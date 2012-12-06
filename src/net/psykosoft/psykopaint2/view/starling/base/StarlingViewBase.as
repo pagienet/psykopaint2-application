@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 
 	public class StarlingViewBase extends Sprite
 	{
-		private var _enabled:Boolean;
+		private var _enabled:Boolean = true;
 
 		public function StarlingViewBase() {
 
@@ -36,15 +36,17 @@ package net.psykosoft.psykopaint2.view.starling.base
 		}
 
 		protected function onSetup():void {
-			// Override.
+			onLayout();
 		}
 
 		public function enable():void {
+			if( _enabled ) return;
 			visible = true;
 			_enabled = true;
 		}
 
 		public function disable():void {
+			if( !_enabled ) return;
 			visible = false;
 			_enabled = false;
 		}

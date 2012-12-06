@@ -2,6 +2,9 @@ package net.psykosoft.psykopaint2.view.starling.base
 {
 
 	import feathers.core.DisplayListWatcher;
+	import feathers.themes.AeonDesktopTheme;
+
+	import net.psykosoft.psykopaint2.view.starling.navigation.Navigation2dView;
 
 	import net.psykosoft.psykopaint2.view.starling.splash.Splash2dView;
 
@@ -18,9 +21,10 @@ package net.psykosoft.psykopaint2.view.starling.base
 		override protected function onSetup():void {
 
 			// Define application UI theme.
-//			_feathersTheme = new MetalWorksMobileTheme( stage );
+			_feathersTheme = new AeonDesktopTheme( stage );
 
-			// Add child views.
+			// Initialize 2d display tree.
+			addChild( new Navigation2dView() );
 			addChild( new Splash2dView() );
 
 		}

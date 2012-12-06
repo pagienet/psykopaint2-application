@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.view.away3d.base
 
 		override protected function onSetup():void {
 
-			// Add child views.
+			// Initialize 3d display tree.
 			addChild( new Wall3dView() );
 
 		}

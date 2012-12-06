@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.view.away3d.base
 	{
 		private var _view:View3D;
 		private var _scene:ObjectContainer3D;
-		private var _enabled:Boolean;
+		private var _enabled:Boolean = true;
 
 		protected var _camera:Camera3D;
 
@@ -60,11 +60,13 @@ package net.psykosoft.psykopaint2.view.away3d.base
 		}
 
 		public function enable():void {
+			if( _enabled ) return;
 			_view.scene.addChild( _scene );
 			_enabled = true;
 		}
 
 		public function disable():void {
+			if( !_enabled ) return;
 			if( _view.scene.contains( _scene ) ) {
 				_view.scene.removeChild( _scene );
 			}
