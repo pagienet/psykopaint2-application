@@ -14,18 +14,17 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 	import org.osflash.signals.Signal;
 
-	public class Wall3dView extends Away3dViewBase
+	public class WallView extends Away3dViewBase
 	{
 		private var _object:Mesh;
 
 		public var objectClickedSignal:Signal;
 
-		public function Wall3dView() {
-			super();
-			objectClickedSignal = new Signal();
-		}
+		public function WallView() {
 
-		override protected function onSetup():void {
+			super();
+
+			objectClickedSignal = new Signal();
 
 			// Init lights.
 			var light:PointLight = new PointLight();
@@ -44,7 +43,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Listen for object clicks.
 			_object.mouseEnabled = true;
 			_object.addEventListener( MouseEvent3D.MOUSE_DOWN, onObjectMouseDown );
-
 		}
 
 		private function onObjectMouseDown( event:MouseEvent3D ):void {
@@ -52,6 +50,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		}
 
 		override protected function onUpdate():void {
+
+//			Cc.info( this, "active" );
 
 			_object.rotationX += 0.6;
 			_object.rotationY += 0.7;

@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 			stage.addEventListener( ResizeEvent.RESIZE, onStageResize );
 			stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
 
-			onSetup();
+			onStageAvailable();
 
 		}
 
@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 			// Override.
 		}
 
-		protected function onSetup():void {
+		protected function onStageAvailable():void {
 			onLayout();
 		}
 

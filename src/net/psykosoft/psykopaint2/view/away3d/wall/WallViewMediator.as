@@ -10,10 +10,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
-	public class Wall3dViewMediator extends Mediator
+	public class WallViewMediator extends Mediator
 	{
 		[Inject]
-		public var view:Wall3dView;
+		public var view:WallView;
 
 		[Inject]
 		public var notifyStateChangedSignal:NotifyStateChangedSignal;

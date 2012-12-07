@@ -3,16 +3,18 @@ package net.psykosoft.psykopaint2.view.starling.splash
 
 	import com.junkbyte.console.Cc;
 
+	import net.psykosoft.psykopaint2.config.Settings;
+
 	import net.psykosoft.psykopaint2.model.data.States;
 	import net.psykosoft.psykopaint2.model.vo.StateVO;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
-	public class Splash2dViewMediator extends StarlingMediator
+	public class SplashViewMediator extends StarlingMediator
 	{
 		[Inject]
-		public var view:Splash2dView;
+		public var view:SplashView;
 
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;

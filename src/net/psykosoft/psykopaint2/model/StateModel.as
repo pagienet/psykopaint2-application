@@ -13,15 +13,32 @@ package net.psykosoft.psykopaint2.model
 		public var notifyStateChangedSignal:NotifyStateChangedSignal;
 
 		private var _currentState:StateVO = new StateVO( States.SPLASH_SCREEN );
+		private var _previousState:StateVO;
 
 		public function StateModel() {
 			super();
 		}
 
 		public function set state( value:StateVO ):void {
+
 			if( _currentState == value ) return;
+
+			if( value.name == States.PREVIOUS_STATE ) {
+				if( _previousState ) {
+					value = _previousState;
+					_previousState = null;
+					// TODO: implement a state stack instead
+				}
+				else {
+					return;
+				}
+			}
+
 			Cc.info( this, "new state: " + value );
+
+			_previousState = _currentState;
 			_currentState = value;
+
 			notifyStateChangedSignal.dispatch( _currentState );
 		}
 	}

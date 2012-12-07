@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.view.starling.splash
 {
 
-	import feathers.controls.ImageLoader;
-
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 
@@ -16,9 +14,10 @@ package net.psykosoft.psykopaint2.view.starling.splash
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 
-	public class Splash2dView extends StarlingViewBase
+	public class SplashView extends StarlingViewBase
 	{
 		private var _logo:Image;
+		private var _bg:Image;
 		private var _autoDieTimer:Timer;
 
 		public var splashDiedSignal:Signal;
@@ -26,27 +25,42 @@ package net.psykosoft.psykopaint2.view.starling.splash
 		[Inject]
 		public var assetManager:AssetManager;
 
-		public function Splash2dView() {
+		public function SplashView() {
+
 			super();
+
 			splashDiedSignal = new Signal();
-		}
 
-		override protected function onSetup():void {
-
-			// Listen for stage clicks.
-			stage.addEventListener( TouchEvent.TOUCH, onStageTouched );
+			// White Bg.
+			_bg = new Image( AssetManager.getTextureById( AssetManager.WhiteTexture ) );
+			addChild( _bg );
 
 			// Display logo.
-			_logo = new Image( AssetManager.getTextureByName( AssetManager.LogoImage ) );
+			_logo = new Image( AssetManager.getTextureById( AssetManager.LogoTexture ) );
 			addChild( _logo );
 
 			// Start auto death timer.
 			_autoDieTimer = new Timer( 5000, 1 );
 			_autoDieTimer.addEventListener( TimerEvent.TIMER, onDieTimer );
 			_autoDieTimer.start();
+		}
 
-			super.onSetup();
+		override protected function onStageAvailable():void {
 
+			// Listen for stage clicks.
+			stage.addEventListener( TouchEvent.TOUCH, onStageTouched );
+
+			super.onStageAvailable();
+
+		}
+
+		override public function disable():void {
+
+			if( _autoDieTimer ) {
+				_autoDieTimer.stop();
+			}
+
+			super.disable();
 		}
 
 		private function onDieTimer( event:TimerEvent ):void {
@@ -66,6 +80,10 @@ package net.psykosoft.psykopaint2.view.starling.splash
 
 		override protected function onLayout():void {
 
+			// Fit bg.
+			_bg.width = stage.stageWidth;
+			_bg.height = stage.stageHeight;
+
 			// Center logo.
 			_logo.x = stage.stageWidth / 2 - _logo.width / 2;
 			_logo.y = stage.stageHeight / 2 - _logo.height / 2;
@@ -74,10 +92,14 @@ package net.psykosoft.psykopaint2.view.starling.splash
 
 		override public function dispose():void {
 
-			// Make sure texture is freed.
+			// Make sure texture is freed ( logo will probably not be used again ).
 			_logo.texture.dispose();
 			_logo.dispose();
 			_logo = null;
+
+			// Clear bg, but not its texture.
+			_bg.dispose();
+			_bg = null;
 
 			super.dispose();
 		}

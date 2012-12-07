@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.view.away3d.base
 			stage.addEventListener( Event.RESIZE, onStageResize );
 			stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
 
-			onSetup();
+			onStageAvailable();
 
 		}
 
@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.view.away3d.base
 			// Override.
 		}
 
-		protected function onSetup():void {
+		protected function onStageAvailable():void {
 			// Override.
 		}
 

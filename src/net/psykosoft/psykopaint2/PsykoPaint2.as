@@ -60,7 +60,7 @@ package net.psykosoft.psykopaint2
 			_stage3dProxy.width = Settings.DEVICE_SCREEN_WIDTH;
 			_stage3dProxy.height = Settings.DEVICE_SCREEN_HEIGHT;
 			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContextCreated );
-			DeviceCapabilities.dpi = 72;
+			DeviceCapabilities.dpi = Settings.DEVICE_DPI;
 			DeviceCapabilities.screenPixelWidth = Settings.DEVICE_SCREEN_WIDTH;
 			DeviceCapabilities.screenPixelHeight = Settings.DEVICE_SCREEN_HEIGHT;
 		}
