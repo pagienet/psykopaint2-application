@@ -88,7 +88,7 @@ package net.psykosoft.psykopaint2
 			Starling.handleLostContext = true;
 			Starling.multitouchEnabled = true;
 			_starling = new Starling( StarlingRootSprite, stage, _stage3dProxy.viewPort, _stage3dProxy.stage3D );
-			if( Settings.DEBUG_MODE ) {
+			if( Settings.DEBUG_STARLING ) {
 				_starling.enableErrorChecking = true;
 				_starling.showStats = true;
 			}

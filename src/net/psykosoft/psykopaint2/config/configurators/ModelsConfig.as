@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.config.configurators
 {
 
-	import net.psykosoft.psykopaint2.model.StateModel;
+	import net.psykosoft.psykopaint2.model.state.StateModel;
 
 	import org.swiftsuspenders.Injector;
 

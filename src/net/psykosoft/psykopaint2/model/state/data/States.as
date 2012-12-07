@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.model.data
+package net.psykosoft.psykopaint2.model.state.data
 {
 
 	public class States

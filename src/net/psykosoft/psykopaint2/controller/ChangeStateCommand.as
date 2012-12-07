@@ -3,8 +3,8 @@ package net.psykosoft.psykopaint2.controller
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.model.StateModel;
-	import net.psykosoft.psykopaint2.model.vo.StateVO;
+	import net.psykosoft.psykopaint2.model.state.StateModel;
+	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
 
 	public class ChangeStateCommand
 	{

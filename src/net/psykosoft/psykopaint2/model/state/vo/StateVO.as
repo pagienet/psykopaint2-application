@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.model.vo
+package net.psykosoft.psykopaint2.model.state.vo
 {
 
 	public class StateVO

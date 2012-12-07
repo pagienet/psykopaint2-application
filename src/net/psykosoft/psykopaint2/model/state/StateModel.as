@@ -1,10 +1,10 @@
-package net.psykosoft.psykopaint2.model
+package net.psykosoft.psykopaint2.model.state
 {
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.model.data.States;
-	import net.psykosoft.psykopaint2.model.vo.StateVO;
+	import net.psykosoft.psykopaint2.model.state.data.States;
+	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
 
 	public class StateModel

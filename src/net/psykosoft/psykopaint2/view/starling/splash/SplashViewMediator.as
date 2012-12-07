@@ -5,8 +5,8 @@ package net.psykosoft.psykopaint2.view.starling.splash
 
 	import net.psykosoft.psykopaint2.config.Settings;
 
-	import net.psykosoft.psykopaint2.model.data.States;
-	import net.psykosoft.psykopaint2.model.vo.StateVO;
+	import net.psykosoft.psykopaint2.model.state.data.States;
+	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;

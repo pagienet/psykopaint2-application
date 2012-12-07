@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.signal.notifications
 {
 
-	import net.psykosoft.psykopaint2.model.vo.StateVO;
+	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
 
 	import org.osflash.signals.Signal;
 
