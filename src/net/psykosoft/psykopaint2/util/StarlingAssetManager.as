@@ -12,12 +12,12 @@ package net.psykosoft.psykopaint2.util
 
 	import starling.textures.Texture;
 
-	public class AssetManager
+	public class StarlingAssetManager
 	{
-		[Embed(source="../../../../../assets/images/PsykopaintLogo500x230.jpg")]
+		[Embed(source="../../../../../assets/images/ui/PsykopaintLogo500x230.jpg")]
 		private static var LogoTextureAsset:Class;
 
-		[Embed(source="../../../../../assets/images/barViewBg.png")]
+		[Embed(source="../../../../../assets/images/ui/barViewBg.png")]
 		private static var NavigationBackgroundTextureAsset:Class;
 
 		// Available assets ( must be reported on the initialize() method ).
@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.util
 
 		private static function initialize():void {
 
-			_textures = new Dictionary();
+			_assets = new Dictionary();
 			_rawAssetData = new Dictionary();
 
 			// Register individual bitmaps.
@@ -36,27 +36,27 @@ package net.psykosoft.psykopaint2.util
 			_rawAssetData[ LogoTexture ] = LogoTextureAsset;
 
 			// Register generative textures.
-			_textures[ WhiteTexture ] = generateTextureOfColor( 0xFFFFFF );
-			_textures[ RedTexture ] = generateTextureOfColor( 0xFF0000 );
+			_assets[ WhiteTexture ] = generateTextureOfColor( 0xFFFFFF );
+			_assets[ RedTexture ] = generateTextureOfColor( 0xFF0000 );
 
 			_initialized = true;
 		}
 
 		private static var _rawAssetData:Dictionary;
-		private static var _textures:Dictionary;
+		private static var _assets:Dictionary;
 		private static var _initialized:Boolean;
 
 		public static function getTextureById( id:uint ):Texture {
 			if( !_initialized ) initialize();
-			if( _textures[ id ] ) return _textures[ id ];
+			if( _assets[ id ] ) return _assets[ id ];
 			var texture:Texture = Texture.fromBitmapData( getBitmapDataById( id ), false, false, Settings.CONTENT_SCALE_FACTOR );
-			_textures[ id ] = texture;
+			_assets[ id ] = texture;
 			return texture;
 		}
 
 		private static function getBitmapDataById( id:uint ):BitmapData {
 			var assetClass:Class = _rawAssetData[ id ];
-			if( !assetClass ) Cc.fatal( "AssetManager.as - the asset [ " + id + " ] does not exist." );
+			if( !assetClass ) Cc.fatal( "StarlingAssetManager.as - the asset [ " + id + " ] does not exist." );
 			var bitmap:Bitmap = new assetClass() as Bitmap;
 			return bitmap.bitmapData;
 		}

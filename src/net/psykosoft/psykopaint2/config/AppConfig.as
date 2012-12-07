@@ -65,12 +65,11 @@ package net.psykosoft.psykopaint2.config
 		private function init():void {
 
 			// Initialize 3d display tree.
-			// Note: the 2d display tree ( StarlingRootSprite.as ) is initialized in the main class,
-			// with the creation of the Starling object.
+			// Note: the 2d display tree ( StarlingRootSprite.as ) is initialized in PsykoPaint.as,
+			// with the creation of the Starling object, which requires it at that time.
 			contextView.view.addChild( new Away3dRootSprite() );
 
 			Cc.info( this, "*** app ready ***" );
-			Cc.info( this, "Starling.contentScaleFactor: " + Starling.contentScaleFactor );
 
 		}
 	}

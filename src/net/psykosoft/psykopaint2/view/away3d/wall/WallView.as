@@ -8,8 +8,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.CubeGeometry;
 
-	import com.junkbyte.console.Cc;
-
 	import net.psykosoft.psykopaint2.view.away3d.base.Away3dViewBase;
 
 	import org.osflash.signals.Signal;

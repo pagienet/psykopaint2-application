@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.view.starling.splash
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 
-	import net.psykosoft.psykopaint2.util.AssetManager;
+	import net.psykosoft.psykopaint2.util.StarlingAssetManager;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.view.starling.splash
 		public var splashDiedSignal:Signal;
 
 		[Inject]
-		public var assetManager:AssetManager;
+		public var assetManager:StarlingAssetManager;
 
 		public function SplashView() {
 
@@ -32,11 +32,11 @@ package net.psykosoft.psykopaint2.view.starling.splash
 			splashDiedSignal = new Signal();
 
 			// White Bg.
-			_bg = new Image( AssetManager.getTextureById( AssetManager.WhiteTexture ) );
+			_bg = new Image( StarlingAssetManager.getTextureById( StarlingAssetManager.WhiteTexture ) );
 			addChild( _bg );
 
 			// Display logo.
-			_logo = new Image( AssetManager.getTextureById( AssetManager.LogoTexture ) );
+			_logo = new Image( StarlingAssetManager.getTextureById( StarlingAssetManager.LogoTexture ) );
 			addChild( _logo );
 
 			// Start auto death timer.
