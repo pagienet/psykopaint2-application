@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.assets
+package net.psykosoft.psykopaint2.util
 {
 
 	import com.junkbyte.console.Cc;

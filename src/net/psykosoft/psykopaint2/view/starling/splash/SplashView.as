@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.view.starling.splash
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 
-	import net.psykosoft.psykopaint2.assets.AssetManager;
+	import net.psykosoft.psykopaint2.util.AssetManager;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
