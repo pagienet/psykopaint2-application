@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 
 		override public function initialize():void {
 
-			Cc.info( this, "initialized" );
+			Cc.log( this, "initialized" );
 
 			// From view.
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 		}
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
-			Cc.info( this, "button pressed: " + buttonLabel );
+			Cc.log( this, "button pressed: " + buttonLabel );
 			switch( buttonLabel ) {
 				case HomeScreenSubNavigationView.BUTTON_LABEL_0:
 					requestStateChangeSignal.dispatch( new StateVO( States.TEST_SCREEN_1 ) );

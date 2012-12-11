@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.model.state
 				}
 			}
 
-			Cc.info( this, "new state: " + value );
+			Cc.log( this, "new state: " + value );
 
 			_previousState = _currentState;
 			_currentState = value;

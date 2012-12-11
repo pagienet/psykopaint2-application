@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.view.starling.splash
 
 		override public function initialize():void {
 
-			Cc.info( this, "initialized" );
+			Cc.log( this, "initialized" );
 
 			// From view.
 			view.splashDiedSignal.add( onViewDied );
@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.view.starling.splash
 
 		private function onViewDied():void {
 
-			Cc.info( this, "onViewDied" );
+			Cc.log( this, "onViewDied" );
 
 			view.parent.removeChild( view );
 			view.dispose();

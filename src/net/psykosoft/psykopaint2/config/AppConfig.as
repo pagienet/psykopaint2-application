@@ -19,8 +19,6 @@ package net.psykosoft.psykopaint2.config
 	import robotlegs.bender.framework.api.IConfig;
 	import robotlegs.bender.framework.api.IContext;
 
-	import starling.core.Starling;
-
 	public class AppConfig implements IConfig
 	{
 		[Inject]
@@ -47,7 +45,7 @@ package net.psykosoft.psykopaint2.config
 			// Debug utility.
 			if( Settings.DEBUG_ENABLE_CONSOLE ) {
 				new Debugger( contextView.view );
-				Cc.info( this, "configuring app - " + Settings.NAME + " " + Settings.VERSION );
+				Cc.log( this, "configuring app - " + Settings.NAME + " " + Settings.VERSION );
 			}
 
 			// Run dedicated configurators.
@@ -69,7 +67,7 @@ package net.psykosoft.psykopaint2.config
 			// with the creation of the Starling object, which requires it at that time.
 			contextView.view.addChild( new Away3dRootSprite() );
 
-			Cc.info( this, "*** app ready ***" );
+			Cc.log( this, "*** app ready ***" );
 
 		}
 	}

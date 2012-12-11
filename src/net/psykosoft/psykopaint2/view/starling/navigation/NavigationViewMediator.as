@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 
 		override public function initialize():void {
 
-			Cc.info( this, "initialized" );
+			Cc.log( this, "initialized" );
 
 			// View starts disabled.
 			view.disable();
@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 		}
 
 		private function onApplicationStateChanged( newState:StateVO ):void {
-			Cc.info( this, "state changed: " + newState.name );
+			Cc.log( this, "state changed: " + newState.name );
 			if( newState.name != States.SPLASH_SCREEN ) {
 				view.enable();
 				evaluateSubNavigation( newState );

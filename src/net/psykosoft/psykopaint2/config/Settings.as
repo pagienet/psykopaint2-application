@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.config
 		// Debugging options.
 		public static const DEBUG_ENABLE_CONSOLE:Boolean = true;
 		public static const DEBUG_STARLING:Boolean = true;
-		public static const DEBUG_SHOW_3D_TRIDENTS:Boolean = true;
+		public static const DEBUG_SHOW_3D_TRIDENTS:Boolean = false;
 		public static const USE_DEBUG_THEME:Boolean = true;
 
 		// Vars.

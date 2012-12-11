@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 			var frameHeight:Number = frameModel.maxY - frameModel.minY;
 			var frameDepth:Number = frameModel.maxZ - frameModel.minZ;
 
-			Cc.info( this, "frame dimensions: " + frameWidth, frameHeight, frameDepth );
+			Cc.log( this, "frame dimensions: " + frameWidth, frameHeight, frameDepth );
 
 			// Mesh.
 			frameModel.material = frameMaterial;

@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 		protected function onButtonTriggered( event:Event ):void {
 			var button:Button = event.currentTarget as Button;
-			Cc.info( this, "button pressed: " + button );
+			Cc.log( this, "button pressed: " + button );
 			buttonPressedSignal.dispatch( button.label );
 		}
 

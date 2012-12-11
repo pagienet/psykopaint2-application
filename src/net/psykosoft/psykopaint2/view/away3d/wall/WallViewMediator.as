@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		override public function initialize():void {
 
-			Cc.info( this, "initialized" );
+			Cc.log( this, "initialized" );
 
 			// View starts disabled.
 			view.disable();
@@ -44,11 +44,11 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			if( newState.name == States.HOME_SCREEN ) {
 				view.enable();
-				Cc.info( this, "enabled" );
+				Cc.log( this, "enabled" );
 			}
 			else {
 				view.disable();
-				Cc.info( this, "disabled" );
+				Cc.log( this, "disabled" );
 			}
 
 		}

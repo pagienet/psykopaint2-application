@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.controller
 
 		public function execute():void {
 
-			Cc.info( this, "executed" );
+			Cc.log( this, "executed" );
 
 			stateModel.state = newState;
 

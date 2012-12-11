@@ -14,6 +14,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 
 	public class PaintingInFrame extends ObjectContainer3D
 	{
+		private var _width:Number;
+
+		private var _height:Number;
+
 		public function PaintingInFrame( frameModel:Mesh, reflectionTexture:BitmapCubeTexture ) {
 
 			super();
@@ -40,19 +44,27 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 			addChild( painting );
 
 			// Identify the dimensions of the loaded painting.
-			var paintingWidth:Number = painting.maxX - painting.minX;
-			var paintingHeight:Number = painting.maxZ - painting.minZ;
+			_width = painting.maxX - painting.minX;
+			_height = painting.maxZ - painting.minZ;
 
 			// Create the frame's glass.
-			var glass:Glass = new Glass( lightPicker, reflectionTexture, paintingWidth, paintingHeight );
+			var glass:Glass = new Glass( lightPicker, reflectionTexture, _width, _height );
 			// TODO: make sure it's working, adjust size, good reflectivity, etc
 			glass.z = -5;
 			addChild( glass );
 
 			// Create the frame model.
-			var frame:Frame = new Frame( frameModel, lightPicker, paintingWidth, paintingHeight );
+			var frame:Frame = new Frame( frameModel, lightPicker, _width, _height );
 			addChild( frame );
 
+		}
+
+		public function get width():Number {
+			return _width;
+		}
+
+		public function get height():Number {
+			return _height;
 		}
 	}
 }
