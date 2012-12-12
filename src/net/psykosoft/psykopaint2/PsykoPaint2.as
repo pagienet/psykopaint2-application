@@ -56,7 +56,7 @@ package net.psykosoft.psykopaint2
 			var stage3dManager:Stage3DManager = Stage3DManager.getInstance( stage );
 			_stage3dProxy = stage3dManager.getFreeStage3DProxy();
 			_stage3dProxy.color = 0xFFFFFF;
-			_stage3dProxy.antiAlias = 8;
+			_stage3dProxy.antiAlias = Settings.ANTI_ALIAS;
 			_stage3dProxy.width = Settings.DEVICE_SCREEN_WIDTH;
 			_stage3dProxy.height = Settings.DEVICE_SCREEN_HEIGHT;
 			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContextCreated );
@@ -88,8 +88,10 @@ package net.psykosoft.psykopaint2
 			Starling.handleLostContext = true;
 			Starling.multitouchEnabled = true;
 			_starling = new Starling( StarlingRootSprite, stage, _stage3dProxy.viewPort, _stage3dProxy.stage3D );
-			if( Settings.DEBUG_STARLING ) {
+			if( Settings.ENABLE_STAGE3D_ERROR_CHECKING ) {
 				_starling.enableErrorChecking = true;
+			}
+			if( Settings.SHOW_STATS ) {
 				_starling.showStats = true;
 			}
 			_starling.shareContext = true;

@@ -9,6 +9,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 	import away3d.textures.BitmapTexture;
 	import away3d.utils.Cast;
 
+	import net.psykosoft.psykopaint2.config.Settings;
+
 	public class Painting extends ObjectContainer3D
 	{
 		// Painting diffuse texture.
@@ -34,8 +36,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 
 			var material:TextureMaterial = new TextureMaterial( diffuseTexture );
 			material.lightPicker = lightPicker;
-			material.normalMap = normalsTexture;
-			material.specularMap = specularTexture;
+			if( Settings.USE_COMPLEX_ILLUMINATION_ON_PAINTINGS ) {
+				material.normalMap = normalsTexture;
+				material.specularMap = specularTexture;
+			}
 			material.ambient = 0.25;
 			material.specular = 0.2;
 

@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 
 		private var _height:Number;
 
-		public function PaintingInFrame( frameModel:Mesh, reflectionTexture:BitmapCubeTexture ) {
+		public function PaintingInFrame( frameModel:Mesh, reflectionTexture:BitmapCubeTexture, sceneLightPicker:StaticLightPicker ) {
 
 			super();
 
@@ -29,14 +29,16 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 				addChild( tri );
 			}
 
-			// Create the frame's own light.
-			var frontLight:PointLight = new PointLight();
-			frontLight.ambient = 1;
-			frontLight.position = new Vector3D( 0, 500, -500 );
-			var backLight:PointLight = new PointLight(); // TODO: just fooling around with this one, will most likely need to remove
-			backLight.position = new Vector3D( 0, 500, 500 );
-			var lightPicker:StaticLightPicker = new StaticLightPicker( [ frontLight, backLight ] );
-			addChild( frontLight );
+			if( Settings.USE_INDIVIDUAL_LIGHTS_ON_FRAMES ) { // Create the frame's own light.
+				var frontLight:PointLight = new PointLight();
+				frontLight.ambient = 1;
+				frontLight.position = new Vector3D( 0, 500, -500 );
+				var lightPicker:StaticLightPicker = new StaticLightPicker( [ frontLight ] );
+				addChild( frontLight );
+			}
+			else {
+				lightPicker = sceneLightPicker;
+			}
 
 			// Create the frame's painting.
 			var painting:Painting = new Painting( lightPicker );
@@ -48,10 +50,12 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 			_height = painting.maxZ - painting.minZ;
 
 			// Create the frame's glass.
-			var glass:Glass = new Glass( lightPicker, reflectionTexture, _width, _height );
-			// TODO: make sure it's working, adjust size, good reflectivity, etc
-			glass.z = -5;
-			addChild( glass );
+			if( Settings.USE_REFLECTIONS_ON_FRAMES ) {
+				var glass:Glass = new Glass( lightPicker, reflectionTexture, _width, _height );
+				// TODO: make sure it's working, adjust size, good reflectivity, etc
+				glass.z = -5;
+				addChild( glass );
+			}
 
 			// Create the frame model.
 			var frame:Frame = new Frame( frameModel, lightPicker, _width, _height );

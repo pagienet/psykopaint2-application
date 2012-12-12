@@ -43,7 +43,7 @@ package net.psykosoft.psykopaint2.config
 		public function configure():void {
 
 			// Debug utility.
-			if( Settings.DEBUG_ENABLE_CONSOLE ) {
+			if( Settings.ENABLE_DEBUG_CONSOLE ) {
 				new Debugger( contextView.view );
 				Cc.log( this, "configuring app - " + Settings.NAME + " " + Settings.VERSION );
 			}

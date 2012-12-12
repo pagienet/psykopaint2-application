@@ -6,19 +6,28 @@ package net.psykosoft.psykopaint2.util
 	import flash.display.DisplayObject;
 	import flash.utils.getTimer;
 
+	import net.psykosoft.psykopaint2.config.Settings;
+
 	public class Debugger
 	{
 		public function Debugger( displayObject:DisplayObject ) {
 
 			super();
 
-			// TODO: add ability to not use with a global setting, this is the only regular display tree object and may be bad for performance
 			Cc.config.style.backgroundAlpha = 0.75;
 			Cc.config.tracing = true;
 			Cc.startOnStage( displayObject, "`" );
 			Cc.visible = false;
 			Cc.height = 350;
+			Cc.y = displayObject.stage.stageHeight - Cc.height;
 			Cc.width = displayObject.stage.stageWidth;
+
+			// Trace all settings.
+			for each( var prop:* in Settings ) {
+				Cc.log( "Setting: " + prop );
+			}
+
+			// Map calls to the IDE console in a custom fashion.
 			Cc.config.traceCall = function( ch:String, line:String, ...args ):void
 			{
 				var time:String = String( getTimer() ) + "ms";

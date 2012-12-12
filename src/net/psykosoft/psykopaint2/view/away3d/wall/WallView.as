@@ -2,7 +2,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 {
 
 	import away3d.entities.Mesh;
+	import away3d.lights.PointLight;
 	import away3d.materials.ColorMaterial;
+	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.primitives.SphereGeometry;
 	import away3d.textures.BitmapCubeTexture;
@@ -34,6 +36,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private const WALL_Z:Number = 700;
 		private const PAINTING_DISTANCE_FROM_WALL:Number = 50;
 
+		private var _cameraLight:PointLight;
+
+		private var _staticLightPicker:StaticLightPicker;
+
 		public function WallView() {
 
 			super();
@@ -46,6 +52,12 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			_wall.rotationX = -90;
 			_wall.z = WALL_Z;
 			addChild3d( _wall );
+
+			_cameraLight = new PointLight();
+			_cameraLight.ambient = 1;
+			_cameraLight.position = new Vector3D( 0, 500, -500 );
+			_staticLightPicker = new StaticLightPicker( [ _cameraLight ] );
+			addChild3d( _cameraLight );
 
 			// Initialize cube texture to be shared by all glass reflections.
 			var bmd:BitmapData = Away3dTextureAssetsManager.getBitmapDataById( Away3dTextureAssetsManager.GallerySkyboxImage );
@@ -79,7 +91,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			Cc.log( this, model.name + " ready: " + model );
 
 			// Create frame.
-			var frame:PaintingInFrame = new PaintingInFrame( model.clone() as Mesh, _bitmapCubeTexture );
+			var frame:PaintingInFrame = new PaintingInFrame( model.clone() as Mesh, _bitmapCubeTexture, _staticLightPicker );
 
 			// Position frame.
 			if( _frames.length > 1 ) {
@@ -100,6 +112,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		override protected function onUpdate():void {
 
 			_cameraController.update();
+			_cameraLight.position = _camera.position;
 
 		}
 	}
