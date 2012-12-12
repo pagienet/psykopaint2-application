@@ -22,19 +22,20 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 	{
 		private var _glassDiffuseMethod:CompositeDiffuseMethod;
 
-		public function Glass( lightPicker:StaticLightPicker, reflectedTexture:BitmapCubeTexture, paintingWidth:Number, paintingHeight:Number ) {
+		public function Glass( lightPicker:StaticLightPicker, reflectedTexture:BitmapCubeTexture ) {
 
 			super();
 
 			// Material.
 			var glassMaterial:ColorMaterial = new ColorMaterial( 0xFFFFFF );
+			glassMaterial.bothSides = true;
 			glassMaterial.blendMode = BlendMode.ADD;
-			glassMaterial.lightPicker = lightPicker; // TODO: see if everything else can be shared but this color material ( cause each glass instance will have its own light )
+			glassMaterial.lightPicker = lightPicker;
 
 			// Env map.
 			var envMapMethod:FresnelEnvMapMethod = new FresnelEnvMapMethod( reflectedTexture );
 			envMapMethod.fresnelPower = 2;
-			envMapMethod.normalReflectance = 0.01;
+			envMapMethod.normalReflectance = 0.1;
 			glassMaterial.addMethod( envMapMethod );
 
 			// Ambient.
@@ -49,7 +50,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 			glassMaterial.diffuseMethod = _glassDiffuseMethod;
 
 			// Mesh.
-			var plane:Mesh = new Mesh( new PlaneGeometry( paintingWidth, paintingHeight ), glassMaterial );
+			var plane:Mesh = new Mesh( new PlaneGeometry( 1, 1 ), glassMaterial );
 			plane.rotationX = -90;
 			addChild( plane );
 		}

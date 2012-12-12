@@ -41,16 +41,27 @@ package net.psykosoft.psykopaint2.assets
 		private static var _targetGeometryNames:Dictionary;
 		private static var _initialized:Boolean;
 
+		/*
+		* Returns a model object by id into the call back function of signature function myCallBack( model:Mesh ).
+		* If the asset hasn't been parsed, it will parse it, if it has, it will return a stored version of it.
+		* NOTE: If multiple requests are made before the asset has finished parsing, this will cause
+		* multiple parsings to occur. Try to avoid calling this method in a loop or synchronously.
+		* */
 		public static function getModelByIdAsync( id:String, callback:Function ):void {
 			if( !_initialized ) initialize();
-			if( _assets[ id ] ) callback( _assets[ id ] );
+			Cc.log( "{Away3dModelAssetsManager}.as - Asset requested: " + id );
+			if( _assets[ id ] ) {
+				callback( _assets[ id ] );
+				Cc.log( "{Away3dModelAssetsManager}.as - Reusing asset: " + id );
+				return;
+			}
 			var assetClass:Class = _rawAssetData[ id ];
-			if( !assetClass ) Cc.fatal( "The asset [ " + id + " ] does not exist." );
+			if( !assetClass ) Cc.fatal( "{Away3dModelAssetsManager}.as - The asset [ " + id + " ] does not exist." );
 			var parser:OBJParser = new OBJParser(); // TODO... must support other formats
 			parser.addEventListener( AssetEvent.ASSET_COMPLETE, function( event:AssetEvent ):void {
 				if( event.asset.assetType == AssetType.MESH ) {
 					if( event.asset.name == _targetGeometryNames[ id ] ) {
-						Cc.log( this, "loaded a mesh: " + event.asset.name );
+						Cc.log( "{Away3dModelAssetsManager}.as - Parsed a mesh: " + id );
 						var model:Mesh = event.asset as Mesh;
 						_assets[ id ] = model;
 						callback( model );

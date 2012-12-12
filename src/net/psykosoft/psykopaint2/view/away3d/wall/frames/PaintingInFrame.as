@@ -8,6 +8,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.textures.BitmapCubeTexture;
 
+	import com.junkbyte.console.Cc;
+
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.config.Settings;
@@ -15,14 +17,15 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 	public class PaintingInFrame extends ObjectContainer3D
 	{
 		private var _width:Number;
-
 		private var _height:Number;
 
-		public function PaintingInFrame( frameModel:Mesh, reflectionTexture:BitmapCubeTexture, sceneLightPicker:StaticLightPicker ) {
+		public function PaintingInFrame( frameModel:Mesh, glass:ObjectContainer3D, sceneLightPicker:StaticLightPicker ) {
 
 			super();
 
 			// TODO: must optimize resources in frames, things can be shared, etc
+
+//			Cc.log( this, "Frame created - glass: " + glass );
 
 			if( Settings.DEBUG_SHOW_3D_TRIDENTS ) {
 				var tri:Trident = new Trident( 250 );
@@ -50,10 +53,11 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 			_height = painting.maxZ - painting.minZ;
 
 			// Create the frame's glass.
-			if( Settings.USE_REFLECTIONS_ON_FRAMES ) {
-				var glass:Glass = new Glass( lightPicker, reflectionTexture, _width, _height );
-				// TODO: make sure it's working, adjust size, good reflectivity, etc
+			if( glass ) {
+				glass.scaleX = _width;
+				glass.scaleY = _height;
 				glass.z = -5;
+				trace( "added glass: " + _width );
 				addChild( glass );
 			}
 
@@ -64,11 +68,11 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 		}
 
 		public function get width():Number {
-			return _width;
+			return _width * _scaleX;
 		}
 
 		public function get height():Number {
-			return _height;
+			return _height * _scaleY;
 		}
 	}
 }

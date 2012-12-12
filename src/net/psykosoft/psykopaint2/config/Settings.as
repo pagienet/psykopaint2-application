@@ -58,14 +58,14 @@ package net.psykosoft.psykopaint2.config
 		public static const USE_DEBUG_THEME:Boolean = true;
 
 		// ---------------------------------------------------------------------
-		// 3D Options.
+		// 3D performance options.
 		// ---------------------------------------------------------------------
 
 		/*
 		* Enables reflections on frames on the wall scene ( frame glass effect ).
 		* Heavy performance const. TODO: Optimize or evaluate removal.
 		* */
-		public static const USE_REFLECTIONS_ON_FRAMES:Boolean = false;
+		public static const USE_REFLECTIONS_ON_FRAMES:Boolean = true;
 
 		/*
 		* Enables usage of normal and specular maps on paintings on
@@ -76,7 +76,6 @@ package net.psykosoft.psykopaint2.config
 		/*
 		* Each picture frame in the wall scene has its own light
 		* that affects only itself.
-		* Medium performance const. TODO: Optimize or evaluate removal.
 		* */
 		public static const USE_INDIVIDUAL_LIGHTS_ON_FRAMES:Boolean = false;
 

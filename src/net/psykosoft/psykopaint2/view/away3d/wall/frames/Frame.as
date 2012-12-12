@@ -8,8 +8,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.config.Settings;
-
 	public class Frame extends ObjectContainer3D
 	{
 		// TODO: must be able to adapt to different painting sizes in some sort of 3D 9-slice thingy
@@ -29,8 +27,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 			var frameWidth:Number = frameModel.maxX - frameModel.minX;
 			var frameHeight:Number = frameModel.maxY - frameModel.minY;
 			var frameDepth:Number = frameModel.maxZ - frameModel.minZ;
-
-			Cc.log( this, "frame dimensions: " + frameWidth, frameHeight, frameDepth );
 
 			// Mesh.
 			frameModel.material = frameMaterial;

@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 	import away3d.entities.Mesh;
 
 	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
 	import com.greensock.easing.Strong;
 
 	import flash.display.Stage;
@@ -47,6 +48,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			super();
 
 			_camera = camera;
+			_camera.x = -500;
 
 			_wall = wall;
 
@@ -149,7 +151,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// Update.
 		// ---------------------------------------------------------------------
 
-		private const FRICTION_FACTOR:Number = 0.98;
+		private const FRICTION_FACTOR:Number = 0.85;
 
 		public function update():void {
 
@@ -197,6 +199,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// ---------------------------------------------------------------------
 
 		private const AVERAGE_SPEED_SAMPLES:uint = 6;
+		private const MINIMUM_THROWING_SPEED:Number = 100;
 
 		private function throwScroller():void {
 
@@ -205,6 +208,15 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			// Calculate the average speed the throw would have.
 			calculateAverageSpeed();
 //			trace( "average speed: " + _speed );
+
+			// Avoid wimp throws, still 0 is allowed for returns to last snap.
+			if( _speed != 0 ) {
+				var speedAbs:Number = Math.abs( _speed );
+				if( speedAbs < MINIMUM_THROWING_SPEED ) {
+					_speed = ( _speed / speedAbs ) * MINIMUM_THROWING_SPEED;
+//					trace( "applying minimum speed: " + _speed );
+				}
+			}
 
 			// Try to precalculate how far this would throw the scroller.
 			var precision:Number = 512;
@@ -279,9 +291,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// Edge containment.
 		// ---------------------------------------------------------------------
 
-		private const EDGE_STIFFNESS_ON_DRAG:Number = 0.005;
-		private const FRICTION_FACTOR_ON_EDGE_CONTAINMENT:Number = 0.75;
-		private const EDGE_CONTAINMENT_SPEED_LIMIT:Number = 1;
+		private const EDGE_STIFFNESS_ON_DRAG:Number = 0.01;
+		private const FRICTION_FACTOR_ON_EDGE_CONTAINMENT:Number = FRICTION_FACTOR * 0.5;
+		private const EDGE_CONTAINMENT_SPEED_LIMIT:Number = 0.5;
 
 		/*
 		* If an edge is surpassed, a stronger friction is applied ( FRICTION_FACTOR_ON_EDGE_CONTAINMENT ),
@@ -339,7 +351,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			_onTween = true;
 			TweenLite.to( _camera, time, {
 				x: position,
-				ease:Strong.easeOut,
+				ease:Expo.easeOut,
 				onComplete: onTweenComplete
 				,onUpdate: onTweenUpdate // uncomment to make sure that tweens are properly killed
 			} );
