@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		private const FRAME_GAP_X:Number = 500;
 		private const PAINTINGS_Y:Number = 100;
-		private const WALL_Z:Number = 1000;
+		private const WALL_Z:Number = 700;
 		private const PAINTING_DISTANCE_FROM_WALL:Number = 50;
 
 		public function WallView() {
@@ -61,10 +61,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		override protected function onStageAvailable():void {
 
 			_cameraController = new ScrollCameraController( _camera, _wall, stage );
-
-			var tracer:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0xFF0000 ) );
-			tracer.position = new Vector3D( 990, 0, WALL_Z );
-			addChild3d( tracer );
 
 			super.onStageAvailable();
 		}

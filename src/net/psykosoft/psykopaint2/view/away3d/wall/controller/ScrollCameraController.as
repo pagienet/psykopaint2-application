@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
-	import com.junkbyte.console.Cc;
 
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
@@ -21,38 +20,28 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 
 	public class ScrollCameraController
 	{
-		// TODO: try not using tweens at all, to ensure that motion is 100% continuous
-
 		private var _camera:Camera3D;
 		private var _speed:Number;
-		private var _userInteracting:Boolean;
 		private var _stage:Stage;
-		private var _snapPoints:Vector.<Number>;
 		private var _wall:Mesh;
+
 		private var _perspectiveFactorDirty:Boolean;
 		private var _perspectiveFactor:Number;
 
 		private var _onEdgeDeceleration:Boolean;
 		private var _onTween:Boolean;
-		private var _surpassedEdge:int = 0; // 0 = none, 1 = right, -1 = left
-		private var _edgeSurpassDistance:Number;
+		private var _edgeSurpassed:int = 0; // 0 = none, 1 = right, -1 = left
+		private var _edgeSurpassDistance:Number = 0;
 
+		private var _userInteracting:Boolean;
 		private var _mouseX:Number = 0;
 		private var _lastMouseX:Number = 0;
-		private var _mouseDeltaX:Number = 0;
 
 		private var _cameraPositionStack:Vector.<Number>;
 
-		private var _justSnapped:Boolean = true;
+		private var _snapPoints:Vector.<Number>;
 		private var _firstSnapPoint:Number;
 		private var _lastSnapPoint:Number;
-
-		private const FRICTION_FACTOR:Number = 0.98;
-		private const AVERAGE_SPEED_SAMPLES:uint = 10;
-		private const EDGE_STIFFNESS_ON_DRAG:Number = 0.01;
-		private const EDGE_CONTAINMENT_FRICTION_FACTOR:Number = 0.5;
-		private const SNAPPING_SPEED_LIMIT:Number = 10;
-		private const TWEEN_TIME:Number = 1;
 
 		public function ScrollCameraController( camera:Camera3D, wall:Mesh, stage:Stage ) {
 			super();
@@ -64,16 +53,17 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			_lastMouseX = 0;
 			_speed = 0;
 
+			_snapPoints = new Vector.<Number>();
+
+			// User input listeners.
 			_stage = stage;
 			_stage.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			_stage.addEventListener( MouseEvent.MOUSE_UP, onMouseUp );
-			_stage.addEventListener( MouseEvent.MOUSE_MOVE, onMouseMove );
 
+			// See pushPosition().
 			_cameraPositionStack = new Vector.<Number>();
 
-			_snapPoints = new Vector.<Number>();
-
-			// TODO: must update on screen resize?
+			// See evaluatePerspectiveFactor().
 			_perspectiveFactorDirty = true;
 		}
 
@@ -129,86 +119,151 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// ---------------------------------------------------------------------
 
 		private function onMouseDown( event:MouseEvent ):void {
+
+//			trace( "mouse down" );
+
 			_userInteracting = true;
+
+			// Refresh average speed calculation stack whenever the user starts
+			// interacting with the scroller.
+			_cameraPositionStack = new Vector.<Number>();
+
+			// Snapshot initial mouse position.
 			_mouseX = _lastMouseX = _stage.mouseX - _stage.stageWidth / 2;
-			if( _onTween ) {
-				stopAllTweens();
-			}
+
+			stopAllTweens();
 		}
 
 		private function onMouseUp( event:MouseEvent ):void {
-			_userInteracting = false;
-			_cameraPositionStack = new Vector.<Number>();
-		}
 
-		private function onMouseMove( event:MouseEvent ):void {
-			if( _userInteracting ) {
-				_mouseX = _stage.mouseX - _stage.stageWidth / 2;
-			}
+//			trace( "mouse up" );
+
+			_userInteracting = false;
+
+			stopAllTweens();
+
+			throwScroller();
 		}
 
 		// ---------------------------------------------------------------------
 		// Update.
 		// ---------------------------------------------------------------------
 
+		private const FRICTION_FACTOR:Number = 0.98;
+
 		public function update():void {
+
+			if( _onTween ) {
+				return;
+			}
 
 			// Check if perspective factor needs to be updated.
 			if( _perspectiveFactorDirty ) {
 				evaluatePerspectiveFactor();
 			}
 
-			if( _userInteracting ) {
+			// Update motion, either glued or free.
+			if( _userInteracting ) { // User's finger is on the screen, scroller snaps to finger.
 				// Update user input.
-				_mouseDeltaX = _lastMouseX - _mouseX;
+				_mouseX = _stage.mouseX - _stage.stageWidth / 2;
+				var mouseDeltaX:Number = _lastMouseX - _mouseX;
 				_lastMouseX = _mouseX;
 				// Move the scroller perfectly under the user's finger.
 				var edgeStiffnessFactor:Number = EDGE_STIFFNESS_ON_DRAG * _edgeSurpassDistance;
 				edgeStiffnessFactor = edgeStiffnessFactor < 1 ? 1 : edgeStiffnessFactor;
-//				Cc.log( "edgeStiffnessFactor: " + edgeStiffnessFactor );
-				_camera.x += _perspectiveFactor * _mouseDeltaX / edgeStiffnessFactor;
-//				Cc.log( "camera x: " + _camera.x );
+//				trace( "edgeStiffnessFactor: " + edgeStiffnessFactor );
+				_camera.x += _perspectiveFactor * mouseDeltaX / edgeStiffnessFactor;
+//				trace( "glued motion - pos: " + _camera.x );
 				// Update speed ( used when the user is not interacting ).
-				updateAverageSpeed();
-				_justSnapped = false;
+				pushPosition();
 			}
-			else {
-				// Update motion.
-				_camera.x += _speed;
-			}
-			_speed *= _onEdgeDeceleration ? EDGE_CONTAINMENT_FRICTION_FACTOR : FRICTION_FACTOR;
-//			trace( "speed: " + _speed );
-
-			// Attempt a snapping.
-			if( !_justSnapped && !_onTween && !_userInteracting && Math.abs( _speed ) < SNAPPING_SPEED_LIMIT ) {
-            	// Evaluate distance to closest snap point.
-				var shortestDistance:Number = Number.MAX_VALUE;
-				var shortestDistanceIndex:uint;
-				var len:uint = _snapPoints.length;
-				for( var i:uint; i < len; ++i ) {
-					var distance:Number = Math.abs( _camera.x - _snapPoints[ i ] );
-//					trace( "distance - " + i + ": " + distance );
-					if( distance < shortestDistance ) {
-						shortestDistance = distance;
-						shortestDistanceIndex = i;
-					}
+			else { // User has released the scroller.
+				if( Math.abs( _speed ) > 0 ) { // Update motion.
+					_camera.x += _speed;
+					_speed *= _onEdgeDeceleration ? FRICTION_FACTOR_ON_EDGE_CONTAINMENT : FRICTION_FACTOR;
+//					trace( "free motion - pos: " + _camera.x + ", speed: " + _speed );
 				}
-				// Snap if going slow enough.
-//				trace( "shortestDistance - " + i + ": " + shortestDistance );
-//				trace( "SNAPPING: " + shortestDistanceIndex );
-				_speed = 0;
-				tweenTo( _snapPoints[ shortestDistanceIndex ], TWEEN_TIME * shortestDistance / ( Settings.DEVICE_SCREEN_WIDTH / 4 ) );
+				else {
+//					trace( "stopped free motion - pos: " + _camera.x );
+				}
 			}
 
-			// Contain if a range has been set.
+			// Contain.
 			containEdges();
 		}
 
-		private function updateAverageSpeed():void {
+		// ---------------------------------------------------------------------
+		// Throwing.
+		// ---------------------------------------------------------------------
+
+		private const AVERAGE_SPEED_SAMPLES:uint = 6;
+
+		private function throwScroller():void {
+
+//			trace( "throwing scroller --------------------------------" );
+
+			// Calculate the average speed the throw would have.
+			calculateAverageSpeed();
+//			trace( "average speed: " + _speed );
+
+			// Try to precalculate how far this would throw the scroller.
+			var precision:Number = 512;
+			var friction:Number = _onEdgeDeceleration ? FRICTION_FACTOR_ON_EDGE_CONTAINMENT : FRICTION_FACTOR;
+			var integralFriction:Number = ( Math.pow( friction, precision ) - 1 ) / ( friction - 1 );
+			var distanceTravelled:Number = _speed * integralFriction;
+			var calculatedPosition:Number = _camera.x + distanceTravelled;
+//			trace( "calculated position with " + precision + " precision: " + calculatedPosition );
+
+			// Try to find a snapping point near the destination.
+			var len:uint = _snapPoints.length;
+			var closestDistanceToSnapPoint:Number = Number.MAX_VALUE;
+			var targetSnapPoint:Number = -1;
+//			trace( "snap points: " + _snapPoints );
+			for( var i:uint; i < len; ++i ) {
+				var snapPoint:Number = _snapPoints[ i ];
+				var distanceToSnapPoint:Number = Math.abs( calculatedPosition - snapPoint );
+//				trace( "evaluating snap point at distance: " + distanceToSnapPoint );
+				if( distanceToSnapPoint < closestDistanceToSnapPoint ) {
+					closestDistanceToSnapPoint = distanceToSnapPoint;
+					targetSnapPoint = snapPoint;
+				}
+			}
+//			trace( "found snap point: " + targetSnapPoint );
+			// Discard chosen snap points that are too far.
+			if( closestDistanceToSnapPoint > Settings.DEVICE_SCREEN_WIDTH ) {
+				targetSnapPoint = -1;
+//				trace( "snap point discarded" );
+			}
+
+
+			// If a valid snap point has been found, alter the speed so that
+			// the scroller reaches it just right.
+			if( targetSnapPoint >= 0 ) {
+				_speed = ( targetSnapPoint - _camera.x ) / integralFriction;
+			}
+//			trace( "altered speed: " + _speed );
+
+		}
+
+		/*
+		* Registers the camera position in a stack, to be used
+		* when an average speed needs to be calculated.
+		* See calculateAverageSpeed().
+		* */
+		private function pushPosition():void {
 			_cameraPositionStack.push( _camera.x );
 			if( _cameraPositionStack.length > AVERAGE_SPEED_SAMPLES ) {
 				_cameraPositionStack.splice( 0, 1 );
 			}
+//			trace( "position pushed to stack: " + _cameraPositionStack );
+		}
+
+		/*
+		* Calculates the average speed of the camera based on a set of previous position samples.
+		* A stack is needed because a single sample produces poor speed calculations.
+		* This calculation is done whenever the uses releases a scrolling and the camera is thrown.
+		* */
+		private function calculateAverageSpeed():void {
 			_speed = 0;
 			var len:uint = _cameraPositionStack.length;
 			for( var i:uint = 0; i < len; ++i ) {
@@ -224,42 +279,62 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// Edge containment.
 		// ---------------------------------------------------------------------
 
+		private const EDGE_STIFFNESS_ON_DRAG:Number = 0.005;
+		private const FRICTION_FACTOR_ON_EDGE_CONTAINMENT:Number = 0.75;
+		private const EDGE_CONTAINMENT_SPEED_LIMIT:Number = 1;
+
 		/*
-		* If an edge is surpassed, a stronger friction is applied ( EDGE_CONTAINMENT_FRICTION_FACTOR ),
+		* If an edge is surpassed, a stronger friction is applied ( FRICTION_FACTOR_ON_EDGE_CONTAINMENT ),
 		* and when the speed reaches a low enough level ( EDGE_CONTAINMENT_SPEED_LIMIT )
 		* ( if the user is not interacting )
 		* a tween is triggered to return the scroller to the appropriate edge limit.
 		* */
 		private function containEdges():void {
 
-			if( _onTween ) return;
+//			trace( "containing - pos: " + _camera.x + ", speed: " + _speed );
 
+			// Check if an edge has been surpassed.
 			if( _camera.x < _firstSnapPoint ) {
-//				Cc.log( this, "left edge surpassed." );
+//				trace( this, "left edge surpassed." );
 				_edgeSurpassDistance = _firstSnapPoint - _camera.x;
 				_onEdgeDeceleration = true;
-				_surpassedEdge = -1;
+				_edgeSurpassed = -1;
 			}
 			else if( _camera.x > _lastSnapPoint ) {
-//				Cc.log( this, "right edge surpassed." );
+//				trace( this, "right edge surpassed." );
 				_edgeSurpassDistance = _camera.x - _lastSnapPoint;
 				_onEdgeDeceleration = true;
-				_surpassedEdge = 1;
+				_edgeSurpassed = 1;
 			}
 			else {
-				_edgeSurpassDistance = 0;
 				_onEdgeDeceleration = false;
-				_surpassedEdge = 0;
 			}
 
+			// If previously surpassed and edge and speed is low enough, tween back to edge.
+			if( _onEdgeDeceleration && !_userInteracting && Math.abs( _speed ) < EDGE_CONTAINMENT_SPEED_LIMIT ) {
+//				trace( "edge motion halted" );
+				_onEdgeDeceleration = false;
+				triggerEdgeTween();
+			}
 		}
 
 		// ---------------------------------------------------------------------
 		// Tweening.
 		// ---------------------------------------------------------------------
 
+		private const EDGE_CONTAINMENT_RETURN_TWEEN_TIME:Number = 1;
+
+		private function triggerEdgeTween():void {
+			_speed = 0;
+			tweenTo(
+				_edgeSurpassed == -1 ? _firstSnapPoint : _lastSnapPoint,
+				EDGE_CONTAINMENT_RETURN_TWEEN_TIME
+			);
+			_edgeSurpassDistance = 0;
+		}
+
 		private function tweenTo( position:Number, time:Number ):void {
-			Cc.log( this, "starting tween to: " + position );
+//			trace( this, "starting tween to: " + position );
 			stopAllTweens();
 			_onTween = true;
 			TweenLite.to( _camera, time, {
@@ -271,22 +346,24 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		}
 
 		private function onTweenUpdate():void {
-			Cc.log( this, "edge tween active..." );
+//			trace( this, "edge tween active - pos: " + _camera.x );
 		}
 
 		private function onTweenComplete():void {
-			Cc.log( this, "tween completed." );
+//			trace( this, "tween completed." );
+			// Lock on.
+			_camera.x = _edgeSurpassed == -1 ? _firstSnapPoint : _lastSnapPoint;
+			_edgeSurpassed = 0;
+			_speed = 0;
 			_onTween = false;
-			if( _surpassedEdge != 0 ) {
-				_camera.x = _surpassedEdge == -1 ? _firstSnapPoint : _lastSnapPoint;
-			}
-			_surpassedEdge = 0;
 		}
 
 		private function stopAllTweens():void {
-			_onTween = false;
-			_justSnapped = true;
-			TweenLite.killTweensOf( _camera );
+//			trace( "tweens killed" );
+			if( _onTween ) {
+				_onTween = false;
+				TweenLite.killTweensOf( _camera );
+			}
 		}
 	}
 }
