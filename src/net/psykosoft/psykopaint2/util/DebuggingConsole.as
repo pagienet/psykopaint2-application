@@ -4,16 +4,18 @@ package net.psykosoft.psykopaint2.util
 	import com.junkbyte.console.Cc;
 
 	import flash.display.DisplayObject;
+	import flash.utils.describeType;
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.config.Settings;
 
-	public class Debugger
+	public class DebuggingConsole
 	{
-		public function Debugger( displayObject:DisplayObject ) {
+		public function DebuggingConsole( displayObject:DisplayObject ) {
 
 			super();
 
+			// Configure.
 			Cc.config.style.backgroundAlpha = 0.75;
 			Cc.config.tracing = true;
 			Cc.startOnStage( displayObject, "`" );
@@ -22,11 +24,24 @@ package net.psykosoft.psykopaint2.util
 			Cc.y = displayObject.stage.stageHeight - Cc.height;
 			Cc.width = displayObject.stage.stageWidth;
 
-			// Trace all settings.
-			for each( var prop:* in Settings ) {
-				Cc.log( "Setting: " + prop );
-			}
+			remapTraces();
 
+			traceAllSettings();
+
+		}
+
+		private function traceAllSettings():void {
+			Cc.log( this, "Application settings: -----------------------------------------" );
+			var typeDescription:XML = describeType( Settings );
+			var constantsList:XMLList = typeDescription.constant;
+			for( var i:uint; i < constantsList.length(); i++ ) {
+				var constantItem:XML = constantsList[ i ];
+				Cc.log( constantItem.@name + ": " + Settings[ String( constantItem.@name ) ] );
+			}
+			Cc.log( "----------------------------------------------------------------------------------" );
+		}
+
+		private function remapTraces():void {
 			// Map calls to the IDE console in a custom fashion.
 			Cc.config.traceCall = function( ch:String, line:String, ...args ):void
 			{

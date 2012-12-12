@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.config
 	import net.psykosoft.psykopaint2.config.configurators.NotificationsConfig;
 	import net.psykosoft.psykopaint2.config.configurators.ServicesConfig;
 	import net.psykosoft.psykopaint2.config.configurators.ViewMediatorsConfig;
-	import net.psykosoft.psykopaint2.util.Debugger;
+	import net.psykosoft.psykopaint2.util.DebuggingConsole;
 	import net.psykosoft.psykopaint2.view.away3d.base.Away3dRootSprite;
 
 	import org.swiftsuspenders.Injector;
@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.config
 
 			// Debug utility.
 			if( Settings.ENABLE_DEBUG_CONSOLE ) {
-				new Debugger( contextView.view );
+				new DebuggingConsole( contextView.view );
 				Cc.log( this, "configuring app - " + Settings.NAME + " " + Settings.VERSION );
 			}
 

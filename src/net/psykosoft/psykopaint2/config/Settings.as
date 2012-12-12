@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.config
 		// ---------------------------------------------------------------------
 
 		public static const SHOW_SPLASH_SCREEN:Boolean = false;
-		public static const DEVICE_DPI:uint = 140;
+		public static const DEVICE_DPI:uint = 132;
 		public static const DEVICE_SCREEN_WIDTH:uint = 1024;
 		public static const DEVICE_SCREEN_HEIGHT:uint = 768;
 		public static const CONTENT_SCALE_FACTOR:Number = 2;
@@ -65,7 +65,7 @@ package net.psykosoft.psykopaint2.config
 		* Enables reflections on frames on the wall scene ( frame glass effect ).
 		* Heavy performance const. TODO: Optimize or evaluate removal.
 		* */
-		public static const USE_REFLECTIONS_ON_FRAMES:Boolean = true;
+		public static const USE_REFLECTIONS_ON_FRAMES:Boolean = false;
 
 		/*
 		* Enables usage of normal and specular maps on paintings on
