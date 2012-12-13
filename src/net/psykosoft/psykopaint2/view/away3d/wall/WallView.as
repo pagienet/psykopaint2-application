@@ -21,7 +21,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 	import net.psykosoft.psykopaint2.util.MathUtil;
 	import net.psykosoft.psykopaint2.view.away3d.base.Away3dViewBase;
 	import net.psykosoft.psykopaint2.view.away3d.wall.controller.ScrollCameraController;
+	import net.psykosoft.psykopaint2.view.away3d.wall.frames.Frame;
 	import net.psykosoft.psykopaint2.view.away3d.wall.frames.Glass;
+	import net.psykosoft.psykopaint2.view.away3d.wall.frames.Painting;
 	import net.psykosoft.psykopaint2.view.away3d.wall.frames.PaintingInFrame;
 
 	import org.osflash.signals.Signal;
@@ -32,18 +34,17 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private var _frames:Vector.<PaintingInFrame>;
 		private var _cameraController:ScrollCameraController;
 		private var _wall:Mesh;
-		private var _glass:Glass;
 
 		public var objectClickedSignal:Signal;
 
-		private const FRAME_GAP_X:Number = 250;
+		private const FRAME_GAP_X:Number = 500;
 		private const PAINTINGS_Y:Number = 100;
-		private const WALL_Z:Number = 1000;
+		private const WALL_Z:Number = 400;
 		private const PAINTING_DISTANCE_FROM_WALL:Number = 50;
 
 		private var _cameraLight:PointLight;
 
-		private var _staticLightPicker:StaticLightPicker;
+		private var _sceneLightPicker:StaticLightPicker;
 
 		public function WallView() {
 
@@ -61,39 +62,61 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			_cameraLight = new PointLight();
 			_cameraLight.ambient = 1;
-			_cameraLight.position = new Vector3D( 0, 1000, 0 ); // Light will move in x.
-			_staticLightPicker = new StaticLightPicker( [ _cameraLight ] );
+			_cameraLight.position = new Vector3D( 0, 500, 0 ); // Light will move in x.
+			_sceneLightPicker = new StaticLightPicker( [ _cameraLight ] );
 			addChild3d( _cameraLight );
 
 			// Initialize cube texture to be shared by all glass reflections.
 			var bmd:BitmapData = Away3dTextureAssetsManager.getBitmapDataById( Away3dTextureAssetsManager.GallerySkyboxImage );
 			_bitmapCubeTexture = new BitmapCubeTexture( bmd, bmd, bmd, bmd, bmd, bmd );
 
-			// Get frame 0 model.
-			Away3dModelAssetsManager.getModelByIdAsync( Away3dModelAssetsManager.Frame0Model, onFrameModelReady );
+			// Get frame model.
+			Away3dModelAssetsManager.getModelByIdAsync( Away3dModelAssetsManager.Frame1Model, onFrameModelReady );
 
 		}
 
-		private function onFrameModelReady( model:Mesh ):void {
+		private function onFrameModelReady( model:ObjectContainer3D ):void {
 
 			Cc.log( this, "'" + model.name + "' model ready, creating frames on wall." );
 
+			// Create painting.
+			var painting:Painting = new Painting( _sceneLightPicker );
+			var paintingWidth:Number = painting.width;
+			var paintingHeight:Number = painting.height;
+
+			// TODO: tidy up object creation, instance types, how types are taken in constructors, etc
+
+			// Create frame.
+			var frameMaterial:ColorMaterial = new ColorMaterial( 0xFDE910 );
+			frameMaterial.gloss = 100;
+			frameMaterial.specular = 0.35;
+			frameMaterial.ambient = 0.1;
+			frameMaterial.lightPicker = _sceneLightPicker;
+			var frame:Frame = new Frame( model.clone() as ObjectContainer3D );
+			frame.material = frameMaterial;
+			frame.fitToPaintingWidth( paintingWidth );
+
+			// Create glass.
 			if( Settings.USE_REFLECTIONS_ON_FRAMES ) {
-				// Create glass.
-				_glass = new Glass( _staticLightPicker, _bitmapCubeTexture );
-				Cc.log( this, "Using glass reflections: " + _glass )
+				var glass:Glass = new Glass( _sceneLightPicker, _bitmapCubeTexture );
+				Cc.log( this, "Using glass reflections: " + glass )
 			}
 
 			// Tests...
 			for( var i:uint = 0; i < 15; i++ ) {
 
+				// Create instances.
+				var frameInstance:Frame = frame.clone() as Frame;
+				var paintingInstance:ObjectContainer3D = painting.clone() as ObjectContainer3D;
+				var glassInstance:ObjectContainer3D = Settings.USE_REFLECTIONS_ON_FRAMES ? glass.clone() as ObjectContainer3D : null;
+				if( glassInstance ) {
+					glassInstance.scaleX = paintingWidth;
+					glassInstance.scaleY = paintingHeight;
+				}
+
 				// Create paintingInFrame.
-				var paintingInFrame:PaintingInFrame = new PaintingInFrame(
-						model.clone() as Mesh,
-						Settings.USE_REFLECTIONS_ON_FRAMES ? _glass.clone() as ObjectContainer3D : null,
-						_staticLightPicker
-				);
-				paintingInFrame.scale( MathUtil.rand( 0.25, 1.5 ) );
+				var paintingInFrame:PaintingInFrame = new PaintingInFrame( frameInstance, paintingInstance, glassInstance );
+				paintingInFrame.scale( MathUtil.rand( 0.25, 0.5 ) );
 
 				// Position paintingInFrame.
 				if( _frames.length > 0 ) {
@@ -121,42 +144,12 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			super.onStageAvailable();
 		}
 
-		/*// TODO: must be able to choose frame type, painting, etc
-		private function createFrame():void {
-
-			Cc.log( this, "requesting frame 0 model..." );
-
-			// Request frame model ( async ).
-
-		}
-
-		private function onFrameModelReady( model:Mesh ):void {
-
-			Cc.log( this, model.name + " ready: " + model );
-
-			// Create frame.
-			var frame:PaintingInFrame = new PaintingInFrame( model.clone() as Mesh, _bitmapCubeTexture, _staticLightPicker );
-
-			// Position frame.
-			if( _frames.length > 1 ) {
-				var previousFrame:PaintingInFrame = _frames[ _frames.length - 1 ];
-				frame.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + frame.width / 2;
-			}
-			frame.y = PAINTINGS_Y;
-			frame.z = WALL_Z - PAINTING_DISTANCE_FROM_WALL;
-
-			// Update scroller range and snapping.
-			_cameraController.addSnapPoint( frame.x );
-
-			// Store and add to display tree.
-			_frames.push( frame );
-			addChild3d( frame );
-		}*/
-
 		override protected function onUpdate():void {
 
 			_cameraController.update();
-			_cameraLight.x = _camera.x;
+
+			var dx:Number = _camera.x - _cameraLight.x;
+			_cameraLight.x += 0.075 * dx;
 
 		}
 	}

@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DManager;
 	import away3d.core.managers.Stage3DProxy;
+	import away3d.debug.Debug;
 	import away3d.events.Stage3DEvent;
 
 	import feathers.system.DeviceCapabilities;
@@ -78,6 +79,9 @@ package net.psykosoft.psykopaint2
 
 		private function init3D():void {
 			_away3d = new View3D();
+			if( Settings.AWAY3D_DEBUG_MODE ) {
+				Debug.active = true;
+			}
 			_away3d.stage3DProxy = _stage3dProxy;
 			_away3d.shareContext = true;
 			addChild( _away3d );

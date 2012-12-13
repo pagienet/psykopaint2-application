@@ -151,7 +151,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// Update.
 		// ---------------------------------------------------------------------
 
-		private const FRICTION_FACTOR:Number = 0.85;
+		private const FRICTION_FACTOR:Number = 0.9;
 
 		public function update():void {
 

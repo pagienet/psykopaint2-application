@@ -2,39 +2,56 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 {
 
 	import away3d.containers.ObjectContainer3D;
-	import away3d.entities.Mesh;
+	import away3d.core.base.Object3D;
 	import away3d.materials.ColorMaterial;
-	import away3d.materials.lightpickers.StaticLightPicker;
 
-	import com.junkbyte.console.Cc;
+	import net.psykosoft.psykopaint2.util.ScenegraphUtil;
 
 	public class Frame extends ObjectContainer3D
 	{
-		// TODO: must be able to adapt to different painting sizes in some sort of 3D 9-slice thingy
-		public function Frame( frameModel:Mesh, lightPicker:StaticLightPicker, paintingWidth:Number, paintingHeight:Number ) {
+		private var _model:ObjectContainer3D;
+		private var _material:ColorMaterial;
+		private var _paintingWidth:Number;
+
+		public function Frame( frameModel:ObjectContainer3D ) {
 
 			super();
 
-			// Material.
-			// TODO: centralize all frame materials ( might be texture materials, can be chosen by the user, etc )
-			var frameMaterial:ColorMaterial = new ColorMaterial( 0xFFFFFF * Math.random() );
-			frameMaterial.gloss = 100;
-			frameMaterial.specular = 0.35;
-			frameMaterial.ambient = 0.1;
-			frameMaterial.lightPicker = lightPicker;
+			_model = frameModel;
+			addChild( _model );
+
+		}
+
+		public function set material( value:ColorMaterial ):void {
+			_material = value;
+			ScenegraphUtil.applyMaterialToAllChildMeshes( _model, _material );
+		}
+
+		public function fitToPaintingWidth( paintingWidth:Number ):void {
+
+			_paintingWidth = paintingWidth;
 
 			// Identify original frame dimensions.
-			var frameWidth:Number = frameModel.maxX - frameModel.minX;
-			var frameHeight:Number = frameModel.maxY - frameModel.minY;
-			var frameDepth:Number = frameModel.maxZ - frameModel.minZ;
+			var frameWidth:Number = _model.maxX - _model.minX;
+			var frameHeight:Number = _model.maxY - _model.minY;
+			var smallestDimension:Number = Math.min( frameWidth, frameHeight );
 
-			// Mesh.
-			frameModel.material = frameMaterial;
-			frameModel.scaleX = paintingWidth / frameWidth;
-			frameModel.scaleY = paintingHeight / frameHeight;
-			frameModel.scaleZ = frameModel.scaleY;
-			addChild( frameModel );
+			// Scale frame without modifying aspect ratio.
+			_model.scaleX = 1.1 * ( _paintingWidth ) / smallestDimension; // TODO: scaling value will depend on frame model ( size of picture area ).
+			_model.scaleY = _model.scaleX;
+			_model.scaleZ = _model.scaleX;
 
+		}
+
+		public function get width():Number {
+			return ( _model.maxX - _model.minX ) * _model.scaleX;
+		}
+
+		override public function clone():Object3D {
+			var clone:Frame = new Frame( _model.clone() as ObjectContainer3D );
+			clone.material = _material;
+			clone.fitToPaintingWidth( _paintingWidth );
+			return clone;
 		}
 	}
 }

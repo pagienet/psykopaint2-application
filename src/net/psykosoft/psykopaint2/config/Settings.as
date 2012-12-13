@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.config
 		/*
 		* Stage3D alias quality both for Starling and Away3D.
 		* */
-		public static const ANTI_ALIAS:uint = 4;
+		public static const ANTI_ALIAS:uint = 8;
 
 		// ---------------------------------------------------------------------
 		// Debugging options.
@@ -57,6 +57,8 @@ package net.psykosoft.psykopaint2.config
 		* */
 		public static const USE_DEBUG_THEME:Boolean = true;
 
+		public static const AWAY3D_DEBUG_MODE:Boolean = false;
+
 		// ---------------------------------------------------------------------
 		// 3D performance options.
 		// ---------------------------------------------------------------------
@@ -76,6 +78,7 @@ package net.psykosoft.psykopaint2.config
 		/*
 		* Each picture frame in the wall scene has its own light
 		* that affects only itself.
+		* // TODO: currently disabled, setting has no effect.
 		* */
 		public static const USE_INDIVIDUAL_LIGHTS_ON_FRAMES:Boolean = false;
 
