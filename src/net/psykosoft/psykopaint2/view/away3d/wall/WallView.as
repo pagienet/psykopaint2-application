@@ -1,156 +1,252 @@
 package net.psykosoft.psykopaint2.view.away3d.wall
 {
 
-	import away3d.containers.ObjectContainer3D;
 	import away3d.entities.Mesh;
 	import away3d.lights.PointLight;
 	import away3d.materials.ColorMaterial;
+	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.BitmapCubeTexture;
+	import away3d.utils.Cast;
 
-	import com.junkbyte.console.Cc;
-
-	import flash.display.BitmapData;
-	import flash.display.BlendMode;
 	import flash.geom.Vector3D;
 
-	import net.psykosoft.psykopaint2.assets.Away3dModelAssetsManager;
-	import net.psykosoft.psykopaint2.assets.Away3dTextureAssetsManager;
-	import net.psykosoft.psykopaint2.config.Settings;
-	import net.psykosoft.psykopaint2.util.MathUtil;
 	import net.psykosoft.psykopaint2.view.away3d.base.Away3dViewBase;
 	import net.psykosoft.psykopaint2.view.away3d.wall.controller.ScrollCameraController;
-	import net.psykosoft.psykopaint2.view.away3d.wall.frames.Frame;
-	import net.psykosoft.psykopaint2.view.away3d.wall.frames.Glass;
-	import net.psykosoft.psykopaint2.view.away3d.wall.frames.Painting;
-	import net.psykosoft.psykopaint2.view.away3d.wall.frames.PaintingInFrame;
+	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.Frame;
+	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.Picture;
+	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.WallFrame;
+	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.frames.FrameTextureManager;
+	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.frames.FrameTextureType;
 
 	import org.osflash.signals.Signal;
 
-	public class WallView extends Away3dViewBase
+	public class WallView extends Away3dViewBase implements IWallView
 	{
-		private var _bitmapCubeTexture:BitmapCubeTexture;
-		private var _frames:Vector.<PaintingInFrame>;
+		// TODO: move to asset manager
+
+		// -----------------------
+		// Wall.
+		// -----------------------
+		[Embed(source="../../../../../../../assets/images/textures/wall/cement/cement-baked.jpg")]
+		private var WallBakedAsset:Class;
+
+		// -----------------------
+		// Floor.
+		// -----------------------
+		[Embed(source="../../../../../../../assets/images/textures/floor/wood/wood-baked.jpg")]
+		private var FloorBakedAsset:Class;
+
+		// -----------------------
+		// Shadow decal.
+		// -----------------------
+		[Embed(source="../../../../../../../assets/images/textures/misc/frame-shadow.png")]
+		private var FrameShadowAsset:Class;
+
+		private var _wallFrames:Vector.<WallFrame>;
 		private var _cameraController:ScrollCameraController;
 		private var _wall:Mesh;
-
-		public var objectClickedSignal:Signal;
-
-		private const FRAME_GAP_X:Number = 500;
-		private const PAINTINGS_Y:Number = 100;
-		private const WALL_Z:Number = 400;
-		private const PAINTING_DISTANCE_FROM_WALL:Number = 50;
-
+		private var _floor:Mesh;
+		private var _wallFrameClickedSignal:Signal;
 		private var _cameraLight:PointLight;
-
 		private var _sceneLightPicker:StaticLightPicker;
+
+		private const FRAME_GAP_X:Number = 1000;
+
+		private const PAINTINGS_Y:Number = 500;
+		private const PAINTINGS_SCALE:Number = 0.9;
+		private const PAINTING_DISTANCE_FROM_WALL:Number = 5;
+
+		private const WALL_WIDTH:Number = 100000;
+		private const WALL_HEIGHT:Number = 2000;
+		private const WALL_BASE_Y:Number = -600;
+		private const WALL_Z:Number = 400;
+
+		private const FLOOR_DEPTH:Number = 1000;
 
 		public function WallView() {
 
 			super();
 
-			_frames = new Vector.<PaintingInFrame>();
+//			var tri:Trident = new Trident( 500 );
+//			addChild3d( tri );
 
-			objectClickedSignal = new Signal();
+			_wallFrames = new Vector.<WallFrame>();
+			_wallFrameClickedSignal = new Signal();
 
-			_wall = new Mesh( new PlaneGeometry( 100000, 5000 ), new ColorMaterial( 0x00FF00 ) );
-			_wall.rotationX = -90;
-			_wall.visible = false;
-			_wall.z = WALL_Z;
-			addChild3d( _wall );
-
+			// Light that moves with camera.
+			// Affects paintings and their frames.
 			_cameraLight = new PointLight();
 			_cameraLight.ambient = 1;
-			_cameraLight.position = new Vector3D( 0, 500, 0 ); // Light will move in x.
+			_cameraLight.diffuse = 0.75;
+			_cameraLight.specular = 1;
+			_cameraLight.position = new Vector3D( 0, WALL_HEIGHT / 2, WALL_Z - PAINTING_DISTANCE_FROM_WALL - 250 ); // Light will move in x.
 			_sceneLightPicker = new StaticLightPicker( [ _cameraLight ] );
 			addChild3d( _cameraLight );
 
-			// Initialize cube texture to be shared by all glass reflections.
-			var bmd:BitmapData = Away3dTextureAssetsManager.getBitmapDataById( Away3dTextureAssetsManager.GallerySkyboxImage );
-			_bitmapCubeTexture = new BitmapCubeTexture( bmd, bmd, bmd, bmd, bmd, bmd );
+			var planeGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
+			planeGeometry.scaleUV( WALL_WIDTH / planeGeometry.width, 1 );
 
-			// Get frame model.
-			Away3dModelAssetsManager.getModelByIdAsync( Away3dModelAssetsManager.Frame1Model, onFrameModelReady );
+			// Wall.
+			var wallMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new WallBakedAsset() ) );
+			wallMaterial.repeat = true;
+			wallMaterial.smooth = true;
+			_wall = new Mesh( planeGeometry, wallMaterial );
+			_wall.scaleX = WALL_WIDTH / planeGeometry.width;
+			_wall.scaleZ = WALL_HEIGHT / planeGeometry.height;
+			_wall.rotationX = -90;
+			_wall.y = WALL_BASE_Y + WALL_HEIGHT / 2;
+			_wall.z = WALL_Z;
+			addChild3d( _wall );
 
-		}
-
-		private function onFrameModelReady( model:ObjectContainer3D ):void {
-
-			Cc.log( this, "'" + model.name + "' model ready, creating frames on wall." );
-
-			// Create painting.
-			var painting:Painting = new Painting( _sceneLightPicker );
-			var paintingWidth:Number = painting.width;
-			var paintingHeight:Number = painting.height;
-
-			// TODO: tidy up object creation, instance types, how types are taken in constructors, etc
-
-			// Create frame.
-			var frameMaterial:ColorMaterial = new ColorMaterial( 0xFDE910 );
-			frameMaterial.gloss = 100;
-			frameMaterial.specular = 0.35;
-			frameMaterial.ambient = 0.1;
-			frameMaterial.lightPicker = _sceneLightPicker;
-			var frame:Frame = new Frame( model.clone() as ObjectContainer3D );
-			frame.material = frameMaterial;
-			frame.fitToPaintingWidth( paintingWidth );
-
-			// Create glass.
-			if( Settings.USE_REFLECTIONS_ON_FRAMES ) {
-				var glass:Glass = new Glass( _sceneLightPicker, _bitmapCubeTexture );
-				Cc.log( this, "Using glass reflections: " + glass )
-			}
-
-			// Tests...
-			for( var i:uint = 0; i < 15; i++ ) {
-
-				// Create instances.
-				var frameInstance:Frame = frame.clone() as Frame;
-				var paintingInstance:ObjectContainer3D = painting.clone() as ObjectContainer3D;
-				var glassInstance:ObjectContainer3D = Settings.USE_REFLECTIONS_ON_FRAMES ? glass.clone() as ObjectContainer3D : null;
-				if( glassInstance ) {
-					glassInstance.scaleX = paintingWidth;
-					glassInstance.scaleY = paintingHeight;
-				}
-
-				// Create paintingInFrame.
-				var paintingInFrame:PaintingInFrame = new PaintingInFrame( frameInstance, paintingInstance, glassInstance );
-				paintingInFrame.scale( MathUtil.rand( 0.25, 0.5 ) );
-
-				// Position paintingInFrame.
-				if( _frames.length > 0 ) {
-					var previousFrame:PaintingInFrame = _frames[ _frames.length - 1 ];
-					paintingInFrame.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + paintingInFrame.width / 2;
-				}
-				paintingInFrame.y = PAINTINGS_Y;
-				paintingInFrame.z = WALL_Z - PAINTING_DISTANCE_FROM_WALL;
-
-				// Update scroller range and snapping.
-				_cameraController.addSnapPoint( paintingInFrame.x );
-
-				// Store and add to display tree.
-				_frames.push( paintingInFrame );
-				addChild3d( paintingInFrame );
-
-			}
+			// Floor.
+			var floorMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FloorBakedAsset() ) );
+			floorMaterial.repeat = true;
+			floorMaterial.smooth = true;
+			_floor = new Mesh( planeGeometry, floorMaterial );
+			_floor.scaleX = WALL_WIDTH / planeGeometry.width;
+			_floor.scaleZ = FLOOR_DEPTH / planeGeometry.height;
+			_floor.y = _wall.y - WALL_HEIGHT / 2 - 5; // Literal offsets kind of slide the floor under the wall
+			_floor.z = WALL_Z - FLOOR_DEPTH / 2 + 190;
+			addChild3d( _floor );
 
 		}
 
 		override protected function onStageAvailable():void {
 
+			// Initialize camera controller.
+			_camera.z = -2000;
 			_cameraController = new ScrollCameraController( _camera, _wall, stage );
 
 			super.onStageAvailable();
 		}
 
 		override protected function onUpdate():void {
-
 			_cameraController.update();
+			_cameraLight.x = _camera.x;
+		}
 
-			var dx:Number = _camera.x - _cameraLight.x;
-			_cameraLight.x += 0.075 * dx;
+		private function addWallFrame( wallFrame:WallFrame ):void {
+			if( _wallFrames.length > 0 ) {
+				var previousFrame:WallFrame = _wallFrames[ _wallFrames.length - 1 ];
+				wallFrame.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + wallFrame.width / 2;
+			}
+			wallFrame.y = PAINTINGS_Y;
+			wallFrame.z = WALL_Z - PAINTING_DISTANCE_FROM_WALL - wallFrame.depth / 2;
+			wallFrame.scale( PAINTINGS_SCALE );
+			_cameraController.addSnapPoint( wallFrame.x );
+			_wallFrames.push( wallFrame );
+			addChild3d( wallFrame );
+		}
 
+		// ---------------------------------------------------------------------
+		// IWallView interface implementation.
+		// ---------------------------------------------------------------------
+
+		public function loadDefaultHomeFrames():void {
+
+			var shadowMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FrameShadowAsset() ) );
+			shadowMaterial.smooth = true;
+			shadowMaterial.alpha = 0.85;
+			shadowMaterial.alphaBlending = true;
+			var shadow:Mesh = new Mesh( new PlaneGeometry( 512, 512 ), shadowMaterial );
+			shadow.rotationX = -90;
+
+
+
+			// -----------------------
+			// Logo frame.
+			// -----------------------
+
+			// Picture.
+			var logoPicture:Picture = new Picture( _sceneLightPicker );
+
+			// Frame.
+			var logoFrame:Frame = new Frame(
+					_sceneLightPicker,
+					FrameTextureManager.getFrameTextureById( FrameTextureType.FRAME_WHITE ),
+					FrameTextureManager.getFrameTextureDimensionsById( FrameTextureType.FRAME_WHITE ),
+					FrameTextureManager.getFrameContentAreaById( FrameTextureType.FRAME_WHITE )
+			);
+
+			// Wall frame.
+			var logoWallFrame:WallFrame = new WallFrame(
+					logoFrame,
+					logoPicture,
+					shadow.clone() as Mesh,
+					PAINTING_DISTANCE_FROM_WALL
+			);
+			addWallFrame( logoWallFrame );
+
+			// -----------------------
+			// Settings frame.
+			// -----------------------
+
+			// Picture.
+			var settingsPicture:Picture = new Picture( _sceneLightPicker );
+
+			// Frame.
+			var settingsFrame:Frame = new Frame(
+					_sceneLightPicker,
+					FrameTextureManager.getFrameTextureById( FrameTextureType.FRAME_WHITE ),
+					FrameTextureManager.getFrameTextureDimensionsById( FrameTextureType.FRAME_WHITE ),
+					FrameTextureManager.getFrameContentAreaById( FrameTextureType.FRAME_WHITE )
+			);
+
+			// Wall frame.
+			var settingsWallFrame:WallFrame = new WallFrame(
+					settingsFrame,
+					settingsPicture,
+					shadow.clone() as Mesh,
+					PAINTING_DISTANCE_FROM_WALL
+			);
+			addWallFrame( settingsWallFrame );
+
+			// -----------------------
+			// Dummy frame.
+			// -----------------------
+
+			// Picture.
+			var dummyPicture:Picture = new Picture( _sceneLightPicker );
+
+			// Frame.
+			var dummyFrame:Frame = new Frame(
+					_sceneLightPicker,
+					FrameTextureManager.getFrameTextureById( FrameTextureType.FRAME_WHITE ),
+					FrameTextureManager.getFrameTextureDimensionsById( FrameTextureType.FRAME_WHITE ),
+					FrameTextureManager.getFrameContentAreaById( FrameTextureType.FRAME_WHITE )
+			);
+
+			// Wall frame.
+			var dummyWallFrame:WallFrame = new WallFrame(
+					dummyFrame,
+					dummyPicture,
+					shadow.clone() as Mesh,
+					PAINTING_DISTANCE_FROM_WALL
+			);
+			addWallFrame( dummyWallFrame );
+
+		}
+
+		public function loadDefaultUserFrames():void {
+			// TODO
+		}
+
+		public function loadUserFrames():void {
+			// TODO
+		}
+
+		public function clearFrames():void {
+			var len:uint = _wallFrames.length;
+			for( var i:uint = 0; i < len; ++i ) {
+				var wallFrame:WallFrame = _wallFrames[ i ];
+				removeChild3d( wallFrame );
+				// TODO: add destroy method to wallFrame?
+			}
+		}
+
+		public function get wallFrameClickedSignal():Signal {
+			return _wallFrameClickedSignal;
 		}
 	}
 }

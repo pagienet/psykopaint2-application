@@ -3,12 +3,10 @@ package net.psykosoft.psykopaint2.util
 
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
-	import flash.geom.Point;
 
 	public class TextureUtil
 	{
 		public static function ensurePowerOf2( bitmapData:BitmapData ):BitmapData {
-
 
 			var origWidth:int = bitmapData.width;
 			var origHeight:int = bitmapData.height;
@@ -29,7 +27,6 @@ package net.psykosoft.psykopaint2.util
 			}
 
 			return bitmapData;
-
 		}
 
 		private static function getNextPowerOfTwo( number:int ):int {

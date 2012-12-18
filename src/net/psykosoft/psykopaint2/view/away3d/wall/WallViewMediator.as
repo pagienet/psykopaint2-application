@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 	public class WallViewMediator extends Mediator
 	{
 		[Inject]
-		public var view:WallView;
+		public var view:IWallView;
 
 		[Inject]
 		public var notifyStateChangedSignal:NotifyStateChangedSignal;
@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			notifyStateChangedSignal.add( onApplicationStateChanged );
 
 			// From view.
-			view.objectClickedSignal.add( onViewObjectClicked );
+			view.wallFrameClickedSignal.add( onViewObjectClicked );
 
 		}
 
@@ -43,8 +43,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private function onApplicationStateChanged( newState:StateVO ):void {
 
 			if( newState.name == States.HOME_SCREEN ) {
-				view.enable();
 				Cc.log( this, "enabled" );
+				view.clearFrames();
+				view.loadDefaultHomeFrames();
+				view.enable();
 			}
 			else {
 				view.disable();

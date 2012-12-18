@@ -48,11 +48,6 @@ package net.psykosoft.psykopaint2.config
 		public static const SHOW_STATS:Boolean = true;
 
 		/*
-		* Shows 3D coordinate axis at key locations on 3D scenes.
-		* */
-		public static const DEBUG_SHOW_3D_TRIDENTS:Boolean = false;
-
-		/*
 		* Replaces the app's official skin with a lighter one for testing.
 		* */
 		public static const USE_DEBUG_THEME:Boolean = true;
@@ -65,7 +60,7 @@ package net.psykosoft.psykopaint2.config
 
 		/*
 		* Enables reflections on frames on the wall scene ( frame glass effect ).
-		* Heavy performance const. TODO: Optimize or evaluate removal.
+		* Heavy performance const. TODO: Find a better performing solution.
 		* */
 		public static const USE_REFLECTIONS_ON_FRAMES:Boolean = false;
 
@@ -74,13 +69,6 @@ package net.psykosoft.psykopaint2.config
 		* the wall scene.
 		* */
 		public static const USE_COMPLEX_ILLUMINATION_ON_PAINTINGS:Boolean = true;
-
-		/*
-		* Each picture frame in the wall scene has its own light
-		* that affects only itself.
-		* // TODO: currently disabled, setting has no effect.
-		* */
-		public static const USE_INDIVIDUAL_LIGHTS_ON_FRAMES:Boolean = false;
 
 		// ---------------------------------------------------------------------
 		// Vars ( these are not settings actually, do not set ).

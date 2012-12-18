@@ -44,11 +44,18 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		private var _firstSnapPoint:Number;
 		private var _lastSnapPoint:Number;
 
+		private const FRICTION_FACTOR:Number = 0.95;
+		private const AVERAGE_SPEED_SAMPLES:uint = 6;
+		private const MINIMUM_THROWING_SPEED:Number = 100;
+		private const EDGE_STIFFNESS_ON_DRAG:Number = 0.01;
+		private const FRICTION_FACTOR_ON_EDGE_CONTAINMENT:Number = FRICTION_FACTOR * 0.5;
+		private const EDGE_CONTAINMENT_SPEED_LIMIT:Number = 0.5;
+		private const EDGE_CONTAINMENT_RETURN_TWEEN_TIME:Number = 1;
+
 		public function ScrollCameraController( camera:Camera3D, wall:Mesh, stage:Stage ) {
 			super();
 
 			_camera = camera;
-			_camera.x = -500;
 
 			_wall = wall;
 
@@ -151,8 +158,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// Update.
 		// ---------------------------------------------------------------------
 
-		private const FRICTION_FACTOR:Number = 0.9;
-
 		public function update():void {
 
 			if( _onTween ) {
@@ -197,9 +202,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// ---------------------------------------------------------------------
 		// Throwing.
 		// ---------------------------------------------------------------------
-
-		private const AVERAGE_SPEED_SAMPLES:uint = 6;
-		private const MINIMUM_THROWING_SPEED:Number = 100;
 
 		private function throwScroller():void {
 
@@ -291,10 +293,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// Edge containment.
 		// ---------------------------------------------------------------------
 
-		private const EDGE_STIFFNESS_ON_DRAG:Number = 0.01;
-		private const FRICTION_FACTOR_ON_EDGE_CONTAINMENT:Number = FRICTION_FACTOR * 0.5;
-		private const EDGE_CONTAINMENT_SPEED_LIMIT:Number = 0.5;
-
 		/*
 		* If an edge is surpassed, a stronger friction is applied ( FRICTION_FACTOR_ON_EDGE_CONTAINMENT ),
 		* and when the speed reaches a low enough level ( EDGE_CONTAINMENT_SPEED_LIMIT )
@@ -333,8 +331,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// ---------------------------------------------------------------------
 		// Tweening.
 		// ---------------------------------------------------------------------
-
-		private const EDGE_CONTAINMENT_RETURN_TWEEN_TIME:Number = 1;
 
 		private function triggerEdgeTween():void {
 			_speed = 0;

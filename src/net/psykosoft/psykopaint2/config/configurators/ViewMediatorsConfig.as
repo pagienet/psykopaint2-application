@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.config.configurators
 {
 
-	import net.psykosoft.psykopaint2.view.away3d.wall.WallView;
+	import net.psykosoft.psykopaint2.view.away3d.wall.IWallView;
 	import net.psykosoft.psykopaint2.view.away3d.wall.WallViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationViewMediator;
@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.config.configurators
 			mediatorMap.map( HomeScreenSubNavigationView ).toMediator( HomeScreenSubNavigationViewMediator );
 
 			// Map 3d views.
-			mediatorMap.map( WallView ).toMediator( WallViewMediator );
+			mediatorMap.map( IWallView ).toMediator( WallViewMediator );
 
 		}
 	}

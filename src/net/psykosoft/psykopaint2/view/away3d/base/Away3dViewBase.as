@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.view.away3d.base
 
 	import net.psykosoft.psykopaint2.util.DisplayContextManager;
 
-	public class Away3dViewBase extends Sprite
+	public class Away3dViewBase extends Sprite implements IView
 	{
 		private var _view:View3D;
 		private var _scene:ObjectContainer3D;
@@ -59,6 +59,20 @@ package net.psykosoft.psykopaint2.view.away3d.base
 			// Override.
 		}
 
+		private function onStageResize( event:Event ):void {
+			onLayout();
+		}
+
+		private function onEnterFrame( event:Event ):void {
+			if( _enabled ) {
+				onUpdate();
+			}
+		}
+
+		// ---------------------------------------------------------------------
+		// IView interface implementation.
+		// ---------------------------------------------------------------------
+
 		public function enable():void {
 			if( _enabled ) return;
 			_view.scene.addChild( _scene );
@@ -73,14 +87,8 @@ package net.psykosoft.psykopaint2.view.away3d.base
 			_enabled = false;
 		}
 
-		private function onStageResize( event:Event ):void {
-			onLayout();
-		}
-
-		private function onEnterFrame( event:Event ):void {
-			if( _enabled ) {
-				onUpdate();
-			}
+		public function destroy():void {
+			// TODO
 		}
 	}
 }

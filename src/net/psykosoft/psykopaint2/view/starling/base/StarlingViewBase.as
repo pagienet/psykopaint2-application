@@ -1,11 +1,13 @@
 package net.psykosoft.psykopaint2.view.starling.base
 {
 
+	import net.psykosoft.psykopaint2.view.away3d.base.IView;
+
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.ResizeEvent;
 
-	public class StarlingViewBase extends Sprite
+	public class StarlingViewBase extends Sprite implements IView
 	{
 		private var _enabled:Boolean = true;
 
@@ -39,6 +41,20 @@ package net.psykosoft.psykopaint2.view.starling.base
 			onLayout();
 		}
 
+		private function onStageResize( event:ResizeEvent ):void {
+			onLayout();
+		}
+
+		private function onEnterFrame( event:Event ):void {
+			if( _enabled ) {
+				onUpdate();
+			}
+		}
+
+		// ---------------------------------------------------------------------
+		// IView interface implementation.
+		// ---------------------------------------------------------------------
+
 		public function enable():void {
 			if( _enabled ) return;
 			visible = true;
@@ -51,14 +67,8 @@ package net.psykosoft.psykopaint2.view.starling.base
 			_enabled = false;
 		}
 
-		private function onStageResize( event:ResizeEvent ):void {
-			onLayout();
-		}
-
-		private function onEnterFrame( event:Event ):void {
-			if( _enabled ) {
-				onUpdate();
-			}
+		public function destroy():void {
+			// TODO
 		}
 	}
 }
