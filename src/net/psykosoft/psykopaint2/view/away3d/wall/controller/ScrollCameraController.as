@@ -44,13 +44,13 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		private var _firstSnapPoint:Number;
 		private var _lastSnapPoint:Number;
 
-		private const FRICTION_FACTOR:Number = 0.95;
+		private const FRICTION_FACTOR:Number = 0.9;
 		private const AVERAGE_SPEED_SAMPLES:uint = 6;
-		private const MINIMUM_THROWING_SPEED:Number = 100;
+		private const MINIMUM_THROWING_SPEED:Number = 200;
 		private const EDGE_STIFFNESS_ON_DRAG:Number = 0.01;
 		private const FRICTION_FACTOR_ON_EDGE_CONTAINMENT:Number = FRICTION_FACTOR * 0.5;
 		private const EDGE_CONTAINMENT_SPEED_LIMIT:Number = 0.5;
-		private const EDGE_CONTAINMENT_RETURN_TWEEN_TIME:Number = 1;
+		private const EDGE_CONTAINMENT_RETURN_TWEEN_TIME:Number = 2;
 
 		public function ScrollCameraController( camera:Camera3D, wall:Mesh, stage:Stage ) {
 			super();

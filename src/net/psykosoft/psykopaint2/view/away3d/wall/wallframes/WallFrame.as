@@ -27,13 +27,13 @@ package net.psykosoft.psykopaint2.view.away3d.wall.wallframes
 
 			// Painting.
 			painting.z = -_frame.depth / 2 - 1;
-//			addChild( painting );
+			addChild( painting );
 
 			// Shadow.
-			var shadowScaleFactor:Number = 1.075;
-			shadow.scaleX = shadowScaleFactor * _frame.width / PlaneGeometry( shadow.geometry ).width;
-			shadow.scaleZ = shadowScaleFactor * _frame.height / PlaneGeometry( shadow.geometry ).height;
-			shadow.z = _frame.depth / 2 + shadowDistance - 1;
+			shadow.scaleX = 1.20 * _frame.width / PlaneGeometry( shadow.geometry ).width;
+			shadow.scaleZ = 1.25 * _frame.height / PlaneGeometry( shadow.geometry ).height;
+			shadow.z = _frame.depth / 2 + shadowDistance - 10;
+			shadow.y = -65;
 			addChild( shadow );
 
 		}

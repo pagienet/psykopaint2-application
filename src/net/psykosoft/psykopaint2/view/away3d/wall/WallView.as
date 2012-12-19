@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 	import away3d.entities.Mesh;
 	import away3d.lights.PointLight;
-	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
@@ -17,7 +16,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.Picture;
 	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.WallFrame;
 	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.frames.FrameTextureManager;
-	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.frames.FrameTextureType;
 
 	import org.osflash.signals.Signal;
 
@@ -28,14 +26,14 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		// -----------------------
 		// Wall.
 		// -----------------------
-		[Embed(source="../../../../../../../assets/images/textures/wall/cement/cement-baked.jpg")]
-		private var WallBakedAsset:Class;
+		[Embed(source="../../../../../../../assets/images/textures/wall/metal3.jpg")]
+		private var WallAsset:Class;
 
 		// -----------------------
 		// Floor.
 		// -----------------------
-		[Embed(source="../../../../../../../assets/images/textures/floor/wood/wood-baked.jpg")]
-		private var FloorBakedAsset:Class;
+		[Embed(source="../../../../../../../assets/images/textures/floor/planks.jpg")]
+		private var FloorAsset:Class;
 
 		// -----------------------
 		// Shadow decal.
@@ -53,9 +51,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		private const FRAME_GAP_X:Number = 1000;
 
-		private const PAINTINGS_Y:Number = 500;
-		private const PAINTINGS_SCALE:Number = 0.9;
-		private const PAINTING_DISTANCE_FROM_WALL:Number = 5;
+		private const PAINTINGS_Y:Number = 400;
+		private const PAINTINGS_SCALE:Number = 1.25;
+		private const PAINTING_DISTANCE_FROM_WALL:Number = 2;
 
 		private const WALL_WIDTH:Number = 100000;
 		private const WALL_HEIGHT:Number = 2000;
@@ -78,34 +76,36 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Affects paintings and their frames.
 			_cameraLight = new PointLight();
 			_cameraLight.ambient = 1;
-			_cameraLight.diffuse = 0.75;
+			_cameraLight.diffuse = 1;
 			_cameraLight.specular = 1;
-			_cameraLight.position = new Vector3D( 0, WALL_HEIGHT / 2, WALL_Z - PAINTING_DISTANCE_FROM_WALL - 250 ); // Light will move in x.
+			_cameraLight.color = 0xFFFFFF;
+			_cameraLight.position = new Vector3D( 0, 1024, WALL_Z - PAINTING_DISTANCE_FROM_WALL - 100 ); // Light will move in x.
 			_sceneLightPicker = new StaticLightPicker( [ _cameraLight ] );
 			addChild3d( _cameraLight );
 
-			var planeGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
-			planeGeometry.scaleUV( WALL_WIDTH / planeGeometry.width, 1 );
-
 			// Wall.
-			var wallMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new WallBakedAsset() ) );
+			var wallGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
+			wallGeometry.scaleUV( WALL_WIDTH / wallGeometry.width, 2 );
+			var wallMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new WallAsset() ) );
 			wallMaterial.repeat = true;
 			wallMaterial.smooth = true;
-			_wall = new Mesh( planeGeometry, wallMaterial );
-			_wall.scaleX = WALL_WIDTH / planeGeometry.width;
-			_wall.scaleZ = WALL_HEIGHT / planeGeometry.height;
+			_wall = new Mesh( wallGeometry, wallMaterial );
+			_wall.scaleX = WALL_WIDTH / wallGeometry.width;
+			_wall.scaleZ = WALL_HEIGHT / wallGeometry.height;
 			_wall.rotationX = -90;
 			_wall.y = WALL_BASE_Y + WALL_HEIGHT / 2;
 			_wall.z = WALL_Z;
 			addChild3d( _wall );
 
 			// Floor.
-			var floorMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FloorBakedAsset() ) );
+			var floorGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
+			floorGeometry.scaleUV( WALL_WIDTH / floorGeometry.width, 1 );
+			var floorMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FloorAsset() ) );
 			floorMaterial.repeat = true;
 			floorMaterial.smooth = true;
-			_floor = new Mesh( planeGeometry, floorMaterial );
-			_floor.scaleX = WALL_WIDTH / planeGeometry.width;
-			_floor.scaleZ = FLOOR_DEPTH / planeGeometry.height;
+			_floor = new Mesh( floorGeometry, floorMaterial );
+			_floor.scaleX = WALL_WIDTH / floorGeometry.width;
+			_floor.scaleZ = FLOOR_DEPTH / floorGeometry.height;
 			_floor.y = _wall.y - WALL_HEIGHT / 2 - 5; // Literal offsets kind of slide the floor under the wall
 			_floor.z = WALL_Z - FLOOR_DEPTH / 2 + 190;
 			addChild3d( _floor );
@@ -115,7 +115,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		override protected function onStageAvailable():void {
 
 			// Initialize camera controller.
-			_camera.z = -2000;
+			_camera.z = -1750;
 			_cameraController = new ScrollCameraController( _camera, _wall, stage );
 
 			super.onStageAvailable();
@@ -147,84 +147,38 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			var shadowMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FrameShadowAsset() ) );
 			shadowMaterial.smooth = true;
-			shadowMaterial.alpha = 0.85;
+			shadowMaterial.alpha = 0.9;
 			shadowMaterial.alphaBlending = true;
 			var shadow:Mesh = new Mesh( new PlaneGeometry( 512, 512 ), shadowMaterial );
 			shadow.rotationX = -90;
 
+			// Add a few test frames.
+			var frameIds:Vector.<String> = FrameTextureManager.availableFrameTypes;
+			for( var i:uint = 0; i < frameIds.length; i++ ) {
 
+				// Picture.
+				var picture:Picture = new Picture( _sceneLightPicker );
 
-			// -----------------------
-			// Logo frame.
-			// -----------------------
+				// Frame.
+				var frameId:String = frameIds[ i ];
+				var frameColor:uint = FrameTextureManager.getColorForFrameId( frameId );
+				var frame:Frame = new Frame(
+						_sceneLightPicker,
+						frameColor,
+						FrameTextureManager.getFrameTextureById( frameId ),
+						FrameTextureManager.getFrameDescriptionById( frameId )
+				);
 
-			// Picture.
-			var logoPicture:Picture = new Picture( _sceneLightPicker );
+				// Wall frame.
+				var wallFrame:WallFrame = new WallFrame(
+						frame,
+						picture,
+						shadow.clone() as Mesh,
+						PAINTING_DISTANCE_FROM_WALL
+				);
+				addWallFrame( wallFrame );
 
-			// Frame.
-			var logoFrame:Frame = new Frame(
-					_sceneLightPicker,
-					FrameTextureManager.getFrameTextureById( FrameTextureType.FRAME_WHITE ),
-					FrameTextureManager.getFrameTextureDimensionsById( FrameTextureType.FRAME_WHITE ),
-					FrameTextureManager.getFrameContentAreaById( FrameTextureType.FRAME_WHITE )
-			);
-
-			// Wall frame.
-			var logoWallFrame:WallFrame = new WallFrame(
-					logoFrame,
-					logoPicture,
-					shadow.clone() as Mesh,
-					PAINTING_DISTANCE_FROM_WALL
-			);
-			addWallFrame( logoWallFrame );
-
-			// -----------------------
-			// Settings frame.
-			// -----------------------
-
-			// Picture.
-			var settingsPicture:Picture = new Picture( _sceneLightPicker );
-
-			// Frame.
-			var settingsFrame:Frame = new Frame(
-					_sceneLightPicker,
-					FrameTextureManager.getFrameTextureById( FrameTextureType.FRAME_WHITE ),
-					FrameTextureManager.getFrameTextureDimensionsById( FrameTextureType.FRAME_WHITE ),
-					FrameTextureManager.getFrameContentAreaById( FrameTextureType.FRAME_WHITE )
-			);
-
-			// Wall frame.
-			var settingsWallFrame:WallFrame = new WallFrame(
-					settingsFrame,
-					settingsPicture,
-					shadow.clone() as Mesh,
-					PAINTING_DISTANCE_FROM_WALL
-			);
-			addWallFrame( settingsWallFrame );
-
-			// -----------------------
-			// Dummy frame.
-			// -----------------------
-
-			// Picture.
-			var dummyPicture:Picture = new Picture( _sceneLightPicker );
-
-			// Frame.
-			var dummyFrame:Frame = new Frame(
-					_sceneLightPicker,
-					FrameTextureManager.getFrameTextureById( FrameTextureType.FRAME_WHITE ),
-					FrameTextureManager.getFrameTextureDimensionsById( FrameTextureType.FRAME_WHITE ),
-					FrameTextureManager.getFrameContentAreaById( FrameTextureType.FRAME_WHITE )
-			);
-
-			// Wall frame.
-			var dummyWallFrame:WallFrame = new WallFrame(
-					dummyFrame,
-					dummyPicture,
-					shadow.clone() as Mesh,
-					PAINTING_DISTANCE_FROM_WALL
-			);
-			addWallFrame( dummyWallFrame );
+			}
 
 		}
 

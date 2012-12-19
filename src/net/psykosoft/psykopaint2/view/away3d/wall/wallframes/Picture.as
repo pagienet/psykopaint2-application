@@ -17,14 +17,11 @@ package net.psykosoft.psykopaint2.view.away3d.wall.wallframes
 	public class Picture extends ObjectContainer3D
 	{
 		// Painting diffuse texture.
-		[Embed(source="../../../../../../../../assets/images/paintings/painting0/painting0.jpg")]
+		[Embed(source="../../../../../../../../assets/images/paintings/painting4/painting4.jpg")]
 		private var PaintingDiffuseAsset:Class;
 		// Painting normal texture.
-		[Embed(source="../../../../../../../../assets/images/paintings/painting0/painting0-norm.png")]
+		[Embed(source="../../../../../../../../assets/images/paintings/painting4/painting4_normals.png")]
 		private var PaintingNormalAsset:Class;
-		// Painting specular texture.
-		[Embed(source="../../../../../../../../assets/images/paintings/painting0/painting0-spec.png")]
-		private var PaintingSpecularAsset:Class;
 
 		private var _width:Number;
 		private var _height:Number;
@@ -38,27 +35,24 @@ package net.psykosoft.psykopaint2.view.away3d.wall.wallframes
 
 			var originalDiffuseBitmapData:BitmapData = new PaintingDiffuseAsset().bitmapData;
 			var originalNormalBitmapData:BitmapData = new PaintingNormalAsset().bitmapData;
-			var originalSpecularBitmapData:BitmapData = new PaintingSpecularAsset().bitmapData;
 
 			_width = originalDiffuseBitmapData.width;
 			_height = originalDiffuseBitmapData.height;
 
 			var diffuseBitmapData:BitmapData = TextureUtil.ensurePowerOf2( originalDiffuseBitmapData );
 			var normalBitmapData:BitmapData = TextureUtil.ensurePowerOf2( originalNormalBitmapData );
-			var specularBitmapData:BitmapData = TextureUtil.ensurePowerOf2( originalSpecularBitmapData );
 
 			var diffuseTexture:BitmapTexture = new BitmapTexture( diffuseBitmapData );
 			var normalTexture:BitmapTexture = new BitmapTexture( normalBitmapData );
-			var specularTexture:BitmapTexture = new BitmapTexture( specularBitmapData );
 
 			var material:TextureMaterial = new TextureMaterial( diffuseTexture );
+			material.smooth = true;
 			if( originalDiffuseBitmapData.width != diffuseBitmapData.width || originalDiffuseBitmapData.height != diffuseBitmapData.height ) {
 				material.alphaBlending = true;
 			}
 			material.lightPicker = lightPicker;
 			if( Settings.USE_COMPLEX_ILLUMINATION_ON_PAINTINGS ) {
 				material.normalMap = normalTexture;
-				material.specularMap = specularTexture;
 			}
 			material.gloss = 10;
 			material.ambient = 0.75;

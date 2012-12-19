@@ -11,28 +11,31 @@ package net.psykosoft.psykopaint2.view.away3d.wall.wallframes
 	import away3d.textures.BitmapTexture;
 
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
+
+	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.frames.FrameTextureDescriptorVO;
 
 	public class Frame extends ObjectContainer3D
 	{
 		private var _edgeMesh:Mesh;
 		private var _frontMesh:Mesh;
 		private var _lightPicker:StaticLightPicker;
-		private var _frontTexture:BitmapTexture;
 		private var _paintingDimensions:Point;
-		private var _frameTextureDimensions:Point;
-		private var _frameTextureContentArea:Rectangle;
+		private var _frontTexture:BitmapTexture;
+		private var _frontTextureDescription:FrameTextureDescriptorVO;
+		private var _frameWidth:Number;
+		private var _frameHeight:Number;
+		private var _frameColor:uint;
 
 		private const GEOMETRY_SIZE:uint = 1024;
-		private const FRAME_DEPTH:Number = 25;
+		private const FRAME_DEPTH:Number = 50;
 
-		public function Frame( lightPicker:StaticLightPicker, frontTexture:BitmapTexture, frameTextureDimensions:Point, frameTextureContentArea:Rectangle ) {
+		public function Frame( lightPicker:StaticLightPicker, frameColor:uint, frontTexture:BitmapTexture, frontTextureDescription:FrameTextureDescriptorVO ) {
 			super();
 
 			_lightPicker = lightPicker;
+			_frameColor = frameColor;
 			_frontTexture = frontTexture;
-			_frameTextureDimensions = frameTextureDimensions;
-			_frameTextureContentArea = frameTextureContentArea;
+			_frontTextureDescription = frontTextureDescription;
 
 			initializeEdge();
 			initializeFront();
@@ -40,10 +43,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall.wallframes
 
 		private function initializeEdge():void {
 
-			var edgeMaterial:ColorMaterial = new ColorMaterial( 0xFF0000 );
-			edgeMaterial.ambient = 0.1;
-			edgeMaterial.specular = 0.05;
-			edgeMaterial.gloss = 1;
+			var edgeMaterial:ColorMaterial = new ColorMaterial( _frameColor );
+			edgeMaterial.ambient = 0.7;
+			edgeMaterial.specular = 0;
+			edgeMaterial.gloss = 100;
 			edgeMaterial.lightPicker = _lightPicker;
 
 			_edgeMesh = new Mesh( new CubeGeometry( GEOMETRY_SIZE, GEOMETRY_SIZE, FRAME_DEPTH ), edgeMaterial );
@@ -54,14 +57,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall.wallframes
 		private function initializeFront():void {
 
 			var frontMaterial:TextureMaterial = new TextureMaterial( _frontTexture );
-//			frontMaterial.alphaBlending = true;
-			frontMaterial.ambient = 0.1;
-			frontMaterial.specular = 0.05;
-			frontMaterial.gloss = 1;
-			frontMaterial.lightPicker = _lightPicker;
+			frontMaterial.smooth = true;
+			frontMaterial.alphaBlending = true;
 
 			_frontMesh = new Mesh( new PlaneGeometry( GEOMETRY_SIZE, GEOMETRY_SIZE ), frontMaterial );
-			_frontMesh.z = -FRAME_DEPTH / 2 - 200;
 			_frontMesh.rotationX = -90;
 			addChild( _frontMesh );
 
@@ -70,29 +69,68 @@ package net.psykosoft.psykopaint2.view.away3d.wall.wallframes
 		// TODO: give frames the ability to adjust to image, to adjust to image with a margin and to keep or not keep aspect ratio.
 		public function fitToPainting( paintingWidth:Number, paintingHeight:Number ):void {
 			trace( this, " - fitting frame to painting of dimensions: " + paintingWidth + ", " + paintingWidth );
+
 			_paintingDimensions = new Point( paintingWidth, paintingHeight );
-			fitFront();
-			fitEdge();
+
+			trace( this, "fitFront() --------------------------" );
+
+			trace( "frame descriptor: " + _frontTextureDescription );
+			trace( "painting content dimensions: " + _paintingDimensions.x + ", " + _paintingDimensions.y );
+
+			// -----------------------
+			// Fit front geometry.
+			// -----------------------
+
+			var ratio:Number;
+			var tolerance:Number = 1.01;
+
+			// Determine portrait or landscape nature of painting.
+			var landscape:Boolean = _paintingDimensions.x > _paintingDimensions.y;
+			if( landscape ) {
+
+				trace( "fitting landscape painting" );
+
+				// The painting's width needs to fit into the frame's painting area width.
+				// Compare their sizes.
+				ratio = tolerance * _paintingDimensions.x / _frontTextureDescription.paintingAreaWidth;
+				trace( "image width to painting area width ratio: " + ratio );
+
+				// Calculate the frame's altered image dimensions.
+				_frameWidth = _frontTextureDescription.imageWidth * ratio;
+				_frameHeight = _frontTextureDescription.imageHeight * ratio;
+
+				// Use ratio to calculate the frame texture's width.
+				var alteredTextureWidth:Number = _frontTextureDescription.textureWidth * ratio;
+				var alteredTextureHeight:Number = _frontTextureDescription.textureHeight * ratio;
+				trace( "frame texture width should be: " + alteredTextureWidth + ", " + alteredTextureHeight );
+
+				// Fit front geometry to front texture dimensions.
+				scaleFrontToFit( alteredTextureWidth, alteredTextureHeight );
+
+			}
+			else {
+				trace( "fitting portrait painting" );
+				// TODO.
+				throw new Error( "Frame.as cannot handle portrait paintings yet." );
+			}
+
+			// -----------------------
+			// Fit edge geometry.
+			// -----------------------
+
+			scaleEdgeToFit( _frameWidth, _frameHeight );
 		}
 
-		private function fitFront():void {
-			var pantingLargestSide:Number = Math.max( _paintingDimensions.x, _paintingDimensions.y );
-			// frame content area must accommodate this side
-			_frontMesh.scaleX = ( pantingLargestSide / _frameTextureContentArea.x ) / GEOMETRY_SIZE;
-			_frontMesh.scaleZ = _frontMesh.scaleX;
+		private function scaleFrontToFit( width:Number, height:Number ):void {
+			_frontMesh.scaleX = width / GEOMETRY_SIZE;
+			_frontMesh.scaleZ = height / GEOMETRY_SIZE;
 		}
 
-		private function fitEdge():void {
-
-			// Identify original frame dimensions.
-			var originalFrameWidth:Number = _edgeMesh.maxX - _edgeMesh.minX;
-			var originalFrameHeight:Number = _edgeMesh.maxY - _edgeMesh.minY;
-
-			// Scale frame edge.
-			var marginFactor:Number = 1.2;
-			_edgeMesh.scaleX = marginFactor * _paintingDimensions.x / originalFrameWidth;
-			_edgeMesh.scaleY = marginFactor * _paintingDimensions.y / originalFrameHeight;
+		private function scaleEdgeToFit( width:Number, height:Number ):void {
+			_edgeMesh.scaleX = width / GEOMETRY_SIZE;
+			_edgeMesh.scaleY = height / GEOMETRY_SIZE;
 			_edgeMesh.scaleZ = _edgeMesh.scaleX;
+			_frontMesh.z = -_edgeMesh.scaleZ * FRAME_DEPTH / 2 - 2;
 		}
 
 		public function get width():Number {
