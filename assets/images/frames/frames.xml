@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:8cb682cd3c96d99895b5f4d6a43e5821$ -->
+<TextureAtlas imagePath="frames.png">
+    <SubTexture name="blueFrame_b" x="1" y="171" width="352" height="58"/>
+    <SubTexture name="blueFrame_bl" x="355" y="172" width="69" height="58"/>
+    <SubTexture name="blueFrame_br" x="426" y="173" width="70" height="58"/>
+    <SubTexture name="blueFrame_l" x="486" y="361" width="262" height="69"/>
+    <SubTexture name="blueFrame_r" x="750" y="365" width="262" height="70"/>
+    <SubTexture name="blueFrame_t" x="1" y="112" width="352" height="57"/>
+    <SubTexture name="blueFrame_tl" x="503" y="55" width="69" height="57"/>
+    <SubTexture name="blueFrame_tr" x="355" y="113" width="70" height="57"/>
+    <SubTexture name="dangerFrame_b" x="1" y="351" width="483" height="63"/>
+    <SubTexture name="dangerFrame_bl" x="860" y="233" width="64" height="63"/>
+    <SubTexture name="dangerFrame_br" x="926" y="233" width="60" height="63"/>
+    <SubTexture name="dangerFrame_l" x="515" y="295" width="343" height="64"/>
+    <SubTexture name="dangerFrame_r" x="515" y="233" width="343" height="60"/>
+    <SubTexture name="dangerFrame_t" x="1" y="416" width="483" height="65"/>
+    <SubTexture name="dangerFrame_tl" x="860" y="298" width="64" height="65"/>
+    <SubTexture name="dangerFrame_tr" x="926" y="298" width="60" height="65"/>
+    <SubTexture name="goldFrame_b" x="1" y="292" width="512" height="57"/>
+    <SubTexture name="goldFrame_bl" x="427" y="113" width="55" height="57"/>
+    <SubTexture name="goldFrame_br" x="574" y="55" width="55" height="57"/>
+    <SubTexture name="goldFrame_l" x="1" y="55" width="386" height="55"/>
+    <SubTexture name="goldFrame_r" x="632" y="1" width="386" height="55"/>
+    <SubTexture name="goldFrame_t" x="498" y="175" width="512" height="56"/>
+    <SubTexture name="goldFrame_tl" x="446" y="55" width="55" height="56"/>
+    <SubTexture name="goldFrame_tr" x="389" y="55" width="55" height="56"/>
+    <SubTexture name="whiteFrame_b" x="1" y="233" width="512" height="57"/>
+    <SubTexture name="whiteFrame_bl" x="484" y="114" width="56" height="57"/>
+    <SubTexture name="whiteFrame_br" x="542" y="114" width="57" height="57"/>
+    <SubTexture name="whiteFrame_l" x="631" y="58" width="378" height="56"/>
+    <SubTexture name="whiteFrame_r" x="601" y="116" width="378" height="57"/>
+    <SubTexture name="whiteFrame_t" x="1" y="1" width="512" height="52"/>
+    <SubTexture name="whiteFrame_tl" x="515" y="1" width="56" height="52"/>
+    <SubTexture name="whiteFrame_tr" x="573" y="1" width="57" height="52"/>
+</TextureAtlas>

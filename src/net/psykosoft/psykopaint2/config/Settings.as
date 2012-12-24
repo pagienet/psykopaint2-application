@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.config
 		/*
 		* Stage3D alias quality both for Starling and Away3D.
 		* */
-		public static const ANTI_ALIAS:uint = 8;
+		public static const ANTI_ALIAS:uint = 1;
 
 		// ---------------------------------------------------------------------
 		// Debugging options.

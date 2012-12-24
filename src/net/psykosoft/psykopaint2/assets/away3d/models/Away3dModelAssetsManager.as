@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.assets
+package net.psykosoft.psykopaint2.assets.away3d.models
 {
 
 	import away3d.containers.ObjectContainer3D;
@@ -16,9 +16,9 @@ package net.psykosoft.psykopaint2.assets
 	public class Away3dModelAssetsManager
 	{
 		// Frame models.
-		[Embed(source="../../../../../assets/models/frames/frame0/frame0.obj", mimeType="application/octet-stream")]
+		[Embed(source="../../../../../../../assets/models/frames/frame0/frame0.obj", mimeType="application/octet-stream")]
 		private static var Frame0ModelAsset:Class;
-		[Embed(source="../../../../../assets/models/frames/frame1/frame1.awd", mimeType="application/octet-stream")]
+		[Embed(source="../../../../../../../assets/models/frames/frame1/frame1.awd", mimeType="application/octet-stream")]
 		private static var Frame1ModelAsset:Class;
 
 		// Available assets ( must be reported on the constructor ).

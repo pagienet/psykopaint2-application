@@ -46,6 +46,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 				Cc.log( this, "enabled" );
 				view.clearFrames();
 				view.loadDefaultHomeFrames();
+				view.loadUserFrames();
 				view.enable();
 			}
 			else {

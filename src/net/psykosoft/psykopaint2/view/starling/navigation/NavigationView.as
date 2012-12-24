@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 
 	import feathers.controls.Button;
 
-	import net.psykosoft.psykopaint2.assets.StarlingTextureAssetsManager;
+	import net.psykosoft.psykopaint2.assets.starling.StarlingTextureAssetsManager;
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base.SubNavigationViewBase;

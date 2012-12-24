@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 	public interface IWallView extends IView
 	{
 		function loadDefaultHomeFrames():void;
-		function loadDefaultUserFrames():void;
 		function loadUserFrames():void;
 		function clearFrames():void;
 		function get wallFrameClickedSignal():Signal;

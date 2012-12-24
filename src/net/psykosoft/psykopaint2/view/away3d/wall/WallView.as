@@ -6,16 +6,22 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
+	import away3d.textures.BitmapTexture;
 	import away3d.utils.Cast;
 
 	import flash.geom.Vector3D;
 
+	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dAtlasTextureDescriptorVO;
+
+	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dFrameTextureType;
+
+	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureAssetsManager;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureInfoVO;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureType;
 	import net.psykosoft.psykopaint2.view.away3d.base.Away3dViewBase;
 	import net.psykosoft.psykopaint2.view.away3d.wall.controller.ScrollCameraController;
-	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.Frame;
-	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.Picture;
-	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.WallFrame;
-	import net.psykosoft.psykopaint2.view.away3d.wall.wallframes.frames.FrameTextureManager;
+	import net.psykosoft.psykopaint2.view.away3d.wall.frames.Picture;
+	import net.psykosoft.psykopaint2.view.away3d.wall.frames.PictureFrame;
 
 	import org.osflash.signals.Signal;
 
@@ -26,13 +32,13 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		// -----------------------
 		// Wall.
 		// -----------------------
-		[Embed(source="../../../../../../../assets/images/textures/wall/metal3.jpg")]
+		[Embed(source="../../../../../../../assets/images/textures/wallpapers/metal3.jpg")]
 		private var WallAsset:Class;
 
 		// -----------------------
 		// Floor.
 		// -----------------------
-		[Embed(source="../../../../../../../assets/images/textures/floor/planks.jpg")]
+		[Embed(source="../../../../../../../assets/images/textures/floorpapers/planks.jpg")]
 		private var FloorAsset:Class;
 
 		// -----------------------
@@ -41,18 +47,20 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		[Embed(source="../../../../../../../assets/images/textures/misc/frame-shadow.png")]
 		private var FrameShadowAsset:Class;
 
-		private var _wallFrames:Vector.<WallFrame>;
+		private var _wallFrames:Vector.<PictureFrame>;
 		private var _cameraController:ScrollCameraController;
 		private var _wall:Mesh;
 		private var _floor:Mesh;
 		private var _wallFrameClickedSignal:Signal;
 		private var _cameraLight:PointLight;
 		private var _sceneLightPicker:StaticLightPicker;
+		private var _shadowMesh:Mesh;
+		private var _frameMaterial:TextureMaterial;
 
 		private const FRAME_GAP_X:Number = 1000;
 
 		private const PAINTINGS_Y:Number = 400;
-		private const PAINTINGS_SCALE:Number = 1.25;
+		private const PAINTINGS_SCALE:Number = 0.9;
 		private const PAINTING_DISTANCE_FROM_WALL:Number = 2;
 
 		private const WALL_WIDTH:Number = 100000;
@@ -69,7 +77,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 //			var tri:Trident = new Trident( 500 );
 //			addChild3d( tri );
 
-			_wallFrames = new Vector.<WallFrame>();
+			_wallFrames = new Vector.<PictureFrame>();
 			_wallFrameClickedSignal = new Signal();
 
 			// Light that moves with camera.
@@ -126,9 +134,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			_cameraLight.x = _camera.x;
 		}
 
-		private function addWallFrame( wallFrame:WallFrame ):void {
+		private function addPictureFrame( wallFrame:PictureFrame ):void {
 			if( _wallFrames.length > 0 ) {
-				var previousFrame:WallFrame = _wallFrames[ _wallFrames.length - 1 ];
+				var previousFrame:PictureFrame = _wallFrames[ _wallFrames.length - 1 ];
 				wallFrame.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + wallFrame.width / 2;
 			}
 			wallFrame.y = PAINTINGS_Y;
@@ -139,61 +147,85 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			addChild3d( wallFrame );
 		}
 
+		private function initializeFrameShadow():void {
+			var shadowMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FrameShadowAsset() ) );
+			shadowMaterial.smooth = true;
+			shadowMaterial.alpha = 0.9;
+			shadowMaterial.alphaBlending = true;
+			_shadowMesh = new Mesh( new PlaneGeometry( 512, 512 ), shadowMaterial );
+			_shadowMesh.rotationX = -90;
+		}
+
+		private function initializeFrameMaterial():void {
+			_frameMaterial = new TextureMaterial(
+					Away3dTextureAssetsManager.getTextureById( Away3dTextureType.TEXTURE_FRAMES )
+			);
+			_frameMaterial.smooth = true;
+		}
+
 		// ---------------------------------------------------------------------
 		// IWallView interface implementation.
 		// ---------------------------------------------------------------------
 
 		public function loadDefaultHomeFrames():void {
 
-			var shadowMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FrameShadowAsset() ) );
-			shadowMaterial.smooth = true;
-			shadowMaterial.alpha = 0.9;
-			shadowMaterial.alphaBlending = true;
-			var shadow:Mesh = new Mesh( new PlaneGeometry( 512, 512 ), shadowMaterial );
-			shadow.rotationX = -90;
+			if( !_shadowMesh ) initializeFrameShadow();
+			if( !_frameMaterial ) initializeFrameMaterial();
+
+			// TODO.
+
+		}
+
+		public function loadUserFrames():void {
+
+			if( !_shadowMesh ) initializeFrameShadow();
+			if( !_frameMaterial ) initializeFrameMaterial();
+
+			// TODO.
+			// implementing dummy images for now
+
+			var dummyImageDiffuse:BitmapTexture = Away3dTextureAssetsManager.getTextureById( Away3dTextureType.TEXTURE_SAMPLE_PAINTING_DIFFUSE );
+			var dummyImageNormals:BitmapTexture = Away3dTextureAssetsManager.getTextureById( Away3dTextureType.TEXTURE_SAMPLE_PAINTING_NORMALS );
+			var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureDescriptionById( Away3dTextureType.TEXTURE_SAMPLE_PAINTING_DIFFUSE );
+
+			var framesAtlas:XML = Away3dTextureAssetsManager.getAtlasById( Away3dTextureType.TEXTURE_FRAMES );
+			trace( "atlas: " + framesAtlas );
 
 			// Add a few test frames.
-			var frameIds:Vector.<String> = FrameTextureManager.availableFrameTypes;
+			var frameIds:Array = Away3dFrameTextureType.getAvailableTypes();
 			for( var i:uint = 0; i < frameIds.length; i++ ) {
 
 				// Picture.
-				var picture:Picture = new Picture( _sceneLightPicker );
+				var picture:Picture = new Picture( _sceneLightPicker, dummyImageDescription, dummyImageDiffuse, dummyImageNormals );
 
-				// Frame.
 				var frameId:String = frameIds[ i ];
-				var frameColor:uint = FrameTextureManager.getColorForFrameId( frameId );
-				var frame:Frame = new Frame(
-						_sceneLightPicker,
-						frameColor,
-						FrameTextureManager.getFrameTextureById( frameId ),
-						FrameTextureManager.getFrameDescriptionById( frameId )
+				trace( "frame id: " + frameId );
+
+				// Frame descriptor.
+				var atlasTextureInfo:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureDescriptionById( Away3dTextureType.TEXTURE_FRAMES );
+				var atlasData:Away3dAtlasTextureDescriptorVO = new Away3dAtlasTextureDescriptorVO(
+						frameId,
+						framesAtlas,
+						atlasTextureInfo.textureWidth, atlasTextureInfo.textureHeight
 				);
+				trace( "atlas data: " + atlasData );
 
 				// Wall frame.
-				var wallFrame:WallFrame = new WallFrame(
-						frame,
+				var wallFrame:PictureFrame = new PictureFrame(
 						picture,
-						shadow.clone() as Mesh,
-						PAINTING_DISTANCE_FROM_WALL
+						_frameMaterial,
+						atlasData
 				);
-				addWallFrame( wallFrame );
+				addPictureFrame( wallFrame );
 
 			}
 
 		}
 
-		public function loadDefaultUserFrames():void {
-			// TODO
-		}
-
-		public function loadUserFrames():void {
-			// TODO
-		}
-
 		public function clearFrames():void {
 			var len:uint = _wallFrames.length;
 			for( var i:uint = 0; i < len; ++i ) {
-				var wallFrame:WallFrame = _wallFrames[ i ];
+				var wallFrame:PictureFrame = _wallFrames[ i ];
 				removeChild3d( wallFrame );
 				// TODO: add destroy method to wallFrame?
 			}
