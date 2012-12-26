@@ -248,7 +248,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			}
 //			trace( "found snap point: " + targetSnapPoint );
 			// Discard chosen snap points that are too far.
-			if( closestDistanceToSnapPoint > Settings.DEVICE_SCREEN_WIDTH ) {
+			var distanceThreshold:Number = _perspectiveFactor * Settings.DEVICE_SCREEN_WIDTH;
+//			trace( "discard threshold: " + distanceThreshold );
+			if( closestDistanceToSnapPoint > distanceThreshold ) {
 				targetSnapPoint = -1;
 //				trace( "snap point discarded" );
 			}
