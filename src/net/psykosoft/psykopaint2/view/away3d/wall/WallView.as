@@ -34,18 +34,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		// TODO: add ability to change wallpapers
 
 		// -----------------------
-		// Wall.
-		// -----------------------
-		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/metal3.jpg")]
-		private var WallAsset:Class;
-
-		// -----------------------
-		// Floor.
-		// -----------------------
-		[Embed(source="../../../../../../../assets-embed/textures/floorpapers/planks.jpg")]
-		private var FloorAsset:Class;
-
-		// -----------------------
 		// Shadow decal.
 		// -----------------------
 		[Embed(source="../../../../../../../assets-embed/textures/misc/frame-shadow.png")]
@@ -105,21 +93,19 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Wall.
 			var wallGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
 			wallGeometry.scaleUV( WALL_WIDTH / wallGeometry.width, 2 );
-			var wallMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new WallAsset() ) );
-			wallMaterial.repeat = true;
-			wallMaterial.smooth = true;
-			_wall = new Mesh( wallGeometry, wallMaterial );
+			_wall = new Mesh( wallGeometry, new ColorMaterial() );
 			_wall.scaleX = WALL_WIDTH / wallGeometry.width;
 			_wall.scaleZ = WALL_HEIGHT / wallGeometry.height;
 			_wall.rotationX = -90;
 			_wall.y = WALL_BASE_Y + WALL_HEIGHT / 2;
 			_wall.z = WALL_Z;
+			randomizeWallpaper();
 			addChild3d( _wall );
 
 			// Floor.
 			var floorGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
 			floorGeometry.scaleUV( WALL_WIDTH / floorGeometry.width, 1 );
-			var floorMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FloorAsset() ) );
+			var floorMaterial:TextureMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( Away3dTextureType.FLOORPAPER_PLANKS ) );
 			floorMaterial.repeat = true;
 			floorMaterial.smooth = true;
 			_floor = new Mesh( floorGeometry, floorMaterial );
@@ -136,9 +122,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Initialize camera controller.
 			_camera.z = -1750;
 			_cameraController = new ScrollCameraController( _camera, _wall, stage );
-			var camControlPerspectiveTracer:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
-			camControlPerspectiveTracer.position = new Vector3D(5441.28818321228, 0.0001220703125, 400.0000305175781);
-			addChild3d( camControlPerspectiveTracer );
+//			var camControlPerspectiveTracer:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
+//			camControlPerspectiveTracer.position = new Vector3D(5441.28818321228, 0.0001220703125, 400.0000305175781);
+//			addChild3d( camControlPerspectiveTracer );
 
 			super.onStageAvailable();
 		}
@@ -199,6 +185,16 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		// IWallView interface implementation.
 		// ---------------------------------------------------------------------
 
+		public function randomizeWallpaper():void {
+			var availableTypes:Array = Away3dTextureType.getAvailableWallPaperTypes();
+			var type:String = availableTypes[ Math.floor( availableTypes.length * Math.random() ) ];
+			// TODO: dispose previous material - dispose texture as well?
+			var wallMaterial:TextureMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( type ) );
+			wallMaterial.smooth = true;
+			wallMaterial.repeat = true;
+			_wall.material = wallMaterial;
+		}
+
 		public function loadDefaultHomeFrames():void {
 
 			checkInit();
@@ -250,21 +246,32 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			checkInit();
 
-			// TODO.
-			// implementing dummy images for now
-
-			var dummyImageDiffuse:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SAMPLE_PAINTING_DIFFUSE );
-			var dummyImageNormals:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SAMPLE_PAINTING_NORMALS );
-			var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.SAMPLE_PAINTING_DIFFUSE );
+			// TODO: implementing dummy images for now
 
 			// Add a few test frames.
 			var frameIds:Array = Away3dFrameTextureType.getAvailableTypes();
-			for( var i:uint = 0; i < frameIds.length; i++ ) {
+			var samplePaintingIds:Array = [
+				"SAMPLE_PAINTING",
+				"SAMPLE_PAINTING1",
+				"SAMPLE_PAINTING2",
+				"SAMPLE_PAINTING3",
+				"SAMPLE_PAINTING4",
+				"SAMPLE_PAINTING5",
+				"SAMPLE_PAINTING6"
+			];
+			var samplePaintingScales:Array = [ 1, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5 ];
+			for( var i:uint = 0; i < samplePaintingIds.length; i++ ) {
 
 				// Picture.
+				var dummyImageDiffuseId:String = Away3dTextureType[ samplePaintingIds[ i ] + "_DIFFUSE" ];
+				var dummyImageNormalsId:String = Away3dTextureType[ samplePaintingIds[ i ] + "_NORMALS" ];
+				var dummyImageDiffuse:BitmapTexture = Away3dTextureManager.getTextureById( dummyImageDiffuseId );
+				var dummyImageNormals:BitmapTexture = Away3dTextureManager.getTextureById( dummyImageNormalsId );
+				var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( dummyImageDiffuseId );
 				var picture:Picture = new Picture( _sceneLightPicker, dummyImageDescription, dummyImageDiffuse, dummyImageNormals );
+				picture.scalePainting( samplePaintingScales[ i ] );
 
-				var frameId:String = frameIds[ i ];
+				var frameId:String = frameIds[ Math.floor( frameIds.length * Math.random() ) ];
 
 				// Frame descriptor.
 				var atlasData:Away3dFrameAtlasTextureDescriptorVO = new Away3dFrameAtlasTextureDescriptorVO(

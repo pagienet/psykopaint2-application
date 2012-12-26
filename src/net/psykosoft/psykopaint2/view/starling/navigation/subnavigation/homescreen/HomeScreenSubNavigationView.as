@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 	{
 		public static const BUTTON_LABEL_0:String = "button0";
 		public static const BUTTON_LABEL_1:String = "button1";
-		public static const BUTTON_LABEL_2:String = "button2";
+		public static const BUTTON_LABEL_2:String = "rand wallpaper";
 
 		public function HomeScreenSubNavigationView() {
 

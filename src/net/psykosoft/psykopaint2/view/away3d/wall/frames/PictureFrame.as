@@ -34,8 +34,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 
 			super();
 
-			_frameMargin = 150;
-			_frameDepth = 50;
+			_frameMargin = 125;
+			_frameDepth = 25;
 
 			_picture = picture;
 			addChild( _picture );

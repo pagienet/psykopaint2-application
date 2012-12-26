@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyRandomWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
 
@@ -19,6 +20,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		public var notifyStateChangedSignal:NotifyStateChangedSignal;
 
 		[Inject]
+		public var notifyRandomWallpaperChangeSignal:NotifyRandomWallpaperChangeSignal;
+
+		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		override public function initialize():void {
@@ -30,14 +34,28 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			// From app.
 			notifyStateChangedSignal.add( onApplicationStateChanged );
+			notifyRandomWallpaperChangeSignal.add( onRandomWallPaperRequested );
 
 			// From view.
 			view.wallFrameClickedSignal.add( onViewObjectClicked );
 
 		}
 
+		// -----------------------
+		// View -> app.
+		// -----------------------
+
 		private function onViewObjectClicked():void {
-			requestStateChangeSignal.dispatch( new StateVO( States.IDLE ) );
+			// TODO
+//			requestStateChangeSignal.dispatch( new StateVO( States.IDLE ) );
+		}
+
+		// -----------------------
+		// App -> view.
+		// -----------------------
+
+		private function onRandomWallPaperRequested():void {
+			view.randomizeWallpaper();
 		}
 
 		private function onApplicationStateChanged( newState:StateVO ):void {

@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
+	import net.psykosoft.psykopaint2.signal.requests.RequestRandomWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
@@ -16,6 +17,9 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
+
+		[Inject]
+		public var requestRandomWallpaperChangeSignal:RequestRandomWallpaperChangeSignal;
 
 		override public function initialize():void {
 
@@ -36,7 +40,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 					requestStateChangeSignal.dispatch( new StateVO( States.TEST_SCREEN_2 ) );
 					break;
 				case HomeScreenSubNavigationView.BUTTON_LABEL_2:
-					requestStateChangeSignal.dispatch( new StateVO( States.TEST_SCREEN_3 ) );
+					requestRandomWallpaperChangeSignal.dispatch();
 					break;
 			}
 		}

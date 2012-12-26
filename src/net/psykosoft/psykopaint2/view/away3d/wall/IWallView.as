@@ -10,5 +10,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		function loadUserFrames():void;
 		function clearFrames():void;
 		function get wallFrameClickedSignal():Signal;
+		function randomizeWallpaper():void;
 	}
 }
