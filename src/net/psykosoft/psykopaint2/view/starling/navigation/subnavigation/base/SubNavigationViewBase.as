@@ -7,10 +7,15 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 	import feathers.controls.ButtonGroup;
 	import feathers.data.ListCollection;
 
+	import net.psykosoft.psykopaint2.assets.starling.StarlingTextureManager;
+	import net.psykosoft.psykopaint2.assets.starling.data.StarlingTextureType;
+
 	import net.psykosoft.psykopaint2.ui.buttons.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
+
+	import starling.display.Image;
 
 	import starling.events.Event;
 
@@ -29,9 +34,17 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			if( !_buttonGroup ) {
 				_buttonGroup = new ButtonGroup();
 				_buttonGroup.direction = ButtonGroup.DIRECTION_HORIZONTAL;
+				_buttonGroup.buttonProperties = { width: 100, height: 100 };
 				addChild( _buttonGroup );
 			}
 			_buttonGroup.dataProvider = new ListCollection( definition.buttonVOArray );
+		}
+
+		override protected function onLayout():void {
+
+			_buttonGroup.validate();
+
+			super.onLayout();
 		}
 
 		protected function onButtonTriggered( event:Event ):void {

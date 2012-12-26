@@ -8,63 +8,60 @@ package net.psykosoft.psykopaint2.assets.starling
 	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 
+	import net.psykosoft.psykopaint2.assets.starling.data.StarlingTextureType;
+
 	import net.psykosoft.psykopaint2.config.Settings;
 
 	import starling.textures.Texture;
 
 	public class StarlingTextureManager
 	{
-		[Embed(source="../../../../../../assets-embed/textures/ui/PsykopaintLogo500x230.jpg")]
+		[Embed(source="../../../../../../assets-embed/textures/ui/psykopaintLogo_lowRes.jpg")]
 		private static var LogoTextureAsset:Class;
 
-		[Embed(source="../../../../../../assets-embed/textures/ui/barViewBg.png")]
+		[Embed(source="../../../../../../assets-embed/textures/ui/barViewBg_lowRes.png")]
 		private static var NavigationBackgroundTextureAsset:Class;
-
-		// Available assets ( must be reported on the constructor ).
-		public static const NavigationBackgroundTexture:String = "barViewBg.png";
-		public static const LogoTexture:String = "PsykopaintLogo500x230.jpg";
-		public static const WhiteTexture:String = "generatedWhite";
-		public static const RedTexture:String = "generatedRed";
 
 		public static function initialize() {
 
+			_textures = new Dictionary();
 			_assets = new Dictionary();
-			_rawAssetData = new Dictionary();
 
 			// Register individual bitmaps.
-			_rawAssetData[ NavigationBackgroundTexture ] = NavigationBackgroundTextureAsset;
-			_rawAssetData[ LogoTexture ] = LogoTextureAsset;
+			_assets[ StarlingTextureType.NAVIGATION_BACKGROUND ] = NavigationBackgroundTextureAsset;
+			_assets[ StarlingTextureType.LOGO ] = LogoTextureAsset;
 
 			// Register generative textures.
 			// TODO: can avoid generation unless requested?
-			_assets[ WhiteTexture ] = generateTextureOfColor( 0xFFFFFF );
-			_assets[ RedTexture ] = generateTextureOfColor( 0xFF0000 );
+			_textures[ StarlingTextureType.WHITE ] = generateTextureOfColor( 0x33FFFFFF );
+			_textures[ StarlingTextureType.RED ] = generateTextureOfColor( 0x33FF0000 );
+			_textures[ StarlingTextureType.GREEN ] = generateTextureOfColor( 0x3300FF00 );
 
 			_initialized = true;
 
 		}
 
-		private static var _rawAssetData:Dictionary;
 		private static var _assets:Dictionary;
+		private static var _textures:Dictionary;
 		private static var _initialized:Boolean;
 
 		public static function getTextureById( id:String ):Texture {
 			if( !_initialized ) initialize();
-			if( _assets[ id ] ) return _assets[ id ];
+			if( _textures[ id ] ) return _textures[ id ];
 			var texture:Texture = Texture.fromBitmapData( getBitmapDataById( id ), false, false, Settings.CONTENT_SCALE_FACTOR );
-			_assets[ id ] = texture;
+			_textures[ id ] = texture;
 			return texture;
 		}
 
 		private static function getBitmapDataById( id:String ):BitmapData {
-			var assetClass:Class = _rawAssetData[ id ];
+			var assetClass:Class = _assets[ id ];
 			if( !assetClass ) Cc.fatal( "The asset [ " + id + " ] does not exist." );
 			var bitmap:Bitmap = new assetClass() as Bitmap;
 			return bitmap.bitmapData;
 		}
 
 		private static function generateTextureOfColor( color:uint ):Texture {
-			var bmd:BitmapData = new BitmapData( 32, 32, false, color );
+			var bmd:BitmapData = new BitmapData( 32, 32, true, color );
 			var texture:Texture = Texture.fromBitmapData( bmd, false, false, Settings.CONTENT_SCALE_FACTOR );
 			return texture;
 		}

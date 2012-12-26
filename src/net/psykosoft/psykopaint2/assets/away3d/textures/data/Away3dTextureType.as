@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.assets.away3d.textures.data
 		public static const FRAMES_ATLAS:String = "frames/atlas";
 
 		// Wallpapers.
-		public static const WALLPAPER_CEMENT:String = "wallpaper/cement";
 		public static const WALLPAPER_DEFAULT:String = "wallpaper/default";
 		public static const WALLPAPER_FURRY_BLACK:String = "wallpaper/furryBlack";
 		public static const WALLPAPER_GREEN_GRASS:String = "wallpaper/greenGrass";
@@ -40,7 +39,7 @@ package net.psykosoft.psykopaint2.assets.away3d.textures.data
 
 		public static function getAvailableWallPaperTypes():Array {
 			return [
-				WALLPAPER_CEMENT, WALLPAPER_DEFAULT, WALLPAPER_FURRY_BLACK, WALLPAPER_GREEN_GRASS, WALLPAPER_METAL1,
+				WALLPAPER_DEFAULT, WALLPAPER_FURRY_BLACK, WALLPAPER_GREEN_GRASS, WALLPAPER_METAL1,
 				WALLPAPER_METAL2, WALLPAPER_METAL3, WALLPAPER_PAPER1, WALLPAPER_PAPER2, WALLPAPER_VINTAGE
 			];
 		}

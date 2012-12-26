@@ -2,25 +2,23 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 {
 
 	import away3d.entities.Mesh;
+	import away3d.entities.Mesh;
 	import away3d.lights.PointLight;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
-	import away3d.primitives.SphereGeometry;
 	import away3d.textures.BitmapTexture;
 	import away3d.utils.Cast;
 
 	import flash.geom.Vector3D;
 	import flash.utils.Dictionary;
 
-	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dFrameAtlasTextureDescriptorVO;
-
-	import net.psykosoft.psykopaint2.assets.away3d.textures.data.Away3dFrameTextureType;
-
 	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureManager;
-	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dTextureInfoVO;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.data.Away3dFrameTextureType;
 	import net.psykosoft.psykopaint2.assets.away3d.textures.data.Away3dTextureType;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dFrameAtlasTextureDescriptorVO;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dTextureInfoVO;
 	import net.psykosoft.psykopaint2.view.away3d.base.Away3dViewBase;
 	import net.psykosoft.psykopaint2.view.away3d.wall.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.view.away3d.wall.frames.Picture;
@@ -292,14 +290,24 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		}
 
-		public function clearFrames():void {
+		public function reset():void {
+
+			// Remove frames.
 			var len:uint = _wallFrames.length;
 			for( var i:uint = 0; i < len; ++i ) {
 				var wallFrame:PictureFrame = _wallFrames[ i ];
 				removeChild3d( wallFrame );
 				// TODO: add destroy method to wallFrame?
-				// TODO: destroy shadows
 			}
+
+			// Remove frame shadows.
+			for each( var mesh:Mesh in _shadows ) {
+				removeChild3d( mesh );
+				mesh.dispose();
+				mesh = null;
+			}
+
+			_cameraController.reset();
 		}
 
 		public function get wallFrameClickedSignal():Signal {

@@ -25,6 +25,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
 
+		private var _firstLoad:Boolean = true;
+
 		override public function initialize():void {
 
 			Cc.log( this, "initialized" );
@@ -62,9 +64,11 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			if( newState.name == States.HOME_SCREEN ) {
 				Cc.log( this, "enabled" );
-				view.clearFrames();
-				view.loadDefaultHomeFrames();
-				view.loadUserFrames();
+				if( _firstLoad ) {
+					view.loadDefaultHomeFrames();
+					view.loadUserFrames();
+					_firstLoad = false;
+				}
 				view.enable();
 			}
 			else {

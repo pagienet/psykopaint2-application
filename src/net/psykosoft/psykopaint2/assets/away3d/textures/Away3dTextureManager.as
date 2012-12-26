@@ -59,8 +59,6 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 		private static var SamplePainting6NormalsTextureAsset:Class;
 
 		// Wallpapers.
-		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/cement.jpg")]
-		private static var WallpaperCementAsset:Class;
 		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/default.jpg")]
 		private static var WallpaperDefaultAsset:Class;
 		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/furryBlack.jpg")]
@@ -104,7 +102,6 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 			_atlases[ Away3dTextureType.FRAMES_ATLAS ] = FramesTextureAtlasXmlAsset;
 
 			// Wallpapers.
-			_assets[ Away3dTextureType.WALLPAPER_CEMENT ] = WallpaperCementAsset;
 			_assets[ Away3dTextureType.WALLPAPER_DEFAULT ] = WallpaperDefaultAsset;
 			_assets[ Away3dTextureType.WALLPAPER_FURRY_BLACK ] = WallpaperFurryBlackAsset;
 			_assets[ Away3dTextureType.WALLPAPER_GREEN_GRASS ] = WallpaperGreenGrassAsset;

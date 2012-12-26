@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.config.AppConfig;
 	import net.psykosoft.psykopaint2.config.Settings;
@@ -58,12 +59,10 @@ package net.psykosoft.psykopaint2
 			_stage3dProxy = stage3dManager.getFreeStage3DProxy();
 			_stage3dProxy.color = 0xFFFFFF;
 			_stage3dProxy.antiAlias = Settings.ANTI_ALIAS;
-			_stage3dProxy.width = Settings.DEVICE_SCREEN_WIDTH;
-			_stage3dProxy.height = Settings.DEVICE_SCREEN_HEIGHT;
 			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContextCreated );
 			DeviceCapabilities.dpi = Settings.DEVICE_DPI;
-			DeviceCapabilities.screenPixelWidth = Settings.DEVICE_SCREEN_WIDTH;
-			DeviceCapabilities.screenPixelHeight = Settings.DEVICE_SCREEN_HEIGHT;
+//			DeviceCapabilities.screenPixelWidth = Settings.DEVICE_SCREEN_WIDTH;
+//			DeviceCapabilities.screenPixelHeight = Settings.DEVICE_SCREEN_HEIGHT;
 		}
 
 		private function onContextCreated( event:Stage3DEvent ):void {
@@ -75,6 +74,9 @@ package net.psykosoft.psykopaint2
 			initRobotLegs();
 			// Start loop, determined by proxy.
 			_stage3dProxy.addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			// Start listening for stage resizes.
+			stage.addEventListener( Event.RESIZE, onStageResize );
+			onStageResize( null ); // One has already occurred while the GPU context was being fetched, so trigger one.
 		}
 
 		private function init3D():void {
@@ -118,6 +120,27 @@ package net.psykosoft.psykopaint2
 		private function onEnterFrame( event:Event ):void {
 			_away3d.render();
 			_starling.nextFrame();
+		}
+
+		private function onStageResize( event:Event ):void {
+
+			trace( this, "stage resized: " + stage.stageWidth + ", " + stage.stageHeight );
+
+			_starling.stage.stageWidth = stage.stageWidth;
+			_starling.stage.stageHeight = stage.stageHeight;
+
+			_stage3dProxy.width = stage.stageWidth;
+			_stage3dProxy.height = stage.stageHeight;
+
+			var viewPort:Rectangle = _starling.viewPort;
+			viewPort.width = stage.stageWidth;
+			viewPort.height = stage.stageHeight;
+			try {
+				trace( this, "starling view port set: " + viewPort.width + ", " + viewPort.height );
+				_starling.viewPort = viewPort;
+			}
+			catch( error:Error ) {
+			}
 		}
 	}
 }

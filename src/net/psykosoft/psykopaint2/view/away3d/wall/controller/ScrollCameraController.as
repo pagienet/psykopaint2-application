@@ -53,6 +53,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		private const EDGE_CONTAINMENT_RETURN_TWEEN_TIME:Number = 2;
 
 		public function ScrollCameraController( camera:Camera3D, wall:Mesh, stage:Stage ) {
+
 			super();
 
 			_camera = camera;
@@ -133,6 +134,13 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 
 		public function jumpToSnapPoint( index:uint ):void {
 			_camera.x = _snapPoints[ index ];
+		}
+
+		public function reset():void {
+			_firstSnapPoint = null;
+			_lastSnapPoint = null;
+			_snapPoints = new Vector.<Number>();
+			stopAllTweens();
 		}
 
 		// ---------------------------------------------------------------------
@@ -256,7 +264,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			}
 //			trace( "found snap point: " + targetSnapPoint );
 			// Discard chosen snap points that are too far.
-			var distanceThreshold:Number = _perspectiveFactor * Settings.DEVICE_SCREEN_WIDTH;
+			var distanceThreshold:Number = _perspectiveFactor * _stage.stageWidth;
 //			trace( "discard threshold: " + distanceThreshold );
 			if( closestDistanceToSnapPoint > distanceThreshold ) {
 				targetSnapPoint = -1;

@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.config
 		public static const DEVICE_DPI:uint = 132;
 		public static const DEVICE_SCREEN_WIDTH:uint = 1024;
 		public static const DEVICE_SCREEN_HEIGHT:uint = 768;
-		public static const CONTENT_SCALE_FACTOR:Number = 2;
+		public static const CONTENT_SCALE_FACTOR:Number = 1;
 
 		/*
 		* Stage3D alias quality both for Starling and Away3D.

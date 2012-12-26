@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 	import feathers.controls.Button;
 
 	import net.psykosoft.psykopaint2.assets.starling.StarlingTextureManager;
+	import net.psykosoft.psykopaint2.assets.starling.data.StarlingTextureType;
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base.SubNavigationViewBase;
@@ -21,35 +22,51 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 		private var _backButton:Button;
 		private var _activeSubNavigation:SubNavigationViewBase;
 
-		private const CONTENT_AREA_HEIGHT:uint = 300;
+		private const CONTENT_AREA_HEIGHT:uint = 170;
 
 		public var backButtonTriggeredSignal:Signal;
 
 		public function NavigationView() {
-
 			super();
 
-			// Init container.
+			// Bg.
+			_bgImage = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.NAVIGATION_BACKGROUND ) );
+			addChild( _bgImage );
+
+			// Container will hold buttons.
 			_container = new Sprite();
 			addChild( _container );
 
-			// Init bg image.
-			_bgImage = new Image( StarlingTextureManager.getTextureById( StarlingTextureManager.NavigationBackgroundTexture ) );
-			_bgImage.y = -_bgImage.height;
-			_container.addChild( _bgImage );
-
-			// Test button.
+			// Back button.
 			_backButton = new Button();
-			_backButton.width = 250 * Settings.CONTENT_SCALE_MULTIPLIER;
-			_backButton.height = 250 * Settings.CONTENT_SCALE_MULTIPLIER;
-			_backButton.x = 10;
-			_backButton.y = -( CONTENT_AREA_HEIGHT + _backButton.height ) / 2;
+			_backButton.width = 100;
+			_backButton.height = 100;
 			_backButton.label = "<< Back";
 			_backButton.visible = false;
 			_backButton.addEventListener( Event.TRIGGERED, onBackButtonTriggered );
 			_container.addChild( _backButton );
 
 			backButtonTriggeredSignal = new Signal();
+		}
+
+		override protected function onLayout():void {
+
+			// back btn
+			_backButton.x = 10;
+			_backButton.y = CONTENT_AREA_HEIGHT / 2 - _backButton.height / 2;
+
+			// bg image.
+			_bgImage.y = stage.stageHeight - _bgImage.height;
+			_bgImage.width = stage.stageWidth;
+
+			// container.
+			_container.y = stage.stageHeight - CONTENT_AREA_HEIGHT;
+
+			// sub navigation.
+			if( _activeSubNavigation ) {
+				_activeSubNavigation.x = stage.stageWidth / 2 - _activeSubNavigation.width / 2;
+				_activeSubNavigation.y = CONTENT_AREA_HEIGHT / 2 - _activeSubNavigation.height / 2;
+			}
 		}
 
 		private function onBackButtonTriggered( event:Event ):void {
@@ -68,7 +85,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 			if( _activeSubNavigation == view ) return;
 			if( _activeSubNavigation ) disableSubNavigation();
 			_activeSubNavigation = view;
-			_activeSubNavigation.y = -CONTENT_AREA_HEIGHT / 2 - _activeSubNavigation.height / 2;
 			_container.addChild( _activeSubNavigation );
 			onLayout();
 		}
@@ -77,20 +93,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 			_container.removeChild( _activeSubNavigation );
 			_activeSubNavigation.dispose();
 			_activeSubNavigation = null;
-		}
-
-		override protected function onLayout():void {
-
-			// container.
-			_container.y = stage.stageHeight;
-
-			// bg image.
-			_bgImage.width = stage.stageWidth;
-
-			// sub navigation.
-			if( _activeSubNavigation ) {
-				_activeSubNavigation.x = stage.stageWidth / 2 - _activeSubNavigation.width / 2;
-			}
 		}
 	}
 }
