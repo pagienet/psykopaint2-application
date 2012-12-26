@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 
-	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dAtlasTextureDescriptorVO;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dFrameAtlasTextureDescriptorVO;
 
 	public class PictureFrame extends ObjectContainer3D
 	{
@@ -28,9 +28,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 		private var _frameMargin:Number;
 		private var _frameDepth:Number;
 
-		private var _textureDescriptor:Away3dAtlasTextureDescriptorVO;
+		private var _textureDescriptor:Away3dFrameAtlasTextureDescriptorVO;
 
-		public function PictureFrame( picture:Picture, material:TextureMaterial, textureDescriptor:Away3dAtlasTextureDescriptorVO ) {
+		public function PictureFrame( picture:Picture, material:TextureMaterial, textureDescriptor:Away3dFrameAtlasTextureDescriptorVO ) {
+
 			super();
 
 			_frameMargin = 150;
@@ -55,6 +56,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 
 		public function get width():Number {
 			return _picture.width + 2 * _frameMargin;
+		}
+
+		public function get height():Number {
+			return _picture.height + 2 * _frameMargin;
 		}
 
 		public function set frameDepth( value:Number ):void {

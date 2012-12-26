@@ -10,14 +10,15 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 	import away3d.utils.Cast;
 
 	import flash.geom.Vector3D;
+	import flash.utils.Dictionary;
 
-	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dAtlasTextureDescriptorVO;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dFrameAtlasTextureDescriptorVO;
 
-	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dFrameTextureType;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.data.Away3dFrameTextureType;
 
 	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureAssetsManager;
-	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureInfoVO;
-	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureType;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dTextureInfoVO;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.data.Away3dTextureType;
 	import net.psykosoft.psykopaint2.view.away3d.base.Away3dViewBase;
 	import net.psykosoft.psykopaint2.view.away3d.wall.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.view.away3d.wall.frames.Picture;
@@ -28,23 +29,24 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 	public class WallView extends Away3dViewBase implements IWallView
 	{
 		// TODO: move to asset manager
+		// TODO: add ability to change wallpapers
 
 		// -----------------------
 		// Wall.
 		// -----------------------
-		[Embed(source="../../../../../../../assets/images/textures/wallpapers/metal3.jpg")]
+		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/metal3.jpg")]
 		private var WallAsset:Class;
 
 		// -----------------------
 		// Floor.
 		// -----------------------
-		[Embed(source="../../../../../../../assets/images/textures/floorpapers/planks.jpg")]
+		[Embed(source="../../../../../../../assets-embed/textures/floorpapers/planks.jpg")]
 		private var FloorAsset:Class;
 
 		// -----------------------
 		// Shadow decal.
 		// -----------------------
-		[Embed(source="../../../../../../../assets/images/textures/misc/frame-shadow.png")]
+		[Embed(source="../../../../../../../assets-embed/textures/misc/frame-shadow.png")]
 		private var FrameShadowAsset:Class;
 
 		private var _wallFrames:Vector.<PictureFrame>;
@@ -56,6 +58,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private var _sceneLightPicker:StaticLightPicker;
 		private var _shadowMesh:Mesh;
 		private var _frameMaterial:TextureMaterial;
+		private var _shadows:Dictionary;
 
 		private const FRAME_GAP_X:Number = 1000;
 
@@ -70,6 +73,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		private const FLOOR_DEPTH:Number = 1000;
 
+		private const SHADOW_INFLATION_X:Number = 1.075;
+		private const SHADOW_INFLATION_Y:Number = 1.1;
+		private const SHADOW_OFFSET_Y:Number = -50;
+
 		public function WallView() {
 
 			super();
@@ -81,7 +88,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			_wallFrameClickedSignal = new Signal();
 
 			// Light that moves with camera.
-			// Affects paintings and their frames.
+			// Affects paintings.
 			_cameraLight = new PointLight();
 			_cameraLight.ambient = 1;
 			_cameraLight.diffuse = 1;
@@ -134,17 +141,29 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			_cameraLight.x = _camera.x;
 		}
 
-		private function addPictureFrame( wallFrame:PictureFrame ):void {
+		private function addPictureFrame( pictureFrame:PictureFrame ):void {
+
+			// Transform frame, store it and add it to the scenegraph.
 			if( _wallFrames.length > 0 ) {
 				var previousFrame:PictureFrame = _wallFrames[ _wallFrames.length - 1 ];
-				wallFrame.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + wallFrame.width / 2;
+				pictureFrame.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + pictureFrame.width / 2;
 			}
-			wallFrame.y = PAINTINGS_Y;
-			wallFrame.z = WALL_Z - PAINTING_DISTANCE_FROM_WALL - wallFrame.depth / 2;
-			wallFrame.scale( PAINTINGS_SCALE );
-			_cameraController.addSnapPoint( wallFrame.x );
-			_wallFrames.push( wallFrame );
-			addChild3d( wallFrame );
+			pictureFrame.y = PAINTINGS_Y;
+			pictureFrame.z = WALL_Z - PAINTING_DISTANCE_FROM_WALL - pictureFrame.depth / 2;
+			pictureFrame.scale( PAINTINGS_SCALE );
+			_cameraController.addSnapPoint( pictureFrame.x );
+			_wallFrames.push( pictureFrame );
+			addChild3d( pictureFrame );
+
+			// Create shadow.
+			var shadow:Mesh = _shadowMesh.clone() as Mesh;
+			shadow.x = pictureFrame.x;
+			shadow.y = pictureFrame.y + SHADOW_OFFSET_Y;
+			shadow.z = WALL_Z - 1;
+			shadow.scaleX = SHADOW_INFLATION_X * pictureFrame.width / 512;
+			shadow.scaleZ = SHADOW_INFLATION_Y * pictureFrame.height / 512;
+			_shadows[ pictureFrame ] = shadow;
+			addChild3d( shadow );
 		}
 
 		private function initializeFrameShadow():void {
@@ -154,6 +173,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			shadowMaterial.alphaBlending = true;
 			_shadowMesh = new Mesh( new PlaneGeometry( 512, 512 ), shadowMaterial );
 			_shadowMesh.rotationX = -90;
+			_shadows = new Dictionary();
 		}
 
 		private function initializeFrameMaterial():void {
@@ -186,10 +206,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			var dummyImageDiffuse:BitmapTexture = Away3dTextureAssetsManager.getTextureById( Away3dTextureType.TEXTURE_SAMPLE_PAINTING_DIFFUSE );
 			var dummyImageNormals:BitmapTexture = Away3dTextureAssetsManager.getTextureById( Away3dTextureType.TEXTURE_SAMPLE_PAINTING_NORMALS );
-			var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureDescriptionById( Away3dTextureType.TEXTURE_SAMPLE_PAINTING_DIFFUSE );
+			var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureInfoById( Away3dTextureType.TEXTURE_SAMPLE_PAINTING_DIFFUSE );
 
-			var framesAtlas:XML = Away3dTextureAssetsManager.getAtlasById( Away3dTextureType.TEXTURE_FRAMES );
-			trace( "atlas: " + framesAtlas );
+			var framesAtlas:XML = Away3dTextureAssetsManager.getAtlasDataById( Away3dTextureType.TEXTURE_FRAMES );
 
 			// Add a few test frames.
 			var frameIds:Array = Away3dFrameTextureType.getAvailableTypes();
@@ -199,16 +218,14 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 				var picture:Picture = new Picture( _sceneLightPicker, dummyImageDescription, dummyImageDiffuse, dummyImageNormals );
 
 				var frameId:String = frameIds[ i ];
-				trace( "frame id: " + frameId );
 
 				// Frame descriptor.
-				var atlasTextureInfo:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureDescriptionById( Away3dTextureType.TEXTURE_FRAMES );
-				var atlasData:Away3dAtlasTextureDescriptorVO = new Away3dAtlasTextureDescriptorVO(
+				var atlasTextureInfo:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureInfoById( Away3dTextureType.TEXTURE_FRAMES );
+				var atlasData:Away3dFrameAtlasTextureDescriptorVO = new Away3dFrameAtlasTextureDescriptorVO(
 						frameId,
 						framesAtlas,
 						atlasTextureInfo.textureWidth, atlasTextureInfo.textureHeight
 				);
-				trace( "atlas data: " + atlasData );
 
 				// Wall frame.
 				var wallFrame:PictureFrame = new PictureFrame(
@@ -228,6 +245,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 				var wallFrame:PictureFrame = _wallFrames[ i ];
 				removeChild3d( wallFrame );
 				// TODO: add destroy method to wallFrame?
+				// TODO: destroy shadows
 			}
 		}
 

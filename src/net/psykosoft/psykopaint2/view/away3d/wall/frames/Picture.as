@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 
-	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureInfoVO;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dTextureInfoVO;
 
 	import net.psykosoft.psykopaint2.config.Settings;
 

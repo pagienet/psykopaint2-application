@@ -15,11 +15,8 @@ package net.psykosoft.psykopaint2.assets.away3d.models
 
 	public class Away3dModelAssetsManager
 	{
-		// Frame models.
-		[Embed(source="../../../../../../../assets/models/frames/frame0/frame0.obj", mimeType="application/octet-stream")]
-		private static var Frame0ModelAsset:Class;
-		[Embed(source="../../../../../../../assets/models/frames/frame1/frame1.awd", mimeType="application/octet-stream")]
-		private static var Frame1ModelAsset:Class;
+		// Frame models embeds.
+		//...  no models atm.
 
 		// Available assets ( must be reported on the constructor ).
 		public static const Frame0Model:String = "frame0.obj";
@@ -31,8 +28,6 @@ package net.psykosoft.psykopaint2.assets.away3d.models
 			_rawAssetData = new Dictionary();
 
 			// Register individual models.
-			_rawAssetData[ Frame0Model ] = Frame0ModelAsset;
-			_rawAssetData[ Frame1Model ] = Frame1ModelAsset;
 
 			_parser = new AWD2Parser();
 			_parser.addEventListener( AssetEvent.ASSET_COMPLETE, onParserAssetComplete );
