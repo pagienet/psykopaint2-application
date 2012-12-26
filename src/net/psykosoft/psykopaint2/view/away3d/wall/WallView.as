@@ -178,7 +178,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		private function initializeFrameMaterial():void {
 			_frameMaterial = new TextureMaterial(
-					Away3dTextureAssetsManager.getTextureById( Away3dTextureType.TEXTURE_FRAMES )
+					Away3dTextureAssetsManager.getTextureById( Away3dTextureType.FRAMES_ATLAS )
 			);
 			_frameMaterial.smooth = true;
 		}
@@ -204,11 +204,12 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// TODO.
 			// implementing dummy images for now
 
-			var dummyImageDiffuse:BitmapTexture = Away3dTextureAssetsManager.getTextureById( Away3dTextureType.TEXTURE_SAMPLE_PAINTING_DIFFUSE );
-			var dummyImageNormals:BitmapTexture = Away3dTextureAssetsManager.getTextureById( Away3dTextureType.TEXTURE_SAMPLE_PAINTING_NORMALS );
-			var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureInfoById( Away3dTextureType.TEXTURE_SAMPLE_PAINTING_DIFFUSE );
+			var dummyImageDiffuse:BitmapTexture = Away3dTextureAssetsManager.getTextureById( Away3dTextureType.SAMPLE_PAINTING_DIFFUSE );
+			var dummyImageNormals:BitmapTexture = Away3dTextureAssetsManager.getTextureById( Away3dTextureType.SAMPLE_PAINTING_NORMALS );
+			var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureInfoById( Away3dTextureType.SAMPLE_PAINTING_DIFFUSE );
 
-			var framesAtlas:XML = Away3dTextureAssetsManager.getAtlasDataById( Away3dTextureType.TEXTURE_FRAMES );
+			var framesAtlasXml:XML = Away3dTextureAssetsManager.getAtlasDataById( Away3dTextureType.FRAMES_ATLAS );
+			var atlasTextureInfo:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureInfoById( Away3dTextureType.FRAMES_ATLAS );
 
 			// Add a few test frames.
 			var frameIds:Array = Away3dFrameTextureType.getAvailableTypes();
@@ -220,10 +221,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 				var frameId:String = frameIds[ i ];
 
 				// Frame descriptor.
-				var atlasTextureInfo:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureInfoById( Away3dTextureType.TEXTURE_FRAMES );
 				var atlasData:Away3dFrameAtlasTextureDescriptorVO = new Away3dFrameAtlasTextureDescriptorVO(
 						frameId,
-						framesAtlas,
+						framesAtlasXml,
 						atlasTextureInfo.textureWidth, atlasTextureInfo.textureHeight
 				);
 

@@ -46,12 +46,12 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 			_atlasses = new Dictionary();
 
 			// Asset strings need to be associated with the raw data.
-			_assets[ Away3dTextureType.TEXTURE_HOME_PAINTING ] = HomePaintingTextureAsset;
-			_assets[ Away3dTextureType.TEXTURE_SETTINGS_PAINTING ] = SettingsPaintingTextureAsset;
-			_assets[ Away3dTextureType.TEXTURE_SAMPLE_PAINTING_DIFFUSE ] = SamplePaintingDiffuseTextureAsset;
-			_assets[ Away3dTextureType.TEXTURE_SAMPLE_PAINTING_NORMALS ] = SamplePaintingNormalsTextureAsset;
-			_assets[ Away3dTextureType.TEXTURE_FRAMES ] = FramesTextureAsset;
-			_atlasses[ Away3dTextureType.TEXTURE_FRAMES ] = FramesTextureAtlasXmlAsset;
+			_assets[ Away3dTextureType.HOME_PAINTING ] = HomePaintingTextureAsset;
+			_assets[ Away3dTextureType.SETTINGS_PAINTING ] = SettingsPaintingTextureAsset;
+			_assets[ Away3dTextureType.SAMPLE_PAINTING_DIFFUSE ] = SamplePaintingDiffuseTextureAsset;
+			_assets[ Away3dTextureType.SAMPLE_PAINTING_NORMALS ] = SamplePaintingNormalsTextureAsset;
+			_assets[ Away3dTextureType.FRAMES_ATLAS ] = FramesTextureAsset;
+			_atlasses[ Away3dTextureType.FRAMES_ATLAS ] = FramesTextureAtlasXmlAsset;
 
 			_initialized = true;
 		}

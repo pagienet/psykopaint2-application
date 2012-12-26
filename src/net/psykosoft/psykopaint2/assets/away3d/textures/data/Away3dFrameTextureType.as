@@ -3,13 +3,13 @@ package net.psykosoft.psykopaint2.assets.away3d.textures.data
 
 	public class Away3dFrameTextureType
 	{
-		public static const FRAME_WHITE:String = "whiteFrame";
-		public static const FRAME_GOLD:String = "goldFrame";
-		public static const FRAME_BLUE:String = "blueFrame";
-		public static const FRAME_DANGER:String = "dangerFrame";
+		public static const WHITE:String = "whiteFrame";
+		public static const GOLD:String = "goldFrame";
+		public static const BLUE:String = "blueFrame";
+		public static const DANGER:String = "dangerFrame";
 
 		public static function getAvailableTypes():Array {
-			return [ FRAME_WHITE, FRAME_GOLD, FRAME_BLUE, FRAME_DANGER ];
+			return [ WHITE, GOLD, BLUE, DANGER ];
 		}
 	}
 }
