@@ -83,14 +83,20 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		* */
 		private function evaluatePerspectiveFactor():void {
 
-//			Cc.log( this, "updating perspective factor." );
+//			trace( this, "updating perspective factor." );
+
+			var cameraCacheX:Number = _camera.x;
+			_camera.x = 0;
 
 			var aspectRatio:Number = _camera.lens.aspectRatio;
+//			trace( this, "aspectRatio: " + aspectRatio );
 
 			// Shoot a ray from the camera to the right edge of the screen.
 			var rayPosition:Vector3D = _camera.unproject( aspectRatio, 0, 0 );
 			var rayDirection:Vector3D = _camera.unproject( aspectRatio, 0, 1 );
 			rayDirection = rayDirection.subtract( rayPosition );
+			rayDirection.normalize();
+//			trace( this, "ray origin: " + rayPosition + ", ray direction: " + rayDirection );
 			var invSceneTransform:Matrix3D = _wall.inverseSceneTransform;
 			var localRayPosition:Vector3D = invSceneTransform.transformVector( rayPosition );
 			var localRayDirection:Vector3D = invSceneTransform.deltaTransformVector( rayDirection );
@@ -104,13 +110,15 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			collisionPos.z = localRayPosition.z + t * localRayDirection.z;
 			collisionPos = _wall.sceneTransform.transformVector( collisionPos );
 			collisionPos.x /= aspectRatio;
-//			Cc.log( "collisionPos: " + collisionPos );
+//			trace( this, "collisionPos: " + collisionPos );
 
 			// Compare the right-span of the screen to the right-span on the wall.
 			_perspectiveFactor = collisionPos.x / ( _stage.width / 2 );
-//			Cc.log( "_perspectiveFactor: " + _perspectiveFactor );
+//			trace( this, "_perspectiveFactor: " + _perspectiveFactor );
 
 			_perspectiveFactorDirty = false;
+
+			_camera.x = cameraCacheX;
 
 		}
 

@@ -3,9 +3,11 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 	import away3d.entities.Mesh;
 	import away3d.lights.PointLight;
+	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
+	import away3d.primitives.SphereGeometry;
 	import away3d.textures.BitmapTexture;
 	import away3d.utils.Cast;
 
@@ -134,6 +136,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Initialize camera controller.
 			_camera.z = -1750;
 			_cameraController = new ScrollCameraController( _camera, _wall, stage );
+			var camControlPerspectiveTracer:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
+			camControlPerspectiveTracer.position = new Vector3D(5441.28818321228, 0.0001220703125, 400.0000305175781);
+			addChild3d( camControlPerspectiveTracer );
 
 			super.onStageAvailable();
 		}
