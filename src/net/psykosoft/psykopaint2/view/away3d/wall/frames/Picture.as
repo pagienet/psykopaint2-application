@@ -16,15 +16,18 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 	{
 		private var _width:Number;
 		private var _height:Number;
+		private var _scale:Number = 1;
 
-		public function Picture( lightPicker:StaticLightPicker, textureDescription:Away3dTextureInfoVO, diffuseTexture:BitmapTexture, normalsTexture:BitmapTexture = null ) {
+		private var _plane:Mesh;
+
+		public function Picture( lightPicker:StaticLightPicker, textureInfo:Away3dTextureInfoVO, diffuseTexture:BitmapTexture, normalsTexture:BitmapTexture = null ) {
 
 			super();
 
 			var material:TextureMaterial = new TextureMaterial( diffuseTexture );
 			material.smooth = true;
 
-			if( textureDescription.imageWidth != textureDescription.textureWidth || textureDescription.imageHeight != textureDescription.textureHeight ) {
+			if( textureInfo.imageWidth != textureInfo.textureWidth || textureInfo.imageHeight != textureInfo.textureHeight ) {
 				material.alphaBlending = true;
 			}
 
@@ -37,20 +40,24 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 			}
 
 			// TODO: used shared geometry
-			var plane:Mesh = new Mesh( new PlaneGeometry( textureDescription.textureWidth, textureDescription.textureHeight ), material );
-			plane.rotationX = -90;
-			addChild( plane );
+			_plane = new Mesh( new PlaneGeometry( textureInfo.textureWidth, textureInfo.textureHeight ), material );
+			_plane.rotationX = -90;
+			addChild( _plane );
 
-			_width = textureDescription.imageWidth;
-			_height = textureDescription.imageHeight;
+			_width = textureInfo.imageWidth;
+			_height = textureInfo.imageHeight;
 		}
 
 		public function get width():Number {
-		 	return _width;
+		 	return _width * _scale;
 		}
 
 		public function get height():Number {
-			return _height;
+			return _height * _scale;
+		}
+
+		public function scalePainting( value:Number ):void {
+			_scale = _plane.scaleX = _plane.scaleZ = value;
 		}
 	}
 }

@@ -10,10 +10,10 @@ package net.psykosoft.psykopaint2.util
 
 			var origWidth:int = bitmapData.width;
 			var origHeight:int = bitmapData.height;
-			trace( "ensurePowerOf2 - original: " + origWidth + ", " + origHeight );
+//			trace( "ensurePowerOf2 - original: " + origWidth + ", " + origHeight );
 			var legalWidth:int = getNextPowerOfTwo( origWidth );
 			var legalHeight:int = getNextPowerOfTwo( origHeight );
-			trace( "ensurePowerOf2 - altered: " + legalWidth + ", " + legalHeight );
+//			trace( "ensurePowerOf2 - altered: " + legalWidth + ", " + legalHeight );
 
 			if( legalWidth > origWidth || legalHeight > origHeight ) {
 				var modifiedBmd:BitmapData = new BitmapData( legalWidth, legalHeight, true, 0 );

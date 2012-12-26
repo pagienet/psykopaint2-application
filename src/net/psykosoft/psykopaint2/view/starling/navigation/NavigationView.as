@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 
 	import feathers.controls.Button;
 
-	import net.psykosoft.psykopaint2.assets.starling.StarlingTextureAssetsManager;
+	import net.psykosoft.psykopaint2.assets.starling.StarlingTextureManager;
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base.SubNavigationViewBase;
@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 			addChild( _container );
 
 			// Init bg image.
-			_bgImage = new Image( StarlingTextureAssetsManager.getTextureById( StarlingTextureAssetsManager.NavigationBackgroundTexture ) );
+			_bgImage = new Image( StarlingTextureManager.getTextureById( StarlingTextureManager.NavigationBackgroundTexture ) );
 			_bgImage.y = -_bgImage.height;
 			_container.addChild( _bgImage );
 

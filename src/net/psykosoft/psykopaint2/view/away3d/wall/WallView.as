@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 	import net.psykosoft.psykopaint2.assets.away3d.textures.data.Away3dFrameTextureType;
 
-	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureAssetsManager;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureManager;
 	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dTextureInfoVO;
 	import net.psykosoft.psykopaint2.assets.away3d.textures.data.Away3dTextureType;
 	import net.psykosoft.psykopaint2.view.away3d.base.Away3dViewBase;
@@ -59,6 +59,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private var _shadowMesh:Mesh;
 		private var _frameMaterial:TextureMaterial;
 		private var _shadows:Dictionary;
+		private var _framesAtlasXml:XML;
+		private var _framesAtlasTextureInfo:Away3dTextureInfoVO;
 
 		private const FRAME_GAP_X:Number = 1000;
 
@@ -177,10 +179,15 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		}
 
 		private function initializeFrameMaterial():void {
-			_frameMaterial = new TextureMaterial(
-					Away3dTextureAssetsManager.getTextureById( Away3dTextureType.FRAMES_ATLAS )
-			);
+			_frameMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( Away3dTextureType.FRAMES_ATLAS ) );
 			_frameMaterial.smooth = true;
+			_framesAtlasXml = Away3dTextureManager.getAtlasDataById( Away3dTextureType.FRAMES_ATLAS );
+			_framesAtlasTextureInfo = Away3dTextureManager.getTextureInfoById( Away3dTextureType.FRAMES_ATLAS );
+		}
+
+		private function checkInit():void {
+			if( !_shadowMesh ) initializeFrameShadow();
+			if( !_frameMaterial ) initializeFrameMaterial();
 		}
 
 		// ---------------------------------------------------------------------
@@ -189,27 +196,61 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		public function loadDefaultHomeFrames():void {
 
-			if( !_shadowMesh ) initializeFrameShadow();
-			if( !_frameMaterial ) initializeFrameMaterial();
+			checkInit();
 
-			// TODO.
+			// -----------------------
+			// Settings frame.
+			// -----------------------
+
+			// Picture.
+			var settingsTexture:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SETTINGS_PAINTING );
+			var settingsTextureInfo:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.SETTINGS_PAINTING );
+			var settingsPicture:Picture = new Picture( _sceneLightPicker, settingsTextureInfo, settingsTexture );
+			settingsPicture.scalePainting( 2 );
+
+			// Frame.
+			var settingsFrameAtlasDescriptor:Away3dFrameAtlasTextureDescriptorVO = new Away3dFrameAtlasTextureDescriptorVO(
+					Away3dFrameTextureType.DANGER,
+					_framesAtlasXml,
+					_framesAtlasTextureInfo.textureWidth, _framesAtlasTextureInfo.textureHeight
+			);
+			var settingsFrame:PictureFrame = new PictureFrame( settingsPicture, _frameMaterial, settingsFrameAtlasDescriptor );
+			addPictureFrame( settingsFrame );
+
+			// -----------------------
+			// Psykopaint frame.
+			// -----------------------
+
+			// Picture.
+			var psykopaintTexture:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.PSYKOPAINT_PAINTING );
+			var psykopaintTextureInfo:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.PSYKOPAINT_PAINTING );
+			var psykopaintPicture:Picture = new Picture( _sceneLightPicker, psykopaintTextureInfo, psykopaintTexture );
+			psykopaintPicture.scalePainting( 2 );
+
+			// Frame.
+			var psykopaintFrameAtlasDescriptor:Away3dFrameAtlasTextureDescriptorVO = new Away3dFrameAtlasTextureDescriptorVO(
+					Away3dFrameTextureType.WHITE,
+					_framesAtlasXml,
+					_framesAtlasTextureInfo.textureWidth, _framesAtlasTextureInfo.textureHeight
+			);
+			var psykopaintFrame:PictureFrame = new PictureFrame( psykopaintPicture, _frameMaterial, psykopaintFrameAtlasDescriptor );
+			addPictureFrame( psykopaintFrame );
+
+			// Starts looking at the psykopaint frame.
+			_cameraController.jumpToSnapPoint( 1 );
 
 		}
 
 		public function loadUserFrames():void {
 
-			if( !_shadowMesh ) initializeFrameShadow();
-			if( !_frameMaterial ) initializeFrameMaterial();
+			checkInit();
 
 			// TODO.
 			// implementing dummy images for now
 
-			var dummyImageDiffuse:BitmapTexture = Away3dTextureAssetsManager.getTextureById( Away3dTextureType.SAMPLE_PAINTING_DIFFUSE );
-			var dummyImageNormals:BitmapTexture = Away3dTextureAssetsManager.getTextureById( Away3dTextureType.SAMPLE_PAINTING_NORMALS );
-			var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureInfoById( Away3dTextureType.SAMPLE_PAINTING_DIFFUSE );
-
-			var framesAtlasXml:XML = Away3dTextureAssetsManager.getAtlasDataById( Away3dTextureType.FRAMES_ATLAS );
-			var atlasTextureInfo:Away3dTextureInfoVO = Away3dTextureAssetsManager.getTextureInfoById( Away3dTextureType.FRAMES_ATLAS );
+			var dummyImageDiffuse:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SAMPLE_PAINTING_DIFFUSE );
+			var dummyImageNormals:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SAMPLE_PAINTING_NORMALS );
+			var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.SAMPLE_PAINTING_DIFFUSE );
 
 			// Add a few test frames.
 			var frameIds:Array = Away3dFrameTextureType.getAvailableTypes();
@@ -223,8 +264,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 				// Frame descriptor.
 				var atlasData:Away3dFrameAtlasTextureDescriptorVO = new Away3dFrameAtlasTextureDescriptorVO(
 						frameId,
-						framesAtlasXml,
-						atlasTextureInfo.textureWidth, atlasTextureInfo.textureHeight
+						_framesAtlasXml,
+						_framesAtlasTextureInfo.textureWidth, _framesAtlasTextureInfo.textureHeight
 				);
 
 				// Wall frame.

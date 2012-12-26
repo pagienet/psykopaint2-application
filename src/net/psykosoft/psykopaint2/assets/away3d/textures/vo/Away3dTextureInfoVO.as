@@ -20,5 +20,14 @@ package net.psykosoft.psykopaint2.assets.away3d.textures.vo
 			this.textureWidth = textureWidth;
 			this.textureHeight = textureHeight;
 		}
+
+		public function toString():String {
+			return "Away3dTextureInfoVO - [ " +
+					"imageWidth: " + imageWidth + ", " +
+					"imageHeight: " + imageHeight + ", " +
+					"textureWidth: " + textureWidth + ", " +
+					"textureHeight: " + textureHeight + ", " +
+					" ]";
+		}
 	}
 }

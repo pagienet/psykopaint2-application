@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.assets.starling
 
 	import starling.textures.Texture;
 
-	public class StarlingTextureAssetsManager
+	public class StarlingTextureManager
 	{
 		[Embed(source="../../../../../../assets-embed/textures/ui/PsykopaintLogo500x230.jpg")]
 		private static var LogoTextureAsset:Class;

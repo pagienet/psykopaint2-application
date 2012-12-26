@@ -123,6 +123,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			_snapPoints.push( position );
 		}
 
+		public function jumpToSnapPoint( index:uint ):void {
+			_camera.x = _snapPoints[ index ];
+		}
+
 		// ---------------------------------------------------------------------
 		// User interaction.
 		// ---------------------------------------------------------------------

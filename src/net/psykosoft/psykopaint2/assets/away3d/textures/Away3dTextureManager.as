@@ -17,7 +17,7 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 	/*
 	* Manages general textures used in 3D scenes.
 	* */
-	public class Away3dTextureAssetsManager
+	public class Away3dTextureManager
 	{
 		[Embed(source="../../../../../../../assets-embed/textures/home/home_painting.jpg")]
 		private static var HomePaintingTextureAsset:Class;
@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 
 		private static var _assets:Dictionary;
 		private static var _textures:Dictionary;
-		private static var _atlasses:Dictionary;
+		private static var _atlases:Dictionary;
 		private static var _textureInfo:Dictionary;
 		private static var _initialized:Boolean;
 
@@ -43,15 +43,15 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 			_assets = new Dictionary();
 			_textures = new Dictionary();
 			_textureInfo = new Dictionary();
-			_atlasses = new Dictionary();
+			_atlases = new Dictionary();
 
 			// Asset strings need to be associated with the raw data.
-			_assets[ Away3dTextureType.HOME_PAINTING ] = HomePaintingTextureAsset;
+			_assets[ Away3dTextureType.PSYKOPAINT_PAINTING ] = HomePaintingTextureAsset;
 			_assets[ Away3dTextureType.SETTINGS_PAINTING ] = SettingsPaintingTextureAsset;
 			_assets[ Away3dTextureType.SAMPLE_PAINTING_DIFFUSE ] = SamplePaintingDiffuseTextureAsset;
 			_assets[ Away3dTextureType.SAMPLE_PAINTING_NORMALS ] = SamplePaintingNormalsTextureAsset;
 			_assets[ Away3dTextureType.FRAMES_ATLAS ] = FramesTextureAsset;
-			_atlasses[ Away3dTextureType.FRAMES_ATLAS ] = FramesTextureAtlasXmlAsset;
+			_atlases[ Away3dTextureType.FRAMES_ATLAS ] = FramesTextureAtlasXmlAsset;
 
 			_initialized = true;
 		}
@@ -59,11 +59,11 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 		public static function getAtlasDataById( id:String ):XML {
 			if( !_initialized ) initialize();
 			Cc.log( "{Away3dTextureManager.as} - requesting atlas for " + id + "." );
-			if( _atlasses[ id ] is XML ) return _atlasses[ id ];
-			var atlasClass:Class = _atlasses[ id ];
+			if( _atlases[ id ] is XML ) return _atlases[ id ];
+			var atlasClass:Class = _atlases[ id ];
 			if( !atlasClass ) Cc.fatal( "{Away3dTextureManager.as} - The atlas [ " + id + " ] does not exist." );
-			_atlasses[ id ] = XML( new atlasClass() );
-			return _atlasses[ id ];
+			_atlases[ id ] = XML( new atlasClass() );
+			return _atlases[ id ];
 		}
 
 		public static function getTextureById( id:String ):BitmapTexture {
