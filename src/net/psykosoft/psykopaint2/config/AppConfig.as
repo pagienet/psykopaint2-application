@@ -36,10 +36,6 @@ package net.psykosoft.psykopaint2.config
 		[Inject]
 		public var contextView:ContextView;
 
-		public function AppConfig() {
-			super();
-		}
-
 		public function configure():void {
 
 			// Debug utility.

@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.config
 		// General options.
 		// ---------------------------------------------------------------------
 
-		public static const SHOW_SPLASH_SCREEN:Boolean = false;
+		public static const SHOW_SPLASH_SCREEN:Boolean = true;
 		public static const DEVICE_DPI:uint = 132;
 		public static const DEVICE_SCREEN_WIDTH:uint = 1024;
 		public static const DEVICE_SCREEN_HEIGHT:uint = 768;

@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.view.starling.splash
 {
 
+	import com.junkbyte.console.Cc;
+
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 
@@ -62,6 +64,7 @@ package net.psykosoft.psykopaint2.view.starling.splash
 		}
 
 		private function onDieTimer( event:TimerEvent ):void {
+			Cc.log( this, "timer complete." );
 			die();
 		}
 
@@ -70,6 +73,7 @@ package net.psykosoft.psykopaint2.view.starling.splash
 			for( var i:uint = 0; i < touches.length; i++ ) {
 				var touch:Touch = touches[ i ];
 				if( touch.phase == TouchPhase.BEGAN ) { // began acts as a mouse down
+					Cc.log( this, "stage touched." );
 					stage.removeEventListener( TouchEvent.TOUCH, onStageTouched );
 					die();
 				}

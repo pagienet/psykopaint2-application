@@ -47,7 +47,6 @@ package net.psykosoft.psykopaint2
 		// ---------------------------------------------------------------------
 
 		private function initStage():void {
-			// Init stage.
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			stage.frameRate = 60;
@@ -57,6 +56,7 @@ package net.psykosoft.psykopaint2
 			// Init GPU context manager.
 			var stage3dManager:Stage3DManager = Stage3DManager.getInstance( stage );
 			_stage3dProxy = stage3dManager.getFreeStage3DProxy();
+			DisplayContextManager.stage3dProxy = _stage3dProxy;
 			_stage3dProxy.color = 0xFFFFFF;
 			_stage3dProxy.antiAlias = Settings.ANTI_ALIAS;
 			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContextCreated );

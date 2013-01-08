@@ -7,15 +7,10 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 	import feathers.controls.ButtonGroup;
 	import feathers.data.ListCollection;
 
-	import net.psykosoft.psykopaint2.assets.starling.StarlingTextureManager;
-	import net.psykosoft.psykopaint2.assets.starling.data.StarlingTextureType;
-
 	import net.psykosoft.psykopaint2.ui.buttons.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
-
-	import starling.display.Image;
 
 	import starling.events.Event;
 

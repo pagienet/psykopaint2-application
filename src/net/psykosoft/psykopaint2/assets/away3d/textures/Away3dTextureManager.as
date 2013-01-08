@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 	import net.psykosoft.psykopaint2.assets.away3d.textures.data.Away3dTextureType;
 
 	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dTextureInfoVO;
+	import net.psykosoft.psykopaint2.util.DisplayContextManager;
 
 	import net.psykosoft.psykopaint2.util.TextureUtil;
 
@@ -152,6 +153,8 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 			if( !assetClass ) Cc.fatal( "{Away3dTextureManager.as} - The asset [ " + id + " ] does not exist." );
 			var originalBmd:BitmapData = new assetClass().bitmapData;
 			var bitmapTexture:BitmapTexture = new BitmapTexture( TextureUtil.ensurePowerOf2( originalBmd ) );
+			bitmapTexture.name = id;
+			bitmapTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy ); // Forces the generation of the texture on demand ( BitmapTextures are lazy )
 			_textureInfo[ id ] = new Away3dTextureInfoVO( originalBmd.width, originalBmd.height, bitmapTexture.width, bitmapTexture.height );
 			_textures[ id ] = bitmapTexture;
 			return bitmapTexture;
