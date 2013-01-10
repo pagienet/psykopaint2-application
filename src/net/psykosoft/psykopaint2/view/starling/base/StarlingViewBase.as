@@ -1,7 +1,9 @@
 package net.psykosoft.psykopaint2.view.starling.base
 {
 
-	import net.psykosoft.psykopaint2.view.away3d.base.IView;
+	import com.junkbyte.console.Cc;
+
+	import net.psykosoft.psykopaint2.view.base.IView;
 
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -59,12 +61,14 @@ package net.psykosoft.psykopaint2.view.starling.base
 			if( _enabled ) return;
 			visible = true;
 			_enabled = true;
+			Cc.info( this, "enable()." );
 		}
 
 		public function disable():void {
 			if( !_enabled ) return;
 			visible = false;
 			_enabled = false;
+			Cc.info( this, "disable()." );
 		}
 
 		public function destroy():void {

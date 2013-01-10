@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.view.starling.splash
 			splashDiedSignal = new Signal();
 
 			// White Bg.
-			_bg = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.WHITE ) );
+			_bg = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.TRANSPARENT_WHITE ) );
 			addChild( _bg );
 
 			// Display logo.

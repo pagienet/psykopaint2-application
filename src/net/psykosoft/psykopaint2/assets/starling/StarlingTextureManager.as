@@ -35,9 +35,11 @@ package net.psykosoft.psykopaint2.assets.starling
 
 			// Register generative textures.
 			// TODO: can avoid generation unless requested?
-			_textures[ StarlingTextureType.WHITE ] = generateTextureOfColor( 0x33FFFFFF );
-			_textures[ StarlingTextureType.RED ] = generateTextureOfColor( 0x33FF0000 );
-			_textures[ StarlingTextureType.GREEN ] = generateTextureOfColor( 0x3300FF00 );
+			_textures[ StarlingTextureType.TRANSPARENT_WHITE ] = generateTextureOfColor( 0x33FFFFFF );
+			_textures[ StarlingTextureType.TRANSPARENT_RED ] = generateTextureOfColor( 0x33FF0000 );
+			_textures[ StarlingTextureType.TRANSPARENT_GREEN ] = generateTextureOfColor( 0x3300FF00 );
+			_textures[ StarlingTextureType.TRANSPARENT ] = generateTextureOfColor( 0x00000000 );
+			_textures[ StarlingTextureType.SOLID_GRAY ] = generateTextureOfColor( 0xFF666666 );
 
 			_initialized = true;
 

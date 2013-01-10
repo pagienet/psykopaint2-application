@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.view.away3d.wall
 {
-	import net.psykosoft.psykopaint2.view.away3d.base.IView;
+	import net.psykosoft.psykopaint2.view.base.IView;
 
 	import org.osflash.signals.Signal;
 

@@ -34,13 +34,13 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 			Cc.log( this, "button pressed: " + buttonLabel );
 			switch( buttonLabel ) {
 				case HomeScreenSubNavigationView.BUTTON_LABEL_0:
-					requestStateChangeSignal.dispatch( new StateVO( States.TEST_SCREEN_1 ) );
+					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
 					break;
 				case HomeScreenSubNavigationView.BUTTON_LABEL_1:
-					requestStateChangeSignal.dispatch( new StateVO( States.TEST_SCREEN_2 ) );
+					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
 					break;
 				case HomeScreenSubNavigationView.BUTTON_LABEL_2:
-					requestRandomWallpaperChangeSignal.dispatch();
+					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
 					break;
 			}
 		}

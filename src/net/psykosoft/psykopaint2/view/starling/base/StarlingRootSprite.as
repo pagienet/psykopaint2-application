@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationView;
+	import net.psykosoft.psykopaint2.view.starling.popups.PopUpManagerView;
 	import net.psykosoft.psykopaint2.view.starling.splash.SplashView;
 
 	import starling.display.Sprite;
@@ -44,6 +45,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 
 			// Initialize 2d display tree.
 			_mainLayer.addChild( new NavigationView() );
+			_mainLayer.addChild( new PopUpManagerView() );
 			if( Settings.SHOW_SPLASH_SCREEN ) {
 				_mainLayer.addChild( new SplashView() );
 			}

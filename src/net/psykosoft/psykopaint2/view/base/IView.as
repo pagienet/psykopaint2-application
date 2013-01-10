@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.view.away3d.base
+package net.psykosoft.psykopaint2.view.base
 {
 
 	public interface IView

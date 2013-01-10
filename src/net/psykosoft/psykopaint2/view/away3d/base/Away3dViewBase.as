@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.view.away3d.base
 	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.util.DisplayContextManager;
+	import net.psykosoft.psykopaint2.view.base.IView;
 
 	public class Away3dViewBase extends Sprite implements IView
 	{
