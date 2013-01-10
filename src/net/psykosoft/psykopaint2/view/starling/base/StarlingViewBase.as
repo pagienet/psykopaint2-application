@@ -59,6 +59,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 
 		public function enable():void {
 			if( _enabled ) return;
+			onLayout();
 			visible = true;
 			_enabled = true;
 			Cc.info( this, "enable()." );

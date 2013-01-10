@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.view.starling.splash
 			addChild( _logo );
 
 			// Start auto death timer.
-			_autoDieTimer = new Timer( 5000, 1 );
+			_autoDieTimer = new Timer( 2000, 1 );
 			_autoDieTimer.addEventListener( TimerEvent.TIMER, onDieTimer );
 			_autoDieTimer.start();
 		}

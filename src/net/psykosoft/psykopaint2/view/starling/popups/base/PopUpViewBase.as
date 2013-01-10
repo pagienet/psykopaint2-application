@@ -20,8 +20,9 @@ package net.psykosoft.psykopaint2.view.starling.popups.base
 	{
 		public var blockerClickedSignal:Signal;
 
-		private var _bg:Image;
-		private var _container:Sprite;
+		protected var _container:Sprite;
+		protected var _bg:Image;
+
 		private var _blocker:Button;
 
 		public function PopUpViewBase() {

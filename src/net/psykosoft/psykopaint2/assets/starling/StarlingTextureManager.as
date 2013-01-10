@@ -4,16 +4,12 @@ package net.psykosoft.psykopaint2.assets.starling
 	import com.junkbyte.console.Cc;
 
 	import flash.display.Bitmap;
-
 	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.assets.starling.data.StarlingTextureType;
 
-	import net.psykosoft.psykopaint2.config.Settings;
-
 	import starling.core.Starling;
-
 	import starling.textures.Texture;
 
 	public class StarlingTextureManager
@@ -39,7 +35,7 @@ package net.psykosoft.psykopaint2.assets.starling
 			_textures[ StarlingTextureType.TRANSPARENT_RED ] = generateTextureOfColor( 0x33FF0000 );
 			_textures[ StarlingTextureType.TRANSPARENT_GREEN ] = generateTextureOfColor( 0x3300FF00 );
 			_textures[ StarlingTextureType.TRANSPARENT ] = generateTextureOfColor( 0x00000000 );
-			_textures[ StarlingTextureType.SOLID_GRAY ] = generateTextureOfColor( 0xFF666666 );
+			_textures[ StarlingTextureType.SOLID_GRAY ] = generateTextureOfColor( 0xFFCCCCCC );
 
 			_initialized = true;
 

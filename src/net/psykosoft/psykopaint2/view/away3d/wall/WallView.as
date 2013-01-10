@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 {
 
 	import away3d.entities.Mesh;
-	import away3d.entities.Mesh;
 	import away3d.lights.PointLight;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
@@ -28,12 +27,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 	public class WallView extends Away3dViewBase implements IWallView
 	{
-		// TODO: move to asset manager
-		// TODO: add ability to change wallpapers
-
 		// -----------------------
 		// Shadow decal.
 		// -----------------------
+		// TODO: move to asset manager
 		[Embed(source="../../../../../../../assets-embed/textures/misc/frame-shadow.png")]
 		private var FrameShadowAsset:Class;
 
@@ -120,9 +117,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Initialize camera controller.
 			_camera.z = -1750;
 			_cameraController = new ScrollCameraController( _camera, _wall, stage );
-//			var camControlPerspectiveTracer:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
-//			camControlPerspectiveTracer.position = new Vector3D(5441.28818321228, 0.0001220703125, 400.0000305175781);
-//			addChild3d( camControlPerspectiveTracer );
 
 			super.onStageAvailable();
 		}
