@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 {
 
 	import away3d.entities.Mesh;
+	import away3d.events.MouseEvent3D;
 	import away3d.lights.PointLight;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
@@ -9,6 +10,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 	import away3d.utils.Cast;
+
+	import com.junkbyte.console.Cc;
 
 	import flash.geom.Vector3D;
 	import flash.utils.Dictionary;
@@ -34,11 +37,12 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		[Embed(source="../../../../../../../assets-embed/textures/misc/frame-shadow.png")]
 		private var FrameShadowAsset:Class;
 
+		private var _paintingClickedSignal:Signal;
+
 		private var _wallFrames:Vector.<PictureFrame>;
 		private var _cameraController:ScrollCameraController;
 		private var _wall:Mesh;
 		private var _floor:Mesh;
-		private var _wallFrameClickedSignal:Signal;
 		private var _cameraLight:PointLight;
 		private var _sceneLightPicker:StaticLightPicker;
 		private var _shadowMesh:Mesh;
@@ -68,11 +72,12 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			super();
 
+			_paintingClickedSignal = new Signal();
+
 //			var tri:Trident = new Trident( 500 );
 //			addChild3d( tri );
 
 			_wallFrames = new Vector.<PictureFrame>();
-			_wallFrameClickedSignal = new Signal();
 
 			// Light that moves with camera.
 			// Affects paintings.
@@ -199,6 +204,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			var settingsTexture:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SETTINGS_PAINTING );
 			var settingsTextureInfo:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.SETTINGS_PAINTING );
 			var settingsPicture:Picture = new Picture( _sceneLightPicker, settingsTextureInfo, settingsTexture );
+			// TODO: 3d mouse picking not working
+			settingsPicture.mouseEnabled = settingsPicture.mouseChildren = true;
+			settingsPicture.addEventListener( MouseEvent3D.MOUSE_UP, onSettingsPaintingMouseUp );
 			settingsPicture.scalePainting( 2 );
 
 			// Frame.
@@ -232,6 +240,11 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Starts looking at the psykopaint frame.
 			_cameraController.jumpToSnapPoint( 1 );
 
+		}
+
+		private function onSettingsPaintingMouseUp( event:MouseEvent3D ):void {
+			Cc.warn( this, "settings painting clicked 3d." );
+			_paintingClickedSignal.dispatch( "settings" ); // TODO: can clean up hardcoded string?
 		}
 
 		public function loadUserFrames():void {
@@ -304,8 +317,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			_cameraController.reset();
 		}
 
-		public function get wallFrameClickedSignal():Signal {
-			return _wallFrameClickedSignal;
+		public function get pictureClickedSignal():Signal {
+			return _paintingClickedSignal;
 		}
 	}
 }

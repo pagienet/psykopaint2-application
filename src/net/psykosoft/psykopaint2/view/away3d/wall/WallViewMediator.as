@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			notifyRandomWallpaperChangeSignal.add( onRandomWallPaperRequested );
 
 			// From view.
-			view.wallFrameClickedSignal.add( onViewObjectClicked );
+			view.pictureClickedSignal.add( onViewObjectClicked );
 
 		}
 
@@ -47,9 +47,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		// View -> app.
 		// -----------------------
 
-		private function onViewObjectClicked():void {
-			// TODO
-//			requestStateChangeSignal.dispatch( new StateVO( States.IDLE ) );
+		private function onViewObjectClicked( paintingId:String ):void {
+			requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
 		}
 
 		// -----------------------
