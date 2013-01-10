@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2.assets.starling
 
 	import net.psykosoft.psykopaint2.config.Settings;
 
+	import starling.core.Starling;
+
 	import starling.textures.Texture;
 
 	public class StarlingTextureManager
@@ -48,7 +50,7 @@ package net.psykosoft.psykopaint2.assets.starling
 		public static function getTextureById( id:String ):Texture {
 			if( !_initialized ) initialize();
 			if( _textures[ id ] ) return _textures[ id ];
-			var texture:Texture = Texture.fromBitmapData( getBitmapDataById( id ), false, false, Settings.CONTENT_SCALE_FACTOR );
+			var texture:Texture = Texture.fromBitmapData( getBitmapDataById( id ), false, false, Starling.contentScaleFactor );
 			_textures[ id ] = texture;
 			return texture;
 		}
@@ -62,7 +64,7 @@ package net.psykosoft.psykopaint2.assets.starling
 
 		private static function generateTextureOfColor( color:uint ):Texture {
 			var bmd:BitmapData = new BitmapData( 32, 32, true, color );
-			var texture:Texture = Texture.fromBitmapData( bmd, false, false, Settings.CONTENT_SCALE_FACTOR );
+			var texture:Texture = Texture.fromBitmapData( bmd, false, false, Starling.contentScaleFactor );
 			return texture;
 		}
 	}

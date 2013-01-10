@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2
 	import net.psykosoft.psykopaint2.config.AppConfig;
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.util.DisplayContextManager;
+	import net.psykosoft.psykopaint2.util.PlatformUtil;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingRootSprite;
 	import net.psykosoft.robotlegs.bundles.SignalCommandMapBundle;
 
@@ -38,6 +39,7 @@ package net.psykosoft.psykopaint2
 
 		public function PsykoPaint2() {
 			super();
+			initPlatform();
 			initStage();
 			initStage3D();
 		}
@@ -45,6 +47,12 @@ package net.psykosoft.psykopaint2
 		// ---------------------------------------------------------------------
 		// Initialization.
 		// ---------------------------------------------------------------------
+
+		private function initPlatform():void {
+			Settings.RUNNING_ON_iPAD = PlatformUtil.isRunningOnIPad();
+			Settings.RUNNING_ON_RETINA_DISPLAY = PlatformUtil.isRunningOnRetinaDisplay();
+			Settings.RUNNING_ON_HD = Settings.RUNNING_ON_iPAD && Settings.RUNNING_ON_RETINA_DISPLAY
+		}
 
 		private function initStage():void {
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -60,9 +68,6 @@ package net.psykosoft.psykopaint2
 			_stage3dProxy.color = 0xFFFFFF;
 			_stage3dProxy.antiAlias = Settings.ANTI_ALIAS;
 			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContextCreated );
-			DeviceCapabilities.dpi = Settings.DEVICE_DPI;
-//			DeviceCapabilities.screenPixelWidth = Settings.DEVICE_SCREEN_WIDTH;
-//			DeviceCapabilities.screenPixelHeight = Settings.DEVICE_SCREEN_HEIGHT;
 		}
 
 		private function onContextCreated( event:Stage3DEvent ):void {
@@ -91,6 +96,8 @@ package net.psykosoft.psykopaint2
 		}
 
 		private function init2D():void {
+
+			// Starling.
 			Starling.handleLostContext = true;
 			Starling.multitouchEnabled = true;
 			_starling = new Starling( StarlingRootSprite, stage, _stage3dProxy.viewPort, _stage3dProxy.stage3D );
@@ -104,6 +111,18 @@ package net.psykosoft.psykopaint2
 			_starling.simulateMultitouch = true;
 			_starling.start();
 			DisplayContextManager.starling = _starling;
+
+			// Feathers.
+			if( Settings.RUNNING_ON_HD ) {
+				DeviceCapabilities.dpi = Settings.DPI_iPAD_RETINA;
+				DeviceCapabilities.screenPixelWidth = Settings.RESOLUTION_X_iPAD_RETINA;
+				DeviceCapabilities.screenPixelHeight = Settings.RESOLUTION_Y_iPAD_RETINA;
+			}
+			else {
+				DeviceCapabilities.dpi = Settings.DPI_iPAD;
+				DeviceCapabilities.screenPixelWidth = Settings.RESOLUTION_X_iPAD;
+				DeviceCapabilities.screenPixelHeight = Settings.RESOLUTION_Y_iPAD;
+			}
 		}
 
 		private function initRobotLegs():void {
@@ -124,19 +143,36 @@ package net.psykosoft.psykopaint2
 
 		private function onStageResize( event:Event ):void {
 
-			trace( this, "stage resized: " + stage.stageWidth + ", " + stage.stageHeight );
+			trace( this, "onStageResize - stage: " + stage.stageWidth + ", " + stage.stageHeight );
 
-			_starling.stage.stageWidth = stage.stageWidth;
-			_starling.stage.stageHeight = stage.stageHeight;
+			// Starling stage size determines the size of the coordinate system,
+			// which will always be set to 1024x768, the regular iPad size.
+			if( Settings.RUNNING_ON_iPAD ) {
+				_starling.stage.stageWidth = Settings.RESOLUTION_X_iPAD;
+				_starling.stage.stageHeight = Settings.RESOLUTION_Y_iPAD;
+			}
+			else {
+				_starling.stage.stageWidth = stage.stageWidth; // On desktop, height is slightly smaller than 768 because of window stat. bar
+				_starling.stage.stageHeight = stage.stageHeight;
+			}
+			trace( this, "starling stage size set: " + _starling.stage.stageWidth + ", " + _starling.stage.stageHeight );
 
-			_stage3dProxy.width = stage.stageWidth;
-			_stage3dProxy.height = stage.stageHeight;
-
+			// The view port however is dynamic and will adapt to
+			// the resolution of the device.
 			var viewPort:Rectangle = _starling.viewPort;
-			viewPort.width = stage.stageWidth;
-			viewPort.height = stage.stageHeight;
+			if( Settings.RUNNING_ON_HD ) {
+				viewPort.width = stage.stageWidth;
+				viewPort.height = stage.stageHeight;
+			}
+			else {
+				viewPort.width = _starling.stage.stageWidth;
+				viewPort.height = _starling.stage.stageHeight;
+			}
 			try {
 				trace( this, "starling view port set: " + viewPort.width + ", " + viewPort.height );
+				trace( this, "starling content scale factor: " + _starling.contentScaleFactor );
+				_stage3dProxy.width = viewPort.width;
+				_stage3dProxy.height = viewPort.height;
 				_starling.viewPort = viewPort;
 			}
 			catch( error:Error ) {
