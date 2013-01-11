@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.view.starling.popups.PopUpManagerView;
+	import net.psykosoft.psykopaint2.view.starling.selectimage.SelectImageView;
 	import net.psykosoft.psykopaint2.view.starling.splash.SplashView;
 
 	import starling.display.Sprite;
@@ -29,7 +30,10 @@ package net.psykosoft.psykopaint2.view.starling.base
 
 		override protected function onStageAvailable():void {
 
-			// Define application UI theme.
+			// -----------------------
+			// UI Theme/skin.
+			// -----------------------
+
 			if( Settings.USE_DEBUG_THEME ) {
 				_feathersTheme = new MinimalMobileTheme( stage );
 			}
@@ -37,18 +41,29 @@ package net.psykosoft.psykopaint2.view.starling.base
 				// TODO: Link to own theme
 			}
 
-			// Define main layers.
+			// -----------------------
+			// Layering.
+			// -----------------------
+
 			addChild( _mainLayer = new Sprite() );
 			if( Settings.ENABLE_DEBUG_CONSOLE ) {
 				addChild( _debugLayer = new Sprite() );
 			}
 
-			// Initialize 2d display tree.
+			// -----------------------
+			// << VIEWS >>.
+			// -----------------------
+
+			_mainLayer.addChild( new SelectImageView() );
 			_mainLayer.addChild( new NavigationView() );
 			_mainLayer.addChild( new PopUpManagerView() );
 			if( Settings.SHOW_SPLASH_SCREEN ) {
 				_mainLayer.addChild( new SplashView() );
 			}
+
+			// -----------------------
+			// Debugging console.
+			// -----------------------
 
 			if( Settings.ENABLE_DEBUG_CONSOLE ) {
 			    // Place a little button at the left corner of the app for toggling the console.

@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen.HomeScreenSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.selectimage.SelectImageSubNavigationView;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -28,10 +29,8 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 
 		override public function initialize():void {
 
-			Cc.log( this, "initialized" );
-
 			// View starts disabled.
-			view.disable();
+			view.disable(); // TODO: all views start disabled?
 
 			// From app.
 			notifyStateChangedSignal.add( onApplicationStateChanged );
@@ -47,25 +46,16 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 
 		}
 
-		private function onViewBackButtonTriggered():void {
-			requestStateChangeSignal.dispatch( new StateVO( States.PREVIOUS_STATE ) );
-		}
+		// -----------------------
+		// From app.
+		// -----------------------
 
 		private function onApplicationStateChanged( newState:StateVO ):void {
 			Cc.log( this, "state changed: " + newState.name );
 			if( newState.name != States.SPLASH_SCREEN ) {
 				view.enable();
 				evaluateSubNavigation( newState );
-				evaluateBackButton( newState );
-			}
-		}
-
-		private function evaluateBackButton( state:StateVO ):void {
-			if( state.name == States.HOME_SCREEN ) {
-				view.hideBackButton();
-			}
-			else {
-				view.showBackButton();
+				evaluateBackButtonUsage( newState );
 			}
 		}
 
@@ -74,9 +64,25 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 				case States.HOME_SCREEN:
 					view.enableSubNavigationView( new HomeScreenSubNavigationView() );
 					break;
+				case States.SELECT_IMAGE:
+					view.enableSubNavigationView( new SelectImageSubNavigationView() );
+					break;
 				default:
 					view.disableSubNavigation();
 			}
+		}
+
+		private function evaluateBackButtonUsage( state:StateVO ):void {
+			if( state.name == States.HOME_SCREEN ) view.hideBackButton();
+			else view.showBackButton();
+		}
+
+		// -----------------------
+		// From view.
+		// -----------------------
+
+		private function onViewBackButtonTriggered():void {
+			requestStateChangeSignal.dispatch( new StateVO( States.PREVIOUS_STATE ) );
 		}
 	}
 }

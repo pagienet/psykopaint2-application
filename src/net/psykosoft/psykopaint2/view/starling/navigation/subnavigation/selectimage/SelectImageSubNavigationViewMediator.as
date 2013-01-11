@@ -1,21 +1,26 @@
-package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen
+package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.selectimage
 {
 
 	import com.junkbyte.console.Cc;
 
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
+	import net.psykosoft.psykopaint2.signal.requests.RequestReadyToPaintImagesSignal;
+
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
-	public class HomeScreenSubNavigationViewMediator extends StarlingMediator
+	public class SelectImageSubNavigationViewMediator extends StarlingMediator
 	{
 		[Inject]
-		public var view:HomeScreenSubNavigationView;
+		public var view:SelectImageSubNavigationView;
 
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
+
+		[Inject]
+		public var requestReadyToPaintImagesSignal:RequestReadyToPaintImagesSignal;
 
 		override public function initialize():void {
 
@@ -31,14 +36,17 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			Cc.log( this, "button pressed: " + buttonLabel );
 			switch( buttonLabel ) {
-				case HomeScreenSubNavigationView.BUTTON_LABEL_SETTINGS:
+				case SelectImageSubNavigationView.BUTTON_LABEL_FACEBOOK:
 					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
 					break;
-				case HomeScreenSubNavigationView.BUTTON_LABEL_GALLERY:
+				case SelectImageSubNavigationView.BUTTON_LABEL_CAMERA:
 					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
 					break;
-				case HomeScreenSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
-					requestStateChangeSignal.dispatch( new StateVO( States.SELECT_IMAGE ) );
+				case SelectImageSubNavigationView.BUTTON_LABEL_READY_TO_PAINT:
+					requestReadyToPaintImagesSignal.dispatch();
+					break;
+				case SelectImageSubNavigationView.BUTTON_LABEL_YOUR_PHOTOS:
+					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
 					break;
 			}
 		}

@@ -14,10 +14,10 @@ package net.psykosoft.psykopaint2.assets.starling
 
 	public class StarlingTextureManager
 	{
-		[Embed(source="../../../../../../assets-embed/textures/ui/psykopaintLogo_highRes.jpg")]
+		[Embed(source="../../../../../../assets-embedded/textures/ui/psykopaintLogo_highRes.jpg")]
 		private static var LogoTextureAsset:Class;
 
-		[Embed(source="../../../../../../assets-embed/textures/ui/barViewBg_lowRes.png")]
+		[Embed(source="../../../../../../assets-embedded/textures/ui/barViewBg_lowRes.png")]
 		private static var NavigationBackgroundTextureAsset:Class;
 
 		public static function initialize() {

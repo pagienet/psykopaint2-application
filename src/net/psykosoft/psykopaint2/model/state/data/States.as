@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.model.state.data
 		public static const HOME_SCREEN:String = "state/home/screen";
 		public static const SETTINGS:String = "state/settings/screen";
 		public static const SHOP:String = "state/shop/screen";
+		public static const SELECT_IMAGE:String = "state/select/image/screen";
 		public static const NEW_PAINTING:String = "state/new/painting/screen";
 		public static const PREVIOUS_STATE:String = "state/previous";
 	}

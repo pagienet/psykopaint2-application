@@ -20,67 +20,67 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 	* */
 	public class Away3dTextureManager
 	{
-		[Embed(source="../../../../../../../assets-embed/textures/home/home_painting.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/home/home_painting.jpg")]
 		private static var HomePaintingTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/home/settings_painting.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/home/settings_painting.jpg")]
 		private static var SettingsPaintingTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/frames/frames.png")]
+		[Embed(source="../../../../../../../assets-embedded/textures/frames/frames.png")]
 		private static var FramesTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/frames/frames.xml", mimeType="application/octet-stream")]
+		[Embed(source="../../../../../../../assets-embedded/textures/frames/frames.xml", mimeType="application/octet-stream")]
 		private static var FramesTextureAtlasXmlAsset:Class;
 
 		// TODO: Sample paintings ( to be removed from here ).
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting0/painting.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting0/painting.jpg")]
 		private static var SamplePaintingDiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting0/painting_normals.png")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting0/painting_normals.png")]
 		private static var SamplePaintingNormalsTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting1/painting.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting1/painting.jpg")]
 		private static var SamplePainting1DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting1/painting_normals.png")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting1/painting_normals.png")]
 		private static var SamplePainting1NormalsTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting2/painting.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting2/painting.jpg")]
 		private static var SamplePainting2DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting2/painting_normals.png")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting2/painting_normals.png")]
 		private static var SamplePainting2NormalsTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting3/painting.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting3/painting.jpg")]
 		private static var SamplePainting3DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting3/painting_normals.png")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting3/painting_normals.png")]
 		private static var SamplePainting3NormalsTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting4/painting.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting4/painting.jpg")]
 		private static var SamplePainting4DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting4/painting_normals.png")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting4/painting_normals.png")]
 		private static var SamplePainting4NormalsTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting5/painting.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting5/painting.jpg")]
 		private static var SamplePainting5DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting5/painting_normals.png")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting5/painting_normals.png")]
 		private static var SamplePainting5NormalsTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting6/painting.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting6/painting.jpg")]
 		private static var SamplePainting6DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/paintings/painting6/painting_normals.png")]
+		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting6/painting_normals.png")]
 		private static var SamplePainting6NormalsTextureAsset:Class;
 
 		// Wallpapers.
-		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/default.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/default.jpg")]
 		private static var WallpaperDefaultAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/furryBlack.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/furryBlack.jpg")]
 		private static var WallpaperFurryBlackAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/greenGrass.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/greenGrass.jpg")]
 		private static var WallpaperGreenGrassAsset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/metal1.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/metal1.jpg")]
 		private static var WallpaperMetal1Asset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/metal2.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/metal2.jpg")]
 		private static var WallpaperMetal2Asset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/metal3.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/metal3.jpg")]
 		private static var WallpaperMetal3Asset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/paper1.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/paper1.jpg")]
 		private static var WallpaperPaper1Asset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/paper2.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/paper2.jpg")]
 		private static var WallpaperPaper2Asset:Class;
-		[Embed(source="../../../../../../../assets-embed/textures/wallpapers/vintage.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/vintage.jpg")]
 		private static var WallpaperVintageAsset:Class;
 
 		// FloorPapers
-		[Embed(source="../../../../../../../assets-embed/textures/floorpapers/planks.jpg")]
+		[Embed(source="../../../../../../../assets-embedded/textures/floorpapers/planks.jpg")]
 		private static var FloorpaperPlanksAsset:Class;
 
 		private static var _assets:Dictionary;

@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		// Shadow decal.
 		// -----------------------
 		// TODO: move to asset manager
-		[Embed(source="../../../../../../../assets-embed/textures/misc/frame-shadow.png")]
+		[Embed(source="../../../../../../../assets-embedded/textures/misc/frame-shadow.png")]
 		private var FrameShadowAsset:Class;
 
 		private var _paintingClickedSignal:Signal;

@@ -7,18 +7,18 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 
 	public class HomeScreenSubNavigationView extends SubNavigationViewBase
 	{
-		public static const BUTTON_LABEL_0:String = "Settings";
-		public static const BUTTON_LABEL_1:String = "Shop";
-		public static const BUTTON_LABEL_2:String = "New Painting";
+		public static const BUTTON_LABEL_SETTINGS:String = "Settings";
+		public static const BUTTON_LABEL_GALLERY:String = "Gallery";
+		public static const BUTTON_LABEL_NEW_PAINTING:String = "New Painting";
 
 		public function HomeScreenSubNavigationView() {
 
 			super();
 
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_0, onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_1, onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_2, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_SETTINGS, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_GALLERY, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_NEW_PAINTING, onButtonTriggered ) );
 			addButtons( buttonGroupDefinition );
 		}
 

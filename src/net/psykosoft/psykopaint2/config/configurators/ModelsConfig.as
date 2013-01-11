@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.config.configurators
 {
 
+	import net.psykosoft.psykopaint2.model.sourceimages.SourceImagesModel;
 	import net.psykosoft.psykopaint2.model.state.StateModel;
 
 	import org.swiftsuspenders.Injector;
@@ -10,6 +11,7 @@ package net.psykosoft.psykopaint2.config.configurators
 		public function ModelsConfig( injector:Injector ) {
 
 			injector.map( StateModel ).asSingleton();
+			injector.map( SourceImagesModel ).asSingleton();
 
 		}
 	}

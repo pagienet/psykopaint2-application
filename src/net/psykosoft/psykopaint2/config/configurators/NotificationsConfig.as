@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.config.configurators
 {
 
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyRandomWallpaperChangeSignal;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifySourceImagesUpdatedSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
 
 	import org.swiftsuspenders.Injector;
@@ -12,6 +13,7 @@ package net.psykosoft.psykopaint2.config.configurators
 
 			injector.map( NotifyStateChangedSignal ).asSingleton();
 			injector.map( NotifyRandomWallpaperChangeSignal ).asSingleton();
+			injector.map( NotifySourceImagesUpdatedSignal ).asSingleton();
 
 		}
 	}
