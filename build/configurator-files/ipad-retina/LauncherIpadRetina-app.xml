@@ -176,8 +176,6 @@
             <![CDATA[
             <key>UIDeviceFamily</key>
             <array>
-                <!-- iPhone and iPod touch devices -->
-                <!--<string>1</string>-->
                 <!-- iPad devices -->
                 <string>2</string>
             </array>
@@ -200,7 +198,7 @@
         </Entitlements>-->
 
         <!-- Display Resolution for the app (either "standard" or "high"). Optional. Default "standard" -->
-        <!--<requestedDisplayResolution>high</requestedDisplayResolution>-->
+        <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
 
     <!-- Android specific tags that get passed to AndroidManifest.xml file. -->
