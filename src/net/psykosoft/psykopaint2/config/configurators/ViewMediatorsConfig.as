@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.config.configurators
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.selectimage.SelectImageSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.popups.PopUpManagerView;
 	import net.psykosoft.psykopaint2.view.starling.popups.PopUpManagerViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.popups.noplatform.FeatureNotInPlatformPopUpView;
+	import net.psykosoft.psykopaint2.view.starling.popups.noplatform.FeatureNotInPlatformPopUpViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.popups.nofeature.FeatureNotImplementedPopUpView;
 	import net.psykosoft.psykopaint2.view.starling.popups.nofeature.FeatureNotImplementedPopUpViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.selectimage.SelectImageView;
@@ -37,6 +39,7 @@ package net.psykosoft.psykopaint2.config.configurators
 			// 2d Pop up views.
 			mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
 			mediatorMap.map( FeatureNotImplementedPopUpView ).toMediator( FeatureNotImplementedPopUpViewMediator );
+			mediatorMap.map( FeatureNotInPlatformPopUpView ).toMediator( FeatureNotInPlatformPopUpViewMediator );
 
 			// 2d Navigation views.
 			mediatorMap.map( NavigationView ).toMediator( NavigationViewMediator );

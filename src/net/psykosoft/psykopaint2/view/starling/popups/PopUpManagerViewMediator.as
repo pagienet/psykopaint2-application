@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.view.starling.popups
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.view.starling.popups.noplatform.FeatureNotInPlatformPopUpView;
 	import net.psykosoft.psykopaint2.view.starling.popups.nofeature.FeatureNotImplementedPopUpView;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
@@ -41,6 +42,9 @@ package net.psykosoft.psykopaint2.view.starling.popups
 			switch( state.name ) {
 				case States.FEATURE_NOT_IMPLEMENTED:
 					view.showPopUp( FeatureNotImplementedPopUpView );
+					break;
+				case States.FEATURE_NOT_AVAILABLE_ON_THIS_PLATFORM:
+					view.showPopUp( FeatureNotInPlatformPopUpView );
 					break;
 				default:
 					view.hideLastPopUp();
