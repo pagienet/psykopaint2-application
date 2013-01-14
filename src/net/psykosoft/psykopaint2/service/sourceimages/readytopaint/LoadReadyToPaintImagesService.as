@@ -63,14 +63,23 @@ package net.psykosoft.psykopaint2.service.sourceimages.readytopaint
 		private function onAllThumbsLoaded( event:BulkProgressEvent ):void {
 			Cc.log( this, "all loaded" );
 
+			var i:uint, j:uint;
+
 			// Produce all bitmapdatas.
 			var bmds:Vector.<BitmapData> = new Vector.<BitmapData>();
-			for( var i:uint; i < _thumbNames.length; i++ ) {
-				bmds.push( _bulkLoader.getBitmapData( _thumbNames[ i ] ) );
+			for( i = 0; i < _thumbNames.length; i++ ) {
+				for( j = 0; j < 50; j++ ) { // TODO: temporarily adding multiple items for tests
+					bmds.push( _bulkLoader.getBitmapData( _thumbNames[ i ] ) );
+				}
 			}
+			bmds = bmds.sort( randomSort );
 			Cc.log( this, "bmds: " + bmds );
 
 			sourceImagesModel.thumbs = bmds;
+		}
+
+		private function randomSort( itemA:Object, itemB:Object ):Number {
+			return Math.random() > 0.5 ? 1 : -1;
 		}
 	}
 }

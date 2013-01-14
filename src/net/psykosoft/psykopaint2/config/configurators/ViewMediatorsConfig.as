@@ -28,7 +28,10 @@ package net.psykosoft.psykopaint2.config.configurators
 			// 2d
 			// -----------------------
 
+			// General.
 			mediatorMap.map( SplashView ).toMediator( SplashViewMediator );
+
+			// Painting process.
 			mediatorMap.map( SelectImageView ).toMediator( SelectImageViewMediator );
 
 			// 2d Pop up views.
@@ -44,6 +47,7 @@ package net.psykosoft.psykopaint2.config.configurators
 			// 3d
 			// -----------------------
 
+			// General.
 			mediatorMap.map( IWallView ).toMediator( WallViewMediator );
 
 		}

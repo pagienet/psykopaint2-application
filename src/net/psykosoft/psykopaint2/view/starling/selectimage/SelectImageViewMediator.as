@@ -38,6 +38,7 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 
 		private function onSourceImagesUpdated( thumbs:Vector.<BitmapData> ):void {
 			Cc.log( this, "thumbs updated: " + thumbs );
+			view.displayThumbs( thumbs );
 		}
 
 		private function onApplicationStateChanged( newState:StateVO ):void {

@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.config.configurators
 			injector.map( LoadReadyToPaintImagesService ).asSingleton();
 
 			// Platform dependent.
-//			injector.map( LoadReadyToPaintImagesService ).toSingleton( Whatever );
+//			injector.map( SampleServiceInterface ).toSingleton( SampleServiceImplementation );
 
 		}
 	}
