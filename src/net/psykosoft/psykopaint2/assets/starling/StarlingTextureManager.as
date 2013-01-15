@@ -20,6 +20,12 @@ package net.psykosoft.psykopaint2.assets.starling
 		[Embed(source="../../../../../../assets-embedded/textures/ui/barViewBg_lowRes.png")]
 		private static var NavigationBackgroundTextureAsset:Class;
 
+		[Embed(source="../../../../../../assets-embedded/textures/ui/barViewBg_highRes.png")]
+		private static var NavigationBackgroundTextureAssetHD:Class;
+
+		// TODO: move all asset embeds to UI project.
+		// TODO: do not embed classes that will not be used, i.e. do not embed low and high res versions and then select, find a way
+
 		public static function initialize() {
 
 			_textures = new Dictionary();
@@ -27,6 +33,7 @@ package net.psykosoft.psykopaint2.assets.starling
 
 			// Register individual bitmaps.
 			_assets[ StarlingTextureType.NAVIGATION_BACKGROUND ] = NavigationBackgroundTextureAsset;
+			_assets[ StarlingTextureType.NAVIGATION_BACKGROUND_HD ] = NavigationBackgroundTextureAssetHD;
 			_assets[ StarlingTextureType.LOGO ] = LogoTextureAsset;
 
 			// Register generative textures.

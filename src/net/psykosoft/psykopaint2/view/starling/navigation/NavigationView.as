@@ -28,7 +28,12 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 			super();
 
 			// Bg.
-			_bgImage = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.NAVIGATION_BACKGROUND ) );
+			if( Settings.RUNNING_ON_HD ) {
+				_bgImage = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.NAVIGATION_BACKGROUND_HD ) );
+			}
+			else {
+				_bgImage = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.NAVIGATION_BACKGROUND ) );
+			}
 			addChild( _bgImage );
 
 			// Container will hold buttons.

@@ -6,6 +6,9 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 	import feathers.controls.Button;
 	import feathers.controls.ButtonGroup;
 	import feathers.controls.Header;
+	import feathers.controls.ScrollContainer;
+	import feathers.controls.Scroller;
+	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
 
 	import net.psykosoft.psykopaint2.config.Settings;
@@ -16,10 +19,13 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 	import org.osflash.signals.Signal;
 
+	import starling.display.Quad;
+
 	import starling.events.Event;
 
 	public class SubNavigationViewBase extends StarlingViewBase
 	{
+		private var _scrollContainer:ScrollContainer;
 		private var _buttonGroup:ButtonGroup;
 		private var _leftButton:Button;
 		private var _rightButton:Button;
@@ -63,14 +69,25 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 		}
 
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
-			if( !_buttonGroup ) {
-				_buttonGroup = new ButtonGroup();
-				_buttonGroup.direction = ButtonGroup.DIRECTION_HORIZONTAL;
-				_buttonGroup.buttonProperties = { width: 100, height: 100 };
-				_buttonGroup.buttonInitializer = buttonInitializer;
-				addChild( _buttonGroup );
-			}
+
+			_buttonGroup = new ButtonGroup();
+			_buttonGroup.direction = ButtonGroup.DIRECTION_HORIZONTAL;
+			_buttonGroup.buttonProperties = { width: 100, height: 100 };
+			_buttonGroup.buttonInitializer = buttonInitializer;
 			_buttonGroup.dataProvider = new ListCollection( definition.buttonVOArray );
+			_buttonGroup.invalidate( FeathersControl.INVALIDATION_FLAG_ALL );
+			_buttonGroup.setSize( definition.buttonVOArray.length * ( 100 + 10 ), 100 ); // TODO: properly do this calculation
+
+			_scrollContainer = new ScrollContainer();
+//			_scrollContainer.backgroundSkin = new Quad( 100, 100, 0x222222 );
+			_scrollContainer.scrollerProperties.horizontalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
+			_scrollContainer.scrollerProperties.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
+			_scrollContainer.width = 650; // TODO: properly manage this 650 value, used throughout the class
+			_scrollContainer.height = Settings.NAVIGATION_AREA_CONTENT_HEIGHT;
+			_scrollContainer.x = 1024 / 2 - 650 / 2;
+			_scrollContainer.y = 0;
+			_scrollContainer.addChild( _buttonGroup );
+			addChild( _scrollContainer );
 		}
 
 		private function buttonInitializer( button:Button, data:ButtonDefinitionVO ):void {
@@ -99,7 +116,10 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 			if( _buttonGroup ) {
 				_buttonGroup.validate();
-				_buttonGroup.x = stage.stageWidth / 2 - _buttonGroup.width / 2;
+				Cc.warn( this, "button group dims - width: " + _buttonGroup.width + ", height: " + _buttonGroup.height );
+				if( _buttonGroup.width < 650 ) {
+					_buttonGroup.x = 650 / 2 - _buttonGroup.width / 2;
+				}
 				_buttonGroup.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT / 2 - _buttonGroup.height / 2;
 			}
 
