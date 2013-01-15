@@ -25,11 +25,26 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 
 		override public function initialize():void {
 
+			// From view.
+			view.listChangedSignal.add( onListItemSelected );
+
 			// From app.
 			notifyStateChangedSignal.add( onApplicationStateChanged );
 			notifySourceImagesUpdatedSignal.add( onSourceImagesUpdated );
 
 			super.initialize();
+		}
+
+		// -----------------------
+		// From view.
+		// -----------------------
+
+		private function onListItemSelected():void {
+
+			// TODO: notify some model that the image was selected
+
+			// A selection of an image triggers the "pick colors" state of the new painting process.
+			notifyStateChangedSignal.dispatch( new StateVO( States.PAINTING_SELECT_COLORS ) );
 		}
 
 		// -----------------------
@@ -42,7 +57,7 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 		}
 
 		private function onApplicationStateChanged( newState:StateVO ):void {
-			if( newState.name == States.SELECT_IMAGE ) {
+			if( newState.name == States.PAINTING_SELECT_IMAGE ) {
 				view.enable();
 			}
 			else {

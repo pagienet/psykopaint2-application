@@ -1,7 +1,5 @@
-package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen
+package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.newpainting
 {
-
-	import com.junkbyte.console.Cc;
 
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
@@ -9,10 +7,10 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
-	public class HomeScreenSubNavigationViewMediator extends StarlingMediator
+	public class NewPaintingSubNavigationViewMediator extends StarlingMediator
 	{
 		[Inject]
-		public var view:HomeScreenSubNavigationView;
+		public var view:NewPaintingSubNavigationView;
 
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
@@ -30,14 +28,11 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
-				case HomeScreenSubNavigationView.BUTTON_LABEL_SETTINGS:
-					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
+				case NewPaintingSubNavigationView.BUTTON_LABEL_SELECT_IMAGE:
+					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_SELECT_IMAGE ) );
 					break;
-				case HomeScreenSubNavigationView.BUTTON_LABEL_GALLERY:
-					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
-					break;
-				case HomeScreenSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
-					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_NEW ) );
+				case NewPaintingSubNavigationView.BUTTON_LABEL_BACK:
+					requestStateChangeSignal.dispatch( new StateVO( States.HOME_SCREEN ) );
 					break;
 			}
 		}

@@ -13,14 +13,15 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 	import feathers.layout.TiledRowsLayout;
 
 	import flash.display.BitmapData;
-	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 
+	import org.osflash.signals.Signal;
+
 	import starling.core.Starling;
 
-	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.events.Event;
 	import starling.textures.Texture;
 
 	public class SelectImageView extends StarlingViewBase
@@ -29,18 +30,14 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 		private var _list:List;
 		private var _listLayout:TiledRowsLayout;
 
+		public var listChangedSignal:Signal;
+
 		public function SelectImageView() {
 			super();
+			listChangedSignal = new Signal();
 		}
 
 		override protected function onStageAvailable():void {
-
-			/*var label:Label = new Label();
-			label.text = "Displays images the user can load to start painting on.\nPlease select an image bank source.";
-			addChild( label );
-			label.validate();
-			label.x = stage.stageWidth / 2 - label.width / 2;
-			label.y = stage.stageHeight / 2 - label.height / 2;*/
 
 			_listLayout = new TiledRowsLayout();
 			_listLayout.gap = 10;
@@ -58,6 +55,7 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 			_list.scrollerProperties.scrollBarDisplayMode = Scroller.SCROLL_BAR_DISPLAY_MODE_NONE;
 			_list.scrollerProperties.horizontalScrollPolicy = Scroller.SCROLL_POLICY_ON;
 			_list.itemRendererFactory = tileListItemRendererFactory;
+			_list.addEventListener( Event.CHANGE, onListChange );
 			addChild( _list );
 
 			super.onStageAvailable();
@@ -124,6 +122,10 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 			}
 
 			_thumbTextures = new Vector.<Texture>();
+		}
+
+		private function onListChange( event:Event ):void {
+			listChangedSignal.dispatch();
 		}
 	}
 }

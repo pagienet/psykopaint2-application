@@ -9,17 +9,15 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 	{
 		public static const BUTTON_LABEL_SETTINGS:String = "Settings";
 		public static const BUTTON_LABEL_GALLERY:String = "Gallery";
-		public static const BUTTON_LABEL_NEW_PAINTING:String = "New Painting";
+		public static const BUTTON_LABEL_NEW_PAINTING:String = "New\nPainting";
 
 		public function HomeScreenSubNavigationView() {
-
-			super();
-
+			super( "Home" );
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_SETTINGS, onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_GALLERY, onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_NEW_PAINTING, onButtonTriggered ) );
-			addButtons( buttonGroupDefinition );
+			setCenterButtons( buttonGroupDefinition );
 		}
 
 	}

@@ -13,8 +13,8 @@
         <resizable>false</resizable>
         <width>1024</width>
         <height>768</height>
-        <x>375</x>
-        <y>100</y>
+        <x>1500</x>
+        <y>-60</y>
         <aspectRatio>landscape</aspectRatio>
         <autoOrients>false</autoOrients>
         <fullScreen>false</fullScreen>

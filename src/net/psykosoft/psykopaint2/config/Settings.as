@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.config
 
 		public static const SHOW_SPLASH_SCREEN:Boolean = true;
 		public static const ANTI_ALIAS:uint = 1;
+		public static const NAVIGATION_AREA_CONTENT_HEIGHT:Number = 170;
 
 		// ---------------------------------------------------------------------
 		// Debugging options.

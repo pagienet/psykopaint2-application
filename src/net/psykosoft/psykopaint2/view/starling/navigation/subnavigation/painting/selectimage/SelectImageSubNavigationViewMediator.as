@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.selectimage
+package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectimage
 {
 
 	import net.psykosoft.psykopaint2.config.Settings;
@@ -33,6 +33,9 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.selecti
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
+				case SelectImageSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
+					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_NEW ) );
+					break;
 				case SelectImageSubNavigationView.BUTTON_LABEL_FACEBOOK:
 					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
 					break;

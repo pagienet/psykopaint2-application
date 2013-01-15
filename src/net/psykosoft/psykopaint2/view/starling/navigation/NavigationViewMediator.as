@@ -12,10 +12,19 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen.HomeScreenSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.selectimage.SelectImageSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.editstyle.EditStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.newpainting.NewPaintingSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectbrush.SelectBrushSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectcolors.SelectColorsSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectimage.SelectImageSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectstyle.SelectStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selecttexture.SelectTextureSubNavigationView;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
+	/*
+	* Listens to application state changes and decides which sub navigation menu to display.
+	* */
 	public class NavigationViewMediator extends StarlingMediator
 	{
 		[Inject]
@@ -55,7 +64,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 			if( newState.name != States.SPLASH_SCREEN ) {
 				view.enable();
 				evaluateSubNavigation( newState );
-				evaluateBackButtonUsage( newState );
 			}
 		}
 
@@ -64,17 +72,30 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 				case States.HOME_SCREEN:
 					view.enableSubNavigationView( new HomeScreenSubNavigationView() );
 					break;
-				case States.SELECT_IMAGE:
+				case States.PAINTING_NEW:
+					view.enableSubNavigationView( new NewPaintingSubNavigationView() );
+					break;
+				case States.PAINTING_SELECT_IMAGE:
 					view.enableSubNavigationView( new SelectImageSubNavigationView() );
+					break;
+				case States.PAINTING_SELECT_COLORS:
+					view.enableSubNavigationView( new SelectColorsSubNavigationView() );
+					break;
+				case States.PAINTING_SELECT_TEXTURE:
+					view.enableSubNavigationView( new SelectTextureSubNavigationView() );
+					break;
+				case States.PAINTING_SELECT_BRUSH:
+					view.enableSubNavigationView( new SelectBrushSubNavigationView() );
+					break;
+				case States.PAINTING_SELECT_STYLE:
+					view.enableSubNavigationView( new SelectStyleSubNavigationView() );
+					break;
+				case States.PAINTING_EDIT_STYLE:
+					view.enableSubNavigationView( new EditStyleSubNavigationView() );
 					break;
 				default:
 					view.disableSubNavigation();
 			}
-		}
-
-		private function evaluateBackButtonUsage( state:StateVO ):void {
-			if( state.name == States.HOME_SCREEN ) view.hideBackButton();
-			else view.showBackButton();
 		}
 
 		// -----------------------

@@ -7,8 +7,20 @@ package net.psykosoft.psykopaint2.config.configurators
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen.HomeScreenSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen.HomeScreenSubNavigationViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.selectimage.SelectImageSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.selectimage.SelectImageSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.editstyle.EditStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.editstyle.EditStyleSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.newpainting.NewPaintingSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.newpainting.NewPaintingSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectbrush.SelectBrushSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectbrush.SelectBrushSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectcolors.SelectColorsSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectcolors.SelectColorsSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectimage.SelectImageSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectimage.SelectImageSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectstyle.SelectStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectstyle.SelectStyleSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selecttexture.SelectTextureSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selecttexture.SelectTextureSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.popups.PopUpManagerView;
 	import net.psykosoft.psykopaint2.view.starling.popups.PopUpManagerViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.popups.noplatform.FeatureNotInPlatformPopUpView;
@@ -44,7 +56,14 @@ package net.psykosoft.psykopaint2.config.configurators
 			// 2d Navigation views.
 			mediatorMap.map( NavigationView ).toMediator( NavigationViewMediator );
 			mediatorMap.map( HomeScreenSubNavigationView ).toMediator( HomeScreenSubNavigationViewMediator );
+			// Painting process sub-navigation elements.
+			mediatorMap.map( NewPaintingSubNavigationView ).toMediator( NewPaintingSubNavigationViewMediator );
 			mediatorMap.map( SelectImageSubNavigationView ).toMediator( SelectImageSubNavigationViewMediator );
+			mediatorMap.map( SelectColorsSubNavigationView ).toMediator( SelectColorsSubNavigationViewMediator );
+			mediatorMap.map( SelectTextureSubNavigationView ).toMediator( SelectTextureSubNavigationViewMediator );
+			mediatorMap.map( SelectBrushSubNavigationView ).toMediator( SelectBrushSubNavigationViewMediator );
+			mediatorMap.map( SelectStyleSubNavigationView ).toMediator( SelectStyleSubNavigationViewMediator ); // This is where you paint.
+			mediatorMap.map( EditStyleSubNavigationView ).toMediator( EditStyleSubNavigationViewMediator );
 
 			// -----------------------
 			// 3d

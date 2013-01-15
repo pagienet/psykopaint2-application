@@ -1,18 +1,19 @@
-package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen
+package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.editstyle
 {
 
 	import com.junkbyte.console.Cc;
 
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
+
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
-	public class HomeScreenSubNavigationViewMediator extends StarlingMediator
+	public class EditStyleSubNavigationViewMediator extends StarlingMediator
 	{
 		[Inject]
-		public var view:HomeScreenSubNavigationView;
+		public var view:EditStyleSubNavigationView;
 
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
@@ -30,14 +31,11 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
-				case HomeScreenSubNavigationView.BUTTON_LABEL_SETTINGS:
-					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
+				case EditStyleSubNavigationView.BUTTON_LABEL_SELECT_STYLE:
+					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_SELECT_STYLE ) );
 					break;
-				case HomeScreenSubNavigationView.BUTTON_LABEL_GALLERY:
-					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
-					break;
-				case HomeScreenSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
-					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_NEW ) );
+				default:
+					Cc.warn( this, "Cannot use properties yet, feature not implemented." );
 					break;
 			}
 		}
