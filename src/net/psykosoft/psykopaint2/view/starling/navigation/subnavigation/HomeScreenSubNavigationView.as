@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen
+package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
 
 	import net.psykosoft.psykopaint2.ui.buttons.buttongroups.vo.ButtonDefinitionVO;

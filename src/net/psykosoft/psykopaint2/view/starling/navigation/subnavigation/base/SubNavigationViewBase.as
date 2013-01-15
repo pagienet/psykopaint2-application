@@ -81,14 +81,9 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 		override protected function onLayout():void {
 
-			Cc.info( this, "layout ----------" );
-
 			_header.x = stage.stageWidth / 2 - _header.width / 2;
 			_header.y = -_header.height / 2;
 			_header.validate();
-
-			Cc.info( "header x: " + _header.x );
-			Cc.info( "header y: " + _header.y );
 
 			if( _leftButton ) {
 				_leftButton.x = 10;

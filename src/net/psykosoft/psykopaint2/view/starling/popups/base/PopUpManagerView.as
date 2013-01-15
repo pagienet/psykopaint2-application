@@ -1,8 +1,7 @@
-package net.psykosoft.psykopaint2.view.starling.popups
+package net.psykosoft.psykopaint2.view.starling.popups.base
 {
 
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
-	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpViewBase;
 
 	import org.osflash.signals.Signal;
 

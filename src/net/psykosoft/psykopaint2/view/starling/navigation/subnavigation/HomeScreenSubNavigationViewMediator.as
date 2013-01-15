@@ -1,11 +1,14 @@
-package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen
+package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
 
 	import com.junkbyte.console.Cc;
 
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.HomeScreenSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpType;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -16,6 +19,9 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
+
+		[Inject]
+		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
 
 		override public function initialize():void {
 
@@ -31,10 +37,10 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescr
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
 				case HomeScreenSubNavigationView.BUTTON_LABEL_SETTINGS:
-					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
+					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );
 					break;
 				case HomeScreenSubNavigationView.BUTTON_LABEL_GALLERY:
-					requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
+					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );
 					break;
 				case HomeScreenSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
 					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_NEW ) );

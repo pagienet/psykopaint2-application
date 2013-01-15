@@ -3,15 +3,10 @@ package net.psykosoft.psykopaint2.model.state.data
 
 	public class States
 	{
-		public static const IDLE:String = "idle";
-		public static const FEATURE_NOT_IMPLEMENTED:String = "feature/not/implemented";
 		public static const SPLASH_SCREEN:String = "splash";
 		public static const HOME_SCREEN:String = "home";
-		public static const SETTINGS:String = "settings";
-		public static const SHOP:String = "shop";
 		public static const PREVIOUS_STATE:String = "previous";
-		public static const FEATURE_NOT_AVAILABLE_ON_THIS_PLATFORM:String = "feature/not/available/on/this/platform";
-		
+
 		// -----------------------
 		// Painting states
 		// -----------------------

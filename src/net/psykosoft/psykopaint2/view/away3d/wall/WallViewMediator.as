@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		// -----------------------
 
 		private function onViewObjectClicked( paintingId:String ):void {
-			requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
+//			requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
 		}
 
 		// -----------------------

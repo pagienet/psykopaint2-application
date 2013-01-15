@@ -1,18 +1,17 @@
-package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectbrush
+package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
-
-	import com.junkbyte.console.Cc;
 
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.NewPaintingSubNavigationView;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
-	public class SelectBrushSubNavigationViewMediator extends StarlingMediator
+	public class NewPaintingSubNavigationViewMediator extends StarlingMediator
 	{
 		[Inject]
-		public var view:SelectBrushSubNavigationView;
+		public var view:NewPaintingSubNavigationView;
 
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
@@ -30,14 +29,11 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.paintin
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
-				case SelectBrushSubNavigationView.BUTTON_LABEL_SELECT_STYLE:
-					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_SELECT_STYLE ) );
+				case NewPaintingSubNavigationView.BUTTON_LABEL_SELECT_IMAGE:
+					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_SELECT_IMAGE ) );
 					break;
-				case SelectBrushSubNavigationView.BUTTON_LABEL_PICK_A_TEXTURE:
-					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_SELECT_TEXTURE ) );
-					break;
-				default:
-					Cc.warn( this, "Cannot use brushes yet, feature not implemented." );
+				case NewPaintingSubNavigationView.BUTTON_LABEL_BACK:
+					requestStateChangeSignal.dispatch( new StateVO( States.HOME_SCREEN ) );
 					break;
 			}
 		}

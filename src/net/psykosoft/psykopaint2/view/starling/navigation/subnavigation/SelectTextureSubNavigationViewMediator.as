@@ -1,11 +1,15 @@
-package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selecttexture
+package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
 
 	import com.junkbyte.console.Cc;
 
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpDisplaySignal;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpMessageSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectTextureSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpType;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -16,6 +20,12 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.paintin
 
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
+
+		[Inject]
+		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
+
+		[Inject]
+		public var notifyPopUpMessageSignal:NotifyPopUpMessageSignal;
 
 		override public function initialize():void {
 
@@ -37,7 +47,8 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.paintin
 					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_SELECT_COLORS ) );
 					break;
 				default:
-					Cc.warn( this, "Cannot texturize yet, feature not implemented." );
+					notifyPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
+					notifyPopUpMessageSignal.dispatch( "Cannot texturize yet, feature not implemented." );
 					break;
 			}
 		}

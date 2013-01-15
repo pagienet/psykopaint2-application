@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.config
 	import com.junkbyte.console.Cc;
 
 	import net.psykosoft.psykopaint2.config.configurators.CommandsConfig;
+	import net.psykosoft.psykopaint2.config.configurators.IncludeClassesConfig;
 	import net.psykosoft.psykopaint2.config.configurators.ModelsConfig;
 	import net.psykosoft.psykopaint2.config.configurators.NotificationsConfig;
 	import net.psykosoft.psykopaint2.config.configurators.ServicesConfig;
@@ -45,6 +46,7 @@ package net.psykosoft.psykopaint2.config
 			}
 
 			// Run dedicated configurators.
+			new IncludeClassesConfig();
 			new CommandsConfig( commandMap );
 			new NotificationsConfig( injector );
 			new ViewMediatorsConfig( mediatorMap );

@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.newpainting
+package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
 
 	import feathers.controls.Button;

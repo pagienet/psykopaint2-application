@@ -11,14 +11,14 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen.HomeScreenSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.editstyle.EditStyleSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.newpainting.NewPaintingSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectbrush.SelectBrushSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectcolors.SelectColorsSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectimage.SelectImageSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectstyle.SelectStyleSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selecttexture.SelectTextureSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.HomeScreenSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.EditStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.NewPaintingSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectBrushSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectColorsSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectImageSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectTextureSubNavigationView;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 

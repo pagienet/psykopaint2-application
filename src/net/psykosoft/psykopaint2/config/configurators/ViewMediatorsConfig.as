@@ -5,28 +5,26 @@ package net.psykosoft.psykopaint2.config.configurators
 	import net.psykosoft.psykopaint2.view.away3d.wall.WallViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen.HomeScreenSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.homescreen.HomeScreenSubNavigationViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.editstyle.EditStyleSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.editstyle.EditStyleSubNavigationViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.newpainting.NewPaintingSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.newpainting.NewPaintingSubNavigationViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectbrush.SelectBrushSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectbrush.SelectBrushSubNavigationViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectcolors.SelectColorsSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectcolors.SelectColorsSubNavigationViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectimage.SelectImageSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectimage.SelectImageSubNavigationViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectstyle.SelectStyleSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selectstyle.SelectStyleSubNavigationViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selecttexture.SelectTextureSubNavigationView;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.painting.selecttexture.SelectTextureSubNavigationViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.popups.PopUpManagerView;
-	import net.psykosoft.psykopaint2.view.starling.popups.PopUpManagerViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.popups.noplatform.FeatureNotInPlatformPopUpView;
-	import net.psykosoft.psykopaint2.view.starling.popups.noplatform.FeatureNotInPlatformPopUpViewMediator;
-	import net.psykosoft.psykopaint2.view.starling.popups.nofeature.FeatureNotImplementedPopUpView;
-	import net.psykosoft.psykopaint2.view.starling.popups.nofeature.FeatureNotImplementedPopUpViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.HomeScreenSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.HomeScreenSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.EditStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.EditStyleSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.NewPaintingSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.NewPaintingSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectBrushSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectBrushSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectColorsSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectColorsSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectImageSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectImageSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectStyleSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectTextureSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectTextureSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpManagerView;
+	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpManagerViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.popups.MessagePopUpView;
+	import net.psykosoft.psykopaint2.view.starling.popups.MessagePopUpViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.selectimage.SelectImageView;
 	import net.psykosoft.psykopaint2.view.starling.selectimage.SelectImageViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.splash.SplashView;
@@ -50,8 +48,7 @@ package net.psykosoft.psykopaint2.config.configurators
 
 			// 2d Pop up views.
 			mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
-			mediatorMap.map( FeatureNotImplementedPopUpView ).toMediator( FeatureNotImplementedPopUpViewMediator );
-			mediatorMap.map( FeatureNotInPlatformPopUpView ).toMediator( FeatureNotInPlatformPopUpViewMediator );
+			mediatorMap.map( MessagePopUpView ).toMediator( MessagePopUpViewMediator );
 
 			// 2d Navigation views.
 			mediatorMap.map( NavigationView ).toMediator( NavigationViewMediator );

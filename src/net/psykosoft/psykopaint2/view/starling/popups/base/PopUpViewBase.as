@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.view.starling.popups.base
 		protected var _container:Sprite;
 		protected var _bg:Image;
 
+		private var _animating:Boolean;
 		private var _blocker:Button;
 
 		public function PopUpViewBase() {
@@ -57,18 +58,26 @@ package net.psykosoft.psykopaint2.view.starling.popups.base
 			_blocker.height = stage.stageHeight;
 
 			_container.x = stage.stageWidth / 2 - _bg.width / 2;
-			_container.y = stage.stageHeight / 2 - _bg.height / 2;
+			if( !_animating ) {
+				_container.y = stage.stageHeight / 2 - _bg.height / 2;
+			}
 
 			super.onLayout();
 		}
 
 		override public function enable():void {
 
-			var yCache:Number = _container.y;
-			_container.y -= 2000;
-			TweenLite.to( _container, 1, { y: yCache, ease:Strong.easeOut } );
+			_animating = true;
+
+			var centerY:Number = stage.stageHeight / 2 - _bg.height / 2;
+			_container.y = centerY - 2000;
+			TweenLite.to( _container, 1, { y: centerY, ease:Strong.easeOut, onComplete: onEnableComplete } );
 
 			super.enable();
+		}
+
+		private function onEnableComplete():void {
+			_animating = false;
 		}
 	}
 }

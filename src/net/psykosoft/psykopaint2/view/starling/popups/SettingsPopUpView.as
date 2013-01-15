@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.view.starling.popups.settings
+package net.psykosoft.psykopaint2.view.starling.popups
 {
 
 	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpViewBase;
