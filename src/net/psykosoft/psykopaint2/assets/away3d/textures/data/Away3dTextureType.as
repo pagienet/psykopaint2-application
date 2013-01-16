@@ -7,17 +7,6 @@ package net.psykosoft.psykopaint2.assets.away3d.textures.data
 		public static const SETTINGS_PAINTING:String = "settings/painting";
 		public static const FRAMES_ATLAS:String = "frames/atlas";
 
-		// Wallpapers.
-		public static const WALLPAPER_DEFAULT:String = "wallpaper/default";
-		public static const WALLPAPER_FURRY_BLACK:String = "wallpaper/furryBlack";
-		public static const WALLPAPER_GREEN_GRASS:String = "wallpaper/greenGrass";
-		public static const WALLPAPER_METAL1:String = "wallpaper/metal1";
-		public static const WALLPAPER_METAL2:String = "wallpaper/metal2";
-		public static const WALLPAPER_METAL3:String = "wallpaper/metal3";
-		public static const WALLPAPER_PAPER1:String = "wallpaper/paper1";
-		public static const WALLPAPER_PAPER2:String = "wallpaper/paper2";
-		public static const WALLPAPER_VINTAGE:String = "wallpaper/vintage";
-
 		// Floorpapers.
 		public static const FLOORPAPER_PLANKS:String = "floorpaper/planks";
 
@@ -36,12 +25,5 @@ package net.psykosoft.psykopaint2.assets.away3d.textures.data
 		public static const SAMPLE_PAINTING5_NORMALS:String = "sample/painting5/normals";
 		public static const SAMPLE_PAINTING6_DIFFUSE:String = "sample/painting6/diffuse";
 		public static const SAMPLE_PAINTING6_NORMALS:String = "sample/painting6/normals";
-
-		public static function getAvailableWallPaperTypes():Array {
-			return [
-				WALLPAPER_DEFAULT, WALLPAPER_FURRY_BLACK, WALLPAPER_GREEN_GRASS, WALLPAPER_METAL1,
-				WALLPAPER_METAL2, WALLPAPER_METAL3, WALLPAPER_PAPER1, WALLPAPER_PAPER2, WALLPAPER_VINTAGE
-			];
-		}
 	}
 }

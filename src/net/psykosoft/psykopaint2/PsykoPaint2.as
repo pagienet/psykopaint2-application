@@ -58,6 +58,7 @@ package net.psykosoft.psykopaint2
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			stage.frameRate = 60;
+			// TODO: if mouse 3d interactivity is not used, disable all mouse events in non desktop mode and ensure that away3d's picking system is disabled
 		}
 
 		private function initStage3D():void {
@@ -78,7 +79,7 @@ package net.psykosoft.psykopaint2
 			// Continue and finish initialization.
 			initRobotLegs();
 			// Start loop, determined by proxy.
-			_stage3dProxy.addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			_stage3dProxy.addEventListener( Event.ENTER_FRAME, onEnterFrameAuto );
 			// Start listening for stage resizes.
 			stage.addEventListener( Event.RESIZE, onStageResize );
 			onStageResize( null ); // One has already occurred while the GPU context was being fetched, so trigger one.
@@ -136,7 +137,7 @@ package net.psykosoft.psykopaint2
 		// Event handlers.
 		// ---------------------------------------------------------------------
 
-		private function onEnterFrame( event:Event ):void {
+		private function onEnterFrameAuto( event:Event ):void {
 			_away3d.render();
 			_starling.nextFrame();
 		}

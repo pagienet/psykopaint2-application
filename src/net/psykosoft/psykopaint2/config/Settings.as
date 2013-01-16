@@ -32,7 +32,6 @@ package net.psykosoft.psykopaint2.config
 		// 3D performance options.
 		// ---------------------------------------------------------------------
 
-		public static const USE_REFLECTIONS_ON_FRAMES:Boolean = false;
 		public static const USE_COMPLEX_ILLUMINATION_ON_PAINTINGS:Boolean = true;
 
 		// ---------------------------------------------------------------------

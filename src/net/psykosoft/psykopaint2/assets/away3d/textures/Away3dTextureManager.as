@@ -59,26 +59,6 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting6/painting_normals.png")]
 		private static var SamplePainting6NormalsTextureAsset:Class;
 
-		// Wallpapers.
-		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/default.jpg")]
-		private static var WallpaperDefaultAsset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/furryBlack.jpg")]
-		private static var WallpaperFurryBlackAsset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/greenGrass.jpg")]
-		private static var WallpaperGreenGrassAsset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/metal1.jpg")]
-		private static var WallpaperMetal1Asset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/metal2.jpg")]
-		private static var WallpaperMetal2Asset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/metal3.jpg")]
-		private static var WallpaperMetal3Asset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/paper1.jpg")]
-		private static var WallpaperPaper1Asset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/paper2.jpg")]
-		private static var WallpaperPaper2Asset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/wallpapers/vintage.jpg")]
-		private static var WallpaperVintageAsset:Class;
-
 		// FloorPapers
 		[Embed(source="../../../../../../../assets-embedded/textures/floorpapers/planks.jpg")]
 		private static var FloorpaperPlanksAsset:Class;
@@ -101,17 +81,6 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 			_assets[ Away3dTextureType.SETTINGS_PAINTING ] = SettingsPaintingTextureAsset;
 			_assets[ Away3dTextureType.FRAMES_ATLAS ] = FramesTextureAsset;
 			_atlases[ Away3dTextureType.FRAMES_ATLAS ] = FramesTextureAtlasXmlAsset;
-
-			// Wallpapers.
-			_assets[ Away3dTextureType.WALLPAPER_DEFAULT ] = WallpaperDefaultAsset;
-			_assets[ Away3dTextureType.WALLPAPER_FURRY_BLACK ] = WallpaperFurryBlackAsset;
-			_assets[ Away3dTextureType.WALLPAPER_GREEN_GRASS ] = WallpaperGreenGrassAsset;
-			_assets[ Away3dTextureType.WALLPAPER_METAL1 ] = WallpaperMetal1Asset;
-			_assets[ Away3dTextureType.WALLPAPER_METAL2 ] = WallpaperMetal2Asset;
-			_assets[ Away3dTextureType.WALLPAPER_METAL3 ] = WallpaperMetal3Asset;
-			_assets[ Away3dTextureType.WALLPAPER_PAPER1 ] = WallpaperPaper1Asset;
-			_assets[ Away3dTextureType.WALLPAPER_PAPER2 ] = WallpaperPaper2Asset;
-			_assets[ Away3dTextureType.WALLPAPER_VINTAGE ] = WallpaperVintageAsset;
 
 			// Floorpapers.
 			_assets[ Away3dTextureType.FLOORPAPER_PLANKS ] = FloorpaperPlanksAsset;

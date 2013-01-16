@@ -1,13 +1,10 @@
 package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
 
-	import com.junkbyte.console.Cc;
-
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.HomeScreenSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpType;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
@@ -37,7 +34,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
 				case HomeScreenSubNavigationView.BUTTON_LABEL_SETTINGS:
-					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );
+					requestStateChangeSignal.dispatch( new StateVO( States.SETTINGS ) );
 					break;
 				case HomeScreenSubNavigationView.BUTTON_LABEL_GALLERY:
 					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );

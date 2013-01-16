@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.commands
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.service.sourceimages.readytopaint.LoadReadyToPaintImagesService;
+	import net.psykosoft.psykopaint2.service.packagedimages.LoadReadyToPaintImagesService;
 
 	public class LoadReadyToPaintImagesCommand
 	{

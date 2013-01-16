@@ -4,25 +4,21 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpDisplaySignal;
-	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpMessageSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpType;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
-	public class SelectTextureSubNavigationViewMediator extends StarlingMediator
+	public class SettingsSubNavigationViewMediator extends StarlingMediator
 	{
 		[Inject]
-		public var view:SelectTextureSubNavigationView;
-
-		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
+		public var view:SettingsSubNavigationView;
 
 		[Inject]
 		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
 
 		[Inject]
-		public var notifyPopUpMessageSignal:NotifyPopUpMessageSignal;
+		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		override public function initialize():void {
 
@@ -36,16 +32,16 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 		// -----------------------
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
+			trace( this, "button pressed: " + buttonLabel);
 			switch( buttonLabel ) {
-				case SelectTextureSubNavigationView.BUTTON_LABEL_PICK_A_BRUSH:
-					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_SELECT_BRUSH ) );
+				case SettingsSubNavigationView.BUTTON_LABEL_BACK:
+					requestStateChangeSignal.dispatch( new StateVO( States.HOME_SCREEN ) );
 					break;
-				case SelectTextureSubNavigationView.BUTTON_LABEL_PICK_A_COLOR:
-					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_SELECT_COLORS ) );
+				case SettingsSubNavigationView.BUTTON_LABEL_WALLPAPER:
+					requestStateChangeSignal.dispatch( new StateVO( States.SETTINGS_WALLPAPER ) );
 					break;
 				default:
-					notifyPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
-					notifyPopUpMessageSignal.dispatch( "Cannot texturize yet, feature not implemented." );
+					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );
 					break;
 			}
 		}

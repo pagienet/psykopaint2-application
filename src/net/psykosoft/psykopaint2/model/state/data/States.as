@@ -3,12 +3,23 @@ package net.psykosoft.psykopaint2.model.state.data
 
 	public class States
 	{
+		// -----------------------
+		// General states.
+		// -----------------------
+
 		public static const SPLASH_SCREEN:String = "splash";
-		public static const HOME_SCREEN:String = "home";
 		public static const PREVIOUS_STATE:String = "previous";
 
 		// -----------------------
-		// Painting states
+		// Wall view states.
+		// -----------------------
+
+		public static const HOME_SCREEN:String = "home";
+		public static const SETTINGS:String = "settings";
+		public static const SETTINGS_WALLPAPER:String = "settings/wallpaper";
+
+		// -----------------------
+		// Painting states.
 		// -----------------------
 		
 		public static const PAINTING_NEW:String = "painting/new";

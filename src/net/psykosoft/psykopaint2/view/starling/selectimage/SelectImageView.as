@@ -14,6 +14,8 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 
 	import flash.display.BitmapData;
 
+	import net.psykosoft.psykopaint2.model.packagedimages.vo.PackagedImageVO;
+
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
@@ -74,19 +76,19 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 			return "";
 		}
 
-		public function displayThumbs( bitmapDatas:Vector.<BitmapData> ):void {
+		public function displayThumbs( images:Vector.<PackagedImageVO> ):void {
 
 			if( _thumbTextures ) {
 				disposeImages();
 			}
 
-			Cc.info( this, "loading bitmap datas: " + bitmapDatas.length );
+			Cc.info( this, "loading bitmap datas: " + images.length );
 
 			// Produce textures.
 			_thumbTextures = new Vector.<Texture>();
 			var dataProvider:ListCollection = new ListCollection();
-			for( var i:uint; i < bitmapDatas.length; i++ ) {
-				var bmd:BitmapData = bitmapDatas[ i ];
+			for( var i:uint; i < images.length; i++ ) {
+				var bmd:BitmapData = images[ i ].thumbBmd;
 				var texture:Texture = Texture.fromBitmapData( bmd, false, false, Starling.contentScaleFactor );
 				Cc.info( this, "creating texture: " + texture );
 				_thumbTextures.push( texture );

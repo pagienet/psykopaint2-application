@@ -13,6 +13,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 	import com.junkbyte.console.Cc;
 
+	import flash.display.BitmapData;
+
 	import flash.geom.Vector3D;
 	import flash.utils.Dictionary;
 
@@ -28,7 +30,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 	import org.osflash.signals.Signal;
 
-	public class WallView extends Away3dViewBase implements IWallView
+	public class WallView extends Away3dViewBase
 	{
 		// -----------------------
 		// Shadow decal.
@@ -36,6 +38,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		// TODO: move to asset manager
 		[Embed(source="../../../../../../../assets-embedded/textures/misc/frame-shadow.png")]
 		private var FrameShadowAsset:Class;
+
+		public var snappedAtPaintingSignal:Signal;
 
 		private var _paintingClickedSignal:Signal;
 
@@ -50,6 +54,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private var _shadows:Dictionary;
 		private var _framesAtlasXml:XML;
 		private var _framesAtlasTextureInfo:Away3dTextureInfoVO;
+		private var _cameraAwake:Boolean;
 
 		private const FRAME_GAP_X:Number = 1000;
 
@@ -72,7 +77,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			super();
 
-			_paintingClickedSignal = new Signal();
+			_paintingClickedSignal = new Signal(); // TODO: make public
+			snappedAtPaintingSignal = new Signal();
 
 //			var tri:Trident = new Trident( 500 );
 //			addChild3d( tri );
@@ -99,7 +105,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			_wall.rotationX = -90;
 			_wall.y = WALL_BASE_Y + WALL_HEIGHT / 2;
 			_wall.z = WALL_Z;
-			randomizeWallpaper();
 			addChild3d( _wall );
 
 			// Floor.
@@ -122,13 +127,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Initialize camera controller.
 			_camera.z = -1750;
 			_cameraController = new ScrollCameraController( _camera, _wall, stage );
+			_cameraController.motionStartedSignal.add( onCameraMotionStarted );
+			_cameraController.motionEndedSignal.add( onCameraMotionEnded );
 
 			super.onStageAvailable();
-		}
-
-		override protected function onUpdate():void {
-			_cameraController.update();
-			_cameraLight.x = _camera.x;
 		}
 
 		private function addPictureFrame( pictureFrame:PictureFrame ):void {
@@ -179,18 +181,30 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		}
 
 		// ---------------------------------------------------------------------
-		// IWallView interface implementation.
+		// Updates.
 		// ---------------------------------------------------------------------
 
-		public function randomizeWallpaper():void {
-			var availableTypes:Array = Away3dTextureType.getAvailableWallPaperTypes();
-			var type:String = availableTypes[ Math.floor( availableTypes.length * Math.random() ) ];
-			// TODO: dispose previous material - dispose texture as well?
-			var wallMaterial:TextureMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( type ) );
-			wallMaterial.smooth = true;
-			wallMaterial.repeat = true;
-			_wall.material = wallMaterial;
+		private function onCameraMotionEnded( snapPoint:uint ):void {
+//			trace( this, "motion ended at " + snapPoint );
+			_cameraAwake = false;
+			snappedAtPaintingSignal.dispatch( snapPoint );
 		}
+
+		private function onCameraMotionStarted():void {
+//			trace( this, "motion started." );
+			_cameraAwake = true;
+		}
+
+		override protected function onUpdate():void {
+			_cameraController.update();
+			if( _cameraAwake ) {
+				_cameraLight.x = _camera.x;
+			}
+		}
+
+		// ---------------------------------------------------------------------
+		// Interface.
+		// ---------------------------------------------------------------------
 
 		public function loadDefaultHomeFrames():void {
 
@@ -297,6 +311,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		}
 
+		public function get currentPainting():uint {
+			return _cameraController.evaluateCurrentClosestSnapPoint();
+		}
+
 		public function reset():void {
 
 			// Remove frames.
@@ -319,6 +337,17 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		public function get pictureClickedSignal():Signal {
 			return _paintingClickedSignal;
+		}
+
+		public function animateToPainting( index:int ):void {
+			_cameraController.jumpToSnapPointAnimated( index );
+		}
+
+		public function changeWallpaper( bmd:BitmapData ):void {
+			var wallMaterial:TextureMaterial = new TextureMaterial( new BitmapTexture( bmd ) );
+			wallMaterial.smooth = true;
+			wallMaterial.repeat = true;
+			_wall.material = wallMaterial;
 		}
 	}
 }

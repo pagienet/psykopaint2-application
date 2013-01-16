@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpDisplaySignal;
-	import net.psykosoft.psykopaint2.signal.requests.RequestReadyToPaintImagesSignal;
+	import net.psykosoft.psykopaint2.signal.requests.RequestReadyToPaintImagesLoadSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectImageSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpType;
@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		[Inject]
-		public var requestReadyToPaintImagesSignal:RequestReadyToPaintImagesSignal;
+		public var requestReadyToPaintImagesSignal:RequestReadyToPaintImagesLoadSignal;
 
 		[Inject]
 		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;

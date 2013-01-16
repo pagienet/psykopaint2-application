@@ -24,10 +24,10 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 
 			// TODO: populate with actual options from the drawing core
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "prop 1", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "prop 2", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "prop 3", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "prop 4", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[prop 1]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[prop 2]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[prop 3]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[prop 4]", onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 
 			super.onStageAvailable();

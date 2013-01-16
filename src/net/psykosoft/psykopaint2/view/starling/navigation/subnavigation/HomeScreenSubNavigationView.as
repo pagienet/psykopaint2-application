@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 	public class HomeScreenSubNavigationView extends SubNavigationViewBase
 	{
 		public static const BUTTON_LABEL_SETTINGS:String = "Settings";
-		public static const BUTTON_LABEL_GALLERY:String = "Gallery";
+		public static const BUTTON_LABEL_GALLERY:String = "[Gallery]";
 		public static const BUTTON_LABEL_NEW_PAINTING:String = "New\nPainting";
 
 		public function HomeScreenSubNavigationView() {

@@ -5,9 +5,9 @@ package net.psykosoft.psykopaint2.signal.notifications
 
 	import org.osflash.signals.Signal;
 
-	public class NotifySourceImagesUpdatedSignal extends Signal
+	public class NotifyWallpaperImagesUpdatedSignal extends Signal
 	{
-		public function NotifySourceImagesUpdatedSignal() {
+		public function NotifyWallpaperImagesUpdatedSignal() {
 			super( Vector.<PackagedImageVO> );
 		}
 	}

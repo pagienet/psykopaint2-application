@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.service.sourceimages.readytopaint
+package net.psykosoft.psykopaint2.service.packagedimages
 {
 
 	import br.com.stimuli.loading.BulkLoader;
@@ -10,23 +10,21 @@ package net.psykosoft.psykopaint2.service.sourceimages.readytopaint
 
 	import flash.filesystem.File;
 
-	import net.psykosoft.psykopaint2.model.sourceimages.SourceImagesModel;
+	import net.psykosoft.psykopaint2.model.packagedimages.vo.PackagedImageVO;
 
-	public class LoadReadyToPaintImagesService
+	public class LoadPackagedImagesServiceBase
 	{
-		[Inject]
-		public var sourceImagesModel:SourceImagesModel;
-
 		private var _file:File;
 		private var _bulkLoader:BulkLoader;
 		private var _thumbNames:Vector.<String>;
+		private var _originalNames:Vector.<String>;
 
-		private const FOLDER_PATH:String = "assets-packaged/source-images/";
+		protected var FOLDER_PATH:String;
+		protected var DUPLICATE_COUNT:uint = 1;
 
-		public function LoadReadyToPaintImagesService() {
-			super();
+		public function LoadPackagedImagesServiceBase() {
 			_file = new File( File.applicationDirectory.url + FOLDER_PATH );
-			_bulkLoader = new BulkLoader( "ready-to-paint-images-loader" );
+			_bulkLoader = new BulkLoader( FOLDER_PATH );
 			_bulkLoader.addEventListener( BulkProgressEvent.COMPLETE, onAllThumbsLoaded );
 			_bulkLoader.addEventListener( BulkProgressEvent.PROGRESS, onAllThumbsProgress );
 		}
@@ -42,12 +40,16 @@ package net.psykosoft.psykopaint2.service.sourceimages.readytopaint
 
 			// Extract file names with "thumb" contained in their name.
 			_thumbNames = new Vector.<String>();
+			_originalNames = new Vector.<String>();
 			for( var i:uint; i < listing.length; i++ ) {
 				var file:File = listing[ i ];
 				if( file.name.indexOf( "thumb" ) != -1 ) {
 					_thumbNames.push( file.url );
-					_bulkLoader.add( file.url );
 				}
+				else {
+					_originalNames.push( file.url );
+				}
+				_bulkLoader.add( file.url );
 			}
 			Cc.info( this, _thumbNames );
 
@@ -66,16 +68,23 @@ package net.psykosoft.psykopaint2.service.sourceimages.readytopaint
 			var i:uint, j:uint;
 
 			// Produce all bitmapdatas.
-			var bmds:Vector.<BitmapData> = new Vector.<BitmapData>();
+			var images:Vector.<PackagedImageVO> = new Vector.<PackagedImageVO>();
 			for( i = 0; i < _thumbNames.length; i++ ) {
-				for( j = 0; j < 50; j++ ) { // TODO: temporarily adding multiple items for tests
-					bmds.push( _bulkLoader.getBitmapData( _thumbNames[ i ] ) );
+				for( j = 0; j < DUPLICATE_COUNT; j++ ) { // TODO: temporarily adding multiple items for tests
+					var vo:PackagedImageVO = new PackagedImageVO( _thumbNames[ i ] );
+					vo.thumbBmd = _bulkLoader.getBitmapData( _thumbNames[ i ] );
+					vo.originalBmd = _bulkLoader.getBitmapData( _originalNames[ i ] );
+					images.push( vo );
 				}
 			}
-			bmds = bmds.sort( randomSort );
-			Cc.log( this, "bmds: " + bmds );
+			images = images.sort( randomSort );
+			Cc.log( this, "images: " + images );
 
-			sourceImagesModel.thumbs = bmds;
+			reportImages( images );
+		}
+
+		protected function reportImages( images:Vector.<PackagedImageVO> ):void {
+			// override
 		}
 
 		private function randomSort( itemA:Object, itemB:Object ):Number {

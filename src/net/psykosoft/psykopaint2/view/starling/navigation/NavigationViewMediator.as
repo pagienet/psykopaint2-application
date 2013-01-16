@@ -19,6 +19,8 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectImageSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectTextureSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectWallpaperSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SettingsSubNavigationView;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -92,6 +94,12 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 					break;
 				case States.PAINTING_EDIT_STYLE:
 					view.enableSubNavigationView( new EditStyleSubNavigationView() );
+					break;
+				case States.SETTINGS:
+					view.enableSubNavigationView( new SettingsSubNavigationView() );
+					break;
+				case States.SETTINGS_WALLPAPER:
+					view.enableSubNavigationView( new SelectWallpaperSubNavigationView() );
 					break;
 				default:
 					view.disableSubNavigation();

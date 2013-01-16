@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.commands
 
 			Cc.log( this, "executed" );
 
-			stateModel.state = newState;
+			stateModel.currentState = newState;
 
 		}
 	}

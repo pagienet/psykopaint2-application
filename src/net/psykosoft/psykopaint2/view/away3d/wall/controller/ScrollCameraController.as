@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 	import away3d.entities.Mesh;
 
 	import com.greensock.TweenLite;
-	import com.greensock.easing.Expo;
 	import com.greensock.easing.Strong;
 
 	import flash.display.Stage;
@@ -16,6 +15,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.config.Settings;
+
+	import org.osflash.signals.Signal;
 
 	use namespace arcane;
 
@@ -43,6 +44,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		private var _snapPoints:Vector.<Number>;
 		private var _firstSnapPoint:Number;
 		private var _lastSnapPoint:Number;
+		private var _moving:Boolean;
 
 		private const FRICTION_FACTOR:Number = 0.9;
 		private const AVERAGE_SPEED_SAMPLES:uint = 6;
@@ -50,11 +52,17 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		private const EDGE_STIFFNESS_ON_DRAG:Number = 0.01;
 		private const FRICTION_FACTOR_ON_EDGE_CONTAINMENT:Number = FRICTION_FACTOR * 0.5;
 		private const EDGE_CONTAINMENT_SPEED_LIMIT:Number = 0.5;
-		private const EDGE_CONTAINMENT_RETURN_TWEEN_TIME:Number = 2;
+		private const EDGE_CONTAINMENT_RETURN_TWEEN_TIME:Number = 1;
+
+		public var motionStartedSignal:Signal;
+		public var motionEndedSignal:Signal;
 
 		public function ScrollCameraController( camera:Camera3D, wall:Mesh, stage:Stage ) {
 
 			super();
+
+			motionStartedSignal = new Signal();
+			motionEndedSignal = new Signal();
 
 			_camera = camera;
 
@@ -133,7 +141,12 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		}
 
 		public function jumpToSnapPoint( index:uint ):void {
-			_camera.x = _snapPoints[ index ];
+			_camera.x = _lastCameraX = _snapPoints[ index ];
+		}
+
+		public function jumpToSnapPointAnimated( index:uint ):void {
+			trace( this, "jumping (animated) to snap point: " + index );
+			tweenTo( _snapPoints[ index ], 1 );
 		}
 
 		public function reset():void {
@@ -149,7 +162,12 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 
 		private function onMouseDown( event:MouseEvent ):void {
 
-//			trace( "mouse down" );
+//			trace( "mouse down: " + _stage.mouseY );
+
+			// Reject scrolls in the navigation area.
+			if( _stage.mouseY > _stage.stageHeight - Settings.NAVIGATION_AREA_CONTENT_HEIGHT ) {
+				return;
+			}
 
 			_userInteracting = true;
 
@@ -160,7 +178,14 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			// Snapshot initial mouse position.
 			_mouseX = _lastMouseX = _stage.mouseX - _stage.stageWidth / 2;
 
+			_lastCameraX = _camera.x;
+
 			stopAllTweens();
+
+			if( !_moving ) {
+				_moving = true;
+				motionStartedSignal.dispatch();
+			}
 		}
 
 		private function onMouseUp( event:MouseEvent ):void {
@@ -177,6 +202,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// ---------------------------------------------------------------------
 		// Update.
 		// ---------------------------------------------------------------------
+
+		private var _lastCameraX:Number = 0;
 
 		public function update():void {
 
@@ -204,19 +231,26 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 				// Update speed ( used when the user is not interacting ).
 				pushPosition();
 			}
-			else { // User has released the scroller.
-				if( Math.abs( _speed ) > 0 ) { // Update motion.
+			else if( _moving ) { // User has released the scroller.
+				if( Math.abs( _speed ) > 0.1 ) { // Update motion.
 					_camera.x += _speed;
 					_speed *= _onEdgeDeceleration ? FRICTION_FACTOR_ON_EDGE_CONTAINMENT : FRICTION_FACTOR;
 //					trace( "free motion - pos: " + _camera.x + ", speed: " + _speed );
 				}
 				else {
-//					trace( "stopped free motion - pos: " + _camera.x );
+					trace( "stopped free motion - pos: " + _camera.x );
+					_moving = false;
+					var dx:Number = Math.abs( _camera.x - _lastCameraX );
+					if( dx > 0 ) {
+						motionEndedSignal.dispatch( evaluateClosestSnapPointIndex( _camera.x ) );
+					}
 				}
 			}
 
 			// Contain.
-			containEdges();
+			if( _userInteracting || _moving ) {
+				containEdges();
+			}
 		}
 
 		// ---------------------------------------------------------------------
@@ -249,28 +283,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 //			trace( "calculated position with " + precision + " precision: " + calculatedPosition );
 
 			// Try to find a snapping point near the destination.
-			var len:uint = _snapPoints.length;
-			var closestDistanceToSnapPoint:Number = Number.MAX_VALUE;
-			var targetSnapPoint:Number = -1;
-//			trace( "snap points: " + _snapPoints );
-			for( var i:uint; i < len; ++i ) {
-				var snapPoint:Number = _snapPoints[ i ];
-				var distanceToSnapPoint:Number = Math.abs( calculatedPosition - snapPoint );
-//				trace( "evaluating snap point at distance: " + distanceToSnapPoint );
-				if( distanceToSnapPoint < closestDistanceToSnapPoint ) {
-					closestDistanceToSnapPoint = distanceToSnapPoint;
-					targetSnapPoint = snapPoint;
-				}
-			}
-//			trace( "found snap point: " + targetSnapPoint );
-			// Discard chosen snap points that are too far.
-			var distanceThreshold:Number = _perspectiveFactor * _stage.stageWidth;
-//			trace( "discard threshold: " + distanceThreshold );
-			if( closestDistanceToSnapPoint > distanceThreshold ) {
-				targetSnapPoint = -1;
-//				trace( "snap point discarded" );
-			}
-
+			var targetSnapPoint:Number = evaluateClosestSnapPoint( calculatedPosition );
 
 			// If a valid snap point has been found, alter the speed so that
 			// the scroller reaches it just right.
@@ -279,6 +292,53 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			}
 //			trace( "altered speed: " + _speed );
 
+		}
+
+		private function evaluateClosestSnapPoint( position:Number ):Number {
+			var len:uint = _snapPoints.length;
+			var closestDistanceToSnapPoint:Number = Number.MAX_VALUE;
+			var targetSnapPoint:Number = -1;
+//			trace( "snap points: " + _snapPoints );
+			for( var i:uint; i < len; ++i ) {
+				var snapPoint:Number = _snapPoints[ i ];
+				var distanceToSnapPoint:Number = Math.abs( position - snapPoint );
+//				trace( "evaluating snap point at distance: " + distanceToSnapPoint );
+				if( distanceToSnapPoint < closestDistanceToSnapPoint ) {
+					closestDistanceToSnapPoint = distanceToSnapPoint;
+					targetSnapPoint = snapPoint;
+				}
+			}
+			// Discard chosen snap points that are too far.
+			var distanceThreshold:Number = _perspectiveFactor * _stage.stageWidth;
+//			trace( "discard threshold: " + distanceThreshold );
+			if( closestDistanceToSnapPoint > distanceThreshold ) {
+				targetSnapPoint = -1;
+//				trace( "snap point discarded" );
+			}
+			return targetSnapPoint;
+		}
+
+		private function evaluateClosestSnapPointIndex( position:Number ):uint {
+			trace( "evaluating closest snap point index at position: " + position );
+			var len:uint = _snapPoints.length;
+			var closestDistanceToSnapPoint:Number = Number.MAX_VALUE;
+			var snapPointIndex:int = -1;
+			trace( "snap points: " + _snapPoints );
+			for( var i:uint; i < len; ++i ) {
+				var snapPoint:Number = _snapPoints[ i ];
+				var distanceToSnapPoint:Number = Math.abs( position - snapPoint );
+				trace( "evaluating snap point at distance: " + distanceToSnapPoint );
+				if( distanceToSnapPoint < closestDistanceToSnapPoint ) {
+					closestDistanceToSnapPoint = distanceToSnapPoint;
+					snapPointIndex = i;
+				}
+			}
+			trace( "found snap point index: " + snapPointIndex );
+			return snapPointIndex;
+		}
+
+		public function evaluateCurrentClosestSnapPoint():uint {
+			return evaluateClosestSnapPoint( _camera.x );
 		}
 
 		/*
@@ -340,6 +400,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			}
 			else {
 				_onEdgeDeceleration = false;
+				_edgeSurpassed = 0;
 			}
 
 			// If previously surpassed and edge and speed is low enough, tween back to edge.
@@ -367,25 +428,35 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 //			trace( this, "starting tween to: " + position );
 			stopAllTweens();
 			_onTween = true;
+			if( !_moving ) {
+				_moving = true;
+				motionStartedSignal.dispatch();
+			}
 			TweenLite.to( _camera, time, {
 				x: position,
-				ease:Expo.easeOut,
+				ease:Strong.easeOut,
 				onComplete: onTweenComplete
 				,onUpdate: onTweenUpdate // uncomment to make sure that tweens are properly killed
 			} );
 		}
 
-		private function onTweenUpdate():void {
+		private function onTweenUpdate():void { // TODO: remove if not used
 //			trace( this, "edge tween active - pos: " + _camera.x );
 		}
 
 		private function onTweenComplete():void {
-//			trace( this, "tween completed." );
+			trace( this, "tween completed." );
 			// Lock on.
-			_camera.x = _edgeSurpassed == -1 ? _firstSnapPoint : _lastSnapPoint;
+			if( _edgeSurpassed != 0 ) {
+				_camera.x = _edgeSurpassed == -1 ? _firstSnapPoint : _lastSnapPoint;
+			}
 			_edgeSurpassed = 0;
 			_speed = 0;
 			_onTween = false;
+			if( _moving ) {
+				_moving = false;
+				motionEndedSignal.dispatch( evaluateClosestSnapPointIndex( _camera.x ) );
+			}
 		}
 
 		private function stopAllTweens():void {

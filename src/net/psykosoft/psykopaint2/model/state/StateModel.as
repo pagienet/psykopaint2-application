@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.model.state
 			super();
 		}
 
-		public function set state( value:StateVO ):void {
+		public function set currentState( value:StateVO ):void {
 
 			if( _currentState == value ) return;
 
@@ -40,6 +40,14 @@ package net.psykosoft.psykopaint2.model.state
 			_currentState = value;
 
 			notifyStateChangedSignal.dispatch( _currentState );
+		}
+
+		public function get currentState():StateVO {
+			return _currentState;
+		}
+
+		public function get previousState():StateVO {
+			return _previousState;
 		}
 	}
 }

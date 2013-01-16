@@ -3,8 +3,7 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 
 	import com.junkbyte.console.Cc;
 
-	import flash.display.BitmapData;
-
+	import net.psykosoft.psykopaint2.model.packagedimages.vo.PackagedImageVO;
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifySourceImagesUpdatedSignal;
@@ -51,7 +50,7 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 		// From app.
 		// -----------------------
 
-		private function onSourceImagesUpdated( thumbs:Vector.<BitmapData> ):void {
+		private function onSourceImagesUpdated( thumbs:Vector.<PackagedImageVO> ):void {
 			Cc.log( this, "thumbs updated: " + thumbs );
 			view.displayThumbs( thumbs );
 		}

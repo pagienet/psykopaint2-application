@@ -26,10 +26,10 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 
 			// TODO: populate with actual options from the drawing core
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "style 1", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "style 2", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "style 3", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "style 4", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[style 1]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[style 2]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[style 3]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[style 4]", onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 
 			var rightButton:Button = new Button();
