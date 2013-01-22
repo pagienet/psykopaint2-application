@@ -27,7 +27,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 
 		public function setImages( images:Vector.<PackagedImageVO> ):void {
 
-			// TODO: populate with proper wallpaper list images
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 			for( var i:uint; i < images.length; i++ ) {
 				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( images[ i ].name, onButtonTriggered ) );

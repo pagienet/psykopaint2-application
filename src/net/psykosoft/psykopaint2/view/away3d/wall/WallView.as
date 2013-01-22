@@ -40,6 +40,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private var FrameShadowAsset:Class;
 
 		public var snappedAtPaintingSignal:Signal;
+		public var motionStartedSignal:Signal;
 
 		private var _paintingClickedSignal:Signal;
 
@@ -47,8 +48,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private var _cameraController:ScrollCameraController;
 		private var _wall:Mesh;
 		private var _floor:Mesh;
-		private var _cameraLight:PointLight;
-		private var _sceneLightPicker:StaticLightPicker;
 		private var _shadowMesh:Mesh;
 		private var _frameMaterial:TextureMaterial;
 		private var _shadows:Dictionary;
@@ -79,22 +78,12 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			_paintingClickedSignal = new Signal(); // TODO: make public
 			snappedAtPaintingSignal = new Signal();
+			motionStartedSignal = new Signal();
 
 //			var tri:Trident = new Trident( 500 );
 //			addChild3d( tri );
 
 			_wallFrames = new Vector.<PictureFrame>();
-
-			// Light that moves with camera.
-			// Affects paintings.
-			_cameraLight = new PointLight();
-			_cameraLight.ambient = 1;
-			_cameraLight.diffuse = 1;
-			_cameraLight.specular = 1;
-			_cameraLight.color = 0xFFFFFF;
-			_cameraLight.position = new Vector3D( 0, 1024, WALL_Z - PAINTING_DISTANCE_FROM_WALL - 100 ); // Light will move in x.
-			_sceneLightPicker = new StaticLightPicker( [ _cameraLight ] );
-			addChild3d( _cameraLight );
 
 			// Wall.
 			var wallGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
@@ -193,13 +182,11 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private function onCameraMotionStarted():void {
 //			trace( this, "motion started." );
 			_cameraAwake = true;
+			motionStartedSignal.dispatch();
 		}
 
 		override protected function onUpdate():void {
 			_cameraController.update();
-			if( _cameraAwake ) {
-				_cameraLight.x = _camera.x;
-			}
 		}
 
 		// ---------------------------------------------------------------------
@@ -217,7 +204,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Picture.
 			var settingsTexture:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SETTINGS_PAINTING );
 			var settingsTextureInfo:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.SETTINGS_PAINTING );
-			var settingsPicture:Picture = new Picture( _sceneLightPicker, settingsTextureInfo, settingsTexture );
+			var settingsPicture:Picture = new Picture( settingsTextureInfo, settingsTexture );
 			// TODO: 3d mouse picking not working
 			settingsPicture.mouseEnabled = settingsPicture.mouseChildren = true;
 			settingsPicture.addEventListener( MouseEvent3D.MOUSE_UP, onSettingsPaintingMouseUp );
@@ -239,7 +226,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Picture.
 			var psykopaintTexture:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.PSYKOPAINT_PAINTING );
 			var psykopaintTextureInfo:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.PSYKOPAINT_PAINTING );
-			var psykopaintPicture:Picture = new Picture( _sceneLightPicker, psykopaintTextureInfo, psykopaintTexture );
+			var psykopaintPicture:Picture = new Picture( psykopaintTextureInfo, psykopaintTexture );
 			psykopaintPicture.scalePainting( 2 );
 
 			// Frame.
@@ -283,11 +270,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 				// Picture.
 				var dummyImageDiffuseId:String = Away3dTextureType[ samplePaintingIds[ i ] + "_DIFFUSE" ];
-				var dummyImageNormalsId:String = Away3dTextureType[ samplePaintingIds[ i ] + "_NORMALS" ];
 				var dummyImageDiffuse:BitmapTexture = Away3dTextureManager.getTextureById( dummyImageDiffuseId );
-				var dummyImageNormals:BitmapTexture = Away3dTextureManager.getTextureById( dummyImageNormalsId );
 				var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( dummyImageDiffuseId );
-				var picture:Picture = new Picture( _sceneLightPicker, dummyImageDescription, dummyImageDiffuse, dummyImageNormals );
+				var picture:Picture = new Picture( dummyImageDescription, dummyImageDiffuse );
 				picture.scalePainting( samplePaintingScales[ i ] );
 
 				var frameId:String = frameIds[ Math.floor( frameIds.length * Math.random() ) ];
@@ -348,6 +333,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			wallMaterial.smooth = true;
 			wallMaterial.repeat = true;
 			_wall.material = wallMaterial;
+		}
+
+		public function get cameraAwake():Boolean {
+			return _cameraAwake;
 		}
 	}
 }

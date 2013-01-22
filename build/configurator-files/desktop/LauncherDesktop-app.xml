@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<application xmlns="http://ns.adobe.com/air/application/3.4">
+<application xmlns="http://ns.adobe.com/air/application/3.6">
     <id>LauncherDesktop</id>
     <filename>LauncherDesktop</filename>
     <name>LauncherDesktop</name>
@@ -13,8 +13,8 @@
         <resizable>false</resizable>
         <width>1024</width>
         <height>768</height>
-        <x>1500</x>
-        <y>-60</y>
+        <x>50</x>
+        <y>50</y>
         <aspectRatio>landscape</aspectRatio>
         <autoOrients>false</autoOrients>
         <fullScreen>false</fullScreen>

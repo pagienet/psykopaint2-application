@@ -2,15 +2,13 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 {
 
 	import away3d.containers.ObjectContainer3D;
+	import away3d.core.base.SubGeometry;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
-	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 
 	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dTextureInfoVO;
-
-	import net.psykosoft.psykopaint2.config.Settings;
 
 	public class Picture extends ObjectContainer3D
 	{
@@ -20,27 +18,31 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 
 		private var _plane:Mesh;
 
-		public function Picture( lightPicker:StaticLightPicker, textureInfo:Away3dTextureInfoVO, diffuseTexture:BitmapTexture, normalsTexture:BitmapTexture = null ) {
+		public function Picture( textureInfo:Away3dTextureInfoVO, diffuseTexture:BitmapTexture ) {
 
 			super();
 
 			var material:TextureMaterial = new TextureMaterial( diffuseTexture );
 			material.smooth = true;
 
-			if( textureInfo.imageWidth != textureInfo.textureWidth || textureInfo.imageHeight != textureInfo.textureHeight ) {
-				material.alphaBlending = true;
+			// Build plane.
+			// Notes: Plane takes original image size ( not power of 2 dimensions ) and shifts and re-scales uvs
+			// so that the image perfectly fits in the plane.
+			var dw:Number = ( ( textureInfo.textureWidth - textureInfo.imageWidth ) / 2 ) / textureInfo.textureWidth; // TODO: math can be optimized
+			var dh:Number = ( ( textureInfo.textureHeight - textureInfo.imageHeight ) / 2 ) / textureInfo.textureHeight;
+			var dsw:Number = textureInfo.textureWidth / textureInfo.imageWidth;
+			var dsh:Number = textureInfo.textureHeight / textureInfo.imageHeight;
+			var planeGeometry:PlaneGeometry = new PlaneGeometry( textureInfo.imageWidth, textureInfo.imageHeight );
+			var subGeometry:SubGeometry = planeGeometry.subGeometries[ 0 ];
+			var uvs:Vector.<Number> = subGeometry.uvs;
+			var newUvs:Vector.<Number> = new Vector.<Number>();
+			for( var i:uint = 0; i < uvs.length / 2; i++ ) {
+				var index:uint = i * 2;
+				newUvs[ index ] = uvs[ index ] / dsw + dw;
+				newUvs[ index + 1 ] = uvs[ index + 1 ] / dsh + dh;
 			}
-
-			if( Settings.USE_COMPLEX_ILLUMINATION_ON_PAINTINGS && normalsTexture ) {
-				material.lightPicker = lightPicker;
-				material.gloss = 10;
-				material.ambient = 0.75;
-				material.specular = 0.2;
-				material.normalMap = normalsTexture;
-			}
-
-			// TODO: used shared geometry
-			_plane = new Mesh( new PlaneGeometry( textureInfo.textureWidth, textureInfo.textureHeight ), material );
+			subGeometry.updateUVData( newUvs );
+			_plane = new Mesh( planeGeometry, material );
 			_plane.rotationX = -90;
 			addChild( _plane );
 

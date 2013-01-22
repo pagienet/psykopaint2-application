@@ -54,7 +54,7 @@ package net.psykosoft.psykopaint2.config
 			new ServicesConfig( injector );
 
 			// Start.
-			context.lifecycle.afterInitializing( init );
+			context.afterInitializing( init );
 
 		}
 

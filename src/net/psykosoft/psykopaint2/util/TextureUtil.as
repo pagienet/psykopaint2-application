@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.util
 //			trace( "ensurePowerOf2 - altered: " + legalWidth + ", " + legalHeight );
 
 			if( legalWidth > origWidth || legalHeight > origHeight ) {
-				var modifiedBmd:BitmapData = new BitmapData( legalWidth, legalHeight, true, 0 );
+				var modifiedBmd:BitmapData = new BitmapData( legalWidth, legalHeight, false, 0 );
 				var transform:Matrix = new Matrix();
 				transform.translate(
 					( legalWidth - origWidth ) / 2,

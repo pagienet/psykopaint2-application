@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
+	import com.junkbyte.console.Cc;
 
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
@@ -17,6 +18,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 	import net.psykosoft.psykopaint2.config.Settings;
 
 	import org.osflash.signals.Signal;
+
+	import starling.core.Starling;
 
 	use namespace arcane;
 
@@ -162,10 +165,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 
 		private function onMouseDown( event:MouseEvent ):void {
 
-//			trace( "mouse down: " + _stage.mouseY );
-
 			// Reject scrolls in the navigation area.
-			if( _stage.mouseY > _stage.stageHeight - Settings.NAVIGATION_AREA_CONTENT_HEIGHT ) {
+			if( !scrollingAllowed() ) {
 				return;
 			}
 
@@ -196,7 +197,17 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 
 			stopAllTweens();
 
+			// Reject throws in the navigation area.
+			if( !scrollingAllowed() ) {
+				return;
+			}
+
 			throwScroller();
+		}
+
+		private function scrollingAllowed():Boolean {
+			var limit:Number = _stage.stageHeight - Settings.NAVIGATION_AREA_CONTENT_HEIGHT * Starling.contentScaleFactor;
+			return _stage.mouseY < limit;
 		}
 
 		// ---------------------------------------------------------------------

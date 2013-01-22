@@ -32,32 +32,18 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 		// TODO: Sample paintings ( to be removed from here ).
 		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting0/painting.jpg")]
 		private static var SamplePaintingDiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting0/painting_normals.png")]
-		private static var SamplePaintingNormalsTextureAsset:Class;
 		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting1/painting.jpg")]
 		private static var SamplePainting1DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting1/painting_normals.png")]
-		private static var SamplePainting1NormalsTextureAsset:Class;
 		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting2/painting.jpg")]
 		private static var SamplePainting2DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting2/painting_normals.png")]
-		private static var SamplePainting2NormalsTextureAsset:Class;
 		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting3/painting.jpg")]
 		private static var SamplePainting3DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting3/painting_normals.png")]
-		private static var SamplePainting3NormalsTextureAsset:Class;
 		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting4/painting.jpg")]
 		private static var SamplePainting4DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting4/painting_normals.png")]
-		private static var SamplePainting4NormalsTextureAsset:Class;
 		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting5/painting.jpg")]
 		private static var SamplePainting5DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting5/painting_normals.png")]
-		private static var SamplePainting5NormalsTextureAsset:Class;
 		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting6/painting.jpg")]
 		private static var SamplePainting6DiffuseTextureAsset:Class;
-		[Embed(source="../../../../../../../assets-embedded/textures/paintings/painting6/painting_normals.png")]
-		private static var SamplePainting6NormalsTextureAsset:Class;
 
 		// FloorPapers
 		[Embed(source="../../../../../../../assets-embedded/textures/floorpapers/planks.jpg")]
@@ -87,19 +73,12 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 
 			// TODO: Sample paintings ( to be removed from here ).
 			_assets[ Away3dTextureType.SAMPLE_PAINTING_DIFFUSE ] = SamplePaintingDiffuseTextureAsset;
-			_assets[ Away3dTextureType.SAMPLE_PAINTING_NORMALS ] = SamplePaintingNormalsTextureAsset;
 			_assets[ Away3dTextureType.SAMPLE_PAINTING1_DIFFUSE ] = SamplePainting1DiffuseTextureAsset;
-			_assets[ Away3dTextureType.SAMPLE_PAINTING1_NORMALS ] = SamplePainting1NormalsTextureAsset;
 			_assets[ Away3dTextureType.SAMPLE_PAINTING2_DIFFUSE ] = SamplePainting2DiffuseTextureAsset;
-			_assets[ Away3dTextureType.SAMPLE_PAINTING2_NORMALS ] = SamplePainting2NormalsTextureAsset;
 			_assets[ Away3dTextureType.SAMPLE_PAINTING3_DIFFUSE ] = SamplePainting3DiffuseTextureAsset;
-			_assets[ Away3dTextureType.SAMPLE_PAINTING3_NORMALS ] = SamplePainting3NormalsTextureAsset;
 			_assets[ Away3dTextureType.SAMPLE_PAINTING4_DIFFUSE ] = SamplePainting4DiffuseTextureAsset;
-			_assets[ Away3dTextureType.SAMPLE_PAINTING4_NORMALS ] = SamplePainting4NormalsTextureAsset;
 			_assets[ Away3dTextureType.SAMPLE_PAINTING5_DIFFUSE ] = SamplePainting5DiffuseTextureAsset;
-			_assets[ Away3dTextureType.SAMPLE_PAINTING5_NORMALS ] = SamplePainting5NormalsTextureAsset;
 			_assets[ Away3dTextureType.SAMPLE_PAINTING6_DIFFUSE ] = SamplePainting6DiffuseTextureAsset;
-			_assets[ Away3dTextureType.SAMPLE_PAINTING6_NORMALS ] = SamplePainting6NormalsTextureAsset;
 
 			_initialized = true;
 		}

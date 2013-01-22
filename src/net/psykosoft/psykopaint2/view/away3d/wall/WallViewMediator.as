@@ -46,14 +46,20 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			notifyWallpaperChangeSignal.add( onWallPaperChanged );
 
 			// From view.
-			view.pictureClickedSignal.add( onViewObjectClicked );
 			view.snappedAtPaintingSignal.add( onViewSnapped );
+			view.motionStartedSignal.add( onViewMotionStarted );
 
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onViewMotionStarted():void {
+			if( stateModel.currentState.name == States.SETTINGS ) {
+				requestStateChangeSignal.dispatch( new StateVO( States.HOME_SCREEN ) );
+			}
+		}
 
 		private function onViewSnapped( paintingIndex:uint ):void {
 			trace( this, "view snapped: " + paintingIndex );
@@ -65,18 +71,14 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			if( stateModel.currentState.name != States.SETTINGS && paintingIndex == 0 ) {
 				trace( "snapping caused triggering of settings state." );
 				requestStateChangeSignal.dispatch( new StateVO( States.SETTINGS ) );
-				return;
+//				return;
 			}
 
 			// Restore home state if snapped on another painting.
-			if( paintingIndex != 0 && stateModel.currentState.name.indexOf( States.SETTINGS ) != -1 ) {
+			/*if( paintingIndex != 0 && stateModel.currentState.name.indexOf( States.SETTINGS ) != -1 ) {
 				trace( "snapping caused restore of home state." );
-				requestStateChangeSignal.dispatch( new StateVO( States.HOME_SCREEN ) );
-			}
-		}
 
-		private function onViewObjectClicked( paintingId:String ):void {
-//			requestStateChangeSignal.dispatch( new StateVO( States.FEATURE_NOT_IMPLEMENTED ) );
+			}*/
 		}
 
 		// -----------------------
@@ -100,7 +102,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			// Clicking on the back button on the settings state restores to the last snapped painting.
 			if( newState.name == States.HOME_SCREEN && stateModel.previousState.name == States.SETTINGS ) {
-				view.animateToPainting( _lastSnapped );
+				if( !view.cameraAwake ) {
+					view.animateToPainting( _lastSnapped );
+				}
 				return;
 			}
 

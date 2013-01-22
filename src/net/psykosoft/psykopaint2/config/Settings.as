@@ -25,14 +25,13 @@ package net.psykosoft.psykopaint2.config
 		public static const ENABLE_DEBUG_CONSOLE:Boolean = true;
 		public static const ENABLE_STAGE3D_ERROR_CHECKING:Boolean = false;
 		public static const SHOW_STATS:Boolean = true;
-		public static const USE_DEBUG_THEME:Boolean = true;
 		public static const AWAY3D_DEBUG_MODE:Boolean = false;
 
 		// ---------------------------------------------------------------------
 		// 3D performance options.
 		// ---------------------------------------------------------------------
 
-		public static const USE_COMPLEX_ILLUMINATION_ON_PAINTINGS:Boolean = true;
+
 
 		// ---------------------------------------------------------------------
 		// Constants.

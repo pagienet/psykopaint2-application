@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 	import feathers.themes.MinimalMobileTheme;
 
 	import net.psykosoft.psykopaint2.config.Settings;
+	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2UiTheme;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpManagerView;
 	import net.psykosoft.psykopaint2.view.starling.selectimage.SelectImageView;
@@ -34,12 +35,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 			// UI Theme/skin.
 			// -----------------------
 
-			if( Settings.USE_DEBUG_THEME ) {
-				_feathersTheme = new MinimalMobileTheme( stage );
-			}
-			else {
-				// TODO: Link to own theme
-			}
+			_feathersTheme = new Psykopaint2UiTheme( stage );
 
 			// -----------------------
 			// Layering.

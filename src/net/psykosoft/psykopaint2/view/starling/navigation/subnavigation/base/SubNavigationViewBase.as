@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 	import feathers.controls.Button;
 	import feathers.controls.ButtonGroup;
-	import feathers.controls.Header;
 	import feathers.controls.ScrollContainer;
 	import feathers.controls.Scroller;
 	import feathers.core.FeathersControl;
@@ -13,13 +12,11 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.ui.buttons.buttongroups.vo.ButtonDefinitionVO;
-
 	import net.psykosoft.psykopaint2.ui.buttons.buttongroups.vo.ButtonGroupDefinitionVO;
+	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2UiTheme;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
-
-	import starling.display.Quad;
 
 	import starling.events.Event;
 
@@ -71,6 +68,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
 
 			_buttonGroup = new ButtonGroup();
+			_buttonGroup.customButtonName = Psykopaint2UiTheme.BUTTON_TYPE_1;
 			_buttonGroup.direction = ButtonGroup.DIRECTION_HORIZONTAL;
 			_buttonGroup.buttonProperties = { width: 100, height: 100 };
 			_buttonGroup.buttonInitializer = buttonInitializer;

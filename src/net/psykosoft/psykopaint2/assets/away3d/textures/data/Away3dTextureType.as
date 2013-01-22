@@ -12,18 +12,11 @@ package net.psykosoft.psykopaint2.assets.away3d.textures.data
 
 		// TODO: Sample paintings ( to be removed from here ).
 		public static const SAMPLE_PAINTING_DIFFUSE:String = "sample/painting/diffuse";
-		public static const SAMPLE_PAINTING_NORMALS:String = "sample/painting/normals";
 		public static const SAMPLE_PAINTING1_DIFFUSE:String = "sample/painting1/diffuse";
-		public static const SAMPLE_PAINTING1_NORMALS:String = "sample/painting1/normals";
 		public static const SAMPLE_PAINTING2_DIFFUSE:String = "sample/painting2/diffuse";
-		public static const SAMPLE_PAINTING2_NORMALS:String = "sample/painting2/normals";
 		public static const SAMPLE_PAINTING3_DIFFUSE:String = "sample/painting3/diffuse";
-		public static const SAMPLE_PAINTING3_NORMALS:String = "sample/painting3/normals";
 		public static const SAMPLE_PAINTING4_DIFFUSE:String = "sample/painting4/diffuse";
-		public static const SAMPLE_PAINTING4_NORMALS:String = "sample/painting4/normals";
 		public static const SAMPLE_PAINTING5_DIFFUSE:String = "sample/painting5/diffuse";
-		public static const SAMPLE_PAINTING5_NORMALS:String = "sample/painting5/normals";
 		public static const SAMPLE_PAINTING6_DIFFUSE:String = "sample/painting6/diffuse";
-		public static const SAMPLE_PAINTING6_NORMALS:String = "sample/painting6/normals";
 	}
 }

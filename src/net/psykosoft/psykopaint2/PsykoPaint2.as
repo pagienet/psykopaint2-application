@@ -58,6 +58,7 @@ package net.psykosoft.psykopaint2
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			stage.frameRate = 60;
+			mouseEnabled = mouseChildren = false; // TODO: can disable from the stage object?
 			// TODO: if mouse 3d interactivity is not used, disable all mouse events in non desktop mode and ensure that away3d's picking system is disabled
 		}
 
