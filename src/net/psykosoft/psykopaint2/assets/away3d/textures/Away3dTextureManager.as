@@ -93,14 +93,14 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 			return _atlases[ id ];
 		}
 
-		public static function getTextureById( id:String ):BitmapTexture {
+		public static function getTextureById( id:String ):ManagedAway3DBitmapTexture {
 			if( !_initialized ) initialize();
 			Cc.log( "{Away3dTextureManager.as} - requesting texture for " + id + "." );
 			if( _textures[ id ] ) return _textures[ id ];
 			var assetClass:Class = _assets[ id ];
 			if( !assetClass ) Cc.fatal( "{Away3dTextureManager.as} - The asset [ " + id + " ] does not exist." );
 			var originalBmd:BitmapData = new assetClass().bitmapData;
-			var bitmapTexture:BitmapTexture = new BitmapTexture( TextureUtil.ensurePowerOf2( originalBmd ) );
+			var bitmapTexture:ManagedAway3DBitmapTexture = new ManagedAway3DBitmapTexture( TextureUtil.ensurePowerOf2( originalBmd ) );
 			bitmapTexture.name = id;
 			bitmapTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy ); // Forces the generation of the texture on demand ( BitmapTextures are lazy )
 			_textureInfo[ id ] = new Away3dTextureInfoVO( originalBmd.width, originalBmd.height, bitmapTexture.width, bitmapTexture.height );

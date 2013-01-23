@@ -8,6 +8,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 
+	import net.psykosoft.psykopaint2.assets.away3d.textures.ManagedAway3DBitmapTexture;
+
 	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dTextureInfoVO;
 
 	public class Picture extends ObjectContainer3D
@@ -18,12 +20,13 @@ package net.psykosoft.psykopaint2.view.away3d.wall.frames
 
 		private var _plane:Mesh;
 
-		public function Picture( textureInfo:Away3dTextureInfoVO, diffuseTexture:BitmapTexture ) {
+		public function Picture( textureInfo:Away3dTextureInfoVO, diffuseTexture:ManagedAway3DBitmapTexture ) {
 
 			super();
 
 			var material:TextureMaterial = new TextureMaterial( diffuseTexture );
 			material.smooth = true;
+			material.mipmap = false;
 
 			// Build plane.
 			// Notes: Plane takes original image size ( not power of 2 dimensions ) and shifts and re-scales uvs

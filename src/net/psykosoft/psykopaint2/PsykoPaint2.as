@@ -17,6 +17,8 @@ package net.psykosoft.psykopaint2
 
 	import net.psykosoft.psykopaint2.config.AppConfig;
 	import net.psykosoft.psykopaint2.config.Settings;
+	import net.psykosoft.psykopaint2.resources.FreeTextureManager;
+	import net.psykosoft.psykopaint2.resources.ManagedTexturePolicy;
 	import net.psykosoft.psykopaint2.util.DisplayContextManager;
 	import net.psykosoft.psykopaint2.util.PlatformUtil;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingRootSprite;
@@ -85,6 +87,7 @@ package net.psykosoft.psykopaint2
 		private function onContextCreated( event:Stage3DEvent ):void {
 			_stage3dProxy.removeEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContextCreated );
 			// Rendering.
+			initTextureManagement();
 			init2D();
 			init3D();
 			// Continue and finish initialization.
@@ -94,6 +97,22 @@ package net.psykosoft.psykopaint2
 			// Start listening for stage resizes.
 			stage.addEventListener( Event.RESIZE, onStageResize );
 			onStageResize( null ); // One has already occurred while the GPU context was being fetched, so trigger one.
+
+		}
+
+		private function initTextureManagement() : void
+		{
+			// Reserve 20MB to be used for random texture usage (Starling etc)
+			var dynamicTexturesSize : uint = 20*1024*1024;
+			// Reserve 112MB to be used for canvas texture usage, 16 for preview texture, (2048x2048 + padding, worst case)
+			var canvasTexturesSize : uint = 128*1024*1024;
+			FreeTextureManager.getInstance().init(dynamicTexturesSize + canvasTexturesSize, _stage3dProxy.context3D);
+
+			// for those who want to pretend how it will respond with a canvas reserved:
+//			FreeTextureManager.getInstance().init(dynamicTexturesSize, _stage3dProxy.context3D);
+
+			// remaining space for texture history
+			var historyTextureSize : uint = (340 - dynamicTexturesSize - canvasTexturesSize)*1024*1024;
 		}
 
 		private function init3D():void {
@@ -113,6 +132,7 @@ package net.psykosoft.psykopaint2
 			Starling.handleLostContext = true;
 			Starling.multitouchEnabled = true;
 			_starling = new Starling( StarlingRootSprite, stage, _stage3dProxy.viewPort, _stage3dProxy.stage3D );
+			_starling.texturePolicy = new ManagedTexturePolicy();
 			if( Settings.ENABLE_STAGE3D_ERROR_CHECKING ) {
 				_starling.enableErrorChecking = true;
 			}

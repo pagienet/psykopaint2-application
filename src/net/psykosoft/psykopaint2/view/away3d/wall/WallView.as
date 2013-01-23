@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureManager;
+	import net.psykosoft.psykopaint2.assets.away3d.textures.ManagedAway3DBitmapTexture;
 	import net.psykosoft.psykopaint2.assets.away3d.textures.data.Away3dFrameTextureType;
 	import net.psykosoft.psykopaint2.assets.away3d.textures.data.Away3dTextureType;
 	import net.psykosoft.psykopaint2.assets.away3d.textures.vo.Away3dFrameAtlasTextureDescriptorVO;
@@ -102,6 +103,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			var floorMaterial:TextureMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( Away3dTextureType.FLOORPAPER_PLANKS ) );
 			floorMaterial.repeat = true;
 			floorMaterial.smooth = true;
+			floorMaterial.mipmap = false;
 			_floor = new Mesh( floorGeometry, floorMaterial );
 			_floor.scaleX = WALL_WIDTH / floorGeometry.width;
 			_floor.scaleZ = FLOOR_DEPTH / floorGeometry.height;
@@ -150,6 +152,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private function initializeFrameShadow():void {
 			var shadowMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FrameShadowAsset() ) );
 			shadowMaterial.smooth = true;
+			shadowMaterial.mipmap = false;
 			shadowMaterial.alpha = 0.9;
 			shadowMaterial.alphaBlending = true;
 			_shadowMesh = new Mesh( new PlaneGeometry( 512, 512 ), shadowMaterial );
@@ -159,6 +162,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		private function initializeFrameMaterial():void {
 			_frameMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( Away3dTextureType.FRAMES_ATLAS ) );
+			_frameMaterial.mipmap = false;
 			_frameMaterial.smooth = true;
 			_framesAtlasXml = Away3dTextureManager.getAtlasDataById( Away3dTextureType.FRAMES_ATLAS );
 			_framesAtlasTextureInfo = Away3dTextureManager.getTextureInfoById( Away3dTextureType.FRAMES_ATLAS );
@@ -202,7 +206,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// -----------------------
 
 			// Picture.
-			var settingsTexture:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SETTINGS_PAINTING );
+			var settingsTexture:ManagedAway3DBitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SETTINGS_PAINTING );
 			var settingsTextureInfo:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.SETTINGS_PAINTING );
 			var settingsPicture:Picture = new Picture( settingsTextureInfo, settingsTexture );
 			// TODO: 3d mouse picking not working
@@ -224,7 +228,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// -----------------------
 
 			// Picture.
-			var psykopaintTexture:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.PSYKOPAINT_PAINTING );
+			var psykopaintTexture:ManagedAway3DBitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.PSYKOPAINT_PAINTING );
 			var psykopaintTextureInfo:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.PSYKOPAINT_PAINTING );
 			var psykopaintPicture:Picture = new Picture( psykopaintTextureInfo, psykopaintTexture );
 			psykopaintPicture.scalePainting( 2 );
@@ -270,7 +274,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 				// Picture.
 				var dummyImageDiffuseId:String = Away3dTextureType[ samplePaintingIds[ i ] + "_DIFFUSE" ];
-				var dummyImageDiffuse:BitmapTexture = Away3dTextureManager.getTextureById( dummyImageDiffuseId );
+				var dummyImageDiffuse:ManagedAway3DBitmapTexture = Away3dTextureManager.getTextureById( dummyImageDiffuseId );
 				var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( dummyImageDiffuseId );
 				var picture:Picture = new Picture( dummyImageDescription, dummyImageDiffuse );
 				picture.scalePainting( samplePaintingScales[ i ] );
@@ -329,7 +333,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		}
 
 		public function changeWallpaper( bmd:BitmapData ):void {
-			var wallMaterial:TextureMaterial = new TextureMaterial( new BitmapTexture( bmd ) );
+			var wallMaterial:TextureMaterial = new TextureMaterial( new ManagedAway3DBitmapTexture( bmd ) );
+			wallMaterial.mipmap = false;
 			wallMaterial.smooth = true;
 			wallMaterial.repeat = true;
 			_wall.material = wallMaterial;
