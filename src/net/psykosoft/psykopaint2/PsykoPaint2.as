@@ -44,6 +44,7 @@ package net.psykosoft.psykopaint2
 			initStage3D();
 			// testing github stars and notifications, please delete me!
 			// testing notifications 1
+			// testing notifications 2
 		}
 
 		// ---------------------------------------------------------------------
