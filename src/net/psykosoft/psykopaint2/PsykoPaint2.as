@@ -49,6 +49,7 @@ package net.psykosoft.psykopaint2
 			// testing notifications 4
 			// testing notifications 5
 			// testing notifications 6 - github service hooks
+			// testing notifications 7 - github service hooks
 		}
 
 		// ---------------------------------------------------------------------
