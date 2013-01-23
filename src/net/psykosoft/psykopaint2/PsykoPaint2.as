@@ -44,16 +44,6 @@ package net.psykosoft.psykopaint2
 			initPlatform();
 			initStage();
 			initStage3D();
-			// testing github stars and notifications, please delete me!
-			// testing notifications 1
-			// testing notifications 2
-			// testing notifications 3
-			// testing notifications 4
-			// testing notifications 5
-			// testing notifications 6 - github service hooks
-			// testing notifications 7 - github service hooks
-			// testing notifications 8 - github service hooks via psykopaintipaddev@psykosoft.net
-			// testing notifications 9 - github service hooks via psykopaintipaddev@psykosoft.net, test 2
 		}
 
 		// ---------------------------------------------------------------------
