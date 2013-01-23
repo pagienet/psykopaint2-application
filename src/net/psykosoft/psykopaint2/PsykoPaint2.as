@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2
 			// testing github stars and notifications, please delete me!
 			// testing notifications 1
 			// testing notifications 2
+			// testing notifications 3
 		}
 
 		// ---------------------------------------------------------------------
