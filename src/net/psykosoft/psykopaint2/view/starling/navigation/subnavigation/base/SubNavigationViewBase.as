@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 	import net.psykosoft.psykopaint2.ui.buttons.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.buttons.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2UiTheme;
+	import net.psykosoft.psykopaint2.util.MathUtil;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
@@ -52,7 +53,8 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 		protected function setLeftButton( button:Button ):void {
 			// TODO: clear previous button?
 			_leftButton = button;
-			_leftButton.width = _leftButton.height = 100;
+			_leftButton.nameList.add( pickRandomButtonName() );
+			_leftButton.width = _leftButton.height = Psykopaint2UiTheme.SIZE_PAPER_BUTTON;
 			_leftButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 			addChild( _leftButton );
 		}
@@ -60,7 +62,8 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 		protected function setRightButton( button:Button ):void {
 			// TODO: clear previous button?
 			_rightButton = button;
-			_rightButton.width = _rightButton.height = 100;
+			_rightButton.nameList.add( pickRandomButtonName() );
+			_rightButton.width = _rightButton.height = Psykopaint2UiTheme.SIZE_PAPER_BUTTON;
 			_rightButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 			addChild( _rightButton );
 		}
@@ -68,13 +71,15 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
 
 			_buttonGroup = new ButtonGroup();
-			_buttonGroup.customButtonName = Psykopaint2UiTheme.BUTTON_TYPE_1;
+			_buttonGroup.customFirstButtonName = pickRandomButtonName();
+			_buttonGroup.customLastButtonName = pickRandomButtonName();
+			_buttonGroup.customButtonName = pickRandomButtonName();
 			_buttonGroup.direction = ButtonGroup.DIRECTION_HORIZONTAL;
-			_buttonGroup.buttonProperties = { width: 100, height: 100 };
+//			_buttonGroup.buttonProperties = { width: 100, height: 100 };
 			_buttonGroup.buttonInitializer = buttonInitializer;
 			_buttonGroup.dataProvider = new ListCollection( definition.buttonVOArray );
 			_buttonGroup.invalidate( FeathersControl.INVALIDATION_FLAG_ALL );
-			_buttonGroup.setSize( definition.buttonVOArray.length * ( 100 + 10 ), 100 ); // TODO: properly do this calculation
+			_buttonGroup.setSize( definition.buttonVOArray.length * ( Psykopaint2UiTheme.SIZE_PAPER_BUTTON + 10 ), Psykopaint2UiTheme.SIZE_PAPER_BUTTON ); // TODO: properly do this calculation
 
 			_scrollContainer = new ScrollContainer();
 //			_scrollContainer.backgroundSkin = new Quad( 100, 100, 0x222222 );
@@ -86,6 +91,22 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			_scrollContainer.y = 0;
 			_scrollContainer.addChild( _buttonGroup );
 			addChild( _scrollContainer );
+		}
+
+		private function pickRandomButtonName():String {
+			var rand:int = MathUtil.randRnd( 0, 2 );
+			switch( rand ) {
+				case 0:
+					return Psykopaint2UiTheme.BUTTON_TYPE_1;
+					break;
+				case 1:
+					return Psykopaint2UiTheme.BUTTON_TYPE_2;
+					break;
+				case 2:
+					return Psykopaint2UiTheme.BUTTON_TYPE_3;
+					break;
+			}
+			return Psykopaint2UiTheme.BUTTON_TYPE_1;
 		}
 
 		private function buttonInitializer( button:Button, data:ButtonDefinitionVO ):void {
