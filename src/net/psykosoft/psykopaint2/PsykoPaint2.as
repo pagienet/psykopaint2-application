@@ -78,6 +78,7 @@ package net.psykosoft.psykopaint2
 			_stage3dProxy.removeEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContextCreated );
 			// Rendering.
 			initTextureManagement();
+			// Init Starling and Away3D.
 			init2D();
 			init3D();
 			// Continue and finish initialization.
@@ -103,17 +104,6 @@ package net.psykosoft.psykopaint2
 
 			// remaining space for texture history
 			var historyTextureSize : uint = (340 - dynamicTexturesSize - canvasTexturesSize)*1024*1024;
-		}
-
-		private function init3D():void {
-			_away3d = new View3D();
-			if( Settings.AWAY3D_DEBUG_MODE ) {
-				Debug.active = true;
-			}
-			_away3d.stage3DProxy = _stage3dProxy;
-			_away3d.shareContext = true;
-			addChild( _away3d );
-			DisplayContextManager.away3d = _away3d;
 		}
 
 		private function init2D():void {
@@ -145,6 +135,17 @@ package net.psykosoft.psykopaint2
 				DeviceCapabilities.screenPixelWidth = Settings.RESOLUTION_X_iPAD;
 				DeviceCapabilities.screenPixelHeight = Settings.RESOLUTION_Y_iPAD;
 			}
+		}
+
+		private function init3D():void {
+			_away3d = new View3D();
+			if( Settings.AWAY3D_DEBUG_MODE ) {
+				Debug.active = true;
+			}
+			_away3d.stage3DProxy = _stage3dProxy;
+			_away3d.shareContext = true;
+			addChild( _away3d );
+			DisplayContextManager.away3d = _away3d;
 		}
 
 		private function initRobotLegs():void {

@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.view.starling.base
 
 	import feathers.controls.Button;
 	import feathers.core.DisplayListWatcher;
-	import feathers.themes.MinimalMobileTheme;
 
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2UiTheme;
@@ -15,13 +14,10 @@ package net.psykosoft.psykopaint2.view.starling.base
 	import net.psykosoft.psykopaint2.view.starling.splash.SplashView;
 
 	import starling.display.Sprite;
-
 	import starling.events.Event;
 
 	public class StarlingRootSprite extends StarlingViewBase
 	{
-		protected var _feathersTheme:DisplayListWatcher;
-
 		private var _mainLayer:Sprite;
 		private var _debugLayer:Sprite;
 
@@ -32,10 +28,10 @@ package net.psykosoft.psykopaint2.view.starling.base
 		override protected function onStageAvailable():void {
 
 			// -----------------------
-			// UI Theme/skin.
+			// Ui theme.
 			// -----------------------
 
-			_feathersTheme = new Psykopaint2UiTheme( stage, true );
+			var theme:DisplayListWatcher = new Psykopaint2UiTheme( stage, Settings.RUNNING_ON_HD );
 
 			// -----------------------
 			// Layering.
