@@ -39,6 +39,10 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 		private var _rightCornerImage:Image;
 		private var _frontLayer:Sprite;
 		private var _backLayer:Sprite;
+		private var _leftClamp:Image;
+		private var _rightClamp:Image;
+		private var _leftArrow:Image;
+		private var _rightArrow:Image;
 
 		public var buttonPressedSignal:Signal;
 
@@ -58,6 +62,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 		override protected function onStageAvailable():void {
 
 			_header = new Button();
+			_header.nameList.add( Psykopaint2UiTheme.BUTTON_TYPE_HEADER );
 			_header.label = _title;
 			_header.height = 30;
 			_header.width = 200;
@@ -82,10 +87,20 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			_leftButton.nameList.add( Psykopaint2UiTheme.pickRandomPaperButtonName() );
 			_leftButton.width = _leftButton.height = Psykopaint2UiTheme.SIZE_PAPER_BUTTON;
 			_leftButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
-			_leftButton.x = 10;
-			_leftButton.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT / 2 - _leftButton.height / 2;
+			_leftButton.x = _leftCornerImage.x + _leftCornerImage.width - _leftButton.width - 15;
+			_leftButton.y = _leftCornerImage.y + 5;
 			_leftButton.validate();
 			_frontLayer.addChild( _leftButton );
+
+			_leftArrow = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_ARROW ) );
+			_leftArrow.x = 0;
+			_leftArrow.y = _leftButton.y + _leftButton.height / 2;
+			_frontLayer.addChild( _leftArrow );
+
+			_leftClamp = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_CLAMP) );
+			_leftClamp.x = _leftCornerImage.width - 50;
+			_leftClamp.y = _leftCornerImage.y + 10;
+			_frontLayer.addChild( _leftClamp );
 		}
 
 		protected function setRightButton( button:Button ):void {
@@ -101,10 +116,21 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			_rightButton.nameList.add( Psykopaint2UiTheme.pickRandomPaperButtonName() );
 			_rightButton.width = _rightButton.height = Psykopaint2UiTheme.SIZE_PAPER_BUTTON;
 			_rightButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
-			_rightButton.x = stage.stageWidth - _rightButton.width - 10;
-			_rightButton.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT / 2 - _rightButton.height / 2;
+			_rightButton.x = _rightCornerImage.x + 5;
+			_rightButton.y = _rightCornerImage.y;
 			_rightButton.validate();
 			_frontLayer.addChild( _rightButton );
+
+			_rightArrow = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_ARROW ) );
+			_rightArrow.scaleX = -1;
+			_rightArrow.x = stage.stageWidth;
+			_rightArrow.y = _rightButton.y + _rightButton.height / 2;
+			_frontLayer.addChild( _rightArrow );
+
+			_rightClamp = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_CLAMP) );
+			_rightClamp.x = _rightCornerImage.x + 15;
+			_rightClamp.y = _rightCornerImage.y + 7;
+			_frontLayer.addChild( _rightClamp );
 		}
 
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
