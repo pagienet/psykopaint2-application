@@ -39,11 +39,11 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 
 		override protected function onLayout():void {
 
-			// bg image.
+			// Bg image.
 			_bgImage.y = stage.stageHeight - _bgImage.height;
 			_bgImage.width = stage.stageWidth;
 
-			// container.
+			// Container.
 			_container.y = stage.stageHeight - Settings.NAVIGATION_AREA_CONTENT_HEIGHT;
 		}
 

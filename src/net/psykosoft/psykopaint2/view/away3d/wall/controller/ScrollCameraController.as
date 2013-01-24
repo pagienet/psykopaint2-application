@@ -60,6 +60,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		public var motionStartedSignal:Signal;
 		public var motionEndedSignal:Signal;
 
+		// TODO: delete countless traces
+
 		public function ScrollCameraController( camera:Camera3D, wall:Mesh, stage:Stage ) {
 
 			super();
@@ -148,7 +150,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		}
 
 		public function jumpToSnapPointAnimated( index:uint ):void {
-			trace( this, "jumping (animated) to snap point: " + index );
+//			trace( this, "jumping (animated) to snap point: " + index );
 			tweenTo( _snapPoints[ index ], 1 );
 		}
 
@@ -249,7 +251,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 //					trace( "free motion - pos: " + _camera.x + ", speed: " + _speed );
 				}
 				else {
-					trace( "stopped free motion - pos: " + _camera.x );
+//					trace( "stopped free motion - pos: " + _camera.x );
 					_moving = false;
 					var dx:Number = Math.abs( _camera.x - _lastCameraX );
 					if( dx > 0 ) {
@@ -330,21 +332,21 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		}
 
 		private function evaluateClosestSnapPointIndex( position:Number ):uint {
-			trace( "evaluating closest snap point index at position: " + position );
+//			trace( "evaluating closest snap point index at position: " + position );
 			var len:uint = _snapPoints.length;
 			var closestDistanceToSnapPoint:Number = Number.MAX_VALUE;
 			var snapPointIndex:int = -1;
-			trace( "snap points: " + _snapPoints );
+//			trace( "snap points: " + _snapPoints );
 			for( var i:uint; i < len; ++i ) {
 				var snapPoint:Number = _snapPoints[ i ];
 				var distanceToSnapPoint:Number = Math.abs( position - snapPoint );
-				trace( "evaluating snap point at distance: " + distanceToSnapPoint );
+//				trace( "evaluating snap point at distance: " + distanceToSnapPoint );
 				if( distanceToSnapPoint < closestDistanceToSnapPoint ) {
 					closestDistanceToSnapPoint = distanceToSnapPoint;
 					snapPointIndex = i;
 				}
 			}
-			trace( "found snap point index: " + snapPointIndex );
+//			trace( "found snap point index: " + snapPointIndex );
 			return snapPointIndex;
 		}
 
@@ -456,7 +458,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		}
 
 		private function onTweenComplete():void {
-			trace( this, "tween completed." );
+//			trace( this, "tween completed." );
 			// Lock on.
 			if( _edgeSurpassed != 0 ) {
 				_camera.x = _edgeSurpassed == -1 ? _firstSnapPoint : _lastSnapPoint;

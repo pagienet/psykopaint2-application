@@ -70,6 +70,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 		}
 
 		private function evaluateSubNavigation( state:StateVO ):void {
+			Cc.info( this, "enabling sub navigation: " + state.name );
 			switch( state.name ) {
 				case States.HOME_SCREEN:
 					view.enableSubNavigationView( new HomeScreenSubNavigationView() );
