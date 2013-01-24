@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 			// UI Theme/skin.
 			// -----------------------
 
-			_feathersTheme = new Psykopaint2UiTheme( stage );
+			_feathersTheme = new Psykopaint2UiTheme( stage, true );
 
 			// -----------------------
 			// Layering.
