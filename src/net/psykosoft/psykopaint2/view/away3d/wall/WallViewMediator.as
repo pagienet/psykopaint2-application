@@ -56,13 +56,12 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		// -----------------------
 
 		private function onViewMotionStarted():void {
-			if( stateModel.currentState.name == States.SETTINGS ) {
+			if( stateModel.currentState.name == States.SETTINGS && stateModel.previousState.name != States.HOME_SCREEN ) {
 				requestStateChangeSignal.dispatch( new StateVO( States.HOME_SCREEN ) );
 			}
 		}
 
 		private function onViewSnapped( paintingIndex:uint ):void {
-			trace( this, "view snapped: " + paintingIndex );
 
 			// Remember last snapped painting.
 			if( paintingIndex != 0 ) _lastSnapped = paintingIndex;

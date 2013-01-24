@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 {
 
-	import com.junkbyte.console.Cc;
-
 	import feathers.controls.Button;
 	import feathers.controls.ButtonGroup;
 	import feathers.controls.ScrollContainer;
@@ -11,20 +9,15 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 	import feathers.data.ListCollection;
 
 	import net.psykosoft.psykopaint2.config.Settings;
-	import net.psykosoft.psykopaint2.ui.buttons.buttongroups.vo.ButtonDefinitionVO;
-	import net.psykosoft.psykopaint2.ui.buttons.buttongroups.vo.ButtonGroupDefinitionVO;
+	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
+	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2UiTheme;
-	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2UiTheme;
-	import net.psykosoft.utils.MathUtil;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
 
 	import starling.display.Image;
-
-	import starling.display.Quad;
 	import starling.display.Sprite;
-
 	import starling.events.Event;
 
 	public class SubNavigationViewBase extends StarlingViewBase
@@ -135,8 +128,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
 
-			Cc.info( super, "setting center buttons." );
-
 			_buttonGroup = new ButtonGroup();
 			_buttonGroup.customFirstButtonName = Psykopaint2UiTheme.pickRandomPaperButtonName();
 			_buttonGroup.customLastButtonName = Psykopaint2UiTheme.pickRandomPaperButtonName();
@@ -159,7 +150,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			_backLayer.addChild( _scrollContainer );
 
 			_buttonGroup.validate();
-			Cc.info( super, "button group dims - width: " + _buttonGroup.width + ", height: " + _buttonGroup.height );
 			if( _buttonGroup.width < SUB_NAVIGATION_SCROLL_AREA_WIDTH ) {
 				_buttonGroup.x = SUB_NAVIGATION_SCROLL_AREA_WIDTH / 2 - _buttonGroup.width / 2;
 			}
