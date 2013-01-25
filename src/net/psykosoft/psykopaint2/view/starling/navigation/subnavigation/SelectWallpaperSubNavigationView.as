@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
 
-	import feathers.controls.Button;
-
 	import net.psykosoft.psykopaint2.model.packagedimages.vo.PackagedImageVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
@@ -18,9 +16,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 
 		override protected function onStageAvailable():void {
 
-			var leftButton:Button = new Button();
-			leftButton.label = BUTTON_LABEL_BACK;
-			setLeftButton( leftButton );
+			setLeftButton( BUTTON_LABEL_BACK );
 
 			super.onStageAvailable();
 		}

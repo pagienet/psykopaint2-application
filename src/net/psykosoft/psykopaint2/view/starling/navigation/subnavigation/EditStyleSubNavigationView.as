@@ -1,16 +1,13 @@
 package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
 
-	import feathers.controls.Button;
-
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
-
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base.SubNavigationViewBase;
 
 	public class EditStyleSubNavigationView extends SubNavigationViewBase
 	{
-		public static const BUTTON_LABEL_SELECT_STYLE:String = "Pick\na Style";
+		public static const BUTTON_LABEL_SELECT_STYLE:String = "Pick a Style";
 
 		public function EditStyleSubNavigationView() {
 			super( "Edit Style" );
@@ -18,9 +15,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 
 		override protected function onStageAvailable():void {
 
-			var leftButton:Button = new Button();
-			leftButton.label = BUTTON_LABEL_SELECT_STYLE;
-			setLeftButton( leftButton );
+			setLeftButton( BUTTON_LABEL_SELECT_STYLE );
 
 			// TODO: populate with actual options from the drawing core
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();

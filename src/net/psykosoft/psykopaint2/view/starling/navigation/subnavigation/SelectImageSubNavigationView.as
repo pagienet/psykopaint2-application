@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
 
-	import feathers.controls.Button;
-
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base.SubNavigationViewBase;
@@ -11,9 +9,9 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 	{
 		public static const BUTTON_LABEL_FACEBOOK:String = "[Facebook]";
 		public static const BUTTON_LABEL_CAMERA:String = "[Camera]";
-		public static const BUTTON_LABEL_READY_TO_PAINT:String = "Ready\nto Paint";
-		public static const BUTTON_LABEL_YOUR_PHOTOS:String = "[Your\nPhotos]";
-		public static const BUTTON_LABEL_NEW_PAINTING:String = "New\nPainting";
+		public static const BUTTON_LABEL_READY_TO_PAINT:String = "Ready to Paint";
+		public static const BUTTON_LABEL_YOUR_PHOTOS:String = "[Your Photos]";
+		public static const BUTTON_LABEL_NEW_PAINTING:String = "New Painting";
 
 		public function SelectImageSubNavigationView() {
 			super( "Select Image" );
@@ -21,9 +19,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 
 		override protected function onStageAvailable():void {
 
-			var leftButton:Button = new Button();
-			leftButton.label = BUTTON_LABEL_NEW_PAINTING;
-			setLeftButton( leftButton );
+			setLeftButton( BUTTON_LABEL_NEW_PAINTING );
 
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_FACEBOOK, onButtonTriggered, false ) );

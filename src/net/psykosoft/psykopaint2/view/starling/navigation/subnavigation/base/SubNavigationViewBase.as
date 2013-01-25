@@ -11,21 +11,23 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
+	import net.psykosoft.psykopaint2.ui.extensions.buttons.CompoundButton;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2UiTheme;
+	import net.psykosoft.psykopaint2.ui.theme.buttons.ButtonSkinType;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
 
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 
 	public class SubNavigationViewBase extends StarlingViewBase
 	{
 		private var _scrollContainer:ScrollContainer;
-		private var _buttonGroup:ButtonGroup;
-		private var _leftButton:Button;
-		private var _rightButton:Button;
+		private var _leftButton:CompoundButton;
+		private var _rightButton:CompoundButton;
 		private var _header:Button;
 		private var _title:String;
 		private var _leftCornerImage:Image;
@@ -39,7 +41,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 		public var buttonPressedSignal:Signal;
 
-		private const SUB_NAVIGATION_SCROLL_AREA_WIDTH:Number = 800;
+		private const SUB_NAVIGATION_SCROLL_AREA_WIDTH:Number = 760;
 
 		public function SubNavigationViewBase( title:String ) {
 			super();
@@ -55,34 +57,35 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 		override protected function onStageAvailable():void {
 
 			_header = new Button();
-			_header.nameList.add( Psykopaint2UiTheme.BUTTON_TYPE_HEADER );
+			_header.nameList.add( ButtonSkinType.LABEL );
 			_header.label = _title;
-			_header.height = 30;
-			_header.width = 200;
 			_header.isEnabled = false;
-			_header.x = stage.stageWidth / 2 - _header.width / 2;
-			_header.y = -_header.height / 2;
+			_header.addEventListener( Event.RESIZE, onHeaderResized );
 			_header.validate();
 			_frontLayer.addChild( _header );
 
 			super.onStageAvailable();
 		}
 
-		protected function setLeftButton( button:Button ):void {
+		private function onHeaderResized( event:Event ):void {
+			_header.x = stage.stageWidth / 2 - _header.width / 2;
+			_header.y = -_header.height / 2;
+		}
+
+		protected function setLeftButton( label:String ):void {
 
 			// TODO: clear previous button?
+
+			var button:CompoundButton = new CompoundButton( label, -20 );
 
 			_leftCornerImage = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_LEFT_CORNER ) );
 			_leftCornerImage.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT - _leftCornerImage.height;
 			_frontLayer.addChild( _leftCornerImage );
 
 			_leftButton = button;
-			_leftButton.nameList.add( Psykopaint2UiTheme.pickRandomPaperButtonName() );
-			_leftButton.width = _leftButton.height = Psykopaint2UiTheme.SIZE_PAPER_BUTTON;
 			_leftButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 			_leftButton.x = _leftCornerImage.x + _leftCornerImage.width - _leftButton.width - 15;
 			_leftButton.y = _leftCornerImage.y + 5;
-			_leftButton.validate();
 			_frontLayer.addChild( _leftButton );
 
 			_leftArrow = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_ARROW ) );
@@ -96,9 +99,11 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			_frontLayer.addChild( _leftClamp );
 		}
 
-		protected function setRightButton( button:Button ):void {
+		protected function setRightButton( label:String ):void {
 
 			// TODO: clear previous button?
+
+			var button:CompoundButton = new CompoundButton( label, -20 );
 
 			_rightCornerImage = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_RIGHT_CORNER ) );
 			_rightCornerImage.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT - _rightCornerImage.height;
@@ -106,12 +111,9 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			_frontLayer.addChild( _rightCornerImage );
 
 			_rightButton = button;
-			_rightButton.nameList.add( Psykopaint2UiTheme.pickRandomPaperButtonName() );
-			_rightButton.width = _rightButton.height = Psykopaint2UiTheme.SIZE_PAPER_BUTTON;
 			_rightButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 			_rightButton.x = _rightCornerImage.x + 5;
 			_rightButton.y = _rightCornerImage.y;
-			_rightButton.validate();
 			_frontLayer.addChild( _rightButton );
 
 			_rightArrow = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_ARROW ) );
@@ -128,42 +130,43 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
 
-			_buttonGroup = new ButtonGroup();
-			_buttonGroup.customFirstButtonName = Psykopaint2UiTheme.pickRandomPaperButtonName();
-			_buttonGroup.customLastButtonName = Psykopaint2UiTheme.pickRandomPaperButtonName();
-			_buttonGroup.customButtonName = Psykopaint2UiTheme.pickRandomPaperButtonName();
-			_buttonGroup.direction = ButtonGroup.DIRECTION_HORIZONTAL;
-			_buttonGroup.buttonInitializer = buttonInitializer;
-			_buttonGroup.dataProvider = new ListCollection( definition.buttonVOArray );
-			_buttonGroup.invalidate( FeathersControl.INVALIDATION_FLAG_ALL );
-			_buttonGroup.setSize( definition.buttonVOArray.length * ( Psykopaint2UiTheme.SIZE_PAPER_BUTTON + 10 ), Psykopaint2UiTheme.SIZE_PAPER_BUTTON ); // TODO: properly do this calculation
-
 			_scrollContainer = new ScrollContainer();
-//			_scrollContainer.backgroundSkin = new Quad( 100, 100, 0x222222 );
+//			_scrollContainer.backgroundSkin = new Quad( 100, 100, 0x222222 ); // Helps visual debugging.
 			_scrollContainer.scrollerProperties.horizontalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
 			_scrollContainer.scrollerProperties.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
-			_scrollContainer.width = SUB_NAVIGATION_SCROLL_AREA_WIDTH;
 			_scrollContainer.height = Settings.NAVIGATION_AREA_CONTENT_HEIGHT;
-			_scrollContainer.x = 1024 / 2 - SUB_NAVIGATION_SCROLL_AREA_WIDTH / 2;
-			_scrollContainer.y = 0;
-			_scrollContainer.addChild( _buttonGroup );
 			_backLayer.addChild( _scrollContainer );
 
-			_buttonGroup.validate();
-			if( _buttonGroup.width < SUB_NAVIGATION_SCROLL_AREA_WIDTH ) {
-				_buttonGroup.x = SUB_NAVIGATION_SCROLL_AREA_WIDTH / 2 - _buttonGroup.width / 2;
+			var inflate:Number = 50;
+			var accumulatedContentWidth:Number = 0;
+			var len:uint = definition.buttonVOArray.length;
+			var gap:Number = 15;
+			for( var i:uint = 0; i < len; i++ ) {
+				var vo:ButtonDefinitionVO = definition.buttonVOArray[ i ];
+				var subButton:CompoundButton = new CompoundButton( vo.label );
+				subButton.addEventListener( Event.TRIGGERED, onButtonTriggered ); // TODO: possible memory leak
+				subButton.x = inflate / 2 + ( subButton.width + gap ) * i;
+				subButton.y = 30;
+				accumulatedContentWidth += subButton.width;
+				if( i != len - 1 ) {
+					accumulatedContentWidth += gap;
+				}
+				_scrollContainer.addChild( subButton );
 			}
-			_buttonGroup.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT / 2 - _buttonGroup.height / 2;
-		}
 
-		private function buttonInitializer( button:Button, data:ButtonDefinitionVO ):void {
-			button.isEnabled = data.isEnabled;
-			button.label = data.label;
-			button.addEventListener( Event.TRIGGERED, data.triggered );
+			// Center stuff ( on content or on container ).
+			if( accumulatedContentWidth < SUB_NAVIGATION_SCROLL_AREA_WIDTH ) {
+				_scrollContainer.width = accumulatedContentWidth + inflate;
+			}
+			else {
+				_scrollContainer.width = SUB_NAVIGATION_SCROLL_AREA_WIDTH;
+			}
+			_scrollContainer.x = 1024 / 2 - _scrollContainer.width / 2;
+
 		}
 
 		protected function onButtonTriggered( event:Event ):void {
-			var button:Button = event.currentTarget as Button;
+			var button:CompoundButton = event.currentTarget as CompoundButton;
 			buttonPressedSignal.dispatch( button.label );
 		}
 

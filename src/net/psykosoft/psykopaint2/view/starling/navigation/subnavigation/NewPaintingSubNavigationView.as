@@ -1,13 +1,11 @@
 package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
 
-	import feathers.controls.Button;
-
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base.SubNavigationViewBase;
 
 	public class NewPaintingSubNavigationView extends SubNavigationViewBase
 	{
-		public static const BUTTON_LABEL_SELECT_IMAGE:String = "Pick\nan Image";
+		public static const BUTTON_LABEL_SELECT_IMAGE:String = "Pick an Image";
 		public static const BUTTON_LABEL_BACK:String = "Back";
 
 		public function NewPaintingSubNavigationView() {
@@ -16,13 +14,9 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 
 		override protected function onStageAvailable():void {
 
-			var leftButton:Button = new Button();
-			leftButton.label = BUTTON_LABEL_BACK;
-			setLeftButton( leftButton );
+			setLeftButton( BUTTON_LABEL_BACK );
 
-			var rightButton:Button = new Button();
-			rightButton.label = BUTTON_LABEL_SELECT_IMAGE;
-			setRightButton( rightButton );
+			setRightButton( BUTTON_LABEL_SELECT_IMAGE );
 
 			super.onStageAvailable();
 		}

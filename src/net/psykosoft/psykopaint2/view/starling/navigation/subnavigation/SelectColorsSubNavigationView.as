@@ -1,16 +1,14 @@
 package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
 
-	import feathers.controls.Button;
-
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base.SubNavigationViewBase;
 
 	public class SelectColorsSubNavigationView extends SubNavigationViewBase
 	{
-		public static const BUTTON_LABEL_PICK_AN_IMAGE:String = "Pick\nan Image";
-		public static const BUTTON_LABEL_PICK_A_TEXTURE:String = "Pick\na Texture";
+		public static const BUTTON_LABEL_PICK_AN_IMAGE:String = "Pick an Image";
+		public static const BUTTON_LABEL_PICK_A_TEXTURE:String = "Pick a Texture";
 
 		public function SelectColorsSubNavigationView() {
 			super( "Select Colors" );
@@ -18,9 +16,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 
 		override protected function onStageAvailable():void {
 
-			var leftButton:Button = new Button();
-			leftButton.label = BUTTON_LABEL_PICK_AN_IMAGE;
-			setLeftButton( leftButton );
+			setLeftButton( BUTTON_LABEL_PICK_AN_IMAGE );
 
 			// TODO: populate with actual options from the drawing core
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
@@ -39,9 +35,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[colors 13]", onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 
-			var rightButton:Button = new Button();
-			rightButton.label = BUTTON_LABEL_PICK_A_TEXTURE;
-			setRightButton( rightButton );
+			setRightButton( BUTTON_LABEL_PICK_A_TEXTURE );
 
 			super.onStageAvailable();
 		}

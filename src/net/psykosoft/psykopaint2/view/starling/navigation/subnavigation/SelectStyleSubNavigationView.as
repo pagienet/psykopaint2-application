@@ -1,18 +1,14 @@
 package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 {
 
-	import feathers.controls.Button;
-
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
-
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
-
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base.SubNavigationViewBase;
 
 	public class SelectStyleSubNavigationView extends SubNavigationViewBase
 	{
-		public static const BUTTON_LABEL_PICK_A_BRUSH:String = "Pick\na Brush";
-		public static const BUTTON_LABEL_EDIT_STYLE:String = "Edit\nStyle";
+		public static const BUTTON_LABEL_PICK_A_BRUSH:String = "Pick a Brush";
+		public static const BUTTON_LABEL_EDIT_STYLE:String = "Edit Style";
 
 		public function SelectStyleSubNavigationView() {
 			super( "Select Style" );
@@ -20,9 +16,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 
 		override protected function onStageAvailable():void {
 
-			var leftButton:Button = new Button();
-			leftButton.label = BUTTON_LABEL_PICK_A_BRUSH;
-			setLeftButton( leftButton );
+			setLeftButton( BUTTON_LABEL_PICK_A_BRUSH );
 
 			// TODO: populate with actual options from the drawing core
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
@@ -32,9 +26,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[style 4]", onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 
-			var rightButton:Button = new Button();
-			rightButton.label = BUTTON_LABEL_EDIT_STYLE;
-			setRightButton( rightButton );
+			setRightButton( BUTTON_LABEL_EDIT_STYLE );
 
 			super.onStageAvailable();
 		}
