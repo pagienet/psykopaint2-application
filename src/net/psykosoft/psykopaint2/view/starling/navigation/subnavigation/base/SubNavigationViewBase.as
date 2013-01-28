@@ -2,24 +2,20 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 {
 
 	import feathers.controls.Button;
-	import feathers.controls.ButtonGroup;
 	import feathers.controls.ScrollContainer;
 	import feathers.controls.Scroller;
-	import feathers.core.FeathersControl;
-	import feathers.data.ListCollection;
 
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttons.CompoundButton;
-	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2UiTheme;
+	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.ui.theme.buttons.ButtonSkinType;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
 
 	import starling.display.Image;
-	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 
@@ -40,8 +36,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 		private var _rightArrow:Image;
 
 		public var buttonPressedSignal:Signal;
-
-		private const SUB_NAVIGATION_SCROLL_AREA_WIDTH:Number = 760;
 
 		public function SubNavigationViewBase( title:String ) {
 			super();
@@ -76,9 +70,10 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 			// TODO: clear previous button?
 
-			var button:CompoundButton = new CompoundButton( label, -20 );
+			var button:CompoundButton = new CompoundButton( label, ButtonSkinType.PAPER_LABEL, -20 );
+			button.placementFunction = leftButtonLabelPlacement;
 
-			_leftCornerImage = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_LEFT_CORNER ) );
+			_leftCornerImage = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_LEFT_CORNER ) );
 			_leftCornerImage.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT - _leftCornerImage.height;
 			_frontLayer.addChild( _leftCornerImage );
 
@@ -88,24 +83,30 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			_leftButton.y = _leftCornerImage.y + 5;
 			_frontLayer.addChild( _leftButton );
 
-			_leftArrow = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_ARROW ) );
+			_leftArrow = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_ARROW ) );
 			_leftArrow.x = 0;
 			_leftArrow.y = _leftButton.y + _leftButton.height / 2;
 			_frontLayer.addChild( _leftArrow );
 
-			_leftClamp = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_CLAMP) );
+			_leftClamp = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_CLAMP) );
 			_leftClamp.x = _leftCornerImage.width - 50;
 			_leftClamp.y = _leftCornerImage.y + 10;
 			_frontLayer.addChild( _leftClamp );
+		}
+
+		private function leftButtonLabelPlacement():void {
+			var label:Button = _leftButton.labelButton;
+			label.x = -_leftButton.x; // Ensure the left edge of the label touches the left edge of the screen.
+			trace( this, "placing left label" );
 		}
 
 		protected function setRightButton( label:String ):void {
 
 			// TODO: clear previous button?
 
-			var button:CompoundButton = new CompoundButton( label, -20 );
+			var button:CompoundButton = new CompoundButton( label, ButtonSkinType.PAPER_LABEL, -20 );
 
-			_rightCornerImage = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_RIGHT_CORNER ) );
+			_rightCornerImage = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_RIGHT_CORNER ) );
 			_rightCornerImage.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT - _rightCornerImage.height;
 			_rightCornerImage.x = stage.stageWidth - _rightCornerImage.width;
 			_frontLayer.addChild( _rightCornerImage );
@@ -116,13 +117,13 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			_rightButton.y = _rightCornerImage.y;
 			_frontLayer.addChild( _rightButton );
 
-			_rightArrow = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_ARROW ) );
+			_rightArrow = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_ARROW ) );
 			_rightArrow.scaleX = -1;
 			_rightArrow.x = stage.stageWidth;
 			_rightArrow.y = _rightButton.y + _rightButton.height / 2;
 			_frontLayer.addChild( _rightArrow );
 
-			_rightClamp = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_CLAMP) );
+			_rightClamp = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_CLAMP) );
 			_rightClamp.x = _rightCornerImage.x + 15;
 			_rightClamp.y = _rightCornerImage.y + 7;
 			_frontLayer.addChild( _rightClamp );
@@ -130,36 +131,46 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
 
+			// Scroll capable container.
 			_scrollContainer = new ScrollContainer();
-//			_scrollContainer.backgroundSkin = new Quad( 100, 100, 0x222222 ); // Helps visual debugging.
+//			_scrollContainer.backgroundSkin = new Quad( 100, 100, 0x222222 ); // Uncomment for visual debugging.
 			_scrollContainer.scrollerProperties.horizontalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
 			_scrollContainer.scrollerProperties.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
 			_scrollContainer.height = Settings.NAVIGATION_AREA_CONTENT_HEIGHT;
 			_backLayer.addChild( _scrollContainer );
 
-			var inflate:Number = 50;
-			var accumulatedContentWidth:Number = 0;
+			// Add buttons to the container.
+			var inflate:Number = 150;
+			var accumulatedContentWidth:Number = inflate;
 			var len:uint = definition.buttonVOArray.length;
 			var gap:Number = 15;
 			for( var i:uint = 0; i < len; i++ ) {
 				var vo:ButtonDefinitionVO = definition.buttonVOArray[ i ];
-				var subButton:CompoundButton = new CompoundButton( vo.label );
+				var subButton:CompoundButton = new CompoundButton( vo.label, ButtonSkinType.LABEL );
 				subButton.addEventListener( Event.TRIGGERED, onButtonTriggered ); // TODO: possible memory leak
-				subButton.x = inflate / 2 + ( subButton.width + gap ) * i;
+				subButton.x = inflate + ( subButton.width + gap ) * i;
 				subButton.y = 30;
 				accumulatedContentWidth += subButton.width;
 				if( i != len - 1 ) {
 					accumulatedContentWidth += gap;
 				}
+				else if( i == len - 1 ) {
+					accumulatedContentWidth += inflate;
+				}
 				_scrollContainer.addChild( subButton );
 			}
 
-			// Center stuff ( on content or on container ).
-			if( accumulatedContentWidth < SUB_NAVIGATION_SCROLL_AREA_WIDTH ) {
-				_scrollContainer.width = accumulatedContentWidth + inflate;
+			// Ensure that the rightmost gap is applied.
+			var contentWidthEnforcer:Sprite = new Sprite();
+			contentWidthEnforcer.x = accumulatedContentWidth;
+			_scrollContainer.addChild( contentWidthEnforcer );
+
+			// Center the container.
+			if( accumulatedContentWidth < 1024 ) {
+				_scrollContainer.width = accumulatedContentWidth;
 			}
 			else {
-				_scrollContainer.width = SUB_NAVIGATION_SCROLL_AREA_WIDTH;
+				_scrollContainer.width = 1024;
 			}
 			_scrollContainer.x = 1024 / 2 - _scrollContainer.width / 2;
 

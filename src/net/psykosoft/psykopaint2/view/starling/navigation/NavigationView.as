@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 {
 
 	import net.psykosoft.psykopaint2.config.Settings;
-	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2UiTheme;
+	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base.SubNavigationViewBase;
 
@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 			super();
 
 			// Bg.
-			_bgImage = new Image( Psykopaint2UiTheme.instance.getTexture( Psykopaint2UiTheme.TEXTURE_NAVIGATION_BG ) );
+			_bgImage = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_BG ) );
 			addChild( _bgImage );
 
 			// Container will hold buttons.
