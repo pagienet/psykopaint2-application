@@ -48,6 +48,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		private var _firstSnapPoint:Number;
 		private var _lastSnapPoint:Number;
 		private var _moving:Boolean;
+		private var _closestItemIndex:uint;
 
 		private const FRICTION_FACTOR:Number = 0.9;
 		private const AVERAGE_SPEED_SAMPLES:uint = 6;
@@ -352,6 +353,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 
 		public function evaluateCurrentClosestSnapPoint():uint {
 			return evaluateClosestSnapPoint( _camera.x );
+		}
+
+		public function evaluateCurrentClosestSnapPointIndex():uint {
+			return evaluateClosestSnapPointIndex( _camera.x );
 		}
 
 		/*

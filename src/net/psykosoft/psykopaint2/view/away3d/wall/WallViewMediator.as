@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		public var notifyWallpaperChangeSignal:NotifyWallpaperChangeSignal;
 
 		private var _firstLoad:Boolean = true;
-		private var _lastSnapped:uint = 1;
+		private var _lastClosest:uint = 1;
 
 		override public function initialize():void {
 
@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			notifyWallpaperChangeSignal.add( onWallPaperChanged );
 
 			// From view.
-			view.snappedAtPaintingSignal.add( onViewSnapped );
+			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
 			view.motionStartedSignal.add( onViewMotionStarted );
 
 		}
@@ -61,23 +61,24 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			}
 		}
 
-		private function onViewSnapped( paintingIndex:uint ):void {
+		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
+
+			trace( this, "closest painting changed: " + paintingIndex );
 
 			// Remember last snapped painting.
-			if( paintingIndex != 0 ) _lastSnapped = paintingIndex;
+			if( paintingIndex != 0 ) _lastClosest = paintingIndex;
 
-			// Trigger settings state if snapped at settings painting ( index 0 ).
+			// Trigger settings state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState.name != States.SETTINGS && paintingIndex == 0 ) {
 				trace( "snapping caused triggering of settings state." );
 				requestStateChangeSignal.dispatch( new StateVO( States.SETTINGS ) );
-//				return;
 			}
 
-			// Restore home state if snapped on another painting.
-			/*if( paintingIndex != 0 && stateModel.currentState.name.indexOf( States.SETTINGS ) != -1 ) {
+			// Restore home state if closest another painting.
+			if( paintingIndex != 0 && stateModel.currentState.name.indexOf( States.SETTINGS ) != -1 ) {
 				trace( "snapping caused restore of home state." );
-
-			}*/
+				requestStateChangeSignal.dispatch( new StateVO( States.HOME_SCREEN ) );
+			}
 		}
 
 		// -----------------------
@@ -102,7 +103,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Clicking on the back button on the settings state restores to the last snapped painting.
 			if( newState.name == States.HOME_SCREEN && stateModel.previousState.name == States.SETTINGS ) {
 				if( !view.cameraAwake ) {
-					view.animateToPainting( _lastSnapped );
+					view.animateToPainting( _lastClosest );
 				}
 				return;
 			}

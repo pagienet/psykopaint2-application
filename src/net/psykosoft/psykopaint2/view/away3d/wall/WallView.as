@@ -41,6 +41,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private var FrameShadowAsset:Class;
 
 		public var snappedAtPaintingSignal:Signal;
+		public var closestPaintingChangedSignal:Signal;
 		public var motionStartedSignal:Signal;
 
 		private var _paintingClickedSignal:Signal;
@@ -55,6 +56,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private var _framesAtlasXml:XML;
 		private var _framesAtlasTextureInfo:Away3dTextureInfoVO;
 		private var _cameraAwake:Boolean;
+		private var _closestPaintingIndex:uint;
 
 		private const FRAME_GAP_X:Number = 1000;
 
@@ -64,7 +66,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		private const WALL_WIDTH:Number = 100000;
 		private const WALL_HEIGHT:Number = 2000;
-		private const WALL_BASE_Y:Number = -600;
+		private const WALL_BASE_Y:Number = -500;
 		private const WALL_Z:Number = 400;
 
 		private const FLOOR_DEPTH:Number = 1000;
@@ -79,6 +81,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 			_paintingClickedSignal = new Signal(); // TODO: make public
 			snappedAtPaintingSignal = new Signal();
+			closestPaintingChangedSignal = new Signal();
 			motionStartedSignal = new Signal();
 
 //			var tri:Trident = new Trident( 500 );
@@ -191,6 +194,13 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		override protected function onUpdate():void {
 			_cameraController.update();
+
+			// Notify when the closest painting has changed.
+			var closest:uint = _cameraController.evaluateCurrentClosestSnapPointIndex();
+			if( closest != _closestPaintingIndex ) {
+				_closestPaintingIndex = closest;
+				closestPaintingChangedSignal.dispatch( closest );
+			}
 		}
 
 		// ---------------------------------------------------------------------
