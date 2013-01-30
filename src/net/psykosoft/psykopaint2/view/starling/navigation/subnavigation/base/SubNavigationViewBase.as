@@ -70,7 +70,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 			// TODO: clear previous button?
 
-			var button:CompoundButton = new CompoundButton( label, ButtonSkinType.PAPER_LABEL, -20 );
+			var button:CompoundButton = new CompoundButton( label, ButtonSkinType.PAPER_LABEL_LEFT, -20 );
 			button.placementFunction = leftButtonLabelPlacement;
 
 			_leftCornerImage = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_LEFT_CORNER ) );
@@ -104,7 +104,8 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 
 			// TODO: clear previous button?
 
-			var button:CompoundButton = new CompoundButton( label, ButtonSkinType.PAPER_LABEL, -20 );
+			var button:CompoundButton = new CompoundButton( label, ButtonSkinType.PAPER_LABEL_RIGHT, -20 );
+			button.placementFunction = rightButtonLabelPlacement;
 
 			_rightCornerImage = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_RIGHT_CORNER ) );
 			_rightCornerImage.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT - _rightCornerImage.height;
@@ -127,6 +128,12 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			_rightClamp.x = _rightCornerImage.x + 15;
 			_rightClamp.y = _rightCornerImage.y + 7;
 			_frontLayer.addChild( _rightClamp );
+		}
+
+		private function rightButtonLabelPlacement():void {
+			var label:Button = _rightButton.labelButton;
+			label.x = _rightButton.width - label.width; // Ensure the right edge of the label touches the right edge of the screen.
+			trace( this, "placing right label" );
 		}
 
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
