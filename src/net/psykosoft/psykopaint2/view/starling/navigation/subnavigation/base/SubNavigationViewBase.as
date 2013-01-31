@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 	import org.osflash.signals.Signal;
 
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 
@@ -97,7 +98,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 		private function leftButtonLabelPlacement():void {
 			var label:Button = _leftButton.labelButton;
 			label.x = -_leftButton.x; // Ensure the left edge of the label touches the left edge of the screen.
-			trace( this, "placing left label" );
 		}
 
 		protected function setRightButton( label:String ):void {
@@ -133,7 +133,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 		private function rightButtonLabelPlacement():void {
 			var label:Button = _rightButton.labelButton;
 			label.x = _rightButton.width - label.width; // Ensure the right edge of the label touches the right edge of the screen.
-			trace( this, "placing right label" );
 		}
 
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
