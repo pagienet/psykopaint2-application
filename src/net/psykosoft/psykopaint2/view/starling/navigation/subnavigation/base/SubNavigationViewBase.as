@@ -143,6 +143,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			_scrollContainer.scrollerProperties.horizontalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
 			_scrollContainer.scrollerProperties.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
 			_scrollContainer.height = Settings.NAVIGATION_AREA_CONTENT_HEIGHT;
+			_scrollContainer.scrollerProperties = { clipContent: false }; // No clipping to ensure filters work. Starling bug: filters don't work with scissor rects.
 			_backLayer.addChild( _scrollContainer );
 
 			// Add buttons to the container.
