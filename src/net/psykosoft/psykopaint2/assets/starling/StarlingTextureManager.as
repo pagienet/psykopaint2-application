@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.assets.starling
 		// TODO: move all asset embeds to UI project.
 		// TODO: do not embed classes that will not be used, i.e. do not embed low and high res versions and then select, find a way
 
-		public static function initialize() {
+		public static function initialize() : void {
 
 			_textures = new Dictionary();
 			_assets = new Dictionary();

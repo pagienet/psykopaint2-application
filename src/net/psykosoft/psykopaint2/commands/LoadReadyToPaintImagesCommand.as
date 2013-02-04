@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.commands
 		[Inject]
 		public var loadReadyToPaintImagesService:LoadReadyToPaintImagesService;
 
-		public function execute() {
+		public function execute() : void {
 
 			Cc.log( this );
 

@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 		private static var _textureInfo:Dictionary;
 		private static var _initialized:Boolean;
 
-		private static function initialize() {
+		private static function initialize() : void {
 
 			_assets = new Dictionary();
 			_textures = new Dictionary();
