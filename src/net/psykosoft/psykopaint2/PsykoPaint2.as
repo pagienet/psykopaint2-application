@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DProfile;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 
@@ -111,7 +113,7 @@ package net.psykosoft.psykopaint2
 			// Starling.
 			Starling.handleLostContext = true;
 			Starling.multitouchEnabled = true;
-			_starling = new Starling( StarlingRootSprite, stage, _stage3dProxy.viewPort, _stage3dProxy.stage3D );
+			_starling = new Starling( StarlingRootSprite, stage, _stage3dProxy.viewPort, _stage3dProxy.stage3D, "auto", Context3DProfile.BASELINE);
 			_starling.texturePolicy = new ManagedTexturePolicy();
 			if( Settings.ENABLE_STAGE3D_ERROR_CHECKING ) {
 				_starling.enableErrorChecking = true;
