@@ -26,6 +26,11 @@ package net.psykosoft.psykopaint2
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingRootSprite;
 	import net.psykosoft.robotlegs.bundles.SignalCommandMapBundle;
 
+	import org.gestouch.core.Gestouch;
+	import org.gestouch.extensions.starling.StarlingDisplayListAdapter;
+	import org.gestouch.extensions.starling.StarlingTouchHitTester;
+	import org.gestouch.input.NativeInputAdapter;
+
 	import robotlegs.bender.bundles.mvcs.MVCSBundle;
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.framework.api.IContext;
@@ -33,6 +38,7 @@ package net.psykosoft.psykopaint2
 	import robotlegs.extensions.starlingViewMap.StarlingViewMapExtension;
 
 	import starling.core.Starling;
+	import starling.display.DisplayObject;
 
 	public class PsykoPaint2 extends Sprite
 	{
@@ -125,6 +131,11 @@ package net.psykosoft.psykopaint2
 			_starling.simulateMultitouch = true;
 			_starling.start();
 			DisplayContextManager.starling = _starling;
+
+			// Gestouch.
+			Gestouch.inputAdapter = new NativeInputAdapter( stage );
+			Gestouch.addDisplayListAdapter( DisplayObject, new StarlingDisplayListAdapter() );
+			Gestouch.addTouchHitTester( new StarlingTouchHitTester( _starling ), -1 );
 
 			// Feathers.
 			if( Settings.RUNNING_ON_HD ) {

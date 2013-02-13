@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 	import net.psykosoft.psykopaint2.model.state.data.States;
 
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyNavigationPanelToggle;
 
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
@@ -38,6 +39,9 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 		[Inject]
 		public var notifyStateChangedSignal:NotifyStateChangedSignal;
 
+		[Inject]
+		public var notifyNavigationPanelToggle:NotifyNavigationPanelToggle;
+
 		override public function initialize():void {
 
 			// View starts disabled.
@@ -45,6 +49,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 
 			// From app.
 			notifyStateChangedSignal.add( onApplicationStateChanged );
+			notifyNavigationPanelToggle.add( onNavigationPanelToggled );
 
 			// From view.
 			view.backButtonTriggeredSignal.add( onViewBackButtonTriggered );
@@ -60,6 +65,16 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onNavigationPanelToggled( show:Boolean ):void {
+			trace( this, "showing: " + show );
+			if( show ) {
+				view.showAnimated();
+			}
+			else {
+				view.hideAnimated();
+			}
+		}
 
 		private function onApplicationStateChanged( newState:StateVO ):void {
 			Cc.log( this, "state changed: " + newState.name );

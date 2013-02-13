@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.config.configurators
 
 	import net.psykosoft.psykopaint2.view.away3d.wall.WallView;
 	import net.psykosoft.psykopaint2.view.away3d.wall.WallViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.base.StarlingRootSprite;
+	import net.psykosoft.psykopaint2.view.starling.base.StarlingRootSpriteMediator;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.EditStyleSubNavigationView;
@@ -46,6 +48,7 @@ package net.psykosoft.psykopaint2.config.configurators
 
 			// General.
 			mediatorMap.map( SplashView ).toMediator( SplashViewMediator );
+			mediatorMap.map( StarlingRootSprite ).toMediator( StarlingRootSpriteMediator );
 
 			// Painting process.
 			mediatorMap.map( SelectImageView ).toMediator( SelectImageViewMediator );

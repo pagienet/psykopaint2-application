@@ -13,6 +13,12 @@ package net.psykosoft.psykopaint2.view.starling.base
 	import net.psykosoft.psykopaint2.view.starling.selectimage.SelectImageView;
 	import net.psykosoft.psykopaint2.view.starling.splash.SplashView;
 
+	import org.gestouch.events.GestureEvent;
+	import org.gestouch.gestures.SwipeGesture;
+	import org.gestouch.gestures.SwipeGestureDirection;
+	import org.gestouch.gestures.TapGesture;
+	import org.osflash.signals.Signal;
+
 	import starling.display.Sprite;
 	import starling.events.Event;
 
@@ -21,8 +27,13 @@ package net.psykosoft.psykopaint2.view.starling.base
 		private var _mainLayer:Sprite;
 		private var _debugLayer:Sprite;
 
+		public var swipedUpSignal:Signal;
+		public var swipedDownSignal:Signal;
+
 		public function StarlingRootSprite() {
 			super();
+			swipedUpSignal = new Signal();
+			swipedDownSignal = new Signal();
 		}
 
 		override protected function onStageAvailable():void {
@@ -54,6 +65,20 @@ package net.psykosoft.psykopaint2.view.starling.base
 			}
 
 			// -----------------------
+			// Global gestures.
+			// -----------------------
+
+			var globalSwipeGestureUp:SwipeGesture = new SwipeGesture( stage );
+			globalSwipeGestureUp.numTouchesRequired = 2;
+			globalSwipeGestureUp.direction = SwipeGestureDirection.UP;
+			globalSwipeGestureUp.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onGlobalSwipeGestureUp );
+
+			var globalSwipeGestureDown:SwipeGesture = new SwipeGesture( stage );
+			globalSwipeGestureDown.numTouchesRequired = 2;
+			globalSwipeGestureDown.direction = SwipeGestureDirection.DOWN;
+			globalSwipeGestureDown.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onGlobalSwipeGestureDown );
+
+			// -----------------------
 			// Debugging console.
 			// -----------------------
 
@@ -71,6 +96,20 @@ package net.psykosoft.psykopaint2.view.starling.base
 
 		private function onConsoleButtonTriggered( event:Event ):void {
 			Cc.visible = !Cc.visible;
+		}
+
+		// ---------------------------------------------------------------------
+		// Gesture handlers.
+		// ---------------------------------------------------------------------
+
+		private function onGlobalSwipeGestureUp( event:GestureEvent ):void {
+			trace( "swiped up!" );
+			swipedUpSignal.dispatch();
+		}
+
+		private function onGlobalSwipeGestureDown( event:GestureEvent ):void {
+			trace( "swiped down!" );
+			swipedDownSignal.dispatch();
 		}
 	}
 }

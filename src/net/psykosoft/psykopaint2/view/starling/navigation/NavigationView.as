@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.view.starling.navigation
 {
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
+
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingViewBase;
@@ -45,6 +48,22 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 
 			// Container.
 			_container.y = stage.stageHeight - Settings.NAVIGATION_AREA_CONTENT_HEIGHT;
+		}
+
+		public function showAnimated():void {
+			trace( this, "show animated" );
+			visible = true;
+			TweenLite.to( this, 1, { y:0, ease:Strong.easeOut } );
+		}
+
+		public function hideAnimated():void {
+			trace( this, "hide animated" );
+			TweenLite.to( this, 1, { y:Settings.NAVIGATION_AREA_CONTENT_HEIGHT + 100, ease:Strong.easeOut, onComplete: onHideAnimatedComplete } );
+		}
+
+		private function onHideAnimatedComplete():void {
+			visible = false;
+			trace( this, "hide complete" );
 		}
 
 		public function enableSubNavigationView( view:SubNavigationViewBase ):void {

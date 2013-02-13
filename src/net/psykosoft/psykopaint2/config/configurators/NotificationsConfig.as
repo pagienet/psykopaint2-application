@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.config.configurators
 {
 
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyNavigationPanelToggle;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpMessageSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpRemovalSignal;
@@ -22,6 +23,7 @@ package net.psykosoft.psykopaint2.config.configurators
 			injector.map( NotifyPopUpDisplaySignal ).asSingleton();
 			injector.map( NotifyPopUpRemovalSignal ).asSingleton();
 			injector.map( NotifyWallpaperChangeSignal ).asSingleton();
+			injector.map( NotifyNavigationPanelToggle ).asSingleton();
 
 		}
 	}
