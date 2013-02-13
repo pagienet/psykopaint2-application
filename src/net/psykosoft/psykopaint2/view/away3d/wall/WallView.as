@@ -69,7 +69,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private const WALL_BASE_Y:Number = -500;
 		private const WALL_Z:Number = 400;
 
-		private const FLOOR_DEPTH:Number = 1000;
+		private const FLOOR_DEPTH:Number = 1500;
 
 		private const SHADOW_INFLATION_X:Number = 1.075;
 		private const SHADOW_INFLATION_Y:Number = 1.1;

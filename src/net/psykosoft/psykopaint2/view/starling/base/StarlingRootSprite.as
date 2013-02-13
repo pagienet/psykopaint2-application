@@ -6,6 +6,9 @@ package net.psykosoft.psykopaint2.view.starling.base
 	import feathers.controls.Button;
 	import feathers.core.DisplayListWatcher;
 
+	import flash.events.AccelerometerEvent;
+	import flash.sensors.Accelerometer;
+
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationView;
@@ -16,7 +19,6 @@ package net.psykosoft.psykopaint2.view.starling.base
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.SwipeGesture;
 	import org.gestouch.gestures.SwipeGestureDirection;
-	import org.gestouch.gestures.TapGesture;
 	import org.osflash.signals.Signal;
 
 	import starling.display.Sprite;
@@ -26,14 +28,20 @@ package net.psykosoft.psykopaint2.view.starling.base
 	{
 		private var _mainLayer:Sprite;
 		private var _debugLayer:Sprite;
+		private var _isVertical:Boolean = true;
+		private var _lockedBySwipe:Boolean;
 
 		public var swipedUpSignal:Signal;
 		public var swipedDownSignal:Signal;
+		public var acceleratedToVerticalSignal:Signal;
+		public var acceleratedToHorizontalSignal:Signal;
 
 		public function StarlingRootSprite() {
 			super();
 			swipedUpSignal = new Signal();
 			swipedDownSignal = new Signal();
+			acceleratedToVerticalSignal = new Signal();
+			acceleratedToHorizontalSignal = new Signal();
 		}
 
 		override protected function onStageAvailable():void {
@@ -79,6 +87,16 @@ package net.psykosoft.psykopaint2.view.starling.base
 			globalSwipeGestureDown.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onGlobalSwipeGestureDown );
 
 			// -----------------------
+			// Accelerometer.
+			// -----------------------
+
+			if( Accelerometer.isSupported ) {
+				var accelerometer:Accelerometer = new Accelerometer();
+				accelerometer.addEventListener( AccelerometerEvent.UPDATE, onAccelerometerUpdate );
+
+			}
+
+			// -----------------------
 			// Debugging console.
 			// -----------------------
 
@@ -99,17 +117,36 @@ package net.psykosoft.psykopaint2.view.starling.base
 		}
 
 		// ---------------------------------------------------------------------
+		// Accelerometer handlers.
+		// ---------------------------------------------------------------------
+
+		private function onAccelerometerUpdate( event:AccelerometerEvent ):void {
+			if( _lockedBySwipe ) return; // If the user has swiped down to hide the navigation, the accelerometer is ignored.
+			trace( this, "accelerometer update: " + event.accelerationX + ", " + event.accelerationY + ", " + event.accelerationZ );
+			if( _isVertical && event.accelerationY <= 0.05 ) {
+				_isVertical = false;
+				acceleratedToHorizontalSignal.dispatch();
+			}
+			if( !_isVertical && event.accelerationY >= 0.95 ) {
+				_isVertical = true;
+				acceleratedToVerticalSignal.dispatch();
+			}
+		}
+
+		// ---------------------------------------------------------------------
 		// Gesture handlers.
 		// ---------------------------------------------------------------------
 
 		private function onGlobalSwipeGestureUp( event:GestureEvent ):void {
 			trace( "swiped up!" );
 			swipedUpSignal.dispatch();
+			_lockedBySwipe = false;
 		}
 
 		private function onGlobalSwipeGestureDown( event:GestureEvent ):void {
 			trace( "swiped down!" );
 			swipedDownSignal.dispatch();
+			_lockedBySwipe = true;
 		}
 	}
 }

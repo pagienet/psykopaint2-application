@@ -51,19 +51,16 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 		}
 
 		public function showAnimated():void {
-			trace( this, "show animated" );
 			visible = true;
 			TweenLite.to( this, 1, { y:0, ease:Strong.easeOut } );
 		}
 
 		public function hideAnimated():void {
-			trace( this, "hide animated" );
 			TweenLite.to( this, 1, { y:Settings.NAVIGATION_AREA_CONTENT_HEIGHT + 100, ease:Strong.easeOut, onComplete: onHideAnimatedComplete } );
 		}
 
 		private function onHideAnimatedComplete():void {
 			visible = false;
-			trace( this, "hide complete" );
 		}
 
 		public function enableSubNavigationView( view:SubNavigationViewBase ):void {
