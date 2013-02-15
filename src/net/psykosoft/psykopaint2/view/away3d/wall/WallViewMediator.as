@@ -3,11 +3,15 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 	import com.junkbyte.console.Cc;
 
+	import net.psykosoft.psykopaint2.controller.gestures.GestureType;
+
 	import net.psykosoft.psykopaint2.model.packagedimages.vo.PackagedImageVO;
 
 	import net.psykosoft.psykopaint2.model.state.StateModel;
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
@@ -31,6 +35,12 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		[Inject]
 		public var notifyWallpaperChangeSignal:NotifyWallpaperChangeSignal;
 
+		[Inject]
+		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
+
+		[Inject]
+		public var notifyNavigationToggleSignal:NotifyNavigationToggleSignal;
+
 		private var _firstLoad:Boolean = true;
 		private var _lastClosest:uint = 1;
 
@@ -44,6 +54,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// From app.
 			notifyStateChangedSignal.add( onApplicationStateChanged );
 			notifyWallpaperChangeSignal.add( onWallPaperChanged );
+			notifyGlobalGestureSignal.add( onGlobalGesture );
+			notifyNavigationToggleSignal.add( onNavigationToggled );
 
 			// From view.
 			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
@@ -84,6 +96,25 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onNavigationToggled( shown:Boolean ):void {
+			view.limitScrolling = shown;
+		}
+
+		private function onGlobalGesture( type:uint ):void {
+			if( type == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN ) {
+				view.startScrollingInteraction();
+			}
+			else if( type == GestureType.HORIZONTAL_PAN_GESTURE_ENDED ) {
+				view.stopScrollingInteraction();
+			}
+			else if( type == GestureType.PINCH_GREW ) {
+				view.zoomIn();
+			}
+			else if( type == GestureType.PINCH_SHRANK ) {
+				view.zoomOut();
+			}
+		}
 
 		private function onWallPaperChanged( image:PackagedImageVO ):void {
 			trace( this, "changing wallpaper" );

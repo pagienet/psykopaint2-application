@@ -143,7 +143,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			_scrollContainer.scrollerProperties.horizontalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
 			_scrollContainer.scrollerProperties.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
 			_scrollContainer.height = Settings.NAVIGATION_AREA_CONTENT_HEIGHT;
-			_scrollContainer.scrollerProperties = { clipContent: false }; // No clipping to ensure filters work. Starling bug: filters don't work with scissor rects.
+//			_scrollContainer.scrollerProperties = { clipContent: false }; // No clipping to ensure filters work. Starling bug: filters don't work with scissor rects.
 			_backLayer.addChild( _scrollContainer );
 
 			// Add buttons to the container.
@@ -181,11 +181,18 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			}
 			_scrollContainer.x = 1024 / 2 - _scrollContainer.width / 2;
 
+			// TODO: could call _scrollContainer.flatten() to optimize rendering.
+			/*
+			* Notes: would have to find a way for scrolling to work.
+			* Would have to find a way for un-flatten to happen on button presses and flatten again on button releases.
+			* */
+
 		}
 
 		protected function onButtonTriggered( event:Event ):void {
 			var button:CompoundButton = event.currentTarget as CompoundButton;
 			buttonPressedSignal.dispatch( button.label );
+
 		}
 
 		override public function dispose():void {

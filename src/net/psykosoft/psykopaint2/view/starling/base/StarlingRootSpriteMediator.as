@@ -1,7 +1,10 @@
 package net.psykosoft.psykopaint2.view.starling.base
 {
 
-	import net.psykosoft.psykopaint2.signal.notifications.NotifyNavigationPanelToggle;
+	import flash.sensors.Accelerometer;
+
+	import net.psykosoft.psykopaint2.controller.accelerometer.AccelerometerManager;
+	import net.psykosoft.psykopaint2.controller.gestures.GestureManager;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -11,32 +14,21 @@ package net.psykosoft.psykopaint2.view.starling.base
 		public var view:StarlingRootSprite;
 
 		[Inject]
-		public var notifyNavigationPanelToggle:NotifyNavigationPanelToggle;
+		public var gestureManager:GestureManager;
+
+		[Inject]
+		public var accelManager:AccelerometerManager;
 
 		override public function initialize():void {
 
-			// From view.
-			view.swipedUpSignal.add( onViewSwipedUp );
-			view.swipedDownSignal.add( onViewSwipedDown );
-			view.acceleratedToHorizontalSignal.add( onViewAcceleratedToHorizontal );
-			view.acceleratedToVerticalSignal.add( onViewAcceleratedToVertical );
+			// Initialize the gesture manager.
+			gestureManager.stage = view.stage;
 
-		}
+			// Initialize the accelerometer manager.
+			if( Accelerometer.isSupported ) {
+				accelManager.init();
+			}
 
-		private function onViewAcceleratedToHorizontal():void {
-			notifyNavigationPanelToggle.dispatch( true );
-		}
-
-		private function onViewAcceleratedToVertical():void {
-			notifyNavigationPanelToggle.dispatch( false );
-		}
-
-		private function onViewSwipedDown():void {
-			notifyNavigationPanelToggle.dispatch( false );
-		}
-
-		private function onViewSwipedUp():void {
-			notifyNavigationPanelToggle.dispatch( true );
 		}
 	}
 }

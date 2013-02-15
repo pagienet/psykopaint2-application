@@ -3,19 +3,17 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 	import away3d.entities.Mesh;
 	import away3d.events.MouseEvent3D;
-	import away3d.lights.PointLight;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
-	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.BitmapTexture;
 	import away3d.utils.Cast;
+
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
 
 	import com.junkbyte.console.Cc;
 
 	import flash.display.BitmapData;
-
-	import flash.geom.Vector3D;
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.assets.away3d.textures.Away3dTextureManager;
@@ -58,7 +56,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private var _cameraAwake:Boolean;
 		private var _closestPaintingIndex:uint;
 
-		private const FRAME_GAP_X:Number = 1000;
+		private const FRAME_GAP_X:Number = 500;
 
 		private const PAINTINGS_Y:Number = 400;
 		private const PAINTINGS_SCALE:Number = 0.9;
@@ -74,6 +72,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		private const SHADOW_INFLATION_X:Number = 1.075;
 		private const SHADOW_INFLATION_Y:Number = 1.1;
 		private const SHADOW_OFFSET_Y:Number = -50;
+
+		private const DEFAULT_CAMERA_Z:Number = -1750;
 
 		public function WallView() {
 
@@ -103,10 +103,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 			// Floor.
 			var floorGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
 			floorGeometry.scaleUV( WALL_WIDTH / floorGeometry.width, 1 );
-			var floorMaterial:TextureMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( Away3dTextureType.FLOORPAPER_PLANKS ) );
+			var floorMaterial:TextureMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( Away3dTextureType.FLOORPAPER_PLANKS, true ) );
 			floorMaterial.repeat = true;
 			floorMaterial.smooth = true;
-			floorMaterial.mipmap = false;
+			floorMaterial.mipmap = true; // Mipmapping is disabled for textures coming from Away3dTextureManager - see ManagedAway3DBitmapTexture.
 			_floor = new Mesh( floorGeometry, floorMaterial );
 			_floor.scaleX = WALL_WIDTH / floorGeometry.width;
 			_floor.scaleZ = FLOOR_DEPTH / floorGeometry.height;
@@ -119,7 +119,9 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		override protected function onStageAvailable():void {
 
 			// Initialize camera controller.
-			_camera.z = -1750;
+			_camera.x = 0;
+			_camera.y = 0;
+			_camera.z = DEFAULT_CAMERA_Z;
 			_cameraController = new ScrollCameraController( _camera, _wall, stage );
 			_cameraController.motionStartedSignal.add( onCameraMotionStarted );
 			_cameraController.motionEndedSignal.add( onCameraMotionEnded );
@@ -193,6 +195,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 		}
 
 		override protected function onUpdate():void {
+
 			_cameraController.update();
 
 			// Notify when the closest painting has changed.
@@ -352,6 +355,27 @@ package net.psykosoft.psykopaint2.view.away3d.wall
 
 		public function get cameraAwake():Boolean {
 			return _cameraAwake;
+		}
+
+		public function startScrollingInteraction():void {
+			_cameraController.startPanInteraction();
+		}
+
+		public function stopScrollingInteraction():void {
+			_cameraController.endPanInteraction();
+		}
+
+		public function set limitScrolling( value:Boolean ):void {
+			_cameraController.scrollingLimited = value;
+		}
+
+		public function zoomIn():void {
+			// TODO: could calculate current painting dimensions and dynamically adjust to it
+			TweenLite.to( _camera, 0.5, { z: DEFAULT_CAMERA_Z + 1000, y: PAINTINGS_Y, ease:Strong.easeOut } );
+		}
+
+		public function zoomOut():void {
+			TweenLite.to( _camera, 0.5, { z: DEFAULT_CAMERA_Z, y: 0, ease:Strong.easeOut } );
 		}
 	}
 }

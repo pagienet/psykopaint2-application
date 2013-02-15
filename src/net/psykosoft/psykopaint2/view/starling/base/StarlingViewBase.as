@@ -35,6 +35,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 			// Override.
 		}
 
+		// TODO: remove all onLayouts? we are working with a fix screen size really 1024x768 ( view port changes only, coordinate system is always that )
 		protected function onLayout():void {
 			// Override.
 		}

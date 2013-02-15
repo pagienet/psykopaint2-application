@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.config
 	import net.psykosoft.psykopaint2.config.configurators.ModelsConfig;
 	import net.psykosoft.psykopaint2.config.configurators.NotificationsConfig;
 	import net.psykosoft.psykopaint2.config.configurators.ServicesConfig;
+	import net.psykosoft.psykopaint2.config.configurators.SingletonsConfig;
 	import net.psykosoft.psykopaint2.config.configurators.ViewMediatorsConfig;
 	import net.psykosoft.psykopaint2.util.DebuggingConsole;
 	import net.psykosoft.psykopaint2.view.away3d.base.Away3dRootSprite;
@@ -52,6 +53,7 @@ package net.psykosoft.psykopaint2.config
 			new ViewMediatorsConfig( mediatorMap );
 			new ModelsConfig( injector );
 			new ServicesConfig( injector );
+			new SingletonsConfig( injector );
 
 			// Start.
 			context.afterInitializing( init );

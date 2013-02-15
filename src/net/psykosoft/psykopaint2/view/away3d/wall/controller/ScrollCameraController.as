@@ -8,10 +8,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
-	import com.junkbyte.console.Cc;
 
 	import flash.display.Stage;
-	import flash.events.MouseEvent;
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 
@@ -22,6 +20,8 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 	import starling.core.Starling;
 
 	use namespace arcane;
+
+	// TODO: clean up after GestureManager refactor...
 
 	public class ScrollCameraController
 	{
@@ -81,8 +81,6 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 
 			// User input listeners.
 			_stage = stage;
-			_stage.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
-			_stage.addEventListener( MouseEvent.MOUSE_UP, onMouseUp );
 
 			// See pushPosition().
 			_cameraPositionStack = new Vector.<Number>();
@@ -166,7 +164,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 		// User interaction.
 		// ---------------------------------------------------------------------
 
-		private function onMouseDown( event:MouseEvent ):void {
+		public function startPanInteraction():void {
 
 			// Reject scrolls in the navigation area.
 			if( !scrollingAllowed() ) {
@@ -192,7 +190,7 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			}
 		}
 
-		private function onMouseUp( event:MouseEvent ):void {
+		public function endPanInteraction():void {
 
 //			trace( "mouse up" );
 
@@ -208,7 +206,10 @@ package net.psykosoft.psykopaint2.view.away3d.wall.controller
 			throwScroller();
 		}
 
+		public var scrollingLimited:Boolean = true;
+
 		private function scrollingAllowed():Boolean {
+			if( !scrollingLimited ) return true;
 			var limit:Number = _stage.stageHeight - Settings.NAVIGATION_AREA_CONTENT_HEIGHT * Starling.contentScaleFactor;
 			return _stage.mouseY < limit;
 		}

@@ -3,17 +3,20 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 
 	import com.junkbyte.console.Cc;
 
+	import flash.utils.Dictionary;
+
 	import net.psykosoft.psykopaint2.config.Settings;
-
+	import net.psykosoft.psykopaint2.controller.accelerometer.AccelerationType;
+	import net.psykosoft.psykopaint2.controller.gestures.GestureType;
 	import net.psykosoft.psykopaint2.model.state.data.States;
-
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
-	import net.psykosoft.psykopaint2.signal.notifications.NotifyNavigationPanelToggle;
-
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyGlobalAccelerometerSignal;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.HomeScreenSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.EditStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.HomeScreenSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.NewPaintingSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectBrushSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectColorsSubNavigationView;
@@ -22,6 +25,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectTextureSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectWallpaperSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SettingsSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base.SubNavigationViewBase;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -40,19 +44,34 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 		public var notifyStateChangedSignal:NotifyStateChangedSignal;
 
 		[Inject]
-		public var notifyNavigationPanelToggle:NotifyNavigationPanelToggle;
+		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
+
+		[Inject]
+		public var notifyNavigationToggleSignal:NotifyNavigationToggleSignal;
+
+		[Inject]
+		public var notifyGlobalAccelerometerSignal:NotifyGlobalAccelerometerSignal;
+
+		private var _subNavigationCache:Dictionary;
+		private var _wasShowing:Boolean;
 
 		override public function initialize():void {
+
+			// Stores sub navigation views.
+			preCacheSections();
 
 			// View starts disabled.
 			view.disable(); // TODO: all views start disabled?
 
 			// From app.
 			notifyStateChangedSignal.add( onApplicationStateChanged );
-			notifyNavigationPanelToggle.add( onNavigationPanelToggled );
+			notifyGlobalGestureSignal.add( onGlobalGesture );
+			notifyGlobalAccelerometerSignal.add( onGlobalAcceleration );
 
 			// From view.
 			view.backButtonTriggeredSignal.add( onViewBackButtonTriggered );
+			view.shownAnimatedSignal.add( onViewShownAnimated );
+			view.hiddenAnimatedSignal.add( onViewHiddenAnimated );
 
 			// If the splash screen is not being shown,
 			// it is this mediator's responsibility to trigger the home state.
@@ -66,13 +85,32 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 		// From app.
 		// -----------------------
 
-		private function onNavigationPanelToggled( show:Boolean ):void {
-			trace( this, "showing: " + show );
-			if( show ) {
+		private function onGlobalAcceleration( type:uint ):void {
+			if( type == AccelerationType.SHAKE_FORWARD ) {
 				view.showAnimated();
 			}
-			else {
+			else if( type == AccelerationType.SHAKE_BACKWARD ) {
 				view.hideAnimated();
+			}
+		}
+
+		private function onGlobalGesture( type:uint ):void {
+			if( type == GestureType.TWO_FINGER_SWIPE_UP ) {
+				view.showAnimated();
+			}
+			else if( type == GestureType.TWO_FINGER_SWIPE_DOWN ) {
+				view.hideAnimated();
+			}
+			else if( type == GestureType.PINCH_GREW ) { // wall zooms on this, so we hide
+				_wasShowing = view.showing;
+				if( _wasShowing ) {
+					view.hideAnimated();
+				}
+			}
+			else if( type == GestureType.PINCH_SHRANK ) {
+				if( _wasShowing ) {
+					view.showAnimated();
+				}
 			}
 		}
 
@@ -85,41 +123,15 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 		}
 
 		private function evaluateSubNavigation( state:StateVO ):void {
+
 			Cc.info( this, "enabling sub navigation: " + state.name );
-			switch( state.name ) {
-				case States.HOME_SCREEN:
-					view.enableSubNavigationView( new HomeScreenSubNavigationView() );
-					break;
-				case States.PAINTING_NEW:
-					view.enableSubNavigationView( new NewPaintingSubNavigationView() );
-					break;
-				case States.PAINTING_SELECT_IMAGE:
-					view.enableSubNavigationView( new SelectImageSubNavigationView() );
-					break;
-				case States.PAINTING_SELECT_COLORS:
-					view.enableSubNavigationView( new SelectColorsSubNavigationView() );
-					break;
-				case States.PAINTING_SELECT_TEXTURE:
-					view.enableSubNavigationView( new SelectTextureSubNavigationView() );
-					break;
-				case States.PAINTING_SELECT_BRUSH:
-					view.enableSubNavigationView( new SelectBrushSubNavigationView() );
-					break;
-				case States.PAINTING_SELECT_STYLE:
-					view.enableSubNavigationView( new SelectStyleSubNavigationView() );
-					break;
-				case States.PAINTING_EDIT_STYLE:
-					view.enableSubNavigationView( new EditStyleSubNavigationView() );
-					break;
-				case States.SETTINGS:
-					view.enableSubNavigationView( new SettingsSubNavigationView() );
-					break;
-				case States.SETTINGS_WALLPAPER:
-					view.enableSubNavigationView( new SelectWallpaperSubNavigationView() );
-					break;
-				default:
-					view.disableSubNavigation();
+
+			var subNavigation:SubNavigationViewBase = _subNavigationCache[ state.name ];
+			if( !subNavigation ) {
+				throw new Error( this, "there is no sub navigation for this state: " + state.name );
 			}
+
+			view.enableSubNavigationView( subNavigation );
 		}
 
 		// -----------------------
@@ -128,6 +140,34 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 
 		private function onViewBackButtonTriggered():void {
 			requestStateChangeSignal.dispatch( new StateVO( States.PREVIOUS_STATE ) );
+		}
+
+		private function onViewHiddenAnimated():void {
+			notifyNavigationToggleSignal.dispatch( false );
+		}
+
+		private function onViewShownAnimated():void {
+			notifyNavigationToggleSignal.dispatch( true );
+		}
+
+		// ---------------------------------------------------------------------
+		// Internal.
+		// ---------------------------------------------------------------------
+
+		private function preCacheSections():void {
+			_subNavigationCache = new Dictionary();
+
+			_subNavigationCache[ States.HOME_SCREEN ] = new HomeScreenSubNavigationView();
+			_subNavigationCache[ States.PAINTING_NEW ] = new NewPaintingSubNavigationView();
+			_subNavigationCache[ States.PAINTING_SELECT_IMAGE ] = new SelectImageSubNavigationView();
+			_subNavigationCache[ States.PAINTING_SELECT_COLORS ] = new SelectColorsSubNavigationView();
+			_subNavigationCache[ States.PAINTING_SELECT_TEXTURE ] = new SelectTextureSubNavigationView();
+			_subNavigationCache[ States.PAINTING_SELECT_BRUSH ] = new SelectBrushSubNavigationView();
+			_subNavigationCache[ States.PAINTING_SELECT_STYLE ] = new SelectStyleSubNavigationView();
+			_subNavigationCache[ States.PAINTING_EDIT_STYLE ] = new EditStyleSubNavigationView();
+			_subNavigationCache[ States.SETTINGS ] = new SettingsSubNavigationView();
+			_subNavigationCache[ States.SETTINGS_WALLPAPER ] = new SelectWallpaperSubNavigationView();
+
 		}
 	}
 }

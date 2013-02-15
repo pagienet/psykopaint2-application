@@ -26,10 +26,13 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 
 		private var _texture : TextureProxy;
 
-		public function ManagedAway3DBitmapTexture(bitmapData : BitmapData)
+		private var _useMipMapping:Boolean = false;
+
+		public function ManagedAway3DBitmapTexture(bitmapData : BitmapData, useMipMapping:Boolean = false)
 		{
 			super();
 
+			_useMipMapping = useMipMapping;
 			this.bitmapData = bitmapData;
 		}
 
@@ -70,35 +73,45 @@ package net.psykosoft.psykopaint2.assets.away3d.textures
 
 			_bitmapData = value;
 
-			setMipMap();
+			if( _useMipMapping ) {
+				setMipMap();
+			}
 		}
 
 		override protected function uploadContent(texture : TextureBase) : void
 		{
-			/*var sourceWidth : uint = _bitmapData.width, sourceHeight : uint = _bitmapData.height;
-			var w : uint = sourceWidth, h : uint = sourceHeight;
-			var i : uint;
-			var rect : Rectangle = new Rectangle(0, 0, w, h);
-			var matrix : Matrix = new Matrix();
+			// TODO: do not create mipmaps if we're not uploading them ( comment out setMipMap ).
 
-			while (w >= 1 || h >= 1) {
-				_mipMapHolder.fillRect(rect, 0);
+			if( _useMipMapping ) {
+				var sourceWidth:uint = _bitmapData.width, sourceHeight:uint = _bitmapData.height;
+				var w:uint = sourceWidth, h:uint = sourceHeight;
+				var i:uint;
+				var rect:Rectangle = new Rectangle( 0, 0, w, h );
+				var matrix:Matrix = new Matrix();
 
-				matrix.a = rect.width/sourceWidth;
-				matrix.d = rect.height/sourceHeight;
+				while( w >= 1 || h >= 1 ) {
 
-				_mipMapHolder.draw(_bitmapData, matrix, null, null, null, true);
+					trace( this, "uploading mip map: " + i );
 
-				_texture.uploadFromBitmapData(_mipMapHolder, i++);
+					_mipMapHolder.fillRect( rect, 0 );
 
-				w >>= 1;
-				h >>= 1;
+					matrix.a = rect.width / sourceWidth;
+					matrix.d = rect.height / sourceHeight;
 
-				rect.width = w > 1? w : 1;
-				rect.height = h > 1? h : 1;
-			}        */
+					_mipMapHolder.draw( _bitmapData, matrix, null, null, null, true );
 
-			_texture.uploadFromBitmapData(_bitmapData, 0);
+					_texture.uploadFromBitmapData( _mipMapHolder, i++ );
+
+					w >>= 1;
+					h >>= 1;
+
+					rect.width = w > 1 ? w : 1;
+					rect.height = h > 1 ? h : 1;
+				}
+			}
+			else {
+				_texture.uploadFromBitmapData(_bitmapData, 0);
+			}
 		}
 
 		private function setMipMap() : void
