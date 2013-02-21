@@ -5,6 +5,12 @@ package net.psykosoft.psykopaint2.config.configurators
 	import net.psykosoft.psykopaint2.view.away3d.wall.WallViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingRootSprite;
 	import net.psykosoft.psykopaint2.view.starling.base.StarlingRootSpriteMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.CaptureImageSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.CaptureImageSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.ConfirmCaptureSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.ConfirmCaptureSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.popups.CaptureImagePopUpView;
+	import net.psykosoft.psykopaint2.view.starling.popups.CaptureImagePopUpViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.EditStyleSubNavigationView;
@@ -27,6 +33,8 @@ package net.psykosoft.psykopaint2.config.configurators
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectWallpaperSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SettingsSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SettingsSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.view.starling.popups.ConfirmCapturePopUpView;
+	import net.psykosoft.psykopaint2.view.starling.popups.ConfirmCapturePopUpViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.popups.MessagePopUpView;
 	import net.psykosoft.psykopaint2.view.starling.popups.MessagePopUpViewMediator;
 	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpManagerView;
@@ -56,6 +64,8 @@ package net.psykosoft.psykopaint2.config.configurators
 			// 2d Pop up views.
 			mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
 			mediatorMap.map( MessagePopUpView ).toMediator( MessagePopUpViewMediator );
+			mediatorMap.map( CaptureImagePopUpView ).toMediator( CaptureImagePopUpViewMediator );
+			mediatorMap.map( ConfirmCapturePopUpView ).toMediator( ConfirmCapturePopUpViewMediator );
 
 			// 2d Navigation views.
 			mediatorMap.map( NavigationView ).toMediator( NavigationViewMediator );
@@ -70,6 +80,8 @@ package net.psykosoft.psykopaint2.config.configurators
 			mediatorMap.map( SelectBrushSubNavigationView ).toMediator( SelectBrushSubNavigationViewMediator );
 			mediatorMap.map( SelectStyleSubNavigationView ).toMediator( SelectStyleSubNavigationViewMediator ); // This is where you paint.
 			mediatorMap.map( EditStyleSubNavigationView ).toMediator( EditStyleSubNavigationViewMediator );
+			mediatorMap.map( CaptureImageSubNavigationView ).toMediator( CaptureImageSubNavigationViewMediator );
+			mediatorMap.map( ConfirmCaptureSubNavigationView ).toMediator( ConfirmCaptureSubNavigationViewMediator );
 
 			// -----------------------
 			// 3d

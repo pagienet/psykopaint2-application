@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 	public class SelectImageSubNavigationView extends SubNavigationViewBase
 	{
 		public static const BUTTON_LABEL_FACEBOOK:String = "[Facebook]";
-		public static const BUTTON_LABEL_CAMERA:String = "[Camera]";
+		public static const BUTTON_LABEL_CAMERA:String = "Camera";
 		public static const BUTTON_LABEL_READY_TO_PAINT:String = "Ready to Paint";
 		public static const BUTTON_LABEL_YOUR_PHOTOS:String = "[Your Photos]";
 		public static const BUTTON_LABEL_NEW_PAINTING:String = "New Painting";

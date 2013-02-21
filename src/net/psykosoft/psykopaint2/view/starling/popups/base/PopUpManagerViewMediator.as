@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.view.starling.popups.base
 
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpRemovalSignal;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpManagerView;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
@@ -18,12 +19,16 @@ package net.psykosoft.psykopaint2.view.starling.popups.base
 		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
 
 		[Inject]
+		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
+
+		[Inject]
 		public var notifyPopUpRemovalSignal:NotifyPopUpRemovalSignal;
 
 		override public function initialize():void {
 
 			// From app.
 			notifyPopUpDisplaySignal.add( onPopUp );
+			notifyPopUpRemovalSignal.add( onPopUpRemoval );
 
 			// From view.
 			view.popUpClosedSignal.add( onPopUpClosed );
@@ -37,12 +42,16 @@ package net.psykosoft.psykopaint2.view.starling.popups.base
 
 		private function onPopUpClosed():void {
 			view.hideLastPopUp();
-			notifyPopUpRemovalSignal.dispatch();
+			notifyPopUpRemovedSignal.dispatch();
 		}
 
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onPopUpRemoval():void {
+			view.hideLastPopUp();
+		}
 
 		private function onPopUp( popUpType:String ):void {
 			var popUpClass:Class = getDefinitionByName( "net.psykosoft.psykopaint2.view.starling.popups." + popUpType ) as Class;

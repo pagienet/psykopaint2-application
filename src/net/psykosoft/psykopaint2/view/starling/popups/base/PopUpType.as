@@ -9,5 +9,7 @@ package net.psykosoft.psykopaint2.view.starling.popups.base
 		public static const NO_FEATURE:String = "FeatureNotImplementedPopUpView";
 		public static const NO_PLATFORM:String = "FeatureNotInPlatformPopUpView";
 		public static const SETTINGS:String = "SettingsPopUpView"; // TODO: this is deprecated, there will be multiple sub settings pop ups, but not a central one
+		public static const CAPTURE_IMAGE:String = "CaptureImagePopUpView";
+		public static const CONFIRM_CAPTURE_IMAGE:String = "ConfirmCapturePopUpView";
 	}
 }

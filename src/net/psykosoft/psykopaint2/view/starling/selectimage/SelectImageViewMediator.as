@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifySourceImagesUpdatedSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
+	import net.psykosoft.psykopaint2.view.starling.selectimage.SelectImageView;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 

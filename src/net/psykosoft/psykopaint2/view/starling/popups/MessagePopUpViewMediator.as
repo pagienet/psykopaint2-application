@@ -17,8 +17,6 @@ package net.psykosoft.psykopaint2.view.starling.popups
 
 		override public function initialize():void {
 
-			Cc.log( this, "initialized" );
-
 			// From app.
 			notifyPopUpMessageSignal.add( onMessage );
 
@@ -30,7 +28,6 @@ package net.psykosoft.psykopaint2.view.starling.popups
 		// -----------------------
 
 		private function onMessage( value:String ):void {
-			Cc.log( this, "setting view's message: " + value );
 			view.setMessage( value );
 		}
 	}

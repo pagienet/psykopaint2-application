@@ -22,6 +22,7 @@ package net.psykosoft.psykopaint2.view.starling.popups.base
 
 		protected var _container:Sprite;
 		protected var _bg:Image;
+		protected var _useBlocker:Boolean = true;
 
 		private var _animating:Boolean;
 		private var _blocker:Button;
@@ -33,9 +34,11 @@ package net.psykosoft.psykopaint2.view.starling.popups.base
 
 		override protected function onStageAvailable():void {
 
-			_blocker = new Button( StarlingTextureManager.getTextureById( StarlingTextureType.TRANSPARENT ) );
-			_blocker.addEventListener( Event.TRIGGERED, onBlockerPressed );
-			addChild( _blocker );
+			if( _useBlocker ) {
+				_blocker = new Button( StarlingTextureManager.getTextureById( StarlingTextureType.TRANSPARENT ) );
+				_blocker.addEventListener( Event.TRIGGERED, onBlockerPressed );
+				addChild( _blocker );
+			}
 
 			_container = new Sprite();
 			addChild( _container );
@@ -54,8 +57,10 @@ package net.psykosoft.psykopaint2.view.starling.popups.base
 
 		override protected function onLayout():void {
 
-			_blocker.width = stage.stageWidth;
-			_blocker.height = stage.stageHeight;
+			if( _useBlocker ) {
+				_blocker.width = stage.stageWidth;
+				_blocker.height = stage.stageHeight;
+			}
 
 			_container.x = stage.stageWidth / 2 - _bg.width / 2;
 			if( !_animating ) {
@@ -76,8 +81,13 @@ package net.psykosoft.psykopaint2.view.starling.popups.base
 			super.enable();
 		}
 
+		protected function finishedAnimating():void {
+			// Override.
+		}
+
 		private function onEnableComplete():void {
 			_animating = false;
+			finishedAnimating();
 		}
 	}
 }

@@ -23,7 +23,9 @@ package net.psykosoft.psykopaint2.service.packagedimages
 		protected var DUPLICATE_COUNT:uint = 1;
 
 		public function LoadPackagedImagesServiceBase() {
-			_file = new File( File.applicationDirectory.url + FOLDER_PATH );
+			var path:String = File.applicationDirectory.url + FOLDER_PATH;
+			trace( this, "path: " + path );
+			_file = new File( path );
 			_bulkLoader = new BulkLoader( FOLDER_PATH );
 			_bulkLoader.addEventListener( BulkProgressEvent.COMPLETE, onAllThumbsLoaded );
 			_bulkLoader.addEventListener( BulkProgressEvent.PROGRESS, onAllThumbsProgress );
@@ -36,7 +38,14 @@ package net.psykosoft.psykopaint2.service.packagedimages
 			Cc.log( this, "loadThumbs()." );
 
 			// Obtain directory listing.
-			var listing:Array = _file.getDirectoryListing();
+			var listing:Array;
+			try {
+				listing = _file.getDirectoryListing();
+				traceListingNames( listing );
+			}
+			catch( e:Error ) {
+				throw new Error( "Could not find packaged assets. If you are compiling for desktop, make sure the psykopaint-application/assets-packaged folder is in your bin folder." );
+			}
 
 			// Extract file names with "thumb" contained in their name.
 			_thumbNames = new Vector.<String>();
@@ -55,6 +64,15 @@ package net.psykosoft.psykopaint2.service.packagedimages
 
 			// Load all thumb image files.
 			_bulkLoader.start();
+		}
+
+		private function traceListingNames( listing:Array ):void {
+			trace( this, "files in listing: " );
+			var len:uint = listing.length;
+			for( var i:uint; i < len; ++i ) {
+				var file:File = listing[ i ];
+				trace( "file " + i + ": " + file.nativePath );
+			}
 		}
 
 		private function onAllThumbsProgress( event:BulkProgressEvent ):void {

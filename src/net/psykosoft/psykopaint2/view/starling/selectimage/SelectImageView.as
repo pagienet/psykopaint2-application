@@ -26,6 +26,10 @@ package net.psykosoft.psykopaint2.view.starling.selectimage
 	import starling.events.Event;
 	import starling.textures.Texture;
 
+	/*
+	* Selects an image from the user photos or from packaged images.
+	* TODO: change mode to use sprite sheets for thumbs so this is compatible with the user photos extension.
+	* */
 	public class SelectImageView extends StarlingViewBase
 	{
 		private var _thumbTextures:Vector.<Texture>;

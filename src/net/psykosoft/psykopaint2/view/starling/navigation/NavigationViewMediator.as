@@ -15,6 +15,8 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.CaptureImageSubNavigationView;
+	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.ConfirmCaptureSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.EditStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.HomeScreenSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.NewPaintingSubNavigationView;
@@ -167,6 +169,8 @@ package net.psykosoft.psykopaint2.view.starling.navigation
 			_subNavigationCache[ States.PAINTING_EDIT_STYLE ] = new EditStyleSubNavigationView();
 			_subNavigationCache[ States.SETTINGS ] = new SettingsSubNavigationView();
 			_subNavigationCache[ States.SETTINGS_WALLPAPER ] = new SelectWallpaperSubNavigationView();
+			_subNavigationCache[ States.PAINTING_CAPTURE_IMAGE ] = new CaptureImageSubNavigationView();
+			_subNavigationCache[ States.PAINTING_CONFIRM_CAPTURE_IMAGE ] = new ConfirmCaptureSubNavigationView();
 
 		}
 	}

@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.view.starling.base
 
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
+	import net.psykosoft.psykopaint2.view.starling.popups.CaptureImagePopUpView;
 	import net.psykosoft.psykopaint2.view.starling.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpManagerView;
 	import net.psykosoft.psykopaint2.view.starling.selectimage.SelectImageView;

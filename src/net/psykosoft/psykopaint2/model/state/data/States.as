@@ -29,5 +29,7 @@ package net.psykosoft.psykopaint2.model.state.data
 		public static const PAINTING_SELECT_BRUSH:String = "painting/select/brush";
 		public static const PAINTING_SELECT_STYLE:String = "painting/select/style"; // This is where you paint.
 		public static const PAINTING_EDIT_STYLE:String = "painting/edit/style";
+		public static const PAINTING_CAPTURE_IMAGE:String = "painting/select/image/capture";
+		public static const PAINTING_CONFIRM_CAPTURE_IMAGE:String = "painting/select/image/capture/confirm";
 	}
 }

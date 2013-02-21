@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestReadyToPaintImagesLoadSignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.SelectImageSubNavigationView;
 	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpType;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
@@ -43,17 +42,18 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_NEW ) );
 					break;
 				case SelectImageSubNavigationView.BUTTON_LABEL_FACEBOOK:
-					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );
+					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO
 					break;
 				case SelectImageSubNavigationView.BUTTON_LABEL_CAMERA:
-					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );
+					notifyPopUpDisplaySignal.dispatch( PopUpType.CAPTURE_IMAGE );
+					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_CAPTURE_IMAGE ) );
 					break;
 				case SelectImageSubNavigationView.BUTTON_LABEL_READY_TO_PAINT:
 					requestReadyToPaintImagesSignal.dispatch();
 					break;
 				case SelectImageSubNavigationView.BUTTON_LABEL_YOUR_PHOTOS:
 					if( Settings.RUNNING_ON_iPAD ) {
-						notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );
+						notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO
 					}
 					else {
 						notifyPopUpDisplaySignal.dispatch( PopUpType.NO_PLATFORM );
