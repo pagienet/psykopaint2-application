@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 	import feathers.controls.Button;
 	import feathers.controls.ScrollContainer;
 	import feathers.controls.Scroller;
+	import feathers.controls.supportClasses.LayoutViewPort;
 
 	import net.psykosoft.psykopaint2.config.Settings;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
@@ -16,7 +17,6 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 	import org.osflash.signals.Signal;
 
 	import starling.display.Image;
-	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 
@@ -140,10 +140,10 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			// Scroll capable container.
 			_scrollContainer = new ScrollContainer();
 //			_scrollContainer.backgroundSkin = new Quad( 100, 100, 0x222222 ); // Uncomment for visual debugging.
-			_scrollContainer.scrollerProperties.horizontalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
-			_scrollContainer.scrollerProperties.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
+			_scrollContainer.horizontalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
+			_scrollContainer.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
 			_scrollContainer.height = Settings.NAVIGATION_AREA_CONTENT_HEIGHT;
-//			_scrollContainer.scrollerProperties = { clipContent: false }; // No clipping to ensure filters work. Starling bug: filters don't work with scissor rects.
+			_scrollContainer.viewPort.addEventListener( Event.ADDED_TO_STAGE, onScrollContainerAddedToStage );
 			_backLayer.addChild( _scrollContainer );
 
 			// Add buttons to the container.
@@ -181,12 +181,14 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation.base
 			}
 			_scrollContainer.x = 1024 / 2 - _scrollContainer.width / 2;
 
-			// TODO: could call _scrollContainer.flatten() to optimize rendering.
-			/*
-			* Notes: would have to find a way for scrolling to work.
-			* Would have to find a way for un-flatten to happen on button presses and flatten again on button releases.
-			* */
+		}
 
+		private function onScrollContainerAddedToStage( event:Event ):void {
+			// TODO: does produce good rendering ( except for missing button animations ),
+			// but does not seem to reduce draw calls.
+			/*_scrollContainer.viewPort.removeEventListener( Event.ADDED_TO_STAGE, onScrollContainerAddedToStage );
+			var viewPort:LayoutViewPort = _scrollContainer.viewPort as LayoutViewPort;
+			viewPort.flatten();*/
 		}
 
 		protected function onButtonTriggered( event:Event ):void {
