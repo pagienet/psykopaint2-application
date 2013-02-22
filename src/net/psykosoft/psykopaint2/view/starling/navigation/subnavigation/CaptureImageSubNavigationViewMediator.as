@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 
 	import net.psykosoft.psykopaint2.model.state.data.States;
 	import net.psykosoft.psykopaint2.model.state.vo.StateVO;
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyCameraFlipSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.view.starling.popups.base.PopUpType;
@@ -19,6 +20,9 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 
 		[Inject]
 		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
+
+		[Inject]
+		public var notifyCameraFlipSignal:NotifyCameraFlipSignal;
 
 		override public function initialize():void {
 
@@ -37,6 +41,9 @@ package net.psykosoft.psykopaint2.view.starling.navigation.subnavigation
 					notifyPopUpDisplaySignal.dispatch( PopUpType.CONFIRM_CAPTURE_IMAGE );
 					requestStateChangeSignal.dispatch( new StateVO( States.PAINTING_CONFIRM_CAPTURE_IMAGE ) );
 					// TODO: do the actual capture and pass it along to the confirm view
+					break;
+				case CaptureImageSubNavigationView.BUTTON_LABEL_FLIP:
+					notifyCameraFlipSignal.dispatch();
 					break;
 			}
 		}

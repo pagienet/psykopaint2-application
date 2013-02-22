@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.config.configurators
 {
 
+	import net.psykosoft.psykopaint2.signal.notifications.NotifyCameraFlipSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.signal.notifications.NotifyNavigationToggleSignal;
@@ -30,6 +31,7 @@ package net.psykosoft.psykopaint2.config.configurators
 			injector.map( NotifyNavigationToggleSignal ).asSingleton();
 			injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 			injector.map( NotifyPopUpRemovalSignal ).asSingleton();
+			injector.map( NotifyCameraFlipSignal ).asSingleton();
 
 		}
 	}

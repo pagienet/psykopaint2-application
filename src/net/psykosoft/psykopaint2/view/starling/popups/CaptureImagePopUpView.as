@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.view.starling.popups
 	public class CaptureImagePopUpView extends PopUpViewBase
 	{
 		private var _camera:StarlingCamera;
+		private var _currentCamera:uint = 0;
 
 		public function CaptureImagePopUpView() {
 			super();
@@ -25,11 +26,15 @@ package net.psykosoft.psykopaint2.view.starling.popups
 			var cameraFps:uint = 8;
 			var cameraDownSample:Number = 1;
 			_camera.init( cameraViewPort, cameraFps, cameraDownSample, false );
-			_camera.selectCamera( 0 );
+			_camera.selectCamera( _currentCamera );
 			addChild( _camera );
 		}
 
-		// TODO: destroy camera on pop up removal?
+		public function flipCamera():void {
+			_currentCamera = _currentCamera == 0 ? 1 : 0;
+			_camera.selectCamera( _currentCamera );
+		}
 
+		// TODO: destroy camera on pop up removal?
 	}
 }
