@@ -117,7 +117,6 @@ package net.psykosoft.psykopaint2.app.view.starling.navigation
 		}
 
 		private function onApplicationStateChanged( newState:StateVO ):void {
-			Cc.log( this, "state changed: " + newState.name );
 			if( newState.name != States.SPLASH_SCREEN ) {
 				view.enable();
 				evaluateSubNavigation( newState );
@@ -125,8 +124,6 @@ package net.psykosoft.psykopaint2.app.view.starling.navigation
 		}
 
 		private function evaluateSubNavigation( state:StateVO ):void {
-
-			Cc.info( this, "enabling sub navigation: " + state.name );
 
 			var subNavigation:SubNavigationViewBase = _subNavigationCache[ state.name ];
 			if( !subNavigation ) {

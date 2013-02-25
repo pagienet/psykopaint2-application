@@ -19,8 +19,6 @@ package net.psykosoft.psykopaint2.app.view.starling.splash
 
 		override public function initialize():void {
 
-			Cc.log( this, "initialized" );
-
 			// From view.
 			view.splashDiedSignal.add( onViewDied );
 

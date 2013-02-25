@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.app.view.away3d.base
 {
 
+	import com.junkbyte.console.Cc;
+
 	import net.psykosoft.psykopaint2.app.view.away3d.wall.WallView;
 
 	public class Away3dRootSprite extends Away3dViewBase
@@ -8,6 +10,8 @@ package net.psykosoft.psykopaint2.app.view.away3d.base
 		public function Away3dRootSprite() {
 
 			super();
+
+			Cc.log( this );
 
 			// Initialize 3d display tree.
 			addChild( new WallView() );

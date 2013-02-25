@@ -18,30 +18,25 @@ package net.psykosoft.psykopaint2.app
 
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.config.Settings;
-	import net.psykosoft.psykopaint2.core.resources.FreeTextureManager;
-	import net.psykosoft.psykopaint2.core.resources.ManagedTexturePolicy;
 	import net.psykosoft.psykopaint2.app.util.DisplayContextManager;
 	import net.psykosoft.psykopaint2.app.util.PlatformUtil;
 	import net.psykosoft.psykopaint2.app.view.starling.base.StarlingRootSprite;
-	import net.psykosoft.robotlegs.bundles.SignalCommandMapBundle;
+	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
+	import net.psykosoft.psykopaint2.core.resources.FreeTextureManager;
+	import net.psykosoft.psykopaint2.core.resources.ManagedTexturePolicy;
 
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.extensions.starling.StarlingDisplayListAdapter;
 	import org.gestouch.extensions.starling.StarlingTouchHitTester;
 	import org.gestouch.input.NativeInputAdapter;
 
-	import robotlegs.bender.bundles.mvcs.MVCSBundle;
-	import robotlegs.bender.extensions.contextView.ContextView;
-	import robotlegs.bender.framework.api.IContext;
-	import robotlegs.bender.framework.impl.Context;
-	import robotlegs.extensions.starlingViewMap.StarlingViewMapExtension;
-
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 
 	public class Psykopaint2 extends Sprite
 	{
-		protected var _context:IContext;
+		protected var _appConfig:AppConfig;
+		protected var _drawingCore:DrawingCore;
 		protected var _stage3dProxy:Stage3DProxy;
 		protected var _starling:Starling;
 		protected var _away3d:View3D;
@@ -162,14 +157,12 @@ package net.psykosoft.psykopaint2.app
 
 		private function initRobotLegs():void {
 
-			// Main context.
-			_context = new Context();
-			_context.install( MVCSBundle, StarlingViewMapExtension, SignalCommandMapBundle );
-			_context.configure( AppConfig, this, _starling );
-			_context.configure( new ContextView( this ) );
+			// Starts main context.
+			_appConfig = new AppConfig( this, _starling );
 
-			// Core context ( as a module ).
-
+			// Starts core context, which handles the core drawing functionalities ( as a module ).
+			_drawingCore = new DrawingCore( _appConfig.injector );
+			addChild( _drawingCore );
 		}
 
 		// ---------------------------------------------------------------------

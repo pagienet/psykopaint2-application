@@ -75,20 +75,16 @@ package net.psykosoft.psykopaint2.app.view.away3d.wall
 
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
 
-			trace( this, "closest painting changed: " + paintingIndex );
-
 			// Remember last snapped painting.
 			if( paintingIndex != 0 ) _lastClosest = paintingIndex;
 
 			// Trigger settings state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState.name != States.SETTINGS && paintingIndex == 0 ) {
-				trace( "snapping caused triggering of settings state." );
 				requestStateChangeSignal.dispatch( new StateVO( States.SETTINGS ) );
 			}
 
 			// Restore home state if closest another painting.
 			if( paintingIndex != 0 && stateModel.currentState.name.indexOf( States.SETTINGS ) != -1 ) {
-				trace( "snapping caused restore of home state." );
 				requestStateChangeSignal.dispatch( new StateVO( States.HOME_SCREEN ) );
 			}
 		}

@@ -15,11 +15,7 @@ package net.psykosoft.psykopaint2.app.commands
 		public var stateModel:StateModel;
 
 		public function execute():void {
-
-			Cc.log( this, "executed" );
-
 			stateModel.currentState = newState;
-
 		}
 	}
 }
