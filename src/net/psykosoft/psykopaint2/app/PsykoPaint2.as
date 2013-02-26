@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.app
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 
-	public class Psykopaint2 extends Sprite
+	public class PsykoPaint2 extends Sprite
 	{
 		protected var _appConfig:AppConfig;
 		protected var _drawingCore:DrawingCore;
@@ -41,7 +41,7 @@ package net.psykosoft.psykopaint2.app
 		protected var _starling:Starling;
 		protected var _away3d:View3D;
 
-		public function Psykopaint2() {
+		public function PsykoPaint2() {
 			super();
 			initPlatform();
 			initStage();

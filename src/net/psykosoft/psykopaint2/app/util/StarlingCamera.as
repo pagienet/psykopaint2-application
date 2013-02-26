@@ -63,7 +63,7 @@ package net.psykosoft.psykopaint2.app.util
         /**
          * Class constructor
          */
-        public function CameraView()
+        public function StarlingCamera()
         {
         }
 

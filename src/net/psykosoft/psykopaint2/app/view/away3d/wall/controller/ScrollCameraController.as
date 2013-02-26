@@ -154,8 +154,8 @@ package net.psykosoft.psykopaint2.app.view.away3d.wall.controller
 		}
 
 		public function reset():void {
-			_firstSnapPoint = null;
-			_lastSnapPoint = null;
+			_firstSnapPoint = 0;
+			_lastSnapPoint = 0;
 			_snapPoints = new Vector.<Number>();
 			stopAllTweens();
 		}
