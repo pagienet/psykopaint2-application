@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.app.config
 		// ---------------------------------------------------------------------
 
 		public static const NAME:String = "Psykopaint2";
-		public static const VERSION:String = "v0.0.0";
+		public static const VERSION:String = "v0.0.2";
 
 		// ---------------------------------------------------------------------
 		// General options.
