@@ -4,15 +4,14 @@ package net.psykosoft.psykopaint2.app.view.starling.navigation.subnavigation.bas
 	import feathers.controls.Button;
 	import feathers.controls.ScrollContainer;
 	import feathers.controls.Scroller;
-	import feathers.controls.supportClasses.LayoutViewPort;
 
 	import net.psykosoft.psykopaint2.app.config.Settings;
+	import net.psykosoft.psykopaint2.app.view.starling.base.StarlingViewBase;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttons.CompoundButton;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.ui.theme.buttons.ButtonSkinType;
-	import net.psykosoft.psykopaint2.app.view.starling.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
 
@@ -70,6 +69,7 @@ package net.psykosoft.psykopaint2.app.view.starling.navigation.subnavigation.bas
 		protected function setLeftButton( label:String ):void {
 
 			// TODO: clear previous button?
+			// TODO: flatten this?
 
 			var button:CompoundButton = new CompoundButton( label, ButtonSkinType.PAPER_LABEL_LEFT, -20 );
 			button.placementFunction = leftButtonLabelPlacement;
@@ -95,14 +95,10 @@ package net.psykosoft.psykopaint2.app.view.starling.navigation.subnavigation.bas
 			_frontLayer.addChild( _leftClamp );
 		}
 
-		private function leftButtonLabelPlacement():void {
-			var label:Button = _leftButton.labelButton;
-			label.x = -_leftButton.x; // Ensure the left edge of the label touches the left edge of the screen.
-		}
-
 		protected function setRightButton( label:String ):void {
 
 			// TODO: clear previous button?
+			// TODO: flatten this?
 
 			var button:CompoundButton = new CompoundButton( label, ButtonSkinType.PAPER_LABEL_RIGHT, -20 );
 			button.placementFunction = rightButtonLabelPlacement;
@@ -130,9 +126,16 @@ package net.psykosoft.psykopaint2.app.view.starling.navigation.subnavigation.bas
 			_frontLayer.addChild( _rightClamp );
 		}
 
+		private function leftButtonLabelPlacement():void {
+			var label:Button = _leftButton.labelButton;
+			label.x = -_leftButton.x; // Ensure the left edge of the label touches the left edge of the screen.
+			label.labelOffsetX = 0;
+		}
+
 		private function rightButtonLabelPlacement():void {
 			var label:Button = _rightButton.labelButton;
 			label.x = _rightButton.width - label.width; // Ensure the right edge of the label touches the right edge of the screen.
+			label.labelOffsetX = -10;
 		}
 
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
