@@ -14,9 +14,7 @@ package net.psykosoft.psykopaint2.app.view.starling.base
 		private var _enabled:Boolean = true;
 
 		public function StarlingViewBase() {
-
 			super();
-
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
@@ -28,7 +26,6 @@ package net.psykosoft.psykopaint2.app.view.starling.base
 			stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
 
 			onStageAvailable();
-
 		}
 
 		protected function onUpdate():void {

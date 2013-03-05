@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.app.view.starling.painting.crop
 	import net.psykosoft.psykopaint2.app.data.types.StateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.app.view.starling.painting.crop.CropImageSubNavigationView;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;

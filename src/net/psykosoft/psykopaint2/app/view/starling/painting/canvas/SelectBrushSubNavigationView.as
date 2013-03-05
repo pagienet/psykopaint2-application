@@ -15,20 +15,22 @@ package net.psykosoft.psykopaint2.app.view.starling.painting.canvas
 		}
 
 		override protected function onStageAvailable():void {
-
 			setLeftButton( BUTTON_LABEL_PICK_A_TEXTURE );
+			setRightButton( BUTTON_LABEL_SELECT_STYLE );
+			super.onStageAvailable();
+		}
 
-			// TODO: populate with actual options from the drawing core
+		public function setAvailableBrushes( availableBrushShapes:Array ):void {
+
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[brush 1]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[brush 2]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[brush 3]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[brush 4]", onButtonTriggered ) );
+
+			var len:uint = availableBrushShapes.length;
+			for( var i:uint; i < len; ++i ) {
+				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( availableBrushShapes[ i ], onButtonTriggered ) );
+			}
+
 			setCenterButtons( buttonGroupDefinition );
 
-			setRightButton( BUTTON_LABEL_SELECT_STYLE );
-
-			super.onStageAvailable();
 		}
 	}
 }

@@ -1,8 +1,7 @@
 package net.psykosoft.psykopaint2.app.config.configurators
 {
 
-	import net.psykosoft.psykopaint2.app.service.packagedimages.LoadReadyToPaintImagesService;
-	import net.psykosoft.psykopaint2.app.service.packagedimages.LoadWallpaperImagesService;
+	import net.psykosoft.psykopaint2.app.service.images.LoadPackagedImagesService;
 
 	import org.swiftsuspenders.Injector;
 
@@ -10,13 +9,8 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	{
 		public function ServicesConfig( injector:Injector ) {
 
-			// Platform independent.
-			injector.map( LoadReadyToPaintImagesService ).asSingleton();
-			injector.map( LoadWallpaperImagesService ).asSingleton();
-
-			// Platform dependent.
-//			injector.map( SampleServiceInterface ).toSingleton( SampleServiceImplementation );
-
+//			injector.map( LoadReadyToPaintImagesService ).asSingleton();
+//			injector.map( LoadWallpaperImagesService ).asSingleton();
 		}
 	}
 }

@@ -24,13 +24,16 @@ package net.psykosoft.psykopaint2.app.data.types
 		
 		public static const PAINTING_NEW:String = "painting/new";
 		public static const PAINTING_SELECT_IMAGE:String = "painting/select/image";
-		public static const PAINTING_CROP_IMAGE:String = "painting/crop/image";
 		public static const PAINTING_CAPTURE_IMAGE:String = "painting/select/image/capture";
 		public static const PAINTING_CONFIRM_CAPTURE_IMAGE:String = "painting/select/image/capture/confirm";
-		public static const PAINTING_SELECT_COLORS:String = "painting/select/colors";
-		public static const PAINTING_SELECT_TEXTURE:String = "painting/select/texture";
-		public static const PAINTING_SELECT_BRUSH:String = "painting/select/brush";
+
+		// Associated to the drawing core's states - see UpdateAppStateFromActiveCoreModuleCommand.as.
+		// Note: the listening to the core is done in NavigationViewMediator.as.
+		public static const PAINTING_CROP_IMAGE:String = "painting/crop/image"; // CropModule
+		public static const PAINTING_SELECT_COLORS:String = "painting/select/colors"; // ColorStyleModule
+		public static const PAINTING_SELECT_TEXTURE:String = "painting/select/texture"; // ?
+		public static const PAINTING_SELECT_BRUSH:String = "painting/select/brush"; // PaintModule
 		public static const PAINTING_SELECT_STYLE:String = "painting/select/style"; // This is where you paint.
-		public static const PAINTING_EDIT_STYLE:String = "painting/edit/style";
+		public static const PAINTING_EDIT_STYLE:String = "painting/edit/style"; // ?
 	}
 }

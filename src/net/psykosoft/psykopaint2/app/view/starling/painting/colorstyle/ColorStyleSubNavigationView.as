@@ -25,8 +25,6 @@ package net.psykosoft.psykopaint2.app.view.starling.painting.colorstyle
 
 		public function setAvailableColorStyles( presetsList:Array ):void {
 
-			// TODO: clear previous buttons
-
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 			var len:uint = presetsList.length;
 			for( var i:uint; i < len; ++i ) {

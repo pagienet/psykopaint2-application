@@ -3,8 +3,8 @@ package net.psykosoft.psykopaint2.app.model.state
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.app.model.state.data.States;
-	import net.psykosoft.psykopaint2.app.model.state.vo.StateVO;
+	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
 
 	public class StateModel
@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.app.model.state
 		[Inject]
 		public var notifyStateChangedSignal:NotifyStateChangedSignal;
 
-		private var _currentState:StateVO = new StateVO( States.SPLASH_SCREEN );
+		private var _currentState:StateVO = new StateVO( StateType.SPLASH_SCREEN );
 		private var _previousState:StateVO;
 
 		public function StateModel() {
@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.app.model.state
 
 			if( _currentState == value ) return;
 
-			if( value.name == States.PREVIOUS_STATE ) {
+			if( value.name == StateType.PREVIOUS_STATE ) {
 				if( _previousState ) {
 					value = _previousState;
 					_previousState = null;

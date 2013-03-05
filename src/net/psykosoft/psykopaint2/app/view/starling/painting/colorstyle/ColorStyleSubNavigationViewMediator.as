@@ -1,16 +1,9 @@
 package net.psykosoft.psykopaint2.app.view.starling.painting.colorstyle
 {
 
-	import com.junkbyte.console.Cc;
-
 	import net.psykosoft.psykopaint2.app.data.types.StateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
-	import net.psykosoft.psykopaint2.app.model.canvas.ColorStylesModel;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.app.view.starling.painting.colorstyle.ColorStyleSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.starling.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleConfirmSignal;
@@ -36,14 +29,12 @@ package net.psykosoft.psykopaint2.app.view.starling.painting.colorstyle
 		public var colorStyleModule:ColorStyleModule;
 
 		[Inject]
-		public var colorStylesModel:ColorStylesModel;
+		public var notifyColorStylePresetsAvailableSignal:NotifyColorStylePresetsAvailableSignal;
 
 		override public function initialize():void {
 
-			trace( this, "initialized" );
-
-			// Init.
-			view.setAvailableColorStyles( colorStylesModel.colorStyles );
+			// From core.
+			notifyColorStylePresetsAvailableSignal.add( onColorStylePresetsAvailable );
 
 			// From view.
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
@@ -51,23 +42,22 @@ package net.psykosoft.psykopaint2.app.view.starling.painting.colorstyle
 		}
 
 		// -----------------------
-		// From view.
+		// From core.
 		// -----------------------
 
-		// TODO
-		/*private function onColorStyleConfirmed():void {
-			notifyColorStyleConfirmSignal.dispatch();
+		private function onColorStylePresetsAvailable( presets:Array ):void {
+			view.setAvailableColorStyles( presets );
 		}
 
-		private function onColorStyleChanged( styleName:String ):void {
-			notifyColorStyleChangedSignal.dispatch( styleName );
-		}*/
+		// -----------------------
+		// From view.
+		// -----------------------
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
 
 				case ColorStyleSubNavigationView.BUTTON_LABEL_PICK_A_TEXTURE:
-					// TODO: Confirm color style here.
+					notifyColorStyleConfirmSignal.dispatch();
 					break;
 
 				case ColorStyleSubNavigationView.BUTTON_LABEL_PICK_AN_IMAGE:

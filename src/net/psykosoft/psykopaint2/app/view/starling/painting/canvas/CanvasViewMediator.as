@@ -47,7 +47,9 @@ package net.psykosoft.psykopaint2.app.view.starling.painting.canvas
 
 		private function onApplicationStateChanged( newState:StateVO ):void {
 
-			var viewIsActive:Boolean = newState.name == ( StateType.PAINTING_SELECT_STYLE || StateType.PAINTING_EDIT_STYLE );
+			var viewIsActive:Boolean = false;
+			if( newState.name == StateType.PAINTING_SELECT_BRUSH ) viewIsActive = true;
+			// other states could make this view active...
 
 			if( viewIsActive ) {
 				view.enable();

@@ -1,9 +1,8 @@
 package net.psykosoft.psykopaint2.app.config.configurators
 {
 
-	import net.psykosoft.psykopaint2.app.model.packagedimages.SourceImagesModel;
-	import net.psykosoft.psykopaint2.app.model.packagedimages.WallpapersModel;
 	import net.psykosoft.psykopaint2.app.model.state.StateModel;
+	import net.psykosoft.psykopaint2.app.model.thumbnails.ReadyToPaintThumbnailsModel;
 
 	import org.swiftsuspenders.Injector;
 
@@ -12,8 +11,8 @@ package net.psykosoft.psykopaint2.app.config.configurators
 		public function ModelsConfig( injector:Injector ) {
 
 			injector.map( StateModel ).asSingleton();
-			injector.map( SourceImagesModel ).asSingleton();
-			injector.map( WallpapersModel ).asSingleton();
+			injector.map( ReadyToPaintThumbnailsModel ).asSingleton();
+//			injector.map( WallpapersModel ).asSingleton();
 
 		}
 	}

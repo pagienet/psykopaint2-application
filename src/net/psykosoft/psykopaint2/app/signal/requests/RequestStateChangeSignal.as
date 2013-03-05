@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.signal.requests
 {
 
-	import net.psykosoft.psykopaint2.app.model.state.vo.StateVO;
+	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 
 	import org.osflash.signals.Signal;
 

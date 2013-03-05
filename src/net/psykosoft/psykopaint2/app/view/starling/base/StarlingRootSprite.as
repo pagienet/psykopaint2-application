@@ -7,11 +7,14 @@ package net.psykosoft.psykopaint2.app.view.starling.base
 	import feathers.core.DisplayListWatcher;
 
 	import net.psykosoft.psykopaint2.app.config.Settings;
+	import net.psykosoft.psykopaint2.app.view.starling.painting.canvas.CanvasView;
+	import net.psykosoft.psykopaint2.app.view.starling.painting.colorstyle.ColorStyleView;
+	import net.psykosoft.psykopaint2.app.view.starling.painting.crop.CropView;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.app.view.starling.popups.CaptureImagePopUpView;
 	import net.psykosoft.psykopaint2.app.view.starling.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.app.view.starling.popups.base.PopUpManagerView;
-	import net.psykosoft.psykopaint2.app.view.starling.selectimage.SelectImageView;
+	import net.psykosoft.psykopaint2.app.view.starling.selectimage.SelectThumbView;
 	import net.psykosoft.psykopaint2.app.view.starling.splash.SplashView;
 
 	import starling.display.Sprite;
@@ -47,7 +50,10 @@ package net.psykosoft.psykopaint2.app.view.starling.base
 			// << VIEWS >>.
 			// -----------------------
 
-			_mainLayer.addChild( new SelectImageView() );
+			_mainLayer.addChild( new CanvasView() );
+			_mainLayer.addChild( new CropView() );
+			_mainLayer.addChild( new ColorStyleView() );
+			_mainLayer.addChild( new SelectThumbView() );
 			_mainLayer.addChild( new NavigationView() );
 			_mainLayer.addChild( new PopUpManagerView() );
 			if( Settings.SHOW_SPLASH_SCREEN ) {

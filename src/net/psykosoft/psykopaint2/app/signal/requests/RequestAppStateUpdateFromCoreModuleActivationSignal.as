@@ -1,10 +1,14 @@
 package net.psykosoft.psykopaint2.app.signal.requests
 {
 
-	public class RequestAppStateUpdateFromCoreModuleActivationSignal extends ${Super_class_name}
+	import net.psykosoft.psykopaint2.core.drawing.modules.IModule;
+
+	import org.osflash.signals.Signal;
+
+	public class RequestAppStateUpdateFromCoreModuleActivationSignal extends Signal
 	{
 		public function RequestAppStateUpdateFromCoreModuleActivationSignal() {
-			super();
+			super( IModule ); // Module just activated.
 		}
 	}
 }

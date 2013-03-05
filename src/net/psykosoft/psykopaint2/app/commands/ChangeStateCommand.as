@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.app.commands
 	import com.junkbyte.console.Cc;
 
 	import net.psykosoft.psykopaint2.app.model.state.StateModel;
-	import net.psykosoft.psykopaint2.app.model.state.vo.StateVO;
+	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 
 	public class ChangeStateCommand
 	{
@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.app.commands
 		public var stateModel:StateModel;
 
 		public function execute():void {
+			Cc.log( this, "execute - new state: " + newState.name );
 			stateModel.currentState = newState;
 		}
 	}
