@@ -25,9 +25,11 @@ package net.psykosoft.psykopaint2.app.view.starling.base
 			gestureManager.stage = view.stage;
 
 			// Initialize the accelerometer manager.
-			if( Accelerometer.isSupported ) {
+			// NOTE: accelerometer is disabled
+			// TODO: remove if not used
+			/*if( Accelerometer.isSupported ) {
 				accelManager.init();
-			}
+			}*/
 
 		}
 	}

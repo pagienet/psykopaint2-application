@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.app.controller.gestures
 
 			trace( this, "initializing textures on stage: " + _stage );
 
-			initTwoFingerVerticalSwipe();
+//			initTwoFingerVerticalSwipe(); // 2 finger swipe disabled. todo: remove if not used
 			initOneFingerHorizontalPan();
 			initPinch();
 
