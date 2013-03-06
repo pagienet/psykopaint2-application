@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		public var notifyNavigationToggleSignal:NotifyNavigationToggleSignal;
 
 		private var _firstLoad:Boolean = true;
-		private var _lastClosest:uint = 1;
+		private var _lastClosestSnapPoint:uint = 1;
 
 		override public function initialize():void {
 
@@ -73,7 +73,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
 
 			// Remember last snapped painting.
-			if( paintingIndex != 0 ) _lastClosest = paintingIndex;
+			if( paintingIndex != 0 ) _lastClosestSnapPoint = paintingIndex;
 
 			// Trigger settings state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState.name != StateType.SETTINGS && paintingIndex == 0 ) {
@@ -125,7 +125,7 @@ package net.psykosoft.psykopaint2.app.view.home
 			// Clicking on the back button on the settings state restores to the last snapped painting.
 			if( newState.name == StateType.HOME_SCREEN && stateModel.previousState.name == StateType.SETTINGS ) {
 				if( !view.cameraAwake ) {
-					view.animateToPainting( _lastClosest );
+					view.animateToPainting( _lastClosestSnapPoint );
 				}
 				return;
 			}
@@ -156,7 +156,7 @@ package net.psykosoft.psykopaint2.app.view.home
 				view.showEasel();
 				view.animateToPainting( view.getSnapPointCount() - 1 );
 			}
-			else {
+			else if( view.showingEasel ) {
 				view.hideEasel();
 				view.animateToPainting( view.getSnapPointCount() - 1 );
 			}

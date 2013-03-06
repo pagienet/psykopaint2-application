@@ -56,6 +56,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		private var _framesAtlasTextureInfo:Away3dTextureInfoVO;
 		private var _cameraAwake:Boolean;
 		private var _closestPaintingIndex:uint;
+		private var _showingEasel:Boolean;
 
 		private const FRAME_GAP_X:Number = 500;
 
@@ -140,6 +141,10 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		public function showEasel():void {
 
+			if( _showingEasel ) return;
+
+			_showingEasel = true;
+
 			if( !_easel ) _easel = new Easel();
 
 			// Place easel to the right of the last painting.
@@ -156,6 +161,8 @@ package net.psykosoft.psykopaint2.app.view.home
 		}
 
 		public function hideEasel():void {
+			if( !_showingEasel ) return;
+			_showingEasel = false;
 			_cameraController.removeLastSnapPoint();
 			removeChild3d( _easel );
 		}
@@ -415,6 +422,10 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		public function getSnapPointCount():uint {
 			return _cameraController.getSnapPointCount();
+		}
+
+		public function get showingEasel():Boolean {
+			return _showingEasel;
 		}
 	}
 }
