@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.app.config.configurators
 
 	import net.psykosoft.psykopaint2.app.controller.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.app.controller.gestures.GestureManager;
-	import net.psykosoft.psykopaint2.app.util.DisplayContextManager;
+	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 
 	import org.swiftsuspenders.Injector;
 

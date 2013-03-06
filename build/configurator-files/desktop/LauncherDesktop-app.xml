@@ -13,7 +13,7 @@
         <resizable>false</resizable>
         <width>1024</width>
         <height>768</height>
-        <x>1050</x>
+        <x>0</x>
         <y>50</y>
         <aspectRatio>landscape</aspectRatio>
         <autoOrients>false</autoOrients>

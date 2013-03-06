@@ -12,8 +12,8 @@ package net.psykosoft.psykopaint2.app.config
 	import net.psykosoft.psykopaint2.app.config.configurators.ServicesConfig;
 	import net.psykosoft.psykopaint2.app.config.configurators.SingletonsConfig;
 	import net.psykosoft.psykopaint2.app.config.configurators.ViewMediatorsConfig;
-	import net.psykosoft.psykopaint2.app.util.DebuggingConsole;
-	import net.psykosoft.psykopaint2.app.view.away3d.base.Away3dRootSprite;
+	import net.psykosoft.psykopaint2.app.utils.DebuggingConsole;
+	import net.psykosoft.psykopaint2.app.view.base.Away3dRootSprite;
 	import net.psykosoft.robotlegs.bundles.SignalCommandMapBundle;
 
 	import org.swiftsuspenders.Injector;

@@ -11,9 +11,9 @@ package net.psykosoft.psykopaint2.app.assets.away3d.textures
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.data.Away3dTextureType;
 
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.vo.Away3dTextureInfoVO;
-	import net.psykosoft.psykopaint2.app.util.DisplayContextManager;
+	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 
-	import net.psykosoft.psykopaint2.app.util.TextureUtil;
+	import net.psykosoft.psykopaint2.app.utils.TextureUtil;
 
 	/*
 	* Manages general textures used in 3D scenes.

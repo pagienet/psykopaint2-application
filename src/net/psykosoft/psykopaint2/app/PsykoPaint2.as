@@ -18,9 +18,9 @@ package net.psykosoft.psykopaint2.app
 
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.config.Settings;
-	import net.psykosoft.psykopaint2.app.util.DisplayContextManager;
-	import net.psykosoft.psykopaint2.app.util.PlatformUtil;
-	import net.psykosoft.psykopaint2.app.view.starling.base.StarlingRootSprite;
+	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
+	import net.psykosoft.psykopaint2.app.utils.PlatformUtil;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingRootSprite;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 	import net.psykosoft.psykopaint2.core.resources.FreeTextureManager;
 	import net.psykosoft.psykopaint2.core.resources.ManagedTexturePolicy;

@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.commands.LoadReadyToPaintImageCommand;
 	import net.psykosoft.psykopaint2.app.commands.LoadReadyToPaintThumbnailsCommand;
 	import net.psykosoft.psykopaint2.app.commands.LoadWallpaperThumbsCommand;
-	import net.psykosoft.psykopaint2.app.commands.UpdateAppStateFromActiveCoreModuleCommand;
+	import net.psykosoft.psykopaint2.app.commands.UpdateAppStateFromActivedDrawingCoreModuleCommand;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestAppStateUpdateFromCoreModuleActivationSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestReadyToPaintImageSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestReadyToPaintThumbnailsSignal;
@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.app.config.configurators
 
 			// Application state changes.
 			commandMap.map( RequestStateChangeSignal ).toCommand( ChangeStateCommand );
-			commandMap.map( RequestAppStateUpdateFromCoreModuleActivationSignal ).toCommand( UpdateAppStateFromActiveCoreModuleCommand );
+			commandMap.map( RequestAppStateUpdateFromCoreModuleActivationSignal ).toCommand( UpdateAppStateFromActivedDrawingCoreModuleCommand );
 
 			// Packaged wallpapers.
 			commandMap.map( RequestWallpaperThumbsLoadSignal ).toCommand( LoadWallpaperThumbsCommand );
