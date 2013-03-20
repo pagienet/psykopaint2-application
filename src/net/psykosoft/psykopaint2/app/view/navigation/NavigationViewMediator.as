@@ -233,7 +233,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_subNavigationCache = new Dictionary();
 
 			_subNavigationCache[ StateType.HOME_SCREEN ] = new HomeScreenSubNavigationView();
-			_subNavigationCache[ StateType.PAINTING_NEW ] = new NewPaintingSubNavigationView();
+			_subNavigationCache[ StateType.PAINTING ] = new NewPaintingSubNavigationView();
 			_subNavigationCache[ StateType.PAINTING_SELECT_IMAGE ] = new SelectImageSubNavigationView();
 			_subNavigationCache[ StateType.PAINTING_SELECT_COLORS ] = new ColorStyleSubNavigationView();
 			_subNavigationCache[ StateType.PAINTING_SELECT_TEXTURE ] = new SelectTextureSubNavigationView();

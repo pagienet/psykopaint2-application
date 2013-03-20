@@ -47,7 +47,6 @@ package net.psykosoft.psykopaint2.app.view.home
 		private var _framesAtlasTextureInfo:Away3dTextureInfoVO;
 		private var _cameraAwake:Boolean;
 		private var _closestPaintingIndex:uint;
-		private var _showingEasel:Boolean;
 
 		private const FRAME_GAP_X:Number = 500;
 
@@ -142,54 +141,20 @@ package net.psykosoft.psykopaint2.app.view.home
 		}
 
 		// ---------------------------------------------------------------------
-		// Easel.
+		// Frames.
 		// ---------------------------------------------------------------------
 
 		private var _easel:Easel;
-
-		public function showEasel():void {
-
-			if( _showingEasel ) return;
-
-			_showingEasel = true;
-
-			if( !_easel ) _easel = new Easel();
-
-			// Place easel to the right of the last painting.
-			if( _wallFrames.length > 0 ) {
-				var previousFrame:PictureFrame = _wallFrames[ _wallFrames.length - 1 ];
-				_easel.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + _easel.width / 2;
-			}
-			_easel.y = PAINTINGS_Y;
-			_easel.z = 0;
-
-			_cameraController.addSnapPoint( _easel.x );
-
-			addChild3d( _easel );
-		}
-
-		public function hideEasel():void {
-			if( !_showingEasel ) return;
-			_showingEasel = false;
-			_cameraController.removeLastSnapPoint();
-			removeChild3d( _easel );
-		}
-
-		public function get showingEasel():Boolean {
-			return _showingEasel;
-		}
-
-		// ---------------------------------------------------------------------
-		// Frames.
-		// ---------------------------------------------------------------------
+		private var _positioningOffset:uint;
 
 		private function addPictureFrame( pictureFrame:PictureFrame ):void {
 
 			// Transform frame, store it and add it to the scenegraph.
 			if( _wallFrames.length > 0 ) {
 				var previousFrame:PictureFrame = _wallFrames[ _wallFrames.length - 1 ];
-				pictureFrame.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + pictureFrame.width / 2;
+				_positioningOffset += previousFrame.width / 2 + FRAME_GAP_X + pictureFrame.width / 2;
 			}
+			pictureFrame.x = _positioningOffset;
 			pictureFrame.y = PAINTINGS_Y;
 			pictureFrame.z = WALL_Z - PAINTING_DISTANCE_FROM_WALL - pictureFrame.depth / 2;
 			pictureFrame.scale( PAINTINGS_SCALE );
@@ -220,7 +185,7 @@ package net.psykosoft.psykopaint2.app.view.home
 			var settingsTexture:ManagedAway3DBitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SETTINGS_PAINTING );
 			var settingsTextureInfo:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.SETTINGS_PAINTING );
 			var settingsPicture:Picture = new Picture( settingsTextureInfo, settingsTexture );
-			// TODO: 3d mouse picking not working
+			// TODO: 3d mouse picking not working... do we need it anyway?
 			settingsPicture.mouseEnabled = settingsPicture.mouseChildren = true;
 			settingsPicture.scalePainting( 2 );
 
@@ -232,6 +197,23 @@ package net.psykosoft.psykopaint2.app.view.home
 			);
 			var settingsFrame:PictureFrame = new PictureFrame( settingsPicture, _frameMaterial, settingsFrameAtlasDescriptor );
 			addPictureFrame( settingsFrame );
+
+			// -----------------------
+			// Easel.
+			// -----------------------
+
+			_easel = new Easel();
+
+			var previousFrame:PictureFrame = _wallFrames[ _wallFrames.length - 1 ];
+			_easel.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + _easel.width / 2;
+			_easel.y = PAINTINGS_Y;
+			_easel.z = 0;
+
+			_cameraController.addSnapPoint( _easel.x );
+
+			_positioningOffset += _easel.x;
+
+			addChild3d( _easel );
 
 			// -----------------------
 			// Psykopaint frame.
@@ -253,7 +235,7 @@ package net.psykosoft.psykopaint2.app.view.home
 			addPictureFrame( psykopaintFrame );
 
 			// Starts looking at the psykopaint frame.
-			_cameraController.jumpToSnapPoint( 1 );
+			_cameraController.jumpToSnapPoint( 2 );
 
 		}
 

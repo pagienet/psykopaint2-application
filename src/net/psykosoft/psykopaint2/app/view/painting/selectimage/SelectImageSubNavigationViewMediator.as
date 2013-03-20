@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.app.view.painting.selectimage
 			switch( buttonLabel ) {
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_NEW ) );
+					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING ) );
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_FACEBOOK:

@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.app.data.types
 		// Painting states.
 		// -----------------------
 		
-		public static const PAINTING_NEW:String = "painting/new";
+		public static const PAINTING:String = "painting";
 		public static const PAINTING_SELECT_IMAGE:String = "painting/select/image";
 		public static const PAINTING_CAPTURE_IMAGE:String = "painting/select/image/capture";
 		public static const PAINTING_CONFIRM_CAPTURE_IMAGE:String = "painting/select/image/capture/confirm";

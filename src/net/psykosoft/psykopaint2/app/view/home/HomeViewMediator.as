@@ -73,15 +73,24 @@ package net.psykosoft.psykopaint2.app.view.home
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
 
 			// Remember last snapped painting.
-			if( paintingIndex != 0 ) _lastClosestSnapPoint = paintingIndex;
+			if( paintingIndex > 1 ) _lastClosestSnapPoint = paintingIndex;
 
 			// Trigger settings state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState.name != StateType.SETTINGS && paintingIndex == 0 ) {
 				requestStateChangeSignal.dispatch( new StateVO( StateType.SETTINGS ) );
+				return;
 			}
 
-			// Restore home state if closest another painting.
-			if( paintingIndex != 0 && stateModel.currentState.name.indexOf( StateType.SETTINGS ) != -1 ) {
+			// Trigger new painting state if closest to easel ( index 1 ).
+			if( stateModel.currentState.name != StateType.PAINTING && paintingIndex == 1 ) {
+				requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING ) );
+				return;
+			}
+
+			// Restore home state if closest to another painting.
+			var isNotInSettings:Boolean = paintingIndex != 0 && stateModel.currentState.name.indexOf( StateType.SETTINGS ) != -1;
+			var isNotInNewPainting:Boolean = paintingIndex != 1 && stateModel.currentState.name.indexOf( StateType.PAINTING ) != -1;
+			if( isNotInSettings || isNotInNewPainting ) {
 				requestStateChangeSignal.dispatch( new StateVO( StateType.HOME_SCREEN ) );
 			}
 		}
@@ -130,12 +139,12 @@ package net.psykosoft.psykopaint2.app.view.home
 				return;
 			}
 
-			// Regular home screen navigation.
+			// When is the view visible?
 			var viewIsVisible:Boolean = false;
 			if( newState.name == StateType.HOME_SCREEN ) viewIsVisible = true;
-			if( newState.name == StateType.PAINTING_NEW ) viewIsVisible = true;
+			if( newState.name == StateType.PAINTING ) viewIsVisible = true;
 			if( newState.name.indexOf( StateType.SETTINGS ) != -1 ) viewIsVisible = true;
-			// More states could cause the easel to show...
+			// More states could cause the view to show...
 			if( viewIsVisible ) {
 				if( _firstLoad ) {
 					view.loadDefaultHomeFrames();
@@ -146,19 +155,6 @@ package net.psykosoft.psykopaint2.app.view.home
 			}
 			else {
 				view.disable();
-			}
-
-			// Show/hide easel?
-			var showEasel:Boolean = false;
-			if( newState.name == StateType.PAINTING_NEW ) showEasel = true;
-			// More states could cause the easel to show...
-			if( showEasel ) {
-				view.showEasel();
-				view.animateToPainting( view.getSnapPointCount() - 1 );
-			}
-			else if( view.showingEasel ) {
-				view.hideEasel();
-				view.animateToPainting( view.getSnapPointCount() - 1 );
 			}
 
 		}

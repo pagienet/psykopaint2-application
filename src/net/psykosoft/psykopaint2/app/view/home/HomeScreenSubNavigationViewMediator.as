@@ -43,7 +43,7 @@ package net.psykosoft.psykopaint2.app.view.home
 					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );
 					break;
 				case HomeScreenSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_NEW ) );
+					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING ) );
 					break;
 			}
 		}
