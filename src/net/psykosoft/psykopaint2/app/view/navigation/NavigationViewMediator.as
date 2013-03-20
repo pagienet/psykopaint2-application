@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.app.view.navigation
 {
 
-	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.app.config.Settings;
@@ -13,31 +12,21 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestAppStateUpdateFromCoreModuleActivationSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.app.view.home.HomeScreenSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.navigation.SubNavigationViewBase;
-	import net.psykosoft.psykopaint2.app.view.painting.newpainting.NewPaintingSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectBrushSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.captureimage.CaptureImageSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.captureimage.ConfirmCaptureSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.painting.selectimage.SelectImageSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.painting.selecttexture.SelectTextureSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.painting.editstyle.EditStyleSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectBrushSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.painting.selectstyle.SelectStyleSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.settings.SelectWallpaperSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.settings.SettingsSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.colorstyle.ColorStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.crop.CropImageSubNavigationView;
-	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.CropModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.SmearModule;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.app.view.painting.editstyle.EditStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.painting.newpainting.NewPaintingSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.painting.selectimage.SelectImageSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.painting.selectstyle.SelectStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.painting.selecttexture.SelectTextureSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.settings.SelectWallpaperSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.settings.SettingsSubNavigationView;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCropModuleActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySmearModuleActivatedSignal;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -67,39 +56,6 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		[Inject]
 		public var notifyColorStylePresetsAvailableSignal:NotifyColorStylePresetsAvailableSignal;
 
-		[Inject]
-		public var requestAppStateUpdateFromCoreModuleActivationSignal:RequestAppStateUpdateFromCoreModuleActivationSignal;
-
-		////////////////////////////////////////////////////////////////////////////////
-
-		[Inject]
-		public var notifyCropModuleActivatedSignal:NotifyCropModuleActivatedSignal;
-
-		[Inject]
-		public var notifyColorStyleModuleActivatedSignal:NotifyColorStyleModuleActivatedSignal;
-
-		[Inject]
-		public var notifyPaintModuleActivatedSignal:NotifyPaintModuleActivatedSignal;
-
-		[Inject]
-		public var notifySmearModuleActivatedSignal:NotifySmearModuleActivatedSignal;
-
-		////////////////////////////////////////////////////////////////////////////////
-
-		[Inject]
-		public var paintModule:PaintModule;
-
-		[Inject]
-		public var cropModule:CropModule;
-
-		[Inject]
-		public var colorStyleModule:ColorStyleModule;
-
-		[Inject]
-		public var smearModule:SmearModule;
-
-		////////////////////////////////////////////////////////////////////////////////
-
 		private var _subNavigationCache:Dictionary;
 		private var _wasShowing:Boolean;
 
@@ -110,13 +66,6 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 			// View starts disabled.
 			view.disable(); // TODO: all views start disabled?
-
-			// From core.
-			// Associates drawing core module activation to application states ( listens to the core ).
-			notifyCropModuleActivatedSignal.add( onCropModuleActivated );
-			notifyColorStyleModuleActivatedSignal.add( onColorStyleModuleActivated );
-			notifyPaintModuleActivatedSignal.add( onPaintModuleActivated );
-			notifySmearModuleActivatedSignal.add( onSmearModuleActivated );
 
 			// From app.
 			notifyStateChangedSignal.add( onApplicationStateChanged );
@@ -134,28 +83,6 @@ package net.psykosoft.psykopaint2.app.view.navigation
 				requestStateChangeSignal.dispatch( new StateVO( StateType.HOME_SCREEN ) );
 			}
 
-		}
-
-		// -----------------------
-		// From core.
-		// -----------------------
-
-		// Associates module activations to application state changes.
-
-		private function onPaintModuleActivated():void {
-			requestAppStateUpdateFromCoreModuleActivationSignal.dispatch( paintModule );
-		}
-
-		private function onColorStyleModuleActivated( image:BitmapData ):void {
-			requestAppStateUpdateFromCoreModuleActivationSignal.dispatch( colorStyleModule );
-		}
-
-		private function onCropModuleActivated( image:BitmapData ):void {
-			requestAppStateUpdateFromCoreModuleActivationSignal.dispatch( cropModule );
-		}
-
-		private function onSmearModuleActivated():void {
-			requestAppStateUpdateFromCoreModuleActivationSignal.dispatch( smearModule );
 		}
 
 		// -----------------------

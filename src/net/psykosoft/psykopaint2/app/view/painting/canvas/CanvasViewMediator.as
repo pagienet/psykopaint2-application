@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 	import net.psykosoft.psykopaint2.app.data.types.StateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
-	import net.psykosoft.psykopaint2.app.view.painting.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;

@@ -1,23 +1,21 @@
 package net.psykosoft.psykopaint2.app.view.base
 {
 
-	import net.psykosoft.psykopaint2.app.view.starling.base.*;
-
 	import com.junkbyte.console.Cc;
 
 	import feathers.controls.Button;
 	import feathers.core.DisplayListWatcher;
 
 	import net.psykosoft.psykopaint2.app.config.Settings;
+	import net.psykosoft.psykopaint2.app.view.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.app.view.painting.colorstyle.ColorStyleView;
 	import net.psykosoft.psykopaint2.app.view.painting.crop.CropView;
-	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
-	import net.psykosoft.psykopaint2.app.view.popups.CaptureImagePopUpView;
-	import net.psykosoft.psykopaint2.app.view.navigation.NavigationView;
+	import net.psykosoft.psykopaint2.app.view.painting.stateproxy.StateProxyView;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpManagerView;
 	import net.psykosoft.psykopaint2.app.view.selectimage.SelectThumbView;
 	import net.psykosoft.psykopaint2.app.view.splash.SplashView;
+	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -52,6 +50,7 @@ package net.psykosoft.psykopaint2.app.view.base
 			// << VIEWS >>.
 			// -----------------------
 
+			_mainLayer.addChild( new StateProxyView() );
 			_mainLayer.addChild( new CanvasView() );
 			_mainLayer.addChild( new CropView() );
 			_mainLayer.addChild( new ColorStyleView() );

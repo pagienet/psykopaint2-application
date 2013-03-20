@@ -17,6 +17,8 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.view.painting.captureimage.ConfirmCaptureSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.app.view.painting.crop.CropImageSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.crop.CropImageSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.app.view.painting.stateproxy.StateProxyView;
+	import net.psykosoft.psykopaint2.app.view.painting.stateproxy.StateProxyViewMediator;
 	import net.psykosoft.psykopaint2.app.view.popups.CaptureImagePopUpView;
 	import net.psykosoft.psykopaint2.app.view.popups.CaptureImagePopUpViewMediator;
 	import net.psykosoft.psykopaint2.app.view.navigation.NavigationView;
@@ -70,6 +72,7 @@ package net.psykosoft.psykopaint2.app.config.configurators
 			// Painting process views.
 			// ---------------------------
 
+			mediatorMap.map( StateProxyView ).toMediator( StateProxyViewMediator );
 			mediatorMap.map( SelectThumbView ).toMediator( SelectThumbViewMediator );
 			mediatorMap.map( CanvasView ).toMediator( CanvasViewMediator );
 			mediatorMap.map( CropView ).toMediator( CropViewMediator );
