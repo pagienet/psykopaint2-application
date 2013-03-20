@@ -96,10 +96,10 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		private function onGlobalGesture( type:uint ):void {
 			if( type == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN ) {
-				view.startScrollingInteraction();
+				view.startPanInteraction();
 			}
 			else if( type == GestureType.HORIZONTAL_PAN_GESTURE_ENDED ) {
-				view.stopScrollingInteraction();
+				view.stopPanInteraction();
 			}
 			else if( type == GestureType.PINCH_GREW ) {
 				view.zoomIn();

@@ -39,16 +39,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		[Embed(source="../../../../../../../assets-embedded/textures/misc/frame-shadow.png")]
 		private var FrameShadowAsset:Class;
 
-		public var snappedAtPaintingSignal:Signal;
-		public var closestPaintingChangedSignal:Signal;
-		public var motionStartedSignal:Signal;
-
-		private var _paintingClickedSignal:Signal;
-
 		private var _wallFrames:Vector.<PictureFrame>;
-		private var _cameraController:ScrollCameraController;
-		private var _wall:Mesh;
-		private var _floor:Mesh;
 		private var _shadowMesh:Mesh;
 		private var _frameMaterial:TextureMaterial;
 		private var _shadows:Dictionary;
@@ -81,7 +72,6 @@ package net.psykosoft.psykopaint2.app.view.home
 
 			super();
 
-			_paintingClickedSignal = new Signal(); // TODO: make public
 			snappedAtPaintingSignal = new Signal();
 			closestPaintingChangedSignal = new Signal();
 			motionStartedSignal = new Signal();
@@ -131,13 +121,31 @@ package net.psykosoft.psykopaint2.app.view.home
 			super.onStageAvailable();
 		}
 
+		public function reset():void {
+
+			// Remove frames.
+			var len:uint = _wallFrames.length;
+			for( var i:uint = 0; i < len; ++i ) {
+				var wallFrame:PictureFrame = _wallFrames[ i ];
+				removeChild3d( wallFrame );
+				// TODO: add destroy method to wallFrame?
+			}
+
+			// Remove frame shadows.
+			for each( var mesh:Mesh in _shadows ) {
+				removeChild3d( mesh );
+				mesh.dispose();
+				mesh = null;
+			}
+
+			_cameraController.reset();
+		}
+
 		// ---------------------------------------------------------------------
 		// Easel.
 		// ---------------------------------------------------------------------
 
 		private var _easel:Easel;
-
-		// TODO: connect via mediator
 
 		public function showEasel():void {
 
@@ -165,6 +173,10 @@ package net.psykosoft.psykopaint2.app.view.home
 			_showingEasel = false;
 			_cameraController.removeLastSnapPoint();
 			removeChild3d( _easel );
+		}
+
+		public function get showingEasel():Boolean {
+			return _showingEasel;
 		}
 
 		// ---------------------------------------------------------------------
@@ -196,62 +208,6 @@ package net.psykosoft.psykopaint2.app.view.home
 			addChild3d( shadow );
 		}
 
-		private function initializeFrameShadow():void {
-			var shadowMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FrameShadowAsset() ) );
-			shadowMaterial.smooth = true;
-			shadowMaterial.mipmap = false;
-			shadowMaterial.alpha = 0.9;
-			shadowMaterial.alphaBlending = true;
-			_shadowMesh = new Mesh( new PlaneGeometry( 512, 512 ), shadowMaterial );
-			_shadowMesh.rotationX = -90;
-			_shadows = new Dictionary();
-		}
-
-		private function initializeFrameMaterial():void {
-			_frameMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( Away3dTextureType.FRAMES_ATLAS ) );
-			_frameMaterial.mipmap = false;
-			_frameMaterial.smooth = true;
-			_framesAtlasXml = Away3dTextureManager.getAtlasDataById( Away3dTextureType.FRAMES_ATLAS );
-			_framesAtlasTextureInfo = Away3dTextureManager.getTextureInfoById( Away3dTextureType.FRAMES_ATLAS );
-		}
-
-		private function checkInit():void {
-			if( !_shadowMesh ) initializeFrameShadow();
-			if( !_frameMaterial ) initializeFrameMaterial();
-		}
-
-		// ---------------------------------------------------------------------
-		// Updates.
-		// ---------------------------------------------------------------------
-
-		private function onCameraMotionEnded( snapPoint:uint ):void {
-//			trace( this, "motion ended at " + snapPoint );
-			_cameraAwake = false;
-			snappedAtPaintingSignal.dispatch( snapPoint );
-		}
-
-		private function onCameraMotionStarted():void {
-//			trace( this, "motion started." );
-			_cameraAwake = true;
-			motionStartedSignal.dispatch();
-		}
-
-		override protected function onUpdate():void {
-
-			_cameraController.update();
-
-			// Notify when the closest painting has changed.
-			var closest:uint = _cameraController.evaluateCurrentClosestSnapPointIndex();
-			if( closest != _closestPaintingIndex ) {
-				_closestPaintingIndex = closest;
-				closestPaintingChangedSignal.dispatch( closest );
-			}
-		}
-
-		// ---------------------------------------------------------------------
-		// Interface.
-		// ---------------------------------------------------------------------
-
 		public function loadDefaultHomeFrames():void {
 
 			checkInit();
@@ -266,7 +222,6 @@ package net.psykosoft.psykopaint2.app.view.home
 			var settingsPicture:Picture = new Picture( settingsTextureInfo, settingsTexture );
 			// TODO: 3d mouse picking not working
 			settingsPicture.mouseEnabled = settingsPicture.mouseChildren = true;
-			settingsPicture.addEventListener( MouseEvent3D.MOUSE_UP, onSettingsPaintingMouseUp );
 			settingsPicture.scalePainting( 2 );
 
 			// Frame.
@@ -300,11 +255,6 @@ package net.psykosoft.psykopaint2.app.view.home
 			// Starts looking at the psykopaint frame.
 			_cameraController.jumpToSnapPoint( 1 );
 
-		}
-
-		private function onSettingsPaintingMouseUp( event:MouseEvent3D ):void {
-			Cc.warn( this, "settings painting clicked 3d." );
-			_paintingClickedSignal.dispatch( "settings" ); // TODO: can clean up hardcoded string?
 		}
 
 		public function loadUserFrames():void {
@@ -350,42 +300,55 @@ package net.psykosoft.psykopaint2.app.view.home
 						atlasData
 				);
 				addPictureFrame( wallFrame );
-
 			}
-
 		}
 
-		public function get currentPainting():uint {
-			return _cameraController.evaluateCurrentClosestSnapPoint();
+		private function initializeFrameShadow():void {
+			var shadowMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FrameShadowAsset() ) );
+			shadowMaterial.smooth = true;
+			shadowMaterial.mipmap = false;
+			shadowMaterial.alpha = 0.9;
+			shadowMaterial.alphaBlending = true;
+			_shadowMesh = new Mesh( new PlaneGeometry( 512, 512 ), shadowMaterial );
+			_shadowMesh.rotationX = -90;
+			_shadows = new Dictionary();
 		}
 
-		public function reset():void {
+		private function initializeFrameMaterial():void {
+			_frameMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( Away3dTextureType.FRAMES_ATLAS ) );
+			_frameMaterial.mipmap = false;
+			_frameMaterial.smooth = true;
+			_framesAtlasXml = Away3dTextureManager.getAtlasDataById( Away3dTextureType.FRAMES_ATLAS );
+			_framesAtlasTextureInfo = Away3dTextureManager.getTextureInfoById( Away3dTextureType.FRAMES_ATLAS );
+		}
 
-			// Remove frames.
-			var len:uint = _wallFrames.length;
-			for( var i:uint = 0; i < len; ++i ) {
-				var wallFrame:PictureFrame = _wallFrames[ i ];
-				removeChild3d( wallFrame );
-				// TODO: add destroy method to wallFrame?
+		private function checkInit():void {
+			if( !_shadowMesh ) initializeFrameShadow();
+			if( !_frameMaterial ) initializeFrameMaterial();
+		}
+
+		// ---------------------------------------------------------------------
+		// Updates.
+		// ---------------------------------------------------------------------
+
+		override protected function onUpdate():void {
+
+			_cameraController.update();
+
+			// Notify when the closest painting has changed.
+			var closest:uint = _cameraController.evaluateCurrentClosestSnapPointIndex();
+			if( closest != _closestPaintingIndex ) {
+				_closestPaintingIndex = closest;
+				closestPaintingChangedSignal.dispatch( closest );
 			}
-
-			// Remove frame shadows.
-			for each( var mesh:Mesh in _shadows ) {
-				removeChild3d( mesh );
-				mesh.dispose();
-				mesh = null;
-			}
-
-			_cameraController.reset();
 		}
 
-		public function get pictureClickedSignal():Signal {
-			return _paintingClickedSignal;
-		}
+		// ---------------------------------------------------------------------
+		// Wall and floor.
+		// ---------------------------------------------------------------------
 
-		public function animateToPainting( index:int ):void {
-			_cameraController.jumpToSnapPointAnimated( index );
-		}
+		private var _wall:Mesh;
+		private var _floor:Mesh;
 
 		public function changeWallpaper( bmd:BitmapData ):void {
 			var wallMaterial:TextureMaterial = new TextureMaterial( new ManagedAway3DBitmapTexture( bmd ) );
@@ -395,20 +358,54 @@ package net.psykosoft.psykopaint2.app.view.home
 			_wall.material = wallMaterial;
 		}
 
+		// ---------------------------------------------------------------------
+		// Camera controller wrapper methods.
+		// ---------------------------------------------------------------------
+
+		private var _cameraController:ScrollCameraController;
+
+		public var snappedAtPaintingSignal:Signal;
+		public var closestPaintingChangedSignal:Signal;
+		public var motionStartedSignal:Signal;
+
+		private function onCameraMotionEnded( snapPoint:uint ):void {
+//			trace( this, "motion ended at " + snapPoint );
+			_cameraAwake = false;
+			snappedAtPaintingSignal.dispatch( snapPoint );
+		}
+
+		private function onCameraMotionStarted():void {
+//			trace( this, "motion started." );
+			_cameraAwake = true;
+			motionStartedSignal.dispatch();
+		}
+
+		public function get currentPainting():uint {
+			return _cameraController.evaluateCurrentClosestSnapPoint();
+		}
+
+		/*
+		* Limits scrolling to everything BUT the lower area of the screen.
+		* If false, scrolling can occur on the entire screen.
+		* */
+		public function set limitScrolling( value:Boolean ):void {
+			_cameraController.scrollingLimited = value;
+		}
+
+		public function animateToPainting( index:int ):void {
+			_cameraController.jumpToSnapPointAnimated( index );
+		}
+
 		public function get cameraAwake():Boolean {
 			return _cameraAwake;
 		}
 
-		public function startScrollingInteraction():void {
+		public function startPanInteraction():void {
 			_cameraController.startPanInteraction();
 		}
 
-		public function stopScrollingInteraction():void {
+		public function stopPanInteraction():void {
 			_cameraController.endPanInteraction();
-		}
-
-		public function set limitScrolling( value:Boolean ):void {
-			_cameraController.scrollingLimited = value;
 		}
 
 		public function zoomIn():void {
@@ -422,10 +419,6 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		public function getSnapPointCount():uint {
 			return _cameraController.getSnapPointCount();
-		}
-
-		public function get showingEasel():Boolean {
-			return _showingEasel;
 		}
 	}
 }
