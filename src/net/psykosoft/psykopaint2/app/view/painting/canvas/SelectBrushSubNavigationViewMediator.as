@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -26,12 +26,15 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 		public var notifyPopUpMessageSignal:NotifyPopUpMessageSignal;
 
 		[Inject]
+		public var notifyAvailableBrushTypesSignal:NotifyAvailableBrushTypesSignal;
+
+		[Inject]
 		public var paintModule:PaintModule;
 
 		override public function initialize():void {
 
 			// Init.
-			view.setAvailableBrushes( paintModule.getAvailableBrushShapes() );
+			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
 
 			// From view.
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
@@ -54,7 +57,7 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 					break;
 
 				default:
-					paintModule.setBrushShape( buttonLabel );
+					paintModule.activeBrush = buttonLabel;
 					break;
 			}
 		}

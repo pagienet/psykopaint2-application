@@ -1,15 +1,11 @@
 package net.psykosoft.psykopaint2.app.view.painting.editstyle
 {
 
-	import com.junkbyte.console.Cc;
-
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
-
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.app.view.painting.editstyle.EditStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpType;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;

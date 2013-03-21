@@ -20,13 +20,13 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 			super.onStageAvailable();
 		}
 
-		public function setAvailableBrushes( availableBrushShapes:Array ):void {
+		public function setAvailableBrushes( brushTypes:Vector.<String> ):void {
 
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 
-			var len:uint = availableBrushShapes.length;
+			var len:uint = brushTypes.length;
 			for( var i:uint; i < len; ++i ) {
-				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( availableBrushShapes[ i ], onButtonTriggered ) );
+				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( brushTypes[ i ], onButtonTriggered ) );
 			}
 
 			setCenterButtons( buttonGroupDefinition );
