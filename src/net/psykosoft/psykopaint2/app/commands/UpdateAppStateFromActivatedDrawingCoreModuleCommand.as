@@ -3,60 +3,39 @@ package net.psykosoft.psykopaint2.app.commands
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.CropModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.IModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.SmearModule;
+	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
+	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
 
 	public class UpdateAppStateFromActivatedDrawingCoreModuleCommand
 	{
 		[Inject]
-		public var moduleJustActivated:IModule;
-
-		////////////////////////////////////////////////////////////////////////////////
-
-		[Inject]
-		public var paintModule:PaintModule;
-
-		[Inject]
-		public var cropModule:CropModule;
-
-		[Inject]
-		public var colorStyleModule:ColorStyleModule;
-
-		[Inject]
-		public var smearModule:SmearModule;
-
-		////////////////////////////////////////////////////////////////////////////////
+		public var moduleActivationVO:ModuleActivationVO;
 
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
-
-		////////////////////////////////////////////////////////////////////////////////
 
 		public function execute():void {
 
 			var newState:StateVO;
 
-			switch( moduleJustActivated ) {
+			switch( moduleActivationVO.activatedModuleType ) {
 
-				case paintModule:
-					newState = new StateVO( StateType.PAINTING_SELECT_BRUSH );
+				case ModuleType.PAINT:
+					newState = new StateVO( ApplicationStateType.PAINTING_SELECT_BRUSH );
 					break;
 
-				case cropModule:
-					newState = new StateVO( StateType.PAINTING_CROP_IMAGE );
+				case ModuleType.CROP:
+					newState = new StateVO( ApplicationStateType.PAINTING_CROP_IMAGE );
 					break;
 
-				case colorStyleModule:
-					newState = new StateVO( StateType.PAINTING_SELECT_COLORS );
+				case ModuleType.COLOR_STYLE:
+					newState = new StateVO( ApplicationStateType.PAINTING_SELECT_COLORS );
 					break;
 
-				case smearModule:
+				case ModuleType.SMEAR:
 					throw new Error( "Don't know what to do with this module..." );
 					break;
 
@@ -64,7 +43,10 @@ package net.psykosoft.psykopaint2.app.commands
 
 			}
 
-			Cc.log( this, "drawing core module activated: " + moduleJustActivated + ", triggering app state: " + newState.name );
+			Cc.log( this, "drawing core module activated: " + moduleActivationVO.activatedModuleType + " ------------------------------------------" );
+			Cc.log( this, "-> triggers application state: " + newState.name );
+			Cc.log( this, "-> previously active module: " + moduleActivationVO.deactivatedModuleType );
+			Cc.log( this, "-> next active module: " + moduleActivationVO.concatenatingModuleType );
 
 			requestStateChangeSignal.dispatch( newState );
 

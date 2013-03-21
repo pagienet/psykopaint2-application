@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.app.view.painting.selectimage
 {
 
 	import net.psykosoft.psykopaint2.app.config.Settings;
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestReadyToPaintThumbnailsSignal;
@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.app.view.painting.selectimage
 			switch( buttonLabel ) {
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING ) );
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_FACEBOOK:

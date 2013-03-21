@@ -1,13 +1,10 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
-	import net.psykosoft.psykopaint2.app.view.navigation.subnavigation.*;
-
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.app.view.home.HomeScreenSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpType;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
@@ -37,13 +34,13 @@ package net.psykosoft.psykopaint2.app.view.home
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
 				case HomeScreenSubNavigationView.BUTTON_LABEL_SETTINGS:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.SETTINGS ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.SETTINGS ) );
 					break;
 				case HomeScreenSubNavigationView.BUTTON_LABEL_GALLERY:
 					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );
 					break;
 				case HomeScreenSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING ) );
 					break;
 			}
 		}

@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.painting.canvas
 {
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
@@ -46,11 +46,11 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 			switch( buttonLabel ) {
 
 				case SelectBrushSubNavigationView.BUTTON_LABEL_SELECT_STYLE:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_SELECT_STYLE ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_STYLE ) );
 					break;
 
 				case SelectBrushSubNavigationView.BUTTON_LABEL_PICK_A_TEXTURE:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_SELECT_TEXTURE ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_TEXTURE ) );
 					break;
 
 				default:

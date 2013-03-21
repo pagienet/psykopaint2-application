@@ -28,8 +28,7 @@ package net.psykosoft.psykopaint2.app.data.types
 		public static const PAINTING_CONFIRM_CAPTURE_IMAGE:String = "painting/select/image/capture/confirm";
 
 		// Associated to the drawing core's states - see UpdateAppStateFromActiveCoreModuleCommand.as.
-		// i.e. the drawing core can trigger application state changes
-		// Note: the listening to the core is done in StateProxyViewMediator.as.
+		// i.e. the drawing core can trigger application state changes.
 		public static const PAINTING_CROP_IMAGE:String = "painting/crop/image"; // CropModule
 		public static const PAINTING_SELECT_COLORS:String = "painting/select/colors"; // ColorStyleModule
 		public static const PAINTING_SELECT_TEXTURE:String = "painting/select/texture"; // ?

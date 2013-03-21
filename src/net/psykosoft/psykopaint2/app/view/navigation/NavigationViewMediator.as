@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.controller.accelerometer.AccelerationType;
 	import net.psykosoft.psykopaint2.app.controller.gestures.GestureType;
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
@@ -80,7 +80,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			// If the splash screen is not being shown,
 			// it is this mediator's responsibility to trigger the home state.
 			if( !Settings.SHOW_SPLASH_SCREEN ) {
-				requestStateChangeSignal.dispatch( new StateVO( StateType.HOME_SCREEN ) );
+				requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.HOME_SCREEN ) );
 			}
 
 		}
@@ -119,7 +119,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		}
 
 		private function onApplicationStateChanged( newState:StateVO ):void {
-			if( newState.name != StateType.SPLASH_SCREEN ) {
+			if( newState.name != ApplicationStateType.SPLASH_SCREEN ) {
 				view.enable();
 				evaluateSubNavigation( newState );
 			}
@@ -140,7 +140,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		// -----------------------
 
 		private function onViewBackButtonTriggered():void {
-			requestStateChangeSignal.dispatch( new StateVO( StateType.PREVIOUS_STATE ) );
+			requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PREVIOUS_STATE ) );
 		}
 
 		private function onViewHiddenAnimated():void {
@@ -159,19 +159,19 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 			_subNavigationCache = new Dictionary();
 
-			_subNavigationCache[ StateType.HOME_SCREEN ] = new HomeScreenSubNavigationView();
-			_subNavigationCache[ StateType.PAINTING ] = new NewPaintingSubNavigationView();
-			_subNavigationCache[ StateType.PAINTING_SELECT_IMAGE ] = new SelectImageSubNavigationView();
-			_subNavigationCache[ StateType.PAINTING_SELECT_COLORS ] = new ColorStyleSubNavigationView();
-			_subNavigationCache[ StateType.PAINTING_SELECT_TEXTURE ] = new SelectTextureSubNavigationView();
-			_subNavigationCache[ StateType.PAINTING_SELECT_BRUSH ] = new SelectBrushSubNavigationView();
-			_subNavigationCache[ StateType.PAINTING_SELECT_STYLE ] = new SelectStyleSubNavigationView();
-			_subNavigationCache[ StateType.PAINTING_EDIT_STYLE ] = new EditStyleSubNavigationView();
-			_subNavigationCache[ StateType.SETTINGS ] = new SettingsSubNavigationView();
-			_subNavigationCache[ StateType.SETTINGS_WALLPAPER ] = new SelectWallpaperSubNavigationView();
-			_subNavigationCache[ StateType.PAINTING_CAPTURE_IMAGE ] = new CaptureImageSubNavigationView();
-			_subNavigationCache[ StateType.PAINTING_CONFIRM_CAPTURE_IMAGE ] = new ConfirmCaptureSubNavigationView();
-			_subNavigationCache[ StateType.PAINTING_CROP_IMAGE ] = new CropImageSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.HOME_SCREEN ] = new HomeScreenSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.PAINTING ] = new NewPaintingSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.PAINTING_SELECT_IMAGE ] = new SelectImageSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.PAINTING_SELECT_COLORS ] = new ColorStyleSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.PAINTING_SELECT_TEXTURE ] = new SelectTextureSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.PAINTING_SELECT_BRUSH ] = new SelectBrushSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.PAINTING_SELECT_STYLE ] = new SelectStyleSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.PAINTING_EDIT_STYLE ] = new EditStyleSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.SETTINGS ] = new SettingsSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.SETTINGS_WALLPAPER ] = new SelectWallpaperSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.PAINTING_CAPTURE_IMAGE ] = new CaptureImageSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.PAINTING_CONFIRM_CAPTURE_IMAGE ] = new ConfirmCaptureSubNavigationView();
+			_subNavigationCache[ ApplicationStateType.PAINTING_CROP_IMAGE ] = new CropImageSubNavigationView();
 
 		}
 	}

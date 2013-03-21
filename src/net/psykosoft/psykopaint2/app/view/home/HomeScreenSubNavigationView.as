@@ -1,11 +1,9 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
-	import net.psykosoft.psykopaint2.app.view.navigation.subnavigation.*;
-
+	import net.psykosoft.psykopaint2.app.view.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
-	import net.psykosoft.psykopaint2.app.view.navigation.SubNavigationViewBase;
 
 	public class HomeScreenSubNavigationView extends SubNavigationViewBase
 	{

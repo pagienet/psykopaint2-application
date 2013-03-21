@@ -1,10 +1,26 @@
 package net.psykosoft.psykopaint2.app.view.painting.stateproxy
 {
 
-	public class StateProxyViewMediator extends ${Super_class_name}
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateUpdateFromModuleActivationSignal;
+	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
+	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
+
+	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
+
+	public class StateProxyViewMediator extends StarlingMediator
 	{
-		public function StateProxyViewMediator() {
-			super();
+		[Inject]
+		public var notifyModuleActivatedSignal:NotifyModuleActivatedSignal;
+
+		[Inject]
+		public var requestStateUpdateFromModuleActivationSignal:RequestStateUpdateFromModuleActivationSignal;
+
+		override public function initialize():void {
+			notifyModuleActivatedSignal.add( onModuleActivated );
+		}
+
+		private function onModuleActivated( vo:ModuleActivationVO ):void {
+			requestStateUpdateFromModuleActivationSignal.dispatch( vo );
 		}
 	}
 }

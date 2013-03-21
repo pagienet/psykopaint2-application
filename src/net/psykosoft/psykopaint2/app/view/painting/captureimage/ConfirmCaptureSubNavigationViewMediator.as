@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.painting.captureimage
 {
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpRemovalSignal;
@@ -38,10 +38,10 @@ package net.psykosoft.psykopaint2.app.view.painting.captureimage
 			switch( buttonLabel ) {
 				case ConfirmCaptureSubNavigationView.BUTTON_LABEL_BACK_TO_CAPTURE:
 					notifyPopUpDisplaySignal.dispatch( PopUpType.CAPTURE_IMAGE );
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_CAPTURE_IMAGE ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_CAPTURE_IMAGE ) );
 					break;
 				case ConfirmCaptureSubNavigationView.BUTTON_LABEL_KEEP:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_SELECT_COLORS ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_COLORS ) );
 					notifyPopUpRemovalSignal.dispatch();
 					// TODO: pass along the image
 					break;

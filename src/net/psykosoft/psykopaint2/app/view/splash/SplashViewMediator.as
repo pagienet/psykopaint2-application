@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.app.view.splash
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 
@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.app.view.splash
 			view.dispose();
 			view = null;
 
-			requestStateChangeSignal.dispatch( new StateVO( StateType.HOME_SCREEN ) );
+			requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.HOME_SCREEN ) );
 		}
 	}
 }

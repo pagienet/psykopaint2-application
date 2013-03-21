@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.selectimage
 {
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifySourceImageThumbnailsRetrievedSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		}
 
 		private function onApplicationStateChanged( newState:StateVO ):void {
-			if( newState.name == StateType.PAINTING_SELECT_IMAGE ) {
+			if( newState.name == ApplicationStateType.PAINTING_SELECT_IMAGE ) {
 				view.enable();
 			}
 			else {

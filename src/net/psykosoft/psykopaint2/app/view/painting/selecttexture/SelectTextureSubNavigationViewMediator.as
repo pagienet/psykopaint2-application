@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.painting.selecttexture
 {
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
@@ -39,10 +39,10 @@ package net.psykosoft.psykopaint2.app.view.painting.selecttexture
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
 				case SelectTextureSubNavigationView.BUTTON_LABEL_PICK_A_BRUSH:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_SELECT_BRUSH ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_BRUSH ) );
 					break;
 				case SelectTextureSubNavigationView.BUTTON_LABEL_PICK_A_COLOR:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_SELECT_COLORS ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_COLORS ) );
 					break;
 				default:
 					notifyPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );

@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 
@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 		// -----------------------
 
 		private function onApplicationStateChanged( newState:StateVO ):void {
-			if( newState.name == StateType.PAINTING_CROP_IMAGE ) {
+			if( newState.name == ApplicationStateType.PAINTING_CROP_IMAGE ) {
 				view.enable();
 			}
 			else {

@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.painting.crop
 {
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 			switch( buttonLabel ) {
 
 				case CropImageSubNavigationView.BUTTON_LABEL_BACK_TO_PICK_AN_IMAGE:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_SELECT_IMAGE ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE ) );
 					break;
 
 				case CropImageSubNavigationView.BUTTON_LABEL_CROP:

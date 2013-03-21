@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 {
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
@@ -61,7 +61,7 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 					break;
 
 				case ColorStyleSubNavigationView.BUTTON_LABEL_PICK_AN_IMAGE:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_SELECT_IMAGE ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE ) );
 					break;
 
 				default:

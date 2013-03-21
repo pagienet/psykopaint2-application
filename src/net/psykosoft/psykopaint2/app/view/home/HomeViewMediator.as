@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.app.view.home
 	import com.junkbyte.console.Cc;
 
 	import net.psykosoft.psykopaint2.app.controller.gestures.GestureType;
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.model.state.StateModel;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
@@ -65,8 +65,8 @@ package net.psykosoft.psykopaint2.app.view.home
 		// -----------------------
 
 		private function onViewMotionStarted():void {
-			if( stateModel.currentState.name == StateType.SETTINGS && stateModel.previousState.name != StateType.HOME_SCREEN ) {
-				requestStateChangeSignal.dispatch( new StateVO( StateType.HOME_SCREEN ) );
+			if( stateModel.currentState.name == ApplicationStateType.SETTINGS && stateModel.previousState.name != ApplicationStateType.HOME_SCREEN ) {
+				requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.HOME_SCREEN ) );
 			}
 		}
 
@@ -76,22 +76,22 @@ package net.psykosoft.psykopaint2.app.view.home
 			if( paintingIndex > 1 ) _lastClosestSnapPoint = paintingIndex;
 
 			// Trigger settings state if closest to settings painting ( index 0 ).
-			if( stateModel.currentState.name != StateType.SETTINGS && paintingIndex == 0 ) {
-				requestStateChangeSignal.dispatch( new StateVO( StateType.SETTINGS ) );
+			if( stateModel.currentState.name != ApplicationStateType.SETTINGS && paintingIndex == 0 ) {
+				requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.SETTINGS ) );
 				return;
 			}
 
 			// Trigger new painting state if closest to easel ( index 1 ).
-			if( stateModel.currentState.name != StateType.PAINTING && paintingIndex == 1 ) {
-				requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING ) );
+			if( stateModel.currentState.name != ApplicationStateType.PAINTING && paintingIndex == 1 ) {
+				requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING ) );
 				return;
 			}
 
 			// Restore home state if closest to another painting.
-			var isNotInSettings:Boolean = paintingIndex != 0 && stateModel.currentState.name.indexOf( StateType.SETTINGS ) != -1;
-			var isNotInNewPainting:Boolean = paintingIndex != 1 && stateModel.currentState.name.indexOf( StateType.PAINTING ) != -1;
+			var isNotInSettings:Boolean = paintingIndex != 0 && stateModel.currentState.name.indexOf( ApplicationStateType.SETTINGS ) != -1;
+			var isNotInNewPainting:Boolean = paintingIndex != 1 && stateModel.currentState.name.indexOf( ApplicationStateType.PAINTING ) != -1;
 			if( isNotInSettings || isNotInNewPainting ) {
-				requestStateChangeSignal.dispatch( new StateVO( StateType.HOME_SCREEN ) );
+				requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.HOME_SCREEN ) );
 			}
 		}
 
@@ -126,13 +126,13 @@ package net.psykosoft.psykopaint2.app.view.home
 		private function onApplicationStateChanged( newState:StateVO ):void {
 
 			// Clicking on the settings button causes animation to the settings painting.
-			if( newState.name == StateType.SETTINGS && stateModel.previousState.name == StateType.HOME_SCREEN && view.currentPainting != 0 ) {
+			if( newState.name == ApplicationStateType.SETTINGS && stateModel.previousState.name == ApplicationStateType.HOME_SCREEN && view.currentPainting != 0 ) {
 				view.animateToPainting( 0 );
 				return;
 			}
 
 			// Clicking on the back button on the settings state restores to the last snapped painting.
-			if( newState.name == StateType.HOME_SCREEN && stateModel.previousState.name == StateType.SETTINGS ) {
+			if( newState.name == ApplicationStateType.HOME_SCREEN && stateModel.previousState.name == ApplicationStateType.SETTINGS ) {
 				if( !view.cameraAwake ) {
 					view.animateToPainting( _lastClosestSnapPoint );
 				}
@@ -141,9 +141,9 @@ package net.psykosoft.psykopaint2.app.view.home
 
 			// When is the view visible?
 			var viewIsVisible:Boolean = false;
-			if( newState.name == StateType.HOME_SCREEN ) viewIsVisible = true;
-			if( newState.name == StateType.PAINTING ) viewIsVisible = true;
-			if( newState.name.indexOf( StateType.SETTINGS ) != -1 ) viewIsVisible = true;
+			if( newState.name == ApplicationStateType.HOME_SCREEN ) viewIsVisible = true;
+			if( newState.name == ApplicationStateType.PAINTING ) viewIsVisible = true;
+			if( newState.name.indexOf( ApplicationStateType.SETTINGS ) != -1 ) viewIsVisible = true;
 			// More states could cause the view to show...
 			if( viewIsVisible ) {
 				if( _firstLoad ) {

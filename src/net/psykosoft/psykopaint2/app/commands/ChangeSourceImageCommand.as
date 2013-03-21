@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.app.commands
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 

@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.app.view.settings
 
 	import flash.utils.Dictionary;
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
@@ -76,7 +76,7 @@ package net.psykosoft.psykopaint2.app.view.settings
 			trace( this, "button pressed: " + buttonLabel);
 			switch( buttonLabel ) {
 				case SelectWallpaperSubNavigationView.BUTTON_LABEL_BACK:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.SETTINGS ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.SETTINGS ) );
 					break;
 				default:
 					var id:String = _imageIds[ buttonLabel ];

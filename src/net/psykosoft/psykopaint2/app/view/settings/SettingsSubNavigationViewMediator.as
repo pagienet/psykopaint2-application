@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.settings
 {
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
@@ -36,10 +36,10 @@ package net.psykosoft.psykopaint2.app.view.settings
 			trace( this, "button pressed: " + buttonLabel);
 			switch( buttonLabel ) {
 				case SettingsSubNavigationView.BUTTON_LABEL_BACK:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.HOME_SCREEN ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.HOME_SCREEN ) );
 					break;
 				case SettingsSubNavigationView.BUTTON_LABEL_WALLPAPER:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.SETTINGS_WALLPAPER ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.SETTINGS_WALLPAPER ) );
 					break;
 				default:
 					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );

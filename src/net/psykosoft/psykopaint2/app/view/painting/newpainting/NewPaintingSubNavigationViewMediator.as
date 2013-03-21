@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.painting.newpainting
 {
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 
@@ -29,10 +29,10 @@ package net.psykosoft.psykopaint2.app.view.painting.newpainting
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
 				case NewPaintingSubNavigationView.BUTTON_LABEL_SELECT_IMAGE:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_SELECT_IMAGE ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE ) );
 					break;
 				case NewPaintingSubNavigationView.BUTTON_LABEL_BACK:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.HOME_SCREEN ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.HOME_SCREEN ) );
 					break;
 			}
 		}

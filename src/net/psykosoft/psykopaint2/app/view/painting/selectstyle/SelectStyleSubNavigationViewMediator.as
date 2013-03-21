@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.app.view.painting.selectstyle
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.app.data.types.StateType;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
@@ -42,10 +42,10 @@ package net.psykosoft.psykopaint2.app.view.painting.selectstyle
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
 				case SelectStyleSubNavigationView.BUTTON_LABEL_EDIT_STYLE:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_EDIT_STYLE ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_EDIT_STYLE ) );
 					break;
 				case SelectStyleSubNavigationView.BUTTON_LABEL_PICK_A_BRUSH:
-					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_SELECT_BRUSH ) );
+					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_BRUSH ) );
 					break;
 				default:
 					notifyPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
