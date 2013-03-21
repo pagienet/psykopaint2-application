@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.app.commands
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.drawing.modules.SmearModule;
 
-	public class UpdateAppStateFromActivedDrawingCoreModuleCommand
+	public class UpdateAppStateFromActivatedDrawingCoreModuleCommand
 	{
 		[Inject]
 		public var moduleJustActivated:IModule;

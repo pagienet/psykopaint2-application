@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.data.types
 {
 
-	public class StateType
+	public class ApplicationStateType
 	{
 		// -----------------------
 		// General states.
