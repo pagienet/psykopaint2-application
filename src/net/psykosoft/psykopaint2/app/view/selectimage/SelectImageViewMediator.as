@@ -42,8 +42,9 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		// -----------------------
 
 		private function onListItemSelected( itemName:String ):void {
+			// TODO: how does it know which image source to call?
 			requestReadyToPaintImageSignal.dispatch( itemName );
-			view.clearThumbs();
+			view.cleanUp(); // TODO: services store textures in models, requesting a single image load clears the thumb atlases, this needs to be separated
 		}
 
 		// -----------------------

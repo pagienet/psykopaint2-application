@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 	import feathers.layout.TiledRowsLayout;
 
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
+	import net.psykosoft.psykopaint2.app.view.base.renderers.ImageListItemRenderer;
 
 	import org.osflash.signals.Signal;
 
@@ -48,23 +49,14 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 			_list = new List();
 			_list.layout = _listLayout;
-			_list.backgroundSkin = new Quad( 100, 100, 0x222222 );
 			_list.scrollerProperties.snapToPages = true;
 			_list.scrollerProperties.scrollBarDisplayMode = Scroller.SCROLL_BAR_DISPLAY_MODE_NONE;
 			_list.scrollerProperties.horizontalScrollPolicy = Scroller.SCROLL_POLICY_ON;
-			_list.itemRendererFactory = tileListItemRendererFactory;
+			_list.itemRendererType = ImageListItemRenderer;
 			_list.addEventListener( Event.CHANGE, onListChange );
 			addChild( _list );
 
 			super.onStageAvailable();
-		}
-
-		protected function tileListItemRendererFactory():IListItemRenderer {
-			const renderer:DefaultListItemRenderer = new DefaultListItemRenderer();
-			renderer.labelField = "label";
-			renderer.iconSourceField = "texture";
-			renderer.iconPosition = Button.ICON_POSITION_TOP;
-			return renderer;
 		}
 
 		public function displayThumbs( thumbs:TextureAtlas ):void {
@@ -74,8 +66,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 			var dataProvider:ListCollection = new ListCollection();
 			for( var i:uint; i < textures.length; i++ ) {
-				dataProvider.push( { label: " ", texture: textures[ i ] } );
-				// TODO: having no label appears to damage the list item size measurements, adding an empty label for now
+				dataProvider.push( { texture: textures[ i ] } );
 			}
 
 			_list.dataProvider = dataProvider;
@@ -96,7 +87,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 			super.onLayout();
 		}
 
-		public function clearThumbs():void {
+		public function cleanUp():void {
 
 			_list.dataProvider = new ListCollection();
 			_thumbNames = null;

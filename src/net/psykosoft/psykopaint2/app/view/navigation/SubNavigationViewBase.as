@@ -186,6 +186,14 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 		}
 
+		public function clearCenterButtons():void {
+			if( _scrollContainer ) {
+				// TODO: completely clear the scroll container and its content
+				_backLayer.removeChild( _scrollContainer );
+				_scrollContainer = null;
+			}
+		}
+
 		private function onScrollContainerAddedToStage( event:Event ):void {
 			// TODO: does produce good rendering ( except for missing button animations ),
 			// but does not seem to reduce draw calls.

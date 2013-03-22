@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.app.view.base
 	import net.psykosoft.psykopaint2.app.view.painting.crop.CropView;
 	import net.psykosoft.psykopaint2.app.view.painting.stateproxy.StateProxyView;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpManagerView;
-	import net.psykosoft.psykopaint2.app.view.selectimage.SelectThumbView;
+	import net.psykosoft.psykopaint2.app.view.selectimage.SelectImageView;
 	import net.psykosoft.psykopaint2.app.view.splash.SplashView;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 
@@ -54,7 +54,7 @@ package net.psykosoft.psykopaint2.app.view.base
 			_mainLayer.addChild( new CanvasView() );
 			_mainLayer.addChild( new CropView() );
 			_mainLayer.addChild( new ColorStyleView() );
-			_mainLayer.addChild( new SelectThumbView() );
+			_mainLayer.addChild( new SelectImageView() );
 			_mainLayer.addChild( new NavigationView() );
 			_mainLayer.addChild( new PopUpManagerView() );
 			if( Settings.SHOW_SPLASH_SCREEN ) {

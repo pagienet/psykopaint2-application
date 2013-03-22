@@ -33,8 +33,8 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectBrushSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.app.view.painting.colorstyle.ColorStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.colorstyle.ColorStyleSubNavigationViewMediator;
-	import net.psykosoft.psykopaint2.app.view.painting.selectimage.SelectImageSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.painting.selectimage.SelectImageSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.app.view.selectimage.SelectImageSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.selectimage.SelectImageSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectStyleSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.app.view.painting.selecttexture.SelectTextureSubNavigationView;
@@ -49,8 +49,8 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.view.popups.MessagePopUpViewMediator;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpManagerView;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpManagerViewMediator;
-	import net.psykosoft.psykopaint2.app.view.selectimage.SelectThumbView;
-	import net.psykosoft.psykopaint2.app.view.selectimage.SelectThumbViewMediator;
+	import net.psykosoft.psykopaint2.app.view.selectimage.SelectImageView;
+	import net.psykosoft.psykopaint2.app.view.selectimage.SelectImageViewMediator;
 	import net.psykosoft.psykopaint2.app.view.splash.SplashView;
 	import net.psykosoft.psykopaint2.app.view.splash.SplashViewMediator;
 
@@ -73,7 +73,7 @@ package net.psykosoft.psykopaint2.app.config.configurators
 			// ---------------------------
 
 			mediatorMap.map( StateProxyView ).toMediator( StateProxyViewMediator );
-			mediatorMap.map( SelectThumbView ).toMediator( SelectThumbViewMediator );
+			mediatorMap.map( SelectImageView ).toMediator( SelectImageViewMediator );
 			mediatorMap.map( CanvasView ).toMediator( CanvasViewMediator );
 			mediatorMap.map( CropView ).toMediator( CropViewMediator );
 			mediatorMap.map( ColorStyleView ).toMediator( ColorStyleViewMediator );

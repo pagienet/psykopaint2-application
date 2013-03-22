@@ -3,11 +3,7 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectStyleSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;

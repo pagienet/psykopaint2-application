@@ -16,11 +16,14 @@ package net.psykosoft.psykopaint2.app.service.images
 	* and regular full size images corresponding to such thumbnails.
 	* Dispatches signals with the loaded assets when done. Does not keep any references to any data.
 	* */
-	public class LoadPackagedImagesService
+	public class LoadPackagedImagesService implements IImageService
 	{
 		private var _imageLoader:Loader;
 		private var _imageLoadCallback:Function;
 		private var _atlasDescriptorFilePath:String;
+
+		public var imageUrl:String;
+		public var xmlUrl:String;
 
 		public var thumbnailsLoadedSignal:Signal;
 		public var imageLoadedSignal:Signal;
@@ -31,7 +34,7 @@ package net.psykosoft.psykopaint2.app.service.images
 			imageLoadedSignal = new Signal( BitmapData );
 		}
 
-		public function loadThumbnails( imageUrl:String, xmlUrl:String  ):void {
+		public function loadThumbnails():void {
 			trace( this, "loading thumbnails - image url: " + imageUrl + ", descriptor url: " + xmlUrl );
 			// Keep track of xml path for step 2.
 			_atlasDescriptorFilePath = xmlUrl;
@@ -39,9 +42,9 @@ package net.psykosoft.psykopaint2.app.service.images
 			loadImage( imageUrl, onThumbnailsAtlasLoaded );
 		}
 
-		public function loadFullImage( url:String ):void {
-			trace( this, "loading full image - url: " + url );
-			loadImage( url, onFullImageLoaded );
+		public function loadFullImage( imageUrl:String ):void {
+			trace( this, "loading full image - url: " + imageUrl );
+			loadImage( imageUrl, onFullImageLoaded );
 		}
 
 		private function onFullImageLoaded( image:BitmapData ):void {

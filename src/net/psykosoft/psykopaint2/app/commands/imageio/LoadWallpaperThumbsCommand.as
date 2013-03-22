@@ -12,10 +12,10 @@ package net.psykosoft.psykopaint2.app.commands.imageio
 
 		public function execute() : void {
 			Cc.log( this );
-			loadPackagedImagesService.loadThumbnails(
+			/*loadPackagedImagesService.loadThumbnails(
 					"wallpapers/wallpapers.png",
 					"wallpapers/wallpapers.xml"
-			);
+			);*/
 		}
 	}
 }

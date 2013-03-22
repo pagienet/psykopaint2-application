@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestReadyToPaintThumbnailsSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpType;
-	import net.psykosoft.psykopaint2.app.view.selectimage.SelectImageSubNavigationView;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -22,6 +21,9 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 		[Inject]
 		public var requestReadyToPaintThumbnailsSignal:RequestReadyToPaintThumbnailsSignal;
+
+//		[Inject]
+//		public var requestUserPhotosThumbnailsSignal:RequestUserPhotosThumbnailsSignal;
 
 		[Inject]
 		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
@@ -45,11 +47,11 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_FACEBOOK:
-					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO
+					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO...
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_CAMERA:
-					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO
+					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO...
 //					notifyPopUpDisplaySignal.dispatch( PopUpType.CAPTURE_IMAGE );
 //					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_CAPTURE_IMAGE ) );
 					break;
@@ -59,12 +61,8 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_YOUR_PHOTOS:
-					if( Settings.RUNNING_ON_iPAD ) {
-						notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO
-					}
-					else {
-						notifyPopUpDisplaySignal.dispatch( PopUpType.NO_PLATFORM );
-					}
+					if( Settings.RUNNING_ON_iPAD ) notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO...
+					else notifyPopUpDisplaySignal.dispatch( PopUpType.NO_PLATFORM ); // TODO: connect to desktop image I/O service?
 					break;
 			}
 		}

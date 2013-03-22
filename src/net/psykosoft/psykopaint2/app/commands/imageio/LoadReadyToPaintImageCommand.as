@@ -32,8 +32,7 @@ package net.psykosoft.psykopaint2.app.commands.imageio
 			Cc.log( this, "executing..." );
 			_packagedImagesService = new LoadPackagedImagesService();
 			_packagedImagesService.imageLoadedSignal.add( onImageLoaded );
-			_packagedImagesService.imageUrl = "assets-packaged/ready-to-paint/originals/" + imageName + ".jpg";
-			_packagedImagesService.loadFullImage();
+			_packagedImagesService.loadFullImage( "assets-packaged/ready-to-paint/originals/" + imageName + ".jpg" );
 			context.detain( this );
 		}
 

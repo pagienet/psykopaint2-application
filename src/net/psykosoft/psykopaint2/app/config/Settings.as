@@ -22,8 +22,8 @@ package net.psykosoft.psykopaint2.app.config
 		// Debugging options.
 		// ---------------------------------------------------------------------
 
-		public static const ENABLE_DEBUG_CONSOLE:Boolean = true;
-		public static const ENABLE_STAGE3D_ERROR_CHECKING:Boolean = false;
+		public static const ENABLE_DEBUG_CONSOLE:Boolean = false;
+		public static const ENABLE_STAGE3D_ERROR_CHECKING:Boolean = true;
 		public static const SHOW_STATS:Boolean = true;
 		public static const AWAY3D_DEBUG_MODE:Boolean = false;
 
@@ -45,7 +45,7 @@ package net.psykosoft.psykopaint2.app.config
 		public static const DPI_iPAD_RETINA:uint = 264;
 
 		// ---------------------------------------------------------------------
-		// Vars ( these are not settings actually, do not set ).
+		// Vars ( these are not settings actually, do not set here ).
 		// ---------------------------------------------------------------------
 
 		public static var RUNNING_ON_HD:Boolean = true;

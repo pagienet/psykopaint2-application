@@ -24,6 +24,8 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 
 		public function setAvailableBrushShapes( brushShapes:Array ):void {
 
+			clearCenterButtons();
+
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 
 			var len:uint = brushShapes.length;

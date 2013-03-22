@@ -5,14 +5,12 @@ package net.psykosoft.psykopaint2.app.commands
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
-
-	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
-
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
-
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 
+	/*
+	* Notifies the drawing core that the source image has changed.
+	* */
 	public class ChangeSourceImageCommand
 	{
 		[Inject]
