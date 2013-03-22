@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.app.view.base
 {
 
-	import net.psykosoft.psykopaint2.app.view.away3d.base.*;
-
 	import com.junkbyte.console.Cc;
 
 	import net.psykosoft.psykopaint2.app.view.home.HomeView;

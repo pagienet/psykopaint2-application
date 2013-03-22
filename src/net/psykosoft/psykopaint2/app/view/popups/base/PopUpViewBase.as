@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 	import net.psykosoft.psykopaint2.app.assets.starling.StarlingTextureManager;
 	import net.psykosoft.psykopaint2.app.assets.starling.data.StarlingTextureType;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
-	import net.psykosoft.psykopaint2.app.view.starling.base.*;
 
 	import org.osflash.signals.Signal;
 
