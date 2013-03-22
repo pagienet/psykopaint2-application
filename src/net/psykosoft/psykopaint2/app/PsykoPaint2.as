@@ -18,10 +18,12 @@ package net.psykosoft.psykopaint2.app
 
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.config.Settings;
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 	import net.psykosoft.psykopaint2.app.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingRootSprite;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
+	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.resources.FreeTextureManager;
 	import net.psykosoft.psykopaint2.core.resources.ManagedTexturePolicy;
 
@@ -32,6 +34,7 @@ package net.psykosoft.psykopaint2.app
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
+	import starling.events.Event;
 
 	public class PsykoPaint2 extends Sprite
 	{
@@ -40,6 +43,8 @@ package net.psykosoft.psykopaint2.app
 		protected var _stage3dProxy:Stage3DProxy;
 		protected var _starling:Starling;
 		protected var _away3d:View3D;
+
+		private var _renderSignal:RequestRenderFrameSignal;
 
 		public function PsykoPaint2() {
 			super();
@@ -77,7 +82,9 @@ package net.psykosoft.psykopaint2.app
 		}
 
 		private function onContextCreated( event:Stage3DEvent ):void {
+
 			_stage3dProxy.removeEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContextCreated );
+
 			// Rendering.
 			initTextureManagement();
 			// Init Starling and Away3D.
@@ -85,27 +92,26 @@ package net.psykosoft.psykopaint2.app
 			init3D();
 			// Continue and finish initialization.
 			initRobotLegs();
-			// Start loop, determined by proxy.
-			_stage3dProxy.addEventListener( Event.ENTER_FRAME, onEnterFrameAuto );
 			// Start listening for stage resizes.
-			stage.addEventListener( Event.RESIZE, onStageResize );
+			stage.addEventListener( flash.events.Event.RESIZE, onStageResize );
 			onStageResize( null ); // One has already occurred while the GPU context was being fetched, so trigger one.
 
 		}
 
-		private function initTextureManagement() : void
-		{
+		private function initTextureManagement():void {
+
 			// Reserve 20MB to be used for random texture usage (Starling etc)
-			var dynamicTexturesSize : uint = 20*1024*1024;
+			var dynamicTexturesSize:uint = 20 * 1024 * 1024;
 			// Reserve 112MB to be used for canvas texture usage, 16 for preview texture, (2048x2048 + padding, worst case)
-			var canvasTexturesSize : uint = 128*1024*1024;
-			FreeTextureManager.getInstance().init(dynamicTexturesSize + canvasTexturesSize, _stage3dProxy.context3D);
+			var canvasTexturesSize:uint = 128 * 1024 * 1024;
+			FreeTextureManager.getInstance().init( dynamicTexturesSize + canvasTexturesSize, _stage3dProxy.context3D );
 
 			// for those who want to pretend how it will respond with a canvas reserved:
 //			FreeTextureManager.getInstance().init(dynamicTexturesSize, _stage3dProxy.context3D);
 
 			// remaining space for texture history
-			var historyTextureSize : uint = (340 - dynamicTexturesSize - canvasTexturesSize)*1024*1024;
+			var historyTextureSize : uint = 340*1024*1024 - dynamicTexturesSize - canvasTexturesSize;
+			CanvasHistoryModel.MAX_TEXTURE_MEMORY_USAGE = historyTextureSize;
 		}
 
 		private function init2D():void {
@@ -113,17 +119,14 @@ package net.psykosoft.psykopaint2.app
 			// Starling.
 			Starling.handleLostContext = true;
 			Starling.multitouchEnabled = true;
-			_starling = new Starling( StarlingRootSprite, stage, _stage3dProxy.viewPort, _stage3dProxy.stage3D, "auto", Context3DProfile.BASELINE);
+			_starling = new Starling( StarlingRootSprite, stage, _stage3dProxy.viewPort, _stage3dProxy.stage3D, "auto", Context3DProfile.BASELINE );
 			_starling.texturePolicy = new ManagedTexturePolicy();
-			if( Settings.ENABLE_STAGE3D_ERROR_CHECKING ) {
-				_starling.enableErrorChecking = true;
-			}
-			if( Settings.SHOW_STATS ) {
-				_starling.showStats = true;
-			}
+			_starling.enableErrorChecking = Settings.ENABLE_STAGE3D_ERROR_CHECKING;
+			_starling.showStats = Settings.SHOW_STATS;
 			_starling.shareContext = true;
-			_starling.simulateMultitouch = true;
+			_starling.simulateMultitouch = false;
 			_starling.start();
+			_starling.addEventListener( starling.events.Event.CONTEXT3D_CREATE, onStarlingContextReady );
 			DisplayContextManager.starling = _starling;
 
 			// Gestouch.
@@ -159,22 +162,42 @@ package net.psykosoft.psykopaint2.app
 
 			// Starts main context.
 			_appConfig = new AppConfig( this, _starling );
+			_renderSignal = _appConfig.injector.getInstance( RequestRenderFrameSignal );
 
 			// Starts core context, which handles the core drawing functionalities ( as a module ).
 			_drawingCore = new DrawingCore( _appConfig.injector );
 			addChild( _drawingCore );
 		}
 
+		private function onStarlingContextReady( event:starling.events.Event ):void {
+			start();
+		}
+
+		private function stop():void {
+			trace( this, "stopped" );
+			if( hasEventListener( flash.events.Event.ENTER_FRAME ) ) {
+				removeEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame );
+			}
+		}
+
+		private function start():void {
+			stop();
+			trace( this, "started" );
+			if( !hasEventListener( flash.events.Event.ENTER_FRAME ) ) {
+				addEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame );
+			}
+		}
+
 		// ---------------------------------------------------------------------
 		// Event handlers.
 		// ---------------------------------------------------------------------
 
-		private function onEnterFrameAuto( event:Event ):void {
-			_away3d.render();
-			_starling.nextFrame();
+		private function onEnterFrame( event:flash.events.Event ):void {
+//			trace( this, "main enterframe - render signal: " + _renderSignal );
+			_renderSignal.dispatch();
 		}
 
-		private function onStageResize( event:Event ):void {
+		private function onStageResize( event:flash.events.Event ):void {
 
 			trace( this, "onStageResize - stage: " + stage.stageWidth + ", " + stage.stageHeight );
 

@@ -35,8 +35,8 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.view.painting.colorstyle.ColorStyleSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.app.view.painting.selectimage.SelectImageSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.selectimage.SelectImageSubNavigationViewMediator;
-	import net.psykosoft.psykopaint2.app.view.painting.selectstyle.SelectStyleSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.painting.selectstyle.SelectStyleSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectStyleSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.app.view.painting.selecttexture.SelectTextureSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.selecttexture.SelectTextureSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.app.view.settings.SelectWallpaperSubNavigationView;

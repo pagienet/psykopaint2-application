@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.app.view.painting.editstyle.EditStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.newpainting.NewPaintingSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.selectimage.SelectImageSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.painting.selectstyle.SelectStyleSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.selecttexture.SelectTextureSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.settings.SelectWallpaperSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.settings.SettingsSubNavigationView;

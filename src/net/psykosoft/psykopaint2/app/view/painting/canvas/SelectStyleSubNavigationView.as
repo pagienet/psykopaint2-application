@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.app.view.painting.selectstyle
+package net.psykosoft.psykopaint2.app.view.painting.canvas
 {
 
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
@@ -17,18 +17,22 @@ package net.psykosoft.psykopaint2.app.view.painting.selectstyle
 		override protected function onStageAvailable():void {
 
 			setLeftButton( BUTTON_LABEL_PICK_A_BRUSH );
-
-			// TODO: populate with actual options from the drawing core
-			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[style 1]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[style 2]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[style 3]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[style 4]", onButtonTriggered ) );
-			setCenterButtons( buttonGroupDefinition );
-
 			setRightButton( BUTTON_LABEL_EDIT_STYLE );
 
 			super.onStageAvailable();
+		}
+
+		public function setAvailableBrushShapes( brushShapes:Array ):void {
+
+			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
+
+			var len:uint = brushShapes.length;
+			for( var i:uint; i < len; ++i ) {
+				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( brushShapes[ i ], onButtonTriggered ) );
+			}
+
+			setCenterButtons( buttonGroupDefinition );
+
 		}
 	}
 }

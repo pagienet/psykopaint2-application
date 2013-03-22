@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.app.view.painting.selectstyle
+package net.psykosoft.psykopaint2.app.view.painting.canvas
 {
 
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
@@ -6,7 +6,9 @@ package net.psykosoft.psykopaint2.app.view.painting.selectstyle
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpType;
+	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -19,12 +21,12 @@ package net.psykosoft.psykopaint2.app.view.painting.selectstyle
 		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		[Inject]
-		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
-
-		[Inject]
-		public var notifyPopUpMessageSignal:NotifyPopUpMessageSignal;
+		public var paintModule:PaintModule;
 
 		override public function initialize():void {
+
+			// Init.
+			view.setAvailableBrushShapes( paintModule.getAvailableBrushShapes() );
 
 			// From view.
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
@@ -44,8 +46,7 @@ package net.psykosoft.psykopaint2.app.view.painting.selectstyle
 					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_BRUSH ) );
 					break;
 				default:
-					notifyPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
-					notifyPopUpMessageSignal.dispatch( "Cannot use styles yet, feature not implemented." );
+					paintModule.setBrushShape( buttonLabel );
 					break;
 			}
 		}

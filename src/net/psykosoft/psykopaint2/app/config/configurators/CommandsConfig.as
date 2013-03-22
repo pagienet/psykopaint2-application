@@ -7,9 +7,11 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.commands.LoadReadyToPaintImageCommand;
 	import net.psykosoft.psykopaint2.app.commands.LoadReadyToPaintThumbnailsCommand;
 	import net.psykosoft.psykopaint2.app.commands.LoadWallpaperThumbsCommand;
+	import net.psykosoft.psykopaint2.app.commands.RenderFrameCommand;
 	import net.psykosoft.psykopaint2.app.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestReadyToPaintImageSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestReadyToPaintThumbnailsSignal;
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestSourceImageChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateUpdateFromModuleActivationSignal;
@@ -37,6 +39,8 @@ package net.psykosoft.psykopaint2.app.config.configurators
 			// Source image change to start the painting process.
 			commandMap.map( RequestSourceImageChangeSignal ).toCommand( ChangeSourceImageCommand );
 
+			// Drawing.
+			commandMap.map( RequestRenderFrameSignal ).toCommand( RenderFrameCommand );
 		}
 	}
 }

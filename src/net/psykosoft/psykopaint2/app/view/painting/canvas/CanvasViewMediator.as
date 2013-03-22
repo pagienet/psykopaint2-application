@@ -48,6 +48,7 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 
 			var viewIsActive:Boolean = false;
 			if( newState.name == ApplicationStateType.PAINTING_SELECT_BRUSH ) viewIsActive = true;
+			if( newState.name == ApplicationStateType.PAINTING_SELECT_STYLE ) viewIsActive = true;
 			// other states could make this view active...
 
 			if( viewIsActive ) {
