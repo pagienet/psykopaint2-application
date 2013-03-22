@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.app.commands
+package net.psykosoft.psykopaint2.app.commands.imageio
 {
 
 	import com.junkbyte.console.Cc;

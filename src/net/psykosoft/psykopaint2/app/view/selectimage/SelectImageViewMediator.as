@@ -11,10 +11,10 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 	import starling.textures.TextureAtlas;
 
-	public class SelectThumbViewMediator extends StarlingMediator
+	public class SelectImageViewMediator extends StarlingMediator
 	{
 		[Inject]
-		public var view:SelectThumbView;
+		public var view:SelectImageView;
 
 		[Inject]
 		public var notifyStateChangedSignal:NotifyStateChangedSignal;

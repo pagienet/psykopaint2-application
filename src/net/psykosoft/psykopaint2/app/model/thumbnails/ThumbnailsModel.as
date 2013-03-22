@@ -10,14 +10,14 @@ package net.psykosoft.psykopaint2.app.model.thumbnails
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 
-	public class ReadyToPaintThumbnailsModel implements IThumbnailModel
+	public class ThumbnailsModel
 	{
 		[Inject]
 		public var notifySourceImageThumbnailsRetrievedSignal:NotifySourceImageThumbnailsRetrievedSignal;
 
 		private var _atlas:TextureAtlas;
 
-		public function ReadyToPaintThumbnailsModel() {
+		public function ThumbnailsModel() {
 		}
 
 		public function setThumbnails( bmd:BitmapData, descriptor:XML ):void {

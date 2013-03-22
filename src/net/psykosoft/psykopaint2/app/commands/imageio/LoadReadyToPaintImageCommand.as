@@ -1,11 +1,11 @@
-package net.psykosoft.psykopaint2.app.commands
+package net.psykosoft.psykopaint2.app.commands.imageio
 {
 
 	import com.junkbyte.console.Cc;
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.app.model.thumbnails.ReadyToPaintThumbnailsModel;
+	import net.psykosoft.psykopaint2.app.model.thumbnails.ThumbnailsModel;
 
 	import net.psykosoft.psykopaint2.app.service.images.LoadPackagedImagesService;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestSourceImageChangeSignal;
@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.app.commands
 		public var requestSourceImageChangeSignal:RequestSourceImageChangeSignal;
 
 		[Inject]
-		public var readyToPaintImagesModel:ReadyToPaintThumbnailsModel;
+		public var readyToPaintImagesModel:ThumbnailsModel;
 
 		[Inject]
 		public var context:IContext;
@@ -32,7 +32,8 @@ package net.psykosoft.psykopaint2.app.commands
 			Cc.log( this, "executing..." );
 			_packagedImagesService = new LoadPackagedImagesService();
 			_packagedImagesService.imageLoadedSignal.add( onImageLoaded );
-			_packagedImagesService.loadFullImage( "assets-packaged/ready-to-paint/originals/" + imageName + ".jpg" );
+			_packagedImagesService.imageUrl = "assets-packaged/ready-to-paint/originals/" + imageName + ".jpg";
+			_packagedImagesService.loadFullImage();
 			context.detain( this );
 		}
 

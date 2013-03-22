@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.app.view.painting.selectimage
+package net.psykosoft.psykopaint2.app.view.selectimage
 {
 
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;

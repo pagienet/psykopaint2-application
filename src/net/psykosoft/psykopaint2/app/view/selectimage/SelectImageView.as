@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 	* Selects an image from the user photos or from packaged images.
 	* TODO: change mode to use sprite sheets for thumbs so this is compatible with the user photos extension.
 	* */
-	public class SelectThumbView extends StarlingViewBase
+	public class SelectImageView extends StarlingViewBase
 	{
 		private var _list:List;
 		private var _listLayout:TiledRowsLayout;
@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 		public var listSelectedItemChangedSignal:Signal;
 
-		public function SelectThumbView() {
+		public function SelectImageView() {
 			super();
 			listSelectedItemChangedSignal = new Signal( String ); // Item name or id.
 		}

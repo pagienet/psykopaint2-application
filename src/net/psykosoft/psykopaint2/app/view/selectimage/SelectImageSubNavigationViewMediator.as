@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.app.view.painting.selectimage
+package net.psykosoft.psykopaint2.app.view.selectimage
 {
 
 	import net.psykosoft.psykopaint2.app.config.Settings;
@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.app.view.painting.selectimage
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestReadyToPaintThumbnailsSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpType;
+	import net.psykosoft.psykopaint2.app.view.selectimage.SelectImageSubNavigationView;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
