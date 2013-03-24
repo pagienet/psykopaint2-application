@@ -14,13 +14,10 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 			super( "Select Colors" );
 		}
 
-		override protected function onStageAvailable():void {
-
+		override protected function onEnabled():void {
+			super.onEnabled();
 			setLeftButton( BUTTON_LABEL_PICK_AN_IMAGE );
-
 			setRightButton( BUTTON_LABEL_PICK_A_TEXTURE );
-
-			super.onStageAvailable();
 		}
 
 		public function setAvailableColorStyles( presetsList:Array ):void {

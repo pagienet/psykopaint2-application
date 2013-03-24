@@ -14,12 +14,10 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 			super( "Select Style" );
 		}
 
-		override protected function onStageAvailable():void {
-
+		override protected function onEnabled():void {
+			super.onEnabled();
 			setLeftButton( BUTTON_LABEL_PICK_A_BRUSH );
 			setRightButton( BUTTON_LABEL_EDIT_STYLE );
-
-			super.onStageAvailable();
 		}
 
 		public function setAvailableBrushShapes( brushShapes:Array ):void {

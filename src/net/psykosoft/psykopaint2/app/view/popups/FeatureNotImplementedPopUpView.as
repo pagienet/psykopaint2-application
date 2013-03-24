@@ -7,21 +7,31 @@ package net.psykosoft.psykopaint2.app.view.popups
 
 	public class FeatureNotImplementedPopUpView extends PopUpViewBase
 	{
+		private var _label:Label;
+
 		public function FeatureNotImplementedPopUpView() {
 			super();
 		}
 
-		override protected function onStageAvailable():void {
+		override protected function onEnabled():void {
 
-			super.onStageAvailable();
+			super.onEnabled();
 
-			var label:Label = new Label();
-			label.text = "Feature not yet implemented.\nClick outside this pop up to dismiss it.";
-			_container.addChild( label );
-			label.validate();
-			label.x = _bg.width / 2 - label.width / 2;
-			label.y = _bg.height / 2 - label.height / 2;
+			_label = new Label();
+			_label.text = "Feature not yet implemented.\nClick outside this pop up to dismiss it.";
+			_container.addChild( _label );
+			_label.validate();
+			_label.x = _bg.width / 2 - _label.width / 2;
+			_label.y = _bg.height / 2 - _label.height / 2;
+		}
 
+		override protected function onDisabled():void {
+
+			_container.removeChild( _label );
+			_label.dispose();
+			_label = null;
+
+			super.onDisabled();
 		}
 	}
 }

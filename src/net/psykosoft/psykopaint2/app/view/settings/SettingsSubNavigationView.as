@@ -14,7 +14,9 @@ package net.psykosoft.psykopaint2.app.view.settings
 			super( "Settings" );
 		}
 
-		override protected function onStageAvailable():void {
+		override protected function onEnabled():void {
+
+			super.onEnabled();
 
 			setLeftButton( BUTTON_LABEL_BACK );
 
@@ -27,8 +29,6 @@ package net.psykosoft.psykopaint2.app.view.settings
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[Connect Stuff]", onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[Log Out]", onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
-
-			super.onStageAvailable();
 		}
 	}
 }

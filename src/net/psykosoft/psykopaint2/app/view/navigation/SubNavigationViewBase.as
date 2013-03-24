@@ -10,45 +10,38 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttons.CompoundButton;
-	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.ui.theme.buttons.ButtonSkinType;
 
 	import org.osflash.signals.Signal;
 
-	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 
 	public class SubNavigationViewBase extends StarlingViewBase
 	{
 		private var _scrollContainer:ScrollContainer;
-		private var _leftButton:CompoundButton;
-		private var _rightButton:CompoundButton;
 		private var _header:Button;
 		private var _title:String;
-		private var _leftCornerImage:Image;
-		private var _rightCornerImage:Image;
-		private var _frontLayer:Sprite;
+		private var _frontLayer:Sprite; // TODO: do we still need layers given that the edge buttons have been moved out of this abstract class?
 		private var _backLayer:Sprite;
-		private var _leftClamp:Image;
-		private var _rightClamp:Image;
-		private var _leftArrow:Image;
-		private var _rightArrow:Image;
 
 		public var buttonPressedSignal:Signal;
 
 		public function SubNavigationViewBase( title:String ) {
 			super();
-
 			buttonPressedSignal = new Signal();
-
 			_title = title;
+			trace( this, "sub-navigation view created." );
+		}
+
+		// ---------------------------------------------------------------------
+		// Overrides.
+		// ---------------------------------------------------------------------
+
+		override protected function onEnabled():void {
 
 			addChild( _backLayer = new Sprite() );
 			addChild( _frontLayer = new Sprite() );
-		}
-
-		override protected function onStageAvailable():void {
 
 			_header = new Button();
 			_header.nameList.add( ButtonSkinType.LABEL );
@@ -57,85 +50,47 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_header.addEventListener( Event.RESIZE, onHeaderResized );
 			_header.validate();
 			_frontLayer.addChild( _header );
-
-			super.onStageAvailable();
 		}
 
-		private function onHeaderResized( event:Event ):void {
-			_header.x = stage.stageWidth / 2 - _header.width / 2;
-			_header.y = -_header.height / 2;
+		override protected function onDisabled():void {
+
+			clearCenterButtons();
+
+			if( _header ) {
+				_frontLayer.removeChild( _header );
+				_header.dispose();
+				_header = null;
+			}
+
+			if( _frontLayer ) {
+				removeChild( _frontLayer );
+				_frontLayer.dispose();
+				_frontLayer = null;
+			}
+
+			if( _backLayer ) {
+				removeChild( _backLayer );
+				_backLayer.dispose();
+				_backLayer = null;
+			}
+		}
+
+		// -----------------------------------------------------------------------------------------------------------------------
+		// Settings center buttons.
+		// -----------------------------------------------------------------------------------------------------------------------
+
+		private var _navigation:NavigationView;
+
+		public function setNavigation( navigation:NavigationView ):void {
+			_navigation = navigation;
 		}
 
 		protected function setLeftButton( label:String ):void {
-
-			// TODO: clear previous button?
-			// TODO: flatten this?
-
-			var button:CompoundButton = new CompoundButton( label, ButtonSkinType.PAPER_LABEL_LEFT, -20 );
-			button.placementFunction = leftButtonLabelPlacement;
-
-			_leftCornerImage = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_LEFT_CORNER ) );
-			_leftCornerImage.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT - _leftCornerImage.height;
-			_frontLayer.addChild( _leftCornerImage );
-
-			_leftButton = button;
-			_leftButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
-			_leftButton.x = _leftCornerImage.x + _leftCornerImage.width - _leftButton.width - 15;
-			_leftButton.y = _leftCornerImage.y + 5;
-			_frontLayer.addChild( _leftButton );
-
-			_leftArrow = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_ARROW ) );
-			_leftArrow.x = 0;
-			_leftArrow.y = _leftButton.y + _leftButton.height / 2;
-			_frontLayer.addChild( _leftArrow );
-
-			_leftClamp = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_CLAMP) );
-			_leftClamp.x = _leftCornerImage.width - 50;
-			_leftClamp.y = _leftCornerImage.y + 10;
-			_frontLayer.addChild( _leftClamp );
+			_navigation.setLeftButton( label );
 		}
 
 		protected function setRightButton( label:String ):void {
-
-			// TODO: clear previous button?
-			// TODO: flatten this?
-
-			var button:CompoundButton = new CompoundButton( label, ButtonSkinType.PAPER_LABEL_RIGHT, -20 );
-			button.placementFunction = rightButtonLabelPlacement;
-
-			_rightCornerImage = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_RIGHT_CORNER ) );
-			_rightCornerImage.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT - _rightCornerImage.height;
-			_rightCornerImage.x = stage.stageWidth - _rightCornerImage.width;
-			_frontLayer.addChild( _rightCornerImage );
-
-			_rightButton = button;
-			_rightButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
-			_rightButton.x = _rightCornerImage.x + 5;
-			_rightButton.y = _rightCornerImage.y;
-			_frontLayer.addChild( _rightButton );
-
-			_rightArrow = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_ARROW ) );
-			_rightArrow.scaleX = -1;
-			_rightArrow.x = stage.stageWidth;
-			_rightArrow.y = _rightButton.y + _rightButton.height / 2;
-			_frontLayer.addChild( _rightArrow );
-
-			_rightClamp = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_CLAMP) );
-			_rightClamp.x = _rightCornerImage.x + 15;
-			_rightClamp.y = _rightCornerImage.y + 7;
-			_frontLayer.addChild( _rightClamp );
-		}
-
-		private function leftButtonLabelPlacement():void {
-			var label:Button = _leftButton.labelButton;
-			label.x = -_leftButton.x; // Ensure the left edge of the label touches the left edge of the screen.
-			label.labelOffsetX = 0;
-		}
-
-		private function rightButtonLabelPlacement():void {
-			var label:Button = _rightButton.labelButton;
-			label.x = _rightButton.width - label.width; // Ensure the right edge of the label touches the right edge of the screen.
-			label.labelOffsetX = -10;
+			_navigation.setRightButton( label );
 		}
 
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
@@ -146,7 +101,6 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_scrollContainer.horizontalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
 			_scrollContainer.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
 			_scrollContainer.height = Settings.NAVIGATION_AREA_CONTENT_HEIGHT;
-			_scrollContainer.viewPort.addEventListener( Event.ADDED_TO_STAGE, onScrollContainerAddedToStage );
 			_backLayer.addChild( _scrollContainer );
 
 			// Add buttons to the container.
@@ -157,7 +111,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			for( var i:uint = 0; i < len; i++ ) {
 				var vo:ButtonDefinitionVO = definition.buttonVOArray[ i ];
 				var subButton:CompoundButton = new CompoundButton( vo.label, ButtonSkinType.LABEL );
-				subButton.addEventListener( Event.TRIGGERED, onButtonTriggered ); // TODO: possible memory leak
+				subButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 				subButton.x = inflate + ( subButton.width + gap ) * i;
 				subButton.y = 30;
 				accumulatedContentWidth += subButton.width;
@@ -188,29 +142,47 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 		public function clearCenterButtons():void {
 			if( _scrollContainer ) {
-				// TODO: completely clear the scroll container and its content
+
+				// Kill children.
+				while( _scrollContainer.numChildren > 0 ) {
+					var child:CompoundButton = _scrollContainer.getChildAt( 0 ) as CompoundButton;
+					_scrollContainer.removeChildAt( 0 );
+					if( child ) {
+						// TODO: check if working
+						child.removeEventListener( Event.TRIGGERED, onButtonTriggered );
+						child.dispose();
+						child = null;
+					}
+				}
+
+				// Kill container.
 				_backLayer.removeChild( _scrollContainer );
+				_scrollContainer.dispose();
 				_scrollContainer = null;
 			}
 		}
 
-		private function onScrollContainerAddedToStage( event:Event ):void {
-			// TODO: does produce good rendering ( except for missing button animations ),
-			// but does not seem to reduce draw calls.
-			/*_scrollContainer.viewPort.removeEventListener( Event.ADDED_TO_STAGE, onScrollContainerAddedToStage );
-			var viewPort:LayoutViewPort = _scrollContainer.viewPort as LayoutViewPort;
-			viewPort.flatten();*/
+		public function notifyButtonPress( buttonLabel:String ):void {
+			trace( this, "notifying button pressed: " + buttonLabel );
+			buttonPressedSignal.dispatch( buttonLabel );
 		}
+
+		// ---------------------------------------------------------------------
+		// Protected.
+		// ---------------------------------------------------------------------
 
 		protected function onButtonTriggered( event:Event ):void {
 			var button:CompoundButton = event.currentTarget as CompoundButton;
-			buttonPressedSignal.dispatch( button.label );
-
+			notifyButtonPress( button.label );
 		}
 
-		override public function dispose():void {
-			// TODO: disable button group, specially remove listeners
-			super.disable();
+		// ---------------------------------------------------------------------
+		// Private.
+		// ---------------------------------------------------------------------
+
+		private function onHeaderResized( event:Event ):void {
+			_header.x = stage.stageWidth / 2 - _header.width / 2;
+			_header.y = -_header.height / 2;
 		}
 	}
 }

@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.app.view.base
 	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
-	import net.psykosoft.psykopaint2.app.view.base.IView;
 
 	public class Away3dViewBase extends Sprite implements IView
 	{
@@ -78,6 +77,7 @@ package net.psykosoft.psykopaint2.app.view.base
 			if( _enabled ) return;
 			_view.scene.addChild( _scene );
 			_enabled = true;
+			trace( this, "enabling 3d view." );
 		}
 
 		public function disable():void {
@@ -86,6 +86,7 @@ package net.psykosoft.psykopaint2.app.view.base
 				_view.scene.removeChild( _scene );
 			}
 			_enabled = false;
+			trace( this, "disabling 3d view." );
 		}
 
 		public function destroy():void {

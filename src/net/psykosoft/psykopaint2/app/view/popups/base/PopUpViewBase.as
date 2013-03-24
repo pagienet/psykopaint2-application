@@ -32,43 +32,57 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 			blockerClickedSignal = new Signal();
 		}
 
-		override protected function onStageAvailable():void {
+		// ---------------------------------------------------------------------
+		// Overrides.
+		// ---------------------------------------------------------------------
+
+		override protected function onEnabled():void {
 
 			if( _useBlocker ) {
 				_blocker = new Button( StarlingTextureManager.getTextureById( StarlingTextureType.TRANSPARENT ) );
 				_blocker.addEventListener( Event.TRIGGERED, onBlockerPressed );
+				_blocker.width = stage.stageWidth;
+				_blocker.height = stage.stageHeight;
 				addChild( _blocker );
 			}
 
 			_container = new Sprite();
+			_container.x = stage.stageWidth / 2 - _bg.width / 2;
+			_container.y = stage.stageHeight / 2 - _bg.height / 2;
 			addChild( _container );
 
 			_bg = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.SOLID_GRAY ) );
 			_bg.width = 512;
 			_bg.height = 512;
 			_container.addChild( _bg );
-
-			super.onStageAvailable();
 		}
 
-		private function onBlockerPressed( event:Event ):void {
-			blockerClickedSignal.dispatch();
-		}
+		override protected function onDisabled():void {
 
-		override protected function onLayout():void {
-
-			if( _useBlocker ) {
-				_blocker.width = stage.stageWidth;
-				_blocker.height = stage.stageHeight;
+			if( _blocker ) {
+				removeChild( _blocker );
+				_blocker.removeEventListener( Event.TRIGGERED, onBlockerPressed );
+				_blocker.dispose();
+				_blocker = null;
 			}
 
-			_container.x = stage.stageWidth / 2 - _bg.width / 2;
-			if( !_animating ) {
-				_container.y = stage.stageHeight / 2 - _bg.height / 2;
+			if( _bg ) {
+				_container.removeChild( _bg );
+				_bg.dispose();
+				_bg = null;
 			}
 
-			super.onLayout();
+			if( _container ) {
+				removeChild( _container );
+				_container.dispose();
+				_container = null;
+			}
+
 		}
+
+		// ---------------------------------------------------------------------
+		// Animation.
+		// ---------------------------------------------------------------------
 
 		override public function enable():void {
 
@@ -88,6 +102,14 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 		private function onEnableComplete():void {
 			_animating = false;
 			finishedAnimating();
+		}
+
+		// ---------------------------------------------------------------------
+		// Private.
+		// ---------------------------------------------------------------------
+
+		private function onBlockerPressed( event:Event ):void {
+			blockerClickedSignal.dispatch();
 		}
 	}
 }

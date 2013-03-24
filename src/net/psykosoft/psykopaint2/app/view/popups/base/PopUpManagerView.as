@@ -28,7 +28,6 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 			if( !_popUp ) return;
 			_popUp.blockerClickedSignal.remove( onCurrentPopUpBlockerPressed );
 			_popUp.disable();
-			_popUp.destroy();
 			removeChild( _popUp );
 			_popUp = null;
 		}

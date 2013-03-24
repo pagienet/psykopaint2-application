@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.app.model.state
 		[Inject]
 		public var notifyStateChangedSignal:NotifyStateChangedSignal;
 
-		private var _currentState:StateVO = new StateVO( ApplicationStateType.SPLASH_SCREEN );
+		private var _currentState:StateVO = new StateVO( ApplicationStateType.IDLE );
 		private var _previousState:StateVO;
 
 		public function StateModel() {

@@ -12,13 +12,10 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 			super( "Crop Image" );
 		}
 
-		override protected function onStageAvailable():void {
-
+		override protected function onEnabled():void {
+			super.onEnabled();
 			setLeftButton( BUTTON_LABEL_BACK_TO_PICK_AN_IMAGE );
-
 			setRightButton( BUTTON_LABEL_CROP );
-
-			super.onStageAvailable();
 		}
 	}
 }

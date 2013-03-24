@@ -13,30 +13,28 @@ package net.psykosoft.psykopaint2.app.view.popups
 			super();
 		}
 
-		override protected function onStageAvailable():void {
+		override protected function onEnabled():void {
 
-			super.onStageAvailable();
+			super.onEnabled();
 
 			_label = new Label();
+			_label.validate();
+			_label.x = _bg.width / 2 - _label.width / 2;
+			_label.y = _bg.height / 2 - _label.height / 2;
 			_container.addChild( _label );
+		}
+
+		override protected function onDisabled():void {
+
+			_container.removeChild( _label );
+			_label.dispose();
+			_label = null;
+
+			super.onDisabled();
 		}
 
 		public function setMessage( value:String ):void {
 			_label.text = value;
-			onLayout();
-		}
-
-		override protected function onLayout():void {
-
-			if( !stage ) return;
-
-			if( _label ) {
-				_label.validate();
-				_label.x = _bg.width / 2 - _label.width / 2;
-				_label.y = _bg.height / 2 - _label.height / 2;
-			}
-
-			super.onLayout();
 		}
 	}
 }

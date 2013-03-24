@@ -12,13 +12,10 @@ package net.psykosoft.psykopaint2.app.view.painting.newpainting
 			super( "New Painting" );
 		}
 
-		override protected function onStageAvailable():void {
-
+		override protected function onEnabled():void {
+			super.onEnabled();
 			setLeftButton( BUTTON_LABEL_BACK );
-
 			setRightButton( BUTTON_LABEL_SELECT_IMAGE );
-
-			super.onStageAvailable();
 		}
 	}
 }

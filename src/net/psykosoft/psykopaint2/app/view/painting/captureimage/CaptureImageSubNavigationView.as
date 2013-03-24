@@ -15,7 +15,9 @@ package net.psykosoft.psykopaint2.app.view.painting.captureimage
 			super( "Take a Picture" );
 		}
 
-		override protected function onStageAvailable():void {
+		override protected function onEnabled():void {
+
+			super.onEnabled();
 
 			setLeftButton( BUTTON_LABEL_BACK_TO_PICK_AN_IMAGE );
 
@@ -24,8 +26,6 @@ package net.psykosoft.psykopaint2.app.view.painting.captureimage
 			setCenterButtons( buttonGroupDefinition );
 
 			setRightButton( BUTTON_LABEL_SHOOT );
-
-			super.onStageAvailable();
 		}
 	}
 }

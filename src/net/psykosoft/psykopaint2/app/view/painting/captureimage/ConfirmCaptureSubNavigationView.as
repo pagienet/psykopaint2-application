@@ -12,12 +12,10 @@ package net.psykosoft.psykopaint2.app.view.painting.captureimage
 			super( "Take a Picture" );
 		}
 
-		override protected function onStageAvailable():void {
-
+		override protected function onEnabled():void {
+			super.onEnabled();
 			setLeftButton( BUTTON_LABEL_BACK_TO_CAPTURE );
 			setRightButton( BUTTON_LABEL_KEEP );
-
-			super.onStageAvailable();
 		}
 	}
 }

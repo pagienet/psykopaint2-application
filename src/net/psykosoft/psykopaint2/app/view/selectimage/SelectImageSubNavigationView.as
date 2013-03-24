@@ -17,7 +17,9 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 			super( "Select Image" );
 		}
 
-		override protected function onStageAvailable():void {
+		override protected function onEnabled():void {
+
+			super.onEnabled();
 
 			setLeftButton( BUTTON_LABEL_NEW_PAINTING );
 
@@ -27,8 +29,6 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_READY_TO_PAINT, onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_YOUR_PHOTOS, onButtonTriggered, false ) );
 			setCenterButtons( buttonGroupDefinition );
-
-			super.onStageAvailable();
 		}
 	}
 }

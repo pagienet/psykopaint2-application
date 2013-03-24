@@ -13,7 +13,9 @@ package net.psykosoft.psykopaint2.app.view.painting.editstyle
 			super( "Edit Style" );
 		}
 
-		override protected function onStageAvailable():void {
+		override protected function onEnabled():void {
+
+			super.onEnabled();
 
 			setLeftButton( BUTTON_LABEL_SELECT_STYLE );
 
@@ -24,8 +26,6 @@ package net.psykosoft.psykopaint2.app.view.painting.editstyle
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[prop 3]", onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[prop 4]", onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
-
-			super.onStageAvailable();
 		}
 	}
 }

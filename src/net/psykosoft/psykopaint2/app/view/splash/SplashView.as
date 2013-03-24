@@ -26,82 +26,81 @@ package net.psykosoft.psykopaint2.app.view.splash
 		public var splashDiedSignal:Signal;
 
 		public function SplashView() {
-
 			super();
-
 			splashDiedSignal = new Signal();
+		}
+
+		// ---------------------------------------------------------------------
+		// Overrides.
+		// ---------------------------------------------------------------------
+
+		override protected function onEnabled():void {
 
 			// White Bg.
 			_bg = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.TRANSPARENT_WHITE ) );
+			_bg.width = stage.stageWidth;
+			_bg.height = stage.stageHeight;
 			addChild( _bg );
 
 			// Display logo.
 			_logo = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.LOGO ) );
+			_logo.x = stage.stageWidth / 2 - _logo.width / 2;
+			_logo.y = stage.stageHeight / 2 - _logo.height / 2;
 			addChild( _logo );
 
 			// Start auto death timer.
 			_autoDieTimer = new Timer( 2000, 1 );
 			_autoDieTimer.addEventListener( TimerEvent.TIMER, onDieTimer );
 			_autoDieTimer.start();
+
+			addEventListener( TouchEvent.TOUCH, onStageTouched );
 		}
 
-		override protected function onStageAvailable():void {
+		override protected function onDisabled():void {
 
-			// Listen for stage clicks.
-			stage.addEventListener( TouchEvent.TOUCH, onStageTouched );
+			if( _bg ) {
+				removeChild( _bg );
+				_bg.texture.dispose();
+				_bg.dispose();
+				_bg = null;
+			}
 
-			super.onStageAvailable();
-
-		}
-
-		override public function disable():void {
+			if( _logo ) {
+				removeChild( _logo );
+				_logo.texture.dispose();
+				_logo.dispose();
+				_logo = null;
+			}
 
 			if( _autoDieTimer ) {
 				_autoDieTimer.stop();
 			}
 
-			super.disable();
+			splashDiedSignal = null;
+
+			if( hasEventListener( TouchEvent.TOUCH ) ) {
+				removeEventListener( TouchEvent.TOUCH, onStageTouched );
+			}
+
 		}
 
-		private function onDieTimer( event:TimerEvent ):void {
-			die();
-		}
+		// ---------------------------------------------------------------------
+		// Private.
+		// ---------------------------------------------------------------------
 
 		private function onStageTouched( event:TouchEvent ):void {
 			var touches:Vector.<Touch> = event.getTouches( this );
 			for( var i:uint = 0; i < touches.length; i++ ) {
 				var touch:Touch = touches[ i ];
 				if( touch.phase == TouchPhase.BEGAN ) { // began acts as a mouse down
-					stage.removeEventListener( TouchEvent.TOUCH, onStageTouched );
+					removeEventListener( TouchEvent.TOUCH, onStageTouched );
 					die();
 				}
 			}
 		}
 
-		override protected function onLayout():void {
-
-			// Fit bg.
-			_bg.width = stage.stageWidth;
-			_bg.height = stage.stageHeight;
-
-			// Center logo.
-			_logo.x = stage.stageWidth / 2 - _logo.width / 2;
-			_logo.y = stage.stageHeight / 2 - _logo.height / 2;
-
-		}
-
-		override public function dispose():void {
-
-			// Make sure texture is freed ( logo will probably not be used again ).
-			_logo.texture.dispose();
-			_logo.dispose();
-			_logo = null;
-
-			// Clear bg, but not its texture.
-			_bg.dispose();
-			_bg = null;
-
-			super.dispose();
+		private function onDieTimer( event:TimerEvent ):void {
+			die();
 		}
 
 		private function die():void {

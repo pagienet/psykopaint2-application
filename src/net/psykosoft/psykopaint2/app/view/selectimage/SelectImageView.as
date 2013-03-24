@@ -1,11 +1,8 @@
 package net.psykosoft.psykopaint2.app.view.selectimage
 {
 
-	import feathers.controls.Button;
 	import feathers.controls.List;
 	import feathers.controls.Scroller;
-	import feathers.controls.renderers.DefaultListItemRenderer;
-	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.data.ListCollection;
 	import feathers.layout.TiledRowsLayout;
 
@@ -14,7 +11,6 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 	import org.osflash.signals.Signal;
 
-	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
@@ -36,7 +32,11 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 			listSelectedItemChangedSignal = new Signal( String ); // Item name or id.
 		}
 
-		override protected function onStageAvailable():void {
+		// ---------------------------------------------------------------------
+		// Overrides.
+		// ---------------------------------------------------------------------
+
+		override protected function onEnabled():void {
 
 			_listLayout = new TiledRowsLayout();
 			_listLayout.gap = 10;
@@ -54,10 +54,35 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 			_list.scrollerProperties.horizontalScrollPolicy = Scroller.SCROLL_POLICY_ON;
 			_list.itemRendererType = ImageListItemRenderer;
 			_list.addEventListener( Event.CHANGE, onListChange );
+			_list.width = stage.stageWidth;
+			_list.height = stage.stageHeight;
+			_list.validate();
 			addChild( _list );
-
-			super.onStageAvailable();
 		}
+
+		override protected function onDisabled():void {
+
+			if( _listLayout ) {
+				_listLayout = null;
+			}
+
+			if( _list ) {
+				removeChild( _list );
+				_list.dispose();
+				_list = null;
+			}
+
+			if( _thumbNames ) {
+				_thumbNames = null;
+			}
+
+			listSelectedItemChangedSignal = null;
+
+		}
+
+		// ---------------------------------------------------------------------
+		// Public.
+		// ---------------------------------------------------------------------
 
 		public function displayThumbs( thumbs:TextureAtlas ):void {
 
@@ -73,25 +98,13 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 			_list.validate();
 		}
 
+		// ---------------------------------------------------------------------
+		// Private.
+		// ---------------------------------------------------------------------
+
 		private function onListChange( event:Event ):void {
 			var itemName:String = _thumbNames[ _list.selectedIndex ];
 			listSelectedItemChangedSignal.dispatch( itemName );
-		}
-
-		override protected function onLayout():void {
-
-			_list.width = stage.stageWidth;
-			_list.height = stage.stageHeight;
-			_list.validate();
-			
-			super.onLayout();
-		}
-
-		public function cleanUp():void {
-
-			_list.dataProvider = new ListCollection();
-			_thumbNames = null;
-
 		}
 	}
 }

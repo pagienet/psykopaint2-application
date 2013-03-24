@@ -1,77 +1,86 @@
 package net.psykosoft.psykopaint2.app.view.base
 {
 
-	import com.junkbyte.console.Cc;
-
-	import net.psykosoft.psykopaint2.app.view.base.IView;
-
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.events.ResizeEvent;
 
 	public class StarlingViewBase extends Sprite implements IView
 	{
-		private var _enabled:Boolean = true;
-
 		public function StarlingViewBase() {
 			super();
-			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			visible = false;
 		}
 
-		private function onAddedToStage( event:Event ):void {
+		// -----------------------
+		// Public.
+		// -----------------------
 
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+		public function enable():void {
 
-			stage.addEventListener( ResizeEvent.RESIZE, onStageResize );
-			stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			// If stage is not yet available, enable will be called again after it is.
+			if( !stage ) {
+				trace( this, "trying to enable view but stage is not yet available..." );
+				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+				return;
+			}
 
-			onStageAvailable();
+			if( _enabled ) return;
+
+			onEnabled();
+			visible = true;
+			_enabled = true;
+
+			if( !hasEventListener( Event.ENTER_FRAME ) ) {
+				addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			}
+
+			trace( this, "enabling 2d view." );
 		}
+
+		public function disable():void {
+
+			if( !_enabled ) return;
+
+			onDisabled();
+			visible = false;
+			_enabled = false;
+
+			if( hasEventListener( Event.ENTER_FRAME ) ) {
+				removeEventListener( Event.ENTER_FRAME, onEnterFrame );
+			}
+
+			trace( this, "disabling 2d view." );
+		}
+
+		// -----------------------
+		// Protected.
+		// -----------------------
 
 		protected function onUpdate():void {
 			// Override.
 		}
 
-		// TODO: remove all onLayouts? we are working with a fix screen size really 1024x768 ( view port changes only, coordinate system is always that )
-		protected function onLayout():void {
+		protected function onEnabled():void {
 			// Override.
 		}
 
-		protected function onStageAvailable():void {
-			onLayout();
+		protected function onDisabled():void {
+			// Override.
 		}
 
-		private function onStageResize( event:ResizeEvent ):void {
-			onLayout();
-		}
+		// -----------------------
+		// Private.
+		// -----------------------
+
+		private var _enabled:Boolean;
 
 		private function onEnterFrame( event:Event ):void {
-			if( _enabled ) {
-				onUpdate();
-			}
+			onUpdate();
 		}
 
-		// ---------------------------------------------------------------------
-		// IView interface implementation.
-		// ---------------------------------------------------------------------
-
-		public function enable():void {
-			if( _enabled ) return;
-			onLayout();
-			visible = true;
-			_enabled = true;
-			Cc.info( this, "enable()." );
-		}
-
-		public function disable():void {
-			if( !_enabled ) return;
-			visible = false;
-			_enabled = false;
-			Cc.info( this, "disable()." );
-		}
-
-		public function destroy():void {
-			// TODO
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			enable();
 		}
 	}
 }

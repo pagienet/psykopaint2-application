@@ -5,6 +5,5 @@ package net.psykosoft.psykopaint2.app.view.base
 	{
 		function enable():void;
 		function disable():void;
-		function destroy():void;
 	}
 }

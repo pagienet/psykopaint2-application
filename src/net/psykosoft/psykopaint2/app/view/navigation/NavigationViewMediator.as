@@ -56,13 +56,13 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		[Inject]
 		public var notifyColorStylePresetsAvailableSignal:NotifyColorStylePresetsAvailableSignal;
 
-		private var _subNavigationCache:Dictionary;
+		private var _subNavigationClasses:Dictionary;
 		private var _wasShowing:Boolean;
 
 		override public function initialize():void {
 
 			// Stores sub navigation views.
-			preCacheSections();
+			initSubNavigationViews();
 
 			// View starts disabled.
 			view.disable(); // TODO: all views start disabled?
@@ -73,7 +73,6 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			notifyGlobalAccelerometerSignal.add( onGlobalAcceleration );
 
 			// From view.
-			view.backButtonTriggeredSignal.add( onViewBackButtonTriggered );
 			view.shownAnimatedSignal.add( onViewShownAnimated );
 			view.hiddenAnimatedSignal.add( onViewHiddenAnimated );
 
@@ -127,21 +126,19 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 		private function evaluateSubNavigation( state:StateVO ):void {
 
-			var subNavigation:SubNavigationViewBase = _subNavigationCache[ state.name ];
-			if( !subNavigation ) {
-				throw new Error( this, "there is no sub navigation for this state: " + state.name + ". If there is, make sure to register it in preCacheSections() below." );
+			var subNavigationClass:Class = _subNavigationClasses[ state.name ];
+			if( !subNavigationClass ) {
+				throw new Error( this, "there is no sub navigation for this state: " + state.name + ". If there is, make sure to register it in initSubNavigationViews() below." );
 			}
 
-			view.enableSubNavigationView( subNavigation );
+			var subNavigationInstance:SubNavigationViewBase = new subNavigationClass();
+
+			view.enableSubNavigationView( subNavigationInstance );
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
-
-		private function onViewBackButtonTriggered():void {
-			requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PREVIOUS_STATE ) );
-		}
 
 		private function onViewHiddenAnimated():void {
 			notifyNavigationToggleSignal.dispatch( false );
@@ -155,23 +152,24 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		// Internal.
 		// ---------------------------------------------------------------------
 
-		private function preCacheSections():void {
+		private function initSubNavigationViews():void {
 
-			_subNavigationCache = new Dictionary();
+			_subNavigationClasses = new Dictionary();
 
-			_subNavigationCache[ ApplicationStateType.HOME_SCREEN ] = new HomeScreenSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.PAINTING ] = new NewPaintingSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.PAINTING_SELECT_IMAGE ] = new SelectImageSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.PAINTING_SELECT_COLORS ] = new ColorStyleSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.PAINTING_SELECT_TEXTURE ] = new SelectTextureSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.PAINTING_SELECT_BRUSH ] = new SelectBrushSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.PAINTING_SELECT_STYLE ] = new SelectStyleSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.PAINTING_EDIT_STYLE ] = new EditStyleSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.SETTINGS ] = new SettingsSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.SETTINGS_WALLPAPER ] = new SelectWallpaperSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.PAINTING_CAPTURE_IMAGE ] = new CaptureImageSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.PAINTING_CONFIRM_CAPTURE_IMAGE ] = new ConfirmCaptureSubNavigationView();
-			_subNavigationCache[ ApplicationStateType.PAINTING_CROP_IMAGE ] = new CropImageSubNavigationView();
+			// This is where application states are associated to sub-navigation views.
+			_subNavigationClasses[ ApplicationStateType.HOME_SCREEN ] 					  = HomeScreenSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.PAINTING ] 						  = NewPaintingSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.PAINTING_SELECT_IMAGE ] 		  = SelectImageSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.PAINTING_SELECT_COLORS ] 		  = ColorStyleSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.PAINTING_SELECT_TEXTURE ] 		  = SelectTextureSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.PAINTING_SELECT_BRUSH ] 		  = SelectBrushSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.PAINTING_SELECT_STYLE ] 		  = SelectStyleSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.PAINTING_EDIT_STYLE ] 			  = EditStyleSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.SETTINGS ] 						  = SettingsSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.SETTINGS_WALLPAPER ] 			  = SelectWallpaperSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.PAINTING_CAPTURE_IMAGE ] 		  = CaptureImageSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.PAINTING_CONFIRM_CAPTURE_IMAGE ]  = ConfirmCaptureSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.PAINTING_CROP_IMAGE ] 			  = CropImageSubNavigationView;
 
 		}
 	}

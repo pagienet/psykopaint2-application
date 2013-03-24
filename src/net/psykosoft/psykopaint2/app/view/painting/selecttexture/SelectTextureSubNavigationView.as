@@ -14,7 +14,9 @@ package net.psykosoft.psykopaint2.app.view.painting.selecttexture
 			super( "Select Texture" );
 		}
 
-		override protected function onStageAvailable():void {
+		override protected function onEnabled():void {
+
+			super.onEnabled();
 
 			setLeftButton( BUTTON_LABEL_PICK_A_COLOR );
 
@@ -27,8 +29,6 @@ package net.psykosoft.psykopaint2.app.view.painting.selecttexture
 			setCenterButtons( buttonGroupDefinition );
 
 			setRightButton( BUTTON_LABEL_PICK_A_BRUSH );
-
-			super.onStageAvailable();
 		}
 	}
 }

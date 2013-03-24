@@ -27,9 +27,14 @@ package net.psykosoft.psykopaint2.app.view.base
 
 		public function StarlingRootSprite() {
 			super();
+			enable();
 		}
 
-		override protected function onStageAvailable():void {
+		// ---------------------------------------------------------------------
+		// Overrides.
+		// ---------------------------------------------------------------------
+
+		override protected function onEnabled():void {
 
 			// -----------------------
 			// Ui theme.
@@ -73,9 +78,11 @@ package net.psykosoft.psykopaint2.app.view.base
 				button.addEventListener( Event.TRIGGERED, onConsoleButtonTriggered );
 				_debugLayer.addChild( button );
 			}
-
-			super.onStageAvailable();
 		}
+
+		// ---------------------------------------------------------------------
+		// Private.
+		// ---------------------------------------------------------------------
 
 		private function onConsoleButtonTriggered( event:Event ):void {
 			Cc.visible = !Cc.visible;

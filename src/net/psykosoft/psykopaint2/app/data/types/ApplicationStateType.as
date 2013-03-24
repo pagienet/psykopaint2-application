@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.app.data.types
 		// General states.
 		// -----------------------
 
+		public static const IDLE:String = "idle";
 		public static const SPLASH_SCREEN:String = "splash";
 		public static const PREVIOUS_STATE:String = "previous";
 

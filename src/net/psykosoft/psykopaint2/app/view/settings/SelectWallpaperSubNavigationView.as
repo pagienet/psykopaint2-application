@@ -11,11 +11,9 @@ package net.psykosoft.psykopaint2.app.view.settings
 			super( "Pick a Wallpaper" );
 		}
 
-		override protected function onStageAvailable():void {
-
+		override protected function onEnabled():void {
+			super.onEnabled();
 			setLeftButton( BUTTON_LABEL_BACK );
-
-			super.onStageAvailable();
 		}
 
 		/*public function setImages( images:Vector.<PackagedImageVO> ):void {

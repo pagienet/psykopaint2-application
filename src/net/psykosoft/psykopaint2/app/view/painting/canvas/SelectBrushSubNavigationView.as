@@ -16,10 +16,10 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 			super( "Select Brush" );
 		}
 
-		override protected function onStageAvailable():void {
+		override protected function onEnabled():void {
+			super.onEnabled();
 			setLeftButton( BUTTON_LABEL_PICK_A_TEXTURE );
 			setRightButton( BUTTON_LABEL_SELECT_STYLE );
-			super.onStageAvailable();
 		}
 
 		public function setAvailableBrushes( brushTypes:Vector.<String> ):void {

@@ -15,10 +15,14 @@ package net.psykosoft.psykopaint2.app
 	import flash.display3D.Context3DProfile;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.config.Settings;
+	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestRenderFrameSignal;
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 	import net.psykosoft.psykopaint2.app.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingRootSprite;
@@ -149,9 +153,7 @@ package net.psykosoft.psykopaint2.app
 
 		private function init3D():void {
 			_away3d = new View3D();
-			if( Settings.AWAY3D_DEBUG_MODE ) {
-				Debug.active = true;
-			}
+			Debug.active = Settings.AWAY3D_DEBUG_MODE;
 			_away3d.stage3DProxy = _stage3dProxy;
 			_away3d.shareContext = true;
 			addChild( _away3d );
@@ -170,19 +172,27 @@ package net.psykosoft.psykopaint2.app
 		}
 
 		private function onStarlingContextReady( event:starling.events.Event ):void {
-			start();
+
+			startLoop();
+
+			// Trigger first state.
+			// TODO: remove ugly time out. It's needed so that the initial state change occurs after the main view elements are on stage ( initialized ) and they can hear the state change.
+			setTimeout( function():void {
+				var requestStateChangeSignal:RequestStateChangeSignal = _appConfig.injector.getInstance( RequestStateChangeSignal );
+				requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.SPLASH_SCREEN ) );
+			}, 1000 );
 		}
 
-		private function stop():void {
-			trace( this, "stopped" );
+		private function stopLoop():void {
+			trace( this, "loop stopped." );
 			if( hasEventListener( flash.events.Event.ENTER_FRAME ) ) {
 				removeEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame );
 			}
 		}
 
-		private function start():void {
-			stop();
-			trace( this, "started" );
+		private function startLoop():void {
+			stopLoop();
+			trace( this, "loop started." );
 			if( !hasEventListener( flash.events.Event.ENTER_FRAME ) ) {
 				addEventListener( flash.events.Event.ENTER_FRAME, onEnterFrame );
 			}

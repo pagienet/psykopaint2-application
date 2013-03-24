@@ -13,12 +13,17 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		public function HomeScreenSubNavigationView() {
 			super( "Home" );
+		}
+
+		override protected function onEnabled():void {
+
+			super.onEnabled();
+
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_SETTINGS, onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_GALLERY, onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_NEW_PAINTING, onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 		}
-
 	}
 }

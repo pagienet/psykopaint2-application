@@ -33,12 +33,21 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 
 		override public function initialize():void {
 
-			// Init.
-			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
+			// From core.
+			// TODO: not being caught, because the view is created after the signal from the core is dispatched
+			notifyAvailableBrushTypesSignal.add( onBrushTypesAvailable );
 
 			// From view.
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
 
+		}
+
+		// -----------------------
+		// From core.
+		// -----------------------
+
+		private function onBrushTypesAvailable( brushTypes:Vector.<String> ):void {
+			view.setAvailableBrushes( brushTypes );
 		}
 
 		// -----------------------
