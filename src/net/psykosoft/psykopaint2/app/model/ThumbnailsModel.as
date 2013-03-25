@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.app.model.thumbnails
+package net.psykosoft.psykopaint2.app.model
 {
 
 	import com.junkbyte.console.Cc;

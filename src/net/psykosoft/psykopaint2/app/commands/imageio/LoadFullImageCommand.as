@@ -5,23 +5,18 @@ package net.psykosoft.psykopaint2.app.commands.imageio
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.app.model.thumbnails.ThumbnailsModel;
-
 	import net.psykosoft.psykopaint2.app.service.images.LoadPackagedImagesService;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestSourceImageChangeSignal;
 
 	import robotlegs.bender.framework.api.IContext;
 
-	public class LoadReadyToPaintImageCommand
+	public class LoadFullImageCommand
 	{
 		[Inject]
 		public var imageName:String;
 
 		[Inject]
 		public var requestSourceImageChangeSignal:RequestSourceImageChangeSignal;
-
-		[Inject]
-		public var readyToPaintImagesModel:ThumbnailsModel;
 
 		[Inject]
 		public var context:IContext;
@@ -40,7 +35,6 @@ package net.psykosoft.psykopaint2.app.commands.imageio
 			_packagedImagesService.imageLoadedSignal.remove( onImageLoaded );
 			Cc.log( this, "onImageLoaded - image: " + image );
 			requestSourceImageChangeSignal.dispatch( image );
-			readyToPaintImagesModel.dispose();
 			context.release( this );
 		}
 	}
