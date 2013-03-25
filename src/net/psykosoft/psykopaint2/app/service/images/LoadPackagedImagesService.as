@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.app.service.images
 
 		public function LoadPackagedImagesService() {
 			super();
-			_thumbnailsLoadedSignal = new Signal( BitmapData, XML );
+			_thumbnailsLoadedSignal = new Signal( TextureAtlas );
 			_imageLoadedSignal = new Signal( BitmapData );
 		}
 
