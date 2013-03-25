@@ -1,14 +1,19 @@
 package net.psykosoft.psykopaint2.app.view.base
 {
 
+	import org.osflash.signals.Signal;
+
 	import starling.display.Sprite;
 	import starling.events.Event;
 
 	public class StarlingViewBase extends Sprite implements IView
 	{
+		public var addedToStageSignal:Signal;
+
 		public function StarlingViewBase() {
 			super();
 			visible = false;
+			addedToStageSignal = new Signal();
 		}
 
 		// -----------------------
@@ -27,6 +32,7 @@ package net.psykosoft.psykopaint2.app.view.base
 			if( _enabled ) return;
 
 			onEnabled();
+
 			visible = true;
 			_enabled = true;
 
@@ -81,6 +87,7 @@ package net.psykosoft.psykopaint2.app.view.base
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			enable();
+			addedToStageSignal.dispatch();
 		}
 	}
 }

@@ -51,8 +51,8 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			if( _activeSubNavigation ) disableSubNavigation();
 			_activeSubNavigation = view;
 			_activeSubNavigation.setNavigation( this );
-			_subNavigationContainer.addChild( _activeSubNavigation );
 			_activeSubNavigation.enable();
+			_subNavigationContainer.addChild( _activeSubNavigation );
 		}
 
 		public function disableSubNavigation():void {

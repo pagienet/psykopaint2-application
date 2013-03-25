@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
-	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -26,33 +25,23 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 		public var notifyPopUpMessageSignal:NotifyPopUpMessageSignal;
 
 		[Inject]
-		public var notifyAvailableBrushTypesSignal:NotifyAvailableBrushTypesSignal;
-
-		[Inject]
 		public var paintModule:PaintModule;
 
 		override public function initialize():void {
 
-			// From core.
-			// TODO: not being caught, because the view is created after the signal from the core is dispatched
-			notifyAvailableBrushTypesSignal.add( onBrushTypesAvailable );
-
 			// From view.
+			view.addedToStageSignal.add( onViewAddedToStage );
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
 
 		}
 
 		// -----------------------
-		// From core.
-		// -----------------------
-
-		private function onBrushTypesAvailable( brushTypes:Vector.<String> ):void {
-			view.setAvailableBrushes( brushTypes );
-		}
-
-		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onViewAddedToStage():void {
+			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
+		}
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {

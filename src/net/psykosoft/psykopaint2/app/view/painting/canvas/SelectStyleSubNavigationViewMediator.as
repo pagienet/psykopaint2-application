@@ -21,10 +21,8 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 
 		override public function initialize():void {
 
-			// Init.
-			view.setAvailableBrushShapes( paintModule.getAvailableBrushShapes() );
-
 			// From view.
+			view.addedToStageSignal.add( onViewAddedToStage );
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
 
 		}
@@ -32,6 +30,10 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onViewAddedToStage():void {
+			view.setAvailableBrushShapes( paintModule.getAvailableBrushShapes() );
+		}
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
