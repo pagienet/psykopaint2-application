@@ -21,4 +21,7 @@
         <renderMode>direct</renderMode>
         <depthAndStencil>true</depthAndStencil>
     </initialWindow>
+	<extensions>
+        <extensionID>net.psykosoft.photos</extensionID>
+    </extensions>
 </application>

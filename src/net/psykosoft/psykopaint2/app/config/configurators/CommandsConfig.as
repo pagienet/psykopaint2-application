@@ -6,16 +6,15 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.commands.ChangeWallpaperCommand;
 	import net.psykosoft.psykopaint2.app.commands.RenderFrameCommand;
 	import net.psykosoft.psykopaint2.app.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
-	import net.psykosoft.psykopaint2.app.commands.imageio.LoadReadyToPaintImageCommand;
-	import net.psykosoft.psykopaint2.app.commands.imageio.LoadReadyToPaintThumbnailsCommand;
-	import net.psykosoft.psykopaint2.app.commands.imageio.LoadUserPhotosThumbnailsCommand;
+	import net.psykosoft.psykopaint2.app.commands.imageio.LoadFullImageCommand;
+	import net.psykosoft.psykopaint2.app.commands.imageio.LoadImageSourceCommand;
 	import net.psykosoft.psykopaint2.app.commands.imageio.LoadWallpaperThumbsCommand;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestReadyToPaintImageSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestReadyToPaintThumbnailsSignal;
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestFullImageSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestSourceImageChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateUpdateFromModuleActivationSignal;
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestImageSourceSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestWallpaperThumbsLoadSignal;
 
@@ -34,8 +33,8 @@ package net.psykosoft.psykopaint2.app.config.configurators
 			commandMap.map( RequestWallpaperChangeSignal ).toCommand( ChangeWallpaperCommand );
 
 			// Image sources.
-			commandMap.map( RequestReadyToPaintThumbnailsSignal ).toCommand( LoadReadyToPaintThumbnailsCommand );
-			commandMap.map( RequestReadyToPaintImageSignal ).toCommand( LoadReadyToPaintImageCommand );
+			commandMap.map( RequestImageSourceSignal ).toCommand( LoadImageSourceCommand );
+			commandMap.map( RequestFullImageSignal ).toCommand( LoadFullImageCommand );
 //			commandMap.map( RequestUserPhotosThumbnailsSignal ).toCommand( LoadUserPhotosThumbnailsCommand );
 
 			// Source image change to start the painting process.

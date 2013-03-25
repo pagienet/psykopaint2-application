@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifySourceImageThumbnailsRetrievedSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestReadyToPaintImageSignal;
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestFullImageSignal;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
 
@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		public var notifyStateChangedSignal:NotifyStateChangedSignal;
 
 		[Inject]
-		public var requestReadyToPaintImageSignal:RequestReadyToPaintImageSignal;
+		public var requestFullImageSignal:RequestFullImageSignal;
 
 		[Inject]
 		public var notifySourceImageThumbnailsRetrievedSignal:NotifySourceImageThumbnailsRetrievedSignal;
@@ -43,7 +43,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 		private function onListItemSelected( itemName:String ):void {
 			// TODO: how does it know which image source to call?
-			requestReadyToPaintImageSignal.dispatch( itemName );
+			requestFullImageSignal.dispatch( itemName );
 			view.disable(); // TODO: services store textures in models, requesting a single image load clears the thumb atlases, this needs to be separated
 		}
 

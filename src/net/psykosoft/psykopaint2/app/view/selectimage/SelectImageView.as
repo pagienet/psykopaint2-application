@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		private var _list:List;
 		private var _listLayout:TiledRowsLayout;
 		private var _thumbNames:Vector.<String>;
+		private var _dataProvider:ListCollection;
 
 		public var listSelectedItemChangedSignal:Signal;
 
@@ -57,7 +58,10 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 			_list.width = stage.stageWidth;
 			_list.height = stage.stageHeight;
 			_list.validate();
+			_list.dataProvider = _dataProvider = new ListCollection();
 			addChild( _list );
+
+			_thumbNames = new Vector.<String>();
 		}
 
 		override protected function onDisabled():void {
@@ -86,15 +90,16 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 		public function displayThumbs( thumbs:TextureAtlas ):void {
 
-			var textures:Vector.<Texture> = thumbs.getTextures();
-			_thumbNames = thumbs.getNames();
+			trace( this, "displaying thumbs from texture atlas: " + thumbs );
 
-			var dataProvider:ListCollection = new ListCollection();
+			var textures:Vector.<Texture> = thumbs.getTextures();
+			_thumbNames = _thumbNames.concat( thumbs.getNames() );
+
 			for( var i:uint; i < textures.length; i++ ) {
-				dataProvider.push( { texture: textures[ i ] } );
+				_dataProvider.push( { texture: textures[ i ] } );
 			}
 
-			_list.dataProvider = dataProvider;
+			_list.dataProvider = _dataProvider; // TODO: needed?
 			_list.validate();
 		}
 

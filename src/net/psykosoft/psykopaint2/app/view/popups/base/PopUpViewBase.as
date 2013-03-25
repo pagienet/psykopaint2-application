@@ -47,17 +47,26 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 			}
 
 			_container = new Sprite();
-			_container.x = stage.stageWidth / 2 - _bg.width / 2;
-			_container.y = stage.stageHeight / 2 - _bg.height / 2;
 			addChild( _container );
 
 			_bg = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.SOLID_GRAY ) );
 			_bg.width = 512;
 			_bg.height = 512;
 			_container.addChild( _bg );
+
+			_container.x = stage.stageWidth / 2 - _bg.width / 2;
+			_container.y = stage.stageHeight / 2 - _bg.height / 2;
+
+			// Trigger animation...
+			_animating = true;
+			var centerY:Number = stage.stageHeight / 2 - _bg.height / 2;
+			_container.y = centerY - 2000; // TODO: redundant positioning
+			TweenLite.to( _container, 1, { y: centerY, ease:Strong.easeOut, onComplete: onEnableComplete } );
 		}
 
 		override protected function onDisabled():void {
+
+			TweenLite.killTweensOf( _container );
 
 			if( _blocker ) {
 				removeChild( _blocker );
@@ -83,17 +92,6 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 		// ---------------------------------------------------------------------
 		// Animation.
 		// ---------------------------------------------------------------------
-
-		override public function enable():void {
-
-			_animating = true;
-
-			var centerY:Number = stage.stageHeight / 2 - _bg.height / 2;
-			_container.y = centerY - 2000;
-			TweenLite.to( _container, 1, { y: centerY, ease:Strong.easeOut, onComplete: onEnableComplete } );
-
-			super.enable();
-		}
 
 		protected function finishedAnimating():void {
 			// Override.

@@ -11,6 +11,9 @@ package net.psykosoft.psykopaint2.app.service.images
 
 	import org.osflash.signals.Signal;
 
+	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
+
 	/*
 	* Loads image atlases that contain a bunch of thumbnails ( with their image and descriptor xml files )
 	* and regular full size images corresponding to such thumbnails.
@@ -21,17 +24,17 @@ package net.psykosoft.psykopaint2.app.service.images
 		private var _imageLoader:Loader;
 		private var _imageLoadCallback:Function;
 		private var _atlasDescriptorFilePath:String;
+		private var _thumbnailsLoadedSignal:Signal;
+		private var _imageLoadedSignal:Signal;
 
 		public var imageUrl:String;
 		public var xmlUrl:String;
-
-		public var thumbnailsLoadedSignal:Signal;
-		public var imageLoadedSignal:Signal;
+		public var originalImagesPath:String;
 
 		public function LoadPackagedImagesService() {
 			super();
-			thumbnailsLoadedSignal = new Signal( BitmapData, XML );
-			imageLoadedSignal = new Signal( BitmapData );
+			_thumbnailsLoadedSignal = new Signal( BitmapData, XML );
+			_imageLoadedSignal = new Signal( BitmapData );
 		}
 
 		public function loadThumbnails():void {
@@ -43,14 +46,16 @@ package net.psykosoft.psykopaint2.app.service.images
 		}
 
 		public function loadFullImage( imageUrl:String ):void {
-			trace( this, "loading full image - url: " + imageUrl );
-			loadImage( imageUrl, onFullImageLoaded );
+			trace( this, "loading full image - url: " + imageUrl + ".jpg" );
+			loadImage( originalImagesPath + imageUrl + ".jpg", onFullImageLoaded );
 		}
 
 		private function onFullImageLoaded( image:BitmapData ):void {
-			imageLoadedSignal.dispatch( image );
-			imageLoadedSignal = null;
+			_imageLoadedSignal.dispatch( image );
+			_imageLoadedSignal = null;
 		}
+
+		private var _texture:Texture;
 
 		private function onThumbnailsAtlasLoaded( image:BitmapData ):void {
 			trace( this, "loadThumbnails()..." );
@@ -58,8 +63,10 @@ package net.psykosoft.psykopaint2.app.service.images
 			var xml:XML = XML( loadData( _atlasDescriptorFilePath ) );
 			_atlasDescriptorFilePath = null;
 			// Dispatch signal with image and xml.
-			thumbnailsLoadedSignal.dispatch( image, xml );
-			thumbnailsLoadedSignal = null;
+			var texture:Texture = Texture.fromBitmapData( image );
+			var atlas:TextureAtlas = new TextureAtlas( texture, xml ); // The atlas will be stored and managed in ThumbnailModel.as
+			_thumbnailsLoadedSignal.dispatch( atlas );
+			_thumbnailsLoadedSignal = null;
 		}
 
 		private function loadImage( url:String, callback:Function ):void {
@@ -95,6 +102,18 @@ package net.psykosoft.psykopaint2.app.service.images
 			_imageLoader = null;
 			_imageLoadCallback( bmd );
 			_imageLoadCallback = null;
+		}
+
+		public function getThumbnailsLoadedSignal():Signal {
+			return _thumbnailsLoadedSignal;
+		}
+
+		public function getFullImageLoadedSignal():Signal {
+			return _imageLoadedSignal;
+		}
+
+		public function disposeService():void {
+			// There is nothing in particular in this service to dispose.
 		}
 	}
 }

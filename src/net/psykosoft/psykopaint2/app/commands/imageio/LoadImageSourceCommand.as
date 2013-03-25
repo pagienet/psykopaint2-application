@@ -9,12 +9,21 @@ package net.psykosoft.psykopaint2.app.commands.imageio
 	import net.psykosoft.psykopaint2.app.model.FullImageModel;
 
 	import net.psykosoft.psykopaint2.app.model.ThumbnailsModel;
+	import net.psykosoft.psykopaint2.app.service.images.ANEIOSImageService;
+	import net.psykosoft.psykopaint2.app.service.images.DesktopImageService;
 	import net.psykosoft.psykopaint2.app.service.images.IImageService;
 
 	import net.psykosoft.psykopaint2.app.service.images.LoadPackagedImagesService;
+	import net.psykosoft.psykopaint2.app.service.images.NativeIOSImageService;
 
 	import robotlegs.bender.framework.api.IContext;
 
+	import starling.textures.TextureAtlas;
+
+	/*
+	* Initiates an async image selection process that may query the user to
+	* pick an image from a source of thumbnails, the operating system, etc.
+	* */
 	public class LoadImageSourceCommand
 	{
 		[Inject]
@@ -38,43 +47,52 @@ package net.psykosoft.psykopaint2.app.commands.imageio
 			switch( sourceType ) {
 
 				case ImageSourceType.FACEBOOK:
-
 						throw new Error( this, "cannot retrieve thumbnails from this source yet: " + sourceType );
-
 					break;
 
 				case ImageSourceType.READY_TO_PAINT:
-
 						_imageService = new LoadPackagedImagesService();
 						LoadPackagedImagesService( _imageService ).imageUrl = "assets-packaged/ready-to-paint/ready-to-paint.png";
 						LoadPackagedImagesService( _imageService ).xmlUrl = "assets-packaged/ready-to-paint/ready-to-paint.xml";
 						LoadPackagedImagesService( _imageService ).originalImagesPath = "assets-packaged/ready-to-paint/originals/";
-
+						_imageService.getThumbnailsLoadedSignal().add( onThumbnailsLoaded );
+						_imageService.loadThumbnails();
 					break;
 
-				case ImageSourceType.IOS_NATIVE_USER_PHOTOS:
+				case ImageSourceType.IOS_USER_PHOTOS_NATIVE:
+						_imageService = new NativeIOSImageService();
+						_imageService.getFullImageLoadedSignal().add( onFullImageLoaded );
+						_imageService.loadFullImage( "prompt" );
+					break;
 
-						throw new Error( this, "cannot retrieve images from this source yet: " + sourceType );
+				case ImageSourceType.IOS_USER_PHOTOS_ANE:
+						_imageService = new ANEIOSImageService();
+						_imageService.getThumbnailsLoadedSignal().add( onThumbnailsLoaded );
+						_imageService.loadThumbnails();
+					break;
 
+				case ImageSourceType.DESKTOP:
+						_imageService = new DesktopImageService();
+						_imageService.getFullImageLoadedSignal().add( onFullImageLoaded );
+						_imageService.loadFullImage( "prompt" );
 					break;
 
 			}
 
 			fullImageModel.setService( _imageService );
-			_imageService.getThumbnailsLoadedSignal().add( onThumbnailsLoaded );
-			_imageService.loadThumbnails();
-
 			context.detain( this );
 		}
 
-		private function onThumbnailsLoaded( atlas:BitmapData, descriptor:XML ):void {
+		private function onFullImageLoaded( bmd:BitmapData ):void {
+			Cc.log( this, "onFullImageLoaded - image: " + bmd );
+			_imageService.getFullImageLoadedSignal().remove( onFullImageLoaded );
+			fullImageModel.setFullImage( bmd );
+		}
 
-			Cc.log( this, "onThumbnailsLoaded - atlas: " + atlas + ", descriptor: " + descriptor );
-
-			_imageService.getThumbnailsLoadedSignal().remove( onThumbnailsLoaded );
-
-			thumbnailsModel.setThumbnails( atlas, descriptor );
-
+		private function onThumbnailsLoaded( atlas:TextureAtlas ):void {
+			Cc.log( this, "onThumbnailsLoaded - atlas: " + atlas );
+//			_imageService.getThumbnailsLoadedSignal().remove( onThumbnailsLoaded );
+			thumbnailsModel.setThumbnails( atlas );
 			context.release( this );
 		}
 	}
