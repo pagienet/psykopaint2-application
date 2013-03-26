@@ -3,11 +3,8 @@ package net.psykosoft.psykopaint2.app.model
 
 	import com.junkbyte.console.Cc;
 
-	import flash.display.BitmapData;
-
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifySourceImageThumbnailsRetrievedSignal;
 
-	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 
 	public class ThumbnailsModel

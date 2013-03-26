@@ -8,15 +8,13 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
 	import net.psykosoft.psykopaint2.app.commands.imageio.LoadFullImageCommand;
 	import net.psykosoft.psykopaint2.app.commands.imageio.LoadImageSourceCommand;
-	import net.psykosoft.psykopaint2.app.commands.imageio.LoadWallpaperThumbsCommand;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestFullImageSignal;
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestImageSourceSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestSourceImageChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateUpdateFromModuleActivationSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestImageSourceSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestWallpaperChangeSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestWallpaperThumbsLoadSignal;
 
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 
@@ -29,7 +27,6 @@ package net.psykosoft.psykopaint2.app.config.configurators
 			commandMap.map( RequestStateUpdateFromModuleActivationSignal ).toCommand( UpdateAppStateFromActivatedDrawingCoreModuleCommand );
 
 			// Packaged wallpapers.
-			commandMap.map( RequestWallpaperThumbsLoadSignal ).toCommand( LoadWallpaperThumbsCommand );
 			commandMap.map( RequestWallpaperChangeSignal ).toCommand( ChangeWallpaperCommand );
 
 			// Image sources.

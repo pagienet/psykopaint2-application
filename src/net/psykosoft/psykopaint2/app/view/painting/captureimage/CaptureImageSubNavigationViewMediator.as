@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.app.view.painting.captureimage
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyCameraFlipSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.app.view.painting.captureimage.CaptureImageSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpType;
 
 	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
