@@ -6,8 +6,10 @@ package net.psykosoft.psykopaint2.app.view.base
 	import starling.display.Sprite;
 	import starling.events.Event;
 
-	public class StarlingViewBase extends Sprite implements IView
+	public class StarlingViewBase extends Sprite
 	{
+		private var _enabled:Boolean;
+
 		public var addedToStageSignal:Signal;
 
 		public function StarlingViewBase() {
@@ -77,8 +79,6 @@ package net.psykosoft.psykopaint2.app.view.base
 		// -----------------------
 		// Private.
 		// -----------------------
-
-		private var _enabled:Boolean;
 
 		private function onEnterFrame( event:Event ):void {
 			onUpdate();

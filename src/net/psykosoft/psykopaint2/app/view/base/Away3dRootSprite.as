@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.app.view.base
 			Cc.log( this );
 
 			// Initialize 3d display tree.
-//			addChild( new HomeView() ); // TODO: disabling all 3d for now
+			addChild( new HomeView() );
 		}
 	}
 }

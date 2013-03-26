@@ -5,14 +5,10 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import away3d.materials.TextureMaterial;
 
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.Away3dTextureManager;
-
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.ManagedAway3DBitmapTexture;
-
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.data.Away3dFrameTextureType;
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.data.Away3dTextureType;
-
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.vo.Away3dFrameAtlasTextureDescriptorVO;
-
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.vo.Away3dTextureInfoVO;
 	import net.psykosoft.psykopaint2.app.view.home.controller.ScrollCameraController;
 
@@ -25,13 +21,15 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		private var _framesAtlasTextureInfo:Away3dTextureInfoVO;
 		private var _wallFrames:Vector.<PictureFrame>;
 		private var _cameraController:ScrollCameraController;
+		private var _room:Room;
 
 		private const FRAME_GAP_X:Number = 500;
 		private const PAINTINGS_SCALE:Number = 0.9;
 
-		public function FrameManager( cameraController:ScrollCameraController ) {
+		public function FrameManager( cameraController:ScrollCameraController, room:Room ) {
 			super();
 			_cameraController = cameraController;
+			_room = room;
 		}
 
 		// ---------------------------------------------------------------------
@@ -39,6 +37,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		// ---------------------------------------------------------------------
 
 		private function addPictureFrame( pictureFrame:PictureFrame ):void {
+
+			if( !_wallFrames ) _wallFrames = new Vector.<PictureFrame>();
 
 			// Transform frame, store it and add it to the scenegraph.
 			if( _wallFrames.length > 0 ) {
@@ -53,12 +53,12 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			addChild( pictureFrame );
 
 			// Create shadow.
-			// TODO: tell room to create shadow
+			_room.addShadow( this.x + pictureFrame.x, this.y + pictureFrame.y, pictureFrame.width, pictureFrame.height );
 		}
 
 		public function loadDefaultHomeFrames():void {
 
-			checkInit();
+			if( !_frameMaterial ) initializeFrameMaterial();
 
 			// -----------------------
 			// Settings frame.

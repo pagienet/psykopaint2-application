@@ -48,7 +48,9 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		private var _firstSnapPoint:Number;
 		private var _lastSnapPoint:Number;
 		private var _moving:Boolean;
-		private var _closestItemIndex:uint;
+
+		private var _currentCameraClosestSnapPointIndex:uint;
+		private var _previousCameraClosestSnapPointIndex:uint;
 
 		private const FRICTION_FACTOR:Number = 0.9;
 		private const AVERAGE_SPEED_SAMPLES:uint = 6;
@@ -58,8 +60,13 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		private const EDGE_CONTAINMENT_SPEED_LIMIT:Number = 0.5;
 		private const EDGE_CONTAINMENT_RETURN_TWEEN_TIME:Number = 1;
 
+		private const DEFAULT_CAMERA_Z:Number = -1750;
+
 		public var motionStartedSignal:Signal;
 		public var motionEndedSignal:Signal;
+		public var cameraClosestSnapPointChangedSignal:Signal;
+
+		public var scrollingLimited:Boolean = true;
 
 		// TODO: delete countless traces
 
@@ -67,10 +74,14 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 			super();
 
+			cameraClosestSnapPointChangedSignal = new Signal();
 			motionStartedSignal = new Signal();
 			motionEndedSignal = new Signal();
 
 			_camera = camera;
+			_camera.x = 0;
+			_camera.y = 0;
+			_camera.z = DEFAULT_CAMERA_Z;
 
 			_wall = wall;
 
@@ -87,6 +98,17 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 			// See evaluatePerspectiveFactor().
 			_perspectiveFactorDirty = true;
+
+
+		}
+
+		public function zoomIn():void {
+			// TODO: could calculate current painting dimensions and dynamically adjust to it
+			TweenLite.to( _camera, 0.5, { z: DEFAULT_CAMERA_Z + 1000, y: 0, ease:Strong.easeOut } );
+		}
+
+		public function zoomOut():void {
+			TweenLite.to( _camera, 0.5, { z: DEFAULT_CAMERA_Z, y: 0, ease:Strong.easeOut } );
 		}
 
 		/*
@@ -209,8 +231,6 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 			throwScroller();
 		}
-
-		public var scrollingLimited:Boolean = true;
 
 		private function scrollingAllowed():Boolean {
 			if( !scrollingLimited ) return true;
@@ -356,12 +376,14 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 			return snapPointIndex;
 		}
 
-		public function evaluateCurrentClosestSnapPoint():uint {
-			return evaluateClosestSnapPoint( _camera.x );
-		}
-
-		public function evaluateCurrentClosestSnapPointIndex():uint {
-			return evaluateClosestSnapPointIndex( _camera.x );
+		public function evaluateCameraCurrentClosestSnapPointIndex():uint {
+			var value:uint = evaluateClosestSnapPointIndex( _camera.x );
+			if( value != _currentCameraClosestSnapPointIndex ) {
+				_previousCameraClosestSnapPointIndex = _currentCameraClosestSnapPointIndex;
+				_currentCameraClosestSnapPointIndex = value;
+				cameraClosestSnapPointChangedSignal.dispatch( value );
+			}
+			return value;
 		}
 
 		/*
@@ -490,8 +512,24 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 			}
 		}
 
+		// ---------------------------------------------------------------------
+		// Getters.
+		// ---------------------------------------------------------------------
+
 		public function getSnapPointCount():uint {
 			return _snapPoints.length;
+		}
+
+		public function get moving():Boolean {
+			return _moving;
+		}
+
+		public function get currentCameraClosestSnapPointIndex():uint {
+			return _currentCameraClosestSnapPointIndex;
+		}
+
+		public function get previousCameraClosestSnapPointIndex():uint {
+			return _previousCameraClosestSnapPointIndex;
 		}
 	}
 }

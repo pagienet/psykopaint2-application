@@ -38,15 +38,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		[Inject]
 		public var notifyNavigationToggleSignal:NotifyNavigationToggleSignal;
 
-		private var _firstLoad:Boolean = true;
-		private var _lastClosestSnapPoint:uint = 1;
-
 		override public function initialize():void {
-
-			Cc.log( this, "initialized" );
-
-			// View starts disabled.
-			view.disable();
 
 			// From app.
 			notifyStateChangedSignal.add( onApplicationStateChanged );
@@ -55,14 +47,24 @@ package net.psykosoft.psykopaint2.app.view.home
 			notifyNavigationToggleSignal.add( onNavigationToggled );
 
 			// From view.
-			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
-			view.motionStartedSignal.add( onViewMotionStarted );
+			view.onEnabledSignal.add( onViewEnabled );
+			view.onDisabledSignal.add( onViewDisabled );
 
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onViewEnabled():void {
+			view.cameraController.cameraClosestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
+			view.cameraController.motionStartedSignal.add( onViewMotionStarted );
+		}
+
+		private function onViewDisabled():void {
+			view.cameraController.cameraClosestSnapPointChangedSignal.remove( onViewClosestPaintingChanged );
+			view.cameraController.motionStartedSignal.remove( onViewMotionStarted );
+		}
 
 		private function onViewMotionStarted():void {
 			if( stateModel.currentState.name == ApplicationStateType.SETTINGS && stateModel.previousState.name != ApplicationStateType.HOME_SCREEN ) {
@@ -71,9 +73,6 @@ package net.psykosoft.psykopaint2.app.view.home
 		}
 
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
-
-			// Remember last snapped painting.
-			if( paintingIndex > 1 ) _lastClosestSnapPoint = paintingIndex;
 
 			// Trigger settings state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState.name != ApplicationStateType.SETTINGS && paintingIndex == 0 ) {
@@ -100,21 +99,21 @@ package net.psykosoft.psykopaint2.app.view.home
 		// -----------------------
 
 		private function onNavigationToggled( shown:Boolean ):void {
-			view.limitScrolling = shown;
+			view.cameraController.scrollingLimited = shown;
 		}
 
 		private function onGlobalGesture( type:uint ):void {
 			if( type == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN ) {
-				view.startPanInteraction();
+				view.cameraController.startPanInteraction();
 			}
 			else if( type == GestureType.HORIZONTAL_PAN_GESTURE_ENDED ) {
-				view.stopPanInteraction();
+				view.cameraController.endPanInteraction();
 			}
 			else if( type == GestureType.PINCH_GREW ) {
-				view.zoomIn();
+				view.cameraController.zoomIn();
 			}
 			else if( type == GestureType.PINCH_SHRANK ) {
-				view.zoomOut();
+				view.cameraController.zoomOut();
 			}
 		}
 
@@ -126,15 +125,15 @@ package net.psykosoft.psykopaint2.app.view.home
 		private function onApplicationStateChanged( newState:StateVO ):void {
 
 			// Clicking on the settings button causes animation to the settings painting.
-			if( newState.name == ApplicationStateType.SETTINGS && stateModel.previousState.name == ApplicationStateType.HOME_SCREEN && view.currentPainting != 0 ) {
-				view.animateToPainting( 0 );
+			if( newState.name == ApplicationStateType.SETTINGS && stateModel.previousState.name == ApplicationStateType.HOME_SCREEN && view.cameraController.evaluateCameraCurrentClosestSnapPointIndex() != 0 ) {
+				view.cameraController.jumpToSnapPointAnimated( 0 );
 				return;
 			}
 
 			// Clicking on the back button on the settings state restores to the last snapped painting.
 			if( newState.name == ApplicationStateType.HOME_SCREEN && stateModel.previousState.name == ApplicationStateType.SETTINGS ) {
-				if( !view.cameraAwake ) {
-					view.animateToPainting( _lastClosestSnapPoint );
+				if( !view.cameraController.moving ) {
+					view.cameraController.jumpToSnapPointAnimated( view.cameraController.previousCameraClosestSnapPointIndex );
 				}
 				return;
 			}
@@ -146,11 +145,6 @@ package net.psykosoft.psykopaint2.app.view.home
 			if( newState.name.indexOf( ApplicationStateType.SETTINGS ) != -1 ) viewIsVisible = true;
 			// More states could cause the view to show...
 			if( viewIsVisible ) {
-				if( _firstLoad ) {
-					view.loadDefaultHomeFrames();
-					view.loadUserFrames();
-					_firstLoad = false;
-				}
 				view.enable();
 			}
 			else {

@@ -10,32 +10,80 @@ package net.psykosoft.psykopaint2.app.view.base
 
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 
-	public class Away3dViewBase extends Sprite implements IView
+	import org.osflash.signals.Signal;
+
+	public class Away3dViewBase extends Sprite
 	{
 		private var _view:View3D;
 		private var _scene:ObjectContainer3D;
-		private var _enabled:Boolean = true;
+		private var _enabled:Boolean;
 
 		protected var _camera:Camera3D;
+
+		public var onEnabledSignal:Signal;
+		public var onDisabledSignal:Signal;
 
 		public function Away3dViewBase() {
 			super();
 			_view = DisplayContextManager.away3d;
 			_camera = _view.camera;
 			_scene = new ObjectContainer3D();
-			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			onEnabledSignal = new Signal();
+			onDisabledSignal = new Signal();
 		}
 
-		private function onAddedToStage( event:Event ):void {
+		// -----------------------
+		// Public.
+		// -----------------------
 
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+		public function enable():void {
 
-			stage.addEventListener( Event.RESIZE, onStageResize );
-			stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			// If stage is not yet available, enable will be called again after it is.
+			if( !stage ) {
+				trace( this, "trying to enable view but stage is not yet available..." );
+				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+				return;
+			}
 
-			onStageAvailable();
+			if( _enabled ) return;
 
+			onEnabled();
+
+			_view.scene.addChild( _scene );
+			_enabled = true;
+
+			if( !hasEventListener( Event.ENTER_FRAME ) ) {
+				addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			}
+
+			trace( this, "enabling 3d view." );
+
+			onEnabledSignal.dispatch();
 		}
+
+		public function disable():void {
+
+			if( !_enabled ) return;
+
+			onDisabled();
+
+			if( _view.scene.contains( _scene ) ) {
+				_view.scene.removeChild( _scene );
+			}
+			_enabled = false;
+
+			if( hasEventListener( Event.ENTER_FRAME ) ) {
+				removeEventListener( Event.ENTER_FRAME, onEnterFrame );
+			}
+
+			trace( this, "disabling 3d view." );
+
+			onDisabledSignal.dispatch();
+		}
+
+		// -----------------------
+		// Protected.
+		// -----------------------
 
 		protected function addChild3d( object:ObjectContainer3D ):void {
 			_scene.addChild( object );
@@ -51,46 +99,25 @@ package net.psykosoft.psykopaint2.app.view.base
 			// Override.
 		}
 
-		protected function onLayout():void {
+		protected function onEnabled():void {
 			// Override.
 		}
 
-		protected function onStageAvailable():void {
+		protected function onDisabled():void {
 			// Override.
-		}
-
-		private function onStageResize( event:Event ):void {
-			onLayout();
 		}
 
 		private function onEnterFrame( event:Event ):void {
-			if( _enabled ) {
-				onUpdate();
-			}
+			onUpdate();
 		}
 
-		// ---------------------------------------------------------------------
-		// IView interface implementation.
-		// ---------------------------------------------------------------------
+		// -----------------------
+		// Private.
+		// -----------------------
 
-		public function enable():void {
-			if( _enabled ) return;
-			_view.scene.addChild( _scene );
-			_enabled = true;
-			trace( this, "enabling 3d view." );
-		}
-
-		public function disable():void {
-			if( !_enabled ) return;
-			if( _view.scene.contains( _scene ) ) {
-				_view.scene.removeChild( _scene );
-			}
-			_enabled = false;
-			trace( this, "disabling 3d view." );
-		}
-
-		public function destroy():void {
-			// TODO
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			enable();
 		}
 	}
 }
