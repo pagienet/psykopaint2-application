@@ -1,18 +1,17 @@
 package net.psykosoft.psykopaint2.app.assets.away3d.textures
 {
-	import away3d.core.managers.Stage3DProxy;
-	import away3d.textures.Texture2DBase;
-	import away3d.tools.utils.TextureUtils;
-
 	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.TextureBase;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-
+	
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.textures.Texture2DBase;
+	import away3d.tools.utils.TextureUtils;
+	
 	import net.psykosoft.psykopaint2.core.resources.FreeTextureManager;
-
 	import net.psykosoft.psykopaint2.core.resources.TextureProxy;
 
 	// this is all a bit dirty, but it basically bypasses away3d's textures to feed it our own

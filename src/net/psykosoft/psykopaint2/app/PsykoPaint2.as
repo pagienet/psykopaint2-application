@@ -1,14 +1,6 @@
 package net.psykosoft.psykopaint2.app
 {
-
-	import away3d.containers.View3D;
-	import away3d.core.managers.Stage3DManager;
-	import away3d.core.managers.Stage3DProxy;
-	import away3d.debug.Debug;
-	import away3d.events.Stage3DEvent;
-
-	import feathers.system.DeviceCapabilities;
-
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -16,7 +8,15 @@ package net.psykosoft.psykopaint2.app
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
-
+	
+	import away3d.containers.View3D;
+	import away3d.core.managers.Stage3DManager;
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.debug.Debug;
+	import away3d.events.Stage3DEvent;
+	
+	import feathers.system.DeviceCapabilities;
+	
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
@@ -30,15 +30,16 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.resources.FreeTextureManager;
 	import net.psykosoft.psykopaint2.core.resources.ManagedTexturePolicy;
-
+	
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.extensions.starling.StarlingDisplayListAdapter;
 	import org.gestouch.extensions.starling.StarlingTouchHitTester;
 	import org.gestouch.input.NativeInputAdapter;
-
+	
 	import starling.core.Starling;
-	import starling.display.DisplayObject;
 	import starling.events.Event;
+
+
 
 	public class PsykoPaint2 extends Sprite
 	{

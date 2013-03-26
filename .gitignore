@@ -37,5 +37,9 @@
 Icon?
 ehthumbs.db
 Thumbs.db
+bin-debug
+.project
+.settings
+.actionScriptProperties
 
 
