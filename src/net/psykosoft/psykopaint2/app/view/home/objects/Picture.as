@@ -17,10 +17,13 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		private var _scale:Number = 1;
 
 		private var _plane:Mesh;
+		private var _texture:ManagedAway3DBitmapTexture;
 
 		public function Picture( textureInfo:Away3dTextureInfoVO, diffuseTexture:ManagedAway3DBitmapTexture ) {
 
 			super();
+
+			_texture = diffuseTexture;
 
 			var material:TextureMaterial = new TextureMaterial( diffuseTexture );
 			material.smooth = true;
@@ -52,7 +55,15 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		}
 
 		override public function dispose():void {
+
+			trace( this, "dispose()" );
+
 			_plane.dispose();
+			_plane = null;
+
+//			_texture.dispose();
+			_texture = null;
+
 			super.dispose();
 		}
 

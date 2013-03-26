@@ -98,6 +98,8 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 		public function dispose():void {
 
+			trace( this, "dispose()" );
+
 			stopAllTweens();
 
 			_cameraPositionStack = null;

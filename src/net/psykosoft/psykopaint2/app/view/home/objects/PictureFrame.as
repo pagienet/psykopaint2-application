@@ -55,9 +55,18 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		}
 
 		override public function dispose():void {
+
+			trace( this, "dispose()" );
+
 			_picture.dispose();
+			_picture = null;
+
 			_frameSubGeometry.dispose();
+			_frameSubGeometry = null;
+
 			_frameMesh.dispose();
+			_frameMesh = null;
+
 			super.dispose();
 		}
 

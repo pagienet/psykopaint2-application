@@ -42,7 +42,11 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		private const SHADOW_INFLATION_Y:Number = 1.1;
 		private const SHADOW_OFFSET_Y:Number = -50;
 
-		private var _textureMaterial:TextureMaterial;
+		private var _shadowMaterial:TextureMaterial;
+
+		private var _floorMaterial:TextureMaterial;
+
+		private var _wallMaterial:TextureMaterial;
 
 		public function Room() {
 			super();
@@ -50,7 +54,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// Wall.
 			var wallGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
 			wallGeometry.scaleUV( WALL_WIDTH / wallGeometry.width, 2 );
-			_wall = new Mesh( wallGeometry, new ColorMaterial() );
+			_wall = new Mesh( wallGeometry, null );
+			changeWallpaper( new BitmapData( 512, 512, false, 0x999999 ) );
 			_wall.scaleX = WALL_WIDTH / wallGeometry.width;
 			_wall.scaleZ = WALL_HEIGHT / wallGeometry.height;
 			_wall.rotationX = -90;
@@ -61,11 +66,11 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// Floor.
 			var floorGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
 			floorGeometry.scaleUV( WALL_WIDTH / floorGeometry.width, 1 );
-			var floorMaterial:TextureMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( Away3dTextureType.FLOORPAPER_PLANKS, true ) );
-			floorMaterial.repeat = true;
-			floorMaterial.smooth = true;
-			floorMaterial.mipmap = true; // Mipmapping is disabled by default for textures coming from Away3dTextureManager - see ManagedAway3DBitmapTexture.
-			_floor = new Mesh( floorGeometry, floorMaterial );
+			_floorMaterial = new TextureMaterial( Away3dTextureManager.getTextureById( Away3dTextureType.FLOORPAPER_PLANKS, true ) );
+			_floorMaterial.repeat = true;
+			_floorMaterial.smooth = true;
+			_floorMaterial.mipmap = true; // Mipmapping is disabled by default for textures coming from Away3dTextureManager - see ManagedAway3DBitmapTexture.
+			_floor = new Mesh( floorGeometry, _floorMaterial );
 			_floor.scaleX = WALL_WIDTH / floorGeometry.width;
 			_floor.scaleZ = FLOOR_DEPTH / floorGeometry.height;
 			_floor.y = _wall.y - WALL_HEIGHT / 2 - 5; // Literal offsets kind of slide the floor under the home
@@ -73,22 +78,29 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			addChild( _floor );
 
 			// Shadows.
-			_textureMaterial = new TextureMaterial( Cast.bitmapTexture( new FrameShadowAsset() ) );
-			_textureMaterial.smooth = true;
-			_textureMaterial.mipmap = false;
-			_textureMaterial.alpha = 0.9;
-			_textureMaterial.alphaBlending = true;
-			_shadowMesh = new Mesh( new PlaneGeometry( 512, 512 ), _textureMaterial );
+			// TODO: manage this texture?
+			_shadowMaterial = new TextureMaterial( Cast.bitmapTexture( new FrameShadowAsset() ) );
+			_shadowMaterial.smooth = true;
+			_shadowMaterial.mipmap = false;
+			_shadowMaterial.alpha = 0.9;
+			_shadowMaterial.alphaBlending = true;
+			_shadowMesh = new Mesh( new PlaneGeometry( 512, 512 ), _shadowMaterial );
 			_shadowMesh.rotationX = -90;
 			_shadows = new Vector.<Mesh>();
 		}
 
 		override public function dispose():void {
 
+			trace( this, "dispose()" );
+
 			_floor.dispose();
+//			_floorMaterial.texture.dispose();
+//			_floorMaterial.dispose();
 			_floor = null;
 
 			_wall.dispose();
+//			_wallMaterial.texture.dispose();
+//			_wallMaterial.dispose();
 			_wall = null;
 
 			for( var i:uint; i < _shadows.length; i++ ) {
@@ -96,9 +108,12 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 				shadow.dispose();
 			}
 			_shadows = null;
-			_shadowMesh.dispose();
-			_textureMaterial.dispose();
 
+			_shadowMesh.dispose();
+			_shadowMesh = null;
+
+//			_shadowMaterial.dispose();
+			_shadowMaterial = null;
 		}
 
 		public function addShadow( x:Number, y:Number, width:Number, height:Number ):void {
@@ -113,11 +128,11 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		}
 
 		public function changeWallpaper( bmd:BitmapData ):void {
-			var wallMaterial:TextureMaterial = new TextureMaterial( new ManagedAway3DBitmapTexture( bmd ) );
-			wallMaterial.mipmap = false;
-			wallMaterial.smooth = true;
-			wallMaterial.repeat = true;
-			_wall.material = wallMaterial;
+			_wallMaterial = new TextureMaterial( new ManagedAway3DBitmapTexture( bmd ) );
+			_wallMaterial.mipmap = false;
+			_wallMaterial.smooth = true;
+			_wallMaterial.repeat = true;
+			_wall.material = _wallMaterial;
 		}
 
 		// -----------------------

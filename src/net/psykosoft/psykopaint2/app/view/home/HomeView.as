@@ -22,6 +22,13 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		override protected function onEnabled():void {
 
+			// TODO: Review construction/deconstruction.
+			/*
+			* The current approach is to build and destroy everything each time the view is shown/hidden.
+			* Scout does not show significant memory and gpu memory releases unless the textures used in this view are released manually,
+			* which does show good memory releasing, but causes an error when an attempt to use the externally managed textures ( ManagedAway3DBitmapTexture ) is made.
+			* */
+
 			_room = new Room();
 			addChild3d( _room );
 
@@ -36,6 +43,8 @@ package net.psykosoft.psykopaint2.app.view.home
 		}
 
 		override protected function onDisabled():void {
+
+			trace( this, "onDisabled()" );
 
 			_cameraController.dispose();
 			_cameraController = null;

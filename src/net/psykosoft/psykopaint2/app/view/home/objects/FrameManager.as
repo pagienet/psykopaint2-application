@@ -34,15 +34,23 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 		override public function dispose():void {
 
+			trace( this, "dispose()" );
+
 			for( var i:uint; i < _wallFrames.length; i++ ) {
 				var frame:PictureFrame = _wallFrames[ i ];
 				frame.dispose();
 			}
 			_wallFrames = null;
 
-			_frameMaterial.dispose();
+			_framesAtlasTextureInfo = null;
+			_framesAtlasXml = null;
+
+//			_frameMaterial.texture.dispose();
+//			_frameMaterial.dispose();
+			_frameMaterial = null;
 
 			_easel.dispose();
+			_easel = null;
 
 			super.dispose();
 		}

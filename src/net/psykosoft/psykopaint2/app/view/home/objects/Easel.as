@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 		override public function dispose():void {
 			// TODO...
+			trace( this, "dispose()" );
 			super.dispose();
 		}
 
