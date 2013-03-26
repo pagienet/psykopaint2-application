@@ -15,6 +15,11 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			addChild( cube );
 		}
 
+		override public function dispose():void {
+			// TODO...
+			super.dispose();
+		}
+
 		public function get width():Number {
 			return 1000;
 		}

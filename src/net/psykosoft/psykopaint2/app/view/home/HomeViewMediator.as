@@ -48,7 +48,6 @@ package net.psykosoft.psykopaint2.app.view.home
 
 			// From view.
 			view.onEnabledSignal.add( onViewEnabled );
-			view.onDisabledSignal.add( onViewDisabled );
 
 		}
 
@@ -59,11 +58,6 @@ package net.psykosoft.psykopaint2.app.view.home
 		private function onViewEnabled():void {
 			view.cameraController.cameraClosestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
 			view.cameraController.motionStartedSignal.add( onViewMotionStarted );
-		}
-
-		private function onViewDisabled():void {
-			view.cameraController.cameraClosestSnapPointChangedSignal.remove( onViewClosestPaintingChanged );
-			view.cameraController.motionStartedSignal.remove( onViewMotionStarted );
 		}
 
 		private function onViewMotionStarted():void {

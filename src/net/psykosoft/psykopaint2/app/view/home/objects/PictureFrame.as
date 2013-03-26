@@ -54,6 +54,13 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 		}
 
+		override public function dispose():void {
+			_picture.dispose();
+			_frameSubGeometry.dispose();
+			_frameMesh.dispose();
+			super.dispose();
+		}
+
 		public function get width():Number {
 			return _picture.width + 2 * _frameMargin;
 		}

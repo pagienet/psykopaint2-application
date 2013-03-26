@@ -32,6 +32,21 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			_room = room;
 		}
 
+		override public function dispose():void {
+
+			for( var i:uint; i < _wallFrames.length; i++ ) {
+				var frame:PictureFrame = _wallFrames[ i ];
+				frame.dispose();
+			}
+			_wallFrames = null;
+
+			_frameMaterial.dispose();
+
+			_easel.dispose();
+
+			super.dispose();
+		}
+
 		// ---------------------------------------------------------------------
 		// Frames.
 		// ---------------------------------------------------------------------

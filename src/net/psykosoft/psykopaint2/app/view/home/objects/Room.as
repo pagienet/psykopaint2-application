@@ -42,6 +42,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		private const SHADOW_INFLATION_Y:Number = 1.1;
 		private const SHADOW_OFFSET_Y:Number = -50;
 
+		private var _textureMaterial:TextureMaterial;
+
 		public function Room() {
 			super();
 
@@ -71,14 +73,32 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			addChild( _floor );
 
 			// Shadows.
-			var shadowMaterial:TextureMaterial = new TextureMaterial( Cast.bitmapTexture( new FrameShadowAsset() ) );
-			shadowMaterial.smooth = true;
-			shadowMaterial.mipmap = false;
-			shadowMaterial.alpha = 0.9;
-			shadowMaterial.alphaBlending = true;
-			_shadowMesh = new Mesh( new PlaneGeometry( 512, 512 ), shadowMaterial );
+			_textureMaterial = new TextureMaterial( Cast.bitmapTexture( new FrameShadowAsset() ) );
+			_textureMaterial.smooth = true;
+			_textureMaterial.mipmap = false;
+			_textureMaterial.alpha = 0.9;
+			_textureMaterial.alphaBlending = true;
+			_shadowMesh = new Mesh( new PlaneGeometry( 512, 512 ), _textureMaterial );
 			_shadowMesh.rotationX = -90;
 			_shadows = new Vector.<Mesh>();
+		}
+
+		override public function dispose():void {
+
+			_floor.dispose();
+			_floor = null;
+
+			_wall.dispose();
+			_wall = null;
+
+			for( var i:uint; i < _shadows.length; i++ ) {
+				var shadow:Mesh = _shadows[ i ];
+				shadow.dispose();
+			}
+			_shadows = null;
+			_shadowMesh.dispose();
+			_textureMaterial.dispose();
+
 		}
 
 		public function addShadow( x:Number, y:Number, width:Number, height:Number ):void {

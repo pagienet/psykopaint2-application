@@ -22,48 +22,29 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		override protected function onEnabled():void {
 
-			// TODO: decide what to do when the view is enabled, create everything again, or cache something?
+			_room = new Room();
+			addChild3d( _room );
 
-			if( !_room ) {
-				_room = new Room();
-				addChild3d( _room );
-			}
+			_cameraController = new ScrollCameraController( _camera, _room.wall, stage );
 
-			if( !_cameraController ) {
-				_cameraController = new ScrollCameraController( _camera, _room.wall, stage );
-			}
-
-			if( !_frameManager ) {
-				_frameManager = new FrameManager( _cameraController, _room );
-				_frameManager.y = 400;
-				_frameManager.z = _room.wall.z - 2;
-				_frameManager.loadDefaultHomeFrames();
-				_frameManager.loadUserFrames();
-				addChild3d( _frameManager );
-			}
+			_frameManager = new FrameManager( _cameraController, _room );
+			_frameManager.y = 400;
+			_frameManager.z = _room.wall.z - 2;
+			_frameManager.loadDefaultHomeFrames();
+			_frameManager.loadUserFrames();
+			addChild3d( _frameManager );
 		}
 
 		override protected function onDisabled():void {
 
-			// TODO: decide what is to be done when the view is deactivated...
+			_cameraController.dispose();
+			_cameraController = null;
 
-			// TODO: Remove frames from frame holder.
-			/*var len:uint = _wallFrames.length;
-			for( var i:uint = 0; i < len; ++i ) {
-				var wallFrame:PictureFrame = _wallFrames[ i ];
-				removeChild3d( wallFrame );
-				// TODO: add destroy method to wallFrame?
-			}*/
+			_room.dispose();
+			_room = null;
 
-			// TODO: Remove frame shadows from room.
-			/*for each( var mesh:Mesh in _shadows ) {
-				removeChild3d( mesh );
-				mesh.dispose();
-				mesh = null;
-			}*/
-
-			// TODO: reset or destroy camera controller?
-//			_cameraController.reset();
+			_frameManager.dispose();
+			_frameManager = null;
 		}
 
 		override protected function onUpdate():void {

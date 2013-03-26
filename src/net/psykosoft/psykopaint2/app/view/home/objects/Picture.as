@@ -6,10 +6,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.BitmapTexture;
 
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.ManagedAway3DBitmapTexture;
-
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.vo.Away3dTextureInfoVO;
 
 	public class Picture extends ObjectContainer3D
@@ -51,6 +49,11 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 			_width = textureInfo.imageWidth;
 			_height = textureInfo.imageHeight;
+		}
+
+		override public function dispose():void {
+			_plane.dispose();
+			super.dispose();
 		}
 
 		public function get width():Number {

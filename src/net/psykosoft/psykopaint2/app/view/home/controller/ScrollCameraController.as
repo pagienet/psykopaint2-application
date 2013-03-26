@@ -21,8 +21,6 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 	use namespace arcane;
 
-	// TODO: clean up after GestureManager refactor...
-
 	public class ScrollCameraController
 	{
 		private var _camera:Camera3D;
@@ -68,8 +66,6 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 		public var scrollingLimited:Boolean = true;
 
-		// TODO: delete countless traces
-
 		public function ScrollCameraController( camera:Camera3D, wall:Mesh, stage:Stage ) {
 
 			super();
@@ -98,17 +94,18 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 			// See evaluatePerspectiveFactor().
 			_perspectiveFactorDirty = true;
-
-
 		}
 
-		public function zoomIn():void {
-			// TODO: could calculate current painting dimensions and dynamically adjust to it
-			TweenLite.to( _camera, 0.5, { z: DEFAULT_CAMERA_Z + 1000, y: 0, ease:Strong.easeOut } );
-		}
+		public function dispose():void {
 
-		public function zoomOut():void {
-			TweenLite.to( _camera, 0.5, { z: DEFAULT_CAMERA_Z, y: 0, ease:Strong.easeOut } );
+			stopAllTweens();
+
+			_cameraPositionStack = null;
+			_snapPoints = null;
+			_camera = null;
+			_stage = null;
+			_wall = null;
+
 		}
 
 		/*
@@ -118,20 +115,16 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		* */
 		private function evaluatePerspectiveFactor():void {
 
-//			trace( this, "updating perspective factor." );
-
 			var cameraCacheX:Number = _camera.x;
 			_camera.x = 0;
 
 			var aspectRatio:Number = _camera.lens.aspectRatio;
-//			trace( this, "aspectRatio: " + aspectRatio );
 
 			// Shoot a ray from the camera to the right edge of the screen.
 			var rayPosition:Vector3D = _camera.unproject( aspectRatio, 0, 0 );
 			var rayDirection:Vector3D = _camera.unproject( aspectRatio, 0, 1 );
 			rayDirection = rayDirection.subtract( rayPosition );
 			rayDirection.normalize();
-//			trace( this, "ray origin: " + rayPosition + ", ray direction: " + rayDirection );
 			var invSceneTransform:Matrix3D = _wall.inverseSceneTransform;
 			var localRayPosition:Vector3D = invSceneTransform.transformVector( rayPosition );
 			var localRayDirection:Vector3D = invSceneTransform.deltaTransformVector( rayDirection );
@@ -145,11 +138,9 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 			collisionPos.z = localRayPosition.z + t * localRayDirection.z;
 			collisionPos = _wall.sceneTransform.transformVector( collisionPos );
 			collisionPos.x /= aspectRatio;
-//			trace( this, "collisionPos: " + collisionPos );
 
 			// Compare the right-span of the screen to the right-span on the home.
 			_perspectiveFactor = collisionPos.x / ( _stage.width / 2 );
-//			trace( this, "_perspectiveFactor: " + _perspectiveFactor );
 
 			_perspectiveFactorDirty = false;
 
@@ -175,15 +166,7 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		}
 
 		public function jumpToSnapPointAnimated( index:uint ):void {
-//			trace( this, "jumping (animated) to snap point: " + index );
 			tweenTo( _snapPoints[ index ], 1 );
-		}
-
-		public function reset():void {
-			_firstSnapPoint = 0;
-			_lastSnapPoint = 0;
-			_snapPoints = new Vector.<Number>();
-			stopAllTweens();
 		}
 
 		// ---------------------------------------------------------------------
@@ -217,8 +200,6 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		}
 
 		public function endPanInteraction():void {
-
-//			trace( "mouse up" );
 
 			_userInteracting = false;
 
@@ -264,9 +245,7 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 				// Move the scroller perfectly under the user's finger.
 				var edgeStiffnessFactor:Number = EDGE_STIFFNESS_ON_DRAG * _edgeSurpassDistance;
 				edgeStiffnessFactor = edgeStiffnessFactor < 1 ? 1 : edgeStiffnessFactor;
-//				trace( "edgeStiffnessFactor: " + edgeStiffnessFactor );
 				_camera.x += _perspectiveFactor * mouseDeltaX / edgeStiffnessFactor;
-//				trace( "glued motion - pos: " + _camera.x );
 				// Update speed ( used when the user is not interacting ).
 				pushPosition();
 			}
@@ -274,10 +253,8 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 				if( Math.abs( _speed ) > 0.1 ) { // Update motion.
 					_camera.x += _speed;
 					_speed *= _onEdgeDeceleration ? FRICTION_FACTOR_ON_EDGE_CONTAINMENT : FRICTION_FACTOR;
-//					trace( "free motion - pos: " + _camera.x + ", speed: " + _speed );
 				}
 				else {
-//					trace( "stopped free motion - pos: " + _camera.x );
 					_moving = false;
 					var dx:Number = Math.abs( _camera.x - _lastCameraX );
 					if( dx > 0 ) {
@@ -298,18 +275,14 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 		private function throwScroller():void {
 
-//			trace( "throwing scroller --------------------------------" );
-
 			// Calculate the average speed the throw would have.
 			calculateAverageSpeed();
-//			trace( "average speed: " + _speed );
 
 			// Avoid wimp throws, still 0 is allowed for returns to last snap.
 			if( _speed != 0 ) {
 				var speedAbs:Number = Math.abs( _speed );
 				if( speedAbs < MINIMUM_THROWING_SPEED ) {
 					_speed = ( _speed / speedAbs ) * MINIMUM_THROWING_SPEED;
-//					trace( "applying minimum speed: " + _speed );
 				}
 			}
 
@@ -319,7 +292,6 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 			var integralFriction:Number = ( Math.pow( friction, precision ) - 1 ) / ( friction - 1 );
 			var distanceTravelled:Number = _speed * integralFriction;
 			var calculatedPosition:Number = _camera.x + distanceTravelled;
-//			trace( "calculated position with " + precision + " precision: " + calculatedPosition );
 
 			// Try to find a snapping point near the destination.
 			var targetSnapPoint:Number = evaluateClosestSnapPoint( calculatedPosition );
@@ -329,7 +301,6 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 			if( targetSnapPoint >= 0 ) {
 				_speed = ( targetSnapPoint - _camera.x ) / integralFriction;
 			}
-//			trace( "altered speed: " + _speed );
 
 		}
 
@@ -337,11 +308,9 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 			var len:uint = _snapPoints.length;
 			var closestDistanceToSnapPoint:Number = Number.MAX_VALUE;
 			var targetSnapPoint:Number = -1;
-//			trace( "snap points: " + _snapPoints );
 			for( var i:uint; i < len; ++i ) {
 				var snapPoint:Number = _snapPoints[ i ];
 				var distanceToSnapPoint:Number = Math.abs( position - snapPoint );
-//				trace( "evaluating snap point at distance: " + distanceToSnapPoint );
 				if( distanceToSnapPoint < closestDistanceToSnapPoint ) {
 					closestDistanceToSnapPoint = distanceToSnapPoint;
 					targetSnapPoint = snapPoint;
@@ -349,30 +318,24 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 			}
 			// Discard chosen snap points that are too far.
 			var distanceThreshold:Number = _perspectiveFactor * _stage.stageWidth;
-//			trace( "discard threshold: " + distanceThreshold );
 			if( closestDistanceToSnapPoint > distanceThreshold ) {
 				targetSnapPoint = -1;
-//				trace( "snap point discarded" );
 			}
 			return targetSnapPoint;
 		}
 
 		private function evaluateClosestSnapPointIndex( position:Number ):uint {
-//			trace( "evaluating closest snap point index at position: " + position );
 			var len:uint = _snapPoints.length;
 			var closestDistanceToSnapPoint:Number = Number.MAX_VALUE;
 			var snapPointIndex:int = -1;
-//			trace( "snap points: " + _snapPoints );
 			for( var i:uint; i < len; ++i ) {
 				var snapPoint:Number = _snapPoints[ i ];
 				var distanceToSnapPoint:Number = Math.abs( position - snapPoint );
-//				trace( "evaluating snap point at distance: " + distanceToSnapPoint );
 				if( distanceToSnapPoint < closestDistanceToSnapPoint ) {
 					closestDistanceToSnapPoint = distanceToSnapPoint;
 					snapPointIndex = i;
 				}
 			}
-//			trace( "found snap point index: " + snapPointIndex );
 			return snapPointIndex;
 		}
 
@@ -396,7 +359,6 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 			if( _cameraPositionStack.length > AVERAGE_SPEED_SAMPLES ) {
 				_cameraPositionStack.splice( 0, 1 );
 			}
-//			trace( "position pushed to stack: " + _cameraPositionStack );
 		}
 
 		/*
@@ -413,7 +375,6 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 				}
 			}
 			_speed /= len;
-//			Cc.log( "speed updated: " + _speed );
 		}
 
 		// ---------------------------------------------------------------------
@@ -428,17 +389,13 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		* */
 		private function containEdges():void {
 
-//			trace( "containing - pos: " + _camera.x + ", speed: " + _speed );
-
 			// Check if an edge has been surpassed.
 			if( _camera.x < _firstSnapPoint ) {
-//				trace( this, "left edge surpassed." );
 				_edgeSurpassDistance = _firstSnapPoint - _camera.x;
 				_onEdgeDeceleration = true;
 				_edgeSurpassed = -1;
 			}
 			else if( _camera.x > _lastSnapPoint ) {
-//				trace( this, "right edge surpassed." );
 				_edgeSurpassDistance = _camera.x - _lastSnapPoint;
 				_onEdgeDeceleration = true;
 				_edgeSurpassed = 1;
@@ -450,7 +407,6 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 			// If previously surpassed and edge and speed is low enough, tween back to edge.
 			if( _onEdgeDeceleration && !_userInteracting && Math.abs( _speed ) < EDGE_CONTAINMENT_SPEED_LIMIT ) {
-//				trace( "edge motion halted" );
 				_onEdgeDeceleration = false;
 				triggerEdgeTween();
 			}
@@ -470,7 +426,6 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		}
 
 		private function tweenTo( position:Number, time:Number ):void {
-//			trace( this, "starting tween to: " + position );
 			stopAllTweens();
 			_onTween = true;
 			if( !_moving ) {
@@ -481,16 +436,10 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 				x: position,
 				ease:Strong.easeOut,
 				onComplete: onTweenComplete
-				,onUpdate: onTweenUpdate // uncomment to make sure that tweens are properly killed
 			} );
 		}
 
-		private function onTweenUpdate():void { // TODO: remove if not used
-//			trace( this, "edge tween active - pos: " + _camera.x );
-		}
-
 		private function onTweenComplete():void {
-//			trace( this, "tween completed." );
 			// Lock on.
 			if( _edgeSurpassed != 0 ) {
 				_camera.x = _edgeSurpassed == -1 ? _firstSnapPoint : _lastSnapPoint;
@@ -505,11 +454,19 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		}
 
 		private function stopAllTweens():void {
-//			trace( "tweens killed" );
 			if( _onTween ) {
 				_onTween = false;
 				TweenLite.killTweensOf( _camera );
 			}
+		}
+
+		public function zoomIn():void {
+			// TODO: could calculate current painting dimensions and dynamically adjust to it
+			TweenLite.to( _camera, 0.5, { z: DEFAULT_CAMERA_Z + 1000, y: 0, ease:Strong.easeOut } );
+		}
+
+		public function zoomOut():void {
+			TweenLite.to( _camera, 0.5, { z: DEFAULT_CAMERA_Z, y: 0, ease:Strong.easeOut } );
 		}
 
 		// ---------------------------------------------------------------------
