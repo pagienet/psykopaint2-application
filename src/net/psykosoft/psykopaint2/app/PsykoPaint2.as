@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.app
 {
-	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -37,6 +36,7 @@ package net.psykosoft.psykopaint2.app
 	import org.gestouch.input.NativeInputAdapter;
 	
 	import starling.core.Starling;
+	import starling.display.DisplayObject;
 	import starling.events.Event;
 
 
