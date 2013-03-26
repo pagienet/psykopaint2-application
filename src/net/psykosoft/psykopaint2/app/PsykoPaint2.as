@@ -1,5 +1,14 @@
 package net.psykosoft.psykopaint2.app
 {
+
+	import away3d.containers.View3D;
+	import away3d.core.managers.Stage3DManager;
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.debug.Debug;
+	import away3d.events.Stage3DEvent;
+
+	import feathers.system.DeviceCapabilities;
+
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -7,15 +16,7 @@ package net.psykosoft.psykopaint2.app
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
-	
-	import away3d.containers.View3D;
-	import away3d.core.managers.Stage3DManager;
-	import away3d.core.managers.Stage3DProxy;
-	import away3d.debug.Debug;
-	import away3d.events.Stage3DEvent;
-	
-	import feathers.system.DeviceCapabilities;
-	
+
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
@@ -28,8 +29,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.resources.FreeTextureManager;
-	import net.psykosoft.psykopaint2.core.resources.ManagedTexturePolicy;
-	
+
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.extensions.starling.StarlingDisplayListAdapter;
 	import org.gestouch.extensions.starling.StarlingTouchHitTester;
@@ -38,8 +38,6 @@ package net.psykosoft.psykopaint2.app
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.events.Event;
-
-
 
 	public class PsykoPaint2 extends Sprite
 	{
@@ -90,8 +88,6 @@ package net.psykosoft.psykopaint2.app
 
 			_stage3dProxy.removeEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContextCreated );
 
-			// Rendering.
-			initTextureManagement();
 			// Init Starling and Away3D.
 			init2D();
 			init3D();
@@ -103,29 +99,12 @@ package net.psykosoft.psykopaint2.app
 
 		}
 
-		private function initTextureManagement():void {
-
-			// Reserve 20MB to be used for random texture usage (Starling etc)
-			var dynamicTexturesSize:uint = 20 * 1024 * 1024;
-			// Reserve 112MB to be used for canvas texture usage, 16 for preview texture, (2048x2048 + padding, worst case)
-			var canvasTexturesSize:uint = 128 * 1024 * 1024;
-			FreeTextureManager.getInstance().init( dynamicTexturesSize + canvasTexturesSize, _stage3dProxy.context3D );
-
-			// for those who want to pretend how it will respond with a canvas reserved:
-//			FreeTextureManager.getInstance().init(dynamicTexturesSize, _stage3dProxy.context3D);
-
-			// remaining space for texture history
-			var historyTextureSize : uint = 340*1024*1024 - dynamicTexturesSize - canvasTexturesSize;
-			CanvasHistoryModel.MAX_TEXTURE_MEMORY_USAGE = historyTextureSize;
-		}
-
 		private function init2D():void {
 
 			// Starling.
 			Starling.handleLostContext = true;
 			Starling.multitouchEnabled = true;
 			_starling = new Starling( StarlingRootSprite, stage, _stage3dProxy.viewPort, _stage3dProxy.stage3D, "auto", Context3DProfile.BASELINE );
-			_starling.texturePolicy = new ManagedTexturePolicy();
 			_starling.enableErrorChecking = Settings.ENABLE_STAGE3D_ERROR_CHECKING;
 			_starling.showStats = Settings.SHOW_STATS;
 			_starling.shareContext = true;

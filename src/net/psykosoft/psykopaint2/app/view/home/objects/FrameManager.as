@@ -3,9 +3,9 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 	import away3d.containers.ObjectContainer3D;
 	import away3d.materials.TextureMaterial;
+	import away3d.textures.BitmapTexture;
 
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.Away3dTextureManager;
-	import net.psykosoft.psykopaint2.app.assets.away3d.textures.ManagedAway3DBitmapTexture;
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.data.Away3dFrameTextureType;
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.data.Away3dTextureType;
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.vo.Away3dFrameAtlasTextureDescriptorVO;
@@ -88,7 +88,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// -----------------------
 
 			// Picture.
-			var settingsTexture:ManagedAway3DBitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SETTINGS_PAINTING );
+			var settingsTexture:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.SETTINGS_PAINTING );
 			var settingsTextureInfo:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.SETTINGS_PAINTING );
 			var settingsPicture:Picture = new Picture( settingsTextureInfo, settingsTexture );
 			settingsPicture.scalePainting( 2 );
@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// -----------------------
 
 			// Picture.
-			var psykopaintTexture:ManagedAway3DBitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.PSYKOPAINT_PAINTING );
+			var psykopaintTexture:BitmapTexture = Away3dTextureManager.getTextureById( Away3dTextureType.PSYKOPAINT_PAINTING );
 			var psykopaintTextureInfo:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( Away3dTextureType.PSYKOPAINT_PAINTING );
 			var psykopaintPicture:Picture = new Picture( psykopaintTextureInfo, psykopaintTexture );
 			psykopaintPicture.scalePainting( 2 );
@@ -162,7 +162,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 				// Picture.
 				var dummyImageDiffuseId:String = Away3dTextureType[ samplePaintingIds[ i ] + "_DIFFUSE" ];
-				var dummyImageDiffuse:ManagedAway3DBitmapTexture = Away3dTextureManager.getTextureById( dummyImageDiffuseId );
+				var dummyImageDiffuse:BitmapTexture = Away3dTextureManager.getTextureById( dummyImageDiffuseId );
 				var dummyImageDescription:Away3dTextureInfoVO = Away3dTextureManager.getTextureInfoById( dummyImageDiffuseId );
 				var picture:Picture = new Picture( dummyImageDescription, dummyImageDiffuse );
 				picture.scalePainting( samplePaintingScales[ i ] );

@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
+	import away3d.textures.BitmapTexture;
 	import away3d.utils.Cast;
 
 	import flash.display.BitmapData;
@@ -13,7 +14,6 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.Away3dTextureManager;
 
-	import net.psykosoft.psykopaint2.app.assets.away3d.textures.ManagedAway3DBitmapTexture;
 	import net.psykosoft.psykopaint2.app.assets.away3d.textures.data.Away3dTextureType;
 
 	public class Room extends ObjectContainer3D
@@ -128,7 +128,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		}
 
 		public function changeWallpaper( bmd:BitmapData ):void {
-			_wallMaterial = new TextureMaterial( new ManagedAway3DBitmapTexture( bmd ) );
+			_wallMaterial = new TextureMaterial( new BitmapTexture( bmd ) );
 			_wallMaterial.mipmap = false;
 			_wallMaterial.smooth = true;
 			_wallMaterial.repeat = true;
