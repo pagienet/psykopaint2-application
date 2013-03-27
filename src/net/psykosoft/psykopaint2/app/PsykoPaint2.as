@@ -17,6 +17,9 @@ package net.psykosoft.psykopaint2.app
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 
+	import net.psykosoft.notifications.NotificationsExtension;
+	import net.psykosoft.notifications.events.NotificationExtensionEvent;
+
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
@@ -48,6 +51,7 @@ package net.psykosoft.psykopaint2.app
 		protected var _away3d:View3D;
 
 		private var _renderSignal:RequestRenderFrameSignal;
+		private var _notificationsExtension:NotificationsExtension;
 
 		public function PsykoPaint2() {
 			super();
@@ -149,6 +153,16 @@ package net.psykosoft.psykopaint2.app
 			// Starts core context, which handles the core drawing functionalities ( as a module ).
 			_drawingCore = new DrawingCore( _appConfig.injector );
 			addChild( _drawingCore );
+
+			// Listen for memory warnings from iOS.
+			// TODO: place this somewhere more coherent and trigger an injected signal to notify listeners.
+			_notificationsExtension = new NotificationsExtension();
+			_notificationsExtension.addEventListener( NotificationExtensionEvent.RECEIVED_MEMORY_WARNING, onMemoryWarning );
+			_notificationsExtension.initialize();
+		}
+
+		private function onMemoryWarning( event:NotificationExtensionEvent ):void {
+			trace( this, "AS3 knows of an iOS memory warning." );
 		}
 
 		private function onStarlingContextReady( event:starling.events.Event ):void {

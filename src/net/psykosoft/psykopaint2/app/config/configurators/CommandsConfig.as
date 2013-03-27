@@ -32,7 +32,6 @@ package net.psykosoft.psykopaint2.app.config.configurators
 			// Image sources.
 			commandMap.map( RequestImageSourceSignal ).toCommand( LoadImageSourceCommand );
 			commandMap.map( RequestFullImageSignal ).toCommand( LoadFullImageCommand );
-//			commandMap.map( RequestUserPhotosThumbnailsSignal ).toCommand( LoadUserPhotosThumbnailsCommand );
 
 			// Source image change to start the painting process.
 			commandMap.map( RequestSourceImageChangeSignal ).toCommand( ChangeSourceImageCommand );

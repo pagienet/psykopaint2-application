@@ -29,17 +29,23 @@ package net.psykosoft.psykopaint2.app.view.home
 			* which does show good memory releasing, but causes an error when an attempt to use the externally managed textures ( ManagedAway3DBitmapTexture ) is made.
 			* */
 
-			_room = new Room();
-			addChild3d( _room );
+			if( !_room ) {
+				_room = new Room();
+				addChild3d( _room );
+			}
 
-			_cameraController = new ScrollCameraController( _camera, _room.wall, stage );
+			if( !_cameraController ) {
+				_cameraController = new ScrollCameraController( _camera, _room.wall, stage );
+			}
 
-			_frameManager = new FrameManager( _cameraController, _room );
-			_frameManager.y = 400;
-			_frameManager.z = _room.wall.z - 2;
-			_frameManager.loadDefaultHomeFrames();
-			_frameManager.loadUserFrames();
-			addChild3d( _frameManager );
+			if( !_frameManager ) {
+				_frameManager = new FrameManager( _cameraController, _room );
+				_frameManager.y = 400;
+				_frameManager.z = _room.wall.z - 2;
+				_frameManager.loadDefaultHomeFrames();
+				_frameManager.loadUserFrames();
+				addChild3d( _frameManager );
+			}
 		}
 
 		override protected function onDisabled():void {

@@ -22,6 +22,7 @@
         <depthAndStencil>true</depthAndStencil>
     </initialWindow>
 	<extensions>
+		<extensionID>net.psykosoft.notifications</extensionID>
         <extensionID>net.psykosoft.photos</extensionID>
     </extensions>
 </application>
