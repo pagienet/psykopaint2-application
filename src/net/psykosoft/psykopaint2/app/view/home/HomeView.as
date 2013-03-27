@@ -52,14 +52,14 @@ package net.psykosoft.psykopaint2.app.view.home
 
 			trace( this, "onDisabled()" );
 
-			_cameraController.dispose();
+			/*_cameraController.dispose();
 			_cameraController = null;
 
 			_room.dispose();
 			_room = null;
 
 			_frameManager.dispose();
-			_frameManager = null;
+			_frameManager = null;*/
 		}
 
 		override protected function onUpdate():void {
