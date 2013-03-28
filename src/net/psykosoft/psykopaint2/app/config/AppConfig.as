@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.app.config
 	import com.junkbyte.console.Cc;
 
 	import flash.display.DisplayObjectContainer;
+	import flash.display.Stage;
 
 	import net.psykosoft.psykopaint2.app.config.configurators.CommandsConfig;
 	import net.psykosoft.psykopaint2.app.config.configurators.IncludeClassesConfig;
@@ -62,6 +63,8 @@ package net.psykosoft.psykopaint2.app.config
 			new ModelsConfig( _injector );
 			new ServicesConfig( _injector );
 			new SingletonsConfig( _injector );
+
+			_injector.map( Stage ).toValue(display.stage);
 
 			// Initialize 3d display tree.
 			// Note: the 2d display tree ( StarlingRootSprite.as ) is initialized in PsykoPaint.as,
