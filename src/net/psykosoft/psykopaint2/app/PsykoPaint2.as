@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.app
 	import org.gestouch.extensions.starling.StarlingDisplayListAdapter;
 	import org.gestouch.extensions.starling.StarlingTouchHitTester;
 	import org.gestouch.input.NativeInputAdapter;
-	
+
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.events.Event;
@@ -145,7 +145,7 @@ package net.psykosoft.psykopaint2.app
 			_renderSignal = _appConfig.injector.getInstance( RequestRenderFrameSignal );
 
 			// Starts core context, which handles the core drawing functionalities ( as a module ).
-			_drawingCore = new DrawingCore( _appConfig.injector );
+			_drawingCore = new DrawingCore( _appConfig.injector, !Settings.RUNNING_ON_iPAD && Settings.USE_DEBUG_KEYS );
 			addChild( _drawingCore );
 		}
 

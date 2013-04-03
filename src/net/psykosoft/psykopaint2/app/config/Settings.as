@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.app.config
 		public static const ANTI_ALIAS:uint = 1;
 		public static const NAVIGATION_AREA_CONTENT_HEIGHT:Number = 210;
 		public static const USER_NATIVE_USER_PHOTOS_BROWSER:Boolean = false; // Setting it as true uses the UserPhotos ANE.
+		public static const USE_DEBUG_KEYS:Boolean = true; // Adds the ability to trigger debugging actions via the keyboard in desktop mode.
 
 		// ---------------------------------------------------------------------
 		// Debugging options.
