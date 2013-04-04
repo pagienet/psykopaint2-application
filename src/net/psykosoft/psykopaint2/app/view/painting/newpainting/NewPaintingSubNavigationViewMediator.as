@@ -3,19 +3,18 @@ package net.psykosoft.psykopaint2.app.view.painting.newpainting
 
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class NewPaintingSubNavigationViewMediator extends StarlingMediator
+	public class NewPaintingSubNavigationViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
 		public var view:NewPaintingSubNavigationView;
 
-		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
-
 		override public function initialize():void {
+
+			super.initialize();
+			manageMemoryWarnings = false;
+			manageStateChanges = false;
 
 			// From view.
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
@@ -29,10 +28,10 @@ package net.psykosoft.psykopaint2.app.view.painting.newpainting
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
 				case NewPaintingSubNavigationView.BUTTON_LABEL_SELECT_IMAGE:
-					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE ) );
+					requestStateChange( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE ) );
 					break;
 				case NewPaintingSubNavigationView.BUTTON_LABEL_BACK:
-					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.HOME_SCREEN ) );
+					requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN ) );
 					break;
 			}
 		}

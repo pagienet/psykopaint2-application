@@ -12,11 +12,12 @@ package net.psykosoft.psykopaint2.app.view.base
 
 	import org.osflash.signals.Signal;
 
-	public class Away3dViewBase extends Sprite
+	public class Away3dViewBase extends Sprite implements IApplicationView
 	{
 		private var _view:View3D;
 		private var _scene:ObjectContainer3D;
 		private var _enabled:Boolean;
+		private var _created:Boolean;
 
 		protected var _camera:Camera3D;
 
@@ -46,6 +47,8 @@ package net.psykosoft.psykopaint2.app.view.base
 			}
 
 			if( _enabled ) return;
+
+			if( !_created ) create();
 
 			onEnabled();
 
@@ -81,6 +84,24 @@ package net.psykosoft.psykopaint2.app.view.base
 			onDisabledSignal.dispatch();
 		}
 
+		public function get enabled():Boolean {
+			return _enabled;
+		}
+
+		public function create():void {
+			if( _created ) return;
+			onCreate();
+			_created = true;
+			trace( this, "creating 3d view." );
+		}
+
+		public function dispose():void {
+			if( !_created ) return;
+			onDispose();
+			_created = false;
+			trace( this, "disposing 3d view." );
+		}
+
 		// -----------------------
 		// Protected.
 		// -----------------------
@@ -104,6 +125,14 @@ package net.psykosoft.psykopaint2.app.view.base
 		}
 
 		protected function onDisabled():void {
+			throw new Error( this + "All views must implement the onDispose method. Come on don't be lazy!" );
+		}
+
+		protected function onCreate():void {
+			// Override.
+		}
+
+		protected function onDispose():void {
 			// Override.
 		}
 

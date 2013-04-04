@@ -2,18 +2,15 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 {
 
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
-	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class CanvasViewMediator extends StarlingMediator
+	public class CanvasViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
-		public var view:CanvasView;
+		public var canvasView:CanvasView;
 
 		[Inject]
 		public var renderer:CanvasRenderer;
@@ -24,39 +21,21 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 		[Inject]
 		public var notifyPaintModuleActivatedSignal:NotifyPaintModuleActivatedSignal;
 
-		[Inject]
-		public var notifyStateChangedSignal:NotifyStateChangedSignal;
-
 		public function CanvasViewMediator() {
 			super();
 		}
 
 		override public function initialize():void {
 
-			// Init.
-			view.renderedCanvasContainer = renderer.outputSprite;
-			// preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
-			paintModule.view = view;
-
-			// From app.
-			notifyStateChangedSignal.add( onApplicationStateChanged );
-
 			super.initialize();
-		}
+			registerView( canvasView );
+			registerEnablingState( ApplicationStateType.PAINTING_SELECT_BRUSH );
+			registerEnablingState( ApplicationStateType.PAINTING_SELECT_STYLE );
 
-		private function onApplicationStateChanged( newState:StateVO ):void {
-
-			var viewIsActive:Boolean = false;
-			if( newState.name == ApplicationStateType.PAINTING_SELECT_BRUSH ) viewIsActive = true;
-			if( newState.name == ApplicationStateType.PAINTING_SELECT_STYLE ) viewIsActive = true;
-			// other states could make this view active...
-
-			if( viewIsActive ) {
-				view.enable();
-			}
-			else {
-				view.disable();
-			}
+			// Init.
+			canvasView.renderedCanvasContainer = renderer.outputSprite;
+			// preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
+			paintModule.view = canvasView;
 		}
 	}
 }

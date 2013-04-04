@@ -4,20 +4,16 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class ColorStyleSubNavigationViewMediator extends StarlingMediator
+	public class ColorStyleSubNavigationViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
 		public var view:ColorStyleSubNavigationView;
-
-		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		[Inject]
 		public var notifyColorStyleChangedSignal:NotifyColorStyleChangedSignal;
@@ -32,6 +28,10 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 		public var notifyColorStylePresetsAvailableSignal:NotifyColorStylePresetsAvailableSignal;
 
 		override public function initialize():void {
+
+			super.initialize();
+			manageMemoryWarnings = false;
+			manageStateChanges = false;
 
 			// From core.
 			notifyColorStylePresetsAvailableSignal.add( onColorStylePresetsAvailable );
@@ -61,7 +61,7 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 					break;
 
 				case ColorStyleSubNavigationView.BUTTON_LABEL_PICK_AN_IMAGE:
-					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE ) );
+					requestStateChange( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE ) );
 					break;
 
 				default:

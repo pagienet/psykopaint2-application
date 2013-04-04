@@ -20,46 +20,33 @@ package net.psykosoft.psykopaint2.app.view.home
 		// Protected.
 		// -----------------------
 
-		override protected function onEnabled():void {
+		override protected function onCreate():void {
 
-			// TODO: Review construction/deconstruction.
-			/*
-			* The current approach is to build and destroy everything each time the view is shown/hidden.
-			* Scout does not show significant memory and gpu memory releases unless the textures used in this view are released manually,
-			* which does show good memory releasing, but causes an error when an attempt to use the externally managed textures ( ManagedAway3DBitmapTexture ) is made.
-			* */
+			_room = new Room();
+			addChild3d( _room );
 
-			if( !_room ) {
-				_room = new Room();
-				addChild3d( _room );
-			}
+			_cameraController = new ScrollCameraController( _camera, _room.wall, stage );
 
-			if( !_cameraController ) {
-				_cameraController = new ScrollCameraController( _camera, _room.wall, stage );
-			}
-
-			if( !_frameManager ) {
-				_frameManager = new FrameManager( _cameraController, _room );
-				_frameManager.y = 400;
-				_frameManager.z = _room.wall.z - 2;
-				_frameManager.loadDefaultHomeFrames();
-				_frameManager.loadUserFrames();
-				addChild3d( _frameManager );
-			}
+			_frameManager = new FrameManager( _cameraController, _room );
+			_frameManager.y = 400;
+			_frameManager.z = _room.wall.z - 2;
+			_frameManager.loadDefaultHomeFrames();
+			_frameManager.loadUserFrames();
+			addChild3d( _frameManager );
 		}
 
-		override protected function onDisabled():void {
+		override protected function onDispose():void {
 
-			trace( this, "onDisabled()" );
-
-			/*_cameraController.dispose();
+			_cameraController.dispose();
 			_cameraController = null;
 
 			_room.dispose();
 			_room = null;
 
 			_frameManager.dispose();
-			_frameManager = null;*/
+			_frameManager = null;
+
+			// TODO: review if memory is really freed up with Scout, it appears not, specially gpu memory
 		}
 
 		override protected function onUpdate():void {

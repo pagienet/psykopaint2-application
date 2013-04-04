@@ -60,23 +60,15 @@ package net.psykosoft.psykopaint2.app.view.splash
 
 			if( _bg ) {
 				removeChild( _bg );
-				_bg.texture.dispose();
-				_bg.dispose();
-				_bg = null;
 			}
 
 			if( _logo ) {
 				removeChild( _logo );
-				_logo.texture.dispose();
-				_logo.dispose();
-				_logo = null;
 			}
 
 			if( _autoDieTimer ) {
 				_autoDieTimer.stop();
 			}
-
-			splashDiedSignal = null;
 
 			if( hasEventListener( TouchEvent.TOUCH ) ) {
 				removeEventListener( TouchEvent.TOUCH, onStageTouched );
@@ -84,7 +76,30 @@ package net.psykosoft.psykopaint2.app.view.splash
 
 		}
 
-		// ---------------------------------------------------------------------
+		override protected function onDispose():void {
+
+			// TODO: ask texture manager to dispose images?
+
+			if( _bg ) {
+				_bg.texture.dispose();
+				_bg.dispose();
+				_bg = null;
+			}
+
+			if( _logo ) {
+				_logo.texture.dispose();
+				_logo.dispose();
+				_logo = null;
+			}
+
+			if( _autoDieTimer ) {
+				_autoDieTimer = null;
+			}
+
+			splashDiedSignal = null;
+		}
+
+// ---------------------------------------------------------------------
 		// Private.
 		// ---------------------------------------------------------------------
 

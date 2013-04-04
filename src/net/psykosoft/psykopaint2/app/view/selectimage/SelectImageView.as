@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 	import feathers.layout.TiledRowsLayout;
 
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
-	import net.psykosoft.psykopaint2.app.view.base.renderers.ImageListItemRenderer;
+	import net.psykosoft.psykopaint2.app.view.renderers.ImageListItemRenderer;
 
 	import org.osflash.signals.Signal;
 
@@ -66,12 +66,19 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 		override protected function onDisabled():void {
 
+			if( _list ) {
+				removeChild( _list );
+			}
+
+		}
+
+		override protected function onDispose():void {
+
 			if( _listLayout ) {
 				_listLayout = null;
 			}
 
 			if( _list ) {
-				removeChild( _list );
 				_list.dispose();
 				_list = null;
 			}
@@ -84,7 +91,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 		}
 
-		// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 		// Public.
 		// ---------------------------------------------------------------------
 

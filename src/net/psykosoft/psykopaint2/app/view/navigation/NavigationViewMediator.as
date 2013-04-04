@@ -11,38 +11,29 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 	import net.psykosoft.psykopaint2.app.view.home.HomeScreenSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectBrushSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.captureimage.CaptureImageSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.captureimage.ConfirmCaptureSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.colorstyle.ColorStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.crop.CropImageSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.editstyle.EditStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.newpainting.NewPaintingSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.selectimage.SelectImageSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectStyleSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.selecttexture.SelectTextureSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.selectimage.SelectImageSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.settings.SelectWallpaperSubNavigationView;
 	import net.psykosoft.psykopaint2.app.view.settings.SettingsSubNavigationView;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
 	/*
 	* Listens to application state changes and decides which sub navigation menu to display.
 	* */
-	public class NavigationViewMediator extends StarlingMediator
+	public class NavigationViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
-		public var view:NavigationView;
-
-		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
-
-		[Inject]
-		public var notifyStateChangedSignal:NotifyStateChangedSignal;
+		public var navigationView:NavigationView;
 
 		[Inject]
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
@@ -61,25 +52,28 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 		override public function initialize():void {
 
+			super.initialize();
+			registerView( navigationView );
+			manageStateChanges = false;
+
 			// Stores sub navigation views.
 			initSubNavigationViews();
 
 			// View starts disabled.
-			view.disable(); // TODO: all views start disabled?
+			navigationView.disable(); // TODO: all views start disabled?
 
 			// From app.
-			notifyStateChangedSignal.add( onApplicationStateChanged );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyGlobalAccelerometerSignal.add( onGlobalAcceleration );
 
 			// From view.
-			view.shownAnimatedSignal.add( onViewShownAnimated );
-			view.hiddenAnimatedSignal.add( onViewHiddenAnimated );
+			navigationView.shownAnimatedSignal.add( onViewShownAnimated );
+			navigationView.hiddenAnimatedSignal.add( onViewHiddenAnimated );
 
 			// If the splash screen is not being shown,
 			// it is this mediator's responsibility to trigger the home state.
 			if( !Settings.SHOW_SPLASH_SCREEN ) {
-				requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.HOME_SCREEN ) );
+				requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN ) );
 			}
 
 		}
@@ -90,50 +84,50 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 		private function onGlobalAcceleration( type:uint ):void {
 			if( type == AccelerationType.SHAKE_FORWARD ) {
-				view.showAnimated();
+				navigationView.showAnimated();
 			}
 			else if( type == AccelerationType.SHAKE_BACKWARD ) {
-				view.hideAnimated();
+				navigationView.hideAnimated();
 			}
 		}
 
 		private function onGlobalGesture( type:uint ):void {
 			if( type == GestureType.TWO_FINGER_SWIPE_UP ) {
-				view.showAnimated();
+				navigationView.showAnimated();
 			}
 			else if( type == GestureType.TWO_FINGER_SWIPE_DOWN ) {
-				view.hideAnimated();
+				navigationView.hideAnimated();
 			}
 			else if( type == GestureType.PINCH_GREW ) { // home zooms on this, so we hide
-				_wasShowing = view.showing;
+				_wasShowing = navigationView.showing;
 				if( _wasShowing ) {
-					view.hideAnimated();
+					navigationView.hideAnimated();
 				}
 			}
 			else if( type == GestureType.PINCH_SHRANK ) {
 				if( _wasShowing ) {
-					view.showAnimated();
+					navigationView.showAnimated();
 				}
 			}
 		}
 
-		private function onApplicationStateChanged( newState:StateVO ):void {
-			if( newState.name != ApplicationStateType.SPLASH_SCREEN ) {
-				view.enable();
-				evaluateSubNavigation( newState );
+		override protected function onStateChange( newStateName:String ):void {
+			if( newStateName != ApplicationStateType.SPLASH_SCREEN ) {
+				navigationView.enable();
+				evaluateSubNavigation( newStateName );
 			}
 		}
 
-		private function evaluateSubNavigation( state:StateVO ):void {
+		private function evaluateSubNavigation( stateName:String ):void {
 
-			var subNavigationClass:Class = _subNavigationClasses[ state.name ];
+			var subNavigationClass:Class = _subNavigationClasses[ stateName ];
 			if( !subNavigationClass ) {
-				throw new Error( this, "there is no sub navigation for this state: " + state.name + ". If there is, make sure to register it in initSubNavigationViews() below." );
+				throw new Error( this, "there is no sub navigation for this state: " + stateName + ". If there is, make sure to register it in initSubNavigationViews() below." );
 			}
 
 			var subNavigationInstance:SubNavigationViewBase = new subNavigationClass();
 
-			view.enableSubNavigationView( subNavigationInstance );
+			navigationView.enableSubNavigationView( subNavigationInstance );
 		}
 
 		// -----------------------

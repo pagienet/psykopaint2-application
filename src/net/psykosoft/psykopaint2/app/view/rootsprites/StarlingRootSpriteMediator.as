@@ -1,15 +1,11 @@
-package net.psykosoft.psykopaint2.app.view.base
+package net.psykosoft.psykopaint2.app.view.rootsprites
 {
-
-	import flash.sensors.Accelerometer;
 
 	import net.psykosoft.psykopaint2.app.controller.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.app.controller.gestures.GestureManager;
-	import net.psykosoft.psykopaint2.app.view.base.StarlingRootSprite;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class StarlingRootSpriteMediator extends StarlingMediator
+	public class StarlingRootSpriteMediator extends StarlingMediatorBase
 	{
 		[Inject]
 		public var view:StarlingRootSprite;
@@ -21,6 +17,10 @@ package net.psykosoft.psykopaint2.app.view.base
 		public var accelManager:AccelerometerManager;
 
 		override public function initialize():void {
+
+			super.initialize();
+			manageMemoryWarnings = false;
+			manageStateChanges = false;
 
 			// Initialize the gesture manager.
 			gestureManager.stage = view.stage;

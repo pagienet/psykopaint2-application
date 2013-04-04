@@ -1,12 +1,14 @@
 package net.psykosoft.psykopaint2.app.view.popups
 {
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
-	public class ConfirmCapturePopUpViewMediator extends StarlingMediator
+	public class ConfirmCapturePopUpViewMediator extends StarlingMediatorBase
 	{
-		public function ConfirmCapturePopUpViewMediator() {
-			super();
+		override public function initialize():void {
+			super.initialize();
+			manageMemoryWarnings = false;
+			manageStateChanges = false;
 		}
 	}
 }

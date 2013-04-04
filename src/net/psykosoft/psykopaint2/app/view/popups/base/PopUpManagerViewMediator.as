@@ -6,14 +6,12 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpRemovedSignal;
-	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpManagerView;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class PopUpManagerViewMediator extends StarlingMediator
+	public class PopUpManagerViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
-		public var view:PopUpManagerView;
+		public var popUpManagerView:PopUpManagerView;
 
 		[Inject]
 		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
@@ -26,14 +24,16 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 
 		override public function initialize():void {
 
+			super.initialize();
+			registerView( popUpManagerView );
+			manageStateChanges = false;
+
 			// From app.
 			notifyPopUpDisplaySignal.add( onPopUp );
 			notifyPopUpRemovalSignal.add( onPopUpRemoval );
 
 			// From view.
-			view.popUpClosedSignal.add( onPopUpClosed );
-
-			super.initialize();
+			popUpManagerView.popUpClosedSignal.add( onPopUpClosed );
 		}
 
 		// -----------------------
@@ -41,7 +41,7 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 		// -----------------------
 
 		private function onPopUpClosed():void {
-			view.hideLastPopUp();
+			popUpManagerView.hideLastPopUp();
 			notifyPopUpRemovedSignal.dispatch();
 		}
 
@@ -50,12 +50,12 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 		// -----------------------
 
 		private function onPopUpRemoval():void {
-			view.hideLastPopUp();
+			popUpManagerView.hideLastPopUp();
 		}
 
 		private function onPopUp( popUpType:String ):void {
 			var popUpClass:Class = getDefinitionByName( "net.psykosoft.psykopaint2.app.view.popups." + popUpType ) as Class;
-			view.showPopUp( popUpClass );
+			popUpManagerView.showPopUp( popUpClass );
 		}
 	}
 }

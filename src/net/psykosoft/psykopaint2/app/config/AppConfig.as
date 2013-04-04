@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.app.config
 	import net.psykosoft.psykopaint2.app.config.configurators.SingletonsConfig;
 	import net.psykosoft.psykopaint2.app.config.configurators.ViewMediatorsConfig;
 	import net.psykosoft.psykopaint2.app.utils.DebuggingConsole;
-	import net.psykosoft.psykopaint2.app.view.base.Away3dRootSprite;
+	import net.psykosoft.psykopaint2.app.view.rootsprites.Away3dRootSprite;
 	import net.psykosoft.robotlegs.bundles.SignalCommandMapBundle;
 
 	import org.swiftsuspenders.Injector;
@@ -65,12 +65,12 @@ package net.psykosoft.psykopaint2.app.config
 			new SingletonsConfig( _injector );
 
 			_injector.map( Stage ).toValue(display.stage);
+		}
 
-			// Initialize 3d display tree.
-			// Note: the 2d display tree ( StarlingRootSprite.as ) is initialized in PsykoPaint.as,
-			// with the creation of the Starling object, which requires it at that time.
+		public function initialize3dDisplayTree():void {
+			// Note: the 2d display tree ( StarlingRootSprite.as ) is initialized in PsykoPaint2.as,
+			// with the creation of the Starling root sprite object, which requires it at that time.
 			_display.addChild( new Away3dRootSprite() );
-
 		}
 
 		public function get injector():Injector {

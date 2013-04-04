@@ -7,18 +7,13 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestImageSourceSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpType;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class SelectImageSubNavigationViewMediator extends StarlingMediator
+	public class SelectImageSubNavigationViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
 		public var view:SelectImageSubNavigationView;
-
-		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		[Inject]
 		public var requestImageSourceSignal:RequestImageSourceSignal;
@@ -30,6 +25,10 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
 
 		override public function initialize():void {
+
+			super.initialize();
+			manageStateChanges = false;
+			manageMemoryWarnings = false;
 
 			// From view.
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
@@ -44,7 +43,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 			switch( buttonLabel ) {
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
-					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING ) );
+					requestStateChange( new StateVO( ApplicationStateType.PAINTING ) );
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_FACEBOOK:

@@ -5,18 +5,13 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class SelectBrushSubNavigationViewMediator extends StarlingMediator
+	public class SelectBrushSubNavigationViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
 		public var view:SelectBrushSubNavigationView;
-
-		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		[Inject]
 		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
@@ -28,6 +23,10 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 		public var paintModule:PaintModule;
 
 		override public function initialize():void {
+
+			super.initialize();
+			manageStateChanges = false;
+			manageMemoryWarnings = false;
 
 			// From view.
 			view.addedToStageSignal.add( onViewAddedToStage );
@@ -47,11 +46,11 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 			switch( buttonLabel ) {
 
 				case SelectBrushSubNavigationView.BUTTON_LABEL_SELECT_STYLE:
-					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_STYLE ) );
+					requestStateChange( new StateVO( ApplicationStateType.PAINTING_SELECT_STYLE ) );
 					break;
 
 				case SelectBrushSubNavigationView.BUTTON_LABEL_PICK_A_TEXTURE:
-					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_TEXTURE ) );
+					requestStateChange( new StateVO( ApplicationStateType.PAINTING_SELECT_TEXTURE ) );
 					break;
 
 				default:

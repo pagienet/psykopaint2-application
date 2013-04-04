@@ -5,47 +5,23 @@ package net.psykosoft.psykopaint2.app.view.splash
 
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class SplashViewMediator extends StarlingMediator
+	public class SplashViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
-		public var view:SplashView;
-
-		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
-
-		[Inject]
-		public var notifyStateChangedSignal:NotifyStateChangedSignal;
+		public var splashView:SplashView;
 
 		override public function initialize():void {
 
-			// From app.
-			notifyStateChangedSignal.add( onApplicationStateChanged );
+			super.initialize();
+			registerView( splashView );
+			registerEnablingState( ApplicationStateType.SPLASH_SCREEN );
 
 			// From view.
-			view.splashDiedSignal.add( onViewDied );
+			splashView.splashDiedSignal.add( onViewDied );
 
 		}
-
-		private function onApplicationStateChanged( newState:StateVO ):void {
-			trace( this, "onApplicationStateChanged: " + newState.name );
-			if( newState.name == ApplicationStateType.SPLASH_SCREEN ) {
-				view.enable();
-			}
-			else {
-				removeView();
-			}
-		}
-
-		// -----------------------
-		// From app.
-		// -----------------------
-
-
 
 		// -----------------------
 		// From view.
@@ -54,7 +30,7 @@ package net.psykosoft.psykopaint2.app.view.splash
 		private function onViewDied():void {
 			Cc.log( this, "onViewDied" );
 			removeView();
-			requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.HOME_SCREEN ) );
+			requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN ) );
 		}
 
 		// ---------------------------------------------------------------------
@@ -62,10 +38,10 @@ package net.psykosoft.psykopaint2.app.view.splash
 		// ---------------------------------------------------------------------
 
 		private function removeView():void {
-			if( !view ) return;
-			view.parent.removeChild( view );
-			view.disable();
-			view = null;
+			if( !splashView ) return;
+			splashView.parent.removeChild( splashView );
+			splashView.disable();
+			splashView = null;
 		}
 	}
 }

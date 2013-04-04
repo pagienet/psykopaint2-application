@@ -1,5 +1,7 @@
-package net.psykosoft.psykopaint2.app.view.base
+package net.psykosoft.psykopaint2.app.view.rootsprites
 {
+
+	import net.psykosoft.psykopaint2.app.view.base.*;
 
 	import com.junkbyte.console.Cc;
 
@@ -14,7 +16,7 @@ package net.psykosoft.psykopaint2.app.view.base
 			Cc.log( this );
 
 			// Initialize 3d display tree.
-//			addChild( new HomeView() ); // TODO: disabled for now, attempts to use memory management which has been deprecated
+			addChild( new HomeView() );
 		}
 	}
 }

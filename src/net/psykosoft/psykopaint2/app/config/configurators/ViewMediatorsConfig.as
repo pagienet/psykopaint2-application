@@ -3,8 +3,8 @@ package net.psykosoft.psykopaint2.app.config.configurators
 
 	import net.psykosoft.psykopaint2.app.view.home.HomeView;
 	import net.psykosoft.psykopaint2.app.view.home.HomeViewMediator;
-	import net.psykosoft.psykopaint2.app.view.base.StarlingRootSprite;
-	import net.psykosoft.psykopaint2.app.view.base.StarlingRootSpriteMediator;
+	import net.psykosoft.psykopaint2.app.view.rootsprites.StarlingRootSprite;
+	import net.psykosoft.psykopaint2.app.view.rootsprites.StarlingRootSpriteMediator;
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.CanvasViewMediator;
 	import net.psykosoft.psykopaint2.app.view.painting.colorstyle.ColorStyleView;

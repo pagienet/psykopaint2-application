@@ -5,18 +5,13 @@ package net.psykosoft.psykopaint2.app.view.painting.editstyle
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpType;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class EditStyleSubNavigationViewMediator extends StarlingMediator
+	public class EditStyleSubNavigationViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
 		public var view:EditStyleSubNavigationView;
-
-		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		[Inject]
 		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
@@ -25,6 +20,10 @@ package net.psykosoft.psykopaint2.app.view.painting.editstyle
 		public var notifyPopUpMessageSignal:NotifyPopUpMessageSignal;
 
 		override public function initialize():void {
+
+			super.initialize();
+			manageStateChanges = false;
+			manageMemoryWarnings = false;
 
 			// From view.
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
@@ -38,7 +37,7 @@ package net.psykosoft.psykopaint2.app.view.painting.editstyle
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
 				case EditStyleSubNavigationView.BUTTON_LABEL_SELECT_STYLE:
-					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.PAINTING_SELECT_STYLE ) );
+					requestStateChange( new StateVO( ApplicationStateType.PAINTING_SELECT_STYLE ) );
 					break;
 				default:
 					notifyPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );

@@ -8,20 +8,14 @@ package net.psykosoft.psykopaint2.app.view.settings
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyWallpaperImagesUpdatedSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestWallpaperThumbsLoadSignal;
-	import net.psykosoft.psykopaint2.app.view.settings.SelectWallpaperSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class SelectWallpaperSubNavigationViewMediator extends StarlingMediator
+	public class SelectWallpaperSubNavigationViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
 		public var view:SelectWallpaperSubNavigationView;
-
-		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		[Inject]
 		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
@@ -42,7 +36,9 @@ package net.psykosoft.psykopaint2.app.view.settings
 
 		override public function initialize():void {
 
-			trace( this, "initialize" );
+			super.initialize();
+			manageMemoryWarnings = false;
+			manageStateChanges = false;
 
 			// Init.
 			requestWallpaperImagesLoadSignal.dispatch();
@@ -76,7 +72,7 @@ package net.psykosoft.psykopaint2.app.view.settings
 			trace( this, "button pressed: " + buttonLabel);
 			switch( buttonLabel ) {
 				case SelectWallpaperSubNavigationView.BUTTON_LABEL_BACK:
-					requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.SETTINGS ) );
+					requestStateChange( new StateVO( ApplicationStateType.SETTINGS ) );
 					break;
 				default:
 					var id:String = _imageIds[ buttonLabel ];

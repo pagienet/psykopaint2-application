@@ -29,6 +29,44 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 			init();
 		}
 
+		// -----------------------
+		// Overrides.
+		// -----------------------
+
+		override protected function onEnabled():void {
+
+		}
+
+		override protected function onDisabled():void {
+
+		}
+
+		override protected function onDispose():void {
+
+			if( _sourceMap ) {
+				_sourceMap.dispose();
+				_sourceMap = null;
+			}
+
+			if( _frameTexture ) {
+				_frameTexture.dispose();
+				_frameTexture = null;
+			}
+
+			if( _frameImage ) {
+				removeChild( _frameImage );
+				_frameImage.dispose();
+				_frameImage = null;
+			}
+
+			if( _positioningSheet ) _positioningSheet.dispose();
+
+		}
+
+		// -----------------------
+		// Private.
+		// -----------------------
+
 		private function init():void {
 			//TODO: replace these with values passed in or a global constant
 			_canvasWidth = 1024;
@@ -41,6 +79,7 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 			frameMap.fillRect( new Rectangle( 1, 1, frameMap.width - 2, frameMap.height - 2 ), 0 );
 
 			_frameTexture = Texture.fromBitmapData( frameMap );
+			frameMap.dispose();
 			_frameImage = new Image( _frameTexture );
 			_frameImage.touchable = false;
 
@@ -84,7 +123,6 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 			_positioningSheet.scaleX = _positioningSheet.scaleY = _positioningSheet.minimumScale = Math.max( _frameImage.width / _positioningSheet.width, _frameImage.height / _positioningSheet.height );
 			_positioningSheet.minimumRotation = 0;
 			_positioningSheet.maximumRotation = 0;
-
 
 			addChildAt( _positioningSheet, 0 );
 			centerCanvas();

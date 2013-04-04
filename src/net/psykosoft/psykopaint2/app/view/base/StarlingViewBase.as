@@ -6,9 +6,10 @@ package net.psykosoft.psykopaint2.app.view.base
 	import starling.display.Sprite;
 	import starling.events.Event;
 
-	public class StarlingViewBase extends Sprite
+	public class StarlingViewBase extends Sprite implements IApplicationView
 	{
 		private var _enabled:Boolean;
+		private var _created:Boolean;
 
 		public var addedToStageSignal:Signal;
 
@@ -32,6 +33,8 @@ package net.psykosoft.psykopaint2.app.view.base
 			}
 
 			if( _enabled ) return;
+
+			if( !_created ) create();
 
 			onEnabled();
 
@@ -60,9 +63,36 @@ package net.psykosoft.psykopaint2.app.view.base
 			trace( this, "disabling 2d view." );
 		}
 
+		public function get enabled():Boolean {
+			return _enabled;
+		}
+
+		public function create():void {
+			if( _created ) return;
+			onCreate();
+			_created = true;
+			trace( this, "creating 2d view." );
+		}
+
+		override public function dispose():void {
+			if( !_created ) return;
+			onDispose();
+			_created = false;
+			trace( this, "disposing 2d view." );
+			super.dispose();
+		}
+
 		// -----------------------
 		// Protected.
 		// -----------------------
+
+		protected function onCreate():void {
+			// Override.
+		}
+
+		protected function onDispose():void {
+			throw new Error( this + "All views must implement the onDispose method. Come on don't be lazy!" );
+		}
 
 		protected function onUpdate():void {
 			// Override.

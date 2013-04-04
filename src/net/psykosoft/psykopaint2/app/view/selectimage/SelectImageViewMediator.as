@@ -2,22 +2,16 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 {
 
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
-	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifySourceImageThumbnailsRetrievedSignal;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestFullImageSignal;
-
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
 	import starling.textures.TextureAtlas;
 
-	public class SelectImageViewMediator extends StarlingMediator
+	public class SelectImageViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
-		public var view:SelectImageView;
-
-		[Inject]
-		public var notifyStateChangedSignal:NotifyStateChangedSignal;
+		public var selectImageView:SelectImageView;
 
 		[Inject]
 		public var requestFullImageSignal:RequestFullImageSignal;
@@ -27,14 +21,15 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 		override public function initialize():void {
 
+			super.initialize();
+			registerView( selectImageView );
+			registerEnablingState( ApplicationStateType.PAINTING_SELECT_IMAGE );
+
 			// From view.
-			view.listSelectedItemChangedSignal.add( onListItemSelected );
+			selectImageView.listSelectedItemChangedSignal.add( onListItemSelected );
 
 			// From app.
-			notifyStateChangedSignal.add( onApplicationStateChanged );
 			notifySourceImageThumbnailsRetrievedSignal.add( onSourceImageThumbnailsRetrieved );
-
-			super.initialize();
 		}
 
 		// -----------------------
@@ -44,7 +39,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		private function onListItemSelected( itemName:String ):void {
 			// TODO: how does it know which image source to call?
 			requestFullImageSignal.dispatch( itemName );
-			view.disable(); // TODO: services store textures in models, requesting a single image load clears the thumb atlases, this needs to be separated
+			selectImageView.disable(); // TODO: services store textures in models, requesting a single image load clears the thumb atlases, this needs to be separated
 		}
 
 		// -----------------------
@@ -52,16 +47,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		// -----------------------
 
 		private function onSourceImageThumbnailsRetrieved( thumbs:TextureAtlas ):void {
-			view.displayThumbs( thumbs );
-		}
-
-		private function onApplicationStateChanged( newState:StateVO ):void {
-			if( newState.name == ApplicationStateType.PAINTING_SELECT_IMAGE ) {
-				view.enable();
-			}
-			else {
-				view.disable();
-			}
+			selectImageView.displayThumbs( thumbs );
 		}
 	}
 }

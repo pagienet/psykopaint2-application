@@ -1,5 +1,7 @@
-package net.psykosoft.psykopaint2.app.view.base
+package net.psykosoft.psykopaint2.app.view.rootsprites
 {
+
+	import net.psykosoft.psykopaint2.app.view.base.*;
 
 	import com.junkbyte.console.Cc;
 

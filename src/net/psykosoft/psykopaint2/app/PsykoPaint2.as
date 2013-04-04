@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 	import net.psykosoft.psykopaint2.app.utils.PlatformUtil;
-	import net.psykosoft.psykopaint2.app.view.base.StarlingRootSprite;
+	import net.psykosoft.psykopaint2.app.view.rootsprites.StarlingRootSprite;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 
 	import org.gestouch.core.Gestouch;
@@ -147,6 +147,8 @@ package net.psykosoft.psykopaint2.app
 			// Starts core context, which handles the core drawing functionalities ( as a module ).
 			_drawingCore = new DrawingCore( _appConfig.injector, !Settings.RUNNING_ON_iPAD && Settings.USE_DEBUG_KEYS );
 			addChild( _drawingCore );
+
+			_appConfig.initialize3dDisplayTree();
 		}
 
 		private function onStarlingContextReady( event:starling.events.Event ):void {

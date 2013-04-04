@@ -1,13 +1,10 @@
 package net.psykosoft.psykopaint2.app.view.popups
 {
 
-	import com.junkbyte.console.Cc;
-
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class MessagePopUpViewMediator extends StarlingMediator
+	public class MessagePopUpViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
 		public var view:MessagePopUpView;
@@ -17,10 +14,12 @@ package net.psykosoft.psykopaint2.app.view.popups
 
 		override public function initialize():void {
 
+			super.initialize();
+			manageMemoryWarnings = false;
+			manageStateChanges = false;
+
 			// From app.
 			notifyPopUpMessageSignal.add( onMessage );
-
-			super.initialize();
 		}
 
 		// -----------------------

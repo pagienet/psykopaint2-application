@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.app.view.base.renderers
+package net.psykosoft.psykopaint2.app.view.renderers
 {
 
 	import feathers.controls.List;

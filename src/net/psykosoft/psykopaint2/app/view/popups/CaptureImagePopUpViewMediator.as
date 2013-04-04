@@ -2,10 +2,9 @@ package net.psykosoft.psykopaint2.app.view.popups
 {
 
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyCameraFlipSignal;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
-	import robotlegs.extensions.starlingViewMap.impl.StarlingMediator;
-
-	public class CaptureImagePopUpViewMediator extends StarlingMediator
+	public class CaptureImagePopUpViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
 		public var view:CaptureImagePopUpView;
@@ -15,11 +14,12 @@ package net.psykosoft.psykopaint2.app.view.popups
 
 		override public function initialize():void {
 
+			super.initialize();
+			manageMemoryWarnings = false;
+			manageStateChanges = false;
+
 			// From app.
 			notifyCameraFlipSignal.add( onFlipRequested );
-
-			super.initialize();
-
 		}
 
 		// -----------------------
