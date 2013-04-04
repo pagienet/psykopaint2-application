@@ -17,9 +17,6 @@ package net.psykosoft.psykopaint2.app
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 
-	import net.psykosoft.notifications.NotificationsExtension;
-	import net.psykosoft.notifications.events.NotificationExtensionEvent;
-
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
@@ -30,8 +27,6 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.app.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingRootSprite;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
-	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
-	import net.psykosoft.psykopaint2.core.resources.FreeTextureManager;
 
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.extensions.starling.StarlingDisplayListAdapter;
