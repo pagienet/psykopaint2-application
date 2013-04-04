@@ -1,8 +1,8 @@
 package net.psykosoft.psykopaint2.app.view.rootsprites
 {
 
-	import net.psykosoft.psykopaint2.app.controller.accelerometer.AccelerometerManager;
-	import net.psykosoft.psykopaint2.app.controller.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.app.managers.accelerometer.AccelerometerManager;
+	import net.psykosoft.psykopaint2.app.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
 	public class StarlingRootSpriteMediator extends StarlingMediatorBase

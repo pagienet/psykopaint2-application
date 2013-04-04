@@ -8,7 +8,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 
-	import net.psykosoft.psykopaint2.app.assets.away3d.textures.vo.Away3dTextureInfoVO;
+	import flash.display.BitmapData;
+	import flash.geom.Point;
 
 	public class Picture extends ObjectContainer3D
 	{
@@ -17,26 +18,28 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		private var _scale:Number = 1;
 
 		private var _plane:Mesh;
-		private var _texture:BitmapTexture;
+		private var _material:TextureMaterial;
+		private var _diffuseTexture:BitmapTexture;
 
-		public function Picture( textureInfo:Away3dTextureInfoVO, diffuseTexture:BitmapTexture ) {
+		public function Picture( diffuseBitmap:BitmapData, imageDimensions:Point, textureDimensions:Point ) {
 
 			super();
 
-			_texture = diffuseTexture;
+			_diffuseTexture = new BitmapTexture( diffuseBitmap );
+			diffuseBitmap.dispose();
 
-			var material:TextureMaterial = new TextureMaterial( diffuseTexture );
-			material.smooth = true;
-			material.mipmap = false;
+			_material = new TextureMaterial( _diffuseTexture );
+			_material.smooth = true;
+			_material.mipmap = false;
 
 			// Build plane.
-			// Notes: Plane takes original image size ( not power of 2 dimensions ) and shifts and re-scales uvs
+			// Note: Plane takes original image size ( not power of 2 dimensions ) and shifts and re-scales uvs
 			// so that the image perfectly fits in the plane.
-			var dw:Number = ( ( textureInfo.textureWidth - textureInfo.imageWidth ) / 2 ) / textureInfo.textureWidth; // TODO: math can be optimized
-			var dh:Number = ( ( textureInfo.textureHeight - textureInfo.imageHeight ) / 2 ) / textureInfo.textureHeight;
-			var dsw:Number = textureInfo.textureWidth / textureInfo.imageWidth;
-			var dsh:Number = textureInfo.textureHeight / textureInfo.imageHeight;
-			var planeGeometry:PlaneGeometry = new PlaneGeometry( textureInfo.imageWidth, textureInfo.imageHeight );
+			var dw:Number = ( ( textureDimensions.x - imageDimensions.x ) / 2 ) / textureDimensions.x; // TODO: math can be optimized
+			var dh:Number = ( ( textureDimensions.y - imageDimensions.y ) / 2 ) / textureDimensions.y;
+			var dsw:Number = textureDimensions.x / imageDimensions.x;
+			var dsh:Number = textureDimensions.y / imageDimensions.y;
+			var planeGeometry:PlaneGeometry = new PlaneGeometry( imageDimensions.x, imageDimensions.y );
 			var subGeometry:SubGeometry = planeGeometry.subGeometries[ 0 ];
 			var uvs:Vector.<Number> = subGeometry.uvs;
 			var newUvs:Vector.<Number> = new Vector.<Number>();
@@ -46,23 +49,26 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 				newUvs[ index + 1 ] = uvs[ index + 1 ] / dsh + dh;
 			}
 			subGeometry.updateUVData( newUvs );
-			_plane = new Mesh( planeGeometry, material );
+			_plane = new Mesh( planeGeometry, _material );
 			_plane.rotationX = -90;
 			addChild( _plane );
 
-			_width = textureInfo.imageWidth;
-			_height = textureInfo.imageHeight;
+			_width = imageDimensions.x;
+			_height = imageDimensions.y;
 		}
 
 		override public function dispose():void {
 
 			trace( this, "dispose()" );
 
+			_material.dispose();
+			_material = null;
+
 			_plane.dispose();
 			_plane = null;
 
-//			_texture.dispose();
-			_texture = null;
+			_diffuseTexture.dispose();
+			_diffuseTexture = null;
 
 			super.dispose();
 		}

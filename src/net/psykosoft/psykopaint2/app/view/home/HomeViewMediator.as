@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
-	import net.psykosoft.psykopaint2.app.controller.gestures.GestureType;
+	import net.psykosoft.psykopaint2.app.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.model.StateModel;

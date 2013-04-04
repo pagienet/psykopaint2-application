@@ -1,13 +1,10 @@
 package net.psykosoft.psykopaint2.app.view.splash
 {
 
-	import com.junkbyte.console.Cc;
-
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 
-	import net.psykosoft.psykopaint2.app.assets.starling.StarlingTextureManager;
-	import net.psykosoft.psykopaint2.app.assets.starling.data.StarlingTextureType;
+	import net.psykosoft.psykopaint2.app.managers.textures.SimpleTextureManager;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
@@ -37,13 +34,13 @@ package net.psykosoft.psykopaint2.app.view.splash
 		override protected function onEnabled():void {
 
 			// White Bg.
-			_bg = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.TRANSPARENT_WHITE ) );
+			_bg = new Image( SimpleTextureManager.solidWhiteTexture );
 			_bg.width = stage.stageWidth;
 			_bg.height = stage.stageHeight;
 			addChild( _bg );
 
 			// Display logo.
-			_logo = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.LOGO ) );
+			_logo = new Image( SimpleTextureManager.solidBlackTexture );
 			_logo.x = stage.stageWidth / 2 - _logo.width / 2;
 			_logo.y = stage.stageHeight / 2 - _logo.height / 2;
 			addChild( _logo );

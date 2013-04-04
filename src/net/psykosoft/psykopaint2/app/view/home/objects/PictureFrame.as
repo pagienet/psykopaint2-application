@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 
-	import net.psykosoft.psykopaint2.app.assets.away3d.textures.vo.Away3dFrameAtlasTextureDescriptorVO;
+	import net.psykosoft.psykopaint2.app.view.home.vos.FrameTextureAtlasDescriptorVO;
 
 	public class PictureFrame extends ObjectContainer3D
 	{
@@ -28,9 +28,9 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		private var _frameMargin:Number;
 		private var _frameDepth:Number;
 
-		private var _textureDescriptor:Away3dFrameAtlasTextureDescriptorVO;
+		private var _textureDescriptor:FrameTextureAtlasDescriptorVO;
 
-		public function PictureFrame( picture:Picture, material:TextureMaterial, textureDescriptor:Away3dFrameAtlasTextureDescriptorVO ) {
+		public function PictureFrame( picture:Picture, material:TextureMaterial, textureDescriptor:FrameTextureAtlasDescriptorVO ) {
 
 			super();
 

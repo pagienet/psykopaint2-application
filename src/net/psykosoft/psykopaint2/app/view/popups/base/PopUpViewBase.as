@@ -4,14 +4,12 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
 
-	import net.psykosoft.psykopaint2.app.assets.starling.StarlingTextureManager;
-	import net.psykosoft.psykopaint2.app.assets.starling.data.StarlingTextureType;
+	import net.psykosoft.psykopaint2.app.managers.textures.SimpleTextureManager;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
 
 	import org.osflash.signals.Signal;
 
 	import starling.display.Button;
-
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -39,7 +37,7 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 		override protected function onEnabled():void {
 
 			if( _useBlocker ) {
-				_blocker = new Button( StarlingTextureManager.getTextureById( StarlingTextureType.TRANSPARENT ) );
+				_blocker = new Button( SimpleTextureManager.transparentTexture );
 				_blocker.addEventListener( Event.TRIGGERED, onBlockerPressed );
 				_blocker.width = stage.stageWidth;
 				_blocker.height = stage.stageHeight;
@@ -49,7 +47,7 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 			_container = new Sprite();
 			addChild( _container );
 
-			_bg = new Image( StarlingTextureManager.getTextureById( StarlingTextureType.SOLID_GRAY ) );
+			_bg = new Image( SimpleTextureManager.solidGrayTexture );
 			_bg.width = 512;
 			_bg.height = 512;
 			_container.addChild( _bg );
@@ -86,7 +84,6 @@ package net.psykosoft.psykopaint2.app.view.popups.base
 				_container.dispose();
 				_container = null;
 			}
-
 		}
 
 		// ---------------------------------------------------------------------

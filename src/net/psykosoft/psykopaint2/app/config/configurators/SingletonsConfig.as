@@ -3,8 +3,8 @@ package net.psykosoft.psykopaint2.app.config.configurators
 
 	import flash.display.Stage3D;
 
-	import net.psykosoft.psykopaint2.app.controller.accelerometer.AccelerometerManager;
-	import net.psykosoft.psykopaint2.app.controller.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.app.managers.accelerometer.AccelerometerManager;
+	import net.psykosoft.psykopaint2.app.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 
 	import org.swiftsuspenders.Injector;
@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	public class SingletonsConfig
 	{
 		public function SingletonsConfig( injector:Injector ) {
+
 			injector.map( GestureManager ).asSingleton();
 			injector.map( AccelerometerManager ).asSingleton();
 

@@ -3,14 +3,14 @@ package net.psykosoft.psykopaint2.app.view.home
 
 	import net.psykosoft.psykopaint2.app.view.base.Away3dViewBase;
 	import net.psykosoft.psykopaint2.app.view.home.controller.ScrollCameraController;
-	import net.psykosoft.psykopaint2.app.view.home.objects.FrameManager;
+	import net.psykosoft.psykopaint2.app.view.home.objects.FrameContainer;
 	import net.psykosoft.psykopaint2.app.view.home.objects.Room;
 
 	public class HomeView extends Away3dViewBase
 	{
 		private var _cameraController:ScrollCameraController;
 		private var _room:Room;
-		private var _frameManager:FrameManager;
+		private var _frameManager:FrameContainer;
 
 		public function HomeView() {
 			super();
@@ -20,19 +20,26 @@ package net.psykosoft.psykopaint2.app.view.home
 		// Protected.
 		// -----------------------
 
+		override protected function onEnabled():void {
+			addChild3d( _room );
+			addChild3d( _frameManager );
+		}
+
+		override protected function onDisabled():void {
+			removeChild3d( _room );
+			removeChild3d( _frameManager );
+		}
+
 		override protected function onCreate():void {
 
 			_room = new Room();
-			addChild3d( _room );
 
 			_cameraController = new ScrollCameraController( _camera, _room.wall, stage );
 
-			_frameManager = new FrameManager( _cameraController, _room );
+			_frameManager = new FrameContainer( _cameraController, _room );
 			_frameManager.y = 400;
 			_frameManager.z = _room.wall.z - 2;
 			_frameManager.loadDefaultHomeFrames();
-			_frameManager.loadUserFrames();
-			addChild3d( _frameManager );
 		}
 
 		override protected function onDispose():void {
@@ -57,7 +64,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		// Getters.
 		// -----------------------
 
-		public function get frameManager():FrameManager {
+		public function get frameManager():FrameContainer {
 			return _frameManager;
 		}
 
