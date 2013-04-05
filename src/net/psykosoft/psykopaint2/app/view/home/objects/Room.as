@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.app.utils.BitmapLoader;
+	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 
 	public class Room extends ObjectContainer3D
 	{
@@ -19,6 +20,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		private var _floor:Mesh;
 		private var _shadowMesh:Mesh;
 		private var _shadows:Vector.<Mesh>;
+		private var _wallTexture:BitmapTexture;
+		private var _shadowTexture:BitmapTexture;
 
 		private const WALL_WIDTH:Number = 100000;
 		private const WALL_HEIGHT:Number = 2000;
@@ -69,42 +72,6 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			addChild( _wall );
 
 			// Continue.
-			loadFloor();
-		}
-
-		// -----------------------
-		// Floor.
-		// -----------------------
-
-		private function loadFloor():void {
-			_loader.loadAsset( "away3d/floorpapers/wood.jpg", onFloorBitmapReady );
-		}
-
-		private function onFloorBitmapReady( bmd:BitmapData ):void {
-
-			// Geometry.
-			var floorGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
-			floorGeometry.scaleUV( WALL_WIDTH / floorGeometry.width, 1 );
-
-			// Texture.
-			var floorTexture:BitmapTexture = new BitmapTexture( bmd );
-			bmd.dispose();
-
-			// Material.
-			_floorMaterial = new TextureMaterial( floorTexture );
-			_floorMaterial.repeat = true;
-			_floorMaterial.smooth = true;
-			_floorMaterial.mipmap = true;
-
-			// Mesh.
-			_floor = new Mesh( floorGeometry, _floorMaterial );
-			_floor.scaleX = WALL_WIDTH / floorGeometry.width;
-			_floor.scaleZ = FLOOR_DEPTH / floorGeometry.height;
-			_floor.y = _wall.y - WALL_HEIGHT / 2 - 5; // Literal offsets kind of slide the floor under the home
-			_floor.z = WALL_Z - FLOOR_DEPTH / 2 + 190;
-			addChild( _floor );
-
-			// Continue.
 			loadShadow();
 		}
 
@@ -113,17 +80,19 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		// -----------------------
 
 		private function loadShadow():void {
-			_loader.loadAsset( "away3d/frames/frame-shadow.png", onShadowBitmapReady );
+			_loader.loadAsset( "/assets-packaged/away3d/frames/frame-shadow.png", onShadowBitmapReady );
 		}
 
 		private function onShadowBitmapReady( bmd:BitmapData ):void {
 
 			// Texture.
-			var shadowTexture:BitmapTexture = new BitmapTexture( bmd );
+			_shadowTexture = new BitmapTexture( bmd );
+			_shadowTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy );
+			_shadowTexture.name = "shadowTexture";
 			bmd.dispose();
 
 			// Material.
-			_shadowMaterial = new TextureMaterial( shadowTexture );
+			_shadowMaterial = new TextureMaterial( _shadowTexture );
 			_shadowMaterial.smooth = true;
 			_shadowMaterial.mipmap = false;
 			_shadowMaterial.alpha = 0.9;
@@ -135,6 +104,44 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 			// Clone holder.
 			_shadows = new Vector.<Mesh>();
+
+			// Continue.
+			loadFloor();
+		}
+
+		// -----------------------
+		// Floor.
+		// -----------------------
+
+		private function loadFloor():void {
+			_loader.loadAsset( "/assets-packaged/away3d/floorpapers/wood.jpg", onFloorBitmapReady );
+		}
+
+		private function onFloorBitmapReady( bmd:BitmapData ):void {
+
+			// Geometry.
+			var floorGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
+			floorGeometry.scaleUV( WALL_WIDTH / floorGeometry.width, 1 );
+
+			// Texture.
+			var floorTexture:BitmapTexture = new BitmapTexture( bmd );
+			floorTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy );
+			floorTexture.name = "floorTexture";
+			bmd.dispose();
+
+			// Material.
+			_floorMaterial = new TextureMaterial( floorTexture );
+			_floorMaterial.repeat = true;
+			_floorMaterial.smooth = true;
+			_floorMaterial.mipmap = false;
+
+			// Mesh.
+			_floor = new Mesh( floorGeometry, _floorMaterial );
+			_floor.scaleX = WALL_WIDTH / floorGeometry.width;
+			_floor.scaleZ = FLOOR_DEPTH / floorGeometry.height;
+			_floor.y = _wall.y - WALL_HEIGHT / 2 - 5; // Literal offsets kind of slide the floor under the home
+			_floor.z = WALL_Z - FLOOR_DEPTH / 2 + 190;
+			addChild( _floor );
 
 			// No further loading.
 			_loader.dispose();
@@ -160,7 +167,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			_floor = null;
 
 			_wall.dispose();
-			_wallMaterial.texture.dispose();
+			_wallTexture.dispose();
 			_wallMaterial.dispose();
 			_wall = null;
 
@@ -174,7 +181,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			_shadowMesh.dispose();
 			_shadowMesh = null;
 
-			_shadowMaterial.texture.dispose();
+			_shadowTexture.dispose();
 			_shadowMaterial.dispose();
 			_shadowMaterial = null;
 		}
@@ -195,8 +202,15 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		}
 
 		public function changeWallpaper( bmd:BitmapData ):void {
-			_wallMaterial = new TextureMaterial( new BitmapTexture( bmd ) );
+
+			// Texture.
+			_wallTexture = new BitmapTexture( bmd );
+			_wallTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy );
+			_wallTexture.name = "wallTexture";
 			bmd.dispose();
+
+			// Material.
+			_wallMaterial = new TextureMaterial(  );
 			_wallMaterial.mipmap = false;
 			_wallMaterial.smooth = true;
 			_wallMaterial.repeat = true;

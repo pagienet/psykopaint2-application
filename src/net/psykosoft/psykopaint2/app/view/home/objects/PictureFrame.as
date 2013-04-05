@@ -59,12 +59,13 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			trace( this, "dispose()" );
 
 			_picture.dispose();
-			_picture = null;
 
 			_frameSubGeometry.dispose();
 			_frameSubGeometry = null;
 
 			_frameMesh.dispose();
+
+			_picture = null;
 			_frameMesh = null;
 
 			super.dispose();

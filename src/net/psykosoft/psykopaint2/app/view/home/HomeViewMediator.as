@@ -29,6 +29,8 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		override public function initialize():void {
 
+			trace( this, "initialized" );
+
 			super.initialize();
 			registerView( homeView );
 			registerEnablingState( ApplicationStateType.HOME_SCREEN );
@@ -116,14 +118,18 @@ package net.psykosoft.psykopaint2.app.view.home
 			// Clicking on the settings button causes animation to the settings painting.
 			if( newStateName == ApplicationStateType.SETTINGS && stateModel.previousState.name == ApplicationStateType.HOME_SCREEN && homeView.cameraController.evaluateCameraCurrentClosestSnapPointIndex() != 0 ) {
 				homeView.cameraController.jumpToSnapPointAnimated( 0 );
+				return;
 			}
 
 			// Clicking on the back button on the settings state restores to the last snapped painting.
 			if( newStateName == ApplicationStateType.HOME_SCREEN && stateModel.previousState.name == ApplicationStateType.SETTINGS ) {
 				if( !homeView.cameraController.moving ) {
 					homeView.cameraController.jumpToSnapPointAnimated( homeView.cameraController.previousCameraClosestSnapPointIndex );
+					return;
 				}
 			}
+
+			super.onStateChange( newStateName );
 		}
 	}
 }

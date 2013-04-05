@@ -11,13 +11,13 @@ package net.psykosoft.psykopaint2.app.view.base
 	public class Away3dMediatorBase extends Mediator
 	{
 		[Inject]
-		public var notifyMemoryWarningSignal:NotifyMemoryWarningSignal;
+		public var notifyOSMemoryWarningSignal:NotifyMemoryWarningSignal;
 
 		[Inject]
-		public var notifyStateChangedSignal:NotifyStateChangedSignal;
+		public var notifyApplicationStateChangedSignal:NotifyStateChangedSignal;
 
 		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
+		public var requestApplicationStateChangeSignal:RequestStateChangeSignal;
 
 		private var _enablingStates:Vector.<String>;
 		private var _view:IApplicationView;
@@ -26,8 +26,8 @@ package net.psykosoft.psykopaint2.app.view.base
 
 			_enablingStates = new Vector.<String>();
 
-			notifyMemoryWarningSignal.add( onMemoryWarning );
-			notifyStateChangedSignal.add( onStateChange );
+			notifyOSMemoryWarningSignal.add( onMemoryWarning );
+			notifyApplicationStateChangedSignal.add( onStateChange );
 		}
 
 		protected function registerEnablingState( stateName:String ):void {
@@ -35,19 +35,18 @@ package net.psykosoft.psykopaint2.app.view.base
 		}
 
 		protected function requestStateChange( vo:StateVO ):void {
-
+			requestApplicationStateChangeSignal.dispatch( vo );
 		}
 
 		protected function onStateChange( newStateName:String ):void {
-			trace( this, "state change: " + newStateName );
-
+//			trace( this, "state change: " + newStateName );
 			var isViewEnabled:Boolean = _enablingStates.indexOf( newStateName ) != -1;
 			if( isViewEnabled ) _view.enable();
 			else _view.disable();
 		}
 
 		protected function onMemoryWarning():void {
-			trace( this, "memory warning" );
+//			trace( this, "memory warning" );
 			if( !_view.enabled ) _view.dispose();
 		}
 

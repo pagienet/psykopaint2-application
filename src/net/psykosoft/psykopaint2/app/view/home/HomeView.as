@@ -3,14 +3,14 @@ package net.psykosoft.psykopaint2.app.view.home
 
 	import net.psykosoft.psykopaint2.app.view.base.Away3dViewBase;
 	import net.psykosoft.psykopaint2.app.view.home.controller.ScrollCameraController;
-	import net.psykosoft.psykopaint2.app.view.home.objects.FrameContainer;
+	import net.psykosoft.psykopaint2.app.view.home.objects.PictureFrameContainer;
 	import net.psykosoft.psykopaint2.app.view.home.objects.Room;
 
 	public class HomeView extends Away3dViewBase
 	{
 		private var _cameraController:ScrollCameraController;
 		private var _room:Room;
-		private var _frameManager:FrameContainer;
+		private var _frameManager:PictureFrameContainer;
 
 		public function HomeView() {
 			super();
@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.app.view.home
 
 			_cameraController = new ScrollCameraController( _camera, _room.wall, stage );
 
-			_frameManager = new FrameContainer( _cameraController, _room );
+			_frameManager = new PictureFrameContainer( _cameraController, _room );
 			_frameManager.y = 400;
 			_frameManager.z = _room.wall.z - 2;
 			_frameManager.loadDefaultHomeFrames();
@@ -64,7 +64,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		// Getters.
 		// -----------------------
 
-		public function get frameManager():FrameContainer {
+		public function get frameManager():PictureFrameContainer {
 			return _frameManager;
 		}
 

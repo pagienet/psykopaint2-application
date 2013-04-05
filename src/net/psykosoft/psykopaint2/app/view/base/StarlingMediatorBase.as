@@ -41,7 +41,7 @@ package net.psykosoft.psykopaint2.app.view.base
 		}
 
 		protected function onStateChange( newStateName:String ):void {
-			trace( this, "state change: " + newStateName );
+//			trace( this, "state change: " + newStateName );
 			if( !_manageStateChanges ) return;
 			var isViewEnabled:Boolean = _enablingStates.indexOf( newStateName ) != -1;
 			if( isViewEnabled ) _view.enable();
@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.app.view.base
 		}
 
 		protected function onMemoryWarning():void {
-			trace( this, "memory warning" );
+//			trace( this, "memory warning" );
 			if( !_manageMemoryWarnings ) return;
 			if( !_view.enabled ) _view.dispose();
 		}

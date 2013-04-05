@@ -9,11 +9,12 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.geom.Point;
 
 	import net.psykosoft.psykopaint2.app.utils.BitmapLoader;
+	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 	import net.psykosoft.psykopaint2.app.utils.XMLLoader;
 	import net.psykosoft.psykopaint2.app.view.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.app.view.home.vos.FrameTextureAtlasDescriptorVO;
 
-	public class FrameContainer extends ObjectContainer3D
+	public class PictureFrameContainer extends ObjectContainer3D
 	{
 		private var _easel:Easel;
 		private var _positioningOffset:uint;
@@ -30,7 +31,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		private const FRAME_GAP_X:Number = 500;
 		private const PAINTINGS_SCALE:Number = 0.9;
 
-		public function FrameContainer( cameraController:ScrollCameraController, room:Room ) {
+		public function PictureFrameContainer( cameraController:ScrollCameraController, room:Room ) {
 			super();
 			_cameraController = cameraController;
 			_room = room;
@@ -39,12 +40,6 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		override public function dispose():void {
 
 			trace( this, "dispose()" );
-
-			for( var i:uint; i < _wallFrames.length; i++ ) {
-				var frame:PictureFrame = _wallFrames[ i ];
-				frame.dispose();
-			}
-			_wallFrames = null;
 
 			if( _bitmapLoader ) {
 				_bitmapLoader.dispose();
@@ -60,13 +55,22 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 				_framesDescriptor = null;
 			}
 
+			for( var i:uint; i < _wallFrames.length; i++ ) {
+				var frame:PictureFrame = _wallFrames[ i ];
+				frame.dispose();
+				frame = null;
+			}
+			_wallFrames = null;
+
 			_framesTexture.dispose();
 			_framesTexture = null;
 			_frameMaterial.dispose();
 			_frameMaterial = null;
 
-			_easel.dispose();
-			_easel = null;
+			if( _easel ) {
+				_easel.dispose();
+				_easel = null;
+			}
 
 			super.dispose();
 		}
@@ -106,13 +110,15 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		}
 
 		private function loadFrameAtlasImage():void {
-			_bitmapLoader.loadAsset( "away3d/frames/frames.png", onFramesAtlasImageReady );
+			_bitmapLoader.loadAsset( "/assets-packaged/away3d/frames/frames.png", onFramesAtlasImageReady );
 		}
 
 		private function onFramesAtlasImageReady( bmd:BitmapData ):void {
 
 			// Texture.
 			_framesTexture = new BitmapTexture( bmd );
+			_framesTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy );
+			_framesTexture.name = "framesTexture";
 			bmd.dispose();
 
 			// Material.
@@ -129,7 +135,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		}
 
 		private function loadFrameAtlasDescriptor():void {
-			_xmlLoader.loadAsset( "away3d/frames/frames.xml", onFramesAtlasDescriptorReady );
+			_xmlLoader.loadAsset( "/assets-packaged/away3d/frames/frames.xml", onFramesAtlasDescriptorReady );
 		}
 
 		private function onFramesAtlasDescriptorReady( xml:XML ):void {
@@ -137,6 +143,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// Dispose xml loader.
 			_framesDescriptor = xml;
 			_xmlLoader.dispose();
+			_xmlLoader = null;
 
 			// Continue.
 			buildDefaultFrames();
@@ -154,7 +161,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 			// Frame.
 			var settingsFrameAtlasDescriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO(
-					"whiteDanger",
+					"dangerFrame",
 					_framesDescriptor,
 					_framesTexture.width, _framesTexture.height
 			);
@@ -186,7 +193,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 			// Frame.
 			var psykopaintFrameAtlasDescriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO(
-					"frameWhite",
+					"whiteFrame",
 					_framesDescriptor,
 					_framesTexture.width, _framesTexture.height
 			);
@@ -195,8 +202,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 			_framesDescriptor = null;
 
-			// Starts looking at the psykopaint frame.
-			_cameraController.jumpToSnapPoint( 2 );
+			// Initial frame.
+			_cameraController.jumpToSnapPoint( 0 );
 
 		}
 	}

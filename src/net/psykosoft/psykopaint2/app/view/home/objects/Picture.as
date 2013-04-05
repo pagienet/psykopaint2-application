@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 
+	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
+
 	public class Picture extends ObjectContainer3D
 	{
 		private var _width:Number;
@@ -26,6 +28,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			super();
 
 			_diffuseTexture = new BitmapTexture( diffuseBitmap );
+			_diffuseTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy );
+			_diffuseTexture.name = "pictureTexture";
 			diffuseBitmap.dispose();
 
 			_material = new TextureMaterial( _diffuseTexture );
@@ -61,14 +65,13 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 			trace( this, "dispose()" );
 
-			_material.dispose();
-			_material = null;
-
 			_plane.dispose();
-			_plane = null;
-
+			_material.dispose();
 			_diffuseTexture.dispose();
+
 			_diffuseTexture = null;
+			_plane = null;
+			_material = null;
 
 			super.dispose();
 		}
