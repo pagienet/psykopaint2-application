@@ -34,11 +34,11 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 		// -----------------------
 
 		override protected function onEnabled():void {
-
+			// Todo: must the view do something on enabled/disabled?
 		}
 
 		override protected function onDisabled():void {
-
+			// Todo: must the view do something on enabled/disabled?
 		}
 
 		override protected function onDispose():void {
@@ -121,8 +121,8 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 			var image:Image = new Image( texture );
 			_positioningSheet = new TouchSheet( image );
 			_positioningSheet.scaleX = _positioningSheet.scaleY = _positioningSheet.minimumScale = Math.max( _frameImage.width / _positioningSheet.width, _frameImage.height / _positioningSheet.height );
-			_positioningSheet.minimumRotation = 0;
-			_positioningSheet.maximumRotation = 0;
+//			_positioningSheet.minimumRotation = 0;
+//			_positioningSheet.maximumRotation = 0;
 
 			addChildAt( _positioningSheet, 0 );
 			centerCanvas();
@@ -130,11 +130,10 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 		}
 
 		public function get cropMatrix():Matrix {
-			var bounds:Rectangle = _positioningSheet.getBounds( this );
-			var m:Matrix = new Matrix( _positioningSheet.scaleX * 2, 0, 0, _positioningSheet.scaleY * 2,
-					( bounds.x - _frameImage.x ) * 2,
-					( bounds.y - _frameImage.y) * 2 );
-
+			var m:Matrix =_positioningSheet.transformationMatrix;
+			m.translate(-0.5 * stage.stageWidth,-0.5 * stage.stageHeight);
+			m.scale( 1 / _cropFrameScale,1 / _cropFrameScale );
+			m.translate(0.5 * _canvasWidth,0.5 * _canvasHeight);
 			return m;
 		}
 	}
