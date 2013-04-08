@@ -24,5 +24,6 @@
 	<extensions>
 		<extensionID>net.psykosoft.notifications</extensionID>
         <extensionID>net.psykosoft.photos</extensionID>
+        <!--<extensionID>com.milkmangames.extensions.GoViral.ane</extensionID>-->
     </extensions>
 </application>
