@@ -284,5 +284,7 @@
     </iPhone>
 <extensions>
         <extensionID>net.psykosoft.photos</extensionID>
+    
+    <extensionID>com.milkmangames.extensions.GoViral</extensionID>
     </extensions>
 </application>

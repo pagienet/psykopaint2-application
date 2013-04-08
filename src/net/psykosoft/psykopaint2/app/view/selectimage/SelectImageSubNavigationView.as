@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 	public class SelectImageSubNavigationView extends SubNavigationViewBase
 	{
-		public static const BUTTON_LABEL_FACEBOOK:String = "[Facebook]";
+		public static const BUTTON_LABEL_FACEBOOK:String = "Facebook";
 		public static const BUTTON_LABEL_CAMERA:String = "[Camera]";
 		public static const BUTTON_LABEL_READY_TO_PAINT:String = "Ready to Paint";
 		public static const BUTTON_LABEL_YOUR_PHOTOS:String = "Your Photos";
@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 			setLeftButton( BUTTON_LABEL_NEW_PAINTING );
 
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_FACEBOOK, onButtonTriggered, false ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_FACEBOOK, onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_CAMERA, onButtonTriggered, false ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_READY_TO_PAINT, onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_YOUR_PHOTOS, onButtonTriggered, false ) );

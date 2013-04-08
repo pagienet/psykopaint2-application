@@ -2,22 +2,21 @@ package net.psykosoft.psykopaint2.app.commands.imageio
 {
 
 	import com.junkbyte.console.Cc;
-
+	
 	import flash.display.BitmapData;
-
+	
 	import net.psykosoft.psykopaint2.app.data.types.ImageSourceType;
 	import net.psykosoft.psykopaint2.app.model.FullImageModel;
-
 	import net.psykosoft.psykopaint2.app.model.ThumbnailsModel;
 	import net.psykosoft.psykopaint2.app.service.images.ANEIOSImageService;
 	import net.psykosoft.psykopaint2.app.service.images.DesktopImageService;
+	import net.psykosoft.psykopaint2.app.service.images.FacebookImageService;
 	import net.psykosoft.psykopaint2.app.service.images.IImageService;
-
 	import net.psykosoft.psykopaint2.app.service.images.LoadPackagedImagesService;
 	import net.psykosoft.psykopaint2.app.service.images.NativeIOSImageService;
-
+	
 	import robotlegs.bender.framework.api.IContext;
-
+	
 	import starling.textures.TextureAtlas;
 
 	/*
@@ -47,7 +46,10 @@ package net.psykosoft.psykopaint2.app.commands.imageio
 			switch( sourceType ) {
 
 				case ImageSourceType.FACEBOOK:
-						throw new Error( this, "cannot retrieve thumbnails from this source yet: " + sourceType );
+						//throw new Error( this, "cannot retrieve thumbnails from this source yet: " + sourceType );
+						_imageService = new FacebookImageService();
+						_imageService.getThumbnailsLoadedSignal().add( onThumbnailsLoaded );
+						_imageService.loadThumbnails( );	
 					break;
 
 				case ImageSourceType.READY_TO_PAINT:

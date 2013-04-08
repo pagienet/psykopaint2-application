@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_FACEBOOK:
-					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO...
+					requestImageSourceSignal.dispatch( ImageSourceType.FACEBOOK );
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_CAMERA:

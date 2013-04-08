@@ -41,5 +41,6 @@ bin-debug
 .project
 .settings
 .actionScriptProperties
+src/net/psykosoft/psykopaint2/app/tests/
 
 

@@ -32,7 +32,6 @@ package net.psykosoft.psykopaint2.app
 	import org.gestouch.extensions.starling.StarlingDisplayListAdapter;
 	import org.gestouch.extensions.starling.StarlingTouchHitTester;
 	import org.gestouch.input.NativeInputAdapter;
-
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.events.Event;

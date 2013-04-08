@@ -1,0 +1,84 @@
+v3.0.2
+-adds publishInstall() method for facebook mobile install ads
+-adds getFbAccessExpiry() for getting facebook access token expiry time
+-fixes an issue on ios where force quitting the app, then restarting, could prevent facebook logout events from being dispatched
+-in accordance with facebook guidelines, publish permissions may no longer be specified in authenticateWithFacebook()
+-in accordance with facebook guidelines, 'forceInAppAuth' parameter has been removed
+-fixes issue with adding message data to facebook photo posts
+-adds requestNewFacebookReadPermissions() and requestNewFacebookPublishPermissions() - advanced users may add permissions to their token manually using these calls
+-adds shouldNotifyFacebookUser, facebookErrorCategoryId, facebookUserErrorMessage params to GVFacebookEvent, useful for debugging authentication issues, on iOS 6+ only
+-on iOS, updates internal facebook SDK to v3.2
+-resolves edge cases with cached tokens on ios
+-adds GoViral.goViral.isEmailAvailable() 
+-As Twitter no longer allows mobile apps to to post status thru the web ui, showTweetSheet requires iOS 5+ or an Android device with Twitter installed.
+v3.0.0
+-now requires AIR 3.5 to build
+
+-for iOS versions, iOS 6 integrated single sign on is now supported for Facebook
+
+-though not reccommended, you can now disable single-sign on and force in-app authentication with the optional third parameter of authenticateWithFacebook(readPermissions:String,writePermissions:String,forceInAppAuth:Boolean)
+
+-integrates latest facebook sdk features
+
+-for iOS, an additional FacebookAppID key is required in the application.xml.  See GettingStarted.pdf: Update Your Application Descriptor for more information
+
+-read and write permissions are now requested separately in the authenticateWithFacebook() call: i.e., authenticateWithFacebook("user_likes,publish_actions") now must be authenticateWithFacebook("user_likes","publish_actions").  See GettingStarted.pdf for more information.
+
+-when using the facebookGraphRequest method for a request requiring write permissions, those permissions must now be set as the last parameter of the facebookGraphRequest() method.  See GettingStarted.pdf for more information.
+
+-fixes issues where some dialog request callbacks did not populate the GVFacebookEvent's .data property
+
+-adds a workaround for Facebook bug that caused dialog's 'cancel' button to report a 'finish' event instead
+
+-on iOS 6, arbitrary social sharing to SMS, email, Sina Weibo, Facebook, Twitter, and other services is now enabled via the shareGenericMessage() and shareGenericMessageWithImage() methods. 
+
+-on iOS 6, native social composer views for Facebook, SinaWeibo, and Twitter are now available via the displaySocialComposer() method.  See GettingStarted.pdf for more information
+
+-fixes error parsing data returned to graph requests with a single boolean return value
+
+-adds graphPathQuery string property to GVFacebookEvent
+
+-adds the ability to set attachment filename in showEmailComposerWithBitmap
+
+v2.0.2
+-adds isGenericShareAvailable()- if this returns true (android only) you can use shareGenericMessage(subject:String,message:String,isHtml:Boolean) or shareGenericMessageWithImage(subject:String,message:String,isHtml:Boolean,image:BitmapData) to send a generic sharing intent to the OS, and the user can pick from the available apps to handle it.
+
+-if extra parameters are returned by Facebook after a request dialog, these will be returned in the event's 'jsonData' and 'data' properties.  This can be useful for determining which friends the user has chosen to share a request with.
+
+v2.0.1
+-fix for facebook access token on ios being returned with a truncated value in some cases
+-additional changes to support problems with sending oversized bitmapdata images to twitter
+v2.0.0
+-namespace changed from com.milkmangames.nativeextensions.ios to com.milkmangames.nativeextensions.  
+-requires AIR 3.3 to compile, but supports native twitter from windows or mac Flash IDEs
+-workaround bug preventing some extensions from compiling in Flash Builder with air 3.3
+-automatically resize twitter post images so large that they might cause ios to run out of memory
+-fixes bug preventing GVFacebookFriend array from being populated in event when calling requestFacebookFriends() with a field: extraParam
+-improved handling of threads on some devices
+-v1.0.7
+-full support for native ios 5 twitter features, when using air 3.3 on windows
+-fixes a bug where response event for getFacebookFriends could be dispatched twice.
+v1.0.6
+-makes the extra parameters for showFacebookFeedDialog() accessible via IDEs- was previously missing
+-improved memory handling
+v1.0.5
+-allow retrieval of current access token
+v1.0.4
+-allow optional extra parameters to be passed to showFacebookFeedDialog()
+-fixes bug that displayed empty bubbles when showing email composer with null 'to' recipients
+-adds GVFacebookEvent.FB_SESSION_INVALIDATED - dispatched when session has been cancelled, or user has uninstalled your app from Facebook
+-addresses intermittent thread error with posting bitmapdata
+v1.0.3
+-fix error that can occur while parsing facebook profile data
+v.1.0.2
+-fix compatability problem with air 3.2 for mac
+-allow deeply nested objects to be passed as params to graph request
+-fix bug when including url params directly in graphpath
+-show a spinning progress icon while dialogs are being loaded
+-add event when sessions are invalidated for facebook
+-add troubleshooting to documentation
+v1.0.1
+-fixes problems parsing email recipients when the language is non-English
+-fixes message encoding when using the basic/fallback twitter status dialog
+v1.0.0
+- initial release.

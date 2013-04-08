@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2.app.config
 		public static const RESOLUTION_X_iPAD_RETINA:uint = 2048;
 		public static const RESOLUTION_Y_iPAD_RETINA:uint = 1536;
 		public static const DPI_iPAD_RETINA:uint = 264;
+		public static const FACEBOOK_APP_ID:String =	"503384473059408";
 
 		// ---------------------------------------------------------------------
 		// Vars ( these are not settings actually, do not set here ).
@@ -53,5 +54,9 @@ package net.psykosoft.psykopaint2.app.config
 		public static var RUNNING_ON_HD:Boolean = true;
 		public static var RUNNING_ON_iPAD:Boolean = true;
 		public static var RUNNING_ON_RETINA_DISPLAY:Boolean = true;
+		
+		
+		
+		
 	}
 }

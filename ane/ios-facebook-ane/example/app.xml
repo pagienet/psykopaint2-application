@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<application xmlns="http://ns.adobe.com/air/application/3.5">
+  <!-- A universally unique application identifier. Must be unique across all AIR applications.
+	Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
+  <id>com.milkmangames.goviralex</id>
+  <!-- Used as the filename for the application. Required. -->
+  <filename>fbexample</filename>
+  <!-- The name that is displayed in the AIR application installer. -->
+  <name>GV AIR Sample</name>
+  <!-- A string value of the format <0-999>.<0-999>.<0-999> 
+	It MUST be three parts separated by periods. Required. -->
+  <versionNumber>1.0.0</versionNumber>
+  <!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the 
+	application, as it should be shown to users. Optional. -->
+  <versionLabel>v1.0.0</versionLabel>
+  <!-- Copyright information. Optional -->
+  <copyright>Copyright (C) 2012 Milkman Games, LLC.  All rights reserved.</copyright>
+  <!-- Settings for the application's initial window. Required. -->
+  <initialWindow>
+    <!-- The main SWF or HTML file of the application. Required. -->
+    <content>goviral.swf</content>
+    <!-- Should the app figure out which way to orient itself? -->
+    <autoOrients>false</autoOrients>
+    <!-- What is the standard aspect ratio, landscape or portrait? -->
+    <aspectRatio>portrait</aspectRatio>
+    <renderMode>cpu</renderMode>
+    <fullScreen>true</fullScreen>
+    <systemChrome>standard</systemChrome>
+  </initialWindow>
+  
+ <iPhone>
+	<!--requestedDisplayResolution>high</requestedDisplayResolution-->
+<InfoAdditions> 
+	<![CDATA[ 
+<key>FacebookAppID</key>
+<string>000000</string>
+<key>UIDeviceFamily</key> 
+<array> 
+    <string>1</string> 
+    <string>2</string> 
+</array>
+<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb000000</string>
+			</array>
+		</dict>
+	</array>
+]]>
+
+</InfoAdditions>
+</iPhone>
+	
+  <extensions>
+    <extensionID>com.milkmangames.extensions.GoViral</extensionID>
+  </extensions> 
+</application>
