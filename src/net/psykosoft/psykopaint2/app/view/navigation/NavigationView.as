@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
 	import net.psykosoft.psykopaint2.ui.extensions.buttons.CompoundButton;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
-	import net.psykosoft.psykopaint2.ui.theme.buttons.ButtonSkinType;
+	import net.psykosoft.psykopaint2.ui.theme.data.ButtonSkinType;
 	
 	import org.osflash.signals.Signal;
 	

@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.app.view.rootsprites
 {
 
+	import flash.display.BitmapData;
+
 	import net.psykosoft.psykopaint2.app.view.base.*;
 
 	import com.junkbyte.console.Cc;
@@ -18,14 +20,24 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 	import net.psykosoft.psykopaint2.app.view.selectimage.SelectImageView;
 	import net.psykosoft.psykopaint2.app.view.splash.SplashView;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
+	import net.psykosoft.utils.loaders.AtlasLoader;
+	import net.psykosoft.utils.loaders.XMLLoader;
 
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 
 	public class StarlingRootSprite extends StarlingViewBase
 	{
 		private var _mainLayer:Sprite;
 		private var _debugLayer:Sprite;
+		private var _themeAtlasLoader:AtlasLoader;
+		private var _themeAtlasImage:BitmapData;
+		private var _themeFontLoader:XMLLoader;
+		private var _themeAtlasDescriptor:XML;
+		private var _resolutionExtension:String;
+		private var _themeFontDescriptor:XML;
 
 		public function StarlingRootSprite() {
 			super();
@@ -36,13 +48,50 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 		// Overrides.
 		// ---------------------------------------------------------------------
 
-		override protected function onEnabled():void {
+		override protected function onCreate():void {
+			loadThemeAtlas();
+		}
+
+		// ---------------------------------------------------------------------
+		// Private.
+		// ---------------------------------------------------------------------
+
+		private function loadThemeAtlas():void {
+			_themeAtlasLoader = new AtlasLoader();
+			_resolutionExtension = Settings.RUNNING_ON_HD ? "-hr" : "-lr";
+			_themeAtlasLoader.loadAsset( "/assets-packaged/theme/psykopaint2" + _resolutionExtension + ".png", "/assets-packaged/theme/psykopaint2" + _resolutionExtension + ".xml", onThemeAtlasLoaded );
+		}
+
+		private function onThemeAtlasLoaded( image:BitmapData, descriptor:XML ):void {
+			_themeAtlasImage = image;
+			_themeAtlasDescriptor = descriptor;
+			_themeAtlasLoader.dispose();
+			_themeAtlasLoader = null;
+			loadThemeFont();
+		}
+
+		private function loadThemeFont():void {
+			_themeFontLoader = new XMLLoader();
+			_themeFontLoader.loadAsset( "/assets-packaged/theme/helveticaneue.fnt", onThemeFontLoaded );
+		}
+
+		private function onThemeFontLoaded( xml:XML ):void {
+			_themeFontDescriptor = xml;
+			_themeFontLoader.dispose();
+			_themeFontLoader = null;
+			initializeDisplayTree();
+		}
+
+		private function initializeDisplayTree():void {
 
 			// -----------------------
 			// Ui theme.
 			// -----------------------
 
-			var theme:DisplayListWatcher = new Psykopaint2Ui( stage, Settings.RUNNING_ON_HD );
+			var themeAtlas:TextureAtlas = new TextureAtlas( Texture.fromBitmapData( _themeAtlasImage ), _themeAtlasDescriptor );
+			_themeAtlasImage.dispose();
+			_themeAtlasImage = null;
+			new Psykopaint2Ui( stage, themeAtlas, _themeFontDescriptor, _resolutionExtension );
 
 			// -----------------------
 			// Layering.
@@ -81,10 +130,6 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 				_debugLayer.addChild( button );
 			}
 		}
-
-		// ---------------------------------------------------------------------
-		// Private.
-		// ---------------------------------------------------------------------
 
 		private function onConsoleButtonTriggered( event:Event ):void {
 			Cc.visible = !Cc.visible;

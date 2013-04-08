@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:00ebb455a030ef0b5796a52dc11b9f4c$ -->
+<TextureAtlas imagePath="psykopaint2-lr.png">
+    <SubTexture name="bg-lr" x="2" y="2" width="1023" height="256"/>
+    <SubTexture name="clamp-lr" x="2" y="417" width="16" height="47"/>
+    <SubTexture name="helveticaneue" x="423" y="387" width="244" height="122" frameX="-3" frameY="-2" frameWidth="256" frameHeight="128"/>
+    <SubTexture name="label-lr" x="2" y="466" width="90" height="42" frameX="-4" frameY="-2" frameWidth="94" frameHeight="44"/>
+    <SubTexture name="leftArrow-lr" x="94" y="486" width="13" height="19"/>
+    <SubTexture name="leftCorner-lr" x="2" y="260" width="154" height="155"/>
+    <SubTexture name="leftLabel-lr" x="20" y="417" width="136" height="36"/>
+    <SubTexture name="paper 1-lr" x="423" y="260" width="123" height="125"/>
+    <SubTexture name="paper 2-lr" x="548" y="260" width="124" height="124"/>
+    <SubTexture name="paper 3-lr" x="298" y="260" width="123" height="127"/>
+    <SubTexture name="rightCorner-lr" x="158" y="260" width="138" height="146"/>
+    <SubTexture name="rightLabel-lr" x="94" y="455" width="129" height="29"/>
+</TextureAtlas>

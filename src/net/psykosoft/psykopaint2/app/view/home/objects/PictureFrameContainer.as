@@ -8,13 +8,10 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 
-	import net.psykosoft.utils.loaders.AtlasLoader;
-
-	import net.psykosoft.utils.loaders.BitmapLoader;
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
-	import net.psykosoft.utils.loaders.XMLLoader;
 	import net.psykosoft.psykopaint2.app.view.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.app.view.home.vos.FrameTextureAtlasDescriptorVO;
+	import net.psykosoft.utils.loaders.AtlasLoader;
 
 	public class PictureFrameContainer extends ObjectContainer3D
 	{
