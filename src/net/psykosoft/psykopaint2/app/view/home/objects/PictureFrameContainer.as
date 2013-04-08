@@ -54,7 +54,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			_wallFrames = null;
 
 			if( _atlasXml ) {
-
+				_atlasXml = null;
 			}
 
 			_framesTexture.dispose();

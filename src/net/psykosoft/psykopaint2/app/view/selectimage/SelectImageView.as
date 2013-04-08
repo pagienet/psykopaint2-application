@@ -95,12 +95,12 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		// Public.
 		// ---------------------------------------------------------------------
 
-		public function displayThumbs( thumbs:TextureAtlas ):void {
+		public function displayThumbs( thumbsAtlas:TextureAtlas ):void {
 
-			trace( this, "displaying thumbs from texture atlas: " + thumbs );
+			trace( this, "displaying thumbs from texture atlas: " + thumbsAtlas );
 
-			var textures:Vector.<Texture> = thumbs.getTextures();
-			_thumbNames = _thumbNames.concat( thumbs.getNames() );
+			var textures:Vector.<Texture> = thumbsAtlas.getTextures();
+			_thumbNames = _thumbNames.concat( thumbsAtlas.getNames() );
 
 			for( var i:uint; i < textures.length; i++ ) {
 				_dataProvider.push( { texture: textures[ i ] } );
