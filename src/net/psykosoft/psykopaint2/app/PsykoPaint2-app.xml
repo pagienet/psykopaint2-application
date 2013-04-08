@@ -273,12 +273,23 @@
 		]]></manifestAdditions>
     </android>
     <iPhone>
-        <InfoAdditions><![CDATA[
+       <InfoAdditions><![CDATA[
+        <key>FacebookAppID</key>
+		<string>503384473059408</string>
 			<key>UIDeviceFamily</key>
 			<array>
 				<string>1</string>
 				<string>2</string>
 			</array>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>fb000000</string>
+				</array>
+			</dict>
+		</array>
 		]]></InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>

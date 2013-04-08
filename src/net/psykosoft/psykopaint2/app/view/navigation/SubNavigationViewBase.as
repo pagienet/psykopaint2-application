@@ -1,21 +1,26 @@
 package net.psykosoft.psykopaint2.app.view.navigation
 {
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
+	
 	import feathers.controls.Button;
 	import feathers.controls.ScrollContainer;
 	import feathers.controls.Scroller;
-
+	
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttons.CompoundButton;
 	import net.psykosoft.psykopaint2.ui.theme.buttons.ButtonSkinType;
-
+	
 	import org.osflash.signals.Signal;
-
+	
+	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.textures.RenderTexture;
 
 	public class SubNavigationViewBase extends StarlingViewBase
 	{
@@ -137,12 +142,17 @@ package net.psykosoft.psykopaint2.app.view.navigation
 				_scrollContainer.width = 1024;
 			}
 			_scrollContainer.x = 1024 / 2 - _scrollContainer.width / 2;
-
+			
+			
 		}
 
 		public function clearCenterButtons():void {
+			
+			
+			
 			if( _scrollContainer ) {
-
+				
+				
 				// Kill children.
 				while( _scrollContainer.numChildren > 0 ) {
 					var child:CompoundButton = _scrollContainer.getChildAt( 0 ) as CompoundButton;
@@ -182,7 +192,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 		private function onHeaderResized( event:Event ):void {
 			_header.x = stage.stageWidth / 2 - _header.width / 2;
-			_header.y = -_header.height / 2;
+			_header.y = -_header.height / 2+20;
 		}
 	}
 }

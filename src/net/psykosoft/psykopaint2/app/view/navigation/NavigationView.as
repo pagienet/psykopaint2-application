@@ -2,20 +2,23 @@ package net.psykosoft.psykopaint2.app.view.navigation
 {
 
 	import com.greensock.TweenLite;
-
+	import com.greensock.easing.Expo;
+	
 	import feathers.controls.Button;
-
+	
+	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
 	import net.psykosoft.psykopaint2.ui.extensions.buttons.CompoundButton;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.ui.theme.buttons.ButtonSkinType;
-
+	
 	import org.osflash.signals.Signal;
-
+	
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.textures.RenderTexture;
 
 	/*
 	* Contains the lower navigation menu background image and the edge buttons.
@@ -45,14 +48,35 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 		public function enableSubNavigationView( view:SubNavigationViewBase ):void {
 
+			
 			if( _activeSubNavigation == view ) return;
 			trace( this, "adding sub-navigation view: " + view );
-
-			if( _activeSubNavigation ) disableSubNavigation();
+						
+			//TRANSITION OUT PREVIOUS VIEW
+			if(_activeSubNavigation)
+			{
+				//TODO : EDGE BUTTONS TRANSITION TOO
+				hideEdgeButtons();
+				trace("Is back button = "+_isBackButton);
+				var previousSubNavigation:SubNavigationViewBase = _activeSubNavigation;
+				
+				TweenLite.to(previousSubNavigation,0.3,{x:(_isBackButton)?(previousSubNavigation.x+stage.stageWidth):previousSubNavigation.x-stage.stageWidth,ease:Expo.easeIn,onComplete:function():void{
+					_subNavigationContainer.removeChild( previousSubNavigation );
+					previousSubNavigation.disable();	
+				}});
+			}
+			
+			
 			_activeSubNavigation = view;
 			_activeSubNavigation.setNavigation( this );
 			_activeSubNavigation.enable();
 			_subNavigationContainer.addChild( _activeSubNavigation );
+			
+			//TRANSITION IN NEW VIEW
+			view.x = (_isBackButton)?-stage.stageWidth-_activeSubNavigation.width/2:+stage.stageWidth+_activeSubNavigation.width/2;
+			TweenLite.to(view,0.5,{x:0,ease:Expo.easeOut});
+			
+			
 		}
 
 		public function disableSubNavigation():void {
@@ -77,6 +101,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		private var _rightArrow:Image;
 		private var _leftButtonContainer:Sprite;
 		private var _rightButtonContainer:Sprite;
+		private var _isBackButton:Boolean;
 
 		public function setLeftButton( label:String ):void {
 			_leftButton.label = label;
@@ -171,6 +196,10 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 		protected function onButtonTriggered( event:Event ):void {
 			var button:CompoundButton = event.currentTarget as CompoundButton;
+			_isBackButton = (button ==_leftButton )?true:false;
+			if ((button ==_leftButton )) trace("clicked left button") else {
+				trace("clicked an other button")
+			}
 			if( _activeSubNavigation ) {
 				_activeSubNavigation.notifyButtonPress( button.label );
 			}
@@ -200,7 +229,8 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			// Edge buttons.
 			initializeLeftEdgeButton();
 			initializeRightEdgeButton();
-
+			
+			
 		}
 
 		override protected function onDisabled():void {
