@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 	import net.psykosoft.psykopaint2.app.data.types.ImageSourceType;
 	import net.psykosoft.psykopaint2.app.service.images.ANEIOSImageService;
 	import net.psykosoft.psykopaint2.app.service.images.DesktopImageService;
+	import net.psykosoft.psykopaint2.app.service.images.FacebookImageService;
 	import net.psykosoft.psykopaint2.app.service.images.IImageService;
 	import net.psykosoft.psykopaint2.app.service.images.LoadPackagedImagesService;
 	import net.psykosoft.psykopaint2.app.service.images.NativeIOSImageService;
@@ -55,10 +56,13 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		// -----------------------
 
 		private function onLoadImageRequested( sourceType:String ):void {
+			trace( this, "image sources requested for: " + sourceType );
 			switch( sourceType ) {
 
 				case ImageSourceType.FACEBOOK:
-						throw new Error( this, "cannot retrieve thumbnails from this source yet: " + sourceType );
+						_imageService = new FacebookImageService();
+						_imageService.getThumbnailsLoadedSignal().add( onThumbnailsLoaded );
+						_imageService.loadThumbnails();
 					break;
 
 				case ImageSourceType.READY_TO_PAINT:
@@ -99,7 +103,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 			requestSourceImageChangeSignal.dispatch( bmd );
 
 			// Dispose service.
-			_imageService.disposeService();
+			_imageService.disposeService(); // TODO: service should also be disposed if the user cancels the selection in some way
 			_imageService = null;
 
 			// Kill view.

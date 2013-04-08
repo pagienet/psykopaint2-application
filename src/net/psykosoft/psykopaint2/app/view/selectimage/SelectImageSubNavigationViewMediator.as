@@ -18,9 +18,6 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		[Inject]
 		public var notifyLoadImageSourceRequestedSignal:NotifyLoadImageSourceRequestedSignal;
 
-//		[Inject]
-//		public var requestUserPhotosThumbnailsSignal:RequestUserPhotosThumbnailsSignal;
-
 		[Inject]
 		public var notifyPopUpDisplaySignal:NotifyPopUpDisplaySignal;
 
@@ -46,20 +43,28 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 					requestStateChange( new StateVO( ApplicationStateType.PAINTING ) );
 					break;
 
+				// TODO: what happens if the user clicks on a button twice?
+					// will SelectImageViewMediator create parallel versions of the services?
+
+				// Facebook.
 				case SelectImageSubNavigationView.BUTTON_LABEL_FACEBOOK:
-					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO...
+					if( Settings.RUNNING_ON_iPAD ) notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.FACEBOOK );
+					else notifyPopUpDisplaySignal.dispatch( PopUpType.NO_PLATFORM ); // Fetching facebook images is not supported on desktop.
 					break;
 
+				// Camera.
 				case SelectImageSubNavigationView.BUTTON_LABEL_CAMERA:
 					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO...
 //					notifyPopUpDisplaySignal.dispatch( PopUpType.CAPTURE_IMAGE );
 //					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_CAPTURE_IMAGE ) );
 					break;
 
+				// Ready to paint.
 				case SelectImageSubNavigationView.BUTTON_LABEL_READY_TO_PAINT:
 					notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.READY_TO_PAINT );
 					break;
 
+				// User photos.
 				case SelectImageSubNavigationView.BUTTON_LABEL_YOUR_PHOTOS:
 					if( Settings.RUNNING_ON_iPAD ) {
 						if( Settings.USER_NATIVE_USER_PHOTOS_BROWSER ) notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.IOS_USER_PHOTOS_NATIVE );
