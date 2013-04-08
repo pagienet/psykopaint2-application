@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.app.utils.BitmapLoader;
+	import net.psykosoft.psykopaint2.app.utils.loaders.BitmapLoader;
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 
 	public class Room extends ObjectContainer3D

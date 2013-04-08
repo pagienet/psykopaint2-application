@@ -6,10 +6,6 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.commands.ChangeWallpaperCommand;
 	import net.psykosoft.psykopaint2.app.commands.RenderFrameCommand;
 	import net.psykosoft.psykopaint2.app.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
-	import net.psykosoft.psykopaint2.app.commands.imageio.LoadFullImageCommand;
-	import net.psykosoft.psykopaint2.app.commands.imageio.LoadImageSourceCommand;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestFullImageSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestImageSourceSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestSourceImageChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
@@ -28,10 +24,6 @@ package net.psykosoft.psykopaint2.app.config.configurators
 
 			// Packaged wallpapers.
 			commandMap.map( RequestWallpaperChangeSignal ).toCommand( ChangeWallpaperCommand );
-
-			// Image sources.
-			commandMap.map( RequestImageSourceSignal ).toCommand( LoadImageSourceCommand );
-			commandMap.map( RequestFullImageSignal ).toCommand( LoadFullImageCommand );
 
 			// Source image change to start the painting process.
 			commandMap.map( RequestSourceImageChangeSignal ).toCommand( ChangeSourceImageCommand );

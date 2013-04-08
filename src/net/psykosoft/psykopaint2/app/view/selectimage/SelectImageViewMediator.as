@@ -1,9 +1,17 @@
 package net.psykosoft.psykopaint2.app.view.selectimage
 {
 
+	import flash.display.BitmapData;
+
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifySourceImageThumbnailsRetrievedSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestFullImageSignal;
+	import net.psykosoft.psykopaint2.app.data.types.ImageSourceType;
+	import net.psykosoft.psykopaint2.app.service.images.ANEIOSImageService;
+	import net.psykosoft.psykopaint2.app.service.images.DesktopImageService;
+	import net.psykosoft.psykopaint2.app.service.images.IImageService;
+	import net.psykosoft.psykopaint2.app.service.images.LoadPackagedImagesService;
+	import net.psykosoft.psykopaint2.app.service.images.NativeIOSImageService;
+	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyLoadImageSourceRequestedSignal;
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestSourceImageChangeSignal;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
 	import starling.textures.TextureAtlas;
@@ -14,10 +22,12 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		public var selectImageView:SelectImageView;
 
 		[Inject]
-		public var requestFullImageSignal:RequestFullImageSignal;
+		public var notifyLoadImageSourceRequestedSignal:NotifyLoadImageSourceRequestedSignal;
 
 		[Inject]
-		public var notifySourceImageThumbnailsRetrievedSignal:NotifySourceImageThumbnailsRetrievedSignal;
+		public var requestSourceImageChangeSignal:RequestSourceImageChangeSignal;
+
+		private var _imageService:IImageService;
 
 		override public function initialize():void {
 
@@ -29,7 +39,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 			selectImageView.listSelectedItemChangedSignal.add( onListItemSelected );
 
 			// From app.
-			notifySourceImageThumbnailsRetrievedSignal.add( onSourceImageThumbnailsRetrieved );
+			notifyLoadImageSourceRequestedSignal.add( onLoadImageRequested );
 		}
 
 		// -----------------------
@@ -37,17 +47,68 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		// -----------------------
 
 		private function onListItemSelected( itemName:String ):void {
-			// TODO: how does it know which image source to call?
-			requestFullImageSignal.dispatch( itemName );
-			selectImageView.disable(); // TODO: services store textures in models, requesting a single image load clears the thumb atlases, this needs to be separated
+			_imageService.loadFullImage( itemName );
 		}
 
 		// -----------------------
 		// From app.
 		// -----------------------
 
-		private function onSourceImageThumbnailsRetrieved( thumbs:TextureAtlas ):void {
-			selectImageView.displayThumbs( thumbs );
+		private function onLoadImageRequested( sourceType:String ):void {
+			switch( sourceType ) {
+
+				case ImageSourceType.FACEBOOK:
+						throw new Error( this, "cannot retrieve thumbnails from this source yet: " + sourceType );
+					break;
+
+				case ImageSourceType.READY_TO_PAINT:
+						_imageService = new LoadPackagedImagesService();
+						LoadPackagedImagesService( _imageService ).imageUrl = "assets-packaged/ready-to-paint/ready-to-paint.png";
+						LoadPackagedImagesService( _imageService ).xmlUrl = "assets-packaged/ready-to-paint/ready-to-paint.xml";
+						LoadPackagedImagesService( _imageService ).originalImagesPath = "assets-packaged/ready-to-paint/originals/";
+						_imageService.getThumbnailsLoadedSignal().add( onThumbnailsLoaded );
+						_imageService.getFullImageLoadedSignal().add( onFullImageLoaded );
+						_imageService.loadThumbnails();
+					break;
+
+				case ImageSourceType.IOS_USER_PHOTOS_NATIVE:
+						_imageService = new NativeIOSImageService();
+						_imageService.getFullImageLoadedSignal().add( onFullImageLoaded );
+						_imageService.loadFullImage( "prompt" );
+					break;
+
+				case ImageSourceType.IOS_USER_PHOTOS_ANE:
+						_imageService = new ANEIOSImageService();
+						_imageService.getThumbnailsLoadedSignal().add( onThumbnailsLoaded );
+						_imageService.getFullImageLoadedSignal().add( onFullImageLoaded );
+						_imageService.loadThumbnails();
+					break;
+
+				case ImageSourceType.DESKTOP:
+						_imageService = new DesktopImageService();
+						_imageService.getFullImageLoadedSignal().add( onFullImageLoaded );
+						_imageService.loadFullImage( "prompt" );
+					break;
+			}
+		}
+
+		private function onFullImageLoaded( bmd:BitmapData ):void {
+			trace( this, "onFullImageLoaded - image: " + bmd );
+
+			// Notify the drawing core of the selected image.
+			requestSourceImageChangeSignal.dispatch( bmd );
+
+			// Dispose service.
+			_imageService.disposeService();
+			_imageService = null;
+
+			// Kill view.
+			selectImageView.disable();
+		}
+
+		private function onThumbnailsLoaded( atlas:TextureAtlas ):void {
+			trace( this, "onThumbnailsLoaded - atlas: " + atlas );
+			selectImageView.displayThumbs( atlas );
 		}
 	}
 }

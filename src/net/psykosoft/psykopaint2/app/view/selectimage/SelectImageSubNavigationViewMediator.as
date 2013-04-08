@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 	import net.psykosoft.psykopaint2.app.data.types.ImageSourceType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestImageSourceSignal;
+	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyLoadImageSourceRequestedSignal;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 	import net.psykosoft.psykopaint2.app.view.popups.base.PopUpType;
 
@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 		public var view:SelectImageSubNavigationView;
 
 		[Inject]
-		public var requestImageSourceSignal:RequestImageSourceSignal;
+		public var notifyLoadImageSourceRequestedSignal:NotifyLoadImageSourceRequestedSignal;
 
 //		[Inject]
 //		public var requestUserPhotosThumbnailsSignal:RequestUserPhotosThumbnailsSignal;
@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_FACEBOOK:
-					requestImageSourceSignal.dispatch( ImageSourceType.FACEBOOK );
+					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO...
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_CAMERA:
@@ -57,15 +57,15 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_READY_TO_PAINT:
-					requestImageSourceSignal.dispatch( ImageSourceType.READY_TO_PAINT );
+					notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.READY_TO_PAINT );
 					break;
 
 				case SelectImageSubNavigationView.BUTTON_LABEL_YOUR_PHOTOS:
 					if( Settings.RUNNING_ON_iPAD ) {
-						if( Settings.USER_NATIVE_USER_PHOTOS_BROWSER ) requestImageSourceSignal.dispatch( ImageSourceType.IOS_USER_PHOTOS_NATIVE );
-						else requestImageSourceSignal.dispatch( ImageSourceType.IOS_USER_PHOTOS_ANE );
+						if( Settings.USER_NATIVE_USER_PHOTOS_BROWSER ) notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.IOS_USER_PHOTOS_NATIVE );
+						else notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.IOS_USER_PHOTOS_ANE );
 					}
-					else requestImageSourceSignal.dispatch( ImageSourceType.DESKTOP );
+					else notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.DESKTOP );
 					break;
 			}
 		}

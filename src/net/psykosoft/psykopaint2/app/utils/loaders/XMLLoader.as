@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.app.utils
+package net.psykosoft.psykopaint2.app.utils.loaders
 {
 
 	import flash.events.Event;

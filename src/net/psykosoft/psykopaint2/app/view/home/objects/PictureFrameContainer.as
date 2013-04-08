@@ -8,9 +8,11 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 
-	import net.psykosoft.psykopaint2.app.utils.BitmapLoader;
+	import net.psykosoft.psykopaint2.app.utils.loaders.AtlasLoader;
+
+	import net.psykosoft.psykopaint2.app.utils.loaders.BitmapLoader;
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
-	import net.psykosoft.psykopaint2.app.utils.XMLLoader;
+	import net.psykosoft.psykopaint2.app.utils.loaders.XMLLoader;
 	import net.psykosoft.psykopaint2.app.view.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.app.view.home.vos.FrameTextureAtlasDescriptorVO;
 
@@ -22,11 +24,9 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		private var _wallFrames:Vector.<PictureFrame>;
 		private var _cameraController:ScrollCameraController;
 		private var _room:Room;
-
+		private var _atlasXml:XML;
 		private var _framesTexture:BitmapTexture;
-		private var _bitmapLoader:BitmapLoader;
-		private var _xmlLoader:XMLLoader;
-		private var _framesDescriptor:XML;
+		private var _atlasLoader:AtlasLoader;
 
 		private const FRAME_GAP_X:Number = 500;
 		private const PAINTINGS_SCALE:Number = 0.9;
@@ -41,18 +41,9 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 			trace( this, "dispose()" );
 
-			if( _bitmapLoader ) {
-				_bitmapLoader.dispose();
-				_bitmapLoader = null;
-			}
-
-			if( _xmlLoader ) {
-				_xmlLoader.dispose();
-				_xmlLoader = null;
-			}
-
-			if( _framesDescriptor ) {
-				_framesDescriptor = null;
+			if( _atlasLoader ) {
+				_atlasLoader.dispose();
+				_atlasLoader = null;
 			}
 
 			for( var i:uint; i < _wallFrames.length; i++ ) {
@@ -61,6 +52,10 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 				frame = null;
 			}
 			_wallFrames = null;
+
+			if( _atlasXml ) {
+
+			}
 
 			_framesTexture.dispose();
 			_framesTexture = null;
@@ -101,19 +96,18 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 		public function loadDefaultHomeFrames():void {
 
-			// Initialize loaders.
-			_bitmapLoader = new BitmapLoader();
-			_xmlLoader = new XMLLoader();
+			// Initialize loader.
+			_atlasLoader = new AtlasLoader();
 
 			// Start by loading the frame's material atlas.
-			loadFrameAtlasImage();
+			loadFrameAtlas();
 		}
 
-		private function loadFrameAtlasImage():void {
-			_bitmapLoader.loadAsset( "/assets-packaged/away3d/frames/frames.png", onFramesAtlasImageReady );
+		private function loadFrameAtlas():void {
+			_atlasLoader.loadAsset( "/assets-packaged/away3d/frames/frames.png", "/assets-packaged/away3d/frames/frames.xml", onFramesAtlasReady );
 		}
 
-		private function onFramesAtlasImageReady( bmd:BitmapData ):void {
+		private function onFramesAtlasReady( bmd:BitmapData, descriptor:XML ):void {
 
 			// Texture.
 			_framesTexture = new BitmapTexture( bmd );
@@ -126,24 +120,12 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			_frameMaterial.mipmap = false;
 			_frameMaterial.smooth = true;
 
-			// Dispose bitmap loader.
-			_bitmapLoader.dispose();
-			_bitmapLoader = null;
+			// Descriptor.
+			_atlasXml = descriptor;
 
-			// Continue.
-			loadFrameAtlasDescriptor();
-		}
-
-		private function loadFrameAtlasDescriptor():void {
-			_xmlLoader.loadAsset( "/assets-packaged/away3d/frames/frames.xml", onFramesAtlasDescriptorReady );
-		}
-
-		private function onFramesAtlasDescriptorReady( xml:XML ):void {
-
-			// Dispose xml loader.
-			_framesDescriptor = xml;
-			_xmlLoader.dispose();
-			_xmlLoader = null;
+			// Dispose loader.
+			_atlasLoader.dispose();
+			_atlasLoader = null;
 
 			// Continue.
 			buildDefaultFrames();
@@ -162,7 +144,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// Frame.
 			var settingsFrameAtlasDescriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO(
 					"dangerFrame",
-					_framesDescriptor,
+					_atlasXml,
 					_framesTexture.width, _framesTexture.height
 			);
 			var settingsFrame:PictureFrame = new PictureFrame( settingsPicture, _frameMaterial, settingsFrameAtlasDescriptor );
@@ -194,13 +176,13 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// Frame.
 			var psykopaintFrameAtlasDescriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO(
 					"whiteFrame",
-					_framesDescriptor,
+					_atlasXml,
 					_framesTexture.width, _framesTexture.height
 			);
 			var psykopaintFrame:PictureFrame = new PictureFrame( psykopaintPicture, _frameMaterial, psykopaintFrameAtlasDescriptor );
 			addPictureFrame( psykopaintFrame );
 
-			_framesDescriptor = null;
+			_atlasXml = null;
 
 			// Initial frame.
 			_cameraController.jumpToSnapPoint( 0 );

@@ -4,12 +4,12 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyCameraFlipSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyLoadImageSourceRequestedSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpRemovedSignal;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifySourceImageThumbnailsRetrievedSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyWallpaperImagesUpdatedSignal;
@@ -21,7 +21,6 @@ package net.psykosoft.psykopaint2.app.config.configurators
 		public function NotificationsConfig( injector:Injector ) {
 
 			injector.map( NotifyStateChangedSignal ).asSingleton();
-			injector.map( NotifySourceImageThumbnailsRetrievedSignal ).asSingleton();
 			injector.map( NotifyWallpaperImagesUpdatedSignal ).asSingleton();
 			injector.map( NotifyPopUpMessageSignal ).asSingleton();
 			injector.map( NotifyPopUpDisplaySignal ).asSingleton();
@@ -32,6 +31,7 @@ package net.psykosoft.psykopaint2.app.config.configurators
 			injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 			injector.map( NotifyPopUpRemovalSignal ).asSingleton();
 			injector.map( NotifyCameraFlipSignal ).asSingleton();
+			injector.map( NotifyLoadImageSourceRequestedSignal ).asSingleton();
 
 		}
 	}
