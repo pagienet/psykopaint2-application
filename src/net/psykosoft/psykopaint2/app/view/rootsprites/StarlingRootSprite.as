@@ -23,6 +23,8 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 	import net.psykosoft.utils.loaders.AtlasLoader;
 	import net.psykosoft.utils.loaders.XMLLoader;
 
+	import starling.core.Starling;
+
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.textures.Texture;
@@ -88,7 +90,9 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 			// Ui theme.
 			// -----------------------
 
-			var themeAtlas:TextureAtlas = new TextureAtlas( Texture.fromBitmapData( _themeAtlasImage ), _themeAtlasDescriptor );
+			trace( this, "initializing display tree with Starling.contentScaleFactor: " + Starling.contentScaleFactor );
+			var texture:Texture = Texture.fromBitmapData( _themeAtlasImage, false, false, Starling.contentScaleFactor );
+			var themeAtlas:TextureAtlas = new TextureAtlas( texture, _themeAtlasDescriptor );
 			_themeAtlasImage.dispose();
 			_themeAtlasImage = null;
 			new Psykopaint2Ui( stage, themeAtlas, _themeFontDescriptor, _resolutionExtension );

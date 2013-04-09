@@ -159,7 +159,7 @@ package net.psykosoft.psykopaint2.app
 			setTimeout( function():void {
 				var requestStateChangeSignal:RequestStateChangeSignal = _appConfig.injector.getInstance( RequestStateChangeSignal );
 				requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.SPLASH_SCREEN ) );
-			}, 1000 );
+			}, 5000 );
 		}
 
 		private function stopLoop():void {
