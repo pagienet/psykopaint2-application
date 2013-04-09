@@ -60,7 +60,7 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 
 		private function loadThemeAtlas():void {
 			_themeAtlasLoader = new AtlasLoader();
-			_resolutionExtension = Settings.RUNNING_ON_HD ? "-hr" : "-lr";
+			_resolutionExtension = Settings.RUNNING_ON_HD ? "-hd" : "-sd";
 			_themeAtlasLoader.loadAsset( "/assets-packaged/theme/psykopaint2" + _resolutionExtension + ".png", "/assets-packaged/theme/psykopaint2" + _resolutionExtension + ".xml", onThemeAtlasLoaded );
 		}
 

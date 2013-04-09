@@ -8,13 +8,29 @@
         <key>verbose</key>
         <false/>
         <key>autoSDSettings</key>
-        <array/>
+        <array>
+            <struct type="AutoSDSettings">
+                <key>scale</key>
+                <double>0.5</double>
+                <key>extension</key>
+                <string>-sd.</string>
+                <key>acceptFractionalValues</key>
+                <false/>
+                <key>maxTextureSize</key>
+                <QSize>
+                    <key>width</key>
+                    <int>2048</int>
+                    <key>height</key>
+                    <int>2048</int>
+                </QSize>
+            </struct>
+        </array>
         <key>allowRotation</key>
         <false/>
         <key>quiet</key>
         <false/>
         <key>premultiplyAlpha</key>
-        <false/>
+        <true/>
         <key>shapeDebug</key>
         <false/>
         <key>dpi</key>
@@ -22,7 +38,7 @@
         <key>dataFormat</key>
         <string>sparrow</string>
         <key>textureFileName</key>
-        <filename>psykopaint2-hr.png</filename>
+        <filename>../../assets-packaged/theme/psykopaint2-hd.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>ditherType</key>
@@ -66,13 +82,13 @@
             <int>-1</int>
         </QSize>
         <key>reduceBorderArtifacts</key>
-        <false/>
+        <true/>
         <key>algorithmSettings</key>
         <struct type="AlgorithmSettings">
             <key>algorithm</key>
             <enum type="AlgorithmSettings::AlgorithmId">MaxRects</enum>
             <key>freeSizeMode</key>
-            <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
+            <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Good</enum>
             <key>sizeConstraints</key>
             <enum type="AlgorithmSettings::SizeConstraints">POT</enum>
             <key>forceSquared</key>
@@ -111,9 +127,9 @@
             <enum type="AndEngine::MagFilter">MagLinear</enum>
         </struct>
         <key>dataFileName</key>
-        <filename>psykopaint2-hr.xml</filename>
+        <filename>../../assets-packaged/theme/psykopaint2-hd.xml</filename>
         <key>mainExtension</key>
-        <string></string>
+        <string>-hd.</string>
         <key>forceIdenticalLayout</key>
         <false/>
         <key>outputFormat</key>
@@ -141,18 +157,20 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>images/bar/bg-hr.png</filename>
-            <filename>images/bar/paper 1-hr.png</filename>
-            <filename>images/bar/paper 2-hr.png</filename>
-            <filename>images/bar/paper 3-hr.png</filename>
-            <filename>images/bar/leftCorner-hr.png</filename>
-            <filename>images/bar/rightCorner-hr.png</filename>
-            <filename>images/bar/clamp-hr.png</filename>
-            <filename>images/bar/leftArrow-hr.png</filename>
-            <filename>images/bar/label-hr.png</filename>
-            <filename>images/bar/leftLabel-hr.png</filename>
-            <filename>images/bar/rightLabel-hr.png</filename>
+            <filename>images/bar/bg.png</filename>
+            <filename>images/bar/clamp.png</filename>
+            <filename>images/bar/label.png</filename>
+            <filename>images/bar/leftArrow.png</filename>
+            <filename>images/bar/leftCorner.png</filename>
+            <filename>images/bar/leftLabel.png</filename>
+            <filename>images/bar/pageLabel.png</filename>
+            <filename>images/bar/paper 1.png</filename>
+            <filename>images/bar/paper 2.png</filename>
+            <filename>images/bar/paper 3.png</filename>
+            <filename>images/bar/rightCorner.png</filename>
+            <filename>images/bar/rightLabel.png</filename>
             <filename>fonts/helveticaneue.png</filename>
+            <filename>images/bar/pf_ronda_seven_0.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
