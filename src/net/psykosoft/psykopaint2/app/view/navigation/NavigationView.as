@@ -57,7 +57,6 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			{
 				//TODO : EDGE BUTTONS TRANSITION TOO
 				hideEdgeButtons();
-				trace("Is back button = "+_isBackButton);
 				var previousSubNavigation:SubNavigationViewBase = _activeSubNavigation;
 				
 				TweenLite.to(previousSubNavigation,0.3,{x:(_isBackButton)?(previousSubNavigation.x+stage.stageWidth):previousSubNavigation.x-stage.stageWidth,ease:Expo.easeIn,onComplete:function():void{
@@ -197,9 +196,6 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		protected function onButtonTriggered( event:Event ):void {
 			var button:CompoundButton = event.currentTarget as CompoundButton;
 			_isBackButton = (button ==_leftButton )?true:false;
-			if ((button ==_leftButton )) trace("clicked left button") else {
-				trace("clicked an other button")
-			}
 			if( _activeSubNavigation ) {
 				_activeSubNavigation.notifyButtonPress( button.label );
 			}
