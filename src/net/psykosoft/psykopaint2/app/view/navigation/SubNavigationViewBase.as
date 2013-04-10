@@ -15,6 +15,8 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.ui.extensions.buttons.CompoundButton;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.ui.theme.data.ButtonSkinType;
+	import net.psykosoft.psykopaint2.utils.decorators.BlurButtonDecorator;
+	import net.psykosoft.psykopaint2.utils.decorators.InvertButtonDecorator;
 	
 	import org.osflash.signals.Signal;
 	
@@ -120,6 +122,8 @@ package net.psykosoft.psykopaint2.app.view.navigation
 				subButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 				subButton.x = inflate + ( subButton.width + gap ) * i;
 				subButton.y = 30;
+				new BlurButtonDecorator(subButton,0);
+				
 				accumulatedContentWidth += subButton.width;
 				if( i != len - 1 ) {
 					accumulatedContentWidth += gap;

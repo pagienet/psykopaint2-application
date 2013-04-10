@@ -24,6 +24,11 @@ package net.psykosoft.psykopaint2.app.view.home
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsGallery",  BUTTON_LABEL_GALLERY, onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_NEW_PAINTING, onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
+			
+			
+			//ADD SLIDER
+			
+			
 		}
 	}
 }
