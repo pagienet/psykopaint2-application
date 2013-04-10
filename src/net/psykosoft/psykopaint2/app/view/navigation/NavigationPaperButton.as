@@ -17,11 +17,6 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		public function NavigationPaperButton(upState:Texture, text:String="")
 		{
 			super(upState,text);
-			/*var _paperButtonUpSkinTexture1:Texture = Psykopaint2Ui.instance.themeAtlas.getTexture( "paper 1"  )
-			
-			_paperImage = new Image(_paperButtonUpSkinTexture1);
-			this.addChild(_paperImage);
-			*/
 			scaleWhenDown = 0.98;
 			
 		}
