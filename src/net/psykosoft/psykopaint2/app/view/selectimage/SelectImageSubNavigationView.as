@@ -21,13 +21,13 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 			super.onEnabled();
 
-			setLeftButton( BUTTON_LABEL_NEW_PAINTING );
+			setLeftButton("FooterIconsSettings", BUTTON_LABEL_NEW_PAINTING );
 
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_FACEBOOK, onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_CAMERA, onButtonTriggered, false ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_READY_TO_PAINT, onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_YOUR_PHOTOS, onButtonTriggered, false ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_FACEBOOK, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_CAMERA, onButtonTriggered, false ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_READY_TO_PAINT, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_YOUR_PHOTOS, onButtonTriggered, false ) );
 			setCenterButtons( buttonGroupDefinition );
 		}
 	}

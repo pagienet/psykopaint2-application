@@ -14,8 +14,8 @@ package net.psykosoft.psykopaint2.app.view.painting.captureimage
 
 		override protected function onEnabled():void {
 			super.onEnabled();
-			setLeftButton( BUTTON_LABEL_BACK_TO_CAPTURE );
-			setRightButton( BUTTON_LABEL_KEEP );
+			setLeftButton("FooterIconsSettings", BUTTON_LABEL_BACK_TO_CAPTURE );
+			setRightButton("FooterIconsSettings", BUTTON_LABEL_KEEP );
 		}
 	}
 }

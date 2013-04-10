@@ -14,8 +14,8 @@ package net.psykosoft.psykopaint2.app.view.painting.newpainting
 
 		override protected function onEnabled():void {
 			super.onEnabled();
-			setLeftButton( BUTTON_LABEL_BACK );
-			setRightButton( BUTTON_LABEL_SELECT_IMAGE );
+			setLeftButton("FooterIconsSettings", BUTTON_LABEL_BACK );
+			setRightButton("FooterIconsSettings", BUTTON_LABEL_SELECT_IMAGE );
 		}
 	}
 }

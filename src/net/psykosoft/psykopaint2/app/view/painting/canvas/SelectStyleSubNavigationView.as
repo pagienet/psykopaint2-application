@@ -16,8 +16,8 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 
 		override protected function onEnabled():void {
 			super.onEnabled();
-			setLeftButton( BUTTON_LABEL_PICK_A_BRUSH );
-			setRightButton( BUTTON_LABEL_EDIT_STYLE );
+			setLeftButton("FooterIconsSettings", BUTTON_LABEL_PICK_A_BRUSH );
+			setRightButton("FooterIconsSettings", BUTTON_LABEL_EDIT_STYLE );
 		}
 
 		public function setAvailableBrushShapes( brushShapes:Array ):void {
@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 
 			var len:uint = brushShapes.length;
 			for( var i:uint; i < len; ++i ) {
-				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( brushShapes[ i ], onButtonTriggered ) );
+				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  brushShapes[ i ], onButtonTriggered ) );
 			}
 
 			setCenterButtons( buttonGroupDefinition );

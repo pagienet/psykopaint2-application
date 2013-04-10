@@ -102,13 +102,15 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		private var _rightButtonContainer:Sprite;
 		private var _isBackButton:Boolean;
 
-		public function setLeftButton( label:String ):void {
+		public function setLeftButton( textureID:String,label:String ):void {
 			_leftButton.label = label;
+			_leftButton.texture = Psykopaint2Ui.instance.getTexture(textureID );
 			_leftButtonContainer.visible = true;
 		}
 
-		public function setRightButton(  label:String  ):void {
+		public function setRightButton( textureID:String, label:String  ):void {
 			_rightButton.label = label;
+			_rightButton.texture = Psykopaint2Ui.instance.getTexture(textureID );
 			_rightButtonContainer.visible = true;
 		}
 
@@ -122,14 +124,12 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_leftButtonContainer = new Sprite();
 			_subNavigationContainer.addChild( _leftButtonContainer );
 
-	   		var button:CompoundButton = new CompoundButton( "", ButtonSkinType.PAPER_LABEL_LEFT, -20 );
-			button.placementFunction = leftButtonLabelPlacement;
-
 			_leftCornerImage = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_LEFT_CORNER ) );
 			_leftCornerImage.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT - _leftCornerImage.height;
 			_leftButtonContainer.addChild( _leftCornerImage );
 
-			_leftButton = button;
+			_leftButton = new CompoundButton(Psykopaint2Ui.instance.themeAtlas.getTexture( "paper 1" ), "", ButtonSkinType.PAPER_LABEL_LEFT, -20 );
+			_leftButton.placementFunction = leftButtonLabelPlacement;
 			_leftButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 			_leftButton.x = _leftCornerImage.x + _leftCornerImage.width - _leftButton.width - 15;
 			_leftButton.y = _leftCornerImage.y + 5;
@@ -153,7 +153,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_rightButtonContainer = new Sprite();
 			_subNavigationContainer.addChild( _rightButtonContainer );
 
-			var button:CompoundButton = new CompoundButton( "", ButtonSkinType.PAPER_LABEL_RIGHT, -20 );
+			var button:CompoundButton = new CompoundButton( Psykopaint2Ui.instance.themeAtlas.getTexture( "paper 1" ),"", ButtonSkinType.PAPER_LABEL_RIGHT, -20 );
 			button.placementFunction = rightButtonLabelPlacement;
 
 			_rightCornerImage = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_RIGHT_CORNER ) );

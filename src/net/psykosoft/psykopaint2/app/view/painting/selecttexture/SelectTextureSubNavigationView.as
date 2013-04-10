@@ -18,17 +18,17 @@ package net.psykosoft.psykopaint2.app.view.painting.selecttexture
 
 			super.onEnabled();
 
-			setLeftButton( BUTTON_LABEL_PICK_A_COLOR );
+			setLeftButton("FooterIconsSettings", BUTTON_LABEL_PICK_A_COLOR );
 
 			// TODO: populate with actual options from the drawing core
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[tex 1]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[tex 2]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[tex 3]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[tex 4]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  "[tex 1]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  "[tex 2]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  "[tex 3]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  "[tex 4]", onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 
-			setRightButton( BUTTON_LABEL_PICK_A_BRUSH );
+			setRightButton("FooterIconsSettings", BUTTON_LABEL_PICK_A_BRUSH );
 		}
 	}
 }

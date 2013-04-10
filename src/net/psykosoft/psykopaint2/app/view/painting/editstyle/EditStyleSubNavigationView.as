@@ -17,14 +17,14 @@ package net.psykosoft.psykopaint2.app.view.painting.editstyle
 
 			super.onEnabled();
 
-			setLeftButton( BUTTON_LABEL_SELECT_STYLE );
+			setLeftButton("FooterIconsSettings", BUTTON_LABEL_SELECT_STYLE );
 
 			// TODO: populate with actual options from the drawing core
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[prop 1]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[prop 2]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[prop 3]", onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "[prop 4]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  "[prop 1]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  "[prop 2]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  "[prop 3]", onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  "[prop 4]", onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 		}
 	}

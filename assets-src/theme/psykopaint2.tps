@@ -171,6 +171,9 @@
             <filename>images/bar/rightLabel.png</filename>
             <filename>fonts/helveticaneue.png</filename>
             <filename>images/bar/pf_ronda_seven_0.png</filename>
+            <filename>images/icons/FooterIconsGallery.png</filename>
+            <filename>images/icons/FooterIconsNewPainting.png</filename>
+            <filename>images/icons/FooterIconsSettings.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.app.view.settings
 
 		override protected function onEnabled():void {
 			super.onEnabled();
-			setLeftButton( BUTTON_LABEL_BACK );
+			setLeftButton( "FooterIconsSettings",BUTTON_LABEL_BACK );
 		}
 
 		/*public function setImages( images:Vector.<PackagedImageVO> ):void {

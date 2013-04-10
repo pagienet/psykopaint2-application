@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttons.CompoundButton;
+	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.ui.theme.data.ButtonSkinType;
 	
 	import org.osflash.signals.Signal;
@@ -90,12 +91,12 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_navigation = navigation;
 		}
 
-		protected function setLeftButton( label:String ):void {
-			_navigation.setLeftButton( label );
+		protected function setLeftButton( textureID:String,label:String ):void {
+			_navigation.setLeftButton(textureID, label );
 		}
 
-		protected function setRightButton( label:String ):void {
-			_navigation.setRightButton( label );
+		protected function setRightButton(textureID:String, label:String ):void {
+			_navigation.setRightButton(textureID, label );
 		}
 
 		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
@@ -115,7 +116,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			var gap:Number = 15;
 			for( var i:uint = 0; i < len; i++ ) {
 				var vo:ButtonDefinitionVO = definition.buttonVOArray[ i ];
-				var subButton:CompoundButton = new CompoundButton( vo.label, ButtonSkinType.LABEL );
+				var subButton:CompoundButton = new CompoundButton( Psykopaint2Ui.instance.themeAtlas.getTexture( vo.textureID  ) , vo.label, ButtonSkinType.LABEL );
 				subButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 				subButton.x = inflate + ( subButton.width + gap ) * i;
 				subButton.y = 30;

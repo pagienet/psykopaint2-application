@@ -16,8 +16,8 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 
 		override protected function onEnabled():void {
 			super.onEnabled();
-			setLeftButton( BUTTON_LABEL_PICK_AN_IMAGE );
-			setRightButton( BUTTON_LABEL_PICK_A_TEXTURE );
+			setLeftButton("FooterIconsSettings", BUTTON_LABEL_PICK_AN_IMAGE );
+			setRightButton("FooterIconsSettings", BUTTON_LABEL_PICK_A_TEXTURE );
 		}
 
 		public function setAvailableColorStyles( presetsList:Array ):void {
@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 			var len:uint = presetsList.length;
 			for( var i:uint; i < len; ++i ) {
-				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( presetsList[ i ], onButtonTriggered ) );
+				buttonGroupDefinition.addButtonDefinition(new ButtonDefinitionVO("FooterIconsNewPainting",  presetsList[ i ], onButtonTriggered ) );
 			}
 			setCenterButtons( buttonGroupDefinition );
 

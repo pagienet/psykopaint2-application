@@ -14,8 +14,8 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 
 		override protected function onEnabled():void {
 			super.onEnabled();
-			setLeftButton( BUTTON_LABEL_BACK_TO_PICK_AN_IMAGE );
-			setRightButton( BUTTON_LABEL_CROP );
+			setLeftButton("FooterIconsSettings", BUTTON_LABEL_BACK_TO_PICK_AN_IMAGE );
+			setRightButton("FooterIconsSettings", BUTTON_LABEL_CROP );
 		}
 	}
 }

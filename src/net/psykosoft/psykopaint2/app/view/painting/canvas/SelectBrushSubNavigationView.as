@@ -18,8 +18,8 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 
 		override protected function onEnabled():void {
 			super.onEnabled();
-			setLeftButton( BUTTON_LABEL_PICK_A_TEXTURE );
-			setRightButton( BUTTON_LABEL_SELECT_STYLE );
+			setLeftButton( "FooterIconsSettings",BUTTON_LABEL_PICK_A_TEXTURE );
+			setRightButton("FooterIconsSettings", BUTTON_LABEL_SELECT_STYLE );
 		}
 
 		public function setAvailableBrushes( brushTypes:Vector.<String> ):void {
@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 
 			var len:uint = brushTypes.length;
 			for( var i:uint; i < len; ++i ) {
-				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( brushTypes[ i ], onButtonTriggered ) );
+				buttonGroupDefinition.addButtonDefinition(new ButtonDefinitionVO("FooterIconsNewPainting",  brushTypes[ i ], onButtonTriggered ) );
 			}
 
 			setCenterButtons( buttonGroupDefinition );

@@ -19,13 +19,13 @@ package net.psykosoft.psykopaint2.app.view.painting.captureimage
 
 			super.onEnabled();
 
-			setLeftButton( BUTTON_LABEL_BACK_TO_PICK_AN_IMAGE );
+			setLeftButton("FooterIconsSettings", BUTTON_LABEL_BACK_TO_PICK_AN_IMAGE );
 
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( BUTTON_LABEL_FLIP, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_FLIP, onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 
-			setRightButton( BUTTON_LABEL_SHOOT );
+			setRightButton("FooterIconsGallery", BUTTON_LABEL_SHOOT );
 		}
 	}
 }
