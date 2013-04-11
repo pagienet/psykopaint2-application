@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 	import net.psykosoft.psykopaint2.core.drawing.modules.CropModule;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropModuleActivatedSignal;
 
@@ -23,6 +24,9 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 		[Inject]
 		public var notifyCropConfirmSignal:NotifyCropConfirmSignal;
 
+		[Inject]
+		public var notifyCropCompleteSignal:NotifyCropCompleteSignal;
+
 		override public function initialize():void {
 
 			super.initialize();
@@ -39,7 +43,9 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 		// -----------------------
 
 		public function doCrop():void {
-			if( cropView.visible ) cropModule.crop( cropView.cropMatrix );
+			if( cropView.visible ) {
+				notifyCropCompleteSignal.dispatch( cropView.renderPreviewToBitmapData() );
+			}
 		}
 
 		private function onModuleActivated( bitmapData:BitmapData ):void {

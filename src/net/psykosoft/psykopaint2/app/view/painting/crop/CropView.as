@@ -8,6 +8,8 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
 	import net.psykosoft.utils.BitmapDataUtils;
 
+	import starling.core.RenderSupport;
+
 	import starling.core.Starling;
 
 	import starling.display.Image;
@@ -18,11 +20,8 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 	public class CropView extends StarlingViewBase
 	{
 		private var _positioningSheet:TouchSheet;
-		private var _frameTexture:Texture;
-		private var _frameImage:Image;
 		private var _canvasWidth:int;
 		private var _canvasHeight:int;
-		private var _cropFrameScale:Number;
 		private var _baseTextureSize:int;
 		private var _sourceMap:BitmapData;
 
@@ -50,17 +49,6 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 				_sourceMap = null;
 			}
 
-			if( _frameTexture ) {
-				_frameTexture.dispose();
-				_frameTexture = null;
-			}
-
-			if( _frameImage ) {
-				removeChild( _frameImage );
-				_frameImage.dispose();
-				_frameImage = null;
-			}
-
 			if( _positioningSheet ) _positioningSheet.dispose();
 
 		}
@@ -70,24 +58,10 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 		// -----------------------
 
 		private function init():void {
-			//TODO: replace these with values passed in or a global constant
-			_canvasWidth = Starling.current.viewPort.width;
+
+			_baseTextureSize = _canvasWidth = Starling.current.viewPort.width;
 			_canvasHeight = Starling.current.viewPort.height;
 
-			_baseTextureSize = Starling.current.viewPort.width;
-//			_cropFrameScale = 0.5;
-
-			trace( this, "Crop Module _canvasWidth: "+_canvasWidth+" _canvasHeight: "+_canvasHeight );
-
-			/*var frameMap:BitmapData = new BitmapData( 1024 * _cropFrameScale, 768 * _cropFrameScale, true, 0xff000000 );
-			frameMap.fillRect( new Rectangle( 1, 1, frameMap.width - 2, frameMap.height - 2 ), 0 );
-
-			_frameTexture = Texture.fromBitmapData( frameMap );
-			frameMap.dispose();
-			_frameImage = new Image( _frameTexture );
-			_frameImage.touchable = false;
-
-			addChild( _frameImage );*/
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
@@ -96,58 +70,54 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 		}
 
 		protected function centerCanvas():void {
-			if( !stage ) return;
+			if ( !stage ) return;
 
-			/*
-			if ( _frameImage )
-			{
-				_frameImage.x = 0.5 * ( stage.stageWidth - _frameImage.width );
-				_frameImage.y = 0.5 * ( stage.stageHeight - _frameImage.height);
-			}
-			*/
 			if ( _positioningSheet )
 			{
 				_positioningSheet.x = 0.5 * stage.stageWidth;
 				_positioningSheet.y = 0.5 * stage.stageHeight;
-				/*
-				_positioningSheet.limitsRect = new Rectangle( 0.5 * stage.stageWidth - _frameImage.width * 0.5,
-					0.5 * stage.stageHeight - _frameImage.height * 0.5,
-					_frameImage.width,_frameImage.height);
-				*/
 				_positioningSheet.limitsRect = new Rectangle( 0,0,stage.stageWidth,stage.stageHeight);
 			}
 		}
 
 		public function set sourceMap( map:BitmapData ):void {
-			if( _positioningSheet ) {
-				removeChild( _positioningSheet );
+			if ( _positioningSheet ){
+				removeChild(_positioningSheet);
 				_positioningSheet.dispose();
 			}
-			if( _sourceMap ) _sourceMap.dispose();
-			_sourceMap = BitmapDataUtils.getLegalBitmapData( map );
+			if ( _sourceMap ) _sourceMap.dispose();
+			_sourceMap = map;
 
 
 			var texture:Texture = Texture.fromBitmapData( _sourceMap );
 			var image:Image = new Image( texture );
 			_positioningSheet = new TouchSheet(image);
-			//_positioningSheet.scaleX = _positioningSheet.scaleY = _positioningSheet.minimumScale = Math.max(_frameImage.width /_positioningSheet.width, _frameImage.height /_positioningSheet.height);
 			_positioningSheet.scaleX = _positioningSheet.scaleY = _positioningSheet.minimumScale = Math.max(stage.stageWidth /_sourceMap.width, stage.stageHeight/_sourceMap.height);
-			//_positioningSheet.minimumRotation = 0;
-			//_positioningSheet.maximumRotation = 0;
+
 
 			addChildAt( _positioningSheet, 0 );
 			centerCanvas();
-
 		}
 
-		public function get cropMatrix():Matrix {
-			/*
-			var m:Matrix =_positioningSheet.transformationMatrix;
-			m.translate( - _frameImage.x , - _frameImage.y);
-			m.scale( 1 / _cropFrameScale,1 / _cropFrameScale );
-			m.translate(0.5 * _canvasWidth,0.5 * _canvasHeight);
-			*/
-			return _positioningSheet.transformationMatrix;
+		public function renderPreviewToBitmapData():BitmapData
+		{
+			var support:RenderSupport = new RenderSupport();
+			RenderSupport.clear();
+			var nativeWidth:Number = Starling.current.viewPort.width
+			var nativeHeight:Number = Starling.current.viewPort.height;
+
+			support.setOrthographicProjection(0,0,nativeWidth, nativeHeight);
+			support.applyBlendMode(false);
+			support.pushMatrix();
+
+			this.render(support, 1.0);
+			support.popMatrix();
+
+			support.finishQuadBatch();
+
+			var croppedMap:BitmapData = new BitmapData(nativeWidth,nativeHeight,false,0xffffffff);
+			Starling.context.drawToBitmapData(croppedMap);
+			return croppedMap;
 		}
 	}
 }

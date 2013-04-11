@@ -1,17 +1,18 @@
 package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 {
 
+	import com.quasimondo.geom.ColorMatrix;
+
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
-	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestColorStyleMatrixChangedSignal;
 
 	public class ColorStyleViewMediator extends StarlingMediatorBase
 	{
@@ -33,9 +34,8 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 		[Inject]
 		public var notifyColorStyleConfirmSignal:NotifyColorStyleConfirmSignal;
 
-		// TODO
-//		[Inject]
-//		public var notifyHudToggledSignal:NotifyHudToggledSignal;
+		[Inject]
+		public var requestColorStyleMatrixChangedSignal:RequestColorStyleMatrixChangedSignal;
 
 		override public function initialize():void {
 
@@ -43,11 +43,14 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 			registerView( colorStyleView );
 			registerEnablingState( ApplicationStateType.PAINTING_SELECT_COLORS );
 
+			// From view.
+
+
 			// From app.
 			notifyColorStyleModuleActivatedSignal.add( onModuleActivated );
-			notifyColorStyleCompleteSignal.add( onColorStyleCompleteSignal );
 			notifyColorStyleChangedSignal.add( onColorStyleChanged );
 			notifyColorStyleConfirmSignal.add( confirmColorStyle );
+			requestColorStyleMatrixChangedSignal.add( onColorStyleMatrixChanged );
 		}
 
 		// -----------------------
@@ -55,33 +58,20 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 		// -----------------------
 
 		private function onModuleActivated( bitmapData:BitmapData ):void {
-
-			trace( this, "module activated" );
-
-			colorStyleView.resultMap = colorStyleModule.resultMap;
-
-			// TODO
-//			notifyHudToggledSignal.dispatch( new HudToggleVO( HudType.COLOR, true ) );
-
-		}
-
-		private function onColorStyleCompleteSignal( bitmapData:BitmapData ):void {
-
-			trace( this, "color style complete" );
-
-			// TODO
-//			notifyHudToggledSignal.dispatch( new HudToggleVO( HudType.COLOR, false ) );
-
-//			view.visible = false;
+			colorStyleView.previewMap = colorStyleModule.sourceMap;
 		}
 
 		private function onColorStyleChanged( styleName:String ):void {
 			colorStyleModule.setColorStyle( styleName );
-			colorStyleView.updatePreview();
 		}
 
 		private function confirmColorStyle():void {
+			colorStyleView.renderPreviewToBitmapData();
 			colorStyleModule.confirmColorStyle();
+		}
+
+		private function onColorStyleMatrixChanged( matrix1:ColorMatrix, matrix2:ColorMatrix, threshold:Number, range:Number ):void {
+			colorStyleView.updateColorMatrices( matrix1, matrix2, threshold, range );
 		}
 	}
 }

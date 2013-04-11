@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <application xmlns="http://ns.adobe.com/air/application/3.6">
-    <id>LauncherDesktop</id>
-    <filename>LauncherDesktop</filename>
-    <name>LauncherDesktop</name>
-    <versionNumber>0.0.0</versionNumber>
+    <id>com.psykosoft.psykopaint</id>
+    <filename>Psykopaint2Desktop</filename>
+    <name>Psykopaint2Desktop</name>
+    <versionNumber>0.0.5</versionNumber>
     <initialWindow>
         <content>SWF file name is set automatically at compile time</content>
         <transparent>false</transparent>

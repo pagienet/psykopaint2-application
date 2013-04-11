@@ -77,7 +77,7 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 		
 		private function loadUiComponentsAtlas():void {
 			
-			_atlasLoader.loadAsset( "/assets-packaged/interface/uiComponents/uicomponents" + resolutionExtension + ".png", "/assets-packaged/interface/uiComponents/uicomponents" + resolutionExtension + ".xml", onUIComponentsAtlasLoaded );
+			_atlasLoader.loadAsset( "/assets-packaged/interface/uicomponents/uicomponents" + resolutionExtension + ".png", "/assets-packaged/interface/uicomponents/uicomponents" + resolutionExtension + ".xml", onUIComponentsAtlasLoaded );
 		}
 		
 		private function onUIComponentsAtlasLoaded( image:BitmapData, descriptor:XML ):void {
