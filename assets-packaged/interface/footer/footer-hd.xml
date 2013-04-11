@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:ebff1425d10d3d84f13bc3758e8b7be2$ -->
-<TextureAtlas imagePath="psykopaint2-hd.png">
+<!-- $TexturePacker:SmartUpdate:22b9d7d206af3a0a9d284003c83b800b$ -->
+<TextureAtlas imagePath="footer-hd.png">
     <SubTexture name="FooterIconsGallery" x="1323" y="514" width="248" height="244" frameX="-2" frameY="0" frameWidth="256" frameHeight="256"/>
     <SubTexture name="FooterIconsNewPainting" x="831" y="514" width="244" height="252" frameX="-4" frameY="0" frameWidth="256" frameHeight="256"/>
     <SubTexture name="FooterIconsSettings" x="1076" y="514" width="246" height="250" frameX="-5" frameY="-1" frameWidth="256" frameHeight="256"/>

@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.ui.theme.buttons
 		protected static const TEXT_SIZE:uint = 16;
 
 		public function ButtonsSkinManagerBase() {
-			_bitmapFont = new BitmapFont( Psykopaint2Ui.instance.themeAtlas.getTexture( "helveticaneue" ), Psykopaint2Ui.instance.fontDescriptor );
+			_bitmapFont = new BitmapFont( Psykopaint2Ui.instance.footerAtlas.getTexture( "helveticaneue" ), Psykopaint2Ui.instance.fontDescriptor );
 			_textFormat = new BitmapFontTextFormat( _bitmapFont, TEXT_SIZE, TEXT_COLOR );
 		}
 

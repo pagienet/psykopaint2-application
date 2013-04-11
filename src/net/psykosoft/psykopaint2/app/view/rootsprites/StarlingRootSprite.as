@@ -1,16 +1,14 @@
 package net.psykosoft.psykopaint2.app.view.rootsprites
 {
 
-	import flash.display.BitmapData;
-
-	import net.psykosoft.psykopaint2.app.view.base.*;
-
 	import com.junkbyte.console.Cc;
-
+	
+	import flash.display.BitmapData;
+	
 	import feathers.controls.Button;
-	import feathers.core.DisplayListWatcher;
-
+	
 	import net.psykosoft.psykopaint2.app.config.Settings;
+	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
 	import net.psykosoft.psykopaint2.app.view.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.app.view.painting.colorstyle.ColorStyleView;
@@ -22,9 +20,8 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.utils.loaders.AtlasLoader;
 	import net.psykosoft.utils.loaders.XMLLoader;
-
+	
 	import starling.core.Starling;
-
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.textures.Texture;
@@ -34,15 +31,18 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 	{
 		private var _mainLayer:Sprite;
 		private var _debugLayer:Sprite;
-		private var _themeAtlasLoader:AtlasLoader;
-		private var _themeAtlasImage:BitmapData;
-		private var _themeFontLoader:XMLLoader;
-		private var _themeAtlasDescriptor:XML;
-		private var _resolutionExtension:String;
-		private var _themeFontDescriptor:XML;
+		private var _atlasLoader:AtlasLoader;
+		private var _footerAtlas:TextureAtlas;
+		private var _uiComponentsAtlas:TextureAtlas;
+		private var _fontDescriptor:XML;
 
+		public function get resolutionExtension ():String{
+			return   Settings.RUNNING_ON_HD ? "-hd" : "-sd";
+		}
+
+		
 		public function StarlingRootSprite() {
-			super();
+			super(); 
 			enable();
 		}
 
@@ -51,38 +51,66 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 		// ---------------------------------------------------------------------
 
 		override protected function onCreate():void {
-			loadThemeAtlas();
+			_atlasLoader = new AtlasLoader();
+			loadFooterAtlas();
 		}
 
 		// ---------------------------------------------------------------------
 		// Private.
 		// ---------------------------------------------------------------------
 
-		private function loadThemeAtlas():void {
-			_themeAtlasLoader = new AtlasLoader();
-			_resolutionExtension = Settings.RUNNING_ON_HD ? "-hd" : "-sd";
-			_themeAtlasLoader.loadAsset( "/assets-packaged/theme/psykopaint2" + _resolutionExtension + ".png", "/assets-packaged/theme/psykopaint2" + _resolutionExtension + ".xml", onThemeAtlasLoaded );
+		private function loadFooterAtlas():void {
+			_atlasLoader.loadAsset( "/assets-packaged/interface/footer/footer" + resolutionExtension + ".png", "/assets-packaged/interface/footer/footer" + resolutionExtension + ".xml", onFooterAtlasLoaded );
 		}
 
-		private function onThemeAtlasLoaded( image:BitmapData, descriptor:XML ):void {
-			_themeAtlasImage = image;
-			_themeAtlasDescriptor = descriptor;
-			_themeAtlasLoader.dispose();
-			_themeAtlasLoader = null;
-			loadThemeFont();
+		private function onFooterAtlasLoaded( image:BitmapData, descriptor:XML ):void {
+			var texture:Texture = Texture.fromBitmapData( image, false, false, Starling.contentScaleFactor );
+			_footerAtlas = new TextureAtlas( texture, descriptor );
+			
+			trace("footer atlas = "+_footerAtlas);
+			
+			image.dispose();
+			image = null;
+			
+			loadUiComponentsAtlas();
 		}
+		
+		private function loadUiComponentsAtlas():void {
+			
+			_atlasLoader.loadAsset( "/assets-packaged/interface/uiComponents/uicomponents" + resolutionExtension + ".png", "/assets-packaged/interface/uiComponents/uicomponents" + resolutionExtension + ".xml", onUIComponentsAtlasLoaded );
+		}
+		
+		private function onUIComponentsAtlasLoaded( image:BitmapData, descriptor:XML ):void {
+			var texture:Texture = Texture.fromBitmapData( image, false, false, Starling.contentScaleFactor );
+			_uiComponentsAtlas = new TextureAtlas( texture, descriptor );
+			
+			trace("_uiComponentsAtlas atlas = "+_uiComponentsAtlas);
+			
+			//DISPOSE OF THE LOADER
+			_atlasLoader.dispose();
+			_atlasLoader = null;
+			
+			image.dispose();
+			image = null;
+			
+			//LOAD FONT
+			loadThemeFont();
+			
+		}		
 
 		private function loadThemeFont():void {
-			_themeFontLoader = new XMLLoader();
-			_themeFontLoader.loadAsset( "/assets-packaged/theme/helveticaneue.fnt", onThemeFontLoaded );
+			var fontLoader:XMLLoader = new XMLLoader();
+			fontLoader.loadAsset( "/assets-packaged/interface/fonts/helveticaneue.fnt", function(xml:XML ):void{
+				
+				_fontDescriptor = xml;
+				
+				fontLoader.dispose();
+				fontLoader = null;
+				
+				initializeDisplayTree();
+			} );
 		}
 
-		private function onThemeFontLoaded( xml:XML ):void {
-			_themeFontDescriptor = xml;
-			_themeFontLoader.dispose();
-			_themeFontLoader = null;
-			initializeDisplayTree();
-		}
 
 		private function initializeDisplayTree():void {
 
@@ -91,12 +119,13 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 			// -----------------------
 
 			trace( this, "initializing display tree with Starling.contentScaleFactor: " + Starling.contentScaleFactor );
-			var texture:Texture = Texture.fromBitmapData( _themeAtlasImage, false, false, Starling.contentScaleFactor );
-			var themeAtlas:TextureAtlas = new TextureAtlas( texture, _themeAtlasDescriptor );
-			_themeAtlasImage.dispose();
-			_themeAtlasImage = null;
-			new Psykopaint2Ui( stage, themeAtlas, _themeFontDescriptor, _resolutionExtension );
+						
+			trace("_uiComponentsAtlas atlas = "+_uiComponentsAtlas);
+			trace("footerAtlas atlas = "+_footerAtlas);
+			
+			var psykopaint2UI:Psykopaint2Ui = new Psykopaint2Ui( stage, _fontDescriptor, resolutionExtension,_footerAtlas,_uiComponentsAtlas );
 
+			
 			// -----------------------
 			// Layering.
 			// -----------------------
@@ -138,6 +167,8 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 		private function onConsoleButtonTriggered( event:Event ):void {
 			Cc.visible = !Cc.visible;
 		}
-
+		
 	}
+
+	
 }

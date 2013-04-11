@@ -6,7 +6,9 @@ package net.psykosoft.psykopaint2.ui.extensions.buttons
 	import net.psykosoft.psykopaint2.app.view.navigation.NavigationPaperButton;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.ui.theme.data.ButtonSkinType;
+	import net.psykosoft.psykopaint2.utils.decorators.MoveButtonDecorator;
 	
+	import starling.animation.Transitions;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.textures.Texture;
@@ -35,7 +37,7 @@ package net.psykosoft.psykopaint2.ui.extensions.buttons
 			_label = label;
 			_labelType = labelType;
 			_labelGap = verticalGap;
-
+			
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
@@ -45,6 +47,8 @@ package net.psykosoft.psykopaint2.ui.extensions.buttons
 			_mainButton = new NavigationPaperButton(_texture,"");
 			_mainButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 			addChild( _mainButton );
+			new MoveButtonDecorator(_mainButton,0.2,{scaleX:0.98,scaleY:0.98,transition:Transitions.EASE_OUT});
+
 
 			_labelButton = new Button();
 			_labelButton.nameList.add( _labelType );

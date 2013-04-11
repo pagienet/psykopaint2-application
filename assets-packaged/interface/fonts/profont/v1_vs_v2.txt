@@ -1,0 +1,27 @@
+PROFONT FOR WINDOWS - VERSION INFORMATION
+
+This is v2 of profont.fon.
+Some text editors (VIM, MultiEdit) wouldn't use v1 because it wasn't
+recognized as a monospaced font.
+Thanks to Zhichao Hong for fixing that problem.
+
+
+DISCLAIMER
+
+This distribution is provided in the hope that it will be useful.
+However, it is provided AS IS and carries NO WARRANTY that it will
+do anything good and NO WARRANTY that it will not do anything bad.
+Your use of the fonts and software that make up this distribution
+is ENTIRELY AT YOUR OWN RISK.
+Zhichao Hong and Tobias Jung hereby disclaim any and
+all liability for any difficulty you may have as a result of using
+any part of this distribution.
+If these terms are not acceptable to you,
+then you must not use any part of this distribution.
+
+For any questions or comments about this distribution, contact
+mail@tobias-jung.de
+
+
+Tobias Jung
+October 2002

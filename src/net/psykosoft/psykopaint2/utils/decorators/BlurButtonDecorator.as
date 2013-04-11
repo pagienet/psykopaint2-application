@@ -32,9 +32,7 @@ package net.psykosoft.psykopaint2.utils.decorators
 				_decorated.filter.dispose();
 				_decorated.filter = null;
 			}});
-			
-			
-			
+
 		}		
 	}
 }

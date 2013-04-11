@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		public function NavigationPaperButton(upState:Texture, text:String="")
 		{
 			super(upState,text);
-			scaleWhenDown = 0.98;
+			scaleWhenDown = 1;
 			
 		}
 		

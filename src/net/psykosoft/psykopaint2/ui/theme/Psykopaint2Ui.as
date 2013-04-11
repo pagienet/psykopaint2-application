@@ -2,12 +2,12 @@ package net.psykosoft.psykopaint2.ui.theme
 {
 
 	import feathers.themes.MinimalMobileTheme;
-
+	
 	import net.psykosoft.psykopaint2.ui.theme.buttons.LabelButtonSkinManager;
 	import net.psykosoft.psykopaint2.ui.theme.buttons.LeftEdgeLabelButtonSkinManager;
 	import net.psykosoft.psykopaint2.ui.theme.buttons.PaperButtonSkinManager;
 	import net.psykosoft.psykopaint2.ui.theme.buttons.RightEdgeLabelButtonSkinManager;
-
+	
 	import starling.display.DisplayObjectContainer;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
@@ -25,18 +25,21 @@ package net.psykosoft.psykopaint2.ui.theme
 	{
 		private static var _instance:Psykopaint2Ui;
 
-		private var _themeAtlas:TextureAtlas;
+		private var _footerAtlas:TextureAtlas;
+		private var _uiComponentsAtlas:TextureAtlas;
 		private var _fontDescriptor:XML;
 		private var _ext:String;
 
-		public function Psykopaint2Ui( root:DisplayObjectContainer, atlas:TextureAtlas, themeFontDescriptor:XML, resolutionExtension:String ) {
+		public function Psykopaint2Ui( root:DisplayObjectContainer, themeFontDescriptor:XML, resolutionExtension:String,footerAtlas:TextureAtlas,uiComponentsAtlas:TextureAtlas ) {
+			_footerAtlas= footerAtlas;
+			_uiComponentsAtlas = uiComponentsAtlas;
 			_instance = this;
-			_themeAtlas = atlas;
 			_ext = resolutionExtension;
 			_fontDescriptor = themeFontDescriptor;
 			super( root );
 		}
 
+		
 		override protected function initialize():void {
 
 			super.initialize();
@@ -59,7 +62,7 @@ package net.psykosoft.psykopaint2.ui.theme
 		public static const TEXTURE_NAVIGATION_CLAMP:String = "clamp";
 
 		public function getTexture( id:String ):Texture {
-			return _themeAtlas.getTexture( id  );
+			return _footerAtlas.getTexture( id  );
 		}
 
 		public static function get instance():Psykopaint2Ui {
@@ -70,9 +73,18 @@ package net.psykosoft.psykopaint2.ui.theme
 			return _ext;
 		}
 
-		public function get themeAtlas():TextureAtlas {
-			return _themeAtlas;
+		
+		public function get footerAtlas():TextureAtlas {
+			return _footerAtlas;
 		}
+		
+		public function get uiComponentsAtlas():TextureAtlas
+		{
+			return _uiComponentsAtlas;
+		}
+		
+	
+
 
 		public function get fontDescriptor():XML {
 			return _fontDescriptor;

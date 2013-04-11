@@ -38,7 +38,7 @@
         <key>dataFormat</key>
         <string>sparrow</string>
         <key>textureFileName</key>
-        <filename>../../assets-packaged/theme/psykopaint2-hd.png</filename>
+        <filename>../../assets-packaged/interface/footer/footer-hd.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>ditherType</key>
@@ -127,7 +127,7 @@
             <enum type="AndEngine::MagFilter">MagLinear</enum>
         </struct>
         <key>dataFileName</key>
-        <filename>../../assets-packaged/theme/psykopaint2-hd.xml</filename>
+        <filename>../../assets-packaged/interface/footer/footer-hd.xml</filename>
         <key>mainExtension</key>
         <string>-hd.</string>
         <key>forceIdenticalLayout</key>
@@ -157,23 +157,23 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>images/bar/bg.png</filename>
-            <filename>images/bar/clamp.png</filename>
-            <filename>images/bar/label.png</filename>
-            <filename>images/bar/leftArrow.png</filename>
-            <filename>images/bar/leftCorner.png</filename>
-            <filename>images/bar/leftLabel.png</filename>
-            <filename>images/bar/pageLabel.png</filename>
-            <filename>images/bar/paper 1.png</filename>
-            <filename>images/bar/paper 2.png</filename>
-            <filename>images/bar/paper 3.png</filename>
-            <filename>images/bar/rightCorner.png</filename>
-            <filename>images/bar/rightLabel.png</filename>
             <filename>fonts/helveticaneue.png</filename>
-            <filename>images/bar/pf_ronda_seven_0.png</filename>
-            <filename>images/icons/FooterIconsGallery.png</filename>
-            <filename>images/icons/FooterIconsNewPainting.png</filename>
-            <filename>images/icons/FooterIconsSettings.png</filename>
+            <filename>images/footer/bg.png</filename>
+            <filename>images/footer/clamp.png</filename>
+            <filename>images/footer/label.png</filename>
+            <filename>images/footer/leftArrow.png</filename>
+            <filename>images/footer/leftCorner.png</filename>
+            <filename>images/footer/leftLabel.png</filename>
+            <filename>images/footer/pageLabel.png</filename>
+            <filename>images/footer/paper 1.png</filename>
+            <filename>images/footer/paper 2.png</filename>
+            <filename>images/footer/paper 3.png</filename>
+            <filename>images/footer/pf_ronda_seven_0.png</filename>
+            <filename>images/footer/rightCorner.png</filename>
+            <filename>images/footer/rightLabel.png</filename>
+            <filename>images/footerIcons/FooterIconsGallery.png</filename>
+            <filename>images/footerIcons/FooterIconsNewPainting.png</filename>
+            <filename>images/footerIcons/FooterIconsSettings.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

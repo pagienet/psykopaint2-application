@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.ui.theme.buttons
 			_textFormat.margin = 50;
 
 			// Scale 9 bg texture for button labels.
-			_paperButtonLabelSkinTextures = new Scale3Textures( Psykopaint2Ui.instance.themeAtlas.getTexture( "label" ), 16, 63, Scale3Textures.DIRECTION_HORIZONTAL );
+			_paperButtonLabelSkinTextures = new Scale3Textures( Psykopaint2Ui.instance.footerAtlas.getTexture( "label" ), 16, 63, Scale3Textures.DIRECTION_HORIZONTAL );
 
 			_selector = new Scale3ImageStateValueSelector();
 			_selector.defaultValue = _paperButtonLabelSkinTextures;

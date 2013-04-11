@@ -1,9 +1,13 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
+	import net.psykosoft.psykopaint2.app.view.components.sliders.HSlider;
 	import net.psykosoft.psykopaint2.app.view.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
+	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
+	
+	import starling.display.Image;
 
 	public class HomeScreenSubNavigationView extends SubNavigationViewBase
 	{
@@ -26,9 +30,9 @@ package net.psykosoft.psykopaint2.app.view.home
 			setCenterButtons( buttonGroupDefinition );
 			
 			
-			//ADD SLIDER
-			
-			
+			//TEST ADD SLIDER
+			var hslider:HSlider = new HSlider();
+			this.addChild(hslider);
 		}
 	}
 }

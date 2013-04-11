@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.utils.decorators
 {
-	import starling.display.Sprite;
+	import starling.display.DisplayObject;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.utils.decorators
 
 	public class AbstractButtonDecorator
 	{
-		protected var _decorated : Sprite;
+		protected var _decorated : DisplayObject;
 		protected var _speed:Number;
 
 		/* CONTAINS THE ANY VALUES THAT THE TRANSITION MIGHT NEED */
@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.utils.decorators
 		
 		/* WARNING: AUTOMATICALLY REMOVE ITSELF WHEN REMOVED FROM STAGE */
 
-		public function AbstractButtonDecorator(decorated:Sprite,speed:Number, paramObject:Object)
+		public function AbstractButtonDecorator(decorated:DisplayObject,speed:Number=0, paramObject:Object=null)
 		{
 			_speed = speed;
 			_paramObject = paramObject;
@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.utils.decorators
 		}
 
 		
-		public function get decorated() : Sprite
+		public function get decorated() : DisplayObject
 		{
 			return _decorated;
 		}

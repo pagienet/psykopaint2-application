@@ -28,9 +28,9 @@ package net.psykosoft.psykopaint2.ui.theme.buttons
 			super();
 
 			// Button bg textures.
-			_paperButtonUpSkinTexture1 = Psykopaint2Ui.instance.themeAtlas.getTexture( "paper 1"  );
-			_paperButtonUpSkinTexture2 = Psykopaint2Ui.instance.themeAtlas.getTexture( "paper 2"  );
-			_paperButtonUpSkinTexture3 = Psykopaint2Ui.instance.themeAtlas.getTexture( "paper 3"  );
+			_paperButtonUpSkinTexture1 = Psykopaint2Ui.instance.footerAtlas.getTexture( "paper 1"  );
+			_paperButtonUpSkinTexture2 = Psykopaint2Ui.instance.footerAtlas.getTexture( "paper 2"  );
+			_paperButtonUpSkinTexture3 = Psykopaint2Ui.instance.footerAtlas.getTexture( "paper 3"  );
 
 			// Associate button textures with their type.
 			_textureBelongingToButtonType = new Dictionary();

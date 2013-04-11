@@ -128,7 +128,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_leftCornerImage.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT - _leftCornerImage.height;
 			_leftButtonContainer.addChild( _leftCornerImage );
 
-			_leftButton = new CompoundButton(Psykopaint2Ui.instance.themeAtlas.getTexture( "paper 1" ), "", ButtonSkinType.PAPER_LABEL_LEFT, -20 );
+			_leftButton = new CompoundButton(Psykopaint2Ui.instance.footerAtlas.getTexture( "paper 1" ), "", ButtonSkinType.PAPER_LABEL_LEFT, -20 );
 			_leftButton.placementFunction = leftButtonLabelPlacement;
 			_leftButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 			_leftButton.x = _leftCornerImage.x + _leftCornerImage.width - _leftButton.width - 15;
@@ -153,7 +153,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_rightButtonContainer = new Sprite();
 			_subNavigationContainer.addChild( _rightButtonContainer );
 
-			var button:CompoundButton = new CompoundButton( Psykopaint2Ui.instance.themeAtlas.getTexture( "paper 1" ),"", ButtonSkinType.PAPER_LABEL_RIGHT, -20 );
+			var button:CompoundButton = new CompoundButton( Psykopaint2Ui.instance.footerAtlas.getTexture( "paper 1" ),"", ButtonSkinType.PAPER_LABEL_RIGHT, -20 );
 			button.placementFunction = rightButtonLabelPlacement;
 
 			_rightCornerImage = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_RIGHT_CORNER ) );
