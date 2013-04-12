@@ -44,6 +44,9 @@ package net.psykosoft.psykopaint2.utils.decorators
 			}else if(touch.phase==TouchPhase.ENDED){
 				
 				onEndTouch();
+			}else if(touch.phase==TouchPhase.MOVED){
+				
+				onMoveTouch();
 			}
 		}		
 		
@@ -57,6 +60,13 @@ package net.psykosoft.psykopaint2.utils.decorators
 		
 		/* OVERRIDE ME */
 		protected function onEndTouch():void
+		{
+			
+			
+		}
+		
+		/* OVERRIDE ME */
+		protected function onMoveTouch():void
 		{
 			
 			

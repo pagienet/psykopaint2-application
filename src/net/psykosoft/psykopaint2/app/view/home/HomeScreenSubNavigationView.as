@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
+	import net.psykosoft.psykopaint2.app.view.components.sliders.HRangeSlider;
 	import net.psykosoft.psykopaint2.app.view.components.sliders.HSlider;
 	import net.psykosoft.psykopaint2.app.view.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
@@ -33,6 +34,13 @@ package net.psykosoft.psykopaint2.app.view.home
 			//TEST ADD SLIDER
 			var hslider:HSlider = new HSlider();
 			this.addChild(hslider);
+			hslider.x = 10;
+			
+			//TEST ADD SLIDER
+			var hRangeSlider:HRangeSlider = new HRangeSlider();
+			this.addChild(hRangeSlider);
+			hRangeSlider.x = 300;
+			
 		}
 	}
 }
