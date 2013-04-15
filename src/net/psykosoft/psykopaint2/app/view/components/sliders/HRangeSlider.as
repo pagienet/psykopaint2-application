@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.text.TextField;
 	import starling.textures.Texture;
 
 	public class HRangeSlider extends Sprite
@@ -31,10 +32,15 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 		private var _value1:Number=0;
 		private var _value2:Number=0;
 		
+		private var _labelLeft:TextField;
+		private var _labelRight:TextField;
+		
 		private var _bgView:Image;
 		private var _leftHandleView:Image;
 		private var _rightHandleView:Image;
 		private var _rangeView:MovieClip;
+		private var _initialTouchPosition:Number;
+		private var _initialValues:Array;
 		
 		public function HRangeSlider()
 		{
@@ -49,13 +55,23 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 			this.addChild(_rangeView); 
 			_rangeView.y=-6;
 			
+			
+			_labelLeft = new TextField(50,30,"0","helveticaneue",12,0);
+			_labelRight = new TextField(50,30,"0","helveticaneue",12,0);
+			_labelLeft.x = 27;
+			_labelRight.x = 397;
+			_labelLeft.y = 7;
+			_labelRight.y = 7;
+			this.addChild(_labelRight);
+			this.addChild(_labelLeft);
+			
 			_leftHandleView = new Image(Psykopaint2Ui.instance.uiComponentsAtlas.getTexture("left head"));
 			this.addChild(_leftHandleView); 
 			
 			_rightHandleView = new Image(Psykopaint2Ui.instance.uiComponentsAtlas.getTexture("right head"));
 			this.addChild(_rightHandleView); 
 			
-		
+			
 			
 			_minPosX =  81;
 			_maxPosX =  369;
@@ -70,9 +86,33 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 			
 			_leftHandleView.addEventListener(TouchEvent.TOUCH, onTouchEventLeftHandle);
 			_rightHandleView.addEventListener(TouchEvent.TOUCH, onTouchEventRightHandle);
+			_rangeView.addEventListener(TouchEvent.TOUCH, onTouchEventHandle);
 			
 		}
 		
+		private function onTouchEventHandle(e:TouchEvent):void
+		{
+			
+			var touch:Touch = e.touches[0];
+			var posX:Number = touch.getLocation(this).x;
+			if (touch.phase == TouchPhase.BEGAN){
+				_initialTouchPosition=posX;
+				_initialValues = [_value1,_value2];
+			}else if (touch.phase == TouchPhase.MOVED){
+				
+				//GET MOUSE X POSITION
+				var shiftX:Number =posX- _initialTouchPosition ;
+				
+				var shiftValue:Number = shiftX* totalRangeOfValues/rangePosition;
+				
+				//APPLY THE SHIFTED VALUE
+				setValues(_initialValues[0]+shiftValue,_initialValues[1]+shiftValue);
+				
+				
+			}else if (touch.phase == TouchPhase.ENDED){
+				
+			}
+		}		
 		
 		private function onTouchEventLeftHandle(e:TouchEvent):void
 		{
@@ -144,6 +184,10 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 				
 				//IF VALUE 2 CANNOT BE LOWER THAN VALUE 1
 				if(_value2<_value1) setValue(_value1,1);
+				
+				
+				_labelLeft.text = String(Math.round(_value1));
+				
 			}else {
 				_value2 = val;
 				_rightHandleView.x = _leftHandleShiftX+_rightShiftX+ _minPosX+ rangePosition * (_value2 - _minValue) / totalRangeOfValues ;
@@ -154,6 +198,10 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 				
 				//VALUE 1 CANNOT BE HIGHER THAN VALUE 2
 				if(_value1>_value2) setValue(_value2,0);
+				
+				
+				_labelRight.text = String(Math.round(_value2));
+
 			}
 			dispatchEvent(new Event(HSlider.CHANGE));
 		}
@@ -217,7 +265,10 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 			_maxValue = maxValue;
 		}
 		
-		
+		public function get rangeValue() : Number
+		{
+			return _value2-_value1;
+		}
 		
 		public function get totalRangeOfValues() : Number
 		{
