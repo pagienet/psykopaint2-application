@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:84ed57bd91d922673835cfd6c73d4349$ -->
+<!-- $TexturePacker:SmartUpdate:e37946505da74cdb0b87b21f589ba6d0$ -->
 <TextureAtlas imagePath="uicomponents-sd.png">
+    <SubTexture name="Smile" x="233" y="343" width="17" height="7"/>
+    <SubTexture name="checkbox0001" x="853" y="502" width="109" height="45" frameX="0" frameY="0" frameWidth="113" frameHeight="45"/>
+    <SubTexture name="checkbox0002" x="2" y="749" width="113" height="45"/>
+    <SubTexture name="checkbox0003" x="111" y="856" width="113" height="43" frameX="0" frameY="-2" frameWidth="113" frameHeight="45"/>
+    <SubTexture name="checkbox0004" x="734" y="802" width="113" height="43" frameX="0" frameY="-2" frameWidth="113" frameHeight="45"/>
+    <SubTexture name="checkbox0005" x="853" y="549" width="109" height="39" frameX="0" frameY="-5" frameWidth="113" frameHeight="45"/>
     <SubTexture name="left head" x="704" y="393" width="24" height="43"/>
     <SubTexture name="rangeSliderBg" x="2" y="2" width="479" height="45"/>
     <SubTexture name="right head" x="704" y="348" width="25" height="43"/>
@@ -59,34 +65,34 @@
     <SubTexture name="sliderRangeBar0050" x="729" y="446" width="151" height="50" frameX="0" frameY="-3" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0051" x="702" y="498" width="149" height="50" frameX="0" frameY="-3" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0052" x="701" y="550" width="145" height="50" frameX="-1" frameY="-3" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0053" x="701" y="602" width="143" height="50" frameX="-1" frameY="-3" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0054" x="393" y="694" width="141" height="50" frameX="0" frameY="-3" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0055" x="846" y="610" width="137" height="50" frameX="0" frameY="-3" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0056" x="622" y="654" width="133" height="50" frameX="-1" frameY="-3" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0057" x="617" y="706" width="131" height="50" frameX="0" frameY="-3" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0058" x="846" y="662" width="127" height="52" frameX="-1" frameY="-1" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0059" x="845" y="716" width="125" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0060" x="159" y="713" width="123" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0061" x="391" y="746" width="119" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0062" x="2" y="749" width="117" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0063" x="512" y="758" width="113" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0064" x="848" y="556" width="111" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0065" x="853" y="502" width="107" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0066" x="284" y="713" width="105" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0067" x="627" y="758" width="103" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0068" x="732" y="762" width="99" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0069" x="833" y="770" width="95" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0070" x="750" y="708" width="93" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0071" x="930" y="770" width="89" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0072" x="757" y="654" width="87" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0073" x="73" y="880" width="85" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0053" x="393" y="694" width="143" height="50" frameX="-1" frameY="-3" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0054" x="848" y="590" width="141" height="50" frameX="0" frameY="-3" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0055" x="701" y="602" width="137" height="50" frameX="0" frameY="-3" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0056" x="840" y="642" width="133" height="50" frameX="-1" frameY="-3" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0057" x="622" y="654" width="131" height="50" frameX="0" frameY="-3" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0058" x="619" y="706" width="127" height="52" frameX="-1" frameY="-1" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0059" x="830" y="694" width="125" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0060" x="819" y="748" width="123" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0061" x="159" y="713" width="119" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0062" x="393" y="746" width="117" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0063" x="619" y="760" width="113" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0064" x="280" y="713" width="111" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0065" x="2" y="856" width="107" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0066" x="512" y="758" width="105" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0067" x="2" y="800" width="103" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0068" x="107" y="800" width="99" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0069" x="2" y="910" width="95" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0070" x="849" y="802" width="93" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0071" x="2" y="964" width="89" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0072" x="93" y="964" width="87" height="52" frameX="-1" frameY="-2" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0073" x="99" y="910" width="85" height="52" frameX="0" frameY="-2" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0074" x="882" y="446" width="81" height="54" frameX="-1" frameY="0" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0075" x="536" y="702" width="79" height="54" frameX="0" frameY="0" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0075" x="538" y="702" width="79" height="54" frameX="0" frameY="0" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0076" x="624" y="598" width="75" height="54" frameX="-1" frameY="0" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0077" x="2" y="824" width="73" height="54" frameX="0" frameY="0" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0078" x="2" y="880" width="69" height="54" frameX="-1" frameY="0" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0079" x="2" y="936" width="67" height="54" frameX="-1" frameY="0" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0080" x="71" y="936" width="65" height="54" frameX="0" frameY="0" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0077" x="755" y="654" width="73" height="54" frameX="0" frameY="0" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0078" x="748" y="710" width="69" height="54" frameX="-1" frameY="0" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0079" x="944" y="750" width="67" height="54" frameX="-1" frameY="0" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0080" x="957" y="694" width="65" height="54" frameX="0" frameY="0" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0081" x="559" y="646" width="61" height="54" frameX="0" frameY="0" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0082" x="965" y="416" width="57" height="54" frameX="-1" frameY="0" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0083" x="567" y="590" width="55" height="54" frameX="0" frameY="0" frameWidth="297" frameHeight="58"/>
@@ -94,7 +100,7 @@
     <SubTexture name="sliderRangeBar0085" x="973" y="360" width="49" height="54" frameX="-1" frameY="0" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0086" x="344" y="657" width="47" height="54" frameX="0" frameY="-1" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0087" x="977" y="304" width="43" height="54" frameX="-1" frameY="-1" frameWidth="297" frameHeight="58"/>
-    <SubTexture name="sliderRangeBar0088" x="962" y="528" width="41" height="54" frameX="0" frameY="-1" frameWidth="297" frameHeight="58"/>
+    <SubTexture name="sliderRangeBar0088" x="964" y="528" width="41" height="54" frameX="0" frameY="-1" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0089" x="662" y="514" width="37" height="56" frameX="-1" frameY="0" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0090" x="987" y="246" width="35" height="56" frameX="-1" frameY="0" frameWidth="297" frameHeight="58"/>
     <SubTexture name="sliderRangeBar0091" x="667" y="456" width="33" height="56" frameX="0" frameY="0" frameWidth="297" frameHeight="58"/>

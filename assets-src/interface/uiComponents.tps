@@ -262,6 +262,12 @@
             <filename>images/uicomponents/rangeSlider/sliderRangeBar0100.png</filename>
             <filename>images/uiComponents/slider/sliderBg.png</filename>
             <filename>images/uiComponents/slider/sliderHandle.png</filename>
+            <filename>images/uiComponents/checkbox/Smile.png</filename>
+            <filename>images/uiComponents/checkbox/checkbox0001.png</filename>
+            <filename>images/uiComponents/checkbox/checkbox0002.png</filename>
+            <filename>images/uiComponents/checkbox/checkbox0003.png</filename>
+            <filename>images/uiComponents/checkbox/checkbox0004.png</filename>
+            <filename>images/uiComponents/checkbox/checkbox0005.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

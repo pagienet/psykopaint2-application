@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	
-	public class HSlider extends Sprite
+	public class PaperSlider extends Sprite
 	{
 		
 		public static const CHANGE : String = "onChange";
@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 		
 		private var _value:Number;
 		
-		public function HSlider()
+		public function PaperSlider()
 		{
 			super();
 			
@@ -86,7 +86,7 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 			
 			
 			
-			dispatchEvent(new Event(HSlider.CHANGE));
+			dispatchEvent(new Event(PaperSlider.CHANGE));
 			
 			trace("value = "+_value);
 		}

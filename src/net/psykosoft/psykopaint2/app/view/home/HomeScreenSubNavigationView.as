@@ -1,8 +1,9 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
-	import net.psykosoft.psykopaint2.app.view.components.sliders.HRangeSlider;
-	import net.psykosoft.psykopaint2.app.view.components.sliders.HSlider;
+	import net.psykosoft.psykopaint2.app.view.components.checkbox.PaperCheckBox;
+	import net.psykosoft.psykopaint2.app.view.components.sliders.PaperRangeSlider;
+	import net.psykosoft.psykopaint2.app.view.components.sliders.PaperSlider;
 	import net.psykosoft.psykopaint2.app.view.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
@@ -32,14 +33,19 @@ package net.psykosoft.psykopaint2.app.view.home
 			
 			
 			//TEST ADD SLIDER
-			var hslider:HSlider = new HSlider();
+			var hslider:PaperSlider = new PaperSlider();
 			this.addChild(hslider);
 			hslider.x = 10;
 			
 			//TEST ADD SLIDER
-			var hRangeSlider:HRangeSlider = new HRangeSlider();
+			var hRangeSlider:PaperRangeSlider = new PaperRangeSlider();
 			this.addChild(hRangeSlider);
 			hRangeSlider.x = 300;
+			
+			//TEST ADD CHECKBOX
+			var papercheckbox:PaperCheckBox = new PaperCheckBox();
+			this.addChild(papercheckbox);
+			papercheckbox.x = 850;
 			
 		}
 	}

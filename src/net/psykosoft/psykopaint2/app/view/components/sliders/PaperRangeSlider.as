@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 	import starling.text.TextField;
 	import starling.textures.Texture;
 
-	public class HRangeSlider extends Sprite
+	public class PaperRangeSlider extends Sprite
 	{
 		public static const CHANGE : String = "onChange";
 		public static const START_DRAG : String = "THUMB_DOWN";
@@ -42,7 +42,7 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 		private var _initialTouchPosition:Number;
 		private var _initialValues:Array;
 		
-		public function HRangeSlider()
+		public function PaperRangeSlider()
 		{
 			super();
 			
@@ -130,7 +130,7 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 
 				//APPLY THE VALUE
 				setValue(slideValue,0);
-				trace("drag LEFT handle slideValue= "+slideValue+" | _leftHandleView.x = "+	_leftHandleView.x );
+				//trace("drag LEFT handle slideValue= "+slideValue+" | _leftHandleView.x = "+	_leftHandleView.x );
 
 				
 			}else if (touch.phase == TouchPhase.ENDED){
@@ -153,7 +153,7 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 				var slideValue:Number = positionToValue(posX);
 				
 				setValue(slideValue,1);
-				trace("drag RIGHT handle slideValue= "+slideValue+" | 	_rightHandleView.x = "+	_rightHandleView.x );
+				//trace("drag RIGHT handle slideValue= "+slideValue+" | 	_rightHandleView.x = "+	_rightHandleView.x );
 				
 				
 			}else if (touch.phase == TouchPhase.ENDED){
@@ -178,7 +178,6 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 				
 				_value1 = val;
 				_leftHandleView.x =  _leftHandleShiftX+_minPosX+ rangePosition * (_value1 - _minValue) / (totalRangeOfValues) ;
-				trace("_leftHandleView.x"+_leftHandleView.x);
 				
 				repositionRange();
 				
@@ -191,7 +190,6 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 			}else {
 				_value2 = val;
 				_rightHandleView.x = _leftHandleShiftX+_rightShiftX+ _minPosX+ rangePosition * (_value2 - _minValue) / totalRangeOfValues ;
-				trace("_rightHandleView.x"+_rightHandleView.x);
 				
 				repositionRange();
 				
@@ -203,7 +201,7 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 				_labelRight.text = String(Math.round(_value2));
 
 			}
-			dispatchEvent(new Event(HSlider.CHANGE));
+			dispatchEvent(new Event(PaperSlider.CHANGE));
 		}
 		
 		private function repositionRange():void
