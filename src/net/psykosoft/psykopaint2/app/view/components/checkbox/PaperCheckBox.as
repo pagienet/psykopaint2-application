@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.app.view.components.checkbox
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	
 	import starling.core.Starling;
+	import starling.display.Image;
 	import starling.display.MovieClip;
 	import starling.display.Sprite;
 	import starling.events.Touch;
@@ -16,6 +17,9 @@ package net.psykosoft.psykopaint2.app.view.components.checkbox
 		private var _selected:Boolean=false;
 		private var _initialTouchPosition:Number;
 		
+		private var _smileView:Image;
+		private var _showSmile:Boolean = false;
+		
 		
 		public function PaperCheckBox()
 		{
@@ -28,9 +32,27 @@ package net.psykosoft.psykopaint2.app.view.components.checkbox
 			_checkboxView.useHandCursor=true;
 			
 			
+			_smileView = new Image(Psykopaint2Ui.instance.uiComponentsAtlas.getTexture("Smile"));
+			this.addChild(_smileView); 
+			_smileView.x = 87;
+			_smileView.y=44;
+			showSmile=showSmile;
+			
+			
 			_checkboxView.addEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		
+		public function get showSmile():Boolean
+		{
+			return _showSmile;
+		}
+
+		public function set showSmile(value:Boolean):void
+		{
+			_showSmile = value;
+			_smileView.visible=value;
+		}
+
 		private function onTouch(e:TouchEvent):void
 		{
 			
