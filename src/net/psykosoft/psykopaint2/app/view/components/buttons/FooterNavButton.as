@@ -1,11 +1,8 @@
-package net.psykosoft.psykopaint2.ui.extensions.buttons
+package net.psykosoft.psykopaint2.app.view.components.buttons
 {
 
-	import feathers.controls.Button;
-	
+	import net.psykosoft.psykopaint2.app.view.components.label.PaperHeaderLabel;
 	import net.psykosoft.psykopaint2.app.view.navigation.NavigationPaperButton;
-	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
-	import net.psykosoft.psykopaint2.ui.theme.data.ButtonSkinType;
 	import net.psykosoft.psykopaint2.utils.decorators.MoveButtonDecorator;
 	
 	import starling.animation.Transitions;
@@ -13,25 +10,25 @@ package net.psykosoft.psykopaint2.ui.extensions.buttons
 	import starling.events.Event;
 	import starling.textures.Texture;
 
-	public class CompoundButton extends Sprite
+	public class FooterNavButton extends Sprite
 	{
 		private var _texture:Texture;
 		private var _label:String;
 		private var _labelType:String;
 		private var _labelGap:Number;
 		private var _mainButton:NavigationPaperButton;
-		private var _labelButton:Button;
+		private var _headerLabel:PaperHeaderLabel;
 		private var _width:Number = 125;
 
 
 		public var placementFunction:Function;
 
 
-		public function CompoundButton( texture:Texture,label:String, labelType:String, verticalGap:Number = 0 ) {
+		public function FooterNavButton( texture:Texture,label:String, labelType:String, verticalGap:Number = 0 ) {
 			super();
 			
 			if(texture==null){
-				throw new Error("[CompoundButton] Hey buddy The texture is null ");
+				throw new Error("[FooterNavButton] Hey buddy The texture is null ");
 			}
 			_texture = texture;
 			_label = label;
@@ -50,45 +47,42 @@ package net.psykosoft.psykopaint2.ui.extensions.buttons
 			new MoveButtonDecorator(_mainButton,0.2,{scaleX:0.98,scaleY:0.98,transition:Transitions.EASE_OUT});
 
 
-			_labelButton = new Button();
-			_labelButton.nameList.add( _labelType );
-			_labelButton.label = label;
-			_labelButton.isEnabled = false;
-			_labelButton.addEventListener( Event.RESIZE, onLabelResized );
-			_labelButton.addEventListener( Event.ADDED_TO_STAGE, onBtnAddedToStage );
-			addChild( _labelButton );
+			_headerLabel = new PaperHeaderLabel();
+			addChild( _headerLabel );
+			_headerLabel.setLabel(label);
+			_headerLabel.x = _mainButton.width/2 - _headerLabel.width/2;
+			//_labelButton.nameList.add( _labelType );
+			//_labelButton.label = label;
+			//_labelButton.isEnabled = false;
+			_headerLabel.addEventListener( Event.RESIZE, onLabelResized );
+			
 
-			_labelButton.y = height + _labelGap;
+			_headerLabel.y = height + _labelGap;
 		}
 
 		override public function dispose():void {
 
 			removeChild( _mainButton );
 			_mainButton.removeEventListener( Event.TRIGGERED, onButtonTriggered );
-			_mainButton.removeEventListener( Event.ADDED_TO_STAGE, onBtnAddedToStage );
 			_mainButton.dispose();
 			_mainButton = null;
 
-			removeChild( _labelButton );
-			_labelButton.removeEventListener( Event.TRIGGERED, onButtonTriggered );
-			_labelButton.removeEventListener( Event.RESIZE, onLabelResized );
-			_labelButton.dispose();
-			_labelButton = null;
+			removeChild( _headerLabel );
+			_headerLabel.removeEventListener( Event.TRIGGERED, onButtonTriggered );
+			_headerLabel.removeEventListener( Event.RESIZE, onLabelResized );
+			_headerLabel.dispose();
+			_headerLabel = null;
 
 			super.dispose();
 		}
 
-		private function onBtnAddedToStage( event:Event ):void {
-			var button:Button = event.target as Button;
-			button.removeEventListener( Event.ADDED_TO_STAGE, onBtnAddedToStage );
-			button.autoFlatten = true;
-		}
+	
 
 		private function onLabelResized( event:Event ):void {
 			// Aligns the lower button according to its width.
-			var w:Number = _labelButton.width;
+			var w:Number = _headerLabel.width;
 			if( placementFunction == null) {
-				_labelButton.x = width / 2 - w / 2;
+				_headerLabel.x = width / 2 - w / 2;
 				if( w > _width ) {
 					_width = w;
 				}
@@ -111,15 +105,16 @@ package net.psykosoft.psykopaint2.ui.extensions.buttons
 		}
 
 		public function set label( value:String ):void {
-			_labelButton.label = _label = value;
+			_headerLabel.setLabel(value);
+			_label = value;
 		}
 
 		public function get label():String {
 			return _label;
 		}
 
-		public function get labelButton():Button {
-			return _labelButton;
+		public function get labelView():PaperHeaderLabel {
+			return _headerLabel;
 		}
 
 		public function get mainButton():NavigationPaperButton {

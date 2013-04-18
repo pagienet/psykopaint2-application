@@ -74,7 +74,7 @@ package net.psykosoft.psykopaint2.utils.decorators
 		
 		public function destroy() : void
 		{
-			trace("[AbstractButtonDecorator]destroy");
+			//trace("[AbstractButtonDecorator]destroy "+_decorated);
 			_decorated.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 			_decorated.removeEventListener(TouchEvent.TOUCH, onTouch);
 			_decorated = null;

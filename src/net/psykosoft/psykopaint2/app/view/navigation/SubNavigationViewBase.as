@@ -1,35 +1,27 @@
 package net.psykosoft.psykopaint2.app.view.navigation
 {
 
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Expo;
-	
-	import feathers.controls.Button;
 	import feathers.controls.ScrollContainer;
 	import feathers.controls.Scroller;
 	
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
+	import net.psykosoft.psykopaint2.app.view.components.buttons.FooterNavButton;
+	import net.psykosoft.psykopaint2.app.view.components.label.PaperHeaderLabel;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
-	import net.psykosoft.psykopaint2.ui.extensions.buttons.CompoundButton;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.ui.theme.data.ButtonSkinType;
-	import net.psykosoft.psykopaint2.utils.decorators.BlurButtonDecorator;
-	import net.psykosoft.psykopaint2.utils.decorators.InvertButtonDecorator;
-	import net.psykosoft.psykopaint2.utils.decorators.MoveButtonDecorator;
 	
 	import org.osflash.signals.Signal;
 	
-	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.textures.RenderTexture;
 
 	public class SubNavigationViewBase extends StarlingViewBase
 	{
 		private var _scrollContainer:ScrollContainer;
-		private var _header:Button;
+		private var _headerLabel:PaperHeaderLabel;
 		private var _title:String;
 		private var _frontLayer:Sprite; // TODO: do we still need layers given that the edge buttons have been moved out of this abstract class?
 		private var _backLayer:Sprite;
@@ -52,23 +44,24 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			addChild( _backLayer = new Sprite() );
 			addChild( _frontLayer = new Sprite() );
 
-			_header = new Button();
-			_header.nameList.add( ButtonSkinType.LABEL );
-			_header.label = _title;
-			_header.isEnabled = false;
-			_header.addEventListener( Event.RESIZE, onHeaderResized );
-			_header.validate();
-			_frontLayer.addChild( _header );
+			_headerLabel = new PaperHeaderLabel();
+			_headerLabel.addEventListener( Event.RESIZE, onHeaderResized );
+			_headerLabel.setLabel(_title);
+			_frontLayer.addChild( _headerLabel );
+			_headerLabel.x = stage.stageWidth / 2 - _headerLabel.width / 2;
+			_headerLabel.y = -_headerLabel.height / 2+20;
+			
+		
 		}
 
 		override protected function onDisabled():void {
 
 			clearCenterButtons();
 
-			if( _header ) {
-				_frontLayer.removeChild( _header );
-				_header.dispose();
-				_header = null;
+			if( _headerLabel ) {
+				_frontLayer.removeChild( _headerLabel );
+				_headerLabel.dispose();
+				_headerLabel = null;
 			}
 
 			if( _frontLayer ) {
@@ -119,7 +112,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			var gap:Number = 15;
 			for( var i:uint = 0; i < len; i++ ) {
 				var vo:ButtonDefinitionVO = definition.buttonVOArray[ i ];
-				var subButton:CompoundButton = new CompoundButton( Psykopaint2Ui.instance.footerAtlas.getTexture( vo.textureID  ) , vo.label, ButtonSkinType.LABEL );
+				var subButton:FooterNavButton = new FooterNavButton( Psykopaint2Ui.instance.footerAtlas.getTexture( vo.textureID  ) , vo.label, ButtonSkinType.LABEL );
 				subButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 				subButton.x = inflate + ( subButton.width + gap ) * i;
 				subButton.y = 30;
@@ -160,7 +153,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 				
 				// Kill children.
 				while( _scrollContainer.numChildren > 0 ) {
-					var child:CompoundButton = _scrollContainer.getChildAt( 0 ) as CompoundButton;
+					var child:FooterNavButton = _scrollContainer.getChildAt( 0 ) as FooterNavButton;
 					_scrollContainer.removeChildAt( 0 );
 					if( child ) {
 						// TODO: check if working
@@ -187,7 +180,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		// ---------------------------------------------------------------------
 
 		protected function onButtonTriggered( event:Event ):void {
-			var button:CompoundButton = event.currentTarget as CompoundButton;
+			var button:FooterNavButton = event.currentTarget as FooterNavButton;
 			notifyButtonPress( button.label );
 		}
 
@@ -196,8 +189,10 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		// ---------------------------------------------------------------------
 
 		private function onHeaderResized( event:Event ):void {
-			_header.x = stage.stageWidth / 2 - _header.width / 2;
-			_header.y = -_header.height / 2+20;
+			trace("[SubNavigationView] onHeaderResized");
+			
+			_headerLabel.x = stage.stageWidth / 2 - _headerLabel.width / 2;
+			_headerLabel.y = -_headerLabel.height / 2+20;
 		}
 	}
 }

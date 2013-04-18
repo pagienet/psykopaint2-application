@@ -30,8 +30,10 @@ package net.psykosoft.psykopaint2.utils.decorators
 			//CENTER THE SCALING
 			_paramObject.onUpdate = function ():void
 			{
-				_decorated.x = _originalObjectProperties.x + (1.0 - _decorated.scaleX) / 2.0 * _decorated.width;
-				_decorated.y = _originalObjectProperties.y + (1.0 - _decorated.scaleY) / 2.0 * _decorated.height;
+				if(_decorated){
+					_decorated.x = _originalObjectProperties.x + (1.0 - _decorated.scaleX) / 2.0 * _decorated.width;
+					_decorated.y = _originalObjectProperties.y + (1.0 - _decorated.scaleY) / 2.0 * _decorated.height;
+				}
 			}
 			Starling.juggler.removeTweens(_decorated);
 			Starling.juggler.tween(_decorated, _speed, _paramObject);
@@ -45,9 +47,10 @@ package net.psykosoft.psykopaint2.utils.decorators
 			
 			//CENTER THE SCALING
 			_originalObjectProperties.onUpdate = function ():void{
-				
-				_decorated.x =shiftX+ _originalObjectProperties.x + (1.0 - _decorated.scaleX) / 2.0 * _decorated.width;
-				_decorated.y =shiftY+ _originalObjectProperties.y + (1.0 - _decorated.scaleY) / 2.0 * _decorated.height;
+				if(_decorated){
+					_decorated.x =shiftX+ _originalObjectProperties.x + (1.0 - _decorated.scaleX) / 2.0 * _decorated.width;
+					_decorated.y =shiftY+ _originalObjectProperties.y + (1.0 - _decorated.scaleY) / 2.0 * _decorated.height;
+				}
 			}
 			//DISPOSE WHEN TRANSITION COMPLETE
 			_originalObjectProperties.onComplete = function ():void{

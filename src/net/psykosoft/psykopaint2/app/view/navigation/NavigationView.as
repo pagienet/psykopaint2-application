@@ -5,11 +5,13 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import com.greensock.easing.Expo;
 	
 	import feathers.controls.Button;
+	import feathers.controls.Header;
 	
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
-	import net.psykosoft.psykopaint2.ui.extensions.buttons.CompoundButton;
+	import net.psykosoft.psykopaint2.app.view.components.label.PaperHeaderLabel;
+	import net.psykosoft.psykopaint2.app.view.components.buttons.FooterNavButton;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.ui.theme.data.ButtonSkinType;
 	
@@ -90,8 +92,8 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		// Edge buttons ( called by sub views ).
 		// ---------------------------------------------------------------------
 
-		private var _leftButton:CompoundButton;
-		private var _rightButton:CompoundButton;
+		private var _leftButton:FooterNavButton;
+		private var _rightButton:FooterNavButton;
 		private var _leftCornerImage:Image;
 		private var _rightCornerImage:Image;
 		private var _leftClamp:Image;
@@ -128,7 +130,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_leftCornerImage.y = Settings.NAVIGATION_AREA_CONTENT_HEIGHT - _leftCornerImage.height;
 			_leftButtonContainer.addChild( _leftCornerImage );
 
-			_leftButton = new CompoundButton(Psykopaint2Ui.instance.footerAtlas.getTexture( "paper 1" ), "", ButtonSkinType.PAPER_LABEL_LEFT, -20 );
+			_leftButton = new FooterNavButton(Psykopaint2Ui.instance.footerAtlas.getTexture( "paper 1" ), "", ButtonSkinType.PAPER_LABEL_LEFT, -20 );
 			_leftButton.placementFunction = leftButtonLabelPlacement;
 			_leftButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 			_leftButton.x = _leftCornerImage.x + _leftCornerImage.width - _leftButton.width - 15;
@@ -153,7 +155,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_rightButtonContainer = new Sprite();
 			_subNavigationContainer.addChild( _rightButtonContainer );
 
-			var button:CompoundButton = new CompoundButton( Psykopaint2Ui.instance.footerAtlas.getTexture( "paper 1" ),"", ButtonSkinType.PAPER_LABEL_RIGHT, -20 );
+			var button:FooterNavButton = new FooterNavButton( Psykopaint2Ui.instance.footerAtlas.getTexture( "paper 1" ),"", ButtonSkinType.PAPER_LABEL_RIGHT, -20 );
 			button.placementFunction = rightButtonLabelPlacement;
 
 			_rightCornerImage = new Image( Psykopaint2Ui.instance.getTexture( Psykopaint2Ui.TEXTURE_NAVIGATION_RIGHT_CORNER ) );
@@ -182,19 +184,19 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		}
 
 		private function leftButtonLabelPlacement():void {
-			var label:Button = _leftButton.labelButton;
+			var label:PaperHeaderLabel = _leftButton.labelView;
 			label.x = -_leftButton.x; // Ensure the left edge of the label touches the left edge of the screen.
-			label.labelOffsetX = 0;
+			//label.labelOffsetX = 0;
 		}
 
 		private function rightButtonLabelPlacement():void {
-			var label:Button = _rightButton.labelButton;
+			var label:PaperHeaderLabel = _rightButton.labelView;
 			label.x = _rightButton.width - label.width; // Ensure the right edge of the label touches the right edge of the screen.
-			label.labelOffsetX = -10;
+			//label.labelOffsetX = -10;
 		}
 
 		protected function onButtonTriggered( event:Event ):void {
-			var button:CompoundButton = event.currentTarget as CompoundButton;
+			var button:FooterNavButton = event.currentTarget as FooterNavButton;
 			_isBackButton = (button ==_leftButton )?true:false;
 			if( _activeSubNavigation ) {
 				_activeSubNavigation.notifyButtonPress( button.label );

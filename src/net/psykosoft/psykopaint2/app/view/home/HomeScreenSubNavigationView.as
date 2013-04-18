@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.app.view.home
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_NEW_PAINTING, onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 			
-			
+			/*
 			//TEST ADD SLIDER
 			var hslider:PaperSlider = new PaperSlider();
 			this.addChild(hslider);
@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.app.view.home
 			var papercheckbox:PaperCheckBox = new PaperCheckBox();
 			this.addChild(papercheckbox);
 			papercheckbox.x = 850;
-			
+			*/
 		}
 	}
 }

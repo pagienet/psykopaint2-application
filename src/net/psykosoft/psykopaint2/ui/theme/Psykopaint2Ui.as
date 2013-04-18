@@ -29,7 +29,9 @@ package net.psykosoft.psykopaint2.ui.theme
 		private var _uiComponentsAtlas:TextureAtlas;
 		private var _fontDescriptor:XML;
 		private var _ext:String;
-
+		
+		
+		
 		public function Psykopaint2Ui( root:DisplayObjectContainer, themeFontDescriptor:XML, resolutionExtension:String,footerAtlas:TextureAtlas,uiComponentsAtlas:TextureAtlas ) {
 			_footerAtlas= footerAtlas;
 			_uiComponentsAtlas = uiComponentsAtlas;
