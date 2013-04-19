@@ -71,7 +71,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_activeSubNavigation = view;
 			_activeSubNavigation.setNavigation( this );
 			_activeSubNavigation.enable();
-			_subNavigationContainer.addChild( _activeSubNavigation );
+			_subNavigationContainer.addChildAt( _activeSubNavigation ,0);
 			
 			//TRANSITION IN NEW VIEW
 			view.x = (_isBackButton)?-stage.stageWidth-_activeSubNavigation.width/2:+stage.stageWidth+_activeSubNavigation.width/2;

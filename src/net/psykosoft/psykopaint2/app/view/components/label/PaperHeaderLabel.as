@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.app.view.components.label
 			//_labelImage.clipRect = new Rectangle(0,0,200,50);
 			
 			
-			_textfield = new TextField(200,50,"0",FontManager.Warugaki,20,0x333333);
+			_textfield = new TextField(200,_labelImage.height,"0",FontManager.Warugaki,20,0x333333);
 			this.addChild(_textfield);
 			//_textfield.x = _labelImage.width/2 - _textfield.width/2;
 			_textfield.y = 1;
