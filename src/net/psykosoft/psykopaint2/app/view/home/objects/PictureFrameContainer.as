@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import away3d.materials.TextureMaterial;
 	import away3d.textures.BitmapTexture;
 
+	import br.com.stimuli.loading.BulkLoader;
+
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 
@@ -21,9 +23,9 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		private var _wallFrames:Vector.<PictureFrame>;
 		private var _cameraController:ScrollCameraController;
 		private var _room:Room;
-		private var _atlasXml:XML;
+
 		private var _framesTexture:BitmapTexture;
-		private var _atlasLoader:AtlasLoader;
+		private var _atlasXml:XML;
 
 		private const FRAME_GAP_X:Number = 500;
 		private const PAINTINGS_SCALE:Number = 0.9;
@@ -37,11 +39,6 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		override public function dispose():void {
 
 			trace( this, "dispose()" );
-
-			if( _atlasLoader ) {
-				_atlasLoader.dispose();
-				_atlasLoader = null;
-			}
 
 			for( var i:uint; i < _wallFrames.length; i++ ) {
 				var frame:PictureFrame = _wallFrames[ i ];
@@ -93,38 +90,20 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 		public function loadDefaultHomeFrames():void {
 
-			// Initialize loader.
-			_atlasLoader = new AtlasLoader();
-
-			// Start by loading the frame's material atlas.
-			loadFrameAtlas();
-		}
-
-		private function loadFrameAtlas():void {
-			_atlasLoader.loadAsset( "/assets-packaged/away3d/frames/frames.png", "/assets-packaged/away3d/frames/frames.xml", onFramesAtlasReady );
-		}
-
-		private function onFramesAtlasReady( bmd:BitmapData, descriptor:XML ):void {
-
-			// Texture.
+			// Retrieve frames atlas texture.
+			var bmd:BitmapData = BulkLoader.getLoader( "homeView" ).getBitmapData( "framesAtlasImage", true );
 			_framesTexture = new BitmapTexture( bmd );
-			_framesTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy );
-			_framesTexture.name = "framesTexture";
+			_framesTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy ); // Force generation before bmd disposal.
 			bmd.dispose();
+
+			// Retrieve frames atlas descriptor.
+			_atlasXml = BulkLoader.getLoader( "homeView" ).getXML( "framesAtlasXml", true );
 
 			// Material.
 			_frameMaterial = new TextureMaterial( _framesTexture );
 			_frameMaterial.mipmap = false;
 			_frameMaterial.smooth = true;
 
-			// Descriptor.
-			_atlasXml = descriptor;
-
-			// Dispose loader.
-			_atlasLoader.dispose();
-			_atlasLoader = null;
-
-			// Continue.
 			buildDefaultFrames();
 		}
 
@@ -135,7 +114,11 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// -----------------------
 
 			// Picture.
-			var settingsPicture:Picture = new Picture( new BitmapData( 512, 512, false, 0 ), new Point( 512, 512 ), new Point( 512, 512 ) );
+			var settingsPicture:Picture = new Picture(
+					new BitmapData( 512, 512, false, 0 ),
+					new Point( 512, 512 ),
+					new Point( 512, 512 )
+			);
 			settingsPicture.scalePainting( 2 );
 
 			// Frame.
@@ -167,7 +150,11 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// -----------------------
 
 			// Picture.
-			var psykopaintPicture:Picture = new Picture( new BitmapData( 512, 512, false, 0 ), new Point( 512, 512 ), new Point( 512, 512 ) );
+			var psykopaintPicture:Picture = new Picture(
+					new BitmapData( 512, 512, false, 0 ),
+					new Point( 512, 512 ),
+					new Point( 512, 512 )
+			);
 			psykopaintPicture.scalePainting( 2 );
 
 			// Frame.

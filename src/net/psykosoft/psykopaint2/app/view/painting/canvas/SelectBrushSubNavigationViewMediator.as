@@ -54,7 +54,7 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 					break;
 
 				default:
-					paintModule.activeBrush = buttonLabel;
+					paintModule.activeBrushKit = buttonLabel;
 					break;
 			}
 		}

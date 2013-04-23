@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
+	import flash.events.Event;
+
+	import net.psykosoft.utils.loaders.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.app.view.base.Away3dViewBase;
 	import net.psykosoft.psykopaint2.app.view.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.app.view.home.objects.PictureFrameContainer;
@@ -11,6 +14,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		private var _cameraController:ScrollCameraController;
 		private var _room:Room;
 		private var _frameManager:PictureFrameContainer;
+		private var _loader:AssetBundleLoader;
 
 		public function HomeView() {
 			super();
@@ -32,17 +36,49 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		override protected function onCreate():void {
 
+			// -----------------------
+			// Initialize objects.
+			// -----------------------
+
 			_room = new Room();
-
-			_cameraController = new ScrollCameraController( _camera, _room.wall, stage );
-
+			_cameraController = new ScrollCameraController( _camera, stage );
 			_frameManager = new PictureFrameContainer( _cameraController, _room );
+
+			// -------------------------
+			// Prepare external assets.
+			// -------------------------
+
+			_loader = new AssetBundleLoader( "homeView" );
+			_loader.addEventListener( Event.COMPLETE, onAssetsReady );
+
+			// Picture frame assets.
+			_loader.registerAsset( "/assets-packaged/away3d/frames/frames.png", "framesAtlasImage" );
+			_loader.registerAsset( "/assets-packaged/away3d/frames/frames.xml", "framesAtlasXml" );
+			// Room assets.
+			_loader.registerAsset( "/assets-packaged/away3d/frames/frame-shadow.png", "frameShadow" );
+			_loader.registerAsset( "/assets-packaged/away3d/floorpapers/wood.jpg", "floorWood" );
+
+			_loader.startLoad();
+		}
+
+		private function onAssetsReady( event:Event ):void {
+			_loader.removeEventListener( Event.COMPLETE, onAssetsReady );
+
+			// Stuff that needs to be done after external assets are ready.
+			_room.initialize();
+			_cameraController.wall = _room.wall;
+			_frameManager.loadDefaultHomeFrames();
 			_frameManager.y = 400;
 			_frameManager.z = _room.wall.z - 2;
-			_frameManager.loadDefaultHomeFrames();
 		}
 
 		override protected function onDispose():void {
+
+			if( _loader.hasEventListener( Event.COMPLETE ) ) {
+				_loader.removeEventListener( Event.COMPLETE, onAssetsReady );
+			}
+			_loader.dispose();
+			_loader = null;
 
 			_cameraController.dispose();
 			_cameraController = null;
@@ -57,6 +93,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		}
 
 		override protected function onUpdate():void {
+			if( !_loader.done ) return;
 			_cameraController.update();
 		}
 

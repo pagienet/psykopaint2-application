@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 		public var scrollingLimited:Boolean = true;
 
-		public function ScrollCameraController( camera:Camera3D, wall:Mesh, stage:Stage ) {
+		public function ScrollCameraController( camera:Camera3D, stage:Stage ) {
 
 			super();
 
@@ -78,8 +78,6 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 			_camera.x = 0;
 			_camera.y = 0;
 			_camera.z = DEFAULT_CAMERA_Z;
-
-			_wall = wall;
 
 			_lastMouseX = 0;
 			_speed = 0;
@@ -489,6 +487,10 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 		public function get previousCameraClosestSnapPointIndex():uint {
 			return _previousCameraClosestSnapPointIndex;
+		}
+
+		public function set wall( value:Mesh ):void {
+			_wall = value;
 		}
 	}
 }

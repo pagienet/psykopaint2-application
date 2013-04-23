@@ -93,7 +93,6 @@ package net.psykosoft.psykopaint2.app.view.home
 		}
 
 		private function onGlobalGesture( type:uint ):void {
-			return; // TODO: fix runtime error caused by the code below
 			if( type == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN ) {
 				homeView.cameraController.startPanInteraction();
 			}
