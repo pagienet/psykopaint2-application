@@ -29,7 +29,6 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 			_diffuseTexture = new BitmapTexture( diffuseBitmap );
 			_diffuseTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy );
-			_diffuseTexture.name = "pictureTexture";
 			diffuseBitmap.dispose();
 
 			_material = new TextureMaterial( _diffuseTexture );

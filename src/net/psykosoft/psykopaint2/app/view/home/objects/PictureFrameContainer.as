@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.geom.Point;
 
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
+	import net.psykosoft.psykopaint2.app.utils.textures.TextureUtil;
 	import net.psykosoft.psykopaint2.app.view.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.app.view.home.vos.FrameTextureAtlasDescriptorVO;
 	import net.psykosoft.utils.loaders.AtlasLoader;
@@ -85,7 +86,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			addChild( pictureFrame );
 
 			// Create shadow.
-			_room.addShadow( this.x + pictureFrame.x, this.y + pictureFrame.y, pictureFrame.width, pictureFrame.height );
+			_room.addShadow( pictureFrame.x, this.y + pictureFrame.y, pictureFrame.width, pictureFrame.height );
 		}
 
 		public function loadDefaultHomeFrames():void {
@@ -114,11 +115,14 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// -----------------------
 
 			// Picture.
+			var bmd:BitmapData = BulkLoader.getLoader( "homeView" ).getBitmapData( "homePainting", true );
+			var safeBmd:BitmapData = TextureUtil.ensurePowerOf2( bmd );
 			var settingsPicture:Picture = new Picture(
-					new BitmapData( 512, 512, false, 0 ),
-					new Point( 512, 512 ),
-					new Point( 512, 512 )
+					safeBmd,
+					new Point( bmd.width, bmd.height ),
+					new Point( safeBmd.width, safeBmd.height )
 			);
+			bmd.dispose();
 			settingsPicture.scalePainting( 2 );
 
 			// Frame.
@@ -150,11 +154,14 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// -----------------------
 
 			// Picture.
+			bmd = BulkLoader.getLoader( "homeView" ).getBitmapData( "settingsPainting", true );
+			safeBmd = TextureUtil.ensurePowerOf2( bmd );
 			var psykopaintPicture:Picture = new Picture(
-					new BitmapData( 512, 512, false, 0 ),
-					new Point( 512, 512 ),
-					new Point( 512, 512 )
+					safeBmd,
+					new Point( bmd.width, bmd.height ),
+					new Point( safeBmd.width, safeBmd.height )
 			);
+			bmd.dispose();
 			psykopaintPicture.scalePainting( 2 );
 
 			// Frame.
@@ -166,6 +173,34 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			var psykopaintFrame:PictureFrame = new PictureFrame( psykopaintPicture, _frameMaterial, psykopaintFrameAtlasDescriptor );
 			addPictureFrame( psykopaintFrame );
 
+			// -----------------------
+			// Sample paintings.
+			// -----------------------
+
+			var availableFrames:Array = [ "blueFrame", "goldFrame", "whiteFrame", "dangerFrame" ];
+			for( var i:uint; i < 7; i++ ) {
+
+				// Picture.
+				bmd = BulkLoader.getLoader( "homeView" ).getBitmapData( "samplePainting" + i, true );
+				safeBmd = TextureUtil.ensurePowerOf2( bmd );
+				var picture:Picture = new Picture(
+						safeBmd,
+						new Point( bmd.width, bmd.height ),
+						new Point( safeBmd.width, safeBmd.height )
+				);
+				bmd.dispose();
+
+				// Frame.
+				var descriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO(
+						availableFrames[ Math.floor( availableFrames.length * Math.random() ) ],
+						_atlasXml,
+						_framesTexture.width, _framesTexture.height
+				);
+				var frame:PictureFrame = new PictureFrame( picture, _frameMaterial, descriptor );
+				addPictureFrame( frame );
+			}
+
+			// Clear.
 			_atlasXml = null;
 
 			// Initial frame.

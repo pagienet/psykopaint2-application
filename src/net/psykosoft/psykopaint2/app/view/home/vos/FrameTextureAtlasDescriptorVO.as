@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.app.view.home.vos
 				}
 			}
 			if( !found ) {
-				throw new Error( this, "The texture " + textureName + " was not found in the atlas " + atlasXml.@imagePath + "." );
+				throw new Error( "FrameTextureAtlasDescriptorVO - The texture " + textureName + " was not found in the atlas " + atlasXml.@imagePath + "." );
 			}
 		}
 
