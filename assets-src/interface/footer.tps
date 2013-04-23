@@ -168,7 +168,6 @@
             <filename>images/footer/paper 1.png</filename>
             <filename>images/footer/paper 2.png</filename>
             <filename>images/footer/paper 3.png</filename>
-            <filename>images/footer/pf_ronda_seven_0.png</filename>
             <filename>images/footer/rightCorner.png</filename>
             <filename>images/footer/rightLabel.png</filename>
             <filename>images/footerIcons/FooterIconsGallery.png</filename>

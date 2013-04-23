@@ -123,6 +123,9 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 			trace("_uiComponentsAtlas atlas = "+_uiComponentsAtlas);
 			trace("footerAtlas atlas = "+_footerAtlas);
 			
+			
+			
+			
 			var psykopaint2UI:Psykopaint2Ui = new Psykopaint2Ui( stage, _fontDescriptor, resolutionExtension,_footerAtlas,_uiComponentsAtlas );
 
 			

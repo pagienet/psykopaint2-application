@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.app.view.components.label
 	
 	import flash.geom.Rectangle;
 	
-	import net.psykosoft.psykopaint2.app.managers.assets.FontManager;
+	import net.psykosoft.psykopaint2.app.managers.assets.Fonts;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.utils.scale.Scale3Image;
 	import net.psykosoft.psykopaint2.utils.scale.Scale3Texture;
@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.app.view.components.label
 			//_labelImage.clipRect = new Rectangle(0,0,200,50);
 			
 			
-			_textfield = new TextField(200,_labelImage.height,"0",FontManager.Warugaki,20,0x333333);
+			_textfield = new TextField(200,_labelImage.height,"0",Fonts.Warugaki,20,0x333333);
 			this.addChild(_textfield);
 			//_textfield.x = _labelImage.width/2 - _textfield.width/2;
 			_textfield.y = 1;

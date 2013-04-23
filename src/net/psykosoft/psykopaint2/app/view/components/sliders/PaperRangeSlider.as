@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.app.view.components.sliders
 {
-	import net.psykosoft.psykopaint2.app.managers.assets.FontManager;
+	import net.psykosoft.psykopaint2.app.managers.assets.Fonts;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	
 	import starling.display.Image;
@@ -57,8 +57,8 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 			_rangeView.y=-6;
 			
 			
-			_labelLeft = new TextField(50,30,"0",FontManager.Warugaki,20,0);
-			_labelRight = new TextField(50,30,"0",FontManager.Warugaki,20,0);
+			_labelLeft = new TextField(50,30,"0",Fonts.Warugaki,20,0);
+			_labelRight = new TextField(50,30,"0",Fonts.Warugaki,20,0);
 			_labelLeft.x = 27;
 			_labelRight.x = 398;
 			_labelLeft.y = 7;

@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.app.managers.assets
 {
-	public class FontManager
+	public class Fonts
 	{
 		
 		// Don't skip the "embedAsCFF"-part!
