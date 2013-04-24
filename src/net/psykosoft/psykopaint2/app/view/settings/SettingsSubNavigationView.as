@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.app.view.settings
 
 	public class SettingsSubNavigationView extends SubNavigationViewBase
 	{
-		public static const BUTTON_LABEL_BACK:String = "Back";
+//		public static const BUTTON_LABEL_BACK:String = "Back";
 		public static const BUTTON_LABEL_WALLPAPER:String = "Wallpaper";
 
 		public function SettingsSubNavigationView() {
@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.app.view.settings
 
 			super.onEnabled();
 
-			setLeftButton("FooterIconsSettings", BUTTON_LABEL_BACK );
+//			setLeftButton("FooterIconsSettings", BUTTON_LABEL_BACK );
 
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting", "[Notifications]", onButtonTriggered ) );

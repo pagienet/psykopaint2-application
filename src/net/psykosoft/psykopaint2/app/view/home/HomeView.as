@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
+	import away3d.debug.Trident;
+
 	import flash.events.Event;
 
 	import net.psykosoft.utils.loaders.AssetBundleLoader;
@@ -40,9 +42,13 @@ package net.psykosoft.psykopaint2.app.view.home
 			// Initialize objects.
 			// -----------------------
 
+			var tri:Trident = new Trident( 500 );
+			addChild3d( tri );
+
 			_room = new Room();
 			_cameraController = new ScrollCameraController( _camera, stage );
 			_frameContainer = new PictureFrameContainer( _cameraController, _room );
+			_frameContainer.y = 400;
 
 			// -------------------------
 			// Prepare external assets.
@@ -57,6 +63,8 @@ package net.psykosoft.psykopaint2.app.view.home
 			// Default paintings.
 			_loader.registerAsset( "/assets-packaged/away3d/paintings/home_painting.jpg", "homePainting" );
 			_loader.registerAsset( "/assets-packaged/away3d/paintings/settings_painting.jpg", "settingsPainting" );
+			// Other room stuff.
+			_loader.registerAsset( "/assets-packaged/away3d/easel/easel.png", "easelImage" );
 			// Sample paintings. TODO: should be removed once we have save capabilities
 			_loader.registerAsset( "/assets-packaged/away3d/paintings/sample_painting0.jpg", "samplePainting0" );
 			_loader.registerAsset( "/assets-packaged/away3d/paintings/sample_painting1.jpg", "samplePainting1" );
@@ -79,7 +87,6 @@ package net.psykosoft.psykopaint2.app.view.home
 			_room.initialize();
 			_cameraController.wall = _room.wall;
 			_frameContainer.loadDefaultHomeFrames();
-			_frameContainer.y = 400;
 			_frameContainer.z = _room.wall.z - 2;
 		}
 

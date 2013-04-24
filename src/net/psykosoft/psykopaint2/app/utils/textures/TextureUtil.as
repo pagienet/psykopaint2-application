@@ -1,12 +1,68 @@
 package net.psykosoft.psykopaint2.app.utils.textures
 {
 
+	import away3d.core.base.SubGeometry;
+	import away3d.entities.Mesh;
+	import away3d.materials.TextureMaterial;
+	import away3d.primitives.PlaneGeometry;
+	import away3d.textures.BitmapTexture;
+
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
+
+	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 
 	public class TextureUtil
 	{
+		public static function createPlaneThatFitsNonPowerOf2TransparentImage( image:BitmapData ):Mesh {
+
+			// Obtain "safe" ( power of 2 sized image ) from the original.
+			var safeImage:BitmapData = TextureUtil.ensurePowerOf2( image );
+
+			// Remember original image and safe image dimensions.
+			var imageDimensions:Point = new Point( image.width, image.height );
+			image.dispose();
+			var textureDimensions:Point = new Point( safeImage.width, safeImage.height );
+
+			// Create texture from image.
+			var texture:BitmapTexture = new BitmapTexture( safeImage );
+			texture.getTextureForStage3D( DisplayContextManager.stage3dProxy ); // Force image creation before the disposal of the bitmap data.
+			safeImage.dispose();
+
+			// Create material.
+			var material:TextureMaterial = new TextureMaterial( texture );
+			material.mipmap = false;
+			material.smooth = true;
+
+			// Build geometry.
+			// Note: Plane takes original image size ( not power of 2 dimensions ) and shifts and re-scales uvs
+			// so that the image perfectly fits in the plane without using transparency on the edges.
+			var dw:Number = ( ( textureDimensions.x - imageDimensions.x ) / 2 ) / textureDimensions.x; // TODO: math can be optimized
+			var dh:Number = ( ( textureDimensions.y - imageDimensions.y ) / 2 ) / textureDimensions.y;
+			var dsw:Number = textureDimensions.x / imageDimensions.x;
+			var dsh:Number = textureDimensions.y / imageDimensions.y;
+			var planeGeometry:PlaneGeometry = new PlaneGeometry( imageDimensions.x, imageDimensions.y );
+			var subGeometry:SubGeometry = planeGeometry.subGeometries[ 0 ];
+			var uvs:Vector.<Number> = subGeometry.uvs;
+			var newUvs:Vector.<Number> = new Vector.<Number>();
+			for( var i:uint = 0; i < uvs.length / 2; i++ ) {
+				var index:uint = i * 2;
+				newUvs[ index ] = uvs[ index ] / dsw + dw;
+				newUvs[ index + 1 ] = uvs[ index + 1 ] / dsh + dh;
+			}
+			subGeometry.updateUVData( newUvs );
+
+			// Build mesh.
+			var plane:Mesh = new Mesh( planeGeometry, material );
+
+			return plane;
+
+		}
+
 		public static function ensurePowerOf2( bitmapData:BitmapData ):BitmapData {
+
+//			trace( "TextureUtil - ensurePowerOf2 - is source transparent? " + bitmapData.transparent );
 
 			var origWidth:int = bitmapData.width;
 			var origHeight:int = bitmapData.height;
@@ -16,7 +72,7 @@ package net.psykosoft.psykopaint2.app.utils.textures
 //			trace( "ensurePowerOf2 - altered: " + legalWidth + ", " + legalHeight );
 
 			if( legalWidth > origWidth || legalHeight > origHeight ) {
-				var modifiedBmd:BitmapData = new BitmapData( legalWidth, legalHeight, false, 0 );
+				var modifiedBmd:BitmapData = new BitmapData( legalWidth, legalHeight, bitmapData.transparent, 0 );
 				var transform:Matrix = new Matrix();
 				transform.translate(
 					( legalWidth - origWidth ) / 2,

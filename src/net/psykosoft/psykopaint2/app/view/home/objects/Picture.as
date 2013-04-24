@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.geom.Point;
 
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
+	import net.psykosoft.psykopaint2.app.utils.textures.TextureUtil;
 
 	public class Picture extends ObjectContainer3D
 	{
@@ -23,41 +24,18 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		private var _material:TextureMaterial;
 		private var _diffuseTexture:BitmapTexture;
 
-		public function Picture( diffuseBitmap:BitmapData, imageDimensions:Point, textureDimensions:Point ) {
+		public function Picture( diffuseBitmap:BitmapData ) {
 
 			super();
 
-			_diffuseTexture = new BitmapTexture( diffuseBitmap );
-			_diffuseTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy );
-			diffuseBitmap.dispose();
+			_width = diffuseBitmap.width;
+			_height = diffuseBitmap.height;
 
-			_material = new TextureMaterial( _diffuseTexture );
-			_material.smooth = true;
-			_material.mipmap = false;
-
-			// Build plane.
-			// Note: Plane takes original image size ( not power of 2 dimensions ) and shifts and re-scales uvs
-			// so that the image perfectly fits in the plane.
-			var dw:Number = ( ( textureDimensions.x - imageDimensions.x ) / 2 ) / textureDimensions.x; // TODO: math can be optimized
-			var dh:Number = ( ( textureDimensions.y - imageDimensions.y ) / 2 ) / textureDimensions.y;
-			var dsw:Number = textureDimensions.x / imageDimensions.x;
-			var dsh:Number = textureDimensions.y / imageDimensions.y;
-			var planeGeometry:PlaneGeometry = new PlaneGeometry( imageDimensions.x, imageDimensions.y );
-			var subGeometry:SubGeometry = planeGeometry.subGeometries[ 0 ];
-			var uvs:Vector.<Number> = subGeometry.uvs;
-			var newUvs:Vector.<Number> = new Vector.<Number>();
-			for( var i:uint = 0; i < uvs.length / 2; i++ ) {
-				var index:uint = i * 2;
-				newUvs[ index ] = uvs[ index ] / dsw + dw;
-				newUvs[ index + 1 ] = uvs[ index + 1 ] / dsh + dh;
-			}
-			subGeometry.updateUVData( newUvs );
-			_plane = new Mesh( planeGeometry, _material );
+			_plane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( diffuseBitmap );
 			_plane.rotationX = -90;
+			_material = _plane.material as TextureMaterial;
+			_diffuseTexture = _material.texture as BitmapTexture;
 			addChild( _plane );
-
-			_width = imageDimensions.x;
-			_height = imageDimensions.y;
 		}
 
 		override public function dispose():void {

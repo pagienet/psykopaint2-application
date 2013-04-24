@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.app.model
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyStateChangedSignal;
 
@@ -13,10 +13,11 @@ package net.psykosoft.psykopaint2.app.model
 		public var notifyStateChangedSignal:NotifyStateChangedSignal;
 
 		private var _currentState:StateVO = new StateVO( ApplicationStateType.IDLE );
-		private var _previousState:StateVO;
+		private var _stateStack:Vector.<StateVO>;
 
 		public function StateModel() {
 			super();
+			_stateStack = new Vector.<StateVO>();
 		}
 
 		public function set currentState( value:StateVO ):void {
@@ -24,20 +25,21 @@ package net.psykosoft.psykopaint2.app.model
 			if( _currentState == value ) return;
 
 			if( value.name == ApplicationStateType.PREVIOUS_STATE ) {
-				if( _previousState ) {
-					value = _previousState;
-					_previousState = null;
-					// TODO: implement a state stack instead
+				if( _stateStack.length > 0 ) {
+					var lastIndex:uint = _stateStack.length - 1;
+					value = _stateStack[ lastIndex ];
+					_stateStack.splice( lastIndex, 1 );
 				}
 				else {
 					return;
 				}
 			}
 
-			Cc.log( this, "new state: " + value );
-
-			_previousState = _currentState;
 			_currentState = value;
+			_stateStack.push( _currentState );
+
+			trace( this, "new state: " + value );
+			trace( this, "stack: " + _stateStack );
 
 			notifyStateChangedSignal.dispatch( _currentState );
 		}
@@ -47,7 +49,8 @@ package net.psykosoft.psykopaint2.app.model
 		}
 
 		public function get previousState():StateVO {
-			return _previousState;
+			var lastIndex:uint = _stateStack.length - 1;
+			return _stateStack[ lastIndex ];
 		}
 	}
 }

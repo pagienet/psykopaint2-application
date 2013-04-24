@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;

@@ -1,14 +1,14 @@
-package net.psykosoft.psykopaint2.app.view.painting.newpainting
+package net.psykosoft.psykopaint2.app.view.navigation
 {
 
-	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
-	public class NewPaintingSubNavigationViewMediator extends StarlingMediatorBase
+	public class BackSubNavigationViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
-		public var view:NewPaintingSubNavigationView;
+		public var view:BackSubNavigationView;
 
 		override public function initialize():void {
 
@@ -26,13 +26,11 @@ package net.psykosoft.psykopaint2.app.view.painting.newpainting
 		// -----------------------
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
+			trace( this, "knows of button press: " + buttonLabel );
 			switch( buttonLabel ) {
-				case NewPaintingSubNavigationView.BUTTON_LABEL_SELECT_IMAGE:
-					requestStateChange( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE ) );
+				case BackSubNavigationView.BUTTON_LABEL_BACK:
+					requestStateChange( new StateVO( ApplicationStateType.PREVIOUS_STATE ) );
 					break;
-				/*case NewPaintingSubNavigationView.BUTTON_LABEL_BACK:
-					requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN ) );
-					break;*/
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
@@ -33,13 +33,13 @@ package net.psykosoft.psykopaint2.app.view.home
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
 				case HomeScreenSubNavigationView.BUTTON_LABEL_SETTINGS:
-					requestStateChange( new StateVO( ApplicationStateType.SETTINGS ) );
+//					requestStateChange( new StateVO( ApplicationStateType.SETTINGS ) ); // TODO: currently disabled
 					break;
 				case HomeScreenSubNavigationView.BUTTON_LABEL_GALLERY:
 					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );
 					break;
 				case HomeScreenSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
-					requestStateChange( new StateVO( ApplicationStateType.PAINTING ) );
+//					requestStateChange( new StateVO( ApplicationStateType.PAINTING ) ); // TODO: currently disabled
 					break;
 			}
 		}

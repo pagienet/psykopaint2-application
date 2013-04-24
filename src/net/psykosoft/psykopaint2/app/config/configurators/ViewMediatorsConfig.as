@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.app.config.configurators
 
 	import net.psykosoft.psykopaint2.app.view.home.HomeView;
 	import net.psykosoft.psykopaint2.app.view.home.HomeViewMediator;
+	import net.psykosoft.psykopaint2.app.view.navigation.BackSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.navigation.BackSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.app.view.rootsprites.StarlingRootSprite;
 	import net.psykosoft.psykopaint2.app.view.rootsprites.StarlingRootSpriteMediator;
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.CanvasView;
@@ -106,6 +108,7 @@ package net.psykosoft.psykopaint2.app.config.configurators
 			mediatorMap.map( CaptureImageSubNavigationView ).toMediator( CaptureImageSubNavigationViewMediator );
 			mediatorMap.map( ConfirmCaptureSubNavigationView ).toMediator( ConfirmCaptureSubNavigationViewMediator );
 			mediatorMap.map( CropImageSubNavigationView ).toMediator( CropImageSubNavigationViewMediator );
+			mediatorMap.map( BackSubNavigationView ).toMediator( BackSubNavigationViewMediator );
 
 			// ---------------------------------------------------------------------
 			// 3d

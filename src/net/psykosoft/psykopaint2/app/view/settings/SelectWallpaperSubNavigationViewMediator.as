@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.app.view.settings
 
 	import flash.utils.Dictionary;
 
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;

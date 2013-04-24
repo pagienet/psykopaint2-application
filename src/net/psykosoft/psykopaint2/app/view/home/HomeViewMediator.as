@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.app.view.home
 {
 
 	import net.psykosoft.psykopaint2.app.managers.gestures.GestureType;
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.model.StateModel;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
@@ -36,6 +36,7 @@ package net.psykosoft.psykopaint2.app.view.home
 			registerEnablingState( ApplicationStateType.HOME_SCREEN );
 			registerEnablingState( ApplicationStateType.PAINTING );
 			registerEnablingState( ApplicationStateType.SETTINGS );
+			registerEnablingState( ApplicationStateType.PAINTING_SELECT_IMAGE );
 
 			// From app.
 //			notifyWallpaperChangeSignal.add( onWallPaperChanged );
@@ -53,16 +54,21 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		private function onViewEnabled():void {
 			homeView.cameraController.cameraClosestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
-			homeView.cameraController.motionStartedSignal.add( onViewMotionStarted );
+//			homeView.cameraController.motionStartedSignal.add( onViewMotionStarted );
 		}
 
-		private function onViewMotionStarted():void {
+		/*private function onViewMotionStarted():void {
+
+			trace( this, "view motion started." );
+
 			if( stateModel.currentState.name == ApplicationStateType.SETTINGS && stateModel.previousState.name != ApplicationStateType.HOME_SCREEN ) {
 				requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN ) );
 			}
-		}
+		}*/
 
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
+
+			trace( this, "closest painting changed to index: " + paintingIndex );
 
 			// Trigger settings state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState.name != ApplicationStateType.SETTINGS && paintingIndex == 0 ) {
@@ -112,23 +118,23 @@ package net.psykosoft.psykopaint2.app.view.home
 			view.changeWallpaper( image.originalBmd );
 		}*/
 
-		override protected function onStateChange( newStateName:String ):void {
+		/*override protected function onStateChange( newStateName:String ):void {
 
 			// Clicking on the settings button causes animation to the settings painting.
-			if( newStateName == ApplicationStateType.SETTINGS && stateModel.previousState.name == ApplicationStateType.HOME_SCREEN && homeView.cameraController.evaluateCameraCurrentClosestSnapPointIndex() != 0 ) {
+			*//*if( newStateName == ApplicationStateType.SETTINGS && stateModel.previousState.name == ApplicationStateType.HOME_SCREEN && homeView.cameraController.evaluateCameraCurrentClosestSnapPointIndex() != 0 ) {
 				homeView.cameraController.jumpToSnapPointAnimated( 0 );
 				return;
-			}
+			}*//*
 
 			// Clicking on the back button on the settings state restores to the last snapped painting.
-			if( newStateName == ApplicationStateType.HOME_SCREEN && stateModel.previousState.name == ApplicationStateType.SETTINGS ) {
+			*//*if( newStateName == ApplicationStateType.HOME_SCREEN && stateModel.previousState.name == ApplicationStateType.SETTINGS ) {
 				if( !homeView.cameraController.moving ) {
 					homeView.cameraController.jumpToSnapPointAnimated( homeView.cameraController.previousCameraClosestSnapPointIndex );
 					return;
 				}
-			}
+			}*//*
 
 			super.onStateChange( newStateName );
-		}
+		}*/
 	}
 }

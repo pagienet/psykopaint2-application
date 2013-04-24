@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.managers.accelerometer.AccelerationType;
 	import net.psykosoft.psykopaint2.app.managers.gestures.GestureType;
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
@@ -49,6 +49,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 		private var _subNavigationClasses:Dictionary;
 		private var _wasShowing:Boolean;
+		private var _anEmptySubNavigationViewHidTheNavigation:Boolean;
 
 		override public function initialize():void {
 
@@ -125,6 +126,16 @@ package net.psykosoft.psykopaint2.app.view.navigation
 				throw new Error( this, "there is no sub navigation for this state: " + stateName + ". If there is, make sure to register it in initSubNavigationViews() below." );
 			}
 
+			// If we are loading an empty sub-nav view, then no need to have the bar visible.
+			if( subNavigationClass == SubNavigationViewBase ) {
+				_anEmptySubNavigationViewHidTheNavigation = true;
+				navigationView.hideAnimated();
+			}
+			else if( _anEmptySubNavigationViewHidTheNavigation ) {
+				_anEmptySubNavigationViewHidTheNavigation = false;
+				navigationView.showAnimated();
+			}
+
 			var subNavigationInstance:SubNavigationViewBase = new subNavigationClass();
 
 			navigationView.enableSubNavigationView( subNavigationInstance );
@@ -151,9 +162,12 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_subNavigationClasses = new Dictionary();
 
 			// This is where application states are associated to sub-navigation views.
+			// NOTE: If you want a state to be associated to an empty sub-navigation, associate it with the class
+			// SubNavigationViewBase. This will cause the navigation view to hide.
 			_subNavigationClasses[ ApplicationStateType.HOME_SCREEN ] 					  = HomeScreenSubNavigationView;
 			_subNavigationClasses[ ApplicationStateType.PAINTING ] 						  = NewPaintingSubNavigationView;
 			_subNavigationClasses[ ApplicationStateType.PAINTING_SELECT_IMAGE ] 		  = SelectImageSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.PAINTING_SELECT_IMAGE_CHOOSING ]  = BackSubNavigationView;
 			_subNavigationClasses[ ApplicationStateType.PAINTING_SELECT_COLORS ] 		  = ColorStyleSubNavigationView;
 			_subNavigationClasses[ ApplicationStateType.PAINTING_SELECT_TEXTURE ] 		  = SelectTextureSubNavigationView;
 			_subNavigationClasses[ ApplicationStateType.PAINTING_SELECT_BRUSH ] 		  = SelectBrushSubNavigationView;

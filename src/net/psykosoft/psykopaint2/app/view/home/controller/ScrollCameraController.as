@@ -238,6 +238,7 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 			// Update motion, either glued or free.
 			if( _userInteracting ) { // User's finger is on the screen, scroller snaps to finger.
+				evaluateCameraCurrentClosestSnapPointIndex();
 				// Update user input.
 				_mouseX = _stage.mouseX - _stage.stageWidth / 2;
 				var mouseDeltaX:Number = _lastMouseX - _mouseX;
@@ -250,6 +251,7 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 				pushPosition();
 			}
 			else if( _moving ) { // User has released the scroller.
+				evaluateCameraCurrentClosestSnapPointIndex();
 				if( Math.abs( _speed ) > 0.1 ) { // Update motion.
 					_camera.x += _speed;
 					_speed *= _onEdgeDeceleration ? FRICTION_FACTOR_ON_EDGE_CONTAINMENT : FRICTION_FACTOR;
@@ -258,16 +260,25 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 					_moving = false;
 					var dx:Number = Math.abs( _camera.x - _lastCameraX );
 					if( dx > 0 ) {
-						motionEndedSignal.dispatch( evaluateClosestSnapPointIndex( _camera.x ) );
+						motionEndedSignal.dispatch( _currentCameraClosestSnapPointIndex );
 					}
 				}
 			}
+
+			_cameraRotationY += _speed / 150;
+			_cameraRotationY *= 0.975;
+			_camera.rotationY = _cameraRotationY;
 
 			// Contain.
 			if( _userInteracting || _moving ) {
 				containEdges();
 			}
+
+			// Uncomment to visually debug perspective in the scene.
+//			_camera.lookAt( new Vector3D() );
 		}
+
+		private var _cameraRotationY:Number = 0;
 
 		// ---------------------------------------------------------------------
 		// Throwing.

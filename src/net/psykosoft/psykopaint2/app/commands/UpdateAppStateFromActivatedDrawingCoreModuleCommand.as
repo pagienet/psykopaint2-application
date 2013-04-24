@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.app.commands
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;

@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.app
 
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.config.Settings;
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
@@ -68,6 +68,7 @@ package net.psykosoft.psykopaint2.app
 			stage.align = StageAlign.TOP_LEFT;
 			stage.frameRate = 60;
 			mouseEnabled = mouseChildren = false; // TODO: can disable from the stage object?
+			DisplayContextManager.root = this;
 			// TODO: if mouse 3d interactivity is not used, disable all mouse events in non desktop mode and ensure that away3d's picking system is disabled
 		}
 
@@ -130,6 +131,7 @@ package net.psykosoft.psykopaint2.app
 
 		private function init3D():void {
 			_away3d = new View3D();
+			_away3d.camera.lens.far = 5000;
 			Debug.active = Settings.AWAY3D_DEBUG_MODE;
 			_away3d.stage3DProxy = _stage3dProxy;
 			_away3d.shareContext = true;

@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 {
 
 	import net.psykosoft.psykopaint2.app.config.Settings;
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.types.ImageSourceType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
@@ -48,7 +48,10 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 				// Facebook.
 				case SelectImageSubNavigationView.BUTTON_LABEL_FACEBOOK:
-					if( Settings.RUNNING_ON_iPAD ) notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.FACEBOOK );
+					if( Settings.RUNNING_ON_iPAD ) {
+						notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.FACEBOOK );
+						requestStateChange( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE_CHOOSING ) );
+					}
 					else notifyPopUpDisplaySignal.dispatch( PopUpType.NO_PLATFORM ); // Fetching facebook images is not supported on desktop.
 					break;
 
@@ -57,11 +60,13 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO...
 //					notifyPopUpDisplaySignal.dispatch( PopUpType.CAPTURE_IMAGE );
 //					requestStateChangeSignal.dispatch( new StateVO( StateType.PAINTING_CAPTURE_IMAGE ) );
+					requestStateChange( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE_CHOOSING ) );
 					break;
 
 				// Ready to paint.
 				case SelectImageSubNavigationView.BUTTON_LABEL_READY_TO_PAINT:
 					notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.READY_TO_PAINT );
+					requestStateChange( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE_CHOOSING ) );
 					break;
 
 				// User photos.
@@ -71,6 +76,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 						else notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.IOS_USER_PHOTOS_ANE );
 					}
 					else notifyLoadImageSourceRequestedSignal.dispatch( ImageSourceType.DESKTOP );
+					requestStateChange( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE_CHOOSING ) );
 					break;
 			}
 		}

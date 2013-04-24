@@ -7,6 +7,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 	import br.com.stimuli.loading.BulkLoader;
 
+	import flash.display.Bitmap;
+
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 
@@ -86,7 +88,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			addChild( pictureFrame );
 
 			// Create shadow.
-			_room.addShadow( pictureFrame.x, this.y + pictureFrame.y, pictureFrame.width, pictureFrame.height );
+			_room.addShadow( pictureFrame.x, this.y, pictureFrame.width, pictureFrame.height );
 		}
 
 		public function loadDefaultHomeFrames():void {
@@ -115,14 +117,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// -----------------------
 
 			// Picture.
-			var bmd:BitmapData = BulkLoader.getLoader( "homeView" ).getBitmapData( "homePainting", true );
-			var safeBmd:BitmapData = TextureUtil.ensurePowerOf2( bmd );
-			var settingsPicture:Picture = new Picture(
-					safeBmd,
-					new Point( bmd.width, bmd.height ),
-					new Point( safeBmd.width, safeBmd.height )
-			);
-			bmd.dispose();
+			var settingsPicture:Picture = new Picture( BulkLoader.getLoader( "homeView" ).getBitmapData( "settingsPainting", true ) );
 			settingsPicture.scalePainting( 2 );
 
 			// Frame.
@@ -134,34 +129,29 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			var settingsFrame:PictureFrame = new PictureFrame( settingsPicture, _frameMaterial, settingsFrameAtlasDescriptor );
 			addPictureFrame( settingsFrame );
 
-			/*// -----------------------
+			// -----------------------
 			// Easel.
 			// -----------------------
 
-			_easel = new Easel();
+			_easel = new Easel( BulkLoader.getLoader( "homeView" ).getBitmapData( "easelImage", true ) );
 
 			var previousFrame:PictureFrame = _wallFrames[ _wallFrames.length - 1 ];
 			_easel.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + _easel.width / 2;
+			_easel.y = -300;
+			_easel.z = -600;
 
 			_cameraController.addSnapPoint( _easel.x );
 
 			_positioningOffset += _easel.x;
 
-			addChild( _easel );*/
+			addChild( _easel );
 
 			// -----------------------
 			// Psykopaint frame.
 			// -----------------------
 
 			// Picture.
-			bmd = BulkLoader.getLoader( "homeView" ).getBitmapData( "settingsPainting", true );
-			safeBmd = TextureUtil.ensurePowerOf2( bmd );
-			var psykopaintPicture:Picture = new Picture(
-					safeBmd,
-					new Point( bmd.width, bmd.height ),
-					new Point( safeBmd.width, safeBmd.height )
-			);
-			bmd.dispose();
+			var psykopaintPicture:Picture = new Picture( BulkLoader.getLoader( "homeView" ).getBitmapData( "homePainting", true ) );
 			psykopaintPicture.scalePainting( 2 );
 
 			// Frame.
@@ -181,14 +171,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			for( var i:uint; i < 7; i++ ) {
 
 				// Picture.
-				bmd = BulkLoader.getLoader( "homeView" ).getBitmapData( "samplePainting" + i, true );
-				safeBmd = TextureUtil.ensurePowerOf2( bmd );
-				var picture:Picture = new Picture(
-						safeBmd,
-						new Point( bmd.width, bmd.height ),
-						new Point( safeBmd.width, safeBmd.height )
-				);
-				bmd.dispose();
+				var picture:Picture = new Picture( BulkLoader.getLoader( "homeView" ).getBitmapData( "samplePainting" + i, true ) );
 
 				// Frame.
 				var descriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO(
@@ -204,7 +187,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			_atlasXml = null;
 
 			// Initial frame.
-			_cameraController.jumpToSnapPoint( 0 );
+			_cameraController.jumpToSnapPoint( 2 );
 
 		}
 	}

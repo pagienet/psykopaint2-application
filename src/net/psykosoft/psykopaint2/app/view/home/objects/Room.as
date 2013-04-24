@@ -183,7 +183,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			bmd.dispose();
 
 			// Material.
-			_wallMaterial = new TextureMaterial(  );
+			_wallMaterial = new TextureMaterial( _wallTexture );
 			_wallMaterial.mipmap = false;
 			_wallMaterial.smooth = true;
 			_wallMaterial.repeat = true;

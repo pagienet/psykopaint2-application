@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.app.view.painting.newpainting
 	public class NewPaintingSubNavigationView extends SubNavigationViewBase
 	{
 		public static const BUTTON_LABEL_SELECT_IMAGE:String = "Pick an Image";
-		public static const BUTTON_LABEL_BACK:String = "Back";
+//		public static const BUTTON_LABEL_BACK:String = "Back";
 
 		public function NewPaintingSubNavigationView() {
 			super( "New Painting" );
@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.app.view.painting.newpainting
 
 		override protected function onEnabled():void {
 			super.onEnabled();
-			setLeftButton("FooterIconsSettings", BUTTON_LABEL_BACK );
+//			setLeftButton("FooterIconsSettings", BUTTON_LABEL_BACK );
 			setRightButton("FooterIconsSettings", BUTTON_LABEL_SELECT_IMAGE );
 		}
 	}

@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.settings
 {
 
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
@@ -33,9 +33,9 @@ package net.psykosoft.psykopaint2.app.view.settings
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			trace( this, "button pressed: " + buttonLabel);
 			switch( buttonLabel ) {
-				case SettingsSubNavigationView.BUTTON_LABEL_BACK:
+				/*case SettingsSubNavigationView.BUTTON_LABEL_BACK:
 					requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN ) );
-					break;
+					break;*/
 				case SettingsSubNavigationView.BUTTON_LABEL_WALLPAPER:
 					requestStateChange( new StateVO( ApplicationStateType.SETTINGS_WALLPAPER ) );
 					break;

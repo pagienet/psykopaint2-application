@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 		public var buttonPressedSignal:Signal;
 
-		public function SubNavigationViewBase( title:String ) {
+		public function SubNavigationViewBase( title:String = "" ) {
 			super();
 			buttonPressedSignal = new Signal();
 			_title = title;
@@ -111,11 +111,12 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			var len:uint = definition.buttonVOArray.length;
 			var gap:Number = 15;
 			for( var i:uint = 0; i < len; i++ ) {
+
 				var vo:ButtonDefinitionVO = definition.buttonVOArray[ i ];
 				var subButton:FooterNavButton = new FooterNavButton( Psykopaint2Ui.instance.footerAtlas.getTexture( vo.textureID  ) , vo.label, ButtonSkinType.LABEL );
 				subButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
-				subButton.x = inflate + ( subButton.width + gap ) * i;
-				subButton.y = 30;
+				subButton.x = inflate + ( subButton.width + gap ) * i + rand( -15, 15 );
+				subButton.y = 30 + rand( -15, 15 );
 				
 				accumulatedContentWidth += subButton.width;
 				if( i != len - 1 ) {
@@ -140,17 +141,16 @@ package net.psykosoft.psykopaint2.app.view.navigation
 				_scrollContainer.width = 1024;
 			}
 			_scrollContainer.x = 1024 / 2 - _scrollContainer.width / 2;
-			
-			
+		}
+
+		private function rand(min:Number, max:Number):Number {
+		    return (max - min)*Math.random() + min;
 		}
 
 		public function clearCenterButtons():void {
-			
-			
-			
+
 			if( _scrollContainer ) {
-				
-				
+
 				// Kill children.
 				while( _scrollContainer.numChildren > 0 ) {
 					var child:FooterNavButton = _scrollContainer.getChildAt( 0 ) as FooterNavButton;

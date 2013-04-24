@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.app.data.types.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.types.ImageSourceType;
 	import net.psykosoft.psykopaint2.app.service.images.ANEIOSImageService;
 	import net.psykosoft.psykopaint2.app.service.images.DesktopImageService;
@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.app.view.selectimage
 
 			super.initialize();
 			registerView( selectImageView );
-			registerEnablingState( ApplicationStateType.PAINTING_SELECT_IMAGE );
+			registerEnablingState( ApplicationStateType.PAINTING_SELECT_IMAGE_CHOOSING );
 
 			// From view.
 			selectImageView.listSelectedItemChangedSignal.add( onListItemSelected );
