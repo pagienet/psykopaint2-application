@@ -50,9 +50,8 @@ package net.psykosoft.psykopaint2.app.view.home
 			paperCombobox2.addItem({id:1,label:"COS WAVE"});
 			paperCombobox2.addItem({id:2,label:"SAWTOOTH"});
 			paperCombobox2.addItem({id:3,label:"SQUARE"});
-			paperCombobox2.addItem({id:4,label:"DRAW SPEED"});
-			paperCombobox2.addItem({id:5,label:"ORIENTATION"});
-			paperCombobox2.x = 800;
+			
+			paperCombobox2.x = 750;
 			
 			/*
 			

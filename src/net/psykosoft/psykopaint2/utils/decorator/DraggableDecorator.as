@@ -74,7 +74,7 @@ package net.psykosoft.psykopaint2.utils.decorator
 					_decorated.y = Math.max(_bounds.y,_decorated.y);
 					_decorated.y = Math.min(_bounds.y+_bounds.height,_decorated.y);
 					
-					trace("TouchPhase.MOVED position = "+_decorated.x+","+_decorated.y);
+					//trace("TouchPhase.MOVED position = "+_decorated.x+","+_decorated.y);
 				}else if (touch.phase == TouchPhase.ENDED){
 					
 				}
@@ -115,5 +115,16 @@ package net.psykosoft.psykopaint2.utils.decorator
 			{
 				_target = target;
 			}
+
+			public function get shiftPosition():Point
+			{
+				return _shiftPosition;
+			}
+
+			public function set shiftPosition(value:Point):void
+			{
+				_shiftPosition = value;
+			}
+
 		}
 	}

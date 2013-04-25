@@ -41,24 +41,24 @@ package net.psykosoft.psykopaint2.utils.decorators.buttons
 		
 		override protected function onEndTouch():void {
 			
-			
-			var shiftX:Number = _decorated.x - _originalObjectProperties.x - (1.0 - _decorated.scaleX) / 2.0 * _decorated.width;
-			var shiftY:Number = _decorated.y - _originalObjectProperties.y - (1.0 - _decorated.scaleY) / 2.0 * _decorated.height;
-			
-			//CENTER THE SCALING
-			_originalObjectProperties.onUpdate = function ():void{
-				if(_decorated){
-					_decorated.x =shiftX+ _originalObjectProperties.x + (1.0 - _decorated.scaleX) / 2.0 * _decorated.width;
-					_decorated.y =shiftY+ _originalObjectProperties.y + (1.0 - _decorated.scaleY) / 2.0 * _decorated.height;
-				}
-			}
-			//DISPOSE WHEN TRANSITION COMPLETE
-			_originalObjectProperties.onComplete = function ():void{
+			if(_decorated){
+				var shiftX:Number = _decorated.x - _originalObjectProperties.x - (1.0 - _decorated.scaleX) / 2.0 * _decorated.width;
+				var shiftY:Number = _decorated.y - _originalObjectProperties.y - (1.0 - _decorated.scaleY) / 2.0 * _decorated.height;
 				
-				_originalObjectProperties = null
+				//CENTER THE SCALING
+				_originalObjectProperties.onUpdate = function ():void{
+					if(_decorated){
+						_decorated.x =shiftX+ _originalObjectProperties.x + (1.0 - _decorated.scaleX) / 2.0 * _decorated.width;
+						_decorated.y =shiftY+ _originalObjectProperties.y + (1.0 - _decorated.scaleY) / 2.0 * _decorated.height;
+					}
+				}
+				//DISPOSE WHEN TRANSITION COMPLETE
+				_originalObjectProperties.onComplete = function ():void{
+					
+					_originalObjectProperties = null
+				}
+				Starling.juggler.tween(_decorated, _speed, _originalObjectProperties);
 			}
-			Starling.juggler.tween(_decorated, _speed, _originalObjectProperties);
-			
 			
 			
 		}		

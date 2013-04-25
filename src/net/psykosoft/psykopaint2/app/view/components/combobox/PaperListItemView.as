@@ -37,5 +37,15 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 			return _data ; 
 			
 		}
+		/*
+		override public function get height():Number{
+			return _bgView.height
+		}
+		
+		override public function set height(value:Number):void{
+			 _bgView.height = value;
+			 _txt.height = value;
+		}*/
+		
 	}
 }
