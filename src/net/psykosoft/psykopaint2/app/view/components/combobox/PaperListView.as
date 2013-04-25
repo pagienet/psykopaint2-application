@@ -94,14 +94,10 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 					//ONLY REUPDATE ONCE
 					if(i==0){
 						
-						if(speed==0){
-							currentItemView.scaleY=1;
-						}else 
+						
 						Starling.juggler.tween(currentItemView,speed,{scaleY:1,transition:Transitions.EASE_OUT_BACK,onStart:update,onUpdate:update,onComplete:update});
 					}else {
-						if(speed==0){
-							currentItemView.scaleY=1;
-						}else 
+						
 						Starling.juggler.tween(currentItemView,speed,{scaleY:1,transition:Transitions.EASE_OUT_BACK});
 					}
 				}
@@ -135,18 +131,14 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 					
 					if(i<positionIndex){
 						//currentItemView.height -=5;
-						if(speed==0){
-							currentItemView.height = 1;
-						}else 
+						
 						Starling.juggler.tween(currentItemView,speed,{height:1,transition:Transitions.EASE_OUT});
 					}else if(i==positionIndex){
 						
 						Starling.juggler.tween(currentItemView,speed,{onStart:update,onUpdate:update,onComplete:update});
 
 					}else {
-						if(speed==0){
-							currentItemView.height = 1;
-						}else 
+						
 						Starling.juggler.tween(currentItemView,speed,{height:1,transition:Transitions.EASE_OUT});
 
 					}

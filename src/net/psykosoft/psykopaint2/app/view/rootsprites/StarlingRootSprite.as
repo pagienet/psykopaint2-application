@@ -118,16 +118,15 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 			// Ui theme.
 			// -----------------------
 
-			trace( this, "initializing display tree with Starling.contentScaleFactor: " + Starling.contentScaleFactor );
-						
-			trace("_uiComponentsAtlas atlas = "+_uiComponentsAtlas);
+			trace( this, "initializing display tree with Starling.contentScaleFactor: " + Starling.contentScaleFactor );		
+			trace("uiComponentsAtlas atlas = "+_uiComponentsAtlas);
 			trace("footerAtlas atlas = "+_footerAtlas);
 			
 			
 			
 			
 			var psykopaint2UI:Psykopaint2Ui = new Psykopaint2Ui( stage, _fontDescriptor, resolutionExtension,_footerAtlas,_uiComponentsAtlas );
-
+			trace("psykopaint2UI created");
 			
 			// -----------------------
 			// Layering.
@@ -152,6 +151,7 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 			if( Settings.SHOW_SPLASH_SCREEN ) {
 				_mainLayer.addChild( new SplashView() );
 			}
+			trace("StarlingRootSprite::Views Created")
 
 			// -----------------------
 			// Debugging console.
@@ -164,6 +164,7 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 				button.x = Settings.SHOW_STATS ? 50 : 0;
 				button.addEventListener( Event.TRIGGERED, onConsoleButtonTriggered );
 				_debugLayer.addChild( button );
+				trace("StarlingRootSprite::ENABLED BUG CONSOLE")
 			}
 		}
 
