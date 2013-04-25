@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.app.utils.textures
+package net.psykosoft.psykopaint2.app.utils
 {
 
 	import away3d.core.base.SubGeometry;

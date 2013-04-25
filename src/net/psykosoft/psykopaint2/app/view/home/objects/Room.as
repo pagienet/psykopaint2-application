@@ -194,8 +194,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 		// Getters.
 		// -----------------------
 
-		public function get wall():Mesh {
-			return _wall;
+		public function get wallZ():Number {
+			return WALL_Z;
 		}
 	}
 }

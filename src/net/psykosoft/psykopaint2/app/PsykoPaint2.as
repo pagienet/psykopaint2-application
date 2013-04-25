@@ -131,7 +131,7 @@ package net.psykosoft.psykopaint2.app
 
 		private function init3D():void {
 			_away3d = new View3D();
-			_away3d.camera.lens.far = 5000;
+			_away3d.camera.lens.far = 50000;
 			Debug.active = Settings.AWAY3D_DEBUG_MODE;
 			_away3d.stage3DProxy = _stage3dProxy;
 			_away3d.shareContext = true;

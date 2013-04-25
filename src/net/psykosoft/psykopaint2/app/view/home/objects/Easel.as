@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 {
 
 	import away3d.containers.ObjectContainer3D;
+	import away3d.debug.Trident;
 	import away3d.entities.Mesh;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
@@ -13,7 +14,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 
-	import net.psykosoft.psykopaint2.app.utils.textures.TextureUtil;
+	import net.psykosoft.psykopaint2.app.utils.TextureUtil;
 
 	public class Easel extends ObjectContainer3D
 	{
@@ -29,6 +30,9 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 			_width = image.width;
 			_height = image.height;
+
+			var tri:Trident = new Trident( 250 );
+			addChild( tri );
 
 			// Init easel mesh.
 			_easelMesh = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( image );

@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.geom.Point;
 
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
-	import net.psykosoft.psykopaint2.app.utils.textures.TextureUtil;
+	import net.psykosoft.psykopaint2.app.utils.TextureUtil;
 
 	public class Picture extends ObjectContainer3D
 	{

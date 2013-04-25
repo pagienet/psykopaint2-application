@@ -2,8 +2,15 @@ package net.psykosoft.psykopaint2.app.view.home
 {
 
 	import away3d.debug.Trident;
+	import away3d.entities.Mesh;
+	import away3d.materials.ColorMaterial;
+	import away3d.primitives.CubeGeometry;
+
+	import flash.display.Sprite;
 
 	import flash.events.Event;
+
+	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 
 	import net.psykosoft.utils.loaders.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.app.view.base.Away3dViewBase;
@@ -17,6 +24,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		private var _room:Room;
 		private var _frameContainer:PictureFrameContainer;
 		private var _loader:AssetBundleLoader;
+		private var _cameraTarget:Mesh;
 
 		public function HomeView() {
 			super();
@@ -29,11 +37,13 @@ package net.psykosoft.psykopaint2.app.view.home
 		override protected function onEnabled():void {
 			addChild3d( _room );
 			addChild3d( _frameContainer );
+			addChild3d( _cameraTarget );
 		}
 
 		override protected function onDisabled():void {
 			removeChild3d( _room );
 			removeChild3d( _frameContainer );
+			removeChild3d( _cameraTarget );
 		}
 
 		override protected function onCreate():void {
@@ -46,9 +56,23 @@ package net.psykosoft.psykopaint2.app.view.home
 			addChild3d( tri );
 
 			_room = new Room();
-			_cameraController = new ScrollCameraController( _camera, stage );
+			_cameraTarget = new Mesh( new CubeGeometry( 25, 25 ), new ColorMaterial( 0x00FF00 ) );
+			_cameraController = new ScrollCameraController( _camera, _cameraTarget, stage );
 			_frameContainer = new PictureFrameContainer( _cameraController, _room );
 			_frameContainer.y = 400;
+			_cameraController.interactionSurfaceZ = _room.wallZ;
+			_cameraController.cameraZ = -1750;
+			_frameContainer.z = _room.wallZ - 2;
+			_cameraTarget.z = _room.wallZ;
+
+			// Debug camera controller.
+			// TODO: remove!
+			var tracer:Sprite = _cameraController.getPositionTracer();
+			tracer.x = 100;
+			tracer.y = 25;
+			tracer.scaleX = tracer.scaleY = 0.25;
+			DisplayContextManager.root.addChild( tracer );
+			addChild3d( _cameraController.perspectiveFactorTracer );
 
 			// -------------------------
 			// Prepare external assets.
@@ -85,9 +109,7 @@ package net.psykosoft.psykopaint2.app.view.home
 
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
-			_cameraController.wall = _room.wall;
 			_frameContainer.loadDefaultHomeFrames();
-			_frameContainer.z = _room.wall.z - 2;
 		}
 
 		override protected function onDispose():void {

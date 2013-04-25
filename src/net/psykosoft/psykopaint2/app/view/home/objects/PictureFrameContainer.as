@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.geom.Point;
 
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
-	import net.psykosoft.psykopaint2.app.utils.textures.TextureUtil;
+	import net.psykosoft.psykopaint2.app.utils.TextureUtil;
 	import net.psykosoft.psykopaint2.app.view.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.app.view.home.vos.FrameTextureAtlasDescriptorVO;
 	import net.psykosoft.utils.loaders.AtlasLoader;
@@ -134,6 +134,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// -----------------------
 
 			_easel = new Easel( BulkLoader.getLoader( "homeView" ).getBitmapData( "easelImage", true ) );
+//			_easel.visible = false;
 
 			var previousFrame:PictureFrame = _wallFrames[ _wallFrames.length - 1 ];
 			_easel.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + _easel.width / 2;
@@ -187,7 +188,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			_atlasXml = null;
 
 			// Initial frame.
-			_cameraController.jumpToSnapPoint( 2 );
+			_cameraController.jumpToSnapPointIndex( 2 );
 
 		}
 	}

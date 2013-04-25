@@ -53,18 +53,8 @@ package net.psykosoft.psykopaint2.app.view.home
 		// -----------------------
 
 		private function onViewEnabled():void {
-			homeView.cameraController.cameraClosestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
-//			homeView.cameraController.motionStartedSignal.add( onViewMotionStarted );
+			homeView.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
 		}
-
-		/*private function onViewMotionStarted():void {
-
-			trace( this, "view motion started." );
-
-			if( stateModel.currentState.name == ApplicationStateType.SETTINGS && stateModel.previousState.name != ApplicationStateType.HOME_SCREEN ) {
-				requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN ) );
-			}
-		}*/
 
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
 
@@ -95,7 +85,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		// -----------------------
 
 		private function onNavigationToggled( shown:Boolean ):void {
-			homeView.cameraController.scrollingLimited = shown;
+			homeView.cameraController.limitInteractionToUpperPartOfTheScreen( shown );
 		}
 
 		private function onGlobalGesture( type:uint ):void {
