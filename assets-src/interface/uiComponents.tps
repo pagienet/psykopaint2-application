@@ -92,7 +92,7 @@
             <key>sizeConstraints</key>
             <enum type="AlgorithmSettings::SizeConstraints">POT</enum>
             <key>forceSquared</key>
-            <false/>
+            <true/>
             <key>forceWordAligned</key>
             <false/>
             <key>maxRects</key>
@@ -134,6 +134,11 @@
         <false/>
         <key>outputFormat</key>
         <enum type="SettingsBase::OutputFormat">RGBA8888</enum>
+        <key>contentProtection</key>
+        <struct type="ContentProtection">
+            <key>key</key>
+            <string></string>
+        </struct>
         <key>autoAliasEnabled</key>
         <true/>
         <key>trimSpriteNames</key>
@@ -268,10 +273,18 @@
             <filename>images/uiComponents/checkbox/checkbox0003.png</filename>
             <filename>images/uiComponents/checkbox/checkbox0004.png</filename>
             <filename>images/uiComponents/checkbox/checkbox0005.png</filename>
+            <filename>images/uiComponents/combobox/comboboxBg.png</filename>
+            <filename>images/uiComponents/combobox/comboboxListTop.png</filename>
+            <filename>images/uiComponents/combobox/comboboxListDownward.png</filename>
+            <filename>images/uiComponents/combobox/comboboxListUpward.png</filename>
+            <filename>images/uiComponents/combobox/comboboxListBottom.png</filename>
+            <filename>images/uiComponents/combobox/comboboxListBottomUpward.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
         <key>replaceList</key>
+        <array/>
+        <key>ignoredWarnings</key>
         <array/>
         <key>commonDivisorX</key>
         <uint>1</uint>

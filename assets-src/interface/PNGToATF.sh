@@ -1,0 +1,4 @@
+#!/bin/bash
+# how to use atf: http://www.adobe.com/devnet/flashruntimes/articles/introducing-compressed-textures.html
+/Applications/Adobe\ Gaming\ SDK\ 1.0.2/Utilities/ATF\ Tools/Mac/png2atf ‐c p ‐i /Users/psykomatt/Documents/workspace/psykopaint2-application/assets-packaged/interface/uicomponents/uicomponents-hd.png ‐o /Users/psykomatt/Documents/workspace/psykopaint2-application/assets-packaged/interface/uicomponents/uicomponents-hd.atf
+# /Applications/Adobe\ Gaming\ SDK\ 1.0.2/Utilities/ATF\ Tools/Mac/png2atf ‐c p ‐i ../../assets-packaged/interface/uicomponents/uicomponents-sd.png ‐o ../../assets-packaged/interface/uicomponents/uicomponents-sd.atf

@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.app.view.components.buttons
 
 	import net.psykosoft.psykopaint2.app.view.components.label.PaperHeaderLabel;
 	import net.psykosoft.psykopaint2.app.view.navigation.NavigationPaperButton;
-	import net.psykosoft.psykopaint2.utils.decorators.MoveButtonDecorator;
+	import net.psykosoft.psykopaint2.utils.decorators.buttons.MoveButtonDecorator;
 	
 	import starling.animation.Transitions;
 	import starling.display.Sprite;

@@ -2,8 +2,8 @@ package net.psykosoft.psykopaint2.app.view.components.sliders
 {
 	
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
-	import net.psykosoft.psykopaint2.utils.decorators.InvertButtonDecorator;
-	import net.psykosoft.psykopaint2.utils.decorators.MoveButtonDecorator;
+	import net.psykosoft.psykopaint2.utils.decorators.buttons.InvertButtonDecorator;
+	import net.psykosoft.psykopaint2.utils.decorators.buttons.MoveButtonDecorator;
 	
 	import starling.animation.Transitions;
 	import starling.display.Image;

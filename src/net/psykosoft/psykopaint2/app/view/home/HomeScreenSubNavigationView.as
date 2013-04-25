@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.app.view.home
 {
 
 	import net.psykosoft.psykopaint2.app.view.components.checkbox.PaperCheckBox;
+	import net.psykosoft.psykopaint2.app.view.components.combobox.PaperComboboxView;
 	import net.psykosoft.psykopaint2.app.view.components.sliders.PaperRangeSlider;
 	import net.psykosoft.psykopaint2.app.view.components.sliders.PaperSlider;
 	import net.psykosoft.psykopaint2.app.view.navigation.SubNavigationViewBase;
@@ -31,7 +32,32 @@ package net.psykosoft.psykopaint2.app.view.home
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_NEW_PAINTING, onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 			
+			var paperCombobox:PaperComboboxView = new PaperComboboxView();
+			this.addChild(paperCombobox);
+			paperCombobox.addItem({id:0,label:"SINE WAVE"});
+			paperCombobox.addItem({id:1,label:"COS WAVE"});
+			paperCombobox.addItem({id:2,label:"SAWTOOTH"});
+			paperCombobox.addItem({id:3,label:"SQUARE"});
+			paperCombobox.addItem({id:4,label:"DRAW SPEED"});
+			paperCombobox.addItem({id:5,label:"ORIENTATION"});
+			paperCombobox.addItem({id:6,label:"SOUND"});
+			paperCombobox.x = 10;
+			
+			
+			var paperCombobox2:PaperComboboxView = new PaperComboboxView();
+			this.addChild(paperCombobox2);
+			paperCombobox2.addItem({id:0,label:"SINE WAVE"});
+			paperCombobox2.addItem({id:1,label:"COS WAVE"});
+			paperCombobox2.addItem({id:2,label:"SAWTOOTH"});
+			paperCombobox2.addItem({id:3,label:"SQUARE"});
+			paperCombobox2.addItem({id:4,label:"DRAW SPEED"});
+			paperCombobox2.addItem({id:5,label:"ORIENTATION"});
+			paperCombobox2.x = 800;
+			
 			/*
+			
+			
+			
 			//TEST ADD SLIDER
 			var hslider:PaperSlider = new PaperSlider();
 			this.addChild(hslider);
