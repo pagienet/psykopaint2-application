@@ -5,10 +5,13 @@ package net.psykosoft.psykopaint2.app.view.home
 	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.model.StateModel;
+	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyFocusedPaintingChangedSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.app.view.base.Away3dMediatorBase;
+
+	import starling.textures.Texture;
 
 	public class HomeViewMediator extends Away3dMediatorBase
 	{
@@ -27,6 +30,9 @@ package net.psykosoft.psykopaint2.app.view.home
 		[Inject]
 		public var notifyNavigationToggleSignal:NotifyNavigationToggleSignal;
 
+		[Inject]
+		public var notifyFocusedPaintingChangedSignal:NotifyFocusedPaintingChangedSignal;
+
 		override public function initialize():void {
 
 			trace( this, "initialized" );
@@ -34,12 +40,14 @@ package net.psykosoft.psykopaint2.app.view.home
 			super.initialize();
 			registerView( homeView );
 			registerEnablingState( ApplicationStateType.HOME_SCREEN );
+			registerEnablingState( ApplicationStateType.HOME_SCREEN_PAINTING );
 			registerEnablingState( ApplicationStateType.PAINTING );
 			registerEnablingState( ApplicationStateType.SETTINGS );
 			registerEnablingState( ApplicationStateType.PAINTING_SELECT_IMAGE );
+			registerEnablingState( ApplicationStateType.SETTINGS_WALLPAPER );
 
 			// From app.
-//			notifyWallpaperChangeSignal.add( onWallPaperChanged );
+			notifyWallpaperChangeSignal.add( onWallPaperChanged );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyNavigationToggleSignal.add( onNavigationToggled );
 
@@ -72,11 +80,21 @@ package net.psykosoft.psykopaint2.app.view.home
 				return;
 			}
 
-			// Restore home state if closest to another painting.
-			var isNotInSettings:Boolean = paintingIndex != 0 && stateModel.currentState.name.indexOf( ApplicationStateType.SETTINGS ) != -1;
-			var isNotInNewPainting:Boolean = paintingIndex != 1 && stateModel.currentState.name.indexOf( ApplicationStateType.PAINTING ) != -1;
-			if( isNotInSettings || isNotInNewPainting ) {
+			// Restore home state if closest to home painting ( index 2 ).
+			if( stateModel.currentState.name != ApplicationStateType.HOME_SCREEN && paintingIndex == 2 ) {
 				requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN ) );
+				return;
+			}
+
+			// Trigger home-painting state otherwise.
+			if( paintingIndex > 2 ) {
+
+				if( stateModel.currentState.name != ApplicationStateType.HOME_SCREEN_PAINTING ) {
+					requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN_PAINTING ) );
+				}
+
+				var temporaryPaintingName:String = "myPainting_" + String( paintingIndex - 2 ); // TODO: use real data
+				notifyFocusedPaintingChangedSignal.dispatch( temporaryPaintingName );
 			}
 		}
 
@@ -103,10 +121,10 @@ package net.psykosoft.psykopaint2.app.view.home
 			}
 		}
 
-		/*private function onWallPaperChanged( image:PackagedImageVO ):void {
+		private function onWallPaperChanged( texture:Texture ):void {
 			trace( this, "changing wallpaper" );
-			view.changeWallpaper( image.originalBmd );
-		}*/
+//			homeView.changeWallpaper( texture );
+		}
 
 		/*override protected function onStateChange( newStateName:String ):void {
 

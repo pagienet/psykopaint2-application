@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.app.config.configurators
 {
 
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyCameraFlipSignal;
+	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyFocusedPaintingChangedSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyLoadImageSourceRequestedSignal;
@@ -32,6 +33,7 @@ package net.psykosoft.psykopaint2.app.config.configurators
 			injector.map( NotifyPopUpRemovalSignal ).asSingleton();
 			injector.map( NotifyCameraFlipSignal ).asSingleton();
 			injector.map( NotifyLoadImageSourceRequestedSignal ).asSingleton();
+			injector.map( NotifyFocusedPaintingChangedSignal ).asSingleton();
 
 		}
 	}

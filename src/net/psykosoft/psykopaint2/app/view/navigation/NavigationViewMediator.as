@@ -50,6 +50,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		private var _subNavigationClasses:Dictionary;
 		private var _wasShowing:Boolean;
 		private var _anEmptySubNavigationViewHidTheNavigation:Boolean;
+		private var _lastSubNavClass:Class;
 
 		override public function initialize():void {
 
@@ -126,6 +127,8 @@ package net.psykosoft.psykopaint2.app.view.navigation
 				throw new Error( this, "there is no sub navigation for this state: " + stateName + ". If there is, make sure to register it in initSubNavigationViews() below." );
 			}
 
+			if( _lastSubNavClass == subNavigationClass ) return;
+
 			// If we are loading an empty sub-nav view, then no need to have the bar visible.
 			if( subNavigationClass == SubNavigationViewBase ) {
 				_anEmptySubNavigationViewHidTheNavigation = true;
@@ -136,6 +139,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 				navigationView.showAnimated();
 			}
 
+			_lastSubNavClass = subNavigationClass;
 			var subNavigationInstance:SubNavigationViewBase = new subNavigationClass();
 
 			navigationView.enableSubNavigationView( subNavigationInstance );
@@ -178,6 +182,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_subNavigationClasses[ ApplicationStateType.PAINTING_CAPTURE_IMAGE ] 		  = CaptureImageSubNavigationView;
 			_subNavigationClasses[ ApplicationStateType.PAINTING_CONFIRM_CAPTURE_IMAGE ]  = ConfirmCaptureSubNavigationView;
 			_subNavigationClasses[ ApplicationStateType.PAINTING_CROP_IMAGE ] 			  = CropImageSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.HOME_SCREEN_PAINTING ] 			  = PaintingSubNavigationView;
 
 		}
 	}

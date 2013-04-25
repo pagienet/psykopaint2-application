@@ -14,9 +14,9 @@ package net.psykosoft.psykopaint2.app.view.home
 
 	public class HomeScreenSubNavigationView extends SubNavigationViewBase
 	{
-		public static const BUTTON_LABEL_SETTINGS:String = "Settings";
-		public static const BUTTON_LABEL_GALLERY:String = "[Gallery]";
-		public static const BUTTON_LABEL_NEW_PAINTING:String = "New Painting";
+		public static const BUTTON_LABEL_NEWS1:String = "[News1]";
+		public static const BUTTON_LABEL_NEWS2:String = "[News2]";
+		public static const BUTTON_LABEL_NEWS3:String = "[News3]";
 
 		public function HomeScreenSubNavigationView() {
 			super( "Home" );
@@ -27,9 +27,9 @@ package net.psykosoft.psykopaint2.app.view.home
 			super.onEnabled();
 
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsSettings",  BUTTON_LABEL_SETTINGS, onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsGallery",  BUTTON_LABEL_GALLERY, onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_NEW_PAINTING, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsSettings",  BUTTON_LABEL_NEWS1, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsGallery",  BUTTON_LABEL_NEWS2, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_NEWS3, onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 			
 			var paperCombobox:PaperComboboxView = new PaperComboboxView();

@@ -43,7 +43,7 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 		{
 			var support:RenderSupport = new RenderSupport();
 			RenderSupport.clear();
-			var nativeWidth:Number = Starling.current.viewPort.width
+			var nativeWidth:Number = Starling.current.viewPort.width;
 			var nativeHeight:Number = Starling.current.viewPort.height;
 
 			support.setOrthographicProjection(0,0,nativeWidth, nativeHeight);

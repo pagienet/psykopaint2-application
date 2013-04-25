@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 
+	import net.psykosoft.psykopaint2.app.data.types.ImageSourceType;
+
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
 	import net.psykosoft.psykopaint2.app.utils.TextureUtil;
 	import net.psykosoft.psykopaint2.app.view.home.controller.ScrollCameraController;
@@ -76,13 +78,10 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			if( !_wallFrames ) _wallFrames = new Vector.<PictureFrame>();
 
 			// Transform frame, store it and add it to the scenegraph.
-			if( _wallFrames.length > 0 ) {
-				var previousFrame:PictureFrame = _wallFrames[ _wallFrames.length - 1 ];
-				_positioningOffset += previousFrame.width / 2 + FRAME_GAP_X + pictureFrame.width / 2;
-			}
-			pictureFrame.x = _positioningOffset;
+			pictureFrame.x = _positioningOffset + pictureFrame.width / 2;
 			pictureFrame.z = -pictureFrame.depth / 2;
 			pictureFrame.scale( PAINTINGS_SCALE );
+			_positioningOffset = pictureFrame.x + pictureFrame.width / 2 + FRAME_GAP_X;
 			_cameraController.addSnapPoint( pictureFrame.x );
 			_wallFrames.push( pictureFrame );
 			addChild( pictureFrame );
@@ -133,17 +132,18 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			// Easel.
 			// -----------------------
 
+			var squeeze:Number = 0.25;
+
 			_easel = new Easel( BulkLoader.getLoader( "homeView" ).getBitmapData( "easelImage", true ) );
 //			_easel.visible = false;
 
-			var previousFrame:PictureFrame = _wallFrames[ _wallFrames.length - 1 ];
-			_easel.x = previousFrame.x + previousFrame.width / 2 + FRAME_GAP_X + _easel.width / 2;
+			_easel.x = _positioningOffset + squeeze * _easel.width / 2;
 			_easel.y = -300;
 			_easel.z = -600;
 
 			_cameraController.addSnapPoint( _easel.x );
 
-			_positioningOffset += _easel.x;
+			_positioningOffset = _easel.x + squeeze * _easel.width / 2 + FRAME_GAP_X;
 
 			addChild( _easel );
 

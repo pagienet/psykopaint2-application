@@ -1,16 +1,20 @@
 package net.psykosoft.psykopaint2.app.view.settings
 {
 
+	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 
-	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyPopUpMessageSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyWallpaperImagesUpdatedSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestWallpaperChangeSignal;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestWallpaperThumbsLoadSignal;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
+	import net.psykosoft.utils.loaders.AtlasLoader;
+
+	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 
 	public class SelectWallpaperSubNavigationViewMediator extends StarlingMediatorBase
 	{
@@ -24,15 +28,13 @@ package net.psykosoft.psykopaint2.app.view.settings
 		public var notifyPopUpMessageSignal:NotifyPopUpMessageSignal;
 
 		[Inject]
-		public var requestWallpaperImagesLoadSignal:RequestWallpaperThumbsLoadSignal;
-
-		[Inject]
 		public var notifyWallpaperImagesUpdatedSignal:NotifyWallpaperImagesUpdatedSignal;
 
 		[Inject]
 		public var requestWallpaperChangeSignal:RequestWallpaperChangeSignal;
 
 		private var _imageIds:Dictionary;
+		private var _atlasLoader:AtlasLoader;
 
 		override public function initialize():void {
 
@@ -40,8 +42,9 @@ package net.psykosoft.psykopaint2.app.view.settings
 			manageMemoryWarnings = false;
 			manageStateChanges = false;
 
-			// Init.
-			requestWallpaperImagesLoadSignal.dispatch();
+			// Init ( fetch packaged wallpapers ).
+			_atlasLoader = new AtlasLoader();
+			_atlasLoader.loadAsset( "/assets-packaged/away3d/wallpapers/wallpapers.png", "/assets-packaged/away3d/wallpapers/wallpapers.xml", onAtlasReady );
 
 			// From app.
 //			notifyWallpaperImagesUpdatedSignal.add( onWallpaperImagesUpdated );
@@ -49,6 +52,12 @@ package net.psykosoft.psykopaint2.app.view.settings
 			// From view.
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
 
+		}
+
+		private function onAtlasReady( bmd:BitmapData, xml:XML ):void {
+			view.setImages( new TextureAtlas( Texture.fromBitmapData( bmd, false ), xml ) );
+			_atlasLoader.dispose();
+			_atlasLoader = null;
 		}
 
 		// -----------------------
@@ -76,7 +85,7 @@ package net.psykosoft.psykopaint2.app.view.settings
 					break;
 				default:
 					var id:String = _imageIds[ buttonLabel ];
-					trace( "id: " + id );
+					trace( this, "requesting wallpaper change - id: " + id );
 					requestWallpaperChangeSignal.dispatch( id );
 					break;
 			}

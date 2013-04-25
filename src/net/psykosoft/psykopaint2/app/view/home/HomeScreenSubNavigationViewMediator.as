@@ -32,13 +32,13 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
-				case HomeScreenSubNavigationView.BUTTON_LABEL_SETTINGS:
+				case HomeScreenSubNavigationView.BUTTON_LABEL_NEWS1:
 //					requestStateChange( new StateVO( ApplicationStateType.SETTINGS ) ); // TODO: currently disabled
 					break;
-				case HomeScreenSubNavigationView.BUTTON_LABEL_GALLERY:
-					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE );
+				case HomeScreenSubNavigationView.BUTTON_LABEL_NEWS2:
+//					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO: currently disabled
 					break;
-				case HomeScreenSubNavigationView.BUTTON_LABEL_NEW_PAINTING:
+				case HomeScreenSubNavigationView.BUTTON_LABEL_NEWS3:
 //					requestStateChange( new StateVO( ApplicationStateType.PAINTING ) ); // TODO: currently disabled
 					break;
 			}

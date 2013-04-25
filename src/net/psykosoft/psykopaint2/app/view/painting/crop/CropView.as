@@ -2,16 +2,12 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 {
 
 	import flash.display.BitmapData;
-	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
-	import net.psykosoft.utils.BitmapDataUtils;
 
 	import starling.core.RenderSupport;
-
 	import starling.core.Starling;
-
 	import starling.display.Image;
 	import starling.display.TouchSheet;
 	import starling.events.Event;

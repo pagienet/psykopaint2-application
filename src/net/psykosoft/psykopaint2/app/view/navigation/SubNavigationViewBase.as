@@ -35,6 +35,13 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			trace( this, "sub-navigation view created." );
 		}
 
+		public function changeTitle( value:String ):void {
+			_title = value;
+			if( _headerLabel ) {
+				_headerLabel.setLabel( _title );
+			}
+		}
+
 		// ---------------------------------------------------------------------
 		// Overrides.
 		// ---------------------------------------------------------------------

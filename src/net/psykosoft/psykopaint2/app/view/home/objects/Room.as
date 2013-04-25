@@ -174,6 +174,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			addChild( shadow );
 		}
 
+		// TODO...
 		public function changeWallpaper( bmd:BitmapData ):void {
 
 			// Texture.
