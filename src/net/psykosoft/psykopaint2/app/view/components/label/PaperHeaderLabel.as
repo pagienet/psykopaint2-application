@@ -56,7 +56,7 @@ package net.psykosoft.psykopaint2.app.view.components.label
 		
 		override public function set width (value:Number):void{
 			_width = value; 
-			trace("[PaperHeaderLabel] width = "+value);
+//			trace("[PaperHeaderLabel] width = "+value);
 			_textfield.x = value/2 - _textfield.width/2;
 			_labelImage.width=value;
 			dispatchEvent(new Event(Event.RESIZE));
@@ -67,10 +67,10 @@ package net.psykosoft.psykopaint2.app.view.components.label
 		}
 		
 		public function setLabel(value:String):void{
-			trace("[PaperHeaderLabel] setLabel = "+value);
+//			trace("[PaperHeaderLabel] setLabel = "+value);
 			_textfield.text = (value=="")?" ":value ;
 			//CHANGE PAPER SIZE 
-			trace("[PaperHeaderLabel] _textfield.textBounds.width = "+_textfield.textBounds.width);
+//			trace("[PaperHeaderLabel] _textfield.textBounds.width = "+_textfield.textBounds.width);
 
 			width = _textfield.textBounds.width+50;
 		}

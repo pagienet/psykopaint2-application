@@ -27,12 +27,10 @@ package net.psykosoft.psykopaint2.app.view.painting.newpainting
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {
+
 				case NewPaintingSubNavigationView.BUTTON_LABEL_SELECT_IMAGE:
 					requestStateChange( new StateVO( ApplicationStateType.PAINTING_SELECT_IMAGE ) );
 					break;
-				/*case NewPaintingSubNavigationView.BUTTON_LABEL_BACK:
-					requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN ) );
-					break;*/
 			}
 		}
 	}

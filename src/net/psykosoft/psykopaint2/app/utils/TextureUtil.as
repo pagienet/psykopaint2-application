@@ -11,14 +11,14 @@ package net.psykosoft.psykopaint2.app.utils
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 
-	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
-
 	public class TextureUtil
 	{
+		private static const MAX_SIZE:uint = 2048;
+
 		public static function createPlaneThatFitsNonPowerOf2TransparentImage( image:BitmapData ):Mesh {
 
 			// Obtain "safe" ( power of 2 sized image ) from the original.
-			var safeImage:BitmapData = TextureUtil.ensurePowerOf2( image );
+			var safeImage:BitmapData = TextureUtil.ensurePowerOf2ByCentering( image );
 
 			// Remember original image and safe image dimensions.
 			var imageDimensions:Point = new Point( image.width, image.height );
@@ -60,9 +60,40 @@ package net.psykosoft.psykopaint2.app.utils
 
 		}
 
-		public static function ensurePowerOf2( bitmapData:BitmapData ):BitmapData {
+		public static function ensurePowerOf2ByScaling( bitmapData:BitmapData, scale:Number = 1 ):BitmapData {
 
-//			trace( "TextureUtil - ensurePowerOf2 - is source transparent? " + bitmapData.transparent );
+//			trace( "TextureUtil - ensurePowerOf2ByScaling --------------------------" );
+
+			if( isDimensionValid( bitmapData.width ) && isDimensionValid( bitmapData.height ) ) {
+				return bitmapData;
+			}
+
+			var origWidth:int = bitmapData.width;
+			var origHeight:int = bitmapData.height;
+//			trace( "ensurePowerOf2ByScaling - original: " + origWidth + ", " + origHeight );
+			var legalWidth:int = getNextPowerOfTwo( origWidth );
+			var legalHeight:int = getNextPowerOfTwo( origHeight );
+//			trace( "ensurePowerOf2ByScaling - altered: " + legalWidth + ", " + legalHeight );
+
+			if( legalWidth > origWidth || legalHeight > origHeight ) {
+				var modifiedBmd:BitmapData = new BitmapData( scale * legalWidth, scale * legalHeight, bitmapData.transparent, 0 );
+				var transform:Matrix = new Matrix();
+				transform.scale( scale * legalHeight / origWidth, scale * legalHeight / origHeight );
+				modifiedBmd.draw( bitmapData, transform );
+				bitmapData = modifiedBmd;
+			}
+
+			return bitmapData;
+
+		}
+
+		public static function ensurePowerOf2ByCentering( bitmapData:BitmapData ):BitmapData {
+
+//			trace( "TextureUtil - ensurePowerOf2ByCentering - is source transparent? " + bitmapData.transparent );
+
+			if( isDimensionValid( bitmapData.width ) && isDimensionValid( bitmapData.height ) ) {
+				return bitmapData;
+			}
 
 			var origWidth:int = bitmapData.width;
 			var origHeight:int = bitmapData.height;
@@ -75,14 +106,18 @@ package net.psykosoft.psykopaint2.app.utils
 				var modifiedBmd:BitmapData = new BitmapData( legalWidth, legalHeight, bitmapData.transparent, 0 );
 				var transform:Matrix = new Matrix();
 				transform.translate(
-					( legalWidth - origWidth ) / 2,
-					( legalHeight - origHeight ) / 2
+						( legalWidth - origWidth ) / 2,
+						( legalHeight - origHeight ) / 2
 				);
 				modifiedBmd.draw( bitmapData, transform );
 				bitmapData = modifiedBmd;
 			}
 
 			return bitmapData;
+		}
+
+		private static function isDimensionValid( d:uint ):Boolean {
+			return d >= 1 && d <= MAX_SIZE && isPowerOfTwo( d );
 		}
 
 		private static function getNextPowerOfTwo( number:int ):int {
@@ -93,6 +128,10 @@ package net.psykosoft.psykopaint2.app.utils
 				while( result < number ) result <<= 1;
 				return result;
 			}
+		}
+
+		private static function isPowerOfTwo( value:int ):Boolean {
+			return value ? ((value & -value) == value) : false;
 		}
 	}
 }

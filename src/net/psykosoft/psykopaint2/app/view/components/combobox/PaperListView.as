@@ -191,8 +191,8 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 			_topImage.y=-_topImage.height+1;
 			
 			if(_itemViews.length>=1){
-				//trace("PaperListView:update");
-				
+//				trace("PaperListView:update");
+
 				//REPOSITION ITEMS IN LINE
 				for (var i:int = 0; i < _itemViews.length; i++) 
 				{

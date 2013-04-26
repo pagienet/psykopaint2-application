@@ -68,7 +68,6 @@ package net.psykosoft.psykopaint2.app.view.components.buttons
 			_mainButton = null;
 
 			removeChild( _headerLabel );
-			_headerLabel.removeEventListener( Event.TRIGGERED, onButtonTriggered );
 			_headerLabel.removeEventListener( Event.RESIZE, onLabelResized );
 			_headerLabel.dispose();
 			_headerLabel = null;
@@ -92,8 +91,11 @@ package net.psykosoft.psykopaint2.app.view.components.buttons
 			}
 		}
 
+		// NOTE: disabled by Li because it causes nav buttons to trigger twice on click and ugly bugs on the app
+		// TODO: clean up
 		private function onButtonTriggered( event:Event ):void {
-			dispatchEvent( event );
+//			trace( this, "onButtonTriggered()" );
+//			dispatchEvent( event );
 		}
 
 		override public function get width():Number {

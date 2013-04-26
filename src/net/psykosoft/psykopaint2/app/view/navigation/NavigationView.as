@@ -63,7 +63,8 @@ package net.psykosoft.psykopaint2.app.view.navigation
 				
 				TweenLite.to(previousSubNavigation,0.3,{x:(_isBackButton)?(previousSubNavigation.x+stage.stageWidth):previousSubNavigation.x-stage.stageWidth,ease:Expo.easeIn,onComplete:function():void{
 					_subNavigationContainer.removeChild( previousSubNavigation );
-					previousSubNavigation.disable();	
+					previousSubNavigation.disable();
+					previousSubNavigation.dispose();
 				}});
 			}
 			

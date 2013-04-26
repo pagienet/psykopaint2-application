@@ -24,8 +24,8 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 		[Inject]
 		public var colorStyleModule:ColorStyleModule;
 
-		[Inject]
-		public var notifyColorStylePresetsAvailableSignal:NotifyColorStylePresetsAvailableSignal;
+//		[Inject]
+//		public var notifyColorStylePresetsAvailableSignal:NotifyColorStylePresetsAvailableSignal;
 
 		override public function initialize():void {
 
@@ -33,10 +33,11 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 			manageMemoryWarnings = false;
 			manageStateChanges = false;
 
-			// From core.
-			notifyColorStylePresetsAvailableSignal.add( onColorStylePresetsAvailable );
+//			From core.
+//			notifyColorStylePresetsAvailableSignal.add( onColorStylePresetsAvailable );
 
 			// From view.
+			view.addedToStageSignal.add( onViewAddedToStage );
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
 
 		}
@@ -45,13 +46,18 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 		// From core.
 		// -----------------------
 
-		private function onColorStylePresetsAvailable( presets:Array ):void {
+		/*private function onColorStylePresetsAvailable( presets:Array ):void {
+			trace( this, "onColorStylePresetsAvailable: " + presets );
 			view.setAvailableColorStyles( presets );
-		}
+		}*/
 
 		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onViewAddedToStage():void {
+			view.setAvailableColorStyles( colorStyleModule.getAvailableColorStylePresets() );
+		}
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			switch( buttonLabel ) {

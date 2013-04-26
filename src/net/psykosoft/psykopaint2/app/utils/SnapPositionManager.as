@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.app.utils
 		private var _lastSnapPoint:Number;
 		private var _direction:int = 0;
 		private var _motionAmount:Number = 0;
-		private var _closestSnapPointIndex:uint;
+		private var _closestSnapPointIndex:int = -1;
 
 		public var closestSnapPointChangedSignal:Signal;
 

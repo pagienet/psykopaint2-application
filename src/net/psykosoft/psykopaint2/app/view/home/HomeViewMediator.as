@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
+	import flash.display.BitmapData;
+
 	import net.psykosoft.psykopaint2.app.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
@@ -121,9 +123,8 @@ package net.psykosoft.psykopaint2.app.view.home
 			}
 		}
 
-		private function onWallPaperChanged( texture:Texture ):void {
-			trace( this, "changing wallpaper" );
-//			homeView.changeWallpaper( texture );
+		private function onWallPaperChanged( bmd:BitmapData ):void {
+			homeView.room.changeWallpaper( bmd );
 		}
 
 		/*override protected function onStateChange( newStateName:String ):void {

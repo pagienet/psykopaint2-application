@@ -7,16 +7,14 @@ package net.psykosoft.psykopaint2.app.view.home
 	import away3d.primitives.CubeGeometry;
 
 	import flash.display.Sprite;
-
 	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
-
-	import net.psykosoft.utils.loaders.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.app.view.base.Away3dViewBase;
 	import net.psykosoft.psykopaint2.app.view.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.app.view.home.objects.PictureFrameContainer;
 	import net.psykosoft.psykopaint2.app.view.home.objects.Room;
+	import net.psykosoft.utils.loaders.AssetBundleLoader;
 
 	public class HomeView extends Away3dViewBase
 	{
@@ -38,12 +36,14 @@ package net.psykosoft.psykopaint2.app.view.home
 			addChild3d( _room );
 			addChild3d( _frameContainer );
 			addChild3d( _cameraTarget );
+			_cameraController.isActive = true;
 		}
 
 		override protected function onDisabled():void {
 			removeChild3d( _room );
 			removeChild3d( _frameContainer );
 			removeChild3d( _cameraTarget );
+			_cameraController.isActive = false;
 		}
 
 		override protected function onCreate():void {
@@ -98,6 +98,7 @@ package net.psykosoft.psykopaint2.app.view.home
 			_loader.registerAsset( "/assets-packaged/away3d/paintings/sample_painting5.jpg", "samplePainting5" );
 			_loader.registerAsset( "/assets-packaged/away3d/paintings/sample_painting6.jpg", "samplePainting6" );
 			// Room assets.
+			_loader.registerAsset( "/assets-packaged/away3d/wallpapers/fullsize/default.jpg", "defaultWallpaper" );
 			_loader.registerAsset( "/assets-packaged/away3d/frames/frame-shadow.png", "frameShadow" );
 			_loader.registerAsset( "/assets-packaged/away3d/floorpapers/wood.jpg", "floorWood" );
 
@@ -110,6 +111,7 @@ package net.psykosoft.psykopaint2.app.view.home
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
 			_frameContainer.loadDefaultHomeFrames();
+
 		}
 
 		override protected function onDispose():void {
@@ -133,6 +135,7 @@ package net.psykosoft.psykopaint2.app.view.home
 		}
 
 		override protected function onUpdate():void {
+//			trace( this, "update" );
 			if( !_loader.done ) return;
 			_cameraController.update();
 		}

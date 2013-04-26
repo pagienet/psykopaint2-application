@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.utils.scale
 	
 		public function set texture(value:Scale3Texture):void
 		{
-			trace("[Scale3Image] set texture "+value)
+//			trace("[Scale3Image] set texture "+value)
 			if(!value)
 			{
 				throw new IllegalOperationError("Scale3Image textures cannot be null.");
@@ -117,7 +117,7 @@ package net.psykosoft.psykopaint2.utils.scale
 		
 		
 		override public function set width (value:Number):void{
-			trace("[Scale3Image] width = "+value );
+//			trace("[Scale3Image] width = "+value );
 			_width = value;
 			this.unflatten();
 			_secondImage.x = _firstImage.width;

@@ -34,7 +34,9 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		private var _stageWidth:Number;
 		private var _stageHeight:Number;
 		private var _perspectiveFactorTracer:Mesh; // TODO: remove!
-		private var _isScrollingLimited:Boolean;
+		private var _isScrollingLimited:Boolean = true;
+
+		public var isActive:Boolean = true;
 
 		private const EASE_FACTOR:Number = 0.75;
 
@@ -66,6 +68,7 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		}
 
 		public function limitInteractionToUpperPartOfTheScreen( value:Boolean ):void {
+//			trace( this, "interaction limited: " + value );
 			_isScrollingLimited = value;
 		}
 
@@ -111,7 +114,7 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		}
 
 		public function startPanInteraction():void {
-			// TODO: scrolling limitation hasn't been tested
+			if( !isActive ) return;
 			if( _isScrollingLimited ) {
 				var limit:Number = _stageHeight - Settings.NAVIGATION_AREA_CONTENT_HEIGHT * Starling.contentScaleFactor;
 				if( _interactionManager.currentY > limit ) return;
@@ -120,16 +123,17 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		}
 
 		public function endPanInteraction():void {
+			if( !isActive ) return;
 			_interactionManager.endInteraction();
 		}
 
 		private function updatePerspectiveFactor():void {
 
-			trace( this, "updating perspective factor --------------------" );
+//			trace( this, "updating perspective factor --------------------" );
 
-			trace( this, "camera position: " + _camera.position );
-			trace( this, "target position: " + _cameraTarget.position );
-			trace( this, "stage width: " + _stageWidth );
+//			trace( this, "camera position: " + _camera.position );
+//			trace( this, "target position: " + _cameraTarget.position );
+//			trace( this, "stage width: " + _stageWidth );
 
 			// Momentarily place the camera at x = 0;
 			var cameraTransformCache:Matrix3D = _camera.transform.clone();
@@ -138,12 +142,12 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 			// Shoot a ray from the camera to the right edge of the screen.
 			var aspectRatio:Number = _camera.lens.aspectRatio;
-			trace( this, "aspect ratio: " + aspectRatio );
+//			trace( this, "aspect ratio: " + aspectRatio );
 			var rayPosition:Vector3D = _camera.unproject( 0, 0, 0 );
 			var rayDirection:Vector3D = _camera.unproject( 1, 0, 1 );
 			rayDirection = rayDirection.subtract( rayPosition );
 			rayDirection.normalize();
-			trace( this, "ray: " + rayPosition + ", " + rayDirection );
+//			trace( this, "ray: " + rayPosition + ", " + rayDirection );
 
 			// See where this ray hits the wall.
 			var t:Number = -( -rayPosition.z + _cameraTarget.z ) / -rayDirection.z; // Typical ray-plane intersection calculation ( simplified because of zero's ).
@@ -152,12 +156,12 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 					rayPosition.y + t * rayDirection.y,
 					rayPosition.z + t * rayDirection.z
 			);
-			trace( this, "collision point: " + collisionPoint );
+//			trace( this, "collision point: " + collisionPoint );
 			_perspectiveFactorTracer.position = collisionPoint;
 
 			// Calculate the perspective factor by comparing the half screen width with how much of the wall is visible.
 			var perspectiveFactor:Number = collisionPoint.x / ( _stageWidth / 2 );
-			trace( this, "new factor: " + perspectiveFactor );
+//			trace( this, "new factor: " + perspectiveFactor );
 			_interactionManager.inputMultiplier = perspectiveFactor;
 
 			// Restore camera position.

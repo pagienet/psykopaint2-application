@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		private var _title:String;
 		private var _frontLayer:Sprite; // TODO: do we still need layers given that the edge buttons have been moved out of this abstract class?
 		private var _backLayer:Sprite;
+		private var _navigation:NavigationView;
 
 		public var buttonPressedSignal:Signal;
 
@@ -32,7 +33,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			super();
 			buttonPressedSignal = new Signal();
 			_title = title;
-			trace( this, "sub-navigation view created." );
+			trace( this, "sub-navigation view created: " + _title );
 		}
 
 		public function changeTitle( value:String ):void {
@@ -57,8 +58,6 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_frontLayer.addChild( _headerLabel );
 			_headerLabel.x = stage.stageWidth / 2 - _headerLabel.width / 2;
 			_headerLabel.y = -_headerLabel.height / 2+20;
-			
-		
 		}
 
 		override protected function onDisabled():void {
@@ -67,28 +66,39 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 			if( _headerLabel ) {
 				_frontLayer.removeChild( _headerLabel );
+			}
+
+			if( _frontLayer ) {
+				removeChild( _frontLayer );
+			}
+
+			if( _backLayer ) {
+				removeChild( _backLayer );
+			}
+		}
+
+		override protected function onDispose():void {
+
+			if( _headerLabel ) {
 				_headerLabel.dispose();
 				_headerLabel = null;
 			}
 
 			if( _frontLayer ) {
-				removeChild( _frontLayer );
 				_frontLayer.dispose();
 				_frontLayer = null;
 			}
 
 			if( _backLayer ) {
-				removeChild( _backLayer );
 				_backLayer.dispose();
 				_backLayer = null;
 			}
+
 		}
 
 		// -----------------------------------------------------------------------------------------------------------------------
 		// Settings center buttons.
 		// -----------------------------------------------------------------------------------------------------------------------
-
-		private var _navigation:NavigationView;
 
 		public function setNavigation( navigation:NavigationView ):void {
 			_navigation = navigation;
@@ -174,7 +184,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		}
 
 		public function notifyButtonPress( buttonLabel:String ):void {
-			trace( this, "notifying button pressed: " + buttonLabel );
+//			trace( this, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> notifying button pressed: " + buttonLabel );
 			buttonPressedSignal.dispatch( buttonLabel );
 		}
 
@@ -183,6 +193,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		// ---------------------------------------------------------------------
 
 		protected function onButtonTriggered( event:Event ):void {
+//			trace( this, "button triggered" );
 			var button:FooterNavButton = event.currentTarget as FooterNavButton;
 			notifyButtonPress( button.label );
 		}

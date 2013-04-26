@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
+	import net.psykosoft.psykopaint2.app.utils.TextureUtil;
 
 	public class Room extends ObjectContainer3D
 	{
@@ -55,11 +56,12 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 
 			// Geometry.
 			var wallGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
-			wallGeometry.scaleUV( WALL_WIDTH / wallGeometry.width, 2 );
+			var uvScale:Number = 1;
+			wallGeometry.scaleUV( uvScale * WALL_WIDTH / wallGeometry.width, uvScale * 2 );
 
 			// Mesh.
 			_wall = new Mesh( wallGeometry, null );
-			changeWallpaper( new BitmapData( 512, 512, false, 0x999999 ) );
+			changeWallpaper( BulkLoader.getLoader( "homeView" ).getBitmapData( "defaultWallpaper", true ) );
 			_wall.scaleX = WALL_WIDTH / wallGeometry.width;
 			_wall.scaleZ = WALL_HEIGHT / wallGeometry.height;
 			_wall.rotationX = -90;
@@ -174,13 +176,11 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			addChild( shadow );
 		}
 
-		// TODO...
 		public function changeWallpaper( bmd:BitmapData ):void {
 
 			// Texture.
 			_wallTexture = new BitmapTexture( bmd );
 			_wallTexture.getTextureForStage3D( DisplayContextManager.stage3dProxy );
-			_wallTexture.name = "wallTexture";
 			bmd.dispose();
 
 			// Material.
