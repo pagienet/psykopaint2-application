@@ -18,8 +18,8 @@ package net.psykosoft.psykopaint2.app.utils
 		public var closestSnapPointChangedSignal:Signal;
 
 		// TODO: these should be externally configurable
-		private const FRICTION_FACTOR:Number = 0.9;
-		private const MINIMUM_THROWING_SPEED:Number = 200;
+		private const FRICTION_FACTOR:Number = 0.8;
+		private const MINIMUM_THROWING_SPEED:Number = 100;
 		private const EDGE_CONTAINMENT_FACTOR:Number = 0.01; // Smaller, softer containment.
 
 		public function SnapPositionManager() {
@@ -57,7 +57,7 @@ package net.psykosoft.psykopaint2.app.utils
 			}
 
 			// Apply motion.
-			_position += amount * multiplier;
+			_position += amount * multiplier*3;
 		}
 
 		public function snap( speed:Number ):void {

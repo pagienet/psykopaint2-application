@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 		private var _perspectiveFactorTracer:Mesh; // TODO: remove!
 		private var _isScrollingLimited:Boolean;
 
-		private const EASE_FACTOR:Number = 0.1;
+		private const EASE_FACTOR:Number = 0.75;
 
 		public function ScrollCameraController( camera:Camera3D, target:Mesh, stage:Stage ) {
 
