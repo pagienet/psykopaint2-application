@@ -182,7 +182,8 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_subNavigationClasses[ ApplicationStateType.PAINTING_CAPTURE_IMAGE ] 		  = CaptureImageSubNavigationView;
 			_subNavigationClasses[ ApplicationStateType.PAINTING_CONFIRM_CAPTURE_IMAGE ]  = ConfirmCaptureSubNavigationView;
 			_subNavigationClasses[ ApplicationStateType.PAINTING_CROP_IMAGE ] 			  = CropImageSubNavigationView;
-			_subNavigationClasses[ ApplicationStateType.HOME_SCREEN_PAINTING ] 			  = PaintingSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.HOME_SCREEN_ON_PAINTING ] 		  = ViewPaintingSubNavigationView;
+			_subNavigationClasses[ ApplicationStateType.HOME_SCREEN_SHARE ] 			  = ShareSubNavigationView;
 
 		}
 	}

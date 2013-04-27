@@ -11,7 +11,8 @@ package net.psykosoft.psykopaint2.app.utils
 		private var _isInteracting:Boolean;
 		private var _positionManager:SnapPositionManager;
 		private var _positionStack:Vector.<Number>;
-		private var _inputMultiplier:Number = 1;
+		private var _scrollInputMultiplier:Number = 1;
+		private var _throwInputMultiplier:Number = 1;
 
 		private const STACK_COUNT:uint = 10;
 
@@ -30,7 +31,7 @@ package net.psykosoft.psykopaint2.app.utils
 		public function endInteraction():void {
 			if( !_isInteracting ) return;
 			_isInteracting = false;
-			var delta:Number = evalDelta();
+			var delta:Number = _throwInputMultiplier * evalDelta();
 			_positionManager.snap( -delta );
 		}
 
@@ -38,7 +39,7 @@ package net.psykosoft.psykopaint2.app.utils
 
 			if( !_isInteracting ) return;
 
-			_positionStack.push( _stage.mouseX * _inputMultiplier );
+			_positionStack.push( _stage.mouseX * _scrollInputMultiplier );
 			if( _positionStack.length > STACK_COUNT ) {
 				_positionStack.splice( 0, 1 );
 			}
@@ -63,8 +64,8 @@ package net.psykosoft.psykopaint2.app.utils
 			_positionStack = new Vector.<Number>();
 		}
 
-		public function set inputMultiplier( value:Number ):void {
-			_inputMultiplier = value;
+		public function set scrollInputMultiplier( value:Number ):void {
+			_scrollInputMultiplier = value;
 		}
 
 		public function get currentX():Number {
@@ -73,6 +74,10 @@ package net.psykosoft.psykopaint2.app.utils
 
 		public function get currentY():Number {
 			return _stage.mouseY;
+		}
+
+		public function set throwInputMultiplier( value:Number ):void {
+			_throwInputMultiplier = value;
 		}
 	}
 }

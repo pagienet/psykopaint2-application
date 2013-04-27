@@ -1,14 +1,12 @@
 package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 {
 
-	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
-	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleConfirmSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
 
 	public class ColorStyleSubNavigationViewMediator extends StarlingMediatorBase
 	{

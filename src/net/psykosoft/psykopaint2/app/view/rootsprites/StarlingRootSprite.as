@@ -20,7 +20,9 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.utils.loaders.AtlasLoader;
 	import net.psykosoft.utils.loaders.XMLLoader;
-	
+
+	import org.osflash.signals.Signal;
+
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -36,6 +38,8 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 		private var _uiComponentsAtlas:TextureAtlas;
 		private var _fontDescriptor:XML;
 
+		public var displayTreeReadySignal:Signal;
+
 		public function get resolutionExtension ():String{
 			return   Settings.RUNNING_ON_HD ? "-hd" : "-sd";
 		}
@@ -44,6 +48,7 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 		public function StarlingRootSprite() {
 			super(); 
 			enable();
+			displayTreeReadySignal = new Signal();
 		}
 
 		// ---------------------------------------------------------------------
@@ -169,6 +174,8 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 				trace("StarlingRootSprite::NOT ENABLED BUG CONSOLE")
 
 			}
+
+			displayTreeReadySignal.dispatch();
 		}
 
 		private function onConsoleButtonTriggered( event:Event ):void {

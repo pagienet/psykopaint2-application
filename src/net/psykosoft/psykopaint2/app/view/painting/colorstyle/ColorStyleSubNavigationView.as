@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 			var len:uint = presetsList.length;
 			for( var i:uint; i < len; ++i ) {
-				buttonGroupDefinition.addButtonDefinition(new ButtonDefinitionVO("FooterIconsNewPainting",  presetsList[ i ], onButtonTriggered ) );
+				buttonGroupDefinition.addButtonDefinition(new ButtonDefinitionVO( getTextureFromId( "FooterIconsNewPainting" ),  presetsList[ i ], onButtonTriggered ) );
 			}
 			setCenterButtons( buttonGroupDefinition );
 

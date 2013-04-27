@@ -14,9 +14,12 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.ui.theme.data.ButtonSkinType;
 	
 	import org.osflash.signals.Signal;
-	
+
+	import starling.display.Quad;
+
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.textures.Texture;
 
 	public class SubNavigationViewBase extends StarlingViewBase
 	{
@@ -97,7 +100,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		}
 
 		// -----------------------------------------------------------------------------------------------------------------------
-		// Settings center buttons.
+		// Setting center buttons.
 		// -----------------------------------------------------------------------------------------------------------------------
 
 		public function setNavigation( navigation:NavigationView ):void {
@@ -112,7 +115,11 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			_navigation.setRightButton(textureID, label );
 		}
 
-		protected function setCenterButtons( definition:ButtonGroupDefinitionVO ):void {
+		protected function getTextureFromId( value:String ):Texture {
+			return Psykopaint2Ui.instance.footerAtlas.getTexture( value );
+		}
+
+		protected function setCenterButtons( definition:ButtonGroupDefinitionVO, scrollOutLeftGap:Boolean = false ):void {
 
 			// Scroll capable container.
 			_scrollContainer = new ScrollContainer();
@@ -130,7 +137,7 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			for( var i:uint = 0; i < len; i++ ) {
 
 				var vo:ButtonDefinitionVO = definition.buttonVOArray[ i ];
-				var subButton:FooterNavButton = new FooterNavButton( Psykopaint2Ui.instance.footerAtlas.getTexture( vo.textureID  ) , vo.label, ButtonSkinType.LABEL );
+				var subButton:FooterNavButton = new FooterNavButton( vo.texture , vo.label, ButtonSkinType.LABEL );
 				subButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 				subButton.x = inflate + ( subButton.width + gap ) * i;
 				subButton.y = 30;
@@ -158,6 +165,12 @@ package net.psykosoft.psykopaint2.app.view.navigation
 				_scrollContainer.width = 1024;
 			}
 			_scrollContainer.x = 1024 / 2 - _scrollContainer.width / 2;
+
+			// TODO: this is kinda hardcoded, does not produce exact centering and will most likely produce bad results with
+			// button counts other than the one found in the settings sub-nav
+			if( scrollOutLeftGap ) {
+				_scrollContainer.horizontalScrollPosition += inflate - 2 * gap;
+			}
 		}
 
 		public function clearCenterButtons():void {

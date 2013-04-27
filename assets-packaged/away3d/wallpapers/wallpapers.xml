@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:3c539ae6f2ba00488fbd85bf8231fb95$ -->
+<!-- $TexturePacker:SmartUpdate:1984743999362c9f1428372af7cb76ed$ -->
 <TextureAtlas imagePath="wallpapers.png">
-    <SubTexture name="GrassGreenTexture0003" x="132" y="652" width="128" height="128"/>
     <SubTexture name="barkWood" x="262" y="522" width="128" height="128"/>
     <SubTexture name="bricks" x="132" y="522" width="128" height="128"/>
     <SubTexture name="cardboard" x="2" y="782" width="128" height="128"/>

@@ -1,7 +1,11 @@
 package net.psykosoft.psykopaint2.app.view.navigation
 {
 
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyFocusedPaintingChangedSignal;
+	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
+	import net.psykosoft.psykopaint2.app.model.ActivePaintingModel;
+	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
+	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyActivePaintingChangedSignal;
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestActivePaintingChangeSignal;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
 	public class ViewPaintingSubNavigationViewMediator extends StarlingMediatorBase
@@ -10,7 +14,10 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		public var view:ViewPaintingSubNavigationView;
 
 		[Inject]
-		public var notifyFocusedPaintingChangedSignal:NotifyFocusedPaintingChangedSignal;
+		public var notifyActivePaintingChangedSignal:NotifyActivePaintingChangedSignal;
+
+		[Inject]
+		public var activePaintingModel:ActivePaintingModel;
 
 		override public function initialize():void {
 
@@ -18,8 +25,10 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			manageMemoryWarnings = false;
 			manageStateChanges = false;
 
+			view.changeTitle( activePaintingModel.activePaintingName );
+
 			// From app.
-			notifyFocusedPaintingChangedSignal.add( onFocusedPaintingChanged );
+			notifyActivePaintingChangedSignal.add( onFocusedPaintingChanged );
 
 			// From view.
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
@@ -41,17 +50,20 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 		private function onSubNavigationButtonPressed( buttonLabel:String ):void {
 			// TODO: not reacting at the time
-			/*switch( buttonLabel ) {
-				case PaintingSubNavigationView.BUTTON_LABEL_NEWS1:
+			switch( buttonLabel ) {
+
+				case ViewPaintingSubNavigationView.BUTTON_LABEL_COMMENT:
 //					requestStateChange( new StateVO( ApplicationStateType.SETTINGS ) ); // TODO: currently disabled
 					break;
-				case PaintingSubNavigationView.BUTTON_LABEL_NEWS2:
+
+				case ViewPaintingSubNavigationView.BUTTON_LABEL_EDIT:
 //					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO: currently disabled
 					break;
-				case PaintingSubNavigationView.BUTTON_LABEL_NEWS3:
-//					requestStateChange( new StateVO( ApplicationStateType.PAINTING ) ); // TODO: currently disabled
+
+				case ViewPaintingSubNavigationView.BUTTON_LABEL_SHARE:
+					requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN_SHARE ) );
 					break;
-			}*/
+			}
 		}
 	}
 }

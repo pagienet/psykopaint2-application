@@ -58,7 +58,9 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 		// -----------------------
 
 		private function onModuleActivated( bitmapData:BitmapData ):void {
+			trace( this, "color style module activated" );
 			colorStyleView.previewMap = colorStyleModule.sourceMap;
+//			colorStyleModule.setColorStyle( colorStyleModule.getAvailableColorStylePresets()[ 0 ] ); // TODO: not working, need the core to set the default color style
 		}
 
 		private function onColorStyleChanged( styleName:String ):void {

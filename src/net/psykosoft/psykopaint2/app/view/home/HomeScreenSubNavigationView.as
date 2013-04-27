@@ -23,9 +23,9 @@ package net.psykosoft.psykopaint2.app.view.home
 			super.onEnabled();
 
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsSettings",  BUTTON_LABEL_NEWS1, onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsGallery",  BUTTON_LABEL_NEWS2, onButtonTriggered ) );
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_NEWS3, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( getTextureFromId( "FooterIconsSettings" ),  BUTTON_LABEL_NEWS1, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( getTextureFromId( "FooterIconsGallery" ),  BUTTON_LABEL_NEWS2, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( getTextureFromId( "FooterIconsNewPainting" ),  BUTTON_LABEL_NEWS3, onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 			
 			/*

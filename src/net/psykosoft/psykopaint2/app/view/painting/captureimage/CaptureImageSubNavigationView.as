@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.app.view.painting.captureimage
 			setLeftButton("FooterIconsSettings", BUTTON_LABEL_BACK_TO_PICK_AN_IMAGE );
 
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
-			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_FLIP, onButtonTriggered ) );
+			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( getTextureFromId( "FooterIconsNewPainting" ),  BUTTON_LABEL_FLIP, onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 
 			setRightButton("FooterIconsGallery", BUTTON_LABEL_SHOOT );

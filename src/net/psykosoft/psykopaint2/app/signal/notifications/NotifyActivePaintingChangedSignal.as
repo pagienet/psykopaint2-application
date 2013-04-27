@@ -1,10 +1,12 @@
 package net.psykosoft.psykopaint2.app.signal.notifications
 {
 
-	public class NotifyActivePaintingChangedSignal extends ${Super_class_name}
+	import org.osflash.signals.Signal;
+
+	public class NotifyActivePaintingChangedSignal extends Signal
 	{
 		public function NotifyActivePaintingChangedSignal() {
-			super();
+			super( String ); // Painting name, for now...
 		}
 	}
 }

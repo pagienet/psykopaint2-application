@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 		public var isActive:Boolean = true;
 
-		private const EASE_FACTOR:Number = 0.5;
+		private const TARGET_EASE_FACTOR:Number = 0.5;
 
 		public function ScrollCameraController( camera:Camera3D, target:Object3D, stage:Stage ) {
 
@@ -51,6 +51,12 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 			_positionManager = new SnapPositionManager();
 			_interactionManager = new ScrollInteractionManager( stage, _positionManager );
+
+			_interactionManager.throwInputMultiplier = 3;
+
+			_positionManager.frictionFactor = 0.9;
+			_positionManager.minimumThrowingSpeed = 175;
+			_positionManager.edgeContainmentFactor = 0.01;
 		}
 
 		public function dispose():void {
@@ -101,7 +107,7 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 
 			// Update camera and camera target positions.
 			_cameraTarget.x = _positionManager.position;
-			_camera.x += EASE_FACTOR * ( _cameraTarget.x - _camera.x );
+			_camera.x += TARGET_EASE_FACTOR * ( _cameraTarget.x - _camera.x );
 			_camera.lookAt( _cameraTarget.position );
 //			_camera.lookAt( new Vector3D() ); // Useful for debugging perspective.
 		}
@@ -142,7 +148,7 @@ package net.psykosoft.psykopaint2.app.view.home.controller
 			);
 
 			// Calculate the perspective factor by comparing the half screen width with how much of the wall is visible.
-			_interactionManager.inputMultiplier = collisionPoint.x / ( _stageWidth / 2 );
+			_interactionManager.scrollInputMultiplier = collisionPoint.x / ( _stageWidth / 2 );
 
 			// Restore camera position.
 			_camera.transform = cameraTransformCache;

@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.app.view.painting.canvas
 
 			var len:uint = brushShapes.length;
 			for( var i:uint; i < len; ++i ) {
-				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  brushShapes[ i ], onButtonTriggered ) );
+				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( getTextureFromId( "FooterIconsNewPainting" ),  brushShapes[ i ], onButtonTriggered ) );
 			}
 
 			setCenterButtons( buttonGroupDefinition );

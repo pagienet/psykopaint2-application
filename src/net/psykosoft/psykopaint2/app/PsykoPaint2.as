@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
+	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyDisplayTreeReadySignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.app.utils.DisplayContextManager;
@@ -108,7 +109,7 @@ package net.psykosoft.psykopaint2.app
 			_starling.shareContext = true;
 			_starling.simulateMultitouch = false;
 			_starling.start();
-			_starling.addEventListener( starling.events.Event.CONTEXT3D_CREATE, onStarlingContextReady );
+			_starling.addEventListener( starling.events.Event.ROOT_CREATED, onStarlingRootCreated );
 			DisplayContextManager.starling = _starling;
 
 			// Gestouch.
@@ -152,16 +153,28 @@ package net.psykosoft.psykopaint2.app
 			_appConfig.initialize3dDisplayTree();
 		}
 
-		private function onStarlingContextReady( event:starling.events.Event ):void {
+		private function onStarlingRootCreated( event:starling.events.Event ):void {
+			trace( this, ">>>>>>>>>>>>>>>>>>>>>>> onStarlingRootCreated" );
+			_starling.removeEventListener( starling.events.Event.ROOT_CREATED, onStarlingRootCreated );
 
+			// Wait for the 2D display tree to be ready.
+			var notifyDisplayTreeReadySignal:NotifyDisplayTreeReadySignal = _appConfig.injector.getInstance( NotifyDisplayTreeReadySignal );
+			notifyDisplayTreeReadySignal.add( startApplication );
+		}
+
+		private function startApplication():void {
+			trace( this, ">>>>>>>>>>>>>>>>>>>>>>> ( display tree ready ) startApplication()" );
+
+			// Clean up listener.
+			var notifyDisplayTreeReadySignal:NotifyDisplayTreeReadySignal = _appConfig.injector.getInstance( NotifyDisplayTreeReadySignal );
+			notifyDisplayTreeReadySignal.remove( startApplication );
+
+			// Start application loop.
 			startLoop();
 
 			// Trigger first state.
-			// TODO: remove ugly time out. It's needed so that the initial state change occurs after the main view elements are on stage ( initialized ) and they can hear the state change.
-			setTimeout( function():void {
-				var requestStateChangeSignal:RequestStateChangeSignal = _appConfig.injector.getInstance( RequestStateChangeSignal );
-				requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.SPLASH_SCREEN ) );
-			}, 5000 );
+			var requestStateChangeSignal:RequestStateChangeSignal = _appConfig.injector.getInstance( RequestStateChangeSignal );
+			requestStateChangeSignal.dispatch( new StateVO( ApplicationStateType.SPLASH_SCREEN ) );
 		}
 
 		private function stopLoop():void {

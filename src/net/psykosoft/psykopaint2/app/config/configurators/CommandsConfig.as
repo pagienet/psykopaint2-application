@@ -1,10 +1,12 @@
 package net.psykosoft.psykopaint2.app.config.configurators
 {
 
+	import net.psykosoft.psykopaint2.app.commands.ChangeActivePaintingCommand;
 	import net.psykosoft.psykopaint2.app.commands.ChangeSourceImageCommand;
 	import net.psykosoft.psykopaint2.app.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.app.commands.RenderFrameCommand;
 	import net.psykosoft.psykopaint2.app.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestActivePaintingChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestSourceImageChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.requests.RequestStateChangeSignal;
@@ -16,15 +18,11 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	{
 		public function CommandsConfig( commandMap:ISignalCommandMap ) {
 
-			// Application state changes.
 			commandMap.map( RequestStateChangeSignal ).toCommand( ChangeStateCommand );
 			commandMap.map( RequestStateUpdateFromModuleActivationSignal ).toCommand( UpdateAppStateFromActivatedDrawingCoreModuleCommand );
-
-			// Source image change to start the painting process.
 			commandMap.map( RequestSourceImageChangeSignal ).toCommand( ChangeSourceImageCommand );
-
-			// Drawing.
 			commandMap.map( RequestRenderFrameSignal ).toCommand( RenderFrameCommand );
+			commandMap.map( RequestActivePaintingChangeSignal ).toCommand( ChangeActivePaintingCommand );
 		}
 	}
 }

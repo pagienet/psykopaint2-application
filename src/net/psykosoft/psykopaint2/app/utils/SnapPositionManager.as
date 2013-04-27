@@ -16,9 +16,9 @@ package net.psykosoft.psykopaint2.app.utils
 		public var closestSnapPointChangedSignal:Signal;
 
 		// TODO: these should be externally configurable
-		private const FRICTION_FACTOR:Number = 0.8;
-		private const MINIMUM_THROWING_SPEED:Number = 100;
-		private const EDGE_CONTAINMENT_FACTOR:Number = 0.01; // Smaller, softer containment.
+		private var _frictionFactor:Number = 0.9;
+		private var _minimumThrowingSpeed:Number = 175;
+		private var _edgeContainmentFactor:Number = 0.01; // Smaller, softer containment.
 
 		public function SnapPositionManager() {
 			_position = 0;
@@ -46,10 +46,10 @@ package net.psykosoft.psykopaint2.app.utils
 			// Edge containment.
 			var multiplier:Number = 1;
 			if( _position < 0 ) {
-				multiplier = 1 / ( -EDGE_CONTAINMENT_FACTOR * _position + 1 );
+				multiplier = 1 / ( -_edgeContainmentFactor * _position + 1 );
 			}
 			if( _position > _lastSnapPoint ) {
-				multiplier = 1 / ( EDGE_CONTAINMENT_FACTOR * ( _position - _lastSnapPoint ) + 1 );
+				multiplier = 1 / ( _edgeContainmentFactor * ( _position - _lastSnapPoint ) + 1 );
 			}
 
 			// Apply motion.
@@ -61,8 +61,8 @@ package net.psykosoft.psykopaint2.app.utils
 			// Avoid wimp throws, still 0 is allowed for returns to last snap.
 			if( speed != 0 ) {
 				var speedAbs:Number = Math.abs( speed );
-				if( speedAbs < MINIMUM_THROWING_SPEED ) {
-					speed = ( speed / speedAbs ) * MINIMUM_THROWING_SPEED;
+				if( speedAbs < _minimumThrowingSpeed ) {
+					speed = ( speed / speedAbs ) * _minimumThrowingSpeed;
 				}
 			}
 
@@ -70,7 +70,7 @@ package net.psykosoft.psykopaint2.app.utils
 
 			// Try to precalculate how far this would throw the scroller.
 			var precision:Number = 512;
-			var integralFriction:Number = ( Math.pow( FRICTION_FACTOR, precision ) - 1 ) / ( FRICTION_FACTOR - 1 );
+			var integralFriction:Number = ( Math.pow( _frictionFactor, precision ) - 1 ) / ( _frictionFactor - 1 );
 			var distanceTravelled:Number = speed * integralFriction;
 			var calculatedPosition:Number = _position + distanceTravelled;
 
@@ -120,7 +120,7 @@ package net.psykosoft.psykopaint2.app.utils
 		public function update():void {
 			if( _speed != 0 ) {
 			 	_position += _speed;
-				_speed *= FRICTION_FACTOR;
+				_speed *= _frictionFactor;
 			}
 		}
 
@@ -131,6 +131,18 @@ package net.psykosoft.psykopaint2.app.utils
 		public function snapAtIndex( value:uint ):void {
 			_speed = 0;
 			_position = _snapPoints[ value ];
+		}
+
+		public function set frictionFactor( value:Number ):void {
+			_frictionFactor = value;
+		}
+
+		public function set minimumThrowingSpeed( value:Number ):void {
+			_minimumThrowingSpeed = value;
+		}
+
+		public function set edgeContainmentFactor( value:Number ):void {
+			_edgeContainmentFactor = value;
 		}
 	}
 }

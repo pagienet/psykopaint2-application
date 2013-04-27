@@ -53,7 +53,8 @@ package net.psykosoft.psykopaint2.app.view.settings
 			var names:Vector.<String> = atlas.getNames();
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 			for( var i:uint; i < names.length; i++ ) {
-				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( "FooterIconsSettings", names[ i ], onButtonTriggered ) );
+				var name:String = names[ i ];
+				buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( _atlas.getTexture( name ), name, onButtonTriggered ) );
 			}
 
 			setCenterButtons( buttonGroupDefinition );

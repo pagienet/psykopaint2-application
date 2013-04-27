@@ -25,10 +25,10 @@ package net.psykosoft.psykopaint2.app.model
 			if( _currentState == value ) return;
 
 			if( value.name == ApplicationStateType.PREVIOUS_STATE ) {
-				if( _stateStack.length > 0 ) {
-					var lastIndex:uint = _stateStack.length - 1;
+				if( _stateStack.length > 1 ) {
+					var lastIndex:uint = _stateStack.length - 2;
 					value = _stateStack[ lastIndex ];
-					_stateStack.splice( lastIndex, 1 );
+					_stateStack.splice( lastIndex, 2 );
 				}
 				else {
 					return;

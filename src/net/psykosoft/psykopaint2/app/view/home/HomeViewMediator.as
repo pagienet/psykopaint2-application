@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.app.view.home
 	import net.psykosoft.psykopaint2.app.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.model.StateModel;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyFocusedPaintingChangedSignal;
+	import net.psykosoft.psykopaint2.app.signal.requests.RequestActivePaintingChangeSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyWallpaperChangeSignal;
@@ -31,18 +31,19 @@ package net.psykosoft.psykopaint2.app.view.home
 		public var notifyNavigationToggleSignal:NotifyNavigationToggleSignal;
 
 		[Inject]
-		public var notifyFocusedPaintingChangedSignal:NotifyFocusedPaintingChangedSignal;
+		public var notifyFocusedPaintingChangedSignal:RequestActivePaintingChangeSignal;
 
 		override public function initialize():void {
 
 			super.initialize();
 			registerView( homeView );
 			registerEnablingState( ApplicationStateType.HOME_SCREEN );
-			registerEnablingState( ApplicationStateType.HOME_SCREEN_PAINTING );
+			registerEnablingState( ApplicationStateType.HOME_SCREEN_ON_PAINTING );
 			registerEnablingState( ApplicationStateType.PAINTING );
 			registerEnablingState( ApplicationStateType.SETTINGS );
 			registerEnablingState( ApplicationStateType.PAINTING_SELECT_IMAGE );
 			registerEnablingState( ApplicationStateType.SETTINGS_WALLPAPER );
+			registerEnablingState( ApplicationStateType.HOME_SCREEN_SHARE );
 
 			// From app.
 			notifyWallpaperChangeSignal.add( onWallPaperChanged );
@@ -85,13 +86,15 @@ package net.psykosoft.psykopaint2.app.view.home
 			}
 
 			// Trigger home-painting state otherwise.
+			// TODO: use proper names
+			var temporaryPaintingNames:Array = [ "house on country side", "digital cowboy", "microcosmos", "patio", "jesse", "flower spots", "beautiful danger" ];
 			if( paintingIndex > 2 ) {
 
-				if( stateModel.currentState.name != ApplicationStateType.HOME_SCREEN_PAINTING ) {
-					requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN_PAINTING ) );
+				if( stateModel.currentState.name != ApplicationStateType.HOME_SCREEN_ON_PAINTING ) {
+					requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN_ON_PAINTING ) );
 				}
 
-				var temporaryPaintingName:String = "myPainting_" + String( paintingIndex - 2 ); // TODO: use real data
+				var temporaryPaintingName:String = temporaryPaintingNames[ paintingIndex - 3 ];
 				notifyFocusedPaintingChangedSignal.dispatch( temporaryPaintingName );
 			}
 		}

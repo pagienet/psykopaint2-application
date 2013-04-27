@@ -16,7 +16,8 @@ package net.psykosoft.psykopaint2.app.model
 		// -----------------------
 
 		public static const HOME_SCREEN:String = "home";
-		public static const HOME_SCREEN_PAINTING:String = "home/painting";
+		public static const HOME_SCREEN_ON_PAINTING:String = "home/on/painting";
+		public static const HOME_SCREEN_SHARE:String = "home/share";
 		public static const SETTINGS:String = "settings";
 		public static const SETTINGS_WALLPAPER:String = "settings/wallpaper";
 

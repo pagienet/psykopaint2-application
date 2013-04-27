@@ -1,10 +1,20 @@
 package net.psykosoft.psykopaint2.app.commands
 {
 
-	public class ChangeActivePaintingCommand extends ${Super_class_name}
+	import net.psykosoft.psykopaint2.app.model.ActivePaintingModel;
+
+	public class ChangeActivePaintingCommand
 	{
-		public function ChangeActivePaintingCommand() {
-			super();
+		[Inject]
+		public var name:String;
+
+		[Inject]
+		public var activePaintingModel:ActivePaintingModel;
+
+		public function execute():void {
+
+			activePaintingModel.changeActivePaintingName( name );
+
 		}
 	}
 }

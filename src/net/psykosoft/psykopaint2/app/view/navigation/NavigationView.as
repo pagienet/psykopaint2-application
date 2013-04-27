@@ -3,24 +3,19 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
-	
-	import feathers.controls.Button;
-	import feathers.controls.Header;
-	
-	import net.psykosoft.psykopaint2.app.config.AppConfig;
+
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
-	import net.psykosoft.psykopaint2.app.view.components.label.PaperHeaderLabel;
 	import net.psykosoft.psykopaint2.app.view.components.buttons.FooterNavButton;
+	import net.psykosoft.psykopaint2.app.view.components.label.PaperHeaderLabel;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.ui.theme.data.ButtonSkinType;
-	
+
 	import org.osflash.signals.Signal;
-	
+
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.textures.RenderTexture;
 
 	/*
 	* Contains the lower navigation menu background image and the edge buttons.

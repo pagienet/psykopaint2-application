@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 
 	import net.psykosoft.psykopaint2.app.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.app.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyDisplayTreeReadySignal;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
 	public class StarlingRootSpriteMediator extends StarlingMediatorBase
@@ -15,6 +16,9 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 
 		[Inject]
 		public var accelManager:AccelerometerManager;
+
+		[Inject]
+		public var notifyDisplayTreeReadySignal:NotifyDisplayTreeReadySignal;
 
 		override public function initialize():void {
 
@@ -32,6 +36,17 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 				accelManager.init();
 			}*/
 
+			// From view.
+			view.displayTreeReadySignal.add( onViewReady );
+
+		}
+
+		// -----------------------
+		// From view.
+		// -----------------------
+
+		private function onViewReady():void {
+			notifyDisplayTreeReadySignal.dispatch();
 		}
 	}
 }

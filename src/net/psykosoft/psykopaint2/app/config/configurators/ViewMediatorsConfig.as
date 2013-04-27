@@ -9,8 +9,10 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.view.navigation.BackSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.app.view.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.app.view.navigation.NavigationViewMediator;
-	import net.psykosoft.psykopaint2.app.view.navigation.PaintingSubNavigationView;
-	import net.psykosoft.psykopaint2.app.view.navigation.PaintingSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.app.view.navigation.ShareSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.navigation.ShareSubNavigationViewMediator;
+	import net.psykosoft.psykopaint2.app.view.navigation.ViewPaintingSubNavigationView;
+	import net.psykosoft.psykopaint2.app.view.navigation.ViewPaintingSubNavigationViewMediator;
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.CanvasViewMediator;
 	import net.psykosoft.psykopaint2.app.view.painting.canvas.SelectBrushSubNavigationView;
@@ -64,42 +66,21 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	{
 		public function ViewMediatorsConfig( mediatorMap:IMediatorMap ) {
 
-			// ---------------------------------------------------------------------
-			// 2d
-			// ---------------------------------------------------------------------
-
-			// General.
 			mediatorMap.map( SplashView ).toMediator( SplashViewMediator );
 			mediatorMap.map( StarlingRootSprite ).toMediator( StarlingRootSpriteMediator );
-
-			// ---------------------------
-			// Painting process views.
-			// ---------------------------
-
 			mediatorMap.map( StateProxyView ).toMediator( StateProxyViewMediator );
 			mediatorMap.map( SelectImageView ).toMediator( SelectImageViewMediator );
 			mediatorMap.map( CanvasView ).toMediator( CanvasViewMediator );
 			mediatorMap.map( CropView ).toMediator( CropViewMediator );
 			mediatorMap.map( ColorStyleView ).toMediator( ColorStyleViewMediator );
-
-			// ---------------------------
-			// Pop up views.
-			// ---------------------------
-
 			mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
 			mediatorMap.map( MessagePopUpView ).toMediator( MessagePopUpViewMediator );
 			mediatorMap.map( CaptureImagePopUpView ).toMediator( CaptureImagePopUpViewMediator );
 			mediatorMap.map( ConfirmCapturePopUpView ).toMediator( ConfirmCapturePopUpViewMediator );
-
-			// -----------------------
-			// Sub-navigation views.
-			// -----------------------
-
 			mediatorMap.map( NavigationView ).toMediator( NavigationViewMediator );
 			mediatorMap.map( SettingsSubNavigationView ).toMediator( SettingsSubNavigationViewMediator );
 			mediatorMap.map( SelectWallpaperSubNavigationView ).toMediator( SelectWallpaperSubNavigationViewMediator );
 			mediatorMap.map( HomeScreenSubNavigationView ).toMediator( HomeScreenSubNavigationViewMediator );
-			// Painting process sub-navigation elements.
 			mediatorMap.map( NewPaintingSubNavigationView ).toMediator( NewPaintingSubNavigationViewMediator );
 			mediatorMap.map( SelectImageSubNavigationView ).toMediator( SelectImageSubNavigationViewMediator );
 			mediatorMap.map( ColorStyleSubNavigationView ).toMediator( ColorStyleSubNavigationViewMediator );
@@ -111,14 +92,9 @@ package net.psykosoft.psykopaint2.app.config.configurators
 			mediatorMap.map( ConfirmCaptureSubNavigationView ).toMediator( ConfirmCaptureSubNavigationViewMediator );
 			mediatorMap.map( CropImageSubNavigationView ).toMediator( CropImageSubNavigationViewMediator );
 			mediatorMap.map( BackSubNavigationView ).toMediator( BackSubNavigationViewMediator );
-			mediatorMap.map( PaintingSubNavigationView ).toMediator( PaintingSubNavigationViewMediator );
-
-			// ---------------------------------------------------------------------
-			// 3d
-			// ---------------------------------------------------------------------
-
-			// General.
+			mediatorMap.map( ViewPaintingSubNavigationView ).toMediator( ViewPaintingSubNavigationViewMediator );
 			mediatorMap.map( HomeView ).toMediator( HomeViewMediator );
+			mediatorMap.map( ShareSubNavigationView ).toMediator( ShareSubNavigationViewMediator );
 
 		}
 	}
