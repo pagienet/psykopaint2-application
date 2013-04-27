@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
+	import away3d.core.base.Object3D;
 	import away3d.debug.Trident;
 	import away3d.entities.Mesh;
 	import away3d.materials.ColorMaterial;
@@ -22,7 +23,6 @@ package net.psykosoft.psykopaint2.app.view.home
 		private var _room:Room;
 		private var _frameContainer:PictureFrameContainer;
 		private var _loader:AssetBundleLoader;
-		private var _cameraTarget:Mesh;
 
 		public function HomeView() {
 			super();
@@ -35,14 +35,12 @@ package net.psykosoft.psykopaint2.app.view.home
 		override protected function onEnabled():void {
 			addChild3d( _room );
 			addChild3d( _frameContainer );
-			addChild3d( _cameraTarget );
 			_cameraController.isActive = true;
 		}
 
 		override protected function onDisabled():void {
 			removeChild3d( _room );
 			removeChild3d( _frameContainer );
-			removeChild3d( _cameraTarget );
 			_cameraController.isActive = false;
 		}
 
@@ -52,27 +50,19 @@ package net.psykosoft.psykopaint2.app.view.home
 			// Initialize objects.
 			// -----------------------
 
-			var tri:Trident = new Trident( 500 );
-			addChild3d( tri );
+			// Visualize scene origin.
+//			var tri:Trident = new Trident( 500 );
+//			addChild3d( tri );
 
 			_room = new Room();
-			_cameraTarget = new Mesh( new CubeGeometry( 25, 25 ), new ColorMaterial( 0x00FF00 ) );
-			_cameraController = new ScrollCameraController( _camera, _cameraTarget, stage );
+			var cameraTarget:Object3D = new Object3D();
+			_cameraController = new ScrollCameraController( _camera, cameraTarget, stage );
 			_frameContainer = new PictureFrameContainer( _cameraController, _room );
 			_frameContainer.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
 			_cameraController.cameraZ = -1750;
 			_frameContainer.z = _room.wallZ - 2;
-			_cameraTarget.z = _room.wallZ;
-
-			// Debug camera controller.
-			// TODO: remove!
-			var tracer:Sprite = _cameraController.getPositionTracer();
-			tracer.x = 100;
-			tracer.y = 25;
-			tracer.scaleX = tracer.scaleY = 0.25;
-			DisplayContextManager.root.addChild( tracer );
-			addChild3d( _cameraController.perspectiveFactorTracer );
+			cameraTarget.z = _room.wallZ;
 
 			// -------------------------
 			// Prepare external assets.

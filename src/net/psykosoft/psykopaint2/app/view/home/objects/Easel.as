@@ -31,9 +31,9 @@ package net.psykosoft.psykopaint2.app.view.home.objects
 			_width = image.width;
 			_height = image.height;
 
-			var tri:Trident = new Trident( 100 );
-			tri.z -= 500;
-			addChild( tri );
+//			var tri:Trident = new Trident( 100 );
+//			tri.z -= 500;
+//			addChild( tri );
 
 			// Init easel mesh.
 			_easelMesh = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( image );

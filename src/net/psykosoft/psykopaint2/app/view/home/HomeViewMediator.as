@@ -3,17 +3,15 @@ package net.psykosoft.psykopaint2.app.view.home
 
 	import flash.display.BitmapData;
 
+	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
-	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.model.StateModel;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyFocusedPaintingChangedSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.app.view.base.Away3dMediatorBase;
-
-	import starling.textures.Texture;
 
 	public class HomeViewMediator extends Away3dMediatorBase
 	{
@@ -36,8 +34,6 @@ package net.psykosoft.psykopaint2.app.view.home
 		public var notifyFocusedPaintingChangedSignal:NotifyFocusedPaintingChangedSignal;
 
 		override public function initialize():void {
-
-			trace( this, "initialized" );
 
 			super.initialize();
 			registerView( homeView );
@@ -68,7 +64,7 @@ package net.psykosoft.psykopaint2.app.view.home
 
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
 
-			trace( this, "closest painting changed to index: " + paintingIndex );
+//			trace( this, "closest painting changed to index: " + paintingIndex );
 
 			// Trigger settings state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState.name != ApplicationStateType.SETTINGS && paintingIndex == 0 ) {
@@ -126,24 +122,5 @@ package net.psykosoft.psykopaint2.app.view.home
 		private function onWallPaperChanged( bmd:BitmapData ):void {
 			homeView.room.changeWallpaper( bmd );
 		}
-
-		/*override protected function onStateChange( newStateName:String ):void {
-
-			// Clicking on the settings button causes animation to the settings painting.
-			*//*if( newStateName == ApplicationStateType.SETTINGS && stateModel.previousState.name == ApplicationStateType.HOME_SCREEN && homeView.cameraController.evaluateCameraCurrentClosestSnapPointIndex() != 0 ) {
-				homeView.cameraController.jumpToSnapPointAnimated( 0 );
-				return;
-			}*//*
-
-			// Clicking on the back button on the settings state restores to the last snapped painting.
-			*//*if( newStateName == ApplicationStateType.HOME_SCREEN && stateModel.previousState.name == ApplicationStateType.SETTINGS ) {
-				if( !homeView.cameraController.moving ) {
-					homeView.cameraController.jumpToSnapPointAnimated( homeView.cameraController.previousCameraClosestSnapPointIndex );
-					return;
-				}
-			}*//*
-
-			super.onStateChange( newStateName );
-		}*/
 	}
 }

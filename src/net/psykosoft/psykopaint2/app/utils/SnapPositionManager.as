@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.app.utils
 {
 
-	import flash.display.Sprite;
-
 	import org.osflash.signals.Signal;
 
 	public class SnapPositionManager
@@ -26,14 +24,12 @@ package net.psykosoft.psykopaint2.app.utils
 			_position = 0;
 			_speed = 0;
 			closestSnapPointChangedSignal = new Signal();
-			initializeTracers();
 		}
 
 		public function addSnapPoint( value:Number ):void {
 			if( !_snapPoints ) _snapPoints = new Vector.<Number>();
 			_snapPoints.push( value );
 			_lastSnapPoint = value;
-			_snapPointTracers.push( addTracer( 0x666666, 10, _lastSnapPoint ) ); // TODO: remove
 		}
 
 		public function moveFreelyByAmount( amount:Number ):void {
@@ -57,7 +53,7 @@ package net.psykosoft.psykopaint2.app.utils
 			}
 
 			// Apply motion.
-			_position += amount * multiplier*3;
+			_position += amount * multiplier;
 		}
 
 		public function snap( speed:Number ):void {
@@ -71,8 +67,6 @@ package net.psykosoft.psykopaint2.app.utils
 			}
 
 			_direction = speed > 0 ? 1 : -1;
-
-//			trace( this, "snapping at speed: " + speed );
 
 			// Try to precalculate how far this would throw the scroller.
 			var precision:Number = 512;
@@ -93,6 +87,8 @@ package net.psykosoft.psykopaint2.app.utils
 		}
 
 		private function evaluateClosestSnapPointPosition( position:Number ):Number {
+
+			// Find closest snap point.
 			var len:uint = _snapPoints.length;
 			var closestDistanceToSnapPoint:Number = Number.MAX_VALUE;
 			var targetSnapPoint:Number = -1;
@@ -106,15 +102,18 @@ package net.psykosoft.psykopaint2.app.utils
 					targetSnapPointIndex = i;
 				}
 			}
+
 			// Avoid targeting past the last snap point ( the code above automatically avoids targeting below the first snap point ).
 			if( closestDistanceToSnapPoint > _lastSnapPoint ) {
 				targetSnapPoint = -1;
 			}
+
 			// Notify closest snap point change?
 			if( targetSnapPointIndex != _closestSnapPointIndex ) {
 				_closestSnapPointIndex = targetSnapPointIndex;
 				closestSnapPointChangedSignal.dispatch( _closestSnapPointIndex );
 			}
+
 			return targetSnapPoint;
 		}
 
@@ -123,7 +122,6 @@ package net.psykosoft.psykopaint2.app.utils
 			 	_position += _speed;
 				_speed *= FRICTION_FACTOR;
 			}
-			_positionTracer.x = _position * TRACER_SCALING;
 		}
 
 		public function get position():Number {
@@ -133,45 +131,6 @@ package net.psykosoft.psykopaint2.app.utils
 		public function snapAtIndex( value:uint ):void {
 			_speed = 0;
 			_position = _snapPoints[ value ];
-			_positionTracer.x = _position * TRACER_SCALING;
-		}
-
-		// ---------------------------------------------------------------------
-		// TRACE CODE - TODO: remove
-		// ---------------------------------------------------------------------
-
-		private var _tracer:Sprite;
-		private var _positionTracer:Sprite;
-		private var _snapPointTracers:Vector.<Sprite>;
-
-		private const TRACER_SCALING:Number = 0.1;
-
-		private function initializeTracers():void {
-			_tracer = new Sprite();
-			_positionTracer = addTracer( 0xFF4444, 25 );
-			_snapPointTracers = new Vector.<Sprite>();
-		}
-
-		private function addTracer( color:uint, size:Number = 15, position:Number = 0 ):Sprite {
-			var pTracer:Sprite = new Sprite();
-			pTracer.graphics.beginFill( color );
-			pTracer.graphics.drawCircle( 0, 0, size );
-			pTracer.graphics.endFill();
-			pTracer.x = position * TRACER_SCALING;
-			_tracer.addChild( pTracer );
-			return pTracer;
-		}
-
-		public function get tracer():Sprite {
-			return _tracer;
-		}
-
-		public function get direction():int {
-			return _direction;
-		}
-
-		public function get motionAmount():Number {
-			return _motionAmount;
 		}
 	}
 }
