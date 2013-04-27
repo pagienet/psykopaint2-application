@@ -4,10 +4,10 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyFocusedPaintingChangedSignal;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
 
-	public class PaintingSubNavigationViewMediator extends StarlingMediatorBase
+	public class ViewPaintingSubNavigationViewMediator extends StarlingMediatorBase
 	{
 		[Inject]
-		public var view:PaintingSubNavigationView;
+		public var view:ViewPaintingSubNavigationView;
 
 		[Inject]
 		public var notifyFocusedPaintingChangedSignal:NotifyFocusedPaintingChangedSignal;

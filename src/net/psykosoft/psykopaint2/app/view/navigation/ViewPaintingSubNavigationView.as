@@ -4,13 +4,13 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
 
-	public class PaintingSubNavigationView extends SubNavigationViewBase
+	public class ViewPaintingSubNavigationView extends SubNavigationViewBase
 	{
 		public static const BUTTON_LABEL_SHARE:String = "[Share]";
 		public static const BUTTON_LABEL_COMMENT:String = "[Comment]";
 		public static const BUTTON_LABEL_EDIT:String = "[Edit]";
 
-		public function PaintingSubNavigationView() {
+		public function ViewPaintingSubNavigationView() {
 			super();
 		}
 
