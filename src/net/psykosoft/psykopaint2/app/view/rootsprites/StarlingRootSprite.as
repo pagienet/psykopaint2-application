@@ -165,6 +165,9 @@ package net.psykosoft.psykopaint2.app.view.rootsprites
 				button.addEventListener( Event.TRIGGERED, onConsoleButtonTriggered );
 				_debugLayer.addChild( button );
 				trace("StarlingRootSprite::ENABLED BUG CONSOLE")
+			}else {
+				trace("StarlingRootSprite::NOT ENABLED BUG CONSOLE")
+
 			}
 		}
 

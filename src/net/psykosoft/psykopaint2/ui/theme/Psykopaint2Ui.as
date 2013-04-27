@@ -43,7 +43,9 @@ package net.psykosoft.psykopaint2.ui.theme
 
 		
 		override protected function initialize():void {
-
+			
+			trace("Psykopaint2UI::initialize");
+			
 			super.initialize();
 
 			// Buttons.

@@ -153,7 +153,7 @@ package feathers.themes
 		}
 
 		protected var scale:Number;
-		protected var fontSize:int;
+		protected var fontSize:int=10;
 
 		protected var atlas:TextureAtlas;
 		protected var atlasBitmapData:BitmapData;

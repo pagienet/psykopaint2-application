@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:9d048dd1124884d1c3bf71e72ad32d1b$ -->
+<!-- $TexturePacker:SmartUpdate:ec90c3ac5d218fe664e79d565e58d9a5$ -->
 <TextureAtlas imagePath="footer-hd.png">
-    <SubTexture name="FooterIconsGallery" x="1238" y="762" width="248" height="244" frameX="-2" frameY="0" frameWidth="256" frameHeight="256"/>
-    <SubTexture name="FooterIconsNewPainting" x="746" y="768" width="244" height="252" frameX="-4" frameY="0" frameWidth="256" frameHeight="256"/>
-    <SubTexture name="FooterIconsSettings" x="991" y="765" width="246" height="250" frameX="-5" frameY="-1" frameWidth="256" frameHeight="256"/>
+    <SubTexture name="FooterIconsGallery" x="1323" y="514" width="248" height="244" frameX="-2" frameY="0" frameWidth="256" frameHeight="256"/>
+    <SubTexture name="FooterIconsNewPainting" x="831" y="514" width="244" height="252" frameX="-4" frameY="0" frameWidth="256" frameHeight="256"/>
+    <SubTexture name="FooterIconsSettings" x="1076" y="514" width="246" height="250" frameX="-5" frameY="-1" frameWidth="256" frameHeight="256"/>
     <SubTexture name="bg" x="1" y="1" width="2046" height="512"/>
     <SubTexture name="clamp" x="246" y="825" width="32" height="93"/>
     <SubTexture name="helveticaneue" x="1" y="825" width="244" height="122" frameX="-3" frameY="-2" frameWidth="256" frameHeight="128"/>
-    <SubTexture name="label" x="279" y="825" width="188" height="88"/>
-    <SubTexture name="leftArrow" x="468" y="866" width="25" height="38"/>
+    <SubTexture name="label" x="503" y="917" width="188" height="88"/>
+    <SubTexture name="leftArrow" x="274" y="938" width="25" height="38"/>
     <SubTexture name="leftCorner" x="1" y="514" width="307" height="310"/>
     <SubTexture name="leftLabel" x="1" y="948" width="272" height="72"/>
-    <SubTexture name="pageLabel" x="274" y="919" width="471" height="91"/>
-    <SubTexture name="paper 1" x="831" y="514" width="246" height="250"/>
-    <SubTexture name="paper 2" x="1078" y="514" width="247" height="247"/>
+    <SubTexture name="pageLabel" x="279" y="825" width="471" height="91"/>
+    <SubTexture name="paper 1" x="950" y="767" width="246" height="250"/>
+    <SubTexture name="paper 2" x="1197" y="765" width="247" height="247"/>
     <SubTexture name="paper 3" x="585" y="514" width="245" height="253"/>
+    <SubTexture name="pf_ronda_seven_0" x="246" y="919" width="256" height="18" frameX="0" frameY="0" frameWidth="256" frameHeight="32"/>
     <SubTexture name="rightCorner" x="309" y="514" width="275" height="292"/>
-    <SubTexture name="rightLabel" x="468" y="807" width="257" height="58"/>
+    <SubTexture name="rightLabel" x="692" y="917" width="257" height="58"/>
 </TextureAtlas>
