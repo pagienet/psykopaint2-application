@@ -29,14 +29,31 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 
 		}
 		
-		public function setData(data:PaperListItemVO):void{
-			this._data = data; 
+		
+		
+		public function setData(value:PaperListItemVO):void{
+			
+			
+			if(_bgView.parent){
+				_bgView.parent.removeChild(_bgView);
+				_bgView = new Image(Psykopaint2Ui.instance.uiComponentsAtlas.getTexture((_data.odd==true)?"comboboxListUpward":"comboboxListDownward"));
+				this.addChildAt(_bgView,0);
+			}
+			if(value.label!=_txt.text){
+				_txt.text = value.label;
+			}
+			
+			this._data = value; 
+			
 		}
 		
 		public function getData():PaperListItemVO{
 			return _data ; 
 			
 		}
+		
+		
+		
 		/*
 		override public function get height():Number{
 			return _bgView.height

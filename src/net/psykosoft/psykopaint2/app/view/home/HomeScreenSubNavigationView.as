@@ -1,16 +1,12 @@
 package net.psykosoft.psykopaint2.app.view.home
 {
 
-	import net.psykosoft.psykopaint2.app.view.components.checkbox.PaperCheckBox;
 	import net.psykosoft.psykopaint2.app.view.components.combobox.PaperComboboxView;
-	import net.psykosoft.psykopaint2.app.view.components.sliders.PaperRangeSlider;
-	import net.psykosoft.psykopaint2.app.view.components.sliders.PaperSlider;
 	import net.psykosoft.psykopaint2.app.view.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
-	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	
-	import starling.display.Image;
+	import starling.events.Event;
 
 	public class HomeScreenSubNavigationView extends SubNavigationViewBase
 	{
@@ -32,6 +28,9 @@ package net.psykosoft.psykopaint2.app.view.home
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO("FooterIconsNewPainting",  BUTTON_LABEL_NEWS3, onButtonTriggered ) );
 			setCenterButtons( buttonGroupDefinition );
 			
+			/*
+			
+			//TEST COMBOBOX
 			var paperCombobox:PaperComboboxView = new PaperComboboxView();
 			this.addChild(paperCombobox);
 			paperCombobox.addItem({id:0,label:"SINE WAVE"});
@@ -42,19 +41,8 @@ package net.psykosoft.psykopaint2.app.view.home
 			paperCombobox.addItem({id:5,label:"ORIENTATION"});
 			paperCombobox.addItem({id:6,label:"SOUND"});
 			paperCombobox.x = 10;
-			
-			
-			var paperCombobox2:PaperComboboxView = new PaperComboboxView();
-			this.addChild(paperCombobox2);
-			paperCombobox2.addItem({id:0,label:"SINE WAVE"});
-			paperCombobox2.addItem({id:1,label:"COS WAVE"});
-			paperCombobox2.addItem({id:2,label:"SAWTOOTH"});
-			paperCombobox2.addItem({id:3,label:"SQUARE"});
-			
-			paperCombobox2.x = 750;
-			
-			/*
-			
+			paperCombobox.removeItemAt(3);
+			paperCombobox.addEventListener(Event.CHANGE,onChangeItem);
 			
 			
 			//TEST ADD SLIDER
@@ -72,6 +60,12 @@ package net.psykosoft.psykopaint2.app.view.home
 			this.addChild(papercheckbox);
 			papercheckbox.x = 850;
 			*/
+		}
+		
+		private function onChangeItem(e:Event):void
+		{
+			var combobox:PaperComboboxView = e.target as PaperComboboxView;
+			trace("paperCombobox item =" +combobox.selectedItem.label)
 		}
 	}
 }

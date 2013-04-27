@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 	import starling.core.Starling;
 	import starling.display.Image;
 	import starling.display.Sprite;
+	import starling.events.Event;
 	
 	public class PaperListView extends Sprite
 	{
@@ -17,9 +18,7 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 		private var _bottomImage:Image;
 		private var _bottomImageUpward:Image;
 		private var _selectedIndex:int;
-		
-		private var _tweenSpeed:Number = 0.35
-		
+		private var _tweenSpeed:Number = 0.35;
 		private var _expandedHeight:Number;
 		
 		private var _opened:Boolean=false;
@@ -48,30 +47,62 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 			this.addChild(_bottomImage);
 			this.addChild(_bottomImageUpward);
 		}		
+		
+		
+		
+		public function removeAll():void
+		{
+			for (var i:int = _itemViews.length-1; i > 0; i--) 
+			{
+				_itemViews[i].parent.removeChild(_itemViews[i]);
+				
+			}
+			_itemViews = new Vector.<PaperListItemView>();
+		}
+		
+		public function removeItemAt(index:int):void
+		{
+			_itemViews[index].parent.removeChild(_itemViews[index]);
+			_itemViews.splice(index,1);
+			
+			caluclateExpandedHeight();
+
+		}
+		
+		public function addItemAt(dataObject:Object, index:int):void
+		{
+			var paperlistItemVO:PaperListItemVO = new PaperListItemVO(dataObject);
+			
+			paperlistItemVO.odd = (index%2==1)?true:false;
+			var newPaperListItemView :PaperListItemView = new PaperListItemView(paperlistItemVO);
+			_itemViews.splice(index,0,newPaperListItemView);
+			_itemViewContainer.addChild(newPaperListItemView);
+			
+			caluclateExpandedHeight();
+		}
+		
 		public function addItem(dataObject:Object):void{
 			
 			var paperlistItemVO:PaperListItemVO = new PaperListItemVO(dataObject);
 			
-			paperlistItemVO.odd = !(_itemViews.length%2);
+			paperlistItemVO.odd = (_itemViews.length%2==1)?true:false;
 			
 			var newPaperListItemView :PaperListItemView = new PaperListItemView(paperlistItemVO);
 			_itemViews.push(newPaperListItemView);
 			_itemViewContainer.addChild(newPaperListItemView);
-			
-			
-			
-			//WHEN ADD AN ITEM WE SET IT TO COLLAPSE
-			//
-			
-			
+		
+			caluclateExpandedHeight();
+		}
+		
+		
+		private function caluclateExpandedHeight():void{
 			expand(0);
 			update();
 			
 			//WHEN EVERYTHING IS EXPANDED WE STORE THE EXPANDED HEIGHT
 			if(_itemViews.length>0)
-			_expandedHeight = _itemViews[_itemViews.length-1].y+_itemViews[_itemViews.length-1].height
+				_expandedHeight = _itemViews[_itemViews.length-1].y+_itemViews[_itemViews.length-1].height
 			
-				
 			collapse(0,0);
 			update();
 		}
@@ -164,6 +195,8 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 				if(speed==0){
 					update();
 				}
+				
+				dispatchEvent(new Event(Event.CHANGE));
 			
 		}
 		
@@ -197,6 +230,10 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 				for (var i:int = 0; i < _itemViews.length; i++) 
 				{
 					var currentItemView:PaperListItemView = _itemViews[i];
+					
+					currentItemView.getData().odd = (i%2==1)?false:true;
+					currentItemView.setData(currentItemView.getData());
+					
 					
 					if(i>0)
 					currentItemView.y = _itemViews[i-1].y + _itemViews[i-1].height-1;
@@ -253,7 +290,15 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 		{
 			return _selectedIndex;
 		}
+		
+		public function get selectedItem():PaperListItemVO
+		{
+			
+			return _itemViews[_selectedIndex].getData();
+		}
+		
 
 
+	
 	}
 }

@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 	import starling.core.Starling;
 	import starling.display.Image;
 	import starling.display.Sprite;
+	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -21,6 +22,7 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 		private var _listView:PaperListView;
 		private var _listViewContainer:Sprite;
 		private var _dragDecorator:DraggableDecorator;
+		private var _selectedIndex:int;
 		
 		
 		public function PaperComboboxView()
@@ -44,6 +46,13 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 			
 			_dragDecorator = new DraggableDecorator(_listView,new Rectangle(0,0,_listView.width,_listView.height));
 			_listView.addEventListener(TouchEvent.TOUCH,onTouchEventHandle);
+			_listView.addEventListener(Event.CHANGE,onChangeList);
+			
+		}
+		
+		private function onChangeList(e:Event):void
+		{
+			dispatchEvent(new Event(Event.CHANGE));
 		}
 		
 		private function onTouchEventHandle(e:TouchEvent):void
@@ -65,6 +74,7 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 				var positionIndex:int = getPositionIndex();
 				Starling.juggler.tween(_listView,_listView.tweenSpeed,{y:0,transition:Transitions.EASE_OUT});
 				_listView.collapse(positionIndex);
+				_selectedIndex = positionIndex;
 			}
 		}	
 		
@@ -87,9 +97,54 @@ package net.psykosoft.psykopaint2.app.view.components.combobox
 		}
 		
 		
-		private function update():void{
+		public function addItemAt(params:Object,index:int):void
+		{
 			
+			_listView.addItemAt(params,index);
 			
+			//UPDATE DRAG DECORATOR
+			_dragDecorator.setBounds(new Rectangle(0,-_listView.height,0,_listView.height+10));
 		}
+		
+		
+		public function removeItemAt(index:int):void
+		{
+			
+			_listView.removeItemAt(index);
+			
+			//UPDATE DRAG DECORATOR
+			_dragDecorator.setBounds(new Rectangle(0,-_listView.height,0,_listView.height+10));
+		}
+		
+		public function removeAll():void
+		{
+			
+			_listView.removeAll();
+			
+			//UPDATE DRAG DECORATOR
+			_dragDecorator.setBounds(new Rectangle(0,-_listView.height,0,_listView.height+10));
+		}
+
+		public function get selectedIndex():int
+		{
+			return _selectedIndex;
+		}
+
+		public function set selectedIndex(value:int):void
+		{
+			_selectedIndex = value;
+			
+			Starling.juggler.tween(_listView,_listView.tweenSpeed,{y:0,transition:Transitions.EASE_OUT});
+			_listView.collapse(_selectedIndex);
+		}
+		
+		
+		public function get selectedItem():PaperListItemVO
+		{
+			return _listView.selectedItem;
+		}
+		
+	
+		
 	}
 }
