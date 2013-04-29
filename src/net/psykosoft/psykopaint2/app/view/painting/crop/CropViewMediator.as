@@ -43,9 +43,7 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 		// -----------------------
 
 		public function doCrop():void {
-			if( cropView.visible ) {
-				notifyCropCompleteSignal.dispatch( cropView.renderPreviewToBitmapData() );
-			}
+			notifyCropCompleteSignal.dispatch( cropView.renderPreviewToBitmapData() );
 		}
 
 		private function onModuleActivated( bitmapData:BitmapData ):void {

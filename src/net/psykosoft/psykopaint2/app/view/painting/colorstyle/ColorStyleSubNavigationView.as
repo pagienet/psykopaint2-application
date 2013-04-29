@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 			for( var i:uint; i < len; ++i ) {
 				buttonGroupDefinition.addButtonDefinition(new ButtonDefinitionVO( getTextureFromId( "FooterIconsNewPainting" ),  presetsList[ i ], onButtonTriggered ) );
 			}
-			setCenterButtons( buttonGroupDefinition );
+			setCenterButtons( buttonGroupDefinition, true );
 
 		}
 	}

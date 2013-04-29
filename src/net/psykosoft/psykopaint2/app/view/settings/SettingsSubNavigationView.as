@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.app.view.settings
 
 	public class SettingsSubNavigationView extends SubNavigationViewBase
 	{
-//		public static const BUTTON_LABEL_BACK:String = "Back";
 		public static const BUTTON_LABEL_WALLPAPER:String = "Wallpaper";
 
 		public function SettingsSubNavigationView() {
@@ -18,8 +17,6 @@ package net.psykosoft.psykopaint2.app.view.settings
 
 			super.onEnabled();
 
-//			setLeftButton("FooterIconsSettings", BUTTON_LABEL_BACK );
-
 			var buttonGroupDefinition:ButtonGroupDefinitionVO = new ButtonGroupDefinitionVO();
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( getTextureFromId( "FooterIconsNewPainting" ), "[Notifications]", onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( getTextureFromId( "FooterIconsNewPainting" ),  "[Invite Friends]", onButtonTriggered ) );
@@ -28,7 +25,7 @@ package net.psykosoft.psykopaint2.app.view.settings
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( getTextureFromId( "FooterIconsNewPainting" ),  BUTTON_LABEL_WALLPAPER, onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( getTextureFromId( "FooterIconsNewPainting" ),  "[Connect Stuff]", onButtonTriggered ) );
 			buttonGroupDefinition.addButtonDefinition( new ButtonDefinitionVO( getTextureFromId( "FooterIconsNewPainting" ),  "[Log Out]", onButtonTriggered ) );
-			setCenterButtons( buttonGroupDefinition, true );
+			setCenterButtons( buttonGroupDefinition, false, true );
 		}
 	}
 }

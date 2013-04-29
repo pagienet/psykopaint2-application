@@ -66,53 +66,51 @@ package net.psykosoft.psykopaint2.app.view.painting.crop
 		}
 
 		protected function centerCanvas():void {
-			if ( !stage ) return;
+			if( !stage ) return;
 
-			if ( _positioningSheet )
-			{
+			if( _positioningSheet ) {
 				_positioningSheet.x = 0.5 * stage.stageWidth;
 				_positioningSheet.y = 0.5 * stage.stageHeight;
-				_positioningSheet.limitsRect = new Rectangle( 0,0,stage.stageWidth,stage.stageHeight);
+				_positioningSheet.limitsRect = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
 			}
 		}
 
 		public function set sourceMap( map:BitmapData ):void {
-			if ( _positioningSheet ){
-				removeChild(_positioningSheet);
+			if( _positioningSheet ) {
+				removeChild( _positioningSheet );
 				_positioningSheet.dispose();
 			}
-			if ( _sourceMap ) _sourceMap.dispose();
+			if( _sourceMap ) _sourceMap.dispose();
 			_sourceMap = map;
 
 
 			var texture:Texture = Texture.fromBitmapData( _sourceMap );
 			var image:Image = new Image( texture );
-			_positioningSheet = new TouchSheet(image);
-			_positioningSheet.scaleX = _positioningSheet.scaleY = _positioningSheet.minimumScale = Math.max(stage.stageWidth /_sourceMap.width, stage.stageHeight/_sourceMap.height);
+			_positioningSheet = new TouchSheet( image );
+			_positioningSheet.scaleX = _positioningSheet.scaleY = _positioningSheet.minimumScale = Math.max( stage.stageWidth / _sourceMap.width, stage.stageHeight / _sourceMap.height );
 
 
 			addChildAt( _positioningSheet, 0 );
 			centerCanvas();
 		}
 
-		public function renderPreviewToBitmapData():BitmapData
-		{
+		public function renderPreviewToBitmapData():BitmapData {
 			var support:RenderSupport = new RenderSupport();
 			RenderSupport.clear();
-			var nativeWidth:Number = Starling.current.viewPort.width
+			var nativeWidth:Number = Starling.current.viewPort.width;
 			var nativeHeight:Number = Starling.current.viewPort.height;
 
-			support.setOrthographicProjection(0,0,nativeWidth, nativeHeight);
-			support.applyBlendMode(false);
+			support.setOrthographicProjection( 0, 0, nativeWidth, nativeHeight );
+			support.applyBlendMode( false );
 			support.pushMatrix();
 
-			this.render(support, 1.0);
+			this.render( support, 1.0 );
 			support.popMatrix();
 
 			support.finishQuadBatch();
 
-			var croppedMap:BitmapData = new BitmapData(nativeWidth,nativeHeight,false,0xffffffff);
-			Starling.context.drawToBitmapData(croppedMap);
+			var croppedMap:BitmapData = new BitmapData( nativeWidth, nativeHeight, false, 0xffffffff );
+			Starling.context.drawToBitmapData( croppedMap );
 			return croppedMap;
 		}
 	}

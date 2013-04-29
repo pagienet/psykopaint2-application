@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 	import com.quasimondo.geom.ColorMatrix;
 
 	import flash.display.BitmapData;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
@@ -43,9 +44,6 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 			registerView( colorStyleView );
 			registerEnablingState( ApplicationStateType.PAINTING_SELECT_COLORS );
 
-			// From view.
-
-
 			// From app.
 			notifyColorStyleModuleActivatedSignal.add( onModuleActivated );
 			notifyColorStyleChangedSignal.add( onColorStyleChanged );
@@ -60,7 +58,6 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 		private function onModuleActivated( bitmapData:BitmapData ):void {
 			trace( this, "color style module activated" );
 			colorStyleView.previewMap = colorStyleModule.sourceMap;
-//			colorStyleModule.setColorStyle( colorStyleModule.getAvailableColorStylePresets()[ 0 ] ); // TODO: not working, need the core to set the default color style
 		}
 
 		private function onColorStyleChanged( styleName:String ):void {
@@ -73,6 +70,7 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 		}
 
 		private function onColorStyleMatrixChanged( matrix1:ColorMatrix, matrix2:ColorMatrix, threshold:Number, range:Number ):void {
+			trace( this, "color style matrix changed" );
 			colorStyleView.updateColorMatrices( matrix1, matrix2, threshold, range );
 		}
 	}

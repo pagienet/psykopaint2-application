@@ -3,7 +3,10 @@ package net.psykosoft.psykopaint2.app.view.navigation
 
 	import feathers.controls.ScrollContainer;
 	import feathers.controls.Scroller;
-	
+
+	import flash.display.BitmapData;
+	import flash.utils.Dictionary;
+
 	import net.psykosoft.psykopaint2.app.config.Settings;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingViewBase;
 	import net.psykosoft.psykopaint2.app.view.components.buttons.FooterNavButton;
@@ -12,11 +15,10 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import net.psykosoft.psykopaint2.ui.extensions.buttongroups.vo.ButtonGroupDefinitionVO;
 	import net.psykosoft.psykopaint2.ui.theme.Psykopaint2Ui;
 	import net.psykosoft.psykopaint2.ui.theme.data.ButtonSkinType;
-	
+
 	import org.osflash.signals.Signal;
 
-	import starling.display.Quad;
-
+	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.textures.Texture;
@@ -29,6 +31,9 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		private var _frontLayer:Sprite; // TODO: do we still need layers given that the edge buttons have been moved out of this abstract class?
 		private var _backLayer:Sprite;
 		private var _navigation:NavigationView;
+		private var _behavesAsList:Boolean;
+		private var _selectedMarker:Image;
+		private var _buttonFromLabel:Dictionary;
 
 		public var buttonPressedSignal:Signal;
 
@@ -78,6 +83,10 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			if( _backLayer ) {
 				removeChild( _backLayer );
 			}
+
+			if( _selectedMarker ) {
+				removeChild( _selectedMarker );
+			}
 		}
 
 		override protected function onDispose():void {
@@ -95,6 +104,16 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			if( _backLayer ) {
 				_backLayer.dispose();
 				_backLayer = null;
+			}
+
+			if( _selectedMarker ) {
+				_selectedMarker.dispose();
+				_selectedMarker.texture.dispose();
+				_selectedMarker = null;
+			}
+
+			if( _buttonFromLabel ) {
+				_buttonFromLabel = null;
 			}
 
 		}
@@ -119,7 +138,11 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			return Psykopaint2Ui.instance.footerAtlas.getTexture( value );
 		}
 
-		protected function setCenterButtons( definition:ButtonGroupDefinitionVO, scrollOutLeftGap:Boolean = false ):void {
+		protected function setCenterButtons( definition:ButtonGroupDefinitionVO, behavesAsList:Boolean = false, scrollOutLeftGap:Boolean = false ):void {
+
+			_behavesAsList = behavesAsList;
+
+			_buttonFromLabel = new Dictionary();
 
 			// Scroll capable container.
 			_scrollContainer = new ScrollContainer();
@@ -141,6 +164,8 @@ package net.psykosoft.psykopaint2.app.view.navigation
 				subButton.addEventListener( Event.TRIGGERED, onButtonTriggered );
 				subButton.x = inflate + ( subButton.width + gap ) * i;
 				subButton.y = 30;
+
+				_buttonFromLabel[ vo.label ] = subButton;
 				
 				accumulatedContentWidth += subButton.width;
 				if( i != len - 1 ) {
@@ -171,6 +196,10 @@ package net.psykosoft.psykopaint2.app.view.navigation
 			if( scrollOutLeftGap ) {
 				_scrollContainer.horizontalScrollPosition += inflate - 2 * gap;
 			}
+
+			if( behavesAsList ) {
+				notifyButtonPress( definition.buttonVOArray[ 0 ].label );
+			}
 		}
 
 		public function clearCenterButtons():void {
@@ -197,8 +226,30 @@ package net.psykosoft.psykopaint2.app.view.navigation
 		}
 
 		public function notifyButtonPress( buttonLabel:String ):void {
-//			trace( this, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> notifying button pressed: " + buttonLabel );
+
+			// Notify.
 			buttonPressedSignal.dispatch( buttonLabel );
+
+			// Update selected marker?
+			if( _behavesAsList ) {
+
+				var button:FooterNavButton = _buttonFromLabel[ buttonLabel ];
+				if( !button ) return;
+
+				// Need to initialize marker?
+				if( !_selectedMarker ) {
+
+					// TODO: implement real graphic, using dummy graphic for now because the provided one lacks necessary transparency
+					var dummyBmd:BitmapData = new BitmapData( button.width, button.height, true, 0 );
+					_selectedMarker = new Image( Texture.fromBitmapData( new BitmapData( button.width, button.height, true, 0x6600FF00 ) ) );
+					dummyBmd.dispose();
+					_scrollContainer.addChild( _selectedMarker );
+				}
+
+				_selectedMarker.x = button.x;
+				_selectedMarker.y = button.y;
+
+			}
 		}
 
 		// ---------------------------------------------------------------------

@@ -30,15 +30,6 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 			// TODO
 		}
 
-		/*protected function centerCanvas():void
-		{
-			if ( _previewImage )
-			{
-				_previewImage.x = 0.5 * ( stage.stageWidth - _previewImage.width );
-				_previewImage.y = 0.5 * ( stage.stageHeight - _previewImage.height);
-			}
-		}*/
-
 		public function renderPreviewToBitmapData():void
 		{
 			var support:RenderSupport = new RenderSupport();
@@ -51,7 +42,6 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 			support.pushMatrix();
 
 			_cmf.render(_previewImage,support, 1.0);
-			//_previewImage.render(support, 1.0);
 			support.popMatrix();
 
 			support.finishQuadBatch();

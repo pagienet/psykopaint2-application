@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 {
 
+	import flash.utils.setTimeout;
+
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
 	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
@@ -22,32 +24,17 @@ package net.psykosoft.psykopaint2.app.view.painting.colorstyle
 		[Inject]
 		public var colorStyleModule:ColorStyleModule;
 
-//		[Inject]
-//		public var notifyColorStylePresetsAvailableSignal:NotifyColorStylePresetsAvailableSignal;
-
 		override public function initialize():void {
 
 			super.initialize();
 			manageMemoryWarnings = false;
 			manageStateChanges = false;
 
-//			From core.
-//			notifyColorStylePresetsAvailableSignal.add( onColorStylePresetsAvailable );
-
 			// From view.
 			view.addedToStageSignal.add( onViewAddedToStage );
 			view.buttonPressedSignal.add( onSubNavigationButtonPressed );
 
 		}
-
-		// -----------------------
-		// From core.
-		// -----------------------
-
-		/*private function onColorStylePresetsAvailable( presets:Array ):void {
-			trace( this, "onColorStylePresetsAvailable: " + presets );
-			view.setAvailableColorStyles( presets );
-		}*/
 
 		// -----------------------
 		// From view.
