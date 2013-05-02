@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.app.view.rootsprites
 {
 
-	import net.psykosoft.psykopaint2.app.managers.accelerometer.AccelerometerManager;
+	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.app.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyDisplayTreeReadySignal;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;

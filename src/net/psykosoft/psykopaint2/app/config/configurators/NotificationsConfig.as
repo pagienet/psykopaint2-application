@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.app.config.configurators
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyActivePaintingChangedSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyCameraFlipSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyDisplayTreeReadySignal;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalAccelerometerSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyLoadImageSourceRequestedSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyNavigationToggleSignal;
@@ -30,7 +30,6 @@ package net.psykosoft.psykopaint2.app.config.configurators
 			injector.map( NotifyWallpaperChangeSignal ).asSingleton();
 			injector.map( NotifyGlobalGestureSignal ).asSingleton();
 			injector.map( NotifyNavigationToggleSignal ).asSingleton();
-			injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 			injector.map( NotifyPopUpRemovalSignal ).asSingleton();
 			injector.map( NotifyCameraFlipSignal ).asSingleton();
 			injector.map( NotifyLoadImageSourceRequestedSignal ).asSingleton();

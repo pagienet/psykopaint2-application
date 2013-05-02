@@ -4,11 +4,11 @@ package net.psykosoft.psykopaint2.app.view.navigation
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.app.config.Settings;
-	import net.psykosoft.psykopaint2.app.managers.accelerometer.AccelerationType;
+	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerationType;
 	import net.psykosoft.psykopaint2.app.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.app.model.ApplicationStateType;
 	import net.psykosoft.psykopaint2.app.data.vos.StateVO;
-	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalAccelerometerSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.app.signal.notifications.NotifyNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.app.view.base.StarlingMediatorBase;
