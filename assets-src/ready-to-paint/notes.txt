@@ -1,7 +1,0 @@
-Thumb sizes:
-------------------
-Thumb images should not exceed 150px on any side. There is no distinction yet for high or low resolution iPads.
-
-Original sizes:
-------------------
-There is no restriction yet set for original image sizes. They shouldn't be small of course.
