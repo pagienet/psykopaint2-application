@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<application xmlns="http://ns.adobe.com/air/application/3.6">
+    <id>com.psykosoft.psykopaint2</id>
+    <filename>PtModuleDesktop</filename>
+    <name>PtModuleDesktop</name>
+    <versionNumber>0.0.1</versionNumber>
+    <initialWindow>
+        <content>SWF file name is set automatically at compile time</content>
+        <transparent>false</transparent>
+        <visible>true</visible>
+        <minimizable>false</minimizable>
+        <maximizable>false</maximizable>
+        <resizable>false</resizable>
+        <width>1024</width>
+        <height>790</height> <!-- would be 768 but the top app bar takes 22 -->
+        <x>1250</x>
+        <y>50</y>
+        <aspectRatio>landscape</aspectRatio>
+        <autoOrients>false</autoOrients>
+        <fullScreen>false</fullScreen>
+        <renderMode>direct</renderMode>
+        <depthAndStencil>false</depthAndStencil>
+    </initialWindow>
+</application>

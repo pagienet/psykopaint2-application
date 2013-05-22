@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Adobe Native Extension Packager" default="all" basedir=".">
+
+    <target name="all" depends="move-packaged-assets"/>
+
+    <target name="move-packaged-assets">
+        <copydir src="../assets/packaged" dest="${OutputPath}/packaged"/>
+    </target>
+
+</project>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
