@@ -1,0 +1,136 @@
+package net.psykosoft.psykopaint2.core.views.components
+{
+	import flash.display.MovieClip;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
+	import flash.text.TextField;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
+
+	public class CrSbNavigationButton extends Sprite
+	{
+		// Declared in Flash.
+		public var tf:TextField;
+		public var labelBg:Sprite;
+		public var btnSelected:Sprite;
+		public var icon:MovieClip;
+
+		private var _mouseIsDown:Boolean;
+		private var _btnLblPos:Point;
+        private var _isSelectable:Boolean = false;
+		private var _autoCenter:Boolean = true;
+
+		public function CrSbNavigationButton() {
+			super();
+
+            btnSelected.visible = false;
+
+			tf.mouseEnabled = false;
+			tf.selectable = false;
+
+			cacheAsBitmap = true;
+
+			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+
+			icon.stop();
+
+			_btnLblPos = new Point( labelBg.x, labelBg.y );
+		}
+
+		public function setIconType( type:String ):void {
+			icon.gotoAndStop( type );
+		}
+
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			addEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
+			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			invalidateLayout();
+		}
+
+		private function onStageMouseUp( event:MouseEvent ):void {
+			if( !_mouseIsDown ) return;
+			icon.scaleX = icon.scaleY = 1;
+			icon.x = -icon.width / 2;
+			icon.y = -icon.height / 2;
+			_mouseIsDown = false;
+		}
+
+		private function onThisMouseDown( event:MouseEvent ):void {
+			icon.scaleX = icon.scaleY = 0.9; // TODO: scaling causes redraw - scroller needs better logic - can we use cacheAsBitmapMatrix or something?
+			icon.x = -icon.width / 2;
+			icon.y = -icon.height / 2;
+			_mouseIsDown = true;
+		}
+
+		public function set labelText( value:String ):void {
+			tf.text = value;
+			invalidateLayout();
+		}
+
+		public function get labelText():String {
+			return tf.text;
+		}
+
+		public function dispose():void {
+			removeChild( tf );
+			tf = null;
+		}
+
+		private function invalidateLayout():void {
+			// Update label.
+			tf.width = 1.25 * tf.textWidth;
+			tf.height = 1.25 * tf.textHeight;
+			labelBg.width = 1.25 * tf.width;
+			if( _autoCenter ) {
+				tf.x = -tf.width / 2;
+				labelBg.x = -labelBg.width / 2;
+			}
+		}
+
+		public function setLabelType( labelType:String ):void {
+			var currentName:String = getQualifiedClassName( labelBg );
+			if( labelType == currentName ) return;
+			removeChild( labelBg );
+			labelBg = null;
+			var newClipClass:Class = Class( getDefinitionByName( labelType ) );
+			labelBg = new newClipClass();
+			labelBg.x = _btnLblPos.x;
+			labelBg.y = _btnLblPos.y;
+			addChildAt( labelBg, 2 );
+		}
+
+		public function displaceLabelBg( dx:Number, dy:Number ):void {
+			labelBg.x += dx;
+			labelBg.y += dy;
+		}
+
+		public function displaceLabelTf( dx:Number, dy:Number ):void {
+			tf.x += dx;
+			tf.y += dy;
+		}
+
+		public function autoCenterLabel( value:Boolean ):void {
+			_autoCenter = value;
+		}
+
+		public function toggleSelect( selected:Boolean ):void {
+			if( !_isSelectable ) return;
+			trace( "setting selected: " + selected );
+			btnSelected.visible = selected;
+		}
+
+		public function get isSelectable():Boolean {
+			return _isSelectable;
+		}
+
+		public function set isSelectable( value:Boolean ):void {
+			_isSelectable = value;
+			if( !value && btnSelected.visible ) {
+				btnSelected.visible = false;
+			}
+		}
+	}
+}

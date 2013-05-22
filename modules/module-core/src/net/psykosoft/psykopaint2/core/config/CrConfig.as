@@ -2,8 +2,20 @@ package net.psykosoft.psykopaint2.core.config
 {
 
 	import flash.display.DisplayObjectContainer;
+	import flash.display.Stage;
+	import flash.display.Stage3D;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.BsSignalCommandMapBundle;
+	import net.psykosoft.psykopaint2.core.commands.CrChangeStateCommand;
+	import net.psykosoft.psykopaint2.core.managers.gestures.CrGestureManager;
+	import net.psykosoft.psykopaint2.core.models.CrStateModel;
+	import net.psykosoft.psykopaint2.core.signals.notifications.CrNotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.notifications.CrNotifyStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.requests.CrRequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.views.base.CrRootView;
+	import net.psykosoft.psykopaint2.core.views.base.CrRootViewMediator;
+	import net.psykosoft.psykopaint2.core.views.navigation.CrNavigationViewMediator;
+	import net.psykosoft.psykopaint2.core.views.navigation.CrSbNavigationView;
 
 	import org.swiftsuspenders.Injector;
 
@@ -16,11 +28,13 @@ package net.psykosoft.psykopaint2.core.config
 
 	public class CrConfig
 	{
+		private var _stage:Stage;
+		private var _stage3d:Stage3D;
 		private var _injector:Injector;
 		private var _mediatorMap:IMediatorMap;
 		private var _commandMap:ISignalCommandMap;
 
-		public function CrConfig( display:DisplayObjectContainer ) {
+		public function CrConfig( display:DisplayObjectContainer, stage:Stage, stage3d:Stage3D ) {
 			super();
 
 			var context:IContext = new Context();
@@ -30,6 +44,9 @@ package net.psykosoft.psykopaint2.core.config
 			_injector = context.injector;
 			_mediatorMap = _injector.getInstance( IMediatorMap );
 			_commandMap = _injector.getInstance( ISignalCommandMap );
+
+			_stage = stage;
+			_stage3d = stage3d;
 
 			mapMediators();
 			mapCommands();
@@ -48,7 +65,7 @@ package net.psykosoft.psykopaint2.core.config
 		// -----------------------
 
 		private function mapModels():void {
-
+			_injector.map( CrStateModel ).asSingleton();
 		}
 
 		// -----------------------
@@ -64,7 +81,9 @@ package net.psykosoft.psykopaint2.core.config
 		// -----------------------
 
 		private function mapSingletons():void {
-
+			_injector.map( Stage ).toValue( _stage );
+			_injector.map( Stage3D ).toValue( _stage3d );
+			_injector.map( CrGestureManager ).asSingleton();
 		}
 
 		// -----------------------
@@ -72,7 +91,8 @@ package net.psykosoft.psykopaint2.core.config
 		// -----------------------
 
 		private function mapNotifications():void {
-
+			_injector.map( CrNotifyStateChangeSignal ).asSingleton();
+			_injector.map( CrNotifyGlobalGestureSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -80,7 +100,7 @@ package net.psykosoft.psykopaint2.core.config
 		// -----------------------
 
 		private function mapCommands():void {
-
+			_commandMap.map( CrRequestStateChangeSignal ).toCommand( CrChangeStateCommand );
 		}
 
 		// -----------------------
@@ -88,7 +108,8 @@ package net.psykosoft.psykopaint2.core.config
 		// -----------------------
 
 		private function mapMediators():void {
-
+			_mediatorMap.map( CrRootView ).toMediator( CrRootViewMediator );
+			_mediatorMap.map( CrSbNavigationView ).toMediator( CrNavigationViewMediator );
 		}
 	}
 }

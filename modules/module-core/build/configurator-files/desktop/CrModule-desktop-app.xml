@@ -19,6 +19,6 @@
         <autoOrients>false</autoOrients>
         <fullScreen>false</fullScreen>
         <renderMode>direct</renderMode>
-        <depthAndStencil>false</depthAndStencil>
+        <depthAndStencil>true</depthAndStencil>
     </initialWindow>
 </application>
