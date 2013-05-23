@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.models.CrStateType;
 	import net.psykosoft.psykopaint2.core.signals.requests.CrRequestStateChangeSignal;
 
-	public class UpdateAppStateFromActivatedDrawingCoreModuleCommand extends BsTracingCommand
+	public class PtUpdateAppStateFromActivatedDrawingCoreModuleCommand extends BsTracingCommand
 	{
 		[Inject]
 		public var moduleActivationVO:ModuleActivationVO;

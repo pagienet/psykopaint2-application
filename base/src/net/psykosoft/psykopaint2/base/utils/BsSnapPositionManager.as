@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.base.utils
 		private var _minimumThrowingSpeed:Number = 100;
 		private var _edgeContainmentFactor:Number = 0.1; // Smaller, softer containment.
 
-		public function SnapPositionManager() {
+		public function BsSnapPositionManager() {
 			closestSnapPointChangedSignal = new Signal();
 			motionEndedSignal = new Signal();
 			reset();

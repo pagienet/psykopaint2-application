@@ -997,6 +997,44 @@ package com.quasimondo.geom {
        		
        		return a2<<24 | r2<<16 | g2<<8 | b2;
         }
+		
+		// this assumes a vector containing a series of 4 floating point colors 0...1
+		// this is used in psykopaint
+		public function applyMatrixToVector( rgba:Vector.<Number> ):void
+		{
+			var i255:Number = 1 / 255;
+			var roffset:Number = matrix[4] * i255;
+			var goffset:Number = matrix[9] * i255;
+			var boffset:Number = matrix[14] * i255;
+			var aoffset:Number = matrix[19] * i255;
+			for ( var i:int = 0; i < 4; i++ )
+			{
+				var r:Number = rgba[i<<2];
+				var g:Number = rgba[(i<<2)+1];
+				var b:Number = rgba[(i<<2)+2];
+				var a:Number = rgba[(i<<2)+3];
+				
+				var r2:Number = r * matrix[0] + g * matrix[1] + b * matrix[2] + a * matrix[3] + roffset;
+				var g2:Number = r * matrix[5] + g * matrix[6] + b * matrix[7] + a * matrix[8] + goffset;
+				var b2:Number = r * matrix[10] + g * matrix[11] + b * matrix[12] + a * matrix[13] + boffset;
+				var a2:Number = r * matrix[15] + g * matrix[16] + b * matrix[17] + a * matrix[18] + aoffset;
+				
+				if ( a2 < 0 ) a2 = 0;
+				else if ( a2 > 1 ) a2 = 1;
+				if ( r2 < 0 ) r2 = 0;
+				else if ( r2 > 1 ) r2 = 1;
+				if ( g2 < 0 ) g2 = 0;
+				else if ( g2 > 1 ) g2 = 1;
+				if ( b2 < 0 ) b2 = 0;
+				else if ( b2 > 1 ) b2 = 1;
+				
+				rgba[i<<2] = r2;
+				rgba[(i<<2)+1] = g2;
+				rgba[(i<<2)+2] = b2;
+				rgba[(i<<2)+3] = a2;
+			}
+			
+		}
         
         
         public function transformVector( values:Array ):void

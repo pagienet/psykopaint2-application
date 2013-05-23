@@ -21,4 +21,9 @@
         <renderMode>direct</renderMode>
         <depthAndStencil>true</depthAndStencil>
     </initialWindow>
+	 <extensions>
+        <extensionID>net.psykosoft.notifications</extensionID>
+		<extensionID>net.psykosoft.photos</extensionID>
+		<extensionID>net.psykosoft.gyroscope</extensionID>
+    </extensions>
 </application>

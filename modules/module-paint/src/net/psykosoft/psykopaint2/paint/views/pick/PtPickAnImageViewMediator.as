@@ -3,15 +3,19 @@ package net.psykosoft.psykopaint2.paint.views.pick
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
+	import net.psykosoft.psykopaint2.core.models.CrStateType;
 
-	public class PtPickAnImageViewMediator extends MediatorBase
+	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
+	import net.psykosoft.psykopaint2.core.views.base.CrMediatorBase;
+	import net.psykosoft.psykopaint2.paint.signals.requests.PtRequestSourceImageSetSignal;
+
+	public class PtPickAnImageViewMediator extends CrMediatorBase
 	{
 		[Inject]
 		public var view:PtPickAnImageView;
 
 		[Inject]
-		public var requestSourceImageSetSignal:RequestSourceImageSetSignal;
+		public var requestSourceImageSetSignal:PtRequestSourceImageSetSignal;
 
 		[Inject]
 		public var notifyColorStyleCompleteSignal:NotifyColorStyleCompleteSignal;
@@ -21,7 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.pick
 			// Init.
 			super.initialize();
 			registerView( view );
-			registerEnablingState( StateType.STATE_PICK_IMAGE );
+			registerEnablingState( CrStateType.STATE_PICK_IMAGE );
 
 			// From view.
 			view.imagePickedSignal.add( onImagePicked );
@@ -37,7 +41,7 @@ package net.psykosoft.psykopaint2.paint.views.pick
 			//	notifyColorStyleCompleteSignal.dispatch( bmd ); // Goes straight to paint mode.
 			}
 			else {
-				requestStateChange( StateType.STATE_PREVIOUS );
+				requestStateChange( CrStateType.STATE_PREVIOUS );
 			}
 		}
 	}

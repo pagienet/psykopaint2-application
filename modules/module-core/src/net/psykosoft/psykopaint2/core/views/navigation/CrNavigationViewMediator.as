@@ -33,6 +33,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			// From view.
 			view.shownAnimatedSignal.add( onViewShown );
 			view.hiddenAnimatedSignal.add( onViewHidden );
+
+			// Causes the first canvas size.
+			notifyNavigationToggledSignal.dispatch( true );
 		}
 
 		// -----------------------
