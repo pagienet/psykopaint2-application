@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.managers.gestures.CrGestureManager;
 	import net.psykosoft.psykopaint2.core.models.CrStateModel;
 	import net.psykosoft.psykopaint2.core.signals.notifications.CrNotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.notifications.CrNotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.CrNotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.CrRequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CrRootView;
@@ -93,6 +94,7 @@ package net.psykosoft.psykopaint2.core.config
 		private function mapNotifications():void {
 			_injector.map( CrNotifyStateChangeSignal ).asSingleton();
 			_injector.map( CrNotifyGlobalGestureSignal ).asSingleton();
+			_injector.map( CrNotifyNavigationToggledSignal ).asSingleton();
 		}
 
 		// -----------------------

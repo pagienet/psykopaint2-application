@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private var _stage:Stage;
 
 		public function CrGestureManager() {
+
 		}
 
 		public function set stage( value:Stage ):void {
@@ -33,7 +34,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function initializeGestures():void {
-//			initTwoFingerVerticalSwipe();
+			initTwoFingerVerticalSwipe();
 			initOneFingerHorizontalPan();
 //			initPinch();
 //			initTap();

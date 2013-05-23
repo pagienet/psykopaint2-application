@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
+	import com.greensock.TweenLite;
 	import com.junkbyte.console.Cc;
 
 	import flash.display.Sprite;
@@ -13,6 +14,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.views.components.CrHorizontalSnapScroller;
 	import net.psykosoft.psykopaint2.core.views.components.CrNavigationButtonLabelType;
 	import net.psykosoft.psykopaint2.core.views.components.CrSbNavigationButton;
+
+	import org.osflash.signals.Signal;
 
 	public class CrSbNavigationView extends BsViewBase
 	{
@@ -32,15 +35,21 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _elementPosOffsetY:Number = 0;
 		private var _elementCreatingPageNum:uint = 1;
 		private var _areButtonsSelectable:Boolean;
+		private var _animating:Boolean;
+		private var _showing:Boolean = true;
 
 		private const ELEMENT_GAP:Number = 15;
 		private const BUTTON_GAP_X:Number = 20;
 		private const BG_HEIGHT:uint = 200;
 
 		public var buttonClickedCallback:Function;
+		public var shownAnimatedSignal:Signal;
+		public var hiddenAnimatedSignal:Signal;
 
 		public function CrSbNavigationView() {
 			super();
+			shownAnimatedSignal = new Signal();
+			hiddenAnimatedSignal = new Signal();
 		}
 
 		override protected function onSetup():void {
@@ -73,6 +82,34 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// ---------------------------------------------------------------------
 		// Interface to be used by the view's mediator.
 		// ---------------------------------------------------------------------
+
+		public function hide():void {
+			if( _animating ) return;
+			if( !_showing ) return;
+			_showing = false;
+			_animating = true;
+			TweenLite.to( this, 0.25, { y: BG_HEIGHT, onComplete: onHideAnimatedComplete } );
+		}
+
+		private function onHideAnimatedComplete():void {
+			this.visible = false;
+			_animating = false;
+			hiddenAnimatedSignal.dispatch();
+		}
+
+		public function show():void {
+			if( _animating ) return;
+			if( _showing ) return;
+			_showing = true;
+			_animating = true;
+			this.visible = true;
+			TweenLite.to( this, 0.25, { y: 0, onComplete: onShowAnimatedComplete } );
+		}
+
+		private function onShowAnimatedComplete():void {
+			_animating = false;
+			shownAnimatedSignal.dispatch();
+		}
 
 		public function updateSubNavigation( subNavType:Class ):void {
 
@@ -207,8 +244,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			header.text = value;
 			header.visible = true;
 
-            header.height = 1.25 * header.textHeight;
-            header.width = 1.25 * header.textWidth;
+			header.height = 1.25 * header.textHeight;
+			header.width = 1.25 * header.textWidth;
 			header.x = 1024 / 2 - header.width / 2;
 
 			headerBg.width = 1.05 * header.width;
