@@ -52,7 +52,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// -----------------------
 
 		private function onGlobalGesture( gestureType:String ):void {
-			trace( this, "global gesture: " + gestureType );
 			switch( gestureType ) {
 				case CrGestureType.HORIZONTAL_PAN_GESTURE_BEGAN: {
 					view.evaluateInteractionStart();

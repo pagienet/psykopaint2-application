@@ -23,8 +23,7 @@ package net.psykosoft.psykopaint2.core
 	import org.swiftsuspenders.Injector;
 
 	// TODO: develop ant script that moves the packaged assets to bin ( only for the core )
-	// TODO: reconnect gesture management
-	// TODO: reconnect memory warnings
+	// TODO: reconnect memory warnings ( conflict with the core, because it has its own memory warnings )
 
 	public class CrModule extends Sprite
 	{

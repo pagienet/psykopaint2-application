@@ -21,8 +21,11 @@ package net.psykosoft.psykopaint2.paint
 
 		private function onCoreModuleReady( coreInjector:Injector ):void {
 			Cc.log( this, "core module is ready, injector: " + coreInjector );
-			// TODO: finish a couple of todo's on the core module
-			// TODO: when the core module is done, move on to setting up the paint and core modules so that we reproduce the pg dtree here...
+
+			// TODO: register all sub nav views to linker
+			// TODO: add all views to config
+			// TODO: add commands views to config
+			// TODO: initialize the drawing core module
 		}
 	}
 }
