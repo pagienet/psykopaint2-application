@@ -20,9 +20,21 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			setLeftButton( LBL_PICK_AN_IMAGE );
 			setRightButton( LBL_PICK_A_BRUSH );
 
-			addCenterButton( "[Pick a Color Style]", NavigationButtonIconType.GALLERY );
-			addCenterButton( "[Pick a Surface]", NavigationButtonIconType.NEW );
-			addCenterButton( "[TestB]", NavigationButtonIconType.SETTINGS );
+			addCenterButton( "[1]", NavigationButtonIconType.GALLERY );
+			addCenterButton( "[2]", NavigationButtonIconType.NEW );
+			addCenterButton( "[3]", NavigationButtonIconType.SETTINGS );
+			addCenterButton( "[4]", NavigationButtonIconType.GALLERY );
+			addCenterButton( "[5]", NavigationButtonIconType.NEW );
+			addCenterButton( "[6]", NavigationButtonIconType.SETTINGS );
+			addCenterButton( "[7]", NavigationButtonIconType.GALLERY );
+			addCenterButton( "[8]", NavigationButtonIconType.NEW );
+			addCenterButton( "[9]", NavigationButtonIconType.SETTINGS );
+			addCenterButton( "[10]", NavigationButtonIconType.GALLERY );
+			addCenterButton( "[11]", NavigationButtonIconType.NEW );
+			addCenterButton( "[12]", NavigationButtonIconType.SETTINGS );
+			addCenterButton( "[13]", NavigationButtonIconType.GALLERY );
+			addCenterButton( "[14]", NavigationButtonIconType.NEW );
+			addCenterButton( "[15]", NavigationButtonIconType.SETTINGS );
 
 			invalidateContent();
 		}

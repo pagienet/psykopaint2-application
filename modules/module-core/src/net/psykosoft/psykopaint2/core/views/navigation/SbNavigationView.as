@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _showing:Boolean = true;
 
 		private const ELEMENT_GAP:Number = 15;
-		private const BUTTON_GAP_X:Number = 20;
+		private const BUTTON_GAP_X:Number = 8;
 		private const BG_HEIGHT:uint = 200;
 
 		public var buttonClickedCallback:Function;
