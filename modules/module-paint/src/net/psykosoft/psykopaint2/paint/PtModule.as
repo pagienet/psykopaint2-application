@@ -70,7 +70,7 @@ package net.psykosoft.psykopaint2.paint
 
 			_crModule.addChild( new PtRootView() ); // Initialize display tree.
 
-			config.injector.getInstance( PtRequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core...
+			config.injector.getInstance( PtRequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...
 
 			addEventListener( Event.ENTER_FRAME, onEnterFrame ); // Start enterframe.
 

@@ -105,7 +105,7 @@ package net.psykosoft.psykopaint2.core
 		private function initShakeAndBakeAsync():void {
 			_shakeAndBakeConnector = new BsShakeAndBakeConnector();
 			_shakeAndBakeConnector.connectedSignal.addOnce( onShakeAndBakeConnected );
-			var swfUrl:String = "packaged/swf/core-assets.swf";
+			var swfUrl:String = "core-packaged/swf/core-assets.swf";
 			_shakeAndBakeConnector.connectAssetsAsync( this, swfUrl );
 			Cc.log( this, "initializing shake and bake: " + swfUrl );
 		}
