@@ -10,7 +10,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.requests.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestStateUpdateFromModuleActivationSignal;
 
@@ -40,6 +43,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
 
+		[Inject]
+		public var notifyExpensiveUiActionToggledSignal:NotifyExpensiveUiActionToggledSignal;
+
+		[Inject]
+		public var requestFreezeRenderingSignal:RequestFreezeRenderingSignal;
+
+		[Inject]
+		public var requestResumeRenderingSignal:RequestResumeRenderingSignal;
+
 		override public function initialize():void {
 
 			super.initialize();
@@ -58,7 +70,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			// From app.
 			notifyNavigationToggledSignal.add( onNavigationToggled );
+			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
+		}
 
+		private function onExpensiveUiTask( started:Boolean, id:String ):void {
+			// TODO: analyze id properly to manage activity queues...
+			if( started ) requestFreezeRenderingSignal.dispatch();
+			else requestResumeRenderingSignal.dispatch();
 		}
 
 		// -----------------------

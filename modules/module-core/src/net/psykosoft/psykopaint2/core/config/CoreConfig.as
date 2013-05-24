@@ -5,9 +5,11 @@ package net.psykosoft.psykopaint2.core.config
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 
+	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
+	import net.psykosoft.psykopaint2.core.signals.requests.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyStateChangeSignal;
@@ -16,7 +18,6 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
-	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 
 	import org.swiftsuspenders.Injector;
 
@@ -95,6 +96,7 @@ package net.psykosoft.psykopaint2.core.config
 			_injector.map( NotifyStateChangeSignal ).asSingleton();
 			_injector.map( NotifyGlobalGestureSignal ).asSingleton();
 			_injector.map( NotifyNavigationToggledSignal ).asSingleton();
+			_injector.map( NotifyExpensiveUiActionToggledSignal ).asSingleton();
 		}
 
 		// -----------------------

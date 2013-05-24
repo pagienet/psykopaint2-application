@@ -45,11 +45,15 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var buttonClickedCallback:Function;
 		public var shownAnimatedSignal:Signal;
 		public var hiddenAnimatedSignal:Signal;
+		public var scrollingStartedSignal:Signal;
+		public var scrollingEndedSignal:Signal;
 
 		public function SbNavigationView() {
 			super();
 			shownAnimatedSignal = new Signal();
 			hiddenAnimatedSignal = new Signal();
+			scrollingStartedSignal = new Signal();
+			scrollingEndedSignal = new Signal();
 		}
 
 		override protected function onSetup():void {
@@ -71,6 +75,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_centerComponentsScroller = new HorizontalSnapScroller();
 			_centerComponentsScroller.pageHeight = 200;
 			_centerComponentsScroller.pageWidth = 750;
+			_centerComponentsScroller.motionStartedSignal.add( onCenterScrollerMotionStart );
+			_centerComponentsScroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
 			addChildAt( _centerComponentsScroller, 1 );
 
 			_leftButton.addEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
@@ -91,12 +97,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			TweenLite.to( this, 0.25, { y: BG_HEIGHT, onComplete: onHideAnimatedComplete } );
 		}
 
-		private function onHideAnimatedComplete():void {
-			this.visible = false;
-			_animating = false;
-			hiddenAnimatedSignal.dispatch();
-		}
-
 		public function show():void {
 			if( _animating ) return;
 			if( _showing ) return;
@@ -104,11 +104,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_animating = true;
 			this.visible = true;
 			TweenLite.to( this, 0.25, { y: 0, onComplete: onShowAnimatedComplete } );
-		}
-
-		private function onShowAnimatedComplete():void {
-			_animating = false;
-			shownAnimatedSignal.dispatch();
 		}
 
 		public function updateSubNavigation( subNavType:Class ):void {
@@ -274,6 +269,29 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function areButtonsSelectable( value:Boolean ):void {
 			_areButtonsSelectable = value;
+		}
+
+		// ---------------------------------------------------------------------
+		// Handlers.
+		// ---------------------------------------------------------------------
+
+		private function onCenterScrollerMotionEnd():void {
+			scrollingEndedSignal.dispatch();
+		}
+
+		private function onCenterScrollerMotionStart():void {
+			scrollingStartedSignal.dispatch();
+		}
+
+		private function onShowAnimatedComplete():void {
+			_animating = false;
+			shownAnimatedSignal.dispatch();
+		}
+
+		private function onHideAnimatedComplete():void {
+			this.visible = false;
+			_animating = false;
+			hiddenAnimatedSignal.dispatch();
 		}
 	}
 }

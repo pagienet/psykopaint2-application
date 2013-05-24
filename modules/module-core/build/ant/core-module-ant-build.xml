@@ -5,7 +5,7 @@
 
     <target name="move-packaged-assets">
         <copy todir="${OutputPath}/core-packaged">
-    		<fileset dir="../../assets/packaged"/>
+    		<fileset dir="../../assets/packaged/core-packaged"/>
   		</copy>
     </target>
 

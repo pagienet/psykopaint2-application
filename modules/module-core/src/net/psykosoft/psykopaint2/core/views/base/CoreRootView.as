@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			// -----------------------
 			// Tests...
 			// -----------------------
-//			return;
+			return;
 
 			// Simple slider test.
 			var simpleSlider:SbSlider = new SbSlider();

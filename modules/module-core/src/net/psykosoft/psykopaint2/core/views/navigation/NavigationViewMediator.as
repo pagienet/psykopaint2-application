@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.requests.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class NavigationViewMediator extends MediatorBase
@@ -18,6 +19,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		[Inject]
 		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
+
+		[Inject]
+		public var requestExpensiveUiActionReactionSignal:NotifyExpensiveUiActionToggledSignal;
 
 		override public function initialize():void {
 
@@ -33,6 +37,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			// From view.
 			view.shownAnimatedSignal.add( onViewShown );
 			view.hiddenAnimatedSignal.add( onViewHidden );
+			view.scrollingStartedSignal.add( onViewScrollingStarted );
+			view.scrollingEndedSignal.add( onViewScrollingEnded );
 
 			// Causes the first canvas size.
 			notifyNavigationToggledSignal.dispatch( true );
@@ -41,6 +47,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onViewScrollingEnded():void {
+			requestExpensiveUiActionReactionSignal.dispatch( false, "nav-scrolling" );
+		}
+
+		private function onViewScrollingStarted():void {
+			requestExpensiveUiActionReactionSignal.dispatch( true, "nav-scrolling" );
+		}
 
 		private function onViewHidden():void {
 			notifyNavigationToggledSignal.dispatch( false );

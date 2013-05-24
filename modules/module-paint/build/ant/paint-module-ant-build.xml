@@ -5,10 +5,10 @@
 
     <target name="move-packaged-assets">
     	<copy todir="${OutputPath}/paint-packaged">
-    		<fileset dir="../../assets/packaged"/>
+    		<fileset dir="../../assets/packaged/paint-packaged"/>
   		</copy>
         <copy todir="${OutputPath}/core-packaged">
-    		<fileset dir="../../../module-core/assets/packaged"/>
+    		<fileset dir="../../../module-core/assets/packaged/paint-packaged"/>
   		</copy>
     </target>
 

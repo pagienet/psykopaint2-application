@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<application xmlns="http://ns.adobe.com/air/application/3.6">
+    <id>com.psykosoft.psykopaintplayground</id>
+    <filename>Psykopaint2PaintModule</filename>
+    <name>Psykopaint2PaintModule</name>
+    <versionNumber>0.0.1</versionNumber>
+    <initialWindow>
+        <content>SWF file name is set automatically at compile time</content>
+        <aspectRatio>landscape</aspectRatio>
+        <autoOrients>true</autoOrients>
+        <fullScreen>true</fullScreen>
+        <renderMode>direct</renderMode>
+		<depthAndStencil>false</depthAndStencil>
+    </initialWindow>
+    <iPhone>
+        <InfoAdditions>
+            <![CDATA[
+            <key>UIDeviceFamily</key>
+            <array>
+                <string>2</string>
+            </array>
+            ]]>
+        </InfoAdditions>
+        <requestedDisplayResolution>high</requestedDisplayResolution>
+    </iPhone>
+    <extensions>
+        <extensionID>net.psykosoft.notifications</extensionID>
+        <extensionID>net.psykosoft.photos</extensionID>
+		<extensionID>net.psykosoft.gyroscope</extensionID>
+    </extensions>
+</application>
