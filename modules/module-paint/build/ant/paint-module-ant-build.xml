@@ -8,7 +8,7 @@
     		<fileset dir="../../assets/packaged/paint-packaged"/>
   		</copy>
         <copy todir="${OutputPath}/core-packaged">
-    		<fileset dir="../../../module-core/assets/packaged/paint-packaged"/>
+    		<fileset dir="../../../module-core/assets/packaged/core-packaged"/>
   		</copy>
     </target>
 

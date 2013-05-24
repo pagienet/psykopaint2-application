@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	public class BrushParametersSubNavView extends SubNavigationViewBase
 	{
 		public static const LBL_BACK:String = "Back";
+		public static const UI_ELEMENT_SCALING:Number = 0.75;
 
 		private var _uiElementToParameter:Dictionary;
 		private var _elements:Vector.<Sprite>;
@@ -78,6 +79,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				if( type == PsykoParameter.IntParameter || type == PsykoParameter.NumberParameter ) {
 
 					var slider:SbSlider = new SbSlider();
+					slider.scaleX = slider.scaleY = UI_ELEMENT_SCALING;
 					slider.numDecimals = 3;
 					slider.minimum = Number( parameter.@minVlaue );
 					slider.maximum = Number( parameter.@maxValue );
@@ -94,6 +96,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				if( type == PsykoParameter.IntRangeParameter || type == PsykoParameter.NumberRangeParameter ) {
 
 					var rangeSlider:SbRangedSlider = new SbRangedSlider();
+					rangeSlider.scaleX = rangeSlider.scaleY = UI_ELEMENT_SCALING;
 					rangeSlider.numDecimals = 2;
 					rangeSlider.minValue = Number( parameter.@minVlaue );
 					rangeSlider.maxValue = Number( parameter.@maxValue );

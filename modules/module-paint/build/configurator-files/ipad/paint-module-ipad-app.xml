@@ -10,7 +10,7 @@
         <autoOrients>true</autoOrients>
         <fullScreen>true</fullScreen>
         <renderMode>direct</renderMode>
-		<depthAndStencil>false</depthAndStencil>
+		<depthAndStencil>true</depthAndStencil>
     </initialWindow>
     <iPhone>
         <InfoAdditions>
