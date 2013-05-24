@@ -28,8 +28,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		public function set stage( value:Stage ):void {
 			_stage = value;
-			Gestouch.inputAdapter = new NativeInputAdapter(_stage,true,true);
-
+			Gestouch.inputAdapter = new NativeInputAdapter( _stage, true, true );
 			initializeGestures();
 		}
 
