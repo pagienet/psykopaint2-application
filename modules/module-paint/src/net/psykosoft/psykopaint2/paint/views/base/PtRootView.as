@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			addChild( cropView );
 			addChild( pickAnImageView );
 
-			// Link sub-navigation views.
+			// Link sub-navigation views that are created dynamically by CrNavigationView
 			CrStateToSubNavLinker.linkSubNavToState( CrStateType.STATE_COLOR_STYLE, PtColorStyleSubNavView );
 			CrStateToSubNavLinker.linkSubNavToState( CrStateType.STATE_PAINT, PtCanvasSubNavView );
 			CrStateToSubNavLinker.linkSubNavToState( CrStateType.STATE_PAINT_SELECT_BRUSH, PtSelectBrushSubNavView );

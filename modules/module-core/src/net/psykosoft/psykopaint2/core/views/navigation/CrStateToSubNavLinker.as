@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private static var _subNavDict:Dictionary;
 
 		public static function getSubNavClassForState( state:String ):Class {
+			if( !_subNavDict ) _subNavDict = new Dictionary();
 			var cl:Class = _subNavDict[ state ];
 			Cc.log( "CrStateToSubNavLinker - getSubNavClassForState() - state " + state + " corresponds to a sub-nav of type: " + cl );
 			return cl;

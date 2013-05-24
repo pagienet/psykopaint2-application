@@ -17,6 +17,8 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.base.utils.BsShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.core.config.CrConfig;
 	import net.psykosoft.psykopaint2.core.config.CrSettings;
+	import net.psykosoft.psykopaint2.core.models.CrStateType;
+	import net.psykosoft.psykopaint2.core.signals.requests.CrRequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CrRootView;
 
 	import org.osflash.signals.Signal;
@@ -32,6 +34,7 @@ package net.psykosoft.psykopaint2.core
 		private var _stage3dInitialized:Boolean;
 		private var _shakeAndBakeInitialized:Boolean;
 		private var _shakeAndBakeConnector:BsShakeAndBakeConnector;
+		private var _stateSignal:CrRequestStateChangeSignal;
 
 		public var moduleReadySignal:Signal;
 
@@ -94,6 +97,7 @@ package net.psykosoft.psykopaint2.core
 
 		private function initRobotlegs():void {
 			var config:CrConfig = new CrConfig( this, stage, _stage3d );
+			_stateSignal = config.injector.getInstance( CrRequestStateChangeSignal ); // Necessary for rendering the core on enter frame.
 			_injector = config.injector;
 			Cc.log( this, "initializing robotlegs context" );
 		}
@@ -120,6 +124,9 @@ package net.psykosoft.psykopaint2.core
 
 			// Init display tree.
 			addChild( new CrRootView() );
+
+			// Initial application state.
+			_stateSignal.dispatch( CrStateType.STATE_IDLE );
 
 			moduleReadySignal.dispatch( _injector );
 		}

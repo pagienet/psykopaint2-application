@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.models
 {
 	public class CrStateType
 	{
+		public static const STATE_IDLE:String = "state/idle";
 		public static const STATE_PREVIOUS:String = "state/previous";
 
 		public static const STATE_COLOR_STYLE:String = "state/color_style";

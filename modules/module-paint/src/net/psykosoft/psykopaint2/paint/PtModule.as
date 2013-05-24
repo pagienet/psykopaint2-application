@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.paint
 
 	import com.junkbyte.console.Cc;
 
+	import flash.display.DisplayObjectContainer;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
@@ -12,6 +14,7 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.base.utils.BsStackUtil;
 
 	import net.psykosoft.psykopaint2.core.CrModule;
+	import net.psykosoft.psykopaint2.core.config.CrSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.paint.commands.PtRenderFrameCommand;
@@ -25,9 +28,6 @@ package net.psykosoft.psykopaint2.paint
 
 	import org.swiftsuspenders.Injector;
 
-	// TODO: link core's nav view show hide signal to a request of canvas resize
-	// TODO: fix linkage bug in PtConfig
-
 	public class PtModule extends Sprite
 	{
 		private var _renderSignal:Signal;
@@ -35,6 +35,7 @@ package net.psykosoft.psykopaint2.paint
 		private var _textField:TextField;
 		private var _fpsStackUtil:BsStackUtil;
 		private var _renderTimeStackUtil:BsStackUtil;
+		private var _crModule:CrModule;
 
 		public var moduleReadySignal:Signal;
 
@@ -50,30 +51,44 @@ package net.psykosoft.psykopaint2.paint
 		// ---------------------------------------------------------------------
 
 		private function initialize():void {
-			var coreModule:CrModule = new CrModule();
-			coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
-			addChild( coreModule );
+			// Request the core and wait for its initialization.
+			// It is async because it loads assets, loads stage3d, etc...
+			_crModule = new CrModule();
+			_crModule.moduleReadySignal.addOnce( onCoreModuleReady );
+			addChild( _crModule );
 		}
 
 		private function onCoreModuleReady( coreInjector:Injector ):void {
 			Cc.log( this, "core module is ready, injector: " + coreInjector );
 
-			// Initialize paint module.
-			var config:PtConfig = new PtConfig( this, coreInjector );
-			_renderSignal = config.injector.getInstance( PtRequestRenderFrameSignal );
-			config.injector.getInstance( PtRequestDrawingCoreStartupSignal ).dispatch();
+			initStats();
+			new DrawingCore( coreInjector ); // All needed to init the drawing core.
 
-			// Initialize drawing core.
-			new DrawingCore( coreInjector );
+			// Initialize the paint module.
+			var config:PtConfig = new PtConfig( coreInjector );
+			_renderSignal = config.injector.getInstance( PtRequestRenderFrameSignal ); // Necessary for rendering the core on enter frame.
 
-			// Initialize display tree.
-			addChild( new PtRootView() );
+			_crModule.addChild( new PtRootView() ); // Initialize display tree.
 
-			// Start enterframe.
-			addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			config.injector.getInstance( PtRequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core...
 
-			// Notify.
-			moduleReadySignal.dispatch( coreInjector );
+			addEventListener( Event.ENTER_FRAME, onEnterFrame ); // Start enterframe.
+
+			moduleReadySignal.dispatch( coreInjector ); // Notify potential super modules.
+		}
+
+		// TODO: remove
+		private function initStats():void {
+			_fpsStackUtil = new BsStackUtil();
+			_renderTimeStackUtil = new BsStackUtil();
+			_fpsStackUtil.count = 24;
+			_renderTimeStackUtil.count = 24;
+			_textField = new TextField();
+			_textField.width = 200;
+			_textField.selectable = false;
+			_textField.mouseEnabled = false;
+			_textField.scaleX = _textField.scaleY = CrSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
+			addChild( _textField );
 		}
 
 		// ---------------------------------------------------------------------
@@ -81,9 +96,11 @@ package net.psykosoft.psykopaint2.paint
 		// ---------------------------------------------------------------------
 
 		private function update():void {
-
 			_renderSignal.dispatch();
+		}
 
+		// TODO: remove
+		private function updateStats():void {
 			var oldTime:Number = _time;
 			_time = getTimer();
 

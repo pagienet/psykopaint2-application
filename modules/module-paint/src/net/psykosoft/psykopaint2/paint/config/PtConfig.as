@@ -1,15 +1,10 @@
 package net.psykosoft.psykopaint2.paint.config
 {
 
-	import flash.display.DisplayObjectContainer;
-
-	import net.psykosoft.psykopaint2.base.robotlegs.BsSignalCommandMapBundle;
-	import net.psykosoft.psykopaint2.core.signals.notifications.CrNotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.paint.commands.PtRenderFrameCommand;
 	import net.psykosoft.psykopaint2.paint.commands.PtSetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.PtStartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.commands.PtUpdateAppStateFromActivatedDrawingCoreModuleCommand;
-	import net.psykosoft.psykopaint2.paint.commands.PtUpdateCanvasRectCommand;
 	import net.psykosoft.psykopaint2.paint.signals.requests.PtRequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.requests.PtRequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.paint.signals.requests.PtRequestSourceImageSetSignal;
@@ -37,17 +32,8 @@ package net.psykosoft.psykopaint2.paint.config
 
 	import org.swiftsuspenders.Injector;
 
-	import robotlegs.bender.bundles.mvcs.MVCSBundle;
-	import robotlegs.bender.extensions.contextView.ContextView;
-
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
-
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
-	import robotlegs.bender.framework.api.IContext;
-	import robotlegs.bender.framework.impl.Context;
-
-	// TODO: add all views to config
-	// TODO: add commands views to config
 
 	public class PtConfig
 	{
@@ -55,12 +41,8 @@ package net.psykosoft.psykopaint2.paint.config
 		private var _mediatorMap:IMediatorMap;
 		private var _commandMap:ISignalCommandMap;
 
-		public function PtConfig( display:DisplayObjectContainer, injector:Injector ) {
+		public function PtConfig( injector:Injector ) {
 			super();
-
-			var context:IContext = new Context();
-			context.install( MVCSBundle, BsSignalCommandMapBundle );
-			context.configure( new ContextView( display ) );
 
 			_injector = injector;
 			_mediatorMap = _injector.getInstance( IMediatorMap );
@@ -119,8 +101,6 @@ package net.psykosoft.psykopaint2.paint.config
 			_commandMap.map( PtRequestStateUpdateFromModuleActivationSignal ).toCommand( PtUpdateAppStateFromActivatedDrawingCoreModuleCommand );
 			_commandMap.map( PtRequestSourceImageSetSignal ).toCommand( PtSetSourceImageCommand );
 			_commandMap.map( PtRequestRenderFrameSignal ).toCommand( PtRenderFrameCommand );
-			// TODO: bug here! CrNotifyNavigationToggledSignal is already mapped
-			_commandMap.map( CrNotifyNavigationToggledSignal ).toCommand( PtUpdateCanvasRectCommand );
 			_commandMap.map( PtRequestDrawingCoreStartupSignal ).toCommand( PtStartUpDrawingCoreCommand );
 		}
 
