@@ -6,46 +6,56 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.core.views.components.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.SbSlider;
-	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+    import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
+    import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 
-	public class CoreRootView extends Sprite
-	{
-		[Inject]
-		public var view:CoreRootView;
+    public class CoreRootView extends Sprite
+    {
+        [Inject]
+        public var view:CoreRootView;
 
-		public function CoreRootView() {
-			super();
+        public function CoreRootView() {
+            super();
 
-			var navigationView:SbNavigationView = new SbNavigationView();
+            var navigationView:SbNavigationView = new SbNavigationView();
 
-			addChild( navigationView );
+            addChild( navigationView );
 
-			// -----------------------
-			// Tests...
-			// -----------------------
+            // -----------------------
+            // Tests...
+            // -----------------------
 			return;
 
-			// Simple slider test.
-			var simpleSlider:SbSlider = new SbSlider();
-			simpleSlider.x = 100;
-			simpleSlider.y = 100;
-			simpleSlider.setIdLabel( "mySlider" );
-			addChild( simpleSlider );
-			trace( "test slider dimensions: " + simpleSlider.width + ", " + simpleSlider.height );
+            // Simple slider test.
+            var simpleSlider:SbSlider = new SbSlider();
+            simpleSlider.x = 200;
+            simpleSlider.y = 20;
+            simpleSlider.setIdLabel( "mySlider" );
+            addChild( simpleSlider );
+            trace( "test slider dimensions: " + simpleSlider.width + ", " + simpleSlider.height );
 
             // Range slider test.
-			var rangeSlider:SbRangedSlider = new SbRangedSlider();
-			rangeSlider.x = 100;
-			rangeSlider.y = 200;
-			rangeSlider.setIdLabel( "myRangeSlider" );
-			addChild( rangeSlider );
-			trace( "test range slider dimensions: " + rangeSlider.width + ", " + rangeSlider.height );
+            var rangeSlider:SbRangedSlider = new SbRangedSlider();
+            rangeSlider.x = 500;
+            rangeSlider.y = 20;
+            rangeSlider.setIdLabel( "myRangeSlider" );
+            addChild( rangeSlider );
+            trace( "test range slider dimensions: " + rangeSlider.width + ", " + rangeSlider.height );
 
             //CheckBox test.
             var checkbox:SbCheckBox = new SbCheckBox();
-            checkbox.x = 100;
-			checkbox.y = 300;
+            checkbox.x = 50;
+            checkbox.y = 20;
             addChild( checkbox );
-		}
-	}
+
+             //Combobox test.
+            var combobox:SbComboboxView = new SbComboboxView();
+            for( var i:uint; i < 10; i++ ) {
+                combobox.addItem( { label:"item_" + i } );
+            }
+            combobox.x = 100;
+            combobox.y = 200;
+            addChild( combobox );
+        }
+    }
 }

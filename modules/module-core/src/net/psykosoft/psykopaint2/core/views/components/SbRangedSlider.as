@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.views.components
 	public class SbRangedSlider extends Sprite
 	{
 		// Declared in Fla.
-		public var bgView:Sprite;
+		public var bgView:Sprite; //TODO: if not used in the future, remove and use graphic directly from the fla
 		public var leftHandleView:Sprite;
 		public var rightHandleView:Sprite;
 		public var rangeView:MovieClip;
@@ -20,8 +20,8 @@ package net.psykosoft.psykopaint2.core.views.components
 		private var _limitForHandle:Dictionary;
 		private var _minValue:Number = 0;
 		private var _maxValue:Number = 1;
-		private var _minPosX:Number = 55;
-		private var _maxPosX:Number = 368;
+		private var _minPosX:Number = 70;
+		private var _maxPosX:Number = 360;
 		private var _value1:Number = 0;
 		private var _value2:Number = 1;
 		private var _labelLeft:TextField;
@@ -33,6 +33,7 @@ package net.psykosoft.psykopaint2.core.views.components
 		private var _mouseDown:Boolean;
 		private var _stage:Stage;
 		private var _clickOffset:Number;
+        //private var _minDistance:Number = 20; //TODO: minimum distance between handles is currently managed from within fla
 
 		public static const CHANGE:String = "onChange";
 		public static const STOP_DRAG:String = "STOP_DRAG";
@@ -43,9 +44,12 @@ package net.psykosoft.psykopaint2.core.views.components
             _labelLeft = new TextField();
 			_labelRight = new TextField();
 			_idLabel = new TextField();
-			_labelLeft.x = 0;
-			_labelRight.x = 185;
+			_labelLeft.x = 45;
+			_labelLeft.y = 15;
+			_labelRight.x = 415;
+			_labelRight.y = 15;
 			_idLabel.y = 40;
+			_idLabel.x = 200;
 
             _labelLeft.width = _labelLeft.height = 1;
             _labelRight.width = _labelRight.height = 1;
@@ -70,8 +74,8 @@ package net.psykosoft.psykopaint2.core.views.components
 
             rangeView.stop();
 
-			leftHandleView.x = _minPosX + leftHandleView.width / 2;
-			rightHandleView.x = _maxPosX + rightHandleView.width / 2;
+			leftHandleView.x = _minPosX;
+			rightHandleView.x = _maxPosX;
             rangeView.x = leftHandleView.x + leftHandleView.width - 2;
 
 			_limitForHandle = new Dictionary();
@@ -99,7 +103,7 @@ package net.psykosoft.psykopaint2.core.views.components
 
 		private function onLeftHandleMouseDown( event:MouseEvent ):void {
 			_selected = leftHandleView;
-			_clickOffset = mouseX - _selected.x; // TODO: implement same offset logic in simple slider
+			_clickOffset = mouseX - _selected.x;
 			_nonSelected = rightHandleView;
 			_mouseDown = true;
 		}
@@ -122,17 +126,16 @@ package net.psykosoft.psykopaint2.core.views.components
 				var leftLimits:Point = _limitForHandle[ leftHandleView ];
 				var rightLimits:Point = _limitForHandle[ rightHandleView ];
 
-				leftLimits.y = rightHandleView.x - leftHandleView.width / 2;
-				rightLimits.x = leftHandleView.x - rightHandleView.width / 2;
+				leftLimits.y = rightHandleView.x;
+				rightLimits.x = leftHandleView.x;
 
 				var limit:Point = _limitForHandle[ _selected ];
 
 				_selected.x = Math.max( Math.min( posX, limit.y ), limit.x );
-//				_selected.x -= _selected.width / 2; // TODO: review this line
 
 				index = ( _selected == leftHandleView ) ? 0 : 1;
 
-				slideValue = positionToValue( posX );
+				slideValue = positionToValue( posX ); //TODO: make sure this is the value we should be passing
 				setValue( slideValue, index );
 
                 repositionRange();
@@ -176,11 +179,11 @@ package net.psykosoft.psykopaint2.core.views.components
 		{
 			rangeView.x = leftHandleView.x + leftHandleView.width - 2;
 			rangeView.gotoAndStop( Math.min( Math.max( 100-int( (_value2-_value1)*100 ),0 ),99 ) );
+
 			if( rangeView.currentFrame >= 99 ){
 				rangeView.visible = false;
 			}else { rangeView.visible = true; }
 
-            trace("RANGE VIEW FRAME _________>>>>",_value2-_value1);
 		}
 
 		public function getValues():Array {
@@ -188,8 +191,8 @@ package net.psykosoft.psykopaint2.core.views.components
 		}
 
 		private function positionToValue( posX:Number ):Number {
-			var limitedPosX:Number = Math.max( Math.min( posX, _maxPosX ), _minPosX );
-			return  _minValue + totalRangeOfValues * ((limitedPosX - _minPosX) / rangePosition);
+			var limitedPosX:Number = Math.max( Math.min( posX, _maxPosX ), _minPosX );    //TODO: go through value managing methods, make sure they are ok
+			return  _minValue + totalRangeOfValues * ((posX - _minPosX) / rangePosition);
 		}
 
 		private function valueToPosition( val:Number ):Number {
