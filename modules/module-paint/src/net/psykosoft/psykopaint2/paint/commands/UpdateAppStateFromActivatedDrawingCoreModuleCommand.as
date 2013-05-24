@@ -3,11 +3,11 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.base.robotlegs.TracingCommand;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 
 	public class UpdateAppStateFromActivatedDrawingCoreModuleCommand extends TracingCommand
 	{

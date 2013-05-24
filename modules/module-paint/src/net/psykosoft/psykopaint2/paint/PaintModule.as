@@ -3,29 +3,22 @@ package net.psykosoft.psykopaint2.paint
 
 	import com.junkbyte.console.Cc;
 
-	import flash.display.DisplayObjectContainer;
-
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.utils.getTimer;
-
-	import net.psykosoft.psykopaint2.base.utils.StackUtil;
 
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
-	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.paint.commands.RenderFrameCommand;
-	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
+	import net.psykosoft.psykopaint2.base.utils.StackUtil;
 
 	import org.osflash.signals.Signal;
-
 	import org.swiftsuspenders.Injector;
 
 	public class PaintModule extends Sprite
@@ -97,6 +90,7 @@ package net.psykosoft.psykopaint2.paint
 
 		private function update():void {
 			_renderSignal.dispatch();
+			updateStats();
 		}
 
 		// TODO: remove

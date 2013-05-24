@@ -3,9 +3,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import flash.display.Sprite;
 
-	import net.psykosoft.psykopaint2.base.ui.ViewBase;
 	import net.psykosoft.psykopaint2.core.views.components.NavigationButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.NavigationButtonLabelType;
+	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 
 	/*
 	 * Note: Sub-navigation views, i.e. views that extend SubNavigationViewBase,

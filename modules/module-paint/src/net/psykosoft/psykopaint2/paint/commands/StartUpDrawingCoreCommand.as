@@ -8,13 +8,13 @@ package net.psykosoft.psykopaint2.paint.commands
 	import flash.display3D.textures.Texture;
 	import flash.utils.setTimeout;
 
-	import net.psykosoft.psykopaint2.base.robotlegs.TracingCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestSourceImageSetSignal;
+	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 
 //	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 

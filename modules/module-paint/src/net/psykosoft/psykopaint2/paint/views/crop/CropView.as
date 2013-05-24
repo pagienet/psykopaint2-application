@@ -4,8 +4,8 @@ package net.psykosoft.psykopaint2.paint.views.crop
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
 
-	import net.psykosoft.psykopaint2.base.ui.ViewBase;
-	import net.psykosoft.psykopaint2.core.views.components.TouchSheet;
+	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.base.ui.components.TouchSheet;
 
 	public class CropView extends ViewBase
 	{

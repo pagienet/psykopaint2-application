@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.core.config
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 
-	import net.psykosoft.psykopaint2.base.robotlegs.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
@@ -17,6 +16,7 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 
 	import org.swiftsuspenders.Injector;
 

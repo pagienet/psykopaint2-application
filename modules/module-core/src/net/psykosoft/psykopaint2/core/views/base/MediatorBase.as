@@ -3,10 +3,9 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import com.junkbyte.console.Cc;
 
-	import net.psykosoft.psykopaint2.base.ui.ViewBase;
-
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
 

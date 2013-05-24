@@ -10,16 +10,15 @@ package net.psykosoft.psykopaint2.core
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 
-	import net.psykosoft.psykopaint2.base.ui.ViewCore;
-
-	import net.psykosoft.psykopaint2.base.utils.DebuggingConsole;
-	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
-	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.core.config.CoreConfig;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
+	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
+	import net.psykosoft.psykopaint2.base.utils.DebuggingConsole;
+	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
+	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
 
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;

@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.base.ui.ViewBase;
+	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 
 	public class ColorStyleView extends ViewBase
 	{

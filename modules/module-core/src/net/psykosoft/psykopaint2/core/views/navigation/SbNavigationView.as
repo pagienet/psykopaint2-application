@@ -10,8 +10,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 
-	import net.psykosoft.psykopaint2.base.ui.ViewBase;
-	import net.psykosoft.psykopaint2.core.views.components.HorizontalSnapScroller;
+	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.base.ui.components.HorizontalSnapScroller;
 	import net.psykosoft.psykopaint2.core.views.components.NavigationButtonLabelType;
 	import net.psykosoft.psykopaint2.core.views.components.SbNavigationButton;
 

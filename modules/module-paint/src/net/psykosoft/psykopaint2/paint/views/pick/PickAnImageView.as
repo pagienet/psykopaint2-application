@@ -7,11 +7,11 @@ package net.psykosoft.psykopaint2.paint.views.pick
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.photos.data.SheetVO;
-	import net.psykosoft.psykopaint2.base.ui.ViewBase;
+	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.base.ui.components.HorizontalSnapScroller;
 	import net.psykosoft.psykopaint2.base.utils.DesktopImageBrowser;
 	import net.psykosoft.psykopaint2.base.utils.IosImagesFetcher;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
-	import net.psykosoft.psykopaint2.core.views.components.HorizontalSnapScroller;
 
 	import org.osflash.signals.Signal;
 
