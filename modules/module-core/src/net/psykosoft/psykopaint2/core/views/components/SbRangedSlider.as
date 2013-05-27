@@ -192,13 +192,13 @@ package net.psykosoft.psykopaint2.core.views.components
 			if( index == 0 ) {
 				_value1 = val;
 				_labelLeft.text = String( num );
-                _labelLeft.width = 1.25 * _labelLeft.textWidth;
+                _labelLeft.width = _labelLeft.textWidth + 10;
 			    _labelLeft.height = 1.25 * _labelLeft.textHeight;
 			}
 			else {
 				_value2 = val;
 				_labelRight.text = String( num );
-                _labelRight.width = 1.25 * _labelRight.textWidth;
+                _labelRight.width = _labelRight.textWidth + 10;
 			    _labelRight.height = 1.25 * _labelRight.textHeight;
 			}
 		}

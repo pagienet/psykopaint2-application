@@ -34,12 +34,15 @@ package net.psykosoft.psykopaint2.core.views.components
 			_sliderIdLabel.mouseEnabled = false;
 			_sliderIdLabel.selectable = false;
 			_sliderIdLabel.width = _sliderIdLabel.height = 1;
+			_sliderIdLabel.y = 40;
 			addChild( _sliderIdLabel );
 
 			_sliderValueLabel = new TextField();
 			_sliderValueLabel.mouseEnabled = false;
 			_sliderValueLabel.selectable = false;
 			_sliderIdLabel.width = _sliderIdLabel.height = 1;
+            _sliderValueLabel.x = 220;
+			_sliderValueLabel.y = 40;
 			addChild( _sliderValueLabel );
 
 			setValue( Number.MIN_VALUE );
@@ -97,8 +100,7 @@ package net.psykosoft.psykopaint2.core.views.components
 			var pow:Number = Math.pow( 10, _numDecimals );
 			var num:Number = Math.round( pow * val ) / pow;
 			_sliderValueLabel.text = String( num );
-			_sliderValueLabel.x = 205;
-			_sliderValueLabel.width = 1.25 * _sliderValueLabel.textWidth;
+			_sliderValueLabel.width = _sliderValueLabel.textWidth + 10;
 			_sliderValueLabel.height = 1.25 * _sliderValueLabel.textHeight;
 
 			val = Math.max( Math.min( val, _maximum ), _minimum );
