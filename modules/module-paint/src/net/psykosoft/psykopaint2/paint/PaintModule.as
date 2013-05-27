@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint
 	import flash.text.TextField;
 	import flash.utils.getTimer;
 
+	import net.psykosoft.psykopaint2.base.utils.StackUtil;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
@@ -16,7 +17,6 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
-	import net.psykosoft.psykopaint2.base.utils.StackUtil;
 
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.paint
 
 		public function PaintModule() {
 			super();
-			trace( ">>>>> PtModule starting..." );
+			trace( ">>>>> PainttModule starting..." );
 			moduleReadySignal = new Signal();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
@@ -63,6 +63,7 @@ package net.psykosoft.psykopaint2.paint
 
 			_crModule.addChild( new PaintRootView() ); // Initialize display tree.
 
+			// Init drawing core.
 			config.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...
 
 			addEventListener( Event.ENTER_FRAME, onEnterFrame ); // Start enterframe.

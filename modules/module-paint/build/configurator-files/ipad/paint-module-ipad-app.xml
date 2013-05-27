@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <application xmlns="http://ns.adobe.com/air/application/3.6">
     <id>com.psykosoft.psykopaintplayground</id>
-    <filename>Psykopaint2PaintModule</filename>
-    <name>Psykopaint2PaintModule</name>
+    <filename>PaintModuleIPad</filename>
+    <name>PaintModuleIPad</name>
     <versionNumber>0.0.1</versionNumber>
     <initialWindow>
         <content>SWF file name is set automatically at compile time</content>

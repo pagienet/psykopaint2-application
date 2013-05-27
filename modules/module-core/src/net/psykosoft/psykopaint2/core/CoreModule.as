@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.core
 
 		public function CoreModule( injector:Injector = null ) {
 			super();
-			trace( ">>>>> CrModule starting..." );
+			trace( ">>>>> CoreModule starting..." );
 			_injector = injector;
 			moduleReadySignal = new Signal();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
