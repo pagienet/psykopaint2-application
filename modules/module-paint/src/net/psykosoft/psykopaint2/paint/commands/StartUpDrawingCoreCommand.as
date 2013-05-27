@@ -2,16 +2,19 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 
 	import flash.display.BitmapData;
+	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
+	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
@@ -50,6 +53,12 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
 
+		[Inject]
+		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
+
+		[Inject]
+		public var stage:Stage;
+
 		override public function execute():void {
 
 			super.execute();
@@ -61,15 +70,20 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Initial auto-setup:
 			// We assume that confirming a color style activates the core's paint module.
-			// TODO: remove time out
+			// TODO: replace time out
 			var bitmapData:BitmapData = new DefaultImage().bitmapData;
 //			requestSourceImageSetSignal.dispatch( bitmapData );
 			setTimeout( function():void {
+
 				// Pick one below...
 //				requestStateChangeSignal.dispatch( StateType.STATE_PICK_IMAGE ); // Launches app in pick an image ( default image ignored ).
 //				requestSourceImageSetSignal.dispatch( bitmapData ); // Launches app in crop mode.
 //				notifyCropCompleteSignal.dispatch( bitmapData ); // Launches app in color style mode.
 				notifyColorStyleCompleteSignal.dispatch( bitmapData ); // Launches app in paint mode.
+
+				// Init canvas size.
+				requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight * .76 ) );
+
 			}, 10 );
 		}
 

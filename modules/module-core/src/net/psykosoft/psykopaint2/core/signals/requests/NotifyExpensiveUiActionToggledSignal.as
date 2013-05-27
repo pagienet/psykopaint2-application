@@ -1,9 +1,9 @@
 package net.psykosoft.psykopaint2.core.signals.requests
 {
 
-	import org.osflash.signals.Signal;
+	import net.psykosoft.psykopaint2.base.robotlegs.signals.TracingSignal;
 
-	public class NotifyExpensiveUiActionToggledSignal extends Signal
+	public class NotifyExpensiveUiActionToggledSignal extends TracingSignal
 	{
 		public function NotifyExpensiveUiActionToggledSignal() {
 			// Boolean: true if the activity started, false if it ended
