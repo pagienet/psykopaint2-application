@@ -144,7 +144,7 @@ package net.psykosoft.psykopaint2.core.views.components
 
 				index = ( _selected == leftHandleView ) ? 0 : 1;
 
-				slideValue = positionToValue( posX ); //TODO: make sure this is the value we should be passing
+				slideValue = positionToValue( _selected.x ); //TODO: make sure this is the value we should be passing
 				setValue( slideValue, index );
 
                 repositionRange();
@@ -165,7 +165,7 @@ package net.psykosoft.psykopaint2.core.views.components
 
                 leftValue = positionToValue( leftPosX );
                 rightValue = positionToValue( rightPosX );
-                setValues(leftValue, rightValue);
+                setValues( leftValue, rightValue );
             }
 		}
 

@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 					var rangeSlider:SbRangedSlider = new SbRangedSlider();
 					rangeSlider.scaleX = rangeSlider.scaleY = UI_ELEMENT_SCALING;
-					rangeSlider.numDecimals = 2;
+					rangeSlider.numDecimals = 1;
 					rangeSlider.minValue = Number( parameter.@minValue );
 					rangeSlider.maxValue = Number( parameter.@maxValue );
 					rangeSlider.setValue( Number( parameter.@value ) );
