@@ -62,14 +62,17 @@ package net.psykosoft.psykopaint2.paint
 			var config:PaintConfig = new PaintConfig( coreInjector );
 			_renderSignal = config.injector.getInstance( RequestRenderFrameSignal ); // Necessary for rendering the core on enter frame.
 
+			// Init display tree for this module.
 			_coreModule.addChild( new PaintRootView() ); // Initialize display tree.
 
 			// Init drawing core.
 			config.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...
 
-			addEventListener( Event.ENTER_FRAME, onEnterFrame ); // Start enterframe.
+			// Start enterframe.
+			addEventListener( Event.ENTER_FRAME, onEnterFrame );
 
-			moduleReadySignal.dispatch( coreInjector ); // Notify potential super modules.
+			// Notify potential super modules.
+			moduleReadySignal.dispatch( coreInjector );
 		}
 
 		// TODO: remove
@@ -95,7 +98,7 @@ package net.psykosoft.psykopaint2.paint
 			updateStats();
 		}
 
-		// TODO: remove
+		// TODO: move to core and add an options in settings to not use this
 		private function updateStats():void {
 			var oldTime:Number = _time;
 			_time = getTimer();
