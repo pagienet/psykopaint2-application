@@ -30,9 +30,11 @@ package net.psykosoft.psykopaint2.core.views.components
 		private var _numDecimals:uint = 1;
 		private var _selected:Sprite;
 		private var _nonSelected:Sprite;
-		private var _mouseDown:Boolean;
+		private var _mouseDown:Boolean = false;
+		private var _mouseDownOnRange:Boolean = false;
 		private var _stage:Stage;
 		private var _clickOffset:Number;
+		private var _handleDistance:Number;
         //private var _minDistance:Number = 20; //TODO: minimum distance between handles is currently managed from within fla
 
 		public static const CHANGE:String = "onChange";
@@ -87,11 +89,18 @@ package net.psykosoft.psykopaint2.core.views.components
 
 			leftHandleView.addEventListener( MouseEvent.MOUSE_DOWN, onLeftHandleMouseDown );
 			rightHandleView.addEventListener( MouseEvent.MOUSE_DOWN, onRightHandleMouseDown );
+			rangeView.addEventListener( MouseEvent.MOUSE_DOWN, onRangeViewMouseDown );
 
 			_stage = stage;
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			stage.addEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
 		}
+
+        private function onRangeViewMouseDown(event:MouseEvent):void {
+            _mouseDownOnRange = true;
+            _clickOffset = mouseX - leftHandleView.x;
+            _handleDistance = rightHandleView.x - leftHandleView.x;
+        }
 
 
 		public function dispose():void {
@@ -140,12 +149,31 @@ package net.psykosoft.psykopaint2.core.views.components
 
                 repositionRange();
 			}
+
+            if( _mouseDownOnRange ) {
+
+                var leftValue:Number;
+                var rightValue:Number;
+
+                var leftPosX:Number = Math.max( Math.min( mouseX - _clickOffset, _maxPosX - _handleDistance ), _minPosX );
+                leftHandleView.x = leftPosX;
+
+                rangeView.x = leftPosX + leftHandleView.width - 2;
+
+                var rightPosX:Number = Math.max( Math.min( leftHandleView.x + _handleDistance, _maxPosX ), _minPosX + _handleDistance );
+                rightHandleView.x = rightPosX;
+
+                leftValue = positionToValue( leftPosX );
+                rightValue = positionToValue( rightPosX );
+                setValues(leftValue, rightValue);
+            }
 		}
 
 		private function onStageMouseUp( event:MouseEvent ):void {
 			_selected = null;
 			_nonSelected = null;
 			_mouseDown = false;
+			_mouseDownOnRange = false;
 		}
 
 		public function setValues( val1:Number, val2:Number ):void {
