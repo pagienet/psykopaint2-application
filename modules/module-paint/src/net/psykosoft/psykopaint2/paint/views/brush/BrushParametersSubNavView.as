@@ -98,20 +98,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					var rangeSlider:SbRangedSlider = new SbRangedSlider();
 					rangeSlider.scaleX = rangeSlider.scaleY = UI_ELEMENT_SCALING;
 					rangeSlider.numDecimals = 2;
-					rangeSlider.minValue = Number( parameter.@minVlaue );//TODO: typo
+					rangeSlider.minValue = Number( parameter.@minValue );
 					rangeSlider.maxValue = Number( parameter.@maxValue );
 					rangeSlider.setValue( Number( parameter.@value ) );
-					rangeSlider.minValue = Number( parameter.@value1 ); //TODO: pass position and value
-					rangeSlider.maxValue = Number( parameter.@value2 );
+//					rangeSlider.minValue = Number( parameter.@value1 );
+//					rangeSlider.maxValue = Number( parameter.@value2 );
 					rangeSlider.setIdLabel( String( parameter.@id ) );
 					rangeSlider.addEventListener( SbRangedSlider.CHANGE, onRangeSliderChanged );
-
-
-//            trace("SLIDER CREATED >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", parameter.@id);
-//            trace("minvalue passed is >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", parameter.@value1);
-//            trace("maxvalue passed is >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", parameter.@value2);
-//            trace("minPOS? passed is >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", parameter.@minVlaue);
-//            trace("maxPOS? passed is >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", parameter.@maxValue);
 
 					_uiElementToParameter[ rangeSlider ] = parameter;
 					_elements.push( rangeSlider );

@@ -178,8 +178,8 @@ package net.psykosoft.psykopaint2.core.views.components
         private function repositionRange():void
 		{
 			rangeView.x = leftHandleView.x + leftHandleView.width - 2;
-			rangeView.gotoAndStop( Math.min( Math.max( 100-int( (_value2-_value1)*100 ),0 ),99 ) );
-
+            var frame:Number =  Math.min( Math.max( 100-int( ((_value2-_value1)-_minValue)*100 ),0 ),99 );
+			rangeView.gotoAndStop( frame );
 			if( rangeView.currentFrame >= 99 ){
 				rangeView.visible = false;
 			}else { rangeView.visible = true; }
