@@ -28,13 +28,13 @@ package net.psykosoft.psykopaint2.paint
 		private var _textField:TextField;
 		private var _fpsStackUtil:StackUtil;
 		private var _renderTimeStackUtil:StackUtil;
-		private var _crModule:CoreModule;
+		private var _coreModule:CoreModule;
 
 		public var moduleReadySignal:Signal;
 
 		public function PaintModule() {
 			super();
-			trace( ">>>>> PainttModule starting..." );
+			trace( ">>>>> PaintModule starting..." );
 			moduleReadySignal = new Signal();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
@@ -46,9 +46,10 @@ package net.psykosoft.psykopaint2.paint
 		private function initialize():void {
 			// Request the core and wait for its initialization.
 			// It is async because it loads assets, loads stage3d, etc...
-			_crModule = new CoreModule();
-			_crModule.moduleReadySignal.addOnce( onCoreModuleReady );
-			addChild( _crModule );
+			// TODO: if this module is used by a higher module, it should receive an already initialized core module.
+			_coreModule = new CoreModule();
+			_coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
+			addChild( _coreModule );
 		}
 
 		private function onCoreModuleReady( coreInjector:Injector ):void {
@@ -61,7 +62,7 @@ package net.psykosoft.psykopaint2.paint
 			var config:PaintConfig = new PaintConfig( coreInjector );
 			_renderSignal = config.injector.getInstance( RequestRenderFrameSignal ); // Necessary for rendering the core on enter frame.
 
-			_crModule.addChild( new PaintRootView() ); // Initialize display tree.
+			_coreModule.addChild( new PaintRootView() ); // Initialize display tree.
 
 			// Init drawing core.
 			config.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...
