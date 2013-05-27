@@ -92,6 +92,7 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function initRobotlegs():void {
+//			trace( this, "initRobotlegs with stage: " + stage + ", and stage3d: " + _stage3d );
 			var config:CoreConfig = new CoreConfig( this, stage, _stage3d );
 			_stateSignal = config.injector.getInstance( RequestStateChangeSignal ); // Necessary for rendering the core on enter frame.
 			_injector = config.injector;
@@ -144,7 +145,8 @@ package net.psykosoft.psykopaint2.core
 
 		private function onContext3dCreated( event:Event ):void {
 
-			trace( this, "context3d created: " + _stage3d.context3D );
+//			trace( this, "context3d created: " + _stage3d.context3D );
+			addEventListener( Event.ENTER_FRAME, onEnterFrame_REMOVE_ME );
 			_stage3d.removeEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated );
 
 			// TODO: listen for context loss?
@@ -160,6 +162,11 @@ package net.psykosoft.psykopaint2.core
 				_stage3dInitialized = true;
 				checkInitialized();
 			}
+		}
+
+		// TODO: remove
+		private function onEnterFrame_REMOVE_ME( event:Event ):void {
+//			trace( this, "context: " + _stage3d.context3D );
 		}
 
 		public function get injector():Injector {

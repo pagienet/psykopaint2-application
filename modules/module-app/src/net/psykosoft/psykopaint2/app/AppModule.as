@@ -4,7 +4,10 @@ package net.psykosoft.psykopaint2.app
 	import com.junkbyte.console.Cc;
 
 	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.display.Stage3D;
 	import flash.events.Event;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.views.base.AppRootView;
@@ -16,11 +19,13 @@ package net.psykosoft.psykopaint2.app
 
 	import org.swiftsuspenders.Injector;
 
-	public class ModuleApp extends ModuleBase
+	// TODO: fix rendering conflict between the paint and the home module...
+
+	public class AppModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;
 
-		public function ModuleApp() {
+		public function AppModule() {
 			super();
 			trace( ">>>>> AppModule starting..." );
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
@@ -43,7 +48,9 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onCoreModuleReady( coreInjector:Injector ):void {
 			Cc.log( this, "core module is ready, injector: " + coreInjector );
-			createHomeModule();
+			// TODO: remove time out calls, they are used because otherwise, usage of the paint and home modules simultaneously causes the core's injected stage3d.context3d to become null
+			setTimeout( createHomeModule, 250 );
+//			createPaintModule();
 		}
 
 		// Home module.
@@ -55,19 +62,25 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onHomeModuleReady( coreInjector:Injector ):void {
 			Cc.log( this, "home module is ready" );
-			createPaintModule();
+			setTimeout( createPaintModule, 250 );
+//			finishInitialization();
 		}
 
 		// Paint module.
 		private function createPaintModule():void {
+//			var rlStage:Stage = _coreModule.injector.getInstance( Stage );
+//			var rlStage3d:Stage3D = _coreModule.injector.getInstance( Stage3D );
 			trace( this, "creating paint module..." );
 			var paintModule:PaintModule = new PaintModule( _coreModule );
 			paintModule.moduleReadySignal.addOnce( onPaintModuleReady );
 			paintModule.initialize();
 		}
 		private function onPaintModuleReady( coreInjector:Injector ):void {
-		     Cc.log( this, "paint module is ready" );
+		    Cc.log( this, "paint module is ready" );
+			finishInitialization();
+		}
 
+		private function finishInitialization():void {
 			// Initialize the app module.
 			new AppConfig( _coreModule.injector );
 

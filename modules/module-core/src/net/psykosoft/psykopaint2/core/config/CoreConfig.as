@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.config
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.display3D.Context3D;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;

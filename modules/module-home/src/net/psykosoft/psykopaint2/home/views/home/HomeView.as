@@ -46,6 +46,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// -----------------------
 
 			_view = new View3D();
+			_view.shareContext = true;
 			_view.camera.lens.far = 50000;
 
 			// -----------------------
@@ -105,7 +106,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
 			_frameContainer.loadDefaultHomeFrames();
-
 		}
 
 		override protected function onDisposed():void {
@@ -129,7 +129,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		override protected function onUpdate():void {
-//			trace( this, "update" );
+			trace( this, "update" );
 			if( !_loader.done ) return;
 			_cameraController.update();
 			_view.render();
