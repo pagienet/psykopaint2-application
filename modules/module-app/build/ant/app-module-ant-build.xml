@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Adobe Native Extension Packager" default="all" basedir=".">
+
+    <target name="app-module-all" depends="move-packaged-assets"/>
+
+    <target name="move-packaged-assets">
+    	<copy todir="${OutputPath}/app-packaged">
+    		<fileset dir="../../assets/packaged/app-packaged"/>
+  		</copy>
+		<copy todir="${OutputPath}/home-packaged">
+    		<fileset dir="../../../module-home/assets/packaged/home-packaged"/>
+  		</copy>
+		<copy todir="${OutputPath}/paint-packaged">
+    		<fileset dir="../../../module-paint/assets/packaged/paint-packaged"/>
+  		</copy>
+        <copy todir="${OutputPath}/core-packaged">
+    		<fileset dir="../../../module-core/assets/packaged/core-packaged"/>
+  		</copy>
+    </target>
+
+</project>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

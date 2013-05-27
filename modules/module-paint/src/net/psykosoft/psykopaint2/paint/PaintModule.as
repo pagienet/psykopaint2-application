@@ -3,13 +3,13 @@ package net.psykosoft.psykopaint2.paint
 
 	import com.junkbyte.console.Cc;
 
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
 	import net.psykosoft.psykopaint2.core.CoreModule;
+	import net.psykosoft.psykopaint2.core.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 	import net.psykosoft.psykopaint2.paint.commands.RenderFrameCommand;
@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.paint
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
 
-	public class PaintModule extends Sprite
+	public class PaintModule extends ModuleBase
 	{
 		private var _renderSignal:Signal;
 		private var _time:Number = 0;
@@ -30,26 +30,30 @@ package net.psykosoft.psykopaint2.paint
 		private var _renderTimeStackUtil:StackUtil;
 		private var _coreModule:CoreModule;
 
-		public var moduleReadySignal:Signal;
-
-		public function PaintModule() {
+		public function PaintModule( core:CoreModule = null ) {
 			super();
 			trace( ">>>>> PaintModule starting..." );
-			moduleReadySignal = new Signal();
-			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			_coreModule = core;
+			if( !_coreModule ) {
+				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			}
 		}
 
 		// ---------------------------------------------------------------------
 		// Initialization.
 		// ---------------------------------------------------------------------
 
-		private function initialize():void {
-			// Request the core and wait for its initialization.
-			// It is async because it loads assets, loads stage3d, etc...
-			// TODO: if this module is used by a higher module, it should receive an already initialized core module.
-			_coreModule = new CoreModule();
-			_coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
-			addChild( _coreModule );
+		public function initialize():void {
+			trace( this, "initializing..." );
+			// Init core module.
+			if( !_coreModule ) {
+				_coreModule = new CoreModule();
+				_coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
+				addChild( _coreModule );
+			}
+			else {
+				onCoreModuleReady( _coreModule.injector );
+			}
 		}
 
 		private function onCoreModuleReady( coreInjector:Injector ):void {

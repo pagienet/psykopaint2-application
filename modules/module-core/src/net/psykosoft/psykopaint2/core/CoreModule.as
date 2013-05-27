@@ -3,30 +3,28 @@ package net.psykosoft.psykopaint2.core
 
 	import com.junkbyte.console.Cc;
 
-	import flash.display.Sprite;
 	import flash.display.Stage3D;
 	import flash.display.StageAlign;
 	import flash.display.StageQuality;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 
+	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
+	import net.psykosoft.psykopaint2.base.utils.DebuggingConsole;
+	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
+	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.core.config.CoreConfig;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
-	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
-	import net.psykosoft.psykopaint2.base.utils.DebuggingConsole;
-	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
-	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
 
-	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
 
 	// TODO: develop ant script that moves the packaged assets to bin ( only for the core )
 	// TODO: reconnect memory warnings ( conflict with the core, because it has its own memory warnings )
 
-	public class CoreModule extends Sprite
+	public class CoreModule extends ModuleBase
 	{
 		private var _stage3d:Stage3D;
 		private var _injector:Injector;
@@ -35,13 +33,10 @@ package net.psykosoft.psykopaint2.core
 		private var _shakeAndBakeConnector:ShakeAndBakeConnector;
 		private var _stateSignal:RequestStateChangeSignal;
 
-		public var moduleReadySignal:Signal;
-
 		public function CoreModule( injector:Injector = null ) {
 			super();
 			trace( ">>>>> CoreModule starting..." );
 			_injector = injector;
-			moduleReadySignal = new Signal();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
@@ -50,6 +45,8 @@ package net.psykosoft.psykopaint2.core
 		// ---------------------------------------------------------------------
 
 		private function initialize():void {
+
+			trace( this, "initializing..." );
 
 			initDebugging();
 
@@ -163,6 +160,10 @@ package net.psykosoft.psykopaint2.core
 				_stage3dInitialized = true;
 				checkInitialized();
 			}
+		}
+
+		public function get injector():Injector {
+			return _injector;
 		}
 	}
 }
