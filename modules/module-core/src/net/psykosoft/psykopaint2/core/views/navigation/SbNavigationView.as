@@ -232,7 +232,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			}
 			_centerComponentsScroller.addChild( centerButton );
 			_centerButtons.push( centerButton );
-			_buttonPositionOffsetX += centerButton.width + BUTTON_GAP_X;
+			_buttonPositionOffsetX += 140 + BUTTON_GAP_X;
 		}
 
 		public function setLabel( value:String ):void {
