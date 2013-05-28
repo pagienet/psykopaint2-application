@@ -2,10 +2,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
 	import flash.display.Stage;
+	import flash.display.Stage3D;
+	import flash.display3D.Context3D;
 	import flash.geom.Rectangle;
+
+	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
+	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
+	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
@@ -52,6 +59,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestResumeRenderingSignal:RequestResumeRenderingSignal;
 
+		[Inject]
+		public var moduleManager:ModuleManager;
+
+		[Inject]
+		public var lightingModel:LightingModel;
+
+		[Inject]
+		public var stage3D:Stage3D;
+
 		override public function initialize():void {
 
 			super.initialize();
@@ -65,6 +81,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
 			paintModule.view = view;
 
+			// Register canvas gpu rendering in core.
+			GpuRenderManager.addRenderingStep( paintModuleRenderingsStep, GpuRenderingStepType.NORMAL );
+
 			// Drawing core to app proxying.
 			notifyModuleActivatedSignal.add( onDrawingCoreModuleActivated );
 
@@ -73,15 +92,24 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 		}
 
-		private function onExpensiveUiTask( started:Boolean, id:String ):void {
-			// TODO: analyze id properly to manage activity queues...
-			if( started ) requestFreezeRenderingSignal.dispatch();
-			else requestResumeRenderingSignal.dispatch();
+		private function paintModuleRenderingsStep():void {
+			var context:Context3D = stage3D.context3D;
+			if( !context ) return;
+			lightingModel.update();
+			stage3D.context3D.setRenderToBackBuffer();
+			stage3D.context3D.clear(1, 1, 1, 1);
+			moduleManager.render();
 		}
 
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onExpensiveUiTask( started:Boolean, id:String ):void {
+			// TODO: analyze id properly to manage activity queues...
+			if( started ) requestFreezeRenderingSignal.dispatch();
+			else requestResumeRenderingSignal.dispatch();
+		}
 
 		private function onNavigationToggled( navVisible:Boolean ):void {
 			if( navVisible ) {

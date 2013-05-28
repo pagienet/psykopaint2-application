@@ -7,12 +7,14 @@ package net.psykosoft.psykopaint2.core.config
 
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
+	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.NotifyExpensiveUiActionToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.requests.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
@@ -105,6 +107,7 @@ package net.psykosoft.psykopaint2.core.config
 
 		private function mapCommands():void {
 			_commandMap.map( RequestStateChangeSignal ).toCommand( ChangeStateCommand );
+			_commandMap.map( RequestGpuRenderingSignal ).toCommand( RenderGpuCommand );
 		}
 
 		// -----------------------

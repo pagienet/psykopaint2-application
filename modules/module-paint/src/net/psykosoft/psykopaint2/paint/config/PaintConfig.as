@@ -1,12 +1,10 @@
 package net.psykosoft.psykopaint2.paint.config
 {
 
-	import net.psykosoft.psykopaint2.paint.commands.RenderFrameCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestDrawingCoreStartupSignal;
-	import net.psykosoft.psykopaint2.paint.signals.requests.RequestRenderFrameSignal;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestStateUpdateFromModuleActivationSignal;
 	import net.psykosoft.psykopaint2.paint.views.brush.BrushParametersSubNavView;
@@ -100,7 +98,6 @@ package net.psykosoft.psykopaint2.paint.config
 		private function mapCommands():void {
 			_commandMap.map( RequestStateUpdateFromModuleActivationSignal ).toCommand( UpdateAppStateFromActivatedDrawingCoreModuleCommand );
 			_commandMap.map( RequestSourceImageSetSignal ).toCommand( SetSourceImageCommand );
-			_commandMap.map( RequestRenderFrameSignal ).toCommand( RenderFrameCommand );
 			_commandMap.map( RequestDrawingCoreStartupSignal ).toCommand( StartUpDrawingCoreCommand );
 		}
 

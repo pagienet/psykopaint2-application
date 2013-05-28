@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 
-	public class RenderFrameCommand
+	public class RenderFrameCommand_REMOVE
 	{
 		public static var renderTime : Number = 0;
 
@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		public function execute():void
 		{
+			return;
 //			trace ("--------");
 			var context:Context3D = stage3D.context3D;
 			if( !context ) return;

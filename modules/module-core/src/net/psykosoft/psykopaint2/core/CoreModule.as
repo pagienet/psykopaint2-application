@@ -8,14 +8,19 @@ package net.psykosoft.psykopaint2.core
 	import flash.display.StageQuality;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.text.TextField;
+	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.base.utils.DebuggingConsole;
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
+	import net.psykosoft.psykopaint2.base.utils.StackUtil;
+	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.config.CoreConfig;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.requests.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 
@@ -31,7 +36,12 @@ package net.psykosoft.psykopaint2.core
 		private var _shakeAndBakeInitialized:Boolean;
 		private var _shakeAndBakeConnector:ShakeAndBakeConnector;
 		private var _stateSignal:RequestStateChangeSignal;
+		private var _requestGpuRenderingSignal:RequestGpuRenderingSignal;
 		private var _stage3d:Stage3D;
+		private var _time:Number = 0;
+		private var _textField:TextField;
+		private var _fpsStackUtil:StackUtil;
+		private var _renderTimeStackUtil:StackUtil;
 
 		public function CoreModule( injector:Injector = null ) {
 			super();
@@ -54,9 +64,23 @@ package net.psykosoft.psykopaint2.core
 
 			initPlatform();
 			initStage();
+			initStats();
 			initStage3dASync();
 			initRobotlegs();
 			initShakeAndBakeAsync();
+		}
+
+		private function initStats():void {
+			_fpsStackUtil = new StackUtil();
+			_renderTimeStackUtil = new StackUtil();
+			_fpsStackUtil.count = 24;
+			_renderTimeStackUtil.count = 24;
+			_textField = new TextField();
+			_textField.width = 200;
+			_textField.selectable = false;
+			_textField.mouseEnabled = false;
+			_textField.scaleX = _textField.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
+			addChild( _textField );
 		}
 
 		private function initDebugging():void {
@@ -95,6 +119,7 @@ package net.psykosoft.psykopaint2.core
 		private function initRobotlegs():void {
 //			trace( this, "initRobotlegs with stage: " + stage + ", and stage3d: " + _stage3d );
 			var config:CoreConfig = new CoreConfig( this, stage, _stage3d );
+			_requestGpuRenderingSignal = config.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
 			_stateSignal = config.injector.getInstance( RequestStateChangeSignal ); // Necessary for rendering the core on enter frame.
 			_injector = config.injector;
 			Cc.log( this, "initializing robotlegs context" );
@@ -126,7 +151,33 @@ package net.psykosoft.psykopaint2.core
 			// Initial application state.
 			_stateSignal.dispatch( StateType.STATE_IDLE );
 
+			// Start enterframe.
+			addEventListener( Event.ENTER_FRAME, onEnterFrame );
+
+			// Notify.
 			moduleReadySignal.dispatch( _injector );
+		}
+
+		// ---------------------------------------------------------------------
+		// Loop.
+		// ---------------------------------------------------------------------
+
+		private function update():void {
+			_requestGpuRenderingSignal.dispatch();
+		}
+
+		private function updateStats():void {
+			var oldTime:Number = _time;
+			_time = getTimer();
+
+			var fps:Number = 1000 / (_time - oldTime);
+			_fpsStackUtil.pushValue( fps );
+			fps = int( _fpsStackUtil.getAverageValue() );
+
+			_renderTimeStackUtil.pushValue( RenderGpuCommand.renderTime );
+			var renderTime:int = int( _renderTimeStackUtil.getAverageValue() );
+
+			_textField.text = fps + "\n" + "Render time: " + renderTime + "ms";
 		}
 
 		// ---------------------------------------------------------------------
@@ -148,7 +199,6 @@ package net.psykosoft.psykopaint2.core
 		private function onContext3dCreated( event:Event ):void {
 
 			Cc.log( this, "context3d created: " + _stage3d.context3D );
-//			addEventListener( Event.ENTER_FRAME, onEnterFrame_REMOVE_ME );
 			_stage3d.removeEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated );
 
 			// TODO: listen for context loss?
@@ -167,9 +217,8 @@ package net.psykosoft.psykopaint2.core
 			}
 		}
 
-		// TODO: remove
-		private function onEnterFrame_REMOVE_ME( event:Event ):void {
-//			trace( this, "context: " + _stage3d.context3D );
+		private function onEnterFrame( event:Event ):void {
+			update();
 		}
 
 		public function get injector():Injector {
