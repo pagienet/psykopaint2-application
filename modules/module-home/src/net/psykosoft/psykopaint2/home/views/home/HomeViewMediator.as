@@ -30,9 +30,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyNavigationToggleSignal:NotifyNavigationToggledSignal;
 
-		[Inject]
-		public var view3d:View3D;
-
 //		[Inject]
 //		public var notifyFocusedPaintingChangedSignal:RequestActivePaintingChangeSignal;
 
@@ -44,7 +41,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerEnablingState( StateType.HOME );
 			registerEnablingState( StateType.HOME_ON_PAINTING );
 			registerEnablingState( StateType.HOME_SETTINGS );
-			view.setView3d( view3d );
 
 			// From app.
 //			notifyWallpaperChangeSignal.add( onWallPaperChanged );

@@ -1,27 +1,21 @@
 package net.psykosoft.psykopaint2.core.views.base
 {
 
-	import away3d.containers.View3D;
-
 	import flash.display.Sprite;
 
 	import net.psykosoft.psykopaint2.core.views.components.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.SbSlider;
-    import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
-    import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
+	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 
-    public class CoreRootView extends Sprite
+	public class CoreRootView extends Sprite
     {
-        [Inject]
-        public var view:CoreRootView;
-
-        public function CoreRootView( view3d:View3D ) {
+        public function CoreRootView() {
             super();
 
             var navigationView:SbNavigationView = new SbNavigationView();
 
-			addChild( view3d );
             addChild( navigationView );
 
             // -----------------------

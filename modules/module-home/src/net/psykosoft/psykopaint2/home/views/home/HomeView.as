@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 
-	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 
@@ -19,8 +18,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _room:Room;
 		private var _frameContainer:PictureFrameContainer;
 		private var _loader:AssetBundleLoader;
-		private var _view3d:View3D;
-		private var _scene:ObjectContainer3D;
+		private var _view:View3D;
 
 		public function HomeView() {
 			super();
@@ -32,38 +30,44 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 
 		override protected function onEnabled():void {
-			_view3d.scene.addChild( _scene );
+			addChild( _view );
 			_cameraController.isActive = true;
 		}
 
 		override protected function onDisabled():void {
-			_view3d.scene.removeChild( _scene );
+			removeChild( _view );
 			_cameraController.isActive = false;
 		}
 
 		override protected function onSetup():void {
 
 			// -----------------------
-			// Initialize objects.
+			// Initialize view.
 			// -----------------------
 
-			_scene = new ObjectContainer3D();
+			_view = new View3D();
+//			_view.shareContext = true;
+			_view.camera.lens.far = 50000;
+
+			// -----------------------
+			// Initialize objects.
+			// -----------------------
 
 			// Visualize scene origin.
 //			var tri:Trident = new Trident( 500 );
 //			addChild3d( tri );
 
-			_room = new Room( _view3d );
+			_room = new Room( _view );
 			var cameraTarget:Object3D = new Object3D();
-			_cameraController = new ScrollCameraController( _view3d.camera, cameraTarget, stage );
-			_frameContainer = new PictureFrameContainer( _cameraController, _room, _view3d );
+			_cameraController = new ScrollCameraController( _view.camera, cameraTarget, stage );
+			_frameContainer = new PictureFrameContainer( _cameraController, _room, _view );
 			_frameContainer.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
 			_cameraController.cameraZ = -1750;
 			_frameContainer.z = _room.wallZ - 2;
 			cameraTarget.z = _room.wallZ;
-			_scene.addChild( _room );
-			_scene.addChild( _frameContainer );
+			_view.scene.addChild( _room );
+			_view.scene.addChild( _frameContainer );
 
 			// -------------------------
 			// Prepare external assets.
@@ -125,8 +129,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		override protected function onUpdate():void {
+			trace( this, "update" );
 			if( !_loader.done ) return;
 			_cameraController.update();
+			_view.render();
 		}
 
 		// -----------------------
@@ -143,10 +149,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function get cameraController():ScrollCameraController {
 			return _cameraController;
-		}
-
-		public function setView3d( view3d:View3D ):void {
-			_view3d = view3d;
 		}
 	}
 }

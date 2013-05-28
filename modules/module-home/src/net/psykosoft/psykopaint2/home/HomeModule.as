@@ -71,9 +71,9 @@ package net.psykosoft.psykopaint2.home
 
 		private function onEnterframe( event:Event ):void {
 //			trace( "rendering 3d" );
-			_coreModule.stage3dProxy.clear();
-			_coreModule.view3d.render();
-			_coreModule.stage3dProxy.present();
+//			_coreModule.stage3dProxy.clear();
+//			_coreModule.view3d.render();
+//			_coreModule.stage3dProxy.present();
 		}
 
 		// ---------------------------------------------------------------------

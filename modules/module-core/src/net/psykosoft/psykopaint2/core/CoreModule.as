@@ -1,13 +1,9 @@
 package net.psykosoft.psykopaint2.core
 {
 
-	import away3d.containers.View3D;
-	import away3d.core.managers.Stage3DManager;
-	import away3d.core.managers.Stage3DProxy;
-	import away3d.events.Stage3DEvent;
-
 	import com.junkbyte.console.Cc;
 
+	import flash.display.Stage3D;
 	import flash.display.StageAlign;
 	import flash.display.StageQuality;
 	import flash.display.StageScaleMode;
@@ -35,8 +31,7 @@ package net.psykosoft.psykopaint2.core
 		private var _shakeAndBakeInitialized:Boolean;
 		private var _shakeAndBakeConnector:ShakeAndBakeConnector;
 		private var _stateSignal:RequestStateChangeSignal;
-		private var _stage3dProxy:Stage3DProxy;
-		private var _view3d:View3D;
+		private var _stage3d:Stage3D;
 
 		public function CoreModule( injector:Injector = null ) {
 			super();
@@ -92,23 +87,14 @@ package net.psykosoft.psykopaint2.core
 
 		private function initStage3dASync():void {
 			Cc.log( this, "initializing stage3d..." );
-
-			var stage3dManager:Stage3DManager = Stage3DManager.getInstance( stage );
-			_stage3dProxy = stage3dManager.getFreeStage3DProxy();
-			_stage3dProxy.width = 1024;
-			_stage3dProxy.height = 768;
-			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContext3dCreated, false, 50 );
-
-			// Init 3d.
-			_view3d = new View3D();
-			_view3d.stage3DProxy = _stage3dProxy;
-			_view3d.shareContext = true;
-			_view3d.camera.lens.far = 50000;
+			_stage3d = stage.stage3Ds[ 0 ];
+			_stage3d.addEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated, false, 50 ); // TODO: ask dave why false and 50?
+			_stage3d.requestContext3D();
 		}
 
 		private function initRobotlegs():void {
 //			trace( this, "initRobotlegs with stage: " + stage + ", and stage3d: " + _stage3d );
-			var config:CoreConfig = new CoreConfig( this, stage, _stage3dProxy.stage3D, _view3d );
+			var config:CoreConfig = new CoreConfig( this, stage, _stage3d );
 			_stateSignal = config.injector.getInstance( RequestStateChangeSignal ); // Necessary for rendering the core on enter frame.
 			_injector = config.injector;
 			Cc.log( this, "initializing robotlegs context" );
@@ -135,7 +121,7 @@ package net.psykosoft.psykopaint2.core
 			Cc.log( this, "initialized" );
 
 			// Init display tree.
-			addChild( new CoreRootView( _view3d ) );
+			addChild( new CoreRootView() );
 
 			// Initial application state.
 			_stateSignal.dispatch( StateType.STATE_IDLE );
@@ -161,9 +147,9 @@ package net.psykosoft.psykopaint2.core
 
 		private function onContext3dCreated( event:Event ):void {
 
-			Cc.log( this, "context3d created: " + _stage3dProxy.context3D );
+			Cc.log( this, "context3d created: " + _stage3d.context3D );
 //			addEventListener( Event.ENTER_FRAME, onEnterFrame_REMOVE_ME );
-			_stage3dProxy.removeEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContext3dCreated );
+			_stage3d.removeEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated );
 
 			// TODO: listen for context loss?
 			// This simulates a context loss. A bit of googling shows that context loss on iPad is rare, but could be possible.
@@ -173,8 +159,8 @@ package net.psykosoft.psykopaint2.core
 			 }, 60000 );*/
 
 			if( !_stage3dInitialized ) {
-				_stage3dProxy.context3D.configureBackBuffer( stage.stageWidth, stage.stageHeight, CoreSettings.STAGE_3D_ANTI_ALIAS, true );
-				_stage3dProxy.context3D.enableErrorChecking = CoreSettings.STAGE_3D_ERROR_CHECKING;
+				_stage3d.context3D.configureBackBuffer( stage.stageWidth, stage.stageHeight, CoreSettings.STAGE_3D_ANTI_ALIAS, true );
+				_stage3d.context3D.enableErrorChecking = CoreSettings.STAGE_3D_ERROR_CHECKING;
 				// TODO: set stage3d props here like antialias, bg color, etc
 				_stage3dInitialized = true;
 				checkInitialized();
@@ -188,14 +174,6 @@ package net.psykosoft.psykopaint2.core
 
 		public function get injector():Injector {
 			return _injector;
-		}
-
-		public function get stage3dProxy():Stage3DProxy {
-			return _stage3dProxy;
-		}
-
-		public function get view3d():View3D {
-			return _view3d;
 		}
 	}
 }
