@@ -129,8 +129,10 @@ package net.psykosoft.psykopaint2.core.views.components
 
 				var posX:Number = mouseX - _clickOffset;
 
-				var slideValue:Number;
-				var index:Number;
+				var slideValueSelected:Number;
+				var slideValueNonSelected:Number;
+				var indexSelected:Number;
+				var indexNonSelected:Number;
 
 				var leftLimits:Point = _limitForHandle[ leftHandleView ];
 				var rightLimits:Point = _limitForHandle[ rightHandleView ];
@@ -138,14 +140,27 @@ package net.psykosoft.psykopaint2.core.views.components
 				leftLimits.y = rightHandleView.x;
 				rightLimits.x = leftHandleView.x;
 
-				var limit:Point = _limitForHandle[ _selected ];
+				var limitSelected:Point = _limitForHandle[ _selected ];
+                var limitNonSelected:Point = _limitForHandle[ _nonSelected ];
 
-				_selected.x = Math.max( Math.min( posX, limit.y ), limit.x );
+				_selected.x = Math.max( Math.min( posX, limitSelected.y ), limitSelected.x );
 
-				index = ( _selected == leftHandleView ) ? 0 : 1;
+                if( _selected.x == _nonSelected.x ){
+                    rangeView.visible = false;
 
-				slideValue = positionToValue( _selected.x ); //TODO: make sure this is the value we should be passing
-				setValue( slideValue, index );
+                    _nonSelected.x = Math.max( Math.min( posX, limitNonSelected.y ), limitNonSelected.x );
+                    indexNonSelected = ( _nonSelected == leftHandleView ) ? 0 : 1;
+                    slideValueNonSelected = positionToValue( _nonSelected.x ); //TODO: make sure this is the value we should be passing
+				    setValue( slideValueNonSelected, indexNonSelected );
+                }
+                else{
+                    rangeView.visible = true;
+                }
+
+				indexSelected = ( _selected == leftHandleView ) ? 0 : 1;
+
+				slideValueSelected = positionToValue( _selected.x ); //TODO: make sure this is the value we should be passing
+				setValue( slideValueSelected, indexSelected );
 
                 repositionRange();
 			}
@@ -208,9 +223,9 @@ package net.psykosoft.psykopaint2.core.views.components
 			rangeView.x = leftHandleView.x + leftHandleView.width - 2;
             var frame:Number =  Math.min( Math.max( 100-int( ((_value2-_value1)-_minValue)*100 ),0 ),99 );
 			rangeView.gotoAndStop( frame );
-			if( rangeView.currentFrame >= 99 ){
-				rangeView.visible = false;
-			}else { rangeView.visible = true; }
+//			if( rangeView.currentFrame >= 99 ){
+//				rangeView.visible = false;
+//			}else { rangeView.visible = true; }
 
 		}
 
