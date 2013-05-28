@@ -36,12 +36,6 @@ package net.psykosoft.psykopaint2.core.commands
 			var len:uint;
 			var steps:Vector.<Function>;
 
-			// Clear proxy.
-			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
-				trace( this, "clear proxy" );
-			}
-			stage3DProxy.clear();
-
 			// Pre-clear steps.
 			steps = GpuRenderManager.preRenderingSteps;
 			len = steps.length;

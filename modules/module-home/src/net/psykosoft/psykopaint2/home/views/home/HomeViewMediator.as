@@ -50,7 +50,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.stage3dProxy = stage3dProxy;
 
 			// Register view gpu rendering in core.
-			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
+//			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 
 			// From app.
 //			notifyWallpaperChangeSignal.add( onWallPaperChanged );
