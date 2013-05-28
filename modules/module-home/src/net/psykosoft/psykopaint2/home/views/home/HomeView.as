@@ -22,7 +22,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function HomeView() {
 			super();
-			autoUpdates = true;
 		}
 
 		// -----------------------
@@ -46,7 +45,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// -----------------------
 
 			_view = new View3D();
-//			_view.shareContext = true;
+			_view.shareContext = true;
 			_view.camera.lens.far = 50000;
 
 			// -----------------------
@@ -128,9 +127,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: review if memory is really freed up with Scout, it appears not, specially gpu memory
 		}
 
-		override protected function onUpdate():void {
-			trace( this, "update" );
-			if( !_loader.done ) return;
+		public function renderScene():void {
+//			trace( this, "rendering 3d?" );
+			if( !_loader.done ) return; // Bounces off 3d rendering when the scene is not ready or active.
+			if( !_view.parent ) return;
+			trace( this, "rendering 3d" );
 			_cameraController.update();
 			_view.render();
 		}

@@ -22,6 +22,8 @@ package net.psykosoft.psykopaint2.core.commands
 			var context:Context3D = stage3D.context3D;
 			if( !context ) return;
 
+			trace( this, "gpu render ------------------------" );
+
 			var preTime:Number = getTimer();
 
 			var i:uint;
@@ -34,6 +36,7 @@ package net.psykosoft.psykopaint2.core.commands
 			for( i = 0; i < len; ++i ) steps[ i ]();
 
 			// Clear.
+			trace( this, "clear" );
 			stage3D.context3D.setRenderToBackBuffer();
 			stage3D.context3D.clear( 1, 1, 1, 1 );
 
@@ -43,6 +46,7 @@ package net.psykosoft.psykopaint2.core.commands
 			for( i = 0; i < len; ++i ) steps[ i ]();
 
 			// Present.
+			trace( this, "present" );
 			stage3D.context3D.present();
 
 			// Post-present steps.

@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
+	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
+	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
@@ -42,6 +44,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerEnablingState( StateType.HOME_ON_PAINTING );
 			registerEnablingState( StateType.HOME_SETTINGS );
 
+			// Register view gpu rendering in core.
+			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
+
 			// From app.
 //			notifyWallpaperChangeSignal.add( onWallPaperChanged );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
@@ -49,8 +54,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// From view.
 //			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
-
-
 		}
 
 		// -----------------------

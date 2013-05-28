@@ -94,10 +94,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function paintModulePreRenderingStep():void {
+			trace( this, "pre rendering canvas" );
 			lightingModel.update();
 		}
 
 		private function paintModuleNormalRenderingsStep():void {
+			trace( this, "rendering canvas" );
 			moduleManager.render();
 		}
 

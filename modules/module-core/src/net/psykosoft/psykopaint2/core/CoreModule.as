@@ -43,6 +43,8 @@ package net.psykosoft.psykopaint2.core
 		private var _fpsStackUtil:StackUtil;
 		private var _renderTimeStackUtil:StackUtil;
 
+		public var updateActive:Boolean = true;
+
 		public function CoreModule( injector:Injector = null ) {
 			super();
 			trace( ">>>>> CoreModule starting..." );
@@ -163,6 +165,7 @@ package net.psykosoft.psykopaint2.core
 		// ---------------------------------------------------------------------
 
 		private function update():void {
+			if( !updateActive ) return;
 			_requestGpuRenderingSignal.dispatch();
 		}
 

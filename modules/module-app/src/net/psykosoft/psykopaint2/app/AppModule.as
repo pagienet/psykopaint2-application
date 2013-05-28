@@ -43,6 +43,7 @@ package net.psykosoft.psykopaint2.app
 		private function createCoreModule():void {
 			trace( this, "creating core module..." );
 			_coreModule = new CoreModule();
+			_coreModule.updateActive = false;
 			_coreModule.isStandalone = false;
 			_coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
 			addChild( _coreModule );
@@ -50,22 +51,7 @@ package net.psykosoft.psykopaint2.app
 		private function onCoreModuleReady( coreInjector:Injector ):void {
 			Cc.log( this, "core module is ready, injector: " + coreInjector );
 			// TODO: remove time out calls, they are used because otherwise, usage of the paint and home modules simultaneously causes the core's injected stage3d.context3d to become null
-			setTimeout( createHomeModule, 250 );
-//			createPaintModule();
-		}
-
-		// Home module.
-		private function createHomeModule():void {
-			trace( this, "creating home module..." );
-			var homeModule:HomeModule = new HomeModule( _coreModule );
-			homeModule.isStandalone = false;
-			homeModule.moduleReadySignal.addOnce( onHomeModuleReady );
-			homeModule.initialize();
-		}
-		private function onHomeModuleReady( coreInjector:Injector ):void {
-			Cc.log( this, "home module is ready" );
-			setTimeout( createPaintModule, 250 );
-//			finishInitialization();
+			setTimeout( createPaintModule, 5 );
 		}
 
 		// Paint module.
@@ -80,15 +66,32 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onPaintModuleReady( coreInjector:Injector ):void {
 		    Cc.log( this, "paint module is ready" );
+			setTimeout( createHomeModule, 5 );
+		}
+
+		// Home module.
+		private function createHomeModule():void {
+			trace( this, "creating home module..." );
+			var homeModule:HomeModule = new HomeModule( _coreModule );
+			homeModule.isStandalone = false;
+			homeModule.moduleReadySignal.addOnce( onHomeModuleReady );
+			homeModule.initialize();
+		}
+		private function onHomeModuleReady( coreInjector:Injector ):void {
+			Cc.log( this, "home module is ready" );
 			finishInitialization();
 		}
 
 		private function finishInitialization():void {
+
 			// Initialize the app module.
 			new AppConfig( _coreModule.injector );
 
 			// Init display tree for this module.
 			_coreModule.addChild( new AppRootView() );
+
+			// Launch core updates.
+			_coreModule.updateActive = true;
 		}
 
 		// ---------------------------------------------------------------------
