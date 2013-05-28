@@ -73,8 +73,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_rightButton.displaceLabelBg( -15, -5 );
 
 			_centerComponentsScroller = new HorizontalSnapScroller();
+			_centerComponentsScroller.edgeContentGap = 150;
 			_centerComponentsScroller.pageHeight = 200;
-			_centerComponentsScroller.pageWidth = 750;
+			_centerComponentsScroller.pageWidth = 1024;
 			_centerComponentsScroller.motionStartedSignal.add( onCenterScrollerMotionStart );
 			_centerComponentsScroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
 			addChildAt( _centerComponentsScroller, 1 );
@@ -164,7 +165,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		private function resetCenterButtons():void {
-			_buttonPositionOffsetX = _leftButton.width / 2;
+			_buttonPositionOffsetX = _leftButton.width / 2 + _centerComponentsScroller.edgeContentGap;
 			if( _centerButtons && _centerButtons.length > 0 ) {
 				var len:uint = _centerButtons.length;
 				for( var i:uint; i < len; ++i ) {
