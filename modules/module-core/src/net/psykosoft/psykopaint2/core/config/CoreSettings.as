@@ -14,7 +14,6 @@ package net.psykosoft.psykopaint2.core.config
 		public static const STAGE_3D_ERROR_CHECKING:Boolean = true;
 		public static const SHOW_STATS:Boolean = true;
 		public static const DEBUG_RENDER_SEQUENCE:Boolean = true;
-		public static const GPU_ANTI_ALIAS:uint = 0;
 
 		// ---------------------------------------------------------------------
 		// Variables ( automatically set by framework ).

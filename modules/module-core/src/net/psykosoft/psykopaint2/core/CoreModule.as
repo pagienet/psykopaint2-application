@@ -237,7 +237,6 @@ package net.psykosoft.psykopaint2.core
 			if( !_stage3dInitialized ) {
 				_stage3dProxy.context3D.configureBackBuffer( stage.stageWidth, stage.stageHeight, CoreSettings.STAGE_3D_ANTI_ALIAS, true );
 				_stage3dProxy.context3D.enableErrorChecking = CoreSettings.STAGE_3D_ERROR_CHECKING;
-				_stage3dProxy.antiAlias = CoreSettings.GPU_ANTI_ALIAS;
 				// TODO: set stage3d props here like antialias, bg color, etc
 				_stage3dInitialized = true;
 				checkInitialized();
