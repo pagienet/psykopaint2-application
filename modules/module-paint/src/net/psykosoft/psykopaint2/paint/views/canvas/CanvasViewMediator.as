@@ -128,7 +128,14 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 		}
 
-		// -----------------------
+		override protected function onStateChange( newState:String ):void {
+			super.onStateChange( newState );
+			if( newState != StateType.STATE_PAINT ) {
+				paintModule.stopAnimations();
+			}
+		}
+
+// -----------------------
 		// Proxying.
 		// -----------------------
 

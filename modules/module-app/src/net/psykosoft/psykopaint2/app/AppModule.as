@@ -51,7 +51,7 @@ package net.psykosoft.psykopaint2.app
 		private function onCoreModuleReady( coreInjector:Injector ):void {
 			Cc.log( this, "core module is ready, injector: " + coreInjector );
 			// TODO: remove time out calls, they are used because otherwise, usage of the paint and home modules simultaneously causes the core's injected stage3d.context3d to become null
-			setTimeout( createPaintModule, 5 );
+			setTimeout( createPaintModule, 250 );
 		}
 
 		// Paint module.
@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onPaintModuleReady( coreInjector:Injector ):void {
 		    Cc.log( this, "paint module is ready" );
-			setTimeout( createHomeModule, 5 );
+			setTimeout( createHomeModule, 250 );
 		}
 
 		// Home module.

@@ -4,6 +4,10 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 	import away3d.core.managers.Stage3DProxy;
+	import away3d.debug.Trident;
+	import away3d.entities.Mesh;
+	import away3d.materials.ColorMaterial;
+	import away3d.primitives.CubeGeometry;
 
 	import flash.events.Event;
 
@@ -37,6 +41,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		override protected function onDisabled():void {
+			// TODO: review if we need to do any clean up when view is disabled
 			removeChild( _view );
 			_cameraController.isActive = false;
 		}
@@ -61,7 +66,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Visualize scene origin.
 //			var tri:Trident = new Trident( 500 );
-//			addChild3d( tri );
+//			_view.scene.addChild( tri );
 
 			_room = new Room( _view );
 			var cameraTarget:Object3D = new Object3D();
@@ -130,6 +135,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_frameContainer.dispose();
 			_frameContainer = null;
+
+			_view.dispose();
+			_view = null;
 
 			// TODO: review if memory is really freed up with Scout, it appears not, specially gpu memory
 		}

@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.home
 {
 
-	import away3d.containers.View3D;
-
 	import com.junkbyte.console.Cc;
 
 	import flash.events.Event;
@@ -56,24 +54,16 @@ package net.psykosoft.psykopaint2.home
 			// Init display tree for this module.
 			_coreModule.addModuleDisplay( new HomeRootView() );
 
-			// Trigger initial state...
-			config.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
-
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( coreInjector );
+
+			// Trigger initial state...
+				config.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
 
 			// Start local enterframe is standalone.
 			if( isStandalone ) {
 				trace( this, " >>> starting as standalone." );
-				addEventListener( Event.ENTER_FRAME, onEnterframe );
 			}
-		}
-
-		private function onEnterframe( event:Event ):void {
-//			trace( "rendering 3d" );
-//			_coreModule.stage3dProxy.clear();
-//			_coreModule.view3d.render();
-//			_coreModule.stage3dProxy.present();
 		}
 
 		// ---------------------------------------------------------------------

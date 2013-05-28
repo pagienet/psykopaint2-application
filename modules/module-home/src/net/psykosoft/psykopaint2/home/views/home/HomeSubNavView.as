@@ -5,8 +5,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	public class HomeSubNavView extends SubNavigationViewBase
 	{
 		public static const LBL_PAINT:String = "Paint";
-		public static const LBL_NEWS2:String = "[News2]";
-		public static const LBL_NEWS3:String = "[News3]";
 
 		public function HomeSubNavView() {
 			super();
@@ -17,8 +15,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			setLabel( "Home" );
 
 			addCenterButton( LBL_PAINT );
-			addCenterButton( LBL_NEWS2 );
-			addCenterButton( LBL_NEWS3 );
 
 			invalidateContent();
 		}
