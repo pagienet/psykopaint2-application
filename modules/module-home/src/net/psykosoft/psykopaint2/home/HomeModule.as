@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.home
 {
 
 	import away3d.containers.View3D;
-	import away3d.core.managers.Stage3DProxy;
 
 	import com.junkbyte.console.Cc;
 
@@ -20,7 +19,6 @@ package net.psykosoft.psykopaint2.home
 	public class HomeModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;
-		private var _view3d:View3D;
 
 		public function HomeModule( core:CoreModule = null ) {
 			super();
@@ -52,17 +50,11 @@ package net.psykosoft.psykopaint2.home
 		private function onCoreModuleReady( coreInjector:Injector ):void {
 			Cc.log( this, "core module is ready, injector: " + coreInjector );
 
-			// Init 3d.
-			_view3d = new View3D();
-			_view3d.stage3DProxy = _coreModule.stage3dProxy;
-			_view3d.shareContext = true;
-			_view3d.camera.lens.far = 50000;
-
 			// Initialize the home module.
-			var config:HomeConfig = new HomeConfig( coreInjector, _view3d );
+			var config:HomeConfig = new HomeConfig( coreInjector );
 
 			// Init display tree for this module.
-			_coreModule.addChild( new HomeRootView( _view3d ) );
+			_coreModule.addChild( new HomeRootView() );
 
 			// Trigger initial state...
 			config.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
@@ -80,7 +72,7 @@ package net.psykosoft.psykopaint2.home
 		private function onEnterframe( event:Event ):void {
 //			trace( "rendering 3d" );
 			_coreModule.stage3dProxy.clear();
-			_view3d.render();
+			_coreModule.view3d.render();
 			_coreModule.stage3dProxy.present();
 		}
 

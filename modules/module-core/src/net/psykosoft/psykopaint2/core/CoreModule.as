@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core
 {
 
+	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DManager;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.events.Stage3DEvent;
@@ -35,6 +36,7 @@ package net.psykosoft.psykopaint2.core
 		private var _shakeAndBakeConnector:ShakeAndBakeConnector;
 		private var _stateSignal:RequestStateChangeSignal;
 		private var _stage3dProxy:Stage3DProxy;
+		private var _view3d:View3D;
 
 		public function CoreModule( injector:Injector = null ) {
 			super();
@@ -90,16 +92,23 @@ package net.psykosoft.psykopaint2.core
 
 		private function initStage3dASync():void {
 			Cc.log( this, "initializing stage3d..." );
+
 			var stage3dManager:Stage3DManager = Stage3DManager.getInstance( stage );
 			_stage3dProxy = stage3dManager.getFreeStage3DProxy();
 			_stage3dProxy.width = 1024;
 			_stage3dProxy.height = 768;
 			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContext3dCreated, false, 50 );
+
+			// Init 3d.
+			_view3d = new View3D();
+			_view3d.stage3DProxy = _stage3dProxy;
+			_view3d.shareContext = true;
+			_view3d.camera.lens.far = 50000;
 		}
 
 		private function initRobotlegs():void {
 //			trace( this, "initRobotlegs with stage: " + stage + ", and stage3d: " + _stage3d );
-			var config:CoreConfig = new CoreConfig( this, stage, _stage3dProxy.stage3D );
+			var config:CoreConfig = new CoreConfig( this, stage, _stage3dProxy.stage3D, _view3d );
 			_stateSignal = config.injector.getInstance( RequestStateChangeSignal ); // Necessary for rendering the core on enter frame.
 			_injector = config.injector;
 			Cc.log( this, "initializing robotlegs context" );
@@ -126,7 +135,7 @@ package net.psykosoft.psykopaint2.core
 			Cc.log( this, "initialized" );
 
 			// Init display tree.
-			addChild( new CoreRootView() );
+			addChild( new CoreRootView( _view3d ) );
 
 			// Initial application state.
 			_stateSignal.dispatch( StateType.STATE_IDLE );
@@ -183,6 +192,10 @@ package net.psykosoft.psykopaint2.core
 
 		public function get stage3dProxy():Stage3DProxy {
 			return _stage3dProxy;
+		}
+
+		public function get view3d():View3D {
+			return _view3d;
 		}
 	}
 }

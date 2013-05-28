@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.core.views.base
 {
 
+	import away3d.containers.View3D;
+
 	import flash.display.Sprite;
 
 	import net.psykosoft.psykopaint2.core.views.components.SbCheckBox;
@@ -14,17 +16,18 @@ package net.psykosoft.psykopaint2.core.views.base
         [Inject]
         public var view:CoreRootView;
 
-        public function CoreRootView() {
+        public function CoreRootView( view3d:View3D ) {
             super();
 
             var navigationView:SbNavigationView = new SbNavigationView();
 
+			addChild( view3d );
             addChild( navigationView );
 
             // -----------------------
             // Tests...
             // -----------------------
-//			return;
+			return;
 
             // Simple slider test.
             var simpleSlider:SbSlider = new SbSlider();

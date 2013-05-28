@@ -41,7 +41,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			moduleManager.render();
 
-			if( view3d ) view3d.render();
+//			view3d.render();
 
 			stage3D.context3D.present();
 
