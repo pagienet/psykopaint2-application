@@ -264,7 +264,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_centerComponentsScroller.invalidateContent();
 			// Position center buttons.
 			_centerComponentsScroller.x = 1024 / 2 - _centerComponentsScroller.minWidth / 2;
-			_centerComponentsScroller.y = 768 - BG_HEIGHT / 2 - _centerComponentsScroller.pageHeight / 2 - 25;
+			_centerComponentsScroller.y = 768 - BG_HEIGHT / 2 - _centerComponentsScroller.pageHeight / 2;
 		}
 
 		public function areButtonsSelectable( value:Boolean ):void {
