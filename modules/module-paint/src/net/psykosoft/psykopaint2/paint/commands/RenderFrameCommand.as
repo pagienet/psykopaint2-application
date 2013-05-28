@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
 
+	import away3d.containers.View3D;
+
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
 	import flash.utils.getTimer;
@@ -21,6 +23,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var stage3D:Stage3D;
 
+		[Inject]
+		public var view3d:View3D;
+
 		public function execute():void
 		{
 //			trace ("--------");
@@ -35,6 +40,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			stage3D.context3D.clear(1, 1, 1, 1);
 
 			moduleManager.render();
+
+			if( view3d ) view3d.render();
 
 			stage3D.context3D.present();
 

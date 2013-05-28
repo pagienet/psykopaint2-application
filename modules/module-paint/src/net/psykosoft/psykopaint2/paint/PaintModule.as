@@ -48,6 +48,7 @@ package net.psykosoft.psykopaint2.paint
 			// Init core module.
 			if( !_coreModule ) {
 				_coreModule = new CoreModule();
+				_coreModule.isStandalone = false;
 				_coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
 				addChild( _coreModule );
 			}

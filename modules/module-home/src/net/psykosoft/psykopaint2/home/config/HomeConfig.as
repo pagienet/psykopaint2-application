@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.home.config
 {
 
+	import away3d.containers.View3D;
+
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
@@ -16,9 +18,12 @@ package net.psykosoft.psykopaint2.home.config
 		private var _injector:Injector;
 		private var _mediatorMap:IMediatorMap;
 		private var _commandMap:ISignalCommandMap;
+		private var _view3d:View3D;
 
-		public function HomeConfig( injector:Injector ) {
+		public function HomeConfig( injector:Injector, view3d:View3D ) {
 			super();
+
+			_view3d = view3d;
 
 			_injector = injector;
 			_mediatorMap = _injector.getInstance( IMediatorMap );
@@ -58,7 +63,7 @@ package net.psykosoft.psykopaint2.home.config
 		// -----------------------
 
 		private function mapSingletons():void {
-
+			_injector.map( View3D ).toValue( _view3d );
 		}
 
 		// -----------------------

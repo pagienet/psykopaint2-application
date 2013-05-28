@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 
+	import away3d.containers.View3D;
+
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
@@ -28,16 +30,21 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyNavigationToggleSignal:NotifyNavigationToggledSignal;
 
+		[Inject]
+		public var view3d:View3D;
+
 //		[Inject]
 //		public var notifyFocusedPaintingChangedSignal:RequestActivePaintingChangeSignal;
 
 		override public function initialize():void {
 
+			// Init.
 			super.initialize();
 			registerView( view );
 			registerEnablingState( StateType.HOME );
 			registerEnablingState( StateType.HOME_ON_PAINTING );
 			registerEnablingState( StateType.HOME_SETTINGS );
+			view.setView3d( view3d );
 
 			// From app.
 //			notifyWallpaperChangeSignal.add( onWallPaperChanged );
@@ -46,6 +53,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// From view.
 //			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
+
 
 		}
 

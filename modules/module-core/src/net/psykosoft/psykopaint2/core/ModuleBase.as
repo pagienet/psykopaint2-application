@@ -7,6 +7,8 @@ package net.psykosoft.psykopaint2.core
 
 	public class ModuleBase extends Sprite
 	{
+		public var isStandalone:Boolean = true;
+
 		public var moduleReadySignal:Signal;
 
 		public function ModuleBase() {
