@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.commands
 {
 
 	import flash.display.Stage3D;
+	import flash.display3D.Context3D;
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
@@ -18,7 +19,8 @@ package net.psykosoft.psykopaint2.core.commands
 		override public function execute():void {
 			super.execute();
 
-			// TODO: bring in render time
+			var context:Context3D = stage3D.context3D;
+			if( !context ) return;
 
 			var preTime:Number = getTimer();
 

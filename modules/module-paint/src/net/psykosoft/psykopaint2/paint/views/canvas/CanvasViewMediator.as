@@ -82,7 +82,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			paintModule.view = view;
 
 			// Register canvas gpu rendering in core.
-			GpuRenderManager.addRenderingStep( paintModuleRenderingsStep, GpuRenderingStepType.NORMAL );
+			GpuRenderManager.addRenderingStep( paintModulePreRenderingStep, GpuRenderingStepType.PRE_CLEAR );
+			GpuRenderManager.addRenderingStep( paintModuleNormalRenderingsStep, GpuRenderingStepType.NORMAL );
 
 			// Drawing core to app proxying.
 			notifyModuleActivatedSignal.add( onDrawingCoreModuleActivated );
@@ -92,12 +93,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 		}
 
-		private function paintModuleRenderingsStep():void {
-			var context:Context3D = stage3D.context3D;
-			if( !context ) return;
+		private function paintModulePreRenderingStep():void {
 			lightingModel.update();
-			stage3D.context3D.setRenderToBackBuffer();
-			stage3D.context3D.clear(1, 1, 1, 1);
+		}
+
+		private function paintModuleNormalRenderingsStep():void {
 			moduleManager.render();
 		}
 
