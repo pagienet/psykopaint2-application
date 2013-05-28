@@ -44,8 +44,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override protected function onDisposed():void {
 
-			trace( ">>>>>>> DISPOSED!" );
-
 			var len:uint = _elements.length;
 			for( var i:uint; i < len; ++i ) {
 				var element:Sprite = _elements[ i ];
