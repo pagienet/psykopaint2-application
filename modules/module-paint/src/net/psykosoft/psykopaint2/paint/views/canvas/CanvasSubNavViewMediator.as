@@ -33,6 +33,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					requestStateChange( StateType.STATE_PAINT_SELECT_BRUSH );
 					break;
 				}
+				case CanvasSubNavView.LBL_HOME: {
+					requestStateChange( StateType.STATE_HOME );
+					break;
+				}
 				case CanvasSubNavView.LBL_CLEAR: {
 					requestClearCanvasSignal.dispatch();
 					break;

@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.views.base
 {
 
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 
 	import net.psykosoft.psykopaint2.core.views.components.SbCheckBox;
@@ -11,12 +12,19 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	public class CoreRootView extends Sprite
     {
+		private var _mainLayer:Sprite;
+
         public function CoreRootView() {
             super();
 
-            var navigationView:SbNavigationView = new SbNavigationView();
+			_mainLayer = new Sprite();
+			addChild( _mainLayer );
 
-            addChild( navigationView );
+			var frontLayer:Sprite = new Sprite();
+			addChild( frontLayer );
+
+            var navigationView:SbNavigationView = new SbNavigationView();
+            frontLayer.addChild( navigationView );
 
             // -----------------------
             // Tests...
@@ -54,5 +62,9 @@ package net.psykosoft.psykopaint2.core.views.base
             combobox.y = 200;
             addChild( combobox );
         }
-    }
+
+		public function addToMainLayer( child:DisplayObject ):void {
+			_mainLayer.addChild( child );
+		}
+	}
 }

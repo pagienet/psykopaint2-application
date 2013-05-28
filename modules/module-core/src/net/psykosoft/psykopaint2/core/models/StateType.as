@@ -5,9 +5,9 @@ package net.psykosoft.psykopaint2.core.models
 		public static const STATE_IDLE:String = "state/idle";
 		public static const STATE_PREVIOUS:String = "state/previous";
 
-		public static const HOME:String = "state/home";
-		public static const HOME_ON_PAINTING:String = "state/home/on_painting";
-		public static const HOME_SETTINGS:String = "state/home/settings";
+		public static const STATE_HOME:String = "state/home";
+		public static const STATE_HOME_ON_PAINTING:String = "state/home/on_painting";
+		public static const STATE_HOME_SETTINGS:String = "state/home/settings";
 
 		public static const STATE_COLOR_STYLE:String = "state/color_style";
 		public static const STATE_CROP:String = "state/crop";

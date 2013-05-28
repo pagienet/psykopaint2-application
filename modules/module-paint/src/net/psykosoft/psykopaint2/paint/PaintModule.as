@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.paint
 			var config:PaintConfig = new PaintConfig( coreInjector );
 
 			// Init display tree for this module.
-			_coreModule.addChild( new PaintRootView() ); // Initialize display tree.
+			_coreModule.addModuleDisplay( new PaintRootView() ); // Initialize display tree.
 
 			// Init drawing core.
 			config.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...

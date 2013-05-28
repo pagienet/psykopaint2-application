@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 
+	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class HomeSubNavViewMediator extends MediatorBase
@@ -20,8 +21,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
-				case HomeSubNavView.LBL_NEWS1:
-//					requestStateChange( new StateVO( ApplicationStateType.SETTINGS ) ); // TODO: currently disabled
+				case HomeSubNavView.LBL_PAINT:
+					requestStateChange( StateType.STATE_PAINT );
 					break;
 				case HomeSubNavView.LBL_NEWS2:
 //					notifyPopUpDisplaySignal.dispatch( PopUpType.NO_FEATURE ); // TODO: currently disabled

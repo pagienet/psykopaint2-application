@@ -3,11 +3,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import flash.display.Stage;
 	import flash.display.Stage3D;
-	import flash.display3D.Context3D;
 	import flash.geom.Rectangle;
 
-	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 
+	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
@@ -94,12 +94,18 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function paintModulePreRenderingStep():void {
-			trace( this, "pre rendering canvas" );
+			if( !view.visible ) return;
+			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
+				trace( this, "pre rendering canvas" );
+			}
 			lightingModel.update();
 		}
 
 		private function paintModuleNormalRenderingsStep():void {
-			trace( this, "rendering canvas" );
+			if( !view.visible ) return;
+			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
+				trace( this, "rendering canvas" );
+			}
 			moduleManager.render();
 		}
 

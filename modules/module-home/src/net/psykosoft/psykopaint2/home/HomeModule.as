@@ -54,10 +54,10 @@ package net.psykosoft.psykopaint2.home
 			var config:HomeConfig = new HomeConfig( coreInjector );
 
 			// Init display tree for this module.
-			_coreModule.addChild( new HomeRootView() );
+			_coreModule.addModuleDisplay( new HomeRootView() );
 
 			// Trigger initial state...
-			config.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
+			config.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( coreInjector );

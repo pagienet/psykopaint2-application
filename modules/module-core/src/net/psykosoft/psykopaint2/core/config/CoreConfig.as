@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.core.config
 {
 
+	import away3d.core.managers.Stage3DProxy;
+
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
@@ -34,11 +36,12 @@ package net.psykosoft.psykopaint2.core.config
 	{
 		private var _stage:Stage;
 		private var _stage3d:Stage3D;
+		private var _stage3dProxy:Stage3DProxy;
 		private var _injector:Injector;
 		private var _mediatorMap:IMediatorMap;
 		private var _commandMap:ISignalCommandMap;
 
-		public function CoreConfig( display:DisplayObjectContainer, stage:Stage, stage3d:Stage3D ) {
+		public function CoreConfig( display:DisplayObjectContainer, stage:Stage, stage3d:Stage3D, stage3dProxy:Stage3DProxy ) {
 			super();
 
 			var context:IContext = new Context();
@@ -51,6 +54,7 @@ package net.psykosoft.psykopaint2.core.config
 
 			_stage = stage;
 			_stage3d = stage3d;
+			_stage3dProxy = stage3dProxy;
 
 			mapMediators();
 			mapCommands();
@@ -87,6 +91,7 @@ package net.psykosoft.psykopaint2.core.config
 		private function mapSingletons():void {
 			_injector.map( Stage ).toValue( _stage );
 			_injector.map( Stage3D ).toValue( _stage3d );
+			_injector.map( Stage3DProxy ).toValue( _stage3dProxy );
 			_injector.map( GestureManager ).asSingleton();
 		}
 

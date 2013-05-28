@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 
 	import away3d.containers.View3D;
+	import away3d.core.managers.Stage3DProxy;
 
 	import flash.display.BitmapData;
 
@@ -35,14 +36,18 @@ package net.psykosoft.psykopaint2.home.views.home
 //		[Inject]
 //		public var notifyFocusedPaintingChangedSignal:RequestActivePaintingChangeSignal;
 
+		[Inject]
+		public var stage3dProxy:Stage3DProxy;
+
 		override public function initialize():void {
 
 			// Init.
 			super.initialize();
 			registerView( view );
-			registerEnablingState( StateType.HOME );
-			registerEnablingState( StateType.HOME_ON_PAINTING );
-			registerEnablingState( StateType.HOME_SETTINGS );
+			registerEnablingState( StateType.STATE_HOME );
+			registerEnablingState( StateType.STATE_HOME_ON_PAINTING );
+			registerEnablingState( StateType.STATE_HOME_SETTINGS );
+			view.stage3dProxy = stage3dProxy;
 
 			// Register view gpu rendering in core.
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );

@@ -3,11 +3,13 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
+	import away3d.core.managers.Stage3DProxy;
 
 	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.AssetBundleLoader;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PictureFrameContainer;
 	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
@@ -19,6 +21,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _frameContainer:PictureFrameContainer;
 		private var _loader:AssetBundleLoader;
 		private var _view:View3D;
+		private var _stage3dProxy:Stage3DProxy;
 
 		public function HomeView() {
 			super();
@@ -45,8 +48,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			// -----------------------
 
 			_view = new View3D();
+			_view.mouseEnabled = _view.mouseChildren = false;
+			_view.stage3DProxy = _stage3dProxy;
 			_view.shareContext = true;
 			_view.camera.lens.far = 50000;
+
+			// TODO: does the path manager update when scrolling on the 3d view? it shouldn't!
 
 			// -----------------------
 			// Initialize objects.
@@ -131,7 +138,9 @@ package net.psykosoft.psykopaint2.home.views.home
 //			trace( this, "rendering 3d?" );
 			if( !_loader.done ) return; // Bounces off 3d rendering when the scene is not ready or active.
 			if( !_view.parent ) return;
-			trace( this, "rendering 3d" );
+			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
+				trace( this, "rendering 3d" );
+			}
 			_cameraController.update();
 			_view.render();
 		}
@@ -150,6 +159,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function get cameraController():ScrollCameraController {
 			return _cameraController;
+		}
+
+		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
+			_stage3dProxy = stage3dProxy;
 		}
 	}
 }

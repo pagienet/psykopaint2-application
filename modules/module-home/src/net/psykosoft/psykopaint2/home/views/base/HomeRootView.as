@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.home.views.base
 			addChild( homeView );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
-			StateToSubNavLinker.linkSubNavToState( StateType.HOME, HomeSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.STATE_HOME, HomeSubNavView );
 		}
 	}
 }
