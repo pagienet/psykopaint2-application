@@ -183,5 +183,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
 			_stage3dProxy = stage3dProxy;
 		}
+
+		public function get stuffCreated():Boolean {
+			return _stuffCreated;
+		}
 	}
 }
