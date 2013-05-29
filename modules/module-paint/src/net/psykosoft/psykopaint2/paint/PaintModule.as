@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.paint
 	import com.junkbyte.console.Cc;
 
 	import flash.events.Event;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.ModuleBase;
@@ -18,6 +19,7 @@ package net.psykosoft.psykopaint2.paint
 	public class PaintModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;
+		private var _paintConfig:PaintConfig;
 
 		public function PaintModule( core:CoreModule = null ) {
 			super();
@@ -55,16 +57,21 @@ package net.psykosoft.psykopaint2.paint
 			new DrawingCore( coreInjector );
 
 			// Initialize the paint module.
-			var config:PaintConfig = new PaintConfig( coreInjector );
+			_paintConfig = new PaintConfig( coreInjector );
 
 			// Init display tree for this module.
 			_coreModule.addModuleDisplay( new PaintRootView() ); // Initialize display tree.
 
 			// Init drawing core.
-			config.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...
+			startCore();
+//			setTimeout( startModule, 2000 ); // TODO: remove time out, currently necessary because some views are not ready yet ( on stage )
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( coreInjector );
+		}
+
+		private function startCore():void {
+			_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...
 		}
 
 		// ---------------------------------------------------------------------

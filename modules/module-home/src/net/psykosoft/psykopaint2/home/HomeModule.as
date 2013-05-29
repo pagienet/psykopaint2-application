@@ -57,12 +57,11 @@ package net.psykosoft.psykopaint2.home
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( coreInjector );
 
-			// Trigger initial state...
-				config.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
-
 			// Start local enterframe is standalone.
 			if( isStandalone ) {
 				trace( this, " >>> starting as standalone." );
+				// Trigger initial state...
+				config.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
 			}
 		}
 

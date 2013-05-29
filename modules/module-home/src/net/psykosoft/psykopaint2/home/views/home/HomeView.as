@@ -36,6 +36,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 
 		override protected function onEnabled():void {
+			if( !_stuffCreated ) createStuff();
 			addChild( _view );
 			_cameraController.isActive = true;
 		}
@@ -47,6 +48,13 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		override protected function onSetup():void {
+
+		}
+
+		// TODO: replace this by relying on ViewBase enable->setup functionality...
+		private var _stuffCreated:Boolean;
+		private function createStuff():void {
+			trace( "CREATED<><><><><" );
 
 			// -----------------------
 			// Initialize view.
@@ -109,6 +117,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_loader.registerAsset( "/home-packaged/away3d/floorpapers/wood.jpg", "floorWood" );
 
 			_loader.startLoad();
+
+			_stuffCreated = true;
 		}
 
 		private function onAssetsReady( event:Event ):void {
@@ -144,7 +154,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function renderScene():void {
 //			trace( this, "rendering 3d?" );
-			if( !_loader.done ) return; // Bounces off 3d rendering when the scene is not ready or active.
+			// TODO: why keep loader around?
+			if( !_loader || !_loader.done ) return; // Bounces off 3d rendering when the scene is not ready or active.
 			if( !_view.parent ) return;
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "rendering 3d" );

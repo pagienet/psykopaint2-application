@@ -51,12 +51,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			hiddenAnimatedSignal = new Signal();
 			scrollingStartedSignal = new Signal();
 			scrollingEndedSignal = new Signal();
+			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbNavigationButton;
+			_rightButton = rightBtnSide.getChildByName( "btn" ) as SbNavigationButton;
 		}
 
 		override protected function onSetup():void {
-
-			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbNavigationButton;
-			_rightButton = rightBtnSide.getChildByName( "btn" ) as SbNavigationButton;
 
 			_leftButton.setLabelType( NavigationButtonLabelType.LEFT );
 			_rightButton.setLabelType( NavigationButtonLabelType.RIGHT );
@@ -105,6 +104,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function updateSubNavigation( subNavType:Class ):void {
+
+			if( subNavType == null ) return;
 
 			visible = true;
 
@@ -155,6 +156,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// ---------------------------------------------------------------------
 
 		private function resetCenterButtons():void {
+			if( !_centerComponentsScroller ) return;
 			_buttonPositionOffsetX = _leftButton.width / 2 + _centerComponentsScroller.edgeContentGap;
 			if( _centerButtons && _centerButtons.length > 0 ) {
 				var len:uint = _centerButtons.length;
