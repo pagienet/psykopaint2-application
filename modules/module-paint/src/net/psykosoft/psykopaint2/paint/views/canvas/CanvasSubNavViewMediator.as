@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
 
 	public class CanvasSubNavViewMediator extends MediatorBase
 	{
@@ -34,7 +35,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 				case CanvasSubNavView.LBL_HOME: {
-					requestStateChange( StateType.STATE_HOME );
+					if( !PaintSettings.isStandalone ) {
+						requestStateChange( StateType.STATE_HOME );
+					}
 					break;
 				}
 				case CanvasSubNavView.LBL_CLEAR: {

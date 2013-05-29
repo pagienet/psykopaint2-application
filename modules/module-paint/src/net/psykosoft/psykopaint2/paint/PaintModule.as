@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.ModuleBase;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
+	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 
@@ -35,12 +36,14 @@ package net.psykosoft.psykopaint2.paint
 			trace( this, "initializing..." );
 			// Init core module.
 			if( !_coreModule ) {
+				PaintSettings.isStandalone = true;
 				_coreModule = new CoreModule();
 				_coreModule.isStandalone = false;
 				_coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
 				addChild( _coreModule );
 			}
 			else {
+				PaintSettings.isStandalone = false;
 				onCoreModuleReady( _coreModule.injector );
 			}
 		}
