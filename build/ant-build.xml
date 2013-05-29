@@ -42,6 +42,9 @@
 		<xmltask source="config-ipad-hr.xml" dest="config-ipad-hr.xml" report="true">
 			<replace path="/:application/:versionNumber/text()" withText="${version}"/>
 		</xmltask>
+		<xmltask source="config-ipad-lr.xml" dest="config-ipad-lr.xml" report="true">
+			<replace path="/:application/:versionNumber/text()" withText="${version}"/>
+		</xmltask>
 	</target>
 
 	<!-- ******************** -->

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<application xmlns="http://ns.adobe.com/air/application/3.6">
+    <id>com.psykosoft.psykopaint2</id>
+    <filename>PsykoPaint2Desktop</filename>
+    <name>PsykoPaint2Desktop</name>
+    <versionNumber>0.4.2</versionNumber>
+    <initialWindow>
+        <content>SWF file name is set automatically at compile time</content>
+        <aspectRatio>landscape</aspectRatio>
+        <autoOrients>true</autoOrients>
+        <fullScreen>true</fullScreen>
+        <renderMode>direct</renderMode>
+		<depthAndStencil>true</depthAndStencil>
+    </initialWindow>
+    <iPhone>
+        <InfoAdditions>
+            <![CDATA[
+            <key>UIDeviceFamily</key>
+            <array>
+                <string>2</string>
+            </array>
+            ]]>
+        </InfoAdditions>
+        <requestedDisplayResolution>low</requestedDisplayResolution>
+    </iPhone>
+    <extensions>
+        <extensionID>net.psykosoft.notifications</extensionID>
+        <extensionID>net.psykosoft.photos</extensionID>
+		<extensionID>net.psykosoft.gyroscope</extensionID>
+    </extensions>
+</application>
