@@ -1,0 +1,32 @@
+add ft5.xy, v0.xy, fc20.xy
+tex ft5, ft5.xyxy, fs2 <2d, clamp, nearest, mipnone>
+max ft4.x, ft4.x, fc0.y
+min ft4.x, ft4.x, fc0.y
+
+add ft5.xy, v0.xy, fc20.zw
+tex ft5, ft5.xyxy, fs2 <2d, clamp, nearest, mipnone>
+sub ft4.y, ft5.x, ft7.x
+max ft4.y, ft4.y, fc0.y
+add ft4.x, ft4.x, ft4.y
+
+add ft5.xy, v0.xy, fc21.xy
+tex ft5, ft5.xyxy, fs2 <2d, clamp, nearest, mipnone>
+sub ft4.y, ft5.x, ft7.x
+max ft4.y, ft4.y, fc0.y
+add ft4.x, ft4.x, ft4.y
+
+add ft5.xy, v0.xy, fc21.zw
+tex ft5, ft5.xyxy, fs2 <2d, clamp, nearest, mipnone>
+sub ft4.y, ft5.x, ft7.x
+max ft4.y, ft4.y, fc0.y
+add ft4.x, ft4.x, ft4.y
+
+add ft5.xy, v0.xy, fc22.xy
+tex ft5, ft5.xyxy, fs2 <2d, clamp, nearest, mipnone>
+sub ft4.y, ft5.x, ft7.x
+max ft4.y, ft4.y, fc0.y
+add ft4.x, ft4.x, ft4.y
+
+mul ft4.x, ft4.x, fc10.w
+sub ft4.x, fc0.z, ft4.x	// 1 - ...
+mul ft4.xyz, fc10.xyz, ft4.x

@@ -1,0 +1,11 @@
+// reflection vector: R = 2*(V.N)*N - V
+dp3 ft4.x, ft2.xyz, ft0.xyz
+add ft4.x, ft4.x, ft4.x
+mul ft4.xyz, ft4.x, ft0.xyz
+sub ft4.xyz, ft4.xyz, ft2.xyz
+
+// specular strength
+dp3 ft4.x, ft4.xyz, ft1
+max ft4.x, ft4.x, fc0.y
+pow ft4.x, ft4.x, fc15.y
+mul ft4.x, ft4.x, fc15.x

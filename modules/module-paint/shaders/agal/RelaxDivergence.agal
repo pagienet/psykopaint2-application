@@ -1,0 +1,40 @@
+///
+// Parameters:
+//
+//   Texture2D linearSampler+field;
+//
+//
+// Registers:
+//
+//   Name                Reg   Size
+//   ------------------- ----- ----
+//   linearSampler+field s0       1
+//
+// Declarations:
+// Define c0, 0.100000001, 2, 0, 0
+//
+tex ft0, v2, fs0 <2d, clamp, nearest, mipnone>
+tex ft1, v1, fs0 <2d, clamp, nearest, mipnone>
+tex ft2, v0, fs0 <2d, clamp, nearest, mipnone>
+sub ft0.x, ft2.x, ft1.x
+add ft0.x, ft2.y, ft0.x
+sub ft0.x, ft0.x, ft0.y
+mul ft0.y, ft0.x, fc0.x
+mul ft7.x, ft0.y, fc0.y
+sub ft6.z, ft2.z, ft7.x
+mov ft6.w, ft2.w
+mul ft7.x, ft0.x, fc0.x
+sub ft0.xy, ft2.xyyy, ft7.x
+tex ft1, v3, fs0 <2d, clamp, nearest, mipnone>
+sub ft0.z, ft1.x, ft0.x
+add ft0.z, ft1.y, ft0.z
+tex ft1, v4, fs0 <2d, clamp, nearest, mipnone>
+sub ft1.x, ft0.z, ft1.y
+tex ft2, v6, fs0 <2d, clamp, nearest, mipnone>
+tex ft3, v5, fs0 <2d, clamp, nearest, mipnone>
+sub ft0.z, ft3.x, ft2.x
+add ft0.z, ft3.y, ft0.z
+sub ft1.y, ft0.z, ft0.y
+mul ft7, ft1, fc0.x
+add ft6.xy, ft0.xyyy, ft7.xyyy
+mov oc, ft6

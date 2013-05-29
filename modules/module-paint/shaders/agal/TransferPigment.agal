@@ -1,0 +1,39 @@
+///
+// Parameters:
+//
+//   float density;
+//   float densityOverStainingPower;
+//   float granulation;
+//   Texture2D linearSampler+normalHeightMap;
+//   Texture2D linearSampler+pigmentField;
+//
+//
+// Registers:
+//
+//   Name                          Reg   Size
+//   ----------------------------- ----- ----
+//   granulation                   c0       1
+//   density                       c1       1
+//   densityOverStainingPower      c2       1
+//   linearSampler+pigmentField    s0       1
+//   linearSampler+normalHeightMap s1       1
+//
+// Declarations:
+// Define c3, 1, -1, 0, 0
+//
+tex ft0, v0, fs1 <2d, clamp, nearest, mipnone>
+mov ft0.x, fc3.x
+mul ft7.x, ft0.w, fc0.x
+sub ft0.y, ft0.x, ft7.x
+add ft0.z, ft0.w, fc3.y
+mul ft7.x, ft0.z, fc0.x
+add ft0.x, ft0.x, ft7.x
+tex ft1, v0, fs0 <2d, clamp, nearest, mipnone>
+mul ft0.xy, ft0.xyyy, ft1.yxzw
+mul ft0.y, ft0.y, fc1.x
+mul ft7.x, ft0.x, fc2.x
+sub ft0.x, ft7.x, ft0.y
+add ft6.x, ft0.x, ft1.x
+sub ft6.y, ft1.y, ft0.x
+mov ft6.zw, ft1.zzzw
+mov oc, ft6

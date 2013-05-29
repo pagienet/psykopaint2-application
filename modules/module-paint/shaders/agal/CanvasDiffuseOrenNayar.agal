@@ -1,0 +1,25 @@
+// Define c5 factors
+// Define c6, 0.5, 1, 0.5, 2.8
+
+dp3 ft6.x, ft2.xyz, ft0.xyz	// VdotN
+dp3 ft6.y, ft1.xyz, ft0.xyz	// LdotN
+neg ft6.xy, ft6.xy
+mul ft4, ft0, ft6.x
+sub ft4, ft2, ft4
+mul ft5, ft0, ft6.y
+sub ft5, ft1, ft5
+dp3 ft6.z, ft4, ft5	// gamma
+
+add ft5.xy, ft6.xy, fc6.y
+mul ft5.xy, ft5.xy, fc6.x
+tex ft5, ft5.xyxy, fs3 <2d, clamp, linear, mipnone>
+sub ft5.x, ft5.x, fc6.x
+mul ft5.x, ft5.x, fc6.w	// C
+
+max ft6.z, ft6.z, fc0.y
+mul ft6.z, ft6.z, ft5.x	// max(0.0f, gamma) * C
+mul ft6.z, ft6.z, fc5.y
+add ft6.z, ft6.z, fc5.x	// A + B * max(0.0f, gamma) * C
+
+max ft6.y, ft6.y, fc0.y
+mul ft4.x, ft6.y, ft6.z

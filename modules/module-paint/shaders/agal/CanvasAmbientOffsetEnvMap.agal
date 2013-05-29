@@ -1,0 +1,4 @@
+mul ft4, ft0, fc0.x
+add ft5, v0, ft4.xyxy
+tex ft4, ft5, fs4 <2d, clamp, linear, mipnone>
+mul ft4, ft4, fc10

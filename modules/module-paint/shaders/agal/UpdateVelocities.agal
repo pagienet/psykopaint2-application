@@ -1,0 +1,82 @@
+///
+// Parameters:
+//
+//   float drag;
+//   float dt;
+//   Texture2D linearSampler+field;
+//   float viscosity;
+//
+//
+// Registers:
+//
+//   Name                Reg   Size
+//   ------------------- ----- ----
+//   viscosity           c0       1
+//   drag                c1       1
+//   dt                  c2       1
+//   linearSampler+field s0       1
+//
+// Declarations:
+// Define c3, -0.5, 2, 8, 0.5
+//
+tex ft0, v2, fs0 <2d, clamp, linear, mipnone>
+add ft0.zw, ft0.xyxy, fc3.x
+add ft0.zw, ft0.zzzw, ft0.zzzw
+tex ft1, v1, fs0 <2d, clamp, linear, mipnone>
+add ft2.xy, ft1.xyyy, fc3.x
+mul ft7, ft2.xyxy, fc3.y
+add ft0.zw, ft0.zzzw, ft7.zzzw
+tex ft2, v3, fs0 <2d, clamp, linear, mipnone>
+add ft2.zw, ft2.xyxy, fc3.x
+mul ft7, ft2, fc3.y
+add ft0.zw, ft0.zzzw, ft7.zzzw
+tex ft3, v4, fs0 <2d, clamp, linear, mipnone>
+add ft2.zw, ft3.xyxy, fc3.x
+mul ft7, ft2, fc3.y
+add ft0.zw, ft0.zzzw, ft7.zzzw
+tex ft4, v0, fs0 <2d, clamp, linear, mipnone>
+add ft2.zw, ft4.xyxy, fc3.x
+mul ft7, ft2, fc3.z
+sub ft0.zw, ft0.zzzw, ft7.zzzw
+tex ft5, v5, fs0 <2d, clamp, linear, mipnone>
+add ft1.w, ft5.y, fc3.x
+add ft1.w, ft1.w, ft1.w
+add ft7, fc3.x, ft4
+mul ft7, ft7, fc3.y
+sub ft5.xy, ft7.xyyy, ft4.xyyy
+add ft2.zw, ft2.zzzw, ft2.zzzw
+add ft0.xy, ft0.xyyy, ft5.xyyy
+add ft1.xy, ft1.xyyy, ft5.xyyy
+mov ft4.x, ft1.z
+mul ft1.x, ft1.x, ft1.x
+mul ft7.x, ft0.x, ft0.x
+sub ft0.x, ft7.x, ft1.x
+add ft1.xz, ft2.xyyw, ft5.xyyw
+add ft2.xy, ft3.xyyy, ft5.xyyy
+mov ft4.y, ft3.z
+mul ft7.x, ft1.x, ft1.w
+add ft0.x, ft0.x, ft7.x
+mul ft7.x, ft2.x, ft1.y
+sub ft3.x, ft0.x, ft7.x
+mul ft0.x, ft2.y, ft2.y
+mul ft7.x, ft1.z, ft1.z
+sub ft0.x, ft7.x, ft0.x
+tex ft5, v6, fs0 <2d, clamp, linear, mipnone>
+add ft1.x, ft5.x, fc3.x
+add ft1.x, ft1.x, ft1.x
+mul ft7.x, ft1.x, ft0.y
+add ft0.x, ft0.x, ft7.x
+mul ft7.x, ft2.x, ft1.y
+sub ft3.y, ft0.x, ft7.x
+mul ft7, fc0.x, ft0.zwzw
+add ft0.xy, ft3.xyyy, ft7.xyyy
+mul ft7, fc1.x, ft2.zwzw
+sub ft0.xy, ft0.xyyy, ft7.xyyy
+add ft0.xy, ft4.z, ft0.xyyy
+mov ft6.zw, ft4.zzzw
+sub ft0.xy, ft0.xyyy, ft4.xyyy
+mul ft7, fc2.x, ft0
+add ft0.xy, ft2.zwzw, ft7.xyyy
+mul ft7, ft0, fc3.w
+add ft6.xy, fc3.w, ft7.xyyy
+mov oc, ft6

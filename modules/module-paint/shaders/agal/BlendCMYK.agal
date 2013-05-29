@@ -1,0 +1,28 @@
+///
+// Parameters:
+//
+//   Texture2D linearSampler+bottom;
+//   Texture2D linearSampler+top;
+//
+//
+// Registers:
+//
+//   Name                 Reg   Size
+//   -------------------- ----- ----
+//   linearSampler+top    s0       1
+//   linearSampler+bottom s1       1
+//
+// Declarations:
+// Define c0, 1, 0, 0, 0
+//
+tex ft0, v0.xyxy, fs0 <2d, clamp, linear, mipnone>
+sub ft0.xyz, ft0.w, ft0.xyzz
+tex ft1, v1.xyxy, fs1 <2d, clamp, linear, mipnone>
+sub ft1.xyz, ft1.w, ft1.xyzz
+sub ft7.x, fc0.x, ft0.w
+mul ft7.x, ft7.x, ft1.w
+add ft2.x, ft0.w, ft7.x
+add ft0.xyz, ft0.xyzz, ft1.xyzz
+sub ft6.xyz, ft2.x, ft0.xyzz
+mov ft6.w, ft2.x
+mov oc, ft6

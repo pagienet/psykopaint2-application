@@ -1,0 +1,48 @@
+///
+// Parameters:
+//
+//   Texture2D linearSampler+pigmentField;
+//   Texture2D linearSampler+velocityField;
+//
+//
+// Registers:
+//
+//   Name                        Reg   Size
+//   --------------------------- ----- ----
+//   linearSampler+velocityField s0       1
+//   linearSampler+pigmentField  s1       1
+//
+// Declarations:
+// Define c0, -0.5, 0, -0, 1
+//
+tex ft0, v1, fs1 <2d, clamp, nearest, mipnone>
+tex ft1, v0, fs0 <2d, clamp, linear, mipnone>
+add ft0.yz, ft1.xxyw, fc0.x
+add ft0.yz, ft0.yyzz, ft0.yyzz
+mul ft1.y, ft0.x, ft0.y
+tex ft2, v3, fs1 <2d, clamp, nearest, mipnone>
+mul ft1.w, ft0.z, ft2.x
+neg ft7, ft1
+max ft2.yw, ft7.yyww, fc0.z
+tex ft1, v2, fs1 <2d, clamp, nearest, mipnone>
+tex ft3, v2, fs0 <2d, clamp, linear, mipnone>
+add ft0.x, ft3.x, fc0.x
+add ft0.x, ft0.x, ft0.x
+mul ft1.x, ft1.x, ft0.x
+tex ft3, v4, fs1 <2d, clamp, nearest, mipnone>
+tex ft4, v4, fs0 <2d, clamp, linear, mipnone>
+add ft0.w, ft4.y, fc0.x
+add ft0.w, ft0.w, ft0.w
+mul ft1.z, ft3.x, ft0.w
+max ft2.xz, ft1.xzzz, fc0.y
+tex ft1, v0, fs1 <2d, clamp, nearest, mipnone>
+mul ft3.yw, ft0.xxzw, ft1.x
+neg ft7, ft3
+max ft4.yw, ft7.yyww, fc0.z
+mul ft0.xy, ft0.yzzw, ft1.x
+max ft4.xz, ft0.xyyw, fc0.y
+sub ft0, ft2, ft4
+dp4 ft0.x, ft0, fc0.w
+add ft6.x, ft0.x, ft1.x
+mov ft6.yzw, ft1.yyzw
+mov oc, ft6
