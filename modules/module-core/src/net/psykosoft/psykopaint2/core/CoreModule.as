@@ -22,6 +22,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
+	import net.psykosoft.psykopaint2.base.utils.XMLLoader;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.config.CoreConfig;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
@@ -37,6 +38,9 @@ package net.psykosoft.psykopaint2.core
 
 	public class CoreModule extends ModuleBase
 	{
+		[Embed(source='../../../../../../../build/ant-build.xml', mimeType="application/octet-stream")]
+    	public var XmlAsset:Class;
+
 		private var _injector:Injector;
 		private var _stage3dInitialized:Boolean;
 		private var _shakeAndBakeInitialized:Boolean;
@@ -45,7 +49,8 @@ package net.psykosoft.psykopaint2.core
 		private var _requestGpuRenderingSignal:RequestGpuRenderingSignal;
 		private var _stage3d:Stage3D;
 		private var _time:Number = 0;
-		private var _textField:TextField;
+		private var _statsTextField:TextField;
+		private var _versionTextField:TextField;
 		private var _fpsStackUtil:StackUtil;
 		private var _renderTimeStackUtil:StackUtil;
 		private var _stage3dProxy:Stage3DProxy;
@@ -55,8 +60,8 @@ package net.psykosoft.psykopaint2.core
 
 		public function CoreModule( injector:Injector = null ) {
 			super();
-			trace( ">>>>> CoreModule starting..." );
 			_injector = injector;
+			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CoreModule";
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
@@ -70,11 +75,10 @@ package net.psykosoft.psykopaint2.core
 
 		private function initialize():void {
 
-			trace( this, "initializing..." );
-
+			getVersion();
 			initDebugging();
 
-			Cc.log( this, "initializing core: " + CoreSettings.NAME + ", " + CoreSettings.VERSION + " ----------------------------------------" );
+			Cc.log( this, "Initializing... [" + name + "] v" + CoreSettings.VERSION );
 
 			initPlatform();
 			initStage();
@@ -83,18 +87,34 @@ package net.psykosoft.psykopaint2.core
 			initShakeAndBakeAsync();
 		}
 
+		private function getVersion():void {
+			var xml:XML = XML( new XmlAsset() );
+			CoreSettings.VERSION = xml.property.( @name == "version" ).@value;
+		}
+
 		private function initStats():void {
 			if( !CoreSettings.SHOW_STATS ) return;
 			_fpsStackUtil = new StackUtil();
 			_renderTimeStackUtil = new StackUtil();
 			_fpsStackUtil.count = 24;
 			_renderTimeStackUtil.count = 24;
-			_textField = new TextField();
-			_textField.width = 200;
-			_textField.selectable = false;
-			_textField.mouseEnabled = false;
-			_textField.scaleX = _textField.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
-			addChild( _textField );
+			_statsTextField = new TextField();
+			_statsTextField.width = 200;
+			_statsTextField.selectable = false;
+			_statsTextField.mouseEnabled = false;
+			_statsTextField.scaleX = _statsTextField.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
+			addChild( _statsTextField );
+		}
+
+		private function initVersion():void {
+			if( !CoreSettings.SHOW_VERSION ) return;
+			_versionTextField = new TextField();
+			_versionTextField.scaleX = _versionTextField.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
+			_versionTextField.width = 200;
+			_versionTextField.mouseEnabled = _versionTextField.selectable = false;
+			_versionTextField.text = CoreSettings.NAME + ", version: " + CoreSettings.VERSION;
+			_versionTextField.y = 25;
+			addChild( _versionTextField );
 		}
 
 		private function initDebugging():void {
@@ -169,6 +189,7 @@ package net.psykosoft.psykopaint2.core
 			_coreRootView = new CoreRootView();
 			addChild( _coreRootView );
 			initStats();
+			initVersion();
 
 			// Initial application state.
 			_stateSignal.dispatch( StateType.STATE_IDLE );
@@ -203,7 +224,7 @@ package net.psykosoft.psykopaint2.core
 			_renderTimeStackUtil.pushValue( RenderGpuCommand.renderTime );
 			var renderTime:int = int( _renderTimeStackUtil.getAverageValue() );
 
-			_textField.text = fps + "\n" + "Render time: " + renderTime + "ms";
+			_statsTextField.text = fps + "\n" + "Render time: " + renderTime + "ms";
 		}
 
 		// ---------------------------------------------------------------------

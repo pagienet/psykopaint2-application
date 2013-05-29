@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.home
 
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.ModuleBase;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.config.HomeConfig;
@@ -20,8 +21,8 @@ package net.psykosoft.psykopaint2.home
 
 		public function HomeModule( core:CoreModule = null ) {
 			super();
-			trace( ">>>>> HomeModule starting..." );
 			_coreModule = core;
+			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "HomeModule";
 			if( !_coreModule ) {
 				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			}

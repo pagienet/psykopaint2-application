@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint
 
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.ModuleBase;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
@@ -23,8 +24,8 @@ package net.psykosoft.psykopaint2.paint
 
 		public function PaintModule( core:CoreModule = null ) {
 			super();
-			trace( ">>>>> PaintModule starting..." );
 			_coreModule = core;
+			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "PaintModule";
 			if( !_coreModule ) {
 				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			}
