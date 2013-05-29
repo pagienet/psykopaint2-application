@@ -31,9 +31,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _buttonPositionOffsetX:Number;
 		private var _centerButtons:Array;
 		private var _centerComponentsScroller:HorizontalSnapScroller;
-		private var _elementPosOffsetX:Number = 0;
-		private var _elementPosOffsetY:Number = 0;
-		private var _elementCreatingPageNum:uint = 1;
 		private var _areButtonsSelectable:Boolean;
 		private var _animating:Boolean;
 		private var _showing:Boolean = true;
@@ -119,7 +116,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			rightBtnSide.visible = false;
 			_areButtonsSelectable = false;
 			resetCenterButtons();
-			resetElements();
 			_centerComponentsScroller.reset();
 
 			// Disable old view.
@@ -158,12 +154,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Private.
 		// ---------------------------------------------------------------------
 
-		private function resetElements():void {
-			_elementPosOffsetX = 0;
-			_elementPosOffsetY = 0;
-			_elementCreatingPageNum = 1;
-		}
-
 		private function resetCenterButtons():void {
 			_buttonPositionOffsetX = _leftButton.width / 2 + _centerComponentsScroller.edgeContentGap;
 			if( _centerButtons && _centerButtons.length > 0 ) {
@@ -198,45 +188,37 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Methods called by SubNavigationViewBase.
 		// ---------------------------------------------------------------------
 
-		public function addCenterElement( element:Sprite ):void {
-			element.x = _elementPosOffsetX;
-			element.y = _elementPosOffsetY;
-			trace( this, "addCenterElement - element added at: " + element.x + ", " + element.y );
-			trace( this, "element dimensions: " + element.width + ", " + element.height );
-			_elementPosOffsetX += element.width + ELEMENT_GAP;
-			if( _elementPosOffsetX + element.width > _elementCreatingPageNum * _centerComponentsScroller.pageWidth ) {
-				_elementPosOffsetX = ( _elementCreatingPageNum - 1 ) * _centerComponentsScroller.pageWidth;
-				_elementPosOffsetY += element.height / 2 + ELEMENT_GAP;
-			}
-			if( _elementPosOffsetY + element.height > _centerComponentsScroller.pageHeight ) {
-				_elementCreatingPageNum++;
-				_elementPosOffsetX = ( _elementCreatingPageNum - 1 ) * _centerComponentsScroller.pageWidth;
-				_elementPosOffsetY = 0;
-			}
-			_centerComponentsScroller.addChild( element );
-		}
-
-		public function addCenterButton( label:String, iconType:String, labelType:String ):void {
+		public function addCenterButton( label:String, iconType:String, labelType:String ):Sprite {
 			var specificButtonClass:Class = Class( getDefinitionByName( getQualifiedClassName( _leftButton ) ) );
-			var centerButton:SbNavigationButton = new specificButtonClass();
-			centerButton.labelText = label;
-			centerButton.setIconType( iconType );
-			centerButton.setLabelType( labelType );
-			centerButton.x = _buttonPositionOffsetX;
-			centerButton.y = _centerComponentsScroller.pageHeight / 2;
-			centerButton.addEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
+			var btn:SbNavigationButton = new specificButtonClass();
+			btn.labelText = label;
+			btn.setIconType( iconType );
+			btn.setLabelType( labelType );
+			btn.x = _buttonPositionOffsetX;
+			btn.y = _centerComponentsScroller.pageHeight / 2;
+			btn.addEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
 			if( _areButtonsSelectable ) {
-				centerButton.isSelectable = true;
+				btn.isSelectable = true;
 				if( _centerButtons.length == 0 ) {
-					centerButton.toggleSelect( true );
+					btn.toggleSelect( true );
 				}
 			}
-			_centerComponentsScroller.addChild( centerButton );
-			_centerButtons.push( centerButton );
+			_centerComponentsScroller.addChild( btn );
+			_centerButtons.push( btn );
 			_buttonPositionOffsetX += 140 + BUTTON_GAP_X;
+			return btn;
 		}
 
 		public function setLabel( value:String ):void {
+
+			if( value == "" ) {
+				header.visible = headerBg.visible = false;
+				return;
+			}
+			else {
+				header.visible = headerBg.visible = true;
+			}
+
 			header.text = value;
 			header.visible = true;
 

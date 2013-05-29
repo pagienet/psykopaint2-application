@@ -1,134 +1,171 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
-	import flash.display.Sprite;
+	import flash.display.DisplayObject;
 	import flash.events.Event;
-	import flash.utils.Dictionary;
+	import flash.events.MouseEvent;
 
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.views.components.SbNavigationButton;
 	import net.psykosoft.psykopaint2.core.views.components.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.SbSlider;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	import org.osflash.signals.Signal;
 
-	// TODO: remove minimalcomps dependency if not used
-
 	public class BrushParametersSubNavView extends SubNavigationViewBase
 	{
-		public static const LBL_BACK:String = "Back";
-		public static const UI_ELEMENT_SCALING:Number = 0.75;
+		private var _btns:Vector.<SbNavigationButton>;
+		private var _uiElements:Vector.<DisplayObject>;
+		private var _parametersXML:XML;
 
-		private var _uiElementToParameter:Dictionary;
-		private var _elements:Vector.<Sprite>;
+		public static const LBL_BACK:String = "Back";
+
+		private const UI_ELEMENT_Y:uint = 560;
 
 		public var brushParameterChangedSignal:Signal;
 
 		public function BrushParametersSubNavView() {
 			super();
 			brushParameterChangedSignal = new Signal();
-			_uiElementToParameter = new Dictionary();
-			_elements = new Vector.<Sprite>();
 		}
 
 		override protected function onEnabled():void {
-
-			setLabel( "Edit Brush" );
-
-			areButtonsSelectable( false );
-
+			setLabel( "" );
+			areButtonsSelectable( true );
 			setLeftButton( LBL_BACK );
-
 			invalidateContent();
 		}
 
 		override protected function onDisposed():void {
-
-			var len:uint = _elements.length;
+			// Dispose local button listeners ( the rest is disposed in SbNavigationView ).
+			var len:uint = _btns.length;
 			for( var i:uint; i < len; ++i ) {
-				var element:Sprite = _elements[ i ];
-				if( element is SbSlider ) {
-					element.removeEventListener( Event.CHANGE, onSliderChanged );
-					SbSlider( element ).dispose();
-				}
-				else if( element is SbRangedSlider ) {
-					element.removeEventListener( Event.CHANGE, onRangeSliderChanged );
-					SbRangedSlider( element ).dispose();
-				}
+				var btn:SbNavigationButton = _btns[ i ];
+				btn.removeEventListener( MouseEvent.MOUSE_UP, onParameterClicked );
 			}
-
-			_uiElementToParameter = new Dictionary();
-			_elements = new Vector.<Sprite>();
+			_btns = null;
+			// Dispose other components.
+			closeLastParameter();
 		}
 
-		public function setParameters( parameters:XML ):void {
+		public function setParameters( xml:XML ):void {
+			_parametersXML = xml;
+//			trace( this, "receiving parameters: " + _parametersXML );
+			// Create a center button for each parameter, with a local listener.
+			// Specific parameter ui components will show up when clicking on a button.
+			_btns = new Vector.<SbNavigationButton>();
+			var numParameters:uint = _parametersXML.parameter.length();
+			for( var i:uint; i < numParameters; ++i ) {
+				var parameter:XML = _parametersXML.parameter[ i ];
+				var btn:SbNavigationButton = addCenterButton( parameter.@id ) as SbNavigationButton;
+				btn.addEventListener( MouseEvent.MOUSE_UP, onParameterClicked );
+				_btns.push( btn );
+			}
+			invalidateContent();
+			openParameter( _parametersXML.parameter[ 0 ].@id );
+		}
 
-//			trace( this, "setParameters ------------------------------------" );
+		private function onParameterClicked( event:MouseEvent ):void {
+			var button:SbNavigationButton = event.target as SbNavigationButton;
+			if( !button ) button = event.target.parent as SbNavigationButton;
+			var label:String = button.labelText;
+			openParameter( label );
+		}
 
-			var parameterList:XMLList = parameters.parameter;
+		private function openParameter( id:String ):void {
+			closeLastParameter();
 
-			var len:uint = parameterList.length();
-			for( var i:uint; i < len; ++i ) {
-				var parameter:XML = parameterList[ i ];
-				var type:uint = uint( parameter.@type );
-//				trace( this, "parameter type: " + type );
+			_uiElements = new Vector.<DisplayObject>();
 
-				// Simple slider.
-				if( type == PsykoParameter.IntParameter || type == PsykoParameter.NumberParameter ) {
+//			trace( this, "opening parameter: " + id );
+			var parameter:XMLList = getParameterFromId( id );
+			var parameterType:uint = uint( parameter.@type );
 
-					var slider:SbSlider = new SbSlider();
-					slider.scaleX = slider.scaleY = UI_ELEMENT_SCALING;
-					slider.numDecimals = 3;
-					slider.minimum = Number( parameter.@minVlaue );
-					slider.maximum = Number( parameter.@maxValue );
-					slider.setValue( Number( parameter.@value ) );
-					slider.setIdLabel( String( parameter.@id ) );
-					slider.addEventListener( SbSlider.CHANGE, onSliderChanged );
+			// Simple slider.
+			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
 
-					_uiElementToParameter[ slider ] = parameter;
-					_elements.push( slider );
-					addCenterElement( slider );
-				}
+				var slider:SbSlider = new SbSlider();
+				slider.numDecimals = 3;
+				slider.minimum = Number( parameter.@minValue );
+				slider.maximum = Number( parameter.@maxValue );
+				slider.setValue( Number( parameter.@value ) );
+				slider.setIdLabel( String( parameter.@id ) );
+				slider.addEventListener( SbSlider.CHANGE, onSliderChanged );
+				positionUiElement( slider );
+				addChild( slider );
 
-				// Range slider.
-				if( type == PsykoParameter.IntRangeParameter || type == PsykoParameter.NumberRangeParameter ) {
-
-					var rangeSlider:SbRangedSlider = new SbRangedSlider();
-					rangeSlider.scaleX = rangeSlider.scaleY = UI_ELEMENT_SCALING;
-					rangeSlider.numDecimals = 1;
-					rangeSlider.minValue = Number( parameter.@minValue );
-					rangeSlider.maxValue = Number( parameter.@maxValue );
-					rangeSlider.setValue( Number( parameter.@value ) );
-//					rangeSlider.minValue = Number( parameter.@value1 );
-//					rangeSlider.maxValue = Number( parameter.@value2 );
-					rangeSlider.setIdLabel( String( parameter.@id ) );
-					rangeSlider.addEventListener( SbRangedSlider.CHANGE, onRangeSliderChanged );
-
-					_uiElementToParameter[ rangeSlider ] = parameter;
-					_elements.push( rangeSlider );
-					addCenterElement( rangeSlider );
-
-				}
+				_uiElements.push( slider );
 			}
 
-			invalidateContent();
+			// Range slider.
+			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter ) {
+
+				var rangeSlider:SbRangedSlider = new SbRangedSlider();
+				rangeSlider.numDecimals = 1;
+				rangeSlider.minValue = Number( parameter.@minValue );
+				rangeSlider.maxValue = Number( parameter.@maxValue );
+				rangeSlider.setValue( Number( parameter.@value ) );
+				rangeSlider.setIdLabel( String( parameter.@id ) );
+				rangeSlider.addEventListener( SbRangedSlider.CHANGE, onRangeSliderChanged );
+				positionUiElement( rangeSlider );
+				addChild( rangeSlider );
+
+				_uiElements.push( rangeSlider );
+			}
+
+			// TODO: support more parameter types...
+			else {
+				trace( this, "*** Warning *** - parameter type not supported: " + parameterType );
+			}
+		}
+
+		private function closeLastParameter():void {
+			if( !_uiElements ) return;
+			// Remove all ui elements from display and clear listeners
+			var len:uint = _uiElements.length;
+			for( var i:uint; i < len; ++i ) {
+				var uiElement:DisplayObject = _uiElements[ i ];
+				if( uiElement is SbSlider ) uiElement.removeEventListener( SbSlider.CHANGE, onSliderChanged );
+				else if( uiElement is SbRangedSlider ) uiElement.removeEventListener( SbRangedSlider.CHANGE, onRangeSliderChanged );
+				else {
+					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
+				}
+				removeChild( uiElement );
+			}
+			_uiElements = null;
+		}
+
+		private function positionUiElement( element:DisplayObject ):void {
+			element.x = 1024 / 2 - element.width / 2;
+			element.y = UI_ELEMENT_Y;
+		}
+
+		private function getParameterFromId( id:String ):XMLList {
+//			trace( this, "getting parameter from id: " + id );
+			var parameter:XMLList = _parametersXML.parameter.( @id == id );
+			return parameter;
+		}
+
+		// ---------------------------------------------------------------------
+		// Listeners.
+		// ---------------------------------------------------------------------
+
+		private function onSliderChanged( event:Event ):void {
+			var slider:SbSlider = event.target as SbSlider;
+			var parameter:XMLList = getParameterFromId( slider.getIdLabel() );
+			parameter.@value = slider.getValue();
+			brushParameterChangedSignal.dispatch( parameter );
+//			trace( this, "onSliderChanged: " + slider.value );
 		}
 
 		private function onRangeSliderChanged( event:Event ):void {
 			var slider:SbRangedSlider = event.target as SbRangedSlider;
-			var parameter:XML = _uiElementToParameter[ slider ];
+			var parameter:XMLList = getParameterFromId( slider.getIdLabel() );
 			parameter.@value1 = slider.minValue;
 			parameter.@value2 = slider.maxValue;
 			brushParameterChangedSignal.dispatch( parameter );
 //			trace( this, "onRangeSliderChanged: " + slider.lowValue + ", " + slider.highValue );
-		}
-
-		private function onSliderChanged( event:Event ):void {
-			var slider:SbSlider = event.target as SbSlider;
-			var parameter:XML = _uiElementToParameter[ slider ];
-			parameter.@value = slider.getValue();
-			brushParameterChangedSignal.dispatch( parameter );
-//			trace( this, "onSliderChanged: " + slider.value );
 		}
 	}
 }

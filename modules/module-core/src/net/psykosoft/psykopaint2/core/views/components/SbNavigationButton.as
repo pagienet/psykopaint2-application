@@ -118,7 +118,6 @@ package net.psykosoft.psykopaint2.core.views.components
 
 		public function toggleSelect( selected:Boolean ):void {
 			if( !_isSelectable ) return;
-			trace( "setting selected: " + selected );
 			btnSelected.visible = selected;
 		}
 

@@ -126,6 +126,10 @@ package net.psykosoft.psykopaint2.core.views.components
 			_sliderIdLabel.height = 1.25 * _sliderIdLabel.textHeight;
 		}
 
+		public function getIdLabel():String {
+			return _sliderIdLabel.text;
+		}
+
 		public function getValue():Number {
 			return _value;
 		}

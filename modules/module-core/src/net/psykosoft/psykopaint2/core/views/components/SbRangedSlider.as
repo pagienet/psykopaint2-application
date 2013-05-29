@@ -292,5 +292,9 @@ package net.psykosoft.psykopaint2.core.views.components
             _idLabel.width = 1.25 * _idLabel.textWidth;
 			_idLabel.height = 1.25 * _idLabel.textHeight;
 		}
+
+		public function getIdLabel():String {
+			return _idLabel.text;
+		}
 	}
 }

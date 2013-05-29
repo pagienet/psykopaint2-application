@@ -33,8 +33,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// From view.
 		// -----------------------
 
-		private function onBrushParameterChanged( parameter:XML ):void {
-			paintModule.setBrushParameter( parameter );
+		private function onBrushParameterChanged( parameter:XMLList ):void {
+			paintModule.setBrushParameter( parameter[ 0 ] );
 		}
 
 		private function onButtonClicked( label:String ):void {
@@ -43,6 +43,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					requestStateChange( StateType.STATE_PREVIOUS );
 					break;
 				}
+				// Note: Parameter buttons also have listeners within the sub nav view.
 			}
 		}
 	}
