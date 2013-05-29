@@ -3,7 +3,7 @@
     <id>com.psykosoft.psykopaint2</id>
     <filename>HomeModuleDesktop</filename>
     <name>HomeModuleDesktop</name>
-    <versionNumber>0.0.1</versionNumber>
+    <versionNumber>0.0.0</versionNumber>
     <initialWindow>
         <content>SWF file name is set automatically at compile time</content>
         <transparent>false</transparent>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <application xmlns="http://ns.adobe.com/air/application/3.6">
     <id>com.psykosoft.psykopaint2</id>
-    <filename>CoreModuleDesktop</filename>
-    <name>CoreModuleDesktop</name>
-    <versionNumber>0.0.0</versionNumber>
+    <filename>PsykoPaint2Desktop</filename>
+    <name>PsykoPaint2Desktop</name>
+    <versionNumber>0.0.1</versionNumber>
     <initialWindow>
         <content>SWF file name is set automatically at compile time</content>
         <transparent>false</transparent>
@@ -21,4 +21,9 @@
         <renderMode>direct</renderMode>
         <depthAndStencil>true</depthAndStencil>
     </initialWindow>
+	<extensions>
+        <extensionID>net.psykosoft.notifications</extensionID>
+		<extensionID>net.psykosoft.photos</extensionID>
+		<extensionID>net.psykosoft.gyroscope</extensionID>
+    </extensions>
 </application>

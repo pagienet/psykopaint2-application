@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Adobe Native Extension Packager" default="module-app" basedir=".">
+
+	<!-- TODO: find out if ant can help to set debug on/off -->
+
+	<!-- TODO: check if can be put below -->
+	<property name="module-app-out" value="${AppOutputPath}"/>
+	<property name="module-home-out" value="${HomeOutputPath}"/>
+	<property name="module-paint-out" value="${PaintOutputPath}"/>
+	<property name="module-core-out" value="${CoreOutputPath}"/>
+
+	<!-- ******************************************************** -->
+	<!-- Pick one of these for each module, from your IDE. -->
+	<!-- ******************************************************** -->
+
+	<target name="module-app" depends="move-packaged-assets-app"/>
+	<target name="module-home" depends="move-packaged-assets-home"/>
+	<target name="module-paint" depends="move-packaged-assets-paint"/>
+	<target name="module-core" depends="move-packaged-assets-core"/>
+
+	<!-- ******************** -->
+	<!-- module-app -->
+	<!-- ******************** -->
+
+	<target name="move-packaged-assets-app">
+		<copy todir="${AppOutputPath}/app-packaged">
+			<fileset dir="../modules/module-app/assets/packaged/app-packaged"/>
+		</copy>
+		<copy todir="${AppOutputPath}/home-packaged">
+			<fileset dir="../modules/module-home/assets/packaged/home-packaged"/>
+		</copy>
+		<copy todir="${AppOutputPath}/paint-packaged">
+			<fileset dir="../modules/module-paint/assets/packaged/paint-packaged"/>
+		</copy>
+		<copy todir="${AppOutputPath}/core-packaged">
+			<fileset dir="../modules/module-core/assets/packaged/core-packaged"/>
+		</copy>
+	</target>
+
+	<!-- ******************** -->
+	<!-- module-home -->
+	<!-- ******************** -->
+
+	<target name="move-packaged-assets-home">
+		<copy todir="${HomeOutputPath}/home-packaged">
+			<fileset dir="../modules/module-home/assets/packaged/home-packaged"/>
+		</copy>
+		<copy todir="${HomeOutputPath}/core-packaged">
+			<fileset dir="../modules/module-core/assets/packaged/core-packaged"/>
+		</copy>
+	</target>
+
+	<!-- ******************** -->
+	<!-- module-paint -->
+	<!-- ******************** -->
+
+	<target name="move-packaged-assets-paint">
+		<copy todir="${PaintOutputPath}/paint-packaged">
+			<fileset dir="../modules/module-paint/assets/packaged/paint-packaged"/>
+		</copy>
+		<copy todir="${PaintOutputPath}/core-packaged">
+			<fileset dir="../modules/module-core/assets/packaged/core-packaged"/>
+		</copy>
+	</target>
+
+	<!-- ******************** -->
+	<!-- module-core -->
+	<!-- ******************** -->
+
+	<target name="move-packaged-assets-core">
+		<copy todir="${CoreOutputPath}/core-packaged">
+			<fileset dir="../modules/module-core/assets/packaged/core-packaged"/>
+		</copy>
+	</target>
+
+</project>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
