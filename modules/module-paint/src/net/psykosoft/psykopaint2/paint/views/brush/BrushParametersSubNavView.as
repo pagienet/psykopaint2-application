@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
+	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
+
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.views.components.SbNavigationButton;
 	import net.psykosoft.psykopaint2.core.views.components.SbRangedSlider;
@@ -21,7 +23,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		public static const LBL_BACK:String = "Back";
 
-		private const UI_ELEMENT_Y:uint = 560;
+		private const UI_ELEMENT_Y:uint = /*100*/560;
 
 		public var brushParameterChangedSignal:Signal;
 
@@ -137,8 +139,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		private function positionUiElement( element:DisplayObject ):void {
-			element.x = 1024 / 2 - element.width / 2;
-			element.y = UI_ELEMENT_Y;
+			element.scaleX = element.scaleY = 1 / ViewCore.globalScaling; // TODO: fix this scaling hack, not sure why its necessary on ipad
+			element.x = ( 1024 / 2 - element.width / 2 ) / ViewCore.globalScaling;
+			element.y = UI_ELEMENT_Y / ViewCore.globalScaling;
+			trace( this, ">>> positioning element at: " + element.x + ", " + element.y );
 		}
 
 		private function getParameterFromId( id:String ):XMLList {
