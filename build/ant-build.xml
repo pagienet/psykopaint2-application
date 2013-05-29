@@ -1,38 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Adobe Native Extension Packager" default="module-app" basedir=".">
 
-	<!-- TODO: find out if ant can help to set debug on/off -->
+	<!-- ******************** -->
+	<!-- properties -->
+	<!-- ******************** -->
 
-	<!-- TODO: check if can be put below -->
+	<property name="version" value="0.4.2"/>
 	<property name="module-app-out" value="${AppOutputPath}"/>
 	<property name="module-home-out" value="${HomeOutputPath}"/>
 	<property name="module-paint-out" value="${PaintOutputPath}"/>
 	<property name="module-core-out" value="${CoreOutputPath}"/>
 
-	<!-- ******************************************************** -->
-	<!-- Pick one of these for each module, from your IDE. -->
-	<!-- ******************************************************** -->
+	<!-- **************************************************************************************** -->
+	<!-- Associate each one of the following task sets to each module in your workspace -->
+	<!-- **************************************************************************************** -->
 
-	<target name="module-app" depends="move-packaged-assets-app"/>
-	<target name="module-home" depends="move-packaged-assets-home"/>
-	<target name="module-paint" depends="move-packaged-assets-paint"/>
-	<target name="module-core" depends="move-packaged-assets-core"/>
+	<target name="module-app" depends="move-packaged-assets-app, update-version"/>
+	<target name="module-home" depends="move-packaged-assets-home, update-version"/>
+	<target name="module-paint" depends="move-packaged-assets-paint, update-version"/>
+	<target name="module-core" depends="move-packaged-assets-core, update-version"/>
+
+	<!-- ******************** -->
+	<!-- extensions -->
+	<!-- ******************** -->
+
+	<path id="xmltask-ref">
+		<pathelement location="xmltask.jar"/>
+	</path>
+	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="xmltask-ref"/>
+
+	<!-- ******************** -->
+	<!-- common -->
+	<!-- ******************** -->
+
+	<target name="update-version">
+		<xmltask source="config-desktop.xml" dest="config-desktop.xml" report="true">
+			<replace path="/:application/:versionNumber/text()" withText="${version}"/>
+		</xmltask>
+		<xmltask source="config-ipad-hr.xml" dest="config-ipad-hr.xml" report="true">
+			<replace path="/:application/:versionNumber/text()" withText="${version}"/>
+		</xmltask>
+	</target>
 
 	<!-- ******************** -->
 	<!-- module-app -->
 	<!-- ******************** -->
 
 	<target name="move-packaged-assets-app">
-		<copy todir="${AppOutputPath}/app-packaged">
+		<copy todir="${module-app-out}/app-packaged">
 			<fileset dir="../modules/module-app/assets/packaged/app-packaged"/>
 		</copy>
-		<copy todir="${AppOutputPath}/home-packaged">
+		<copy todir="${module-app-out}/home-packaged">
 			<fileset dir="../modules/module-home/assets/packaged/home-packaged"/>
 		</copy>
-		<copy todir="${AppOutputPath}/paint-packaged">
+		<copy todir="${module-app-out}/paint-packaged">
 			<fileset dir="../modules/module-paint/assets/packaged/paint-packaged"/>
 		</copy>
-		<copy todir="${AppOutputPath}/core-packaged">
+		<copy todir="${module-app-out}/core-packaged">
 			<fileset dir="../modules/module-core/assets/packaged/core-packaged"/>
 		</copy>
 	</target>
@@ -42,10 +66,10 @@
 	<!-- ******************** -->
 
 	<target name="move-packaged-assets-home">
-		<copy todir="${HomeOutputPath}/home-packaged">
+		<copy todir="${module-home-out}/home-packaged">
 			<fileset dir="../modules/module-home/assets/packaged/home-packaged"/>
 		</copy>
-		<copy todir="${HomeOutputPath}/core-packaged">
+		<copy todir="${module-home-out}/core-packaged">
 			<fileset dir="../modules/module-core/assets/packaged/core-packaged"/>
 		</copy>
 	</target>
@@ -55,10 +79,10 @@
 	<!-- ******************** -->
 
 	<target name="move-packaged-assets-paint">
-		<copy todir="${PaintOutputPath}/paint-packaged">
+		<copy todir="${module-paint-out}/paint-packaged">
 			<fileset dir="../modules/module-paint/assets/packaged/paint-packaged"/>
 		</copy>
-		<copy todir="${PaintOutputPath}/core-packaged">
+		<copy todir="${module-paint-out}/core-packaged">
 			<fileset dir="../modules/module-core/assets/packaged/core-packaged"/>
 		</copy>
 	</target>
@@ -68,7 +92,7 @@
 	<!-- ******************** -->
 
 	<target name="move-packaged-assets-core">
-		<copy todir="${CoreOutputPath}/core-packaged">
+		<copy todir="${module-core-out}/core-packaged">
 			<fileset dir="../modules/module-core/assets/packaged/core-packaged"/>
 		</copy>
 	</target>
