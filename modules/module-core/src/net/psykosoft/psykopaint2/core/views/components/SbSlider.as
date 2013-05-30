@@ -25,7 +25,8 @@ package net.psykosoft.psykopaint2.core.views.components
 		private var _stage:Stage;
 
 		public static const CHANGE:String = "onChange";
-		public static const STOP_DRAG:String = "STOP_DRAG";
+		public static const STOP_DRAG:String = "STOP_DRAG"; // TODO: borrar si no se usa
+		// TODO: de hecho, reemplazar estos por Event.CHANGE
 
 		public function SbSlider() {
 			super();

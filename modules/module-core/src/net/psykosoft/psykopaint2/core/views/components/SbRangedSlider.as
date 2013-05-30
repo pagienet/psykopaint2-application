@@ -37,8 +37,9 @@ package net.psykosoft.psykopaint2.core.views.components
 		private var _handleDistance:Number;
         //private var _minDistance:Number = 20; //TODO: minimum distance between handles is currently managed from within fla
 
-		public static const CHANGE:String = "onChange";
-		public static const STOP_DRAG:String = "STOP_DRAG";
+		public static const CHANGE:String = "onChange"; // TODO: ojo que no se estaba disparando el evento, tarde un rato largo en encontrar el bug, al probar un componente hay que probar -todas- sus funcionalidades
+		public static const STOP_DRAG:String = "STOP_DRAG"; // TODO: borrar si no se usa
+		// TODO: de hecho, reemplazar estos por Event.CHANGE
 
 		public function SbRangedSlider() {
 			super();
@@ -84,8 +85,8 @@ package net.psykosoft.psykopaint2.core.views.components
 			_limitForHandle[ leftHandleView ] = new Point( _minPosX, rightHandleView.x );
 			_limitForHandle[ rightHandleView ] = new Point( leftHandleView.x, _maxPosX );
 
-			setValue( _value1, 0 );
-			setValue( _value2, 1 );
+			setValue( _value1, 0, false );
+			setValue( _value2, 1, false );
 
 			leftHandleView.addEventListener( MouseEvent.MOUSE_DOWN, onLeftHandleMouseDown );
 			rightHandleView.addEventListener( MouseEvent.MOUSE_DOWN, onRightHandleMouseDown );
@@ -196,7 +197,7 @@ package net.psykosoft.psykopaint2.core.views.components
 			setValue( val2, 1 );
 		}
 
-		public function setValue( val:Number, index:int = 0 ):void {
+		public function setValue( val:Number, index:int = 0, notify:Boolean = true ):void {
 
 			//SET VALUE WITHIN BOUNDS
 			val = Math.max( Math.min( val, _maxValue ), _minValue );
@@ -215,6 +216,10 @@ package net.psykosoft.psykopaint2.core.views.components
 				_labelRight.text = String( num );
                 _labelRight.width = _labelRight.textWidth + 10;
 			    _labelRight.height = 1.25 * _labelRight.textHeight;
+			}
+
+			if( notify ) {
+				dispatchEvent( new Event( SbRangedSlider.CHANGE ) );
 			}
 		}
 
@@ -237,6 +242,8 @@ package net.psykosoft.psykopaint2.core.views.components
 			var limitedPosX:Number = Math.max( Math.min( posX, _maxPosX ), _minPosX );    //TODO: go through value managing methods, make sure they are ok
 			return  _minValue + totalRangeOfValues * ((posX - _minPosX) / rangePosition);
 		}
+
+		// TODO: remove unused items all around
 
 		private function valueToPosition( val:Number ):Number {
 			var valueRatio:Number = (val - _minValue) / totalRangeOfValues;
@@ -285,6 +292,14 @@ package net.psykosoft.psykopaint2.core.views.components
 				throw new Error( this, "value must be >= 1." );
 			}
 			_numDecimals = value;
+		}
+
+		public function get value2():Number {
+			return _value2;
+		}
+
+		public function get value1():Number {
+			return _value1;
 		}
 
 		public function setIdLabel( id:String ):void {

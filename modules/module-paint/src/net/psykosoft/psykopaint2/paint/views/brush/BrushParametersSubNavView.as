@@ -58,15 +58,16 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
 			_btns = new Vector.<SbNavigationButton>();
-			var numParameters:uint = _parametersXML.parameter.length();
+			var list:XMLList = _parametersXML.parameter;
+			var numParameters:uint = list.length();
 			for( var i:uint; i < numParameters; ++i ) {
-				var parameter:XML = _parametersXML.parameter[ i ];
+				var parameter:XML = list[ i ];
 				var btn:SbNavigationButton = addCenterButton( parameter.@id ) as SbNavigationButton;
 				btn.addEventListener( MouseEvent.MOUSE_UP, onParameterClicked );
 				_btns.push( btn );
 			}
 			invalidateContent();
-			openParameter( _parametersXML.parameter[ 0 ].@id );
+			openParameter( list[ 0 ].@id );
 		}
 
 		private function onParameterClicked( event:MouseEvent ):void {
@@ -81,8 +82,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			_uiElements = new Vector.<DisplayObject>();
 
-//			trace( this, "opening parameter: " + id );
-			var parameter:XMLList = getParameterFromId( id );
+			var parameter:XML = getParameterFromId( id );
 			var parameterType:uint = uint( parameter.@type );
 
 			// Simple slider.
@@ -108,7 +108,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				rangeSlider.numDecimals = 1;
 				rangeSlider.minValue = Number( parameter.@minValue );
 				rangeSlider.maxValue = Number( parameter.@maxValue );
-				rangeSlider.setValue( Number( parameter.@value ) );
+				rangeSlider.setValues( Number( parameter.@value1 ), Number( parameter.@value2 ) );
 				rangeSlider.setIdLabel( String( parameter.@id ) );
 				rangeSlider.addEventListener( SbRangedSlider.CHANGE, onRangeSliderChanged );
 				positionUiElement( rangeSlider );
@@ -142,15 +142,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private function positionUiElement( element:Sprite ):void {
 			// TODO: fix this scaling hack, not sure why its necessary on ipad.
 			element.scaleX = element.scaleY = 1 / ViewCore.globalScaling;
-			element.x = ( 1024 / 2 - element.width / 2 ) / ViewCore.globalScaling - 100;
+			element.x = ViewCore.globalScaling == 2 ? -100 : 0 + ( 1024 / 2 - element.width / 2 ) / ViewCore.globalScaling;
 			element.y = UI_ELEMENT_Y / ViewCore.globalScaling;
 //			trace( this, ">>> positioning element at: " + element.x + ", " + element.y + ", scale: " + scaleX );
 		}
 
-		private function getParameterFromId( id:String ):XMLList {
-//			trace( this, "getting parameter from id: " + id );
-			var parameter:XMLList = _parametersXML.parameter.( @id == id );
+		private function getParameterFromId( id:String ):XML {
+			var parameter:XML = _parametersXML.parameter.( @id == id )[ 0 ];
+//			trace( this, "getting parameter from id: " + id + ", value: " + parameter.toXMLString() );
 			return parameter;
+		}
+
+		private function updateParameter( parameter:XML ):void {
+			var id:String = parameter.@id;
+			_parametersXML.parameter.( @id == id )[ 0 ] = parameter;
 		}
 
 		// ---------------------------------------------------------------------
@@ -159,19 +164,19 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onSliderChanged( event:Event ):void {
 			var slider:SbSlider = event.target as SbSlider;
-			var parameter:XMLList = getParameterFromId( slider.getIdLabel() );
+			var parameter:XML = getParameterFromId( slider.getIdLabel() );
 			parameter.@value = slider.getValue();
+			updateParameter( parameter );
 			brushParameterChangedSignal.dispatch( parameter );
-//			trace( this, "onSliderChanged: " + slider.value );
 		}
 
 		private function onRangeSliderChanged( event:Event ):void {
 			var slider:SbRangedSlider = event.target as SbRangedSlider;
-			var parameter:XMLList = getParameterFromId( slider.getIdLabel() );
-			parameter.@value1 = slider.minValue;
-			parameter.@value2 = slider.maxValue;
+			var parameter:XML = getParameterFromId( slider.getIdLabel() );
+			parameter.@value1 = slider.value1;
+			parameter.@value2 = slider.value2;
+			updateParameter( parameter );
 			brushParameterChangedSignal.dispatch( parameter );
-//			trace( this, "onRangeSliderChanged: " + slider.lowValue + ", " + slider.highValue );
 		}
 	}
 }
