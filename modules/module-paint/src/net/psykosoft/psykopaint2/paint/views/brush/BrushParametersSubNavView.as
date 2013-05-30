@@ -106,11 +106,18 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 				var rangeSlider:SbRangedSlider = new SbRangedSlider();
 				rangeSlider.numDecimals = 1;
-				rangeSlider.minValue = Number( parameter.@minValue );
-				rangeSlider.maxValue = Number( parameter.@maxValue );
-				rangeSlider.setValues( Number( parameter.@value1 ), Number( parameter.@value2 ) );
-				rangeSlider.setIdLabel( String( parameter.@id ) );
-				rangeSlider.addEventListener( SbRangedSlider.CHANGE, onRangeSliderChanged );
+				rangeSlider.minValue = Number( 0.5 );
+//				rangeSlider.minValue = Number( parameter.@minValue );
+                trace("MINIMUM VALUE >>>>>>>>>>>>>>>>>>>>>>", parameter.@minValue );
+                trace("MAXIMUM VALUE >>>>>>>>>>>>>>>>>>>>>>", parameter.@maxValue );
+				rangeSlider.maxValue = Number( 10 );
+//				rangeSlider.maxValue = Number( parameter.@maxValue );
+				rangeSlider.value1 = Number( parameter.@value1 );
+				rangeSlider.value2 = Number( parameter.@value2 );
+                trace("VALUE 1 >>>>>>>>>>>>>>>>>>>>>>", parameter.@value1 );
+                trace("VALUE 2 >>>>>>>>>>>>>>>>>>>>>>", parameter.@value2 );
+				rangeSlider.label = String( parameter.@id );
+				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
 				positionUiElement( rangeSlider );
 				addChild( rangeSlider );
 
@@ -130,7 +137,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			for( var i:uint; i < len; ++i ) {
 				var uiElement:DisplayObject = _uiElements[ i ];
 				if( uiElement is SbSlider ) uiElement.removeEventListener( SbSlider.CHANGE, onSliderChanged );
-				else if( uiElement is SbRangedSlider ) uiElement.removeEventListener( SbRangedSlider.CHANGE, onRangeSliderChanged );
+				else if( uiElement is SbRangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
 				else {
 					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
 				}
@@ -172,7 +179,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onRangeSliderChanged( event:Event ):void {
 			var slider:SbRangedSlider = event.target as SbRangedSlider;
-			var parameter:XML = getParameterFromId( slider.getIdLabel() );
+			var parameter:XML = getParameterFromId( slider.label );
 			parameter.@value1 = slider.value1;
 			parameter.@value2 = slider.value2;
 			updateParameter( parameter );

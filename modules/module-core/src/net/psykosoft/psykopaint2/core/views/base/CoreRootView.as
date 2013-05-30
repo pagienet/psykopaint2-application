@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core.views.base
             // -----------------------
             // Tests...
             // -----------------------
-			return;
+//			return;
 
             // Simple slider test.
             /*var simpleSlider:SbSlider = new SbSlider();
@@ -45,15 +45,12 @@ package net.psykosoft.psykopaint2.core.views.base
             trace( "test slider dimensions: " + simpleSlider.width + ", " + simpleSlider.height );*/
 
             // Range slider test.
-			/*var container:Sprite = new Sprite();
-			container.scaleX = container.scaleY = 2;
-			addChild( container );
             var rangeSlider:SbRangedSlider = new SbRangedSlider();
             rangeSlider.x = 1024 / 2 - rangeSlider.width / 2;
             rangeSlider.y = 560;
-            rangeSlider.setIdLabel( "myRangeSlider" );
-            container.addChild( rangeSlider );
-            trace( "test range slider dimensions: " + rangeSlider.width + ", " + rangeSlider.height );*/
+            rangeSlider.label = "myRangeSlider";
+            addChild( rangeSlider );
+//            trace( "test range slider dimensions: " + rangeSlider.width + ", " + rangeSlider.height );
 
             //CheckBox test.
            /* var checkbox:SbCheckBox = new SbCheckBox();
