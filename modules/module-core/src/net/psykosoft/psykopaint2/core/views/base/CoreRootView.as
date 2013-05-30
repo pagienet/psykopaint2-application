@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.utils.Timer;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
+	import net.psykosoft.psykopaint2.core.views.components.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 
 	public class CoreRootView extends Sprite
@@ -34,7 +35,11 @@ package net.psykosoft.psykopaint2.core.views.base
             // -----------------------
             // Tests...
             // -----------------------
-//			return;
+			return;
+
+			this.graphics.beginFill(0x000000, 1.0);
+			this.graphics.drawRect(0, 0, 1024, 768);
+			this.graphics.endFill();
 
             // Simple slider test.
             /*var simpleSlider:SbSlider = new SbSlider();
@@ -49,6 +54,7 @@ package net.psykosoft.psykopaint2.core.views.base
             rangeSlider.x = 1024 / 2 - rangeSlider.width / 2;
             rangeSlider.y = 560;
             rangeSlider.label = "myRangeSlider";
+			// TODO: test set values
             addChild( rangeSlider );
 //            trace( "test range slider dimensions: " + rangeSlider.width + ", " + rangeSlider.height );
 
