@@ -164,7 +164,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function evaluateInteractionStart():void {
-			if( maxWidth <= visibleWidth ) return; // No need for scrolling if all content is visible in 1 page.
+			if( maxWidth - edgeContentGap <= visibleWidth ) return; // No need for scrolling if all content is visible in 1 page.
 			if( !mouseHitsPageArea() ) return; // Hit test.
 			_interactionManager.startInteraction();
 			startEnterframe();
@@ -197,7 +197,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		private function enterframeHandler( event:Event ):void {
-//			trace( this, "updating" ); // This should trace only when there is motion in the scroller.
+//			trace( this, ">>> updating scroller <<<" ); // This should trace only when there is motion in the scroller.
 			_interactionManager.update();
 			_positionManager.update();
 			_container.x = visibleWidth / 2 - _positionManager.position;

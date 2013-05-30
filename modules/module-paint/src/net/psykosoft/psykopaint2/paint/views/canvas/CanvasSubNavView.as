@@ -24,6 +24,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			addCenterButton( LBL_CLEAR, NavigationButtonIconType.NEW );
 			addCenterButton( LBL_HOME, NavigationButtonIconType.GALLERY );
+//			addCenterButton( "test" );
+//			addCenterButton( "test" );
+//			addCenterButton( "test" );
 
 			invalidateContent();
 		}
