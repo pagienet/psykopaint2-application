@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <application xmlns="http://ns.adobe.com/air/application/3.6">
     <id>com.psykosoft.psykopaint2</id>
-    <filename>PsykoPaint2Desktop</filename>
-    <name>PsykoPaint2Desktop</name>
+    <filename>Psykopaint2</filename>
+    <name>Psykopaint2</name>
     <versionNumber>0.4.4</versionNumber>
     <initialWindow>
         <content>SWF file name is set automatically at compile time</content>
