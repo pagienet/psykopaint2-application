@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.core.model
 		public function init() : void
 		{
 			_bytesAvailable = MAX_TEXTURE_MEMORY_USAGE;
-			trace ("CanvasHistoryModel: " + (MAX_TEXTURE_MEMORY_USAGE - _bytesAvailable)/(1024*1024) + "MB used");
+			trace ("CanvasHistoryModel.init: " + (MAX_TEXTURE_MEMORY_USAGE - _bytesAvailable)/(1024*1024) + "MB used");
 			_context = stage3d.context3D;
 		}
 
@@ -148,7 +148,7 @@ package net.psykosoft.psykopaint2.core.model
 			var texture : Texture = _context.createTexture(textureProxy.width, textureProxy.height, textureProxy.format, textureProxy.isRenderTarget);
 			textureProxy.setTexture(texture);
 			_bytesAvailable -= textureProxy.size;
-			trace ("CanvasHistoryModel: " + (MAX_TEXTURE_MEMORY_USAGE - _bytesAvailable)/(1024*1024) + "MB used");
+			trace ("CanvasHistoryModel.initTexture: " + (MAX_TEXTURE_MEMORY_USAGE - _bytesAvailable)/(1024*1024) + "MB used");
 		}
 
 		private function assureFreeSpace(size : uint) : void
@@ -156,14 +156,15 @@ package net.psykosoft.psykopaint2.core.model
 			if (size > MAX_TEXTURE_MEMORY_USAGE)
 				throw ResourceError("Stroke data larger than reserved space!");
 
-			while (_bytesAvailable < size)
+			//PATCH: this will result in an inifinite loop so I removed the while
+			//while (_bytesAvailable < size)
 				cleanUpOldest();
 		}
 
 		public function freeTexture(textureProxy : TextureProxy) : void
 		{
 			_bytesAvailable += textureProxy.size;
-			trace ("CanvasHistoryModel: " + (MAX_TEXTURE_MEMORY_USAGE - _bytesAvailable)/(1024*1024) + "MB used");
+			trace ("CanvasHistoryModel.freeTexture: " + (MAX_TEXTURE_MEMORY_USAGE - _bytesAvailable)/(1024*1024) + "MB used");
 			textureProxy.texture.dispose();
 			textureProxy.setTexture(null);
 		}

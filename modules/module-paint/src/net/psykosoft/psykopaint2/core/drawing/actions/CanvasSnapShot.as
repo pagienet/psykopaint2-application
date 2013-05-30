@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 	import flash.display3D.textures.Texture;
 	import flash.display3D.textures.TextureBase;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
@@ -76,10 +76,18 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 			return new TextureProxy(texWidth, texHeight, Context3DTextureFormat.BGRA, true, _textureManager);
 		}
 
-		public function dispose() : void
+		public function dispose() : uint
 		{
-			if (_colorTexture) _colorTexture.dispose();
-			if (_heightSpecularTexture) _heightSpecularTexture.dispose();
+			var freedBytes:uint = 0;
+			if (_colorTexture){
+				freedBytes += _colorTexture.size;
+				_colorTexture.dispose();
+			}
+			if (_heightSpecularTexture) {
+				freedBytes += _heightSpecularTexture.size;
+				_heightSpecularTexture.dispose();
+			}
+			return freedBytes;
 		}
 
 		public function get canvasBounds() : Rectangle

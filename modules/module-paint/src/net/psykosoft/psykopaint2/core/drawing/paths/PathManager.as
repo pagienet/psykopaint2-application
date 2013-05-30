@@ -287,7 +287,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if ( _currentTick == _lastUpdateTick ) return;
 			_lastUpdateTick = _currentTick;
 			
-			trace("updateDecorators: before: "+_accumulatedResults.length+ " points");
+			trace("updateDecorators: before: "+_accumulatedResults.length+ " points (frame: "+_currentTick+")");
 			var conditionalStack:Vector.<Vector.<SamplePoint>>;
 			var inCondition:int = -1;
 			for ( var i:int = 0; i < _pointDecorators.length; i++ )
