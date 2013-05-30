@@ -1,37 +1,24 @@
 package net.psykosoft.psykopaint2.core.drawing.modules
 {
+
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Stage3D;
 	import flash.events.Event;
-	import flash.utils.Dictionary;
-	
+
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.DelaunayBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.ShatterBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.UncoloredSprayCanBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterDamageBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ParticleDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.resources.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
 
 	public class PaintModule implements IModule
 	{

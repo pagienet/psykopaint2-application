@@ -8,25 +8,29 @@ package net.psykosoft.psykopaint2.core
 	import com.junkbyte.console.Cc;
 
 	import flash.display.DisplayObject;
-
 	import flash.display.Stage3D;
 	import flash.display.StageAlign;
 	import flash.display.StageQuality;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.text.TextField;
+	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
+
+	import net.psykosoft.notifications.NotificationsExtension;
+	import net.psykosoft.notifications.events.NotificationExtensionEvent;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.base.utils.DebuggingConsole;
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
-	import net.psykosoft.psykopaint2.base.utils.XMLLoader;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.config.CoreConfig;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
@@ -34,13 +38,13 @@ package net.psykosoft.psykopaint2.core
 	import org.swiftsuspenders.Injector;
 
 	// TODO: develop ant script that moves the packaged assets to bin ( only for the core )
-	// TODO: reconnect memory warnings ( conflict with the core, because it has its own memory warnings )
 
 	public class CoreModule extends ModuleBase
 	{
 		[Embed(source='../../../../../../../build/ant-build.xml', mimeType="application/octet-stream")]
     	public var XmlAsset:Class;
 
+		private var _coreConfig:CoreConfig;
 		private var _injector:Injector;
 		private var _stage3dInitialized:Boolean;
 		private var _shakeAndBakeInitialized:Boolean;
@@ -55,6 +59,8 @@ package net.psykosoft.psykopaint2.core
 		private var _renderTimeStackUtil:StackUtil;
 		private var _stage3dProxy:Stage3DProxy;
 		private var _coreRootView:CoreRootView;
+		private var _notificationsExtension:NotificationsExtension;
+		private var _memoryWarningNotification:NotifyMemoryWarningSignal;
 
 		public var updateActive:Boolean = true;
 
@@ -84,6 +90,7 @@ package net.psykosoft.psykopaint2.core
 			initStage();
 			initStage3dASync();
 			initRobotlegs();
+			initMemoryWarnings();
 			initShakeAndBakeAsync();
 		}
 
@@ -118,8 +125,13 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function initDebugging():void {
+			// Cc
 			var console:DebuggingConsole = new DebuggingConsole( this );
 			console.traceAllStaticVariablesInClass( CoreSettings );
+			// Keys
+			if( CoreSettings.USE_DEBUG_KEYS ) {
+				stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
+			}
 		}
 
 		private function initPlatform():void {
@@ -158,11 +170,18 @@ package net.psykosoft.psykopaint2.core
 
 		private function initRobotlegs():void {
 //			trace( this, "initRobotlegs with stage: " + stage + ", and stage3d: " + _stage3d );
-			var config:CoreConfig = new CoreConfig( this, stage, _stage3d, _stage3dProxy );
-			_requestGpuRenderingSignal = config.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
-			_stateSignal = config.injector.getInstance( RequestStateChangeSignal ); // Necessary for rendering the core on enter frame.
-			_injector = config.injector;
+			_coreConfig = new CoreConfig( this, stage, _stage3d, _stage3dProxy );
+			_requestGpuRenderingSignal = _coreConfig.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
+			_stateSignal = _coreConfig.injector.getInstance( RequestStateChangeSignal ); // Necessary for rendering the core on enter frame.
+			_injector = _coreConfig.injector;
 			Cc.log( this, "initializing robotlegs context" );
+		}
+
+		private function initMemoryWarnings():void {
+			_memoryWarningNotification = _coreConfig.injector.getInstance( NotifyMemoryWarningSignal );
+			_notificationsExtension = new NotificationsExtension();
+			_notificationsExtension.addEventListener( NotificationExtensionEvent.RECEIVED_MEMORY_WARNING, onMemoryWarning );
+			_notificationsExtension.initialize();
 		}
 
 		private function initShakeAndBakeAsync():void {
@@ -230,6 +249,20 @@ package net.psykosoft.psykopaint2.core
 		// ---------------------------------------------------------------------
 		// Listeners.
 		// ---------------------------------------------------------------------
+
+		private function onStageKeyDown( event:KeyboardEvent ):void {
+			switch( event.keyCode ) {
+				case Keyboard.M: {
+					_memoryWarningNotification.dispatch();
+					break;
+				}
+			}
+		}
+
+		private function onMemoryWarning( event:NotificationExtensionEvent ):void {
+			Cc.log( this, "*** WARNING *** - AS3 knows of an iOS memory warning." );
+			_memoryWarningNotification.dispatch();
+		}
 
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );

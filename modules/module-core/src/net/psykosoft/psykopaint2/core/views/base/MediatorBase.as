@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import com.junkbyte.console.Cc;
 
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
+
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
@@ -11,8 +13,8 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	public class MediatorBase extends Mediator
 	{
-//		[Inject]
-//		public var notifyMemoryWarningSignal:NotifyMemoryWarningSignal; // TODO: reconnect
+		[Inject]
+		public var notifyMemoryWarningSignal:NotifyMemoryWarningSignal;
 
 		[Inject]
 		public var notifyStateChangeSignal:NotifyStateChangeSignal;
@@ -32,7 +34,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 			_enablingStates = new Vector.<String>();
 
-//			notifyMemoryWarningSignal.add( onMemoryWarning );
+			notifyMemoryWarningSignal.add( onMemoryWarning );
 			notifyStateChangeSignal.add( onStateChange );
 		}
 
@@ -56,6 +58,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		}
 
 		protected function onMemoryWarning():void {
+			trace( this, "received memory warning." );
 			if( !manageMemoryWarnings ) return;
 			if( !_view.visible ) _view.dispose();
 		}

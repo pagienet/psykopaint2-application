@@ -1,17 +1,16 @@
 package net.psykosoft.psykopaint2.core.model
 {
+
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
-	import flash.display3D.textures.TextureBase;
 	import flash.geom.Matrix;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
-	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
 

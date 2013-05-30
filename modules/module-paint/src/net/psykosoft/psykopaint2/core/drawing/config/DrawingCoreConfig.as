@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 {
 
 	import flash.display.DisplayObjectContainer;
-	
+
 	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
 	import net.psykosoft.psykopaint2.core.commands.RedoCanvasActionCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderRubberMeshCommand;
@@ -34,7 +34,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
@@ -52,9 +51,9 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.signals.RequestRenderRubberMeshSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
-	
+
 	import org.swiftsuspenders.Injector;
-	
+
 	import robotlegs.bender.bundles.mvcs.MVCSBundle;
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
@@ -83,8 +82,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_commandMap = _injector.getInstance(ISignalCommandMap);
 
 			// Map notification signals.
-			_injector.map( NotifyMemoryWarningSignal ).asSingleton();
-
 			_injector.map( NotifyModuleActivatedSignal ).asSingleton();
 			_injector.map( NotifyAvailableBrushTypesSignal ).asSingleton();
 			_injector.map( NotifyActivateBrushChangedSignal ).asSingleton();

@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		public static const LBL_BACK:String = "Back";
 
-		private const UI_ELEMENT_Y:uint = /*100*/560;
+		private const UI_ELEMENT_Y:uint = 560;
 
 		public var brushParameterChangedSignal:Signal;
 
