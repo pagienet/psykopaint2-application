@@ -29,9 +29,7 @@
 		<extensionID>net.psykosoft.gyroscope</extensionID>
     </extensions>
 	<icon>
-        <image57x57>core-packaged/icon57.png</image57x57>
-        <image72x72>core-packaged/icon72.png</image72x72>
-        <image114x114>core-packaged/icon114.png</image114x114>
-        <image144x144>core-packaged/icon144.png</image144x144>
+		<!-- TODO: need more icons for itunes, store, etc: http://mrgan.tumblr.com/post/708404794/ios-app-icon-sizes -->
+       <image72x72>core-packaged/images/icon/icon72_ipad_lr.png</image72x72>
     </icon>
 </application>
