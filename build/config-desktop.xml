@@ -27,9 +27,9 @@
 		<extensionID>net.psykosoft.gyroscope</extensionID>
     </extensions>
 	<icon>
-        <image57x57>icon57.png</image57x57>
-        <image72x72>icon72.png</image72x72>
-        <image114x114>icon114.png</image114x114>
-        <image144x144>icon144.png</image144x144>   
+        <image57x57>core-packaged/icon57.png</image57x57>
+        <image72x72>core-packaged/icon72.png</image72x72>
+        <image114x114>core-packaged/icon114.png</image114x114>
+        <image144x144>core-packaged/icon144.png</image144x144>   
     </icon>
 </application>
