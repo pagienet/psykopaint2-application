@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 {
 
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
@@ -138,11 +139,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			_uiElements = null;
 		}
 
-		private function positionUiElement( element:DisplayObject ):void {
-			element.scaleX = element.scaleY = 1 / ViewCore.globalScaling; // TODO: fix this scaling hack, not sure why its necessary on ipad
-			element.x = ( 1024 / 2 - element.width / 2 ) / ViewCore.globalScaling;
+		private function positionUiElement( element:Sprite ):void {
+			// TODO: fix this scaling hack, not sure why its necessary on ipad.
+			element.scaleX = element.scaleY = 1 / ViewCore.globalScaling;
+			element.x = ( 1024 / 2 - element.width / 2 ) / ViewCore.globalScaling - 100;
 			element.y = UI_ELEMENT_Y / ViewCore.globalScaling;
-			trace( this, ">>> positioning element at: " + element.x + ", " + element.y );
+//			trace( this, ">>> positioning element at: " + element.x + ", " + element.y + ", scale: " + scaleX );
 		}
 
 		private function getParameterFromId( id:String ):XMLList {

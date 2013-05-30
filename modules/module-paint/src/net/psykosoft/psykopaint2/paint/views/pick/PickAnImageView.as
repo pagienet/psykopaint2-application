@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.pick
 
 	import net.psykosoft.photos.data.SheetVO;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.base.ui.components.HorizontalSnapScroller;
+	import net.psykosoft.psykopaint2.base.ui.components.HPageScroller;
 	import net.psykosoft.psykopaint2.base.utils.DesktopImageBrowser;
 	import net.psykosoft.psykopaint2.base.utils.IosImagesFetcher;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.paint.views.pick
 	{
 		private var _browser:DesktopImageBrowser;
 		private var _iosUtil:IosImagesFetcher;
-		private var _imageScroller:HorizontalSnapScroller;
+		private var _imageScroller:HPageScroller;
 		private var _thumbX:Number;
 		private var _thumbY:Number;
 		private var _creatingPageNum:uint;
@@ -41,9 +41,9 @@ package net.psykosoft.psykopaint2.paint.views.pick
 			graphics.endFill();
 
 			// Scroller.
-			_imageScroller = new HorizontalSnapScroller();
-			_imageScroller.pageHeight = 768;// * ( Settings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1);
-			_imageScroller.pageWidth = 1024;// * ( Settings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1);
+			_imageScroller = new HPageScroller();
+			_imageScroller.visibleHeight = 768;// * ( Settings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1);
+			_imageScroller.visibleWidth = 1024;// * ( Settings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1);
 			
 			addChild( _imageScroller );
 			
@@ -141,8 +141,8 @@ package net.psykosoft.psykopaint2.paint.views.pick
 			
 			var gap:Number = 20;
 			_cellSize =  vo.thumbSize + gap;
-			var cols:int = _imageScroller.pageWidth / _cellSize;
-			var border:int = (_imageScroller.pageWidth - ( _cellSize * cols) + gap) / 2;
+			var cols:int = _imageScroller.visibleWidth / _cellSize;
+			var border:int = (_imageScroller.visibleWidth - ( _cellSize * cols) + gap) / 2;
 			
 			
 			for( var i:uint; i < len; ++i ) {
@@ -165,13 +165,13 @@ package net.psykosoft.psykopaint2.paint.views.pick
 				// Advance in scroller space.
 				
 				_thumbX += vo.thumbSize + gap;
-				if( border + _thumbX + vo.thumbSize > _creatingPageNum * _imageScroller.pageWidth ) {
-					_thumbX = ( _creatingPageNum - 1 ) * _imageScroller.pageWidth;
+				if( border + _thumbX + vo.thumbSize > _creatingPageNum * _imageScroller.visibleWidth ) {
+					_thumbX = ( _creatingPageNum - 1 ) * _imageScroller.visibleWidth;
 					_thumbY += vo.thumbSize + gap;
 				}
-				if( border + _thumbY + vo.thumbSize > _imageScroller.pageHeight ) {
+				if( border + _thumbY + vo.thumbSize > _imageScroller.visibleHeight ) {
 					_creatingPageNum++;
-					_thumbX = ( _creatingPageNum - 1 ) * _imageScroller.pageWidth;
+					_thumbX = ( _creatingPageNum - 1 ) * _imageScroller.visibleWidth;
 					_thumbY = 0;
 				}
 				
@@ -196,7 +196,7 @@ package net.psykosoft.psykopaint2.paint.views.pick
 			_imageScroller.removeEventListener( MouseEvent.MOUSE_DOWN, onSheetClick );
 			var column:int = _imageScroller.mouseX / _cellSize;
 			var row:int = _imageScroller.mouseY / _cellSize;
-			var thumbIndex:String = String( row * int( _imageScroller.pageWidth / _cellSize ) + column );
+			var thumbIndex:String = String( row * int( _imageScroller.visibleWidth / _cellSize ) + column );
 			_iosUtil.getFullImageLoadedSignal().add( onIosFullImageRetrieved );
 			_iosUtil.loadFullImage( thumbIndex );
 		}

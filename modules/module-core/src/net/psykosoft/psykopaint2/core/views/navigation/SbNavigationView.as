@@ -11,7 +11,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.utils.getQualifiedClassName;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.base.ui.components.HorizontalSnapScroller;
+	import net.psykosoft.psykopaint2.base.ui.components.HItemScroller;
+	import net.psykosoft.psykopaint2.base.ui.components.HSnapScroller;
 	import net.psykosoft.psykopaint2.core.views.components.NavigationButtonLabelType;
 	import net.psykosoft.psykopaint2.core.views.components.SbNavigationButton;
 
@@ -30,7 +31,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _currentSubNavView:SubNavigationViewBase;
 		private var _buttonPositionOffsetX:Number;
 		private var _centerButtons:Array;
-		private var _centerComponentsScroller:HorizontalSnapScroller;
+		private var _centerComponentsScroller:HItemScroller;
 		private var _areButtonsSelectable:Boolean;
 		private var _animating:Boolean;
 		private var _showing:Boolean = true;
@@ -68,10 +69,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_rightButton.displaceLabelTf( 5, -15 );
 			_rightButton.displaceLabelBg( -15, -5 );
 
-			_centerComponentsScroller = new HorizontalSnapScroller();
+			_centerComponentsScroller = new HItemScroller();
 			_centerComponentsScroller.edgeContentGap = 150;
-			_centerComponentsScroller.pageHeight = 200;
-			_centerComponentsScroller.pageWidth = 1024;
+			_centerComponentsScroller.visibleHeight = 200;
+			_centerComponentsScroller.visibleWidth = 1024;
+			_centerComponentsScroller.positionManager.minimumThrowingSpeed = 25;
 			_centerComponentsScroller.motionStartedSignal.add( onCenterScrollerMotionStart );
 			_centerComponentsScroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
 			addChildAt( _centerComponentsScroller, 1 );
@@ -197,7 +199,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			btn.setIconType( iconType );
 			btn.setLabelType( labelType );
 			btn.x = _buttonPositionOffsetX;
-			btn.y = _centerComponentsScroller.pageHeight / 2;
+			btn.y = _centerComponentsScroller.visibleHeight / 2;
 			btn.addEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
 			if( _areButtonsSelectable ) {
 				btn.isSelectable = true;
@@ -249,7 +251,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_centerComponentsScroller.invalidateContent();
 			// Position center buttons.
 			_centerComponentsScroller.x = 1024 / 2 - _centerComponentsScroller.minWidth / 2;
-			_centerComponentsScroller.y = 768 - BG_HEIGHT / 2 - _centerComponentsScroller.pageHeight / 2;
+			_centerComponentsScroller.y = 768 - BG_HEIGHT / 2 - _centerComponentsScroller.visibleHeight / 2;
 		}
 
 		public function areButtonsSelectable( value:Boolean ):void {

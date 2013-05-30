@@ -32,35 +32,38 @@ package net.psykosoft.psykopaint2.core.views.base
 			return;
 
             // Simple slider test.
-            var simpleSlider:SbSlider = new SbSlider();
+            /*var simpleSlider:SbSlider = new SbSlider();
             simpleSlider.x = 200;
             simpleSlider.y = 20;
             simpleSlider.setIdLabel( "mySlider" );
             addChild( simpleSlider );
-            trace( "test slider dimensions: " + simpleSlider.width + ", " + simpleSlider.height );
+            trace( "test slider dimensions: " + simpleSlider.width + ", " + simpleSlider.height );*/
 
             // Range slider test.
+			/*var container:Sprite = new Sprite();
+			container.scaleX = container.scaleY = 2;
+			addChild( container );
             var rangeSlider:SbRangedSlider = new SbRangedSlider();
-            rangeSlider.x = 500;
-            rangeSlider.y = 20;
+            rangeSlider.x = 1024 / 2 - rangeSlider.width / 2;
+            rangeSlider.y = 560;
             rangeSlider.setIdLabel( "myRangeSlider" );
-            addChild( rangeSlider );
-            trace( "test range slider dimensions: " + rangeSlider.width + ", " + rangeSlider.height );
+            container.addChild( rangeSlider );
+            trace( "test range slider dimensions: " + rangeSlider.width + ", " + rangeSlider.height );*/
 
             //CheckBox test.
-            var checkbox:SbCheckBox = new SbCheckBox();
+           /* var checkbox:SbCheckBox = new SbCheckBox();
             checkbox.x = 50;
             checkbox.y = 20;
-            addChild( checkbox );
+            addChild( checkbox );*/
 
              //Combobox test.
-            var combobox:SbComboboxView = new SbComboboxView();
+            /*var combobox:SbComboboxView = new SbComboboxView();
             for( var i:uint; i < 10; i++ ) {
                 combobox.addItem( { label:"item_" + i } );
             }
             combobox.x = 100;
             combobox.y = 200;
-            addChild( combobox );
+            addChild( combobox );*/
         }
 
 		public function addToMainLayer( child:DisplayObject ):void {

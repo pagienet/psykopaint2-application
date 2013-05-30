@@ -47,6 +47,10 @@ package net.psykosoft.psykopaint2.base.utils
 			return _snapPoints[ index ];
 		}
 
+		public function removeSnapPointAt( index:uint ):void {
+			_snapPoints.splice( index, 1 );
+		}
+
 		public function removeSnapPoint( value:Number ):void {
 			_snapPoints.splice( _snapPoints.indexOf( value ), 1 );
 		}
@@ -175,6 +179,10 @@ package net.psykosoft.psykopaint2.base.utils
 
 		public function set edgeContainmentFactor( value:Number ):void {
 			_edgeContainmentFactor = value;
+		}
+
+		public function get snapPoints():Vector.<Number> {
+			return _snapPoints;
 		}
 	}
 }
