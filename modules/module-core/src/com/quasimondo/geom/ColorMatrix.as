@@ -155,6 +155,7 @@ package com.quasimondo.geom {
 		private static const RAD:Number = Math.PI / 180;
 													
 		public var matrix:Array;
+		private var tempMatrix:Array;
 		
 		private var preHue:ColorMatrix;
 		private var postHue:ColorMatrix;
@@ -190,7 +191,7 @@ package com.quasimondo.geom {
 			{
 				matrix = IDENTITY.concat();
 			}
-			
+			tempMatrix = [];
 		}
 		
 		/*
@@ -591,7 +592,7 @@ package com.quasimondo.geom {
       	public function concat( mat:Array ):void
 		{
 			
-			var temp:Array = [];
+			var temp:Array = tempMatrix;
 			var i:int = 0;
 			var x:int, y:int;
 			for (y = 0; y < 4; y++ )
@@ -607,7 +608,7 @@ package com.quasimondo.geom {
 				}
 				i+=5;
 			}
-			
+			tempMatrix = matrix;
 			matrix = temp;
 			
 		}
