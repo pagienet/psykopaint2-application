@@ -54,7 +54,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 			* Last test with unstable stuff going on in stage3d shows that it is the
 			* same to use scroll rect or not.
 			* */
-			scrollRect = new Rectangle( 0, 0, visibleWidth, visibleHeight );
+			// TODO: 1.5 hardcode allows vertical visibility to be isolated from the vertical interaction area. These should be properly isolated. Analyze performance impact too.
+			// TODO: also, we could not only split them, but completely separate the area rects
+ 			scrollRect = new Rectangle( 0, 0, visibleWidth, visibleHeight * 1.5 );
 
 			_interactionManager = new ScrollInteractionManager( stage, _positionManager );
 

@@ -36,9 +36,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _animating:Boolean;
 		private var _showing:Boolean = true;
 
-		private const ELEMENT_GAP:Number = 15;
 		private const BUTTON_GAP_X:Number = 8;
 		private const BG_HEIGHT:uint = 200;
+		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 100;
 
 		public var buttonClickedCallback:Function;
 		public var shownAnimatedSignal:Signal;
@@ -71,8 +71,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			_centerComponentsScroller = new HItemScroller();
 			_centerComponentsScroller.edgeContentGap = 150;
-			_centerComponentsScroller.visibleHeight = 200;
+			_centerComponentsScroller.visibleHeight = 130;
 			_centerComponentsScroller.visibleWidth = 1024;
+			_centerComponentsScroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _centerComponentsScroller.visibleHeight / 2;
 			_centerComponentsScroller.positionManager.minimumThrowingSpeed = 25;
 			_centerComponentsScroller.motionStartedSignal.add( onCenterScrollerMotionStart );
 			_centerComponentsScroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
@@ -251,7 +252,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_centerComponentsScroller.invalidateContent();
 			// Position center buttons.
 			_centerComponentsScroller.x = 1024 / 2 - _centerComponentsScroller.minWidth / 2;
-			_centerComponentsScroller.y = 768 - BG_HEIGHT / 2 - _centerComponentsScroller.visibleHeight / 2;
 		}
 
 		public function areButtonsSelectable( value:Boolean ):void {
