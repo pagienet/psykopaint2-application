@@ -188,7 +188,7 @@ package com.quasimondo.geom {
 				matrix = mat.concat();
 			} else 
 			{
-				reset();
+				matrix = IDENTITY.concat();
 			}
 			
 		}
@@ -210,7 +210,8 @@ package com.quasimondo.geom {
 		
 		public function reset():void
 		{
-			matrix = IDENTITY.concat();
+			//matrix = IDENTITY.concat();
+			for ( var i:int = 20; --i > -1; ) matrix[i] = IDENTITY[i];
 		}
 		
 		
