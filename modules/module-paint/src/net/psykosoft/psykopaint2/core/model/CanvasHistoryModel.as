@@ -71,7 +71,7 @@ package net.psykosoft.psykopaint2.core.model
 		private function cleanUpOldest() : void
 		{
 			var snapshot : CanvasSnapShot = _snapShots.shift();
-			//Mario: this check is only a temporary fix to avoid errors during the demo.
+			//PATCH Mario: this check is only a temporary fix to avoid errors during the demo.
 			// the real cause for this error must still be found:
 			if ( snapshot != null )
 			{

@@ -89,6 +89,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var _listeningToTouch : Boolean;
 		private var _startCallbacksSent : Boolean;
 		
+		private var _currentTick:uint;
+		private var _lastUpdateTick:uint;
+		
 
 		public function PathManager( type:int )
 		{
@@ -200,6 +203,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		protected function onEnterFrame(event : Event) : void
 		{
+			_currentTick++;
 			
 			if ( _accumulatedResults.length == 0 && hasActiveDecorators() )
 			{
@@ -280,6 +284,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		protected function updateDecorators() : void
 		{
+			if ( _currentTick == _lastUpdateTick ) return;
+			_lastUpdateTick = _currentTick;
+			
+			trace("updateDecorators: before: "+_accumulatedResults.length+ " points");
 			var conditionalStack:Vector.<Vector.<SamplePoint>>;
 			var inCondition:int = -1;
 			for ( var i:int = 0; i < _pointDecorators.length; i++ )
@@ -305,6 +313,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					}
 				}
 			}
+			trace("updateDecorators: after: "+_accumulatedResults.length+ " points");
 		}
 
 		public function activate(view : DisplayObject, canvasModel:CanvasModel ) : void
