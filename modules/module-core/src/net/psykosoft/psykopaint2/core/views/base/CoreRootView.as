@@ -3,28 +3,33 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.TimerEvent;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+	import flash.utils.Timer;
 
-	import net.psykosoft.psykopaint2.core.views.components.SbCheckBox;
-	import net.psykosoft.psykopaint2.core.views.components.SbRangedSlider;
-	import net.psykosoft.psykopaint2.core.views.components.SbSlider;
-	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
+	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 
 	public class CoreRootView extends Sprite
     {
 		private var _mainLayer:Sprite;
+		private var _memoryIcon:TextField;
+		private var _memoryIconTimer:Timer;
+		private var _frontLayer:Sprite;
+		private var _memoryWarningCount:uint;
 
-        public function CoreRootView() {
+		public function CoreRootView() {
             super();
 
 			_mainLayer = new Sprite();
 			addChild( _mainLayer );
 
-			var frontLayer:Sprite = new Sprite();
-			addChild( frontLayer );
+			_frontLayer = new Sprite();
+			addChild( _frontLayer );
 
             var navigationView:SbNavigationView = new SbNavigationView();
-            frontLayer.addChild( navigationView );
+            _frontLayer.addChild( navigationView );
 
             // -----------------------
             // Tests...
@@ -68,6 +73,33 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		public function addToMainLayer( child:DisplayObject ):void {
 			_mainLayer.addChild( child );
+		}
+
+		public function flashMemoryIcon():void {
+			if( !_memoryIconTimer ) {
+				_memoryIconTimer = new Timer( 1000, 1 );
+				_memoryIconTimer.addEventListener( TimerEvent.TIMER, onMemoryIconTimerTick );
+			}
+			if( !_memoryIcon ) {
+				_memoryIcon = new TextField();
+				_memoryIcon.selectable = _memoryIcon.mouseEnabled = false;
+				_memoryIcon.defaultTextFormat = new TextFormat( null, 72 );
+				_memoryIcon.text = "MEMORY WARNING";
+				_memoryIcon.textColor = 0xFF0000;
+				_memoryIcon.width = _memoryIcon.textWidth;
+				_memoryIcon.height = _memoryIcon.textHeight;
+				_memoryIcon.x = ViewCore.globalScaling * ( 1024 / 2 - _memoryIcon.width / 2 );
+				_memoryIcon.y = ViewCore.globalScaling * ( 768 / 2 - _memoryIcon.height / 2 );
+			   	_frontLayer.addChild( _memoryIcon );
+			}
+			_memoryWarningCount++;
+			_memoryIconTimer.start();
+			_memoryIcon.visible = true;
+		}
+
+		private function onMemoryIconTimerTick( event:TimerEvent ):void {
+			_memoryIconTimer.reset();
+			_memoryIcon.visible = false;
 		}
 	}
 }
