@@ -111,7 +111,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 
 			// Range slider.
-			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter ) {
+			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter || parameterType == PsykoParameter.AngleRangeParameter ) {
 				var rangeSlider:SbRangedSlider = new SbRangedSlider();
 				rangeSlider.numDecimals = 2;
 				rangeSlider.minValue = Number( _parameter.@minValue );
@@ -135,6 +135,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				positionUiElement( knob as DisplayObject, 0, -20 );
 				_uiElements.push( knob );
 			}
+
+			/*// Angle range.
+			else if( parameterType == PsykoParameter.AngleRangeParameter ) {
+				trace( ">>> ANGLE RANGE: " + _parameter.toXMLString() );
+				*//*<parameter id="Offset Angle" type="11" path="pathengine.pointdecorator_6" minValue="0" maxValue="180" value1="0" value2="90"/>*//*
+			}*/
 
 			// Combo box. // TODO: implement real combobox, design is ready
 			else if( parameterType == PsykoParameter.StringListParameter ) {

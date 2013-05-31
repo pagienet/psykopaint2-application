@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 {
 	public class PsykoParameter
 	{
+		// TODO: @Mario - let me know if you add parameters or if you need any ui component implementations
 		public static const NumberParameter:int = 0; // slider
 		public static const IntParameter:int = 1; // slider
 		public static const NumberRangeParameter:int =2; // range slider
@@ -9,11 +10,11 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		public static const StringParameter:int = 4; // text input TODO
 		public static const NumberListParameter:int = 5; // Some kind of List - Horizontal Bar? TODO
 		public static const IntListParameter:int = 6; // Some kind of List - Horizontal Bar? TODO
-		public static const StringListParameter:int = 7; // combo box TODO minimalcomps for now, implement real combobox
+		public static const StringListParameter:int = 7; // combo box TODO minimalcomps for now, implement real combobox ( design is ready, component is not )
 		public static const BooleanParameter:int = 8; // checkbox TODO: there seems to be a bug in the way the core handles parameter updates
 		public static const BooleanListParameter:int = 9; // check box TODO: what is a boolean list?
-		public static const AngleParameter:int = 10; // angle control TODO: use minimal comps for now
-		public static const AngleRangeParameter:int = 11; // double angle control TODO: see if minimal comps can offer something
+		public static const AngleParameter:int = 10; // angle control TODO: minimalcomps for now, implement real knob
+		public static const AngleRangeParameter:int = 11; // double angle control TODO: using range slider for now
 
 		public static function getTypeName( type:int ):String {
 			switch( type ) {
