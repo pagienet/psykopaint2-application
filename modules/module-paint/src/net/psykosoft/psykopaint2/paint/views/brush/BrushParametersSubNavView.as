@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import com.bit101.components.ComboBox;
 	import com.bit101.components.Component;
+	import com.bit101.components.Knob;
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -27,7 +28,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private var _btns:Vector.<SbNavigationButton>;
 		private var _uiElements:Vector.<DisplayObject>;
 		private var _parametersXML:XML;
-		private var _activeParameter:XML;
+		private var _parameter:XML;
 
 		public static const LBL_BACK:String = "Back";
 
@@ -93,16 +94,16 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			_uiElements = new Vector.<DisplayObject>();
 
-			_activeParameter = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ]
-			var parameterType:uint = uint( _activeParameter.@type );
+			_parameter = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ]
+			var parameterType:uint = uint( _parameter.@type );
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
 				var slider:SbSlider = new SbSlider();
 				slider.numDecimals = 2;
-				slider.minValue = Number( _activeParameter.@minValue );
-				slider.maxValue = Number( _activeParameter.@maxValue );
-				slider.value = Number( _activeParameter.@value );
+				slider.minValue = Number( _parameter.@minValue );
+				slider.maxValue = Number( _parameter.@maxValue );
+				slider.value = Number( _parameter.@value );
 				slider.addEventListener( Event.CHANGE, onSliderChanged );
 				positionUiElement( slider );
 				addChild( slider );
@@ -113,14 +114,26 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter ) {
 				var rangeSlider:SbRangedSlider = new SbRangedSlider();
 				rangeSlider.numDecimals = 2;
-				rangeSlider.minValue = Number( _activeParameter.@minValue );
-				rangeSlider.maxValue = Number( _activeParameter.@maxValue );
-				rangeSlider.value1 = Number( _activeParameter.@value1 );
-				rangeSlider.value2 = Number( _activeParameter.@value2 );
+				rangeSlider.minValue = Number( _parameter.@minValue );
+				rangeSlider.maxValue = Number( _parameter.@maxValue );
+				rangeSlider.value1 = Number( _parameter.@value1 );
+				rangeSlider.value2 = Number( _parameter.@value2 );
 				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
 				positionUiElement( rangeSlider );
 				addChild( rangeSlider );
 				_uiElements.push( rangeSlider );
+			}
+
+			// Angle.
+			else if( parameterType == PsykoParameter.AngleParameter ) {
+				var knob:Knob = new Knob( this );
+				knob.value = Number( _parameter.@value );
+				knob.minimum = Number( _parameter.@minValue );
+				knob.maximum = Number( _parameter.@maxValue );
+				knob.addEventListener( Event.CHANGE, onKnobChanged );
+				knob.draw();
+				positionUiElement( knob as DisplayObject, 0, -20 );
+				_uiElements.push( knob );
 			}
 
 			// Combo box. // TODO: implement real combobox, design is ready
@@ -128,26 +141,26 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var comboBox:ComboBox = new ComboBox( this );
 				comboBox.alternateRows = true;
 				comboBox.openPosition = ComboBox.TOP;
-				var list:Array = String( _activeParameter.@list ).split( "," );
+				var list:Array = String( _parameter.@list ).split( "," );
 				var len:uint = list.length;
 				for( var i:uint; i < len; ++i ) {
 					var option:String = list[ i ];
 					comboBox.addItem( option );
 				}
-				comboBox.defaultLabel = list[ uint( _activeParameter.@index ) ];
+				comboBox.defaultLabel = list[ uint( _parameter.@index ) ];
 				comboBox.numVisibleItems = Math.min( 6, len );
 				comboBox.addEventListener( Event.SELECT, onComboBoxChanged );
+				comboBox.draw();
 				positionUiElement( comboBox as DisplayObject );
 				_uiElements.push( comboBox );
 			}
 
 			// Check box
 			else if( parameterType == PsykoParameter.BooleanParameter ) {
-				trace( ">>>>> BOOLEAN: " + _activeParameter.toXMLString() );
 				var checkBox:SbCheckBox = new SbCheckBox();
-				checkBox.selected = Boolean( _activeParameter.@value );
+				checkBox.selected = Boolean( _parameter.@value );
 				checkBox.addEventListener( Event.CHANGE, onCheckBoxChanged );
-				positionUiElement( checkBox as DisplayObject );
+				positionUiElement( checkBox );
 				addChild( checkBox );
 				_uiElements.push( checkBox );
 			}
@@ -166,6 +179,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				else if( uiElement is SbRangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
 				// TODO: dispose combo boxes...
 				// TODO: dispose check boxes...
+				// TODO: dispose knobs...
 				else {
 					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
 				}
@@ -178,53 +192,62 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// Utils.
 		// ---------------------------------------------------------------------
 
-		private function positionUiElement( element:DisplayObject ):void {
+		private function positionUiElement( element:DisplayObject, offsetX:Number = 0, offsetY:Number = 0 ):void {
 			// TODO: fix this scaling hack, not sure why its necessary on ipad.
-			element.scaleX = element.scaleY = 1 / ViewCore.globalScaling;
-			element.x = ( ViewCore.globalScaling == 2 ? -100 : 0 ) + ( 1024 / 2 - element.width / 2 ) / ViewCore.globalScaling;
-			element.y = UI_ELEMENT_Y / ViewCore.globalScaling;
+			var invSc:Number = 1 / ViewCore.globalScaling;
+			element.scaleX = element.scaleY = invSc;
+			element.x = ( ViewCore.globalScaling == 2 ? -100 + offsetX * invSc : offsetX ) + ( 1024 / 2 - element.width / 2 ) * invSc;
+			element.y = ( ViewCore.globalScaling == 2 ? offsetY * invSc : offsetY ) + UI_ELEMENT_Y * invSc;
 //			trace( this, ">>> positioning element at: " + element.x + ", " + element.y + ", scale: " + scaleX );
 		}
 
 		private function updateActiveParameter():void {
-			var id:String = _activeParameter.@id;
-			_parametersXML.descendants( "parameter" ).( @id == id )[ 0 ] = _activeParameter;
+			var id:String = _parameter.@id;
+			_parametersXML.descendants( "parameter" ).( @id == id )[ 0 ] = _parameter;
 		}
 
 		private function notifyParameterChange():void {
-			brushParameterChangedSignal.dispatch( _activeParameter );
+			brushParameterChangedSignal.dispatch( _parameter );
 		}
 
 		// ---------------------------------------------------------------------
 		// Listeners.
 		// ---------------------------------------------------------------------
 
+		private function onKnobChanged( event:Event ):void {
+		    var knob:Knob = event.target as Knob;
+			trace( knob.value );
+			_parameter.@value = knob.value;
+			updateActiveParameter();
+			notifyParameterChange();
+		}
+
 		private function onCheckBoxChanged( event:Event ):void {
 			var checkBox:SbCheckBox = event.target as SbCheckBox;
-			_activeParameter.@value = checkBox.selected;
+			_parameter.@value = checkBox.selected;
 			updateActiveParameter();
 			notifyParameterChange();
 		}
 
 		private function onComboBoxChanged( event:Event ):void {
 			var comboBox:ComboBox = event.target as ComboBox;
-			var list:Array = String( _activeParameter.@list ).split( "," );
-			_activeParameter.@index = list.indexOf( comboBox.selectedItem );
+			var list:Array = String( _parameter.@list ).split( "," );
+			_parameter.@index = list.indexOf( comboBox.selectedItem );
 			updateActiveParameter();
 			notifyParameterChange();
 		}
 
 		private function onSliderChanged( event:Event ):void {
 			var slider:SbSlider = event.target as SbSlider;
-			_activeParameter.@value = slider.value;
+			_parameter.@value = slider.value;
 			updateActiveParameter();
 			notifyParameterChange();
 		}
 
 		private function onRangeSliderChanged( event:Event ):void {
 			var slider:SbRangedSlider = event.target as SbRangedSlider;
-			_activeParameter.@value1 = slider.value1;
-			_activeParameter.@value2 = slider.value2;
+			_parameter.@value1 = slider.value1;
+			_parameter.@value2 = slider.value2;
 			updateActiveParameter();
 			notifyParameterChange();
 		}

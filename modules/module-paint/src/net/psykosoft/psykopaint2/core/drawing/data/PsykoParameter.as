@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		public static const NumberListParameter:int = 5; // Some kind of List - Horizontal Bar? TODO
 		public static const IntListParameter:int = 6; // Some kind of List - Horizontal Bar? TODO
 		public static const StringListParameter:int = 7; // combo box TODO minimalcomps for now, implement real combobox
-		public static const BooleanParameter:int = 8; // checkbox TODO: we have one, implement it
+		public static const BooleanParameter:int = 8; // checkbox TODO: there seems to be a bug in the way the core handles parameter updates
 		public static const BooleanListParameter:int = 9; // check box TODO: what is a boolean list?
 		public static const AngleParameter:int = 10; // angle control TODO: use minimal comps for now
 		public static const AngleRangeParameter:int = 11; // double angle control TODO: see if minimal comps can offer something
