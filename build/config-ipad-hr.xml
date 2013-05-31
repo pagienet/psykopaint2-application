@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <application xmlns="http://ns.adobe.com/air/application/3.6">
-    <id>com.psykosoft.psykopaint2</id>
+    <id>com.psykosoft.psykopaint</id>
     <filename>Psykopaint2</filename>
     <name>Psykopaint2</name>
-    <versionNumber>0.4.6</versionNumber>
+    <versionNumber>0.4.7</versionNumber>
     <initialWindow>
         <content>SWF file name is set automatically at compile time</content>
         <aspectRatio>landscape</aspectRatio>

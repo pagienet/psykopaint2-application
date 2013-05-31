@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			super();
 			this.mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed"]);
 			this.mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,"Factor",1,1,0,100);
-			this.mappingFunction   = new PsykoParameter( PsykoParameter.NumberParameter,"Mapping",0,["Linear","Quad In","Quad InOut","Quad Out"]);
+			this.mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,"Mapping",0,["Linear","Quad In","Quad InOut","Quad Out"]);
 			_parameters.push(this.mappingMode,this.mappingFactor,this.mappingFunction );
 			
 			rng = new LCG( Math.random() * 0xffffff );
