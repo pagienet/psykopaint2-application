@@ -1,14 +1,16 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
+	import com.bit101.components.ComboBox;
+	import com.bit101.components.Component;
+
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.views.components.SbNavigationButton;
 	import net.psykosoft.psykopaint2.core.views.components.SbRangedSlider;
@@ -17,11 +19,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import org.osflash.signals.Signal;
 
+	// TODO: remove minimalcomps dependency when done
+
 	public class BrushParametersSubNavView extends SubNavigationViewBase
 	{
 		private var _btns:Vector.<SbNavigationButton>;
 		private var _uiElements:Vector.<DisplayObject>;
 		private var _parametersXML:XML;
+		private var _activeParameter:XML;
 
 		public static const LBL_BACK:String = "Back";
 
@@ -53,6 +58,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			closeLastParameter();
 		}
 
+		// ---------------------------------------------------------------------
+		// Parameter listing.
+		// ---------------------------------------------------------------------
+
 		public function setParameters( xml:XML ):void {
 
 			_parametersXML = xml;
@@ -66,7 +75,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			for( var i:uint; i < numParameters; ++i ) {
 				var parameter:XML = list[ i ];
 //				trace( ">>> " + parameter.toXMLString() );
-				var btn:SbNavigationButton = addCenterButton( parameter.@id ) as SbNavigationButton;
+				var btn:SbNavigationButton = addCenterButton( parameter.@id, "param" + parameter.@type ) as SbNavigationButton;
 				btn.addEventListener( MouseEvent.MOUSE_UP, onParameterClicked );
 				_btns.push( btn );
 			}
@@ -74,30 +83,26 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			openParameter( list[ 0 ].@id );
 		}
 
-		private function onParameterClicked( event:MouseEvent ):void {
-			var button:SbNavigationButton = event.target as SbNavigationButton;
-			if( !button ) button = event.target.parent as SbNavigationButton;
-			var label:String = button.labelText;
-			openParameter( label );
-		}
+		// ---------------------------------------------------------------------
+		// Parameter components.
+		// ---------------------------------------------------------------------
 
 		private function openParameter( id:String ):void {
 			closeLastParameter();
 
 			_uiElements = new Vector.<DisplayObject>();
 
-			var parameter:XML = getParameterFromId( id );
-			var parameterType:uint = uint( parameter.@type );
+			_activeParameter = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ]
+			var parameterType:uint = uint( _activeParameter.@type );
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
 
 				var slider:SbSlider = new SbSlider();
-				slider.id = String( parameter.@id );
 				slider.numDecimals = 2;
-				slider.minValue = Number( parameter.@minValue );
-				slider.maxValue = Number( parameter.@maxValue );
-				slider.value = Number( parameter.@value );
+				slider.minValue = Number( _activeParameter.@minValue );
+				slider.maxValue = Number( _activeParameter.@maxValue );
+				slider.value = Number( _activeParameter.@value );
 				slider.addEventListener( Event.CHANGE, onSliderChanged );
 				positionUiElement( slider );
 				addChild( slider );
@@ -109,17 +114,40 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter ) {
 
 				var rangeSlider:SbRangedSlider = new SbRangedSlider();
-				rangeSlider.id = String( parameter.@id );
 				rangeSlider.numDecimals = 2;
-				rangeSlider.minValue = Number( parameter.@minValue );
-				rangeSlider.maxValue = Number( parameter.@maxValue );
-				rangeSlider.value1 = Number( parameter.@value1 );
-				rangeSlider.value2 = Number( parameter.@value2 );
+				rangeSlider.minValue = Number( _activeParameter.@minValue );
+				rangeSlider.maxValue = Number( _activeParameter.@maxValue );
+				rangeSlider.value1 = Number( _activeParameter.@value1 );
+				rangeSlider.value2 = Number( _activeParameter.@value2 );
 				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
 				positionUiElement( rangeSlider );
 				addChild( rangeSlider );
 
 				_uiElements.push( rangeSlider );
+			}
+
+			// Combo box.
+			else if( parameterType == PsykoParameter.StringListParameter ) {
+
+				trace( ">>>>>>>> STRING LIST: " + _activeParameter.toXMLString() );
+
+				var combobox:ComboBox = new ComboBox( this );
+				combobox.alternateRows = true;
+				combobox.openPosition = ComboBox.TOP;
+
+				var list:Array = String( _activeParameter.@list ).split( "," );
+				var len:uint = list.length;
+				for( var i:uint; i < len; ++i ) {
+					var option:String = list[ i ];
+					combobox.addItem( option );
+				}
+				combobox.defaultLabel = list[ uint( _activeParameter.@index ) ];
+				combobox.numVisibleItems = Math.min( 6, len );
+				combobox.addEventListener( Event.SELECT, onComboBoxChanged );
+
+				positionUiElement( combobox as DisplayObject );
+
+				_uiElements.push( combobox );
 			}
 
 			// TODO: support more parameter types...
@@ -136,6 +164,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var uiElement:DisplayObject = _uiElements[ i ];
 				if( uiElement is SbSlider ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
 				else if( uiElement is SbRangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
+				// TODO: dispose combo boxes...
 				else {
 					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
 				}
@@ -144,7 +173,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			_uiElements = null;
 		}
 
-		private function positionUiElement( element:Sprite ):void {
+		// ---------------------------------------------------------------------
+		// Utils.
+		// ---------------------------------------------------------------------
+
+		private function positionUiElement( element:DisplayObject ):void {
 			// TODO: fix this scaling hack, not sure why its necessary on ipad.
 			element.scaleX = element.scaleY = 1 / ViewCore.globalScaling;
 			element.x = ( ViewCore.globalScaling == 2 ? -100 : 0 ) + ( 1024 / 2 - element.width / 2 ) / ViewCore.globalScaling;
@@ -152,36 +185,44 @@ package net.psykosoft.psykopaint2.paint.views.brush
 //			trace( this, ">>> positioning element at: " + element.x + ", " + element.y + ", scale: " + scaleX );
 		}
 
-		private function getParameterFromId( id:String ):XML {
-			var parameter:XML = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ];
-//			trace( this, "getting parameter from id: " + id + ", value: " + parameter.toXMLString() );
-			return parameter;
-		}
-
-		private function updateParameter( parameter:XML ):void {
-			var id:String = parameter.@id;
-			_parametersXML.descendants( "parameter" ).( @id == id )[ 0 ] = parameter;
+		private function updateActiveParameter():void {
+			var id:String = _activeParameter.@id;
+			_parametersXML.descendants( "parameter" ).( @id == id )[ 0 ] = _activeParameter;
 		}
 
 		// ---------------------------------------------------------------------
 		// Listeners.
 		// ---------------------------------------------------------------------
 
+		private function onComboBoxChanged( event:Event ):void {
+			var combobox:ComboBox = event.target as ComboBox;
+			var list:Array = String( _activeParameter.@list ).split( "," );
+			var index:uint = list.indexOf( combobox.selectedItem );
+			_activeParameter.@index = index;
+			updateActiveParameter();
+			brushParameterChangedSignal.dispatch( _activeParameter );
+		}
+
+		private function onParameterClicked( event:MouseEvent ):void {
+			var button:SbNavigationButton = event.target as SbNavigationButton;
+			if( !button ) button = event.target.parent as SbNavigationButton;
+			var label:String = button.labelText;
+			openParameter( label );
+		}
+
 		private function onSliderChanged( event:Event ):void {
 			var slider:SbSlider = event.target as SbSlider;
-			var parameter:XML = getParameterFromId( slider.id );
-			parameter.@value = slider.value;
-			updateParameter( parameter );
-			brushParameterChangedSignal.dispatch( parameter );
+			_activeParameter.@value = slider.value;
+			updateActiveParameter();
+			brushParameterChangedSignal.dispatch( _activeParameter );
 		}
 
 		private function onRangeSliderChanged( event:Event ):void {
 			var slider:SbRangedSlider = event.target as SbRangedSlider;
-			var parameter:XML = getParameterFromId( slider.id );
-			parameter.@value1 = slider.value1;
-			parameter.@value2 = slider.value2;
-			updateParameter( parameter );
-			brushParameterChangedSignal.dispatch( parameter );
+			_activeParameter.@value1 = slider.value1;
+			_activeParameter.@value2 = slider.value2;
+			updateActiveParameter();
+			brushParameterChangedSignal.dispatch( _activeParameter );
 		}
 	}
 }

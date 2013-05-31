@@ -2,18 +2,18 @@ package net.psykosoft.psykopaint2.core.drawing.data
 {
 	public class PsykoParameter
 	{
-		public static const NumberParameter:int = 0;
-		public static const IntParameter:int = 1;
-		public static const NumberRangeParameter:int =2;
-		public static const IntRangeParameter:int = 3;
-		public static const StringParameter:int = 4;
-		public static const NumberListParameter:int = 5;
-		public static const IntListParameter:int = 6;
-		public static const StringListParameter:int = 7;
-		public static const BooleanParameter:int = 8;
-		public static const BooleanListParameter:int = 9;
-		public static const AngleParameter:int = 10;
-		public static const AngleRangeParameter:int = 11;
+		public static const NumberParameter:int = 0; // slider
+		public static const IntParameter:int = 1; // slider
+		public static const NumberRangeParameter:int =2; // range slider
+		public static const IntRangeParameter:int = 3; // range slider
+		public static const StringParameter:int = 4; // text input TODO
+		public static const NumberListParameter:int = 5; // Some kind of List - Horizontal Bar? TODO
+		public static const IntListParameter:int = 6; // Some kind of List - Horizontal Bar? TODO
+		public static const StringListParameter:int = 7; // combo box TODO minimalcomps for now, implement real combobox
+		public static const BooleanParameter:int = 8; // checkbox TODO: we have one, implement it
+		public static const BooleanListParameter:int = 9; // check box TODO: what is a boolean list?
+		public static const AngleParameter:int = 10; // angle control TODO: use minimal comps for now
+		public static const AngleRangeParameter:int = 11; // double angle control TODO: see if minimal comps can offer something
 
 		public static function getTypeName( type:int ):String {
 			switch( type ) {

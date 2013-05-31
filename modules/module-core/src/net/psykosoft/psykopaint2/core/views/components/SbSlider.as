@@ -17,7 +17,6 @@ package net.psykosoft.psykopaint2.core.views.components
 		private var _minValue:Number = 0;
 		private var _maxValue:Number = 1;
 		private var _numDecimals:uint = 2;
-		private var _id:String;
 		private var _minX:Number = 0;
 		private var _maxX:Number = 220;
 		private var _xRange:Number;
@@ -115,14 +114,6 @@ package net.psykosoft.psykopaint2.core.views.components
 
 		public function get value():Number {
 			return _value;
-		}
-
-		public function get id():String {
-			return _id;
-		}
-
-		public function set id( value:String ):void {
-			_id = value;
 		}
 
 		// ---------------------------------------------------------------------
