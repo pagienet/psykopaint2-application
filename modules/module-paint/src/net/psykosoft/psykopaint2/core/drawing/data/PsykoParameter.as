@@ -14,6 +14,23 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		public static const BooleanListParameter:int = 9;
 		public static const AngleParameter:int = 10;
 		public static const AngleRangeParameter:int = 11;
+
+		public static function getTypeName( type:int ):String {
+			switch( type ) {
+				case NumberParameter: return "NumberParameter";
+				case IntParameter: return "IntParameter";
+				case NumberRangeParameter: return "NumberRangeParameter";
+				case IntRangeParameter: return "IntRangeParameter";
+				case StringParameter: return "StringParameter";
+				case IntListParameter: return "IntListParameter";
+				case StringListParameter: return "StringListParameter";
+				case BooleanParameter: return "BooleanParameter";
+				case BooleanListParameter: return "BooleanListParameter";
+				case AngleParameter: return "AngleParameter";
+				case AngleRangeParameter: return "AngleRangeParameter";
+			}
+			return "unrecognized - have a look in PsykoParameter.as";
+		}
 		
 		public static const LIMIT_MODE_IGNORE:String = "ignore";
 		public static const LIMIT_MODE_CLAMP:String = "clamp";

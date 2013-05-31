@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.events.MouseEvent;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.views.components.SbNavigationButton;
@@ -53,15 +54,18 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		public function setParameters( xml:XML ):void {
+
 			_parametersXML = xml;
-			trace( this, "receiving parameters: " + _parametersXML );
+//			trace( this, "receiving parameters: " + _parametersXML );
+
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
 			_btns = new Vector.<SbNavigationButton>();
-			var list:XMLList = _parametersXML.parameter;
+			var list:XMLList = _parametersXML.descendants( "parameter" );
 			var numParameters:uint = list.length();
 			for( var i:uint; i < numParameters; ++i ) {
 				var parameter:XML = list[ i ];
+//				trace( ">>> " + parameter.toXMLString() );
 				var btn:SbNavigationButton = addCenterButton( parameter.@id ) as SbNavigationButton;
 				btn.addEventListener( MouseEvent.MOUSE_UP, onParameterClicked );
 				_btns.push( btn );
@@ -120,7 +124,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// TODO: support more parameter types...
 			else {
-				trace( this, "*** Warning *** - parameter type not supported: " + parameterType );
+				trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
 			}
 		}
 
@@ -149,14 +153,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		private function getParameterFromId( id:String ):XML {
-			var parameter:XML = _parametersXML.parameter.( @id == id )[ 0 ];
+			var parameter:XML = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ];
 //			trace( this, "getting parameter from id: " + id + ", value: " + parameter.toXMLString() );
 			return parameter;
 		}
 
 		private function updateParameter( parameter:XML ):void {
 			var id:String = parameter.@id;
-			_parametersXML.parameter.( @id == id )[ 0 ] = parameter;
+			_parametersXML.descendants( "parameter" ).( @id == id )[ 0 ] = parameter;
 		}
 
 		// ---------------------------------------------------------------------
