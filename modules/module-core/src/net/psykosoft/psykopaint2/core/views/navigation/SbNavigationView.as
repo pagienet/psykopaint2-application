@@ -181,6 +181,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			var label:String = button.labelText;
 			buttonClickedCallback( label );
 
+			// Deselects all buttons except the one just clicked.
 			if( _areButtonsSelectable && button != _leftButton && button != _rightButton ) {
 				for( var i:Number = 0; i < _centerButtons.length; ++i ) {
 					_centerButtons[ i ].toggleSelect( false );
@@ -202,6 +203,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			btn.x = _buttonPositionOffsetX;
 			btn.y = _centerComponentsScroller.visibleHeight / 2;
 			btn.addEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
+			// Defaults to 1st button as selected.
 			if( _areButtonsSelectable ) {
 				btn.isSelectable = true;
 				if( _centerButtons.length == 0 ) {
@@ -256,6 +258,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function areButtonsSelectable( value:Boolean ):void {
 			_areButtonsSelectable = value;
+		}
+
+		public function selectButtonWithLabel( value:String ):void {
+			if( !_areButtonsSelectable ) return;
+			for( var i:Number = 0; i < _centerButtons.length; ++i ) {
+				var button:SbNavigationButton = _centerButtons[ i ];
+				button.toggleSelect( button.labelText == value );
+			}
 		}
 
 		// ---------------------------------------------------------------------

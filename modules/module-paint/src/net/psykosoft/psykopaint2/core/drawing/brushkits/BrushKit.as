@@ -186,5 +186,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			message.appendChild(getParameterSet());
 			PsykoSocket.sendString( message.toXMLString() );
 		}
+
+		public function get getActiveBrushShape():String {
+			return _selectedBrushShapeID;
+		}
 	}
 }

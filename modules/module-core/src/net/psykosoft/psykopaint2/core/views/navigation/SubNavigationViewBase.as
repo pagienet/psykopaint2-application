@@ -58,5 +58,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		protected function areButtonsSelectable( value:Boolean ):void {
 			_navigation.areButtonsSelectable( value );
 		}
+
+		protected function selectButtonWithLabel( value:String ):void {
+			_navigation.selectButtonWithLabel( value );
+		}
 	}
 }

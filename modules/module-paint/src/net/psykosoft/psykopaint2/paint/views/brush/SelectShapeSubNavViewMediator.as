@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// Post init.
 			view.setAvailableShapes( paintModule.getCurrentBrushShapes() );
+			view.setSelectedShape( paintModule.activeBrushKitShape );
 		}
 
 		private function onButtonClicked( label:String ):void {

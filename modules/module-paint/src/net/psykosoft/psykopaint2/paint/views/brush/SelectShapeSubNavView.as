@@ -33,5 +33,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 			invalidateContent();
 		}
+
+		public function setSelectedShape( activeBrushKitShape:String ):void {
+			selectButtonWithLabel( activeBrushKitShape );
+		}
 	}
 }

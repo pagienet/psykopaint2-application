@@ -358,7 +358,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			return _activeBrushKitName;
 		}
-		
+
+		public function get activeBrushKitShape():String {
+			return _activeBrushKit.getActiveBrushShape;
+		}
+
 		public function set activeBrushKit( brushKitName:String ) : void
 		{
 			
@@ -483,6 +487,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_activeBrushKit.brushEngine.setBrushSizeFactors( minSizeFactor, maxSizeFactor );
 		}
 		*/
+
 		public function setBrushParameter( parameter:XML ):void 
 		{
 			_activeBrushKit.setBrushParameter( parameter );
