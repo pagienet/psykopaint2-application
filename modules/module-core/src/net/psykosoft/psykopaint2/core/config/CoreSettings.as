@@ -18,7 +18,8 @@ package net.psykosoft.psykopaint2.core.config
 
 		public static const RESOLUTION_DPI_RETINA:uint = 264;
 		public static const STAGE_3D_ANTI_ALIAS:uint = 0;
-
+		public static const PSYKOSOCKET_IP:String = "192.168.178.26"; /*remove on final release*/
+		
 		// ---------------------------------------------------------------------
 		// Variables ( automatically set by framework ).
 		// ---------------------------------------------------------------------

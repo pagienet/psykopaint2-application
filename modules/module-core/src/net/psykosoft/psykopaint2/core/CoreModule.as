@@ -1,12 +1,8 @@
 package net.psykosoft.psykopaint2.core
 {
 
-	import away3d.core.managers.Stage3DManager;
-	import away3d.core.managers.Stage3DProxy;
-	import away3d.events.Stage3DEvent;
-
 	import com.junkbyte.console.Cc;
-
+	
 	import flash.display.DisplayObject;
 	import flash.display.Stage3D;
 	import flash.display.StageAlign;
@@ -17,10 +13,14 @@ package net.psykosoft.psykopaint2.core
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
-
+	
+	import away3d.core.managers.Stage3DManager;
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.events.Stage3DEvent;
+	
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
-
+	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.base.utils.DebuggingConsole;
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
-
+	
 	import org.swiftsuspenders.Injector;
 
 	// TODO: develop ant script that moves the packaged assets to bin ( only for the core )
@@ -140,6 +140,10 @@ package net.psykosoft.psykopaint2.core
 			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
 				ViewCore.globalScaling = 2;
 			}
+			
+			//adding this early on so it can be used for logging, too
+			PsykoSocket.init(CoreSettings.PSYKOSOCKET_IP);
+			
 			Cc.log( this, "initializing platform - " +
 					"running on iPad: " + CoreSettings.RUNNING_ON_iPAD + "," +
 					"running on HD: " + CoreSettings.RUNNING_ON_RETINA_DISPLAY + ", " +

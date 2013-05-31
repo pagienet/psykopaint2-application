@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
 	
+	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.DelaunayBrush;
@@ -14,12 +15,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.brushes.UncoloredSprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterDamageBrush;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
-	import net.psykosoft.psykopaint2.core.resources.PsykoSocket;
-
+	
 	public class BrushKit extends EventDispatcher
 	{
 		

@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.resources
+package net.psykosoft.psykopaint2.base.remote
 {
 	import flash.desktop.NativeApplication;
 	import flash.events.DatagramSocketDataEvent;

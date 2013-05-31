@@ -3,8 +3,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
 	
-	import net.psykosoft.psykopaint2.core.resources.PsykoSocket;
-
+	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
+	
 	public class BrushShapeLibrary
 	{
 		[Inject]

@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.resources
+package net.psykosoft.psykopaint2.base.remote
 {
 	final public class PsykoSocketCallback
 	{

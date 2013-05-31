@@ -2,8 +2,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 {
 	import flash.utils.Dictionary;
 	
-	import net.psykosoft.psykopaint2.core.resources.PsykoSocket;
-
+	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
+	
 	public class PointDecoratorFactory
 	{
 		private static var _availableDecoratorTypes:Object;
