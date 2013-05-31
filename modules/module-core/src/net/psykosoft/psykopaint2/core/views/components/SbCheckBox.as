@@ -8,20 +8,15 @@ package net.psykosoft.psykopaint2.core.views.components
 	{
 		private var _selected:Boolean = false;
 
-		public static const CHANGE:String = "onChange";
-
 		public function SbCheckBox() {
 			super();
-
 			stop();
-
 			addEventListener( MouseEvent.MOUSE_DOWN, onMouseDownEvent );
 		}
 
 		private function onMouseDownEvent( event:MouseEvent ):void {
 			_selected = !_selected;
-			dispatchEvent( new Event( SbCheckBox.CHANGE ) );
-
+			dispatchEvent( new Event( Event.CHANGE ) );
 			if( !hasEventListener( Event.ENTER_FRAME ) ) {
 				addEventListener( Event.ENTER_FRAME, onEnterFrame );
 			}
@@ -29,7 +24,6 @@ package net.psykosoft.psykopaint2.core.views.components
 
 		private function onEnterFrame( event:Event ):void {
 			if( _selected ) {
-
 				if( currentFrame != 5 ) {
 					gotoAndStop( currentFrame + 1 );
 				}
@@ -39,7 +33,6 @@ package net.psykosoft.psykopaint2.core.views.components
 				}
 			}
 			else {
-
 				if( currentFrame != 1 ) {
 					gotoAndStop( currentFrame - 1 );
 				}
@@ -48,6 +41,11 @@ package net.psykosoft.psykopaint2.core.views.components
 					removeEventListener( Event.ENTER_FRAME, onEnterFrame );
 				}
 			}
+		}
+
+		public function set selected( value:Boolean ):void {
+			_selected = value;
+			gotoAndStop( _selected ? 5 : 1 );
 		}
 
 		public function get selected():Boolean {

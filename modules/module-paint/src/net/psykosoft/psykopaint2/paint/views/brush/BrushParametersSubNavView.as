@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.views.components.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.SbNavigationButton;
 	import net.psykosoft.psykopaint2.core.views.components.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.SbSlider;
@@ -97,7 +98,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
-
 				var slider:SbSlider = new SbSlider();
 				slider.numDecimals = 2;
 				slider.minValue = Number( _activeParameter.@minValue );
@@ -106,13 +106,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				slider.addEventListener( Event.CHANGE, onSliderChanged );
 				positionUiElement( slider );
 				addChild( slider );
-
 				_uiElements.push( slider );
 			}
 
 			// Range slider.
 			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter ) {
-
 				var rangeSlider:SbRangedSlider = new SbRangedSlider();
 				rangeSlider.numDecimals = 2;
 				rangeSlider.minValue = Number( _activeParameter.@minValue );
@@ -122,38 +120,40 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
 				positionUiElement( rangeSlider );
 				addChild( rangeSlider );
-
 				_uiElements.push( rangeSlider );
 			}
 
-			// Combo box.
+			// Combo box. // TODO: implement real combobox, design is ready
 			else if( parameterType == PsykoParameter.StringListParameter ) {
-
-				trace( ">>>>>>>> STRING LIST: " + _activeParameter.toXMLString() );
-
-				var combobox:ComboBox = new ComboBox( this );
-				combobox.alternateRows = true;
-				combobox.openPosition = ComboBox.TOP;
-
+				var comboBox:ComboBox = new ComboBox( this );
+				comboBox.alternateRows = true;
+				comboBox.openPosition = ComboBox.TOP;
 				var list:Array = String( _activeParameter.@list ).split( "," );
 				var len:uint = list.length;
 				for( var i:uint; i < len; ++i ) {
 					var option:String = list[ i ];
-					combobox.addItem( option );
+					comboBox.addItem( option );
 				}
-				combobox.defaultLabel = list[ uint( _activeParameter.@index ) ];
-				combobox.numVisibleItems = Math.min( 6, len );
-				combobox.addEventListener( Event.SELECT, onComboBoxChanged );
-
-				positionUiElement( combobox as DisplayObject );
-
-				_uiElements.push( combobox );
+				comboBox.defaultLabel = list[ uint( _activeParameter.@index ) ];
+				comboBox.numVisibleItems = Math.min( 6, len );
+				comboBox.addEventListener( Event.SELECT, onComboBoxChanged );
+				positionUiElement( comboBox as DisplayObject );
+				_uiElements.push( comboBox );
 			}
 
-			// TODO: support more parameter types...
-			else {
-				trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
+			// Check box
+			else if( parameterType == PsykoParameter.BooleanParameter ) {
+				trace( ">>>>> BOOLEAN: " + _activeParameter.toXMLString() );
+				var checkBox:SbCheckBox = new SbCheckBox();
+				checkBox.selected = Boolean( _activeParameter.@value );
+				checkBox.addEventListener( Event.CHANGE, onCheckBoxChanged );
+				positionUiElement( checkBox as DisplayObject );
+				addChild( checkBox );
+				_uiElements.push( checkBox );
 			}
+
+			// No Ui component for this parameter.
+			else trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
 		}
 
 		private function closeLastParameter():void {
@@ -165,6 +165,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				if( uiElement is SbSlider ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
 				else if( uiElement is SbRangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
 				// TODO: dispose combo boxes...
+				// TODO: dispose check boxes...
 				else {
 					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
 				}
@@ -190,31 +191,34 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			_parametersXML.descendants( "parameter" ).( @id == id )[ 0 ] = _activeParameter;
 		}
 
+		private function notifyParameterChange():void {
+			brushParameterChangedSignal.dispatch( _activeParameter );
+		}
+
 		// ---------------------------------------------------------------------
 		// Listeners.
 		// ---------------------------------------------------------------------
 
-		private function onComboBoxChanged( event:Event ):void {
-			var combobox:ComboBox = event.target as ComboBox;
-			var list:Array = String( _activeParameter.@list ).split( "," );
-			var index:uint = list.indexOf( combobox.selectedItem );
-			_activeParameter.@index = index;
+		private function onCheckBoxChanged( event:Event ):void {
+			var checkBox:SbCheckBox = event.target as SbCheckBox;
+			_activeParameter.@value = checkBox.selected;
 			updateActiveParameter();
-			brushParameterChangedSignal.dispatch( _activeParameter );
+			notifyParameterChange();
 		}
 
-		private function onParameterClicked( event:MouseEvent ):void {
-			var button:SbNavigationButton = event.target as SbNavigationButton;
-			if( !button ) button = event.target.parent as SbNavigationButton;
-			var label:String = button.labelText;
-			openParameter( label );
+		private function onComboBoxChanged( event:Event ):void {
+			var comboBox:ComboBox = event.target as ComboBox;
+			var list:Array = String( _activeParameter.@list ).split( "," );
+			_activeParameter.@index = list.indexOf( comboBox.selectedItem );
+			updateActiveParameter();
+			notifyParameterChange();
 		}
 
 		private function onSliderChanged( event:Event ):void {
 			var slider:SbSlider = event.target as SbSlider;
 			_activeParameter.@value = slider.value;
 			updateActiveParameter();
-			brushParameterChangedSignal.dispatch( _activeParameter );
+			notifyParameterChange();
 		}
 
 		private function onRangeSliderChanged( event:Event ):void {
@@ -222,7 +226,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			_activeParameter.@value1 = slider.value1;
 			_activeParameter.@value2 = slider.value2;
 			updateActiveParameter();
-			brushParameterChangedSignal.dispatch( _activeParameter );
+			notifyParameterChange();
+		}
+
+		private function onParameterClicked( event:MouseEvent ):void {
+			var button:SbNavigationButton = event.target as SbNavigationButton;
+			if( !button ) button = event.target.parent as SbNavigationButton;
+			var label:String = button.labelText;
+			openParameter( label );
 		}
 	}
 }
