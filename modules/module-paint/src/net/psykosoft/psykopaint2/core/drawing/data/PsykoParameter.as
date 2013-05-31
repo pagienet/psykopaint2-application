@@ -8,8 +8,8 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		public static const NumberRangeParameter:int =2; // range slider
 		public static const IntRangeParameter:int = 3; // range slider
 		public static const StringParameter:int = 4; // text input TODO
-		public static const NumberListParameter:int = 5; // Some kind of List - Horizontal Bar? TODO
-		public static const IntListParameter:int = 6; // Some kind of List - Horizontal Bar? TODO
+		public static const NumberListParameter:int = 5; // combo box TODO
+		public static const IntListParameter:int = 6; // combo box TODO
 		public static const StringListParameter:int = 7; // combo box TODO minimalcomps for now, implement real combobox ( design is ready, component is not )
 		public static const BooleanParameter:int = 8; // checkbox TODO: there seems to be a bug in the way the core handles parameter updates
 		public static const BooleanListParameter:int = 9; // check box TODO: what is a boolean list?

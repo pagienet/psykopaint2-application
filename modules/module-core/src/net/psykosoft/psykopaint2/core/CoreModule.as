@@ -66,6 +66,7 @@ package net.psykosoft.psykopaint2.core
 
 		public function CoreModule( injector:Injector = null ) {
 			super();
+			inlineTest(); // TODO: remove
 			_injector = injector;
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CoreModule";
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
@@ -75,6 +76,28 @@ package net.psykosoft.psykopaint2.core
 			_coreRootView.addToMainLayer( child );
 		}
 
+		// TODO: delete this test
+		private function inlineTest():void {
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+			trace( "inline test: " + avg( 4, 5 ) );
+		}
+		[Inline]
+		final private function avg( value1:Number, value2:Number ):Number {
+			return ( value1 + value2 ) / 2 + 2;
+		}
+
 		// ---------------------------------------------------------------------
 		// Initialization.
 		// ---------------------------------------------------------------------
@@ -82,7 +105,7 @@ package net.psykosoft.psykopaint2.core
 		private function initialize():void {
 
 			getVersion();
-			initDebugging();
+//			initDebugging();
 
 			Cc.log( this, "Initializing... [" + name + "] v" + CoreSettings.VERSION );
 

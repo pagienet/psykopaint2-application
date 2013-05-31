@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 	import flash.display.Stage;
 
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyBlockingGestureSignal;
+
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
 
 	import org.gestouch.core.Gestouch;
@@ -20,10 +22,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		[Inject]
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
 
+		[Inject]
+		public var notifyBlockingGestureSignal:NotifyBlockingGestureSignal;
+
 		private var _stage:Stage;
 
 		public function GestureManager() {
-
 		}
 
 		public function set stage( value:Stage ):void {
@@ -111,10 +115,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onTwoFingerSwipeUp( event:GestureEvent ):void {
 			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_UP );
+			notifyBlockingGestureSignal.dispatch( false );
 		}
 
 		private function onTwoFingerSwipeDown( event:GestureEvent ):void {
 			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_DOWN );
+			notifyBlockingGestureSignal.dispatch( false );
 		}
 
 		// ---------------------------------------------------------------------

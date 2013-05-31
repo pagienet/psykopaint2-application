@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
@@ -106,6 +107,7 @@ package net.psykosoft.psykopaint2.core.config
 			_injector.map( NotifyNavigationToggledSignal ).asSingleton();
 			_injector.map( NotifyExpensiveUiActionToggledSignal ).asSingleton();
 			_injector.map( NotifyMemoryWarningSignal ).asSingleton();
+			_injector.map( NotifyBlockingGestureSignal ).asSingleton();
 		}
 
 		// -----------------------

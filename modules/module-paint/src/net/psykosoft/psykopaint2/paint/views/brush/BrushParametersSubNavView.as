@@ -136,12 +136,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				_uiElements.push( knob );
 			}
 
-			/*// Angle range.
-			else if( parameterType == PsykoParameter.AngleRangeParameter ) {
-				trace( ">>> ANGLE RANGE: " + _parameter.toXMLString() );
-				*//*<parameter id="Offset Angle" type="11" path="pathengine.pointdecorator_6" minValue="0" maxValue="180" value1="0" value2="90"/>*//*
-			}*/
-
 			// Combo box. // TODO: implement real combobox, design is ready
 			else if( parameterType == PsykoParameter.StringListParameter ) {
 				var comboBox:ComboBox = new ComboBox( this );
