@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
@@ -10,6 +11,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.core.views.components.SbRangedSlider;
+	import net.psykosoft.psykopaint2.core.views.components.SbSlider;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 
 	public class CoreRootView extends Sprite
@@ -33,30 +35,38 @@ package net.psykosoft.psykopaint2.core.views.base
             _frontLayer.addChild( navigationView );
 
             // -----------------------
-            // Tests...
+            // Component tests...
             // -----------------------
-			return;
+//			return;
 
-			this.graphics.beginFill(0x000000, 1.0);
+			/*this.graphics.beginFill(0xCCCCCC, 1.0);
 			this.graphics.drawRect(0, 0, 1024, 768);
-			this.graphics.endFill();
+			this.graphics.endFill();*/
 
             // Simple slider test.
             /*var simpleSlider:SbSlider = new SbSlider();
             simpleSlider.x = 200;
             simpleSlider.y = 20;
-            simpleSlider.setIdLabel( "mySlider" );
-            addChild( simpleSlider );
-            trace( "test slider dimensions: " + simpleSlider.width + ", " + simpleSlider.height );*/
+			simpleSlider.value = 0.7;
+			simpleSlider.minValue = 0.5;
+			simpleSlider.maxValue = 0.75;
+			simpleSlider.addEventListener( Event.CHANGE, function( event:Event ):void {
+				trace( ">>> simple slider change: " + simpleSlider.value );
+			} );
+            addChild( simpleSlider );*/
 
             // Range slider test.
-            var rangeSlider:SbRangedSlider = new SbRangedSlider();
-            rangeSlider.x = 1024 / 2 - rangeSlider.width / 2;
-            rangeSlider.y = 560;
-            rangeSlider.label = "myRangeSlider";
-			// TODO: test set values
-            addChild( rangeSlider );
-//            trace( "test range slider dimensions: " + rangeSlider.width + ", " + rangeSlider.height );
+           /* var rangeSlider:SbRangedSlider = new SbRangedSlider();
+            rangeSlider.x = 200;
+            rangeSlider.y = 150;
+			rangeSlider.minValue = 0.5;
+			rangeSlider.maxValue = 0.75;
+			rangeSlider.value1 = 0.6;
+			rangeSlider.value2 = 0.75;
+			rangeSlider.addEventListener( Event.CHANGE, function( event:Event ):void {
+				trace( ">>> range slider change: " + rangeSlider.value1 + ", " + rangeSlider.value2 );
+			} );
+            addChild( rangeSlider );*/
 
             //CheckBox test.
            /* var checkbox:SbCheckBox = new SbCheckBox();

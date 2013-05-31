@@ -5,205 +5,188 @@ package net.psykosoft.psykopaint2.core.views.components
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 
 	public class SbRangedSlider extends Sprite
 	{
-
 		// Declared in Fla.
-		public var bgView:Sprite; //TODO: if not used in the future, remove and use graphic directly from the fla
 		public var leftHandleView:Sprite;
 		public var rightHandleView:Sprite;
 		public var rangeView:MovieClip;
+		public var value1Label:TextField;
+		public var value2Label:TextField;
 
-		private var _initialLeftHandleX:Number;
-		private var _initialRightHandleX:Number;
-		private var _maxDistanceBetweenHandles:Number;
-		private var _range:Number = 1;
+		private var _value1:Number = 0;
+		private var _value2:Number = 0;
+		private var _valueRatio1:Number = 0;
+		private var _valueRatio2:Number = 0;
 		private var _minValue:Number = 0;
 		private var _maxValue:Number = 1;
-		private var _value1:Number = 0;
-		private var _value2:Number = 1;
-		private var _numLabelsDecimals:uint = 1;
-		private var _labelLeft:TextField;
-		private var _labelRight:TextField;
-		private var _label:TextField;
+		private var _numDecimals:uint = 2;
+		private var _id:String;
+		private var _minX:Number = 0;
+		private var _maxX:Number = 220;
+		private var _xRange:Number;
 		private var _mouseIsDown:Boolean;
-		private var _handleBeingDragged:Sprite;
-		private var _handleNotBeingDragged:Sprite;
 		private var _clickOffset:Number;
+		private var _valueRange:Number = 1;
+		private var _activeHandle:Sprite;
 		private var _handleWidth:Number;
-
-		// ---------------------------------------------------------------------
-		// Initialization.
-		// ---------------------------------------------------------------------
+		private var _initialDistanceBetweenHandles:Number;
 
 		public function SbRangedSlider() {
 			super();
-
+			_minX = leftHandleView.x;
+			_maxX = rightHandleView.x;
 			_handleWidth = leftHandleView.width;
-
-			_initialLeftHandleX = leftHandleView.x;
-			_initialRightHandleX = rightHandleView.x;
-
-			_maxDistanceBetweenHandles = rightHandleView.x - leftHandleView.x;
-
-			rangeView.transform.colorTransform = new ColorTransform( 1, 0, 0 );
-			rangeView.y -= 5;
+			_initialDistanceBetweenHandles = rightHandleView.x - leftHandleView.x - _handleWidth;
+			_xRange = _maxX - _minX;
 			rangeView.stop();
-			updateRangeView();
-
-			initLabels();
-
+			value1Label.selectable = value1Label.mouseEnabled = false;
+			value2Label.selectable = value2Label.mouseEnabled = false;
 			leftHandleView.addEventListener( MouseEvent.MOUSE_DOWN, onHandleMouseDown );
 			rightHandleView.addEventListener( MouseEvent.MOUSE_DOWN, onHandleMouseDown );
-			rangeView.addEventListener( MouseEvent.MOUSE_DOWN, onRangeViewMouseDown );
-
+			rangeView.addEventListener( MouseEvent.MOUSE_DOWN, onHandleMouseDown );
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-		}
-
-		private function initLabels():void {
-
-			_labelLeft = new TextField();
-			_labelRight = new TextField();
-			_label = new TextField();
-			_labelLeft.x = 45;
-			_labelLeft.y = 15;
-			_labelRight.x = 415;
-			_labelRight.y = 15;
-			_label.y = 40;
-			_label.x = 200;
-
-			_labelLeft.width = _labelLeft.height = 1;
-			_labelRight.width = _labelRight.height = 1;
-			_label.width = _label.height = 1;
-
-			_labelRight.mouseEnabled = false;
-			_labelLeft.mouseEnabled = false;
-			_label.mouseEnabled = false;
-			_labelRight.selectable = false;
-			_labelLeft.selectable = false;
-			_label.selectable = false;
-
-			addChild( _labelRight );
-			addChild( _labelLeft );
-			addChild( _label );
-		}
-
-		// ---------------------------------------------------------------------
-		// Listeners.
-		// ---------------------------------------------------------------------
-
-		private function onRangeViewMouseDown( event:MouseEvent ):void {
-			// TODO...
-		}
-
-		private function onHandleMouseDown( event:MouseEvent ):void {
-			_mouseIsDown = true;
-			_handleBeingDragged = event.target as Sprite;
-			_clickOffset = mouseX - _handleBeingDragged.x;
-			_handleNotBeingDragged = _handleBeingDragged == leftHandleView ? rightHandleView : leftHandleView;
-		}
-
-		private function onAddedToStage( event:Event ):void {
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-			stage.addEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
-		}
-
-		private function onStageMouseMove( event:MouseEvent ):void {
-			if( _mouseIsDown ) {
-
-				_handleBeingDragged.x = mouseX - _clickOffset;
-				if( _handleBeingDragged.x < _initialLeftHandleX ) _handleBeingDragged.x = _initialLeftHandleX;
-				if( _handleBeingDragged.x > _initialRightHandleX ) _handleBeingDragged.x = _initialRightHandleX;
-
-				// Updates values from handle positions.
-				var dx:Number;
-				var ratio:Number;
-				if( _handleBeingDragged == leftHandleView ) {
-					dx = leftHandleView.x - _initialLeftHandleX;
-					ratio = dx / _maxDistanceBetweenHandles;
-					_value1 = ratioToValue( ratio );
-				}
-				else {
-					dx = rightHandleView.x - _initialLeftHandleX;
-					ratio = dx / _maxDistanceBetweenHandles;
-					_value2 = ratioToValue( ratio );
-				}
-
-				updateRangeView();
-			}
-		}
-
-		private function onStageMouseUp( event:MouseEvent ):void {
-			_mouseIsDown = false;
 		}
 
 		// ---------------------------------------------------------------------
 		// Internal.
 		// ---------------------------------------------------------------------
 
-		private function updateHandles():void {
-			// TODO: check collisions
+		private function updateHandlePositionFromMouse():void {
+			_activeHandle.x = mouseX + _clickOffset;
+			// Handle collisions and edge containment.
+			var limit:Number;
+			if( _activeHandle == leftHandleView ) {
+				// Edge.
+				if( leftHandleView.x < _minX ) leftHandleView.x = _minX;
+				limit = _maxX - _handleWidth;
+				if( leftHandleView.x > limit ) leftHandleView.x = limit;
+				// Collision.
+				limit = leftHandleView.x + _handleWidth;
+				if( rightHandleView.x < limit ) rightHandleView.x = limit;
+				updateAccordion();
+			}
+			else if( _activeHandle == rightHandleView ) {
+				// Edge.
+				if( rightHandleView.x > _maxX ) rightHandleView.x = _maxX;
+				limit = _minX + _handleWidth;
+				if( rightHandleView.x < limit ) rightHandleView.x = limit;
+				// Collision.
+				limit = rightHandleView.x - _handleWidth;
+				if( leftHandleView.x > limit ) leftHandleView.x = limit;
+				updateAccordion();
+			}
+			else {
+				var currentDistanceBetweenHandles:Number = rightHandleView.x - leftHandleView.x;
+				limit = _minX + _handleWidth;
+				if( rangeView.x < limit ) rangeView.x = limit;
+				limit = _maxX - currentDistanceBetweenHandles + _handleWidth;
+				if( rangeView.x > limit ) rangeView.x = limit;
+				leftHandleView.x = rangeView.x - _handleWidth;
+				rightHandleView.x = leftHandleView.x + currentDistanceBetweenHandles;
+			}
+			updateValueFromView();
 		}
 
-		private function updateRangeView():void {
-			trace( "ratios: " + _value1 + ", " + _value2 );
-			var deltaRatio:Number = valueToRatio( _value2 ) - valueToRatio( _value1 );
-			var frame:uint = Math.floor( deltaRatio * 100 ) + 1;
-			rangeView.gotoAndStop( 101 - frame );
-			rangeView.x = _initialLeftHandleX + valueToRatio( _value1 ) * ( _maxDistanceBetweenHandles ) - 1;
+		private function updateAccordion():void {
+			// Position.
+			rangeView.x = leftHandleView.x + _handleWidth;
+			// "Scale"
+			var currentDistanceBetweenHandles:Number = rightHandleView.x - leftHandleView.x - _handleWidth;
+			var xRatio:Number = currentDistanceBetweenHandles / _initialDistanceBetweenHandles;
+			var frame:Number = 101 * ( 1 - xRatio );
+			rangeView.gotoAndStop( uint( frame ) );
+			rangeView.visible = rangeView.currentFrame < 100;
 		}
 
-		// Returns 0 -> 1
-		private function valueToRatio( val:Number ):Number {
-			return ( val - _minValue ) / _range;
+		private function updateValueFromView():void {
+			_valueRatio1 = ( leftHandleView.x - _minX ) / _xRange;
+			_valueRatio2 = ( rightHandleView.x - _minX ) / _xRange;
+			_value1 = ratioToValue( _valueRatio1 );
+			_value2 = ratioToValue( _valueRatio2 );
+			updateLabel();
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 
-		// Expects 0 -> 1
+		private function updateViewFromValue():void {
+			leftHandleView.x = _minX + _valueRatio1 * _xRange;
+			rightHandleView.x = _minX + _valueRatio2 * _xRange;
+			updateLabel();
+			updateAccordion();
+		}
+
+		private function updateLabel():void {
+			var pow:Number = Math.pow( 10, _numDecimals );
+			var num:Number = Math.round( pow * _value1 ) / pow;
+			value1Label.text = String( num );
+			num = Math.round( pow * _value2 ) / pow;
+			value2Label.text = String( num );
+		}
+
+		private function valueToRatio( value:Number ):Number {
+			return ( value - _minValue ) / _valueRange;
+		}
+
 		private function ratioToValue( ratio:Number ):Number {
-			return ratio * _range + _minValue;
+			return ratio * _valueRange + _minValue;
+		}
+
+		private function containValue():void {
+			if( _value1 < _minValue ) _value1 = _minValue;
+			if( _value1 > _maxValue ) _value1 = _maxValue;
+			if( _value2 < _minValue ) _value2 = _minValue;
+			if( _value2 > _maxValue ) _value2 = _maxValue;
 		}
 
 		// ---------------------------------------------------------------------
-		// Setters & getters.
+		// Interface.
 		// ---------------------------------------------------------------------
+
+		public function dispose():void {
+			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+		}
+
+		public function set numDecimals( numDecimals:int ):void {
+			_numDecimals = numDecimals;
+			updateLabel();
+		}
 
 		public function set minValue( minValue:Number ):void {
 			_minValue = minValue;
-			_range = _maxValue - _minValue;
+			_valueRange = _maxValue - _minValue;
+			containValue();
+			updateLabel();
+			_valueRatio1 = valueToRatio( _value1 );
+			_valueRatio2 = valueToRatio( _value2 );
 		}
 
 		public function set maxValue( maxValue:Number ):void {
 			_maxValue = maxValue;
-			_range = _maxValue - _minValue;
-		}
-
-		public function get range():Number {
-			return _range;
-		}
-
-		public function set numDecimals( value:uint ):void {
-			if( _numLabelsDecimals < 1 ) {
-				throw new Error( this, "value must be >= 1." );
-			}
-			_numLabelsDecimals = value;
+			_valueRange = _maxValue - _minValue;
+			containValue();
+			updateLabel();
+			_valueRatio1 = valueToRatio( _value1 );
+			_valueRatio2 = valueToRatio( _value2 );
 		}
 
 		public function set value1( value:Number ):void {
-			_value1 = Math.max( Math.min( value, _maxValue ), _minValue );
-			leftHandleView.x = _initialLeftHandleX + valueToRatio( _value1 ) * _maxDistanceBetweenHandles;
-			updateRangeView();
-			updateHandles();
+			_value1 = value;
+			containValue();
+			_valueRatio1 = valueToRatio( _value1 );
+			updateLabel();
+			updateViewFromValue();
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 
 		public function set value2( value:Number ):void {
-			_value2 = Math.max( Math.min( value, _maxValue ), _minValue );
-			rightHandleView.x = _initialLeftHandleX + valueToRatio( _value2 ) * _maxDistanceBetweenHandles;
-			updateRangeView();
-			updateHandles();
+			_value2 = value;
+			containValue();
+			_valueRatio2 = valueToRatio( _value2 );
+			updateLabel();
+			updateViewFromValue();
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 
 		public function get value1():Number {
@@ -214,162 +197,42 @@ package net.psykosoft.psykopaint2.core.views.components
 			return _value2;
 		}
 
-		public function set label( id:String ):void {
-			_label.text = String( id );
-			_label.width = 1.25 * _label.textWidth;
-			_label.height = 1.25 * _label.textHeight;
+		public function get id():String {
+			return _id;
 		}
 
-		public function get label():String {
-			return _label.text;
+		public function set id( value:String ):void {
+			_id = value;
+		}
+
+		override public function get width():Number {
+			return 451;
 		}
 
 		// ---------------------------------------------------------------------
-		// legacy
+		// Listeners.
 		// ---------------------------------------------------------------------
 
-		/*private var _limitForHandle:Dictionary;
+		private function onHandleMouseDown( event:MouseEvent ):void {
+			_mouseIsDown = true;
+			_activeHandle = event.target as Sprite;
+			_clickOffset = _activeHandle.x - mouseX;
+		}
 
-		 private var _minPosX:Number = 70;
-		 private var _maxPosX:Number = 360;
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			stage.addEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
+		}
 
-		 private var _selected:Sprite;
-		 private var _nonSelected:Sprite;
-		 private var _mouseDown:Boolean = false;
-		 private var _mouseDownOnRange:Boolean = false;
-		 private var _stage:Stage;
-		 private var _clickOffset:Number;
-		 private var _handleDistance:Number;*/
-		//private var _minDistance:Number = 20; //TODO: minimum distance between handles is currently managed from within fla
+		private function onStageMouseMove( event:MouseEvent ):void {
+			if( _mouseIsDown ) {
+				updateHandlePositionFromMouse();
+			}
+		}
 
-//		public static const CHANGE:String = "onChange"; // TODO: ojo que no se estaba disparando el evento, tarde un rato largo en encontrar el bug, al probar un componente hay que probar -todas- sus funcionalidades
-//		public static const STOP_DRAG:String = "STOP_DRAG"; // TODO: borrar si no se usa
-		// TODO: de hecho, reemplazar estos por Event.CHANGE
-
-		/*private function onRangeViewMouseDown(event:MouseEvent):void {
-		 _mouseDownOnRange = true;
-		 _clickOffset = mouseX - leftHandleView.x;
-		 _handleDistance = rightHandleView.x - leftHandleView.x;
-		 }*/
-
-
-		/*public function dispose():void {
-		 leftHandleView.removeEventListener( MouseEvent.MOUSE_DOWN, onLeftHandleMouseDown );
-		 rightHandleView.removeEventListener( MouseEvent.MOUSE_DOWN, onRightHandleMouseDown );
-		 _stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-		 _stage.removeEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
-		 }*/
-
-		/*private function onLeftHandleMouseDown( event:MouseEvent ):void {
-		 _selected = leftHandleView;
-		 _clickOffset = mouseX - _selected.x;
-		 _nonSelected = rightHandleView;
-		 _mouseDown = true;
-		 }*/
-
-		/*private function onRightHandleMouseDown( event:MouseEvent ):void {
-		 _selected = rightHandleView;
-		 _clickOffset = mouseX - _selected.x;
-		 _nonSelected = leftHandleView;
-		 _mouseDown = true;
-		 }*/
-
-		/*private function onStageMouseMove( event:MouseEvent ):void {
-		 if( _mouseDown ) {
-
-		 var posX:Number = mouseX - _clickOffset;
-
-		 var slideValueSelected:Number;
-		 var slideValueNonSelected:Number;
-		 var indexSelected:Number;
-		 var indexNonSelected:Number;
-
-		 var leftLimits:Point = _limitForHandle[ leftHandleView ];
-		 var rightLimits:Point = _limitForHandle[ rightHandleView ];
-
-		 leftLimits.y = rightHandleView.x;
-		 rightLimits.x = leftHandleView.x;
-
-		 var limitSelected:Point = _limitForHandle[ _selected ];
-		 var limitNonSelected:Point = _limitForHandle[ _nonSelected ];
-
-		 _selected.x = Math.max( Math.min( posX, limitSelected.y ), limitSelected.x );
-
-		 if( _selected.x == _nonSelected.x ){
-		 rangeView.visible = false;
-
-		 _nonSelected.x = Math.max( Math.min( posX, limitNonSelected.y ), limitNonSelected.x );
-		 indexNonSelected = ( _nonSelected == leftHandleView ) ? 0 : 1;
-		 slideValueNonSelected = positionToValue( _nonSelected.x ); //TODO: make sure this is the value we should be passing
-		 setValue( slideValueNonSelected, indexNonSelected );
-		 }
-		 else{
-		 rangeView.visible = true;
-		 }
-
-		 indexSelected = ( _selected == leftHandleView ) ? 0 : 1;
-
-		 slideValueSelected = positionToValue( _selected.x ); //TODO: make sure this is the value we should be passing
-		 setValue( slideValueSelected, indexSelected );
-
-		 repositionRange();
-		 }
-
-		 if( _mouseDownOnRange ) {
-
-		 var leftValue:Number;
-		 var rightValue:Number;
-
-		 var leftPosX:Number = Math.max( Math.min( mouseX - _clickOffset, _maxPosX - _handleDistance ), _minPosX );
-		 leftHandleView.x = leftPosX;
-
-		 rangeView.x = leftPosX + leftHandleView.width - 2;
-
-		 var rightPosX:Number = Math.max( Math.min( leftHandleView.x + _handleDistance, _maxPosX ), _minPosX + _handleDistance );
-		 rightHandleView.x = rightPosX;
-
-		 leftValue = positionToValue( leftPosX );
-		 rightValue = positionToValue( rightPosX );
-		 setValues( leftValue, rightValue );
-		 }
-		 }*/
-
-		/*private function onStageMouseUp( event:MouseEvent ):void {
-		 _selected = null;
-		 _nonSelected = null;
-		 _mouseDown = false;
-		 _mouseDownOnRange = false;
-		 }*/
-
-		/*public function setValues( val1:Number, val2:Number ):void {
-		 setValue( val1, 0 );
-		 setValue( val2, 1 );
-		 }*/
-
-		/*public function setValue( val:Number, index:int = 0 ):void {
-
-		 //SET VALUE WITHIN BOUNDS
-		 val = Math.max( Math.min( val, _maxValue ), _minValue );
-
-		 var pow:Number = Math.pow( 10, _numLabelsDecimals );
-		 var num:Number = Math.round( pow * val ) / pow;
-
-		 // TODO: posicionar handles
-
-		 if( index == 0 ) {
-		 _value1 = val;
-		 _labelLeft.text = String( num );
-		 _labelLeft.width = _labelLeft.textWidth + 10;
-		 _labelLeft.height = 1.25 * _labelLeft.textHeight;
-		 }
-		 else {
-		 _value2 = val;
-		 _labelRight.text = String( num );
-		 _labelRight.width = _labelRight.textWidth + 10;
-		 _labelRight.height = 1.25 * _labelRight.textHeight;
-		 }
-
-		 dispatchEvent( new Event( SbRangedSlider.CHANGE ) );
-		 }*/
+		private function onStageMouseUp( event:MouseEvent ):void {
+			_mouseIsDown = false;
+		}
 	}
 }

@@ -54,7 +54,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		public function setParameters( xml:XML ):void {
 			_parametersXML = xml;
-//			trace( this, "receiving parameters: " + _parametersXML );
+			trace( this, "receiving parameters: " + _parametersXML );
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
 			_btns = new Vector.<SbNavigationButton>();
@@ -89,12 +89,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
 
 				var slider:SbSlider = new SbSlider();
-				slider.numDecimals = 3;
-				slider.minimum = Number( parameter.@minValue );
-				slider.maximum = Number( parameter.@maxValue );
-				slider.setValue( Number( parameter.@value ) );
-				slider.setIdLabel( String( parameter.@id ) );
-				slider.addEventListener( SbSlider.CHANGE, onSliderChanged );
+				slider.id = String( parameter.@id );
+				slider.numDecimals = 2;
+				slider.minValue = Number( parameter.@minValue );
+				slider.maxValue = Number( parameter.@maxValue );
+				slider.value = Number( parameter.@value );
+				slider.addEventListener( Event.CHANGE, onSliderChanged );
 				positionUiElement( slider );
 				addChild( slider );
 
@@ -105,18 +105,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter ) {
 
 				var rangeSlider:SbRangedSlider = new SbRangedSlider();
-				rangeSlider.numDecimals = 1;
-				rangeSlider.minValue = Number( 0.5 );
-//				rangeSlider.minValue = Number( parameter.@minValue );
-                trace("MINIMUM VALUE >>>>>>>>>>>>>>>>>>>>>>", parameter.@minValue );
-                trace("MAXIMUM VALUE >>>>>>>>>>>>>>>>>>>>>>", parameter.@maxValue );
-				rangeSlider.maxValue = Number( 10 );
-//				rangeSlider.maxValue = Number( parameter.@maxValue );
+				rangeSlider.id = String( parameter.@id );
+				rangeSlider.numDecimals = 2;
+				rangeSlider.minValue = Number( parameter.@minValue );
+				rangeSlider.maxValue = Number( parameter.@maxValue );
 				rangeSlider.value1 = Number( parameter.@value1 );
 				rangeSlider.value2 = Number( parameter.@value2 );
-                trace("VALUE 1 >>>>>>>>>>>>>>>>>>>>>>", parameter.@value1 );
-                trace("VALUE 2 >>>>>>>>>>>>>>>>>>>>>>", parameter.@value2 );
-				rangeSlider.label = String( parameter.@id );
 				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
 				positionUiElement( rangeSlider );
 				addChild( rangeSlider );
@@ -136,7 +130,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var len:uint = _uiElements.length;
 			for( var i:uint; i < len; ++i ) {
 				var uiElement:DisplayObject = _uiElements[ i ];
-				if( uiElement is SbSlider ) uiElement.removeEventListener( SbSlider.CHANGE, onSliderChanged );
+				if( uiElement is SbSlider ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
 				else if( uiElement is SbRangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
 				else {
 					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
@@ -149,7 +143,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private function positionUiElement( element:Sprite ):void {
 			// TODO: fix this scaling hack, not sure why its necessary on ipad.
 			element.scaleX = element.scaleY = 1 / ViewCore.globalScaling;
-			element.x = ViewCore.globalScaling == 2 ? -100 : 0 + ( 1024 / 2 - element.width / 2 ) / ViewCore.globalScaling;
+			element.x = ( ViewCore.globalScaling == 2 ? -100 : 0 ) + ( 1024 / 2 - element.width / 2 ) / ViewCore.globalScaling;
 			element.y = UI_ELEMENT_Y / ViewCore.globalScaling;
 //			trace( this, ">>> positioning element at: " + element.x + ", " + element.y + ", scale: " + scaleX );
 		}
@@ -171,15 +165,15 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onSliderChanged( event:Event ):void {
 			var slider:SbSlider = event.target as SbSlider;
-			var parameter:XML = getParameterFromId( slider.getIdLabel() );
-			parameter.@value = slider.getValue();
+			var parameter:XML = getParameterFromId( slider.id );
+			parameter.@value = slider.value;
 			updateParameter( parameter );
 			brushParameterChangedSignal.dispatch( parameter );
 		}
 
 		private function onRangeSliderChanged( event:Event ):void {
 			var slider:SbRangedSlider = event.target as SbRangedSlider;
-			var parameter:XML = getParameterFromId( slider.label );
+			var parameter:XML = getParameterFromId( slider.id );
 			parameter.@value1 = slider.value1;
 			parameter.@value2 = slider.value2;
 			updateParameter( parameter );
