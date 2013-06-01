@@ -13,8 +13,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.HItemScroller;
 	import net.psykosoft.psykopaint2.base.ui.components.HSnapScroller;
-	import net.psykosoft.psykopaint2.core.views.components.NavigationButtonLabelType;
-	import net.psykosoft.psykopaint2.core.views.components.SbNavigationButton;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 
 	import org.osflash.signals.Signal;
 
@@ -26,8 +26,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var leftBtnSide:Sprite;
 		public var rightBtnSide:Sprite;
 
-		private var _leftButton:SbNavigationButton;
-		private var _rightButton:SbNavigationButton;
+		private var _leftButton:SbButton;
+		private var _rightButton:SbButton;
 		private var _currentSubNavView:SubNavigationViewBase;
 		private var _buttonPositionOffsetX:Number;
 		private var _centerButtons:Array;
@@ -52,14 +52,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			hiddenAnimatedSignal = new Signal();
 			scrollingStartedSignal = new Signal();
 			scrollingEndedSignal = new Signal();
-			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbNavigationButton;
-			_rightButton = rightBtnSide.getChildByName( "btn" ) as SbNavigationButton;
+			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbButton;
+			_rightButton = rightBtnSide.getChildByName( "btn" ) as SbButton;
 		}
 
 		override protected function onSetup():void {
 
-			_leftButton.setLabelType( NavigationButtonLabelType.LEFT );
-			_rightButton.setLabelType( NavigationButtonLabelType.RIGHT );
+			_leftButton.setLabelType( ButtonLabelType.LEFT );
+			_rightButton.setLabelType( ButtonLabelType.RIGHT );
 
 			_leftButton.autoCenterLabel( false );
 			_leftButton.displaceLabelTf( 30, -13 );
@@ -164,7 +164,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if( _centerButtons && _centerButtons.length > 0 ) {
 				var len:uint = _centerButtons.length;
 				for( var i:uint; i < len; ++i ) {
-					var centerButton:SbNavigationButton = _centerButtons[ i ];
+					var centerButton:SbButton = _centerButtons[ i ];
 					centerButton.removeEventListener( MouseEvent.MOUSE_DOWN, onButtonClicked );
 					centerButton.dispose();
 					centerButton = null;
@@ -175,8 +175,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onButtonClicked( event:MouseEvent ):void {
 			if( _centerComponentsScroller.isActive ) return; // Reject clicks while the scroller is moving.
-			var button:SbNavigationButton = event.target as SbNavigationButton;
-			if( !button ) button = event.target.parent as SbNavigationButton;
+			var button:SbButton = event.target as SbButton;
+			if( !button ) button = event.target.parent as SbButton;
 			trace( this, "button clicked: " + button.labelText );
 			var label:String = button.labelText;
 			buttonClickedCallback( label );
@@ -196,7 +196,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function addCenterButton( label:String, iconType:String, labelType:String ):Sprite {
 			var specificButtonClass:Class = Class( getDefinitionByName( getQualifiedClassName( _leftButton ) ) );
-			var btn:SbNavigationButton = new specificButtonClass();
+			var btn:SbButton = new specificButtonClass();
 			btn.labelText = label;
 			btn.setIconType( iconType );
 			btn.setLabelType( labelType );
@@ -263,7 +263,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function selectButtonWithLabel( value:String ):void {
 			if( !_areButtonsSelectable ) return;
 			for( var i:Number = 0; i < _centerButtons.length; ++i ) {
-				var button:SbNavigationButton = _centerButtons[ i ];
+				var button:SbButton = _centerButtons[ i ];
 				button.toggleSelect( button.labelText == value );
 			}
 		}

@@ -10,8 +10,8 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.utils.Timer;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
-	import net.psykosoft.psykopaint2.core.views.components.SbRangedSlider;
-	import net.psykosoft.psykopaint2.core.views.components.SbSlider;
+	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
+	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 
 	public class CoreRootView extends Sprite
@@ -37,7 +37,6 @@ package net.psykosoft.psykopaint2.core.views.base
             // -----------------------
             // Component tests...
             // -----------------------
-//			return;
 
 			/*this.graphics.beginFill(0xCCCCCC, 1.0);
 			this.graphics.drawRect(0, 0, 1024, 768);
@@ -59,8 +58,9 @@ package net.psykosoft.psykopaint2.core.views.base
            /* var rangeSlider:SbRangedSlider = new SbRangedSlider();
             rangeSlider.x = 200;
             rangeSlider.y = 150;
-			rangeSlider.minValue = 0.5;
-			rangeSlider.maxValue = 0.75;
+			rangeSlider.numDecimals = 3;
+			rangeSlider.minValue = 0;
+			rangeSlider.maxValue = 1;
 			rangeSlider.value1 = 0.6;
 			rangeSlider.value2 = 0.75;
 			rangeSlider.addEventListener( Event.CHANGE, function( event:Event ):void {

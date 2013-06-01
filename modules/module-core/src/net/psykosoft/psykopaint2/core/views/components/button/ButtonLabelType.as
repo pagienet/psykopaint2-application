@@ -1,6 +1,6 @@
-package net.psykosoft.psykopaint2.core.views.components
+package net.psykosoft.psykopaint2.core.views.components.button
 {
-	public class NavigationButtonLabelType
+	public class ButtonLabelType
 	{
 		public static const CENTER:String = "btnLabelCenter";
 		public static const LEFT:String = "btnLabelLeft";

@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.views.components
+package net.psykosoft.psykopaint2.core.views.components.button
 {
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.core.views.components
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 
-	public class SbNavigationButton extends Sprite
+	public class SbButton extends Sprite
 	{
 		// Declared in Flash.
 		public var tf:TextField;
@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.core.views.components
         private var _isSelectable:Boolean = false;
 		private var _autoCenter:Boolean = true;
 
-		public function SbNavigationButton() {
+		public function SbButton() {
 			super();
 
             btnSelected.visible = false;

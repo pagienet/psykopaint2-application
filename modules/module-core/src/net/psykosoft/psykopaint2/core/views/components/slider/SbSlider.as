@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.views.components
+package net.psykosoft.psykopaint2.core.views.components.slider
 {
 
 	import flash.display.Sprite;

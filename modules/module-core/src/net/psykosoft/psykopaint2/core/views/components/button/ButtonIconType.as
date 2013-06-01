@@ -1,6 +1,6 @@
-package net.psykosoft.psykopaint2.core.views.components
+package net.psykosoft.psykopaint2.core.views.components.button
 {
-	public class NavigationButtonIconType
+	public class ButtonIconType
 	{
 		public static const DEFAULT:String = "default";
 		public static const GALLERY:String = "gallery";

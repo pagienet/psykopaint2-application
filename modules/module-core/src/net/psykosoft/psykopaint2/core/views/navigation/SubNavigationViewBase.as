@@ -3,8 +3,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import flash.display.Sprite;
 
-	import net.psykosoft.psykopaint2.core.views.components.NavigationButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.NavigationButtonLabelType;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 
 	/*
@@ -38,8 +38,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		protected function addCenterButton( label:String,
-											iconType:String = NavigationButtonIconType.DEFAULT,
-											labelType:String = NavigationButtonLabelType.CENTER ):Sprite {
+											iconType:String = ButtonIconType.DEFAULT,
+											labelType:String = ButtonLabelType.CENTER ):Sprite {
 			return _navigation.addCenterButton( label, iconType, labelType );
 		}
 

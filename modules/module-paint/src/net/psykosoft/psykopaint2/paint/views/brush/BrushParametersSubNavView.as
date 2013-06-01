@@ -13,10 +13,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-	import net.psykosoft.psykopaint2.core.views.components.SbCheckBox;
-	import net.psykosoft.psykopaint2.core.views.components.SbNavigationButton;
-	import net.psykosoft.psykopaint2.core.views.components.SbRangedSlider;
-	import net.psykosoft.psykopaint2.core.views.components.SbSlider;
+	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
+	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
+	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	import org.osflash.signals.Signal;
@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	public class BrushParametersSubNavView extends SubNavigationViewBase
 	{
-		private var _btns:Vector.<SbNavigationButton>;
+		private var _btns:Vector.<SbButton>;
 		private var _uiElements:Vector.<DisplayObject>;
 		private var _parametersXML:XML;
 		private var _parameter:XML;
@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Dispose local button listeners ( the rest is disposed in SbNavigationView ).
 			var len:uint = _btns.length;
 			for( var i:uint; i < len; ++i ) {
-				var btn:SbNavigationButton = _btns[ i ];
+				var btn:SbButton = _btns[ i ];
 				btn.removeEventListener( MouseEvent.MOUSE_UP, onParameterClicked );
 			}
 			_btns = null;
@@ -71,13 +71,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
-			_btns = new Vector.<SbNavigationButton>();
+			_btns = new Vector.<SbButton>();
 			var list:XMLList = _parametersXML.descendants( "parameter" );
 			var numParameters:uint = list.length();
 			for( var i:uint; i < numParameters; ++i ) {
 				var parameter:XML = list[ i ];
 //				trace( ">>> " + parameter.toXMLString() );
-				var btn:SbNavigationButton = addCenterButton( parameter.@id, "param" + parameter.@type ) as SbNavigationButton;
+				var btn:SbButton = addCenterButton( parameter.@id, "param" + parameter.@type ) as SbButton;
 				btn.addEventListener( MouseEvent.MOUSE_UP, onParameterClicked );
 				_btns.push( btn );
 			}
@@ -253,8 +253,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		private function onParameterClicked( event:MouseEvent ):void {
-			var button:SbNavigationButton = event.target as SbNavigationButton;
-			if( !button ) button = event.target.parent as SbNavigationButton;
+			var button:SbButton = event.target as SbButton;
+			if( !button ) button = event.target.parent as SbButton;
 			var label:String = button.labelText;
 			openParameter( label );
 		}
