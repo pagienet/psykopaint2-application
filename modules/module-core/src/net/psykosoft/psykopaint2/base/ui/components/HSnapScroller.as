@@ -28,7 +28,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public var visibleWidth:Number = 600;
 
 		// TODO: button presses conflict with scrolling
-		// TODO: ability to change bg color and even not to use one ( avoid 0 alpha for gpu performance )
 
 		public var motionStartedSignal:Signal;
 		public var motionEndedSignal:Signal;
@@ -47,16 +46,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			super.addChild( _container );
 
 			_container.cacheAsBitmap = true;
-			// TODO: wouldn't it make more sense to only set cache as bitmap to true after all the childs have been added to the container?
-
-			// TODO: confirm how usage of scroll rect affects performance in iPad
-			/*
-			* Last test with unstable stuff going on in stage3d shows that it is the
-			* same to use scroll rect or not.
-			* */
-			// TODO: 1.5 hardcode allows vertical visibility to be isolated from the vertical interaction area. These should be properly isolated. Analyze performance impact too.
-			// TODO: also, we could not only split them, but completely separate the area rects
- 			scrollRect = new Rectangle( 0, 0, visibleWidth, visibleHeight * 1.5 );
+			// TODO: wouldn't it make more sense to only set cache as bitmap to true after all the children have been added to the container?
 
 			_interactionManager = new ScrollInteractionManager( stage, _positionManager );
 
@@ -148,7 +138,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			}
 		}
 
-		private function mouseHitsPageArea():Boolean {
+		private function mouseHitsInteractiveArea():Boolean {
 
 			var topLeft:Point = new Point( 0, 0 );
 			var bottomRight:Point = new Point( visibleWidth, visibleHeight );
@@ -167,7 +157,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function evaluateInteractionStart():void {
 			if( maxWidth - edgeContentGap <= visibleWidth ) return; // No need for scrolling if all content is visible in 1 page.
-			if( !mouseHitsPageArea() ) return; // Hit test.
+			if( !mouseHitsInteractiveArea() ) return; // Hit test.
 			_interactionManager.startInteraction();
 			startEnterframe();
 		}
