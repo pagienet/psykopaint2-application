@@ -63,6 +63,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			icon.x = -icon.width / 2;
 			icon.y = -icon.height / 2;
 			_mouseIsDown = true;
+			if( isSelectable ) toggleSelect( true );
 		}
 
 		public function set labelText( value:String ):void {
