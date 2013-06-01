@@ -76,7 +76,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_centerComponentsScroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _centerComponentsScroller.visibleHeight / 2;
 			_centerComponentsScroller.positionManager.minimumThrowingSpeed = 15;
 			_centerComponentsScroller.positionManager.frictionFactor = 0.85;
-			_centerComponentsScroller.interactionManager.throwInputMultiplier = 3;
+			_centerComponentsScroller.interactionManager.throwInputMultiplier = 2;
 			_centerComponentsScroller.motionStartedSignal.add( onCenterScrollerMotionStart );
 			_centerComponentsScroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
 			addChildAt( _centerComponentsScroller, 1 );
@@ -167,7 +167,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				var len:uint = _centerButtons.length;
 				for( var i:uint; i < len; ++i ) {
 					var centerButton:SbButton = _centerButtons[ i ];
-					centerButton.removeEventListener( MouseEvent.MOUSE_DOWN, onButtonClicked );
+					centerButton.removeEventListener( MouseEvent.CLICK, onButtonClicked );
 					centerButton.dispose();
 					centerButton = null;
 				}
@@ -176,6 +176,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		private function onButtonClicked( event:MouseEvent ):void {
+
 			if( _centerComponentsScroller.isActive ) return; // Reject clicks while the scroller is moving.
 			var button:SbButton = event.target as SbButton;
 			if( !button ) button = event.target.parent as SbButton;
@@ -196,7 +197,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Methods called by SubNavigationViewBase.
 		// ---------------------------------------------------------------------
 
-		public function addCenterButton( label:String, iconType:String, labelType:String ):Sprite {
+		public function addCenterButton( label:String, iconType:String, labelType:String ):void {
 			var specificButtonClass:Class = Class( getDefinitionByName( getQualifiedClassName( _leftButton ) ) );
 			var btn:SbButton = new specificButtonClass();
 			btn.labelText = label;
@@ -204,7 +205,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			btn.setLabelType( labelType );
 			btn.x = _buttonPositionOffsetX;
 			btn.y = _centerComponentsScroller.visibleHeight / 2;
-			btn.addEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
+			btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			// Defaults to 1st button as selected.
 			if( _areButtonsSelectable ) {
 				btn.isSelectable = true;
@@ -215,7 +216,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_centerComponentsScroller.addChild( btn );
 			_centerButtons.push( btn );
 			_buttonPositionOffsetX += 140 + BUTTON_GAP_X;
-			return btn;
 		}
 
 		public function setLabel( value:String ):void {

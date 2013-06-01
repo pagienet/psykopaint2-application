@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	public class BrushParametersSubNavView extends SubNavigationViewBase
 	{
-		private var _btns:Vector.<SbButton>;
+//		private var _btns:Vector.<SbButton>;
 		private var _uiElements:Vector.<DisplayObject>;
 		private var _parametersXML:XML;
 		private var _parameter:XML;
@@ -47,12 +47,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override protected function onDisposed():void {
 			// Dispose local button listeners ( the rest is disposed in SbNavigationView ).
-			var len:uint = _btns.length;
+			/*var len:uint = _btns.length;
 			for( var i:uint; i < len; ++i ) {
 				var btn:SbButton = _btns[ i ];
-				btn.removeEventListener( MouseEvent.MOUSE_UP, onParameterClicked );
+				btn.removeEventListener( MouseEvent.CLICK, onParameterClicked );
 			}
-			_btns = null;
+			_btns = null;*/
 			// Dispose other components.
 			closeLastParameter();
 		}
@@ -70,7 +70,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
 			var openIndex:uint;
-			_btns = new Vector.<SbButton>();
+//			_btns = new Vector.<SbButton>();
 			var list:XMLList = _parametersXML.descendants( "parameter" );
 			var numParameters:uint = list.length();
 			for( var i:uint; i < numParameters; ++i ) {
@@ -78,9 +78,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var matchesLast:Boolean = BrushParameterCache.getLastSelectedParameter().indexOf( parameter.@id ) != -1;
 				if( matchesLast ) openIndex = i;
 //				trace( ">>> " + parameter.toXMLString() );
-				var btn:SbButton = addCenterButton( parameter.@id, "param" + parameter.@type ) as SbButton;
-				btn.addEventListener( MouseEvent.MOUSE_UP, onParameterClicked );
-				_btns.push( btn );
+				addCenterButton( parameter.@id, "param" + parameter.@type );
+//				btn.addEventListener( MouseEvent.CLICK, onParameterClicked );
+//				_btns.push( btn );
 			}
 			invalidateContent();
 			openParameter( list[ openIndex ].@id );
@@ -91,7 +91,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// Parameter components.
 		// ---------------------------------------------------------------------
 
-		private function openParameter( id:String ):void {
+		public function openParameter( id:String ):void {
 			closeLastParameter();
 
 			_uiElements = new Vector.<DisplayObject>();
@@ -250,11 +250,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			notifyParameterChange();
 		}
 
-		private function onParameterClicked( event:MouseEvent ):void {
+		/*private function onParameterClicked( event:MouseEvent ):void {
 			var button:SbButton = event.target as SbButton;
 			if( !button ) button = event.target.parent as SbButton;
 			var label:String = button.labelText;
 			openParameter( label );
-		}
+		}*/
 	}
 }

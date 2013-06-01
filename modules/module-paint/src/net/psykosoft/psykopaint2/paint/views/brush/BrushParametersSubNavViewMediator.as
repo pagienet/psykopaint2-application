@@ -44,7 +44,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					requestStateChange( StateType.STATE_PREVIOUS );
 					break;
 				}
-				// Note: Parameter buttons also have listeners, but within BrushParametersSubNavView itself.
+				// WARNING: be careful if another side button is added since default should only be for parameter buttons.
+				default: {
+					view.openParameter( label );
+				}
 			}
 		}
 	}

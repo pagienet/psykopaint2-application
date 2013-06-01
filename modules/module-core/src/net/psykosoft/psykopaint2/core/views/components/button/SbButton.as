@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		private var _btnLblPos:Point;
         private var _isSelectable:Boolean = false;
 		private var _autoCenter:Boolean = true;
+		private var _parentOnMouseDownX:Number;
 
 		public function SbButton() {
 			super();
@@ -46,8 +47,13 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			addEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
+			addEventListener( MouseEvent.CLICK, onThisMouseClick );
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			invalidateLayout();
+		}
+
+		private function onThisMouseClick( event:MouseEvent ):void {
+			if( isSelectable && parent.x == _parentOnMouseDownX ) toggleSelect( true );
 		}
 
 		private function onStageMouseUp( event:MouseEvent ):void {
@@ -59,11 +65,11 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		}
 
 		private function onThisMouseDown( event:MouseEvent ):void {
-			icon.scaleX = icon.scaleY = 0.9; // TODO: scaling causes redraw - scroller needs better logic - can we use cacheAsBitmapMatrix or something?
+			_parentOnMouseDownX = parent.x;
+			icon.scaleX = icon.scaleY = 0.98; // TODO: scaling causes redraw - scroller needs better logic - can we use cacheAsBitmapMatrix or something?
 			icon.x = -icon.width / 2;
 			icon.y = -icon.height / 2;
 			_mouseIsDown = true;
-			if( isSelectable ) toggleSelect( true );
 		}
 
 		public function set labelText( value:String ):void {
@@ -120,6 +126,10 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public function toggleSelect( selected:Boolean ):void {
 			if( !_isSelectable ) return;
 			btnSelected.visible = selected;
+			if( visible ) {
+				btnSelected.scaleX = Math.random() > 0.5 ? 1 : -1;
+				btnSelected.scaleY = Math.random() > 0.5 ? 1 : -1;
+			}
 		}
 
 		public function get isSelectable():Boolean {
