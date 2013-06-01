@@ -190,12 +190,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// ---------------------------------------------------------------------
 
 		private function positionUiElement( element:DisplayObject, offsetX:Number = 0, offsetY:Number = 0 ):void {
-			// TODO: fix this scaling hack, not sure why its necessary on ipad.
-			var invSc:Number = 1 / ViewCore.globalScaling;
-			element.scaleX = element.scaleY = invSc;
-			element.x = ( ViewCore.globalScaling == 2 ? -100 + offsetX * invSc : offsetX ) + ( 1024 / 2 - element.width / 2 ) * invSc;
-			element.y = ( ViewCore.globalScaling == 2 ? offsetY * invSc : offsetY ) + UI_ELEMENT_Y * invSc;
-//			trace( this, ">>> positioning element at: " + element.x + ", " + element.y + ", scale: " + scaleX );
+			element.x = 1024 / 2 - element.width / 2 + offsetX;
+			element.y = UI_ELEMENT_Y + offsetY;
 		}
 
 		private function updateActiveParameter():void {

@@ -17,7 +17,6 @@ package net.psykosoft.psykopaint2.base.ui.base
 			super();
 			Cc.log( this, "constructor" );
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-			scaleX = scaleY = ViewCore.globalScaling;
 			visible = false;
 		}
 
@@ -90,6 +89,12 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+
+			// Retina scaling.
+			if( !( parent is ViewBase ) ) {
+				scaleX = scaleY = ViewCore.globalScaling;
+			}
+
 //			if( _setupPending ) setup();
 			setup();
 			// TODO: fix, setup needs to happen when a view is enabled, but delayed if not on stage

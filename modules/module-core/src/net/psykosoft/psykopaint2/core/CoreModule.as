@@ -22,6 +22,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
+	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.base.utils.DebuggingConsole;
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
@@ -120,7 +121,7 @@ package net.psykosoft.psykopaint2.core
 			_versionTextField.width = 200;
 			_versionTextField.mouseEnabled = _versionTextField.selectable = false;
 			_versionTextField.text = CoreSettings.NAME + ", version: " + CoreSettings.VERSION;
-			_versionTextField.y = 25;
+			_versionTextField.y = ViewCore.globalScaling * 25;
 			addChild( _versionTextField );
 		}
 
