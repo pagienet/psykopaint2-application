@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.base.utils
 		private var _scrollInputMultiplier:Number = 1;
 		private var _throwInputMultiplier:Number = 1;
 
-		private const STACK_COUNT:uint = 4;
+		private const STACK_COUNT:uint = 8;
 
 		public function ScrollInteractionManager( stage:Stage, positionManager:SnapPositionManager ) {
 			_stage = stage;
