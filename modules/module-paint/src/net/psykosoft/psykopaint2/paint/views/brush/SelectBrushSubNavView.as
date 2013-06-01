@@ -32,6 +32,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		public function setSelectedBrush( activeBrushKit:String ):void {
+			BrushParameterCache.setLastSelectedBrush( activeBrushKit );
 			selectButtonWithLabel( activeBrushKit );
 		}
 	}

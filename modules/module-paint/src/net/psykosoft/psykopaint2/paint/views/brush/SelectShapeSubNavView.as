@@ -28,7 +28,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var types:XMLList = shapes[ 0 ].shape;
 			var len:uint = types.length();
 			for( var i:uint; i < len; ++i ) {
-				trace( this, "type: " + types[ i ].@type );
 				addCenterButton( types[ i ].@type );
 			}
 			invalidateContent();

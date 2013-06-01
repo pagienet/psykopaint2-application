@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// -----------------------
 
 		private function onBrushParameterChanged( parameter:XML ):void {
-			trace( this, "param changed: " + parameter.toXMLString() );
+//			trace( this, "param changed: " + parameter.toXMLString() );
 			paintModule.setBrushParameter( parameter );
 		}
 

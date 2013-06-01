@@ -39,6 +39,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				}
 				default: { // Center buttons select a brush.
 					paintModule.activeBrushKit = label;
+					BrushParameterCache.setLastSelectedBrush( label );
 					break;
 				}
 			}

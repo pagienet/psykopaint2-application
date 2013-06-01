@@ -66,20 +66,25 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			_parametersXML = xml;
 //			trace( this, "receiving parameters: " + _parametersXML );
 
+
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
+			var openIndex:uint;
 			_btns = new Vector.<SbButton>();
 			var list:XMLList = _parametersXML.descendants( "parameter" );
 			var numParameters:uint = list.length();
 			for( var i:uint; i < numParameters; ++i ) {
 				var parameter:XML = list[ i ];
+				var matchesLast:Boolean = BrushParameterCache.getLastSelectedParameter().indexOf( parameter.@id ) != -1;
+				if( matchesLast ) openIndex = i;
 //				trace( ">>> " + parameter.toXMLString() );
 				var btn:SbButton = addCenterButton( parameter.@id, "param" + parameter.@type ) as SbButton;
 				btn.addEventListener( MouseEvent.MOUSE_UP, onParameterClicked );
 				_btns.push( btn );
 			}
 			invalidateContent();
-			openParameter( list[ 0 ].@id );
+			openParameter( list[ openIndex ].@id );
+			selectButtonWithLabel( list[ openIndex ].@id );
 		}
 
 		// ---------------------------------------------------------------------
@@ -93,6 +98,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			_parameter = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ]
 			var parameterType:uint = uint( _parameter.@type );
+			BrushParameterCache.setLastSelectedParameter( _parameter.@id );
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
@@ -209,7 +215,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onKnobChanged( event:Event ):void {
 		    var knob:Knob = event.target as Knob;
-			trace( knob.value );
 			_parameter.@value = knob.value;
 			updateActiveParameter();
 			notifyParameterChange();
