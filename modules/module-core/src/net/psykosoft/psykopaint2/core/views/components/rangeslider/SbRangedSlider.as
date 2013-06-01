@@ -57,7 +57,7 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 			if( _activeHandle == leftHandleView ) {
 				// Edge.
 				if( leftHandleView.x < _minX ) leftHandleView.x = _minX;
-				if( leftHandleView.x > _maxX ) leftHandleView.x = _maxX;
+				else if( leftHandleView.x > _maxX ) leftHandleView.x = _maxX;
 				// Collision.
 				if( rightHandleView.x < leftHandleView.x ) rightHandleView.x = leftHandleView.x;
 				updateAccordion();
@@ -65,16 +65,16 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 			else if( _activeHandle == rightHandleView ) {
 				// Edge.
 				if( rightHandleView.x > _maxX ) rightHandleView.x = _maxX;
-				if( rightHandleView.x < _minX ) rightHandleView.x = _minX;
+				else if( rightHandleView.x < _minX ) rightHandleView.x = _minX;
 				// Collision.
 				if( leftHandleView.x > rightHandleView.x ) leftHandleView.x = rightHandleView.x;
 				updateAccordion();
 			}
 			else {
 				var currentDistanceBetweenHandles:Number = rightHandleView.x - leftHandleView.x;
-				if( rangeView.x < _minX ) rangeView.x = _minX;
 				var limit:Number = _maxX - currentDistanceBetweenHandles;
-				if( rangeView.x > limit ) rangeView.x = limit;
+				if( rangeView.x < _minX ) rangeView.x = _minX;
+				else if( rangeView.x > limit ) rangeView.x = limit;
 				leftHandleView.x = rangeView.x;
 				rightHandleView.x = leftHandleView.x + currentDistanceBetweenHandles;
 			}

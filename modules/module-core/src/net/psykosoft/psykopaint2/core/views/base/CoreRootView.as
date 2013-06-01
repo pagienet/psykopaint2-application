@@ -55,14 +55,14 @@ package net.psykosoft.psykopaint2.core.views.base
             addChild( simpleSlider );*/
 
             // Range slider test.
-           /* var rangeSlider:SbRangedSlider = new SbRangedSlider();
+            /*var rangeSlider:SbRangedSlider = new SbRangedSlider();
             rangeSlider.x = 200;
             rangeSlider.y = 150;
 			rangeSlider.numDecimals = 3;
 			rangeSlider.minValue = 0;
 			rangeSlider.maxValue = 1;
-			rangeSlider.value1 = 0.6;
-			rangeSlider.value2 = 0.75;
+			rangeSlider.value1 = 0;
+			rangeSlider.value2 = 1;
 			rangeSlider.addEventListener( Event.CHANGE, function( event:Event ):void {
 				trace( ">>> range slider change: " + rangeSlider.value1 + ", " + rangeSlider.value2 );
 			} );
