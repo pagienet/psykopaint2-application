@@ -2,19 +2,16 @@ package net.psykosoft.psykopaint2.paint.views.brush
 {
 
 	import com.bit101.components.ComboBox;
-	import com.bit101.components.Component;
 	import com.bit101.components.Knob;
 
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
+	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
@@ -177,9 +174,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var uiElement:DisplayObject = _uiElements[ i ];
 				if( uiElement is SbSlider ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
 				else if( uiElement is SbRangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
-				// TODO: dispose combo boxes...
-				// TODO: dispose check boxes...
-				// TODO: dispose knobs...
+				else if( uiElement is ComboBox ) uiElement.removeEventListener( Event.SELECT, onComboBoxChanged );
+				else if( uiElement is SbCheckBox ) uiElement.addEventListener( Event.CHANGE, onCheckBoxChanged );
+				else if( uiElement is Knob ) uiElement.addEventListener( Event.CHANGE, onKnobChanged );
 				else {
 					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
 				}
