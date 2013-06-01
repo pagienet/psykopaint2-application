@@ -35,6 +35,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public function HSnapScroller() {
 			super();
 			_positionManager = new SnapPositionManager();
+			_interactionManager = new ScrollInteractionManager( _positionManager );
 			motionStartedSignal = new Signal();
 			motionEndedSignal = new Signal();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
@@ -48,7 +49,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_container.cacheAsBitmap = true;
 			// TODO: wouldn't it make more sense to only set cache as bitmap to true after all the children have been added to the container?
 
-			_interactionManager = new ScrollInteractionManager( stage, _positionManager );
+			_interactionManager.stage = stage;
 
 			_positionManager.motionEndedSignal.add( onPositionManagerMotionEnded );
 			_interactionManager.scrollInputMultiplier = 1 / ViewCore.globalScaling;
@@ -238,6 +239,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function get positionManager():SnapPositionManager {
 			return _positionManager;
+		}
+
+		public function get interactionManager():ScrollInteractionManager {
+			return _interactionManager;
 		}
 	}
 }

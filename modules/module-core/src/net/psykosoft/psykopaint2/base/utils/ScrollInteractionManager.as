@@ -14,10 +14,13 @@ package net.psykosoft.psykopaint2.base.utils
 
 		private const STACK_COUNT:uint = 8;
 
-		public function ScrollInteractionManager( stage:Stage, positionManager:SnapPositionManager ) {
-			_stage = stage;
+		public function ScrollInteractionManager( positionManager:SnapPositionManager ) {
 			_positionManager = positionManager;
 			_positionStack = new Vector.<Number>();
+		}
+
+		public function set stage( value:Stage ):void {
+			_stage = value;
 		}
 
 		public function startInteraction():void {
@@ -35,7 +38,7 @@ package net.psykosoft.psykopaint2.base.utils
 
 		public function update():void {
 
-			if( !_isInteracting ) return;
+			if( !_isInteracting || !_stage ) return;
 
 			_positionStack.push( _stage.mouseX * _scrollInputMultiplier );
 			if( _positionStack.length > STACK_COUNT ) {
@@ -68,10 +71,12 @@ package net.psykosoft.psykopaint2.base.utils
 		}
 
 		public function get currentX():Number {
+			if( !_stage ) return 0;
 			return _stage.mouseX;
 		}
 
 		public function get currentY():Number {
+			if( !_stage ) return 0;
 			return _stage.mouseY;
 		}
 
