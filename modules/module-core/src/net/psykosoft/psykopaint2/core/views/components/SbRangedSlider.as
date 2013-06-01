@@ -30,15 +30,13 @@ package net.psykosoft.psykopaint2.core.views.components
 		private var _clickOffset:Number;
 		private var _valueRange:Number = 1;
 		private var _activeHandle:Sprite;
-		private var _handleWidth:Number;
 		private var _initialDistanceBetweenHandles:Number;
 
 		public function SbRangedSlider() {
 			super();
 			_minX = leftHandleView.x;
 			_maxX = rightHandleView.x;
-			_handleWidth = leftHandleView.width;
-			_initialDistanceBetweenHandles = rightHandleView.x - leftHandleView.x - _handleWidth;
+			_initialDistanceBetweenHandles = rightHandleView.x - leftHandleView.x;
 			_xRange = _maxX - _minX;
 			rangeView.stop();
 			value1Label.selectable = value1Label.mouseEnabled = false;
@@ -56,34 +54,28 @@ package net.psykosoft.psykopaint2.core.views.components
 		private function updateHandlePositionFromMouse():void {
 			_activeHandle.x = mouseX + _clickOffset;
 			// Handle collisions and edge containment.
-			var limit:Number;
 			if( _activeHandle == leftHandleView ) {
 				// Edge.
 				if( leftHandleView.x < _minX ) leftHandleView.x = _minX;
-				limit = _maxX - _handleWidth;
-				if( leftHandleView.x > limit ) leftHandleView.x = limit;
+				if( leftHandleView.x > _maxX ) leftHandleView.x = _maxX;
 				// Collision.
-				limit = leftHandleView.x + _handleWidth;
-				if( rightHandleView.x < limit ) rightHandleView.x = limit;
+				if( rightHandleView.x < leftHandleView.x ) rightHandleView.x = leftHandleView.x;
 				updateAccordion();
 			}
 			else if( _activeHandle == rightHandleView ) {
 				// Edge.
 				if( rightHandleView.x > _maxX ) rightHandleView.x = _maxX;
-				limit = _minX + _handleWidth;
-				if( rightHandleView.x < limit ) rightHandleView.x = limit;
+				if( rightHandleView.x < _minX ) rightHandleView.x = _minX;
 				// Collision.
-				limit = rightHandleView.x - _handleWidth;
-				if( leftHandleView.x > limit ) leftHandleView.x = limit;
+				if( leftHandleView.x > rightHandleView.x ) leftHandleView.x = rightHandleView.x;
 				updateAccordion();
 			}
 			else {
 				var currentDistanceBetweenHandles:Number = rightHandleView.x - leftHandleView.x;
-				limit = _minX + _handleWidth;
-				if( rangeView.x < limit ) rangeView.x = limit;
-				limit = _maxX - currentDistanceBetweenHandles + _handleWidth;
+				if( rangeView.x < _minX ) rangeView.x = _minX;
+				var limit:Number = _maxX - currentDistanceBetweenHandles;
 				if( rangeView.x > limit ) rangeView.x = limit;
-				leftHandleView.x = rangeView.x - _handleWidth;
+				leftHandleView.x = rangeView.x;
 				rightHandleView.x = leftHandleView.x + currentDistanceBetweenHandles;
 			}
 			updateValueFromView();
@@ -91,9 +83,9 @@ package net.psykosoft.psykopaint2.core.views.components
 
 		private function updateAccordion():void {
 			// Position.
-			rangeView.x = leftHandleView.x + _handleWidth;
+			rangeView.x = leftHandleView.x;
 			// "Scale"
-			var currentDistanceBetweenHandles:Number = rightHandleView.x - leftHandleView.x - _handleWidth;
+			var currentDistanceBetweenHandles:Number = rightHandleView.x - leftHandleView.x;
 			var xRatio:Number = currentDistanceBetweenHandles / _initialDistanceBetweenHandles;
 			var frame:Number = 101 * ( 1 - xRatio );
 			rangeView.gotoAndStop( uint( frame ) );
