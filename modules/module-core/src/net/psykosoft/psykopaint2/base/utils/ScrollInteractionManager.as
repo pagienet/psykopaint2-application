@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.base.utils
 		private var _scrollInputMultiplier:Number = 1;
 		private var _throwInputMultiplier:Number = 1;
 
-		private const STACK_COUNT:uint = 10;
+		private const STACK_COUNT:uint = 4;
 
 		public function ScrollInteractionManager( stage:Stage, positionManager:SnapPositionManager ) {
 			_stage = stage;
@@ -47,6 +47,7 @@ package net.psykosoft.psykopaint2.base.utils
 		}
 
 		private function evalDelta():Number {
+			if( _positionStack.length <= 1 ) return 0;
 			var delta:Number = 0;
 			var len:uint = _positionStack.length;
 			for( var i:uint = 0; i < len; ++i ) {
@@ -54,7 +55,7 @@ package net.psykosoft.psykopaint2.base.utils
 					delta += _positionStack[ i ] - _positionStack[ i - 1 ];
 				}
 			}
-			delta /= len;
+			delta /= ( len - 1 );
 			return delta;
 		}
 
