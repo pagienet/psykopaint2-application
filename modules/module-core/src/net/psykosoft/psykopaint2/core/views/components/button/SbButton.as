@@ -102,9 +102,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 		private function invalidateLayout():void {
 			// Update label.
-			tf.width = 1.25 * tf.textWidth;
+			tf.width = tf.textWidth + 10;
 			tf.height = 1.25 * tf.textHeight;
-            labelBg.width = Math.max ( 1.4 * tf.width, 100 );
+            labelBg.width = Math.max ( tf.width + 30, 100 );
 			if( _autoCenter ) {
 				tf.x = -tf.width / 2;
 				labelBg.x = -labelBg.width / 2;

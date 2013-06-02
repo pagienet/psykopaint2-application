@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
+	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
 
 	public class CanvasSubNavView extends SubNavigationViewBase
 	{
@@ -23,7 +24,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			setRightButton( LBL_PICK_A_BRUSH );
 
 			addCenterButton( LBL_CLEAR, ButtonIconType.NEW );
-			addCenterButton( LBL_HOME, ButtonIconType.GALLERY );
+			if( !PaintSettings.isStandalone ) {
+				addCenterButton( LBL_HOME, ButtonIconType.GALLERY );
+			}
 //			addCenterButton( "test" );
 //			addCenterButton( "test" );
 //			addCenterButton( "test" );

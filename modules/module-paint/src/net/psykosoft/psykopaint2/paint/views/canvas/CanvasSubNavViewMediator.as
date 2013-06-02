@@ -35,9 +35,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 				case CanvasSubNavView.LBL_HOME: {
-					if( !PaintSettings.isStandalone ) {
-						requestStateChange( StateType.STATE_HOME );
-					}
+					requestStateChange( StateType.STATE_HOME );
 					break;
 				}
 				case CanvasSubNavView.LBL_CLEAR: {

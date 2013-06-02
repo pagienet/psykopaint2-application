@@ -267,10 +267,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			header.visible = true;
 
 			header.height = 1.25 * header.textHeight;
-			header.width = 1.25 * header.textWidth;
+			header.width = 15 + header.textWidth;
 			header.x = 1024 / 2 - header.width / 2;
 
-			headerBg.width = 1.25 * header.width;
+			headerBg.width = header.width + 50;
 			headerBg.x = 1024 / 2 - headerBg.width / 2 + 5;
 		}
 
