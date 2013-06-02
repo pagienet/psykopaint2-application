@@ -90,7 +90,12 @@ package net.psykosoft.psykopaint2.app
 			new AppConfig( _coreModule.injector );
 
 			// Init display tree for this module.
-			_coreModule.addModuleDisplay( new AppRootView() );
+			var appRootView:AppRootView = new AppRootView();
+			appRootView.allViewsReadySignal.addOnce( onViewsReady );
+			_coreModule.addModuleDisplay( appRootView );
+		}
+
+		private function onViewsReady():void {
 
 			// Launch core updates.
 			_coreModule.updateActive = true;

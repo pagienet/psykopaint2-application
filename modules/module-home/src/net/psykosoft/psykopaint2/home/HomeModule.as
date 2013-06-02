@@ -1,9 +1,8 @@
 package net.psykosoft.psykopaint2.home
 {
 
-	import com.junkbyte.console.Cc;
-
 	import flash.events.Event;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.ModuleBase;
@@ -11,6 +10,7 @@ package net.psykosoft.psykopaint2.home
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.config.HomeConfig;
+	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
 
 	import org.swiftsuspenders.Injector;
@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.home
 	public class HomeModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;
+		private var _homeConfig:HomeConfig;
 
 		public function HomeModule( core:CoreModule = null ) {
 			super();
@@ -36,12 +37,14 @@ package net.psykosoft.psykopaint2.home
 			trace( this, "initializing..." );
 			// Init core module.
 			if( !_coreModule ) {
+				HomeSettings.isStandalone = true;
 				_coreModule = new CoreModule();
 				_coreModule.isStandalone = false;
 				_coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
 				addChild( _coreModule );
 			}
 			else {
+				HomeSettings.isStandalone = false;
 				onCoreModuleReady( _coreModule.injector );
 			}
 		}
@@ -50,20 +53,25 @@ package net.psykosoft.psykopaint2.home
 			trace( this, "core module is ready, injector: " + coreInjector );
 
 			// Initialize the home module.
-			var config:HomeConfig = new HomeConfig( coreInjector );
+			_homeConfig = new HomeConfig( coreInjector );
 
 			// Init display tree for this module.
-			_coreModule.addModuleDisplay( new HomeRootView() );
+			var homeRootView:HomeRootView = new HomeRootView();
+			homeRootView.allViewsReadySignal.addOnce( onViewsReady );
+			_coreModule.addModuleDisplay( homeRootView );
+		}
 
-			// Notify potential super modules.
-			moduleReadySignal.dispatch( coreInjector );
+		private function onViewsReady():void {
 
-			// Start local enterframe is standalone.
+			// First state.
 			if( isStandalone ) {
 				trace( this, " >>> starting as standalone." );
 				// Trigger initial state...
-				config.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
+				_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
 			}
+
+			// Notify potential super modules.
+			moduleReadySignal.dispatch( _coreModule.injector );
 		}
 
 		// ---------------------------------------------------------------------

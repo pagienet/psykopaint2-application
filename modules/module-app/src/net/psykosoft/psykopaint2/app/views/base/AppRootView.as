@@ -1,14 +1,19 @@
 package net.psykosoft.psykopaint2.app.views.base
 {
 
-	import flash.display.Sprite;
+	import flash.utils.setTimeout;
 
-	public class AppRootView extends Sprite
+	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
+
+	public class AppRootView extends RootViewBase
 	{
 		public function AppRootView() {
 			super();
 
-			// TODO...
+			// No views at the time, dispatching signal directly.
+			setTimeout( function():void {
+				allViewsReadySignal.dispatch();
+			}, 25 );
 		}
 	}
 }

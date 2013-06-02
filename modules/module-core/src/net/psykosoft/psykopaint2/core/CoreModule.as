@@ -5,7 +5,10 @@ package net.psykosoft.psykopaint2.core
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.events.Stage3DEvent;
 
+	import flash.display.Bitmap;
+
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.display.Stage3D;
 	import flash.display.StageAlign;
 	import flash.display.StageQuality;
@@ -15,11 +18,13 @@ package net.psykosoft.psykopaint2.core
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
+	import net.psykosoft.psykopaint2.base.utils.BitmapLoader;
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
@@ -40,6 +45,9 @@ package net.psykosoft.psykopaint2.core
 
 	public class CoreModule extends ModuleBase
 	{
+		[Embed(source="../../../../../../../modules/module-core/assets/embedded/images/launch/ipad-hr/Default-Landscape@2x.png")]
+		private var SplashImageAsset:Class;
+
 		private var _coreConfig:CoreConfig;
 		private var _injector:Injector;
 		private var _stage3dInitialized:Boolean;
@@ -58,6 +66,12 @@ package net.psykosoft.psykopaint2.core
 		private var _notificationsExtension:NotificationsExtension;
 		private var _memoryWarningNotification:NotifyMemoryWarningSignal;
 		private var _requestNavigationToggleSignal:RequestNavigationToggleSignal;
+		private var _xmLoader:XMLLoader;
+		private var _splashScreen:Bitmap;
+		private var _frontLayer:Sprite;
+		private var _backLayer:Sprite;
+		private var _fps:Number;
+		private var _splashScreenRemoved:Boolean;
 
 		public var updateActive:Boolean = true;
 
@@ -74,12 +88,16 @@ package net.psykosoft.psykopaint2.core
 
 		private function initialize():void {
 
+			addChild( _backLayer = new Sprite() );
+			addChild( _frontLayer = new Sprite() );
+
 			getXmlData();
 			initDebugging();
 
 			trace( this, "Initializing... [" + name + "] v" + CoreSettings.VERSION );
 
 			initPlatform();
+			getSplashScreen();
 			initStage();
 			initStage3dASync();
 			initRobotlegs();
@@ -87,7 +105,11 @@ package net.psykosoft.psykopaint2.core
 			initShakeAndBakeAsync();
 		}
 
-		private var _xmLoader:XMLLoader;
+		private function getSplashScreen():void {
+			_frontLayer.addChild( _splashScreen = new SplashImageAsset() );
+			_splashScreen.scaleX = _splashScreen.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1 : 0.5;
+		}
+
 		private function getXmlData():void {
 			_xmLoader = new XMLLoader();
 			var date:Date = new Date();
@@ -109,7 +131,7 @@ package net.psykosoft.psykopaint2.core
 			_statsTextField.selectable = false;
 			_statsTextField.mouseEnabled = false;
 			_statsTextField.scaleX = _statsTextField.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
-			addChild( _statsTextField );
+			_backLayer.addChild( _statsTextField );
 		}
 
 		private function initVersionDisplay():void {
@@ -120,7 +142,7 @@ package net.psykosoft.psykopaint2.core
 			_versionTextField.mouseEnabled = _versionTextField.selectable = false;
 			_versionTextField.text = CoreSettings.NAME + ", version: " + CoreSettings.VERSION;
 			_versionTextField.y = ViewCore.globalScaling * 25;
-			addChild( _versionTextField );
+			_backLayer.addChild( _versionTextField );
 		}
 
 		private function initDebugging():void {
@@ -211,7 +233,7 @@ package net.psykosoft.psykopaint2.core
 			// Init display tree.
 			_coreRootView = new CoreRootView();
 			_coreRootView.allViewsReadySignal.addOnce( onViewsReady );
-			addChild( _coreRootView );
+			_backLayer.addChild( _coreRootView );
 		}
 
 		private function onViewsReady():void {
@@ -222,11 +244,31 @@ package net.psykosoft.psykopaint2.core
 			// Initial application state.
 			_stateSignal.dispatch( StateType.STATE_IDLE );
 
-			// Start enterframe.
+			// Start main enterframe.
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
+
+			// Start another enterframe to evaluate when to remove the splash image ( will be removed shortly ).
+			addEventListener( Event.ENTER_FRAME, onSplashEnterFrame );
 
 			// Notify.
 			moduleReadySignal.dispatch( _injector );
+		}
+
+		private function onSplashEnterFrame( event:Event ):void {
+			var targetFPS:Number = 30;
+			trace( this, "waiting for frame rate to increase before removing splash screen - fps: " + _fps + ", expected: " + targetFPS );
+			if( !_splashScreenRemoved && _fps >= targetFPS ) {
+				trace( this, "--- SPLASH REMOVED ---" );
+				removeEventListener( Event.ENTER_FRAME, onSplashEnterFrame );
+				removeSplashScreen();
+			}
+		}
+
+		private function removeSplashScreen():void {
+			_frontLayer.removeChild( _splashScreen );
+			_splashScreen.bitmapData.dispose();
+			_splashScreen = null;
+			_splashScreenRemoved = true;
 		}
 
 		// ---------------------------------------------------------------------
@@ -244,23 +286,26 @@ package net.psykosoft.psykopaint2.core
 		private function update():void {
 			if( !updateActive ) return;
 			_requestGpuRenderingSignal.dispatch();
+			evalFPS();
 			updateStats();
+		}
+
+		private function evalFPS():void {
+			var oldTime:Number = _time;
+			_time = getTimer();
+			_fps = 1000 / (_time - oldTime);
+			_fpsStackUtil.pushValue( _fps );
+			_fps = int( _fpsStackUtil.getAverageValue() );
+//			trace( ">>> fps: " + _fps );
 		}
 
 		private function updateStats():void {
 			if( !CoreSettings.SHOW_STATS ) return;
 
-			var oldTime:Number = _time;
-			_time = getTimer();
-
-			var fps:Number = 1000 / (_time - oldTime);
-			_fpsStackUtil.pushValue( fps );
-			fps = int( _fpsStackUtil.getAverageValue() );
-
 			_renderTimeStackUtil.pushValue( RenderGpuCommand.renderTime );
 			var renderTime:int = int( _renderTimeStackUtil.getAverageValue() );
 
-			_statsTextField.text = fps + "\n" + "Render time: " + renderTime + "ms";
+			_statsTextField.text = _fps + "\n" + "Render time: " + renderTime + "ms";
 		}
 
 		// ---------------------------------------------------------------------

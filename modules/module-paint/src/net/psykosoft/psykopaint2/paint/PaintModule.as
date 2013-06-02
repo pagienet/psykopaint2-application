@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.paint
 {
 
-	import com.junkbyte.console.Cc;
-
 	import flash.events.Event;
 	import flash.utils.setTimeout;
 
@@ -69,15 +67,10 @@ package net.psykosoft.psykopaint2.paint
 		private function onViewsReady():void {
 
 			// Init drawing core.
-			startCore();
-//			setTimeout( startCore, 2000 ); // TODO: remove time out, currently necessary because some views are not ready yet ( on stage )
+			_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );
-		}
-
-		private function startCore():void {
-			_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...
 		}
 
 		// ---------------------------------------------------------------------

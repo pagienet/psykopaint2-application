@@ -43,7 +43,8 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_stageHeight = stage.stageHeight;
 
 			_positionManager = new SnapPositionManager();
-			_interactionManager = new ScrollInteractionManager( stage, _positionManager );
+			_interactionManager = new ScrollInteractionManager( _positionManager );
+			_interactionManager.stage = stage;
 
 			_interactionManager.throwInputMultiplier = 3;
 
