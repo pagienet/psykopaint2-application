@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.paint
 		}
 
 		private function onCoreModuleReady( coreInjector:Injector ):void {
-			Cc.log( this, "core module is ready, injector: " + coreInjector );
+			trace( this, "core module is ready, injector: " + coreInjector );
 
 			// Init drawing core.
 			new DrawingCore( coreInjector );

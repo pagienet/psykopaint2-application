@@ -85,7 +85,7 @@ package net.psykosoft.psykopaint2.core
 			getVersion();
 //			initDebugging();
 
-			Cc.log( this, "Initializing... [" + name + "] v" + CoreSettings.VERSION );
+			trace( this, "Initializing... [" + name + "] v" + CoreSettings.VERSION );
 
 			initPlatform();
 			initStage();
@@ -145,7 +145,7 @@ package net.psykosoft.psykopaint2.core
 			//adding this early on so it can be used for logging, too
 			PsykoSocket.init(CoreSettings.PSYKOSOCKET_IP);
 			
-			Cc.log( this, "initializing platform - " +
+			trace( this, "initializing platform - " +
 					"running on iPad: " + CoreSettings.RUNNING_ON_iPAD + "," +
 					"running on HD: " + CoreSettings.RUNNING_ON_RETINA_DISPLAY + ", " +
 					"global scaling: " + ViewCore.globalScaling
@@ -157,11 +157,11 @@ package net.psykosoft.psykopaint2.core
 			stage.align = StageAlign.TOP_LEFT;
 			stage.frameRate = 60;
 			stage.quality = StageQuality.LOW; // Note: On Desktop, the quality will be set to a lowest value of HIGH.
-			Cc.log( this, "initializing stage - dimensions: " + stage.stageWidth + "x" + stage.stageHeight );
+			trace( this, "initializing stage - dimensions: " + stage.stageWidth + "x" + stage.stageHeight );
 		}
 
 		private function initStage3dASync():void {
-			Cc.log( this, "initializing stage3d..." );
+			trace( this, "initializing stage3d..." );
 			var stage3dManager:Stage3DManager = Stage3DManager.getInstance( stage );
 			_stage3dProxy = stage3dManager.getFreeStage3DProxy();
 			_stage3dProxy.width = 1024;
@@ -179,7 +179,7 @@ package net.psykosoft.psykopaint2.core
 			_requestGpuRenderingSignal = _coreConfig.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
 			_stateSignal = _coreConfig.injector.getInstance( RequestStateChangeSignal ); // Necessary for rendering the core on enter frame.
 			_injector = _coreConfig.injector;
-			Cc.log( this, "initializing robotlegs context" );
+			trace( this, "initializing robotlegs context" );
 		}
 
 		private function initMemoryWarnings():void {
@@ -194,12 +194,12 @@ package net.psykosoft.psykopaint2.core
 			_shakeAndBakeConnector.connectedSignal.addOnce( onShakeAndBakeConnected );
 			var swfUrl:String = "core-packaged/swf/core-assets.swf";
 			_shakeAndBakeConnector.connectAssetsAsync( this, swfUrl );
-			Cc.log( this, "initializing shake and bake: " + swfUrl + "..." );
+			trace( this, "initializing shake and bake: " + swfUrl + "..." );
 		}
 
 		private function checkInitialized():void {
 
-			Cc.log( this, "check initialized - " +
+			trace( this, "check initialized - " +
 					"shakeAndBake: " + _shakeAndBakeInitialized + ", " +
 					"stage3d: " + _stage3dInitialized
 			);
@@ -207,7 +207,7 @@ package net.psykosoft.psykopaint2.core
 			if( !_shakeAndBakeInitialized ) return;
 			if( !_stage3dInitialized ) return;
 
-			Cc.log( this, "initialized" );
+			trace( this, "initialized" );
 
 			// Init display tree.
 			_coreRootView = new CoreRootView();
@@ -265,7 +265,7 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function onMemoryWarning( event:NotificationExtensionEvent ):void {
-			Cc.log( this, "*** WARNING *** - AS3 knows of an iOS memory warning." );
+			trace( this, "*** WARNING *** - AS3 knows of an iOS memory warning." );
 			_memoryWarningNotification.dispatch();
 		}
 
@@ -275,7 +275,7 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function onShakeAndBakeConnected():void {
-			Cc.log( this, "shake and bake connected" );
+			trace( this, "shake and bake connected" );
 			_shakeAndBakeInitialized = true;
 			_shakeAndBakeConnector = null;
 			checkInitialized();
@@ -283,7 +283,7 @@ package net.psykosoft.psykopaint2.core
 
 		private function onContext3dCreated( event:Event ):void {
 
-			Cc.log( this, "context3d created: " + _stage3dProxy.context3D );
+			trace( this, "context3d created: " + _stage3dProxy.context3D );
 			_stage3dProxy.removeEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated );
 
 			// TODO: listen for context loss?

@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.home
 		}
 
 		private function onCoreModuleReady( coreInjector:Injector ):void {
-			Cc.log( this, "core module is ready, injector: " + coreInjector );
+			trace( this, "core module is ready, injector: " + coreInjector );
 
 			// Initialize the home module.
 			var config:HomeConfig = new HomeConfig( coreInjector );

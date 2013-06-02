@@ -42,7 +42,7 @@ package net.psykosoft.psykopaint2.base.utils
 		}
 
 		private function onDescriptorLoaded( xml:XML ):void {
-			Cc.log( this, "loaded: " + _imageUrl + ", " + _descriptorUrl );
+			trace( this, "loaded: " + _imageUrl + ", " + _descriptorUrl );
 			_finalCallback( _bmd, xml );
 		}
 	}

@@ -87,7 +87,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		override protected function onStateChange( newState:String ):void {
-			Cc.log( this, "state change: " + newState );
+			trace( this, "state change: " + newState );
 
 			// Evaluate a sub-nav change.
 			var cl:Class = StateToSubNavLinker.getSubNavClassForState( newState );

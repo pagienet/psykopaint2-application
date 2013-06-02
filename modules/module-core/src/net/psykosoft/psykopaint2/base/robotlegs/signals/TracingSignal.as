@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.base.robotlegs.signals
 		}
 
 		override public function dispatch( ...valueObjects ):void {
-			Cc.log( this, "dispatch(" + valueObjects + ")" );
+			trace( this, "dispatch(" + valueObjects + ")" );
 			super.dispatch.apply( this, valueObjects );
 		}
 	}

@@ -21,14 +21,14 @@ package net.psykosoft.psykopaint2.core.models
 		public function returnToPreviousState():void {
 			_stateStackUtil.popState();
 			var state:String = currentState;
-			Cc.log( this, "state changed: " + state );
+			trace( this, "state changed: " + state );
 			notifyStateChangeSignal.dispatch( state );
 		}
 
 		public function set currentState( state:String ):void {
 			if( _stateStackUtil.currentState == state ) return; // Dismiss changes to current state.
 			_stateStackUtil.pushState( state );
-			Cc.log( this, "state changed: " + state );
+			trace( this, "state changed: " + state );
 			notifyStateChangeSignal.dispatch( state );
 		}
 

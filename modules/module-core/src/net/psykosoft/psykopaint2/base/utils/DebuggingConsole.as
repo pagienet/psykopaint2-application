@@ -25,14 +25,14 @@ package net.psykosoft.psykopaint2.base.utils
 		}
 
 		public function traceAllStaticVariablesInClass( cl:Class ):void {
-			Cc.log( this, "Variables in class " + cl + ": ****************************************" );
+			trace( this, "Variables in class " + cl + ": ****************************************" );
 			var typeDescription:XML = describeType( cl );
 			var constantsList:XMLList = typeDescription.constant;
 			for( var i:uint; i < constantsList.length(); i++ ) {
 				var constantItem:XML = constantsList[ i ];
-				Cc.log( constantItem.@name + ": " + cl[ String( constantItem.@name ) ] );
+				trace( constantItem.@name + ": " + cl[ String( constantItem.@name ) ] );
 			}
-			Cc.log( "********************************************************************************" );
+			trace( "********************************************************************************" );
 		}
 
 		private function remapTraces():void {

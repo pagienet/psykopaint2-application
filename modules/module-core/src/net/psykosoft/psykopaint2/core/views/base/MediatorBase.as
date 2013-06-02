@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		override public function initialize():void {
 
-			Cc.log( this, "initialize" );
+			trace( this, "initialize" );
 
 			_enablingStates = new Vector.<String>();
 

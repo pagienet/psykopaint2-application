@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.base.utils
 		}
 
 		public function loadAsset( url:String, callback:Function ):void {
-			Cc.log( this, "loading asset: " + url );
+			trace( this, "loading asset: " + url );
 			_url = url;
 			_callback = callback;
 			_loader.load( new URLRequest( url ) );
@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.base.utils
 		}
 
 		private function onLoaderComplete( event:Event ):void {
-			Cc.log( this, "loaded: " + _url );
+			trace( this, "loaded: " + _url );
 			var xml:XML = new XML( event.target.data );
 			_callback( xml );
 		}

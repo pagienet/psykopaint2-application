@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.core.resources
 				throw new ResourceError("Texture larger than reserved size!");
 
 			if (_bytesAvailable < size) {
-				Cc.log(this, "Ran out of free texture memory, freeing up space");
+				trace(this, "Ran out of free texture memory, freeing up space");
 				_textureCache.sort(sortOnUsage)
 			}
 

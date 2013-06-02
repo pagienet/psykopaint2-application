@@ -44,10 +44,10 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			}
 
-			Cc.log( this, "drawing core module activated: " + moduleActivationVO.activatedModuleType + " ------------------------------------------" );
-			Cc.log( this, "-> triggers application state: " + newState );
-			Cc.log( this, "-> previously active module: " + moduleActivationVO.deactivatedModuleType );
-			Cc.log( this, "-> next active module: " + moduleActivationVO.concatenatingModuleType );
+			trace( this, "drawing core module activated: " + moduleActivationVO.activatedModuleType + " ------------------------------------------" );
+			trace( this, "-> triggers application state: " + newState );
+			trace( this, "-> previously active module: " + moduleActivationVO.deactivatedModuleType );
+			trace( this, "-> next active module: " + moduleActivationVO.concatenatingModuleType );
 
 			requestStateChangeSignal.dispatch( newState );
 		}
