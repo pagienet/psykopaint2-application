@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	public class SelectBrushSubNavView extends SubNavigationViewBase
 	{
-		public static const LBL_BACK:String = "Back";
+		public static const LBL_BACK:String = "Paint";
 		public static const LBL_SELECT_SHAPE:String = "Pick a Shape";
 
 		public function SelectBrushSubNavView() {

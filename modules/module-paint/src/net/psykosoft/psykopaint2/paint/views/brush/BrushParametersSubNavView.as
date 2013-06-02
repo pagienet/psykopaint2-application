@@ -6,11 +6,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import flash.display.DisplayObject;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 
-	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
@@ -27,7 +24,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private var _parametersXML:XML;
 		private var _parameter:XML;
 
-		public static const LBL_BACK:String = "Back";
+		public static const LBL_BACK:String = "Pick a Shape";
 
 		private const UI_ELEMENT_Y:uint = 560;
 

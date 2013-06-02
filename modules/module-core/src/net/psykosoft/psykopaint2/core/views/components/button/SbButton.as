@@ -121,8 +121,17 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			tf.y += dy;
 		}
 
+		public function setTextAlign( value:String ):void {
+			tf.defaultTextFormat.align = value;
+		}
+
 		public function autoCenterLabel( value:Boolean ):void {
 			_autoCenter = value;
+		}
+
+		public function useLabelBg( value:Boolean ):void {
+			tf.background = value;
+			tf.backgroundColor = 0xFF0000;
 		}
 
 		public function toggleSelect( selected:Boolean ):void {

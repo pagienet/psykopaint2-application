@@ -9,6 +9,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
 
+	import flashx.textLayout.formats.TextAlign;
+
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.HItemScroller;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
@@ -60,12 +62,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_leftButton.setLabelType( ButtonLabelType.LEFT );
 			_rightButton.setLabelType( ButtonLabelType.RIGHT );
 
+			_leftButton.setTextAlign( TextAlign.LEFT );
+//			_leftButton.useLabelBg( true );
 			_leftButton.autoCenterLabel( false );
-			_leftButton.displaceLabelTf( 30, -13 );
+			_leftButton.displaceLabelTf( -20, -15 );
 			_leftButton.displaceLabelBg( -27, -10 );
 
+			_rightButton.setTextAlign( TextAlign.RIGHT );
+//			_rightButton.useLabelBg( true );
 			_rightButton.autoCenterLabel( false );
-			_rightButton.displaceLabelTf( 5, -15 );
+			_rightButton.displaceLabelTf( -35, -15 );
 			_rightButton.displaceLabelBg( -15, -5 );
 
 			_scroller = new HItemScroller();
@@ -264,8 +270,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			header.width = 1.25 * header.textWidth;
 			header.x = 1024 / 2 - header.width / 2;
 
-			headerBg.width = 1.05 * header.width;
-			headerBg.x = 1024 / 2 - headerBg.width / 2;
+			headerBg.width = 1.25 * header.width;
+			headerBg.x = 1024 / 2 - headerBg.width / 2 + 5;
 		}
 
 		public function setLeftButton( label:String ):void {
