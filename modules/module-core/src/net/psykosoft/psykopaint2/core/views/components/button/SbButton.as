@@ -42,6 +42,20 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 		public function setIconType( type:String ):void {
 			icon.gotoAndStop( type );
+			icon.x = -icon.width / 2;
+			icon.y = -icon.height / 2;
+		}
+
+		public function setLabelType( labelType:String ):void {
+			var currentName:String = getQualifiedClassName( labelBg );
+			if( labelType == currentName ) return;
+			removeChild( labelBg );
+			labelBg = null;
+			var newClipClass:Class = Class( getDefinitionByName( labelType ) );
+			labelBg = new newClipClass();
+			labelBg.x = _btnLblPos.x;
+			labelBg.y = _btnLblPos.y;
+			addChildAt( labelBg, 2 );
 		}
 
 		private function onAddedToStage( event:Event ):void {
@@ -95,18 +109,6 @@ package net.psykosoft.psykopaint2.core.views.components.button
 				tf.x = -tf.width / 2;
 				labelBg.x = -labelBg.width / 2;
 			}
-		}
-
-		public function setLabelType( labelType:String ):void {
-			var currentName:String = getQualifiedClassName( labelBg );
-			if( labelType == currentName ) return;
-			removeChild( labelBg );
-			labelBg = null;
-			var newClipClass:Class = Class( getDefinitionByName( labelType ) );
-			labelBg = new newClipClass();
-			labelBg.x = _btnLblPos.x;
-			labelBg.y = _btnLblPos.y;
-			addChildAt( labelBg, 2 );
 		}
 
 		public function displaceLabelBg( dx:Number, dy:Number ):void {

@@ -32,7 +32,9 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestGpuRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	
@@ -62,6 +64,7 @@ package net.psykosoft.psykopaint2.core
 		private var _coreRootView:CoreRootView;
 		private var _notificationsExtension:NotificationsExtension;
 		private var _memoryWarningNotification:NotifyMemoryWarningSignal;
+		private var _requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
 		public var updateActive:Boolean = true;
 
@@ -83,7 +86,7 @@ package net.psykosoft.psykopaint2.core
 		private function initialize():void {
 
 			getVersion();
-//			initDebugging();
+			initDebugging();
 
 			trace( this, "Initializing... [" + name + "] v" + CoreSettings.VERSION );
 
@@ -127,8 +130,8 @@ package net.psykosoft.psykopaint2.core
 
 		private function initDebugging():void {
 			// Cc
-			var console:DebuggingConsole = new DebuggingConsole( this );
-			console.traceAllStaticVariablesInClass( CoreSettings );
+//			var console:DebuggingConsole = new DebuggingConsole( this );
+//			console.traceAllStaticVariablesInClass( CoreSettings );
 			// Keys
 			if( CoreSettings.USE_DEBUG_KEYS ) {
 				stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
@@ -176,6 +179,7 @@ package net.psykosoft.psykopaint2.core
 		private function initRobotlegs():void {
 //			trace( this, "initRobotlegs with stage: " + stage + ", and stage3d: " + _stage3d );
 			_coreConfig = new CoreConfig( this, stage, _stage3d, _stage3dProxy );
+			_requestNavigationToggleSignal = _coreConfig.injector.getInstance( RequestNavigationToggleSignal );
 			_requestGpuRenderingSignal = _coreConfig.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
 			_stateSignal = _coreConfig.injector.getInstance( RequestStateChangeSignal ); // Necessary for rendering the core on enter frame.
 			_injector = _coreConfig.injector;
@@ -264,6 +268,10 @@ package net.psykosoft.psykopaint2.core
 			switch( event.keyCode ) {
 				case Keyboard.M: {
 					_memoryWarningNotification.dispatch();
+					break;
+				}
+				case Keyboard.SPACE: {
+					_requestNavigationToggleSignal.dispatch();
 					break;
 				}
 			}
