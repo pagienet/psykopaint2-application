@@ -114,7 +114,7 @@ package net.psykosoft.psykopaint2.core
 			addChild( _statsTextField );
 		}
 
-		private function initVersion():void {
+		private function initVersionDisplay():void {
 			if( !CoreSettings.SHOW_VERSION ) return;
 			_versionTextField = new TextField();
 			_versionTextField.scaleX = _versionTextField.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
@@ -211,9 +211,14 @@ package net.psykosoft.psykopaint2.core
 
 			// Init display tree.
 			_coreRootView = new CoreRootView();
+			_coreRootView.allViewsReadySignal.addOnce( onViewsReady );
 			addChild( _coreRootView );
+		}
+
+		private function onViewsReady():void {
+
 			initStats();
-			initVersion();
+			initVersionDisplay();
 
 			// Initial application state.
 			_stateSignal.dispatch( StateType.STATE_IDLE );

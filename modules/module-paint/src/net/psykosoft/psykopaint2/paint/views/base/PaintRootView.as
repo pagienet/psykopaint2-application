@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.paint.views.base
 
 	import flash.display.Sprite;
 
+	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
+
 	import net.psykosoft.psykopaint2.core.models.StateType;
 
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
@@ -18,20 +20,16 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.paint.views.crop.CropView;
 	import net.psykosoft.psykopaint2.paint.views.pick.PickAnImageView;
 
-	public class PaintRootView extends Sprite
+	public class PaintRootView extends RootViewBase
 	{
 		public function PaintRootView() {
 			super();
 
-			var colorStyleView:ColorStyleView = new ColorStyleView();
-			var canvasView:CanvasView = new CanvasView();
-			var cropView:CropView = new CropView();
-			var pickAnImageView:PickAnImageView = new PickAnImageView();
-
-			addChild( colorStyleView );
-			addChild( canvasView );
-			addChild( cropView );
-			addChild( pickAnImageView );
+			// Add main views.
+			addRegisteredView( new ColorStyleView(), this );
+			addRegisteredView( new CanvasView(), this );
+			addRegisteredView( new CropView(), this );
+			addRegisteredView( new PickAnImageView(), this );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( StateType.STATE_COLOR_STYLE, ColorStyleSubNavView );

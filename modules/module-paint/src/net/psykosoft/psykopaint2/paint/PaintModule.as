@@ -61,14 +61,19 @@ package net.psykosoft.psykopaint2.paint
 			_paintConfig = new PaintConfig( coreInjector );
 
 			// Init display tree for this module.
-			_coreModule.addModuleDisplay( new PaintRootView() ); // Initialize display tree.
+			var rootView:PaintRootView = new PaintRootView();
+			rootView.allViewsReadySignal.addOnce( onViewsReady );
+			_coreModule.addModuleDisplay( rootView );
+		}
+
+		private function onViewsReady():void {
 
 			// Init drawing core.
 			startCore();
-//			setTimeout( startModule, 2000 ); // TODO: remove time out, currently necessary because some views are not ready yet ( on stage )
+//			setTimeout( startCore, 2000 ); // TODO: remove time out, currently necessary because some views are not ready yet ( on stage )
 
 			// Notify potential super modules.
-			moduleReadySignal.dispatch( coreInjector );
+			moduleReadySignal.dispatch( _coreModule.injector );
 		}
 
 		private function startCore():void {

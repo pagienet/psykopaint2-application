@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			registerView( view );
 			manageMemoryWarnings = false;
 			manageStateChanges = false;
-			view.visible = true; // Starts visible, independent of state.
+			view.enable(); // Starts visible, independent of state.
 
 			// From app.
 			notifyGlobalGestureSignal.add( onGlobalGesture );
