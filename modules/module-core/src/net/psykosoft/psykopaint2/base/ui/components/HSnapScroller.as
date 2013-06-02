@@ -22,7 +22,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _minContentX:Number = 0;
 		protected var _maxContentX:Number = 0;
 
-		public var edgeContentGap:Number = 0;
+		public var leftGap:Number = 0;
+		public var rightGap:Number = 0;
 
 		public var visibleHeight:Number = 100;
 		public var visibleWidth:Number = 600;
@@ -61,10 +62,16 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function reset():void {
 			_positionManager.reset();
-			_container.x = 0;
 			_minContentX = 0;
 			_maxContentX = 0;
+			_container.x = 0;
 			_container.removeChildren();
+		}
+
+		public function dock():void {
+			if( width < visibleWidth ) return;
+			_positionManager.snapAtIndex( 0 );
+			_container.x = visibleWidth / 2 - _positionManager.position;
 		}
 
 		override public function addChild( value:DisplayObject ):DisplayObject {
@@ -97,8 +104,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		private function evaluateDimensionsFromChild( lastElement:DisplayObject ):void {
-			var minX:Number = lastElement.x - lastElement.width / 2 - edgeContentGap; // Note: assumes elements will be registered at their center
-			var maxX:Number = lastElement.x + lastElement.width / 2 + edgeContentGap;
+			var minX:Number = lastElement.x - lastElement.width / 2; // Note: assumes elements will be registered at their center
+			var maxX:Number = lastElement.x + lastElement.width / 2;
 			if( minX < _minContentX ) _minContentX = minX;
 			if( maxX > _maxContentX ) _maxContentX = maxX;
 		}
@@ -108,8 +115,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 			var len:uint = _positionManager.numSnapPoints;
 			var leftEdgeSnapPointMatched:Boolean = false;
 			var rightEdgeSnapPointMatched:Boolean = false;
-			var minAllowed:Number = visibleWidth / 2;
-			var maxAllowed:Number = maxWidth - visibleWidth / 2;
+			var minAllowed:Number = visibleWidth / 2 - leftGap;
+			var maxAllowed:Number = maxWidth + rightGap - visibleWidth / 2;
 			for( var i:uint; i < len; i++ ) {
 				var snapPoint:Number = _positionManager.getSnapPointAt( i );
 				// Left containment.
@@ -157,7 +164,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function evaluateInteractionStart():void {
-			if( maxWidth - edgeContentGap <= visibleWidth ) return; // No need for scrolling if all content is visible in 1 page.
+			if( maxWidth <= visibleWidth ) return; // No need for scrolling if all content is visible in 1 page.
 			if( !mouseHitsInteractiveArea() ) return; // Hit test.
 			_interactionManager.startInteraction();
 			startEnterframe();

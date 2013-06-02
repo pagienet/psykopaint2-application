@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
-	import com.junkbyte.console.Cc;
-
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
@@ -29,7 +27,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			registerView( view );
 			manageMemoryWarnings = false;
 			manageStateChanges = false;
-			view.enable(); // Starts visible, independent of state.
 
 			// From app.
 			notifyGlobalGestureSignal.add( onGlobalGesture );

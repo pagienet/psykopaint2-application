@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import com.greensock.TweenLite;
-	import com.junkbyte.console.Cc;
 
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -30,10 +29,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _currentSubNavView:SubNavigationViewBase;
 		private var _buttonPositionOffsetX:Number;
 		private var _centerButtons:Array;
-		private var _centerComponentsScroller:HItemScroller;
+		private var _scroller:HItemScroller;
 		private var _areButtonsSelectable:Boolean;
 		private var _animating:Boolean;
 		private var _showing:Boolean = true;
+		private var _needGapCheck:Boolean = true;
 
 		private const BUTTON_GAP_X:Number = 8;
 		private const BG_HEIGHT:uint = 200;
@@ -68,20 +68,19 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_rightButton.displaceLabelTf( 5, -15 );
 			_rightButton.displaceLabelBg( -15, -5 );
 
-			_centerComponentsScroller = new HItemScroller();
-			_centerComponentsScroller.edgeContentGap = 150;
-			_centerComponentsScroller.visibleHeight = 130;
-			_centerComponentsScroller.visibleWidth = 1024;
-			_centerComponentsScroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _centerComponentsScroller.visibleHeight / 2;
-			_centerComponentsScroller.positionManager.minimumThrowingSpeed = 15;
-			_centerComponentsScroller.positionManager.frictionFactor = 0.85;
-			_centerComponentsScroller.interactionManager.throwInputMultiplier = 2;
-			_centerComponentsScroller.motionStartedSignal.add( onCenterScrollerMotionStart );
-			_centerComponentsScroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
-			addChildAt( _centerComponentsScroller, 1 );
+			_scroller = new HItemScroller();
+			_scroller.visibleHeight = 130;
+			_scroller.visibleWidth = 1024;
+			_scroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _scroller.visibleHeight / 2;
+			_scroller.positionManager.minimumThrowingSpeed = 15;
+			_scroller.positionManager.frictionFactor = 0.85;
+			_scroller.interactionManager.throwInputMultiplier = 2;
+			_scroller.motionStartedSignal.add( onCenterScrollerMotionStart );
+			_scroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
+			addChildAt( _scroller, 1 );
 
-			_leftButton.addEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
-			_rightButton.addEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
+			_leftButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
+			_rightButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
 
 			visible = false;
 		}
@@ -111,17 +110,18 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			if( subNavType == null ) return;
 
-			visible = true;
+			enable();
 
 			trace( this, "updating sub-nav: " + subNavType );
 
 			// Reset.
+			_needGapCheck = true;
 			header.visible = false;
 			leftBtnSide.visible = false;
 			rightBtnSide.visible = false;
 			_areButtonsSelectable = false;
 			resetCenterButtons();
-			_centerComponentsScroller.reset();
+			_scroller.reset();
 
 			// Disable old view.
 			if( _currentSubNavView ) {
@@ -148,11 +148,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function evaluateInteractionStart():void {
-			_centerComponentsScroller.evaluateInteractionStart();
+			_scroller.evaluateInteractionStart();
 		}
 
 		public function evaluateInteractionEnd():void {
-			_centerComponentsScroller.evaluateInteractionEnd();
+			_scroller.evaluateInteractionEnd();
 		}
 
 		// ---------------------------------------------------------------------
@@ -160,8 +160,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// ---------------------------------------------------------------------
 
 		private function resetCenterButtons():void {
-			if( !_centerComponentsScroller ) return;
-			_buttonPositionOffsetX = _leftButton.width / 2 + _centerComponentsScroller.edgeContentGap;
+			if( !_scroller ) return;
+			_buttonPositionOffsetX = _leftButton.width / 2;
 			if( _centerButtons && _centerButtons.length > 0 ) {
 				var len:uint = _centerButtons.length;
 				for( var i:uint; i < len; ++i ) {
@@ -176,7 +176,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onButtonClicked( event:MouseEvent ):void {
 
-			if( _centerComponentsScroller.isActive ) return; // Reject clicks while the scroller is moving.
+			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
 			var button:SbButton = event.target as SbButton;
 			if( !button ) button = event.target.parent as SbButton;
 			trace( this, "button clicked: " + button.labelText );
@@ -192,18 +192,44 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			}
 		}
 
+		// TODO: this assumes that side buttons will always be set before center buttons, which is not enforced anywhere
+		// and will cause edge gaps to be set incorrectly
+		private function checkGap():void {
+			// Decide scroller gaps according to the presence of side buttons.
+			if( leftBtnSide.visible && rightBtnSide.visible ) {
+				trace( ">>>>>>>>>>>>>> RANGE: double gap" );
+				_scroller.leftGap = _scroller.rightGap = 150;
+			}
+			else if( leftBtnSide.visible && !rightBtnSide.visible ) {
+				trace( ">>>>>>>>>>>>>> RANGE: left gap" );
+				_scroller.leftGap = 150;
+				_scroller.rightGap = 0;
+			}
+			else if( !leftBtnSide.visible && rightBtnSide.visible ) {
+				trace( ">>>>>>>>>>>>>> RANGE: right gap" );
+				_scroller.leftGap = 0;
+				_scroller.rightGap = 150;
+			}
+			else {
+				trace( ">>>>>>>>>>>>>> RANGE: full" );
+				_scroller.leftGap = _scroller.rightGap = 0;
+			}
+			_needGapCheck = false;
+		}
+
 		// ---------------------------------------------------------------------
 		// Methods called by SubNavigationViewBase.
 		// ---------------------------------------------------------------------
 
 		public function addCenterButton( label:String, iconType:String, labelType:String ):void {
+			if( _needGapCheck ) checkGap();
 			var specificButtonClass:Class = Class( getDefinitionByName( getQualifiedClassName( _leftButton ) ) );
 			var btn:SbButton = new specificButtonClass();
 			btn.labelText = label;
 			btn.setIconType( iconType );
 			btn.setLabelType( labelType );
 			btn.x = _buttonPositionOffsetX;
-			btn.y = _centerComponentsScroller.visibleHeight / 2;
+			btn.y = _scroller.visibleHeight / 2;
 			btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			// Defaults to 1st button as selected.
 			if( _areButtonsSelectable ) {
@@ -212,7 +238,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 					btn.toggleSelect( true );
 				}
 			}
-			_centerComponentsScroller.addChild( btn );
+			_scroller.addChild( btn );
 			_centerButtons.push( btn );
 			_buttonPositionOffsetX += 140 + BUTTON_GAP_X;
 		}
@@ -251,10 +277,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function invalidateContent():void {
-			// Invalidate scroller.
-			_centerComponentsScroller.invalidateContent();
-			// Position center buttons.
-			_centerComponentsScroller.x = 1024 / 2 - _centerComponentsScroller.minWidth / 2;
+			_scroller.invalidateContent();
+			_scroller.x = 1024 / 2 - _scroller.minWidth / 2;
+			_scroller.dock();
 		}
 
 		public function areButtonsSelectable( value:Boolean ):void {
