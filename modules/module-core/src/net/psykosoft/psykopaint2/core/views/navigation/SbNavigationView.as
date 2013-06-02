@@ -40,15 +40,15 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 100;
 
 		public var buttonClickedCallback:Function;
-		public var shownAnimatedSignal:Signal;
-		public var hiddenAnimatedSignal:Signal;
+		public var shownSignal:Signal;
+		public var hidingSignal:Signal;
 		public var scrollingStartedSignal:Signal;
 		public var scrollingEndedSignal:Signal;
 
 		public function SbNavigationView() {
 			super();
-			shownAnimatedSignal = new Signal();
-			hiddenAnimatedSignal = new Signal();
+			shownSignal = new Signal();
+			hidingSignal = new Signal();
 			scrollingStartedSignal = new Signal();
 			scrollingEndedSignal = new Signal();
 			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbButton;
@@ -89,11 +89,18 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Interface to be used by the view's mediator.
 		// ---------------------------------------------------------------------
 
+		public function toggle():void {
+			if( _showing ) hide();
+			else show();
+		}
+
 		public function hide():void {
 			if( _animating ) return;
 			if( !_showing ) return;
+			hidingSignal.dispatch();
 			_showing = false;
 			_animating = true;
+			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 0.25, { y: BG_HEIGHT, onComplete: onHideAnimatedComplete } );
 		}
 
@@ -103,6 +110,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_showing = true;
 			_animating = true;
 			this.visible = true;
+			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 0.25, { y: 0, onComplete: onShowAnimatedComplete } );
 		}
 
@@ -197,21 +205,17 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private function checkGap():void {
 			// Decide scroller gaps according to the presence of side buttons.
 			if( leftBtnSide.visible && rightBtnSide.visible ) {
-				trace( ">>>>>>>>>>>>>> RANGE: double gap" );
 				_scroller.leftGap = _scroller.rightGap = 150;
 			}
 			else if( leftBtnSide.visible && !rightBtnSide.visible ) {
-				trace( ">>>>>>>>>>>>>> RANGE: left gap" );
 				_scroller.leftGap = 150;
 				_scroller.rightGap = 0;
 			}
 			else if( !leftBtnSide.visible && rightBtnSide.visible ) {
-				trace( ">>>>>>>>>>>>>> RANGE: right gap" );
 				_scroller.leftGap = 0;
 				_scroller.rightGap = 150;
 			}
 			else {
-				trace( ">>>>>>>>>>>>>> RANGE: full" );
 				_scroller.leftGap = _scroller.rightGap = 0;
 			}
 			_needGapCheck = false;
@@ -308,13 +312,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onShowAnimatedComplete():void {
 			_animating = false;
-			shownAnimatedSignal.dispatch();
+			shownSignal.dispatch();
 		}
 
 		private function onHideAnimatedComplete():void {
 			this.visible = false;
 			_animating = false;
-			hiddenAnimatedSignal.dispatch();
 		}
 	}
 }

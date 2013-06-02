@@ -17,8 +17,9 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.requests.NotifyExpensiveUiActionToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestGpuRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
@@ -108,6 +109,7 @@ package net.psykosoft.psykopaint2.core.config
 			_injector.map( NotifyExpensiveUiActionToggledSignal ).asSingleton();
 			_injector.map( NotifyMemoryWarningSignal ).asSingleton();
 			_injector.map( NotifyBlockingGestureSignal ).asSingleton();
+			_injector.map( RequestNavigationToggleSignal ).asSingleton();
 		}
 
 		// -----------------------

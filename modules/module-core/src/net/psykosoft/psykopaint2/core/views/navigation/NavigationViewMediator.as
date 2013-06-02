@@ -4,7 +4,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.requests.NotifyExpensiveUiActionToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyExpensiveUiActionToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class NavigationViewMediator extends MediatorBase
@@ -21,6 +22,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		[Inject]
 		public var requestExpensiveUiActionReactionSignal:NotifyExpensiveUiActionToggledSignal;
 
+		[Inject]
+		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
+
 		override public function initialize():void {
 
 			super.initialize();
@@ -30,10 +34,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			// From app.
 			notifyGlobalGestureSignal.add( onGlobalGesture );
+			requestNavigationToggleSignal.add( onToggleRequest );
 
 			// From view.
-			view.shownAnimatedSignal.add( onViewShown );
-			view.hiddenAnimatedSignal.add( onViewHidden );
+			view.shownSignal.add( onViewShown );
+			view.hidingSignal.add( onViewHiding );
 			view.scrollingStartedSignal.add( onViewScrollingStarted );
 			view.scrollingEndedSignal.add( onViewScrollingEnded );
 		}
@@ -50,12 +55,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			requestExpensiveUiActionReactionSignal.dispatch( true, "nav-scrolling" );
 		}
 
-		private function onViewHidden():void {
+		private function onViewHiding():void {
 			notifyNavigationToggledSignal.dispatch( false );
 		}
 
 		private function onViewShown():void {
 			notifyNavigationToggledSignal.dispatch( true );
+		}
+
+		private function onToggleRequest():void {
+			view.toggle();
 		}
 
 		// -----------------------
