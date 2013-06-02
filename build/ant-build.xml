@@ -7,7 +7,7 @@
 	<!-- properties -->
 	<!-- ******************** -->
 
-	<property name="version" value="0.4.8"/>
+	<property name="version" value="0.4.9"/>
 	<property name="module-app-out" value="${AppOutputPath}"/>
 	<property name="module-home-out" value="${HomeOutputPath}"/>
 	<property name="module-paint-out" value="${PaintOutputPath}"/>
