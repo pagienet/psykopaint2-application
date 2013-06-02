@@ -81,10 +81,6 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onHomeModuleReady( coreInjector:Injector ):void {
 			trace( this, "home module is ready" );
-			finishInitialization();
-		}
-
-		private function finishInitialization():void {
 
 			// Initialize the app module.
 			new AppConfig( _coreModule.injector );

@@ -8,6 +8,8 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
+	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestDrawingCoreStartupSignal;
@@ -66,11 +68,22 @@ package net.psykosoft.psykopaint2.paint
 
 		private function onViewsReady():void {
 
+			// Listen for splash out.
+			_coreModule.splashScreenRemovedSignal.addOnce( onSplashOut );
+
 			// Init drawing core.
 			_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );
+		}
+
+		private function onSplashOut():void {
+			if( isStandalone ) {
+				// Show navigation.
+				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
+				showNavigationSignal.dispatch();
+			}
 		}
 
 		// ---------------------------------------------------------------------

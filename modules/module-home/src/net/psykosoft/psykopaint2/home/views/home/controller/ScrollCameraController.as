@@ -5,6 +5,9 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 	import away3d.cameras.Camera3D;
 	import away3d.core.base.Object3D;
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
+
 	import flash.display.Stage;
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
@@ -13,6 +16,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 	import net.psykosoft.psykopaint2.base.utils.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.SnapPositionManager;
+	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 
 	import org.osflash.signals.Signal;
 
@@ -58,16 +62,27 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		}
 
 		public function zoomIn():void {
-			// TODO...
+			TweenLite.killTweensOf( _cameraTarget );
+			TweenLite.killTweensOf( _camera );
+			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_IN_Y, ease:Expo.easeOut } );
+			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_IN_Y, z: HomeSettings.CAMERA_ZOOM_IN_Z, ease:Expo.easeOut } );
 		}
 
 		public function zoomOut():void {
-			// TODO...
+			TweenLite.killTweensOf( _cameraTarget );
+			TweenLite.killTweensOf( _camera );
+			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, ease:Expo.easeOut } );
+			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, z: HomeSettings.CAMERA_ZOOM_OUT_Z, ease:Expo.easeOut } );
 		}
 
 		public function limitInteractionToUpperPartOfTheScreen( value:Boolean ):void {
 //			trace( this, "interaction limited: " + value );
 			_isScrollingLimited = value;
+		}
+
+		public function set cameraY( value:Number ):void {
+			_camera.y = value;
+			_perspectiveFactorDirty = true;
 		}
 
 		public function set cameraZ( value:Number ):void {

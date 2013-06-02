@@ -4,16 +4,14 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 	import away3d.core.managers.Stage3DProxy;
-	import away3d.debug.Trident;
-	import away3d.entities.Mesh;
-	import away3d.materials.ColorMaterial;
-	import away3d.primitives.CubeGeometry;
 
 	import flash.events.Event;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PictureFrameContainer;
 	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
@@ -26,6 +24,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _loader:AssetBundleLoader;
 		private var _view:View3D;
 		private var _stage3dProxy:Stage3DProxy;
+		private var _fpsCache:Number;
 
 		public function HomeView() {
 			super();
@@ -36,7 +35,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 
 		override protected function onEnabled():void {
-			if( !_stuffCreated ) createStuff();
 			addChild( _view );
 			_cameraController.isActive = true;
 		}
@@ -49,16 +47,16 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		override protected function onSetup():void {
 
-		}
-
-		// TODO: replace this by relying on ViewBase enable->setup functionality...
-		private var _stuffCreated:Boolean;
-		private function createStuff():void {
-			trace( "CREATED<><><><><" );
-
 			// -----------------------
 			// Initialize view.
 			// -----------------------
+
+			// TODO: make distinctions between first set up and potentially later ones because of memory warning cleanups.
+
+			// Detain frame rate so that app retains splash screen during setup.
+			_fpsCache = stage.frameRate;
+			trace( this, "detaining fps: " + _fpsCache );
+			stage.frameRate = 5;
 
 			_view = new View3D();
 			_view.mouseEnabled = _view.mouseChildren = false;
@@ -82,7 +80,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_frameContainer = new PictureFrameContainer( _cameraController, _room, _view );
 			_frameContainer.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
-			_cameraController.cameraZ = -1750;
+			_cameraController.cameraY = cameraTarget.y = HomeSettings.CAMERA_ZOOM_IN_Y;
+			_cameraController.cameraZ = HomeSettings.CAMERA_ZOOM_IN_Z;
 			_frameContainer.z = _room.wallZ - 2;
 			cameraTarget.z = _room.wallZ;
 			_view.scene.addChild( _room );
@@ -117,8 +116,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			_loader.registerAsset( "/home-packaged/away3d/floorpapers/wood.jpg", "floorWood" );
 
 			_loader.startLoad();
-
-			_stuffCreated = true;
 		}
 
 		private function onAssetsReady( event:Event ):void {
@@ -127,6 +124,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
 			_frameContainer.loadDefaultHomeFrames();
+
+			// Release fps detainment ( releases the splash screen ).
+			stage.frameRate = _fpsCache;
+
+			setTimeout( function():void {
+				_cameraController.zoomOut();
+			}, 1000 );
 		}
 
 		override protected function onDisposed():void {
@@ -182,10 +186,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
 			_stage3dProxy = stage3dProxy;
-		}
-
-		public function get stuffCreated():Boolean {
-			return _stuffCreated;
 		}
 	}
 }

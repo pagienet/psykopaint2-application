@@ -83,6 +83,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 		private function setup():void {
 			trace( this, "setup" );
 			onSetup();
+			_initialized = true;
 		}
 
 		// ---------------------------------------------------------------------

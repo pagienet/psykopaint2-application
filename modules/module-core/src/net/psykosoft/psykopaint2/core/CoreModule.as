@@ -39,6 +39,8 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 
+	import org.osflash.signals.Signal;
+
 	import org.swiftsuspenders.Injector;
 
 	// TODO: develop ant script that moves the packaged assets to bin ( only for the core )
@@ -75,9 +77,12 @@ package net.psykosoft.psykopaint2.core
 
 		public var updateActive:Boolean = true;
 
+		public var splashScreenRemovedSignal:Signal;
+
 		public function CoreModule( injector:Injector = null ) {
 			super();
 			_injector = injector;
+			splashScreenRemovedSignal = new Signal();
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CoreModule";
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
@@ -269,6 +274,7 @@ package net.psykosoft.psykopaint2.core
 			_splashScreen.bitmapData.dispose();
 			_splashScreen = null;
 			_splashScreenRemoved = true;
+			splashScreenRemovedSignal.dispatch();
 		}
 
 		// ---------------------------------------------------------------------

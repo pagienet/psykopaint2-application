@@ -55,6 +55,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			scrollingEndedSignal = new Signal();
 			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbButton;
 			_rightButton = rightBtnSide.getChildByName( "btn" ) as SbButton;
+			hide( 0.01 );
 		}
 
 		override protected function onSetup():void {
@@ -100,14 +101,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			else show();
 		}
 
-		public function hide():void {
+		public function hide( time:Number = 0.25 ):void {
 			if( _animating ) return;
 			if( !_showing ) return;
 			hidingSignal.dispatch();
 			_showing = false;
 			_animating = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 0.25, { y: BG_HEIGHT, onComplete: onHideAnimatedComplete } );
+			TweenLite.to( this, time, { y: BG_HEIGHT + 50, onComplete: onHideAnimatedComplete } );
 		}
 
 		public function show():void {

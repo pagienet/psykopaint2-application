@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.home
 	import net.psykosoft.psykopaint2.core.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.config.HomeConfig;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
@@ -63,15 +64,22 @@ package net.psykosoft.psykopaint2.home
 
 		private function onViewsReady():void {
 
-			// First state.
-			if( isStandalone ) {
-				trace( this, " >>> starting as standalone." );
-				// Trigger initial state...
-				_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
-			}
+			// Trigger initial state...
+			_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
+
+			// Listen for splash out.
+			_coreModule.splashScreenRemovedSignal.addOnce( onSplashOut );
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );
+		}
+
+		private function onSplashOut():void {
+			// Show navigation.
+			setTimeout( function():void { // Wait a bit while the view is zooming out...
+				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
+				showNavigationSignal.dispatch();
+			}, 1500 );
 		}
 
 		// ---------------------------------------------------------------------

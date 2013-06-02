@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.paint.commands
 				notifyColorStyleCompleteSignal.dispatch( bitmapData ); // Launches app in paint mode.
 
 				// Init canvas size.
-				requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight * .76 ) );
+				requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight ) );
 
 			}, 10 );
 		}
