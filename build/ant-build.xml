@@ -3,24 +3,24 @@
 
 	<!-- TODO: can we set debug or release for all modules here? -->
 
-	<!-- ******************** -->
-	<!-- properties -->
-	<!-- ******************** -->
+	<!-- **************************************** -->
+	<!-- properties - link them from your IDE -->
+	<!-- **************************************** -->
 
-	<property name="version" value="0.4.9"/>
 	<property name="module-app-out" value="${AppOutputPath}"/>
 	<property name="module-home-out" value="${HomeOutputPath}"/>
 	<property name="module-paint-out" value="${PaintOutputPath}"/>
 	<property name="module-core-out" value="${CoreOutputPath}"/>
+	<xmlproperty file="app-data.xml" collapseAttributes="true"/>
 
 	<!-- **************************************************************************************** -->
 	<!-- Associate each one of the following task sets to each module in your workspace -->
 	<!-- **************************************************************************************** -->
 
-	<target name="module-app" depends="move-packaged-assets-app, update-version"/>
-	<target name="module-home" depends="move-packaged-assets-home, update-version"/>
-	<target name="module-paint" depends="move-packaged-assets-paint, update-version"/>
-	<target name="module-core" depends="move-packaged-assets-core, update-version"/>
+	<target name="module-app" depends="copy-data, update-version, move-packaged-assets-app"/>
+	<target name="module-home" depends="copy-data, update-version, move-packaged-assets-home"/>
+	<target name="module-paint" depends="copy-data, update-version, move-packaged-assets-paint"/>
+	<target name="module-core" depends="copy-data, update-version, move-packaged-assets-core"/>
 
 	<!-- ******************** -->
 	<!-- extensions -->
@@ -35,15 +35,19 @@
 	<!-- common -->
 	<!-- ******************** -->
 
+	<target name="copy-data">
+		<copy file="app-data.xml" todir="${module-core-out}/core-packaged"/>
+	</target>
+
 	<target name="update-version">
 		<xmltask source="config-desktop.xml" dest="config-desktop.xml" report="true">
-			<replace path="/:application/:versionNumber/text()" withText="${version}"/>
+			<replace path="/:application/:versionNumber/text()" withText="${data.version}"/>
 		</xmltask>
 		<xmltask source="config-ipad-hr.xml" dest="config-ipad-hr.xml" report="true">
-			<replace path="/:application/:versionNumber/text()" withText="${version}"/>
+			<replace path="/:application/:versionNumber/text()" withText="${data.version}"/>
 		</xmltask>
 		<xmltask source="config-ipad-lr.xml" dest="config-ipad-lr.xml" report="true">
-			<replace path="/:application/:versionNumber/text()" withText="${version}"/>
+			<replace path="/:application/:versionNumber/text()" withText="${data.version}"/>
 		</xmltask>
 	</target>
 

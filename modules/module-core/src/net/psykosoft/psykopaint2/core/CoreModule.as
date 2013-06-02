@@ -1,8 +1,10 @@
 package net.psykosoft.psykopaint2.core
 {
 
-	import com.junkbyte.console.Cc;
-	
+	import away3d.core.managers.Stage3DManager;
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.events.Stage3DEvent;
+
 	import flash.display.DisplayObject;
 	import flash.display.Stage3D;
 	import flash.display.StageAlign;
@@ -13,40 +15,31 @@ package net.psykosoft.psykopaint2.core
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
-	
-	import away3d.core.managers.Stage3DManager;
-	import away3d.core.managers.Stage3DProxy;
-	import away3d.events.Stage3DEvent;
-	
+
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
-	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
-	import net.psykosoft.psykopaint2.base.utils.DebuggingConsole;
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
+	import net.psykosoft.psykopaint2.base.utils.XMLLoader;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.config.CoreConfig;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
-	
+
 	import org.swiftsuspenders.Injector;
 
 	// TODO: develop ant script that moves the packaged assets to bin ( only for the core )
 
 	public class CoreModule extends ModuleBase
 	{
-		[Embed(source='../../../../../../../build/ant-build.xml', mimeType="application/octet-stream")]
-    	public var XmlAsset:Class;
-
 		private var _coreConfig:CoreConfig;
 		private var _injector:Injector;
 		private var _stage3dInitialized:Boolean;
@@ -75,17 +68,13 @@ package net.psykosoft.psykopaint2.core
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
-		public function addModuleDisplay( child:DisplayObject ):void {
-			_coreRootView.addToMainLayer( child );
-		}
-
 		// ---------------------------------------------------------------------
 		// Initialization.
 		// ---------------------------------------------------------------------
 
 		private function initialize():void {
 
-			getVersion();
+			getXmlData();
 			initDebugging();
 
 			trace( this, "Initializing... [" + name + "] v" + CoreSettings.VERSION );
@@ -98,9 +87,15 @@ package net.psykosoft.psykopaint2.core
 			initShakeAndBakeAsync();
 		}
 
-		private function getVersion():void {
-			var xml:XML = XML( new XmlAsset() );
-			CoreSettings.VERSION = xml.property.( @name == "version" ).@value;
+		private var _xmLoader:XMLLoader;
+		private function getXmlData():void {
+			_xmLoader = new XMLLoader();
+			var date:Date = new Date();
+			_xmLoader.loadAsset( "/core-packaged/app-data.xml?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() ), onVersionRetrieved );
+		}
+		private function onVersionRetrieved( data:XML ):void {
+			CoreSettings.VERSION = data.version;
+			_xmLoader = null;
 		}
 
 		private function initStats():void {
@@ -144,10 +139,10 @@ package net.psykosoft.psykopaint2.core
 			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
 				ViewCore.globalScaling = 2;
 			}
-			
+
 			//adding this early on so it can be used for logging, too
 			PsykoSocket.init(CoreSettings.PSYKOSOCKET_IP);
-			
+
 			trace( this, "initializing platform - " +
 					"running on iPad: " + CoreSettings.RUNNING_ON_iPAD + "," +
 					"running on HD: " + CoreSettings.RUNNING_ON_RETINA_DISPLAY + ", " +
@@ -232,6 +227,14 @@ package net.psykosoft.psykopaint2.core
 
 			// Notify.
 			moduleReadySignal.dispatch( _injector );
+		}
+
+		// ---------------------------------------------------------------------
+		// Interface.
+		// ---------------------------------------------------------------------
+
+		public function addModuleDisplay( child:DisplayObject ):void {
+			_coreRootView.addToMainLayer( child );
 		}
 
 		// ---------------------------------------------------------------------
