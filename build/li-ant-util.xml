@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Release/Debug Helper" default="all" basedir=".">
+
+	<!-- **************************************** -->
+	<!-- properties -->
+	<!-- **************************************** -->
+
+	<property name="debug" value="false"/>
+
+	<property name="rootDir" value="../../../workspaces/psykopaint2-official"/>
+
+	<property name="paintPath" value="${rootDir}/module-paint/module-paint.iml"/>
+	<property name="homePath" value="${rootDir}/module-home/module-home.iml"/>
+	<property name="corePath" value="${rootDir}/module-core/module-core.iml"/>
+	<property name="appPath" value="${rootDir}/module-app/module-app.iml"/>
+
+	<property name="robotlegs2SignalsPath" value="${rootDir}/lib-robotlegs2-extension-SignalCommandMap/lib-robotlegs2-extension-SignalCommandMap.iml"/>
+	<property name="robotlegs2Path" value="${rootDir}/lib-robotlegs2-extension-SignalCommandMap/lib-robotlegs2-extension-SignalCommandMap.iml"/>
+	<property name="gestouchPath" value="${rootDir}/lib-gestouch/lib-gestouch.iml"/>
+	<property name="away3dPath" value="${rootDir}/lib-away3d-core-fp11/lib-away3d-core-fp11.iml"/>
+	<property name="signalsPath" value="${rootDir}/lib-as3-signals/lib-as3-signals.iml"/>
+	<property name="signalsPath" value="${rootDir}/lib-as3-signals/lib-as3-signals.iml"/>
+
+	<property name="launcherPaintIpadPath" value="${rootDir}/launcher-paint-ipad/launcher-paint-ipad.iml"/>
+	<property name="launcherPaintDesktopPath" value="${rootDir}/launcher-paint-desktop/launcher-paint-desktop.iml"/>
+	<property name="launcherHomeDesktopPath" value="${rootDir}/launcher-home-desktop/launcher-home-desktop.iml"/>
+	<property name="launcherCoreDesktopPath" value="${rootDir}/launcher-core-desktop/launcher-core-desktop.iml"/>
+	<property name="launcherAppIpadPath" value="${rootDir}/launcher-app-ipad/launcher-app-ipad.iml"/>
+	<property name="launcherAppDesktopPath" value="${rootDir}/launcher-app-desktop/launcher-app-desktop.iml"/>
+
+	<!-- ******************** -->
+	<!-- extensions -->
+	<!-- ******************** -->
+
+	<path id="xmltask-ref">
+		<pathelement location="xmltask.jar"/>
+	</path>
+	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="xmltask-ref"/>
+
+	<!-- **************************************** -->
+	<!-- targets -->
+	<!-- **************************************** -->
+
+	<target name="all" depends="set-compiler-arguments"/>
+
+	<target name="set-compiler-arguments">
+		<xmltask source="${launcherPaintIpadPath}" dest="${launcherPaintIpadPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+		</xmltask>
+		<xmltask source="${launcherPaintDesktopPath}" dest="${launcherPaintDesktopPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+		</xmltask>
+		<xmltask source="${launcherHomeDesktopPath}" dest="${launcherHomeDesktopPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+		</xmltask>
+		<xmltask source="${launcherCoreDesktopPath}" dest="${launcherCoreDesktopPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+		</xmltask>
+		<xmltask source="${launcherAppIpadPath}" dest="${launcherAppIpadPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+		</xmltask>
+		<xmltask source="${launcherAppDesktopPath}" dest="${launcherAppDesktopPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+		</xmltask>
+
+		<xmltask source="${away3dPath}" dest="${away3dPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+		</xmltask>
+		<xmltask source="${gestouchPath}" dest="${gestouchPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+		</xmltask>
+		<xmltask source="${robotlegs2Path}" dest="${robotlegs2Path}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+		</xmltask>
+		<xmltask source="${robotlegs2SignalsPath}" dest="${robotlegs2SignalsPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+		</xmltask>
+
+		<xmltask source="${appPath}" dest="${appPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} -inline"/>
+		</xmltask>
+		<xmltask source="${corePath}" dest="${corePath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} -inline"/>
+		</xmltask>
+		<xmltask source="${paintPath}" dest="${paintPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} -inline"/>
+		</xmltask>
+		<xmltask source="${homePath}" dest="${homePath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} -inline"/>
+		</xmltask>
+	</target>
+
+</project>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

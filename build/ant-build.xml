@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Adobe Native Extension Packager" default="module-app" basedir=".">
+<project name="Psykopaint2 Build Utility" default="module-app" basedir=".">
 
 	<!-- TODO: can we set debug or release for all modules here? -->
 
