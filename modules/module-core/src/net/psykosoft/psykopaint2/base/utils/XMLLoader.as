@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.base.utils
 {
 
-	import com.junkbyte.console.Cc;
-
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
