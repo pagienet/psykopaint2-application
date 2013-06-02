@@ -255,9 +255,6 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function initDebugging():void {
-			// Cc
-//			var console:DebuggingConsole = new DebuggingConsole( this );
-//			console.traceAllStaticVariablesInClass( CoreSettings );
 			// Keys
 			if( CoreSettings.USE_DEBUG_KEYS ) {
 				stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
