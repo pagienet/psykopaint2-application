@@ -31,6 +31,15 @@ package net.psykosoft.psykopaint2.home
 		}
 
 		// ---------------------------------------------------------------------
+		// Listeners.
+		// ---------------------------------------------------------------------
+
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			initialize();
+		}
+
+		// ---------------------------------------------------------------------
 		// Initialization.
 		// ---------------------------------------------------------------------
 
@@ -46,15 +55,15 @@ package net.psykosoft.psykopaint2.home
 			}
 			else {
 				HomeSettings.isStandalone = false;
-				onCoreModuleReady( _coreModule.injector );
+				onCoreModuleReady();
 			}
 		}
 
-		private function onCoreModuleReady( coreInjector:Injector ):void {
-			trace( this, "core module is ready, injector: " + coreInjector );
+		private function onCoreModuleReady():void {
+			trace( this, "core module is ready, injector: " + _coreModule.injector );
 
 			// Initialize the home module.
-			_homeConfig = new HomeConfig( coreInjector );
+			_homeConfig = new HomeConfig( _coreModule.injector );
 
 			// Init display tree for this module.
 			var homeRootView:HomeRootView = new HomeRootView();
@@ -64,8 +73,10 @@ package net.psykosoft.psykopaint2.home
 
 		private function onViewsReady():void {
 
-			// Trigger initial state...
-			_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
+			if( isStandalone ) {
+				// Trigger initial state...
+				_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
+			}
 
 			// Listen for splash out.
 			_coreModule.splashScreenRemovedSignal.addOnce( onSplashOut );
@@ -75,20 +86,12 @@ package net.psykosoft.psykopaint2.home
 		}
 
 		private function onSplashOut():void {
-			// Show navigation.
-			setTimeout( function():void { // Wait a bit while the view is zooming out...
-				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-				showNavigationSignal.dispatch();
-			}, 1500 );
-		}
-
-		// ---------------------------------------------------------------------
-		// Listeners.
-		// ---------------------------------------------------------------------
-
-		private function onAddedToStage( event:Event ):void {
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-			initialize();
+			if( isStandalone ) { // Show navigation.
+				setTimeout( function ():void { // Wait a bit while the view is zooming out...
+					var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
+					showNavigationSignal.dispatch();
+				}, 1500 );
+			}
 		}
 	}
 }

@@ -1,20 +1,17 @@
 package net.psykosoft.psykopaint2.app
 {
 
-	import com.junkbyte.console.Cc;
-
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.display.Stage3D;
 	import flash.events.Event;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.views.base.AppRootView;
-	import net.psykosoft.psykopaint2.core.ModuleBase;
-
 	import net.psykosoft.psykopaint2.core.CoreModule;
+	import net.psykosoft.psykopaint2.core.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.HomeModule;
 	import net.psykosoft.psykopaint2.paint.PaintModule;
 
@@ -30,6 +27,15 @@ package net.psykosoft.psykopaint2.app
 			super();
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "AppModule";
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+		}
+
+		// ---------------------------------------------------------------------
+		// Listeners.
+		// ---------------------------------------------------------------------
+
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			initialize();
 		}
 
 		// ---------------------------------------------------------------------
@@ -49,11 +55,12 @@ package net.psykosoft.psykopaint2.app
 			_coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
 			addChild( _coreModule );
 		}
-		private function onCoreModuleReady( coreInjector:Injector ):void {
-			trace( this, "core module is ready, injector: " + coreInjector );
+		private function onCoreModuleReady():void {
+			trace( this, "core module is ready, injector: " + _coreModule.injector );
 
 			// TODO: remove time out calls, they are used because otherwise, usage of the paint and home modules simultaneously causes the core's injected stage3d.context3d to become null
-			setTimeout( createPaintModule, 250 );
+//			setTimeout( createPaintModule, 250 );
+			createPaintModule();
 		}
 
 		// Paint module.
@@ -68,7 +75,8 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onPaintModuleReady( coreInjector:Injector ):void {
 		    trace( this, "paint module is ready" );
-			setTimeout( createHomeModule, 250 );
+//			setTimeout( createHomeModule, 250 );
+			createHomeModule();
 		}
 
 		// Home module.
@@ -93,17 +101,23 @@ package net.psykosoft.psykopaint2.app
 
 		private function onViewsReady():void {
 
+			// Trigger initial state...
+			_coreModule.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
+
+			// Listen for splash out.
+			_coreModule.splashScreenRemovedSignal.addOnce( onSplashOut );
+
 			// Launch core updates.
 			_coreModule.updateActive = true;
 		}
 
-		// ---------------------------------------------------------------------
-		// Listeners.
-		// ---------------------------------------------------------------------
+		private function onSplashOut():void {
 
-		private function onAddedToStage( event:Event ):void {
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-			initialize();
+			// Show navigation.
+			setTimeout( function ():void { // Wait a bit while the view is zooming out...
+				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
+				showNavigationSignal.dispatch();
+			}, 2000 );
 		}
 	}
 }

@@ -13,7 +13,6 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
-
 	import net.psykosoft.psykopaint2.base.utils.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.SnapPositionManager;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
@@ -64,15 +63,15 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		public function zoomIn():void {
 			TweenLite.killTweensOf( _cameraTarget );
 			TweenLite.killTweensOf( _camera );
-			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_IN_Y, ease:Expo.easeOut } );
-			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_IN_Y, z: HomeSettings.CAMERA_ZOOM_IN_Z, ease:Expo.easeOut } );
+			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_IN_Y, ease:Expo.easeInOut } );
+			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_IN_Y, z: HomeSettings.CAMERA_ZOOM_IN_Z, ease:Expo.easeInOut } );
 		}
 
 		public function zoomOut():void {
 			TweenLite.killTweensOf( _cameraTarget );
 			TweenLite.killTweensOf( _camera );
-			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, ease:Expo.easeOut } );
-			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, z: HomeSettings.CAMERA_ZOOM_OUT_Z, ease:Expo.easeOut } );
+			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, ease:Expo.easeInOut } );
+			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, z: HomeSettings.CAMERA_ZOOM_OUT_Z, ease:Expo.easeInOut } );
 		}
 
 		public function limitInteractionToUpperPartOfTheScreen( value:Boolean ):void {

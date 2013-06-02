@@ -8,9 +8,10 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 	public class ViewBase extends Sprite
 	{
-		private var _initialized:Boolean;
+		protected var _initialized:Boolean;
 
 		public var autoUpdates:Boolean = false;
+		public var scalesToRetina:Boolean = true;
 
 		public var addedToStageSignal:Signal;
 
@@ -94,7 +95,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 
 			// Retina scaling.
-			if( !( parent is ViewBase ) ) {
+			if( scalesToRetina && !( parent is ViewBase ) ) {
 				scaleX = scaleY = ViewCore.globalScaling;
 			}
 

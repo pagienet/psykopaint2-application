@@ -106,10 +106,12 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 
 		private function onNavigationToggled( shown:Boolean ):void {
+			if( !view.visible ) return;
 			view.cameraController.limitInteractionToUpperPartOfTheScreen( shown );
 		}
 
 		private function onGlobalGesture( type:String ):void {
+			if( !view.visible ) return;
 			if( type == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN ) {
 				view.cameraController.startPanInteraction();
 			}
@@ -125,6 +127,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onWallPaperChanged( bmd:BitmapData ):void {
+			if( !view.visible ) return;
 			view.room.changeWallpaper( bmd );
 		}
 	}

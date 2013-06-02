@@ -36,10 +36,10 @@
 	<!-- ******************** -->
 
 	<target name="copy-data">
-		<copy file="app-data.xml" todir="${module-core-out}/core-packaged"/>
-		<copy file="app-data.xml" todir="${module-app-out}/core-packaged"/>
-		<copy file="app-data.xml" todir="${module-home-out}/core-packaged"/>
-		<copy file="app-data.xml" todir="${module-paint-out}/core-packaged"/>
+		<copy file="app-data.xml" todir="${module-core-out}"/>
+		<copy file="app-data.xml" todir="${module-app-out}"/>
+		<copy file="app-data.xml" todir="${module-home-out}"/>
+		<copy file="app-data.xml" todir="${module-paint-out}"/>
 	</target>
 
 	<target name="update-version">

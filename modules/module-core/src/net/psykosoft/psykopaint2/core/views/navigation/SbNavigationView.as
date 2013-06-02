@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import com.greensock.TweenLite;
+	import com.greensock.easing.Expo;
 
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -101,14 +102,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			else show();
 		}
 
-		public function hide( time:Number = 0.25 ):void {
+		public function hide( time:Number = 0.5 ):void {
 			if( _animating ) return;
 			if( !_showing ) return;
 			hidingSignal.dispatch();
 			_showing = false;
 			_animating = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, time, { y: BG_HEIGHT + 50, onComplete: onHideAnimatedComplete } );
+			TweenLite.to( this, time, { y: BG_HEIGHT + 50, onComplete: onHideAnimatedComplete, ease:Expo.easeInOut } );
 		}
 
 		public function show():void {
@@ -118,7 +119,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_animating = true;
 			this.visible = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 0.25, { y: 0, onComplete: onShowAnimatedComplete } );
+			TweenLite.to( this, 0.5, { y: 0, onComplete: onShowAnimatedComplete, ease:Expo.easeInOut } );
 		}
 
 		public function updateSubNavigation( subNavType:Class ):void {

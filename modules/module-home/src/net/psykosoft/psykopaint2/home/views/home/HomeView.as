@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function HomeView() {
 			super();
+			scalesToRetina = false;
 		}
 
 		// -----------------------
@@ -62,6 +63,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.mouseEnabled = _view.mouseChildren = false;
 			_view.stage3DProxy = _stage3dProxy;
 			_view.shareContext = true;
+			_view.width = stage.stageWidth;
+			_view.height = stage.stageHeight;
 			_view.camera.lens.far = 50000;
 
 			// TODO: does the path manager update when scrolling on the 3d view? it shouldn't!
@@ -119,6 +122,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onAssetsReady( event:Event ):void {
+			// TODO: dispose loader?
 			_loader.removeEventListener( Event.COMPLETE, onAssetsReady );
 
 			// Stuff that needs to be done after external assets are ready.
@@ -128,30 +132,56 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Release fps detainment ( releases the splash screen ).
 			stage.frameRate = _fpsCache;
 
-			setTimeout( function():void {
+			// TODO: remove timer, is there a way to know when the view has rendered properly?
+			/*setTimeout( function():void {
+
 				_cameraController.zoomOut();
-			}, 1000 );
+
+
+			}, 100 );*/
 		}
+
+		private var _introZoomOutPending:Boolean = true;
 
 		override protected function onDisposed():void {
 
-			if( _loader.hasEventListener( Event.COMPLETE ) ) {
-				_loader.removeEventListener( Event.COMPLETE, onAssetsReady );
+			// TODO: can't clean up everything because it causes runtime errors, use scout to see if the memory is being freed up
+			/*
+			* For the time being I'm disposing meshes only, but we have to dispose materials too...
+			* UPDATE AWAY3D FIRST
+			*
+			* Getting an error in the drawing core now. Away3D disposal fucks up something in the GPU.
+			* */
+			_initialized = true;
+ 			return;
+
+			if( _loader ) {
+				if( _loader.hasEventListener( Event.COMPLETE ) ) {
+					_loader.removeEventListener( Event.COMPLETE, onAssetsReady );
+				}
+				_loader.dispose();
+				_loader = null;
 			}
-			_loader.dispose();
-			_loader = null;
 
-			_cameraController.dispose();
-			_cameraController = null;
+			if( _room ) {
+				_room.dispose();
+				_room = null;
+			}
 
-			_room.dispose();
-			_room = null;
+			if( _frameContainer ) {
+				_frameContainer.dispose();
+				_frameContainer = null;
+			}
 
-			_frameContainer.dispose();
-			_frameContainer = null;
+			if( _cameraController ) {
+				_cameraController.dispose();
+				_cameraController = null;
+			}
 
-			_view.dispose();
-			_view = null;
+			if( _view ) {
+				_view.dispose();
+				_view = null;
+			}
 
 			// TODO: review if memory is really freed up with Scout, it appears not, specially gpu memory
 		}
@@ -161,6 +191,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: why keep loader around?
 			if( !_loader || !_loader.done ) return; // Bounces off 3d rendering when the scene is not ready or active.
 			if( !_view.parent ) return;
+			if( _introZoomOutPending && stage.frameRate > 30 ) {
+				_introZoomOutPending = false;
+				setTimeout( function():void {
+					_cameraController.zoomOut();
+				}, 1500 );
+			}
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "rendering 3d" );
 			}

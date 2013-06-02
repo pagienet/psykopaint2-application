@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		}
 
 		protected function onMemoryWarning():void {
-//			trace( this, "received memory warning." );
+			trace( this, "received memory warning." );
 			if( !manageMemoryWarnings ) return;
 			if( !_view.visible ) _view.dispose();
 		}

@@ -59,10 +59,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		override public function dispose():void {
 
-			var material:TextureMaterial = _easelMesh.material as TextureMaterial;
+			/*var material:TextureMaterial = _easelMesh.material as TextureMaterial;
 			var texture:BitmapTexture = material.texture as BitmapTexture;
 			texture.dispose();
-			material.dispose();
+			material.dispose();*/
 			_easelMesh.dispose();
 			_easelMesh = null;
 

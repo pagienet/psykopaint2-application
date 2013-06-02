@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.core
 	import away3d.events.Stage3DEvent;
 
 	import flash.display.Bitmap;
-
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.display.Stage3D;
@@ -18,13 +17,11 @@ package net.psykosoft.psykopaint2.core
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
-	import net.psykosoft.psykopaint2.base.utils.BitmapLoader;
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
@@ -40,7 +37,6 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 
 	import org.osflash.signals.Signal;
-
 	import org.swiftsuspenders.Injector;
 
 	// TODO: develop ant script that moves the packaged assets to bin ( only for the core )
@@ -72,7 +68,7 @@ package net.psykosoft.psykopaint2.core
 		private var _splashScreen:Bitmap;
 		private var _frontLayer:Sprite;
 		private var _backLayer:Sprite;
-		private var _fps:Number;
+		private var _fps:Number = 0;
 		private var _splashScreenRemoved:Boolean;
 
 		public var updateActive:Boolean = true;
@@ -85,6 +81,112 @@ package net.psykosoft.psykopaint2.core
 			splashScreenRemovedSignal = new Signal();
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CoreModule";
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+		}
+
+		// ---------------------------------------------------------------------
+		// Interface.
+		// ---------------------------------------------------------------------
+
+		public function addModuleDisplay( child:DisplayObject ):void {
+			_coreRootView.addToMainLayer( child );
+		}
+
+		// ---------------------------------------------------------------------
+		// Loop.
+		// ---------------------------------------------------------------------
+
+		private function update():void {
+			if( !updateActive ) return;
+			_requestGpuRenderingSignal.dispatch();
+			evalFPS();
+			updateStats();
+		}
+
+		private function evalFPS():void {
+			var oldTime:Number = _time;
+			_time = getTimer();
+			_fps = 1000 / (_time - oldTime);
+			_fpsStackUtil.pushValue( _fps );
+			_fps = int( _fpsStackUtil.getAverageValue() );
+//			trace( ">>> fps: " + _fps );
+		}
+
+		private function updateStats():void {
+			if( !CoreSettings.SHOW_STATS ) return;
+
+			_renderTimeStackUtil.pushValue( RenderGpuCommand.renderTime );
+			var renderTime:int = int( _renderTimeStackUtil.getAverageValue() );
+
+			_statsTextField.text = _fps + "/" + stage.frameRate + "fps \n" + "Render time: " + renderTime + "ms";
+		}
+
+		// ---------------------------------------------------------------------
+		// Listeners.
+		// ---------------------------------------------------------------------
+
+		private function onStageKeyDown( event:KeyboardEvent ):void {
+			switch( event.keyCode ) {
+				case Keyboard.M:
+				{
+					_memoryWarningNotification.dispatch();
+					break;
+				}
+				case Keyboard.SPACE:
+				{
+					_requestNavigationToggleSignal.dispatch();
+					break;
+				}
+			}
+		}
+
+		private function onMemoryWarning( event:NotificationExtensionEvent ):void {
+			trace( this, "*** WARNING *** - AS3 knows of an iOS memory warning." );
+			_memoryWarningNotification.dispatch();
+		}
+
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			initialize();
+		}
+
+		private function onShakeAndBakeConnected():void {
+			trace( this, "shake and bake connected" );
+			_shakeAndBakeInitialized = true;
+			_shakeAndBakeConnector = null;
+			checkInitialized();
+		}
+
+		private function onContext3dCreated( event:Event ):void {
+
+			trace( this, "context3d created: " + _stage3dProxy.context3D );
+			_stage3dProxy.removeEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated );
+
+			// TODO: listen for context loss?
+			// This simulates a context loss. A bit of googling shows that context loss on iPad is rare, but could be possible.
+			/*setTimeout( function():void {
+			 trace( "<<< CONTEXT3D LOSS TEST >>>" );
+			 _stage3D.context3D.dispose();
+			 }, 60000 );*/
+
+			if( !_stage3dInitialized ) {
+				_stage3dProxy.context3D.configureBackBuffer( stage.stageWidth, stage.stageHeight, CoreSettings.STAGE_3D_ANTI_ALIAS, true );
+				_stage3dProxy.context3D.enableErrorChecking = CoreSettings.STAGE_3D_ERROR_CHECKING;
+				// TODO: set stage3d props here like antialias, bg color, etc
+				_stage3dInitialized = true;
+				checkInitialized();
+			}
+		}
+
+		private function onEnterFrame( event:Event ):void {
+			update();
+		}
+
+		// ---------------------------------------------------------------------
+		// Getters.
+		// ---------------------------------------------------------------------
+
+		public function get injector():Injector {
+			return _injector;
 		}
 
 		// ---------------------------------------------------------------------
@@ -118,10 +220,12 @@ package net.psykosoft.psykopaint2.core
 		private function getXmlData():void {
 			_xmLoader = new XMLLoader();
 			var date:Date = new Date();
-			_xmLoader.loadAsset( "/core-packaged/app-data.xml?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() ), onVersionRetrieved );
+			_xmLoader.loadAsset( "/app-data.xml?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() ), onVersionRetrieved );
 		}
+
 		private function onVersionRetrieved( data:XML ):void {
 			CoreSettings.VERSION = data.version;
+			_xmLoader.dispose();
 			_xmLoader = null;
 		}
 
@@ -168,7 +272,7 @@ package net.psykosoft.psykopaint2.core
 			}
 
 			//adding this early on so it can be used for logging, too
-			PsykoSocket.init(CoreSettings.PSYKOSOCKET_IP);
+			PsykoSocket.init( CoreSettings.PSYKOSOCKET_IP );
 
 			trace( this, "initializing platform - " +
 					"running on iPad: " + CoreSettings.RUNNING_ON_iPAD + "," +
@@ -256,16 +360,23 @@ package net.psykosoft.psykopaint2.core
 			addEventListener( Event.ENTER_FRAME, onSplashEnterFrame );
 
 			// Notify.
-			moduleReadySignal.dispatch( _injector );
+			moduleReadySignal.dispatch();
 		}
 
 		private function onSplashEnterFrame( event:Event ):void {
 			var targetFPS:Number = 30;
-			trace( this, "waiting for frame rate to increase before removing splash screen - fps: " + _fps + ", expected: " + targetFPS );
+			trace( this, "waiting for frame rate to increase before removing splash screen - current fps: " + _fps + "/60, minimum: " + targetFPS );
 			if( !_splashScreenRemoved && _fps >= targetFPS ) {
+
 				trace( this, "--- SPLASH REMOVED ---" );
 				removeEventListener( Event.ENTER_FRAME, onSplashEnterFrame );
 				removeSplashScreen();
+
+				if( isStandalone ) {
+					// Show navigation.
+					var showNavigationSignal:RequestNavigationToggleSignal = injector.getInstance( RequestNavigationToggleSignal );
+					showNavigationSignal.dispatch();
+				}
 			}
 		}
 
@@ -275,110 +386,6 @@ package net.psykosoft.psykopaint2.core
 			_splashScreen = null;
 			_splashScreenRemoved = true;
 			splashScreenRemovedSignal.dispatch();
-		}
-
-		// ---------------------------------------------------------------------
-		// Interface.
-		// ---------------------------------------------------------------------
-
-		public function addModuleDisplay( child:DisplayObject ):void {
-			_coreRootView.addToMainLayer( child );
-		}
-
-		// ---------------------------------------------------------------------
-		// Loop.
-		// ---------------------------------------------------------------------
-
-		private function update():void {
-			if( !updateActive ) return;
-			_requestGpuRenderingSignal.dispatch();
-			evalFPS();
-			updateStats();
-		}
-
-		private function evalFPS():void {
-			var oldTime:Number = _time;
-			_time = getTimer();
-			_fps = 1000 / (_time - oldTime);
-			_fpsStackUtil.pushValue( _fps );
-			_fps = int( _fpsStackUtil.getAverageValue() );
-//			trace( ">>> fps: " + _fps );
-		}
-
-		private function updateStats():void {
-			if( !CoreSettings.SHOW_STATS ) return;
-
-			_renderTimeStackUtil.pushValue( RenderGpuCommand.renderTime );
-			var renderTime:int = int( _renderTimeStackUtil.getAverageValue() );
-
-			_statsTextField.text = _fps + "\n" + "Render time: " + renderTime + "ms";
-		}
-
-		// ---------------------------------------------------------------------
-		// Listeners.
-		// ---------------------------------------------------------------------
-
-		private function onStageKeyDown( event:KeyboardEvent ):void {
-			switch( event.keyCode ) {
-				case Keyboard.M: {
-					_memoryWarningNotification.dispatch();
-					break;
-				}
-				case Keyboard.SPACE: {
-					_requestNavigationToggleSignal.dispatch();
-					break;
-				}
-			}
-		}
-
-		private function onMemoryWarning( event:NotificationExtensionEvent ):void {
-			trace( this, "*** WARNING *** - AS3 knows of an iOS memory warning." );
-			_memoryWarningNotification.dispatch();
-		}
-
-		private function onAddedToStage( event:Event ):void {
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-			initialize();
-		}
-
-		private function onShakeAndBakeConnected():void {
-			trace( this, "shake and bake connected" );
-			_shakeAndBakeInitialized = true;
-			_shakeAndBakeConnector = null;
-			checkInitialized();
-		}
-
-		private function onContext3dCreated( event:Event ):void {
-
-			trace( this, "context3d created: " + _stage3dProxy.context3D );
-			_stage3dProxy.removeEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated );
-
-			// TODO: listen for context loss?
-			// This simulates a context loss. A bit of googling shows that context loss on iPad is rare, but could be possible.
-			/*setTimeout( function():void {
-			 trace( "<<< CONTEXT3D LOSS TEST >>>" );
-			 _stage3D.context3D.dispose();
-			 }, 60000 );*/
-
-			if( !_stage3dInitialized ) {
-				_stage3dProxy.context3D.configureBackBuffer( stage.stageWidth, stage.stageHeight, CoreSettings.STAGE_3D_ANTI_ALIAS, true );
-				_stage3dProxy.context3D.enableErrorChecking = CoreSettings.STAGE_3D_ERROR_CHECKING;
-				// TODO: set stage3d props here like antialias, bg color, etc
-				_stage3dInitialized = true;
-				checkInitialized();
-			}
-		}
-
-		private function onEnterFrame( event:Event ):void {
-			update();
-		}
-
-		// ---------------------------------------------------------------------
-		// Getters.
-		// ---------------------------------------------------------------------
-
-		public function get injector():Injector {
-			return _injector;
 		}
 	}
 }

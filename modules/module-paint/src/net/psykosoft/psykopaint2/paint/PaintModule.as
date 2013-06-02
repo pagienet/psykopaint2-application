@@ -2,13 +2,11 @@ package net.psykosoft.psykopaint2.paint
 {
 
 	import flash.events.Event;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
-	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
@@ -32,6 +30,15 @@ package net.psykosoft.psykopaint2.paint
 		}
 
 		// ---------------------------------------------------------------------
+		// Listeners.
+		// ---------------------------------------------------------------------
+
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			initialize();
+		}
+
+		// ---------------------------------------------------------------------
 		// Initialization.
 		// ---------------------------------------------------------------------
 
@@ -47,18 +54,18 @@ package net.psykosoft.psykopaint2.paint
 			}
 			else {
 				PaintSettings.isStandalone = false;
-				onCoreModuleReady( _coreModule.injector );
+				onCoreModuleReady();
 			}
 		}
 
-		private function onCoreModuleReady( coreInjector:Injector ):void {
-			trace( this, "core module is ready, injector: " + coreInjector );
+		private function onCoreModuleReady():void {
+			trace( this, "core module is ready, injector: " + _coreModule.injector );
 
 			// Init drawing core.
-			new DrawingCore( coreInjector );
+			new DrawingCore( _coreModule.injector );
 
 			// Initialize the paint module.
-			_paintConfig = new PaintConfig( coreInjector );
+			_paintConfig = new PaintConfig( _coreModule.injector );
 
 			// Init display tree for this module.
 			var rootView:PaintRootView = new PaintRootView();
@@ -84,15 +91,6 @@ package net.psykosoft.psykopaint2.paint
 				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
 				showNavigationSignal.dispatch();
 			}
-		}
-
-		// ---------------------------------------------------------------------
-		// Listeners.
-		// ---------------------------------------------------------------------
-
-		private function onAddedToStage( event:Event ):void {
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-			initialize();
 		}
 	}
 }

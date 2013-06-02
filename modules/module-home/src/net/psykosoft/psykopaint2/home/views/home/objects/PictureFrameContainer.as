@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		override public function dispose():void {
 
-			trace( this, "dispose()" );
+			trace( "dispose()" );
 
 			for( var i:uint; i < _wallFrames.length; i++ ) {
 				var frame:PictureFrame = _wallFrames[ i ];
@@ -51,10 +51,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				_atlasXml = null;
 			}
 
-			_framesTexture.dispose();
-			_framesTexture = null;
-			_frameMaterial.dispose();
-			_frameMaterial = null;
+//			_framesTexture.dispose();
+//			_framesTexture = null;
+//			_frameMaterial.dispose();
+//			_frameMaterial = null;
 
 			if( _easel ) {
 				_easel.dispose();

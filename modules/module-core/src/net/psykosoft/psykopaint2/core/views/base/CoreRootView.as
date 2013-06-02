@@ -3,13 +3,17 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.utils.Timer;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 
 	public class CoreRootView extends RootViewBase
@@ -49,22 +53,22 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		public function flashMemoryIcon():void {
 			if( !_memoryIconTimer ) {
-				_memoryIconTimer = new Timer( 1000, 1 );
+				_memoryIconTimer = new Timer( 5000, 1 );
 				_memoryIconTimer.addEventListener( TimerEvent.TIMER, onMemoryIconTimerTick );
 			}
 			if( !_memoryIcon ) {
 				_memoryIcon = new TextField();
 				_memoryIcon.selectable = _memoryIcon.mouseEnabled = false;
-				_memoryIcon.defaultTextFormat = new TextFormat( null, 72 );
-				_memoryIcon.text = "MEMORY WARNING";
+				_memoryIcon.scaleX = _memoryIcon.scaleY = ViewCore.globalScaling;
 				_memoryIcon.textColor = 0xFF0000;
-				_memoryIcon.width = _memoryIcon.textWidth;
-				_memoryIcon.height = _memoryIcon.textHeight;
-				_memoryIcon.x = ViewCore.globalScaling * ( 1024 / 2 - _memoryIcon.width / 2 );
-				_memoryIcon.y = ViewCore.globalScaling * ( 768 / 2 - _memoryIcon.height / 2 );
+				_memoryIcon.width = 200;
+				_memoryIcon.height = 25;
+				_memoryIcon.y = ViewCore.globalScaling * 40;
 				_frontLayer.addChild( _memoryIcon );
 			}
+			trace( this, "showing memory icon" );
 			_memoryWarningCount++;
+			_memoryIcon.text = "MEMORY WARNING: " + _memoryWarningCount;
 			_memoryIconTimer.start();
 			_memoryIcon.visible = true;
 		}
@@ -74,6 +78,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		// ---------------------------------------------------------------------
 
 		private function onMemoryIconTimerTick( event:TimerEvent ):void {
+			trace( this, "hiding memory icon" );
 			_memoryIconTimer.reset();
 			_memoryIcon.visible = false;
 		}

@@ -136,14 +136,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			trace( this, "dispose()" );
 
+//			_floorMaterial.texture.dispose();
+//			_floorMaterial.dispose();
 			_floor.dispose();
-			_floorMaterial.texture.dispose();
-			_floorMaterial.dispose();
 			_floor = null;
 
+//			_wallTexture.dispose();
+//			_wallMaterial.dispose();
 			_wall.dispose();
-			_wallTexture.dispose();
-			_wallMaterial.dispose();
 			_wall = null;
 
 			for( var i:uint; i < _shadows.length; i++ ) {
@@ -153,12 +153,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			}
 			_shadows = null;
 
+//			_shadowTexture.dispose();
+//			_shadowMaterial.dispose();
+			_shadowMaterial = null;
+
 			_shadowMesh.dispose();
 			_shadowMesh = null;
-
-			_shadowTexture.dispose();
-			_shadowMaterial.dispose();
-			_shadowMaterial = null;
 		}
 
 		// -----------------------
