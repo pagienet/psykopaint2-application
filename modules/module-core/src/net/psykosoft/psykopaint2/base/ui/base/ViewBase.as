@@ -14,11 +14,13 @@ package net.psykosoft.psykopaint2.base.ui.base
 		public var scalesToRetina:Boolean = true;
 
 		public var addedToStageSignal:Signal;
+		public var enabledSignal:Signal;
 
 		public function ViewBase() {
 			super();
 			trace( this, "constructor" );
 			addedToStageSignal = new Signal();
+			enabledSignal = new Signal();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			visible = false;
 		}
@@ -33,6 +35,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 			if( !_initialized ) setup();
 			onEnabled();
 			visible = true;
+			enabledSignal.dispatch();
 			if( autoUpdates && !hasEventListener( Event.ENTER_FRAME ) ) {
 				addEventListener( Event.ENTER_FRAME, onEnterFrame );
 			}

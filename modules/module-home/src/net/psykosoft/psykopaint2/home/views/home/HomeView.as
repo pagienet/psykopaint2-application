@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.base.Object3D;
 	import away3d.core.managers.Stage3DProxy;
 
+	import flash.display.BitmapData;
+
 	import flash.events.Event;
 	import flash.utils.setTimeout;
 
@@ -186,6 +188,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 
 			// TODO: review if memory is really freed up with Scout, it appears not, specially gpu memory
+		}
+
+		// ---------------------------------------------------------------------
+		// Interface.
+		// ---------------------------------------------------------------------
+
+		public function updateEasel( bmd:BitmapData ):void {
+			_frameContainer.updateEasel( bmd );
 		}
 
 		public function renderScene():void {

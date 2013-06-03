@@ -1,10 +1,15 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
+	import flash.display.BitmapData;
+	import flash.geom.Rectangle;
+
+	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
 
 	public class CanvasSubNavViewMediator extends MediatorBase
 	{
@@ -14,6 +19,14 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestClearCanvasSignal:RequestClearCanvasSignal;
 
+		[Inject]
+		public var notifyCanvasSnapshotSignal:NotifyCanvasSnapshotSignal;
+
+		[Inject]
+		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
+
+		private var _waitingForSnapshot:Boolean;
+
 		override public function initialize():void {
 
 			// Init.
@@ -22,6 +35,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
 			view.setButtonClickCallback( onButtonClicked );
+
+			// From app.
+			notifyCanvasSnapshotSignal.add( onCanvasSnapshotRetrieved );
 		}
 
 		private function onButtonClicked( label:String ):void {
@@ -35,7 +51,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 				case CanvasSubNavView.LBL_HOME: {
-					requestStateChange( StateType.STATE_HOME );
+					navigateToHomeWithSnapshot();
 					break;
 				}
 				case CanvasSubNavView.LBL_CLEAR: {
@@ -43,6 +59,24 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 			}
+		}
+
+		private function navigateToHomeWithSnapshot():void {
+			trace( this, "requesting canvas snapshot..." );
+
+			// Request a snapshot from the core and wait for it.
+			// Before changing state.
+			_waitingForSnapshot = true;
+			requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, view.stage.stageWidth, view.stage.stageHeight ) );
+			RenderGpuCommand.snapshotRequested = true;
+		}
+
+		private function onCanvasSnapshotRetrieved( bmd:BitmapData ):void {
+			if( !_waitingForSnapshot ) return;
+			trace( this, "snapshot retrieved, changing state" );
+			requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, view.stage.stageWidth, view.stage.stageHeight * 0.76 ) );
+			_waitingForSnapshot = false;
+			requestStateChange( StateType.STATE_HOME );
 		}
 	}
 }

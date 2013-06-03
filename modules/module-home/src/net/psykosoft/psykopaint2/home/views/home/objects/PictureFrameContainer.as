@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import flash.display.BitmapData;
 
+	import flash.display.BitmapData;
+
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.vos.FrameTextureAtlasDescriptorVO;
 
@@ -129,7 +131,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			var squeeze:Number = 0.25;
 
-			_easel = new Easel( BulkLoader.getLoader( "homeView" ).getBitmapData( "easelImage", true ), _view );
+			var initEaselPic:BitmapData = new BitmapData( 1024, 768, false, 0xCCCCCC );
+			_easel = new Easel(
+					initEaselPic,
+					BulkLoader.getLoader( "homeView" ).getBitmapData( "easelImage", true ), _view // frame image
+			);
 //			_easel.visible = false;
 
 			_easel.x = _positioningOffset + squeeze * _easel.width / 2;
@@ -185,6 +191,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// Initial frame.
 			_cameraController.jumpToSnapPointIndex( 2 );
 
+		}
+
+		public function updateEasel( bmd:BitmapData ):void {
+			_easel.updateImage( bmd );
 		}
 	}
 }

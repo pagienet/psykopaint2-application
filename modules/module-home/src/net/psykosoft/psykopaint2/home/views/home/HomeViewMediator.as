@@ -1,19 +1,18 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 
-	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
-
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
-
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class HomeViewMediator extends MediatorBase
@@ -37,6 +36,9 @@ package net.psykosoft.psykopaint2.home.views.home
 //		public var notifyFocusedPaintingChangedSignal:RequestActivePaintingChangeSignal;
 
 		[Inject]
+		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotSignal;
+
+		[Inject]
 		public var stage3dProxy:Stage3DProxy;
 
 		override public function initialize():void {
@@ -56,6 +58,7 @@ package net.psykosoft.psykopaint2.home.views.home
 //			notifyWallpaperChangeSignal.add( onWallPaperChanged );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyNavigationToggleSignal.add( onNavigationToggled );
+			notifyCanvasBitmapSignal.add( onCanvasBitmapReceived );
 
 			// From view.
 //			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
@@ -104,6 +107,13 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onCanvasBitmapReceived( bmd:BitmapData ):void {
+			trace( this, "retrieved canvas bitmap: " + bmd );
+//			view.addChild( new Bitmap( bmd ) );
+			view.updateEasel( bmd );
+			// TODO: cant we just pass the back buffer texture from canvas model to the easel's material? why do we need a bitmap?
+		}
 
 		private function onNavigationToggled( shown:Boolean ):void {
 			if( !view.visible ) return;

@@ -23,12 +23,12 @@ package net.psykosoft.psykopaint2.base.utils
 
 			// Remember original image and safe image dimensions.
 			var imageDimensions:Point = new Point( image.width, image.height );
-			image.dispose();
 			var textureDimensions:Point = new Point( safeImage.width, safeImage.height );
 
 			// Create texture from image.
 			var texture:BitmapTexture = new BitmapTexture( safeImage );
 			texture.getTextureForStage3D( stage3dProxy ); // Force image creation before the disposal of the bitmap data.
+			image.dispose();
 			safeImage.dispose();
 
 			// Create material.

@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
@@ -19,8 +18,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyExpensiveUiActionToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestStateUpdateFromModuleActivationSignal;
 
@@ -92,6 +91,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyNavigationToggledSignal.add( onNavigationToggled );
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 		}
+
+		// -----------------------
+		// Rendering.
+		// -----------------------
 
 		private function paintModulePreRenderingStep():void {
 			if( !view.visible ) return;
