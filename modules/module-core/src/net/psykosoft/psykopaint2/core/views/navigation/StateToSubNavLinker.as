@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
-	import com.junkbyte.console.Cc;
-
 	import flash.utils.Dictionary;
 
 	public class StateToSubNavLinker

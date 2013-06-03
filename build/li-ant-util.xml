@@ -6,6 +6,7 @@
 	<!-- **************************************** -->
 
 	<property name="debug" value="true"/>
+	<property name="inline" value=""/> <!-- '-inline' or '' -->
 
 	<property name="rootDir" value="../../../workspaces/psykopaint2-official"/>
 
@@ -93,19 +94,19 @@
 
 		<xmltask source="${appPath}" dest="${appPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} -inline"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline}"/>
 		</xmltask>
 		<xmltask source="${corePath}" dest="${corePath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} -inline"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline}"/>
 		</xmltask>
 		<xmltask source="${paintPath}" dest="${paintPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} -inline"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline}"/>
 		</xmltask>
 		<xmltask source="${homePath}" dest="${homePath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} -inline"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline}"/>
 		</xmltask>
 	</target>
 

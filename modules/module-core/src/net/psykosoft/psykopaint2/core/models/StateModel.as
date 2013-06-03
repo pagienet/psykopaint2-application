@@ -1,10 +1,7 @@
 package net.psykosoft.psykopaint2.core.models
 {
-
-	import com.junkbyte.console.Cc;
-
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.base.utils.StateStack;
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyStateChangeSignal;
 
 	public class StateModel
 	{
