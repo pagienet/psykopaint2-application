@@ -14,9 +14,11 @@ package net.psykosoft.psykopaint2.core
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.events.UncaughtErrorEvent;
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
@@ -58,6 +60,7 @@ package net.psykosoft.psykopaint2.core
 		private var _time:Number = 0;
 		private var _statsTextField:TextField;
 		private var _versionTextField:TextField;
+		private var _errorsTextField:TextField;
 		private var _fpsStackUtil:StackUtil;
 		private var _renderTimeStackUtil:StackUtil;
 		private var _stage3dProxy:Stage3DProxy;
@@ -71,6 +74,7 @@ package net.psykosoft.psykopaint2.core
 		private var _backLayer:Sprite;
 		private var _fps:Number = 0;
 		private var _splashScreenRemoved:Boolean;
+		private var _errorCount:uint;
 
 		public var updateActive:Boolean = true;
 
@@ -182,6 +186,12 @@ package net.psykosoft.psykopaint2.core
 			update();
 		}
 
+		private function onGlobalError( event:UncaughtErrorEvent ):void {
+			_errorCount++;
+			_errorsTextField.htmlText += "<font color='#FF0000'><b>RUNTIME ERROR - " + _errorCount + "</b></font>: " + event.error + "<br>";
+			_errorsTextField.visible = true;
+		}
+
 		// ---------------------------------------------------------------------
 		// Getters.
 		// ---------------------------------------------------------------------
@@ -240,19 +250,35 @@ package net.psykosoft.psykopaint2.core
 			_statsTextField.width = 200;
 			_statsTextField.selectable = false;
 			_statsTextField.mouseEnabled = false;
-			_statsTextField.scaleX = _statsTextField.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
+			_statsTextField.scaleX = _statsTextField.scaleY = ViewCore.globalScaling;
 			_backLayer.addChild( _statsTextField );
 		}
 
 		private function initVersionDisplay():void {
-			if( !CoreSettings.SHOW_VERSION ) return;
-			_versionTextField = new TextField();
-			_versionTextField.scaleX = _versionTextField.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
-			_versionTextField.width = 200;
-			_versionTextField.mouseEnabled = _versionTextField.selectable = false;
-			_versionTextField.text = CoreSettings.NAME + ", version: " + CoreSettings.VERSION;
-			_versionTextField.y = ViewCore.globalScaling * 25;
-			_backLayer.addChild( _versionTextField );
+			if( CoreSettings.SHOW_VERSION ) {
+				_versionTextField = new TextField();
+				_versionTextField.scaleX = _versionTextField.scaleY = ViewCore.globalScaling;
+				_versionTextField.width = 200;
+				_versionTextField.mouseEnabled = _versionTextField.selectable = false;
+				_versionTextField.text = CoreSettings.NAME + ", version: " + CoreSettings.VERSION;
+				_versionTextField.y = ViewCore.globalScaling * 25;
+				_backLayer.addChild( _versionTextField );
+			}
+			if( CoreSettings.SHOW_ERRORS ) {
+				loaderInfo.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onGlobalError );
+				_errorsTextField = new TextField();
+				_errorsTextField.scaleX = _errorsTextField.scaleY = ViewCore.globalScaling;
+				_errorsTextField.width = 520 * ViewCore.globalScaling;
+				_errorsTextField.height = 250 * ViewCore.globalScaling;
+				_errorsTextField.x = ( 1024 - 520 - 1 ) * ViewCore.globalScaling;
+				_errorsTextField.y = ViewCore.globalScaling;
+				_errorsTextField.border = true;
+				_errorsTextField.borderColor = 0xFF0000;
+				_errorsTextField.multiline = true;
+				_errorsTextField.wordWrap = true;
+				_errorsTextField.visible = false;
+				_backLayer.addChild( _errorsTextField );
+			}
 		}
 
 		private function initDebugging():void {

@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.core.config
 		// TODO: add a "force release" master switch boolean that automatically changes all these
 		public static const SHOW_STATS:Boolean = true; /*false on release*/
 		public static const SHOW_VERSION:Boolean = true; /*false on release*/
+		public static const SHOW_ERRORS:Boolean = true; /*false on release*/
 		public static const STAGE_3D_ERROR_CHECKING:Boolean = false; /*false on release*/
 		public static const DEBUG_RENDER_SEQUENCE:Boolean = false; /*false on release*/
 		public static const USE_DEBUG_KEYS:Boolean = true; /*false on release*/
