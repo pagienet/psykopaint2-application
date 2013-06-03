@@ -188,7 +188,9 @@ package net.psykosoft.psykopaint2.core
 
 		private function onGlobalError( event:UncaughtErrorEvent ):void {
 			_errorCount++;
-			_errorsTextField.htmlText += "<font color='#FF0000'><b>RUNTIME ERROR - " + _errorCount + "</b></font>: " + event.error + "<br>";
+			var error:Error = Error( event.error );
+			var stack:String = error.getStackTrace();
+			_errorsTextField.htmlText += "<font color='#FF0000'><b>RUNTIME ERROR - " + _errorCount + "</b></font>: " + error + " - stack: " + stack + "<br>";
 			_errorsTextField.visible = true;
 		}
 
