@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.core
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.UncaughtErrorEvent;
+	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
@@ -226,7 +227,9 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function getSplashScreen():void {
-			_frontLayer.addChild( _splashScreen = new SplashImageAsset() );
+			_splashScreen = new SplashImageAsset();
+			_splashScreen.transform.colorTransform = new ColorTransform( 0, 0, 1 );
+			_frontLayer.addChild( _splashScreen );
 			_splashScreen.scaleX = _splashScreen.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1 : 0.5;
 		}
 
