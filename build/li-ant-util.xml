@@ -6,7 +6,7 @@
 	<!-- **************************************** -->
 
 	<property name="debug" value="true"/>
-	<property name="inline" value="-inline"/> <!-- '-inline' or '' -->
+	<property name="inline" value=""/> <!-- '-inline' or '' -->
 
 	<property name="rootDir" value="../../../workspaces/psykopaint2-official"/>
 
