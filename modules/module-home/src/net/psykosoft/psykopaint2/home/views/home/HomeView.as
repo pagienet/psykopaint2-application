@@ -6,13 +6,10 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.managers.Stage3DProxy;
 
 	import flash.display.BitmapData;
-
 	import flash.events.Event;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
-	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.base.utils.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;

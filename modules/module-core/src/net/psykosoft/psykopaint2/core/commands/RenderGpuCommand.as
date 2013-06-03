@@ -6,7 +6,10 @@ package net.psykosoft.psykopaint2.core.commands
 	import flash.display.BitmapData;
 
 	import flash.display3D.Context3D;
+	import flash.geom.Matrix;
 	import flash.utils.getTimer;
+
+	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
@@ -60,10 +63,15 @@ package net.psykosoft.psykopaint2.core.commands
 
 			if( snapshotRequested ) {
 				trace( this, "taking snapshot ------------------------------"  );
-				trace( this, "proxy dims: " + stage3DProxy.width + "x" + stage3DProxy.height );
-				// TODO: apply proper dimensions
-				var bmd:BitmapData = new BitmapData( stage3DProxy.width, stage3DProxy.height, true, 0 );
+				var bmd:BitmapData = new BitmapData( ViewCore.globalScaling * stage3DProxy.width, ViewCore.globalScaling * stage3DProxy.height, true, 0 );
 				stage3DProxy.context3D.drawToBitmapData( bmd );
+				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
+					var matrix:Matrix = new Matrix();
+					matrix.scale( 0.5, 0.5 );
+					var scaledDownBmd:BitmapData = new BitmapData( stage3DProxy.width, stage3DProxy.height, false, 0 );
+					scaledDownBmd.draw( bmd, matrix );
+					bmd = scaledDownBmd;
+				}
 				notifyCanvasBitmapSignal.dispatch( bmd );
 				snapshotRequested = false;
 			}

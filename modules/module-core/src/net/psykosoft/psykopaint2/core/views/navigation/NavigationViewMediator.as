@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
+	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyExpensiveUiActionToggledSignal;
@@ -98,6 +99,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			// Evaluate a sub-nav change.
 			var cl:Class = StateToSubNavLinker.getSubNavClassForState( newState );
 			view.updateSubNavigation( cl );
+
+			// TODO: remove
+			if( !( newState == StateType.STATE_HOME || newState == StateType.STATE_IDLE || newState == StateType.STATE_PAINT ) ) {
+				view.tempMessage.visible = false;
+			}
 		}
 	}
 }

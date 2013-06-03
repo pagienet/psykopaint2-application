@@ -20,12 +20,12 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onButtonClicked( label:String ):void {
-			switch( label ) {
+			/*switch( label ) {
 				case HomeSubNavView.LBL_PAINT: {
 					requestStateChange( StateType.STATE_PAINT );
 					break;
 				}
-			}
+			}*/
 		}
 	}
 }

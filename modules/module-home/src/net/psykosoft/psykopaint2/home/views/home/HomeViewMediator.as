@@ -5,14 +5,18 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
+	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.requests.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class HomeViewMediator extends MediatorBase
@@ -20,8 +24,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var view:HomeView;
 
-//		[Inject]
-//		public var stateModel:StateModel;
+		[Inject]
+		public var stateModel:StateModel;
 
 //		[Inject]
 //		public var notifyWallpaperChangeSignal:NotifyWallpaperChangeSignal;
@@ -41,12 +45,19 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var stage3dProxy:Stage3DProxy;
 
+		[Inject]
+		public var notifyZoomCompleteSignal:NotifyZoomCompleteSignal;
+
+		[Inject]
+		public var requestZoomToggleSignal:RequestZoomToggleSignal;
+
 		override public function initialize():void {
 
 			// Init.
 			super.initialize();
 			registerView( view );
 			registerEnablingState( StateType.STATE_HOME );
+			registerEnablingState( StateType.STATE_HOME_ON_EASEL );
 			registerEnablingState( StateType.STATE_HOME_ON_PAINTING );
 			registerEnablingState( StateType.STATE_HOME_SETTINGS );
 			view.stage3dProxy = stage3dProxy;
@@ -59,54 +70,87 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyNavigationToggleSignal.add( onNavigationToggled );
 			notifyCanvasBitmapSignal.add( onCanvasBitmapReceived );
+			requestZoomToggleSignal.add( onZoomRequested );
 
 			// From view.
-//			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
+			view.enabledSignal.add( onViewEnabled );
+			view.setupSignal.add( onViewSetup );
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
 
+		private function onViewSetup():void {
+			// TODO: will cause trouble if view was disposed by a memory warning and the listener is set up again...
+			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
+			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
+		}
+
+		private function onViewEnabled():void {
+			if( view.cameraController.zoomedIn ) {
+				setTimeout( function():void { // TODO: review time out - ipad seems to need it for animation to be visible when coming from the paint state
+					view.cameraController.zoomOut();
+				}, 1000 );
+			}
+		}
+
+		private function onCameraZoomComplete():void {
+			notifyZoomCompleteSignal.dispatch();
+		}
+
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
 
-//			trace( this, "closest painting changed to index: " + paintingIndex );
-/*
+			trace( this, "closest painting changed to index: " + paintingIndex );
 			// Trigger settings state if closest to settings painting ( index 0 ).
-			if( stateModel.currentState.name != ApplicationStateType.SETTINGS && paintingIndex == 0 ) {
-				requestStateChange( new StateVO( ApplicationStateType.SETTINGS ) );
+			// TODO: implement settings sub-nav
+			if( stateModel.currentState != StateType.STATE_HOME && paintingIndex == 0 ) {
+				requestStateChange( StateType.STATE_HOME );
 				return;
 			}
 
 			// Trigger new painting state if closest to easel ( index 1 ).
-			if( stateModel.currentState.name != ApplicationStateType.PAINTING && paintingIndex == 1 ) {
-				requestStateChange( new StateVO( ApplicationStateType.PAINTING ) );
+			if( stateModel.currentState != StateType.STATE_HOME_ON_EASEL && paintingIndex == 1 ) {
+				requestStateChange( StateType.STATE_HOME_ON_EASEL );
 				return;
 			}
 
 			// Restore home state if closest to home painting ( index 2 ).
-			if( stateModel.currentState.name != ApplicationStateType.HOME_SCREEN && paintingIndex == 2 ) {
-				requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN ) );
+			if( stateModel.currentState != StateType.STATE_HOME && paintingIndex == 2 ) {
+				requestStateChange( StateType.STATE_HOME );
 				return;
 			}
 
 			// Trigger home-painting state otherwise.
 			// TODO: use proper names
+			// TODO: implement painting sub-nav
 			var temporaryPaintingNames:Array = [ "house on country side", "digital cowboy", "microcosmos", "patio", "jesse", "flower spots", "beautiful danger" ];
 			if( paintingIndex > 2 ) {
 
-				if( stateModel.currentState.name != ApplicationStateType.HOME_SCREEN_ON_PAINTING ) {
-					requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN_ON_PAINTING ) );
+				// TODO: delete this bit
+				if( stateModel.currentState != StateType.STATE_HOME ) {
+					requestStateChange( StateType.STATE_HOME );
+					return;
 				}
 
-				var temporaryPaintingName:String = temporaryPaintingNames[ paintingIndex - 3 ];
-				notifyFocusedPaintingChangedSignal.dispatch( temporaryPaintingName );
-			}*/
+				/*if( stateModel.currentState.name != ApplicationStateType.HOME_SCREEN_ON_PAINTING ) {
+					requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN_ON_PAINTING ) );
+				}*/
+
+//				var temporaryPaintingName:String = temporaryPaintingNames[ paintingIndex - 3 ];
+//				notifyFocusedPaintingChangedSignal.dispatch( temporaryPaintingName );
+			}
 		}
 
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onZoomRequested( zoomIn:Boolean ):void {
+			if( !view.visible ) return;
+			if( zoomIn ) view.cameraController.zoomIn();
+			else view.cameraController.zoomOut();
+		}
 
 		private function onCanvasBitmapReceived( bmd:BitmapData ):void {
 			trace( this, "retrieved canvas bitmap: " + bmd );

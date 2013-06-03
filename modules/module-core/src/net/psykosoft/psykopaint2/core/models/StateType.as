@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.models
 		public static const STATE_PREVIOUS:String = "state/previous";
 
 		public static const STATE_HOME:String = "state/home";
+		public static const STATE_HOME_ON_EASEL:String = "state/home/on_easel";
 		public static const STATE_HOME_ON_PAINTING:String = "state/home/on_painting";
 		public static const STATE_HOME_SETTINGS:String = "state/home/settings";
 

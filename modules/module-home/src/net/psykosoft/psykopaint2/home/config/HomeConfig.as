@@ -1,12 +1,12 @@
 package net.psykosoft.psykopaint2.home.config
 {
 
-	import away3d.containers.View3D;
-
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeViewMediator;
+	import net.psykosoft.psykopaint2.home.views.home.NewPaintingSubNavView;
+	import net.psykosoft.psykopaint2.home.views.home.NewPaintingSubNavViewMediator;
 
 	import org.swiftsuspenders.Injector;
 
@@ -85,6 +85,7 @@ package net.psykosoft.psykopaint2.home.config
 
 		private function mapMediators():void {
 			_mediatorMap.map( HomeView ).toMediator( HomeViewMediator );
+			_mediatorMap.map( NewPaintingSubNavView ).toMediator( NewPaintingSubNavViewMediator );
 			_mediatorMap.map( HomeSubNavView ).toMediator( HomeSubNavViewMediator );
 		}
 	}

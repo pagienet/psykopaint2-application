@@ -31,14 +31,19 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		private var _stageWidth:Number;
 		private var _stageHeight:Number;
 		private var _isScrollingLimited:Boolean = true;
+		private var _zoomedIn:Boolean;
 
 		public var isActive:Boolean = true;
 
 		private const TARGET_EASE_FACTOR:Number = 0.5;
 
+		public var zoomCompleteSignal:Signal;
+
 		public function ScrollCameraController( camera:Camera3D, target:Object3D, stage:Stage ) {
 
 			super();
+
+			zoomCompleteSignal = new Signal();
 
 			_camera = camera;
 			_cameraTarget = target;
@@ -61,17 +66,23 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		}
 
 		public function zoomIn():void {
+			_zoomedIn = true;
 			TweenLite.killTweensOf( _cameraTarget );
 			TweenLite.killTweensOf( _camera );
 			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_IN_Y, ease:Expo.easeInOut } );
-			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_IN_Y, z: HomeSettings.CAMERA_ZOOM_IN_Z, ease:Expo.easeInOut } );
+			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_IN_Y, z: HomeSettings.CAMERA_ZOOM_IN_Z, ease:Expo.easeInOut, onComplete:onZoomComplete } );
 		}
 
 		public function zoomOut():void {
+			_zoomedIn = false;
 			TweenLite.killTweensOf( _cameraTarget );
 			TweenLite.killTweensOf( _camera );
 			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, ease:Expo.easeInOut } );
-			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, z: HomeSettings.CAMERA_ZOOM_OUT_Z, ease:Expo.easeInOut } );
+			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, z: HomeSettings.CAMERA_ZOOM_OUT_Z, ease:Expo.easeInOut, onComplete:onZoomComplete } );
+		}
+
+		private function onZoomComplete():void {
+			zoomCompleteSignal.dispatch();
 		}
 
 		public function limitInteractionToUpperPartOfTheScreen( value:Boolean ):void {
@@ -164,6 +175,10 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 		public function get closestSnapPointChangedSignal():Signal {
 			return _positionManager.closestSnapPointChangedSignal;
+		}
+
+		public function get zoomedIn():Boolean {
+			return _zoomedIn;
 		}
 	}
 }

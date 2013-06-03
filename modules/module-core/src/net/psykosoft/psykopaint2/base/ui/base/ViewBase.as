@@ -15,12 +15,14 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 		public var addedToStageSignal:Signal;
 		public var enabledSignal:Signal;
+		public var setupSignal:Signal;
 
 		public function ViewBase() {
 			super();
 			trace( this, "constructor" );
 			addedToStageSignal = new Signal();
 			enabledSignal = new Signal();
+			setupSignal = new Signal();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			visible = false;
 		}
@@ -87,6 +89,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 		private function setup():void {
 			trace( this, "setup" );
 			onSetup();
+			setupSignal.dispatch();
 			_initialized = true;
 		}
 
