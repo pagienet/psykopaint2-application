@@ -320,8 +320,8 @@ package net.psykosoft.psykopaint2.core
 			var stage3dManager:Stage3DManager = Stage3DManager.getInstance( stage );
 			_stage3dProxy = stage3dManager.getFreeStage3DProxy();
 			trace( this, "stage3d size: " + stage.stageWidth + ", " + stage.stageHeight );
-			_stage3dProxy.width = stage.stageWidth;
-			_stage3dProxy.height = stage.stageHeight;
+			_stage3dProxy.width = 1024;
+			_stage3dProxy.height = 768;
 			_stage3d = _stage3dProxy.stage3D;
 			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContext3dCreated );
 //			_stage3d = stage.stage3Ds[ 0 ];
