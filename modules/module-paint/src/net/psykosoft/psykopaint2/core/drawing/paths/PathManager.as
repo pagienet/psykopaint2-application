@@ -112,7 +112,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		public function set brushAngleRange( value:Number ):void
 		{
-			trace( this + "value: " + value + ", previous: " + _brushAngleRange );
 			_brushAngleRange = value;
 		}
 		
