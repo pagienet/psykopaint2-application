@@ -22,6 +22,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
+	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
@@ -283,15 +284,18 @@ package net.psykosoft.psykopaint2.core
 			stage.align = StageAlign.TOP_LEFT;
 			stage.frameRate = 60;
 			stage.quality = StageQuality.LOW; // Note: On Desktop, the quality will be set to a lowest value of HIGH.
-			trace( this, "initializing stage - dimensions: " + stage.stageWidth + "x" + stage.stageHeight );
+			stage.stageWidth = ViewCore.globalScaling * 1024;
+			stage.stageHeight = ViewCore.globalScaling * 768;
+//			trace( this, "initializing stage - dimensions: " + stage.stageWidth + "x" + stage.stageHeight );
 		}
 
 		private function initStage3dASync():void {
 			trace( this, "initializing stage3d..." );
 			var stage3dManager:Stage3DManager = Stage3DManager.getInstance( stage );
 			_stage3dProxy = stage3dManager.getFreeStage3DProxy();
-			_stage3dProxy.width = 1024;
-			_stage3dProxy.height = 768;
+			trace( this, "stage3d size: " + stage.stageWidth + ", " + stage.stageHeight );
+			_stage3dProxy.width = stage.stageWidth;
+			_stage3dProxy.height = stage.stageHeight;
 			_stage3d = _stage3dProxy.stage3D;
 			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContext3dCreated );
 //			_stage3d = stage.stage3Ds[ 0 ];

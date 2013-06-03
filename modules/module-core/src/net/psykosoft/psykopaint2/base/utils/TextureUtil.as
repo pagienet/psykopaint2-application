@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.base.utils
 {
 
-	import away3d.core.base.CompactSubGeometry;
 	import away3d.core.base.SubGeometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;

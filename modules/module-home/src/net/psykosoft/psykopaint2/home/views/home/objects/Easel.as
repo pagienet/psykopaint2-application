@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.CubeGeometry;
-	import away3d.textures.BitmapTexture;
 
 	import flash.display.BitmapData;
 
@@ -41,7 +40,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Init frame mesh.
 			var frameGeometry:CubeGeometry = new CubeGeometry( 1024, 768, 25 ); // TODO: must adapt to the size of the canvas
-			var frameMaterial:ColorMaterial = new ColorMaterial( 0xFFFFFF, 1 );
+			var frameMaterial:ColorMaterial = new ColorMaterial( 0x333333, 1 );
 			_frameMesh = new Mesh( frameGeometry, frameMaterial );
 			_frameMesh.y = 768 / 2 - 155; // TODO: must adapt to the size of the canvas
 			_frameMesh.z = -25;
@@ -49,7 +48,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Init picture mesh.
 			var pictureDummyImage:BitmapData = new BitmapData( frameGeometry.width, frameGeometry.height, false, 0 );
-			pictureDummyImage.perlinNoise( 50, 50, 8, 1, false, true, 7, true );
+			pictureDummyImage.perlinNoise( 512, 512, 8, 1, false, true, 7, false );
 			_pictureMesh = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( pictureDummyImage, view.stage3DProxy );
 			_pictureMesh.rotationX = -90;
 			_pictureMesh.y = _frameMesh.y;

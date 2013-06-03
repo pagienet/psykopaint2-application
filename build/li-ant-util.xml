@@ -5,7 +5,7 @@
 	<!-- properties -->
 	<!-- **************************************** -->
 
-	<property name="debug" value="true"/>
+	<property name="debug" value="false"/>
 
 	<property name="rootDir" value="../../../workspaces/psykopaint2-official"/>
 

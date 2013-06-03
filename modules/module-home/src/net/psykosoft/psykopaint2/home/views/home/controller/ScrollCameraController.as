@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_interactionManager = new ScrollInteractionManager( _positionManager );
 			_interactionManager.stage = stage;
 
-			_interactionManager.throwInputMultiplier = 3;
+			_interactionManager.throwInputMultiplier = 2;
 
 			_positionManager.frictionFactor = 0.9;
 			_positionManager.minimumThrowingSpeed = 175;
