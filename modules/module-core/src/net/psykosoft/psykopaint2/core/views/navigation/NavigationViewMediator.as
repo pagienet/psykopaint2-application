@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
 
 		[Inject]
-		public var requestExpensiveUiActionReactionSignal:NotifyExpensiveUiActionToggledSignal;
+		public var notifyExpensiveUiActionToggledSignal:NotifyExpensiveUiActionToggledSignal;
 
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
@@ -39,6 +39,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			// From view.
 			view.shownSignal.add( onViewShown );
+			view.showingSignal.add( onViewShowing );
+			view.hiddenSignal.add( onViewHidden );
 			view.hidingSignal.add( onViewHiding );
 			view.scrollingStartedSignal.add( onViewScrollingStarted );
 			view.scrollingEndedSignal.add( onViewScrollingEnded );
@@ -49,18 +51,28 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// -----------------------
 
 		private function onViewScrollingEnded():void {
-			requestExpensiveUiActionReactionSignal.dispatch( false, "nav-scrolling" );
+			notifyExpensiveUiActionToggledSignal.dispatch( false, "nav-scrolling" );
 		}
 
 		private function onViewScrollingStarted():void {
-			requestExpensiveUiActionReactionSignal.dispatch( true, "nav-scrolling" );
+			notifyExpensiveUiActionToggledSignal.dispatch( true, "nav-scrolling" );
 		}
 
 		private function onViewHiding():void {
+			notifyExpensiveUiActionToggledSignal.dispatch( true, "nav-hiding" );
 			notifyNavigationToggledSignal.dispatch( false );
 		}
 
+		private function onViewHidden():void {
+			notifyExpensiveUiActionToggledSignal.dispatch( false, "nav-hiding" );
+		}
+
+		private function onViewShowing():void {
+			notifyExpensiveUiActionToggledSignal.dispatch( true, "nav-showing" );
+		}
+
 		private function onViewShown():void {
+			notifyExpensiveUiActionToggledSignal.dispatch( false, "nav-showing" );
 			notifyNavigationToggledSignal.dispatch( true );
 		}
 

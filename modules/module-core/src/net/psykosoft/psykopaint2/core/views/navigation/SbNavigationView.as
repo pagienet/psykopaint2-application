@@ -45,7 +45,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public var buttonClickedCallback:Function;
 		public var shownSignal:Signal;
+		public var showingSignal:Signal;
 		public var hidingSignal:Signal;
+		public var hiddenSignal:Signal;
 		public var scrollingStartedSignal:Signal;
 		public var scrollingEndedSignal:Signal;
 
@@ -53,6 +55,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			super();
 			shownSignal = new Signal();
 			hidingSignal = new Signal();
+			showingSignal = new Signal();
+			hiddenSignal = new Signal();
 			scrollingStartedSignal = new Signal();
 			scrollingEndedSignal = new Signal();
 			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbButton;
@@ -112,15 +116,25 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, time, { y: BG_HEIGHT + 50, onComplete: onHideAnimatedComplete, ease:Expo.easeInOut } );
 		}
+		private function onHideAnimatedComplete():void {
+			hiddenSignal.dispatch();
+			this.visible = false;
+			_animating = false;
+		}
 
 		public function show():void {
 			if( _animating ) return;
 			if( _showing ) return;
 			_showing = true;
 			_animating = true;
+			showingSignal.dispatch();
 			this.visible = true;
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 0.5, { y: 0, onComplete: onShowAnimatedComplete, ease:Expo.easeInOut } );
+		}
+		private function onShowAnimatedComplete():void {
+			_animating = false;
+			shownSignal.dispatch();
 		}
 
 		public function updateSubNavigation( subNavType:Class ):void {
@@ -317,16 +331,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onCenterScrollerMotionStart():void {
 			scrollingStartedSignal.dispatch();
-		}
-
-		private function onShowAnimatedComplete():void {
-			_animating = false;
-			shownSignal.dispatch();
-		}
-
-		private function onHideAnimatedComplete():void {
-			this.visible = false;
-			_animating = false;
 		}
 	}
 }

@@ -118,8 +118,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function onExpensiveUiTask( started:Boolean, id:String ):void {
 			// TODO: analyze id properly to manage activity queues...
-			if( started ) requestFreezeRenderingSignal.dispatch();
-			else requestResumeRenderingSignal.dispatch();
+			trace( this, "onExpensiveUiTask - task started: " + started + ", task id: " + id );
+			if( started ) {
+				trace( this, "requesting rendering freeze" );
+				requestFreezeRenderingSignal.dispatch();
+			}
+			else {
+				trace( this, "requesting rendering resume" );
+				requestResumeRenderingSignal.dispatch();
+			}
 		}
 
 		private function onNavigationToggled( navVisible:Boolean ):void {
