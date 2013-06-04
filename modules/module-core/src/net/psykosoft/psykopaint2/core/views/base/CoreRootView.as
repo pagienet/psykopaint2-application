@@ -3,17 +3,12 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.text.TextField;
-	import flash.text.TextFormat;
 	import flash.utils.Timer;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 
 	public class CoreRootView extends RootViewBase
@@ -66,7 +61,6 @@ package net.psykosoft.psykopaint2.core.views.base
 				_memoryIcon.y = ViewCore.globalScaling * 40;
 				_frontLayer.addChild( _memoryIcon );
 			}
-			trace( this, "showing memory icon" );
 			_memoryWarningCount++;
 			_memoryIcon.text = "MEMORY WARNING: " + _memoryWarningCount;
 			_memoryIconTimer.start();
@@ -78,7 +72,6 @@ package net.psykosoft.psykopaint2.core.views.base
 		// ---------------------------------------------------------------------
 
 		private function onMemoryIconTimerTick( event:TimerEvent ):void {
-			trace( this, "hiding memory icon" );
 			_memoryIconTimer.reset();
 			_memoryIcon.visible = false;
 		}
