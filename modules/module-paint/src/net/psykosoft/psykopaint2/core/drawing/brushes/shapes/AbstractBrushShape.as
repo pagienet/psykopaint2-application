@@ -125,7 +125,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		protected function uploadHeightMap(heightMap : Texture) : void
 		{
-			throw new AbstractMethodError();
 		}
 
 		protected function uploadBrushTexture(texture : Texture) : void

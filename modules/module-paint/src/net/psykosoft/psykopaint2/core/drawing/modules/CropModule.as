@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.core.drawing.modules
 {
-	import com.junkbyte.console.Cc;
-	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;

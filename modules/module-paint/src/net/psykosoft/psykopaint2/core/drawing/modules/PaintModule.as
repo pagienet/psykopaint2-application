@@ -64,6 +64,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private const brushKitData:XML = 
 			<brushkits>
+				<brush engine={BrushType.PENCIL} name="Pencil">
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<ColorDecorator>
+							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
+						</ColorDecorator>
+					</pathengine>
+					<shapes>
+						<shape type="pencil" />
+					</shapes>
+				</brush>
 				<brush engine={BrushType.WATER_COLOR} name="Water Color">
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 					<shapes>

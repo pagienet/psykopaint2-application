@@ -243,7 +243,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			growBounds(_brushMesh.getBounds());
 			finalizeStroke();
 			_inProgress = false;
-			 
+			_renderInvalid = false;
 		}
 		
 		protected function onPickColor( point : SamplePoint ) : void
