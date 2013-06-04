@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.core
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.events.Stage3DEvent;
 
+	import com.bit101.MinimalComps;
+
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -299,6 +301,8 @@ package net.psykosoft.psykopaint2.core
 			CoreSettings.RUNNING_ON_RETINA_DISPLAY = PlatformUtil.isRunningOnDisplayWithDpi( CoreSettings.RESOLUTION_DPI_RETINA );
 			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
 				ViewCore.globalScaling = 2;
+				// TODO: remove ( temporary )
+				MinimalComps.globalScaling = 2;
 			}
 
 			//adding this early on so it can be used for logging, too

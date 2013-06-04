@@ -7,12 +7,10 @@ package net.psykosoft.psykopaint2.paint.config
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestStateUpdateFromModuleActivationSignal;
-	import net.psykosoft.psykopaint2.paint.views.brush.BrushParametersSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.brush.BrushParametersSubNavViewMediator;
+	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavViewMediator;
-	import net.psykosoft.psykopaint2.paint.views.brush.SelectShapeSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.brush.SelectShapeSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
@@ -106,9 +104,8 @@ package net.psykosoft.psykopaint2.paint.config
 		// -----------------------
 
 		private function mapMediators():void {
-			_mediatorMap.map( BrushParametersSubNavView ).toMediator( BrushParametersSubNavViewMediator );
+			_mediatorMap.map( EditBrushSubNavView ).toMediator( EditBrushSubNavViewMediator );
 			_mediatorMap.map( SelectBrushSubNavView ).toMediator( SelectBrushSubNavViewMediator );
-			_mediatorMap.map( SelectShapeSubNavView ).toMediator( SelectShapeSubNavViewMediator );
 			_mediatorMap.map( CanvasSubNavView ).toMediator( CanvasSubNavViewMediator );
 			_mediatorMap.map( CanvasView ).toMediator( CanvasViewMediator );
 			_mediatorMap.map( ColorStyleSubNavView ).toMediator( ColorStyleSubNavViewMediator );

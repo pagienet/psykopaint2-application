@@ -73,7 +73,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerView( view );
 			registerEnablingState( StateType.STATE_PAINT );
 			registerEnablingState( StateType.STATE_PAINT_SELECT_BRUSH );
-			registerEnablingState( StateType.STATE_PAINT_SELECT_SHAPE );
 			registerEnablingState( StateType.STATE_PAINT_ADJUST_BRUSH );
 
 			// Init.

@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import flash.display.DisplayObject;
 	import flash.events.Event;
+	import flash.text.TextField;
 
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
@@ -17,7 +18,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	// TODO: remove minimalcomps dependency when done
 
-	public class BrushParametersSubNavView extends SubNavigationViewBase
+	public class EditBrushSubNavView extends SubNavigationViewBase
 	{
 //		private var _btns:Vector.<SbButton>;
 		private var _uiElements:Vector.<DisplayObject>;
@@ -25,14 +26,17 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private var _parameter:XML;
 
 		public static const LBL_BACK:String = "Pick a Shape";
+		public static const LBL_SHAPE:String = "Shapes";
 
 		private const UI_ELEMENT_Y:uint = 560;
 
 		public var brushParameterChangedSignal:Signal;
+		public var shapeChangedSignal:Signal;
 
-		public function BrushParametersSubNavView() {
+		public function EditBrushSubNavView() {
 			super();
 			brushParameterChangedSignal = new Signal();
+			shapeChangedSignal = new Signal();
 		}
 
 		override protected function onEnabled():void {
@@ -55,14 +59,34 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		// ---------------------------------------------------------------------
+		// TODO: change now, the info is in the parameter xml already
+		// Shapes. ( this is temporary, it will be treated as a parameter )
+		// ---------------------------------------------------------------------
+
+		public function setAvailableShapes( shapes:XML ):void {
+			var types:XMLList = shapes[ 0 ].shape;
+			var len:uint = types.length();
+			for( var i:uint; i < len; ++i ) {
+				addCenterButton( types[ i ].@type );
+			}
+			invalidateContent();
+		}
+
+		public function setSelectedShape( activeBrushKitShape:String ):void {
+			selectButtonWithLabel( activeBrushKitShape );
+		}
+
+		// ---------------------------------------------------------------------
 		// Parameter listing.
 		// ---------------------------------------------------------------------
 
 		public function setParameters( xml:XML ):void {
 
 			_parametersXML = xml;
-//			trace( this, "receiving parameters: " + _parametersXML );
+			trace( this, "receiving parameters: " + _parametersXML );
 
+			// Shapes button is always present.
+			addCenterButton( LBL_SHAPE );
 
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
@@ -72,7 +96,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var numParameters:uint = list.length();
 			for( var i:uint; i < numParameters; ++i ) {
 				var parameter:XML = list[ i ];
-				var matchesLast:Boolean = BrushParameterCache.getLastSelectedParameter().indexOf( parameter.@id ) != -1;
+				var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter().indexOf( parameter.@id ) != -1;
 				if( matchesLast ) openIndex = i;
 //				trace( ">>> " + parameter.toXMLString() );
 				addCenterButton( parameter.@id, "param" + parameter.@type );
@@ -80,22 +104,48 @@ package net.psykosoft.psykopaint2.paint.views.brush
 //				_btns.push( btn );
 			}
 			invalidateContent();
-			openParameter( list[ openIndex ].@id );
-			selectButtonWithLabel( list[ openIndex ].@id );
+			openParameter( LBL_SHAPE );
+			selectButtonWithLabel( LBL_SHAPE );
 		}
 
 		// ---------------------------------------------------------------------
 		// Parameter components.
 		// ---------------------------------------------------------------------
 
+		/* called by the mediator */
 		public function openParameter( id:String ):void {
 			closeLastParameter();
 
+			var i:uint;
 			_uiElements = new Vector.<DisplayObject>();
 
-			_parameter = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ]
+			// Special treatment for the shapes "parameter".
+			_tempIsShapeCombo = id == LBL_SHAPE;
+			if( id == LBL_SHAPE ) {
+				var shapeList:XMLList = _parametersXML.descendants( "shape" );
+				var numShapes:uint = shapeList.length();
+				if( numShapes == 0 ) return;
+				var shapeComboBox:ComboBox = new ComboBox( this );
+				shapeComboBox.alternateRows = true;
+				shapeComboBox.openPosition = ComboBox.TOP;
+				for( i = 0; i < numShapes; ++i ) {
+					var shape:XML = shapeList[ i ];
+					shapeComboBox.addItem( shape.@type );
+				}
+				shapeComboBox.defaultLabel = shapeList[ 0 ].@type;
+				shapeComboBox.numVisibleItems = Math.min( 6, numShapes );
+				shapeComboBox.addEventListener( Event.SELECT, onShapeComboBoxChanged );
+				shapeComboBox.draw();
+				positionUiElement( shapeComboBox as DisplayObject );
+				_uiElements.push( shapeComboBox );
+				return;
+			}
+
+			// Regular parameters...
+
+			_parameter = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ];
 			var parameterType:uint = uint( _parameter.@type );
-			BrushParameterCache.setLastSelectedParameter( _parameter.@id );
+			EditBrushCache.setLastSelectedParameter( _parameter.@id );
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
@@ -143,7 +193,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				comboBox.openPosition = ComboBox.TOP;
 				var list:Array = String( _parameter.@list ).split( "," );
 				var len:uint = list.length;
-				for( var i:uint; i < len; ++i ) {
+				for( i = 0; i < len; ++i ) {
 					var option:String = list[ i ];
 					comboBox.addItem( option );
 				}
@@ -166,8 +216,22 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 
 			// No Ui component for this parameter.
-			else trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
+			// TODO: display a textfield or something when there is no component
+			else {
+				trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
+				var tf:TextField = new TextField();
+				tf.selectable = tf.mouseEnabled = false;
+				tf.text = "parameter type not supported: " + PsykoParameter.getTypeName( parameterType );
+				tf.width = tf.textWidth * 1.2;
+				tf.height = tf.textHeight * 1.2;
+				positionUiElement( tf );
+				addChild( tf );
+				_uiElements.push( tf );
+			}
 		}
+
+		// TODO: remove
+		private var _tempIsShapeCombo:Boolean;
 
 		private function closeLastParameter():void {
 			if( !_uiElements ) return;
@@ -177,7 +241,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var uiElement:DisplayObject = _uiElements[ i ];
 				if( uiElement is SbSlider ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
 				else if( uiElement is SbRangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
-				else if( uiElement is ComboBox ) uiElement.removeEventListener( Event.SELECT, onComboBoxChanged );
+				else if( uiElement is ComboBox ) {
+					if( !_tempIsShapeCombo ) {
+						uiElement.removeEventListener( Event.SELECT, onComboBoxChanged );
+					}
+					else {
+						uiElement.removeEventListener( Event.SELECT, onShapeComboBoxChanged );
+					}
+				}
 				else if( uiElement is SbCheckBox ) uiElement.addEventListener( Event.CHANGE, onCheckBoxChanged );
 				else if( uiElement is Knob ) uiElement.addEventListener( Event.CHANGE, onKnobChanged );
 				else {
@@ -232,6 +303,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			notifyParameterChange();
 		}
 
+		private function onShapeComboBoxChanged( event:Event ):void {
+			var comboBox:ComboBox = event.target as ComboBox;
+			trace( this, "shape combo box changed: " + comboBox.selectedItem );
+			shapeChangedSignal.dispatch( comboBox.selectedItem );
+		}
+
 		private function onSliderChanged( event:Event ):void {
 			var slider:SbSlider = event.target as SbSlider;
 			_parameter.@value = slider.value;
@@ -246,12 +323,5 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			updateActiveParameter();
 			notifyParameterChange();
 		}
-
-		/*private function onParameterClicked( event:MouseEvent ):void {
-			var button:SbButton = event.target as SbButton;
-			if( !button ) button = event.target.parent as SbButton;
-			var label:String = button.labelText;
-			openParameter( label );
-		}*/
 	}
 }

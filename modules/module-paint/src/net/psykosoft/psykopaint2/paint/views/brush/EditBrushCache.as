@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
-	public class BrushParameterCache
+	public class EditBrushCache
 	{
 		static private var _lastSelectedBrush:String = "";
 		static private var _lastSelectedParameter:String = "";

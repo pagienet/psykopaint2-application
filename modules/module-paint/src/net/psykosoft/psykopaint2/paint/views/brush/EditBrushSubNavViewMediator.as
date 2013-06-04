@@ -5,10 +5,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
-	public class BrushParametersSubNavViewMediator extends MediatorBase
+	public class EditBrushSubNavViewMediator extends MediatorBase
 	{
 		[Inject]
-		public var view:BrushParametersSubNavView;
+		public var view:EditBrushSubNavView;
 
 		[Inject]
 		public var paintModule:PaintModule;
@@ -23,15 +23,22 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			view.setButtonClickCallback( onButtonClicked );
 
 			// Post init.
+//			view.setAvailableShapes( paintModule.getCurrentBrushShapes() );
+//			view.setSelectedShape( paintModule.activeBrushKitShape );
 			view.setParameters( paintModule.getCurrentBrushParameters() );
 
 			// From view.
 			view.brushParameterChangedSignal.add( onBrushParameterChanged );
+			view.shapeChangedSignal.add( onShapeChanged );
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onShapeChanged( shapeName:String ):void {
+			paintModule.setBrushShape( shapeName );
+		}
 
 		private function onBrushParameterChanged( parameter:XML ):void {
 //			trace( this, "param changed: " + parameter.toXMLString() );
@@ -40,7 +47,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
-				case BrushParametersSubNavView.LBL_BACK: {
+				case EditBrushSubNavView.LBL_BACK: {
 					requestStateChange( StateType.STATE_PREVIOUS );
 					break;
 				}

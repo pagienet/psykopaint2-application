@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	public class SelectBrushSubNavView extends SubNavigationViewBase
 	{
 		public static const LBL_BACK:String = "Paint";
-		public static const LBL_SELECT_SHAPE:String = "Pick a Shape";
+		public static const LBL_EDIT_BRUSH:String = "Edit Brush";
 
 		public function SelectBrushSubNavView() {
 			super();
@@ -17,7 +17,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			setLabel( "Pick a Brush" );
 
 			setLeftButton( LBL_BACK );
-			setRightButton( LBL_SELECT_SHAPE );
+			setRightButton( LBL_EDIT_BRUSH );
 
 			invalidateContent();
 		}
@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		public function setSelectedBrush( activeBrushKit:String ):void {
-			BrushParameterCache.setLastSelectedBrush( activeBrushKit );
+			EditBrushCache.setLastSelectedBrush( activeBrushKit );
 			selectButtonWithLabel( activeBrushKit );
 		}
 	}

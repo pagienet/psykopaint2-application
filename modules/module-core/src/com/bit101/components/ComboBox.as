@@ -28,6 +28,9 @@
 
 package com.bit101.components
 {
+
+	import com.bit101.MinimalComps;
+
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -86,6 +89,8 @@ package com.bit101.components
 		{
 			super.addChildren();
 			_list = new List(null, 0, 0, _items);
+			_list.scaleX = _list.scaleY = MinimalComps.globalScaling;
+			trace( this, "list created: " + MinimalComps.globalScaling );
 			_list.autoHideScrollBar = true;
 			_list.addEventListener(Event.SELECT, onSelect);
 			

@@ -33,13 +33,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					requestStateChange( StateType.STATE_PREVIOUS );
 					break;
 				}
-				case SelectBrushSubNavView.LBL_SELECT_SHAPE: {
-					requestStateChange( StateType.STATE_PAINT_SELECT_SHAPE );
+				case SelectBrushSubNavView.LBL_EDIT_BRUSH: {
+					requestStateChange( StateType.STATE_PAINT_ADJUST_BRUSH );
 					break;
 				}
 				default: { // Center buttons select a brush.
 					paintModule.activeBrushKit = label;
-					BrushParameterCache.setLastSelectedBrush( label );
+					EditBrushCache.setLastSelectedBrush( label );
 					break;
 				}
 			}

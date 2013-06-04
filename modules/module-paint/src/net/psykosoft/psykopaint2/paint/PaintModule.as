@@ -13,8 +13,6 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.paint.signals.requests.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 
-	import org.swiftsuspenders.Injector;
-
 	public class PaintModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;

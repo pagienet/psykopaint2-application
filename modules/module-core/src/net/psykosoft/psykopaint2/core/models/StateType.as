@@ -16,7 +16,6 @@ package net.psykosoft.psykopaint2.core.models
 
 		public static const STATE_PAINT:String = "state/paint";
 		public static const STATE_PAINT_SELECT_BRUSH:String = "state/paint/select_brush";
-		public static const STATE_PAINT_SELECT_SHAPE:String = "state/paint/select_style";
 		public static const STATE_PAINT_ADJUST_BRUSH:String = "state/paint/adjust_brush";
 	}
 }
