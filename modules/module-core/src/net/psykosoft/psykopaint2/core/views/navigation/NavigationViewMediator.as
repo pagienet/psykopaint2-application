@@ -111,11 +111,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			// Evaluate a sub-nav change.
 			var cl:Class = StateToSubNavLinker.getSubNavClassForState( newState );
 			view.updateSubNavigation( cl );
-
-			// TODO: remove
-			if( !( newState == StateType.STATE_HOME || newState == StateType.STATE_IDLE || newState == StateType.STATE_PAINT ) ) {
-				view.tempMessage.visible = false;
-			}
 		}
 	}
 }

@@ -26,7 +26,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var headerBg:Sprite;
 		public var leftBtnSide:Sprite;
 		public var rightBtnSide:Sprite;
-		public var tempMessage:Sprite;
 
 		private var _leftButton:SbButton;
 		private var _rightButton:SbButton;
