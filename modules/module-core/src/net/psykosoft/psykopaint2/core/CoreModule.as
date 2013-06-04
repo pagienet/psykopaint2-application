@@ -236,7 +236,7 @@ package net.psykosoft.psykopaint2.core
 		private function getXmlData():void {
 			_xmLoader = new XMLLoader();
 			var date:Date = new Date();
-			_xmLoader.loadAsset( "/app-data.xml?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() ), onVersionRetrieved );
+			_xmLoader.loadAsset( "common-packaged/app-data.xml?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() ), onVersionRetrieved );
 		}
 
 		private function onVersionRetrieved( data:XML ):void {
@@ -277,13 +277,15 @@ package net.psykosoft.psykopaint2.core
 				_errorsTextField.height = 250 * ViewCore.globalScaling;
 				_errorsTextField.x = ( 1024 - 520 - 1 ) * ViewCore.globalScaling;
 				_errorsTextField.y = ViewCore.globalScaling;
+				_errorsTextField.background = true;
 				_errorsTextField.border = true;
 				_errorsTextField.borderColor = 0xFF0000;
 				_errorsTextField.multiline = true;
 				_errorsTextField.wordWrap = true;
 				_errorsTextField.visible = false;
-				_backLayer.addChild( _errorsTextField );
+				_frontLayer.addChild( _errorsTextField );
 			}
+			stage.scaleX = 2;
 		}
 
 		private function initDebugging():void {
