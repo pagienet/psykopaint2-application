@@ -12,5 +12,6 @@ package net.psykosoft.psykopaint2.core.drawing
 		public static const UNCOLORED_SPRAY_CAN:String = "uncolored_spray_can";
 		public static const DELAUNAY:String = "delaunay";
 		public static const SHATTER:String = "shatter";
+		public static const PENCIL:String = "pencil";
 	}
 }

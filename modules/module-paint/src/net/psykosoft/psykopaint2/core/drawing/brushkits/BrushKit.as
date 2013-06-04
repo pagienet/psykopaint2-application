@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.DelaunayBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.PencilBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.ShatterBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.UncoloredSprayCanBrush;
@@ -58,6 +59,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			registerBrush( BrushType.UNCOLORED_SPRAY_CAN, UncoloredSprayCanBrush );
 			registerBrush( BrushType.DELAUNAY, DelaunayBrush );
 			registerBrush( BrushType.SHATTER, ShatterBrush );
+			registerBrush( BrushType.PENCIL, PencilBrush );
 			_initialized = true;
 		}
 		

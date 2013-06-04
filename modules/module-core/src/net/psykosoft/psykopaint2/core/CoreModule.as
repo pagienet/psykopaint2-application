@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.core
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
