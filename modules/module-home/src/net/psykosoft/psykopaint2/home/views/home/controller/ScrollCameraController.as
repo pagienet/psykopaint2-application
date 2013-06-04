@@ -3,7 +3,11 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 	import away3d.arcane;
 	import away3d.cameras.Camera3D;
+	import away3d.containers.ObjectContainer3D;
 	import away3d.core.base.Object3D;
+	import away3d.entities.Mesh;
+	import away3d.materials.ColorMaterial;
+	import away3d.primitives.CubeGeometry;
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
@@ -21,7 +25,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 	use namespace arcane;
 
-	public class ScrollCameraController
+	public class ScrollCameraController extends ObjectContainer3D
 	{
 		private var _interactionManager:ScrollInteractionManager;
 		private var _positionManager:SnapPositionManager;
@@ -32,6 +36,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		private var _stageHeight:Number;
 		private var _isScrollingLimited:Boolean = true;
 		private var _zoomedIn:Boolean;
+		private var _perspectiveTracer:Mesh;
 
 		public var isActive:Boolean = true;
 
@@ -59,10 +64,16 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_positionManager.frictionFactor = 0.9;
 			_positionManager.minimumThrowingSpeed = 175;
 			_positionManager.edgeContainmentFactor = 0.01;
+
+			// Uncomment to visually debug perspective factor.
+			// - ensures that the scrolling snaps to finger 100%, if right, the tracer should be placed just at the edge of the screen -
+//			_perspectiveTracer = new Mesh( new CubeGeometry(), new ColorMaterial( 0xFF0000 ) );
+//			addChild( _perspectiveTracer );
 		}
 
-		public function dispose():void {
+		override public function dispose():void {
 			// TODO...
+			super.dispose();
 		}
 
 		public function zoomIn():void {
@@ -82,6 +93,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		}
 
 		private function onZoomComplete():void {
+			_perspectiveFactorDirty = true;
 			zoomCompleteSignal.dispatch();
 		}
 
@@ -147,11 +159,6 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 		private function updatePerspectiveFactor():void {
 
-			// Momentarily place the camera at x = 0;
-			var cameraTransformCache:Matrix3D = _camera.transform.clone();
-			_camera.transform = new Matrix3D();
-			_camera.z = cameraTransformCache.position.z;
-
 			// Shoot a ray from the camera to the right edge of the screen.
 			var rayPosition:Vector3D = _camera.unproject( 0, 0, 0 );
 			var rayDirection:Vector3D = _camera.unproject( 1, 0, 1 );
@@ -165,12 +172,12 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 					rayPosition.y + t * rayDirection.y,
 					rayPosition.z + t * rayDirection.z
 			);
+			if( _perspectiveTracer ) {
+				_perspectiveTracer.position = collisionPoint;
+			}
 
 			// Calculate the perspective factor by comparing the half screen width with how much of the wall is visible.
-			_interactionManager.scrollInputMultiplier = collisionPoint.x / ( _stageWidth / 2 );
-
-			// Restore camera position.
-			_camera.transform = cameraTransformCache;
+			_interactionManager.scrollInputMultiplier = ( ( collisionPoint.x - _camera.x ) / ( _stageWidth / 2 ) )/* * ViewCore.globalScaling*/;
 		}
 
 		public function get closestSnapPointChangedSignal():Signal {
