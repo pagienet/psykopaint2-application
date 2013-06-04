@@ -6,14 +6,11 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.base.Object3D;
 	import away3d.entities.Mesh;
-	import away3d.materials.ColorMaterial;
-	import away3d.primitives.CubeGeometry;
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
 
 	import flash.display.Stage;
-	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;

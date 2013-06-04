@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.base.utils
 {
 
+	import away3d.core.base.CompactSubGeometry;
 	import away3d.core.base.SubGeometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
@@ -44,15 +45,15 @@ package net.psykosoft.psykopaint2.base.utils
 			var dsw:Number = textureDimensions.x / imageDimensions.x;
 			var dsh:Number = textureDimensions.y / imageDimensions.y;
 			var planeGeometry:PlaneGeometry = new PlaneGeometry( imageDimensions.x, imageDimensions.y );
-			var subGeometry:SubGeometry = planeGeometry.subGeometries[ 0 ] as SubGeometry;
-			var uvs:Vector.<Number> = subGeometry.uvs;
-			var newUvs:Vector.<Number> = new Vector.<Number>();
-			for( var i:uint = 0; i < uvs.length / 2; i++ ) {
-				var index:uint = i * 2;
-				newUvs[ index ] = uvs[ index ] / dsw + dw;
-				newUvs[ index + 1 ] = uvs[ index + 1 ] / dsh + dh;
+			var subGeometry:CompactSubGeometry = planeGeometry.subGeometries[ 0 ] as CompactSubGeometry;
+			var combinedVertexData:Vector.<Number> = subGeometry.vertexData;
+			var len:uint = combinedVertexData.length / 13; // See CompactSubGeometry.as, updateData()
+			for( var i:uint = 0; i < len; i++ ) { // Sweeps vertices.
+				var ii:uint = i * 13;
+				combinedVertexData[ ii + 9  ] = combinedVertexData[ ii + 9  ] / dsw + dw;
+				combinedVertexData[ ii + 10 ] = combinedVertexData[ ii + 10 ] / dsh + dh;
 			}
-			subGeometry.updateUVData( newUvs );
+			subGeometry.updateData( combinedVertexData );
 
 			// Build mesh.
 			var plane:Mesh = new Mesh( planeGeometry, material );
