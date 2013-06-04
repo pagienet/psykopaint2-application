@@ -285,7 +285,6 @@ package net.psykosoft.psykopaint2.core
 				_errorsTextField.visible = false;
 				_frontLayer.addChild( _errorsTextField );
 			}
-			stage.scaleX = 2;
 		}
 
 		private function initDebugging():void {
