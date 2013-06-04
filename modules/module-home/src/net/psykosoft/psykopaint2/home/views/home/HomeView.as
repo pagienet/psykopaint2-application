@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 	import away3d.core.managers.Stage3DProxy;
+	import away3d.debug.Trident;
 
 	import flash.display.BitmapData;
 	import flash.events.Event;
@@ -88,6 +89,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController.cameraZ = HomeSettings.CAMERA_ZOOM_IN_Z;
 			_frameContainer.z = _room.wallZ - 2;
 			cameraTarget.z = _room.wallZ;
+			_view.scene.addChild( _cameraController );
 			_view.scene.addChild( _room );
 			_view.scene.addChild( _frameContainer );
 

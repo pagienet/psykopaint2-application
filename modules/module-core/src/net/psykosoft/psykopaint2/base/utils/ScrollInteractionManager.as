@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.base.utils
 		private var _scrollInputMultiplier:Number = 1;
 		private var _throwInputMultiplier:Number = 1;
 
-		private const STACK_COUNT:uint = 8;
+		private const STACK_COUNT:uint = 6;
 
 		public function ScrollInteractionManager( positionManager:SnapPositionManager ) {
 			_positionManager = positionManager;
@@ -66,10 +66,6 @@ package net.psykosoft.psykopaint2.base.utils
 			_positionStack = new Vector.<Number>();
 		}
 
-		public function set scrollInputMultiplier( value:Number ):void {
-			_scrollInputMultiplier = value;
-		}
-
 		public function get currentX():Number {
 			if( !_stage ) return 0;
 			return _stage.mouseX;
@@ -82,6 +78,14 @@ package net.psykosoft.psykopaint2.base.utils
 
 		public function set throwInputMultiplier( value:Number ):void {
 			_throwInputMultiplier = value;
+		}
+
+		public function set scrollInputMultiplier( value:Number ):void {
+			_scrollInputMultiplier = value;
+		}
+
+		public function get scrollInputMultiplier():Number {
+			return _scrollInputMultiplier;
 		}
 	}
 }
