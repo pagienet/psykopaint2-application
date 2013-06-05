@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.debug.Trident;
 
+	import br.com.stimuli.loading.BulkLoader;
+
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.utils.setTimeout;
@@ -100,6 +102,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			_loader = new AssetBundleLoader( "homeView" );
 			_loader.addEventListener( Event.COMPLETE, onAssetsReady );
 
+			var rootUrl:String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
+			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
+
 			// Picture frame assets.
 			_loader.registerAsset( "/home-packaged/away3d/frames/frames.png", "framesAtlasImage" );
 			_loader.registerAsset( "/home-packaged/away3d/frames/frames.xml", "framesAtlasXml" );
@@ -119,7 +124,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Room assets.
 			_loader.registerAsset( "/home-packaged/away3d/wallpapers/fullsize/default.jpg", "defaultWallpaper" );
 			_loader.registerAsset( "/home-packaged/away3d/frames/frame-shadow.png", "frameShadow" );
-			_loader.registerAsset( "/home-packaged/away3d/floorpapers/wood.jpg", "floorWood" );
+			_loader.registerAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", BulkLoader.TYPE_BINARY );
 
 			_loader.startLoad();
 		}

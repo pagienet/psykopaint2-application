@@ -18,9 +18,14 @@ package net.psykosoft.psykopaint2.base.utils
 			_loader = new BulkLoader( bundleName );
 		}
 
-		public function registerAsset( url:String, id:String ):void {
+		public function registerAsset( url:String, id:String, type:String = null ):void {
 			trace( this, "BulkLoader bundle: " + _bundleName + ", registering asset of id: " + id + ", with url: " + url );
-			_loader.add( url, { id:id } );
+			if( type ) {
+				_loader.add( url, { id: id, type: type } );
+			}
+			else {
+				_loader.add( url, { id: id } );
+			}
 		}
 
 		public function startLoad():void {

@@ -6,11 +6,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
+	import away3d.textures.ATFTexture;
 	import away3d.textures.BitmapTexture;
 
 	import br.com.stimuli.loading.BulkLoader;
 
 	import flash.display.BitmapData;
+	import flash.utils.ByteArray;
 
 	public class Room extends ObjectContainer3D
 	{
@@ -108,10 +110,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			floorGeometry.scaleUV( WALL_WIDTH / floorGeometry.width, 1 );
 
 			// Texture.
-			var bmd:BitmapData = BulkLoader.getLoader( "homeView" ).getBitmapData( "floorWood", true );
-			var floorTexture:BitmapTexture = new BitmapTexture( bmd );
+			var bytes:ByteArray = BulkLoader.getLoader( "homeView" ).getBinary( "floorWood", true );
+			var floorTexture:ATFTexture = new ATFTexture( bytes );
 			floorTexture.getTextureForStage3D( _view.stage3DProxy );
-			bmd.dispose();
+			bytes.clear();
 
 			// Material.
 			_floorMaterial = new TextureMaterial( floorTexture );
