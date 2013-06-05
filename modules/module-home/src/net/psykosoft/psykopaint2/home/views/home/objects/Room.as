@@ -79,14 +79,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private function loadShadow():void {
 
-			// Texture.
-			var bmd:BitmapData = BulkLoader.getLoader( "homeView" ).getBitmapData( "frameShadow", true );
-			_shadowTexture = new BitmapTexture( bmd );
-			_shadowTexture.getTextureForStage3D( _view.stage3DProxy );
-			bmd.dispose();
-
 			// Material.
-			_shadowMaterial = new TextureMaterial( _shadowTexture );
+			_shadowMaterial = TextureUtil.getAtfMaterial( "homeView", "frameShadow", _view );
 			_shadowMaterial.smooth = true;
 			_shadowMaterial.mipmap = false;
 			_shadowMaterial.alpha = 0.9;

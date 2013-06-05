@@ -106,7 +106,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
 
 			// Picture frame assets.
-			_loader.registerAsset( "/home-packaged/away3d/frames/frames.png", "framesAtlasImage" );
+			_loader.registerAsset( rootUrl + "away3d/frames/frames" + extra + ".atf", "framesAtlasImage", BulkLoader.TYPE_BINARY );
 			_loader.registerAsset( "/home-packaged/away3d/frames/frames.xml", "framesAtlasXml" );
 			// Default paintings.
 			_loader.registerAsset( "/home-packaged/away3d/paintings/home_painting.jpg", "homePainting" );
@@ -123,7 +123,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting6.jpg", "samplePainting6" );
 			// Room assets.
 			_loader.registerAsset( "/home-packaged/away3d/wallpapers/fullsize/default.jpg", "defaultWallpaper" );
-			_loader.registerAsset( "/home-packaged/away3d/frames/frame-shadow.png", "frameShadow" );
+			_loader.registerAsset( "/home-packaged/away3d/frames/frame-shadow-uncompressed.atf", "frameShadow", BulkLoader.TYPE_BINARY );
 			_loader.registerAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", BulkLoader.TYPE_BINARY );
 
 			_loader.startLoad();

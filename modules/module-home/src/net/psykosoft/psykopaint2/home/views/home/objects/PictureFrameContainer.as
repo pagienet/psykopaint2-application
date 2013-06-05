@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.materials.TextureMaterial;
+	import away3d.textures.ATFTexture;
 	import away3d.textures.BitmapTexture;
 
 	import br.com.stimuli.loading.BulkLoader;
@@ -11,6 +12,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.display.BitmapData;
 
 	import flash.display.BitmapData;
+
+	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
 
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.vos.FrameTextureAtlasDescriptorVO;
@@ -25,7 +28,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _room:Room;
 		private var _view:View3D;
 
-		private var _framesTexture:BitmapTexture;
+		private var _framesTexture:ATFTexture;
 		private var _atlasXml:XML;
 
 		private const FRAME_GAP_X:Number = 500;
@@ -89,17 +92,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		public function loadDefaultHomeFrames():void {
 
-			// Retrieve frames atlas texture.
-			var bmd:BitmapData = BulkLoader.getLoader( "homeView" ).getBitmapData( "framesAtlasImage", true );
-			_framesTexture = new BitmapTexture( bmd );
-			_framesTexture.getTextureForStage3D( _view.stage3DProxy ); // Force generation before bmd disposal.
-			bmd.dispose();
-
 			// Retrieve frames atlas descriptor.
 			_atlasXml = BulkLoader.getLoader( "homeView" ).getXML( "framesAtlasXml", true );
 
 			// Material.
-			_frameMaterial = new TextureMaterial( _framesTexture );
+			_frameMaterial = TextureUtil.getAtfMaterial( "homeView", "framesAtlasImage", _view );
 			_frameMaterial.mipmap = false;
 			_frameMaterial.smooth = true;
 
@@ -120,7 +117,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var settingsFrameAtlasDescriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO(
 					"dangerFrame",
 					_atlasXml,
-					_framesTexture.width, _framesTexture.height
+					1024, 512
 			);
 			var settingsFrame:PictureFrame = new PictureFrame( settingsPicture, _frameMaterial, settingsFrameAtlasDescriptor );
 			addPictureFrame( settingsFrame );
@@ -156,7 +153,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var psykopaintFrameAtlasDescriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO(
 					"whiteFrame",
 					_atlasXml,
-					_framesTexture.width, _framesTexture.height
+					1024, 512
 			);
 			var psykopaintFrame:PictureFrame = new PictureFrame( psykopaintPicture, _frameMaterial, psykopaintFrameAtlasDescriptor );
 			addPictureFrame( psykopaintFrame );
@@ -175,7 +172,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				var descriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO(
 						availableFrames[ Math.floor( availableFrames.length * Math.random() ) ],
 						_atlasXml,
-						_framesTexture.width, _framesTexture.height
+						1024, 512
 				);
 				var frame:PictureFrame = new PictureFrame( picture, _frameMaterial, descriptor );
 				addPictureFrame( frame );
