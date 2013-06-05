@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private var _parametersXML:XML;
 		private var _parameter:XML;
 
-		public static const LBL_BACK:String = "Pick a Shape";
+		public static const LBL_BACK:String = "Pick a Brush";
 		//public static const LBL_SHAPE:String = "Shapes";
 
 		private const UI_ELEMENT_Y:uint = 560;

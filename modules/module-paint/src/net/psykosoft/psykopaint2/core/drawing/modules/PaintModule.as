@@ -177,16 +177,28 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<parameter id="Output Step Size" path="pathengine" value="3"/>
+						<SizeDecorator>
+							<!-- Mapping drawing speed to size -->
+							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
+						</SizeDecorator>
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Circular">
 					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<SizeDecorator>
+							<!-- Mapping drawing speed to size -->
+							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
+						</SizeDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
 						</ColorDecorator>
 						<CircularRotationDecorator>
-							<parameter id="Angle Adjustment"  path="pathengine.pointdecorator_1" value={90} />
+							<parameter id="Angle Adjustment"  path="pathengine.pointdecorator_2" value={90} />
 							<centers>
 								<point x="0.5" y="0.5"/>
 							</centers>
