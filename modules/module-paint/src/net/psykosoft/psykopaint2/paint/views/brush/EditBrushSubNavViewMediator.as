@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// -----------------------
 
 		private function onShapeChanged( shapeName:String ):void {
-			paintModule.setBrushShape( shapeName );
+			//paintModule.setBrushShape( shapeName );
 		}
 
 		private function onBrushParameterChanged( parameter:XML ):void {
