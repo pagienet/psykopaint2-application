@@ -35,3 +35,12 @@ png2atf -c e -n 0,0 -i default.png -o default-desktop.atf
 Examples for opaque images with mipmaps:
 png2atf -c p -i default.png -o default-ios-mips.atf
 png2atf -c p -n 0,3 -i default.png -o default-ios-mips.atf // Mip map levels from 0 to 3
+
+//////////////////////////////
+Resources:
+//////////////////////////////
+
+https://dl.dropbox.com/u/7009356/atftools.zip ( Adobe ATF utils )
+http://www.adobe.com/devnet/flashruntimes/articles/introducing-compressed-textures.html
+http://wiki.starling-framework.org/manual/atf_textures ( first part is non-starling specific )
+
