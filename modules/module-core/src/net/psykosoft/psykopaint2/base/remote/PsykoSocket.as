@@ -142,17 +142,18 @@ package net.psykosoft.psykopaint2.base.remote
 							{
 								if ( callbacks[i].isReceipient(targetPath) )
 								{
-									callbacks[i].callbackMethod.apply( callbacks[i].callbackObject, [message] );
+									var mc:XML = message.copy();
+									mc.@target = targets[j];
+									callbacks[i].callbackMethod.apply( callbacks[i].callbackObject, [mc] );
 								}
 							}
 						}
 					}
-				
-			} catch (error:Error )
-			{
-				trace(error.message);
+				} catch (error:Error )
+				{
+					trace(error.message);
+				}
 			}
-		}
 		}
 		
 		protected function _sendString( data:String ):void
