@@ -10,9 +10,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class PencilBrushShape extends AbstractBrushShape
 	{
-		private var _hardness : Number = .05;
-		private var _grain : Number = 0.67;
-		private var _coarseness : Number = .3;
+		private var _hardness : Number = .01;
+		private var _grain : Number = 0.9;
+		private var _coarseness : Number = .4;
 
 		public function PencilBrushShape(context3D : Context3D)
 		{
