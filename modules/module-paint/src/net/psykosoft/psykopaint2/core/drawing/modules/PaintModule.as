@@ -5,8 +5,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.display.DisplayObject;
 	import flash.display.Stage3D;
 	import flash.events.Event;
-
+	
+	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
@@ -14,7 +16,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
@@ -65,20 +66,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private const brushKitData:XML = 
 			<brushkits>
 				<brush engine={BrushType.WATER_COLOR} name="Water Color">
+					<parameter id="Shapes" path="brush" index="0" values="wet,basic"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
-					<shapes>
-						<shape type="wet" />
-						<shape type="basic" />
-					</shapes>
 				</brush>
 				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
+					<parameter id="Shapes" path="brush" index="0" values="wet"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
-					<shapes>
-						<shape type="wet" />
-					</shapes>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
 					<parameter id="Bumpyness" path="brush" value="0.2" />
+					<parameter id="Shapes" path="brush" index="0" values="splat,splat3,line,basic,noisy"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
@@ -95,15 +92,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Size Factor" path="pathengine.pointdecorator_2" value="0.02" />
 						</SplatterDecorator>
 					</pathengine>
-					<shapes>
-						<shape type="splat" />
-						<shape type="splat3" />
-						<shape type="line" />
-						<shape type="basic" />
-						<shape type="noisy" />
-					</shapes>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Gravity Spray">
+					<parameter id="Shapes" path="brush" index="0" values="noisy"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
@@ -149,11 +140,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<EndConditionalDecorator/>
 						<EndConditionalDecorator/>
 					</pathengine>
-					<shapes>
-						<shape type="noisy" />
-					</shapes>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Tree Brush">
+					<parameter id="Shapes" path="brush" index="0" values="inkdots1,test,splat,line,noisy"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<ColorDecorator>
 							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="1" />
@@ -183,26 +172,15 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 								<parameter id="Mapping" path="pathengine.pointdecorator_6" value="2" />
 						</SizeDecorator>
 					</pathengine>
-					<shapes>
-						<shape type="inkdots1" />
-						<shape type="test" />
-						<shape type="splat" />
-						<shape type="line" />
-						<shape type="noisy" />
-					</shapes>
 				</brush>
 				<brush engine={BrushType.SHATTER} name="Shatter">
+					<parameter id="Shapes" path="brush" index="0" values="splat,splat3,line,basic"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<parameter id="Output Step Size" path="pathengine" value="3"/>
 					</pathengine>
-					<shapes>
-						<shape type="splat" />
-						<shape type="splat3" />
-						<shape type="line" />
-						<shape type="basic" />
-					</shapes>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Circular">
+					<parameter id="Shapes" path="brush" index="0" values="splat,splat3,line,basic"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<ColorDecorator>
 							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="1" />
@@ -214,14 +192,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							</centers>
 						</CircularRotationDecorator>
 					</pathengine>
-					<shapes>
-						<shape type="splat" />
-						<shape type="splat3" />
-						<shape type="line" />
-						<shape type="basic" />
-					</shapes>
 				</brush>
 				<brush engine={BrushType.UNCOLORED_SPRAY_CAN} name="Ink dots">
+					<parameter id="Shapes" path="brush" index="0" values="inkdots1,objects"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SplatterDecorator>
 							<parameter id="Splat Factor"  path="pathengine.pointdecorator_0" value="8" />
@@ -233,10 +206,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
 						</ColorDecorator>
 					</pathengine>
-					<shapes>
-						<shape type="inkdots1" />
-						<shape type="objects" />
-					</shapes>
 				</brush>
 				<brush engine={BrushType.UNCOLORED_SPRAY_CAN} name="Pointillist">
 					<parameter id="Size Factor" path="brush" value1="0.05" value2="0.08"/>
@@ -255,12 +224,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Offset Parent Point" path="pathengine.pointdecorator_2" value="1"/>
 						</SpawnDecorator>
 					</pathengine>
-					<shapes>
-						<shape type="inkdots1" />
-					</shapes>
 				</brush>
 				<brush engine={BrushType.DELAUNAY} name="Delaunay">
 					<parameter id="Size Factor" path="brush" value1="0.1" value2="0.2"/>
+					<parameter id="Shapes" path="brush" index="0" values="scales"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<parameter id="Output Step Size" path="pathengine" value="30"  />
 						<SplatterDecorator>
@@ -268,14 +235,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Minimum Offset" path="pathengine.pointdecorator_0" value="1" />
 						</SplatterDecorator>
 					</pathengine>
-					<shapes>
-						<shape type="scales" />
-					</shapes>
 				</brush>
 				
 				<brush engine={BrushType.SPRAY_CAN} name="Precision Test">
 					<parameter id="Bumpyness" path="brush" value="0" />
 					<parameter id="Size Factor" path="brush" value1="1" value2="1"/>
+					<parameter id="Shapes" path="brush" index="0" values="test"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<ColorDecorator>
 							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="1" />
@@ -288,9 +253,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Row Offset" path="pathengine.pointdecorator_1" value={32} />
 						</GridDecorator>
 					</pathengine>
-					<shapes>
-						<shape type="test" />
-					</shapes>
 				</brush>
 			</brushkits>
 		
@@ -317,7 +279,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[PostConstruct]
 		public function postConstruct() : void
 		{
-			BrushKit.brushShapeLibrary = brushShapeLibrary;
+			AbstractBrush.brushShapeLibrary = brushShapeLibrary;
 			
 			memoryWarningSignal.add(onMemoryWarning);
 		}

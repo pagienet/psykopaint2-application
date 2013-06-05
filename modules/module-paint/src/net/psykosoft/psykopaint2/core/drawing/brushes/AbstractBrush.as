@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.AbstractBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.StrokeAppendVO;
@@ -26,6 +27,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	public class AbstractBrush extends EventDispatcher
 	{
+		public static var brushShapeLibrary:BrushShapeLibrary;
+		
 		protected var _canvasModel : CanvasModel;
 		protected var _view : DisplayObject;
 
@@ -53,6 +56,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected var _shininess:PsykoParameter;
 		protected var _glossiness:PsykoParameter;
 		protected var _bumpiness:PsykoParameter;
+		protected var _shapes:PsykoParameter;
 
 		
 		protected var appendVO : StrokeAppendVO;
@@ -76,6 +80,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_depthStencil = useDepthStencil;
 			_incremental = incremental;
 			_parameters = new Vector.<PsykoParameter>();
+			_shapes    = new PsykoParameter( PsykoParameter.StringListParameter, "Shapes",0,["basic"]);
+			
 			_opacity    = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Opacity",0.5,1,0,1);
 			_colorBlend = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Color Blending",0.5,1,0,1);
 			_sizeFactor = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Size Factor",0,1,0,1 );
@@ -85,7 +91,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_bumpiness = new PsykoParameter( PsykoParameter.NumberParameter, "Bumpyness",1,0,1 );
 			
 			
-			_parameters.push( _opacity, _colorBlend, _sizeFactor);
+			_parameters.push( _shapes, _opacity, _colorBlend, _sizeFactor);
 
 			if (drawNormalsOrSpecular)
 				_parameters.push(_shininess,_glossiness,_bumpiness);
@@ -160,6 +166,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, textureManager : ITextureManager) : void
 		{
+			brushShape = brushShapeLibrary.getBrushShape(_shapes.stringValue);
 			_brushMesh = createBrushMesh();
 			_view = view;
 			_canvasModel = canvasModel;
@@ -422,6 +429,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			}
 			
 			_pathManager.updateParametersFromXML( message );
+		}
+		
+		public function getParameter( parameterID:String ):PsykoParameter
+		{
+			for ( var i:int = 0; i < _parameters.length; i++ )
+			{
+				if( _parameters[i].id == parameterID )
+				{
+					return _parameters[i];
+				}
+			}
+			return null;
 		}
 		/*
 		public function addAvailableShape( type:String):void
