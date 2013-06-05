@@ -37,7 +37,9 @@ package com.adobe.utils
 	// ---------------------------------------------------------------------------
 	//import flash.display3D.*;
 	import flash.utils.*;
-	
+
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+
 	// ===========================================================================
 	//	Class
 	// ---------------------------------------------------------------------------
@@ -63,9 +65,9 @@ package com.adobe.utils
 		// ======================================================================
 		//	Constructor
 		// ----------------------------------------------------------------------
-		public function AGALMiniAssembler( debugging:Boolean = false ):void
+		public function AGALMiniAssembler():void
 		{
-			debugEnabled = debugging;
+			debugEnabled = CoreSettings.DEBUG_AGAL;
 			if ( !initialized )
 				init();
 		}
@@ -127,7 +129,7 @@ package com.adobe.utils
 				if ( opFound == null )
 				{
 					if ( line.length >= 3 )
-						trace( "warning: bad line "+i+": "+lines[i] );
+						throw new Error( "warning: bad line "+i+": "+lines[i] );
 					continue;
 				}
 				
@@ -398,7 +400,7 @@ package com.adobe.utils
 			{
 				_error += "\n  at line " + i + " " + lines[i];
 				agalcode.length = 0;
-				trace( _error );
+				throw new Error( _error );
 			}
 			
 			// trace the bytecode bytes if debugging is enabled
