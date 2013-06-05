@@ -240,6 +240,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				</brush>
 				<brush engine={BrushType.UNCOLORED_SPRAY_CAN} name="Pointillist">
 					<parameter id="Size Factor" path="brush" value1="0.05" value2="0.08"/>
+					<parameter id="Shapes" path="brush" index="0" values="inkdots1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<GridDecorator> 
 							<parameter id="Cell Width"  path="pathengine.pointdecorator_0" value="8" />
@@ -375,13 +376,15 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			
 			//trace( this, "activating brush kit: " + _activeBrushKitName + ", engine: " + _activeBrushKit.brushEngine + " --------------------" );
 			
-			var brushShapes:XML = _activeBrushKit.getShapeSet();
+			//var brushShapes:XML = _activeBrushKit.getShapeSet();
 			
 			//trace( this, "available shapes: " +brushShapes );
 			
+			/*
 			if (!_activeBrushKit.brushEngine.brushShape && brushShapes != null && brushShapes.shape.length() > 0 ) {
 				setBrushShape( brushShapes.shape[0].@type );
 			}
+			*/
 			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSet() );
 		}
 
@@ -463,18 +466,22 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			return _availableBrushKitNames;
 		}
 
+		/*
 		public function getCurrentBrushShapes():XML {
 			return _activeBrushKit.getShapeSet();
 		}
+		*/
 
 		public function getCurrentBrushParameters():XML {
 			return _activeBrushKit.getParameterSet();
 		}
 
+		/*
 		public function setBrushShape(id : String) : void
 		{
 			_activeBrushKit.setBrushShape( id );
 		}
+		*/
 		
 		/*
 		public function setColorBlending( minColorBlendFactor:Number, maxColorBlendFactor:Number, minimumOpacity:Number, maximumOpacity:Number ):void 

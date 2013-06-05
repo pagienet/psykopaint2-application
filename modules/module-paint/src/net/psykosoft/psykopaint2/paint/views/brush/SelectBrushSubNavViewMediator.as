@@ -23,25 +23,29 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			view.setButtonClickCallback( onButtonClicked );
 
 			// Post init.
+
 			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
 			view.setSelectedBrush( paintModule.activeBrushKit );
+
+		//	view.setAvailableShapes( paintModule.getCurrentBrushShapes() );
+		//	view.setSelectedShape( paintModule.activeBrushKitShape );
 		}
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
-				case SelectBrushSubNavView.LBL_BACK: {
+				case SelectBrushSubNavView.LBL_BACK: 
 					requestStateChange( StateType.STATE_PREVIOUS );
 					break;
-				}
-				case SelectBrushSubNavView.LBL_EDIT_BRUSH: {
+				
+				case SelectBrushSubNavView.LBL_EDIT_BRUSH: 
 					requestStateChange( StateType.STATE_PAINT_ADJUST_BRUSH );
 					break;
-				}
-				default: { // Center buttons select a brush.
+				
+				default: // Center buttons select a brush.
 					paintModule.activeBrushKit = label;
 					EditBrushCache.setLastSelectedBrush( label );
 					break;
-				}
+				
 			}
 		}
 	}

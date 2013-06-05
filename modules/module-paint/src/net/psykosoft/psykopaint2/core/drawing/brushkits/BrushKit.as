@@ -39,8 +39,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				var engine:AbstractBrush = new _brushClassFromBrushType[ String(xml.@engine) ]();
 				kit.brushEngine = engine;
 				
-				if ( xml.shapes[0] )
-					engine.setAvailableBrushShapes(xml.shapes[0]);
+				//if ( xml.shapes[0] )
+				//	engine.setAvailableBrushShapes(xml.shapes[0]);
 				if ( xml.pathengine[0] )
 				{
 					engine.setPathEngine(xml.pathengine[0]);
@@ -119,10 +119,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			return _brushEngine.getParameterSet([]);
 		}
 		
+		/*
 		public function getShapeSet():XML
 		{
 			return _brushEngine.getAvailableBrushShapes();
-		}			
+		}		
+		*/
 		
 		public function setBrushParameter( parameter:XML):void
 		{
@@ -156,6 +158,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					_brushEngine.pathManager.movePointDecorator(int(message.@oldIndex), int(message.@newIndex) );
 					dispatchEvent( new Event( Event.CHANGE ) );
 				break;
+				/*
 				case "addShape":
 					_brushEngine.addAvailableShape(message.@type);
 					sendBrushKitParameterSet();
@@ -166,6 +169,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					sendBrushKitParameterSet();
 					dispatchEvent( new Event( Event.CHANGE ) );
 					break;
+				*/
 				default:
 					throw("unknown target "+target );	
 				break;

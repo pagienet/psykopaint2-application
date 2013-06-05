@@ -107,7 +107,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			throw new AbstractMethodError();
 		}
 
-		
+		/*
 		public function getAvailableBrushShapes() : XML
 		{
 			return _availableBrushShapes;
@@ -118,6 +118,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			_availableBrushShapes = data;
 		}
+		*/
 		
 		public function setPathEngine( data:XML ) : void
 		{
@@ -395,7 +396,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			}
 			
 			brushParameters.appendChild( _pathManager.getParameterSet(path) );
-			brushParameters.appendChild( getAvailableBrushShapes() );
+			//brushParameters.appendChild( getAvailableBrushShapes() );
 			return brushParameters;
 		}
 		
@@ -422,7 +423,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			_pathManager.updateParametersFromXML( message );
 		}
-		
+		/*
 		public function addAvailableShape( type:String):void
 		{
 			_availableBrushShapes.appendChild( <shape type={type}/> );
@@ -434,6 +435,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			delete _availableBrushShapes.children()[index];
 			
 		}
+		*/
 		
 	}
 }
