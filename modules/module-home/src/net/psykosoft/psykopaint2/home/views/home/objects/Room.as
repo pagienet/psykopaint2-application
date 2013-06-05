@@ -21,7 +21,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _floor:Mesh;
 		private var _shadowMesh:Mesh;
 		private var _shadows:Vector.<Mesh>;
-		private var _wallTexture:BitmapTexture;
 		private var _shadowTexture:BitmapTexture;
 		private var _shadowMaterial:TextureMaterial;
 		private var _floorMaterial:TextureMaterial;
@@ -64,7 +63,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Mesh.
 			_wall = new Mesh( wallGeometry, null );
-			changeWallpaper( BulkLoader.getLoader( "homeView" ).getBitmapData( "defaultWallpaper", true ) );
+			changeWallpaper( "defaultWallpaper" );
 			_wall.scaleX = WALL_WIDTH / wallGeometry.width;
 			_wall.scaleZ = WALL_HEIGHT / wallGeometry.height;
 			_wall.rotationX = -90;
@@ -170,15 +169,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			addChild( shadow );
 		}
 
-		public function changeWallpaper( bmd:BitmapData ):void {
-
-			// Texture.
-			_wallTexture = new BitmapTexture( bmd );
-			_wallTexture.getTextureForStage3D( _view.stage3DProxy );
-			bmd.dispose();
+		public function changeWallpaper( imageId:String ):void {
 
 			// Material.
-			_wallMaterial = new TextureMaterial( _wallTexture );
+			_wallMaterial = TextureUtil.getAtfMaterial( "homeView", imageId, _view );
 			_wallMaterial.mipmap = false;
 			_wallMaterial.smooth = true;
 			_wallMaterial.repeat = true;

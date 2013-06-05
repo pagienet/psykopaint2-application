@@ -181,8 +181,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onWallPaperChanged( bmd:BitmapData ):void {
-			if( !view.visible ) return;
-			view.room.changeWallpaper( bmd );
+			/*if( !view.visible ) return;
+			view.room.changeWallpaper( bmd );*/
 		}
 	}
 }

@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting5.jpg", "samplePainting5" );
 			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting6.jpg", "samplePainting6" );
 			// Room assets.
-			_loader.registerAsset( "/home-packaged/away3d/wallpapers/fullsize/default.jpg", "defaultWallpaper" );
+			_loader.registerAsset( rootUrl + "away3d/wallpapers/fullsize/default" + extra + ".atf", "defaultWallpaper", BulkLoader.TYPE_BINARY );
 			_loader.registerAsset( "/home-packaged/away3d/frames/frame-shadow-uncompressed.atf", "frameShadow", BulkLoader.TYPE_BINARY );
 			_loader.registerAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", BulkLoader.TYPE_BINARY );
 
