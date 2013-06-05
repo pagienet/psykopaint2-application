@@ -9,10 +9,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.textures.ATFTexture;
 	import away3d.textures.BitmapTexture;
 
-	import br.com.stimuli.loading.BulkLoader;
-
-	import flash.display.BitmapData;
-
 	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
 
 	public class Room extends ObjectContainer3D
@@ -21,7 +17,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _floor:Mesh;
 		private var _shadowMesh:Mesh;
 		private var _shadows:Vector.<Mesh>;
-		private var _shadowTexture:BitmapTexture;
 		private var _shadowMaterial:TextureMaterial;
 		private var _floorMaterial:TextureMaterial;
 		private var _wallMaterial:TextureMaterial;

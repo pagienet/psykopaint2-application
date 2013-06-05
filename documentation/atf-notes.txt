@@ -1,0 +1,37 @@
+//////////////////////////////
+Command line commands:
+//////////////////////////////
+
+General:
+png2atf {compression} {mipmaps} -i {sourcepng} -o {outputatf}
+
+Compression:
+-c {type} or do not specify for no compression.
+Type: Can be p for iOS, d for desktop or e for android.
+Transparency: Note that using compression does not support transparency. Away3D can support transparency on non-compressed atfs, just make sure to set material.alphaBlending = true.
+Naming: If compression is not used, add "-uncompressed" to the name of the file. If a platform is used, add "-ios" or "-desktop".
+
+Mipmaps:
+-n {from, to} or do not specify for all mipmaps.
+For no mipmaps: -n 0,0
+Away3D: If no mipmaps are used, make sure to set material.mipmap = false or object will not be visible.
+Naming: Add "-mips" to files that use mipmaps. Do not add anything if there are no mipmaps, since this is the common case in the application.
+
+Image dimensions:
+Pow2: Image dimensions must be a power of 2.
+Square: ATF documentation says that compressed images need to be square, but practice shows otherwise.
+
+ATFViewer:
+Make sure to use this app to check on generated atf files.
+
+Examples for transparent images:
+png2atf -i default.png -o default-uncompressed-mips.atf
+png2atf -n 0,0 -i default.png -o default-uncompressed.atf // No mipmaps.
+
+Examples for opaque images with no mipmaps:
+png2atf -c p -n 0,0 -i default.png -o default-ios.atf
+png2atf -c e -n 0,0 -i default.png -o default-desktop.atf
+
+Examples for opaque images with mipmaps:
+png2atf -c p -i default.png -o default-ios-mips.atf
+png2atf -c p -n 0,3 -i default.png -o default-ios-mips.atf // Mip map levels from 0 to 3
