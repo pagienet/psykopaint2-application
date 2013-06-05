@@ -362,18 +362,30 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					break;
 				case StringListParameter:
 				case IconListParameter:
-					_stringValues = Vector.<String>(String( message.@list ).split(",") );
-					_minLimit = 0;
-					_maxLimit = _stringValues.length-1;
-					index =  int( message.@index );
+					if ( message.hasOwnProperty("@list") )
+					{
+						_stringValues = Vector.<String>(String( message.@list ).split(",") );
+						_minLimit = 0;
+						_maxLimit = _stringValues.length-1;
+					}
+					if ( message.hasOwnProperty("@index") )
+					{
+						index =  int( message.@index );
+					}	
 					break;
 				case NumberListParameter:
 				case IntListParameter:
 				case BooleanListParameter:
-					_numberValues = Vector.<Number>(String( message.@list ).split(",") );
-					_minLimit = 0;
-					_maxLimit = _numberValues.length-1;
-					index =  int( message.@index );
+					if ( message.hasOwnProperty("@list") )
+					{
+						_numberValues = Vector.<Number>(String( message.@list ).split(",") );
+						_minLimit = 0;
+						_maxLimit = _numberValues.length-1;
+					}
+					if ( message.hasOwnProperty("@index") )
+					{
+						index =  int( message.@index );
+					}
 					break;
 				case BooleanParameter:
 					booleanValue = int( message.@value ) == 1;

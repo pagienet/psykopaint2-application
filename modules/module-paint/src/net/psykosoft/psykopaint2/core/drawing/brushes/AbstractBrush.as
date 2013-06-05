@@ -172,8 +172,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, textureManager : ITextureManager) : void
 		{
-			brushShape = brushShapeLibrary.getBrushShape(_shapes.stringValue);
 			_brushMesh = createBrushMesh();
+			brushShape = brushShapeLibrary.getBrushShape(_shapes.stringValue);
+			
 			_view = view;
 			_canvasModel = canvasModel;
 			_context = context;
