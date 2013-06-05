@@ -110,32 +110,32 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</StationaryDecorator>
 						<ColorDecorator>
 							<!-- pick color at current point -->
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Pick Color"  path="pathengine.pointdecorator_2" value="1" />
 						</ColorDecorator>
 						<SplatterDecorator>
 							<!-- randomize position -->
-							<parameter id="Splat Factor"  path="pathengine.pointdecorator_1" value="8" />
-							<parameter id="Minimum Offset" path="pathengine.pointdecorator_1" value="1" />
-							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_1" value="360" />
+							<parameter id="Splat Factor"  path="pathengine.pointdecorator_3" value="8" />
+							<parameter id="Minimum Offset" path="pathengine.pointdecorator_3" value="1" />
+							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_3" value="360" />
 						</SplatterDecorator>
 						<ConditionalDecorator>
 							<!-- if speed < 0.1 add dripping particles -->
-							<parameter id="Test Property"  path="pathengine.pointdecorator_2" index="0" />
-							<parameter id="Threshold"  path="pathengine.pointdecorator_2" value="0.1" />
+							<parameter id="Test Property"  path="pathengine.pointdecorator_4" index="0" />
+							<parameter id="Threshold"  path="pathengine.pointdecorator_4" value="0.1" />
 						</ConditionalDecorator>
 						<SizeDecorator>
-							<parameter id="Mode"  path="pathengine.pointdecorator_3" index="0" />
-							<parameter id="Factor" path="pathengine.pointdecorator_3" value1="0.02" value2="0.15"/>
+							<parameter id="Mode"  path="pathengine.pointdecorator_5" index="0" />
+							<parameter id="Factor" path="pathengine.pointdecorator_5" value1="0.02" value2="0.15"/>
 						</SizeDecorator>
 						<ParticleDecorator>
-							<parameter id="Use Accelerometer"  path="pathengine.pointdecorator_4" value={1} />
-							<parameter id="Curl Angle"  path="pathengine.pointdecorator_4" value={0} />
-							<parameter id="Lifespan"  path="pathengine.pointdecorator_4" value1={150} value2={500}/>
-							<parameter id="Render Steps per Frame" path="pathengine.pointdecorator_4" value={10}/>
-							<parameter id="Update Probability" path="pathengine.pointdecorator_4" value1={1} value2={1}/>
-							<parameter id="Spawn Probability" path="pathengine.pointdecorator_4" value={0.3}/>
-							<parameter id="Minimum Spawn Distance" path="pathengine.pointdecorator_4" value={0}/>
-							<parameter id="Max Concurrent Particles" path="pathengine.pointdecorator_4" value={20}/>
+							<parameter id="Use Accelerometer"  path="pathengine.pointdecorator_6" value={1} />
+							<parameter id="Curl Angle"  path="pathengine.pointdecorator_6" value={0} />
+							<parameter id="Lifespan"  path="pathengine.pointdecorator_6" value1={150} value2={500}/>
+							<parameter id="Render Steps per Frame" path="pathengine.pointdecorator_6" value={10}/>
+							<parameter id="Update Probability" path="pathengine.pointdecorator_6" value1={1} value2={1}/>
+							<parameter id="Spawn Probability" path="pathengine.pointdecorator_6" value={0.3}/>
+							<parameter id="Minimum Spawn Distance" path="pathengine.pointdecorator_6" value={0}/>
+							<parameter id="Max Concurrent Particles" path="pathengine.pointdecorator_6" value={20}/>
 						</ParticleDecorator>
 						<EndConditionalDecorator/>
 						<EndConditionalDecorator/>
