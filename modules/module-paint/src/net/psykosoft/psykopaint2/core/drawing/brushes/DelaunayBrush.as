@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		
 		
-		override public function set brushShape(brushShape : AbstractBrushShape) : void
+		override protected function set brushShape(brushShape : AbstractBrushShape) : void
 		{
 			super.brushShape = brushShape;
 			TexturedAntialiasedColoredTriangleStroke(_brushMesh).brushTexture = _brushShape.texture;

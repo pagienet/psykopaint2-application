@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private var _parameter:XML;
 
 		public static const LBL_BACK:String = "Pick a Shape";
-		public static const LBL_SHAPE:String = "Shapes";
+		//public static const LBL_SHAPE:String = "Shapes";
 
 		private const UI_ELEMENT_Y:uint = 560;
 
@@ -85,8 +85,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			_parametersXML = xml;
 			trace( this, "receiving parameters: " + _parametersXML );
 
-			// Shapes button is always present.
-			addCenterButton( LBL_SHAPE );
+			// Shapes button is always present. - @Mario: not anymore, should be automatically done by the regular parameter list
+			//addCenterButton( LBL_SHAPE );
 
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
@@ -104,8 +104,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 //				_btns.push( btn );
 			}
 			invalidateContent();
+			
+			/*
+			//TODO: the shapes do not have to be handled separately anymore
+			// there is a new parameter type "IconListParameter" which should create the required component
 			openParameter( LBL_SHAPE );
 			selectButtonWithLabel( LBL_SHAPE );
+			*/
 		}
 
 		// ---------------------------------------------------------------------
@@ -120,6 +125,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			_uiElements = new Vector.<DisplayObject>();
 
 			// Special treatment for the shapes "parameter".
+			/*
 			_tempIsShapeCombo = id == LBL_SHAPE;
 			if( id == LBL_SHAPE ) {
 				var shapeList:XMLList = _parametersXML.descendants( "shape" );
@@ -140,7 +146,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				_uiElements.push( shapeComboBox );
 				return;
 			}
-
+			*/
 			// Regular parameters...
 
 			_parameter = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ];
@@ -213,6 +219,23 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				positionUiElement( checkBox );
 				addChild( checkBox );
 				_uiElements.push( checkBox );
+			} else if (parameterType == PsykoParameter.IconListParameter)
+			{
+				var shapeList:Array = String(_parameter.@list).split(",");
+				var numShapes:uint = shapeList.length;
+				if( numShapes == 0 ) return;
+				var shapeComboBox:ComboBox = new ComboBox( this );
+				shapeComboBox.alternateRows = true;
+				shapeComboBox.openPosition = ComboBox.TOP;
+				for( i = 0; i < numShapes; ++i ) {
+					shapeComboBox.addItem(  shapeList[ i ] );
+				}
+				shapeComboBox.defaultLabel = shapeList[ 0 ];
+				shapeComboBox.numVisibleItems = Math.min( 6, numShapes );
+				shapeComboBox.addEventListener( Event.SELECT, onComboBoxChanged );
+				shapeComboBox.draw();
+				positionUiElement( shapeComboBox as DisplayObject );
+				_uiElements.push( shapeComboBox );
 			}
 
 			// No Ui component for this parameter.
@@ -230,9 +253,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 		}
 
-		// TODO: remove
-		private var _tempIsShapeCombo:Boolean;
-
 		private function closeLastParameter():void {
 			if( !_uiElements ) return;
 			// Remove all ui elements from display and clear listeners
@@ -242,12 +262,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				if( uiElement is SbSlider ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
 				else if( uiElement is SbRangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
 				else if( uiElement is ComboBox ) {
-					if( !_tempIsShapeCombo ) {
-						uiElement.removeEventListener( Event.SELECT, onComboBoxChanged );
-					}
-					else {
-						uiElement.removeEventListener( Event.SELECT, onShapeComboBoxChanged );
-					}
+					uiElement.removeEventListener( Event.SELECT, onComboBoxChanged );
 				}
 				else if( uiElement is SbCheckBox ) uiElement.addEventListener( Event.CHANGE, onCheckBoxChanged );
 				else if( uiElement is Knob ) uiElement.addEventListener( Event.CHANGE, onKnobChanged );
@@ -268,11 +283,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			element.y = UI_ELEMENT_Y + offsetY;
 		}
 
+		//Mario: this method is not really required since when a parameter xml is changed the main xml object automatically updates anyway
+		/*
 		private function updateActiveParameter():void {
 			var id:String = _parameter.@id;
 			_parametersXML.descendants( "parameter" ).( @id == id )[ 0 ] = _parameter;
 		}
-
+		*/
 		private function notifyParameterChange():void {
 			brushParameterChangedSignal.dispatch( _parameter );
 		}
@@ -284,22 +301,28 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private function onKnobChanged( event:Event ):void {
 		    var knob:Knob = event.target as Knob;
 			_parameter.@value = knob.value;
-			updateActiveParameter();
+			//updateActiveParameter();
 			notifyParameterChange();
 		}
 
 		private function onCheckBoxChanged( event:Event ):void {
 			var checkBox:SbCheckBox = event.target as SbCheckBox;
 			_parameter.@value = checkBox.selected;
-			updateActiveParameter();
+		//	updateActiveParameter();
 			notifyParameterChange();
 		}
 
 		private function onComboBoxChanged( event:Event ):void {
 			var comboBox:ComboBox = event.target as ComboBox;
+			/*
 			var list:Array = String( _parameter.@list ).split( "," );
 			_parameter.@index = list.indexOf( comboBox.selectedItem );
-			updateActiveParameter();
+			*/
+			//Mario: not sure there was some special intention to handle it the way above
+			// but since the combob ox items is originally created from the
+			// list parameter we can use the selected index directly
+			_parameter.@index = comboBox.selectedIndex;
+			//updateActiveParameter();
 			notifyParameterChange();
 		}
 
@@ -312,7 +335,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private function onSliderChanged( event:Event ):void {
 			var slider:SbSlider = event.target as SbSlider;
 			_parameter.@value = slider.value;
-			updateActiveParameter();
+			//updateActiveParameter();
 			notifyParameterChange();
 		}
 
@@ -320,7 +343,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var slider:SbRangedSlider = event.target as SbRangedSlider;
 			_parameter.@value1 = slider.value1;
 			_parameter.@value2 = slider.value2;
-			updateActiveParameter();
+			//updateActiveParameter();
 			notifyParameterChange();
 		}
 	}

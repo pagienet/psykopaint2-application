@@ -80,7 +80,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_depthStencil = useDepthStencil;
 			_incremental = incremental;
 			_parameters = new Vector.<PsykoParameter>();
-			_shapes    = new PsykoParameter( PsykoParameter.StringListParameter, "Shapes",0,["basic"]);
+			_shapes    = new PsykoParameter( PsykoParameter.IconListParameter, "Shapes",0,["basic"]);
 			
 			_opacity    = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Opacity",0.5,1,0,1);
 			_colorBlend = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Color Blending",0.5,1,0,1);
@@ -142,17 +142,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 		}
 
-		public function get brushShape() : AbstractBrushShape
-		{
-			return _brushShape;
-		}
-		
 		public function get pathManager() : PathManager
 		{
 			return _pathManager;
 		}
 
-		public function set brushShape(brushShape : AbstractBrushShape) : void
+		protected function get brushShape() : AbstractBrushShape
+		{
+			return _brushShape;
+		}
+		
+		protected function set brushShape(brushShape : AbstractBrushShape) : void
 		{
 			if (_brushShape == brushShape) return;
 			if (_brushShape) _brushShape.freeMemory();
@@ -164,6 +164,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			rotationRange = _brushShape.rotationRange;
 		}
 		
+		protected function onShapeChanged(event:Event):void
+		{
+			brushShape = brushShapeLibrary.getBrushShape(_shapes.stringValue);
+		}
+		
+		
 		public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, textureManager : ITextureManager) : void
 		{
 			brushShape = brushShapeLibrary.getBrushShape(_shapes.stringValue);
@@ -173,11 +179,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context = context;
 			_textureManager = textureManager;
 			_pathManager.activate(view,canvasModel);
+			_shapes.addEventListener( Event.CHANGE, onShapeChanged );
 		}
-
+		
 		public function deactivate() : void
 		{
 			_pathManager.deactivate();
+			_shapes.removeEventListener( Event.CHANGE, onShapeChanged );
 			if (_brushShape) _brushShape.freeMemory();
 		}
 
@@ -210,13 +218,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			for (var i : int = 0; i < len; i++) {
 				var point : SamplePoint = points[i];
 				point.normalizeXY(_canvasScaleW,_canvasScaleH);
-				/*
-				var x : Number = point.x;
-				var y : Number = point.y;
-
-				point.x = x * _canvasScaleW - 1.0;
-				point.y = y * _canvasScaleH - 1.0;
-				*/
 				processPoint( point );
 			}
 			_firstPoint = false;

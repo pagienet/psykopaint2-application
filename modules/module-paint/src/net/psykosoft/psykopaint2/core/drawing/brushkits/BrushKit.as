@@ -15,7 +15,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.brushes.UncoloredSprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterDamageBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
@@ -38,8 +37,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				var engine:AbstractBrush = new _brushClassFromBrushType[ String(xml.@engine) ]();
 				kit.brushEngine = engine;
 				
-				//if ( xml.shapes[0] )
-				//	engine.setAvailableBrushShapes(xml.shapes[0]);
 				if ( xml.pathengine[0] )
 				{
 					engine.setPathEngine(xml.pathengine[0]);
@@ -73,7 +70,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		
 		private var _brushEngine:AbstractBrush;
-		//private var _selectedBrushShapeID:String;
 		
 		
 		public function BrushKit() 
@@ -89,11 +85,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		public function activate( view : DisplayObject, context : Context3D, canvasModel : CanvasModel, textureManager : ITextureManager ):void
 		{
 			_brushEngine.activate(view, context, canvasModel, textureManager );
-			//if ( _selectedBrushShapeID != null ) setBrushShape( _selectedBrushShapeID );
-			
 			PsykoSocket.addMessageCallback("ActiveBrushKit.*", this, onSocketMessage );
 			sendBrushKitParameterSet();
-			
 		}
 		
 		public function deactivate():void
@@ -117,13 +110,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			return _brushEngine.getParameterSet([]);
 		}
-		
-		/*
-		public function getShapeSet():XML
-		{
-			return _brushEngine.getAvailableBrushShapes();
-		}		
-		*/
 		
 		public function setBrushParameter( parameter:XML):void
 		{
@@ -177,14 +163,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		//	PsykoSocket.sendString( ping );
 		}
 		
-		/*
-		public function setBrushShape( id:String ):void
-		{
-			_selectedBrushShapeID = id;
-			brushEngine.brushShape = brushShapeLibrary.getBrushShape(id);
-		}
-		*/
-		
 		protected function sendBrushKitParameterSet():void
 		{
 			var message:XML = <msg src="ActiveBrushKit.parameterSet" />;
@@ -192,9 +170,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			PsykoSocket.sendString( message.toXMLString() );
 		}
 		
+		/*
 		public function get getActiveBrushShape():String {
 			return _brushEngine.getParameter("Shapes").stringValue;
 		}
+		*/
 		
 	}
 }

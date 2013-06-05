@@ -50,7 +50,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			return new TextureSplatMesh();
 		}
 
-		override public function set brushShape(brushShape : AbstractBrushShape) : void
+		override protected function set brushShape(brushShape : AbstractBrushShape) : void
 		{
 			super.brushShape = brushShape;
 			if (_brushMesh)

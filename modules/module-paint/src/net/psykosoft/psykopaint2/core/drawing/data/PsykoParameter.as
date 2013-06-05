@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.core.drawing.data
 {
-	public class PsykoParameter
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+
+	public class PsykoParameter extends EventDispatcher
 	{
 		// TODO: @Mario - let me know if you add parameters or if you need any ui component implementations
 		public static const NumberParameter:int = 0; // slider
@@ -12,10 +15,12 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		public static const IntListParameter:int = 6; // combo box TODO
 		public static const StringListParameter:int = 7; // combo box TODO minimalcomps for now, implement real combobox ( design is ready, component is not )
 		public static const BooleanParameter:int = 8; // checkbox TODO: there seems to be a bug in the way the core handles parameter updates
-		public static const BooleanListParameter:int = 9; // check box TODO: what is a boolean list?
+		public static const BooleanListParameter:int = 9; // check box TODO: what is a boolean list? Mario: it's a list of checkboxes - probably never used
 		public static const AngleParameter:int = 10; // angle control TODO: minimalcomps for now, implement real knob
 		public static const AngleRangeParameter:int = 11; // double angle control TODO: using range slider for now
-
+		public static const IconListParameter:int = 12; // works like a stringlist, but the type allows the view to pick a separate selection component
+		
+		
 		public static function getTypeName( type:int ):String {
 			switch( type ) {
 				case NumberParameter: return "NumberParameter";
@@ -29,6 +34,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case BooleanListParameter: return "BooleanListParameter";
 				case AngleParameter: return "AngleParameter";
 				case AngleRangeParameter: return "AngleRangeParameter";
+				case IconListParameter: return "IconListParameter";
 			}
 			return "unrecognized - have a look in PsykoParameter.as";
 		}
@@ -84,6 +90,11 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					list = data.@list.split(",");
 					return new PsykoParameter( int(data.@type), data.@id, int(data.@index), list );
 				break;
+				case IconListParameter:
+					//index, array
+					list = data.@list.split(",");
+					return new PsykoParameter( int(data.@type), data.@id, int(data.@index), list );
+					break;
 				case BooleanParameter:
 					//value, minValue, maxValue 
 					return new PsykoParameter( int(data.@type), data.@id, int( data.@value ) == 1 );
@@ -142,6 +153,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					_maxLimit = _numberValues.length-1;
 					break;
 				case StringListParameter:
+				case IconListParameter:
 					//index, array
 					_index = args[0];
 					_stringValues = Vector.<String>( args[1] );
@@ -178,6 +190,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				if ( value < _minLimit ) value = _minLimit;
 				if ( value > _maxLimit ) value = _maxLimit;
 				_numberValue = value;
+				dispatchEvent( new Event( Event.CHANGE ) );
 			} 
 		}
 		
@@ -200,6 +213,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				if ( v > _maxLimit ) v = _maxLimit;
 				_numberValue = v;
 			}
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
 		public function get booleanValue():Boolean
@@ -210,6 +224,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		public function set booleanValue( value:Boolean ):void
 		{
 			_numberValue = value ? 1 : 0;
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
 		public function get intValue():int
@@ -226,6 +241,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( value < _minLimit ) value = _minLimit;
 			if ( value > _maxLimit ) value = _maxLimit;
 			_numberValue = value;
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
 		public function get index():int
@@ -238,6 +254,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( value < _minLimit ) value = _minLimit;
 			if ( value > _maxLimit ) value = _maxLimit;
 			_index = value;
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
 		public function get lowerRangeValue():Number
@@ -250,6 +267,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( value < _minLimit ) value = _minLimit;
 			if ( value > _maxLimit ) value = _maxLimit;
 			_numberValues[0] = value;
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
 		public function get upperRangeValue():Number
@@ -262,6 +280,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( value < _minLimit ) value = _minLimit;
 			if ( value > _maxLimit ) value = _maxLimit;
 			_numberValues[1] = value;
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
 		
@@ -276,6 +295,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( v < _minLimit ) v = _minLimit;
 			if ( v > _maxLimit ) v = _maxLimit;
 			_numberValues[0] = v;
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
 		public function get upperDegreesValue():Number
@@ -289,6 +309,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( v < _minLimit ) v = _minLimit;
 			if ( v > _maxLimit ) v = _maxLimit;
 			_numberValues[1] = v;
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
 		public function get rangeValue():Number
@@ -298,7 +319,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		
 		public function get stringValue():String
 		{
-			if ( type == StringListParameter )
+			if ( type == StringListParameter  || type == IconListParameter)
 			{
 				return _stringValues[_index];
 			}
@@ -308,6 +329,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		public function set stringValue( value:String ):void
 		{
 			_stringValue = value;
+			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
 		public function updateValueFromXML( message:XML ):void
@@ -338,10 +360,19 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case StringParameter:
 					stringValue = String(message.@value);
 					break;
+				case StringListParameter:
+				case IconListParameter:
+					_stringValues = Vector.<String>(String( message.@list ).split(",") );
+					_minLimit = 0;
+					_maxLimit = _stringValues.length-1;
+					index =  int( message.@index );
+					break;
 				case NumberListParameter:
 				case IntListParameter:
 				case BooleanListParameter:
-				case StringListParameter:
+					_numberValues = Vector.<Number>(String( message.@list ).split(",") );
+					_minLimit = 0;
+					_maxLimit = _numberValues.length-1;
 					index =  int( message.@index );
 					break;
 				case BooleanParameter:
@@ -389,6 +420,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					result.@list = _numberValues.join(",");
 					break;
 				case StringListParameter:
+				case IconListParameter:
 					result.@index = _index;
 					result.@list = _stringValues.join(",");
 					break;
