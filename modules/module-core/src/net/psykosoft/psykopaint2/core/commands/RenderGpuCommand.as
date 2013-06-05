@@ -54,8 +54,7 @@ package net.psykosoft.psykopaint2.core.commands
 				trace( this, "clear context" );
 			}
 			stage3DProxy.context3D.setRenderToBackBuffer();
-//			stage3DProxy.context3D.clear( 1, 1, 1, 1 );
-			stage3DProxy.clear(); // TODO: @dave, review, avoids runtime error in Mouse3DManager.updateCollider cause view.stage3DProxy.bufferClear never happens
+			stage3DProxy.clear();
 
 			// Normal steps.
 			steps = GpuRenderManager.renderingSteps;

@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
@@ -18,6 +19,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.home.signals.notifications.RequestWallpaperChangeSignal;
 
 	public class HomeViewMediator extends MediatorBase
 	{
@@ -27,8 +29,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var stateModel:StateModel;
 
-//		[Inject]
-//		public var notifyWallpaperChangeSignal:NotifyWallpaperChangeSignal;
+		[Inject]
+		public var requestWallpaperChangeSignal:RequestWallpaperChangeSignal;
 
 		[Inject]
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
@@ -59,14 +61,15 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerEnablingState( StateType.STATE_HOME );
 			registerEnablingState( StateType.STATE_HOME_ON_EASEL );
 			registerEnablingState( StateType.STATE_HOME_ON_PAINTING );
-			registerEnablingState( StateType.STATE_HOME_SETTINGS );
+			registerEnablingState( StateType.STATE_SETTINGS );
+			registerEnablingState( StateType.STATE_SETTINGS_WALLPAPER );
 			view.stage3dProxy = stage3dProxy;
 
 			// Register view gpu rendering in core.
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 
 			// From app.
-//			notifyWallpaperChangeSignal.add( onWallPaperChanged );
+			requestWallpaperChangeSignal.add( onWallPaperChanged );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyNavigationToggleSignal.add( onNavigationToggled );
 			notifyCanvasBitmapSignal.add( onCanvasBitmapReceived );
@@ -102,10 +105,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
 
 			trace( this, "closest painting changed to index: " + paintingIndex );
+
 			// Trigger settings state if closest to settings painting ( index 0 ).
-			// TODO: implement settings sub-nav
-			if( stateModel.currentState != StateType.STATE_HOME && paintingIndex == 0 ) {
-				requestStateChange( StateType.STATE_HOME );
+			if( stateModel.currentState != StateType.STATE_SETTINGS && paintingIndex == 0 ) {
+				requestStateChange( StateType.STATE_SETTINGS );
 				return;
 			}
 
@@ -180,9 +183,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 		}
 
-		private function onWallPaperChanged( bmd:BitmapData ):void {
-			/*if( !view.visible ) return;
-			view.room.changeWallpaper( bmd );*/
+		private function onWallPaperChanged( atf:ByteArray ):void {
+			if( !view.visible ) return;
+			view.room.changeWallpaper( atf );
 		}
 	}
 }

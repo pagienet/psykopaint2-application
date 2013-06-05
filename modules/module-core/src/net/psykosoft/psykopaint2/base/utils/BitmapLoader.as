@@ -29,8 +29,10 @@ package net.psykosoft.psykopaint2.base.utils
 		}
 
 		public function dispose():void {
+			// TODO: if disposed, make sure all potential previous loading is stopped
 			_callback = null;
 			_loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, onLoaderComplete );
+			_loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, onLoaderError );
 			_loader = null;
 			_url = null;
 		}

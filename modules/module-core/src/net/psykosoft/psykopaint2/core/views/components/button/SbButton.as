@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.core.views.components.button
 {
+
+	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -38,6 +40,14 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			icon.stop();
 
 			_btnLblPos = new Point( labelBg.x, labelBg.y );
+		}
+
+		public function setIcon( image:Bitmap ):void {
+			// TODO: account for possibility of previously set icon
+			image.width = image.height = 100;
+			image.x = icon.width / 2 - 50;
+			image.y = icon.height / 2 - 50;
+			icon.addChild( image );
 		}
 
 		public function setIconType( type:String ):void {

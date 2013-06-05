@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
@@ -39,8 +40,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		protected function addCenterButton( label:String,
 											iconType:String = ButtonIconType.DEFAULT,
-											labelType:String = ButtonLabelType.CENTER ):void {
-			_navigation.addCenterButton( label, iconType, labelType );
+											labelType:String = ButtonLabelType.CENTER,
+											icon:Bitmap = null
+				):void {
+			_navigation.addCenterButton( label, iconType, labelType, icon );
 		}
 
 		protected function setLeftButton( label:String ):void {

@@ -1,12 +1,17 @@
 package net.psykosoft.psykopaint2.home.config
 {
 
+	import net.psykosoft.psykopaint2.home.signals.notifications.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.NewPaintingSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.NewPaintingSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavView;
+	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavView;
+	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavViewMediator;
 
 	import org.swiftsuspenders.Injector;
 
@@ -68,7 +73,7 @@ package net.psykosoft.psykopaint2.home.config
 		// -----------------------
 
 		private function mapNotifications():void {
-
+	   		_injector.map( RequestWallpaperChangeSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -86,6 +91,8 @@ package net.psykosoft.psykopaint2.home.config
 		private function mapMediators():void {
 			_mediatorMap.map( HomeView ).toMediator( HomeViewMediator );
 			_mediatorMap.map( NewPaintingSubNavView ).toMediator( NewPaintingSubNavViewMediator );
+			_mediatorMap.map( SettingsSubNavView ).toMediator( SettingsSubNavViewMediator );
+			_mediatorMap.map( WallpaperSubNavView ).toMediator( WallpaperSubNavViewMediator );
 			_mediatorMap.map( HomeSubNavView ).toMediator( HomeSubNavViewMediator );
 		}
 	}

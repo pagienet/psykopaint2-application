@@ -45,8 +45,6 @@ package net.psykosoft.psykopaint2.core
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
 
-	// TODO: develop ant script that moves the packaged assets to bin ( only for the core )
-
 	public class CoreModule extends ModuleBase
 	{
 		[Embed(source="../../../../../../../modules/module-core/assets/embedded/images/launch/ipad-hr/Default-Landscape@2x.png")]

@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
 
+	import flash.display.Bitmap;
+
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
@@ -247,15 +249,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Methods called by SubNavigationViewBase.
 		// ---------------------------------------------------------------------
 
-		public function addCenterButton( label:String, iconType:String, labelType:String ):void {
+		public function addCenterButton( label:String, iconType:String, labelType:String, icon:Bitmap ):void {
 			if( _needGapCheck ) checkGap();
 			var specificButtonClass:Class = Class( getDefinitionByName( getQualifiedClassName( _leftButton ) ) );
 			var btn:SbButton = new specificButtonClass();
 			btn.labelText = label;
-			btn.setIconType( iconType );
+			if( iconType != "" ) btn.setIconType( iconType );
 			btn.setLabelType( labelType );
 			btn.x = _buttonPositionOffsetX;
 			btn.y = _scroller.visibleHeight / 2;
+			if( icon ) btn.setIcon( icon );
 			btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			// Defaults to 1st button as selected.
 			if( _areButtonsSelectable ) {

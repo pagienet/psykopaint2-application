@@ -9,6 +9,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.textures.ATFTexture;
 	import away3d.textures.BitmapTexture;
 
+	import br.com.stimuli.loading.BulkLoader;
+
+	import flash.utils.ByteArray;
+
 	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
 
 	public class Room extends ObjectContainer3D
@@ -58,7 +62,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Mesh.
 			_wall = new Mesh( wallGeometry, null );
-			changeWallpaper( "defaultWallpaper" );
+			changeWallpaper(
+					BulkLoader.getLoader( "homeView" ).getBinary( "defaultWallpaper", true )
+			);
 			_wall.scaleX = WALL_WIDTH / wallGeometry.width;
 			_wall.scaleZ = WALL_HEIGHT / wallGeometry.height;
 			_wall.rotationX = -90;
@@ -164,10 +170,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			addChild( shadow );
 		}
 
-		public function changeWallpaper( imageId:String ):void {
+		public function changeWallpaper( atf:ByteArray ):void {
+
+			// TODO: make sure previous atf is disposed
 
 			// Material.
-			_wallMaterial = TextureUtil.getAtfMaterial( "homeView", imageId, _view );
+			_wallMaterial = new TextureMaterial( new ATFTexture( atf ) );
 			_wallMaterial.mipmap = false;
 			_wallMaterial.smooth = true;
 			_wallMaterial.repeat = true;
