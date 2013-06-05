@@ -12,7 +12,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import br.com.stimuli.loading.BulkLoader;
 
 	import flash.display.BitmapData;
-	import flash.utils.ByteArray;
+
+	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
 
 	public class Room extends ObjectContainer3D
 	{
@@ -110,10 +111,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			floorGeometry.scaleUV( WALL_WIDTH / floorGeometry.width, 1 );
 
 			// Texture.
-			var bytes:ByteArray = BulkLoader.getLoader( "homeView" ).getBinary( "floorWood", true );
-			var floorTexture:ATFTexture = new ATFTexture( bytes );
-			floorTexture.getTextureForStage3D( _view.stage3DProxy );
-			bytes.clear();
+			var floorTexture:ATFTexture = TextureUtil.getAtfTexture( "homeView", "floorWood", _view );
 
 			// Material.
 			_floorMaterial = new TextureMaterial( floorTexture );

@@ -132,11 +132,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var squeeze:Number = 0.25;
 
 			var initEaselPic:BitmapData = new BitmapData( 1024, 768, false, 0xCCCCCC );
-			_easel = new Easel(
-					initEaselPic,
-					BulkLoader.getLoader( "homeView" ).getBitmapData( "easelImage", true ), _view // frame image
-			);
-//			_easel.visible = false;
+			_easel = new Easel( initEaselPic, _view );
 
 			_easel.x = _positioningOffset + squeeze * _easel.width / 2;
 			_easel.y = -300;

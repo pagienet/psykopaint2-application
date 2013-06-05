@@ -112,7 +112,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_loader.registerAsset( "/home-packaged/away3d/paintings/home_painting.jpg", "homePainting" );
 			_loader.registerAsset( "/home-packaged/away3d/paintings/settings_painting.jpg", "settingsPainting" );
 			// Other room stuff.
-			_loader.registerAsset( "/home-packaged/away3d/easel/easel.png", "easelImage" );
+			_loader.registerAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", BulkLoader.TYPE_BINARY );
 			// Sample paintings. TODO: should be removed once we have save capabilities
 			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting0.jpg", "samplePainting0" );
 			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting1.jpg", "samplePainting1" );

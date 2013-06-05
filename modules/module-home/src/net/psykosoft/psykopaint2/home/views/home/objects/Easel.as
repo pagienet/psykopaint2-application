@@ -7,8 +7,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.CubeGeometry;
-
-	import flash.display.BitmapData;
+	import away3d.primitives.PlaneGeometry;
+	import away3d.textures.ATFTexture;
 
 	import flash.display.BitmapData;
 
@@ -16,20 +16,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	public class Easel extends ObjectContainer3D
 	{
-		private var _height:Number;
-		private var _width:Number;
-
 		private var _easelMesh:Mesh;
 		private var _pictureMesh:Mesh;
 		private var _frameMesh:Mesh;
 
 		private var _view:View3D;
 
-		public function Easel( pictureImage:BitmapData, frameImage:BitmapData, view:View3D ) {
+		public function Easel( pictureImage:BitmapData, view:View3D ) {
 			super();
-
-			_width = frameImage.width;
-			_height = frameImage.height;
 
 			_view = view;
 
@@ -38,32 +32,19 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 //			addChild( tri );
 
 			// Init easel mesh.
-			_easelMesh = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( frameImage, _view.stage3DProxy );
-//			TextureMaterial( _easelMesh.material ).alphaThreshold = 0.0001; // Testing binary transparency, if it looks bad, use alphaBlending instead.material.smooth = true;
-			TextureMaterial( _easelMesh.material ).alphaBlending = true;
+			var easelMaterial:TextureMaterial = TextureUtil.getAtfMaterial( "homeView", "easelImage", view );
+			easelMaterial.alphaBlending = true;
+			easelMaterial.mipmap = false;
+			_easelMesh = new Mesh( new PlaneGeometry( 1024, 1024 ), easelMaterial );
+			_easelMesh.scale( 1.575 );
 			_easelMesh.rotationX = -90;
 			addChild( _easelMesh );
 
 			updateImage( pictureImage );
 		}
 
-		override public function dispose():void {
-
-			/*var material:TextureMaterial = _easelMesh.material as TextureMaterial;
-			var texture:BitmapTexture = material.texture as BitmapTexture;
-			texture.dispose();
-			material.dispose();*/
-			removeChild( _easelMesh );
-			_easelMesh.dispose();
-			_easelMesh = null;
-
-			_view = null;
-
-			super.dispose();
-		}
-
 		public function get width():Number {
-			return _width;
+			return 1024;
 		}
 
 		public function updateImage( bmd:BitmapData ):void {
@@ -84,7 +65,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var frameGeometry:CubeGeometry = new CubeGeometry( bmd.width, bmd.height, 25 ); // TODO: must adapt to the size of the canvas
 			var frameMaterial:ColorMaterial = new ColorMaterial( 0x333333, 1 );
 			_frameMesh = new Mesh( frameGeometry, frameMaterial );
-			_frameMesh.y = 768 / 2 - 155; // TODO: must adapt to the size of the canvas
+			_frameMesh.y = 768 / 2 - 170; // TODO: must adapt to the size of the canvas
 			_frameMesh.z = -25;
 			addChild( _frameMesh );
 
@@ -94,6 +75,21 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_pictureMesh.y = _frameMesh.y;
 			_pictureMesh.z = _frameMesh.z - frameGeometry.depth / 2 - 1;
 			addChild( _pictureMesh );
+		}
+
+		override public function dispose():void {
+
+			/*var material:TextureMaterial = _easelMesh.material as TextureMaterial;
+			var texture:BitmapTexture = material.texture as BitmapTexture;
+			texture.dispose();
+			material.dispose();*/
+			removeChild( _easelMesh );
+			_easelMesh.dispose();
+			_easelMesh = null;
+
+			_view = null;
+
+			super.dispose();
 		}
 	}
 }

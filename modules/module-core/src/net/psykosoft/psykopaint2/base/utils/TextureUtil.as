@@ -1,17 +1,22 @@
 package net.psykosoft.psykopaint2.base.utils
 {
 
+	import away3d.containers.View3D;
 	import away3d.core.base.CompactSubGeometry;
 	import away3d.core.base.SubGeometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
+	import away3d.textures.ATFTexture;
 	import away3d.textures.BitmapTexture;
+
+	import br.com.stimuli.loading.BulkLoader;
 
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.utils.ByteArray;
 
 	public class TextureUtil
 	{
@@ -134,6 +139,30 @@ package net.psykosoft.psykopaint2.base.utils
 
 		private static function isPowerOfTwo( value:int ):Boolean {
 			return value ? ((value & -value) == value) : false;
+		}
+
+		public static function getAtfMaterial( bundle:String, id:String, view:View3D ):TextureMaterial {
+			return new TextureMaterial( getAtfTexture( bundle, id, view ) );
+		}
+
+		public static function getBitmapMaterial( bundle:String, id:String, view:View3D ):TextureMaterial {
+			return new TextureMaterial( getBitmapTexture( bundle, id, view ) );
+		}
+
+		public static function getAtfTexture( bundle:String, id:String, view:View3D ):ATFTexture {
+			var bytes:ByteArray = BulkLoader.getLoader( bundle ).getBinary( id, true );
+			var texture:ATFTexture = new ATFTexture( bytes );
+			texture.getTextureForStage3D( view.stage3DProxy );
+			bytes.clear();
+			return texture;
+		}
+
+		public static function getBitmapTexture( bundle:String, id:String, view:View3D ):BitmapTexture {
+			var bmd:BitmapData = BulkLoader.getLoader( bundle ).getBitmapData( id, true );
+			var texture:BitmapTexture = new BitmapTexture( bmd );
+			texture.getTextureForStage3D( view.stage3DProxy );
+			bmd.dispose();
+			return texture;
 		}
 	}
 }
