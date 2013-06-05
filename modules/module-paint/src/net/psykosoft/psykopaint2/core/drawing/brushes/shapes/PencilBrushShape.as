@@ -10,9 +10,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class PencilBrushShape extends AbstractBrushShape
 	{
-		private var _hardness : Number = .1;
+		private var _hardness : Number = .05;
 		private var _grain : Number = 0.67;
-		private var _coarseness : Number = 1;
+		private var _coarseness : Number = .3;
 
 		public function PencilBrushShape(context3D : Context3D)
 		{
@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			_variationFactors[3] = 1 / _variationFactors[1];
 			_rotationRange = 0;
 
-			size = 8;
+			size = 16;
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void
