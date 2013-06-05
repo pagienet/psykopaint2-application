@@ -61,6 +61,9 @@
 		<copy todir="${module-app-out}/home-packaged">
 			<fileset dir="../modules/module-home/assets/packaged/home-packaged"/>
 		</copy>
+		<copy todir="${module-app-out}/home-packaged-desktop">
+			<fileset dir="../modules/module-home/assets/packaged/home-packaged-desktop"/>
+		</copy>
 		<copy todir="${module-app-out}/paint-packaged">
 			<fileset dir="../modules/module-paint/assets/packaged/paint-packaged"/>
 		</copy>
@@ -79,6 +82,9 @@
 		</copy>
 		<copy todir="${module-home-out}/home-packaged">
 			<fileset dir="../modules/module-home/assets/packaged/home-packaged"/>
+		</copy>
+		<copy todir="${module-home-out}/home-packaged-desktop">
+			<fileset dir="../modules/module-home/assets/packaged/home-packaged-desktop"/>
 		</copy>
 		<copy todir="${module-home-out}/core-packaged">
 			<fileset dir="../modules/module-core/assets/packaged/core-packaged"/>
