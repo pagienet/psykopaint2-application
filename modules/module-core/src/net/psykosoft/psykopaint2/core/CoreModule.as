@@ -329,14 +329,10 @@ package net.psykosoft.psykopaint2.core
 			trace( this, "initializing stage3d..." );
 			var stage3dManager:Stage3DManager = Stage3DManager.getInstance( stage );
 			_stage3dProxy = stage3dManager.getFreeStage3DProxy();
-			trace( this, "stage3d size: " + stage.stageWidth + ", " + stage.stageHeight );
-			_stage3dProxy.width = 1024;
-			_stage3dProxy.height = 768;
+			_stage3dProxy.width = 1024 * ViewCore.globalScaling;
+			_stage3dProxy.height = 768 * ViewCore.globalScaling;
 			_stage3d = _stage3dProxy.stage3D;
 			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContext3dCreated );
-//			_stage3d = stage.stage3Ds[ 0 ];
-//			_stage3d.addEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated, false, 50 ); // TODO: ask dave why false and 50?
-//			_stage3d.requestContext3D();
 		}
 
 		private function initRobotlegs():void {
