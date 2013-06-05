@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.core.resources
 {
-	import com.junkbyte.console.Cc;
-
 	import flash.display3D.Context3D;
 	import flash.display3D.textures.Texture;
 

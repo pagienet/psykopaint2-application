@@ -9,19 +9,26 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.RubbedStrokeMesh;
-	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+    import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
+import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
 
 	public class PencilBrush extends AbstractBrush
 	{
+        private var _surfaceRelief:PsykoParameter;
+
 		public function PencilBrush()
 		{
-			super(false, false);
-			type = BrushType.PENCIL;
+            super(false, false);
+            type = BrushType.PENCIL;
 
+            _surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence",.2, 0, 1.0);
 			_shininess.numberValue = .4;
 			_glossiness.numberValue = .5;
 			_bumpiness.numberValue = .6;
+            _sizeFactor.lowerRangeValue = .2;
+            _sizeFactor.upperRangeValue = .4;
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, textureManager : ITextureManager) : void
@@ -55,8 +62,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		override protected function createColorStrategy() : IColorStrategy
 		{
 			var strategy : PyramidMapTdsiStrategy = new PyramidMapTdsiStrategy(_canvasModel);
-			strategy.setBlendFactors(.5,1);
+			strategy.setBlendFactors(.7,1);
 			return strategy;
 		}
-	}
+
+        override protected function drawBrushColor():void {
+            RubbedStrokeMesh(_brushMesh).setSurfaceRelief(_surfaceRelief.numberValue);
+            super.drawBrushColor();
+        }
+
+
+        override protected function processPoint(point:SamplePoint):void {
+            var scale : Number = _sizeFactor.lowerRangeValue + Math.random()*(_sizeFactor.upperRangeValue - _sizeFactor.lowerRangeValue);
+            addStrokePoint(point, _brushShape.actualSize * _canvasScaleW * scale, _brushShape.rotationRange);
+        }
+    }
 }
