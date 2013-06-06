@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 {
 
 	import flash.display.BitmapData;
-
+	
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
@@ -22,7 +22,8 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 		[Inject]
 		public var notifyCropConfirmSignal:NotifyCropConfirmSignal;
-
+		
+		
 		override public function initialize():void {
 
 			super.initialize();
@@ -33,7 +34,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 			notifyCropModuleActivatedSignal.add( onCropModuleActivated );
 			notifyCropConfirmSignal.add( onCropConfirmed );
 		}
-
+		
 		// -----------------------
 		// From app.
 		// -----------------------

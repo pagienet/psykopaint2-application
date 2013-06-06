@@ -25,5 +25,10 @@ package net.psykosoft.psykopaint2.base.remote
 			}
 			return targetPath.length != incomingPath.length;
 		}
+		
+		public function equals(targetPath:String, callbackObject:Object, callbackMethod:Function):Boolean
+		{
+			return (fullTargetPath == targetPath && callbackObject == callbackObject && callbackMethod == callbackMethod );
+		}
 	}
 }

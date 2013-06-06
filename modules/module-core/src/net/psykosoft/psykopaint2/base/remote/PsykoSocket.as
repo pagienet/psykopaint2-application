@@ -181,7 +181,11 @@ package net.psykosoft.psykopaint2.base.remote
 		
 		protected function _addMessageCallback( targetPath:String, callbackObject:Object, callbackMethod:Function ):void
 		{
-			//TODO: optional check if callback already exists
+			for ( var i:int = 0; i < callbacks.length; i++ )
+			{
+				if ( callbacks[i].equals(targetPath, callbackObject, callbackMethod ) ) return
+			}
+			
 			callbacks.push( new PsykoSocketCallback(targetPath, callbackObject, callbackMethod ));
 			
 		}
@@ -190,7 +194,7 @@ package net.psykosoft.psykopaint2.base.remote
 		{
 			for ( var i:int = callbacks.length; --i >-1; )
 			{
-				if ( callbacks[i].fullTargetPath == targetPath && callbacks[i].callbackObject == callbackObject && callbacks[i].callbackMethod == callbackMethod )
+				if ( callbacks[i].equals(targetPath, callbackObject, callbackMethod ) )
 				{
 					callbacks.splice(i,1);
 				}
