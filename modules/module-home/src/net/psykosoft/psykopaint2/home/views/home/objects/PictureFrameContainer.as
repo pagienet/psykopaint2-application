@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
+	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.vos.FrameTextureAtlasDescriptorVO;
@@ -93,10 +94,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		public function loadDefaultHomeFrames():void {
 
 			// Retrieve frames atlas descriptor.
-			_atlasXml = BulkLoader.getLoader( "homeView" ).getXML( "framesAtlasXml", true );
+			_atlasXml = BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getXML( "framesAtlasXml", true );
 
 			// Material.
-			_frameMaterial = TextureUtil.getAtfMaterial( "homeView", "framesAtlasImage", _view );
+			_frameMaterial = TextureUtil.getAtfMaterial( HomeView.HOME_BUNDLE_ID, "framesAtlasImage", _view );
 			_frameMaterial.mipmap = false;
 			_frameMaterial.smooth = true;
 
@@ -110,7 +111,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// -----------------------
 
 			// Picture.
-			var settingsPicture:Picture = new Picture( BulkLoader.getLoader( "homeView" ).getBitmapData( "settingsPainting", true ), _view );
+			var settingsPicture:Picture = new Picture( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ), _view );
 			settingsPicture.scalePainting( 2 );
 
 			// Frame.
@@ -146,7 +147,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// -----------------------
 
 			// Picture.
-			var psykopaintPicture:Picture = new Picture( BulkLoader.getLoader( "homeView" ).getBitmapData( "homePainting", true ), _view );
+			var psykopaintPicture:Picture = new Picture( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ), _view );
 			psykopaintPicture.scalePainting( 2 );
 
 			// Frame.
@@ -166,7 +167,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			for( var i:uint; i < 7; i++ ) {
 
 				// Picture.
-				var picture:Picture = new Picture( BulkLoader.getLoader( "homeView" ).getBitmapData( "samplePainting" + i, true ), _view );
+				var picture:Picture = new Picture( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "samplePainting" + i, true ), _view );
 
 				// Frame.
 				var descriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO(

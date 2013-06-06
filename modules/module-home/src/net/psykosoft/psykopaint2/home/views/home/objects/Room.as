@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
+	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
 	public class Room extends ObjectContainer3D
 	{
@@ -63,7 +64,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// Mesh.
 			_wall = new Mesh( wallGeometry, null );
 			changeWallpaper(
-					BulkLoader.getLoader( "homeView" ).getBinary( "defaultWallpaper", true )
+					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBinary( "defaultWallpaper", true )
 			);
 			_wall.scaleX = WALL_WIDTH / wallGeometry.width;
 			_wall.scaleZ = WALL_HEIGHT / wallGeometry.height;
@@ -80,7 +81,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private function loadShadow():void {
 
 			// Material.
-			_shadowMaterial = TextureUtil.getAtfMaterial( "homeView", "frameShadow", _view );
+			_shadowMaterial = TextureUtil.getAtfMaterial( HomeView.HOME_BUNDLE_ID, "frameShadow", _view );
 			_shadowMaterial.smooth = true;
 			_shadowMaterial.mipmap = false;
 			_shadowMaterial.alpha = 0.9;
@@ -105,7 +106,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			floorGeometry.scaleUV( WALL_WIDTH / floorGeometry.width, 1 );
 
 			// Texture.
-			var floorTexture:ATFTexture = TextureUtil.getAtfTexture( "homeView", "floorWood", _view );
+			var floorTexture:ATFTexture = TextureUtil.getAtfTexture( HomeView.HOME_BUNDLE_ID, "floorWood", _view );
 
 			// Material.
 			_floorMaterial = new TextureMaterial( floorTexture );

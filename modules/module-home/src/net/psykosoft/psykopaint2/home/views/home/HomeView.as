@@ -30,6 +30,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _stage3dProxy:Stage3DProxy;
 		private var _fpsCache:Number;
 
+		public static const HOME_BUNDLE_ID:String = "homeView";
+
 		public function HomeView() {
 			super();
 			scalesToRetina = false;
@@ -99,39 +101,34 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Prepare external assets.
 			// -------------------------
 
-			_loader = new AssetBundleLoader( "homeView" );
-			_loader.addEventListener( Event.COMPLETE, onAssetsReady );
+			initializeBundledAssets( HOME_BUNDLE_ID );
 
 			var rootUrl:String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
 			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
 
 			// Picture frame assets.
-			_loader.registerAsset( rootUrl + "away3d/frames/frames" + extra + ".atf", "framesAtlasImage", BulkLoader.TYPE_BINARY );
-			_loader.registerAsset( "/home-packaged/away3d/frames/frames.xml", "framesAtlasXml" );
+			registerBundledAsset( rootUrl + "away3d/frames/frames" + extra + ".atf", "framesAtlasImage", true );
+			registerBundledAsset( "/home-packaged/away3d/frames/frames.xml", "framesAtlasXml" );
 			// Default paintings.
-			_loader.registerAsset( "/home-packaged/away3d/paintings/home_painting.jpg", "homePainting" );
-			_loader.registerAsset( "/home-packaged/away3d/paintings/settings_painting.jpg", "settingsPainting" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/home_painting.jpg", "homePainting" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/settings_painting.jpg", "settingsPainting" );
 			// Other room stuff.
-			_loader.registerAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", BulkLoader.TYPE_BINARY );
+			registerBundledAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", true );
 			// Sample paintings. TODO: should be removed once we have save capabilities
-			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting0.jpg", "samplePainting0" );
-			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting1.jpg", "samplePainting1" );
-			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting2.jpg", "samplePainting2" );
-			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting3.jpg", "samplePainting3" );
-			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting4.jpg", "samplePainting4" );
-			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting5.jpg", "samplePainting5" );
-			_loader.registerAsset( "/home-packaged/away3d/paintings/sample_painting6.jpg", "samplePainting6" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting0.jpg", "samplePainting0" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting1.jpg", "samplePainting1" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting2.jpg", "samplePainting2" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting3.jpg", "samplePainting3" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting4.jpg", "samplePainting4" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting5.jpg", "samplePainting5" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting6.jpg", "samplePainting6" );
 			// Room assets.
-			_loader.registerAsset( rootUrl + "away3d/wallpapers/fullsize/default" + extra + ".atf", "defaultWallpaper", BulkLoader.TYPE_BINARY );
-			_loader.registerAsset( "/home-packaged/away3d/frames/frame-shadow-uncompressed.atf", "frameShadow", BulkLoader.TYPE_BINARY );
-			_loader.registerAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", BulkLoader.TYPE_BINARY );
-
-			_loader.startLoad();
+			registerBundledAsset( rootUrl + "away3d/wallpapers/fullsize/default" + extra + ".atf", "defaultWallpaper", true );
+			registerBundledAsset( "/home-packaged/away3d/frames/frame-shadow-uncompressed.atf", "frameShadow", true );
+			registerBundledAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", true );
 		}
 
-		private function onAssetsReady( event:Event ):void {
-			// TODO: dispose loader?
-			_loader.removeEventListener( Event.COMPLETE, onAssetsReady );
+		override protected function onAssetsReady():void {
 
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();

@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
+	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
 	public class Easel extends ObjectContainer3D
 	{
@@ -32,7 +33,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 //			addChild( tri );
 
 			// Init easel mesh.
-			var easelMaterial:TextureMaterial = TextureUtil.getAtfMaterial( "homeView", "easelImage", view );
+			var easelMaterial:TextureMaterial = TextureUtil.getAtfMaterial( HomeView.HOME_BUNDLE_ID, "easelImage", view );
 			easelMaterial.alphaBlending = true;
 			easelMaterial.mipmap = false;
 			_easelMesh = new Mesh( new PlaneGeometry( 1024, 1024 ), easelMaterial );
