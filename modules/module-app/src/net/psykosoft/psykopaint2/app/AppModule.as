@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.views.base.AppRootView;
 	import net.psykosoft.psykopaint2.core.CoreModule;
-	import net.psykosoft.psykopaint2.core.ModuleBase;
+	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;

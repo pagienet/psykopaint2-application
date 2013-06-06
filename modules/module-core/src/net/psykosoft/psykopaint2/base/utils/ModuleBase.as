@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core
+package net.psykosoft.psykopaint2.base.utils
 {
 
 	import flash.display.Sprite;

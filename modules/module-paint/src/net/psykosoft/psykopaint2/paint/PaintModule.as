@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.paint
 	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.core.CoreModule;
-	import net.psykosoft.psykopaint2.core.ModuleBase;
+	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
