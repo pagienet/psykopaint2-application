@@ -13,9 +13,9 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 	import flash.display.Stage;
 	import flash.geom.Vector3D;
 
-	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.base.utils.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.SnapPositionManager;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 
 	import org.osflash.signals.Signal;
@@ -143,7 +143,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		public function startPanInteraction():void {
 			if( !isActive ) return;
 			if( _isScrollingLimited ) {
-				var limit:Number = _stageHeight - 200 * ViewCore.globalScaling;
+				var limit:Number = _stageHeight - 200 * CoreSettings.GLOBAL_SCALING;
 				if( _interactionManager.currentY > limit ) return;
 			}
 			_interactionManager.startInteraction();

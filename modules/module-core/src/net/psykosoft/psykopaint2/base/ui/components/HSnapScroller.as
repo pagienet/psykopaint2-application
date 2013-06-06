@@ -5,11 +5,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 
-	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.base.utils.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.SnapPositionManager;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 
 	import org.osflash.signals.Signal;
 
@@ -53,7 +52,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_interactionManager.stage = stage;
 
 			_positionManager.motionEndedSignal.add( onPositionManagerMotionEnded );
-			_interactionManager.scrollInputMultiplier = 1 / ViewCore.globalScaling;
+			_interactionManager.scrollInputMultiplier = 1 / CoreSettings.GLOBAL_SCALING;
 		}
 
 		// ---------------------------------------------------------------------

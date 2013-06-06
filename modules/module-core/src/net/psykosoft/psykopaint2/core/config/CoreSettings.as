@@ -30,5 +30,6 @@ package net.psykosoft.psykopaint2.core.config
 		public static var RUNNING_ON_RETINA_DISPLAY:Boolean;
 		public static var VERSION:String;
 		public static var NAME:String = "";
+		public static var GLOBAL_SCALING:Number = 1;
 	}
 }

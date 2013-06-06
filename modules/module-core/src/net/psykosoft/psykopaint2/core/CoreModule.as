@@ -21,13 +21,10 @@ package net.psykosoft.psykopaint2.core
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
 	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
-	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
-	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
@@ -256,18 +253,18 @@ package net.psykosoft.psykopaint2.core
 			_statsTextField.width = 200;
 			_statsTextField.selectable = false;
 			_statsTextField.mouseEnabled = false;
-			_statsTextField.scaleX = _statsTextField.scaleY = ViewCore.globalScaling;
+			_statsTextField.scaleX = _statsTextField.scaleY = CoreSettings.GLOBAL_SCALING;
 			_backLayer.addChild( _statsTextField );
 		}
 
 		private function initVersionDisplay():void {
 			if( CoreSettings.SHOW_VERSION ) {
 				_versionTextField = new TextField();
-				_versionTextField.scaleX = _versionTextField.scaleY = ViewCore.globalScaling;
+				_versionTextField.scaleX = _versionTextField.scaleY = CoreSettings.GLOBAL_SCALING;
 				_versionTextField.width = 200;
 				_versionTextField.mouseEnabled = _versionTextField.selectable = false;
 				_versionTextField.text = CoreSettings.NAME + ", version: " + CoreSettings.VERSION;
-				_versionTextField.y = ViewCore.globalScaling * 25;
+				_versionTextField.y = CoreSettings.GLOBAL_SCALING * 25;
 				_backLayer.addChild( _versionTextField );
 			}
 		}
@@ -276,11 +273,11 @@ package net.psykosoft.psykopaint2.core
 			if( CoreSettings.SHOW_ERRORS ) {
 				loaderInfo.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onGlobalError );
 				_errorsTextField = new TextField();
-				_errorsTextField.scaleX = _errorsTextField.scaleY = ViewCore.globalScaling;
-				_errorsTextField.width = 520 * ViewCore.globalScaling;
-				_errorsTextField.height = 250 * ViewCore.globalScaling;
-				_errorsTextField.x = ( 1024 - 520 - 1 ) * ViewCore.globalScaling;
-				_errorsTextField.y = ViewCore.globalScaling;
+				_errorsTextField.scaleX = _errorsTextField.scaleY = CoreSettings.GLOBAL_SCALING;
+				_errorsTextField.width = 520 * CoreSettings.GLOBAL_SCALING;
+				_errorsTextField.height = 250 * CoreSettings.GLOBAL_SCALING;
+				_errorsTextField.x = ( 1024 - 520 - 1 ) * CoreSettings.GLOBAL_SCALING;
+				_errorsTextField.y = CoreSettings.GLOBAL_SCALING;
 				_errorsTextField.background = true;
 				_errorsTextField.border = true;
 				_errorsTextField.borderColor = 0xFF0000;
@@ -302,7 +299,7 @@ package net.psykosoft.psykopaint2.core
 			CoreSettings.RUNNING_ON_iPAD = PlatformUtil.isRunningOnIPad();
 			CoreSettings.RUNNING_ON_RETINA_DISPLAY = PlatformUtil.isRunningOnDisplayWithDpi( CoreSettings.RESOLUTION_DPI_RETINA );
 			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
-				ViewCore.globalScaling = 2;
+				CoreSettings.GLOBAL_SCALING = 2;
 				// TODO: remove ( temporary )
 				MinimalComps.globalScaling = 2;
 			}
@@ -310,7 +307,7 @@ package net.psykosoft.psykopaint2.core
 			trace( this, "initializing platform - " +
 					"running on iPad: " + CoreSettings.RUNNING_ON_iPAD + "," +
 					"running on HD: " + CoreSettings.RUNNING_ON_RETINA_DISPLAY + ", " +
-					"global scaling: " + ViewCore.globalScaling
+					"global scaling: " + CoreSettings.GLOBAL_SCALING
 			);
 		}
 
@@ -319,8 +316,8 @@ package net.psykosoft.psykopaint2.core
 			stage.align = StageAlign.TOP_LEFT;
 			stage.frameRate = 60;
 			stage.quality = StageQuality.LOW; // Note: On Desktop, the quality will be set to a lowest value of HIGH.
-			stage.stageWidth = ViewCore.globalScaling * 1024;
-			stage.stageHeight = ViewCore.globalScaling * 768;
+			stage.stageWidth = CoreSettings.GLOBAL_SCALING * 1024;
+			stage.stageHeight = CoreSettings.GLOBAL_SCALING * 768;
 //			trace( this, "initializing stage - dimensions: " + stage.stageWidth + "x" + stage.stageHeight );
 		}
 
@@ -328,8 +325,8 @@ package net.psykosoft.psykopaint2.core
 			trace( this, "initializing stage3d..." );
 			var stage3dManager:Stage3DManager = Stage3DManager.getInstance( stage );
 			_stage3dProxy = stage3dManager.getFreeStage3DProxy();
-			_stage3dProxy.width = 1024 * ViewCore.globalScaling;
-			_stage3dProxy.height = 768 * ViewCore.globalScaling;
+			_stage3dProxy.width = 1024 * CoreSettings.GLOBAL_SCALING;
+			_stage3dProxy.height = 768 * CoreSettings.GLOBAL_SCALING;
 			_stage3d = _stage3dProxy.stage3D;
 			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContext3dCreated );
 		}

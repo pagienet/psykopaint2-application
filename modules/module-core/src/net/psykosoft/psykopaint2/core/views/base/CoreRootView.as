@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.utils.Timer;
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
-	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
@@ -59,11 +58,11 @@ package net.psykosoft.psykopaint2.core.views.base
 			if( !_memoryIcon ) {
 				_memoryIcon = new TextField();
 				_memoryIcon.selectable = _memoryIcon.mouseEnabled = false;
-				_memoryIcon.scaleX = _memoryIcon.scaleY = ViewCore.globalScaling;
+				_memoryIcon.scaleX = _memoryIcon.scaleY = CoreSettings.GLOBAL_SCALING;
 				_memoryIcon.textColor = 0xFF0000;
 				_memoryIcon.width = 200;
 				_memoryIcon.height = 25;
-				_memoryIcon.y = ViewCore.globalScaling * 40;
+				_memoryIcon.y = CoreSettings.GLOBAL_SCALING * 40;
 				_frontLayer.addChild( _memoryIcon );
 			}
 			_memoryWarningCount++;
