@@ -65,20 +65,20 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private const brushKitData:XML = 
 			<brushkits>
-				<brush engine={BrushType.PENCIL} name="Pencil">
-					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
-						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
-						</ColorDecorator>
-					</pathengine>
-					<shapes>
-						<shape type="pencil" />
-					</shapes>
-				</brush>
 				<brush engine={BrushType.WATER_COLOR} name="Water Color">
 					<parameter id="Shapes" path="brush" index="0" list="wet,basic" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 				</brush>
+                <brush engine={BrushType.PENCIL} name="Pencil">
+                    <pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+                        <ColorDecorator>
+                            <parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="1" />
+                        </ColorDecorator>
+                    </pathengine>
+                    <shapes>
+                        <shape type="pencil" />
+                    </shapes>
+                </brush>
 				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
 					<parameter id="Shapes" path="brush" index="0" list="wet" showInUI="0"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>

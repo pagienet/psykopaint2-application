@@ -10,8 +10,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.RubbedStrokeMesh;
     import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
-import net.psykosoft.psykopaint2.core.model.CanvasModel;
+    import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
+    import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
 
 	public class PencilBrush extends AbstractBrush
@@ -43,7 +43,7 @@ import net.psykosoft.psykopaint2.core.model.CanvasModel;
 			return new RubbedStrokeMesh();
 		}
 
-		override public function set brushShape(brushShape : AbstractBrushShape) : void
+		override protected function set brushShape(brushShape : AbstractBrushShape) : void
 		{
 			super.brushShape = brushShape;
 			if (_brushMesh)

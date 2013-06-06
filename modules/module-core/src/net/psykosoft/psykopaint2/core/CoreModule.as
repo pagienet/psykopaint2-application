@@ -403,7 +403,7 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function onSplashEnterFrame( event:Event ):void {
-			var targetFPS:Number = 30;
+			var targetFPS:Number = 12;
 			trace( this, "waiting for frame rate to increase before removing splash screen - current fps: " + _fps + "/60, minimum: " + targetFPS );
 			if( !_splashScreenRemoved && _fps >= targetFPS ) {
 
