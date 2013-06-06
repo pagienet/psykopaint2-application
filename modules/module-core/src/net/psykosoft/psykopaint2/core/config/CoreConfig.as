@@ -28,6 +28,8 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
+	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketViewMediator;
 
 	import org.swiftsuspenders.Injector;
 
@@ -134,6 +136,7 @@ package net.psykosoft.psykopaint2.core.config
 		private function mapMediators():void {
 			_mediatorMap.map( CoreRootView ).toMediator( CoreRootViewMediator );
 			_mediatorMap.map( SbNavigationView ).toMediator( NavigationViewMediator );
+			_mediatorMap.map( PsykoSocketView ).toMediator( PsykoSocketViewMediator );
 		}
 	}
 }

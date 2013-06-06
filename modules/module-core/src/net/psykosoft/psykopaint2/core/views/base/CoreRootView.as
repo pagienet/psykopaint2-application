@@ -9,7 +9,9 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 
 	public class CoreRootView extends RootViewBase
 	{
@@ -30,6 +32,9 @@ package net.psykosoft.psykopaint2.core.views.base
 
 			// Core module's main views.
 			addRegisteredView( new SbNavigationView(), _frontLayer );
+			if( CoreSettings.SHOW_PSYKOSOCKET_CONNECTION_UI ) {
+				addRegisteredView( new PsykoSocketView(), _frontLayer );
+			}
 
 			// -----------------------
 			// Component tests...

@@ -5,7 +5,7 @@
 	<!-- properties -->
 	<!-- **************************************** -->
 
-	<property name="debug" value="false"/>
+	<property name="debug" value="true"/>
 	<property name="inline" value=""/> <!-- '-inline' or '' -->
 
 	<property name="rootDir" value="../../../workspaces/psykopaint2-official"/>
@@ -29,6 +29,7 @@
 	<property name="launcherAppIpadPath" value="${rootDir}/launcher-app-ipad/launcher-app-ipad.iml"/>
 	<property name="launcherAppDesktopPath" value="${rootDir}/launcher-app-desktop/launcher-app-desktop.iml"/>
 	<property name="launcherHomeIpadPath" value="${rootDir}/launcher-home-ipad/launcher-home-ipad.iml"/>
+	<property name="launcherCoreIpadPath" value="${rootDir}/launcher-core-ipad/launcher-core-ipad.iml"/>
 
 	<!-- ******************** -->
 	<!-- extensions -->
@@ -46,6 +47,10 @@
 	<target name="all" depends="set-compiler-arguments"/>
 
 	<target name="set-compiler-arguments">
+		<xmltask source="${launcherCoreIpadPath}" dest="${launcherCoreIpadPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+		</xmltask>
 		<xmltask source="${launcherHomeIpadPath}" dest="${launcherHomeIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>

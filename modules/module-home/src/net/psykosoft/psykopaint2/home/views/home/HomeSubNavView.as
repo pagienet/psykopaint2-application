@@ -10,11 +10,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		override protected function onEnabled():void {
-
 			setLabel( "Home" );
-
-
-
 			invalidateContent();
 		}
 	}
