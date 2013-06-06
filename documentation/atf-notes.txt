@@ -30,7 +30,7 @@ png2atf -n 0,0 -i default.png -o default-uncompressed.atf // No mipmaps.
 
 Examples for opaque images with no mipmaps:
 png2atf -c p -n 0,0 -i default.png -o default-ios.atf
-png2atf -c e -n 0,0 -i default.png -o default-desktop.atf
+png2atf -c d -n 0,0 -i default.png -o default-desktop.atf
 
 Examples for opaque images with mipmaps:
 png2atf -c p -i default.png -o default-ios-mips.atf
