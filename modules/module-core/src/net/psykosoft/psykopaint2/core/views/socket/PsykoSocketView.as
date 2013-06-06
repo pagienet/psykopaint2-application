@@ -104,7 +104,8 @@ package net.psykosoft.psykopaint2.core.views.socket
 
 		private function updateSocket():void {
 			trace( this, "connecting to: " + _tf.text );
-			PsykoSocket.ip = _tf.text;
+			PsykoSocket.init( _tf.text );
+		//	PsykoSocket.ip = _tf.text;
 			storeCookie();
 		}
 	}

@@ -316,7 +316,7 @@ package net.psykosoft.psykopaint2.core
 
 		private function initPsykoSocket():void {
 			//adding this early on so it can be used for logging, too
-			PsykoSocket.init( CoreSettings.DEFAULT_PSYKOSOCKET_IP );
+			//PsykoSocket.init( CoreSettings.DEFAULT_PSYKOSOCKET_IP );
 		}
 
 		private function initStage():void {
