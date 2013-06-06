@@ -2,11 +2,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import com.greensock.TweenLite;
-	import com.greensock.easing.Expo;
+	import com.greensock.easing.Strong;
 
 	import flash.display.Bitmap;
-
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.utils.getDefinitionByName;
@@ -16,6 +16,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.HItemScroller;
+	import net.psykosoft.psykopaint2.base.utils.StackUtil;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 
@@ -40,8 +42,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _showing:Boolean = true;
 		private var _needGapCheck:Boolean = true;
 
+		private var _onReactiveHide:Boolean;
+		private var _reactiveHideMouseDownY:Number;
+		private var _reactiveHideStackY:StackUtil;
+
 		private const BUTTON_GAP_X:Number = 8;
-		private const BG_HEIGHT:uint = 200;
 		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 100;
 
 		public var buttonClickedCallback:Function;
@@ -52,6 +57,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var scrollingStartedSignal:Signal;
 		public var scrollingEndedSignal:Signal;
 
+		private var BG_HEIGHT:uint = 250;
+
 		public function SbNavigationView() {
 			super();
 			shownSignal = new Signal();
@@ -60,8 +67,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			hiddenSignal = new Signal();
 			scrollingStartedSignal = new Signal();
 			scrollingEndedSignal = new Signal();
+			_reactiveHideStackY = new StackUtil();
 			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbButton;
 			_rightButton = rightBtnSide.getChildByName( "btn" ) as SbButton;
+			BG_HEIGHT *= CoreSettings.GLOBAL_SCALING;
 			hide( 0.01 );
 		}
 
@@ -110,12 +119,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function hide( time:Number = 0.5 ):void {
 			if( _animating ) return;
-			if( !_showing ) return;
+			if( !_onReactiveHide && !_showing ) return;
+			trace( this, "hide" );
 			hidingSignal.dispatch();
 			_showing = false;
 			_animating = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, time, { y: BG_HEIGHT + 50, onComplete: onHideAnimatedComplete, ease:Expo.easeInOut } );
+			TweenLite.to( this, time, { y: BG_HEIGHT, onComplete: onHideAnimatedComplete, ease:Strong.easeOut } );
 		}
 		private function onHideAnimatedComplete():void {
 			hiddenSignal.dispatch();
@@ -125,13 +135,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function show():void {
 			if( _animating ) return;
-			if( _showing ) return;
+			if( !_onReactiveHide &&_showing ) return;
+			trace( this, "show" );
 			_showing = true;
 			_animating = true;
 			showingSignal.dispatch();
 			this.visible = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 0.5, { y: 0, onComplete: onShowAnimatedComplete, ease:Expo.easeInOut } );
+			TweenLite.to( this, 0.5, { y: 0, onComplete: onShowAnimatedComplete, ease:Strong.easeOut } );
 		}
 		private function onShowAnimatedComplete():void {
 			_animating = false;
@@ -179,12 +190,59 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			addChild( _currentSubNavView );
 		}
 
-		public function evaluateInteractionStart():void {
+		public function evaluateScrollingInteractionStart():void {
+			if( !_scroller ) return;
 			_scroller.evaluateInteractionStart();
 		}
 
-		public function evaluateInteractionEnd():void {
+		public function evaluateScrollingInteractionEnd():void {
+			if( !_scroller ) return;
 			_scroller.evaluateInteractionEnd();
+		}
+
+		public function evaluateReactiveHideStart():void {
+			if( _animating ) return;
+			if( _onReactiveHide ) return;
+			if( stage.mouseY < 768 - BG_HEIGHT ) return; // reject interactions outside of the navigation area
+			_onReactiveHide = true;
+			if( !visible ) {
+				visible = true;
+				y = BG_HEIGHT;
+				_reactiveHideMouseDownY = stage.mouseY - BG_HEIGHT;
+			}
+			else {
+				_reactiveHideMouseDownY = stage.mouseY;
+			}
+			_reactiveHideStackY.clear();
+//			trace( this, "reactive hide start - values: " + _reactiveHideStackY.values() );
+			TweenLite.killTweensOf( this );
+			if( !hasEventListener( Event.ENTER_FRAME ) ) addEventListener( Event.ENTER_FRAME, onReactiveHideEnterFrame );
+		}
+
+		public function evaluateReactiveHideEnd():void {
+			if( !_onReactiveHide ) return;
+			if( hasEventListener( Event.ENTER_FRAME ) ) removeEventListener( Event.ENTER_FRAME, onReactiveHideEnterFrame );
+			var speedY:Number = _reactiveHideStackY.getAverageDeltaDetailed();
+//			trace( this, "reactive hide end, speed: " + speedY + ", values: " + _reactiveHideStackY.values() );
+			if( speedY == 0 ) {
+				if( y > BG_HEIGHT / 2 ) hide();
+				else show();
+			}
+			else {
+				if( speedY > 0 ) hide();
+				else show();
+			}
+
+			_onReactiveHide = false;
+		}
+
+		private function onReactiveHideEnterFrame( event:Event ):void {
+//			trace( this, "reactive hide enterframe" );
+			y = stage.mouseY - _reactiveHideMouseDownY;
+			if( y > BG_HEIGHT ) y = BG_HEIGHT;
+			if( y < 0 ) y = 0;
+//			trace( this, "pushing value: " + y + ", index: " + _reactiveHideStackY.newestIndex );
+			_reactiveHideStackY.pushValue( y );
 		}
 
 		// ---------------------------------------------------------------------

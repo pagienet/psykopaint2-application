@@ -8,5 +8,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public static const TWO_FINGER_SWIPE_DOWN:String 		= "two/finger/swipe/down";
 		public static const PINCH_GREW:String					= "pinch/grew";
 		public static const PINCH_SHRANK:String				    = "pinch/shrank";
+		public static const VERTICAL_PAN_GESTURE_BEGAN:String   = "vertical/pan/began";
+		public static const VERTICAL_PAN_GESTURE_ENDED:String   = "vertical/pan/ended";
 	}
 }

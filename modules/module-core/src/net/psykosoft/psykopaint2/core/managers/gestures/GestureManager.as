@@ -37,17 +37,56 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function initializeGestures():void {
-			initTwoFingerVerticalSwipe();
+//			initTwoFingerVerticalSwipe();
 			initOneFingerHorizontalPan();
+			initOneFingerVerticalPan();
 //			initPinch();
 //			initTap();
+		}
+
+		// ---------------------------------------------------------------------
+		// 1 finger, horizontal pan.
+		// ---------------------------------------------------------------------
+
+		private function initOneFingerHorizontalPan():void {
+			var panGestureHorizontal:PanGesture = new PanGesture( _stage );
+			panGestureHorizontal.direction = PanGestureDirection.HORIZONTAL;
+			panGestureHorizontal.addEventListener( GestureEvent.GESTURE_BEGAN, onHorizontalPanGestureBegan );
+			panGestureHorizontal.addEventListener( GestureEvent.GESTURE_ENDED, onHorizontalPanGestureEnded );
+		}
+
+		private function onHorizontalPanGestureBegan( event:GestureEvent ):void {
+			notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN );
+		}
+
+		private function onHorizontalPanGestureEnded( event:GestureEvent ):void {
+			notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_ENDED );
+		}
+
+		// ---------------------------------------------------------------------
+		// 1 finger, vertical pan.
+		// ---------------------------------------------------------------------
+
+		private function initOneFingerVerticalPan():void {
+			var panGestureVertical:PanGesture = new PanGesture( _stage );
+			panGestureVertical.direction = PanGestureDirection.VERTICAL;
+			panGestureVertical.addEventListener( GestureEvent.GESTURE_BEGAN, onVerticalPanGestureBegan );
+			panGestureVertical.addEventListener( GestureEvent.GESTURE_ENDED, onVerticalPanGestureEnded );
+		}
+
+		private function onVerticalPanGestureBegan( event:GestureEvent ):void {
+			notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_BEGAN );
+		}
+
+		private function onVerticalPanGestureEnded( event:GestureEvent ):void {
+			notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_ENDED );
 		}
 
 		// ---------------------------------------------------------------------
 		// Tap.
 		// ---------------------------------------------------------------------
 
-		private var _tapGesture:TapGesture;
+		/*private var _tapGesture:TapGesture;
 
 		private function initTap():void {
 			// TODO: do we need the tap gesture here?
@@ -57,13 +96,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onTapGestureRecognized( event:GestureEvent ):void {
 			trace( this, "tap recognized" );
-		}
+		}*/
 
 		// ---------------------------------------------------------------------
 		// Pinch.
 		// ---------------------------------------------------------------------
 
-		private var _pinchGesture:ZoomGesture;
+		/*private var _pinchGesture:ZoomGesture;
 		private var _initialPinchDistance:Number;
 		private var _finalPinchDistance:Number;
 
@@ -94,13 +133,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onPinchGestureChanged( event:GestureEvent ):void {
-		}
+		}*/
 
 		// ---------------------------------------------------------------------
 		// Two finger vertical swipe.
 		// ---------------------------------------------------------------------
 
-		private function initTwoFingerVerticalSwipe():void {
+		/*private function initTwoFingerVerticalSwipe():void {
 
 			var twoFingerSwipeGestureUp:SwipeGesture = new SwipeGesture( _stage );
 			twoFingerSwipeGestureUp.numTouchesRequired = 2;
@@ -121,25 +160,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private function onTwoFingerSwipeDown( event:GestureEvent ):void {
 			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_DOWN );
 			notifyBlockingGestureSignal.dispatch( false );
-		}
-
-		// ---------------------------------------------------------------------
-		// Horizontal pan.
-		// ---------------------------------------------------------------------
-
-		private function initOneFingerHorizontalPan():void {
-			var panGestureHorizontal:PanGesture = new PanGesture( _stage );
-			panGestureHorizontal.direction = PanGestureDirection.HORIZONTAL;
-			panGestureHorizontal.addEventListener( GestureEvent.GESTURE_BEGAN, onHorizontalPanGestureBegan );
-			panGestureHorizontal.addEventListener( GestureEvent.GESTURE_ENDED, onHorizontalPanGestureEnded );
-		}
-
-		private function onHorizontalPanGestureBegan( event:GestureEvent ):void {
-			notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN );
-		}
-
-		private function onHorizontalPanGestureEnded( event:GestureEvent ):void {
-			notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_ENDED );
-		}
+		}*/
 	}
 }

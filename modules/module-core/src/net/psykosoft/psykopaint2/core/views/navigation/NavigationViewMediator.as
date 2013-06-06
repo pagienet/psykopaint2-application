@@ -2,10 +2,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -87,19 +86,19 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private function onGlobalGesture( gestureType:String ):void {
 			switch( gestureType ) {
 				case GestureType.HORIZONTAL_PAN_GESTURE_BEGAN: {
-					view.evaluateInteractionStart();
+					view.evaluateScrollingInteractionStart();
 					break;
 				}
 				case GestureType.HORIZONTAL_PAN_GESTURE_ENDED: {
-					view.evaluateInteractionEnd();
+					view.evaluateScrollingInteractionEnd();
 					break;
 				}
-				case GestureType.TWO_FINGER_SWIPE_DOWN: {
-					view.hide();
+				case GestureType.VERTICAL_PAN_GESTURE_BEGAN: {
+					view.evaluateReactiveHideStart();
 					break;
 				}
-				case GestureType.TWO_FINGER_SWIPE_UP: {
-					view.show();
+				case GestureType.VERTICAL_PAN_GESTURE_ENDED: {
+					view.evaluateReactiveHideEnd();
 					break;
 				}
 			}

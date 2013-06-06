@@ -4,10 +4,10 @@ package net.psykosoft.psykopaint2.base.utils
 	public class StackUtil
 	{
 		private var _stack:Vector.<Number>;
-
-		public var count:uint = 10;
 		private var _newestIndex : int = -1;
 		private var _numElements : int;
+
+		public var count:uint = 10;
 
 		public function StackUtil() {
 			super();
@@ -35,6 +35,14 @@ package net.psykosoft.psykopaint2.base.utils
 			return (_stack[_newestIndex] - _stack[oldestIndex]) / (_numElements - 1);
 		}
 
+		public function getAverageDeltaDetailed():Number {
+			if( _stack.length < 2 ) return 0;
+			var value:Number = 0;
+			for( var i:uint = 1; i <= _newestIndex; ++i )
+				value += _stack[i] - _stack[i-1];
+			return value / ( _numElements - 1 );
+		}
+
 		public function getAverageValue():Number {
 			var value:Number = 0;
 
@@ -42,6 +50,20 @@ package net.psykosoft.psykopaint2.base.utils
 				value += _stack[i];
 
 			return value / _numElements;
+		}
+
+		public function clear():void {
+			_stack = new Vector.<Number>();
+			_newestIndex = -1;
+			_numElements = 0;
+		}
+
+		public function values():Vector.<Number> {
+			return _stack;
+		}
+
+		public function get newestIndex():int {
+			return _newestIndex;
 		}
 	}
 }
