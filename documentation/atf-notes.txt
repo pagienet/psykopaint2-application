@@ -43,4 +43,3 @@ Resources:
 https://dl.dropbox.com/u/7009356/atftools.zip ( Adobe ATF utils )
 http://www.adobe.com/devnet/flashruntimes/articles/introducing-compressed-textures.html
 http://wiki.starling-framework.org/manual/atf_textures ( first part is non-starling specific )
-
