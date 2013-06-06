@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<ConditionalDecorator>
 							<!-- if speed < 0.1 add dripping particles -->
 							<parameter id="Test Property"  path="pathengine.pointdecorator_4" index="0" />
-							<parameter id="Threshold"  path="pathengine.pointdecorator_4" value="0.1" />
+							<parameter id="Speed Threshold"  path="pathengine.pointdecorator_4" value="0.15" showInUI="1"/>
 						</ConditionalDecorator>
 						<SizeDecorator>
 							<parameter id="Mode"  path="pathengine.pointdecorator_5" index="0" />
@@ -150,7 +150,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</ColorDecorator>
 						<ConditionalDecorator>
 							<parameter id="Test Property"  path="pathengine.pointdecorator_1" index="0" />
-							<parameter id="Threshold"  path="pathengine.pointdecorator_1" value="0.75" />
+							<parameter id="Speed Threshold"  path="pathengine.pointdecorator_1" value="0.75" showInUI="1"/>
 						</ConditionalDecorator>
 						<EndConditionalDecorator/>
 							<ParticleDecorator>

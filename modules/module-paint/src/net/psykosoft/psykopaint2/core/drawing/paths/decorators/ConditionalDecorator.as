@@ -14,7 +14,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	public class ConditionalDecorator extends AbstractPointDecorator
 	{
 		private var testProperty:PsykoParameter;
-		private var threshold:PsykoParameter;
+		private var speedThreshold:PsykoParameter;
+		private var luminanceThreshold:PsykoParameter;
+		private var randomThreshold:PsykoParameter;
 		
 		private var rng:LCG;
 		
@@ -22,9 +24,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super();
 			testProperty  = new PsykoParameter( PsykoParameter.StringListParameter,"Test Property",0,["Speed","Luminance","Random"] );
-			threshold  = new PsykoParameter( PsykoParameter.NumberParameter,"Threshold",0,-1000, 1000);
+			speedThreshold  = new PsykoParameter( PsykoParameter.NumberParameter,"Speed Threshold",0,0, 10);
+			luminanceThreshold  = new PsykoParameter( PsykoParameter.NumberParameter,"Luminance Threshold",0,0, 255);
+			randomThreshold  = new PsykoParameter( PsykoParameter.NumberParameter,"Random Threshold",0,0, 1);
 			
-			_parameters.push(testProperty, threshold);
+			_parameters.push(testProperty, speedThreshold, luminanceThreshold, randomThreshold);
 			rng = new LCG(Math.random() * 0xffffffff);
 			
 		}
@@ -37,7 +41,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			var cb:PathManagerCallbackInfo =  manager.callbacks;
 			var conditionIndex:int = testProperty.index
-			var th:Number = threshold.numberValue;
 			
 			for ( var i:int = 0; i < points.length; i++ )
 			{
@@ -45,14 +48,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				{
 					case 0:
 						//Speed
-						result[(points[i].speed < th ? 0 : 1)].push(points[i]);
+						result[(points[i].speed < speedThreshold.numberValue ? 0 : 1)].push(points[i]);
 						break;
 					case 1:
 						//Luminance
 						break;
 					case 2:
 						//Random
-						result[rng.getChance(th) ? 0 : 1].push(points[i]);
+						result[rng.getChance(randomThreshold.numberValue) ? 0 : 1].push(points[i]);
 						break;
 					
 				}

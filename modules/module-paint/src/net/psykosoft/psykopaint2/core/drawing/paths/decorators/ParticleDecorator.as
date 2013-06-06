@@ -117,7 +117,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				{
 					if ( applyColorMatrix.booleanValue ) cm.applyMatrixToVector( activeParticles[i].samplePoint.colorsRGBA );
 					
-					if ( !activeParticles[i].update(yAxis.x, yAxis.y) )
+					if ( !activeParticles[i].update(-yAxis.x, yAxis.y) )
 					{
 						PathManager.recycleSamplePoint(activeParticles[i].samplePoint);
 						activeParticles.splice(i,1);
