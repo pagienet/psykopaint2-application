@@ -22,19 +22,9 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		override protected function onSetup():void {
 			_baseTextureSize = _canvasWidth = stage.stageWidth;
 			_canvasHeight = stage.stageHeight;
-			centerCanvas();
 		}
 
-		protected function centerCanvas():void {
-			if( !stage ) return;
-
-			if( _positioningSheet ) {
-				_positioningSheet.x = 0.5 * stage.stageWidth;
-				_positioningSheet.y = 0.5 * stage.stageHeight;
-				_positioningSheet.limitsRect = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
-			}
-		}
-
+		
 		public function set sourceMap( map:BitmapData ):void {
 			
 			
@@ -52,10 +42,10 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 			_positioningSheet = new TouchSheet( _sourceMap );
 			_positioningSheet.minimumScale = Math.max( stage.stageWidth / _sourceMap.width, stage.stageHeight / _sourceMap.height );
-
+			_positioningSheet.limitsRect = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
 
 			addChildAt( _positioningSheet, 0 );
-			centerCanvas();
+		
 			
 		}
 

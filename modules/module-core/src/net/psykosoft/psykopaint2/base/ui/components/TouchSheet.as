@@ -2,15 +2,14 @@ package net.psykosoft.psykopaint2.base.ui.components
 {
     import flash.display.Bitmap;
     import flash.display.BitmapData;
-    import flash.display.DisplayObject;
     import flash.display.Sprite;
     import flash.events.Event;
-    import flash.events.MouseEvent;
-    import flash.events.TouchEvent;
-    import flash.events.TransformGestureEvent;
     import flash.geom.Matrix;
     import flash.geom.Point;
     import flash.geom.Rectangle;
+    
+    import org.gestouch.events.GestureEvent;
+    import org.gestouch.gestures.TransformGesture;
     
  
     public class TouchSheet extends Sprite
@@ -24,181 +23,66 @@ package net.psykosoft.psykopaint2.base.ui.components
 		private var _contentsWidth:Number = NaN;
 		private var _contentsHeight:Number = NaN;
 		
-		private var pivotX:Number;
-		private var pivotY:Number;
 		
-		private var _lastX:Number;
-		private var _lastY:Number;
-		private var _lastStageX:Number;
-		private var _lastStageY:Number;
-	
-		private var _newX:Number;
-		private var _newY:Number;
-		private var _newPivotX:Number;
-		private var _newPivotY:Number;
-		private var _newScale:Number;
-		private var _newRotation:Number;
-		
-		private const _tmpPoint:Point = new Point();
-		private const _tmpMatrix:Matrix = new Matrix();
 		private var _stepRadians:Number = Math.PI * 0.5;
 		private var _snapRadians:Number = Math.PI * 1.5 / 180;
 		
 		private var content:Bitmap;
-		private var transformer:Sprite;
-		
-		private var _newMatrix:Matrix;
+		private var _transformGesture:TransformGesture;
 		
         public function TouchSheet(map:BitmapData)
         {
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
           	
             useHandCursor = true;
-			transformer = new Sprite();
-			addChild( transformer );
 			
-			
-            
 			content = new Bitmap();
-			transformer.addChild(content);
+			addChild(content);
 			
 			content.bitmapData = map;
 			content.smoothing = true;
-            content.x = int((_contentsWidth = map.width) / -2);
-            content.y = int((_contentsHeight = map.height) / -2);
-			
-			_newMatrix = transformer.transform.matrix.clone();
-			
-			updateInternalProperties();
-			//pivotX = -_contentsWidth* 0.5;
-			//pivotY = -_contentsHeight* 0.5;
-            
-        }
+          
+			centerContent();
+		
+		}
 		
 		protected function onAddedToStage(event:Event):void
 		{
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			addEventListener(TransformGestureEvent.GESTURE_PAN, onPan);
-			addEventListener(TransformGestureEvent.GESTURE_ZOOM, onZoom);
-			addEventListener(TransformGestureEvent.GESTURE_ROTATE, onRotate);
+			_transformGesture = new TransformGesture(this);
+			_transformGesture.addEventListener(org.gestouch.events.GestureEvent.GESTURE_BEGAN, onGesture);
+			_transformGesture.addEventListener(org.gestouch.events.GestureEvent.GESTURE_CHANGED, onGesture);
+			centerContent();
+		}
+		
+		private function onGesture(event:org.gestouch.events.GestureEvent):void
+		{
+			const gesture:TransformGesture = event.target as TransformGesture;
+			var matrix:Matrix = content.transform.matrix;
 			
-		}
-		
-		protected function onMouseDown(event:MouseEvent):void
-		{
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			_newMatrix = transformer.transform.matrix.clone();
-			_lastStageX = event.stageX;
-			_lastStageY = event.stageY;
-			_lastX = transformer.x;
-			_lastY = transformer.y;
-		}
-		
-		protected function onMouseUp(event:MouseEvent):void
-		{
-			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			// Panning
+			matrix.translate(gesture.offsetX, gesture.offsetY);
+			content.transform.matrix = matrix;
 			
+			if (gesture.scale != 1 || gesture.rotation != 0)
+			{
+				// Scale and rotation.
+				var transformPoint:Point = matrix.transformPoint(content.globalToLocal(gesture.location));
+				matrix.translate(-transformPoint.x, -transformPoint.y);
+				matrix.rotate(gesture.rotation);
+				matrix.scale(gesture.scale, gesture.scale);
+				matrix.translate(transformPoint.x, transformPoint.y);
+				
+				content.transform.matrix = matrix;
+			}
 		}
 		
-		protected function onMouseMove(event:MouseEvent):void
+		
+		private function centerContent():void
 		{
-			/*
-			_newX = _lastX + event.stageX - _lastStageX;
-			_newY = _lastY + event.stageY - _lastStageY;
-			_lastStageX = event.stageX;
-			_lastStageY = event.stageY;
-			_newPivotX = pivotX;
-			_newPivotY = pivotY;
-			_newScale = transformer.scaleX;
-			_newRotation = transformer.rotation;
-			*/
-			_newMatrix.translate(event.stageX - _lastStageX,event.stageY - _lastStageY);
-			_lastStageX = event.stageX;
-			_lastStageY = event.stageY;
-			clampToLimitRect(false);	
-			_lastX = transformer.x;
-			_lastY = transformer.y;
+			if ( !stage || !content ) return;
 			
-		}
-		
-		protected function onRotate(event:TransformGestureEvent):void
-		{
-			onMouseUp(null);
-			
-			_newMatrix.translate( -event.localX, -event.localY );
-			_newMatrix.rotate(event.rotation / 180 * Math.PI);
-			_newMatrix.translate( event.localX, event.localY );
-			
-			/*
-			_newX = transformer.x ;
-			_newY = transformer.y ;
-			_newPivotX = pivotX;
-			_newPivotY = pivotY;
-			_newScale = transformer.scaleX;
-			_newRotation = transformer.rotation + event.rotation / 180 * Math.PI;
-			*/
-			clampToLimitRect(false);	
-			_lastX = transformer.x;
-			_lastY = transformer.y;
-		}
-		
-		protected function onZoom(event:TransformGestureEvent):void
-		{
-			onMouseUp(null);
-			_newMatrix.translate( -event.localX, -event.localY );
-			_newMatrix.scale(event.scaleX, event.scaleY );
-			_newMatrix.translate( event.localX, event.localY );
-			
-			/*
-			_newX = transformer.x ;
-			_newY = transformer.y ;
-			_newPivotX = pivotX;
-			_newPivotY = pivotY;
-			_newScale = scaleX * event.scaleX;
-			_newRotation = transformer.rotation
-				*/
-			clampToLimitRect(false);	
-			_lastX = transformer.x;
-			_lastY = transformer.y;
-		}
-		
-		protected function onPan(event:TransformGestureEvent):void
-		{
-			onMouseUp(null);
-			_newMatrix.translate( event.offsetX,event.offsetY );
-			/*
-			_newX = transformer.x + event.offsetX;
-			_newY = transformer.y + event.offsetY;
-			_newPivotX = pivotX;
-			_newPivotY = pivotY;
-			_newScale = transformer.scaleX;
-			_newRotation = transformer.rotation;
-			*/
-			clampToLimitRect(false);			
-			_lastX = transformer.x;
-			_lastY = transformer.y;
-		}
-		
-	
-		private function updateInternalProperties():void
-		{
-			_newX = transformer.x;
-			_newY = transformer.y;
-			_newPivotX = pivotX;
-			_newPivotY = pivotY;
-			_newScale = transformer.scaleX;
-			_newRotation = transformer.rotation;
-		}
-		
-		private function updateNewMatrix():void
-		{
-			_newMatrix.identity();
-			_newMatrix.translate(-_newPivotX,-_newPivotY);
-			_newMatrix.rotate(_newRotation);
-			_newMatrix.scale(_newScale,_newScale);
-			_newMatrix.translate(_newPivotX + _newX,_newPivotY + _newY);
+			content.x = (stage.stageWidth - content.width) >> 1;
+			content.y = (stage.stageHeight - content.height) >> 1;
 		}
 		
 		
@@ -227,9 +111,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public function set minimumScale( value:Number ):void
 		{
 			_minimumScale = value;
-			updateInternalProperties();
 			clampScale();
-			updateNewMatrix();
 			clampToLimitRect(false);
 		}
 		
@@ -247,82 +129,12 @@ package net.psykosoft.psykopaint2.base.ui.components
 			clampToLimitRect(false);
 		}
         
-		/*
-        private function onTouch(event:TouchEvent):void
-        {
-			
-            var touches:Vector.<Touch> = event.getTouches(this, TouchPhase.MOVED);
-            
-            if (touches.length == 1)
-            {
-                // one finger touching -> move
-                var delta:Point = touches[0].getMovement(parent);
-				_newX = x + delta.x;
-				_newY = y + delta.y;
-				_newPivotX = pivotX;
-				_newPivotY = pivotY;
-				_newScale = scaleX;
-				_newRotation = rotation;
-				
-              //  x += delta.x;
-              //  y += delta.y;
-				clampToLimitRect(false);
-            }            
-            else if (touches.length == 2)
-            {
-				
-                // two fingers touching -> rotate and scale
-                var touchA:Touch = touches[0];
-                var touchB:Touch = touches[1];
-                
-                var currentPosA:Point  = touchA.getLocation(parent);
-                var previousPosA:Point = touchA.getPreviousLocation(parent);
-                var currentPosB:Point  = touchB.getLocation(parent);
-                var previousPosB:Point = touchB.getPreviousLocation(parent);
-                
-                var currentVector:Point  = currentPosA.subtract(currentPosB);
-                var previousVector:Point = previousPosA.subtract(previousPosB);
-                
-                var currentAngle:Number  = Math.atan2(currentVector.y, currentVector.x);
-                var previousAngle:Number = Math.atan2(previousVector.y, previousVector.x);
-                var deltaAngle:Number = currentAngle - previousAngle;
-                
-				// update pivot point based on previous center
-				var previousLocalA:Point  = touchA.getPreviousLocation(this);
-				var previousLocalB:Point  = touchB.getPreviousLocation(this);
-				//pivotX = (previousLocalA.x + previousLocalB.x) * 0.5;
-				//pivotY = (previousLocalA.y + previousLocalB.y) * 0.5;
-				
-				_newPivotX = (previousLocalA.x + previousLocalB.x) * 0.5;
-				_newPivotY = (previousLocalA.y + previousLocalB.y) * 0.5;
-				
-				// update location based on the current center
-				//x = (currentPosA.x + currentPosB.x) * 0.5;
-				//y = (currentPosA.y + currentPosB.y) * 0.5;
-				_newX = (currentPosA.x + currentPosB.x) * 0.5;
-				_newY = (currentPosA.y + currentPosB.y) * 0.5;
-				
-				
-				// rotate
-               _newRotation = rotation + deltaAngle;
-				
-				 // scale
-                var sizeDiff:Number = currentVector.length / previousVector.length;
-				_newScale = scaleX * sizeDiff;
-				
-				clampRotation();
-				clampScale();
-				clampToLimitRect( deltaAngle != 0 || sizeDiff != 1);
-			 }
-            
-           
-        }
-        */
+		
 		protected function clampToLimitRect( scaleToFit:Boolean ):void
 		{
-			var p:Point = _tmpPoint;
-			var m:Matrix = _newMatrix.clone();//_tmpMatrix;
-			//var difference:Point = new Point( x, y);
+			var p:Point = new Point();
+			var m:Matrix = content.transform.matrix.clone();//_tmpMatrix;
+			
 			if ( _limitsRect != null )
 			{
 				/*
@@ -373,7 +185,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 					p.y += maxY - _contentsHeight * 0.5
 				}
 				
-				m = _newMatrix.clone();
+				m = content.transform.matrix.clone();
 				/*
 				m.a = a;
 				m.b = b;
@@ -386,12 +198,12 @@ package net.psykosoft.psykopaint2.base.ui.components
 				//_newX += p.x;
 				//_newY += p.y;
 				
-				_newMatrix.translate( p.x,p.y);
+				content.transform.matrix.translate( p.x,p.y);
 				
 				
 				if (scaleToFit )
 				{
-					m = _newMatrix.clone();
+					m = content.transform.matrix.clone();
 					/*
 					m.a = a;
 					m.b = b;
@@ -424,7 +236,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 						deltaScale =  Math.max(deltaScale,h / _contentsHeight);
 					}
 					
-					_newMatrix.scale(deltaScale,deltaScale);
+					content.transform.matrix.scale(deltaScale,deltaScale);
 					//_newScale *= deltaScale;
 					
 					if ( deltaScale != 1 )
@@ -442,7 +254,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 						m.tx =  _newX - _newPivotX * a - _newPivotY * c;
 						m.ty =  _newY - _newPivotX * b - _newPivotY * d;
 						*/
-						m = _newMatrix.clone();
+						m = content.transform.matrix.clone();
 						m.invert();
 						
 						p.x = _limitsRect.x;
@@ -478,7 +290,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 						
 						m.tx = m.ty = 0;
 						p = m.transformPoint(p);
-						_newMatrix.translate( p.x,p.y);
+						content.transform.matrix.translate( p.x,p.y);
 						/*
 						m.a = a;
 						m.b = b;
@@ -495,7 +307,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 				
 			}
 			
-			transformer.transform.matrix = _newMatrix;
+			//transformer.transform.matrix = _newMatrix;
 			/*
 			pivotX = _newPivotX;
 			pivotY = _newPivotY;
@@ -522,21 +334,26 @@ package net.psykosoft.psykopaint2.base.ui.components
 			
 		protected function clampScale():void
 		{
-			if ( !isNaN(_minimumScale) && _newScale < _minimumScale ) _newScale = _minimumScale;
-			if ( !isNaN(_maximumScale) && _newScale > _maximumScale ) _newScale = _maximumScale;
+			var m:Matrix = content.transform.matrix;
+			var currentScale:Number = Math.sqrt( m.a*m.a + m.b*m.b );
+			var scaleDelta:Number = 1;
+			if ( !isNaN(_minimumScale) && currentScale < _minimumScale ) scaleDelta = _minimumScale / currentScale;
+			if ( !isNaN(_maximumScale) && currentScale > _maximumScale ) scaleDelta = _maximumScale / currentScale;
+			if ( scaleDelta != 1 )
+			{
+				m.scale( scaleDelta, scaleDelta );
+				content.transform.matrix = m;
+			}
+			
 		}
 		
         public function dispose():void
         {
-			if ( stage )
+			if (_transformGesture)
 			{
-				stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-				stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-				stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				_transformGesture.dispose();
+				_transformGesture = null;
 			}
-			removeEventListener(TransformGestureEvent.GESTURE_PAN, onPan);
-			removeEventListener(TransformGestureEvent.GESTURE_ZOOM, onZoom);
-			removeEventListener(TransformGestureEvent.GESTURE_ROTATE, onRotate);
            
         }
     }
