@@ -18,10 +18,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyExpensiveUiActionToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.paint.signals.requests.RequestStateUpdateFromModuleActivationSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 
 	public class CanvasViewMediator extends MediatorBase
 	{

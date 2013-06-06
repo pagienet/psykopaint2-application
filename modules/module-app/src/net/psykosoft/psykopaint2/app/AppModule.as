@@ -10,8 +10,8 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.HomeModule;
 	import net.psykosoft.psykopaint2.paint.PaintModule;
 

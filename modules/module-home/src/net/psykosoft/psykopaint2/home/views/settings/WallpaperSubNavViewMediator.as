@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.home.signals.notifications.RequestWallpaperChangeSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	public class WallpaperSubNavViewMediator extends MediatorBase
 	{

@@ -4,9 +4,9 @@ package net.psykosoft.psykopaint2.paint.config
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
-	import net.psykosoft.psykopaint2.paint.signals.requests.RequestDrawingCoreStartupSignal;
-	import net.psykosoft.psykopaint2.paint.signals.requests.RequestSourceImageSetSignal;
-	import net.psykosoft.psykopaint2.paint.signals.requests.RequestStateUpdateFromModuleActivationSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;

@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.commands
 
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 
 	import robotlegs.bender.bundles.mvcs.Command;
 

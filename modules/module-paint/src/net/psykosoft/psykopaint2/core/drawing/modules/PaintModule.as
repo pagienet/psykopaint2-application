@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 
 	public class PaintModule implements IModule
 	{

@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.signals.requests
+package net.psykosoft.psykopaint2.core.signals
 {
 
 	import org.osflash.signals.Signal;

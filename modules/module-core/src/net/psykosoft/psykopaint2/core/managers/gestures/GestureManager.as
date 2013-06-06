@@ -3,9 +3,9 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 	import flash.display.Stage;
 
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyBlockingGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.events.GestureEvent;

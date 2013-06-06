@@ -2,8 +2,8 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyZoomCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.requests.RequestZoomToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class NewPaintingSubNavViewMediator extends MediatorBase

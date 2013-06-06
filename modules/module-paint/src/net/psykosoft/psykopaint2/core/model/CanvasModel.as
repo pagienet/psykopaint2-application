@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
 

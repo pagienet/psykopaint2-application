@@ -7,10 +7,10 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
-	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
-	import net.psykosoft.psykopaint2.paint.signals.requests.RequestDrawingCoreStartupSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 
 	public class PaintModule extends ModuleBase

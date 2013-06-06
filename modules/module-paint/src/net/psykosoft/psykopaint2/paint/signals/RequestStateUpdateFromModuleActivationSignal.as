@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.signals.requests
+package net.psykosoft.psykopaint2.paint.signals
 {
 
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;

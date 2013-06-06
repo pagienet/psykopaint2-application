@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.home.config
 {
 
-	import net.psykosoft.psykopaint2.home.signals.notifications.RequestWallpaperChangeSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;

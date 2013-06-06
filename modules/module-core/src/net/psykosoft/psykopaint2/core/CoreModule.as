@@ -36,10 +36,10 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.config.CoreConfig;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
-	import net.psykosoft.psykopaint2.core.signals.requests.RequestGpuRenderingSignal;
-	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 
 	import org.osflash.signals.Signal;
@@ -218,7 +218,6 @@ package net.psykosoft.psykopaint2.core
 			trace( this, "Initializing... [" + name + "]" );
 
 			initPlatform();
-			initPsykoSocket();
 			getSplashScreen();
 			initStage();
 			initStage3dASync();
@@ -313,11 +312,6 @@ package net.psykosoft.psykopaint2.core
 					"running on HD: " + CoreSettings.RUNNING_ON_RETINA_DISPLAY + ", " +
 					"global scaling: " + ViewCore.globalScaling
 			);
-		}
-
-		private function initPsykoSocket():void {
-			//adding this early on so it can be used for logging, too
-			//PsykoSocket.init( CoreSettings.DEFAULT_PSYKOSOCKET_IP );
 		}
 
 		private function initStage():void {

@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.paint.views.pick
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.paint.signals.requests.RequestSourceImageSetSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 
 	public class PickAnImageViewMediator extends MediatorBase
 	{

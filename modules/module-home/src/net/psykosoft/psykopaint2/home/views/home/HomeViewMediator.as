@@ -13,13 +13,13 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyCanvasSnapshotSignal;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyZoomCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.requests.RequestZoomToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.home.signals.notifications.RequestWallpaperChangeSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	public class HomeViewMediator extends MediatorBase
 	{

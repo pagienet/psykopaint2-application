@@ -15,8 +15,8 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
-	import net.psykosoft.psykopaint2.core.signals.requests.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.paint.signals.requests.RequestSourceImageSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 
 //	import net.psykosoft.psykopaint2.core.model.CanvasModel;

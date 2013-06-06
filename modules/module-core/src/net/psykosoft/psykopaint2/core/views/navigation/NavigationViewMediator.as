@@ -3,10 +3,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyExpensiveUiActionToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.requests.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class NavigationViewMediator extends MediatorBase

@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.home.signals.notifications
+package net.psykosoft.psykopaint2.home.signals
 {
 
 	import flash.utils.ByteArray;

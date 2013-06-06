@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.core.views.socket
 
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.NetStatusEvent;
 	import flash.net.SharedObject;
@@ -16,9 +15,7 @@ package net.psykosoft.psykopaint2.core.views.socket
 	import flash.ui.Keyboard;
 
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
-
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 
 	public class PsykoSocketView extends ViewBase
 	{
@@ -34,7 +31,7 @@ package net.psykosoft.psykopaint2.core.views.socket
 			var container:Sprite = new Sprite();
 			addChild( container );
 
-			_tf = new InputText( container, 0, 0, CoreSettings.DEFAULT_PSYKOSOCKET_IP );
+			_tf = new InputText( container, 0, 0, "ip address" );
 			_tf.textField.addEventListener( KeyboardEvent.KEY_DOWN, onTfKeyDown );
 			var format:TextFormat = _tf.textField.defaultTextFormat;
 			format.align = TextFormatAlign.CENTER;
@@ -105,7 +102,6 @@ package net.psykosoft.psykopaint2.core.views.socket
 		private function updateSocket():void {
 			trace( this, "connecting to: " + _tf.text );
 			PsykoSocket.init( _tf.text );
-		//	PsykoSocket.ip = _tf.text;
 			storeCookie();
 		}
 	}

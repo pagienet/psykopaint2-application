@@ -80,8 +80,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			// -----------------------
 
 			// Visualize scene origin.
-			var tri:Trident = new Trident( 500 );
-			_view.scene.addChild( tri );
+//			var tri:Trident = new Trident( 500 );
+//			_view.scene.addChild( tri );
 
 			_room = new Room( _view );
 			var cameraTarget:Object3D = new Object3D();

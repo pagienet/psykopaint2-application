@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
-	import net.psykosoft.psykopaint2.core.signals.notifications.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
