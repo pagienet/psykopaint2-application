@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 	public class CropView extends ViewBase
 	{
-		// TODO: commented by li, we don't use starling anymore
 		private var _positioningSheet:TouchSheet;
 		private var _baseTextureSize:int;
 		private var _sourceMap:BitmapData;
@@ -21,7 +20,6 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		}
 
 		override protected function onSetup():void {
-			// TODO: commented by li, we don't use starling anymore
 			_baseTextureSize = _canvasWidth = stage.stageWidth;
 			_canvasHeight = stage.stageHeight;
 			centerCanvas();

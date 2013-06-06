@@ -24,21 +24,21 @@ package net.psykosoft.psykopaint2.base.ui.components
 		private var _contentsWidth:Number = NaN;
 		private var _contentsHeight:Number = NaN;
 		
-	//	private var pivotX:Number;
-	//	private var pivotY:Number;
+		private var pivotX:Number;
+		private var pivotY:Number;
 		
 		private var _lastX:Number;
 		private var _lastY:Number;
 		private var _lastStageX:Number;
 		private var _lastStageY:Number;
-	/*
+	
 		private var _newX:Number;
 		private var _newY:Number;
 		private var _newPivotX:Number;
 		private var _newPivotY:Number;
 		private var _newScale:Number;
 		private var _newRotation:Number;
-		*/
+		
 		private const _tmpPoint:Point = new Point();
 		private const _tmpMatrix:Matrix = new Matrix();
 		private var _stepRadians:Number = Math.PI * 0.5;
@@ -57,7 +57,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			transformer = new Sprite();
 			addChild( transformer );
 			
-			//updateInternalProperties();
+			
             
 			content = new Bitmap();
 			transformer.addChild(content);
@@ -68,6 +68,8 @@ package net.psykosoft.psykopaint2.base.ui.components
             content.y = int((_contentsHeight = map.height) / -2);
 			
 			_newMatrix = transformer.transform.matrix.clone();
+			
+			updateInternalProperties();
 			//pivotX = -_contentsWidth* 0.5;
 			//pivotY = -_contentsHeight* 0.5;
             
@@ -179,7 +181,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_lastY = transformer.y;
 		}
 		
-	/*
+	
 		private function updateInternalProperties():void
 		{
 			_newX = transformer.x;
@@ -189,7 +191,16 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_newScale = transformer.scaleX;
 			_newRotation = transformer.rotation;
 		}
-		*/
+		
+		private function updateNewMatrix():void
+		{
+			_newMatrix.identity();
+			_newMatrix.translate(-_newPivotX,-_newPivotY);
+			_newMatrix.rotate(_newRotation);
+			_newMatrix.scale(_newScale,_newScale);
+			_newMatrix.translate(_newPivotX + _newX,_newPivotY + _newY);
+		}
+		
 		
 		public function setRotationSnap( stepDegrees:Number = 90, snapAngle:Number = 1.5 ):void
 		{
@@ -216,8 +227,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public function set minimumScale( value:Number ):void
 		{
 			_minimumScale = value;
-			//updateInternalProperties();
+			updateInternalProperties();
 			clampScale();
+			updateNewMatrix();
+			clampToLimitRect(false);
 		}
 		
 		public function set maximumScale( value:Number ):void
@@ -509,8 +522,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 			
 		protected function clampScale():void
 		{
-			//if ( !isNaN(_minimumScale) && _newScale < _minimumScale ) _newScale = _minimumScale;
-			//if ( !isNaN(_maximumScale) && _newScale > _maximumScale ) _newScale = _maximumScale;
+			if ( !isNaN(_minimumScale) && _newScale < _minimumScale ) _newScale = _minimumScale;
+			if ( !isNaN(_maximumScale) && _newScale > _maximumScale ) _newScale = _maximumScale;
 		}
 		
         public function dispose():void
