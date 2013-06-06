@@ -40,10 +40,21 @@ package net.psykosoft.psykopaint2.core.views.socket
 			var btn:PushButton = new PushButton( container, _tf.width + 5, 0, "connect", onBtnPressed );
 			_tf.height = btn.height;
 
+			var btnHide:PushButton = new PushButton( container, _tf.width*2 + 10, 0, "hide", onBtnHidePressed );
+
 			container.x = 1024 / 2 - container.width / 2;
 			container.y = 5;
 
 			retrieveCookie();
+		}
+
+		private function onBtnHidePressed( event:Event ):void {
+			dispose();
+		}
+
+		override protected function onDisposed():void {
+			_tf.textField.removeEventListener( KeyboardEvent.KEY_DOWN, onTfKeyDown );
+			parent.removeChild( this );
 		}
 
 		private function onTfKeyDown( event:KeyboardEvent ):void {
