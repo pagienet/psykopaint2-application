@@ -80,8 +80,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			// -----------------------
 
 			// Visualize scene origin.
-//			var tri:Trident = new Trident( 500 );
-//			_view.scene.addChild( tri );
+			var tri:Trident = new Trident( 500 );
+			_view.scene.addChild( tri );
 
 			_room = new Room( _view );
 			var cameraTarget:Object3D = new Object3D();
@@ -136,14 +136,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Release fps detainment ( releases the splash screen ).
 			stage.frameRate = _fpsCache;
-
-			// TODO: remove timer, is there a way to know when the view has rendered properly?
-			/*setTimeout( function():void {
-
-				_cameraController.zoomOut();
-
-
-			}, 100 );*/
 		}
 
 		private var _introZoomOutPending:Boolean = true;
@@ -201,8 +193,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function renderScene():void {
 //			trace( this, "rendering 3d?" );
-			// TODO: why keep loader around?
-			if( !_loader || !_loader.done ) return; // Bounces off 3d rendering when the scene is not ready or active.
+			if( !_assetsLoaded ) return; // Bounces off 3d rendering when the scene is not ready or active.
 			if( !_view.parent ) return;
 			if( _introZoomOutPending && stage.frameRate > 30 ) {
 				_introZoomOutPending = false;

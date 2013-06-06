@@ -76,7 +76,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestZoomToggleSignal.add( onZoomRequested );
 
 			// From view.
-			view.enabledSignal.add( onViewEnabled );
+//			view.enabledSignal.add( onViewEnabled );
 			view.setupSignal.add( onViewSetup );
 		}
 
@@ -90,13 +90,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
 		}
 
-		private function onViewEnabled():void {
+		/*private function onViewEnabled():void {
 			if( view.cameraController.zoomedIn ) {
 				setTimeout( function():void { // TODO: review time out - ipad seems to need it for animation to be visible when coming from the paint state
+					trace( "zooming out" );
 					view.cameraController.zoomOut();
 				}, 1000 );
 			}
-		}
+		}*/
 
 		private function onCameraZoomComplete():void {
 			notifyZoomCompleteSignal.dispatch();

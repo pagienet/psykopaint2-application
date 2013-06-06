@@ -16,7 +16,8 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 		private var _loader:AssetBundleLoader;
 		private var _bundleId:String;
-		private var _bundledAssetsLoaded:Boolean;
+
+		protected var _assetsLoaded:Boolean;
 
 		public var autoUpdates:Boolean = false;
 		public var scalesToRetina:Boolean = true;
@@ -24,6 +25,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 		public var addedToStageSignal:Signal;
 		public var enabledSignal:Signal;
 		public var setupSignal:Signal;
+		public var assetsReadySignal:Signal;
 
 		public function ViewBase() {
 			super();
@@ -31,6 +33,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 			addedToStageSignal = new Signal();
 			enabledSignal = new Signal();
 			setupSignal = new Signal();
+			assetsReadySignal = new Signal();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			visible = false;
 		}
@@ -41,8 +44,8 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 		public function enable():void {
 			if( visible ) return;
-			trace( this, "enabled" );
 			if( !_initialized ) setup();
+			trace( this, "enabled" );
 			onEnabled();
 			visible = true;
 			enabledSignal.dispatch();
@@ -63,8 +66,26 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 		public function dispose():void {
 			_initialized = false;
-			if( _loader ) _loader.dispose();
+			if( _loader ) {
+				_loader.dispose();
+				_loader = null;
+			}
 			onDisposed();
+		}
+
+		// ---------------------------------------------------------------------
+		// Private.
+		// ---------------------------------------------------------------------
+
+		private function setup():void {
+			trace( this, "setup" );
+			onSetup();
+			if( !_assetsLoaded && _loader ) {
+				trace( this, "load started..." );
+				_loader.startLoad();
+			}
+			setupSignal.dispatch();
+			_initialized = true;
 		}
 
 		// ---------------------------------------------------------------------
@@ -111,18 +132,6 @@ package net.psykosoft.psykopaint2.base.ui.base
 		}
 
 		// ---------------------------------------------------------------------
-		// Private.
-		// ---------------------------------------------------------------------
-
-		private function setup():void {
-			trace( this, "setup" );
-			onSetup();
-			if( !_bundledAssetsLoaded && _loader ) _loader.startLoad();
-			setupSignal.dispatch();
-			_initialized = true;
-		}
-
-		// ---------------------------------------------------------------------
 		// Listeners.
 		// ---------------------------------------------------------------------
 
@@ -142,8 +151,10 @@ package net.psykosoft.psykopaint2.base.ui.base
 		}
 
 		private function onBundledAssetsReady( event:Event ):void {
+			trace( this, "assets ready" );
 			onAssetsReady();
-			_bundledAssetsLoaded = true;
+			assetsReadySignal.dispatch();
+			_assetsLoaded = true;
 			_loader.removeEventListener( Event.COMPLETE, onBundledAssetsReady );
 		}
 	}
