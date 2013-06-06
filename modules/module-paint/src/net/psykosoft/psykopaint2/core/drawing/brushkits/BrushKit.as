@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			if (!_initialized ) init();
 			
-			var kit:BrushKit = new BrushKit();
+			var kit:BrushKit = new BrushKit(String(xml.@name));
 			
 			if ( _brushClassFromBrushType[ String(xml.@engine) ] )
 			{
@@ -70,11 +70,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		
 		private var _brushEngine:AbstractBrush;
+		private var _brushName:String;;
 		
-		
-		public function BrushKit() 
+		public function BrushKit( name:String ) 
 		{
-			
+			_brushName = name;
 		}
 
 		public function stopProgression() : void
@@ -108,7 +108,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		public function getParameterSet():XML
 		{
-			return _brushEngine.getParameterSet([]);
+			var result:XML = _brushEngine.getParameterSet([]);
+			result.@name = _brushName;
+			return result;
 		}
 		
 		public function setBrushParameter( parameter:XML):void

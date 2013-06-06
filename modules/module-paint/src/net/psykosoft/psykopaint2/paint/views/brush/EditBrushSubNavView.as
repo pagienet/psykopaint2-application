@@ -96,12 +96,15 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var numParameters:uint = list.length();
 			for( var i:uint; i < numParameters; ++i ) {
 				var parameter:XML = list[ i ];
-				var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter().indexOf( parameter.@id ) != -1;
-				if( matchesLast ) openIndex = i;
-//				trace( ">>> " + parameter.toXMLString() );
-				addCenterButton( parameter.@id, "param" + parameter.@type );
-//				btn.addEventListener( MouseEvent.CLICK, onParameterClicked );
-//				_btns.push( btn );
+				if ( parameter.hasOwnProperty("@showInUI") && parameter.@showInUI == "1" )
+				{
+					var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter().indexOf( parameter.@id ) != -1;
+					if( matchesLast ) openIndex = i;
+	//				trace( ">>> " + parameter.toXMLString() );
+					addCenterButton( parameter.@id, "param" + parameter.@type );
+	//				btn.addEventListener( MouseEvent.CLICK, onParameterClicked );
+	//				_btns.push( btn );
+				}
 			}
 			invalidateContent();
 			

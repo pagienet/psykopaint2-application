@@ -53,6 +53,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		private var _stringValue:String;
 		private var _numberValues:Vector.<Number>;
 		private var _stringValues:Vector.<String>;
+		private var _showInUI:Boolean;
 		
 		public static function fromXML( data:XML ):PsykoParameter
 		{
@@ -338,27 +339,35 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			{
 				case NumberParameter:
 				case IntParameter:
-					numberValue = Number( message.@value );
+					if (  message.hasOwnProperty("@value") )
+						numberValue = Number( message.@value );
 					break;
 				case AngleParameter:
-					degrees = Number( message.@value ) ;
+					if (  message.hasOwnProperty("@value") )
+						degrees = Number( message.@value ) ;
 					break;
 				case NumberRangeParameter:
 				case IntRangeParameter:
-					if (  message.hasOwnProperty("@value1") )
-					{
-						lowerRangeValue = Number( message.@value1 );
-						upperRangeValue = Number( message.@value2 );
-					} else{
+					if (  message.hasOwnProperty("@value") )
 						lowerRangeValue = upperRangeValue = Number( message.@value );
-					}
+					
+					if (  message.hasOwnProperty("@value1") )
+						lowerRangeValue = Number( message.@value1 );
+					
+					if (  message.hasOwnProperty("@value2") )
+						upperRangeValue = Number( message.@value2 );
+					
+					
 					break;
 				case AngleRangeParameter:
-					lowerDegreesValue = Number( message.@value1 );
-					upperDegreesValue = Number( message.@value2 );
+					if (  message.hasOwnProperty("@value1") )
+						lowerDegreesValue = Number( message.@value1 );
+					if (  message.hasOwnProperty("@value2") )
+						upperDegreesValue = Number( message.@value2 );
 					break;
 				case StringParameter:
-					stringValue = String(message.@value);
+					if (  message.hasOwnProperty("@value") )
+						stringValue = String(message.@value);
 					break;
 				case StringListParameter:
 				case IconListParameter:
@@ -388,14 +397,17 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					}
 					break;
 				case BooleanParameter:
-					booleanValue = int( message.@value ) == 1;
+					if (  message.hasOwnProperty("@value") )
+						booleanValue = int( message.@value ) == 1;
 					break;
 			}
+			
+			_showInUI = message.hasOwnProperty("@showInUI") && message.@showInUI == "1";
 		}
 		
 		public function toXML( path:Array ):XML
 		{
-			var result:XML = <parameter id={id} type={type} path={path.join(".")} />
+			var result:XML = <parameter id={id} type={type} path={path.join(".")} showInUI={_showInUI ? "1" : "0" } />
 			switch ( type )
 			{
 				case NumberParameter:
@@ -437,7 +449,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					result.@list = _stringValues.join(",");
 					break;
 				case BooleanParameter:
-					result.@value = (_numberValue == 1);
+					result.@value = (_numberValue == 1 ? "1" : "0");
 			}
 			return result;
 		}

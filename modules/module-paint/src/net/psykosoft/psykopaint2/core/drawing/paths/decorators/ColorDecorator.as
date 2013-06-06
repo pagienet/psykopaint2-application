@@ -25,8 +25,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super();
 			pickColor  = new PsykoParameter( PsykoParameter.BooleanParameter,"Pick Color",1 );
-			saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,"Saturation",1,-10, 1);
-			hueAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,"Hue",0,-360, 360);
+			saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,"Saturation",1,-3, 3);
+			hueAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,"Hue",0,-180, 180);
 			brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,"Brightness",0,-255, 255);
 			
 			_parameters.push(pickColor, saturationAdjustment, hueAdjustment, brightnessAdjustment);
