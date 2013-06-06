@@ -44,8 +44,8 @@ package net.psykosoft.psykopaint2.base.utils
 		}
 
 		private function onLoaderError( event:IOErrorEvent ):void {
-//			throw new Error( this + event +" cannot find " + _url);
-			trace( this + event +" cannot find " + _url);
+			throw new Error( this + event +" cannot find " + _url);
+//			trace( this + event +" cannot find " + _url);
 		}
 	}
 }
