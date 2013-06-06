@@ -21,12 +21,11 @@ package net.psykosoft.psykopaint2.core
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
+	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
-	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewCore;
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
@@ -215,9 +214,10 @@ package net.psykosoft.psykopaint2.core
 			getXmlData();
 			initDebugging();
 
-			trace( this, "Initializing... [" + name + "] v" + CoreSettings.VERSION );
+			trace( this, "Initializing... [" + name + "]" );
 
 			initPlatform();
+			initPsykoSocket();
 			getSplashScreen();
 			initStage();
 			initStage3dASync();
@@ -241,6 +241,7 @@ package net.psykosoft.psykopaint2.core
 
 		private function onVersionRetrieved( data:XML ):void {
 			CoreSettings.VERSION = data.version;
+			trace( this, "VERSION: " + CoreSettings.VERSION );
 			_xmLoader.dispose();
 			_xmLoader = null;
 		}
@@ -269,6 +270,9 @@ package net.psykosoft.psykopaint2.core
 				_versionTextField.y = ViewCore.globalScaling * 25;
 				_backLayer.addChild( _versionTextField );
 			}
+		}
+
+		private function initErrorDisplay():void {
 			if( CoreSettings.SHOW_ERRORS ) {
 				loaderInfo.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onGlobalError );
 				_errorsTextField = new TextField();
@@ -303,14 +307,16 @@ package net.psykosoft.psykopaint2.core
 				MinimalComps.globalScaling = 2;
 			}
 
-			//adding this early on so it can be used for logging, too
-			PsykoSocket.init( CoreSettings.PSYKOSOCKET_IP );
-
 			trace( this, "initializing platform - " +
 					"running on iPad: " + CoreSettings.RUNNING_ON_iPAD + "," +
 					"running on HD: " + CoreSettings.RUNNING_ON_RETINA_DISPLAY + ", " +
 					"global scaling: " + ViewCore.globalScaling
 			);
+		}
+
+		private function initPsykoSocket():void {
+			//adding this early on so it can be used for logging, too
+			PsykoSocket.init( CoreSettings.PSYKOSOCKET_IP );
 		}
 
 		private function initStage():void {
@@ -380,6 +386,7 @@ package net.psykosoft.psykopaint2.core
 
 			initStats();
 			initVersionDisplay();
+			initErrorDisplay();
 
 			// Initial application state.
 			_stateSignal.dispatch( StateType.STATE_IDLE );
