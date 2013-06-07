@@ -3,13 +3,15 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-	import flash.events.TimerEvent;
+import flash.events.Event;
+import flash.events.TimerEvent;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
-	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
+import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 
 	public class CoreRootView extends RootViewBase
@@ -108,7 +110,6 @@ package net.psykosoft.psykopaint2.core.views.base
 			 var rangeSlider:SbRangedSlider = new SbRangedSlider();
 			 rangeSlider.x = 1024 / 2 - rangeSlider.width / 2;
 			 rangeSlider.y = 768 / 2;
-			 rangeSlider.numDecimals = 3;
 			 rangeSlider.minValue = 0;
 			 rangeSlider.maxValue = 1;
 			 rangeSlider.value1 = 0;
@@ -116,7 +117,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			 rangeSlider.addEventListener( Event.CHANGE, function( event:Event ):void {
 			 //				trace( ">>> range slider change: " + rangeSlider.value1 + ", " + rangeSlider.value2 );
 			 } );
-			 container.addChild( rangeSlider );*/
+			 container.addChild( rangeSlider );  */
 
 			//CheckBox test.
 			/* var checkbox:SbCheckBox = new SbCheckBox();
