@@ -125,7 +125,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			var initEaselPic:BitmapData = new BitmapData( 1024, 768, false, 0xCCCCCC );
 			_easel = new Easel( initEaselPic, _view );
-
 			_easel.x = _positioningOffset + squeeze * _easel.width / 2;
 			_easel.y = -300;
 			_easel.z = -600;
@@ -183,6 +182,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		public function updateEasel( bmd:BitmapData ):void {
 			_easel.updateImage( bmd );
+		}
+
+		public function get easel():Easel {
+			return _easel;
 		}
 	}
 }

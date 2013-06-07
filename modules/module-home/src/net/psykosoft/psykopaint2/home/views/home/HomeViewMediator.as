@@ -78,16 +78,30 @@ package net.psykosoft.psykopaint2.home.views.home
 			// From view.
 			view.enabledSignal.add( onViewEnabled );
 			view.setupSignal.add( onViewSetup );
+			view.assetsReadySignal.add( onViewAssetsReady );
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
 
+		private var _waitingForPaintModeAfterZoomIn:Boolean;
+		private function onEaselClicked():void {
+			if( !view.cameraController.zoomedIn ) {
+				_waitingForPaintModeAfterZoomIn = true;
+				view.zoomIn();
+			}
+		}
+
 		private function onViewSetup():void {
 			// TODO: will cause trouble if view was disposed by a memory warning and the listener is set up again...
 			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
 			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
+		}
+
+		private function onViewAssetsReady():void {
+			// TODO: will cause trouble if view was disposed by a memory warning and the listener is set up again...
+			view.frameContainer.easel.clickedSignal.add( onEaselClicked );
 		}
 
 		private function onViewEnabled():void {
@@ -101,6 +115,12 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onCameraZoomComplete():void {
 			notifyZoomCompleteSignal.dispatch();
+
+			// Clicked on easel before zoom in.
+			if( _waitingForPaintModeAfterZoomIn ) {
+			    requestStateChange( StateType.STATE_PAINT );
+				_waitingForPaintModeAfterZoomIn = false;
+			}
 		}
 
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {

@@ -11,7 +11,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
+	import flash.ui.Multitouch;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
@@ -68,7 +70,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			stage.frameRate = 5;
 
 			_view = new View3D();
-			_view.mouseEnabled = _view.mouseChildren = false;
 			_view.stage3DProxy = _stage3dProxy;
 			_view.shareContext = true;
 			_view.width = stage.stageWidth;

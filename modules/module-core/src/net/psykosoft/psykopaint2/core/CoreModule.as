@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
 	import flash.events.UncaughtErrorEvent;
 	import flash.geom.ColorTransform;
 	import flash.text.TextField;

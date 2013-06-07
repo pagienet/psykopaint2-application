@@ -3,18 +3,19 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
-	import away3d.debug.Trident;
 	import away3d.entities.Mesh;
+	import away3d.events.MouseEvent3D;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.CubeGeometry;
 	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.ATFTexture;
 
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
+
+	import org.osflash.signals.Signal;
 
 	public class Easel extends ObjectContainer3D
 	{
@@ -24,8 +25,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private var _view:View3D;
 
+		public var clickedSignal:Signal;
+
 		public function Easel( pictureImage:BitmapData, view:View3D ) {
 			super();
+
+			clickedSignal = new Signal();
 
 			_view = view;
 
@@ -74,10 +79,17 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Init picture mesh.
 			_pictureMesh = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( bmd, _view.stage3DProxy );
+			_pictureMesh.name = "EaselPicture";
 			_pictureMesh.rotationX = -90;
 			_pictureMesh.y = _frameMesh.y;
 			_pictureMesh.z = _frameMesh.z - frameGeometry.depth / 2 - 1;
+			_pictureMesh.mouseEnabled = true;
+			_pictureMesh.addEventListener( MouseEvent3D.MOUSE_DOWN, onPictureMouseDown );
 			addChild( _pictureMesh );
+		}
+
+		private function onPictureMouseDown( event:MouseEvent3D ):void {
+			clickedSignal.dispatch();
 		}
 
 		override public function dispose():void {
