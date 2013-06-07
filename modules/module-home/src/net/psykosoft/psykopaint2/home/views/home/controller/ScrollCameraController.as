@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_interactionManager.throwInputMultiplier = 2;
 
 			_positionManager.frictionFactor = 0.9;
-			_positionManager.minimumThrowingSpeed = 175;
+			_positionManager.minimumThrowingSpeed = 125;
 			_positionManager.edgeContainmentFactor = 0.01;
 
 			// Uncomment to visually debug perspective factor.

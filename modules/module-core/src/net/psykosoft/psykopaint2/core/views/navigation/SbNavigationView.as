@@ -98,7 +98,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_scroller.visibleWidth = 1024;
 			_scroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _scroller.visibleHeight / 2;
 			_scroller.positionManager.minimumThrowingSpeed = 15;
-			_scroller.positionManager.frictionFactor = 0.85;
+			_scroller.positionManager.frictionFactor = 0.75;
 			_scroller.interactionManager.throwInputMultiplier = 2;
 			_scroller.motionStartedSignal.add( onCenterScrollerMotionStart );
 			_scroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
