@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private var _atlasXml:XML;
 
-		private const FRAME_GAP_X:Number = 500;
+		private const FRAME_GAP_X:Number = 300;
 		private const PAINTINGS_SCALE:Number = 0.9;
 
 		public function PictureFrameContainer( cameraController:ScrollCameraController, room:Room, view:View3D ) {
