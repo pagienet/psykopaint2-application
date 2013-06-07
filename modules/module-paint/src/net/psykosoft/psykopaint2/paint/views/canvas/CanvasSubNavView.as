@@ -20,12 +20,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			setLabel( "Do some painting!" );
 
-			setLeftButton( LBL_PICK_AN_IMAGE );
+			setLeftButton( LBL_HOME );
 			setRightButton( LBL_PICK_A_BRUSH );
 
 			addCenterButton( LBL_CLEAR, ButtonIconType.NEW );
 			if( !PaintSettings.isStandalone ) {
-				addCenterButton( LBL_HOME, ButtonIconType.GALLERY );
+				addCenterButton( LBL_PICK_AN_IMAGE, ButtonIconType.GALLERY );
 			}
 
 			invalidateContent();

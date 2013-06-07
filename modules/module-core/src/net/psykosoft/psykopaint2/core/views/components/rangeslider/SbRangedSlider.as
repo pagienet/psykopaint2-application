@@ -72,10 +72,27 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 			else {
 				var currentDistanceBetweenHandles:Number = rightHandleView.x - leftHandleView.x;
 				var limit:Number = _maxX - currentDistanceBetweenHandles;
-				if( rangeView.x < _minX ) rangeView.x = _minX;
-				else if( rangeView.x > limit ) rangeView.x = limit;
-				leftHandleView.x = rangeView.x;
-				rightHandleView.x = leftHandleView.x + currentDistanceBetweenHandles;
+				var dx:Number;
+				if( rangeView.x < _minX ) {
+					dx = _minX - rangeView.x;
+					rightHandleView.x = _minX + currentDistanceBetweenHandles - dx;
+					if( rightHandleView.x < _minX ) rightHandleView.x = _minX;
+					rangeView.x = leftHandleView.x = _minX;
+					_clickOffset += dx;
+					updateAccordion();
+				}
+				else if( rangeView.x > limit ) {
+					dx = _maxX - ( rangeView.x + currentDistanceBetweenHandles );
+					leftHandleView.x = _maxX - currentDistanceBetweenHandles - dx;
+					if( leftHandleView.x > _maxX ) leftHandleView.x = _maxX;
+					rightHandleView.x = _maxX;
+					_clickOffset -= dx; //TODO: double check this, not working properly
+					updateAccordion();
+				}
+				else {
+					leftHandleView.x = rangeView.x;
+					rightHandleView.x = leftHandleView.x + currentDistanceBetweenHandles;
+				}
 			}
 			updateValueFromView();
 		}
