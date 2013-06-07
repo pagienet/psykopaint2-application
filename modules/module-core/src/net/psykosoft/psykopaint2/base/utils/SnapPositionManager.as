@@ -184,5 +184,9 @@ package net.psykosoft.psykopaint2.base.utils
 		public function get snapPoints():Vector.<Number> {
 			return _snapPoints;
 		}
+
+		public function get closestSnapPointIndex():int {
+			return _closestSnapPointIndex;
+		}
 	}
 }

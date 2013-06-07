@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
+	import away3d.debug.Trident;
 	import away3d.entities.Mesh;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
@@ -27,10 +28,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super();
 
 			_view = view;
-
-//			var tri:Trident = new Trident( 100 );
-//			tri.z -= 500;
-//			addChild( tri );
 
 			// Init easel mesh.
 			var easelMaterial:TextureMaterial = TextureUtil.getAtfMaterial( HomeView.HOME_BUNDLE_ID, "easelImage", view );
@@ -69,6 +66,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_frameMesh.y = 768 / 2 - 170; // TODO: must adapt to the size of the canvas
 			_frameMesh.z = -25;
 			addChild( _frameMesh );
+
+			// Uncomment to visualize painting center.
+			/*var tri:Trident = new Trident( 100 );
+			tri.z -= 30;
+			_frameMesh.addChild( tri );*/
 
 			// Init picture mesh.
 			_pictureMesh = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( bmd, _view.stage3DProxy );

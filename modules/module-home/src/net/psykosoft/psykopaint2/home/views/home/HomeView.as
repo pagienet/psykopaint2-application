@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import flash.display.BitmapData;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
@@ -76,6 +78,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: does the path manager update when scrolling on the 3d view? it shouldn't!
 
 			// -----------------------
+			// Key debugging.
+			// -----------------------
+
+			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
+			stage.addEventListener( KeyboardEvent.KEY_UP, onStageKeyUp );
+
+			// -----------------------
 			// Initialize objects.
 			// -----------------------
 
@@ -138,6 +147,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			stage.frameRate = _fpsCache;
 		}
 
+		// TODO: tidy up
 		private var _introZoomOutPending:Boolean = true;
 
 		override protected function onDisposed():void {
@@ -206,6 +216,70 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			_cameraController.update();
 			_view.render();
+		}
+
+		public function zoomIn():void {
+			// TODO: evaluate zoom in y and z for current snap point
+
+			var zoomY:Number = 400; // Default values.
+			var zoomZ:Number = -800;
+
+			var index:uint = _cameraController.positionManager.closestSnapPointIndex;
+
+			// Easel.
+			if( index == 1 ) {
+				zoomY = 320;
+				zoomZ = -900;
+			}
+
+			trace( this, "zooming in to Y: " + zoomY + ", Z: " + zoomZ );
+
+			_cameraController.zoomIn( zoomY, zoomZ );
+		}
+
+		public function zoomOut():void {
+			_cameraController.zoomOut();
+		}
+
+		// ---------------------------------------------------------------------
+		// Listeners.
+		// ---------------------------------------------------------------------
+
+		private var _shiftMultiplier:Number = 1;
+
+		private function onStageKeyUp( event:KeyboardEvent ):void {
+			switch( event.keyCode ) {
+				case Keyboard.SHIFT: {
+					_shiftMultiplier = 1;
+					break;
+				}
+			}
+		}
+
+		private function onStageKeyDown( event:KeyboardEvent ):void {
+			switch( event.keyCode ) {
+				case Keyboard.UP: {
+					_cameraController.offsetY( _shiftMultiplier );
+					break;
+				}
+				case Keyboard.DOWN: {
+					_cameraController.offsetY( -_shiftMultiplier );
+					break;
+				}
+				case Keyboard.RIGHT: {
+					_cameraController.offsetZ( _shiftMultiplier );
+					break;
+				}
+				case Keyboard.LEFT: {
+					_cameraController.offsetZ( -_shiftMultiplier );
+					break;
+				}
+				case Keyboard.SHIFT: {
+					_shiftMultiplier = 10;
+					break;
+				}
+			}
+			trace( this, "positioning camera, Y: " + _cameraController.camera.y + ", Z: " + _cameraController.camera.z );
 		}
 
 		// -----------------------

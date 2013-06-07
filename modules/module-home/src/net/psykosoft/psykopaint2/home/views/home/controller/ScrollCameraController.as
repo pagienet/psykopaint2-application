@@ -73,12 +73,21 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			super.dispose();
 		}
 
-		public function zoomIn():void {
+		public function offsetY( offY:Number ):void {
+			_camera.y += offY;
+			_cameraTarget.y = _camera.y;
+		}
+
+		public function offsetZ( offZ:Number ):void {
+			_camera.z += offZ;
+		}
+
+		public function zoomIn( targetY:Number, targetZ:Number ):void {
 			_zoomedIn = true;
 			TweenLite.killTweensOf( _cameraTarget );
 			TweenLite.killTweensOf( _camera );
-			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_IN_Y, ease:Expo.easeInOut } );
-			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_IN_Y, z: HomeSettings.CAMERA_ZOOM_IN_Z, ease:Expo.easeInOut, onComplete:onZoomComplete } );
+			TweenLite.to( _cameraTarget, 1, { y: targetY, ease:Expo.easeInOut } );
+			TweenLite.to( _camera, 1, { y: targetY, z: targetZ, ease:Expo.easeInOut, onComplete:onZoomComplete } );
 		}
 
 		public function zoomOut():void {
@@ -183,6 +192,14 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 		public function get zoomedIn():Boolean {
 			return _zoomedIn;
+		}
+
+		public function get positionManager():SnapPositionManager {
+			return _positionManager;
+		}
+
+		public function get camera():Camera3D {
+			return _camera;
 		}
 	}
 }

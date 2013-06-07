@@ -4,18 +4,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.materials.TextureMaterial;
-	import away3d.textures.ATFTexture;
-	import away3d.textures.BitmapTexture;
 
 	import br.com.stimuli.loading.BulkLoader;
 
 	import flash.display.BitmapData;
 
-	import flash.display.BitmapData;
-
 	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
-
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.vos.FrameTextureAtlasDescriptorVO;
 
@@ -29,7 +24,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _room:Room;
 		private var _view:View3D;
 
-		private var _framesTexture:ATFTexture;
 		private var _atlasXml:XML;
 
 		private const FRAME_GAP_X:Number = 500;

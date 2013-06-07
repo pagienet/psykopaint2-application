@@ -94,7 +94,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Zoom out when coming from paint state ( view zooms out, when activated, if it was zoomed in when deactivated ).
 			if( view.cameraController.zoomedIn ) {
 				setTimeout( function():void { // TODO: review time out - ipad seems to need it for animation to be visible when coming from the paint state
-					view.cameraController.zoomOut();
+					view.zoomOut();
 				}, 1000 );
 			}
 		}
@@ -152,8 +152,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onZoomRequested( zoomIn:Boolean ):void {
 			if( !view.visible ) return;
-			if( zoomIn ) view.cameraController.zoomIn();
-			else view.cameraController.zoomOut();
+			if( zoomIn ) view.zoomIn();
+			else view.zoomOut();
 		}
 
 		private function onCanvasBitmapReceived( bmd:BitmapData ):void {
@@ -177,10 +177,10 @@ package net.psykosoft.psykopaint2.home.views.home
 				view.cameraController.endPanInteraction();
 			}
 			else if( type == GestureType.PINCH_GREW ) {
-				view.cameraController.zoomIn();
+				view.zoomIn();
 			}
 			else if( type == GestureType.PINCH_SHRANK ) {
-				view.cameraController.zoomOut();
+				view.zoomOut();
 			}
 		}
 
