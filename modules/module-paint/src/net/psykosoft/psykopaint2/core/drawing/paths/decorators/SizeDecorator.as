@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import com.greensock.easing.Expo;
 	import com.greensock.easing.Linear;
 	import com.greensock.easing.Quad;
+	import com.greensock.easing.Quart;
+	import com.greensock.easing.Quint;
 	
 	import de.popforge.math.LCG;
 	
@@ -17,20 +19,22 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var mappingFactor:PsykoParameter;
 		private var mappingFunction:PsykoParameter;
 		private var invertMapping:PsykoParameter;
+		private var maxSpeed:PsykoParameter;
 		
 		private var rng:LCG;
 		
-		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([null,Quad.easeIn,Quad.easeInOut,Quad.easeOut, Expo.easeIn, Expo.easeInOut, Expo.easeOut, Circ.easeIn,Circ.easeInOut, Circ.easeOut ]);
+		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([Linear.easeNone,Quad.easeIn,Quad.easeInOut,Quad.easeOut, Quart.easeIn,Quart.easeInOut,Quart.easeOut, Quint.easeIn,Quint.easeInOut,Quint.easeOut,Expo.easeIn, Expo.easeInOut, Expo.easeOut, Circ.easeIn,Circ.easeInOut, Circ.easeOut ]);
 		
 		public function SizeDecorator()
 		{
 			super();
 			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed"]);
 			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,"Factor",1,1,0,100);
-			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,"Mapping",0,["Linear","Quad In","Quad InOut","Quad Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
+			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,"Mapping",0,["Linear","Quadratic In","Quadratic InOut","Quadratic Out","Quartic In","Quartic InOut","Quartic Out","Quintic In","Quintic InOut","Quintic Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
 			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,"Invert Mapping",0);
+			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,"Maximum Speed",20,1,100);
 			
-			_parameters.push(mappingMode,mappingFactor,mappingFunction,invertMapping );
+			_parameters.push(mappingMode,mappingFactor,mappingFunction,invertMapping,maxSpeed );
 			
 			rng = new LCG( Math.random() * 0xffffff );
 		}
@@ -42,8 +46,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var maxFactor:Number = mappingFactor.upperRangeValue;
 			
 			var mapping:Function = mappingFunctions[mappingFunction.index];
-			var m1:Number = invertMapping.booleanValue ? 1 : 0;
-			var m2:Number = 1 - m1;
+			var ms:Number = maxSpeed.numberValue;
+			var inv:Boolean = invertMapping.booleanValue;
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var point:SamplePoint = points[i];
@@ -52,7 +56,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					point.size = rng.getNumber(minFactor,maxFactor );
 				} else if ( mode == 1 )
 				{
-					point.size = ( mapping ? mapping.apply( null, [point.speed,m1,m2,1]) : point.speed ) * rng.getNumber(minFactor,maxFactor );
+					point.size = mapping.apply( null, [Math.min(point.speed,maxSpeed.numberValue),0,ms,ms]);
+					if ( inv ) point.size = ms - point.size;
+					point.size *= rng.getNumber(minFactor,maxFactor );
 				}
 			}
 			return points;
