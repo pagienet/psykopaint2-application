@@ -60,12 +60,12 @@ package net.psykosoft.psykopaint2.core.commands
 
 			if( snapshotRequested ) {
 				trace( this, "taking snapshot ------------------------------"  );
-				var bmd:BitmapData = new BitmapData( CoreSettings.GLOBAL_SCALING * stage3DProxy.width, CoreSettings.GLOBAL_SCALING * stage3DProxy.height, true, 0 );
+				var bmd:BitmapData = new BitmapData( stage3DProxy.width, stage3DProxy.height, true, 0 );
 				stage3DProxy.context3D.drawToBitmapData( bmd );
 				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
 					var matrix:Matrix = new Matrix();
-					matrix.scale( 0.5, 0.5 );
-					var scaledDownBmd:BitmapData = new BitmapData( stage3DProxy.width, stage3DProxy.height, false, 0 );
+					matrix.scale( 1 / CoreSettings.GLOBAL_SCALING, 1 / CoreSettings.GLOBAL_SCALING );
+					var scaledDownBmd:BitmapData = new BitmapData( stage3DProxy.width / CoreSettings.GLOBAL_SCALING, stage3DProxy.height / CoreSettings.GLOBAL_SCALING, false, 0 );
 					scaledDownBmd.draw( bmd, matrix );
 					bmd = scaledDownBmd;
 				}
