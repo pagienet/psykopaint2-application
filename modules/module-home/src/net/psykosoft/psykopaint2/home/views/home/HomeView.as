@@ -98,8 +98,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_frameContainer = new PictureFrameContainer( _cameraController, _room, _view );
 			_frameContainer.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
-			_cameraController.cameraY = cameraTarget.y = HomeSettings.CAMERA_ZOOM_IN_Y;
-			_cameraController.cameraZ = HomeSettings.CAMERA_ZOOM_IN_Z;
+			_cameraController.cameraY = cameraTarget.y = 400;
+			_cameraController.cameraZ = -800;
 			_frameContainer.z = _room.wallZ - 2;
 			cameraTarget.z = _room.wallZ;
 			_view.scene.addChild( _cameraController );
