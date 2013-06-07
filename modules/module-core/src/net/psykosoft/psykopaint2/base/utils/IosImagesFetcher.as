@@ -81,10 +81,10 @@ package net.psykosoft.psykopaint2.base.utils
 			_thumbnailsLoadedSignal.dispatch( _currentVO );
 
 			// Load next sheet.
-			if( !( _latestThumbnailRetrieved == _totalItems - 1 ) ) getNextThumbnailSheet();
+			/*if( !( _latestThumbnailRetrieved == _totalItems - 1 ) ) getNextThumbnailSheet();
 			else {
 				_extension.removeEventListener( UserPhotosExtensionEvent.SPRITE_SHEET_READY, onSpriteSheetReady );
-			}
+			}*/
 		}
 
 		private function initializeExtension( callback:Function ):void {

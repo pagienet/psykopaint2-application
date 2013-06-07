@@ -27,30 +27,29 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public var visibleHeight:Number = 100;
 		public var visibleWidth:Number = 600;
 
-		// TODO: button presses conflict with scrolling
-
 		public var motionStartedSignal:Signal;
 		public var motionEndedSignal:Signal;
 
 		public function HSnapScroller() {
 			super();
+
 			_positionManager = new SnapPositionManager();
 			_interactionManager = new ScrollInteractionManager( _positionManager );
+
 			motionStartedSignal = new Signal();
 			motionEndedSignal = new Signal();
+
+			_container = new Sprite();
+			_container.cacheAsBitmap = true; // TODO: wouldn't it make more sense to only set cache as bitmap to true after all the children have been added to the container?
+			super.addChild( _container );
+
+			reset();
+
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
 		private function initialize():void {
-
-			_container = new Sprite();
-			super.addChild( _container );
-
-			_container.cacheAsBitmap = true;
-			// TODO: wouldn't it make more sense to only set cache as bitmap to true after all the children have been added to the container?
-
 			_interactionManager.stage = stage;
-
 			_positionManager.motionEndedSignal.add( onPositionManagerMotionEnded );
 			_interactionManager.scrollInputMultiplier = 1 / CoreSettings.GLOBAL_SCALING;
 		}

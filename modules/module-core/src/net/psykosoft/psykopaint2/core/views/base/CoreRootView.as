@@ -1,14 +1,19 @@
 package net.psykosoft.psykopaint2.core.views.base
 {
 
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.components.tilesheet.TileSheet;
+	import net.psykosoft.psykopaint2.core.views.components.tilesheet.UserPhotosTileSheet;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 
@@ -36,9 +41,13 @@ package net.psykosoft.psykopaint2.core.views.base
 			}
 
 			// -----------------------
-			// Component tests...
+			// Component tests ( comment all lines below to remove tests )...
 			// -----------------------
+			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+		}
 
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			runUiTests();
 		}
 
@@ -88,6 +97,47 @@ package net.psykosoft.psykopaint2.core.views.base
 			/*this.graphics.beginFill(0xCCCCCC, 1.0);
 			 this.graphics.drawRect(0, 0, 1024, 768);
 			 this.graphics.endFill();*/
+
+			// Tile sheet.
+			// Source bmd sheet.
+			/*var bmd:BitmapData = new BitmapData( 1024, 1024, false, 0 );
+			bmd.perlinNoise( 50, 50, 1, 1, false, true, 7, false );
+			// Component.
+			var tileSheet:TileSheet = new TileSheet();
+			tileSheet.visibleWidth = 1024;
+			tileSheet.visibleHeight = 768;
+			addChild( tileSheet );
+			// Population.
+			var tileSize:uint = 128;
+			var numTiles:uint = 160;
+			tileSheet.initializeWithProperties( numTiles, tileSize );
+			for( var i:uint; i < numTiles; ++i ) {
+				var tileSheetX:Number = ( 1024 - tileSize ) * Math.random();
+				var tileSheetY:Number = ( 1024 - tileSize ) * Math.random();
+				tileSheet.setTileContentFromSpriteSheet( bmd, tileSheetX, tileSheetY );
+			}
+			// Interaction.
+			stage.addEventListener( MouseEvent.MOUSE_DOWN, function( event:Event ):void {
+				tileSheet.evaluateInteractionStart();
+			} );
+			stage.addEventListener( MouseEvent.MOUSE_UP, function( event:Event ):void {
+				tileSheet.evaluateInteractionEnd();
+			} );*/
+
+			// User photos tile sheet.
+			// Component.
+			/*var tileSheet:UserPhotosTileSheet = new UserPhotosTileSheet();
+			tileSheet.visibleWidth = 1024;
+			tileSheet.visibleHeight = 768;
+			addChild( tileSheet );
+			// Interaction.
+			stage.addEventListener( MouseEvent.MOUSE_DOWN, function( event:Event ):void {
+				tileSheet.evaluateInteractionStart();
+			} );
+			stage.addEventListener( MouseEvent.MOUSE_UP, function( event:Event ):void {
+				tileSheet.evaluateInteractionEnd();
+			} );
+			tileSheet.fetchPhotos();*/
 
 			// Simple slider test.
 			/*var simpleSlider:SbSlider = new SbSlider();
