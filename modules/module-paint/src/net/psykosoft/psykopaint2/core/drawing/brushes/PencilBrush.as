@@ -27,8 +27,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_shininess.numberValue = .4;
 			_glossiness.numberValue = .5;
 			_bumpiness.numberValue = .6;
-            _sizeFactor.lowerRangeValue = .2;
-            _sizeFactor.upperRangeValue = .4;
+			setBrushSizeFactors(.2,.4);
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, textureManager : ITextureManager) : void
@@ -73,7 +72,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 
         override protected function processPoint(point:SamplePoint):void {
-            var scale : Number = _sizeFactor.lowerRangeValue + Math.random()*(_sizeFactor.upperRangeValue - _sizeFactor.lowerRangeValue);
+            var scale : Number = point.size * _sizeFactor.upperRangeValue - Math.random()*(_sizeFactor.upperRangeValue - _sizeFactor.lowerRangeValue);
             addStrokePoint(point, _brushShape.actualSize * _canvasScaleW * scale, _brushShape.rotationRange);
         }
     }

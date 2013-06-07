@@ -72,8 +72,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
                 <brush engine={BrushType.PENCIL} name="Pencil">
                     <pathengine type={PathManager.ENGINE_TYPE_BASIC}>
                         <ColorDecorator>
-                            <parameter id="Pick Color" path="pathengine.pointdecorator_0" value="1" />
+                            <parameter id="Pick Color" path="pathengine.pointdecorator_0" value="1" showInUI="0" />
                         </ColorDecorator>
+						<SizeDecorator>
+							<parameter id="Mode" path="pathengine.pointdecorator_1" index="1" />
+							<parameter id="Factor" path="pathengine.pointdecorator_1" value="1" showInUI="1" />
+							<parameter id="Mapping" path="pathengine.pointdecorator_1" value="2" />
+						</SizeDecorator>
                     </pathengine>
 					<parameter id="Shapes" path="brush" index="0" list="pencil" showInUI="0"/>
                 </brush>
