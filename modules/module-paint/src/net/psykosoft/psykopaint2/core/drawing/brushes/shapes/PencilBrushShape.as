@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function PencilBrushShape(context3D : Context3D)
 		{
+			trace ("moo");
 			super(context3D, "pencil", 1);
 			_variationFactors[0] = 1;
 			_variationFactors[1] = 1;

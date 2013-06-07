@@ -99,15 +99,6 @@ import flash.display3D.Context3DVertexBufferFormat;
                 }
 			}
 
-			// if corner is sharp enough, add subsegments
-			var dot : Number = _prevNormalX*normalX + _prevNormalY*normalY;
-
-			if 	(dot < .25) {
-				var numSegments : int = -(dot - .25)/1.25 * 7;
-				if (numSegments < 2) numSegments = 2;
-				appendConnection(_prevNormalX, _prevNormalY, normalX, normalY, appendVO, numSegments);
-			}
-
 			appendSegment(point.normalX, point.normalY, appendVO, normalX, normalY);
 
 			invalidateBuffers();
@@ -118,33 +109,6 @@ import flash.display3D.Context3DVertexBufferFormat;
 			_prevNormalX = normalX;
 			_prevNormalY = normalY;
 			_prevAppendVO = appendVO;
-		}
-
-		public function appendStationary() : void
-		{
-			appendConnection(_prevNormalX, _prevNormalY, -_prevNormalX, -_prevNormalY, _prevAppendVO, 7);
-			_prevNormalX = -_prevNormalX;
-			_prevNormalY = -_prevNormalY;
-
-			invalidateBuffers();
-			invalidateBounds();
-		}
-
-		private function appendConnection(startNormalX : Number, startNormalY : Number, endNormalX : Number, endNormalY : Number, appendVO : StrokeAppendVO, numSegments : uint) : void
-		{
-			// not slerping because angle between normals isn't always the correct value
-			var startAngle : Number = Math.atan2(startNormalY, startNormalX);
-			var endAngle : Number = Math.atan2(endNormalY, endNormalX);
-
-			for (var i : int = 1; i <= numSegments +1; ++i) {
-				var t : Number = i / (numSegments + 1);
-				var angle : Number = startAngle + t * (endAngle - startAngle);
-
-				var interpNormalX : Number = Math.cos(angle);
-				var interpNormalY : Number = Math.sin(angle);
-
-				appendSegment(_prevX, _prevY, appendVO, interpNormalX, interpNormalY);
-			}
 		}
 
 		private function appendSegment(x : Number, y : Number, appendVO : StrokeAppendVO, normalX : Number, normalY : Number) : void
