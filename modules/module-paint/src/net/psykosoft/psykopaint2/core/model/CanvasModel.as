@@ -127,9 +127,9 @@ package net.psykosoft.psykopaint2.core.model
 			if ( sourceBitmapData.width != _textureWidth || sourceBitmapData.height != _textureHeight )
 			{
 				var tmpBmd:BitmapData = new BitmapData( _textureWidth,_textureHeight ,false,0xffffffff);
-				var scl:Number = Math.max(textureWidth /  sourceBitmapData.width, textureHeight /  sourceBitmapData.height );
+				var scl:Number = Math.min(textureWidth /  sourceBitmapData.width, textureHeight /  sourceBitmapData.height );
 				
-				var m:Matrix = new Matrix(scl,0,0,scl, 0.5 * (_textureWidth - sourceBitmapData.width*scl), 0.5 * (_textureHeight - sourceBitmapData.height*scl))
+				var m:Matrix = new Matrix(scl,0,0,scl, 0.5 * (_textureWidth - sourceBitmapData.width*scl), 0)
 				tmpBmd.draw(sourceBitmapData,m,null,"normal",null,true);
 				return tmpBmd;
 			} else {

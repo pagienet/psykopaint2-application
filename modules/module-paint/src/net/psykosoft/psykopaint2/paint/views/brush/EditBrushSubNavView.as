@@ -217,7 +217,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Check box
 			else if( parameterType == PsykoParameter.BooleanParameter ) {
 				var checkBox:SbCheckBox = new SbCheckBox();
-				checkBox.selected = Boolean( _parameter.@value );
+				checkBox.selected = int( _parameter.@value ) == 1;
 				checkBox.addEventListener( Event.CHANGE, onCheckBoxChanged );
 				positionUiElement( checkBox );
 				addChild( checkBox );
@@ -310,7 +310,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onCheckBoxChanged( event:Event ):void {
 			var checkBox:SbCheckBox = event.target as SbCheckBox;
-			_parameter.@value = checkBox.selected;
+			_parameter.@value = checkBox.selected ? "1" : "0";
 		//	updateActiveParameter();
 			notifyParameterChange();
 		}

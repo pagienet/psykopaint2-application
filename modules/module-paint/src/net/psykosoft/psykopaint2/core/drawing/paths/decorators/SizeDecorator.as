@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 {
+	import com.greensock.easing.Circ;
+	import com.greensock.easing.Expo;
 	import com.greensock.easing.Linear;
 	import com.greensock.easing.Quad;
 	
@@ -14,18 +16,21 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var mappingMode:PsykoParameter;
 		private var mappingFactor:PsykoParameter;
 		private var mappingFunction:PsykoParameter;
+		private var invertMapping:PsykoParameter;
 		
 		private var rng:LCG;
 		
-		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([null,Quad.easeIn,Quad.easeInOut,Quad.easeOut]);
+		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([null,Quad.easeIn,Quad.easeInOut,Quad.easeOut, Expo.easeIn, Expo.easeInOut, Expo.easeOut, Circ.easeIn,Circ.easeInOut, Circ.easeOut ]);
 		
 		public function SizeDecorator()
 		{
 			super();
-			this.mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed"]);
-			this.mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,"Factor",1,1,0,100);
-			this.mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,"Mapping",0,["Linear","Quad In","Quad InOut","Quad Out"]);
-			_parameters.push(this.mappingMode,this.mappingFactor,this.mappingFunction );
+			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed"]);
+			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,"Factor",1,1,0,100);
+			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,"Mapping",0,["Linear","Quad In","Quad InOut","Quad Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
+			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,"Invert Mapping",0);
+			
+			_parameters.push(mappingMode,mappingFactor,mappingFunction,invertMapping );
 			
 			rng = new LCG( Math.random() * 0xffffff );
 		}
@@ -37,18 +42,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var maxFactor:Number = mappingFactor.upperRangeValue;
 			
 			var mapping:Function = mappingFunctions[mappingFunction.index];
-			
+			var m1:Number = invertMapping.booleanValue ? 1 : 0;
+			var m2:Number = 1 - m1;
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var point:SamplePoint = points[i];
-				switch ( mode )
+				if ( mode == 0 )
 				{
-					case 0:
-						point.size = rng.getNumber(minFactor,maxFactor );
-						break;
-					case 1:
-						point.size = ( mapping ? mapping.apply( null, [point.speed,0,1,1]) : point.speed ) * rng.getNumber(minFactor,maxFactor );
-						break;
+					point.size = rng.getNumber(minFactor,maxFactor );
+				} else if ( mode == 1 )
+				{
+					point.size = ( mapping ? mapping.apply( null, [point.speed,m1,m2,1]) : point.speed ) * rng.getNumber(minFactor,maxFactor );
 				}
 			}
 			return points;

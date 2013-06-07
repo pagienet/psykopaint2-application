@@ -52,9 +52,9 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		public function renderPreviewToBitmapData():BitmapData 
 		{
 			var croppedMap:BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, false, 0xffffffff );
-			croppedMap.draw(this,null,null,"normal",null,true);
+			croppedMap.draw(_positioningSheet,null,null,"normal",null,true);
 			return croppedMap;
-			return null;
+			
 		}
 	}
 }
