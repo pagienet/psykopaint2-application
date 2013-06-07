@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Embed(source="/../assets/embedded/images/canvas-height-specular.png")]
 		private var DefaultHeightSpecularMap:Class;
 
-		[Embed(source="/../assets/embedded/images/aa.jpg")]
+		[Embed(source="/../assets/embedded/images/default-image.jpg")]
 		private var DefaultImage:Class;
 
 		[Inject]
