@@ -8,6 +8,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.events.Event;
 	import flash.text.TextField;
 
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
@@ -20,23 +22,19 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	public class EditBrushSubNavView extends SubNavigationViewBase
 	{
-//		private var _btns:Vector.<SbButton>;
 		private var _uiElements:Vector.<DisplayObject>;
 		private var _parametersXML:XML;
 		private var _parameter:XML;
 
 		public static const LBL_BACK:String = "Pick a Brush";
-		//public static const LBL_SHAPE:String = "Shapes";
 
 		private const UI_ELEMENT_Y:uint = 560;
 
 		public var brushParameterChangedSignal:Signal;
-		public var shapeChangedSignal:Signal;
 
 		public function EditBrushSubNavView() {
 			super();
 			brushParameterChangedSignal = new Signal();
-			shapeChangedSignal = new Signal();
 		}
 
 		override protected function onEnabled():void {
@@ -47,33 +45,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onDisposed():void {
-			// Dispose local button listeners ( the rest is disposed in SbNavigationView ).
-			/*var len:uint = _btns.length;
-			for( var i:uint; i < len; ++i ) {
-				var btn:SbButton = _btns[ i ];
-				btn.removeEventListener( MouseEvent.CLICK, onParameterClicked );
-			}
-			_btns = null;*/
-			// Dispose other components.
 			closeLastParameter();
-		}
-
-		// ---------------------------------------------------------------------
-		// TODO: change now, the info is in the parameter xml already
-		// Shapes. ( this is temporary, it will be treated as a parameter )
-		// ---------------------------------------------------------------------
-
-		public function setAvailableShapes( shapes:XML ):void {
-			var types:XMLList = shapes[ 0 ].shape;
-			var len:uint = types.length();
-			for( var i:uint; i < len; ++i ) {
-				addCenterButton( types[ i ].@type );
-			}
-			invalidateContent();
-		}
-
-		public function setSelectedShape( activeBrushKitShape:String ):void {
-			selectButtonWithLabel( activeBrushKitShape );
 		}
 
 		// ---------------------------------------------------------------------
@@ -83,37 +55,30 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public function setParameters( xml:XML ):void {
 
 			_parametersXML = xml;
-			trace( this, "receiving parameters: " + _parametersXML );
-
-			// Shapes button is always present. - @Mario: not anymore, should be automatically done by the regular parameter list
-			//addCenterButton( LBL_SHAPE );
+//			trace( this, "receiving parameters: " + _parametersXML );
 
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
-			var openIndex:uint;
-//			_btns = new Vector.<SbButton>();
 			var list:XMLList = _parametersXML.descendants( "parameter" );
 			var numParameters:uint = list.length();
+			var firstParamId:String = "";
+//			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
 			for( var i:uint; i < numParameters; ++i ) {
 				var parameter:XML = list[ i ];
-//				if ( parameter.hasOwnProperty("@showInUI") && parameter.@showInUI == "1" )
-//				{
+				if ( CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS || ( parameter.hasOwnProperty("@showInUI") && parameter.@showInUI == "1" ) )
+				{
+					if( firstParamId == "" ) firstParamId = parameter.@id;
 					var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter().indexOf( parameter.@id ) != -1;
-					if( matchesLast ) openIndex = i;
-	//				trace( ">>> " + parameter.toXMLString() );
+					if( matchesLast ) firstParamId = parameter.@id;
+//					trace( ">>> " + parameter.toXMLString() );
 					addCenterButton( parameter.@id, "param" + parameter.@type );
-	//				btn.addEventListener( MouseEvent.CLICK, onParameterClicked );
-	//				_btns.push( btn );
-//				}
+				}
 			}
 			invalidateContent();
-			
-			/*
-			//TODO: the shapes do not have to be handled separately anymore
-			// there is a new parameter type "IconListParameter" which should create the required component
-			openParameter( LBL_SHAPE );
-			selectButtonWithLabel( LBL_SHAPE );
-			*/
+
+		    // Select and <<< activate >>> the first parameter.
+			selectButtonWithLabel( firstParamId );
+			openParameter( firstParamId );
 		}
 
 		// ---------------------------------------------------------------------
@@ -126,31 +91,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			var i:uint;
 			_uiElements = new Vector.<DisplayObject>();
-
-			// Special treatment for the shapes "parameter".
-			/*
-			_tempIsShapeCombo = id == LBL_SHAPE;
-			if( id == LBL_SHAPE ) {
-				var shapeList:XMLList = _parametersXML.descendants( "shape" );
-				var numShapes:uint = shapeList.length();
-				if( numShapes == 0 ) return;
-				var shapeComboBox:ComboBox = new ComboBox( this );
-				shapeComboBox.alternateRows = true;
-				shapeComboBox.openPosition = ComboBox.TOP;
-				for( i = 0; i < numShapes; ++i ) {
-					var shape:XML = shapeList[ i ];
-					shapeComboBox.addItem( shape.@type );
-				}
-				shapeComboBox.defaultLabel = shapeList[ 0 ].@type;
-				shapeComboBox.numVisibleItems = Math.min( 6, numShapes );
-				shapeComboBox.addEventListener( Event.SELECT, onShapeComboBoxChanged );
-				shapeComboBox.draw();
-				positionUiElement( shapeComboBox as DisplayObject );
-				_uiElements.push( shapeComboBox );
-				return;
-			}
-			*/
-			// Regular parameters...
 
 			_parameter = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ];
 			var parameterType:uint = uint( _parameter.@type );
@@ -240,7 +180,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 
 			// No Ui component for this parameter.
-			// TODO: display a textfield or something when there is no component
 			else {
 				trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
 				var tf:TextField = new TextField();
@@ -284,13 +223,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			element.y = UI_ELEMENT_Y + offsetY;
 		}
 
-		//Mario: this method is not really required since when a parameter xml is changed the main xml object automatically updates anyway
-		/*
-		private function updateActiveParameter():void {
-			var id:String = _parameter.@id;
-			_parametersXML.descendants( "parameter" ).( @id == id )[ 0 ] = _parameter;
-		}
-		*/
 		private function notifyParameterChange():void {
 			brushParameterChangedSignal.dispatch( _parameter );
 		}
@@ -302,14 +234,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private function onKnobChanged( event:Event ):void {
 		    var knob:Knob = event.target as Knob;
 			_parameter.@value = knob.value;
-			//updateActiveParameter();
 			notifyParameterChange();
 		}
 
 		private function onCheckBoxChanged( event:Event ):void {
 			var checkBox:SbCheckBox = event.target as SbCheckBox;
 			_parameter.@value = checkBox.selected ? "1" : "0";
-		//	updateActiveParameter();
 			notifyParameterChange();
 		}
 
@@ -323,20 +253,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// but since the combob ox items is originally created from the
 			// list parameter we can use the selected index directly
 			_parameter.@index = comboBox.selectedIndex;
-			//updateActiveParameter();
 			notifyParameterChange();
-		}
-
-		private function onShapeComboBoxChanged( event:Event ):void {
-			var comboBox:ComboBox = event.target as ComboBox;
-			trace( this, "shape combo box changed: " + comboBox.selectedItem );
-			shapeChangedSignal.dispatch( comboBox.selectedItem );
 		}
 
 		private function onSliderChanged( event:Event ):void {
 			var slider:SbSlider = event.target as SbSlider;
 			_parameter.@value = slider.value;
-			//updateActiveParameter();
 			notifyParameterChange();
 		}
 
@@ -344,7 +266,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var slider:SbRangedSlider = event.target as SbRangedSlider;
 			_parameter.@value1 = slider.value1;
 			_parameter.@value2 = slider.value2;
-			//updateActiveParameter();
 			notifyParameterChange();
 		}
 	}
