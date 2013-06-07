@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _onReactiveHide:Boolean;
 		private var _reactiveHideMouseDownY:Number;
 		private var _reactiveHideStackY:StackUtil;
+		private var _targetReactiveY:Number;
 
 		private const BUTTON_GAP_X:Number = 8;
 		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 100;
@@ -71,6 +72,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbButton;
 			_rightButton = rightBtnSide.getChildByName( "btn" ) as SbButton;
 			BG_HEIGHT *= CoreSettings.GLOBAL_SCALING;
+			_targetReactiveY = 768 * scaleX - BG_HEIGHT;
 			hide( 0.01 );
 		}
 
@@ -131,6 +133,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			hiddenSignal.dispatch();
 			this.visible = false;
 			_animating = false;
+			_targetReactiveY = 768 * scaleX - BG_HEIGHT * 0.2;
 		}
 
 		public function show():void {
@@ -147,6 +150,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private function onShowAnimatedComplete():void {
 			_animating = false;
 			shownSignal.dispatch();
+			_targetReactiveY = 768 * scaleX - BG_HEIGHT;
 		}
 
 		public function updateSubNavigation( subNavType:Class ):void {
@@ -203,7 +207,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function evaluateReactiveHideStart():void {
 			if( _animating ) return;
 			if( _onReactiveHide ) return;
-			if( stage.mouseY < 768 - BG_HEIGHT ) return; // reject interactions outside of the navigation area
+			if( stage.mouseY < _targetReactiveY ) return; // reject interactions outside of the navigation area
 			_onReactiveHide = true;
 			if( !visible ) {
 				visible = true;
