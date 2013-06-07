@@ -22,7 +22,6 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 		private var _valueRatio2:Number = 0;
 		private var _minValue:Number = 0;
 		private var _maxValue:Number = 1;
-		private var _numDecimals:uint = 2;
 		private var _minX:Number = 0;
 		private var _maxX:Number = 220;
 		private var _xRange:Number;
@@ -109,11 +108,11 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 		}
 
 		private function updateLabel():void {
-			var pow:Number = Math.pow( 10, _numDecimals );
-			var num:Number = Math.round( pow * _value1 ) / pow;
-			value1Label.text = String( num );
-			num = Math.round( pow * _value2 ) / pow;
-			value2Label.text = String( num );
+			var percentage:Number = Math.round(_valueRatio1*100);
+			value1Label.text = String( percentage + "%" );
+
+			percentage = Math.round(_valueRatio2*100);
+			value2Label.text = String( percentage + "%"  );
 		}
 
 		private function valueToRatio( value:Number ):Number {
@@ -137,11 +136,6 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 
 		public function dispose():void {
 			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-		}
-
-		public function set numDecimals( numDecimals:int ):void {
-			_numDecimals = numDecimals;
-			updateLabel();
 		}
 
 		public function set minValue( minValue:Number ):void {

@@ -96,15 +96,15 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var numParameters:uint = list.length();
 			for( var i:uint; i < numParameters; ++i ) {
 				var parameter:XML = list[ i ];
-				if ( parameter.hasOwnProperty("@showInUI") && parameter.@showInUI == "1" )
-				{
+//				if ( parameter.hasOwnProperty("@showInUI") && parameter.@showInUI == "1" )
+//				{
 					var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter().indexOf( parameter.@id ) != -1;
 					if( matchesLast ) openIndex = i;
 	//				trace( ">>> " + parameter.toXMLString() );
 					addCenterButton( parameter.@id, "param" + parameter.@type );
 	//				btn.addEventListener( MouseEvent.CLICK, onParameterClicked );
 	//				_btns.push( btn );
-				}
+//				}
 			}
 			invalidateContent();
 			
@@ -159,7 +159,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
 				var slider:SbSlider = new SbSlider();
-				slider.numDecimals = 2;
 				slider.minValue = Number( _parameter.@minValue );
 				slider.maxValue = Number( _parameter.@maxValue );
 				slider.value = Number( _parameter.@value );
@@ -172,7 +171,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Range slider.
 			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter || parameterType == PsykoParameter.AngleRangeParameter ) {
 				var rangeSlider:SbRangedSlider = new SbRangedSlider();
-				rangeSlider.numDecimals = 2;
 				rangeSlider.minValue = Number( _parameter.@minValue );
 				rangeSlider.maxValue = Number( _parameter.@maxValue );
 				rangeSlider.value1 = Number( _parameter.@value1 );
