@@ -137,7 +137,7 @@ package net.psykosoft.psykopaint2.core
 				}
 				case Keyboard.SPACE:
 				{
-					_requestNavigationToggleSignal.dispatch();
+					_requestNavigationToggleSignal.dispatch( 0 );
 					break;
 				}
 			}
@@ -405,8 +405,7 @@ package net.psykosoft.psykopaint2.core
 
 				if( isStandalone ) {
 					// Show navigation.
-					var showNavigationSignal:RequestNavigationToggleSignal = injector.getInstance( RequestNavigationToggleSignal );
-					showNavigationSignal.dispatch();
+					_requestNavigationToggleSignal.dispatch( 1 );
 				}
 			}
 		}

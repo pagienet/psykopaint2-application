@@ -75,8 +75,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			notifyNavigationToggledSignal.dispatch( true );
 		}
 
-		private function onToggleRequest():void {
-			view.toggle();
+		private function onToggleRequest( value:int ):void {
+			if( value == 1 ) view.show();
+			else if( value == -1 ) view.hide();
+			else view.toggle();
 		}
 
 		// -----------------------

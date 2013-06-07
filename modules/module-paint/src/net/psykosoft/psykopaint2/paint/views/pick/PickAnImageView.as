@@ -25,9 +25,9 @@ package net.psykosoft.psykopaint2.paint.views.pick
 		private var _creatingPageNum:uint;
 		private var _itemCount:uint;
 		private var _cellSize:int;
-		
+
 		public var imagePickedSignal:Signal;
-		
+
 		public function PickAnImageView() {
 			super();
 			imagePickedSignal = new Signal();
@@ -44,9 +44,9 @@ package net.psykosoft.psykopaint2.paint.views.pick
 			_imageScroller = new HPageScroller();
 			_imageScroller.visibleHeight = 768;// * ( Settings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1);
 			_imageScroller.visibleWidth = 1024;// * ( Settings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1);
-			
+
 			addChild( _imageScroller );
-			
+
 		}
 
 		override protected function onEnabled():void {
@@ -79,7 +79,6 @@ package net.psykosoft.psykopaint2.paint.views.pick
 			_creatingPageNum = 1;
 		}
 
-		/*
 		private function onIosThumbnailSheetReady( vo:SheetVO ):void {
 
 			trace( this, "iOS thumbnail sheet retrieved: " + vo.numberOfItems );
@@ -87,83 +86,29 @@ package net.psykosoft.psykopaint2.paint.views.pick
 			var len:uint = vo.numberOfItems;
 			var thumbSheetX:Number = 0;
 			var thumbSheetY:Number = 0;
-			for( var i:uint; i < len; ++i ) {
 
-				// Redraw portion of sheet.
-				var bmd:BitmapData = new BitmapData( vo.thumbSize, vo.thumbSize, false, 0xFF0000 );
-				var matrix:Matrix = new Matrix();
-				matrix.translate( -thumbSheetX, -thumbSheetY );
-				bmd.draw( vo.bmd, matrix );
-
-				// Advance in sheet space.
-				thumbSheetX += vo.thumbSize;
-				if( thumbSheetX + vo.thumbSize >= vo.sheetSize ) {
-					thumbSheetX = 0;
-					thumbSheetY += vo.thumbSize;
-				}
-
-				// Contain drawing in display object.
-				var spr:Sprite = new Sprite();
-				var bitmap:Bitmap = new Bitmap( bmd );
-				spr.addEventListener( MouseEvent.MOUSE_DOWN, onThumbClick );
-				spr.x = _thumbX;
-				spr.y = _thumbY;
-				spr.addChild( bitmap );
-				spr.name = "item_" + _itemCount;
-				_imageScroller.addChild( spr );
-
-				// Advance in scroller space.
-				var gap:Number = 20;
-				_thumbX += vo.thumbSize + gap;
-				if( _thumbX + vo.thumbSize > _creatingPageNum * _imageScroller.pageWidth ) {
-					_thumbX = ( _creatingPageNum - 1 ) * _imageScroller.pageWidth;
-					_thumbY += vo.thumbSize + gap;
-				}
-				if( _thumbY + vo.thumbSize > _imageScroller.pageHeight ) {
-					_creatingPageNum++;
-					_thumbX = ( _creatingPageNum - 1 ) * _imageScroller.pageWidth;
-					_thumbY = 0;
-				}
-
-				_itemCount++;
-			}
-
-			_imageScroller.invalidateContent();
-		}
-		*/
-		private function onIosThumbnailSheetReady( vo:SheetVO ):void {
-			
-			trace( this, "iOS thumbnail sheet retrieved: " + vo.numberOfItems );
-			
-			var len:uint = vo.numberOfItems;
-			var thumbSheetX:Number = 0;
-			var thumbSheetY:Number = 0;
-			
 			var gap:Number = 20;
-			_cellSize =  vo.thumbSize + gap;
+			_cellSize = vo.thumbSize + gap;
 			var cols:int = _imageScroller.visibleWidth / _cellSize;
 			var border:int = (_imageScroller.visibleWidth - ( _cellSize * cols) + gap) / 2;
-			
-			
+
 			for( var i:uint; i < len; ++i ) {
-				
-				
+
 				var bitmap:Bitmap = new Bitmap( vo.bmd );
-				bitmap.scrollRect = new Rectangle(thumbSheetX,thumbSheetY,vo.thumbSize,vo.thumbSize);
+				bitmap.scrollRect = new Rectangle( thumbSheetX, thumbSheetY, vo.thumbSize, vo.thumbSize );
 				bitmap.x = border + _thumbX;
 				bitmap.y = border + _thumbY;
 				bitmap.opaqueBackground = 0xffffff;
 				_imageScroller.addChild( bitmap );
-				
+
 				// Advance in sheet space.
 				thumbSheetX += vo.thumbSize;
 				if( thumbSheetX + vo.thumbSize >= vo.sheetSize ) {
 					thumbSheetX = 0;
 					thumbSheetY += vo.thumbSize;
 				}
-				
+
 				// Advance in scroller space.
-				
 				_thumbX += vo.thumbSize + gap;
 				if( border + _thumbX + vo.thumbSize > _creatingPageNum * _imageScroller.visibleWidth ) {
 					_thumbX = ( _creatingPageNum - 1 ) * _imageScroller.visibleWidth;
@@ -174,25 +119,15 @@ package net.psykosoft.psykopaint2.paint.views.pick
 					_thumbX = ( _creatingPageNum - 1 ) * _imageScroller.visibleWidth;
 					_thumbY = 0;
 				}
-				
+
 				_itemCount++;
 			}
-			
+
 			_imageScroller.addEventListener( MouseEvent.MOUSE_DOWN, onSheetClick );
 			_imageScroller.invalidateContent();
 		}
 
-/*
-		private function onThumbClick( event:MouseEvent ):void {
-			var thumb:Sprite = event.target as Sprite;
-			var thumbIndex:String = thumb.name.split( "_" )[ 1 ];
-			_iosUtil.getFullImageLoadedSignal().add( onIosFullImageRetrieved );
-			_iosUtil.loadFullImage( thumbIndex );
-		}
-*/
-		
 		private function onSheetClick( event:MouseEvent ):void {
-			
 			_imageScroller.removeEventListener( MouseEvent.MOUSE_DOWN, onSheetClick );
 			var column:int = _imageScroller.mouseX / _cellSize;
 			var row:int = _imageScroller.mouseY / _cellSize;
@@ -200,21 +135,10 @@ package net.psykosoft.psykopaint2.paint.views.pick
 			_iosUtil.getFullImageLoadedSignal().add( onIosFullImageRetrieved );
 			_iosUtil.loadFullImage( thumbIndex );
 		}
-		
+
 		private function onIosFullImageRetrieved( bmd:BitmapData ):void {
-			// TODO: loose all thumb data
-			// TODO: notify with full image bmd
-			/*
-			while ( _imageScroller.numChildren > 0 ) {
-				var dob:DisplayObject = _imageScroller.removeChildAt(0);
-				if ( dob is Bitmap ) Bitmap(dob).bitmapData.dispose();
-			}
-			*/
-			
 			imagePickedSignal.dispatch( bmd );
 		}
-		
-		
 
 		private function onImagePickedFromDesktop( bmd:BitmapData ):void {
 			_browser.dispose();

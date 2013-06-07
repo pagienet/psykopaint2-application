@@ -87,7 +87,7 @@ package net.psykosoft.psykopaint2.paint
 			if( isStandalone ) {
 				// Show navigation.
 				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-				showNavigationSignal.dispatch();
+				showNavigationSignal.dispatch( 1 );
 			}
 		}
 	}

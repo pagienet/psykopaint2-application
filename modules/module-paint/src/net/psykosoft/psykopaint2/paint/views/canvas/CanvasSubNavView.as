@@ -27,9 +27,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			if( !PaintSettings.isStandalone ) {
 				addCenterButton( LBL_HOME, ButtonIconType.GALLERY );
 			}
-//			addCenterButton( "test" );
-//			addCenterButton( "test" );
-//			addCenterButton( "test" );
 
 			invalidateContent();
 		}
