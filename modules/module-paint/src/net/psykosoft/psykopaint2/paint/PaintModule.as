@@ -74,7 +74,7 @@ package net.psykosoft.psykopaint2.paint
 		private function onViewsReady():void {
 
 			// Listen for splash out.
-			_coreModule.splashScreenRemovedSignal.addOnce( onSplashOut );
+			_coreModule.coreRootView.splashScreenRemovedSignal.addOnce( onSplashOut );
 
 			// Init drawing core.
 			_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...

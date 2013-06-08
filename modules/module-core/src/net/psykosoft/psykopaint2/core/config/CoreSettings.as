@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.core.config
 		public static const STAGE_3D_ERROR_CHECKING:Boolean = true; /*false on release*/
 		public static const DEBUG_RENDER_SEQUENCE:Boolean = false; /*false on release*/
 		public static const USE_DEBUG_KEYS:Boolean = true; /*false on release*/
-		public static const VISUALIZE_MEMORY_WARNINGS:Boolean = true; /*false on release*/
+		public static const SHOW_MEMORY_WARNINGS:Boolean = true; /*false on release*/
 		public static const DEBUG_AGAL:Boolean = false; /*false on release*/
 		public static const SHOW_PSYKOSOCKET_CONNECTION_UI:Boolean = true; /*false on release*/
 		public static const SHOW_HIDDEN_BRUSH_PARAMETERS:Boolean = false; /*false on release*/

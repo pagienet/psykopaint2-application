@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.home
 			}
 
 			// Listen for splash out.
-			_coreModule.splashScreenRemovedSignal.addOnce( onSplashOut );
+			_coreModule.coreRootView.splashScreenRemovedSignal.addOnce( onSplashOut );
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );
