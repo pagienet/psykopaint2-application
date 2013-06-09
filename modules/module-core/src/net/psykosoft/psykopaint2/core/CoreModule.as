@@ -292,7 +292,6 @@ package net.psykosoft.psykopaint2.core
 			moduleReadySignal.dispatch();
 			// Remove splash screen.
 			_coreRootView.removeSplashScreenWhenReady();
-			stage.scaleX = 2;
 		}
 	}
 }
