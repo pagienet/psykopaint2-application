@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.paint.views.pick
 	public class PickAnImageView extends ViewBase
 	{
 		private var _browser:DesktopImageBrowser;
-		private var _iosUtil:IosImagesFetcher;
+//		private var _iosUtil:IosImagesFetcher;
 		private var _imageScroller:HPageScroller;
 		private var _thumbX:Number;
 		private var _thumbY:Number;
@@ -58,9 +58,9 @@ package net.psykosoft.psykopaint2.paint.views.pick
 				_browser.browseForImage( onImagePickedFromDesktop );
 			}
 			else {
-				_iosUtil = new IosImagesFetcher( CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 150 : 75 );
+				/*_iosUtil = new IosImagesFetcher( CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 150 : 75 );
 				_iosUtil.getThumbnailsLoadedSignal().add( onIosThumbnailSheetReady );
-				_iosUtil.loadThumbnails();
+				_iosUtil.loadThumbnails();*/
 			}
 		}
 
@@ -132,8 +132,8 @@ package net.psykosoft.psykopaint2.paint.views.pick
 			var column:int = _imageScroller.mouseX / _cellSize;
 			var row:int = _imageScroller.mouseY / _cellSize;
 			var thumbIndex:String = String( row * int( _imageScroller.visibleWidth / _cellSize ) + column );
-			_iosUtil.getFullImageLoadedSignal().add( onIosFullImageRetrieved );
-			_iosUtil.loadFullImage( thumbIndex );
+			/*_iosUtil.getFullImageLoadedSignal().add( onIosFullImageRetrieved );
+			_iosUtil.loadFullImage( thumbIndex );*/
 		}
 
 		private function onIosFullImageRetrieved( bmd:BitmapData ):void {

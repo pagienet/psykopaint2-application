@@ -9,8 +9,9 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 
 	public class TileSheet extends HPageScroller
 	{
+		protected var _tileSize:uint;
+
 		private var _cellSize:uint;
-		private var _tileSize:uint;
 		private var _thumbX:Number;
 		private var _thumbY:Number;
 		private var _creatingPageNum:uint;

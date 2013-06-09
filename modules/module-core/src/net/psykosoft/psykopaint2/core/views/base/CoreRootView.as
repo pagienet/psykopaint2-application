@@ -14,12 +14,14 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.tilesheet.TileSheet;
+	import net.psykosoft.psykopaint2.core.views.components.tilesheet.UserPhotosTileSheet;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 
@@ -82,7 +84,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			// Component tests.
 			// -----------------------
 
-//			runUiTests();
+			runUiTests();
 		}
 
 		// ---------------------------------------------------------------------
@@ -253,7 +255,10 @@ package net.psykosoft.psykopaint2.core.views.base
 		// Ui tests...
 		// ---------------------------------------------------------------------
 
+		// TODO: remove
 		private function runUiTests():void {
+
+//			return;
 
 			// Bg fill.
 			/*this.graphics.beginFill(0xCCCCCC, 1.0);
@@ -262,22 +267,22 @@ package net.psykosoft.psykopaint2.core.views.base
 
 			// Find out what view element is clicked.
 			/*stage.addEventListener( MouseEvent.MOUSE_DOWN, function ( event:Event ):void {
-				trace( this, "stage mouse down --------------------------" );
-				trace( "listing objects under mouse..." );
-				var pt:Point = new Point( stage.mouseX, stage.mouseY );
-				var objects:Array = getObjectsUnderPoint( pt );
-				for( var i:int = 0; i < objects.length; i++ ) {
-					trace( "-", objects[i].name, ": ", objects[i] );
-				}
-				trace( "object clicked hierarchy..." );
-				var p:* = event.target;
-				var off:String = ">";
-				while( p ) {
-					trace( off, p.name, ": ", p );
-					p = p.parent;
-					off += ">";
-				}
-			} );*/
+			 trace( this, "stage mouse down --------------------------" );
+			 trace( "listing objects under mouse..." );
+			 var pt:Point = new Point( stage.mouseX, stage.mouseY );
+			 var objects:Array = getObjectsUnderPoint( pt );
+			 for( var i:int = 0; i < objects.length; i++ ) {
+			 trace( "-", objects[i].name, ": ", objects[i] );
+			 }
+			 trace( "object clicked hierarchy..." );
+			 var p:* = event.target;
+			 var off:String = ">";
+			 while( p ) {
+			 trace( off, p.name, ": ", p );
+			 p = p.parent;
+			 off += ">";
+			 }
+			 } );*/
 
 			// Tile sheet.
 			// Source bmd sheet.
@@ -307,18 +312,20 @@ package net.psykosoft.psykopaint2.core.views.base
 
 			// User photos tile sheet.
 			// Component.
-			/*var tileSheet:UserPhotosTileSheet = new UserPhotosTileSheet();
-			 tileSheet.visibleWidth = 1024;
-			 tileSheet.visibleHeight = 768;
-			 addChild( tileSheet );
-			 // Interaction.
-			 stage.addEventListener( MouseEvent.MOUSE_DOWN, function( event:Event ):void {
-			 tileSheet.evaluateInteractionStart();
-			 } );
-			 stage.addEventListener( MouseEvent.MOUSE_UP, function( event:Event ):void {
-			 tileSheet.evaluateInteractionEnd();
-			 } );
-			 tileSheet.fetchPhotos();*/
+			var tileSheet:UserPhotosTileSheet = new UserPhotosTileSheet();
+			tileSheet.visibleWidth = 1024;
+			tileSheet.visibleHeight = 768;
+			addChild( tileSheet );
+			// Interaction.
+			stage.addEventListener( MouseEvent.MOUSE_DOWN, function ( event:Event ):void {
+				tileSheet.evaluateInteractionStart();
+			} );
+			stage.addEventListener( MouseEvent.MOUSE_UP, function ( event:Event ):void {
+				tileSheet.evaluateInteractionEnd();
+			} );
+			setTimeout( function():void {
+				tileSheet.fetchPhotos();
+			}, 3000 );
 
 			// Simple slider test.
 			/*var simpleSlider:SbSlider = new SbSlider();
