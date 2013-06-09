@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			// Component tests.
 			// -----------------------
 
-			runUiTests();
+//			runUiTests();
 		}
 
 		// ---------------------------------------------------------------------

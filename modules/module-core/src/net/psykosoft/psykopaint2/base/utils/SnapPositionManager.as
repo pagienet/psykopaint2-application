@@ -117,6 +117,7 @@ package net.psykosoft.psykopaint2.base.utils
 
 		public function snapAtIndexWithoutEasing( index:uint ):void {
 			_position = _snapPoints[ index ];
+			evaluateClosestSnapPointPosition( _position );
 		}
 
 		public function update():void {

@@ -4,22 +4,16 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 	import away3d.core.managers.Stage3DProxy;
-	import away3d.debug.Trident;
-
-	import br.com.stimuli.loading.BulkLoader;
 
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
-	import flash.ui.Multitouch;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
-	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PictureFrameContainer;
 	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
@@ -301,6 +295,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
 			_stage3dProxy = stage3dProxy;
+		}
+
+		public function getCurrentPaintingIndex():uint {
+			return _cameraController.positionManager.closestSnapPointIndex;
 		}
 	}
 }
