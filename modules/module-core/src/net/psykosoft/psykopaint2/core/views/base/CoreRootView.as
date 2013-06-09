@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.views.base
 {
 
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -9,6 +10,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.events.TimerEvent;
 	import flash.events.UncaughtErrorEvent;
 	import flash.geom.ColorTransform;
+	import flash.geom.Point;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
@@ -17,6 +19,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.components.tilesheet.TileSheet;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 
@@ -51,8 +54,10 @@ package net.psykosoft.psykopaint2.core.views.base
 
 			// Setup root layers.
 			_applicationLayer = new Sprite();
+			_applicationLayer.name = "application layer";
 			addChild( _applicationLayer );
 			_debugLayer = new Sprite();
+			_debugLayer.name = "debug layer";
 			addChild( _debugLayer );
 
 			initSplashScreen();
@@ -77,7 +82,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			// Component tests.
 			// -----------------------
 
-//			runUiTests();
+			runUiTests();
 		}
 
 		// ---------------------------------------------------------------------
@@ -93,7 +98,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		}
 
 		public function addToMainLayer( child:DisplayObject ):void {
-			_applicationLayer.addChild( child );
+			_applicationLayer.addChildAt( child, 0 );
 		}
 
 		public function flashMemoryIcon():void {
@@ -126,6 +131,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		private function initMemoryWarningDisplay():void {
 			if( !CoreSettings.SHOW_MEMORY_WARNINGS ) return;
 			_memoryIcon = new TextField();
+			_memoryIcon.name = "memory text field";
 			_memoryIcon.selectable = _memoryIcon.mouseEnabled = false;
 			_memoryIcon.scaleX = _memoryIcon.scaleY = CoreSettings.GLOBAL_SCALING;
 			_memoryIcon.textColor = 0xFF0000;
@@ -142,6 +148,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			_fpsStackUtil.count = 24;
 			_renderTimeStackUtil.count = 24;
 			_statsTextField = new TextField();
+			_statsTextField.name = "stats text field";
 			_statsTextField.width = 200;
 			_statsTextField.selectable = false;
 			_statsTextField.mouseEnabled = false;
@@ -152,6 +159,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		private function initVersionDisplay():void {
 			if( CoreSettings.SHOW_VERSION ) {
 				_versionTextField = new TextField();
+				_versionTextField.name = "version text field";
 				_versionTextField.scaleX = _versionTextField.scaleY = CoreSettings.GLOBAL_SCALING;
 				_versionTextField.width = 200;
 				_versionTextField.mouseEnabled = _versionTextField.selectable = false;
@@ -164,6 +172,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		private function initErrorDisplay():void {
 			if( CoreSettings.SHOW_ERRORS ) {
 				_errorsTextField = new TextField();
+				_errorsTextField.name = "errors text field";
 				_errorsTextField.scaleX = _errorsTextField.scaleY = CoreSettings.GLOBAL_SCALING;
 				_errorsTextField.addEventListener( MouseEvent.MOUSE_UP, onErrorsMouseUp );
 				_errorsTextField.width = 520 * CoreSettings.GLOBAL_SCALING;
@@ -198,7 +207,8 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		private function initSplashScreen():void {
 			_splashScreen = new SplashImageAsset();
-			_splashScreen.transform.colorTransform = new ColorTransform( -1, -1, -1,1, 255, 255, 255 );
+			_splashScreen.name = "splash screen";
+			_splashScreen.transform.colorTransform = new ColorTransform( -1, -1, -1, 1, 255, 255, 255 );
 			_debugLayer.addChild( _splashScreen );
 			_splashScreen.scaleX = _splashScreen.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1 : 0.5;
 		}
@@ -244,50 +254,71 @@ package net.psykosoft.psykopaint2.core.views.base
 		// ---------------------------------------------------------------------
 
 		private function runUiTests():void {
+
+			// Bg fill.
 			/*this.graphics.beginFill(0xCCCCCC, 1.0);
 			 this.graphics.drawRect(0, 0, 1024, 768);
 			 this.graphics.endFill();*/
 
+			// Find out what view element is clicked.
+			/*stage.addEventListener( MouseEvent.MOUSE_DOWN, function ( event:Event ):void {
+				trace( this, "stage mouse down --------------------------" );
+				trace( "listing objects under mouse..." );
+				var pt:Point = new Point( stage.mouseX, stage.mouseY );
+				var objects:Array = getObjectsUnderPoint( pt );
+				for( var i:int = 0; i < objects.length; i++ ) {
+					trace( "-", objects[i].name, ": ", objects[i] );
+				}
+				trace( "object clicked hierarchy..." );
+				var p:* = event.target;
+				var off:String = ">";
+				while( p ) {
+					trace( off, p.name, ": ", p );
+					p = p.parent;
+					off += ">";
+				}
+			} );*/
+
 			// Tile sheet.
 			// Source bmd sheet.
 			/*var bmd:BitmapData = new BitmapData( 1024, 1024, false, 0 );
-			bmd.perlinNoise( 50, 50, 1, 1, false, true, 7, false );
-			// Component.
-			var tileSheet:TileSheet = new TileSheet();
-			tileSheet.visibleWidth = 1024;
-			tileSheet.visibleHeight = 768;
-			addChild( tileSheet );
-			// Population.
-			var tileSize:uint = 128;
-			var numTiles:uint = 160;
-			tileSheet.initializeWithProperties( numTiles, tileSize );
-			for( var i:uint; i < numTiles; ++i ) {
-				var tileSheetX:Number = ( 1024 - tileSize ) * Math.random();
-				var tileSheetY:Number = ( 1024 - tileSize ) * Math.random();
-				tileSheet.setTileContentFromSpriteSheet( bmd, tileSheetX, tileSheetY );
-			}
-			// Interaction.
-			stage.addEventListener( MouseEvent.MOUSE_DOWN, function( event:Event ):void {
-				tileSheet.evaluateInteractionStart();
-			} );
-			stage.addEventListener( MouseEvent.MOUSE_UP, function( event:Event ):void {
-				tileSheet.evaluateInteractionEnd();
-			} );*/
+			 bmd.perlinNoise( 50, 50, 1, 1, false, true, 7, false );
+			 // Component.
+			 var tileSheet:TileSheet = new TileSheet();
+			 tileSheet.visibleWidth = 1024;
+			 tileSheet.visibleHeight = 768;
+			 addChild( tileSheet );
+			 // Population.
+			 var tileSize:uint = 128;
+			 var numTiles:uint = 160;
+			 tileSheet.initializeWithProperties( numTiles, tileSize );
+			 for( var i:uint; i < numTiles; ++i ) {
+			 var tileSheetX:Number = ( 1024 - tileSize ) * Math.random();
+			 var tileSheetY:Number = ( 1024 - tileSize ) * Math.random();
+			 tileSheet.setTileContentFromSpriteSheet( bmd, tileSheetX, tileSheetY );
+			 }
+			 // Interaction.
+			 stage.addEventListener( MouseEvent.MOUSE_DOWN, function( event:Event ):void {
+			 tileSheet.evaluateInteractionStart();
+			 } );
+			 stage.addEventListener( MouseEvent.MOUSE_UP, function( event:Event ):void {
+			 tileSheet.evaluateInteractionEnd();
+			 } );*/
 
 			// User photos tile sheet.
 			// Component.
 			/*var tileSheet:UserPhotosTileSheet = new UserPhotosTileSheet();
-			tileSheet.visibleWidth = 1024;
-			tileSheet.visibleHeight = 768;
-			addChild( tileSheet );
-			// Interaction.
-			stage.addEventListener( MouseEvent.MOUSE_DOWN, function( event:Event ):void {
-				tileSheet.evaluateInteractionStart();
-			} );
-			stage.addEventListener( MouseEvent.MOUSE_UP, function( event:Event ):void {
-				tileSheet.evaluateInteractionEnd();
-			} );
-			tileSheet.fetchPhotos();*/
+			 tileSheet.visibleWidth = 1024;
+			 tileSheet.visibleHeight = 768;
+			 addChild( tileSheet );
+			 // Interaction.
+			 stage.addEventListener( MouseEvent.MOUSE_DOWN, function( event:Event ):void {
+			 tileSheet.evaluateInteractionStart();
+			 } );
+			 stage.addEventListener( MouseEvent.MOUSE_UP, function( event:Event ):void {
+			 tileSheet.evaluateInteractionEnd();
+			 } );
+			 tileSheet.fetchPhotos();*/
 
 			// Simple slider test.
 			/*var simpleSlider:SbSlider = new SbSlider();
