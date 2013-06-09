@@ -17,6 +17,8 @@ package net.psykosoft.psykopaint2.base.utils
 		private var _throwInputMultiplier:Number = 1;
 		private var _pStack:StackUtil;
 
+		public var useDetailedDelta:Boolean = true;
+
 		public function ScrollInteractionManager( positionManager:SnapPositionManager ) {
 			_positionManager = positionManager;
 			_pStack = new StackUtil();
@@ -37,14 +39,14 @@ package net.psykosoft.psykopaint2.base.utils
 		public function endInteraction():void {
 			if( !_isInteracting ) return;
 			_isInteracting = false;
-			var delta:Number = _throwInputMultiplier * _pStack.getAverageDeltaDetailed();
+			var delta:Number = _throwInputMultiplier * ( useDetailedDelta ? _pStack.getAverageDeltaDetailed() : _pStack.getAverageDelta() );
 			_positionManager.snap( -delta );
 		}
 
 		public function update():void {
 			if( !_isInteracting || !_stage ) return;
 			_pStack.pushValue( _stage.mouseX * _scrollInputMultiplier );
-			var delta:Number = _pStack.getAverageDeltaDetailed();
+			var delta:Number = useDetailedDelta ? _pStack.getAverageDeltaDetailed() : _pStack.getAverageDelta();
 //			trace( this, "stack; " + _pStack.values() );
 			_positionManager.moveFreelyByAmount( -delta );
 		}
@@ -69,6 +71,10 @@ package net.psykosoft.psykopaint2.base.utils
 
 		public function get scrollInputMultiplier():Number {
 			return _scrollInputMultiplier;
+		}
+
+		public function get pStack():StackUtil {
+			return _pStack;
 		}
 	}
 }

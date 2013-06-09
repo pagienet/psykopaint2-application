@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.base.Object3D;
 	import away3d.entities.Mesh;
+	import away3d.materials.ColorMaterial;
+	import away3d.primitives.CubeGeometry;
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
@@ -57,13 +59,13 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_interactionManager.stage = stage;
 
 			_interactionManager.throwInputMultiplier = 2;
-
+			_interactionManager.useDetailedDelta = false;
 			_positionManager.frictionFactor = 0.9;
 			_positionManager.minimumThrowingSpeed = 125;
 			_positionManager.edgeContainmentFactor = 0.01;
 
 			// Uncomment to visually debug perspective factor.
-			// - ensures that the scrolling snaps to finger 100%, if right, the tracer should be placed just at the edge of the screen -
+			// Ensures that the scrolling snaps to finger 100%, if right, the tracer should be placed just at the edge of the screen -
 //			_perspectiveTracer = new Mesh( new CubeGeometry(), new ColorMaterial( 0xFF0000 ) );
 //			addChild( _perspectiveTracer );
 		}
@@ -183,7 +185,15 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			}
 
 			// Calculate the perspective factor by comparing the half screen width with how much of the wall is visible.
-			_interactionManager.scrollInputMultiplier = ( ( collisionPoint.x - _camera.x ) / ( _stageWidth / 2 ) )/* * ViewCore.globalScaling*/;
+			var halfSceneWidth:Number = collisionPoint.x - _camera.x;
+			var halfViewWidth:Number = _stageWidth / 2;
+			var multiplier:Number = halfSceneWidth / halfViewWidth;
+			trace( this, ">>>> input multiplier: " + multiplier );
+			trace( this, "half scene: " + halfSceneWidth );
+			trace( this, "half view: " + halfViewWidth );
+			trace( this, "camera x: " + _camera.x );
+			trace( this, "collision x: " + collisionPoint.x );
+			_interactionManager.scrollInputMultiplier = multiplier/* * ViewCore.globalScaling*/;
 		}
 
 		public function get closestSnapPointChangedSignal():Signal {
