@@ -12,6 +12,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 	import org.osflash.signals.Signal;
 
+	/*
+	* Adds elements to a container which can be scrolled horizontally.
+	* */
 	public class HSnapScroller extends Sprite
 	{
 		protected var _interactionManager:ScrollInteractionManager;
@@ -68,7 +71,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function dock():void {
 			if( width < visibleWidth ) return;
-			_positionManager.snapAtIndex( 0 );
+			_positionManager.snapAtIndexWithoutEasing( 0 );
 			_container.x = visibleWidth / 2 - _positionManager.position;
 		}
 
@@ -89,7 +92,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			containEdgeSnapPoints();
 			// Dock at first snap point.
 			if( _positionManager.numSnapPoints > 0 ) {
-				_positionManager.snapAtIndex( 0 );
+				_positionManager.snapAtIndexWithoutEasing( 0 );
 			}
 		}
 

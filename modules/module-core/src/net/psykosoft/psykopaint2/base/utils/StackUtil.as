@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.base.utils
 {
-
+	/*
+	* Pushes values into an array and keeps the array at constant length.
+	* The array can be queried to calculate average values, average deltas, etc.
+	* */
 	public class StackUtil
 	{
 		private var _stack:Vector.<Number>;

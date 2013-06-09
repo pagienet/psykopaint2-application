@@ -128,7 +128,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		}
 
 		public function jumpToSnapPointIndex( value:uint ):void {
-			_positionManager.snapAtIndex( value );
+			_positionManager.snapAtIndexWithoutEasing( value );
 			_camera.x = _cameraTarget.x = _positionManager.position;
 		}
 

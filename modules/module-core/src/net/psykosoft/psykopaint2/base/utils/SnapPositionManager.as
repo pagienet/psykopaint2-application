@@ -3,6 +3,10 @@ package net.psykosoft.psykopaint2.base.utils
 
 	import org.osflash.signals.Signal;
 
+	/*
+	* Moves a position value along a line where snap points exist.
+	* The position will be eased towards the nearest snap point.
+	* */
 	public class SnapPositionManager
 	{
 		private var _snapPoints:Vector.<Number>;
@@ -51,7 +55,7 @@ package net.psykosoft.psykopaint2.base.utils
 			_snapPoints.splice( index, 1 );
 		}
 
-		public function removeSnapPoint( value:Number ):void {
+		public function removeSnapPointWithValue( value:Number ):void {
 			_snapPoints.splice( _snapPoints.indexOf( value ), 1 );
 		}
 
@@ -65,12 +69,17 @@ package net.psykosoft.psykopaint2.base.utils
 			var firstSnapPoint:Number = _snapPoints[ 0 ];
 			var lastSnapPoint:Number = _snapPoints[ _snapPoints.length - 1 ]; // TODO: optimize?
 			var multiplier:Number = 1;
-			if( _position < firstSnapPoint ) {
-				multiplier = 1 / ( _edgeContainmentFactor * ( firstSnapPoint - _position ) + 1 );
+			var delta:Number;
+			var target:Number = _position + amount;
+			if( target < firstSnapPoint ) {
+				delta = firstSnapPoint - target;
+				multiplier = 1 / ( _edgeContainmentFactor * delta );
 			}
-			if( _position > lastSnapPoint ) {
-				multiplier = 1 / ( _edgeContainmentFactor * ( _position - lastSnapPoint ) + 1 );
+			if( target > lastSnapPoint ) {
+				delta = target - lastSnapPoint;
+				multiplier = 1 / ( _edgeContainmentFactor * delta );
 			}
+			if( multiplier > 1 ) multiplier = 1;
 
 			// Apply motion.
 			_position += amount * multiplier;
@@ -102,14 +111,12 @@ package net.psykosoft.psykopaint2.base.utils
 
 			// Evaluate throw speed to reach target.
 			_snapMotionSpeed = ( _targetSnapPoint - _position ) / integralFriction;
-
 			_positionChange = _snapMotionSpeed;
-
 			_onSnapMotion = true;
 		}
 
-		public function snapAtIndex( value:uint ):void {
-			_position = _snapPoints[ value ];
+		public function snapAtIndexWithoutEasing( index:uint ):void {
+			_position = _snapPoints[ index ];
 		}
 
 		public function update():void {
@@ -135,6 +142,7 @@ package net.psykosoft.psykopaint2.base.utils
 		// ---------------------------------------------------------------------
 
 		private function evaluateClosestSnapPointPosition( position:Number ):void {
+
 			// Find closest snap point.
 			var len:uint = _snapPoints.length;
 			var closestDistanceToSnapPoint:Number = Number.MAX_VALUE;

@@ -3,20 +3,24 @@ package net.psykosoft.psykopaint2.base.utils
 
 	import flash.display.Stage;
 
+	/*
+	* Changes a PositionManager's value with input from the stage.
+	* Uses a StackUtil to soften input.
+	* Needs to be told when to start/end interaction, doesn't do it by itself.
+	* */
 	public class ScrollInteractionManager
 	{
 		private var _stage:Stage;
 		private var _isInteracting:Boolean;
 		private var _positionManager:SnapPositionManager;
-		private var _positionStack:Vector.<Number>; // TODO: replace by stack util
 		private var _scrollInputMultiplier:Number = 1;
 		private var _throwInputMultiplier:Number = 1;
-
-		private const STACK_COUNT:uint = 6;
+		private var _pStack:StackUtil;
 
 		public function ScrollInteractionManager( positionManager:SnapPositionManager ) {
 			_positionManager = positionManager;
-			_positionStack = new Vector.<Number>();
+			_pStack = new StackUtil();
+			_pStack.count = 6;
 		}
 
 		public function set stage( value:Stage ):void {
@@ -26,44 +30,23 @@ package net.psykosoft.psykopaint2.base.utils
 		public function startInteraction():void {
 			if( _isInteracting ) return;
 			_isInteracting = true;
-			clearStack();
+			_pStack.clear();
+			if( _stage ) _pStack.pushValue( _stage.mouseX * _scrollInputMultiplier );
 		}
 
 		public function endInteraction():void {
 			if( !_isInteracting ) return;
 			_isInteracting = false;
-			var delta:Number = _throwInputMultiplier * evalDelta();
+			var delta:Number = _throwInputMultiplier * _pStack.getAverageDeltaDetailed();
 			_positionManager.snap( -delta );
 		}
 
 		public function update():void {
-
 			if( !_isInteracting || !_stage ) return;
-
-			_positionStack.push( _stage.mouseX * _scrollInputMultiplier );
-			if( _positionStack.length > STACK_COUNT ) {
-				_positionStack.splice( 0, 1 );
-			}
-
-			var delta:Number = evalDelta();
+			_pStack.pushValue( _stage.mouseX * _scrollInputMultiplier );
+			var delta:Number = _pStack.getAverageDeltaDetailed();
+//			trace( this, "stack; " + _pStack.values() );
 			_positionManager.moveFreelyByAmount( -delta );
-		}
-
-		private function evalDelta():Number {
-			if( _positionStack.length <= 1 ) return 0;
-			var delta:Number = 0;
-			var len:uint = _positionStack.length;
-			for( var i:uint = 0; i < len; ++i ) {
-				if( i > 0 ) {
-					delta += _positionStack[ i ] - _positionStack[ i - 1 ];
-				}
-			}
-			delta /= ( len - 1 );
-			return delta;
-		}
-
-		private function clearStack():void {
-			_positionStack = new Vector.<Number>();
 		}
 
 		public function get currentX():Number {
