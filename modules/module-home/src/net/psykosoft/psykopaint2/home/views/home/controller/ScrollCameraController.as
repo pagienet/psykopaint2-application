@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
+	import com.greensock.easing.Strong;
 
 	import flash.display.Stage;
 	import flash.geom.Vector3D;
@@ -88,16 +89,16 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_zoomedIn = true;
 			TweenLite.killTweensOf( _cameraTarget );
 			TweenLite.killTweensOf( _camera );
-			TweenLite.to( _cameraTarget, 1, { y: targetY, ease:Expo.easeInOut } );
-			TweenLite.to( _camera, 1, { y: targetY, z: targetZ, ease:Expo.easeInOut, onComplete:onZoomComplete } );
+			TweenLite.to( _cameraTarget, 1, { y: targetY, ease:Strong.easeInOut } );
+			TweenLite.to( _camera, 1, { y: targetY, z: targetZ, ease:Strong.easeInOut, onComplete:onZoomComplete } );
 		}
 
 		public function zoomOut():void {
 			_zoomedIn = false;
 			TweenLite.killTweensOf( _cameraTarget );
 			TweenLite.killTweensOf( _camera );
-			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, ease:Expo.easeInOut } );
-			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, z: HomeSettings.CAMERA_ZOOM_OUT_Z, ease:Expo.easeInOut, onComplete:onZoomComplete } );
+			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, ease:Strong.easeInOut } );
+			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, z: HomeSettings.CAMERA_ZOOM_OUT_Z, ease:Strong.easeInOut, onComplete:onZoomComplete } );
 		}
 
 		private function onZoomComplete():void {
