@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.utils.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.SnapPositionManager;
@@ -52,6 +53,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		private function initialize():void {
+			scrollRect = new Rectangle( visibleWidth, visibleHeight );
 			_interactionManager.stage = stage;
 			_positionManager.motionEndedSignal.add( onPositionManagerMotionEnded );
 			_interactionManager.scrollInputMultiplier = 1 / CoreSettings.GLOBAL_SCALING;
