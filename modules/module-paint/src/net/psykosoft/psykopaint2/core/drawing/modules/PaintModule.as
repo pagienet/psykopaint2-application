@@ -252,6 +252,20 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</SpawnDecorator>
 					</pathengine>
 				</brush>
+				<brush engine={BrushType.RIBBON} name="Ribbon">
+					<parameter id="Size Factor" path="brush" value1="0.1" value2="0.8"/>
+					<parameter id="Shapes" path="brush" index="0" list="scales" showInUI="0"/>
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<parameter id="Output Step Size" path="pathengine" value="10"  />
+						<SizeDecorator>
+							<!-- Mapping drawing speed to size -->
+							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
+						</SizeDecorator>
+					</pathengine>
+				</brush>
+
 				<brush engine={BrushType.DELAUNAY} name="Delaunay">
 					<parameter id="Size Factor" path="brush" value1="0.1" value2="0.2"/>
 					<parameter id="Shapes" path="brush" index="0" list="scales" showInUI="0"/>
