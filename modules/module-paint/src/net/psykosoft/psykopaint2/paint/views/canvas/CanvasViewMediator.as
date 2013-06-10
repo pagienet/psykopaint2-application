@@ -74,6 +74,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( StateType.STATE_PAINT );
 			registerEnablingState( StateType.STATE_PAINT_SELECT_BRUSH );
 			registerEnablingState( StateType.STATE_PAINT_ADJUST_BRUSH );
+			registerEnablingState( StateType.STATE_PICK_SURFACE );
 
 			// Init.
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them

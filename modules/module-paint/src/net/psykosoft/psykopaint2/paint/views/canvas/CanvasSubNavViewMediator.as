@@ -51,6 +51,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					requestStateChange( StateType.STATE_PICK_IMAGE );
 					break;
 				}
+				case CanvasSubNavView.LBL_PICK_A_SURFACE: {
+					requestStateChange( StateType.STATE_PICK_SURFACE );
+					break;
+				}
 				case CanvasSubNavView.LBL_PICK_A_BRUSH: {
 					requestStateChange( StateType.STATE_PAINT_SELECT_BRUSH );
 					break;

@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.views.pick
+package net.psykosoft.psykopaint2.paint.views.pick.image
 {
 
 	import flash.display.Bitmap;
