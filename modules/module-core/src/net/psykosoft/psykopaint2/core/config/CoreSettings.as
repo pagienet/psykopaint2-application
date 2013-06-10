@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.config
 		public static const SHOW_VERSION:Boolean = true; /*false on release*/
 		public static const SHOW_ERRORS:Boolean = true; /*false on release*/
 		public static const STAGE_3D_ERROR_CHECKING:Boolean = false; /*false on release*/
-		public static const DEBUG_RENDER_SEQUENCE:Boolean = true; /*false on release*/
+		public static const DEBUG_RENDER_SEQUENCE:Boolean = false; /*false on release*/
 		public static const USE_DEBUG_KEYS:Boolean = true; /*false on release*/
 		public static const SHOW_MEMORY_WARNINGS:Boolean = true; /*false on release*/
 		public static const DEBUG_AGAL:Boolean = false; /*false on release*/
