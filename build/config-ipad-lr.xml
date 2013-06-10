@@ -27,6 +27,7 @@
         <extensionID>net.psykosoft.notifications</extensionID>
         <extensionID>net.psykosoft.photos</extensionID>
 		<extensionID>net.psykosoft.gyroscope</extensionID>
+		<extensionID>net.psykosoft.wacom</extensionID>
     </extensions>
 	<icon>
 		<!-- TODO: need more icons for itunes, store, etc: http://mrgan.tumblr.com/post/708404794/ios-app-icon-sizes -->
