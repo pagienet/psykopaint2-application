@@ -100,7 +100,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						
 						_lastAngle = angle + da *(-Math.pow(2, -10 * step) + 1);
 						step+=stepSize;
-						result.push( PathManager.getSamplePointXY( _lastX, _lastY, _lastSpeed * 0.05,0, _lastAngle ) );
+						result.push( PathManager.getSamplePointXY( _lastX, _lastY, _lastSpeed,0, _lastAngle ) );
 						_accumulatedDistance-=outputStep;
 					}
 					

@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.BasicRibbonMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TexturedAntialiasedColoredTriangleStroke;
@@ -79,31 +80,25 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			return strategy;
 		}
 		
-		override protected function onPickColor( point : SamplePoint ) : void
-		{
-			
-		}
+		
 
 		override protected function processPoint( point : SamplePoint) : void
 		{
-			if (  point.size <= 0 ) return;
-			var colors:Vector.<Number> = point.colorsRGBA;
-			var vertexUVData:Vector.<Number> = appendVO.verticesAndUV;
+			if ( point.speed <= 0 ) return;
+			
 			var overdrive:Number = 1.2;
+			var overlap:Number = 1;
+			var vertexUVData:Vector.<Number> = appendVO.verticesAndUV;
 			
-			var tri:Triangle = Triangle.getCenteredTriangle( new Vector2(point),point.size,point.size,point.size,point.angle )
+			
+			
 				
-			var cx:Number = point.x;
-			var cy:Number = point.y;
-			var size:Number = point.size * 32; 
-			
-			size *=0.005;
-			
-			_colorStrategy.getColor(cx,cy,size,colors,1);
-			var luma:Number = 0.29900 * colors[0] +  0.58700 * colors[1] + 0.11400 * colors[2] ;
-			var r:Number = colors[0];
-			var g:Number = colors[1];
-			var b:Number = colors[2];
+			var tri:Triangle = new Triangle( 
+				new Vector2(point.x + Math.cos(point.angle) * point.speed * 0.5, point.y + Math.sin(point.angle) * point.speed * 0.5),
+				new Vector2(point.x - Math.cos(point.angle) * point.speed * 0.5, point.y - Math.sin(point.angle) * point.speed* 0.5),
+				new Vector2(point.x + Math.cos(point.angle + Math.PI * 0.5) * point.speed, point.y + Math.sin(point.angle+ Math.PI * 0.5) * point.speed)
+				
+			);
 			
 			
 			var inc:Circle = tri.inCircle;
@@ -134,7 +129,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			vertexUVData[13] =  l2;
 			vertexUVData[22] =  l3;
 			
-		
+			
 			var bounds:Circle = tri.getBoundingCircle();
 			var tri_c:Vector2 = bounds.c;
 			var angle:Number = 0;
@@ -152,26 +147,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			vertexUVData[19] = 0.5 - (tri.p3.y - tri_c.y) * _canvasScaleH;
 			
 			
-			_colorStrategy.getColor((0.8 * cx + 0.2 * x1),(0.8 * cy + 0.2 * y1),size,colors,1);
-			var dl:Number =  overdrive * ((0.29900 * colors[0] +  0.58700 * colors[1] + 0.11400 * colors[2]) - luma);
-			colors[0] = r + dl;
-			colors[1] = g + dl;
-			colors[2] = b + dl;
 			
-			_colorStrategy.getColor((0.8 * cx + 0.2 * x2),(0.8 * cy + 0.2 * y2),size,colors,2);
-			dl =  overdrive * ((0.29900 * colors[4] +  0.58700 * colors[5] + 0.11400 * colors[6] ) - luma);
-			colors[4] = r + dl;
-			colors[5] = g + dl;
-			colors[6] = b + dl;
-			
-			_colorStrategy.getColor((0.8 * cx + 0.2 * x2),(0.8 * cy + 0.2 * y2),size,colors,4);
-			dl =  overdrive * ((0.29900 * colors[8] +  0.58700 * colors[9] + 0.11400 * colors[10] ) - luma);
-			colors[8] = r + dl;
-			colors[9] = g + dl;
-			colors[10] = b + dl;
 			appendVO.point = point;
 			
 			_brushMesh.append( appendVO );
+			
+				
 		}
 	}
 }

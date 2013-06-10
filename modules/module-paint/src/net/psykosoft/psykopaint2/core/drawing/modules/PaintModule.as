@@ -92,7 +92,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="1"/>
+							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0.01" value2="0.1"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" showInUI="1"/>
 							<parameter id="Invert Mapping" path="pathengine.pointdecorator_0" value="0" showInUI="1"/>
 						</SizeDecorator>
@@ -101,7 +101,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Saturation"  path="pathengine.pointdecorator_1" showInUI="1"/>
 						</ColorDecorator>
 						<SplatterDecorator>
-							<parameter id="Splat Factor"  path="pathengine.pointdecorator_2" value="8" />
+							<parameter id="Splat Factor"  path="pathengine.pointdecorator_2" value="2" />
 							<parameter id="Minimum Offset" path="pathengine.pointdecorator_2" value="1" />
 							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_2" value="30" />
 							<parameter id="Size Factor" path="pathengine.pointdecorator_2" value="0.02" />
@@ -110,11 +110,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Gravity Spray">
 					<parameter id="Shapes" path="brush" index="0" list="noisy"/>
+					<parameter id="Bumpyness" path="brush" value="0.02" showInUI="1"/>
+					
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
 							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0" value2="1"/>
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0.01" value2="0.05"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
 						<StationaryDecorator>
@@ -129,7 +131,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</ColorDecorator>
 						<SplatterDecorator>
 							<!-- randomize position -->
-							<parameter id="Splat Factor"  path="pathengine.pointdecorator_3" value="8" />
+							<parameter id="Splat Factor"  path="pathengine.pointdecorator_3" value="2" />
 							<parameter id="Minimum Offset" path="pathengine.pointdecorator_3" value="1" />
 							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_3" value="360" />
 						</SplatterDecorator>
@@ -183,7 +185,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</SplatterDecorator>
 						<SizeDecorator>
 								<parameter id="Mode"  path="pathengine.pointdecorator_6" index="1"/>
-								<parameter id="Factor" path="pathengine.pointdecorator_6" value1="0.2" value2="0.2"/>
+								<parameter id="Factor" path="pathengine.pointdecorator_6" value1="0.01" value2="0.05"/>
 								<parameter id="Mapping" path="pathengine.pointdecorator_6" value="2" />
 						</SizeDecorator>
 					</pathengine>
@@ -195,7 +197,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
 							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0" value2="2"/>
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0.001" value2="0.05"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
 					</pathengine>
@@ -206,7 +208,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
 							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0" value2="1"/>
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0.001" value2="0.05"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
 						<ColorDecorator>
@@ -223,15 +225,21 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				<brush engine={BrushType.UNCOLORED_SPRAY_CAN} name="Ink dots">
 					<parameter id="Shapes" path="brush" index="0" list="inkdots1,objects" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
-						<SplatterDecorator>
-							<parameter id="Splat Factor"  path="pathengine.pointdecorator_0" value="8" />
-							<parameter id="Minimum Offset"  path="pathengine.pointdecorator_0" value="3" />
-							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_0" value="30" />
-							<parameter id="Size Factor" path="pathengine.pointdecorator_0" value="0.6" />
-						</SplatterDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
+							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="1" />
 						</ColorDecorator>
+						<SpawnDecorator>
+							<parameter id="Multiples" value1="3" value2="10" path="pathengine.pointdecorator1" />
+							<parameter id="Maximum Offset" path="pathengine.pointdecorator_1" value="16"/>
+							<parameter id="Offset Parent Point" path="pathengine.pointdecorator_1" value="1"/>
+						</SpawnDecorator>
+						<SplatterDecorator>
+							<parameter id="Splat Factor"  path="pathengine.pointdecorator_2" value="2" />
+							<parameter id="Minimum Offset"  path="pathengine.pointdecorator_2" value="3" />
+							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_2" value="30" />
+							<parameter id="Size Factor" path="pathengine.pointdecorator_2" value="0.6" />
+						</SplatterDecorator>
+						
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.UNCOLORED_SPRAY_CAN} name="Pointillist">
@@ -253,7 +261,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.RIBBON} name="Ribbon">
-					<parameter id="Size Factor" path="brush" value1="0.1" value2="0.8"/>
+					<parameter id="Size Factor" path="brush" value1="0.01" value2="0.05"/>
 					<parameter id="Shapes" path="brush" index="0" list="scales" showInUI="0"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<parameter id="Output Step Size" path="pathengine" value="10"  />
