@@ -258,7 +258,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		// TODO: remove
 		private function runUiTests():void {
 
-//			return;
+			return;
 
 			// Bg fill.
 			/*this.graphics.beginFill(0xCCCCCC, 1.0);
