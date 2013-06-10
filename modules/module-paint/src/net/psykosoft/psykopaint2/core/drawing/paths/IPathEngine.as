@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.paths
 {
 	import flash.geom.Point;
-	
+
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 
 	public interface IPathEngine
@@ -25,6 +25,5 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		function get sampledPoints():Vector.<SamplePoint>;
 		function set sendTaps( value:Boolean ):void;
 		function get sendTaps():Boolean;
-		
 	}
 }

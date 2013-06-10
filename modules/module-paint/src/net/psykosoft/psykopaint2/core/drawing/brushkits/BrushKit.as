@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.display3D.Context3D;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
@@ -74,8 +75,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		
 		private var _brushEngine:AbstractBrush;
-		private var _brushName:String;;
-		
+		private var _brushName:String;
+
 		public function BrushKit( name:String ) 
 		{
 			_brushName = name;
@@ -181,6 +182,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			return _brushEngine.getParameter("Shapes").stringValue;
 		}
 		*/
-		
+
+		public function set canvasRect(canvasRect : Rectangle) : void
+		{
+			_brushEngine.pathManager.setCanvasRect(canvasRect);
+		}
 	}
 }

@@ -5,7 +5,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.display.DisplayObject;
 	import flash.display.Stage3D;
 	import flash.events.Event;
-	
+	import flash.geom.Rectangle;
+
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
@@ -22,6 +23,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 
 	public class PaintModule implements IModule
 	{
@@ -54,6 +56,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		[Inject]
 		public var penManager : WacomPenManager;
+
+		[Inject]
+		public var requestChangeRenderRect : RequestChangeRenderRectSignal;
 
 		private var _view : DisplayObject;
 
@@ -106,7 +111,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Saturation"  path="pathengine.pointdecorator_1" showInUI="1"/>
 						</ColorDecorator>
 						<SplatterDecorator>
-							<parameter id="Splat Factor"  path="pathengine.pointdecorator_2" value="2" />
+							<parameter id="Splat Factor"  path="pathengine.pointdecorator_2" value="8" />
 							<parameter id="Minimum Offset" path="pathengine.pointdecorator_2" value="1" />
 							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_2" value="30" />
 							<parameter id="Size Factor" path="pathengine.pointdecorator_2" value="0.02" />
@@ -309,6 +314,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					</pathengine>
 				</brush>
 			</brushkits>
+
+		private var _canvasRect : Rectangle;
 		
 		
 		public function PaintModule()
@@ -336,6 +343,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			AbstractBrush.brushShapeLibrary = brushShapeLibrary;
 			
 			memoryWarningSignal.add(onMemoryWarning);
+			requestChangeRenderRect.add(onChangeRenderRect);
+		}
+
+		private function onChangeRenderRect(rect : Rectangle) : void
+		{
+			var scale : Number = rect.height/canvasModel.height;
+			var width : Number = canvasModel.width*scale;
+			_canvasRect = new Rectangle((canvasModel.width - width) *.5, 0, width, rect.height);
+			if (_activeBrushKit)
+				_activeBrushKit.canvasRect = _canvasRect;
 		}
 
 		public function stopAnimations() : void
@@ -452,6 +469,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			if ( _activeBrushKit )
 			{
+				_activeBrushKit.canvasRect = _canvasRect;
 				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, canvasHistory);
 				_activeBrushKit.brushEngine.addEventListener(Event.COMPLETE, onBrushComplete);
 				_activeBrushKit.addEventListener( Event.CHANGE, onActiveBrushKitChanged );

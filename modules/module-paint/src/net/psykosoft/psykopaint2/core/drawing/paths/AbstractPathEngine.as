@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 {
 	import flash.display.Graphics;
 	import flash.geom.Point;
-	
+
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 
 	public class AbstractPathEngine implements IPathEngine

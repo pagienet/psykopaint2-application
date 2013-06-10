@@ -6,7 +6,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
-	
+	import flash.geom.Rectangle;
+
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.EndConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
@@ -91,6 +92,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		private var _currentTick:uint;
 		private var _lastUpdateTick:uint;
+		private var _canvasRect : Rectangle;
 		
 
 		public function PathManager( type:int )
@@ -228,23 +230,33 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if (_listeningToTouch) return;
 			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
 			_listeningToMouse = true;
-			if ( !(event.target is Stage) ) return;
-			onSampleStart(new Point(event.stageX, event.stageY));
+			var stage : Stage = event.target as Stage;
+			if (!stage) return;
+			onSampleStart(getCanvasCoord(event.stageX, event.stageY));
 			_view.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_view.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		}
+
+		private function getCanvasCoord(stageX : Number, stageY : Number) : Point
+		{
+			var px : Number = stageX - _canvasRect.x;
+			var py : Number = stageY - _canvasRect.y;
+			var scaleX : Number = _view.stage.stageWidth/_canvasRect.width;
+			var scaleY : Number = _view.stage.stageHeight/_canvasRect.height;
+			return new Point(px*scaleX, py*scaleY);
 		}
 
 		protected function onMouseUp(event : MouseEvent) : void
 		{
 			_listeningToMouse = false;
-			onSampleEnd(new Point(event.stageX, event.stageY));
+			onSampleEnd(getCanvasCoord(event.stageX, event.stageY));
 			_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		}
 
 		private function onMouseMove(event : MouseEvent) : void
 		{
-			onSamplePoint(new Point(event.stageX, event.stageY));
+			onSamplePoint(getCanvasCoord(event.stageX, event.stageY));
 		}
 
 		protected function onSampleStart(location : Point) : void
@@ -415,6 +427,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public function get callbacks():PathManagerCallbackInfo
 		{
 			return _callbacks;
+		}
+
+		public function setCanvasRect(canvasRect : Rectangle) : void
+		{
+			_canvasRect = canvasRect;
 		}
 	}
 }
