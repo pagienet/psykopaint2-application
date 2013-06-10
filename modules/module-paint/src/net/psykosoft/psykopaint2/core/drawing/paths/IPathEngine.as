@@ -7,9 +7,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	public interface IPathEngine
 	{
 		function clear():void;
-		function addFirstPoint( point:Point ):void;
-		function addPoint( point:Point, force:Boolean = false ):Boolean;
-		function addXY( x:Number, y:Number, force:Boolean = false ):Boolean;
+		function addFirstPoint( point:Point, pressure:Number = -1 ):void;
+		function addPoint( point:Point, pressure:Number = -1, force:Boolean = false ):Boolean;
+		function addXY( x:Number, y:Number, pressure:Number = -1, force:Boolean = false ):Boolean;
 		function getPointAt( index:int ):SamplePoint;
 		function clone( startIndex:int = 0, count:int = -1 ):IPathEngine;
 		function update( forceUpdate:Boolean = false ):Vector.<SamplePoint>;

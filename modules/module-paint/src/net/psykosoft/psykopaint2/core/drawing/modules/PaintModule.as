@@ -87,7 +87,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
-					<parameter id="Bumpyness" path="brush" value="0.2" showInUI="1"/>
+					<parameter id="Bumpyness" path="brush" value="0.02" showInUI="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>

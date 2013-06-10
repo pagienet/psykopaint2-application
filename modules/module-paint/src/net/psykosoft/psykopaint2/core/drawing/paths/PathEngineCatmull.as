@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var _lastPoint2 : SamplePoint;
 		private var _lastX : Number;
 		private var _lastY : Number;
+		private var _lastPressure : Number;
 		private var _squaredAccumulatedDistance : Number;
 		
 		private var _lastResultLastPoint : SamplePoint;
@@ -33,7 +34,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			return PathManager.ENGINE_TYPE_CATMULL;
 		}
 		
-		override public function addFirstPoint( p:Point ):void
+		override public function addFirstPoint( p:Point, pressure:Number = -1 ):void
 		{
 			_lastResultLastPoint = null;
 			_lastPoint1 = null;
@@ -46,7 +47,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_speed = 0;
 			_squaredAccumulatedDistance = 0;
 			
-			super.addFirstPoint(p);
+			_lastPressure = pressure;
+			
+			super.addFirstPoint(p, pressure);
 			
 		}
 
@@ -64,7 +67,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				var simplePath : PathEngineCatmull = clone(_lastOutputIndex, -1) as PathEngineCatmull;
 				simplePath.simplify2(0, -1, _simplificationDistance);
 				var p : SamplePoint = simplePath.getPointAt(-1);
-				simplePath.addPoint( p, true);
+				simplePath.addPoint( p, p.pressure, true);
 				var engine2 : IPathEngine = CatmullRomInterpolator.interpolate(simplePath, 0, -1);
 				//PathInterpolator.interpolate( PathInterpolator.TYPE_CATMULLROM, simplePath, 0,-1 );
 				var bs : int = _minSamplesPerStep.intValue >> 1;

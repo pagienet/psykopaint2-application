@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function SizeDecorator()
 		{
 			super();
-			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed"]);
+			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed","Pressure"]);
 			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,"Factor",1,1,0,100);
 			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,"Mapping",0,["Linear","Quadratic In","Quadratic InOut","Quadratic Out","Quartic In","Quartic InOut","Quartic Out","Quintic In","Quintic InOut","Quintic Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
 			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,"Invert Mapping",0);

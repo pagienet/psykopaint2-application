@@ -68,49 +68,49 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_lastOutputIndex = 0;
 		}
 		
-		public function addFirstPoint( p:Point ):void
+		public function addFirstPoint( p:Point, pressure:Number = -1):void
 		{
 			clear();
-			addPoint(p,true);
+			addPoint(p,pressure, true);
 		}
 		
-		public function addPoint( p:Point, force:Boolean = false ):Boolean
+		public function addPoint( p:Point, pressure:Number = -1, force:Boolean = false ):Boolean
 		{
 			if ( !force && nextIndex > 0 && _sampledPoints[nextIndex-1].equals(p) ) 
 			{
 				return false;
 			}
 				
-			_sampledPoints[nextIndex++] = PathManager.getSamplePoint(p);
+			_sampledPoints[nextIndex++] = PathManager.getSamplePoint(p,0,0,0,pressure);
 			return true;
 		}
 		
-		public function addXY( x:Number, y:Number, force:Boolean = false ):Boolean
+		public function addXY( x:Number, y:Number, pressure:Number = -1, force:Boolean = false ):Boolean
 		{
 			if ( !force && nextIndex > 0 && _sampledPoints[nextIndex-1].x == x && _sampledPoints[nextIndex-1].y == y ) 
 			{
 				return false;
 			}
 			
-			_sampledPoints[nextIndex++] = PathManager.getSamplePointXY(x,y);
+			_sampledPoints[nextIndex++] = PathManager.getSamplePointXY(x,y,0,0,0,pressure);
 			return true;
 		}
 		
-		public function addXYAt( index:int, x:Number, y:Number ):void
+		public function addXYAt( index:int, x:Number, y:Number, pressure:Number = -1):void
 		{
 			if ( index > nextIndex ) index = nextIndex;
 			if ( index < 0 ) index = 0;
-			var p:SamplePoint = PathManager.getSamplePointXY(x,y);
+			var p:SamplePoint = PathManager.getSamplePointXY(x,y,0,0,0,pressure);
 			_sampledPoints.splice(index,0,p);
 			nextIndex++;
 			
 		}
 		
-		public function addPointAt( index:int, point:Point ):void
+		public function addPointAt( index:int, point:Point, pressure:Number ):void
 		{
 			if ( index > nextIndex ) index = nextIndex;
 			if ( index < 0 ) index = 0;
-			var p:SamplePoint = PathManager.getSamplePoint(point);
+			var p:SamplePoint = PathManager.getSamplePoint(point,0,0,0,pressure);
 			_sampledPoints.splice(index,0,p);
 			nextIndex++;
 			
@@ -175,7 +175,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				var p:SamplePoint = _sampledPoints[startIndex];
 				while ( count > 0)
 				{
-					result.addXY(p.x,p.y,true);
+					result.addXY(p.x,p.y,p.pressure,true);
 					if ( ++startIndex < nextIndex )
 						p = _sampledPoints[startIndex];
 					else 
