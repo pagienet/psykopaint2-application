@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 
             if (value.label != _txt.text) {
                 _txt.text = value.label;
+				_txt.selectable = false;
             }
 
             this._data = value;

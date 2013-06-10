@@ -210,6 +210,18 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				comboBox.draw();
 				positionUiElement( comboBox as DisplayObject );
 				_uiElements.push( comboBox );
+
+				/*var comboBox:SbComboboxView = new SbComboboxView( );
+				var list:Array = String( _parameter.@list ).split( "," );
+				var len:uint = list.length;
+				for( i = 0; i < len; ++i ) {
+					var option:String = list[ i ];
+					comboBox.addItem( { label:option } );
+				}
+				addChild( comboBox );
+				comboBox.addEventListener( Event.SELECT, onComboBoxChanged );
+				positionUiElement( comboBox as DisplayObject );
+				_uiElements.push( comboBox );*/
 			}
 
 			// Check box
