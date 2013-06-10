@@ -53,7 +53,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		private function initialize():void {
-			scrollRect = new Rectangle( visibleWidth, visibleHeight );
+//			scrollRect = new Rectangle( visibleWidth, visibleHeight );
 			_interactionManager.stage = stage;
 			_positionManager.motionEndedSignal.add( onPositionManagerMotionEnded );
 			_interactionManager.scrollInputMultiplier = 1 / CoreSettings.GLOBAL_SCALING;
