@@ -42,7 +42,7 @@ package net.psykosoft.psykopaint2.paint.views.pick
 		private function onImagePicked( bmd:BitmapData ):void {
 			if( bmd ) {
 				// Show navigation.
-				requestNavigationToggleSignal.dispatch( true );
+				requestNavigationToggleSignal.dispatch( 1 );
 				// Change drawing core state.
 //				requestSourceImageSetSignal.dispatch( bmd ); // Goes through crop, color style, etc...
 				notifyColorStyleCompleteSignal.dispatch( bmd ); // Goes straight to paint mode.

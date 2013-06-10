@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.ui.components.HPageScroller;
@@ -18,8 +19,27 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 		private var _bitmaps:Vector.<Bitmap>;
 		private var _numberOfItemsPerPage:uint;
 
+		protected var _activePageIndex:uint;
+
 		public function TileSheet() {
 			super();
+			addEventListener( MouseEvent.CLICK, onClick );
+			_positionManager.closestSnapPointChangedSignal.add( onClosestSnapPointChanged );
+		}
+
+		protected function onClosestSnapPointChanged( snapPointIndex:uint ):void {
+			_activePageIndex = snapPointIndex;
+		}
+
+		private function onClick( event:MouseEvent ):void {
+			var column:int = mouseX / _cellSize;
+			var row:int = mouseY / _cellSize;
+			var thumbIndex:uint = _numberOfItemsPerPage * _activePageIndex + row * int( visibleWidth / _cellSize ) + column;
+			onTileClicked( thumbIndex );
+		}
+
+		protected function onTileClicked( tileIndex:uint ):void {
+			// Override.
 		}
 
 		override public function reset():void {
@@ -35,9 +55,9 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 			var gap:Number = 20;
 			_tileSize = tileSize;
 			_cellSize = tileSize + gap;
-			_numberOfItemsPerPage = 0;
+			_numberOfItemsPerPage = Math.floor( visibleWidth / _cellSize ) * Math.floor( visibleHeight / _cellSize );
 
-			var bmd:BitmapData = new BitmapData( tileSize, tileSize, false, 0xFF0000 );
+			var bmd:BitmapData = new BitmapData( tileSize, tileSize, false, 0xFFFFFF );
 
 			for( var i:uint; i < numTiles; ++i ) {
 
@@ -57,7 +77,6 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 				}
 				// Next y is off the bottom edge of the page?
 				if( _thumbY + _cellSize > visibleHeight ) {
-					if( _creatingPageNum == 0 ) _numberOfItemsPerPage = i - 1;
 					_creatingPageNum++;
 					_thumbX = ( _creatingPageNum - 1 ) * visibleWidth;
 					_thumbY = 0;

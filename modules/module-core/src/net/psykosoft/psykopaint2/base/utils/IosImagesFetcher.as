@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.base.utils
 
 		public function dispose():void {
 
-			trace( this, "disposing service." );
+			trace( this, "disposing" );
 
 			// Dispose of all bmds in flash.
 			for( var i:uint = 0; i < _sheetVOs.length; ++i ) {
@@ -40,8 +40,6 @@ package net.psykosoft.psykopaint2.base.utils
 				vo = null;
 			}
 			_sheetVOs = null;
-
-			_sheetVOs = new Vector.<SheetVO>();
 
 			// Clean up extension.
 			_extension.releaseLibraryItems();

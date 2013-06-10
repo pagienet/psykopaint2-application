@@ -312,7 +312,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 			// User photos tile sheet.
 			// Component.
-			var tileSheet:UserPhotosTileSheet = new UserPhotosTileSheet();
+			/*var tileSheet:UserPhotosTileSheet = new UserPhotosTileSheet();
 			tileSheet.visibleWidth = 1024;
 			tileSheet.visibleHeight = 768;
 			addChild( tileSheet );
@@ -325,7 +325,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			} );
 			setTimeout( function():void {
 				tileSheet.fetchPhotos();
-			}, 3000 );
+			}, 3000 );*/
 
 			// Simple slider test.
 			/*var simpleSlider:SbSlider = new SbSlider();
