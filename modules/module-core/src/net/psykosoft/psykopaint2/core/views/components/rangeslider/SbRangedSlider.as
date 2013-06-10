@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 		// Declared in Fla.
 		public var leftHandleView:Sprite;
 		public var rightHandleView:Sprite;
+		public var bgView:Sprite;
 		public var rangeView:MovieClip;
 		public var value1Label:TextField;
 		public var value2Label:TextField;
@@ -201,6 +202,15 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 
 		override public function get width():Number {
 			return 451;
+		}
+
+		public function setWidth( newWidth:Number ):void{
+			bgView.width = newWidth;
+//			rangeView.width = newWidth - 200;  TODO
+			_maxX = newWidth - 95;
+			value2Label.x = newWidth - 70;
+			_xRange = _maxX - _minX;
+			updateViewFromValue();
 		}
 
 		// ---------------------------------------------------------------------

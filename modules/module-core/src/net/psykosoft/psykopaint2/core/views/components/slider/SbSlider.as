@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	{
 		// Declared in Fla.
 		public var handleView:Sprite;
+		public var bgView:Sprite;
 		public var valueLabel:TextField;
 
 		private var _value:Number = 0;
@@ -70,6 +71,14 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function containValue():void {
 			if( _value < _minValue ) _value = _minValue;
 			if( _value > _maxValue ) _value = _maxValue;
+		}
+
+		public function setWidth( newWidth:Number ):void{
+			bgView.width = newWidth;
+			_maxX = newWidth - handleView.width;
+			_xRange = _maxX - _minX;
+			updateViewFromValue();
+			valueLabel.x = newWidth + 20;
 		}
 
 		// ---------------------------------------------------------------------
