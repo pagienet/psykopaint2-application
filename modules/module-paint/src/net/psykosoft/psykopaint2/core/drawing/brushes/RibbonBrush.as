@@ -95,7 +95,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				
 			var cx:Number = point.x;
 			var cy:Number = point.y;
-			var size:Number = point.size;
+			var size:Number = point.size * 32; 
 			
 			size *=0.005;
 			

@@ -76,7 +76,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
                         </ColorDecorator>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_1" index="1" />
-							<parameter id="Factor" path="pathengine.pointdecorator_1" value="1" showInUI="1" />
+							<parameter id="Factor" path="pathengine.pointdecorator_1" value1="1" value2="1" showInUI="1" />
 							<parameter id="Mapping" path="pathengine.pointdecorator_1" value="2" />
 						</SizeDecorator>
                     </pathengine>
@@ -92,7 +92,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor" path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="1"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" showInUI="1"/>
 							<parameter id="Invert Mapping" path="pathengine.pointdecorator_0" value="0" showInUI="1"/>
 						</SizeDecorator>
@@ -114,7 +114,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
 							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0" value2="1"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
 						<StationaryDecorator>
@@ -195,7 +195,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
 							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0" value2="2"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
 					</pathengine>
@@ -206,7 +206,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
 							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0" value2="1"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
 						<ColorDecorator>
@@ -260,7 +260,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
 							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0" value2="10"  />
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
 					</pathengine>
