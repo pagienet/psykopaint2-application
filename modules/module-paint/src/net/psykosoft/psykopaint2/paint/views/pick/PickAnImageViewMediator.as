@@ -44,8 +44,8 @@ package net.psykosoft.psykopaint2.paint.views.pick
 				// Show navigation.
 				requestNavigationToggleSignal.dispatch( 1 );
 				// Change drawing core state.
-//				requestSourceImageSetSignal.dispatch( bmd ); // Goes through crop, color style, etc...
-				notifyColorStyleCompleteSignal.dispatch( bmd ); // Goes straight to paint mode.
+				requestSourceImageSetSignal.dispatch( bmd ); // Goes through crop, color style, etc...
+	//			notifyColorStyleCompleteSignal.dispatch( bmd ); // Goes straight to paint mode.
 			}
 			else {
 				requestStateChange( StateType.STATE_PREVIOUS );
