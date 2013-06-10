@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 	public class UserPhotosTileSheet extends TileSheet
 	{
 		private var _fetcher:IosImagesFetcher;
+		private var _activePageIndex:uint;
 
 		public function UserPhotosTileSheet() {
 			super();
@@ -43,12 +44,23 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 
 		private function onThumbnailsLoaded( sheet:SheetVO ):void {
 			trace( this, "onThumbnailsLoaded --------------------" );
-			trace( "num: " + sheet.numberOfItems );
-			trace( "base: " + sheet.baseItemIndex );
-			// TODO: continue here, we need to do something with the fetched sprite sheet
+			trace( "items per component page: " + numberOfItemsPerPage );
+			var index:uint;
+			var sx:Number = 0;
+			var sy:Number = 0;
+			for( var i:uint; i < sheet.numberOfItems; ++i ) {
+				index = sheet.baseItemIndex + i;
+				setTileContentFromSpriteSheet( sheet.bmd, sx, sy, _activePageIndex * numberOfItemsPerPage + i );
+				// Advance in sheet space.
+				if( sx + _tileSize > sheet.sheetSize ) {
+					sx = 0;
+					sy += _tileSize;
+				}
+			}
 		}
 
 		private function onClosestSnapPointChanged( snapPointIndex:uint ):void {
+			_activePageIndex = snapPointIndex;
 			updatePage( snapPointIndex );
 		}
 	}

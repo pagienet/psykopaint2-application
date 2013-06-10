@@ -15,8 +15,8 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 		private var _thumbX:Number;
 		private var _thumbY:Number;
 		private var _creatingPageNum:uint;
-		private var _populatedItemCount:uint;
 		private var _bitmaps:Vector.<Bitmap>;
+		private var _numberOfItemsPerPage:uint;
 
 		public function TileSheet() {
 			super();
@@ -25,7 +25,6 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 		override public function reset():void {
 			super.reset();
 			_thumbX = _thumbY = 0;
-			_populatedItemCount = 0;
 			_creatingPageNum = 1;
 			_bitmaps = new Vector.<Bitmap>();
 		}
@@ -36,6 +35,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 			var gap:Number = 20;
 			_tileSize = tileSize;
 			_cellSize = tileSize + gap;
+			_numberOfItemsPerPage = 0;
 
 			var bmd:BitmapData = new BitmapData( tileSize, tileSize, false, 0xFF0000 );
 
@@ -57,6 +57,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 				}
 				// Next y is off the bottom edge of the page?
 				if( _thumbY + _cellSize > visibleHeight ) {
+					if( _creatingPageNum == 0 ) _numberOfItemsPerPage = i - 1;
 					_creatingPageNum++;
 					_thumbX = ( _creatingPageNum - 1 ) * visibleWidth;
 					_thumbY = 0;
@@ -66,12 +67,14 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 			invalidateContent();
 		}
 
-		public function setTileContentFromSpriteSheet( bmd:BitmapData, sheetX:Number, sheetY:Number ):void {
-			trace( this, "adding tile: " + sheetX + ", " + sheetY );
-			var bitmap:Bitmap = _bitmaps[ _populatedItemCount ];
+		public function setTileContentFromSpriteSheet( bmd:BitmapData, bmdX:Number, bmdY:Number, tileIndex:uint ):void {
+			var bitmap:Bitmap = _bitmaps[ tileIndex ];
 			bitmap.bitmapData = bmd;
-			bitmap.scrollRect = new Rectangle( sheetX, sheetY, _tileSize, _tileSize );
-			_populatedItemCount++;
+			bitmap.scrollRect = new Rectangle( bmdX, bmdY, _tileSize, _tileSize );
+		}
+
+		public function get numberOfItemsPerPage():uint {
+			return _numberOfItemsPerPage;
 		}
 	}
 }
