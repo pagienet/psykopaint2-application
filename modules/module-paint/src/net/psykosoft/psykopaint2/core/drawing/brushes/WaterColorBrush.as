@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_pigmentStaining = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment staining", 5.5, 1, 10);
 			_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment granulation", .81, 0, 1);
 
-			_parameters.push( _surfaceRelief, _pigmentDensity, _pigmentStaining, _pigmentGranulation);
+			_parameters.push( _surfaceRelief, _gravityStrength, _pigmentDensity, _pigmentStaining, _pigmentGranulation);
 
 			type = BrushType.WATER_COLOR;
 		}

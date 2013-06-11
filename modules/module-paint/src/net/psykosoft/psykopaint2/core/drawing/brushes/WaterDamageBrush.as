@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_pigmentFlow = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment flow", .5, 0, 1);
 			_pigmentBleaching = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment bleaching", 0.07, 0, 1);
 
-			_parameters.push( _pigmentFlow, _pigmentBleaching);
+			_parameters.push( _surfaceRelief, _gravityStrength, _pigmentFlow, _pigmentBleaching);
 
 			type = BrushType.WATER_DAMAGE;
 		}
