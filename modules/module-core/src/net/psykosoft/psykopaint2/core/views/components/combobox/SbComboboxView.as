@@ -7,9 +7,8 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
     import flash.display.Sprite;
     import flash.events.Event;
     import flash.events.MouseEvent;
-import flash.geom.Rectangle;
-
-import net.psykosoft.psykopaint2.base.utils.DraggableDecorator;
+	import flash.geom.Rectangle;
+	import net.psykosoft.psykopaint2.base.utils.DraggableDecorator;
 
     public class SbComboboxView extends Sprite {
 
@@ -33,8 +32,8 @@ import net.psykosoft.psykopaint2.base.utils.DraggableDecorator;
 			_listViewContainer.addChild(_listView);
 			this.addChild(_listViewContainer);
 
-		  _dragDecorator = new DraggableDecorator(_listView,new Rectangle(0,0,_listView.width,_listView.height));
-		  addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			_dragDecorator = new DraggableDecorator(_listView,new Rectangle(0,0,_listView.width,_listView.height));
+			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
         }
 
 		private function onAddedToStage(event:Event):void {
