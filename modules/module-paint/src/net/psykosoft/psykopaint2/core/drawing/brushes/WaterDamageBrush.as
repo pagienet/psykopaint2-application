@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.textures.Texture;
+	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.FlatColorStrategy;
@@ -15,6 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.MovePigmentRGB;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.RelaxDivergence;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.UpdateVelocities;
+	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 
 	public class WaterDamageBrush extends SimulationBrush
 	{
@@ -34,6 +36,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		// brush properties:
 		private var _surfaceRelief : PsykoParameter;
+		private var _gravityStrength : PsykoParameter;
 		private var _waterViscosity : PsykoParameter;
 		private var _waterDrag : PsykoParameter;
 		private var _pigmentFlow : PsykoParameter;
@@ -49,6 +52,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			super(false);
 
 			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.3, 0, 1);
+			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter, "Gravity influence", 0.1, 0, .3);
 			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, "Viscosity", .1, 0, 1);
 			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, "Drag", .01, 0, .2);
 			_pigmentFlow = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment flow", .5, 0, 1);
@@ -166,8 +170,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function applySlope() : void
 		{
+			var gravity : Vector3D = AccelerometerManager.gravityVector;
 			_applySlope.surfaceRelief = _surfaceRelief.numberValue;
-			_applySlope.execute(_context, SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer);
+			_applySlope.gravityStrength = _gravityStrength.numberValue;
+			_applySlope.execute(_context, gravity, SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer);
 			swapVelocityBuffer();
 		}
 

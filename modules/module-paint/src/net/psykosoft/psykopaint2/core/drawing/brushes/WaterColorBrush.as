@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.textures.Texture;
+	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 
@@ -21,6 +22,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.RelaxDivergence;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.TransferPigment;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.UpdateVelocities;
+	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
 	public class WaterColorBrush extends SimulationBrush
@@ -48,6 +50,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		// brush properties:
 		private var _surfaceRelief : PsykoParameter;
+		private var _gravityStrength : PsykoParameter;
 		private var _waterViscosity : PsykoParameter;
 		private var _waterDrag : PsykoParameter;
 		private var _pigmentDensity : PsykoParameter;
@@ -73,6 +76,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			super(false);
 			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.5, 0, 1);
+			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter, "Gravity influence", 0.1, 0, .3);
 			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, "Viscosity", .2, 0, 1);
 			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, "Drag", .1, 0, .2);
 			_pigmentDensity = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment density", .75, 0, 1);
@@ -104,6 +108,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_pigmentDensityField = _canvasModel.createCanvasTexture(true, .5);
 			_pigmentColorField = _canvasModel.createCanvasTexture(true, .5);
 
+			// todo: if "connection" was added previously, force last N segments to add water
 			_addPigmentToPigmentDensity = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, SinglePigmentBlotTransfer.TARGET_X);
 			_addPigmentToPigmentColor = new StrokeColorTransfer(_canvasModel.stage3D.context3D);
 			if (_wetBrush) {
@@ -234,8 +239,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		public function applySlope() : void
 		{
+			var gravity : Vector3D = AccelerometerManager.gravityVector;
 			_applySlope.surfaceRelief = _surfaceRelief.numberValue;
-			_applySlope.execute(_context, SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer);
+			_applySlope.gravityStrength = _gravityStrength.numberValue;
+			_applySlope.execute(_context, gravity, SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer);
 			swapVelocityBuffer();
 		}
 
