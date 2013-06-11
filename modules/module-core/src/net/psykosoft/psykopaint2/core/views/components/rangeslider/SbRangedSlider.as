@@ -86,7 +86,6 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 					leftHandleView.x = _maxX - currentDistanceBetweenHandles - dx;
 					if( leftHandleView.x > _maxX ) leftHandleView.x = _maxX;
 					rightHandleView.x = _maxX;
-					_clickOffset -= dx; //TODO: double check this, not working properly
 					updateAccordion();
 				}
 				else {
