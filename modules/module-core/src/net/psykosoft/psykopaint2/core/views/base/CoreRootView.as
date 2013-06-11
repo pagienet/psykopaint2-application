@@ -17,7 +17,8 @@ import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 import net.psykosoft.psykopaint2.base.utils.StackUtil;
 import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 import net.psykosoft.psykopaint2.core.config.CoreSettings;
-import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
+	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 
 import org.osflash.signals.Signal;
@@ -47,6 +48,8 @@ public class CoreRootView extends RootViewBase
 		public function CoreRootView() {
 			super();
 
+			trace( this, "constructor" );
+
 			splashScreenRemovedSignal = new Signal();
 
 			// Setup root layers.
@@ -74,12 +77,6 @@ public class CoreRootView extends RootViewBase
 
 			// Start enterframe.
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
-
-			// -----------------------
-			// Component tests.
-			// -----------------------
-
-			runUiTests();
 		}
 
 		// ---------------------------------------------------------------------
@@ -251,9 +248,9 @@ public class CoreRootView extends RootViewBase
 		// ---------------------------------------------------------------------
 
 		// TODO: remove
-		private function runUiTests():void {
+		public function runUiTests():void {
 
-			return;
+//			return;
 
 			// Bg fill.
 			/*this.graphics.beginFill(0xCCCCCC, 1.0);
@@ -335,7 +332,7 @@ public class CoreRootView extends RootViewBase
 			 addChild( simpleSlider );*/
 
 			// Range slider test.
-			/*var container:Sprite = new Sprite();
+			var container:Sprite = new Sprite();
 			 container.scaleX = container.scaleY = 1;
 			 addChild( container );
 			 var rangeSlider:SbRangedSlider = new SbRangedSlider();
@@ -348,7 +345,7 @@ public class CoreRootView extends RootViewBase
 			 rangeSlider.addEventListener( Event.CHANGE, function( event:Event ):void {
 			 //				trace( ">>> range slider change: " + rangeSlider.value1 + ", " + rangeSlider.value2 );
 			 } );
-			 container.addChild( rangeSlider );  */
+			 container.addChild( rangeSlider );
 
 			//CheckBox test.
 			/* var checkbox:SbCheckBox = new SbCheckBox();

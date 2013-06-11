@@ -278,6 +278,7 @@ package net.psykosoft.psykopaint2.core
 			trace( this, "initialized" );
 
 			// Init display tree.
+			_coreRootView.runUiTests();
 			_coreRootView.allViewsReadySignal.addOnce( onViewsReady );
 			_coreRootView.initialize();
 		}
