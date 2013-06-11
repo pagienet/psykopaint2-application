@@ -64,7 +64,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		// IMPORTANT:
 		// The simulation runs on a grid, with values associated to each cell
-		// Velocity field is a staggered grid, its values represent the values on the boundaries of the actual grid cells
+		// Velocity field is a staggered grid; its values represent the values on the boundaries of the actual grid cells
 		// We assume (i, j) contains the velocity values for:
 		// u(i+.5, j) and v(i, j+.5)
 		// This means: when the paper mentions u(i+.5, j), we sample at v(i, j)
