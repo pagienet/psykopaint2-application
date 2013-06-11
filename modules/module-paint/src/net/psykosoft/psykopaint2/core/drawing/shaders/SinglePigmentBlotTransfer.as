@@ -102,8 +102,6 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE);
 			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentConstants, 1);
 
-
-
 			if (_useTexture) {
 				_context.setTextureAt(0, brushTexture);
 				stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS, 1, false, triOffset);

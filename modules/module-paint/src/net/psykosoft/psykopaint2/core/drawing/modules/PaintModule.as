@@ -86,7 +86,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
                         </ColorDecorator>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_1" index="1" />
-							<parameter id="Factor" path="pathengine.pointdecorator_1" value1="1" value2="1" showInUI="1" />
+							<parameter id="Factor" path="pathengine.pointdecorator_1" value1=".1" value2=".1" showInUI="1" />
 							<parameter id="Mapping" path="pathengine.pointdecorator_1" value="2" />
 						</SizeDecorator>
                     </pathengine>
