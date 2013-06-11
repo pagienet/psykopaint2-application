@@ -14,9 +14,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		private var _grain : Number = 0.9;
 		private var _coarseness : Number = .4;
 
+		[Embed(source="assets/pencilAlpha.png")]
+		private var AlphaMaskAsset : Class;
+
 		public function PencilBrushShape(context3D : Context3D)
 		{
-			trace ("moo");
 			super(context3D, "pencil", 1);
 			_variationFactors[0] = 1;
 			_variationFactors[1] = 1;
@@ -29,6 +31,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		override protected function uploadBrushTexture(texture : Texture) : void
 		{
+			var alpha : BitmapData = new AlphaMaskAsset().bitmapData;
 			var size : Number = _textureSize;
 
 			var upperLimit : uint = 255*(0.9-_hardness*0.8),
@@ -40,7 +43,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 			uploadMips(_textureSize, brushMap, texture);
 
-			if (brushMap) brushMap.dispose();
+			brushMap.copyChannel(alpha, alpha.rect, new Point(), BitmapDataChannel.RED, BitmapDataChannel.ALPHA);
+			alpha.dispose();
+			brushMap.dispose();
 		}
 	}
 }

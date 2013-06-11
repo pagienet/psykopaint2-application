@@ -6,9 +6,12 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.base.Object3D;
 	import away3d.entities.Mesh;
+	import away3d.materials.ColorMaterial;
+	import away3d.primitives.CubeGeometry;
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
+	import com.greensock.easing.Strong;
 
 	import flash.display.Stage;
 	import flash.geom.Vector3D;
@@ -57,13 +60,13 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_interactionManager.stage = stage;
 
 			_interactionManager.throwInputMultiplier = 2;
-
+			_interactionManager.useDetailedDelta = false;
 			_positionManager.frictionFactor = 0.9;
 			_positionManager.minimumThrowingSpeed = 125;
 			_positionManager.edgeContainmentFactor = 0.01;
 
 			// Uncomment to visually debug perspective factor.
-			// - ensures that the scrolling snaps to finger 100%, if right, the tracer should be placed just at the edge of the screen -
+			// Ensures that the scrolling snaps to finger 100%, if right, the tracer should be placed just at the edge of the screen -
 //			_perspectiveTracer = new Mesh( new CubeGeometry(), new ColorMaterial( 0xFF0000 ) );
 //			addChild( _perspectiveTracer );
 		}
@@ -86,16 +89,16 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_zoomedIn = true;
 			TweenLite.killTweensOf( _cameraTarget );
 			TweenLite.killTweensOf( _camera );
-			TweenLite.to( _cameraTarget, 1, { y: targetY, ease:Expo.easeInOut } );
-			TweenLite.to( _camera, 1, { y: targetY, z: targetZ, ease:Expo.easeInOut, onComplete:onZoomComplete } );
+			TweenLite.to( _cameraTarget, 1, { y: targetY, ease:Strong.easeInOut } );
+			TweenLite.to( _camera, 1, { y: targetY, z: targetZ, ease:Strong.easeInOut, onComplete:onZoomComplete } );
 		}
 
 		public function zoomOut():void {
 			_zoomedIn = false;
 			TweenLite.killTweensOf( _cameraTarget );
 			TweenLite.killTweensOf( _camera );
-			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, ease:Expo.easeInOut } );
-			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, z: HomeSettings.CAMERA_ZOOM_OUT_Z, ease:Expo.easeInOut, onComplete:onZoomComplete } );
+			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, ease:Strong.easeInOut } );
+			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, z: HomeSettings.CAMERA_ZOOM_OUT_Z, ease:Strong.easeInOut, onComplete:onZoomComplete } );
 		}
 
 		private function onZoomComplete():void {
@@ -128,7 +131,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		}
 
 		public function jumpToSnapPointIndex( value:uint ):void {
-			_positionManager.snapAtIndex( value );
+			_positionManager.snapAtIndexWithoutEasing( value );
 			_camera.x = _cameraTarget.x = _positionManager.position;
 		}
 
@@ -183,7 +186,15 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			}
 
 			// Calculate the perspective factor by comparing the half screen width with how much of the wall is visible.
-			_interactionManager.scrollInputMultiplier = ( ( collisionPoint.x - _camera.x ) / ( _stageWidth / 2 ) )/* * ViewCore.globalScaling*/;
+			var halfSceneWidth:Number = collisionPoint.x - _camera.x;
+			var halfViewWidth:Number = _stageWidth / 2;
+			var multiplier:Number = halfSceneWidth / halfViewWidth;
+			trace( this, ">>>> input multiplier: " + multiplier );
+			trace( this, "half scene: " + halfSceneWidth );
+			trace( this, "half view: " + halfViewWidth );
+			trace( this, "camera x: " + _camera.x );
+			trace( this, "collision x: " + collisionPoint.x );
+			_interactionManager.scrollInputMultiplier = multiplier/* * ViewCore.globalScaling*/;
 		}
 
 		public function get closestSnapPointChangedSignal():Signal {

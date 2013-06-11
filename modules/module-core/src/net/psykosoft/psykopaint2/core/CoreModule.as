@@ -45,9 +45,6 @@ package net.psykosoft.psykopaint2.core
 
 	public class CoreModule extends ModuleBase
 	{
-		[Embed(source="../../../../../../../modules/module-core/assets/embedded/images/launch/ipad-hr/Default-Landscape@2x.png")]
-		private var SplashImageAsset:Class;
-
 		private var _coreConfig:CoreConfig;
 		private var _injector:Injector;
 		private var _stage3dInitialized:Boolean;
@@ -56,33 +53,18 @@ package net.psykosoft.psykopaint2.core
 		private var _stateSignal:RequestStateChangeSignal;
 		private var _requestGpuRenderingSignal:RequestGpuRenderingSignal;
 		private var _stage3d:Stage3D;
-		private var _time:Number = 0;
-		private var _statsTextField:TextField;
-		private var _versionTextField:TextField;
-		private var _errorsTextField:TextField;
-		private var _fpsStackUtil:StackUtil;
-		private var _renderTimeStackUtil:StackUtil;
 		private var _stage3dProxy:Stage3DProxy;
 		private var _coreRootView:CoreRootView;
 		private var _notificationsExtension:NotificationsExtension;
 		private var _memoryWarningNotification:NotifyMemoryWarningSignal;
 		private var _requestNavigationToggleSignal:RequestNavigationToggleSignal;
 		private var _xmLoader:XMLLoader;
-		private var _splashScreen:Bitmap;
-		private var _frontLayer:Sprite;
-		private var _backLayer:Sprite;
-		private var _fps:Number = 0;
-		private var _splashScreenRemoved:Boolean;
-		private var _errorCount:uint;
 
 		public var updateActive:Boolean = true;
-
-		public var splashScreenRemovedSignal:Signal;
 
 		public function CoreModule( injector:Injector = null ) {
 			super();
 			_injector = injector;
-			splashScreenRemovedSignal = new Signal();
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CoreModule";
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
@@ -102,26 +84,6 @@ package net.psykosoft.psykopaint2.core
 		private function update():void {
 			if( !updateActive ) return;
 			_requestGpuRenderingSignal.dispatch();
-			evalFPS();
-			updateStats();
-		}
-
-		private function evalFPS():void {
-			var oldTime:Number = _time;
-			_time = getTimer();
-			_fps = 1000 / (_time - oldTime);
-			_fpsStackUtil.pushValue( _fps );
-			_fps = int( _fpsStackUtil.getAverageValue() );
-//			trace( ">>> fps: " + _fps );
-		}
-
-		private function updateStats():void {
-			if( !CoreSettings.SHOW_STATS ) return;
-
-			_renderTimeStackUtil.pushValue( RenderGpuCommand.renderTime );
-			var renderTime:int = int( _renderTimeStackUtil.getAverageValue() );
-
-			_statsTextField.text = _fps + "/" + stage.frameRate + "fps \n" + "Render time: " + renderTime + "ms";
 		}
 
 		// ---------------------------------------------------------------------
@@ -137,7 +99,7 @@ package net.psykosoft.psykopaint2.core
 				}
 				case Keyboard.SPACE:
 				{
-					_requestNavigationToggleSignal.dispatch();
+					_requestNavigationToggleSignal.dispatch( 0 );
 					break;
 				}
 			}
@@ -185,14 +147,6 @@ package net.psykosoft.psykopaint2.core
 			update();
 		}
 
-		private function onGlobalError( event:UncaughtErrorEvent ):void {
-			_errorCount++;
-			var error:Error = Error( event.error );
-			var stack:String = error.getStackTrace();
-			_errorsTextField.htmlText += "<font color='#FF0000'><b>RUNTIME ERROR - " + _errorCount + "</b></font>: " + error + " - stack: " + stack + "<br>";
-			_errorsTextField.visible = true;
-		}
-
 		// ---------------------------------------------------------------------
 		// Getters.
 		// ---------------------------------------------------------------------
@@ -201,14 +155,15 @@ package net.psykosoft.psykopaint2.core
 			return _injector;
 		}
 
+		public function get coreRootView():CoreRootView {
+			return _coreRootView;
+		}
+
 		// ---------------------------------------------------------------------
 		// Initialization.
 		// ---------------------------------------------------------------------
 
 		private function initialize():void {
-
-			addChild( _backLayer = new Sprite() );
-			addChild( _frontLayer = new Sprite() );
 
 			getXmlData();
 			initDebugging();
@@ -216,19 +171,12 @@ package net.psykosoft.psykopaint2.core
 			trace( this, "Initializing... [" + name + "]" );
 
 			initPlatform();
-			getSplashScreen();
 			initStage();
+			initDisplay();
 			initStage3dASync();
 			initRobotlegs();
 			initMemoryWarnings();
 			initShakeAndBakeAsync();
-		}
-
-		private function getSplashScreen():void {
-			_splashScreen = new SplashImageAsset();
-			_splashScreen.transform.colorTransform = new ColorTransform( -1, -1, -1,1, 255, 255, 255 );
-			_frontLayer.addChild( _splashScreen );
-			_splashScreen.scaleX = _splashScreen.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1 : 0.5;
 		}
 
 		private function getXmlData():void {
@@ -244,49 +192,9 @@ package net.psykosoft.psykopaint2.core
 			_xmLoader = null;
 		}
 
-		private function initStats():void {
-			if( !CoreSettings.SHOW_STATS ) return;
-			_fpsStackUtil = new StackUtil();
-			_renderTimeStackUtil = new StackUtil();
-			_fpsStackUtil.count = 24;
-			_renderTimeStackUtil.count = 24;
-			_statsTextField = new TextField();
-			_statsTextField.width = 200;
-			_statsTextField.selectable = false;
-			_statsTextField.mouseEnabled = false;
-			_statsTextField.scaleX = _statsTextField.scaleY = CoreSettings.GLOBAL_SCALING;
-			_backLayer.addChild( _statsTextField );
-		}
-
-		private function initVersionDisplay():void {
-			if( CoreSettings.SHOW_VERSION ) {
-				_versionTextField = new TextField();
-				_versionTextField.scaleX = _versionTextField.scaleY = CoreSettings.GLOBAL_SCALING;
-				_versionTextField.width = 200;
-				_versionTextField.mouseEnabled = _versionTextField.selectable = false;
-				_versionTextField.text = CoreSettings.NAME + ", version: " + CoreSettings.VERSION;
-				_versionTextField.y = CoreSettings.GLOBAL_SCALING * 25;
-				_backLayer.addChild( _versionTextField );
-			}
-		}
-
-		private function initErrorDisplay():void {
-			if( CoreSettings.SHOW_ERRORS ) {
-				loaderInfo.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onGlobalError );
-				_errorsTextField = new TextField();
-				_errorsTextField.scaleX = _errorsTextField.scaleY = CoreSettings.GLOBAL_SCALING;
-				_errorsTextField.width = 520 * CoreSettings.GLOBAL_SCALING;
-				_errorsTextField.height = 250 * CoreSettings.GLOBAL_SCALING;
-				_errorsTextField.x = ( 1024 - 520 - 1 ) * CoreSettings.GLOBAL_SCALING;
-				_errorsTextField.y = CoreSettings.GLOBAL_SCALING;
-				_errorsTextField.background = true;
-				_errorsTextField.border = true;
-				_errorsTextField.borderColor = 0xFF0000;
-				_errorsTextField.multiline = true;
-				_errorsTextField.wordWrap = true;
-				_errorsTextField.visible = false;
-				_frontLayer.addChild( _errorsTextField );
-			}
+		private function initDisplay():void {
+			_coreRootView = new CoreRootView();
+			addChild( _coreRootView );
 		}
 
 		private function initDebugging():void {
@@ -370,53 +278,20 @@ package net.psykosoft.psykopaint2.core
 			trace( this, "initialized" );
 
 			// Init display tree.
-			_coreRootView = new CoreRootView();
 			_coreRootView.allViewsReadySignal.addOnce( onViewsReady );
-			_backLayer.addChild( _coreRootView );
+			_coreRootView.initialize();
 		}
 
 		private function onViewsReady():void {
-
-			initStats();
-			initVersionDisplay();
-			initErrorDisplay();
-
-			// Initial application state.
-			_stateSignal.dispatch( StateType.STATE_IDLE );
-
-			// Start main enterframe.
-			addEventListener( Event.ENTER_FRAME, onEnterFrame );
-
-			// Start another enterframe to evaluate when to remove the splash image ( will be removed shortly ).
-			addEventListener( Event.ENTER_FRAME, onSplashEnterFrame );
-
-			// Notify.
-			moduleReadySignal.dispatch();
-		}
-
-		private function onSplashEnterFrame( event:Event ):void {
-			var targetFPS:Number = 12;
-			trace( this, "waiting for frame rate to increase before removing splash screen - current fps: " + _fps + "/60, minimum: " + targetFPS );
-			if( !_splashScreenRemoved && _fps >= targetFPS ) {
-
-				trace( this, "--- SPLASH REMOVED ---" );
-				removeEventListener( Event.ENTER_FRAME, onSplashEnterFrame );
-				removeSplashScreen();
-
-				if( isStandalone ) {
-					// Show navigation.
-					var showNavigationSignal:RequestNavigationToggleSignal = injector.getInstance( RequestNavigationToggleSignal );
-					showNavigationSignal.dispatch();
-				}
+			if( isStandalone ) {
+				// Show navigation.
+				_requestNavigationToggleSignal.dispatch( 1 );
 			}
-		}
-
-		private function removeSplashScreen():void {
-			_frontLayer.removeChild( _splashScreen );
-			_splashScreen.bitmapData.dispose();
-			_splashScreen = null;
-			_splashScreenRemoved = true;
-			splashScreenRemovedSignal.dispatch();
+			_stateSignal.dispatch( StateType.STATE_IDLE );
+			addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			moduleReadySignal.dispatch();
+			// Remove splash screen.
+			_coreRootView.removeSplashScreenWhenReady();
 		}
 	}
 }

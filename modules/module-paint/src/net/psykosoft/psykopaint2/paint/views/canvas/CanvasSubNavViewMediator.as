@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class CanvasSubNavViewMediator extends MediatorBase
@@ -24,6 +25,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
+
+		[Inject]
+		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
 		private var _waitingForSnapshot:Boolean;
 
@@ -43,7 +47,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case CanvasSubNavView.LBL_PICK_AN_IMAGE: {
+					requestNavigationToggleSignal.dispatch( -1 );
 					requestStateChange( StateType.STATE_PICK_IMAGE );
+					break;
+				}
+				case CanvasSubNavView.LBL_PICK_A_SURFACE: {
+					requestStateChange( StateType.STATE_PICK_SURFACE );
 					break;
 				}
 				case CanvasSubNavView.LBL_PICK_A_BRUSH: {

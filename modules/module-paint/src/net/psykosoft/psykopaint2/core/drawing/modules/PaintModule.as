@@ -5,7 +5,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.display.DisplayObject;
 	import flash.display.Stage3D;
 	import flash.events.Event;
-	
+	import flash.geom.Rectangle;
+
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
@@ -13,13 +14,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
+	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
+	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 
 	public class PaintModule implements IModule
 	{
@@ -49,6 +53,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		[Inject]
 		public var stage3D : Stage3D;
+		
+		[Inject]
+		public var penManager : WacomPenManager;
+
+		[Inject]
+		public var requestChangeRenderRect : RequestChangeRenderRectSignal;
 
 		private var _view : DisplayObject;
 
@@ -76,7 +86,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
                         </ColorDecorator>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_1" index="1" />
-							<parameter id="Factor" path="pathengine.pointdecorator_1" value="1" showInUI="1" />
+							<parameter id="Factor" path="pathengine.pointdecorator_1" value1="1" value2="1" showInUI="1" />
 							<parameter id="Mapping" path="pathengine.pointdecorator_1" value="2" />
 						</SizeDecorator>
                     </pathengine>
@@ -87,12 +97,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
-					<parameter id="Bumpyness" path="brush" value="0.2" showInUI="1"/>
+					<parameter id="Bumpyness" path="brush" value="0.02" showInUI="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor" path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0.01" value2="0.1"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" showInUI="1"/>
 							<parameter id="Invert Mapping" path="pathengine.pointdecorator_0" value="0" showInUI="1"/>
 						</SizeDecorator>
@@ -110,11 +120,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Gravity Spray">
 					<parameter id="Shapes" path="brush" index="0" list="noisy"/>
+					<parameter id="Bumpyness" path="brush" value="0.02" showInUI="1"/>
+					
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
 							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0.01" value2="0.05"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
 						<StationaryDecorator>
@@ -129,7 +141,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</ColorDecorator>
 						<SplatterDecorator>
 							<!-- randomize position -->
-							<parameter id="Splat Factor"  path="pathengine.pointdecorator_3" value="8" />
+							<parameter id="Splat Factor"  path="pathengine.pointdecorator_3" value="2" />
 							<parameter id="Minimum Offset" path="pathengine.pointdecorator_3" value="1" />
 							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_3" value="360" />
 						</SplatterDecorator>
@@ -183,7 +195,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</SplatterDecorator>
 						<SizeDecorator>
 								<parameter id="Mode"  path="pathengine.pointdecorator_6" index="1"/>
-								<parameter id="Factor" path="pathengine.pointdecorator_6" value1="0.2" value2="0.2"/>
+								<parameter id="Factor" path="pathengine.pointdecorator_6" value1="0.01" value2="0.05"/>
 								<parameter id="Mapping" path="pathengine.pointdecorator_6" value="2" />
 						</SizeDecorator>
 					</pathengine>
@@ -195,7 +207,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
 							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0.001" value2="0.05"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
 					</pathengine>
@@ -206,7 +218,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
 							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0.001" value2="0.05"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
 						<ColorDecorator>
@@ -223,15 +235,21 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				<brush engine={BrushType.UNCOLORED_SPRAY_CAN} name="Ink dots">
 					<parameter id="Shapes" path="brush" index="0" list="inkdots1,objects" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
-						<SplatterDecorator>
-							<parameter id="Splat Factor"  path="pathengine.pointdecorator_0" value="8" />
-							<parameter id="Minimum Offset"  path="pathengine.pointdecorator_0" value="3" />
-							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_0" value="30" />
-							<parameter id="Size Factor" path="pathengine.pointdecorator_0" value="0.6" />
-						</SplatterDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
+							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="1" />
 						</ColorDecorator>
+						<SpawnDecorator>
+							<parameter id="Multiples" value1="3" value2="10" path="pathengine.pointdecorator1" />
+							<parameter id="Maximum Offset" path="pathengine.pointdecorator_1" value="16"/>
+							<parameter id="Offset Parent Point" path="pathengine.pointdecorator_1" value="1"/>
+						</SpawnDecorator>
+						<SplatterDecorator>
+							<parameter id="Splat Factor"  path="pathengine.pointdecorator_2" value="2" />
+							<parameter id="Minimum Offset"  path="pathengine.pointdecorator_2" value="3" />
+							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_2" value="30" />
+							<parameter id="Size Factor" path="pathengine.pointdecorator_2" value="0.6" />
+						</SplatterDecorator>
+						
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.UNCOLORED_SPRAY_CAN} name="Pointillist">
@@ -252,6 +270,20 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</SpawnDecorator>
 					</pathengine>
 				</brush>
+				<brush engine={BrushType.RIBBON} name="Ribbon">
+					<parameter id="Size Factor" path="brush" value1="0.01" value2="0.05"/>
+					<parameter id="Shapes" path="brush" index="0" list="scales" showInUI="0"/>
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<parameter id="Output Step Size" path="pathengine" value="10"  />
+						<SizeDecorator>
+							<!-- Mapping drawing speed to size -->
+							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0" value2="10"  />
+							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
+						</SizeDecorator>
+					</pathengine>
+				</brush>
+
 				<brush engine={BrushType.DELAUNAY} name="Delaunay">
 					<parameter id="Size Factor" path="brush" value1="0.1" value2="0.2"/>
 					<parameter id="Shapes" path="brush" index="0" list="scales" showInUI="0"/>
@@ -282,6 +314,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					</pathengine>
 				</brush>
 			</brushkits>
+
+		private var _canvasRect : Rectangle;
 		
 		
 		public function PaintModule()
@@ -309,6 +343,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			AbstractBrush.brushShapeLibrary = brushShapeLibrary;
 			
 			memoryWarningSignal.add(onMemoryWarning);
+			requestChangeRenderRect.add(onChangeRenderRect);
+		}
+
+		private function onChangeRenderRect(rect : Rectangle) : void
+		{
+			var scale : Number = rect.height/canvasModel.height;
+			var width : Number = canvasModel.width*scale;
+			_canvasRect = new Rectangle((canvasModel.width - width) *.5, 0, width, rect.height);
+			if (_activeBrushKit)
+				_activeBrushKit.canvasRect = _canvasRect;
 		}
 
 		public function stopAnimations() : void
@@ -425,6 +469,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			if ( _activeBrushKit )
 			{
+				_activeBrushKit.canvasRect = _canvasRect;
 				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, canvasHistory);
 				_activeBrushKit.brushEngine.addEventListener(Event.COMPLETE, onBrushComplete);
 				_activeBrushKit.addEventListener( Event.CHANGE, onActiveBrushKitChanged );

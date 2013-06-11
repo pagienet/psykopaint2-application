@@ -42,6 +42,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 			content.bitmapData = map;
 			content.smoothing = true;
           
+			
+			_contentsWidth = map.width;
+			_contentsHeight = map.height;
+			
 			centerContent();
 		
 		}
@@ -73,7 +77,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 				matrix.translate(transformPoint.x, transformPoint.y);
 				
 				content.transform.matrix = matrix;
+				
 			}
+			clampToLimitRect(false);
 		}
 		
 		
@@ -90,21 +96,18 @@ package net.psykosoft.psykopaint2.base.ui.components
 		{
 			_stepRadians = stepDegrees / 180 * Math.PI;
 			_snapRadians = snapAngle / 180 * Math.PI;
-			//updateInternalProperties();
 			clampRotation();
 		}
 		
 		public function set minimumRotation( value:Number ):void
 		{
 			_minimumRotation = ( value % ( Math.PI * 2 ) + Math.PI * 2 ) % (Math.PI * 2);
-			//updateInternalProperties();
 			clampRotation();
 		}
 		
 		public function set maximumRotation( value:Number ):void
 		{
 			_maximumRotation = ( value % ( Math.PI * 2 ) + Math.PI * 2 ) % (Math.PI * 2);
-			//updateInternalProperties();
 			clampRotation();
 		}
 		
@@ -118,14 +121,12 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public function set maximumScale( value:Number ):void
 		{
 			_maximumScale = value;
-			//updateInternalProperties();
 			clampScale();
 		}
 		
 		public function set limitsRect( value:Rectangle ):void
 		{
-			//_limitsRect = value;
-			//updateInternalProperties();
+			_limitsRect = value;
 			clampToLimitRect(false);
 		}
         
@@ -133,25 +134,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected function clampToLimitRect( scaleToFit:Boolean ):void
 		{
 			var p:Point = new Point();
-			var m:Matrix = content.transform.matrix.clone();//_tmpMatrix;
+			var m:Matrix = content.transform.matrix;//_tmpMatrix;
 			
 			if ( _limitsRect != null )
 			{
-				/*
-				var cos:Number = Math.cos(_newRotation);
-				var sin:Number = Math.sin(_newRotation);
-				var a:Number   = _newScale *  cos;
-				var b:Number   = _newScale *  sin;
-				var c:Number   = _newScale * -sin;
-				var d:Number   = _newScale *  cos;
-				
-				m.a = a;
-				m.b = b;
-				m.c = c;
-				m.d = d;
-				m.tx =  _newX - _newPivotX * a - _newPivotY * c;
-				m.ty =  _newY - _newPivotX * b - _newPivotY * d;
-				*/
 				m.invert();
 				
 				p.x = _limitsRect.x;
@@ -169,49 +155,36 @@ package net.psykosoft.psykopaint2.base.ui.components
 				var maxY:Number = Math.max( tl.y,tr.y,bl.y,br.y);
 				
 				p.x = p.y = 0;
-				if ( minX < -_contentsWidth * 0.5 )
+				if ( minX < 0 )
 				{
-					p.x += minX + _contentsWidth * 0.5
-				} else if ( maxX > _contentsWidth * 0.5 )
+					p.x += minX;
+				} else if ( maxX > _contentsWidth )
 				{
-					p.x += maxX - _contentsWidth * 0.5
+					p.x -= _contentsWidth - maxX;
 				}
 				
-				if ( minY < -_contentsHeight * 0.5 )
+				if ( minY < 0 )
 				{
-					p.y += minY + _contentsHeight * 0.5
-				} else if ( maxY > _contentsHeight * 0.5 )
+					p.y += minY;
+				} else if ( maxY > _contentsHeight )
 				{
-					p.y += maxY - _contentsHeight * 0.5
+					p.y -= _contentsHeight - maxY;
 				}
 				
-				m = content.transform.matrix.clone();
-				/*
-				m.a = a;
-				m.b = b;
-				m.c = c;
-				m.d = d;
-				*/
+				m = content.transform.matrix;
 				m.tx = m.ty = 0;
 				p = m.transformPoint(p);
 				
-				//_newX += p.x;
-				//_newY += p.y;
-				
-				content.transform.matrix.translate( p.x,p.y);
-				
+				if ( p.x != 0 || p.y != 0 )
+				{
+					m = content.transform.matrix;
+					m.translate( p.x,p.y);
+					content.transform.matrix = m;
+				}
 				
 				if (scaleToFit )
 				{
 					m = content.transform.matrix.clone();
-					/*
-					m.a = a;
-					m.b = b;
-					m.c = c;
-					m.d = d;
-					m.tx =_newX - _newPivotX * a - _newPivotY * c;
-					m.ty = _newY - _newPivotX * b - _newPivotY * d;
-					*/
 					m.invert();
 					
 					p.x = _limitsRect.x;
@@ -235,25 +208,12 @@ package net.psykosoft.psykopaint2.base.ui.components
 					{
 						deltaScale =  Math.max(deltaScale,h / _contentsHeight);
 					}
-					
-					content.transform.matrix.scale(deltaScale,deltaScale);
-					//_newScale *= deltaScale;
+					m = content.transform.matrix;
+					m.scale(deltaScale,deltaScale);
+					content.transform.matrix = m;
 					
 					if ( deltaScale != 1 )
 					{
-						/*
-						a   = _newScale *  cos;
-						b   = _newScale *  sin;
-						c   = _newScale * -sin;
-						d   = _newScale *  cos;
-						
-						m.a = a;
-						m.b = b;
-						m.c = c;
-						m.d = d;
-						m.tx =  _newX - _newPivotX * a - _newPivotY * c;
-						m.ty =  _newY - _newPivotX * b - _newPivotY * d;
-						*/
 						m = content.transform.matrix.clone();
 						m.invert();
 						
@@ -272,52 +232,32 @@ package net.psykosoft.psykopaint2.base.ui.components
 						maxY = Math.max( tl.y,tr.y,bl.y,br.y);
 						
 						p.x = p.y = 0;
-						if ( minX < -_contentsWidth * 0.5 )
+						if ( minX < 0 )
 						{
-							p.x += minX + _contentsWidth * 0.5
-						} else if ( maxX > _contentsWidth * 0.5 )
+							p.x += minX;
+						} else if ( maxX > _contentsWidth )
 						{
-							p.x += maxX - _contentsWidth * 0.5
+							p.x -= _contentsWidth - maxX;
 						}
 						
-						if ( minY < -_contentsHeight * 0.5 )
+						if ( minY < 0 )
 						{
-							p.y += minY + _contentsHeight * 0.5
-						} else if ( maxY > _contentsHeight * 0.5 )
+							p.y += minY;
+						} else if ( maxY > _contentsHeight )
 						{
-							p.y += maxY - _contentsHeight * 0.5
+							p.y -= _contentsHeight - maxY;
 						}
 						
 						m.tx = m.ty = 0;
 						p = m.transformPoint(p);
-						content.transform.matrix.translate( p.x,p.y);
-						/*
-						m.a = a;
-						m.b = b;
-						m.c = c;
-						m.d = d;
-						m.tx = m.ty = 0;
-						p = m.transformPoint(p);
+						m = content.transform.matrix;
+						m.translate( p.x,p.y);
+						content.transform.matrix = m;
 						
-						_newX += p.x;
-						_newY += p.y;
-						*/
 					}
 				}
 				
 			}
-			
-			//transformer.transform.matrix = _newMatrix;
-			/*
-			pivotX = _newPivotX;
-			pivotY = _newPivotY;
-			
-			transformer.x = _newX;
-			transformer.y = _newY;
-			
-			transformer.rotation = _newRotation;
-			transformer.scaleX = transformer.scaleY = _newScale;
-			*/
 		}
 		
 		protected function clampRotation():void

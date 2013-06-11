@@ -2,8 +2,10 @@ package net.psykosoft.psykopaint2.paint.config
 {
 
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
+	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
@@ -23,8 +25,10 @@ package net.psykosoft.psykopaint2.paint.config
 	import net.psykosoft.psykopaint2.paint.views.crop.CropSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropView;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropViewMediator;
-	import net.psykosoft.psykopaint2.paint.views.pick.PickAnImageView;
-	import net.psykosoft.psykopaint2.paint.views.pick.PickAnImageViewMediator;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageViewMediator;
+	import net.psykosoft.psykopaint2.paint.views.pick.surface.PickASurfaceSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.pick.surface.PickASurfaceSubNavViewMediator;
 
 	import org.swiftsuspenders.Injector;
 
@@ -97,6 +101,7 @@ package net.psykosoft.psykopaint2.paint.config
 			_commandMap.map( RequestStateUpdateFromModuleActivationSignal ).toCommand( UpdateAppStateFromActivatedDrawingCoreModuleCommand );
 			_commandMap.map( RequestSourceImageSetSignal ).toCommand( SetSourceImageCommand );
 			_commandMap.map( RequestDrawingCoreStartupSignal ).toCommand( StartUpDrawingCoreCommand );
+			_commandMap.map( RequestSurfaceImageSetSignal ).toCommand( SetSurfaceImageCommand );
 		}
 
 		// -----------------------
@@ -113,6 +118,7 @@ package net.psykosoft.psykopaint2.paint.config
 			_mediatorMap.map( CropSubNavView ).toMediator( CropSubNavViewMediator );
 			_mediatorMap.map( CropView ).toMediator( CropViewMediator );
 			_mediatorMap.map( PickAnImageView ).toMediator( PickAnImageViewMediator );
+			_mediatorMap.map( PickASurfaceSubNavView ).toMediator( PickASurfaceSubNavViewMediator );
 		}
 	}
 }

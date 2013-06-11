@@ -181,7 +181,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var y:Number = rawRect.y / _textureDescriptor.height;
 			var w:Number = widthFactor * rawRect.width / _textureDescriptor.width;
 			var h:Number = heightFactor * rawRect.height / _textureDescriptor.height;
-			return new Rectangle( x, y, w, h );
+			var rect:Rectangle = new Rectangle( x, y, w, h );
+			rect.inflate( -0.001, -0.001 );
+			return rect;
 		}
 
 		private function calculateAnchorPoints():void {

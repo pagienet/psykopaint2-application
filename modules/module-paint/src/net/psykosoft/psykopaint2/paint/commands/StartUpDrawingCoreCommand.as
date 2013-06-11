@@ -10,14 +10,13 @@ package net.psykosoft.psykopaint2.paint.commands
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 
+	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
-	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
-	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 
 //	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 
@@ -26,14 +25,8 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Embed(source="/../assets/embedded/images/diffuseTestProbe.jpg")]
 		private var EnvMapAsset:Class;
 
-		[Embed(source="/../assets/embedded/images/canvas-height-specular.png")]
-		private var DefaultHeightSpecularMap:Class;
-
 		[Embed(source="/../assets/embedded/images/default-image.jpg")]
 		private var DefaultImage:Class;
-
-		[Inject]
-		public var canvasModel:CanvasModel;
 
 		[Inject]
 		public var lightController : GyroscopeLightController;
@@ -63,9 +56,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			super.execute();
 
-			canvasModel.setHeightSpecularMap( new DefaultHeightSpecularMap().bitmapData );
 			lightController.enabled = true;
 
+			// TODO: clean up
 //			initEnvMap();
 
 			// Initial auto-setup:

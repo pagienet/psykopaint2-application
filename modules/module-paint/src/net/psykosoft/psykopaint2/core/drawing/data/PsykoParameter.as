@@ -349,8 +349,10 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case NumberRangeParameter:
 				case IntRangeParameter:
 					if (  message.hasOwnProperty("@value") )
+					{
 						lowerRangeValue = upperRangeValue = Number( message.@value );
-					
+						trace("This is a range value decorator. Are you sure you want to set it via @value and not via @value1/@value2 ?");
+					}
 					if (  message.hasOwnProperty("@value1") )
 						lowerRangeValue = Number( message.@value1 );
 					

@@ -1,7 +1,10 @@
 package net.psykosoft.psykopaint2.paint
 {
 
+	import flash.display.BitmapData;
 	import flash.events.Event;
+
+	import net.psykosoft.psykopaint2.base.utils.BitmapLoader;
 
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
@@ -11,12 +14,14 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 
 	public class PaintModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;
 		private var _paintConfig:PaintConfig;
+		private var _loader:BitmapLoader;
 
 		public function PaintModule( core:CoreModule = null ) {
 			super();
@@ -72,13 +77,20 @@ package net.psykosoft.psykopaint2.paint
 		}
 
 		private function onViewsReady():void {
-
 			// Listen for splash out.
-			_coreModule.splashScreenRemovedSignal.addOnce( onSplashOut );
+			_coreModule.coreRootView.splashScreenRemovedSignal.addOnce( onSplashOut );
+			// Load default surface.
+			_loader = new BitmapLoader();
+			_loader.loadAsset( "/paint-packaged/surfaces/canvas-height-specular0.png", onDefaultSurfaceLoaded );
+		}
 
+		private function onDefaultSurfaceLoaded( bmd:BitmapData ):void {
+			_loader.dispose();
+			_loader = null;
+			// Set default surface.
+			_paintConfig.injector.getInstance( RequestSurfaceImageSetSignal ).dispatch( bmd );
 			// Init drawing core.
-			_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Ignite drawing core, causes first "real" application states...
-
+			_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Start drawing core, causes first "real" application states...
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );
 		}
@@ -87,7 +99,7 @@ package net.psykosoft.psykopaint2.paint
 			if( isStandalone ) {
 				// Show navigation.
 				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-				showNavigationSignal.dispatch();
+				showNavigationSignal.dispatch( 1 );
 			}
 		}
 	}

@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		}
 
 		private function onMemoryWarning():void {
-			if( CoreSettings.VISUALIZE_MEMORY_WARNINGS ) {
+			if( CoreSettings.SHOW_MEMORY_WARNINGS ) {
 				view.flashMemoryIcon();
 			}
 		}

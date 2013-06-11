@@ -87,6 +87,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private var _waitingForPaintModeAfterZoomIn:Boolean;
 		private function onEaselClicked():void {
+			if( view.getCurrentPaintingIndex() != 1 ) return; // Ignore clicks on easel if not looking at it.
 			if( !view.cameraController.zoomedIn ) {
 				_waitingForPaintModeAfterZoomIn = true;
 				view.zoomIn();

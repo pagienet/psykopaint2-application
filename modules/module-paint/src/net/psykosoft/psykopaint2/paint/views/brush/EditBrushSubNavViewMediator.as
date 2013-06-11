@@ -23,25 +23,18 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			view.setButtonClickCallback( onButtonClicked );
 
 			// Post init.
-//			view.setAvailableShapes( paintModule.getCurrentBrushShapes() );
-//			view.setSelectedShape( paintModule.activeBrushKitShape );
 			view.setParameters( paintModule.getCurrentBrushParameters() );
 
 			// From view.
 			view.brushParameterChangedSignal.add( onBrushParameterChanged );
-			view.shapeChangedSignal.add( onShapeChanged );
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
 
-		private function onShapeChanged( shapeName:String ):void {
-			//paintModule.setBrushShape( shapeName );
-		}
-
 		private function onBrushParameterChanged( parameter:XML ):void {
-//			trace( this, "param changed: " + parameter.toXMLString() );
+			trace( this, "param changed: " + parameter.toXMLString() );
 			paintModule.setBrushParameter( parameter );
 		}
 

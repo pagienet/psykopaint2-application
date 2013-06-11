@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.utils.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.SnapPositionManager;
@@ -12,6 +13,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 	import org.osflash.signals.Signal;
 
+	/*
+	* Adds elements to a container which can be scrolled horizontally.
+	* */
 	public class HSnapScroller extends Sprite
 	{
 		protected var _interactionManager:ScrollInteractionManager;
@@ -27,30 +31,30 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public var visibleHeight:Number = 100;
 		public var visibleWidth:Number = 600;
 
-		// TODO: button presses conflict with scrolling
-
 		public var motionStartedSignal:Signal;
 		public var motionEndedSignal:Signal;
 
 		public function HSnapScroller() {
 			super();
+
 			_positionManager = new SnapPositionManager();
 			_interactionManager = new ScrollInteractionManager( _positionManager );
+
 			motionStartedSignal = new Signal();
 			motionEndedSignal = new Signal();
+
+			_container = new Sprite();
+			_container.cacheAsBitmap = true; // TODO: wouldn't it make more sense to only set cache as bitmap to true after all the children have been added to the container?
+			super.addChild( _container );
+
+			reset();
+
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
 		private function initialize():void {
-
-			_container = new Sprite();
-			super.addChild( _container );
-
-			_container.cacheAsBitmap = true;
-			// TODO: wouldn't it make more sense to only set cache as bitmap to true after all the children have been added to the container?
-
+//			scrollRect = new Rectangle( visibleWidth, visibleHeight );
 			_interactionManager.stage = stage;
-
 			_positionManager.motionEndedSignal.add( onPositionManagerMotionEnded );
 			_interactionManager.scrollInputMultiplier = 1 / CoreSettings.GLOBAL_SCALING;
 		}
@@ -69,7 +73,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function dock():void {
 			if( width < visibleWidth ) return;
-			_positionManager.snapAtIndex( 0 );
+			_positionManager.snapAtIndexWithoutEasing( 0 );
 			_container.x = visibleWidth / 2 - _positionManager.position;
 		}
 
@@ -90,7 +94,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			containEdgeSnapPoints();
 			// Dock at first snap point.
 			if( _positionManager.numSnapPoints > 0 ) {
-				_positionManager.snapAtIndex( 0 );
+				_positionManager.snapAtIndexWithoutEasing( 0 );
 			}
 		}
 

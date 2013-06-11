@@ -105,7 +105,7 @@ package net.psykosoft.psykopaint2.app
 			_coreModule.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
 
 			// Listen for splash out.
-			_coreModule.splashScreenRemovedSignal.addOnce( onSplashOut );
+			_coreModule.coreRootView.splashScreenRemovedSignal.addOnce( onSplashOut );
 
 			// Launch core updates.
 			_coreModule.updateActive = true;
@@ -116,7 +116,7 @@ package net.psykosoft.psykopaint2.app
 			// Show navigation.
 			setTimeout( function ():void { // Wait a bit while the view is zooming out...
 				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-				showNavigationSignal.dispatch();
+				showNavigationSignal.dispatch( 1 );
 			}, 2000 );
 		}
 	}

@@ -45,10 +45,6 @@ package net.psykosoft.psykopaint2.core.rendering
 		private var _context3D : Context3D;
 
 		private var _lightingRenderer : LightingRenderer;
-		private var _needBake : Boolean;
-		private var _freezeRender : Boolean = false;
-
-
 
 		public function CanvasRenderer()
 		{

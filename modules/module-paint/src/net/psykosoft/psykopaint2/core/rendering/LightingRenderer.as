@@ -83,9 +83,9 @@ package net.psykosoft.psykopaint2.core.rendering
 				copyBakedRender(canvas);
 			}
 			else {
-				_context3d.setScissorRectangle(_renderRect);
-				renderLighting(1, 1, canvas);
-				_context3d.setScissorRectangle(null);
+				var scale : Number = _renderRect.height/canvas.height;
+				var offsetX : Number = (1 - scale)*.5;
+				renderLighting(offsetX, scale, scale, canvas);
 			}
 		}
 
@@ -95,7 +95,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_context3d.setRenderToTexture(canvas.fullSizeBackBuffer);
 			_context3d.clear(1, 1, 1, 1);
 
-			renderLighting(canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio, canvas);
+			renderLighting(0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio, canvas);
 
 			_context3d.setRenderToBackBuffer();
 			_context3d.clear(1, 1, 1, 1);
@@ -105,14 +105,16 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function copyBakedRender(canvas : CanvasModel) : void
 		{
+			var scale : Number = _renderRect.height/canvas.height;
+			var offsetX : Number = 1 - scale*.5;
 			var sourceRect : Rectangle = new Rectangle(0, 0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio);
-			var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
+			var destRect : Rectangle = new Rectangle(offsetX, 0, scale, scale);
 			CopySubTexture.copy(canvas.fullSizeBackBuffer, sourceRect, destRect, _context3d);
 		}
 
-		private function renderLighting(widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
+		private function renderLighting(offsetX : Number, widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
 		{
-			updateGlobalVertexData(widthRatio, heightRatio, canvas);
+			updateGlobalVertexData(offsetX, widthRatio, heightRatio, canvas);
 			updateGlobalFragmentData(canvas);
 
 			_diffuseModel.setRenderState(_context3d);
@@ -143,10 +145,11 @@ package net.psykosoft.psykopaint2.core.rendering
 			if (_shadowModel) _shadowModel.clearRenderState(_context3d);
 		}
 
-		private function updateGlobalVertexData(widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
+		private function updateGlobalVertexData(offsetX : Number, widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
 		{
 			_globalVertexData[0] = widthRatio*2;
 			_globalVertexData[1] = heightRatio*2;
+			_globalVertexData[4] = offsetX*2 - 1;
 
 			_globalVertexData[8] = canvas.usedTextureWidthRatio;
 			_globalVertexData[9] = canvas.usedTextureHeightRatio;

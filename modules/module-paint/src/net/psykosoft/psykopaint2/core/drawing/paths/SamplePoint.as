@@ -10,20 +10,22 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public var normalX:Number;
 		public var normalY:Number;
 		public var size:Number;
+		public var pressure:Number;
 		
-		public function SamplePoint( x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, colors:Vector.<Number> = null)
+		public function SamplePoint( x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, colors:Vector.<Number> = null)
 		{
 			colorsRGBA = new Vector.<Number>();
-			resetData(x, y, speed, size, angle, colors);
+			resetData(x, y, speed, size, angle, pressure, colors);
 		}
 		
-		public function resetData(x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, colors:Vector.<Number> = null):SamplePoint
+		public function resetData(x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, colors:Vector.<Number> = null):SamplePoint
 		{
 			this.x = x;
 			this.y = y;
 			this.speed = speed;
 			this.angle = angle;
 			this.size = size;
+			this.pressure = pressure;
 			
 			if ( colors == null )
 			{
@@ -48,7 +50,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		public function getClone():SamplePoint
 		{
-			return PathManager.getSamplePoint(this,speed,size, angle,colorsRGBA);
+			return PathManager.getSamplePoint(this,speed,size, angle, pressure, colorsRGBA);
 		}
 		
 		public function squaredDistance( p:SamplePoint ):Number
