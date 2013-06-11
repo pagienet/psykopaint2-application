@@ -19,7 +19,6 @@ package net.psykosoft.psykopaint2.base.utils
 		private var _bounds : Rectangle;
 		private var _target : DisplayObject;
 		private var _followers : Array;
-		private var _initialPosition:Number;
 		private var _shiftPosition:Number;
 		private var _mouseIsDown:Boolean;
 		private var _clickOffset:Number;
@@ -40,36 +39,6 @@ package net.psykosoft.psykopaint2.base.utils
 			//_decorated.useHandCursor = true;
 			_decorated.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			_decorated.addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-		}
-
-		private function onAddedToStage(event:Event):void {
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-			_decorated.stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-			_decorated.stage.addEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
-		}
-
-		private function onStageMouseUp(event:MouseEvent):void {
-			_mouseIsDown = false;
-		}
-
-		private function onMouseDown(event:MouseEvent):void {
-			_mouseIsDown = true;
-
-			var shiftPosition:Number = _decorated.mouseY;
-			_initialPosition = _decorated.parent.mouseY;
-			_shiftPosition = new Number( shiftPosition - _decorated.parent.mouseY );
-			_clickOffset = _decorated.y - _decorated.parent.mouseY;
-		}
-
-		private function onStageMouseMove(event:MouseEvent):void {
-			if (_mouseIsDown){
-
-				var position:Number = _decorated.parent.mouseY;
-				_decorated.y = _initialPosition + position - _shiftPosition + _clickOffset;
-				_decorated.y = Math.max(_bounds.y,_decorated.y);
-				_decorated.y = Math.min(_bounds.y+_bounds.height,_decorated.y);
-
-			}
 		}
 
 		public function disable() : void
@@ -125,5 +94,35 @@ package net.psykosoft.psykopaint2.base.utils
 			_shiftPosition = value;
 		}
 
+		private function onAddedToStage(event:Event):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			_decorated.stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			_decorated.stage.addEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
+		}
+
+		// ---------------------------------------------------------------------
+		// Listeners.
+		// ---------------------------------------------------------------------
+
+		private function onStageMouseUp(event:MouseEvent):void {
+			_mouseIsDown = false;
+		}
+
+		private function onMouseDown(event:MouseEvent):void {
+			_mouseIsDown = true;
+
+			var shiftPosition:Number = _decorated.mouseY;
+			_shiftPosition = new Number( shiftPosition - _decorated.parent.mouseY );
+			_clickOffset = _decorated.y - _decorated.parent.mouseY;
+		}
+
+		private function onStageMouseMove(event:MouseEvent):void {
+			if (_mouseIsDown){
+				var position:Number = _decorated.parent.mouseY;
+				_decorated.y = position - _shiftPosition + _clickOffset;
+				_decorated.y = Math.max(_bounds.y,_decorated.y);
+				_decorated.y = Math.min(_bounds.y+_bounds.height,_decorated.y);
+			}
+		}
 	}
 }

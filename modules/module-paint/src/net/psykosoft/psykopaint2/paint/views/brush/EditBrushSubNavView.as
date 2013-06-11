@@ -12,7 +12,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
-	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
+import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
+import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
@@ -136,8 +137,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 
 			// Combo box. // TODO: implement real combobox, design is ready
-			else if( parameterType == PsykoParameter.StringListParameter ) {
-				var comboBox:ComboBox = new ComboBox( this );
+			else if( parameterType == PsykoParameter.StringListParameter || parameterType == PsykoParameter.IconListParameter ) {
+
+				/*var comboBox:ComboBox = new ComboBox( this );
 				comboBox.alternateRows = true;
 				comboBox.openPosition = ComboBox.TOP;
 				var list:Array = String( _parameter.@list ).split( "," );
@@ -152,18 +154,18 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				comboBox.draw();
 				positionUiElement( comboBox as DisplayObject );
 				_uiElements.push( comboBox );
+				trace("STRINGLIST PARAM");*/
 
-				/*var comboBox:SbComboboxView = new SbComboboxView( );
-				var list:Array = String( _parameter.@list ).split( "," );
-				var len:uint = list.length;
-				for( i = 0; i < len; ++i ) {
-					var option:String = list[ i ];
-					comboBox.addItem( { label:option } );
+				var shapeList:Array = String(_parameter.@list).split(",");
+				var numShapes:uint = shapeList.length;
+				var shapeComboBox:SbComboboxView = new SbComboboxView( );
+				for( i = 0; i < numShapes; ++i ) {
+					shapeComboBox.addItem( { label: shapeList[ i ] } );
 				}
-				addChild( comboBox );
-				comboBox.addEventListener( Event.SELECT, onComboBoxChanged );
-				positionUiElement( comboBox as DisplayObject );
-				_uiElements.push( comboBox );*/
+				addChild( shapeComboBox );
+				shapeComboBox.addEventListener( Event.CHANGE, onComboBoxChanged );
+				positionUiElement( shapeComboBox as DisplayObject );
+				_uiElements.push( shapeComboBox );
 			}
 
 			// Check box
@@ -174,23 +176,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				positionUiElement( checkBox );
 				addChild( checkBox );
 				_uiElements.push( checkBox );
-			} else if (parameterType == PsykoParameter.IconListParameter)
-			{
-				var shapeList:Array = String(_parameter.@list).split(",");
-				var numShapes:uint = shapeList.length;
-				if( numShapes == 0 ) return;
-				var shapeComboBox:ComboBox = new ComboBox( this );
-				shapeComboBox.alternateRows = true;
-				shapeComboBox.openPosition = ComboBox.TOP;
-				for( i = 0; i < numShapes; ++i ) {
-					shapeComboBox.addItem(  shapeList[ i ] );
-				}
-				shapeComboBox.defaultLabel = shapeList[ 0 ];
-				shapeComboBox.numVisibleItems = Math.min( 6, numShapes );
-				shapeComboBox.addEventListener( Event.SELECT, onComboBoxChanged );
-				shapeComboBox.draw();
-				positionUiElement( shapeComboBox as DisplayObject );
-				_uiElements.push( shapeComboBox );
 			}
 
 			// No Ui component for this parameter.
@@ -258,14 +243,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		private function onComboBoxChanged( event:Event ):void {
-			var comboBox:ComboBox = event.target as ComboBox;
-			/*
-			var list:Array = String( _parameter.@list ).split( "," );
-			_parameter.@index = list.indexOf( comboBox.selectedItem );
-			*/
-			//Mario: not sure there was some special intention to handle it the way above
-			// but since the combob ox items is originally created from the
-			// list parameter we can use the selected index directly
+			var comboBox:SbComboboxView = event.target as SbComboboxView;
+			// TODO: passed index seems to be inverted
 			_parameter.@index = comboBox.selectedIndex;
 			notifyParameterChange();
 		}

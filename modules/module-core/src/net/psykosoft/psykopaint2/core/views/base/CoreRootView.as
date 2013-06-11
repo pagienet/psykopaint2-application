@@ -17,8 +17,7 @@ import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 import net.psykosoft.psykopaint2.base.utils.StackUtil;
 import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 import net.psykosoft.psykopaint2.core.config.CoreSettings;
-	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
-	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 
 import org.osflash.signals.Signal;
@@ -250,8 +249,6 @@ public class CoreRootView extends RootViewBase
 		// TODO: remove
 		public function runUiTests():void {
 
-//			return;
-
 			// Bg fill.
 			/*this.graphics.beginFill(0xCCCCCC, 1.0);
 			 this.graphics.drawRect(0, 0, 1024, 768);
@@ -332,7 +329,7 @@ public class CoreRootView extends RootViewBase
 			 addChild( simpleSlider );*/
 
 			// Range slider test.
-			var container:Sprite = new Sprite();
+		/*	var container:Sprite = new Sprite();
 			 container.scaleX = container.scaleY = 1;
 			 addChild( container );
 			 var rangeSlider:SbRangedSlider = new SbRangedSlider();
@@ -345,10 +342,10 @@ public class CoreRootView extends RootViewBase
 			 rangeSlider.addEventListener( Event.CHANGE, function( event:Event ):void {
 			 //				trace( ">>> range slider change: " + rangeSlider.value1 + ", " + rangeSlider.value2 );
 			 } );
-			 container.addChild( rangeSlider );
+			 container.addChild( rangeSlider );*/
 
 			//CheckBox test.
-			/* var checkbox:SbCheckBox = new SbCheckBox();
+			 /*var checkbox:SbCheckBox = new SbCheckBox();
 			 checkbox.x = 50;
 			 checkbox.y = 20;
 			 addChild( checkbox );*/
@@ -360,7 +357,7 @@ public class CoreRootView extends RootViewBase
 			 }
 			 combobox.x = 100;
 			 combobox.y = 200;
-			 addChild( combobox );  */
+			 addChild( combobox );*/
 		}
 	}
 }

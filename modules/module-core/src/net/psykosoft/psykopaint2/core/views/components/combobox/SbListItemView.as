@@ -14,10 +14,11 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
             super();
 
             _txt = new TextField();
+			_txt.x = 30;
+            _txt.y = 10;
             _txt.width = this.width;
-            _txt.height = this.height;
-            _txt.x = 30;
-            _txt.y = 0; //TODO: set y offset for label without creating gaps between items
+            _txt.height = this.height - _txt.y;
+
             this.addChild(_txt);
         }
 

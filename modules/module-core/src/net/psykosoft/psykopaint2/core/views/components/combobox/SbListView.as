@@ -80,7 +80,6 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 
 			listItemVO.odd = (_itemViews.length%2==1)?true:false;
 
-            trace( this, "creating list item....", listItemVO.odd );
 			var newListItemView :SbListItemView = new SbListItemView();
             newListItemView.setData( listItemVO );
 			_itemViews.push(newListItemView);
@@ -113,7 +112,6 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 				for (var i:int = 0; i < _itemViews.length; i++)
 				{
 					var currentItemView:SbListItemView = _itemViews[i];
-
 
                     TweenLite.killTweensOf(currentItemView);
 
@@ -220,7 +218,6 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 			topImage.y=-topImage.height+1;
 
 			if(_itemViews.length>=1){
-				trace("SBListView:update");
 
 				//REPOSITION ITEMS IN LINE
 				for (var i:int = 0; i < _itemViews.length; i++)
