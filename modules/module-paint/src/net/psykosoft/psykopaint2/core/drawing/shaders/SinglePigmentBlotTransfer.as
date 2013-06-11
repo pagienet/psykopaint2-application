@@ -89,8 +89,11 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 
 		public function execute(stroke : SimulationMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase, textureRatioX : Number, textureRatioY : Number) : void
 		{
+			var triOffset : int = _triOffset <= 2? 0 : _triOffset-2;
+			var stationaryEnd : int = stroke.numTriangles - stroke.stationaryTriangleCount;
+			if (triOffset > stationaryEnd) triOffset = stationaryEnd;
 			// nothing new
-			if (_triOffset == stroke.numTriangles) return;
+			if (triOffset == stroke.numTriangles) return;
 
 			_context.setRenderToTexture(target);
 			_context.clear();
@@ -99,13 +102,15 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE);
 			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentConstants, 1);
 
+
+
 			if (_useTexture) {
 				_context.setTextureAt(0, brushTexture);
-				stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS, 1, false, _triOffset <= 2? 0 : _triOffset-2);
+				stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS, 1, false, triOffset);
 				_context.setTextureAt(0, null);
 			}
 			else {
-				stroke.drawMesh(_context, SimulationMesh.NO_UVS, 1, false, _triOffset <= 2? 0 : _triOffset-2);
+				stroke.drawMesh(_context, SimulationMesh.NO_UVS, 1, false, triOffset);
 			}
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);

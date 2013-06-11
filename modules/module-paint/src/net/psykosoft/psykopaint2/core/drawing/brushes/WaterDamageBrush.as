@@ -43,7 +43,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var _pigmentBleaching : PsykoParameter;
 
 		private var _wetBrush : Boolean = true;
-		private var _numTriangles : int;
 
 		// TODO: edge darkening (increase pigment density where divergence is negative?)
 
@@ -130,18 +129,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_addPigmentToPressure.reset();
 			if (_addWetness) _addWetness.reset();
-
-			_numTriangles = 0;
 		}
 
 		override protected function updateSimulation() : void
 		{
 			_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
 
-			if (_numTriangles != _brushMesh.numTriangles) {
-				addPaintToSimulation();
-				_numTriangles = _brushMesh.numTriangles;
-			}
+			addPaintToSimulation();
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			applySlope();

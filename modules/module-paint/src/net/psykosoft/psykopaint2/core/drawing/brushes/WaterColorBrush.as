@@ -58,9 +58,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var _pigmentGranulation : PsykoParameter;
 
 		private var _wetBrush : Boolean = false;
-		private var _numTriangles : int;
-
-
 
 		// IMPORTANT:
 		// The simulation runs on a grid, with values associated to each cell
@@ -109,7 +106,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_pigmentColorField = _canvasModel.createCanvasTexture(true, .5);
 
 			// todo: if "connection" was added previously, force last N segments to add water
-			_addPigmentToPigmentDensity = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, SinglePigmentBlotTransfer.TARGET_X);
+			_addPigmentToPigmentDensity = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, SinglePigmentBlotTransfer.TARGET_X, true);
 			_addPigmentToPigmentColor = new StrokeColorTransfer(_canvasModel.stage3D.context3D);
 			if (_wetBrush) {
 				_addWetness = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, "w", false);
@@ -192,18 +189,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_addPigmentToPigmentColor.reset();
 			_addPigmentToPressure.reset();
 			if (_addWetness) _addWetness.reset();
-
-			_numTriangles = 0;
 		}
 
 		override protected function updateSimulation() : void
 		{
 			_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
 
-			if (_numTriangles != _brushMesh.numTriangles) {
-				addPaintToSimulation();
-				_numTriangles = _brushMesh.numTriangles;
-			}
+			addPaintToSimulation();
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			applySlope();

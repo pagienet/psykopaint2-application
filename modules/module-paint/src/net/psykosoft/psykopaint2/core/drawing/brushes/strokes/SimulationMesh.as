@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		private var _prevNormalX : Number;
 		private var _prevNormalY : Number;
 		private var _prevAppendVO : StrokeAppendVO;
+		private var _stationaryTriangleCount : int;
 
 		public function SimulationMesh(subtractiveBlending : Boolean = false)
 		{
@@ -53,6 +54,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		override public function append( appendVO:StrokeAppendVO ) : void
 		{
+			_stationaryTriangleCount = 0;
 			var normalX : Number, normalY : Number;
 			var point:SamplePoint = appendVO.point;
 			if (_numVertices == 0) {
@@ -101,12 +103,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		public function appendStationary() : void
 		{
-			appendConnection(_prevNormalX, _prevNormalY, -_prevNormalX, -_prevNormalY, _prevAppendVO, 7);
+			const numSegments : int = 7;
+			_stationaryTriangleCount = numSegments*2;
+			appendConnection(_prevNormalX, _prevNormalY, -_prevNormalX, -_prevNormalY, _prevAppendVO, numSegments);
 			_prevNormalX = -_prevNormalX;
 			_prevNormalY = -_prevNormalY;
 
 			invalidateBuffers();
 			invalidateBounds();
+		}
+
+		public function get stationaryTriangleCount() : int
+		{
+			return _stationaryTriangleCount;
 		}
 
 		private function appendConnection(startNormalX : Number, startNormalY : Number, endNormalX : Number, endNormalY : Number, appendVO : StrokeAppendVO, numSegments : uint) : void
@@ -116,7 +125,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var endAngle : Number = Math.atan2(endNormalY, endNormalX);
 
 			for (var i : int = 1; i <= numSegments +1; ++i) {
-				var t : Number = i / (numSegments + 1);
+				var t : Number = i / numSegments;
 				var angle : Number = startAngle + t * (endAngle - startAngle);
 
 				var interpNormalX : Number = Math.cos(angle);
