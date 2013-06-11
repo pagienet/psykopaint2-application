@@ -107,7 +107,6 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		}
 
 		public function limitInteractionToUpperPartOfTheScreen( value:Boolean ):void {
-//			trace( this, "interaction limited: " + value );
 			_isScrollingLimited = value;
 		}
 
@@ -155,7 +154,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		public function startPanInteraction():void {
 			if( !isActive ) return;
 			if( _isScrollingLimited ) {
-				var limit:Number = _stageHeight - 200 * CoreSettings.GLOBAL_SCALING;
+				var limit:Number = _stageHeight - 211 * CoreSettings.GLOBAL_SCALING;
 				if( _interactionManager.currentY > limit ) return;
 			}
 			_interactionManager.startInteraction();
