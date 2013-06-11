@@ -117,7 +117,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				rangeSlider.value1 = Number( _parameter.@value1 );
 				rangeSlider.value2 = Number( _parameter.@value2 );
 				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
-				rangeSlider.setWidth ( 478 );
+				rangeSlider.setWidth ( 451 );
 				positionUiElement( rangeSlider );
 				addChild( rangeSlider );
 				_uiElements.push( rangeSlider );

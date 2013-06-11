@@ -29,14 +29,13 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 		private var _mouseIsDown:Boolean;
 		private var _clickOffset:Number;
 		private var _valueRange:Number = 1;
+		private var _width:Number = 451;
 		private var _activeHandle:Sprite;
-		private var _initialDistanceBetweenHandles:Number;
 
 		public function SbRangedSlider() {
 			super();
 			_minX = leftHandleView.x;
 			_maxX = rightHandleView.x;
-			_initialDistanceBetweenHandles = rightHandleView.x - leftHandleView.x;
 			_xRange = _maxX - _minX;
 			rangeView.stop();
 			value1Label.selectable = value1Label.mouseEnabled = false;
@@ -103,7 +102,7 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 			rangeView.x = leftHandleView.x;
 			// "Scale"
 			var currentDistanceBetweenHandles:Number = rightHandleView.x - leftHandleView.x;
-			var xRatio:Number = currentDistanceBetweenHandles / _initialDistanceBetweenHandles;
+			var xRatio:Number = currentDistanceBetweenHandles / _xRange;
 			var frame:Number = 101 * ( 1 - xRatio );
 			rangeView.gotoAndStop( uint( frame ) );
 			rangeView.visible = rangeView.currentFrame < 100;
@@ -201,12 +200,13 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 		}
 
 		override public function get width():Number {
-			return 451;
+			return _width;
 		}
 
 		public function setWidth( newWidth:Number ):void{
+			_width = newWidth;
 			bgView.width = newWidth;
-//			rangeView.width = newWidth - 200;  TODO
+			rangeView.width = newWidth - 180;
 			_maxX = newWidth - 95;
 			value2Label.x = newWidth - 70;
 			_xRange = _maxX - _minX;
