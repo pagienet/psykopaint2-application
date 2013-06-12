@@ -48,25 +48,25 @@ package net.psykosoft.psykopaint2.core.managers.pen
 		
 		private function onButton1Pressed( event:WacomExtensionEvent ):void {
 			trace( "Button 1 pressed." );
-			PsykoSocket.sendString("<msg src='Pen.onButton1Pressed'/>");
+			//PsykoSocket.sendString("<msg src='Pen.onButton1Pressed'/>");
 			_hasPen = true;
 		}
 		
 		private function onButton2Pressed( event:WacomExtensionEvent ):void {
 			trace( "Button 2 pressed." );
-			PsykoSocket.sendString("<msg src='Pen.onButton2Pressed'/>");
+			//PsykoSocket.sendString("<msg src='Pen.onButton2Pressed'/>");
 			_hasPen = true;
 		}
 		
 		private function onButton1Released( event:WacomExtensionEvent ):void {
 			trace( "Button 1 released." );
-			PsykoSocket.sendString("<msg src='Pen.onButton1Released'/>");
+			//PsykoSocket.sendString("<msg src='Pen.onButton1Released'/>");
 			_hasPen = true;
 		}
 		
 		private function onButton2Released( event:WacomExtensionEvent ):void {
 			trace( "Button 2 released." );
-			PsykoSocket.sendString("<msg src='Pen.onButton2Released'/>");
+			//PsykoSocket.sendString("<msg src='Pen.onButton2Released'/>");
 			_hasPen = true;
 		}
 		
@@ -74,12 +74,12 @@ package net.psykosoft.psykopaint2.core.managers.pen
 			trace( "Pen pressure changed: " + event.data );
 			_pressure = event.data;
 			_hasPen = true;
-			PsykoSocket.sendString("<msg src='Pen.onPressureChanged' pressure='"+_pressure+"'/>");
+			//PsykoSocket.sendString("<msg src='Pen.onPressureChanged' pressure='"+_pressure+"'/>");
 		}
 		
 		private function onDeviceDiscovered( event:WacomExtensionEvent ):void {
 			trace( "Device discovered.");
-			PsykoSocket.sendString("<msg src='Pen.onDeviceDiscovered'/>");
+			//PsykoSocket.sendString("<msg src='Pen.onDeviceDiscovered'/>");
 			_hasPen = true;
 		}
 	}

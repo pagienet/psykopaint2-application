@@ -42,6 +42,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if ( !forceUpdate && (pointCount - _lastOutputIndex < _minSamplesPerStep.intValue)) return result;
 			
 			if ( isNaN(_lastAngle) && nextIndex > 1 ) _lastAngle = Math.atan2(sampledPoints[1].y - sampledPoints[0].y, sampledPoints[1].x - sampledPoints[0].x);
+			
+			if ( _lastPressure == -1 && sampledPoints[_lastOutputIndex].pressure != -1 ) _lastPressure = 0;
 			var pi:Number = Math.PI;
 			var outputStep:Number = _outputStepSize.numberValue;
 			for ( var i:int = _lastOutputIndex; i < nextIndex; i++ )
@@ -70,8 +72,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 							speed = 0.5 * _lastSpeed
 						}
 					}	
-						
-					var ds:Number = (speed - _lastSpeed) * ( outputStep / _accumulatedDistance);
+					
+					var stepSize:Number = outputStep / _accumulatedDistance;
+					var ds:Number = (speed - _lastSpeed) * stepSize;
 					var da:Number = (angle -_lastAngle);
 					if ( da < -pi )
 					{
@@ -86,9 +89,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						da = 0;
 					}
 					
-					var stepSize:Number = outputStep / _accumulatedDistance;
+					var dp:Number = (target.pressure - _lastPressure)  * stepSize;
+						
 					var step:Number = stepSize;
 					angle = _lastAngle;
+					var pressure:Number = _lastPressure;
 					d /= outputStep;
 					dx /= d;
 					dy /= d;
@@ -99,8 +104,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						_lastSpeed += ds;
 						
 						_lastAngle = angle + da *(-Math.pow(2, -10 * step) + 1);
+						_lastPressure += dp;
 						step+=stepSize;
-						result.push( PathManager.getSamplePointXY( _lastX, _lastY, _lastSpeed,0, _lastAngle ) );
+						result.push( PathManager.getSamplePointXY( _lastX, _lastY, _lastSpeed,0, _lastAngle, _lastPressure ) );
 						_accumulatedDistance-=outputStep;
 					}
 					

@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	
 	import de.popforge.math.LCG;
 	
+	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
@@ -63,6 +64,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				{
 					if ( point.pressure != -1 )
 					{
+						
 						point.size = mapping.apply( null, [point.pressure / 2000,0,1,1]);
 						if ( inv ) point.size = 1 - point.size;
 						point.size = minFactor + point.size * (maxFactor - minFactor );
