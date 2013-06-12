@@ -43,12 +43,13 @@ package net.psykosoft.psykopaint2.base.utils
 		public static function traceVertex( object:ObjectContainer3D, index:uint, vx:Number, vy:Number, vz:Number ):void {
 			var tf:TextField = new TextField();
 			var format:TextFormat = new TextFormat();
-			format.size = 64;
+			var size:Number = 16;
+			format.size = size;
 			tf.text = index + "";
 			tf.setTextFormat( format );
-			var bmd:BitmapData = new BitmapData( 64, 64, false, 0x00FF00 );
+			var bmd:BitmapData = new BitmapData( size, size, false, 0x00FF00 );
 			bmd.draw( tf );
-			var tracer:Sprite3D = new Sprite3D( new TextureMaterial( new BitmapTexture( bmd ) ), 64, 64 );
+			var tracer:Sprite3D = new Sprite3D( new TextureMaterial( new BitmapTexture( bmd ) ), size, size );
 			tracer.position = object.transform.transformVector( new Vector3D( vx, vy, vz ) );
 			object.parent.addChild( tracer );
 		}
