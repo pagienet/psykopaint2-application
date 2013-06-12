@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class EditBrushSubNavViewMediator extends MediatorBase
@@ -12,6 +13,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		[Inject]
 		public var paintModule:PaintModule;
+		
+		[Inject]
+		public var notifyActivateBrushChangedSignal:NotifyActivateBrushChangedSignal
 
 		override public function initialize():void {
 
@@ -27,6 +31,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// From view.
 			view.brushParameterChangedSignal.add( onBrushParameterChanged );
+			
+			notifyActivateBrushChangedSignal.add( onBrushParameterChangedFromOutside );
 		}
 
 		// -----------------------
@@ -49,6 +55,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					view.openParameter( label );
 				}
 			}
+		}
+		
+		private function onBrushParameterChangedFromOutside( parameter:XML ):void {
+			view.updateParameters( parameter );
 		}
 	}
 }

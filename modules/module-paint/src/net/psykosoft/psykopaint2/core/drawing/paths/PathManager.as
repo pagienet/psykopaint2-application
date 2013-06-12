@@ -7,10 +7,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.EndConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
+	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 
 	final public class PathManager
@@ -262,7 +263,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onSampleStart(location : Point) : void
 		{
 			_pathEngine.clear();
-			_pathEngine.addFirstPoint(location );
+			_pathEngine.addFirstPoint(location, WacomPenManager.hasPen ? WacomPenManager.currentPressure : -1  );
 			sendStartCallbacks();
 			if ( _pathEngine.sendTaps ) {
 				update(true);
@@ -273,12 +274,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onSamplePoint(location : Point) : void
 		{
 			//TODO: add pressure info here
-			if ( _pathEngine.addPoint(location, -1 )) update();
+			if ( _pathEngine.addPoint(location, WacomPenManager.hasPen ? WacomPenManager.currentPressure : -1 )) update();
 		}
 
 		protected function onSampleEnd(location : Point) : void
 		{
-			_pathEngine.addPoint(location,-1, true); //TODO: add pressure info here
+			_pathEngine.addPoint(location,WacomPenManager.hasPen ? WacomPenManager.currentPressure : -1 , true); //TODO: add pressure info here
 			update(true);
 			onEnterFrame(null);
 			if (!hasActiveDecorators() )

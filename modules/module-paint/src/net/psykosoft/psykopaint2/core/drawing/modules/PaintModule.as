@@ -96,25 +96,43 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<parameter id="Shapes" path="brush" index="0" list="wet" showInUI="0"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 				</brush>
+				<brush engine={BrushType.SPRAY_CAN} name="Pressure Pen">
+					<parameter id="Bumpyness" path="brush" value="0.02" showInUI="1"/>
+					<parameter id="Shapes" path="brush" index="0" list="splat3,splat,line,basic,noisy" showInUI="1"/>
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<SizeDecorator>
+							<parameter id="Mode" path="pathengine.pointdecorator_0" index="2" />
+							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.2" minValue="0" maxValue="1" showInUI="1"/>
+							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="0" showInUI="1"/>
+						</SizeDecorator>
+						<ColorDecorator>
+							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
+							<parameter id="Saturation"  path="pathengine.pointdecorator_1"/>
+						</ColorDecorator>
+					</pathengine>
+				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
 					<parameter id="Bumpyness" path="brush" value="0.02" showInUI="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0.01" value2="0.1"/>
+							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0.0001" value2="0.06" minValue="0" maxValue="0.5"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" showInUI="1"/>
-							<parameter id="Invert Mapping" path="pathengine.pointdecorator_0" value="0" showInUI="1"/>
+							<parameter id="Invert Mapping" path="pathengine.pointdecorator_0" value="0"/>
 						</SizeDecorator>
 						<ColorDecorator>
 							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
 							<parameter id="Saturation"  path="pathengine.pointdecorator_1" showInUI="1"/>
 						</ColorDecorator>
 						<SplatterDecorator>
-							<parameter id="Splat Factor"  path="pathengine.pointdecorator_2" value="8" />
-							<parameter id="Minimum Offset" path="pathengine.pointdecorator_2" value="1" />
+							<parameter id="Mode" path="pathengine.pointdecorator_2" index="1" />
+							<parameter id="Offset Mapping" path="pathengine.pointdecorator_2" value="0" showInUI="1" />
+							
+							<parameter id="Splat Factor"  path="pathengine.pointdecorator_2" value="40" />
+							<parameter id="Minimum Offset" path="pathengine.pointdecorator_2" value="0" />
 							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_2" value="30" />
-							<parameter id="Size Factor" path="pathengine.pointdecorator_2" value="0.02" />
+							<parameter id="Size Factor" path="pathengine.pointdecorator_2" value="0.8" />
 						</SplatterDecorator>
 					</pathengine>
 				</brush>

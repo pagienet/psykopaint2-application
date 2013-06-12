@@ -333,8 +333,47 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
+		public function set minLimit( value:Number ):void
+		{
+			if ( type == AngleParameter || type == AngleRangeParameter ) value = value / 180 * Math.PI;
+			_minLimit = value;
+			if ( _numberValue < _minLimit ) _numberValue = _minLimit;
+			if ( _numberValues[0] < _minLimit ) _numberValues[0] = _minLimit;
+			if ( _numberValues[1] < _minLimit ) _numberValues[1] = _minLimit;
+		}
+		
+		public function get minLimit( ):Number
+		{
+			if ( type == AngleParameter || type == AngleRangeParameter) return _minLimit / Math.PI * 180;
+			return _minLimit;
+		}
+		
+		
+		public function set maxLimit( value:Number ):void
+		{
+			if ( type == AngleParameter || type == AngleRangeParameter) value = value / 180 * Math.PI;
+			_maxLimit = value;
+			if ( _numberValue > _maxLimit ) _numberValue = _maxLimit;
+			if ( _numberValues[0] > _maxLimit ) _numberValues[0] = _maxLimit;
+			if ( _numberValues[1] > _maxLimit ) _numberValues[1] = _maxLimit;
+		}
+		
+		public function get maxLimit( ):Number
+		{
+			if ( type == AngleParameter || type == AngleRangeParameter) return _maxLimit / Math.PI * 180;
+			return _maxLimit;
+		}
+		
+		
 		public function updateValueFromXML( message:XML ):void
 		{
+			
+			if (  message.hasOwnProperty("@minValue") )
+				minLimit = Number( message.@minValue );
+			
+			if (  message.hasOwnProperty("@maxValue") )
+				maxLimit = Number( message.@maxValue );
+			
 			switch ( type )
 			{
 				case NumberParameter:
@@ -358,8 +397,6 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					
 					if (  message.hasOwnProperty("@value2") )
 						upperRangeValue = Number( message.@value2 );
-					
-					
 					break;
 				case AngleRangeParameter:
 					if (  message.hasOwnProperty("@value1") )

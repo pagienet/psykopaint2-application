@@ -3,20 +3,19 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import com.bit101.components.ComboBox;
 	import com.bit101.components.Knob;
-
+	
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.text.TextField;
-
+	
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
 import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-
+	
 	import org.osflash.signals.Signal;
 
 	// TODO: remove minimalcomps dependency when done
@@ -68,18 +67,31 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 				var parameter:XML = list[ i ];
 				if ( CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS || ( parameter.hasOwnProperty("@showInUI") && parameter.@showInUI == "1" ) )
 				{
-					if( firstParamId == "" ) firstParamId = parameter.@id;
+					//if( firstParamId == "" ) firstParamId = parameter.@id;
 					var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter().indexOf( parameter.@id ) != -1;
 					if( matchesLast ) firstParamId = parameter.@id;
 //					trace( ">>> " + parameter.toXMLString() );
-					addCenterButton( parameter.@id, "param" + parameter.@type );
+					addCenterButton( parameter.@id, "param" + parameter.@type, "btnLabelCenter",null,false );
 				}
 			}
 			invalidateContent();
 
 		    // Select and <<< activate >>> the first parameter.
-			selectButtonWithLabel( firstParamId );
-			openParameter( firstParamId );
+			if ( firstParamId != "" )
+			{
+				selectButtonWithLabel( firstParamId );
+				openParameter( firstParamId );
+			}
+		}
+		
+		public function updateParameters( xml:XML ):void 
+		{
+			_parametersXML = xml;
+			var currentParameterID:String = EditBrushCache.getLastSelectedParameter();
+			if ( currentParameterID != "" )
+			{
+				openParameter( currentParameterID );
+			}
 		}
 
 		// ---------------------------------------------------------------------

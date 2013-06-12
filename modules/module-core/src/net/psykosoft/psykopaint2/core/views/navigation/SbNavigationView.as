@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
-
+	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -11,16 +11,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.text.TextField;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
-
+	
 	import flashx.textLayout.formats.TextAlign;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.HItemScroller;
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class SbNavigationView extends ViewBase
@@ -311,7 +311,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Methods called by SubNavigationViewBase.
 		// ---------------------------------------------------------------------
 
-		public function addCenterButton( label:String, iconType:String, labelType:String, icon:Bitmap ):void {
+		public function addCenterButton( label:String, iconType:String, labelType:String, icon:Bitmap, autoSelect:Boolean = true ):void {
 			if( _needGapCheck ) checkGap();
 			var specificButtonClass:Class = Class( getDefinitionByName( getQualifiedClassName( _leftButton ) ) );
 			var btn:SbButton = new specificButtonClass();
@@ -325,7 +325,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			// Defaults to 1st button as selected.
 			if( _areButtonsSelectable ) {
 				btn.isSelectable = true;
-				if( _centerButtons.length == 0 ) {
+				if( autoSelect && _centerButtons.length == 0 ) {
 					btn.toggleSelect( true );
 				}
 			}

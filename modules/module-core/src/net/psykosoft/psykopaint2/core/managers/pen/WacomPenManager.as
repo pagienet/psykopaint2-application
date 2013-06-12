@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.managers.pen
 {
 
+	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.wacom.WacomExtension;
 	import net.psykosoft.wacom.events.WacomExtensionEvent;
 
@@ -11,6 +12,19 @@ package net.psykosoft.psykopaint2.core.managers.pen
 		
 		public function WacomPenManager()
 		{
+		}
+		
+		private static var _pressure : int = -1;
+		private static var _hasPen:Boolean = false;;
+		
+		public static function get currentPressure():int
+		{
+			return _pressure;
+		}
+		
+		public static function get hasPen():Boolean
+		{
+			return _hasPen;
 		}
 
 		[PostConstruct]
@@ -34,26 +48,39 @@ package net.psykosoft.psykopaint2.core.managers.pen
 		
 		private function onButton1Pressed( event:WacomExtensionEvent ):void {
 			trace( "Button 1 pressed." );
+			PsykoSocket.sendString("<msg src='Pen.onButton1Pressed'/>");
+			_hasPen = true;
 		}
 		
 		private function onButton2Pressed( event:WacomExtensionEvent ):void {
 			trace( "Button 2 pressed." );
+			PsykoSocket.sendString("<msg src='Pen.onButton2Pressed'/>");
+			_hasPen = true;
 		}
 		
 		private function onButton1Released( event:WacomExtensionEvent ):void {
 			trace( "Button 1 released." );
+			PsykoSocket.sendString("<msg src='Pen.onButton1Released'/>");
+			_hasPen = true;
 		}
 		
 		private function onButton2Released( event:WacomExtensionEvent ):void {
 			trace( "Button 2 released." );
+			PsykoSocket.sendString("<msg src='Pen.onButton2Released'/>");
+			_hasPen = true;
 		}
 		
 		private function onPressureChanged( event:WacomExtensionEvent ):void {
 			trace( "Pen pressure changed: " + event.data );
+			_pressure = event.data;
+			_hasPen = true;
+			PsykoSocket.sendString("<msg src='Pen.onPressureChanged' pressure='"+_pressure+"'/>");
 		}
 		
 		private function onDeviceDiscovered( event:WacomExtensionEvent ):void {
 			trace( "Device discovered.");
+			PsykoSocket.sendString("<msg src='Pen.onDeviceDiscovered'/>");
+			_hasPen = true;
 		}
 	}
 }

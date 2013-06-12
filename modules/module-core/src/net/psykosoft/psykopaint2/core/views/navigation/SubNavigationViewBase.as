@@ -41,9 +41,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		protected function addCenterButton( label:String,
 											iconType:String = ButtonIconType.DEFAULT,
 											labelType:String = ButtonLabelType.CENTER,
-											icon:Bitmap = null
+											icon:Bitmap = null,
+											autoSelect:Boolean = true
 				):void {
-			_navigation.addCenterButton( label, iconType, labelType, icon );
+			_navigation.addCenterButton( label, iconType, labelType, icon, autoSelect );
 		}
 
 		protected function setLeftButton( label:String ):void {
