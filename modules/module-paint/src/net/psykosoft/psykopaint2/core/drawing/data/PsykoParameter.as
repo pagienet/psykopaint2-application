@@ -338,8 +338,11 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( type == AngleParameter || type == AngleRangeParameter ) value = value / 180 * Math.PI;
 			_minLimit = value;
 			if ( _numberValue < _minLimit ) _numberValue = _minLimit;
-			if ( _numberValues[0] < _minLimit ) _numberValues[0] = _minLimit;
-			if ( _numberValues[1] < _minLimit ) _numberValues[1] = _minLimit;
+			if ( _numberValues )
+			{
+				if ( _numberValues[0] < _minLimit ) _numberValues[0] = _minLimit;
+				if ( _numberValues[1] < _minLimit ) _numberValues[1] = _minLimit;
+			}
 		}
 		
 		public function get minLimit( ):Number
@@ -354,8 +357,11 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( type == AngleParameter || type == AngleRangeParameter) value = value / 180 * Math.PI;
 			_maxLimit = value;
 			if ( _numberValue > _maxLimit ) _numberValue = _maxLimit;
-			if ( _numberValues[0] > _maxLimit ) _numberValues[0] = _maxLimit;
-			if ( _numberValues[1] > _maxLimit ) _numberValues[1] = _maxLimit;
+			if ( _numberValues )
+			{
+				if ( _numberValues[0] > _maxLimit ) _numberValues[0] = _maxLimit;
+				if ( _numberValues[1] > _maxLimit ) _numberValues[1] = _maxLimit;
+			}
 		}
 		
 		public function get maxLimit( ):Number
