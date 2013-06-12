@@ -35,6 +35,7 @@ public class SbComboboxView extends Sprite {
 	}
 
 	private function onChangeList(e:Event):void {
+		_selectedIndex = getPositionIndex();
 		dispatchEvent(new Event(Event.CHANGE));
 	}
 
@@ -120,7 +121,6 @@ public class SbComboboxView extends Sprite {
 		var positionIndex:int = getPositionIndex();
 		TweenLite.to(_listView, _listView.tweenSpeed, { y: 0, ease: Elastic.easeOut });
 		_listView.collapse(positionIndex);
-		_selectedIndex = positionIndex;
 	}
 
 

@@ -168,16 +168,16 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 				_uiElements.push( comboBox );
 				trace("STRINGLIST PARAM");*/
 
-				var shapeList:Array = String(_parameter.@list).split(",");
-				var numShapes:uint = shapeList.length;
-				var shapeComboBox:SbComboboxView = new SbComboboxView( );
-				for( i = 0; i < numShapes; ++i ) {
-					shapeComboBox.addItem( { label: shapeList[ i ] } );
+				var list:Array = String(_parameter.@list).split(",");
+				var len:uint = list.length;
+				var combobox:SbComboboxView = new SbComboboxView( );
+				for( i = 0; i < len; ++i ) {
+					combobox.addItem( { label: list[ i ] } );
 				}
-				addChild( shapeComboBox );
-				shapeComboBox.addEventListener( Event.CHANGE, onComboBoxChanged );
-				positionUiElement( shapeComboBox as DisplayObject, 0, -17 );
-				_uiElements.push( shapeComboBox );
+				addChild( combobox );
+				combobox.addEventListener( Event.CHANGE, onComboBoxChanged );
+				positionUiElement( combobox as DisplayObject, 0, -17 );
+				_uiElements.push( combobox );
 			}
 
 			// Check box

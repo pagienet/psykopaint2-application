@@ -108,45 +108,47 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 				speed = _tweenSpeed;
 			}
 
-				_opened= true;
-				for (var i:int = 0; i < _itemViews.length; i++)
-				{
-					var currentItemView:SbListItemView = _itemViews[i];
+			_opened= true;
+			for (var i:int = 0; i < _itemViews.length; i++)
+			{
+				var currentItemView:SbListItemView = _itemViews[i];
 
-                    TweenLite.killTweensOf(currentItemView);
+				TweenLite.killTweensOf(currentItemView);
 
-					//ONLY REUPDATE ONCE
-					if(i==0){
+				//ONLY REUPDATE ONCE
+				if(i==0){
 
-						if(speed==0){
-							currentItemView.scaleY=1;
-						}else
-                        TweenLite.to(currentItemView, speed, { scaleY:1, ease:Elastic.easeOut, onStart:update, onUpdate:update, onComplete:update });
-                        //TODO: make sure the update function is being called
-					}else {
-						if(speed==0){
-							currentItemView.scaleY=1;
-						}else
-                        TweenLite.to(currentItemView, speed, { scaleY:1, ease:Elastic.easeOut });
-					}
+					if(speed==0){
+						currentItemView.scaleY=1;
+					}else
+					TweenLite.to(currentItemView, speed, { scaleY:1, ease:Elastic.easeOut, onStart:update, onUpdate:update, onComplete:update });
+					//TODO: make sure the update function is being called
+				}else {
+					if(speed==0){
+						currentItemView.scaleY=1;
+					}else
+					TweenLite.to(currentItemView, speed, { scaleY:1, ease:Elastic.easeOut });
 				}
+			}
 
-                TweenLite.killTweensOf(topImage);
-                TweenLite.killTweensOf(bottomImage);
-                TweenLite.killTweensOf(bottomImageUpward);
-                TweenLite.to(topImage, speed, { scaleY:1, ease:Elastic.easeOut });
-                TweenLite.to(bottomImage, speed, { scaleY:1, ease:Elastic.easeOut });
-                TweenLite.to(bottomImageUpward, speed, { scaleY:1, ease:Elastic.easeOut });
+			TweenLite.killTweensOf(topImage);
+			TweenLite.killTweensOf(bottomImage);
+			TweenLite.killTweensOf(bottomImageUpward);
+			TweenLite.to(topImage, speed, { scaleY:1, ease:Elastic.easeOut });
+			TweenLite.to(bottomImage, speed, { scaleY:1, ease:Elastic.easeOut });
+			TweenLite.to(bottomImageUpward, speed, { scaleY:1, ease:Elastic.easeOut });
 
-				if(speed==0){
-					update();
-				}
+			if(speed==0){
+				update();
+			}
 		}
 
 		public function collapse(positionIndex:int,speed:Number=-1):void
 		{
-				_opened= false;
-				_selectedIndex = positionIndex;
+			_opened= false;
+			_selectedIndex = positionIndex;
+
+			dispatchEvent(new Event(SbListView.CHANGE));
 
 				if(speed==-1){
 					speed = _tweenSpeed;
@@ -190,7 +192,6 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 					update();
 				}
 
-				dispatchEvent(new Event(SbListView.CHANGE));
 
 		}
 
