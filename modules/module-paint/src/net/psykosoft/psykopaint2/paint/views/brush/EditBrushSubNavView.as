@@ -176,7 +176,7 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 				}
 				addChild( shapeComboBox );
 				shapeComboBox.addEventListener( Event.CHANGE, onComboBoxChanged );
-				positionUiElement( shapeComboBox as DisplayObject );
+				positionUiElement( shapeComboBox as DisplayObject, 0, -17 );
 				_uiElements.push( shapeComboBox );
 			}
 
