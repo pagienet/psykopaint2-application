@@ -23,7 +23,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private var _stage:Stage;
 		
-		//NASTY UGLY HACK:
 		public static var gesturesEnabled:Boolean = true;
 
 		public function GestureManager() {
@@ -56,12 +55,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onHorizontalPanGestureBegan( event:GestureEvent ):void {
 			
-			if ( gesturesEnabled ) //DIRTY HACK
+			if ( gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN );
 		}
 
 		private function onHorizontalPanGestureEnded( event:GestureEvent ):void {
-			if ( gesturesEnabled ) //DIRTY HACK
+			if ( gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_ENDED );
 		}
 
@@ -77,12 +76,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onVerticalPanGestureBegan( event:GestureEvent ):void {
-			if ( gesturesEnabled ) //DIRTY HACK
+			if ( gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_BEGAN );
 		}
 
 		private function onVerticalPanGestureEnded( event:GestureEvent ):void {
-			if ( gesturesEnabled ) //DIRTY HACK
+			if ( gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_ENDED );
 		}
 
