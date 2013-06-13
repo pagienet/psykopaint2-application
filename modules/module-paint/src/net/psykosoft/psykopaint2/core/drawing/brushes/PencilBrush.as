@@ -53,7 +53,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private function assignBrushShape() : void
 		{
 			RubbedStrokeMesh(_brushMesh).brushTexture = _brushShape.texture;
-			RubbedStrokeMesh(_brushMesh).normalTexture = _brushShape.normalHeightMap;
+			RubbedStrokeMesh(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
 			RubbedStrokeMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
 			_pathManager.brushAngleRange = brushShape.rotationRange;
 		}

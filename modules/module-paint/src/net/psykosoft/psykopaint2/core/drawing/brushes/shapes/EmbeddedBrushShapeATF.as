@@ -7,13 +7,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	public class EmbeddedBrushShapeATF extends AbstractBrushShape
 	{
 		private var _colorAsset : Class;
-		private var _normalHeightAsset : Class;
+		private var _normalSpecularAsset : Class;
 
-		public function EmbeddedBrushShapeATF(context3D : Context3D, id : String, colorAsset : Class, heightAsset : Class, size:int )
+		public function EmbeddedBrushShapeATF(context3D : Context3D, id : String, colorAsset : Class, normalSpecularAsset : Class, size:int )
 		{
 			super(context3D, id, 1)
 			_colorAsset = colorAsset;
-			_normalHeightAsset = heightAsset;
+			_normalSpecularAsset = normalSpecularAsset;
 			this.size = size;
 			
 		}
@@ -28,9 +28,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		
 		}
 
-		override protected function uploadHeightMap(texture : Texture) : void
+		override protected function uploadNormalSpecularMap(texture : Texture) : void
 		{
-			var textureAsset:ByteArray = new _normalHeightAsset() as ByteArray;
+			var textureAsset:ByteArray = new _normalSpecularAsset() as ByteArray;
 			texture.uploadCompressedTextureFromByteArray(textureAsset, 0);
 		}
 	}

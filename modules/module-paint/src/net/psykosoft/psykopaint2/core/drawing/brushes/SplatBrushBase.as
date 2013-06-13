@@ -8,9 +8,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected var _maxBrushRenderSize:Number;
 		protected var _minBrushRenderSize:Number;
 
-		public function SplatBrushBase(drawToHeightMap : Boolean)
+		public function SplatBrushBase(drawNormalsOrSpecular : Boolean)
 		{
-			super(drawToHeightMap);
+			super(drawNormalsOrSpecular);
 			_maxBrushRenderSize = 128;
 			_minBrushRenderSize = 2;
 		}

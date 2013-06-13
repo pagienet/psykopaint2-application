@@ -16,9 +16,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var _lastDrawCount : int;
 		private var _cleanUpTickerTimer : Timer;
 
-		public function SimulationBrush(drawToHeightMap : Boolean)
+		public function SimulationBrush(drawNormalsOrSpecular : Boolean)
 		{
-			super(drawToHeightMap, false, true);
+			super(drawNormalsOrSpecular, false, true);
 			_ticker = new Sprite();
 		}
 

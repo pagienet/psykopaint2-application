@@ -1,13 +1,17 @@
-// specular strength
-//dp3 ft4.x, v5, ft0
-//max ft4.x, ft4.x, fc0.y
-//mul ft5.x, fc15.w, ft7.y
-//pow ft4.x, ft4.x, ft5.x
-//mul ft4.x, ft4.x, ft7.z
-//mul ft4, ft4.x, fc15
+// MSB = specular
+// LSB = gloss	( gloss = frac(bits * 255 / 16))
+// gloss = frac(bits * 255 / 16)
+
+// bits *= 255/16
+// gloss = frac(bits)
+// specular = (bits - gloss) / 15 (scale back to 0 - 1 range)
 
 nrm ft4.xyz, v5
 dp3 ft4.x, ft4.xyz, ft0.xyz
-mov ft4.y, ft7.y
+
+mul ft7.z, ft7.z, fc15.x	// bits * 255/32
+frc ft4.y, ft7.z			// gloss = fract(bits * 255/32)
+sub ft7.z, ft7.z, ft4.y		// specular = bits - gloss
+mul ft7.z, ft7.z, fc15.y	// specular = (bits - gloss)/32
 tex ft4, ft4.xyxy, fs3 <linear, nomip, clamp>
 mul ft4, ft4, ft7.z

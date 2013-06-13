@@ -87,7 +87,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			super.brushShape = brushShape;
 			TexturedAntialiasedColoredTriangleStroke(_brushMesh).brushTexture = _brushShape.texture;
-			TexturedAntialiasedColoredTriangleStroke(_brushMesh).normalTexture = _brushShape.normalHeightMap;
+			TexturedAntialiasedColoredTriangleStroke(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
 		}
 
 		override protected function createColorStrategy() : IColorStrategy

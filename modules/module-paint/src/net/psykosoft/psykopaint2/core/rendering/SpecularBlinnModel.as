@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function SpecularBlinnModel()
 		{
 			super();
-			_fragmentShaderData = new <Number>[0, 0, 0, 0];
+			_fragmentShaderData = new <Number>[255/16, 1/15, 0, 0];
 		}
 
 		override public function getFragmentCode() : String

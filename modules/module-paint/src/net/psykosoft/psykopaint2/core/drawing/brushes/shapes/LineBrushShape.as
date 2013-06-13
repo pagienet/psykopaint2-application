@@ -7,12 +7,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
 
-	import net.psykosoft.psykopaint2.core.utils.NormalMapGenerator;
+	import net.psykosoft.psykopaint2.core.utils.NormalSpecularMapGenerator;
 
 	public class LineBrushShape extends AbstractBrushShape
 	{
 		[Embed(source="assets/line-hsp.png", mimeType="image/png")]
-		protected var SourceNormalHeightMap:Class;
+		protected var SourceNormalSpecularMap:Class;
 
 		public function LineBrushShape(context3D : Context3D)
 		{
@@ -44,9 +44,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			bitmapData.dispose();
 		}
 
-		override protected function uploadHeightMap(texture : Texture) : void
+		override protected function uploadNormalSpecularMap(texture : Texture) : void
 		{
-			var source:BitmapData = new SourceNormalHeightMap().bitmapData;
+			var source:BitmapData = new SourceNormalSpecularMap().bitmapData;
 
 			uploadMips(_textureSize, source, texture);
 

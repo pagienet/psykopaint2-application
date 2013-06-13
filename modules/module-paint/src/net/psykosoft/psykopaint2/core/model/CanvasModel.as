@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.utils.NormalSpecularMapGenerator;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
 
@@ -29,7 +30,7 @@ package net.psykosoft.psykopaint2.core.model
 		private var _fullSizeBackBuffer : Texture;
 		private var _halfSizeBackBuffer : Texture;
 		private var _colorTexture : Texture;
-		private var _heightSpecularMap : Texture;	// RGB = slope, A = height, half sized
+		private var _normalSpecularMap : Texture;	// RGB = slope, A = height, half sized
 
 		private var _width : Number;
 		private var _height : Number;
@@ -39,7 +40,7 @@ package net.psykosoft.psykopaint2.core.model
 		private var _textureHeight : Number;
 
 		private var _viewport : Rectangle;
-		private var _heightSpecularOriginal : BitmapData;
+		private var _normalSpecularOriginal : BitmapData;
 
 		public function CanvasModel()
 		{
@@ -51,9 +52,9 @@ package net.psykosoft.psykopaint2.core.model
 			return _pyramidMap;
 		}
 
-		public function get heightSpecularMap() : Texture
+		public function get normalSpecularMap() : Texture
 		{
-			return _heightSpecularMap;
+			return _normalSpecularMap;
 		}
 
 		public function get fullSizeBackBuffer() : Texture
@@ -136,14 +137,19 @@ package net.psykosoft.psykopaint2.core.model
 				return sourceBitmapData;
 			}
 		}
-		
+
+		/**
+		 * A texture containing height and specular data. Height on red channel, glossiness on y, specular strength on z
+		 */
 		public function setHeightSpecularMap(value : BitmapData) : void
 		{
-			_heightSpecularOriginal = value;
+			var normalSpecularGenerator : NormalSpecularMapGenerator = new NormalSpecularMapGenerator();
+			_normalSpecularOriginal = normalSpecularGenerator.generate(value);
+			value.dispose();
 
 			// not sure if this will be called before or after post construct
-			if (_heightSpecularMap)
-				_heightSpecularMap.uploadFromBitmapData(value);
+			if (_normalSpecularMap)
+				_normalSpecularMap.uploadFromBitmapData(_normalSpecularOriginal);
 		}
 
 		public function get sourceTexture() : Texture
@@ -174,9 +180,9 @@ package net.psykosoft.psykopaint2.core.model
 			_fullSizeBackBuffer = createCanvasTexture(true);
 
 			_halfSizeBackBuffer = createCanvasTexture(true, .5);
-			_heightSpecularMap = createCanvasTexture(true);
+			_normalSpecularMap = createCanvasTexture(true);
 
-			if (_heightSpecularOriginal) setHeightSpecularMap(_heightSpecularOriginal);
+			if (_normalSpecularOriginal) setHeightSpecularMap(_normalSpecularOriginal);
 
 			var tempBitmapData : BitmapData = new BitmapData(_textureWidth, _textureHeight, true, 0);
 			_colorTexture.uploadFromBitmapData(tempBitmapData);
@@ -192,17 +198,17 @@ package net.psykosoft.psykopaint2.core.model
 		{
 			if (!_colorTexture) return;
 			if (_sourceTexture) _sourceTexture.dispose();
-			if (_heightSpecularOriginal) _heightSpecularOriginal.dispose();
+			if (_normalSpecularOriginal) _normalSpecularOriginal.dispose();
 			_colorTexture.dispose();
 			_fullSizeBackBuffer.dispose();
 			_halfSizeBackBuffer.dispose();
-			_heightSpecularMap.dispose();    	// storing height as well, you never know what we can use it for (raymarching for offline rendering \o/)
+			_normalSpecularMap.dispose();    	// storing height as well, you never know what we can use it for (raymarching for offline rendering \o/)
 			_sourceTexture = null;
 			_colorTexture = null;
 			_fullSizeBackBuffer = null;
 			_halfSizeBackBuffer = null;
-			_heightSpecularMap = null;
-			_heightSpecularOriginal = null;
+			_normalSpecularMap = null;
+			_normalSpecularOriginal = null;
 		}
 
 		public function swapColorLayer() : void
@@ -210,9 +216,9 @@ package net.psykosoft.psykopaint2.core.model
 			_colorTexture = swapFullSized(_colorTexture);
 		}
 
-		public function swapHeightSpecularLayer() : void
+		public function swapNormalSpecularLayer() : void
 		{
-			_heightSpecularMap = swapFullSized(_heightSpecularMap);
+			_normalSpecularMap = swapFullSized(_normalSpecularMap);
 		}
 
 		public function swapFullSized(target : Texture) : Texture
@@ -253,9 +259,9 @@ package net.psykosoft.psykopaint2.core.model
 			context3d.setRenderToBackBuffer();
 		}
 
-		public function clearNormalHeightTexture() : void
+		public function clearNormalSpecularTexture() : void
 		{
-			setHeightSpecularMap(_heightSpecularOriginal);
+			_normalSpecularMap.uploadFromBitmapData(_normalSpecularOriginal);
 		}
 	}
 }

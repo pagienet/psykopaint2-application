@@ -15,8 +15,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	public class PrecisionTestShape extends AbstractBrushShape
 	{
 		private var _brushMap : BitmapData;
-		private const origin:Point = new Point();
-		
+
 		public function PrecisionTestShape(context3D : Context3D)
 		{
 			super(context3D, "test", 1);
@@ -40,7 +39,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			uploadMips(_textureSize, _brushMap, texture);
 		}
 
-		override protected function uploadHeightMap(texture : Texture) : void
+		override protected function uploadNormalSpecularMap(texture : Texture) : void
 		{
 			uploadMips(_textureSize, _brushMap, texture);
 		}

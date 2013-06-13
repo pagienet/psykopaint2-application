@@ -53,7 +53,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			bitmapData.dispose();
 		}
 		
-		override protected function uploadHeightMap(texture : Texture) : void
+		override protected function uploadNormalSpecularMap(texture : Texture) : void
 		{
 			var bitmapData : BitmapData = new BitmapData(size, size, true,0xff00007f);
 			uploadMips(_textureSize, bitmapData, texture);
