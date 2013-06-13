@@ -26,6 +26,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _shadowMaterial:TextureMaterial;
 		private var _floorMaterial:TextureMaterial;
 		private var _wallMaterial:TextureMaterial;
+		private var _spotlightsMaterial:TextureMaterial;
+		private var _spotlightsMesh:Mesh;
 		private var _view:View3D;
 
 		private const WALL_WIDTH:Number = 100000;
@@ -42,9 +44,40 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		}
 
 		public function initialize():void {
+			loadLights();
 			loadWall();
 			loadShadow();
 			loadFloor();
+		}
+
+		// -----------------------
+		// Spotlights.
+		// -----------------------
+
+		private function loadLights():void {
+
+			// Geometry.
+			var geometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
+			var uvScale:Number = 1;
+			geometry.scaleUV( uvScale * WALL_WIDTH / geometry.width, uvScale );
+
+			// Material.
+			var material:TextureMaterial = TextureUtil.getAtfMaterial( HomeView.HOME_BUNDLE_ID, "spotlight", _view );
+			material.alpha = 0.5;
+			material.alphaBlending = true;
+			material.mipmap = false;
+			material.smooth = true;
+			material.repeat = true;
+
+			// Mesh.
+			_spotlightsMesh = new Mesh( geometry, material );
+			_spotlightsMesh.scaleX = WALL_WIDTH / geometry.width;
+			_spotlightsMesh.scaleZ = WALL_HEIGHT / geometry.height;
+			_spotlightsMesh.rotationX = -90;
+			_spotlightsMesh.y = WALL_BASE_Y + WALL_HEIGHT / 2;
+			_spotlightsMesh.z = WALL_Z - 5;
+			addChild( _spotlightsMesh );
+
 		}
 
 		// -----------------------
