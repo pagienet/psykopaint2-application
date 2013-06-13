@@ -129,7 +129,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Room assets.
 			registerBundledAsset( rootUrl + "away3d/wallpapers/fullsize/default" + extra + ".atf", "defaultWallpaper", true );
 			registerBundledAsset( "/home-packaged/away3d/frames/frame-shadow-uncompressed.atf", "frameShadow", true );
-			registerBundledAsset( "/home-packaged/away3d/wallpapers/spotlight-uncompressed.atf", "spotlight", true );
 			registerBundledAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", true );
 		}
 
