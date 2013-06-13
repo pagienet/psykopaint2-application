@@ -34,14 +34,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			return PathManager.ENGINE_TYPE_CATMULL;
 		}
 		
-		override public function addFirstPoint( p:Point, pressure:Number = -1, penButtonState:int = 0 ):void
+		override public function addFirstPoint( x:Number,y:Number, pressure:Number = -1, penButtonState:int = 0 ):void
 		{
 			_lastResultLastPoint = null;
 			_lastPoint1 = null;
 			_lastPoint2 = null;
 			
-			_lastX = p.x;
-			_lastY = p.y;
+			_lastX = x;
+			_lastY = y;
 			
 			_lastSegmentSpeed = 0;
 			_speed = 0;
@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			
 			_lastPressure = pressure;
 			
-			super.addFirstPoint(p, pressure, penButtonState);
+			super.addFirstPoint(x,y, pressure, penButtonState);
 			
 		}
 
@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				var simplePath : PathEngineCatmull = clone(_lastOutputIndex, -1) as PathEngineCatmull;
 				simplePath.simplify2(0, -1, _simplificationDistance);
 				var p : SamplePoint = simplePath.getPointAt(-1);
-				simplePath.addPoint( p, p.pressure, p.penButtonState, true);
+				simplePath.addSamplePoint(p,true);
 				var engine2 : IPathEngine = CatmullRomInterpolator.interpolate(simplePath, 0, -1);
 				//PathInterpolator.interpolate( PathInterpolator.TYPE_CATMULLROM, simplePath, 0,-1 );
 				var bs : int = _minSamplesPerStep.intValue >> 1;
@@ -96,7 +96,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						if (_squaredAccumulatedDistance >= rsq) 
 						{
 							//TODO: this is probably missing vital information like pressure 
-							result.push(PathManager.getSamplePointXY(p2x, p2y));
+							result.push(PathManager.getSamplePoint(p2x, p2y));
 							_squaredAccumulatedDistance -= rsq;
 						}
 						_lastX = p2x;
@@ -118,7 +118,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					_squaredAccumulatedDistance += d;
 					currentSquaredDistance += d;
 					if (_squaredAccumulatedDistance >= rsq) {
-						result.push(PathManager.getSamplePoint(p));
+						result.push(p);
 						_squaredAccumulatedDistance -= rsq;
 					}
 					

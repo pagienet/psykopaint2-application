@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ConditionalDecorator;
@@ -38,23 +37,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			}
 		}
 
-		static public function getSamplePointXY(x : Number, y : Number, speed : Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null) : SamplePoint
+		static public function getSamplePoint( x: Number, y:Number, speed : Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null) : SamplePoint
 		{
 			if (_samplePointDepot.length > 0) {
 				var p : SamplePoint = _samplePointDepot.pop();
 				return p.resetData(x, y, speed, size, angle, pressure, penButtonState, colors);
 			} else {
 				return new SamplePoint(x, y,  speed, size, angle, pressure, penButtonState, colors);
-			}
-		}
-		
-		static public function getSamplePoint( point:Point, speed : Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null) : SamplePoint
-		{
-			if (_samplePointDepot.length > 0) {
-				var p : SamplePoint = _samplePointDepot.pop();
-				return p.resetData(point.x, point.y, speed, size, angle, pressure, penButtonState, colors);
-			} else {
-				return new SamplePoint(point.x, point.y,  speed, size, angle, pressure, penButtonState, colors);
 			}
 		}
 
@@ -94,6 +83,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var _currentTick:uint;
 		private var _lastUpdateTick:uint;
 		private var _canvasRect : Rectangle;
+		private var scaleX:Number;
+		private var scaleY:Number;
 		
 
 		public function PathManager( type:int )
@@ -175,7 +166,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		{
 			if (_listeningToMouse) return;
 			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
-
+			
 			if (_touchID == -1) {
 				_listeningToTouch = true;
 				_touchID = event.touchPointID;
@@ -183,21 +174,21 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				_view.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 				_view.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 
-				onSampleStart(new Point(event.stageX, event.stageY));
+				onSampleStart(event.stageX, event.stageY);
 			}
 		}
 
 		protected function onTouchMove(event : TouchEvent) : void
 		{
 			if (event.touchPointID == _touchID)
-				onSamplePoint(new Point(event.stageX, event.stageY));
+				onSamplePoint(event.stageX, event.stageY);
 		}
 
 		protected function onTouchEnd(event : TouchEvent) : void
 		{
 			if (event.touchPointID == _touchID) {
 				_listeningToTouch = false;
-				onSampleEnd(new Point(event.stageX, event.stageY));
+				onSampleEnd(event.stageX, event.stageY);
 				_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 				_view.stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 				_touchID = -1;
@@ -229,41 +220,42 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onMouseDown(event : MouseEvent) : void
 		{
 			if (_listeningToTouch) return;
+			
 			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
 			_listeningToMouse = true;
 			var stage : Stage = event.target as Stage;
 			if (!stage) return;
-			onSampleStart(getCanvasCoord(event.stageX, event.stageY));
+			
+			onSampleStart(event.stageX, event.stageY);
 			_view.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_view.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		}
-
-		private function getCanvasCoord(stageX : Number, stageY : Number) : Point
-		{
-			var px : Number = stageX - _canvasRect.x;
-			var py : Number = stageY - _canvasRect.y;
-			var scaleX : Number = _view.stage.stageWidth/_canvasRect.width;
-			var scaleY : Number = _view.stage.stageHeight/_canvasRect.height;
-			return new Point(px*scaleX, py*scaleY);
 		}
 
 		protected function onMouseUp(event : MouseEvent) : void
 		{
 			_listeningToMouse = false;
-			onSampleEnd(getCanvasCoord(event.stageX, event.stageY));
+			onSampleEnd(event.stageX, event.stageY);
 			_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		}
 
 		private function onMouseMove(event : MouseEvent) : void
 		{
-			onSamplePoint(getCanvasCoord(event.stageX, event.stageY));
+			onSamplePoint(event.stageX, event.stageY);
 		}
 
-		protected function onSampleStart(location : Point) : void
+		protected function onSampleStart(stageX : Number, stageY : Number) : void
 		{
+			var px : Number = (stageX - _canvasRect.x) * scaleX;
+			var py : Number = (stageY - _canvasRect.y) * scaleY;
+			
 			_pathEngine.clear();
-			_pathEngine.addFirstPoint(location, WacomPenManager.hasPen ? WacomPenManager.currentPressure : -1  );
+			if ( WacomPenManager.hasPen )
+			{
+				_pathEngine.addFirstPoint(px,py, WacomPenManager.currentPressure, WacomPenManager.buttonState);
+			} else {
+			 	_pathEngine.addFirstPoint( px, py, -1, 0);
+			}
 			sendStartCallbacks();
 			if ( _pathEngine.sendTaps ) {
 				update(true);
@@ -271,22 +263,27 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			}
 		}
 
-		protected function onSamplePoint(location : Point) : void
+		protected function onSamplePoint(stageX : Number, stageY : Number) : void
 		{
+			var px : Number = (stageX - _canvasRect.x) * scaleX;
+			var py : Number = (stageY - _canvasRect.y) * scaleY;
+			
 			if ( WacomPenManager.hasPen )
 			{
-				if ( _pathEngine.addPoint(location, WacomPenManager.currentPressure, WacomPenManager.buttonState) ) update();
+				if ( _pathEngine.addPoint(px,py, WacomPenManager.currentPressure, WacomPenManager.buttonState) ) update();
 			} else {
-				if ( _pathEngine.addPoint(location, -1, 0) ) update();
+				if ( _pathEngine.addPoint(px,py, -1, 0) ) update();
 			}
 		}
 
-		protected function onSampleEnd(location : Point) : void
+		protected function onSampleEnd(stageX : Number, stageY : Number) : void
 		{
+			var px : Number = (stageX - _canvasRect.x) * scaleX;
+			var py : Number = (stageY - _canvasRect.y) * scaleY;
 			if ( WacomPenManager.hasPen )
-				_pathEngine.addPoint(location, WacomPenManager.currentPressure, WacomPenManager.buttonState, true); 
+				_pathEngine.addPoint( px, py, WacomPenManager.currentPressure, WacomPenManager.buttonState, true); 
 			 else 
-				_pathEngine.addPoint(location, -1, 0, true); 
+				_pathEngine.addPoint( px, py, -1, 0, true); 
 			update(true);
 			onEnterFrame(null);
 			if (!hasActiveDecorators() )
@@ -308,7 +305,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if ( _currentTick == _lastUpdateTick ) return;
 			_lastUpdateTick = _currentTick;
 			
-			trace("updateDecorators: before: "+_accumulatedResults.length+ " points (frame: "+_currentTick+")");
 			var conditionalStack:Vector.<Vector.<SamplePoint>>;
 			var inCondition:int = -1;
 			for ( var i:int = 0; i < _pointDecorators.length; i++ )
@@ -334,7 +330,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					}
 				}
 			}
-			trace("updateDecorators: after: "+_accumulatedResults.length+ " points");
 		}
 
 		public function activate(view : DisplayObject, canvasModel:CanvasModel ) : void
@@ -349,6 +344,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_view.stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 			
 			_view.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			
+			updateStageScaleFactors();
 		}
 
 		public function deactivate() : void
@@ -440,6 +437,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public function setCanvasRect(canvasRect : Rectangle) : void
 		{
 			_canvasRect = canvasRect;
+			updateStageScaleFactors();
+		}
+		
+		private function updateStageScaleFactors():void
+		{
+			if ( _canvasRect && _view && _view.stage )
+			{
+				scaleX = _view.stage.stageWidth/_canvasRect.width;
+				scaleY = _view.stage.stageHeight/_canvasRect.height;
+			}		
 		}
 	}
 }

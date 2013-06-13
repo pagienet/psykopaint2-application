@@ -51,7 +51,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		public function getClone():SamplePoint
 		{
-			return PathManager.getSamplePoint(this,speed,size, angle, pressure, penButtonState, colorsRGBA);
+			return PathManager.getSamplePoint(x,y,speed,size, angle, pressure, penButtonState, colorsRGBA);
 		}
 		
 		public function squaredDistance( p:SamplePoint ):Number

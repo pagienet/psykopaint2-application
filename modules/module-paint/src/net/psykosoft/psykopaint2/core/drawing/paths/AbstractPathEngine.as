@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 {
 	import flash.display.Graphics;
 	import flash.geom.Point;
-
+	
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 
 	public class AbstractPathEngine implements IPathEngine
@@ -68,31 +68,31 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_lastOutputIndex = 0;
 		}
 		
-		public function addFirstPoint( p:Point, pressure:Number = -1, penButtonState:int = 0):void
+		public function addFirstPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0):void
 		{
 			clear();
-			addPoint( p, pressure, penButtonState, true);
+			addPoint(x, y, pressure, penButtonState, true);
 		}
 		
-		public function addPoint( p:Point, pressure:Number = -1, penButtonState:int = 0, force:Boolean = false ):Boolean
+		public function addPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0, force:Boolean = false ):Boolean
 		{
-			if ( !force && nextIndex > 0 && _sampledPoints[nextIndex-1].equals(p) ) 
+			if ( !force && nextIndex > 0 && _sampledPoints[nextIndex-1].x == x && _sampledPoints[nextIndex-1].y == y) 
 			{
 				return false;
 			}
 				
-			_sampledPoints[nextIndex++] = PathManager.getSamplePoint( p, 0, 0, 0, pressure, penButtonState );
+			_sampledPoints[nextIndex++] = PathManager.getSamplePoint( x,y, 0, 0, 0, pressure, penButtonState );
 			return true;
 		}
 		
-		public function addXY( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0, force:Boolean = false ):Boolean
+		public function addSamplePoint( p:SamplePoint, force:Boolean = false ):Boolean
 		{
-			if ( !force && nextIndex > 0 && _sampledPoints[nextIndex-1].x == x && _sampledPoints[nextIndex-1].y == y ) 
+			if ( !force && nextIndex > 0 && _sampledPoints[nextIndex-1].x == p.x && _sampledPoints[nextIndex-1].y == p.y) 
 			{
 				return false;
 			}
 			
-			_sampledPoints[nextIndex++] = PathManager.getSamplePointXY(x,y,0,0,0,pressure,penButtonState);
+			_sampledPoints[nextIndex++] = p;
 			return true;
 		}
 		
@@ -100,17 +100,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		{
 			if ( index > nextIndex ) index = nextIndex;
 			if ( index < 0 ) index = 0;
-			var p:SamplePoint = PathManager.getSamplePointXY(x,y,0,0,0,pressure,penButtonState);
+			var p:SamplePoint = PathManager.getSamplePoint(x,y,0,0,0,pressure,penButtonState);
 			_sampledPoints.splice(index,0,p);
 			nextIndex++;
 			
 		}
 		
-		public function addPointAt( index:int, point:Point, pressure:Number, penButtonState:int = 0 ):void
+		public function addPointAt( index:int, x:Number, y:Number, pressure:Number, penButtonState:int = 0 ):void
 		{
 			if ( index > nextIndex ) index = nextIndex;
 			if ( index < 0 ) index = 0;
-			var p:SamplePoint = PathManager.getSamplePoint(point,0,0,0,pressure,penButtonState);
+			var p:SamplePoint = PathManager.getSamplePoint(x,y,0,0,0,pressure,penButtonState);
 			_sampledPoints.splice(index,0,p);
 			nextIndex++;
 			
@@ -175,7 +175,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				var p:SamplePoint = _sampledPoints[startIndex];
 				while ( count > 0)
 				{
-					result.addXY(p.x,p.y,p.pressure,p.penButtonState, true);
+					result.addPoint(p.x,p.y,p.pressure,p.penButtonState, true);
 					if ( ++startIndex < nextIndex )
 						p = _sampledPoints[startIndex];
 					else 

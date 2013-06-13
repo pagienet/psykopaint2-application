@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					{
 						var angle:Number = rng.getNumber( 0, Math.PI * 2);
 						var distance:Number =  rng.getMappedNumber(0, maxOffset.numberValue, Quad.easeIn );
-						points.push( PathManager.getSamplePointXY(lastX +  Math.cos(angle) * distance,lastY +  Math.sin(angle) * distance,0,rng.getNumber(sizeRange.lowerRangeValue,sizeRange.upperRangeValue),lastAngle ));
+						points.push( PathManager.getSamplePoint(lastX +  Math.cos(angle) * distance,lastY +  Math.sin(angle) * distance,0,rng.getNumber(sizeRange.lowerRangeValue,sizeRange.upperRangeValue),lastAngle ));
 					} else if ( !delayTriggered )
 					{
 						delayTriggered = true;
