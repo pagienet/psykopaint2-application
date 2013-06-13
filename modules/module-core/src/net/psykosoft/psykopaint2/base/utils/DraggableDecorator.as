@@ -20,7 +20,6 @@ package net.psykosoft.psykopaint2.base.utils
 		private var _target : DisplayObject;
 		private var _followers : Array;
 		private var _shiftPosition:Number;
-		private var _mouseIsDown:Boolean;
 		private var _clickOffset:Number;
 
 		public function DraggableDecorator(decorated : DisplayObject,bounds : Rectangle = null,para_target : Sprite = null,followers:Array=null)
@@ -38,20 +37,24 @@ package net.psykosoft.psykopaint2.base.utils
 		{
 			//_decorated.useHandCursor = true;
 			_decorated.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
-			_decorated.addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			//_decorated.addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
 		public function disable() : void
 		{
 			//_decorated.useHandCursor = false;
 			_decorated.removeEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
-
+			
+			//just in case:
+			if ( _decorated.stage )
+			{
+				_decorated.stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+				_decorated.stage.removeEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
+			}
 		}
 
 		private function onDragMove(event:Event) : void
 		{
-
-
 			if(_followers!=null)
 				for (var i : int = 0; i < _followers.length; i++) {
 
@@ -61,7 +64,6 @@ package net.psykosoft.psykopaint2.base.utils
 
 			dispatchEvent(new Event(DRAG));
 		}
-
 
 
 		public function get decorated() : DisplayObject
@@ -94,35 +96,30 @@ package net.psykosoft.psykopaint2.base.utils
 			_shiftPosition = value;
 		}
 
-		private function onAddedToStage(event:Event):void {
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-			_decorated.stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-			_decorated.stage.addEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
-		}
-
 		// ---------------------------------------------------------------------
 		// Listeners.
 		// ---------------------------------------------------------------------
 
-		private function onStageMouseUp(event:MouseEvent):void {
-			_mouseIsDown = false;
+		private function onStageMouseUp(event:MouseEvent):void 
+		{
+			_decorated.stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			_decorated.stage.removeEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
 		}
 
-		private function onMouseDown(event:MouseEvent):void {
-			_mouseIsDown = true;
+		private function onMouseDown(event:MouseEvent):void 
+		{
+			_decorated.stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			_decorated.stage.addEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
 
-			var shiftPosition:Number = _decorated.mouseY;
-			_shiftPosition = new Number( shiftPosition - _decorated.parent.mouseY );
+			_shiftPosition = _decorated.mouseY - _decorated.parent.mouseY;
 			_clickOffset = _decorated.y - _decorated.parent.mouseY;
 		}
 
-		private function onStageMouseMove(event:MouseEvent):void {
-			if (_mouseIsDown){
-				var position:Number = _decorated.parent.mouseY;
-				_decorated.y = position - _shiftPosition + _clickOffset;
-				_decorated.y = Math.max(_bounds.y,_decorated.y);
-				_decorated.y = Math.min(_bounds.y+_bounds.height,_decorated.y);
-			}
+		private function onStageMouseMove(event:MouseEvent):void 
+		{
+			_decorated.y = _decorated.parent.mouseY - _shiftPosition + _clickOffset;
+			if ( _decorated.y < _bounds.y ) _decorated.y = _bounds.y;
+			else if ( _decorated.y > _bounds.y+_bounds.height ) _decorated.y = _bounds.y+_bounds.height;
 		}
 	}
 }
