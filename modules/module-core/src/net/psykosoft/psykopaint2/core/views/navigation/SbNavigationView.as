@@ -168,7 +168,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			rightBtnSide.visible = false;
 			_areButtonsSelectable = false;
 			resetCenterButtons();
-			_scroller.reset();
+			if( _scroller ) _scroller.reset();
 
 			// Disable old view.
 			if( _currentSubNavView ) {
