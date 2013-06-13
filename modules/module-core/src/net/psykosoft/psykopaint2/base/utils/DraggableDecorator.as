@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.base.utils
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
+	
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 
 
 	/**
@@ -51,6 +53,9 @@ package net.psykosoft.psykopaint2.base.utils
 				_decorated.stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 				_decorated.stage.removeEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
 			}
+			
+			//DIRTY HACK
+			GestureManager.gesturesEnabled = true;
 		}
 
 		private function onDragMove(event:Event) : void
@@ -102,12 +107,18 @@ package net.psykosoft.psykopaint2.base.utils
 
 		private function onStageMouseUp(event:MouseEvent):void 
 		{
+			//DIRTY HACK
+			GestureManager.gesturesEnabled = true;
+			
 			_decorated.stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			_decorated.stage.removeEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
 		}
 
 		private function onMouseDown(event:MouseEvent):void 
 		{
+			//DIRTY HACK
+			GestureManager.gesturesEnabled = false;
+			
 			_decorated.stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			_decorated.stage.addEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
 

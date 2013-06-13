@@ -11,10 +11,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.PanGesture;
 	import org.gestouch.gestures.PanGestureDirection;
-	import org.gestouch.gestures.SwipeGesture;
-	import org.gestouch.gestures.SwipeGestureDirection;
-	import org.gestouch.gestures.TapGesture;
-	import org.gestouch.gestures.ZoomGesture;
 	import org.gestouch.input.NativeInputAdapter;
 
 	public class GestureManager
@@ -26,6 +22,9 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public var notifyBlockingGestureSignal:NotifyBlockingGestureSignal;
 
 		private var _stage:Stage;
+		
+		//NASTY UGLY HACK:
+		public static var gesturesEnabled:Boolean = true;
 
 		public function GestureManager() {
 		}
@@ -56,11 +55,14 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onHorizontalPanGestureBegan( event:GestureEvent ):void {
-			notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN );
+			
+			if ( gesturesEnabled ) //DIRTY HACK
+				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN );
 		}
 
 		private function onHorizontalPanGestureEnded( event:GestureEvent ):void {
-			notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_ENDED );
+			if ( gesturesEnabled ) //DIRTY HACK
+				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_ENDED );
 		}
 
 		// ---------------------------------------------------------------------
@@ -75,11 +77,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onVerticalPanGestureBegan( event:GestureEvent ):void {
-			notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_BEGAN );
+			if ( gesturesEnabled ) //DIRTY HACK
+				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_BEGAN );
 		}
 
 		private function onVerticalPanGestureEnded( event:GestureEvent ):void {
-			notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_ENDED );
+			if ( gesturesEnabled ) //DIRTY HACK
+				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_ENDED );
 		}
 
 		// ---------------------------------------------------------------------
