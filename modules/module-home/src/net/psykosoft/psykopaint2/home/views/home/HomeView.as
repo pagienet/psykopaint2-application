@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _view:View3D;
 		private var _stage3dProxy:Stage3DProxy;
 		private var _fpsCache:Number;
+		private var _introZoomOutPending:Boolean = true;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
 
@@ -141,9 +142,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Release fps detainment ( releases the splash screen ).
 			stage.frameRate = _fpsCache;
 		}
-
-		// TODO: tidy up
-		private var _introZoomOutPending:Boolean = true;
 
 		override protected function onDisposed():void {
 

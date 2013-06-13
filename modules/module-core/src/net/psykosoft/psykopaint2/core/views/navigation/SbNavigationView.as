@@ -47,6 +47,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _reactiveHideStackY:StackUtil;
 		private var _targetReactiveY:Number;
 
+		private var _hidden:Boolean;
+		private var _bgHeight:uint = 250;
+
 		private const BUTTON_GAP_X:Number = 8;
 		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 100;
 
@@ -57,8 +60,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var hiddenSignal:Signal;
 		public var scrollingStartedSignal:Signal;
 		public var scrollingEndedSignal:Signal;
-
-		private var BG_HEIGHT:uint = 250;
 
 		public function SbNavigationView() {
 			super();
@@ -71,8 +72,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_reactiveHideStackY = new StackUtil();
 			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbButton;
 			_rightButton = rightBtnSide.getChildByName( "btn" ) as SbButton;
-			BG_HEIGHT *= CoreSettings.GLOBAL_SCALING;
-			_targetReactiveY = 768 * scaleX - BG_HEIGHT;
+			_bgHeight *= CoreSettings.GLOBAL_SCALING;
+			_targetReactiveY = 768 * scaleX - _bgHeight;
 			hide( 0.01 );
 		}
 
@@ -127,13 +128,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_showing = false;
 			_animating = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, time, { y: BG_HEIGHT, onComplete: onHideAnimatedComplete, ease:Strong.easeOut } );
+			TweenLite.to( this, time, { y: _bgHeight, onComplete: onHideAnimatedComplete, ease:Strong.easeOut } );
 		}
 		private function onHideAnimatedComplete():void {
 			hiddenSignal.dispatch();
-			this.visible = false;
+			visible = false;
 			_animating = false;
-			_targetReactiveY = 768 * scaleX - BG_HEIGHT * 0.2;
+			_hidden = true;
+			_targetReactiveY = 768 * scaleX - _bgHeight * 0.2;
 		}
 
 		public function show():void {
@@ -150,7 +152,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private function onShowAnimatedComplete():void {
 			_animating = false;
 			shownSignal.dispatch();
-			_targetReactiveY = 768 * scaleX - BG_HEIGHT;
+			_hidden = false;
+			_targetReactiveY = 768 * scaleX - _bgHeight;
 		}
 
 		public function updateSubNavigation( subNavType:Class ):void {
@@ -183,7 +186,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				visible = false;
 				return;
 			}
-			else {
+			else if( !_hidden ) {
 				visible = true;
 			}
 
@@ -209,10 +212,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if( _onReactiveHide ) return;
 			if( stage.mouseY < _targetReactiveY ) return; // reject interactions outside of the navigation area
 			_onReactiveHide = true;
-			if( !visible ) {
+			if( _hidden ) {
 				visible = true;
-				y = BG_HEIGHT;
-				_reactiveHideMouseDownY = stage.mouseY - BG_HEIGHT;
+				y = _bgHeight;
+				_reactiveHideMouseDownY = stage.mouseY - _bgHeight;
 			}
 			else {
 				_reactiveHideMouseDownY = stage.mouseY;
@@ -229,7 +232,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			var speedY:Number = _reactiveHideStackY.getAverageDeltaDetailed();
 //			trace( this, "reactive hide end, speed: " + speedY + ", values: " + _reactiveHideStackY.values() );
 			if( speedY == 0 ) {
-				if( y > BG_HEIGHT / 2 ) hide();
+				if( y > _bgHeight / 2 ) hide();
 				else show();
 			}
 			else {
@@ -243,7 +246,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private function onReactiveHideEnterFrame( event:Event ):void {
 //			trace( this, "reactive hide enterframe" );
 			y = stage.mouseY - _reactiveHideMouseDownY;
-			if( y > BG_HEIGHT ) y = BG_HEIGHT;
+			if( y > _bgHeight ) y = _bgHeight;
 			if( y < 0 ) y = 0;
 //			trace( this, "pushing value: " + y + ", index: " + _reactiveHideStackY.newestIndex );
 			_reactiveHideStackY.pushValue( y );
