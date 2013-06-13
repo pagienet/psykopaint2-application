@@ -271,11 +271,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private function onButtonClicked( event:MouseEvent ):void {
 
 			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
+
 			var button:SbButton = event.target as SbButton;
 			if( !button ) button = event.target.parent as SbButton;
-			trace( this, "button clicked: " + button.labelText );
 			var label:String = button.labelText;
-			buttonClickedCallback( label );
+			trace( this, "button clicked: " + button.labelText );
 
 			// Deselects all buttons except the one just clicked.
 			if( _areButtonsSelectable && button != _leftButton && button != _rightButton ) {
@@ -284,6 +284,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				}
 				button.toggleSelect( true );
 			}
+
+			buttonClickedCallback( label );
 		}
 
 		// TODO: this assumes that side buttons will always be set before center buttons, which is not enforced anywhere
@@ -313,6 +315,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function addCenterButton( label:String, iconType:String, labelType:String, icon:Bitmap, autoSelect:Boolean = true ):void {
 			if( _needGapCheck ) checkGap();
+
 			var specificButtonClass:Class = Class( getDefinitionByName( getQualifiedClassName( _leftButton ) ) );
 			var btn:SbButton = new specificButtonClass();
 			btn.labelText = label;
