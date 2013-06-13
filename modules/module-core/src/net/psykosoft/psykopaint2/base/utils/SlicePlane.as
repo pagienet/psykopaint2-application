@@ -2,14 +2,11 @@ package net.psykosoft.psykopaint2.base.utils
 {
 
 	import away3d.core.base.CompactSubGeometry;
+	import away3d.core.base.Object3D;
 	import away3d.entities.Mesh;
+	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.BitmapTexture;
-
-	import flash.display.BitmapData;
-
-	import net.psykosoft.psykopaint2.base.utils.GeomUtil;
 
 	public class SlicePlane extends Mesh
 	{
@@ -19,13 +16,15 @@ package net.psykosoft.psykopaint2.base.utils
 		private var _sliceBottom:Number;
 		private var _originalWidth:Number;
 		private var _originalHeight:Number;
+		private var _material:TextureMaterial;
+		private var _width:Number;
+		private var _height:Number;
 
-		public function SlicePlane( bmd:BitmapData ) {
-			var material:TextureMaterial = new TextureMaterial( new BitmapTexture( bmd ) );
-			var geometry:PlaneGeometry = new PlaneGeometry( bmd.width, bmd.height, 3, 3 );
-			_sliceLeft = 0; _sliceRight = _originalWidth = bmd.width;
-			_sliceTop = 0; _sliceBottom = _originalHeight = bmd.height;
-			super( geometry, material );
+		public function SlicePlane( material:TextureMaterial, textureWidth:Number, textureHeight:Number ) {
+			var geometry:PlaneGeometry = new PlaneGeometry( textureWidth, textureHeight, 3, 3 );
+			_sliceLeft = 0; _sliceRight = _originalWidth = _width = textureWidth;
+			_sliceTop = 0; _sliceBottom = _originalHeight = _height = textureHeight;
+			super( geometry, material/*new ColorMaterial( 0xFF0000 )*/ );
 		}
 
 		public function setSlices( left:Number, right:Number, top:Number, bottom:Number ):void {
@@ -35,13 +34,14 @@ package net.psykosoft.psykopaint2.base.utils
 			_sliceBottom = bottom;
 			// Adjust column uvs.
 			setVertexColumnU( 1, _sliceLeft / _originalWidth );
-			setVertexColumnU( 2, 1 - _sliceLeft / _originalWidth );
+			setVertexColumnU( 2, 1 - _sliceRight / _originalWidth );
 			// Adjust row uvs.
 			setVertexRowV( 1, 1 - _sliceBottom / _originalHeight );
 			setVertexRowV( 2, _sliceTop / _originalHeight );
 		}
 
 		public function set width( value:Number ):void {
+			_width = value;
 			var hw:Number = value / 2;
 			setVertexColumnPosition( 0, -hw ); // Column 0 to ratio 0.
 			setVertexColumnPosition( 1, -hw + _sliceLeft ); // Column 1 to sliceMinX.
@@ -50,11 +50,19 @@ package net.psykosoft.psykopaint2.base.utils
 		}
 
 		public function set height( value:Number ):void {
+			_height = value;
 			var hh:Number = value / 2;
 			setVertexRowPosition( 0, -hh ); // Column 0 to ratio 0.
-			setVertexRowPosition( 1, -hh + _sliceTop ); // Column 1 to sliceMinX.
-			setVertexRowPosition( 2,  hh - _sliceBottom ); // Column 2 to sliceMaxX.
+			setVertexRowPosition( 1, -hh + _sliceBottom ); // Column 1 to sliceMinX.
+			setVertexRowPosition( 2,  hh - _sliceTop ); // Column 2 to sliceMaxX.
 			setVertexRowPosition( 3,  hh ); // Column 3 to 1.
+		}
+
+		override public function clone():Object3D {
+			var clone:SlicePlane = new SlicePlane( _material, _originalWidth, _originalHeight );
+			clone.setSlices( _sliceLeft, _sliceRight, _sliceTop, _sliceBottom );
+			clone.transform = transform.clone();
+			return  clone;
 		}
 
 		// -----------------------
@@ -117,6 +125,14 @@ package net.psykosoft.psykopaint2.base.utils
 				vz = buffer[ compIndex + 2 ];
 				GeomUtil.traceVertex( this, i, vx, vy, vz );
 			}
+		}
+
+		public function get width():Number {
+			return _width;
+		}
+
+		public function get height():Number {
+			return _height;
 		}
 	}
 }

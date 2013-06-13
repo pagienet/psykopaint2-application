@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			_width = diffuseBitmap.width;
 			_height = diffuseBitmap.height;
+			trace( this, "creating picture with dimensions: " + _width + "x" + _height );
 
 			_plane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( diffuseBitmap, view.stage3DProxy );
 			_plane.rotationX = -90;

@@ -51,7 +51,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_frameMesh = new Mesh( frameGeometry, material );
 			addChild( _frameMesh );
 			invalidateGeometry();
-
 		}
 
 		override public function dispose():void {

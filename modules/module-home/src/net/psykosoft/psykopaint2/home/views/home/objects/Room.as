@@ -13,6 +13,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.base.utils.SlicePlane;
+
 	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
@@ -20,7 +22,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	{
 		private var _wall:Mesh;
 		private var _floor:Mesh;
-		private var _shadowMesh:Mesh;
 		private var _shadows:Vector.<Mesh>;
 		private var _shadowMaterial:TextureMaterial;
 		private var _floorMaterial:TextureMaterial;
@@ -34,10 +35,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private const WALL_Z:Number = 400;
 
 		private const FLOOR_DEPTH:Number = 1500;
-
-		private const SHADOW_INFLATION_X:Number = 1.075;
-		private const SHADOW_INFLATION_Y:Number = 1.1;
-		private const SHADOW_OFFSET_Y:Number = -50;
 
 		public function Room( view:View3D ) {
 			super();
@@ -86,10 +83,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_shadowMaterial.mipmap = false;
 			_shadowMaterial.alpha = 0.9;
 			_shadowMaterial.alphaBlending = true;
-
-			// Mesh.
-			_shadowMesh = new Mesh( new PlaneGeometry( 512, 512 ), _shadowMaterial );
-			_shadowMesh.rotationX = -90;
 
 			// Clone holder.
 			_shadows = new Vector.<Mesh>();
@@ -151,9 +144,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 //			_shadowTexture.dispose();
 //			_shadowMaterial.dispose();
 			_shadowMaterial = null;
-
-			_shadowMesh.dispose();
-			_shadowMesh = null;
 		}
 
 		// -----------------------
@@ -161,12 +151,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		// -----------------------
 
 		public function addShadow( x:Number, y:Number, width:Number, height:Number ):void {
-			var shadow:Mesh = _shadowMesh.clone() as Mesh;
-			shadow.x = x;
-			shadow.y = y + SHADOW_OFFSET_Y;
+			var shadow:SlicePlane = new SlicePlane( _shadowMaterial, 1024, 1024 );
+			shadow.setSlices( 100, 100, 275, 275 );
+			shadow.rotationX = -90;
+			shadow.x = x - 10;
+			shadow.y = y;
 			shadow.z = WALL_Z - 1;
-			shadow.scaleX = SHADOW_INFLATION_X * width / 512;
-			shadow.scaleZ = SHADOW_INFLATION_Y * height / 512;
+			shadow.width = width + 148;
+			shadow.height = height + 450;
 			_shadows.push( shadow );
 			addChild( shadow );
 		}

@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			addChild( pictureFrame );
 
 			// Create shadow.
-			_room.addShadow( pictureFrame.x, this.y, pictureFrame.width, pictureFrame.height );
+			_room.addShadow( pictureFrame.x, this.y, pictureFrame.width * PAINTINGS_SCALE, pictureFrame.height * PAINTINGS_SCALE );
 		}
 
 		public function loadDefaultHomeFrames():void {
