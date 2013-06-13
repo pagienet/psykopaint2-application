@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:1984743999362c9f1428372af7cb76ed$ -->
+<!-- $TexturePacker:SmartUpdate:c7cda6e2889828bbb5bdc4668dc347fe$ -->
 <TextureAtlas imagePath="wallpapers.png">
-    <SubTexture name="barkWood" x="262" y="522" width="128" height="128"/>
-    <SubTexture name="bricks" x="132" y="522" width="128" height="128"/>
-    <SubTexture name="cardboard" x="2" y="782" width="128" height="128"/>
-    <SubTexture name="default" x="2" y="652" width="128" height="128"/>
-    <SubTexture name="furryBlack" x="2" y="522" width="128" height="128"/>
-    <SubTexture name="greenGrass" x="262" y="392" width="128" height="128"/>
-    <SubTexture name="haystack" x="132" y="392" width="128" height="128"/>
-    <SubTexture name="metal1" x="2" y="392" width="128" height="128"/>
-    <SubTexture name="metal2" x="262" y="262" width="128" height="128"/>
-    <SubTexture name="metal3" x="132" y="262" width="128" height="128"/>
-    <SubTexture name="paper1" x="2" y="262" width="128" height="128"/>
-    <SubTexture name="paper2" x="262" y="132" width="128" height="128"/>
-    <SubTexture name="stars" x="132" y="132" width="128" height="128"/>
-    <SubTexture name="stones" x="2" y="132" width="128" height="128"/>
-    <SubTexture name="vintage1" x="2" y="912" width="128" height="83"/>
-    <SubTexture name="wood" x="262" y="2" width="128" height="128"/>
-    <SubTexture name="woodPlanks" x="132" y="2" width="128" height="128"/>
-    <SubTexture name="yellowFlowers" x="2" y="2" width="128" height="128"/>
+    <SubTexture name="barkWood" x="406" y="810" width="200" height="200"/>
+    <SubTexture name="bricks" x="406" y="608" width="200" height="200"/>
+    <SubTexture name="cardboard" x="406" y="406" width="200" height="200"/>
+    <SubTexture name="default" x="810" y="204" width="200" height="200"/>
+    <SubTexture name="furryBlack" x="608" y="204" width="200" height="200"/>
+    <SubTexture name="greenGrass" x="406" y="204" width="200" height="200"/>
+    <SubTexture name="haystack" x="204" y="810" width="200" height="200"/>
+    <SubTexture name="metal1" x="204" y="608" width="200" height="200"/>
+    <SubTexture name="metal2" x="204" y="406" width="200" height="200"/>
+    <SubTexture name="metal3" x="204" y="204" width="200" height="200"/>
+    <SubTexture name="paper1" x="810" y="2" width="200" height="200"/>
+    <SubTexture name="paper2" x="608" y="2" width="200" height="200"/>
+    <SubTexture name="stars" x="406" y="2" width="200" height="200"/>
+    <SubTexture name="stones" x="204" y="2" width="200" height="200"/>
+    <SubTexture name="vintage1" x="2" y="810" width="200" height="200"/>
+    <SubTexture name="white" x="2" y="608" width="200" height="200"/>
+    <SubTexture name="wood" x="2" y="406" width="200" height="200"/>
+    <SubTexture name="woodPlanks" x="2" y="204" width="200" height="200"/>
+    <SubTexture name="yellowFlowers" x="2" y="2" width="200" height="200"/>
 </TextureAtlas>
