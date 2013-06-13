@@ -61,7 +61,7 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 			// Specific parameter ui components will show up when clicking on a button.
 			var list:XMLList = _parametersXML.descendants( "parameter" );
 			var numParameters:uint = list.length();
-			var firstParamId:String = "";
+			var firstParamId:String = list[ 0 ].@id;
 //			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
 			for( var i:uint; i < numParameters; ++i ) {
 				var parameter:XML = list[ i ];
@@ -76,12 +76,10 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 			}
 			invalidateContent();
 
-		    // Select and <<< activate >>> the first parameter.
-			if ( firstParamId != "" )
-			{
-				selectButtonWithLabel( firstParamId );
-				openParameter( firstParamId );
-			}
+			// Select and <<< activate >>> the first parameter.
+//			trace( this, "first: >>>" + firstParamId + "<<<" );
+			selectButtonWithLabel( firstParamId );
+			openParameter( firstParamId );
 		}
 		
 		public function updateParameters( xml:XML ):void 
