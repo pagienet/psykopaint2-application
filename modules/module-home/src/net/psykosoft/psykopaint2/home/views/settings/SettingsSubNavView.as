@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override protected function onEnabled():void {
 
 			setLabel( "Settings" );
+//			areButtonsSelectable( true );
 
 			addCenterButton( LBL_WALLPAPER );
 			addCenterButton( "[setting1]" );

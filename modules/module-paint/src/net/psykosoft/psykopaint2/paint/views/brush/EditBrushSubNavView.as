@@ -256,7 +256,6 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 
 		private function onComboBoxChanged( event:Event ):void {
 			var comboBox:SbComboboxView = event.target as SbComboboxView;
-			// TODO: passed index seems to be inverted
 			_parameter.@index = comboBox.selectedIndex;
 			notifyParameterChange();
 		}

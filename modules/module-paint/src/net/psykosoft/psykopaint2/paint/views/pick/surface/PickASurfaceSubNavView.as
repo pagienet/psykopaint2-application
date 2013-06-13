@@ -16,11 +16,17 @@ package net.psykosoft.psykopaint2.paint.views.pick.surface
 
 		override protected function onEnabled():void {
 			setLabel( "Pick a Surface" );
+			areButtonsSelectable( true );
 			setLeftButton( LBL_BACK );
 			addCenterButton( LBL_SURF1 );
 			addCenterButton( LBL_SURF2 );
 			addCenterButton( LBL_SURF3 );
 			invalidateContent();
+		}
+
+		public function setSelectedSurfaceBtn( ):void {
+			selectButtonWithLabel( PickASurfaceCache.getLastSelectedSurface() );
+			trace( PickASurfaceCache.getLastSelectedSurface() );
 		}
 	}
 }

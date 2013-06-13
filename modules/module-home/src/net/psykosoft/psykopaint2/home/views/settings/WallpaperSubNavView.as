@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		override protected function onEnabled():void {
 			setLabel( "Settings" );
+			areButtonsSelectable( true );
 			setLeftButton( LBL_BACK );
 			invalidateContent();
 		}
@@ -34,8 +35,11 @@ package net.psykosoft.psykopaint2.home.views.settings
 				var name:String = names[ i ];
 				addCenterButton( name, "", ButtonLabelType.CENTER, new Bitmap( atlas.getSubTextureForId( name ) ) );
 			}
-
 			invalidateContent();
+		}
+
+		public function setSelectedWallpaperBtn( ):void {
+			selectButtonWithLabel( WallpaperCache.getLastSelectedWallpaper() );
 		}
 	}
 }

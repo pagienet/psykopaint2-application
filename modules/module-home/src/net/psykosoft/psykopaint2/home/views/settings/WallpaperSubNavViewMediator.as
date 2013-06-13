@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 			view.setImages( new BitmapAtlas( bmd, xml ) );
 			_atlasLoader.dispose();
 			_atlasLoader = null;
+			view.setSelectedWallpaperBtn();
 		}
 
 		private function onButtonClicked( label:String ):void {
@@ -55,6 +56,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 				}
 				default: { // Center buttons are wallpaper thumbnails.
 					getFullImageAndSetAsWallpaper( label );
+					WallpaperCache.setLastSelectedWallpaper( label );
 				}
 			}
 		}
