@@ -251,7 +251,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					//  Start drawing at the very first point
 					if (  n == nStart ) 
 					{ 
-						result.addXY(fx,fy,-1,true);
+						result.addXY(fx,fy,-1,0,true);
 						//g.moveTo(fx,fy);
 					}
 					//  Accent the beginning of eachsegment (knot)
@@ -277,7 +277,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						//
 						
 						//g.lineTo(fx,fy); 
-						result.addXY(fx,fy,-1,true);
+						result.addXY(fx,fy,-1,0,true);
 						
 					}	 //  j   sub-step "between" vectors
 					
@@ -341,7 +341,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					if (  n == nStart ) 
 					{ 
 						//g.moveTo(fx,fy);
-						result.addXY(fx,fy,-1,true);
+						result.addXY(fx,fy,-1,0,true);
 					}
 					
 					//
@@ -351,7 +351,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						fy = fy+fd1y;  //interpolated y value
 						//              And another for "Z"
 						
-						result.addXY(fx,fy,-1,true);
+						result.addXY(fx,fy,-1,0,true);
 						//
 						fd1x=fd1x+fd2x; 
 						fd1y=fd1y+fd2y; // Next speed

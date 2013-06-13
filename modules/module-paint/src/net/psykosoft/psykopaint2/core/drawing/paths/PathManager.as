@@ -38,23 +38,23 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			}
 		}
 
-		static public function getSamplePointXY(x : Number, y : Number, speed : Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, colors:Vector.<Number> = null) : SamplePoint
+		static public function getSamplePointXY(x : Number, y : Number, speed : Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null) : SamplePoint
 		{
 			if (_samplePointDepot.length > 0) {
 				var p : SamplePoint = _samplePointDepot.pop();
-				return p.resetData(x, y, speed, size, angle, pressure, colors);
+				return p.resetData(x, y, speed, size, angle, pressure, penButtonState, colors);
 			} else {
-				return new SamplePoint(x, y,  speed, size, angle, pressure, colors);
+				return new SamplePoint(x, y,  speed, size, angle, pressure, penButtonState, colors);
 			}
 		}
 		
-		static public function getSamplePoint( point:Point, speed : Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, colors:Vector.<Number> = null) : SamplePoint
+		static public function getSamplePoint( point:Point, speed : Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null) : SamplePoint
 		{
 			if (_samplePointDepot.length > 0) {
 				var p : SamplePoint = _samplePointDepot.pop();
-				return p.resetData(point.x, point.y, speed, size, angle, pressure, colors);
+				return p.resetData(point.x, point.y, speed, size, angle, pressure, penButtonState, colors);
 			} else {
-				return new SamplePoint(point.x, point.y,  speed, size, angle, pressure, colors);
+				return new SamplePoint(point.x, point.y,  speed, size, angle, pressure, penButtonState, colors);
 			}
 		}
 
@@ -273,13 +273,20 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		protected function onSamplePoint(location : Point) : void
 		{
-			//TODO: add pressure info here
-			if ( _pathEngine.addPoint(location, WacomPenManager.hasPen ? WacomPenManager.currentPressure : -1 )) update();
+			if ( WacomPenManager.hasPen )
+			{
+				if ( _pathEngine.addPoint(location, WacomPenManager.currentPressure, WacomPenManager.buttonState) ) update();
+			} else {
+				if ( _pathEngine.addPoint(location, -1, 0) ) update();
+			}
 		}
 
 		protected function onSampleEnd(location : Point) : void
 		{
-			_pathEngine.addPoint(location,WacomPenManager.hasPen ? WacomPenManager.currentPressure : -1 , true); //TODO: add pressure info here
+			if ( WacomPenManager.hasPen )
+				_pathEngine.addPoint(location, WacomPenManager.currentPressure, WacomPenManager.buttonState, true); 
+			 else 
+				_pathEngine.addPoint(location, -1, 0, true); 
 			update(true);
 			onEnterFrame(null);
 			if (!hasActiveDecorators() )

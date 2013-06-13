@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		}
 		
 		
-		override public function addFirstPoint( p:Point, pressure:Number = -1 ):void
+		override public function addFirstPoint( p:Point, pressure:Number = -1, penButtonState:int = 0 ):void
 		{
 			_lastX = p.x;
 			_lastY = p.y;
@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_lastSpeed = 0;
 			_lastAngle = NaN;
 			_lastPressure = pressure;
-			super.addFirstPoint(p,pressure);
+			super.addFirstPoint(p,pressure,penButtonState);
 		}
 		
 		override public function update(forceUpdate : Boolean = false) : Vector.<SamplePoint>
@@ -90,10 +90,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					}
 					
 					var dp:Number = (target.pressure - _lastPressure)  * stepSize;
-						
+					var pb:int = target.penButtonState;	
 					var step:Number = stepSize;
 					angle = _lastAngle;
-					var pressure:Number = _lastPressure;
+					
 					d /= outputStep;
 					dx /= d;
 					dy /= d;
@@ -106,7 +106,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						_lastAngle = angle + da *(-Math.pow(2, -10 * step) + 1);
 						_lastPressure += dp;
 						step+=stepSize;
-						result.push( PathManager.getSamplePointXY( _lastX, _lastY, _lastSpeed,0, _lastAngle, _lastPressure ) );
+						result.push( PathManager.getSamplePointXY( _lastX, _lastY, _lastSpeed,0, _lastAngle, _lastPressure, pb ) );
 						_accumulatedDistance-=outputStep;
 					}
 					

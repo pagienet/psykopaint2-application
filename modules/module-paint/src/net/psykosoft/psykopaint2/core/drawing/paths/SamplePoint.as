@@ -11,14 +11,15 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public var normalY:Number;
 		public var size:Number;
 		public var pressure:Number;
+		public var penButtonState:int;
 		
-		public function SamplePoint( x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, colors:Vector.<Number> = null)
+		public function SamplePoint( x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null)
 		{
 			colorsRGBA = new Vector.<Number>();
-			resetData(x, y, speed, size, angle, pressure, colors);
+			resetData(x, y, speed, size, angle, pressure, penButtonState, colors);
 		}
 		
-		public function resetData(x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, colors:Vector.<Number> = null):SamplePoint
+		public function resetData(x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null):SamplePoint
 		{
 			this.x = x;
 			this.y = y;
@@ -26,7 +27,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			this.angle = angle;
 			this.size = size;
 			this.pressure = pressure;
-			
+			this.penButtonState = penButtonState;
 			if ( colors == null )
 			{
 				for ( var i:int = 0; i < 16; i++ )
@@ -50,7 +51,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		public function getClone():SamplePoint
 		{
-			return PathManager.getSamplePoint(this,speed,size, angle, pressure, colorsRGBA);
+			return PathManager.getSamplePoint(this,speed,size, angle, pressure, penButtonState, colorsRGBA);
 		}
 		
 		public function squaredDistance( p:SamplePoint ):Number

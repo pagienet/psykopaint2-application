@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function SizeDecorator()
 		{
 			super();
-			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed","Pressure"]);
+			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed","Pressure","Automatic"]);
 			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,"Factor",0,1,0,10);
 			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,"Mapping",0,["Linear","Quadratic In","Quadratic InOut","Quadratic Out","Quartic In","Quartic InOut","Quartic Out","Quintic In","Quintic InOut","Quintic Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
 			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,"Invert Mapping",0);
@@ -71,7 +71,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					} else {
 						point.size = rng.getNumber(minFactor,maxFactor );
 					}
-				}
+				} else if ( mode == 3 )
+				{
+					if ( point.pressure != -1 )
+					{
+						point.size = mapping.apply( null, [point.pressure / 2000,0,1,1]);
+					} else {
+						point.size = mapping.apply( null, [Math.min(point.speed,maxSpeed.numberValue),0,ms,ms]);
+					}
+					if ( inv ) point.size = ms - point.size;
+					point.size = minFactor + point.size * (maxFactor - minFactor );
+				} 
 			}
 			return points;
 		}
