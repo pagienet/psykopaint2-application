@@ -186,7 +186,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		protected function onTouchEnd(event : TouchEvent) : void
 		{
-			if (event.touchPointID == _touchID) {
+			if ( event.touchPointID == _touchID ) 
+			{
 				_listeningToTouch = false;
 				onSampleEnd(event.stageX, event.stageY);
 				_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
@@ -252,7 +253,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_pathEngine.clear();
 			if ( WacomPenManager.hasPen )
 			{
-				_pathEngine.addFirstPoint(px,py, WacomPenManager.currentPressure, WacomPenManager.buttonState);
+				_pathEngine.addFirstPoint( px, py, WacomPenManager.currentPressure, WacomPenManager.buttonState);
 			} else {
 			 	_pathEngine.addFirstPoint( px, py, -1, 0);
 			}

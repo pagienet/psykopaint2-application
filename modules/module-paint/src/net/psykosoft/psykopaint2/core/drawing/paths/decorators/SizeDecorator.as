@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function SizeDecorator()
 		{
 			super();
-			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed","Pressure","Automatic"]);
+			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed","Pressure","Automatic","Multiply","Add"]);
 			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,"Factor",0,1,0,10);
 			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,"Mapping",0,["Linear","Quadratic In","Quadratic InOut","Quadratic Out","Quartic In","Quartic InOut","Quartic Out","Quintic In","Quintic InOut","Quintic Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
 			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,"Invert Mapping",0);
@@ -57,30 +57,35 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					point.size = rng.getNumber(minFactor,maxFactor );
 				} else if ( mode == 1 )
 				{
-					point.size = mapping.apply( null, [Math.min(point.speed,maxSpeed.numberValue),0,ms,ms]);
-					if ( inv ) point.size = ms - point.size;
+					point.size = mapping.apply( null, [Math.min(point.speed,ms) / ms,0,1,1]);
+					if ( inv ) point.size = 1 - point.size;
 					point.size = minFactor + point.size * (maxFactor - minFactor );
 				}  else if ( mode == 2 )
 				{
-					if ( point.pressure != -1 )
+					if ( point.pressure > 0 )
 					{
-						
 						point.size = mapping.apply( null, [point.pressure / 2000,0,1,1]);
 						if ( inv ) point.size = 1 - point.size;
 						point.size = minFactor + point.size * (maxFactor - minFactor );
 					} else {
-						point.size = rng.getNumber(minFactor,maxFactor );
+						point.size = minFactor;
 					}
 				} else if ( mode == 3 )
 				{
-					if ( point.pressure != -1 )
+					if ( point.pressure > 0 )
 					{
 						point.size = mapping.apply( null, [point.pressure / 2000,0,1,1]);
 					} else {
-						point.size = mapping.apply( null, [Math.min(point.speed,maxSpeed.numberValue),0,ms,ms]);
+						point.size = mapping.apply( null, [Math.min(point.speed,ms) / ms,0,1,1]);
 					}
-					if ( inv ) point.size = ms - point.size;
+					if ( inv ) point.size = 1 - point.size;
 					point.size = minFactor + point.size * (maxFactor - minFactor );
+				}  else if ( mode == 4 )
+				{
+					point.size *= rng.getNumber(minFactor,maxFactor );
+				} else if ( mode == 5 )
+				{
+					point.size *= rng.getNumber(minFactor,maxFactor );
 				} 
 			}
 			return points;

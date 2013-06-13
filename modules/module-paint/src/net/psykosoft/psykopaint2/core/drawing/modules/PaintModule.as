@@ -101,14 +101,43 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<parameter id="Shapes" path="brush" index="0" list="splat3,splat,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
-							<parameter id="Mode" path="pathengine.pointdecorator_0" index="2" />
-							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.2" minValue="0" maxValue="4" showInUI="1"/>
+							<parameter id="Mode" path="pathengine.pointdecorator_0" index="3" />
+							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.4" minValue="0" maxValue="10" showInUI="1"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="0" showInUI="1"/>
 						</SizeDecorator>
+						<ConditionalDecorator>
+							<!-- if pen button 1 is pressed -->
+							<parameter id="Test Property"  path="pathengine.pointdecorator_1" index="5" />
+						</ConditionalDecorator>
+						<SpawnDecorator>
+							<parameter id="Multiples" value1="3" value2="10" path="pathengine.pointdecorator2" />
+							<parameter id="Maximum Offset" path="pathengine.pointdecorator_2" value="16"/>
+							<parameter id="Offset Parent Point" path="pathengine.pointdecorator_2" value="1"/>
+						</SpawnDecorator>
+						<SplatterDecorator>
+							<parameter id="Mode" path="pathengine.pointdecorator_3" index="2" />
+							<parameter id="Offset Mapping" path="pathengine.pointdecorator_3" value="0" />
+							<parameter id="Splat Factor"  path="pathengine.pointdecorator_3" value="40" />
+							<parameter id="Minimum Offset" path="pathengine.pointdecorator_3" value="0" />
+							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_3" value="180" />
+							<parameter id="Size Factor" path="pathengine.pointdecorator_3" value="0.8" />
+						</SplatterDecorator>
+						<EndConditionalDecorator/>
+						<EndConditionalDecorator/>
+						<ConditionalDecorator>
+							<!-- if pen button 2 is pressed -->
+							<parameter id="Test Property"  path="pathengine.pointdecorator_6" index="6" />
+						</ConditionalDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
-							<parameter id="Saturation"  path="pathengine.pointdecorator_1"/>
+							<parameter id="Pick Color"  path="pathengine.pointdecorator_7" value="0" />
+							<parameter id="Fixed Color"  path="pathengine.pointdecorator_7" value="1" />
 						</ColorDecorator>
+						<EndConditionalDecorator/>
+						<ColorDecorator>
+							<parameter id="Pick Color"  path="pathengine.pointdecorator_8" value="1" />
+						</ColorDecorator>
+						<EndConditionalDecorator/>
+						
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
@@ -117,9 +146,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0.0001" value2="0.06" minValue="0" maxValue="0.5"/>
+							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.9" minValue="0" maxValue="10"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" showInUI="1"/>
-							<parameter id="Invert Mapping" path="pathengine.pointdecorator_0" value="0"/>
+							<parameter id="Invert Mapping" path="pathengine.pointdecorator_0" value="0" />
 						</SizeDecorator>
 						<ColorDecorator>
 							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />

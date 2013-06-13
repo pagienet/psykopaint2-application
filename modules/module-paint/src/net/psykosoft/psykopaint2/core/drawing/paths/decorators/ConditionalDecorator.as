@@ -73,7 +73,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 						result[((points[i].penButtonState & 1) == 1 ? 0 : 1)].push(points[i]);
 						break;
 					case 6:
-						//Pen Button 1
+						//Pen Button 2
 						result[((points[i].penButtonState & 2) == 2  ? 0 : 1)].push(points[i]);
 						break;
 				}

@@ -11,8 +11,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function SplatBrushBase(drawToHeightMap : Boolean)
 		{
 			super(drawToHeightMap);
-			_maxBrushRenderSize = 128;
-			_minBrushRenderSize = 2;
+			//I think this should rather be parameters. Right now this affect all brushes when changed so tread carefully:
+			_maxBrushRenderSize = 256;
+			_minBrushRenderSize = 1;
 		}
 
 		override protected function createColorStrategy() : IColorStrategy
