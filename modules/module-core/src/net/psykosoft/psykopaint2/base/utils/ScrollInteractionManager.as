@@ -76,5 +76,9 @@ package net.psykosoft.psykopaint2.base.utils
 		public function get pStack():StackUtil {
 			return _pStack;
 		}
+
+		public function get isInteracting():Boolean {
+			return _isInteracting;
+		}
 	}
 }
