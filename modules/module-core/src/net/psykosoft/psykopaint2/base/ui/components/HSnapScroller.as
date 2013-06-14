@@ -39,6 +39,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 			_positionManager = new SnapPositionManager();
 			_interactionManager = new ScrollInteractionManager( _positionManager );
+			_interactionManager.useDetailedDelta = false;
 
 			motionStartedSignal = new Signal();
 			motionEndedSignal = new Signal();
