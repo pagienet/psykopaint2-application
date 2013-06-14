@@ -136,6 +136,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_animating = false;
 			_hidden = true;
 			_targetReactiveY = 768 * scaleX - _bgHeight * 0.2;
+			NavigationCache.isHidden = true;
 		}
 
 		public function show():void {
@@ -154,6 +155,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			shownSignal.dispatch();
 			_hidden = false;
 			_targetReactiveY = 768 * scaleX - _bgHeight;
+			NavigationCache.isHidden = false;
 		}
 
 		public function updateSubNavigation( subNavType:Class ):void {

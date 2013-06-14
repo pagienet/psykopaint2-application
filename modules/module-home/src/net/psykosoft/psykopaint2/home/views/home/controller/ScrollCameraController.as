@@ -95,6 +95,15 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_camera.z += offZ;
 		}
 
+		public function adjustY( posY:Number ):void {
+			_camera.y = posY;
+			_cameraTarget.y = _camera.y;
+		}
+
+		public function adjustZ( posZ:Number ):void {
+			_camera.z = posZ;
+		}
+
 		public function zoomIn( targetY:Number, targetZ:Number ):void {
 			_zoomedIn = true;
 			TweenLite.killTweensOf( _cameraTarget );

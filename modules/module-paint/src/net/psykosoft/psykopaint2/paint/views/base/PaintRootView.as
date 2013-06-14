@@ -27,12 +27,12 @@ package net.psykosoft.psykopaint2.paint.views.base
 			addRegisteredView( new PickAnImageView(), this );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
-			StateToSubNavLinker.linkSubNavToState( StateType.STATE_COLOR_STYLE, ColorStyleSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.STATE_PAINT, CanvasSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.STATE_PAINT_SELECT_BRUSH, SelectBrushSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.STATE_CROP, CropSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.STATE_PAINT_ADJUST_BRUSH, EditBrushSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.STATE_PICK_SURFACE, PickASurfaceSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.COLOR_STYLE, ColorStyleSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.PAINT, CanvasSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_SELECT_BRUSH, SelectBrushSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.CROP, CropSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_ADJUST_BRUSH, EditBrushSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.PICK_SURFACE, PickASurfaceSubNavView );
 		}
 	}
 }

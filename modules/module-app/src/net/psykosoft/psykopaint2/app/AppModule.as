@@ -102,7 +102,7 @@ package net.psykosoft.psykopaint2.app
 		private function onViewsReady():void {
 
 			// Trigger initial state...
-			_coreModule.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
+			_coreModule.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
 
 			// Listen for splash out.
 			_coreModule.coreRootView.splashScreenRemovedSignal.addOnce( onSplashOut );

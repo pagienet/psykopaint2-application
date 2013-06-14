@@ -34,7 +34,7 @@ public class PickASurfaceSubNavViewMediator extends MediatorBase
 
 			switch( label ) {
 				case PickASurfaceSubNavView.LBL_BACK:
-					requestStateChange( StateType.STATE_PREVIOUS );
+					requestStateChange( StateType.PREVIOUS );
 					break;
 				case PickASurfaceSubNavView.LBL_SURF1:
 						PickASurfaceCache.setLastSelectedSurface( label );

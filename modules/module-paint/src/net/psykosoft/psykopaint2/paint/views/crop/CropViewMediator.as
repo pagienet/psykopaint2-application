@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 			super.initialize();
 			registerView( view );
-			registerEnablingState( StateType.STATE_CROP );
+			registerEnablingState( StateType.CROP );
 
 			// From app.
 			notifyCropModuleActivatedSignal.add( onCropModuleActivated );

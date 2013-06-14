@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case ColorStyleSubNavView.LBL_PICK_AN_IMAGE: {
-					requestStateChange( StateType.STATE_PICK_IMAGE );
+					requestStateChange( StateType.PICK_IMAGE );
 					break;
 				}
 				case ColorStyleSubNavView.LBL_CONFIRM: {

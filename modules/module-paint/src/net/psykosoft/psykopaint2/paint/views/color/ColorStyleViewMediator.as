@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			// Init.
 			super.initialize();
 			registerView( view );
-			registerEnablingState( StateType.STATE_COLOR_STYLE );
+			registerEnablingState( StateType.COLOR_STYLE );
 
 			// From app.
 			notifyColorStyleModuleActivatedSignal.add( onModuleActivated );

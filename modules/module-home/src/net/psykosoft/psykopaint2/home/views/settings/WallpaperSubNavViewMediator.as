@@ -51,7 +51,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case WallpaperSubNavView.LBL_BACK: {
-					requestStateChange( StateType.STATE_SETTINGS );
+					requestStateChange( StateType.SETTINGS );
 					break;
 				}
 				default: { // Center buttons are wallpaper thumbnails.

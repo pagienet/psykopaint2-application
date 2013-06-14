@@ -1,7 +1,12 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 
+	import flash.display.BitmapData;
+	import flash.utils.setTimeout;
+
+	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -17,7 +22,11 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyZoomCompleteSignal:NotifyZoomCompleteSignal;
 
+		[Inject]
+		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotSignal;
+
 		private var _waitingForZoom:Boolean;
+		private var _waitingForSnapShot:Boolean;
 
 		override public function initialize():void {
 
@@ -30,6 +39,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// From app.
 			notifyZoomCompleteSignal.add( onZoomComplete );
+			notifyCanvasBitmapSignal.add( onCanvasSnapshot );
 		}
 
 		// -----------------------
@@ -50,10 +60,17 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 
 		private function onZoomComplete():void {
-			if( _waitingForZoom ) {
-				_waitingForZoom = false;
-				requestStateChange( StateType.STATE_PAINT );
-			}
+			if( !_waitingForZoom ) return;
+			_waitingForZoom = false;
+			_waitingForSnapShot = true;
+			requestStateChange( StateType.GOING_TO_PAINT );
+			RenderGpuCommand.snapshotRequested = true;
+		}
+
+		private function onCanvasSnapshot( bmd:BitmapData ):void {
+			if( !_waitingForSnapShot ) return;
+			_waitingForSnapShot = false;
+			requestStateChange( StateType.PAINT );
 		}
 
 		// -----------------------

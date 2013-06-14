@@ -71,10 +71,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			super.initialize();
 			registerView( view );
-			registerEnablingState( StateType.STATE_PAINT );
-			registerEnablingState( StateType.STATE_PAINT_SELECT_BRUSH );
-			registerEnablingState( StateType.STATE_PAINT_ADJUST_BRUSH );
-			registerEnablingState( StateType.STATE_PICK_SURFACE );
+			registerEnablingState( StateType.PAINT );
+			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
+			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
+			registerEnablingState( StateType.PICK_SURFACE );
 
 			// Init.
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
@@ -140,7 +140,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
-			if( newState != StateType.STATE_PAINT ) {
+			if( newState != StateType.PAINT ) {
 				paintModule.stopAnimations();
 			}
 		}

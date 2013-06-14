@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.core.commands
 
 		override public function execute():void {
 			super.execute();
-			if( newState == StateType.STATE_PREVIOUS ) {
+			if( newState == StateType.PREVIOUS ) {
 				stateModel.returnToPreviousState();
 			}
 			else {

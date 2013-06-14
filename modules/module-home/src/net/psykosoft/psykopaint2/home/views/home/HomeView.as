@@ -8,12 +8,14 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PictureFrameContainer;
 	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
@@ -211,23 +213,38 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.render();
 		}
 
+		public static const DEFAULT_ZOOM_IN:Point = new Point( 400, -800 );
+		public static const EASEL_CLOSE_ZOOM_IN:Point = new Point( 315, -900 );
+		public static const EASEL_FAR_ZOOM_IN:Point = new Point( 170, -1160 );
+
 		public function zoomIn():void {
 			// TODO: evaluate zoom in y and z for current snap point
 
-			var zoomY:Number = 400; // Default values.
-			var zoomZ:Number = -800;
+			var zoomY:Number = DEFAULT_ZOOM_IN.x; // Default values.
+			var zoomZ:Number = DEFAULT_ZOOM_IN.y;
 
 			var index:uint = _cameraController.positionManager.closestSnapPointIndex;
 
 			// Easel.
 			if( index == 1 ) {
-				zoomY = 320;
-				zoomZ = -900;
+				if( !NavigationCache.isHidden ) {
+					zoomY = EASEL_FAR_ZOOM_IN.x;
+					zoomZ = EASEL_FAR_ZOOM_IN.y;
+				}
+				else {
+					zoomY = EASEL_CLOSE_ZOOM_IN.x;
+					zoomZ = EASEL_CLOSE_ZOOM_IN.y;
+				}
 			}
 
 			trace( this, "zooming in to Y: " + zoomY + ", Z: " + zoomZ );
 
 			_cameraController.zoomIn( zoomY, zoomZ );
+		}
+
+		public function adjustCamera( py:Number, pz:Number ):void {
+			_cameraController.adjustY( py );
+			_cameraController.adjustZ( pz );
 		}
 
 		public function zoomOut():void {

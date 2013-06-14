@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			// Init.
 			super.initialize();
 			registerView( view );
-			registerEnablingState( StateType.STATE_PICK_IMAGE );
+			registerEnablingState( StateType.PICK_IMAGE );
 
 			// From view.
 			view.imagePickedSignal.add( onImagePicked );
@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 	//			notifyColorStyleCompleteSignal.dispatch( bmd ); // Goes straight to paint mode.
 			}
 			else {
-				requestStateChange( StateType.STATE_PREVIOUS );
+				requestStateChange( StateType.PREVIOUS );
 			}
 		}
 	}

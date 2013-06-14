@@ -75,7 +75,7 @@ package net.psykosoft.psykopaint2.home
 
 			if( isStandalone ) {
 				// Trigger initial state...
-				_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.STATE_HOME );
+				_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
 			}
 
 			// Listen for splash out.

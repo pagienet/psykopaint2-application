@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case EditBrushSubNavView.LBL_BACK: {
-					requestStateChange( StateType.STATE_PREVIOUS );
+					requestStateChange( StateType.PREVIOUS );
 					break;
 				}
 				// WARNING: be careful if another side button is added since default should only be for parameter buttons.

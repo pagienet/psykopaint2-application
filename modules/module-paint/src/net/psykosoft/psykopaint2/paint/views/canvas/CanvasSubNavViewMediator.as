@@ -48,15 +48,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			switch( label ) {
 				case CanvasSubNavView.LBL_PICK_AN_IMAGE: {
 					requestNavigationToggleSignal.dispatch( -1 );
-					requestStateChange( StateType.STATE_PICK_IMAGE );
+					requestStateChange( StateType.PICK_IMAGE );
 					break;
 				}
 				case CanvasSubNavView.LBL_PICK_A_SURFACE: {
-					requestStateChange( StateType.STATE_PICK_SURFACE );
+					requestStateChange( StateType.PICK_SURFACE );
 					break;
 				}
 				case CanvasSubNavView.LBL_PICK_A_BRUSH: {
-					requestStateChange( StateType.STATE_PAINT_SELECT_BRUSH );
+					requestStateChange( StateType.PAINT_SELECT_BRUSH );
 					break;
 				}
 				case CanvasSubNavView.LBL_HOME: {
@@ -85,7 +85,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			trace( this, "snapshot retrieved, changing state" );
 			requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, view.stage.stageWidth, view.stage.stageHeight * 0.76 ) );
 			_waitingForSnapshot = false;
-			requestStateChange( StateType.STATE_HOME_ON_EASEL );
+			requestStateChange( StateType.HOME_ON_EASEL );
 		}
 	}
 }

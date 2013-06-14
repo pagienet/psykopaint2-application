@@ -34,11 +34,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case SelectBrushSubNavView.LBL_BACK: 
-					requestStateChange( StateType.STATE_PREVIOUS );
+					requestStateChange( StateType.PREVIOUS );
 					break;
 				
 				case SelectBrushSubNavView.LBL_EDIT_BRUSH: 
-					requestStateChange( StateType.STATE_PAINT_ADJUST_BRUSH );
+					requestStateChange( StateType.PAINT_ADJUST_BRUSH );
 					break;
 				
 				default: // Center buttons select a brush.

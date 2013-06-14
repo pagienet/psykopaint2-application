@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.snapshot.HomeSnapShotView;
+	import net.psykosoft.psykopaint2.home.views.snapshot.HomeSnapShotViewMediator;
 
 	import org.swiftsuspenders.Injector;
 
@@ -94,6 +96,7 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( SettingsSubNavView ).toMediator( SettingsSubNavViewMediator );
 			_mediatorMap.map( WallpaperSubNavView ).toMediator( WallpaperSubNavViewMediator );
 			_mediatorMap.map( HomeSubNavView ).toMediator( HomeSubNavViewMediator );
+			_mediatorMap.map( HomeSnapShotView ).toMediator( HomeSnapShotViewMediator );
 		}
 	}
 }

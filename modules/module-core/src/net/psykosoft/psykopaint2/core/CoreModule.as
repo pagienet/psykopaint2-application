@@ -288,7 +288,7 @@ package net.psykosoft.psykopaint2.core
 				// Show navigation.
 				_requestNavigationToggleSignal.dispatch( 1 );
 			}
-			_stateSignal.dispatch( StateType.STATE_IDLE );
+			_stateSignal.dispatch( StateType.IDLE );
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
 			moduleReadySignal.dispatch();
 			// Remove splash screen.

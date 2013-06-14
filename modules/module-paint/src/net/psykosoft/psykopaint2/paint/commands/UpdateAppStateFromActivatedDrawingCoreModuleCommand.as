@@ -23,15 +23,15 @@ package net.psykosoft.psykopaint2.paint.commands
 			switch( moduleActivationVO.activatedModuleType ) {
 
 				case ModuleType.PAINT:
-					newState = StateType.STATE_PAINT;
+					newState = StateType.PAINT;
 					break;
 
 				case ModuleType.CROP:
-					newState = StateType.STATE_CROP;
+					newState = StateType.CROP;
 					break;
 
 				case ModuleType.COLOR_STYLE:
-					newState = StateType.STATE_COLOR_STYLE;
+					newState = StateType.COLOR_STYLE;
 					break;
 
 				case ModuleType.SMEAR:
