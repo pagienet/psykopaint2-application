@@ -179,7 +179,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onCanvasBitmapReceived( bmd:BitmapData ):void {
-			trace( this, "retrieved canvas bitmap: " + bmd );
+//			trace( this, "retrieved canvas bitmap: " + bmd );
 //			view.addChild( new Bitmap( bmd ) );
 			view.updateEasel( bmd );
 			// TODO: cant we just pass the back buffer texture from canvas model to the easel's material? why do we need a bitmap?
@@ -190,19 +190,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.cameraController.limitInteractionToUpperPartOfTheScreen( shown );
 		}
 
-		private function onGlobalGesture( type:String ):void {
+		private function onGlobalGesture( gestureType:String ):void {
+//			trace( this, "onGlobalGesture: " + gestureType );
 			if( !view.visible ) return;
-			if( type == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN ) {
+			if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN || gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
 				view.cameraController.startPanInteraction();
 			}
-			else if( type == GestureType.HORIZONTAL_PAN_GESTURE_ENDED ) {
+			else if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_ENDED || gestureType == GestureType.VERTICAL_PAN_GESTURE_ENDED ) {
 				view.cameraController.endPanInteraction();
-			}
-			else if( type == GestureType.PINCH_GREW ) {
-				view.zoomIn();
-			}
-			else if( type == GestureType.PINCH_SHRANK ) {
-				view.zoomOut();
 			}
 		}
 
