@@ -57,8 +57,12 @@ public class CoreRootView extends RootViewBase
 			addChild( _applicationLayer );
 			_debugLayer = new Sprite();
 			_debugLayer.name = "debug layer";
+			_debugLayer.mouseEnabled = false;
 			addChild( _debugLayer );
-
+			
+			//not sure if this is bad, but it does not seem to be harmful either
+			mouseEnabled = false;
+			
 			initSplashScreen();
 			initVersionDisplay();
 			initStats();

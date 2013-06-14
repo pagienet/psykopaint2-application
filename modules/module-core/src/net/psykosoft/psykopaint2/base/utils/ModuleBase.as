@@ -14,6 +14,9 @@ package net.psykosoft.psykopaint2.base.utils
 		public function ModuleBase() {
 			super();
 			moduleReadySignal = new Signal();
+			
+			//does not seem to do harm and fixes the "upper left corner not paintable" error
+			mouseEnabled = false;
 		}
 	}
 }
