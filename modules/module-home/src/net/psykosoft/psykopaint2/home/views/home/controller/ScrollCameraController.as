@@ -37,8 +37,9 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		private var _isScrollingLimited:Boolean = true;
 		private var _zoomedIn:Boolean;
 		private var _perspectiveTracer:Mesh;
+		private var _onMotion:Boolean;
 
-		public var isActive:Boolean = true;
+		public var isEnabled:Boolean = true;
 
 		private const TARGET_EASE_FACTOR:Number = 0.5;
 
@@ -64,11 +65,20 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_positionManager.frictionFactor = 0.9;
 			_positionManager.minimumThrowingSpeed = 125;
 			_positionManager.edgeContainmentFactor = 0.01;
+			_positionManager.motionEndedSignal.add( onSnapMotionEnded );
 
 			// Uncomment to visually debug perspective factor.
 			// Ensures that the scrolling snaps to finger 100%, if right, the tracer should be placed just at the edge of the screen -
 //			_perspectiveTracer = new Mesh( new CubeGeometry(), new ColorMaterial( 0xFF0000 ) );
 //			addChild( _perspectiveTracer );
+		}
+
+		private function onSnapMotionEnded():void {
+			_onMotion = false;
+		}
+
+		public function get onMotion():Boolean {
+			return _onMotion;
 		}
 
 		override public function dispose():void {
@@ -152,16 +162,17 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		}
 
 		public function startPanInteraction():void {
-			if( !isActive ) return;
+			if( !isEnabled ) return;
 			if( _isScrollingLimited ) {
 				var limit:Number = _stageHeight - 211 * CoreSettings.GLOBAL_SCALING;
 				if( _interactionManager.currentY > limit ) return;
 			}
 			_interactionManager.startInteraction();
+			_onMotion = true;
 		}
 
 		public function endPanInteraction():void {
-			if( !isActive ) return;
+			if( !isEnabled ) return;
 			_interactionManager.endInteraction();
 		}
 

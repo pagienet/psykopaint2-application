@@ -121,20 +121,19 @@ package net.psykosoft.psykopaint2.base.utils
 		}
 
 		public function update():void {
-			if( _onSnapMotion ) {
+			if( !_onSnapMotion ) return;
 
-				// Update speed and position.
-				_position += _snapMotionSpeed;
-				_snapMotionSpeed *= _frictionFactor;
+			// Update speed and position.
+			_position += _snapMotionSpeed;
+			_snapMotionSpeed *= _frictionFactor;
 
-				// Evaluate if motion has stopped.
-				var distanceToTarget:Number = Math.abs( _targetSnapPoint - _position );
-				var absSpeed:Number = Math.abs( _snapMotionSpeed );
-				if( absSpeed < 0.1 && distanceToTarget < 1 ) {
-					_position = _targetSnapPoint;
-					_onSnapMotion = false;
-					motionEndedSignal.dispatch();
-				}
+			// Evaluate if motion has stopped.
+			var distanceToTarget:Number = Math.abs( _targetSnapPoint - _position );
+			var absSpeed:Number = Math.abs( _snapMotionSpeed );
+			if( absSpeed < 0.1 && distanceToTarget < 1 ) {
+				_position = _targetSnapPoint;
+				_onSnapMotion = false;
+				motionEndedSignal.dispatch();
 			}
 		}
 

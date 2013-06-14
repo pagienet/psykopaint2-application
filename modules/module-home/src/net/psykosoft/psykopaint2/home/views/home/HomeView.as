@@ -42,13 +42,13 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		override protected function onEnabled():void {
 			addChild( _view );
-			_cameraController.isActive = true;
+			_cameraController.isEnabled = true;
 		}
 
 		override protected function onDisabled():void {
 			// TODO: review if we need to do any clean up when view is disabled
 			removeChild( _view );
-			_cameraController.isActive = false;
+			_cameraController.isEnabled = false;
 		}
 
 		override protected function onSetup():void {

@@ -89,11 +89,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onEaselClicked():void {
 			if( view.getCurrentPaintingIndex() != 1 ) return; // Ignore clicks on easel if not looking at it.
-			if( view.cameraController.isActive ) return; // Ignore clicks on easel if view is scrolling
-			if( !view.cameraController.zoomedIn ) {
-				_waitingForPaintModeAfterZoomIn = true;
-				view.zoomIn();
-			}
+			if( view.cameraController.onMotion ) return; // Ignore clicks on easel if view is scrolling
+			if( view.cameraController.zoomedIn ) return;
+			_waitingForPaintModeAfterZoomIn = true;
+			view.zoomIn();
 		}
 
 		private function onViewSetup():void {
