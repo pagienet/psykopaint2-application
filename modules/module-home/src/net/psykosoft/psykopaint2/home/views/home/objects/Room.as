@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private const WALL_Z:Number = 400;
 
-		private const FLOOR_DEPTH:Number = 1500;
+		private const FLOOR_DEPTH:Number = 1750;
 
 		public function Room( view:View3D ) {
 			super();
