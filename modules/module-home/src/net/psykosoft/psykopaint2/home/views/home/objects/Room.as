@@ -7,16 +7,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.ATFTexture;
-	import away3d.textures.BitmapTexture;
 
 	import br.com.stimuli.loading.BulkLoader;
-
-	import flash.display.BlendMode;
 
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.SlicePlane;
-
 	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
@@ -58,7 +54,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// Geometry.
 			var wallGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
 			var uvScale:Number = 1;
-			wallGeometry.scaleUV( uvScale * WALL_WIDTH / wallGeometry.width, uvScale * 2 );
+			wallGeometry.scaleUV( uvScale * WALL_WIDTH / wallGeometry.width, uvScale );
 
 			// Mesh.
 			_wall = new Mesh( wallGeometry, null );
