@@ -3,9 +3,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.display.DisplayObject;
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
+	import flash.ui.Keyboard;
+	import flash.utils.getTimer;
 	
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.EndConditionalDecorator;
@@ -85,13 +88,19 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var _canvasRect : Rectangle;
 		private var scaleX:Number;
 		private var scaleY:Number;
-		
+		private var recordedData:Vector.<Number>;
+		private var playbackActive:Boolean;
+		private var playbackIndex:int;
+		private var playbackOffset:int;
 
 		public function PathManager( type:int )
 		{
 			_pathEngine = getPathEngine( type );
 			_accumulatedResults = new Vector.<SamplePoint>();
 			_pointDecorators = new Vector.<IPointDecorator>();
+			
+			//FOR DEBUGGING ONLY:
+			recordedData = new Vector.<Number>();
 		}
 		
 		public function set minSamplesPerStep( value:int ):void
@@ -165,9 +174,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onTouchBegin(event : TouchEvent) : void
 		{
 			if (_listeningToMouse) return;
-			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+			
+			var stage : Stage = event.target as Stage;
+			if (!stage) return;
 			
 			if (_touchID == -1) {
+				_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+				
 				_listeningToTouch = true;
 				_touchID = event.touchPointID;
 
@@ -198,6 +211,29 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		protected function onEnterFrame(event : Event) : void
 		{
+			if ( playbackActive && event != null )
+			{
+				if ( playbackIndex == 0 )
+				{
+					onSampleStart(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
+					playbackIndex += 3;
+				} 
+				
+				while ( playbackIndex < recordedData.length )
+				{
+					if ( getTimer() - playbackOffset < recordedData[playbackIndex] ) break;
+					
+					if ( playbackIndex == recordedData.length - 3 )
+					{
+						onSampleEnd(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
+						playbackActive = false;
+					} else {
+						onSamplePoint(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
+					}
+					playbackIndex += 3;
+				} 
+			}
+			
 			_currentTick++;
 			
 			if ( _accumulatedResults.length == 0 && hasActiveDecorators() )
@@ -210,7 +246,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				_accumulatedResults.length = 0;
 			}
 			
-			if (!_listeningToTouch && !_listeningToMouse && !hasActiveDecorators() )
+			if (!playbackActive && !_listeningToTouch && !_listeningToMouse && !hasActiveDecorators() )
 			{
 				sendEndCallbacks();
 			}
@@ -221,11 +257,19 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onMouseDown(event : MouseEvent) : void
 		{
 			if (_listeningToTouch) return;
+			var stage : Stage = event.target as Stage;
+			if (!stage) return;
 			
 			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
 			_listeningToMouse = true;
-			var stage : Stage = event.target as Stage;
-			if (!stage) return;
+			
+			//TEMPORARY RECORDING FOR TESTS:
+			if ( !playbackActive )
+			{
+				playbackOffset = getTimer();
+				recordedData.length = 0;
+				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
+			} 
 			
 			onSampleStart(event.stageX, event.stageY);
 			_view.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
@@ -235,6 +279,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onMouseUp(event : MouseEvent) : void
 		{
 			_listeningToMouse = false;
+			if ( !playbackActive )
+			{
+				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
+			}
 			onSampleEnd(event.stageX, event.stageY);
 			_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -242,6 +290,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		private function onMouseMove(event : MouseEvent) : void
 		{
+			if ( !playbackActive )
+			{
+				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
+			}
 			onSamplePoint(event.stageX, event.stageY);
 		}
 
@@ -343,12 +395,27 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_active = true;
 			_view = view;
 			_view.stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-			
 			_view.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			_view.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
 			
 			updateStageScaleFactors();
 		}
-
+		
+		protected function onKeyDown(event:KeyboardEvent):void
+		{
+			if ( event.keyCode == Keyboard.P )
+			{
+				if ( recordedData.length > 8 )
+				{
+					playbackIndex = 0;
+					playbackOffset = getTimer();
+					playbackActive = true;
+					_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+				}
+			}
+			
+		}
+		
 		public function deactivate() : void
 		{
 			_active = false;
@@ -361,6 +428,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_view.stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			_view.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			_view.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
 		}
 
 		public function getParameterSet( path:Array ):XML
