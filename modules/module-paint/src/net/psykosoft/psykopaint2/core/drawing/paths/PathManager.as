@@ -83,8 +83,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var _listeningToTouch : Boolean;
 		private var _startCallbacksSent : Boolean;
 		
-		private var _currentTick:uint;
-		private var _lastUpdateTick:uint;
 		private var _canvasRect : Rectangle;
 		private var scaleX:Number;
 		private var scaleY:Number;
@@ -238,12 +236,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				} 
 			}
 			
-			_currentTick++;
+			updateDecorators();
 			
-			if ( _accumulatedResults.length == 0 && hasActiveDecorators() )
-			{
-				updateDecorators();
-			}
 			if ( _accumulatedResults.length > 0 )
 			{
 				sendPointsCallbacks(_accumulatedResults);
@@ -268,12 +262,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_listeningToMouse = true;
 			
 			//TEMPORARY RECORDING FOR TESTS:
-			if ( !playbackActive )
-			{
-				playbackOffset = getTimer();
-				recordedData.length = 0;
-				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
-			} 
+			playbackActive = false;
+			singleStepPlaybackActive = false;
+			playbackOffset = getTimer();
+			recordedData.length = 0;
+			recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
+			 
 			
 			onSampleStart(event.stageX, event.stageY);
 			_view.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
@@ -354,13 +348,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function update(forceUpdate : Boolean = false) : void
 		{
 			_accumulatedResults = _accumulatedResults.concat(_pathEngine.update( forceUpdate ) );
-			updateDecorators();
+			//updateDecorators();
 		}
 		
 		protected function updateDecorators() : void
 		{
-			if ( _currentTick == _lastUpdateTick ) return;
-			_lastUpdateTick = _currentTick;
 			
 			var conditionalStack:Vector.<Vector.<SamplePoint>>;
 			var inCondition:int = -1;
