@@ -93,12 +93,12 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			// as long as there's no rendering, we assume noone is using the canvas back buffer
 			_context3d.setRenderToTexture(canvas.fullSizeBackBuffer);
-			_context3d.clear(1, 1, 1, 1);
+			_context3d.clear(0, 0, 0, 0);
 
 			renderLighting(0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio, canvas);
 
 			_context3d.setRenderToBackBuffer();
-			_context3d.clear(1, 1, 1, 1);
+			_context3d.clear(0, 0, 0, 0);
 
 			_needBake = false;
 		}
@@ -106,7 +106,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		private function copyBakedRender(canvas : CanvasModel) : void
 		{
 			var scale : Number = _renderRect.height/canvas.height;
-			var offsetX : Number = 1 - scale*.5;
+			var offsetX : Number = (1 - scale)*.5;
 			var sourceRect : Rectangle = new Rectangle(0, 0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio);
 			var destRect : Rectangle = new Rectangle(offsetX, 0, scale, scale);
 			CopySubTexture.copy(canvas.fullSizeBackBuffer, sourceRect, destRect, _context3d);

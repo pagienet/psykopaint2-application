@@ -1,17 +1,6 @@
-// MSB = specular
-// LSB = gloss	( gloss = frac(bits * 255 / 16))
-// gloss = frac(bits * 255 / 16)
-
-// bits *= 255/16
-// gloss = frac(bits)
-// specular = (bits - gloss) / 15 (scale back to 0 - 1 range)
-
 nrm ft4.xyz, v5
 dp3 ft4.x, ft4.xyz, ft0.xyz
 
-mul ft7.z, ft7.z, fc15.x	// bits * 255/32
-frc ft4.y, ft7.z			// gloss = fract(bits * 255/32)
-sub ft7.z, ft7.z, ft4.y		// specular = bits - gloss
-mul ft7.z, ft7.z, fc15.y	// specular = (bits - gloss)/32
+mov ft4.y, ft7.w
 tex ft4, ft4.xyxy, fs3 <linear, nomip, clamp>
 mul ft4, ft4, ft7.z

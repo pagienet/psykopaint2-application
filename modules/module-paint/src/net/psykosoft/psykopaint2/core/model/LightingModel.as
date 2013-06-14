@@ -69,7 +69,7 @@ package net.psykosoft.psykopaint2.core.model
 //			_ambientModel = new AmbientOccludedModel();
 //			_shadowModel = new AOShadowModel();
 //			_shadowModel = new SoftShadowModel();
-			ambientColor = 0x808085;
+			ambientColor = 0x808088;
 
 			_diffuseModel = new DiffuseLambertModel();
 			_specularModel = new SpecularBlinnModel();

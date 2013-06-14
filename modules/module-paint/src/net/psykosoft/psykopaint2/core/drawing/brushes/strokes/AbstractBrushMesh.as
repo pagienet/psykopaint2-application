@@ -258,11 +258,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 				// canvas uvs
 					"mul vt0, va0, vc1.xyww\n" +
 					"add vt0, vt0, vc1.xxzz\n" +
-					"mov v3, vt0\n" /*+
-					"add v4, vt0, vc2.xzzw\n" +
-					"add v5, vt0, vc2.zyzw\n" +
-					"sub v6, vt0, vc2.zyzw\n" +
-					"sub v7, vt0, vc2.xzzw\n";*/
+					"mov v3, vt0\n";
 		}
 
 		// default code expects a height map + alpha map
@@ -283,31 +279,23 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 				// add brush normal to canvas normals
 					"tex ft3, v3, fs1 <2d, clamp, linear, nomip>\n" +
-//					"tex ft4, v4, fs1 <2d, clamp, linear, nomip>\n" +
-//					"tex ft5, v5, fs1 <2d, clamp, linear, nomip>\n" +
-//					"tex ft6, v6, fs1 <2d, clamp, linear, nomip>\n" +
-//					"tex ft7, v7, fs1 <2d, clamp, linear, nomip>\n" +
-//					"add ft5.xy, ft5.xy, ft3.xy\n" +
-//					"add ft5.xy, ft5.xy, ft4.xy\n" +
-//					"add ft5.xy, ft5.xy, ft6.xy\n" +
-//					"add ft5.xy, ft5.xy, ft7.xy\n" +
-//					"mul ft5.xy, ft5.xy, fc1.w\n" +
 
 				// smooth out underneath
-					"mul ft5.w, fc1.z, ft1.x\n" +
 					"sub ft4.xy, fc0.xx, ft3.xy\n" +
-					"mul ft4.xy, ft4.xy, ft5.w\n" +
-					"add ft3.xy, ft4.xy, ft3.xy\n" +
+					"mul ft4.xy, ft4.xy, fc1.z\n" +
+					"add ft4.xy, ft4.xy, ft3.xy\n" +
 
-					"add ft0.xy, ft3.xy, ft0.xy\n" +
+				// set specular
+					"mul ft0.z, ft1.y, fc1.y\n" +
+					"mov ft0.w, fc0.w\n" +
 
-				// TODO: Unpack original specular, lerp with new values and pack again
+//					"mul ft0.xy, ft0.xy, fc0.x\n" +
+					"add ft0.xy, ft0.xy, ft4.xy\n" +
 
-				// pack specular
-					"mul ft0.z, ft1.y, fc1.y\n" +	// specularity strength*31/255 << 4
-					"add ft0.z, ft0.z, fc0.w\n" +
-
-					"mov ft0.w, ft3.w\n" +
+//					"mul ft5.w, fc1.z, ft1.x\n" +
+					"sub ft0, ft0, ft3\n" +
+					"mul ft0, ft0, ft1.x\n" +
+					"add ft0, ft0, ft3\n" +
 
 					"mov oc, ft0";
 		}
@@ -426,10 +414,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_normalSpecularVertexData[1] = 1/512;
 			_normalSpecularVertexData[8] = 1/canvas.textureWidth;
 			_normalSpecularVertexData[9] = 1/canvas.textureHeight;
-			_normalSpecularFragmentData[3] = int(glossiness*15) / 255;
-			_normalSpecularFragmentData[4] = bumpiness;
-			_normalSpecularFragmentData[5] = (int(shininess * 15) << 4) / 255;
-			_normalSpecularFragmentData[6] = 0.2;
+			_normalSpecularFragmentData[3] = glossiness;
+			_normalSpecularFragmentData[4] = bumpiness*2;
+			_normalSpecularFragmentData[5] = shininess;
+			_normalSpecularFragmentData[6] = .6;
 			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _normalSpecularVertexData, 3);
 			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _normalSpecularFragmentData, 2);
 			context3d.drawTriangles(getIndexBuffer(context3d), 0, _numIndices/3);
