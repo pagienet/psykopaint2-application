@@ -90,8 +90,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var scaleY:Number;
 		private var recordedData:Vector.<Number>;
 		private var playbackActive:Boolean;
+		private var singleStepPlaybackActive:Boolean;
+		
 		private var playbackIndex:int;
 		private var playbackOffset:int;
+		private var playBackOffsetX:Number;
+		private var playBackOffsetY:Number;
 
 		public function PathManager( type:int )
 		{
@@ -215,7 +219,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			{
 				if ( playbackIndex == 0 )
 				{
-					onSampleStart(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
+					onSampleStart(recordedData[playbackIndex+1] + playBackOffsetX,recordedData[playbackIndex+2]+ playBackOffsetY);
 					playbackIndex += 3;
 				} 
 				
@@ -225,10 +229,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					
 					if ( playbackIndex == recordedData.length - 3 )
 					{
-						onSampleEnd(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
+						onSampleEnd(recordedData[playbackIndex+1]+ playBackOffsetX,recordedData[playbackIndex+2]+ playBackOffsetY);
 						playbackActive = false;
 					} else {
-						onSamplePoint(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
+						onSamplePoint(recordedData[playbackIndex+1]+ playBackOffsetX,recordedData[playbackIndex+2]+ playBackOffsetY);
 					}
 					playbackIndex += 3;
 				} 
@@ -246,7 +250,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				_accumulatedResults.length = 0;
 			}
 			
-			if (!playbackActive && !_listeningToTouch && !_listeningToMouse && !hasActiveDecorators() )
+			if (!playbackActive && !singleStepPlaybackActive &&!_listeningToTouch && !_listeningToMouse && !hasActiveDecorators() )
 			{
 				sendEndCallbacks();
 			}
@@ -407,10 +411,50 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			{
 				if ( recordedData.length > 8 )
 				{
+					playBackOffsetX = 0;
+					playBackOffsetY = 0;
+					
 					playbackIndex = 0;
 					playbackOffset = getTimer();
 					playbackActive = true;
 					_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+				}
+			} else if ( event.keyCode == Keyboard.O )
+			{
+				if ( recordedData.length > 8 )
+				{
+					playBackOffsetX = _view.stage.mouseX - recordedData[1];
+					playBackOffsetY = _view.stage.mouseY - recordedData[2];
+					
+					playbackIndex = 0;
+					playbackOffset = getTimer();
+					playbackActive = true;
+					_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+				}
+			}else if ( event.keyCode == Keyboard.RIGHT)
+			{
+				playbackActive = false;
+				_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+				if ( recordedData.length > 8 )
+				{
+					if ( !singleStepPlaybackActive )
+					{
+						playBackOffsetX = 0;
+						playBackOffsetY = 0;
+						playbackIndex = 0;
+						singleStepPlaybackActive = true;
+						onSampleStart(recordedData[playbackIndex+1] ,recordedData[playbackIndex+2]);
+						
+					} else {
+						if ( playbackIndex == recordedData.length - 3 )
+						{
+							onSampleEnd(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
+							singleStepPlaybackActive = false;
+						} else {
+							onSamplePoint(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
+						}
+					}
+					playbackIndex += 3;
 				}
 			}
 			
