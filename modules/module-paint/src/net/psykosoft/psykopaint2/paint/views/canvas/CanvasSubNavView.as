@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			addCenterButton( LBL_PICK_AN_IMAGE, ButtonIconType.GALLERY );
 			addCenterButton( LBL_PICK_A_SURFACE, ButtonIconType.GALLERY );
+			addCenterButton( LBL_CLEAR, ButtonIconType.GALLERY );
 
 			invalidateContent();
 		}
