@@ -70,10 +70,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			var minSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.lowerRangeValue);
 			var maxSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.upperRangeValue);
-			
-			var rsize : Number = 0.3 * point.size * maxSize + rng.getMappedNumber(0, 0.5 * maxSize, Quint.easeIn) * (rng.getChance(0.6) ? -1 : 1);
+			var rsize : Number = minSize + (maxSize - minSize) * point.size;
 			if (rsize > maxSize) rsize = maxSize;
 			else if (rsize < minSize) rsize = minSize;
+			
 			
 			_colorStrategy.setBlendFactors(_firstPoint ? 1 : rng.getNumber(_colorBlend.lowerRangeValue, _colorBlend.lowerRangeValue + (_colorBlend.upperRangeValue - _colorBlend.lowerRangeValue) * (1 - Math.min(1, point.size))), rng.getNumber(_opacity.lowerRangeValue, _opacity.upperRangeValue));
 			_colorStrategy.getColors(point.x, point.y, rsize, rsize * 0.5, point.colorsRGBA);
@@ -83,10 +83,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function processPoint(point : SamplePoint) : void
 		{
-			var minSize:Number = _minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.lowerRangeValue;
-			var maxSize:Number = _minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.upperRangeValue;
-				
-			var rsize : Number = 0.3 * point.size * maxSize + rng.getMappedNumber(0, 0.5 * maxSize, Quint.easeIn) * (rng.getChance(0.6) ? -1 : 1);
+			var minSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.lowerRangeValue);
+			var maxSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.upperRangeValue);
+			var rsize : Number = minSize + (maxSize - minSize) * point.size;
 			if (rsize > maxSize) rsize = maxSize;
 			else if (rsize < minSize) rsize = minSize;
 
