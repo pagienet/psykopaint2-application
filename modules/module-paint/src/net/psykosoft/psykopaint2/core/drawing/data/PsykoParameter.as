@@ -54,26 +54,28 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		private var _numberValues:Vector.<Number>;
 		private var _stringValues:Vector.<String>;
 		private var _showInUI:Boolean;
+		private var _label:String;
 		
 		public static function fromXML( data:XML ):PsykoParameter
 		{
+			var pp:PsykoParameter;
 			switch ( int(data.@type) )
 			{
 				case NumberParameter:
 				case IntParameter:
 				case AngleParameter:
 					//value, minValue, maxValue 
-					return new PsykoParameter( int(data.@type), data.@id, Number( data.@value ),Number( data.@minValue ),Number( data.@maxValue ) );
+					pp = new PsykoParameter( int(data.@type), data.@id, Number( data.@value ),Number( data.@minValue ),Number( data.@maxValue ) );
 					break;
 				case NumberRangeParameter:
 				case IntRangeParameter:
 				case AngleRangeParameter:
 					//value1, value2, minValue, maxValue 
-					return new PsykoParameter( int(data.@type), data.@id, Number( data.@value1 ),Number( data.@value2 ),Number( data.@minValue ),Number( data.@maxValue ) );
+					pp = new PsykoParameter( int(data.@type), data.@id, Number( data.@value1 ),Number( data.@value2 ),Number( data.@minValue ),Number( data.@maxValue ) );
 					break;
 				case StringParameter:
 					//value
-					return new PsykoParameter( int(data.@type), data.@id,String(data.@value) );
+					pp = new PsykoParameter( int(data.@type), data.@id,String(data.@value) );
 					break;
 				case NumberListParameter:
 				case IntListParameter:
@@ -84,31 +86,33 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					{
 						list[i] = Number(list[i]);
 					}
-					return new PsykoParameter( int(data.@type), data.@id, int(data.@index), list );
+					pp = new PsykoParameter( int(data.@type), data.@id, int(data.@index), list );
 					break;
 				case StringListParameter:
 					//index, array
 					list = data.@list.split(",");
-					return new PsykoParameter( int(data.@type), data.@id, int(data.@index), list );
+					pp = new PsykoParameter( int(data.@type), data.@id, int(data.@index), list );
 				break;
 				case IconListParameter:
 					//index, array
 					list = data.@list.split(",");
-					return new PsykoParameter( int(data.@type), data.@id, int(data.@index), list );
+					pp = new PsykoParameter( int(data.@type), data.@id, int(data.@index), list );
 					break;
 				case BooleanParameter:
 					//value, minValue, maxValue 
-					return new PsykoParameter( int(data.@type), data.@id, int( data.@value ) == 1 );
+					pp = new PsykoParameter( int(data.@type), data.@id, int( data.@value ) == 1 );
 					break;
 			}
 			
-			return null;
+			if ( data.hasOwnProperty("@label") ) pp.label = data.@label;
+			
+			return pp;
 		}
 		
 		public function PsykoParameter( type:int, id:String, ...args )
 		{
 			this.type = type;
-			this.id = id;
+			this.label = this.id = id;
 			switch ( type )
 			{
 				case NumberParameter:
@@ -370,6 +374,15 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			return _maxLimit;
 		}
 		
+		public function get label():String
+		{
+			return _label;
+		}
+		
+		public function set label( value:String ):void
+		{
+			_label = value;
+		}
 		
 		public function updateValueFromXML( message:XML ):void
 		{
@@ -379,6 +392,9 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			
 			if (  message.hasOwnProperty("@maxValue") )
 				maxLimit = Number( message.@maxValue );
+			
+			if (  message.hasOwnProperty("@label") )
+				label = message.@label;
 			
 			switch ( type )
 			{
@@ -452,7 +468,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		
 		public function toXML( path:Array ):XML
 		{
-			var result:XML = <parameter id={id} type={type} path={path.join(".")} showInUI={_showInUI ? "1" : "0" } />
+			var result:XML = <parameter id={id} label={label} type={type} path={path.join(".")} showInUI={_showInUI ? "1" : "0" } />
 			switch ( type )
 			{
 				case NumberParameter:
