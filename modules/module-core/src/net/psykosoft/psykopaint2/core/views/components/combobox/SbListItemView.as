@@ -6,29 +6,28 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 
     public class SbListItemView extends MovieClip {
 
-        private var _txt:TextField;
+		// Declared in Fla.
+        public var tf:TextField;
+
         private var _data:SbListItemVO;
 
         public function SbListItemView() {
 
             super();
 
-            _txt = new TextField();
-			_txt.x = 30;
-            _txt.y = 10;
-            _txt.width = this.width;
-            _txt.height = this.height - _txt.y;
-
-            this.addChild(_txt);
+			tf.x = 30;
+            tf.y = 10;
+            tf.width = this.width;
+            tf.height = this.height - tf.y;
         }
 
         public function setData(value:SbListItemVO):void {
 
             gotoAndStop( value.odd ? 1 : 2 );
 
-            if (value.label != _txt.text) {
-                _txt.text = value.label;
-				_txt.selectable = false;
+            if (value.label != tf.text) {
+                tf.text = value.label;
+				tf.selectable = false;
             }
 
             this._data = value;
