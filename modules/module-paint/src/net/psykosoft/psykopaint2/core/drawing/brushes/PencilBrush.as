@@ -72,7 +72,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 
         override protected function processPoint(point:SamplePoint):void {
-            var scale : Number = point.size * _sizeFactor.upperRangeValue - Math.random()*(_sizeFactor.upperRangeValue - _sizeFactor.lowerRangeValue);
+            var scale : Number = point.size*10 * _sizeFactor.upperRangeValue - Math.random()*(_sizeFactor.upperRangeValue - _sizeFactor.lowerRangeValue);
             addStrokePoint(point, _brushShape.actualSize * _canvasScaleW * scale, _brushShape.rotationRange);
         }
     }
