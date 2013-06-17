@@ -148,7 +148,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
 							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.9" minValue="0" maxValue="10"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" showInUI="1"/>
-							<parameter id="Invert Mapping" path="pathengine.pointdecorator_0" value="0" />
 						</SizeDecorator>
 						<ColorDecorator>
 							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
@@ -249,14 +248,33 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				</brush>
 				<brush engine={BrushType.SHATTER} name="Shatter">
 					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic" showInUI="1"/>
+					<parameter id="Opacity" path="brush" value1="0.5" value2="0.75" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<parameter id="Output Step Size" path="pathengine" value="3"/>
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
 							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0.001" value2="0.05"/>
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0.0" value2="0.9"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
+					</pathengine>
+				</brush>
+				<brush engine={BrushType.SHATTER} name="Grid Shatter">
+					<parameter id="Shapes" path="brush" index="0" list="basic" showInUI="1"/>
+					<parameter id="Opacity" path="brush" value1="1" value2="1"/>
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<parameter id="Output Step Size" path="pathengine" value="3"/>
+						<SizeDecorator>
+							<!-- Mapping drawing speed to size -->
+							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="0" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="1" value2="1"/>
+						</SizeDecorator>
+						<GridDecorator> 
+							<parameter id="Cell Width"  path="pathengine.pointdecorator_1" value="44" />
+							<parameter id="Cell Height"  path="pathengine.pointdecorator_1" value="44"/>
+							<parameter id="Angle Step"  path="pathengine.pointdecorator_1" value="90"/>
+							<parameter id="Angle Offset"  path="pathengine.pointdecorator_1" value="45"/>
+						</GridDecorator>
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Circular">

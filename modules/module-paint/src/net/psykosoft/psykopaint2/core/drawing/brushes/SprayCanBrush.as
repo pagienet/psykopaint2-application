@@ -1,13 +1,8 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
-	import com.greensock.easing.Quad;
-
 	import de.popforge.math.LCG;
-
 	import flash.display.DisplayObject;
-
 	import flash.display3D.Context3D;
-	import flash.utils.setTimeout;
 	
 	import de.popforge.math.LCG;
 	
@@ -76,8 +71,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			var minSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.lowerRangeValue);
 			var maxSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.upperRangeValue);
-			
-			//var rsize : Number = maxSize * rng.getMappedNumber(point.size * 0.5, point.size, Quad.easeInOut);
 			var rsize : Number = minSize + (maxSize - minSize) * point.size;
 			if (rsize > maxSize) rsize = maxSize;
 			else if (rsize < minSize) rsize = minSize;
@@ -92,8 +85,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			var minSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.lowerRangeValue);
 			var maxSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.upperRangeValue);
-
-			//var rsize : Number = maxSize * rng.getMappedNumber(point.size * 0.5, point.size, Quad.easeInOut);
 			var rsize : Number = minSize + (maxSize - minSize) * point.size;
 			
 			if (rsize > maxSize) rsize = maxSize;

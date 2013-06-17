@@ -34,10 +34,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_maxY = Math.max( verticesAndUV[1],verticesAndUV[7],verticesAndUV[13],verticesAndUV[19],_maxY );
 			_minY = Math.min( verticesAndUV[1],verticesAndUV[7],verticesAndUV[13],verticesAndUV[19],_minY );
 			
-			_fastBuffer.addFloatsToVertices(verticesAndUV,_vIndex);
-			
-			_vIndex += 96;
+			_fastBuffer.addInterleavedFloatsToVertices(verticesAndUV,_vIndex,6,4);
+			_fastBuffer.addInterleavedFloatsToVertices(appendVO.point.colorsRGBA,_vIndex+24,4,6);
 
+			_vIndex += 160;
+			
 			_numVertices += 4;
 			_numIndices += 6;
 
@@ -53,6 +54,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			context3d.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // xy
 			context3d.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv shape
 			context3d.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_2); // uv composite
+			context3d.setVertexBufferAt(3, vertexBuffer, 6, Context3DVertexBufferFormat.FLOAT_4); // ARGB
 
 			context3d.setTextureAt(0, _brushTexture);
 			context3d.setTextureAt(1, canvas.sourceTexture);
@@ -64,6 +66,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			context3d.setVertexBufferAt(0, null);
 			context3d.setVertexBufferAt(1, null);
 			context3d.setVertexBufferAt(2, null);
+			context3d.setVertexBufferAt(3, null);
 		}
 
 
@@ -71,6 +74,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		{
 			return "mov v0, va1\n"+
 				   "mov v1, va2\n" +
+				   "mov v2, va3\n" +
 				   "mov op, va0\n";
 		}
 
@@ -78,12 +82,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		{
 			return "tex ft0, v0, fs0 <2d, clamp, linear, miplinear >\n" +
 				   "tex ft1, v1, fs1 <2d, clamp, linear, mipnone >\n" +
+				   "mul ft0.x, v2.w, ft0.x\n" +
 				   "mul oc, ft1, ft0.x\n";
 		}
 
 		override protected function get numElementsPerVertex() : int
 		{
-			return 6;
+			return 10;
 		}
 
 		override protected function get topologyIndexType() : int
