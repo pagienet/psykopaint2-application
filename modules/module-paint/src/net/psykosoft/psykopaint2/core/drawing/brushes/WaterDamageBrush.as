@@ -193,8 +193,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_movePigment.execute(_context, SimulationMesh(_brushMesh), _canvasModel.colorTexture, _canvasModel.fullSizeBackBuffer, _velocityPressureField, _pigmentFlow.numberValue, _pigmentBleaching.numberValue, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 			_canvasModel.swapColorLayer();
 
-			_movePigment.execute(_context, SimulationMesh(_brushMesh), _canvasModel.heightSpecularMap, _canvasModel.fullSizeBackBuffer, _velocityPressureField, _pigmentFlow.numberValue, _pigmentBleaching.numberValue, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-			_canvasModel.swapHeightSpecularLayer();
+			_movePigment.execute(_context, SimulationMesh(_brushMesh), _canvasModel.normalSpecularMap, _canvasModel.fullSizeBackBuffer, _velocityPressureField, _pigmentFlow.numberValue, _pigmentBleaching.numberValue, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			_canvasModel.swapNormalSpecularLayer();
 		}
 
 		override public function draw() : void

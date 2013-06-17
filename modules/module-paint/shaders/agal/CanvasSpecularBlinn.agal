@@ -1,13 +1,6 @@
-// specular strength
-//dp3 ft4.x, v5, ft0
-//max ft4.x, ft4.x, fc0.y
-//mul ft5.x, fc15.w, ft7.y
-//pow ft4.x, ft4.x, ft5.x
-//mul ft4.x, ft4.x, ft7.z
-//mul ft4, ft4.x, fc15
-
 nrm ft4.xyz, v5
 dp3 ft4.x, ft4.xyz, ft0.xyz
-mov ft4.y, ft7.y
+
+mov ft4.y, ft7.w
 tex ft4, ft4.xyxy, fs3 <linear, nomip, clamp>
 mul ft4, ft4, ft7.z

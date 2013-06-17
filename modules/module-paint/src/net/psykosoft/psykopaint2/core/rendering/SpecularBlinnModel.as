@@ -17,8 +17,6 @@ package net.psykosoft.psykopaint2.core.rendering
 		[Embed(source="/../shaders/agal/CanvasSpecularBlinn.agal", mimeType="application/octet-stream")]
 		private var Shader : Class;
 
-		protected var _fragmentShaderData : Vector.<Number>;
-
 		private var _lookUp : LookUpTexture;
 		private var _glossiness : Number;
 		private var _specularColorR : Number;
@@ -28,7 +26,6 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function SpecularBlinnModel()
 		{
 			super();
-			_fragmentShaderData = new <Number>[0, 0, 0, 0];
 		}
 
 		override public function getFragmentCode() : String
@@ -61,7 +58,6 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			if (!_lookUp) initLookUp(context);
 			// add
-			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 15, _fragmentShaderData, 1);
 			context.setTextureAt(3, _lookUp.texture);
 		}
 

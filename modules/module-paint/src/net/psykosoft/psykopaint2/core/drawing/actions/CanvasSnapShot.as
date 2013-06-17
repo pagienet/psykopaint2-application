@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 		private var _canvasBounds : Rectangle;
 		private var _trimmedBounds : Rectangle;
 		private var _colorTexture : TextureProxy;
-		private var _heightSpecularTexture : TextureProxy;
+		private var _normalSpecularTexture : TextureProxy;
 		private var _textureManager : ITextureManager;
 		private var _context : Context3D;
 		private var _canvas : CanvasModel;
@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 			_canvasBounds = bounds || new Rectangle(0, 0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio);
 			_trimmedBounds = new Rectangle();
 			_colorTexture = createSnapFrom(canvas.colorTexture);
-			if (saveNormals) _heightSpecularTexture = createSnapFrom(canvas.heightSpecularMap);
+			if (saveNormals) _normalSpecularTexture = createSnapFrom(canvas.normalSpecularMap);
 		}
 
 		private function createSnapFrom(source : TextureBase) : TextureProxy
@@ -64,10 +64,10 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 			_colorTexture.dispose();
 			_colorTexture = colorTexture;
 
-			if (_heightSpecularTexture) {
-				var heightTexture : TextureProxy = createSnapFrom(_heightSpecularTexture.texture);
-				_heightSpecularTexture.dispose();
-				_heightSpecularTexture = heightTexture;
+			if (_normalSpecularTexture) {
+				var normalSpecularTexture : TextureProxy = createSnapFrom(_normalSpecularTexture.texture);
+				_normalSpecularTexture.dispose();
+				_normalSpecularTexture = normalSpecularTexture;
 			}
 		}
 
@@ -83,9 +83,9 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 				freedBytes += _colorTexture.size;
 				_colorTexture.dispose();
 			}
-			if (_heightSpecularTexture) {
-				freedBytes += _heightSpecularTexture.size;
-				_heightSpecularTexture.dispose();
+			if (_normalSpecularTexture) {
+				freedBytes += _normalSpecularTexture.size;
+				_normalSpecularTexture.dispose();
 			}
 			return freedBytes;
 		}
@@ -100,9 +100,9 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 			return Texture(_colorTexture.texture);
 		}
 
-		public function get heightSpecularTexture() : Texture
+		public function get normalSpecularTexture() : Texture
 		{
-			return Texture(_heightSpecularTexture.texture);
+			return Texture(_normalSpecularTexture.texture);
 		}
 
 		public function drawColor() : void
@@ -112,7 +112,7 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 
 		public function drawNormalsSpecular() : void
 		{
-			CopySubTexture.copy(_heightSpecularTexture.texture, _trimmedBounds, _canvasBounds, _context);
+			CopySubTexture.copy(_normalSpecularTexture.texture, _trimmedBounds, _canvasBounds, _context);
 		}
 	}
 }

@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.core.commands
 			var snapshot : CanvasSnapShot = new CanvasSnapShot(canvas.stage3D.context3D, canvas, history, true);
 			history.addSnapShot(snapshot);
 			canvas.clearColorTexture();
-			canvas.clearNormalHeightTexture();
+			canvas.clearNormalSpecularTexture();
 
 		}
 	}

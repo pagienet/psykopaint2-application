@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	public class AbstractBrushShape
 	{
 		private var _texture : Texture;
-		private var _normalHeightMap : Texture;
+		private var _normalSpecularMap : Texture;
 		protected var _scaleFactor : Number;
 		private var _size : Number;
 		private var _id : String;
@@ -75,10 +75,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			return _texture;
 		}
 
-		public function get normalHeightMap() : Texture
+		public function get normalSpecularMap() : Texture
 		{
-			if (!_normalHeightMap) initHeightMap();
-			return _normalHeightMap;
+			if (!_normalSpecularMap) initNormalSpecularMap();
+			return _normalSpecularMap;
 		}
 
 		public function get variationFactors() : Vector.<Number>
@@ -113,17 +113,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			uploadBrushTexture(_texture);
 		}
 
-		private function initHeightMap() : void
+		private function initNormalSpecularMap() : void
 		{
 			// I had to replace this since it looks like we are using "actualSize" for two different things
 			//_textureSize = TextureUtils.getBestPowerOf2(actualSize);
 			_textureSize = size;
-			_normalHeightMap = _context.createTexture(_textureSize, _textureSize, Context3DTextureFormat.BGRA, false);
-			uploadHeightMap(_normalHeightMap);
+			_normalSpecularMap = _context.createTexture(_textureSize, _textureSize, Context3DTextureFormat.BGRA, false);
+			uploadNormalSpecularMap(_normalSpecularMap);
 		}
 
 
-		protected function uploadHeightMap(heightMap : Texture) : void
+		protected function uploadNormalSpecularMap(normalSpecularMap : Texture) : void
 		{
 		}
 

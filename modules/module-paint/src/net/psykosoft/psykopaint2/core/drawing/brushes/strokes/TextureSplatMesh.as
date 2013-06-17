@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			if (!_tmpData )
 			{
-				_tmpData = new Vector.<Number>(16,true);
+				_tmpData = new Vector.<Number>(32,true);
 			}
 		}
 
@@ -39,7 +39,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var sin1 : Number =  -halfSize*Math.sin(baseAngle + angle);
 			var cos2 : Number =   halfSize*Math.cos( -baseAngle + angle);
 			var sin2 : Number =  -halfSize*Math.sin( -baseAngle + angle);
-			
+			var rotCos : Number = Math.cos(angle);
+			var rotSin : Number = Math.sin(angle);
+
 			var point:SamplePoint = appendVO.point;
 			var vx : Number, vy : Number;
 			var data:Vector.<Number> = _tmpData;
@@ -50,6 +52,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			data[2] = uvBounds.left;
 			data[3] = uvBounds.top;
 
+			data[4] = rotCos;
+			data[5] = -rotSin;
+			data[6] = rotSin;
+			data[7] = rotCos;
+
 			if (vx > _maxX) _maxX = vx;
 			else if (vx < _minX) _minX = vx;
 			if (vy > _maxY) _maxY = vy;
@@ -57,10 +64,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			vx = point.normalX + cos2;
 			vy = point.normalY + sin2;
-			data[4] = vx;
-			data[5] = vy;
-			data[6] = uvBounds.right;
-			data[7] = uvBounds.top;
+			data[8] = vx;
+			data[9] = vy;
+			data[10] = uvBounds.right;
+			data[11] = uvBounds.top;
+			data[12] = rotCos;
+			data[13] = -rotSin;
+			data[14] = rotSin;
+			data[15] = rotCos;
 
 			if (vx > _maxX) _maxX = vx;
 			else if (vx < _minX) _minX = vx;
@@ -69,10 +80,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			vx = point.normalX + cos1;
 			vy = point.normalY + sin1;
-			data[8] = vx;
-			data[9] = vy;
-			data[10] = uvBounds.right;
-			data[11] = uvBounds.bottom;
+			data[16] = vx;
+			data[17] = vy;
+			data[18] = uvBounds.right;
+			data[19] = uvBounds.bottom;
+			data[20] = rotCos;
+			data[21] = -rotSin;
+			data[22] = rotSin;
+			data[23] = rotCos;
 
 			if (vx > _maxX) _maxX = vx;
 			else if (vx < _minX) _minX = vx;
@@ -81,20 +96,24 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			vx = point.normalX - cos2;
 			vy = point.normalY - sin2;
-			data[12] = vx;
-			data[13] = vy;
-			data[14] = uvBounds.left;
-			data[15] = uvBounds.bottom;
+			data[24] = vx;
+			data[25] = vy;
+			data[26] = uvBounds.left;
+			data[27] = uvBounds.bottom;
+			data[28] = rotCos;
+			data[29] = -rotSin;
+			data[30] = rotSin;
+			data[31] = rotCos;
 
 			if (vx > _maxX) _maxX = vx;
 			else if (vx < _minX) _minX = vx;
 			if (vy > _maxY) _maxY = vy;
 			else if (vy < _minY) _minY = vy;
 
-			_fastBuffer.addInterleavedFloatsToVertices(data,_vIndex,4,4);
-			_fastBuffer.addInterleavedFloatsToVertices(appendVO.point.colorsRGBA,_vIndex+16,4,4);
+			_fastBuffer.addInterleavedFloatsToVertices(data,_vIndex,8,4);
+			_fastBuffer.addInterleavedFloatsToVertices(appendVO.point.colorsRGBA,_vIndex+32,4,8);
 
-			_vIndex += 128;
+			_vIndex += 192;
 
 			_numVertices += 4;
 			_numIndices += 6;
@@ -110,7 +129,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			context3d.setProgram(getColorProgram(context3d));
 			context3d.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 			context3d.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
-			context3d.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4);
+			context3d.setVertexBufferAt(2, vertexBuffer, 8, Context3DVertexBufferFormat.FLOAT_4);
 
 			context3d.setTextureAt(0, _brushTexture);
 			context3d.drawTriangles(getIndexBuffer(context3d), 0, _numIndices/3);
@@ -138,7 +157,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		override protected function get numElementsPerVertex() : int
 		{
-			return 8;
+			return 12;
 		}
 
 		override protected function get topologyIndexType() : int

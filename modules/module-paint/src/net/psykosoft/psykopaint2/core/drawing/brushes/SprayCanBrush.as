@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			rng = new LCG(Math.random() * 0xffffff);
 			type = BrushType.SPRAY_CAN;
 			
-			_shininess.numberValue = .2;
+			_shininess.numberValue = .3;
 			_glossiness.numberValue = .25;
 			_bumpiness.numberValue = .6;
 		}
@@ -56,7 +56,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private function assignBrushShape() : void
 		{
 			TextureSplatMesh(_brushMesh).brushTexture = _brushShape.texture;
-			TextureSplatMesh(_brushMesh).normalTexture = _brushShape.normalHeightMap;
+			TextureSplatMesh(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
 			TextureSplatMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
 			_pathManager.brushAngleRange = brushShape.rotationRange;
 		}

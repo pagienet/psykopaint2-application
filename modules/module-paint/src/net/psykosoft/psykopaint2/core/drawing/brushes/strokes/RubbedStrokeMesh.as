@@ -182,7 +182,7 @@ import flash.display3D.Context3DVertexBufferFormat;
 			context3d.setVertexBufferAt(4, vertexBuffer, 10, Context3DVertexBufferFormat.FLOAT_2);  // stroke direction
 
 			context3d.setTextureAt(0, _brushTexture);
-			context3d.setTextureAt(1, canvas.heightSpecularMap);
+			context3d.setTextureAt(1, canvas.normalSpecularMap);
 			context3d.drawTriangles(getIndexBuffer(context3d), 0, _numIndices/3);
 
 			context3d.setTextureAt(0, null);

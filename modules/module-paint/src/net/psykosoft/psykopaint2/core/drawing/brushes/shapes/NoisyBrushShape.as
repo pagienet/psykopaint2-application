@@ -70,7 +70,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			uploadMips(_textureSize, _brushMap, texture);
 		}
 		
-		override protected function uploadHeightMap(texture : Texture) : void
+		override protected function uploadNormalSpecularMap(texture : Texture) : void
 		{
 			_brushMap.perlinNoise(3, 3, 3, Math.random() * 0xffffff, false, true, 15, true);
 			

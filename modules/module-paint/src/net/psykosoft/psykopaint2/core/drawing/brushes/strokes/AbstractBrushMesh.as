@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		private static var _inProgressVertexBuffer : VertexBuffer3D;	// arrays because they're sparse
 		private static var _inProgressIndexBuffer : IndexBuffer3D;
 		private static var _colorPrograms : Array = [];
-		private static var _heightPrograms : Array = [];
+		private static var _normalSpecularPrograms : Array = [];
 		private static var _currentNumElementsPerVertex : int = -1;
 		private static var _currentTopology : int = -1;
 
@@ -58,11 +58,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		private var _programKey : String;
 		protected var _pixelUVOffset:Number = 0;
 
-		protected var _heightSpecularData : Vector.<Number>;
+		protected var _normalSpecularFragmentData : Vector.<Number>;
+		protected var _normalSpecularVertexData : Vector.<Number>;
 
 		public function AbstractBrushMesh()
 		{
-			_heightSpecularData = new <Number>[.5,.5, 0, 0, 1, 0, 0, 0];
+			_normalSpecularFragmentData = new <Number>[.5,.5, 0, 0, 1, 0, 0, 1/5];
+			_normalSpecularVertexData = new <Number>[0, 0, 0, 1, .5, -.5, 0, 1, 0, 0, 0, 0];
 			_bounds = new Rectangle();
 			_programKey = getQualifiedClassName(this);
 			_fastBuffer = FastBufferManager.getFastBuffer(topologyIndexType);
@@ -89,7 +91,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		{
 			return _numIndices / 3;
 		}
-		
+
 		public function set pixelUVOffset( value:Number ) : void
 		{
 			_pixelUVOffset = value;
@@ -242,25 +244,60 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			return null;
 		}
 
-		protected function getHeightSpecularVertexCode() : String
+		protected function getNormalSpecularVertexCode() : String
 		{
 			return 	"mov op, va0\n" +
-					"mov v0, va1\n";
+
+				// brushmap coords
+					"mov v0, va1\n" +
+					"mul vt0, va2.xyxy, vc0.xyzz\n" +
+					"add v1, va1, vt0\n" +
+					"mul vt0, va2.zwzw, vc0.xyzz\n" +
+					"add v2, va1, vt0\n" +
+
+				// canvas uvs
+					"mul vt0, va0, vc1.xyww\n" +
+					"add vt0, vt0, vc1.xxzz\n" +
+					"mov v3, vt0\n";
 		}
 
 		// default code expects a height map + alpha map
 		// texture input is:
 		// R = height
 		// G = specular occlusion
-		// B = influence
-		// output should be (h, gloss, specular, influence(alpha))
+		// output should be (normalX, normalY, specular | gloss, influence(alpha))
 		// analytical solutions may be more optimal if possible
-		protected function getHeightSpecularFragmentCode() : String
+		protected function getNormalSpecularFragmentCode() : String
 		{
 			return 	"tex ft1, v0, fs0 <2d, clamp, linear, miplinear >\n" +
-					"mul ft1.xy, ft1, fc1\n" +	// specularity strength
-					"mov ft1.w, fc0.w\n" +	// gloss
-					"mov oc, ft1.xwyz";
+					"tex ft2, v1, fs0 <2d, clamp, linear, miplinear >\n" +
+					"tex ft3, v2, fs0 <2d, clamp, linear, miplinear >\n" +
+					"sub ft0.x, ft1.x, ft2.x\n" +
+					"sub ft0.y, ft1.x, ft3.x\n" +
+
+					"mul ft0.xy, ft0.xy, fc1.x\n" +	// bumpiness
+
+				// add brush normal to canvas normals
+					"tex ft3, v3, fs1 <2d, clamp, linear, nomip>\n" +
+
+				// smooth out underneath
+					"sub ft4.xy, fc0.xx, ft3.xy\n" +
+					"mul ft4.xy, ft4.xy, fc1.z\n" +
+					"add ft4.xy, ft4.xy, ft3.xy\n" +
+
+				// set specular
+					"mul ft0.z, ft1.y, fc1.y\n" +
+					"mov ft0.w, fc0.w\n" +
+
+//					"mul ft0.xy, ft0.xy, fc0.x\n" +
+					"add ft0.xy, ft0.xy, ft4.xy\n" +
+
+//					"mul ft5.w, fc1.z, ft1.x\n" +
+					"sub ft0, ft0, ft3\n" +
+					"mul ft0, ft0, ft1.x\n" +
+					"add ft0, ft0, ft3\n" +
+
+					"mov oc, ft0";
 		}
 
 		protected function updateColorProgram(context3d : Context3D) : void
@@ -275,15 +312,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			}
 		}
 
-		protected function updateHeightProgram(context3d : Context3D) : void
+		protected function updateNormalSpecularProgram(context3d : Context3D) : void
 		{
 			var key : String = getQualifiedClassName(this);
-			if (!_heightPrograms[key]) {
-				var vertexByteCode : ByteArray = new AGALMiniAssembler().assemble(Context3DProgramType.VERTEX, getHeightSpecularVertexCode());
-				var fragmentByteCode : ByteArray = new AGALMiniAssembler().assemble(Context3DProgramType.FRAGMENT, getHeightSpecularFragmentCode());
+			if (!_normalSpecularPrograms[key]) {
+				var vertexByteCode : ByteArray = new AGALMiniAssembler().assemble(Context3DProgramType.VERTEX, getNormalSpecularVertexCode());
+				var fragmentByteCode : ByteArray = new AGALMiniAssembler().assemble(Context3DProgramType.FRAGMENT, getNormalSpecularFragmentCode());
 
-				_heightPrograms[key] = context3d.createProgram();
-				_heightPrograms[key].upload(vertexByteCode, fragmentByteCode);
+				_normalSpecularPrograms[key] = context3d.createProgram();
+				_normalSpecularPrograms[key].upload(vertexByteCode, fragmentByteCode);
 			}
 		}
 
@@ -317,12 +354,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			return _colorPrograms[_programKey];
 		}
 
-		protected function getHeightProgram(context3d : Context3D) : Program3D
+		protected function getNormalSpecularProgram(context3d : Context3D) : Program3D
 		{
-			if (!_heightPrograms[_programKey])
-				updateHeightProgram(context3d);
+			if (!_normalSpecularPrograms[_programKey])
+				updateNormalSpecularProgram(context3d);
 
-			return _heightPrograms[_programKey];
+			return _normalSpecularPrograms[_programKey];
 		}
 
 		private function updateBounds() : void
@@ -361,25 +398,36 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_colorPrograms = [];
 		}
 
-		// default height mapping expects default vertex layout: pos=0, uv=1, rotation matrix = 2 + 3
-		public function drawHeightAndSpecular(context3d : Context3D, canvas : CanvasModel, shininess : Number, glossiness : Number, bumpiness : Number) : void
+		// default height mapping expects default vertex layout: pos=0, brush uv=1, rotation vectors = 2
+		public function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, shininess : Number, glossiness : Number, bumpiness : Number) : void
 		{
 			var vertexBuffer : VertexBuffer3D = getVertexBuffer(context3d);
 
-			context3d.setProgram(getHeightProgram(context3d));
+			context3d.setProgram(getNormalSpecularProgram(context3d));
 			context3d.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 			context3d.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
+			context3d.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4);
 
 			context3d.setTextureAt(0, _normalTexture);
-			_heightSpecularData[3] = glossiness;
-			_heightSpecularData[4] = bumpiness;
-			_heightSpecularData[5] = shininess;
-			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _heightSpecularData, 2);
+			context3d.setTextureAt(1, canvas.normalSpecularMap);
+			_normalSpecularVertexData[0] = 1/512;
+			_normalSpecularVertexData[1] = 1/512;
+			_normalSpecularVertexData[8] = 1/canvas.textureWidth;
+			_normalSpecularVertexData[9] = 1/canvas.textureHeight;
+			_normalSpecularFragmentData[3] = glossiness;
+			_normalSpecularFragmentData[4] = bumpiness*2;
+			_normalSpecularFragmentData[5] = shininess;
+			_normalSpecularFragmentData[6] = .6;
+			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _normalSpecularVertexData, 3);
+			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _normalSpecularFragmentData, 2);
 			context3d.drawTriangles(getIndexBuffer(context3d), 0, _numIndices/3);
 			context3d.setTextureAt(0, null);
+			context3d.setTextureAt(1, null);
 
 			context3d.setVertexBufferAt(0, null);
 			context3d.setVertexBufferAt(1, null);
+			context3d.setVertexBufferAt(2, null);
 		}
 	}
 }
+//

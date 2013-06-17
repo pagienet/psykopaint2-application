@@ -126,7 +126,7 @@ package net.psykosoft.psykopaint2.core.model
 		private function swapSnapShots() : void
 		{
 			var oldSnap : CanvasSnapShot = _snapShots[_currentHistoryIndex];
-			var newSnap : CanvasSnapShot = new CanvasSnapShot(_context, canvas, this, oldSnap.heightSpecularTexture != null, oldSnap.canvasBounds);
+			var newSnap : CanvasSnapShot = new CanvasSnapShot(_context, canvas, this, oldSnap.normalSpecularTexture != null, oldSnap.canvasBounds);
 
 			_context.setRenderToTexture(canvas.fullSizeBackBuffer);
 			_context.clear(0, 0, 0, 0);

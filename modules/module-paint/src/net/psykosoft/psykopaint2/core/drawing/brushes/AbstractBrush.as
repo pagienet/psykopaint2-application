@@ -71,9 +71,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var _depthStencil : Boolean;
 
 		private var _drawNormalsOrSpecular : Boolean;
-		protected var _availableBrushShapes:XML;
 
-		
 		public function AbstractBrush(drawNormalsOrSpecular : Boolean, incremental : Boolean = true, useDepthStencil : Boolean = false)
 		{
 			_drawNormalsOrSpecular = drawNormalsOrSpecular;
@@ -325,7 +323,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (!_renderInvalid) return;
 
 			drawColor();
-			if (_drawNormalsOrSpecular) drawNormalsAndSpecular();
+			if (_drawNormalsOrSpecular)
+				drawNormalsAndSpecular();
 
 			_renderInvalid = false;
 			_context.setRenderToBackBuffer();
@@ -366,17 +365,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer, _depthStencil || (_incremental && !_inProgress));
 			_context.clear();
 
-			if (_incremental) {
-				_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-				CopyTexture.copy(_canvasModel.heightSpecularMap, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-			}
+			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+			if (_incremental)
+				CopyTexture.copy(_canvasModel.normalSpecularMap, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 			else
-				throw "Non-incremental height not supported yet";
+				throw "Non-incremental normal/speculars not supported yet";
 
-			_context.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			drawBrushNormalsAndSpecular();
 
-			_canvasModel.swapHeightSpecularLayer();
+			_canvasModel.swapNormalSpecularLayer();
 		}
 
 		// default behaviour
@@ -387,7 +384,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		protected function drawBrushNormalsAndSpecular() : void
 		{
-			_brushMesh.drawHeightAndSpecular(_context, _canvasModel, _shininess.numberValue, _glossiness.numberValue, _bumpiness.numberValue);
+			_brushMesh.drawNormalsAndSpecular(_context, _canvasModel, _shininess.numberValue, _glossiness.numberValue, _bumpiness.numberValue);
 		}
 
 		public function get snapshot() : CanvasSnapShot

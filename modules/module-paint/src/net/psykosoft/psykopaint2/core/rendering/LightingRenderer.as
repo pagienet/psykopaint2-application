@@ -93,12 +93,12 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			// as long as there's no rendering, we assume noone is using the canvas back buffer
 			_context3d.setRenderToTexture(canvas.fullSizeBackBuffer);
-			_context3d.clear(1, 1, 1, 1);
+			_context3d.clear(0, 0, 0, 0);
 
 			renderLighting(0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio, canvas);
 
 			_context3d.setRenderToBackBuffer();
-			_context3d.clear(1, 1, 1, 1);
+			_context3d.clear(0, 0, 0, 0);
 
 			_needBake = false;
 		}
@@ -106,7 +106,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		private function copyBakedRender(canvas : CanvasModel) : void
 		{
 			var scale : Number = _renderRect.height/canvas.height;
-			var offsetX : Number = 1 - scale*.5;
+			var offsetX : Number = (1 - scale)*.5;
 			var sourceRect : Rectangle = new Rectangle(0, 0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio);
 			var destRect : Rectangle = new Rectangle(offsetX, 0, scale, scale);
 			CopySubTexture.copy(canvas.fullSizeBackBuffer, sourceRect, destRect, _context3d);
@@ -127,7 +127,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_context3d.setTextureAt(0, canvas.colorTexture);
 			if (_sourceTextureAlpha > 0)
 				_context3d.setTextureAt(1, canvas.sourceTexture);
-			_context3d.setTextureAt(2, canvas.heightSpecularMap);
+			_context3d.setTextureAt(2, canvas.normalSpecularMap);
 			_context3d.setVertexBufferAt(0, _quadVertices, 0, Context3DVertexBufferFormat.FLOAT_2); // vertices
 			_context3d.setVertexBufferAt(1, _quadVertices, 2, Context3DVertexBufferFormat.FLOAT_2);	// uvs
 			_context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _globalVertexData, 6);
@@ -195,13 +195,12 @@ package net.psykosoft.psykopaint2.core.rendering
 			code += _specularModel.getFragmentCode() + "\n";
 			code += applySpecularLight();
 
-			code += "mov oc, ft3\n"
-
-//			code += "mov ft0.z, fc0.y\n" +
-//					"mul ft0.xy, ft0.xy, fc0.x\n" +
+			code += "mov oc, ft3\n";
+//			code += "mul ft0.xy, ft0.xy, fc0.x\n" +
 //					"add ft0.xy, ft0.xy, fc0.x\n" +
-//					"mov ft0.w, fc0.z\n" +
-//					"mov oc, ft0";
+//					"mov ft0.w, ft7.w\n" +
+//					"mov oc, ft0\n";
+
 
 
 			return code;
@@ -233,7 +232,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		// FT1 = HEIGHT GRADIENT X, Y (unscaled)
 		// FT3 = LIGHT ACCUMULATION
 		// FT4 = MODEL OUTPUT (x for strength)
-		// FT7 = HEIGHT, SPECULAR GLOSS, SPECULAR STRENGTH, SHADOW STRENGTH (if used)
+		// FT7 = PACKED NORMAL X, NORMAL Y, SPECULAR STRENGTH + GLOSS (4 bits each), SHADOW STRENGTH (if used)
 
 		// FC0 = (0.5, 0, 1, bumpiness)
 		// FC1 = SOURCE BLEND ALPHA, -1, ?, ?
@@ -261,10 +260,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 					"add vt1, vt4, vt2\n" +
 					"nrm vt1.xyz, vt1.xyz\n" +
-					"mov v5, vt1\n" +
-
-					"add v3, vt0, vc5.xyzz\n" +
-					"add v4, vt0, vc5.zyzz\n";
+					"mov v5, vt1\n";
 
 			if (_shadowModel)
 				code += _shadowModel.getVertexCode();
@@ -275,13 +271,8 @@ package net.psykosoft.psykopaint2.core.rendering
 		private function getInitFragmentCode() : String
 		{
 			return 	"tex ft7, v0, fs2 <2d, clamp, linear, mipnone>\n" +
-					"tex ft0, v3, fs2 <2d, clamp, linear, mipnone>\n" +
-					"tex ft2, v4, fs2 <2d, clamp, linear, mipnone>\n" +
-
-					"sub ft1.x, ft7.x, ft0.x\n" +
-					"sub ft1.y, ft7.x, ft2.x\n" +
-
-					"mul ft0.xy, ft1.xy, fc0.ww\n" +	// multiply by bumpiness
+					"sub ft0.xy, ft7.xy, fc0.x\n" +
+					"mul ft0.xy, ft0.xy, fc0.w\n" +	// multiply by bumpiness
 
 					"mov ft0.z, fc1.y\n" +
 					"nrm ft0.xyz, ft0.xyz\n";
@@ -388,7 +379,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			if (_sourceTextureAlpha == 0 || value == 0)
 				invalidateProgram();
 
-			_globalFragmentData[4] = value;
+			_globalFragmentData[4] = value*2;
 		}
 	}
 }

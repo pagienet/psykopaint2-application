@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		{
 			context.setRenderToTexture(_canvas.halfSizeBackBuffer, true);
 			context.setTextureAt(0, pigment);
-			context.setTextureAt(1, _canvas.heightSpecularMap);
+			context.setTextureAt(1, _canvas.normalSpecularMap);
 			context.clear();
 			_props[0] = pigmentGranulation;
 			_props[4] = pigmentDensity;

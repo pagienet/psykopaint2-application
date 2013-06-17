@@ -8,13 +8,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	public class EmbeddedBrushShape extends AbstractBrushShape
 	{
 		private var _colorAsset : Class;
-		private var _normalHeightAsset : Class;
+		private var _normalSpecularAsset : Class;
 
-		public function EmbeddedBrushShape(context3D : Context3D, id : String, colorAsset : Class, heightAsset : Class)
+		public function EmbeddedBrushShape(context3D : Context3D, id : String, colorAsset : Class, normalSpecularAsset : Class)
 		{
 			super(context3D, id, 1)
 			_colorAsset = colorAsset;
-			_normalHeightAsset = heightAsset;
+			_normalSpecularAsset = normalSpecularAsset;
 			var source:BitmapData = (new _colorAsset() as Bitmap ).bitmapData;
 			this.size = source.width;
 			source.dispose();
@@ -30,9 +30,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			source.dispose();
 		}
 
-		override protected function uploadHeightMap(texture : Texture) : void
+		override protected function uploadNormalSpecularMap(texture : Texture) : void
 		{
-			var source:BitmapData = (new _normalHeightAsset() as Bitmap ).bitmapData;
+			var source:BitmapData = (new _normalSpecularAsset() as Bitmap ).bitmapData;
 
 			uploadMips(_textureSize, source, texture);
 

@@ -1,3 +1,3 @@
-dp3 ft4.x, ft0, v1
+dp3 ft4.x, ft0.xyz, v1.xyz
 max ft4.x, ft4.x, fc0.y
 mul ft3.xyz, fc5.xyz, ft4.x

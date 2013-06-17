@@ -79,22 +79,22 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<parameter id="Shapes" path="brush" index="0" list="wet,basic" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 				</brush>
-                <brush engine={BrushType.PENCIL} name="Pencil">
-                    <pathengine type={PathManager.ENGINE_TYPE_BASIC}>
-                        <ColorDecorator>
-                            <parameter id="Pick Color" path="pathengine.pointdecorator_0" value="1" showInUI="0" />
-                        </ColorDecorator>
+				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
+					<parameter id="Shapes" path="brush" index="0" list="wet" showInUI="0"/>
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
+				</brush>
+				<brush engine={BrushType.PENCIL} name="Pencil">
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<ColorDecorator>
+							<parameter id="Pick Color" path="pathengine.pointdecorator_0" value="1" showInUI="0" />
+						</ColorDecorator>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_1" index="1" />
 							<parameter id="Factor" path="pathengine.pointdecorator_1" value1=".1" value2=".1" showInUI="1" />
 							<parameter id="Mapping" path="pathengine.pointdecorator_1" value="2" />
 						</SizeDecorator>
-                    </pathengine>
+					</pathengine>
 					<parameter id="Shapes" path="brush" index="0" list="pencil" showInUI="0"/>
-                </brush>
-				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
-					<parameter id="Shapes" path="brush" index="0" list="wet" showInUI="0"/>
-					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Pressure Pen">
 					<parameter id="Bumpyness" path="brush" value="0.02" showInUI="1"/>
@@ -141,7 +141,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
-					<parameter id="Bumpyness" path="brush" value="0.02" showInUI="1"/>
+					<parameter id="Bumpyness" path="brush" value="0.12" showInUI="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
@@ -166,7 +166,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Gravity Spray">
 					<parameter id="Shapes" path="brush" index="0" list="noisy"/>
-					<parameter id="Bumpyness" path="brush" value="0.02" showInUI="1"/>
+					<parameter id="Bumpyness" path="brush" value="0.12" showInUI="1"/>
 					
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
@@ -506,7 +506,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			initializeDefaultBrushes();
 
 			_active = true;
-			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
+			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[3];
 			activateBrushKit();
 			renderer.init(this);
 			canvasModel.setSourceBitmapData(bitmapData);

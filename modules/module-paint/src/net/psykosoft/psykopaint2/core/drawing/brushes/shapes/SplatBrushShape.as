@@ -8,12 +8,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		[Embed( source = "assets/brushset5.atf", mimeType="application/octet-stream")]
 		protected var SourceImage : Class;
 
-		[Embed(source="assets/brushset5_NRM2.atf", mimeType="application/octet-stream")]
-		protected var SourceNormalHeightMap : Class;
+		[Embed(source="assets/brushset5_NRM3.atf", mimeType="application/octet-stream")]
+		protected var SourceNormalSpecularMap : Class;
 
 		public function SplatBrushShape(context3D : Context3D)
 		{
-			super(context3D, "splat", SourceImage, SourceNormalHeightMap, 512 );
+			super(context3D, "splat", SourceImage, SourceNormalSpecularMap, 512 );
 			_variationFactors[0] = 2;
 			_variationFactors[1] = 3;
 			_variationFactors[2] = 1 / _variationFactors[0];
