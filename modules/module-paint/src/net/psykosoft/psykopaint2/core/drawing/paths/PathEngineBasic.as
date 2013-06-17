@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.core.drawing.paths
 {
-	import flash.geom.Point;
 	
 	public class PathEngineBasic extends AbstractPathEngine
 	{

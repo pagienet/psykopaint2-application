@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		protected var _minSamplesPerStep : PsykoParameter;
 		protected var _outputStepSize:PsykoParameter;
-		protected var _sendTaps:Boolean = false;
+		protected var _sendTaps:PsykoParameter;
 		protected var _parameters:Vector.<PsykoParameter>;
 		
 		public function AbstractPathEngine()
@@ -27,8 +27,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			nextIndex = 0;
 			_minSamplesPerStep = new PsykoParameter( PsykoParameter.IntParameter,"Minimum Samples Per Step",1,1,10);
 			_outputStepSize = new PsykoParameter( PsykoParameter.NumberParameter,"Output Step Size",3,0.05,200);
+			_sendTaps = new PsykoParameter( PsykoParameter.BooleanParameter,"Send Taps",false);
 			_parameters = new Vector.<PsykoParameter>();
-			_parameters.push(_minSamplesPerStep,_outputStepSize);
+			_parameters.push(_minSamplesPerStep,_outputStepSize, _sendTaps);
 		}
 		
 		public function get type():int
@@ -193,12 +194,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		public function get sendTaps():Boolean
 		{
-			return _sendTaps;
+			return _sendTaps.booleanValue;
 		}
 		
 		public function set sendTaps(value:Boolean):void
 		{
-			_sendTaps = value;
+			_sendTaps.booleanValue = value;
 		}
 		
 		public function update(forceUpdate : Boolean = false) :Vector.<SamplePoint>
