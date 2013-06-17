@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.core.model
 			notifyStackChange();
 		}
 
-		private function cleanUpOldest() : void
+		private function cleanUpOldest() : Boolean
 		{
 			var snapshot : CanvasSnapShot = _snapShots.shift();
 			//PATCH Mario: this check is only a temporary fix to avoid errors during the demo.
@@ -77,7 +77,10 @@ package net.psykosoft.psykopaint2.core.model
 			{
 				--_currentHistoryIndex;
 				snapshot.dispose();
+			} else { 
+				return false;
 			}
+			return true;
 		}
 
 		public function get history() : Vector.<CanvasSnapShot>
@@ -156,9 +159,10 @@ package net.psykosoft.psykopaint2.core.model
 			if (size > MAX_TEXTURE_MEMORY_USAGE)
 				throw ResourceError("Stroke data larger than reserved space!");
 
-			//PATCH: this will result in an inifinite loop so I removed the while
-			//while (_bytesAvailable < size)
-				cleanUpOldest();
+			while (_bytesAvailable < size)
+			{
+				if (!cleanUpOldest()) break;
+			}
 		}
 
 		public function freeTexture(textureProxy : TextureProxy) : void

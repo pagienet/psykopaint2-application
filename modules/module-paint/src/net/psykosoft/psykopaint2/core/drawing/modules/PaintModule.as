@@ -364,18 +364,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				<brush engine={BrushType.SPRAY_CAN} name="Precision Test">
 					<parameter id="Bumpyness" path="brush" value="0" />
 					<parameter id="Size Factor" path="brush" value1="1" value2="1"/>
-					<parameter id="Shapes" path="brush" index="0" list="test" showInUI="0"/>
+					<parameter id="Shapes" path="brush" index="0" list="dot" showInUI="0"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<parameter id="Output Step Size" path="pathengine" value="6"  />
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="1" />
-						</ColorDecorator>
-						<GridDecorator>
-							<parameter id="Angle Step"  path="pathengine.pointdecorator_1" value={360} />
-							<parameter id="Angle Offset" path="pathengine.pointdecorator_1" value={45} />
-							<parameter id="Cell Width" path="pathengine.pointdecorator_1" value={64} />
-							<parameter id="Cell Height" path="pathengine.pointdecorator_1" value={64} />
-							<parameter id="Row Offset" path="pathengine.pointdecorator_1" value={32} />
-						</GridDecorator>
+							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="0" />
+							<parameter id="Fixed Color"  path="pathengine.pointdecorator_0" value="1" />
+					</ColorDecorator>
 					</pathengine>
 				</brush>
 			</brushkits>
