@@ -46,5 +46,10 @@ package net.psykosoft.psykopaint2.home.views.snapshot
 		public function toggleSnapShot( show:Boolean ):void {
 			_leftSide.visible = _rightSide.visible = show;
 		}
+
+		public function widen( ratio:Number ):void {
+			_leftSide.x = -EDGE_WIDTH * ratio;
+			_rightSide.x = 1024 - EDGE_WIDTH + EDGE_WIDTH * ratio;
+		}
 	}
 }

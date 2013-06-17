@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
@@ -118,6 +119,7 @@ package net.psykosoft.psykopaint2.core.config
 			_injector.map( NotifyCanvasSnapshotSignal ).asSingleton();
 			_injector.map( RequestZoomToggleSignal ).asSingleton();
 			_injector.map( NotifyZoomCompleteSignal ).asSingleton();
+			_injector.map( NotifyNavigationMovingSignal ).asSingleton();
 		}
 
 		// -----------------------

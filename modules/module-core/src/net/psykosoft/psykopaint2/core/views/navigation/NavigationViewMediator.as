@@ -4,9 +4,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class NavigationViewMediator extends MediatorBase
@@ -19,6 +19,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		[Inject]
 		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
+
+		[Inject]
+		public var notifyNavigationMovingSignal:NotifyNavigationMovingSignal;
 
 		[Inject]
 		public var notifyExpensiveUiActionToggledSignal:NotifyExpensiveUiActionToggledSignal;
@@ -44,11 +47,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			view.hidingSignal.add( onViewHiding );
 			view.scrollingStartedSignal.add( onViewScrollingStarted );
 			view.scrollingEndedSignal.add( onViewScrollingEnded );
+			view.showHideUpdateSignal.add( onViewShowHideUpdate );
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onViewShowHideUpdate( ratio:Number ):void {
+			notifyNavigationMovingSignal.dispatch( ratio );
+		}
 
 		private function onViewScrollingEnded():void {
 			notifyExpensiveUiActionToggledSignal.dispatch( false, "nav-scrolling" );
@@ -59,20 +67,20 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		private function onViewHiding():void {
-			notifyExpensiveUiActionToggledSignal.dispatch( true, "nav-hiding" );
+//			notifyExpensiveUiActionToggledSignal.dispatch( true, "nav-hiding" ); // TODO: reactivate this signal when render freeze is less glitchy
 			notifyNavigationToggledSignal.dispatch( false );
 		}
 
 		private function onViewHidden():void {
-			notifyExpensiveUiActionToggledSignal.dispatch( false, "nav-hiding" );
+//			notifyExpensiveUiActionToggledSignal.dispatch( false, "nav-hiding" );
 		}
 
 		private function onViewShowing():void {
-			notifyExpensiveUiActionToggledSignal.dispatch( true, "nav-showing" );
+//			notifyExpensiveUiActionToggledSignal.dispatch( true, "nav-showing" );
 		}
 
 		private function onViewShown():void {
-			notifyExpensiveUiActionToggledSignal.dispatch( false, "nav-showing" );
+//			notifyExpensiveUiActionToggledSignal.dispatch( false, "nav-showing" );
 			notifyNavigationToggledSignal.dispatch( true );
 		}
 

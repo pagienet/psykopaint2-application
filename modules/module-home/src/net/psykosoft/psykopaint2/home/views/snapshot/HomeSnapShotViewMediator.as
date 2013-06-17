@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.home.views.snapshot
 
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -19,6 +20,9 @@ package net.psykosoft.psykopaint2.home.views.snapshot
 		[Inject]
 		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
 
+		[Inject]
+		public var notifyNavigationMovingSignal:NotifyNavigationMovingSignal;
+
 		override public function initialize():void {
 
 			// Init.
@@ -32,11 +36,17 @@ package net.psykosoft.psykopaint2.home.views.snapshot
 			// From app.
 			notifyCanvasBitmapSignal.add( onCanvasSnapShot );
 			notifyNavigationToggledSignal.add( onNavigationToggled );
+			notifyNavigationMovingSignal.add( onNavigationMoving );
 		}
 
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onNavigationMoving( ratio:Number ):void {
+			view.toggleSnapShot( true );
+			view.widen( ratio );
+		}
 
 		private function onCanvasSnapShot( bmd:BitmapData ):void {
 			if( !view.visible ) return;

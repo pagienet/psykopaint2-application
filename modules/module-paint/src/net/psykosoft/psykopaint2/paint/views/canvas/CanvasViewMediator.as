@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
@@ -45,6 +46,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
+
+		[Inject]
+		public var notifyNavigationMovingSignal:NotifyNavigationMovingSignal;
 
 		[Inject]
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
@@ -90,6 +94,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// From app.
 			notifyNavigationToggledSignal.add( onNavigationToggled );
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
+			notifyNavigationMovingSignal.add( onNavigationMoving );
 		}
 
 		// -----------------------
@@ -118,15 +123,19 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function onExpensiveUiTask( started:Boolean, id:String ):void {
 			// TODO: analyze id properly to manage activity queues...
-			trace( this, "onExpensiveUiTask - task started: " + started + ", task id: " + id );
+//			trace( this, "onExpensiveUiTask - task started: " + started + ", task id: " + id );
 			if( started ) {
-				trace( this, "requesting rendering freeze" );
+//				trace( this, "requesting rendering freeze" );
 				requestFreezeRenderingSignal.dispatch();
 			}
 			else {
-				trace( this, "requesting rendering resume" );
+//				trace( this, "requesting rendering resume" );
 				requestResumeRenderingSignal.dispatch();
 			}
+		}
+
+		private function onNavigationMoving( ratio:Number ):void {
+			requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight * ( 1 - .24 * ( 1 - ratio ) ) ) );
 		}
 
 		private function onNavigationToggled( navVisible:Boolean ):void {

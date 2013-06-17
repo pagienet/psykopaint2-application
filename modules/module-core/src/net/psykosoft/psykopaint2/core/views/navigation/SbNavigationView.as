@@ -60,15 +60,19 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var hiddenSignal:Signal;
 		public var scrollingStartedSignal:Signal;
 		public var scrollingEndedSignal:Signal;
+		public var showHideUpdateSignal:Signal;
 
 		public function SbNavigationView() {
 			super();
+
 			shownSignal = new Signal();
 			hidingSignal = new Signal();
 			showingSignal = new Signal();
 			hiddenSignal = new Signal();
 			scrollingStartedSignal = new Signal();
 			scrollingEndedSignal = new Signal();
+			showHideUpdateSignal = new Signal();
+
 			_reactiveHideStackY = new StackUtil();
 			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbButton;
 			_rightButton = rightBtnSide.getChildByName( "btn" ) as SbButton;
@@ -128,7 +132,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_showing = false;
 			_animating = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, time, { y: _bgHeight, onComplete: onHideAnimatedComplete, ease:Strong.easeOut } );
+			TweenLite.to( this, time, { y: _bgHeight, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease:Strong.easeOut } );
 		}
 		private function onHideAnimatedComplete():void {
 			hiddenSignal.dispatch();
@@ -148,7 +152,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			showingSignal.dispatch();
 			this.visible = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 0.5, { y: 0, onComplete: onShowAnimatedComplete, ease:Strong.easeOut } );
+			TweenLite.to( this, 0.5, { y: 0, onUpdate: onShowHideUpdate, onComplete: onShowAnimatedComplete, ease:Strong.easeOut } );
 		}
 		private function onShowAnimatedComplete():void {
 			_animating = false;
@@ -156,6 +160,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_hidden = false;
 			_targetReactiveY = 768 * scaleX - _bgHeight;
 			NavigationCache.isHidden = false;
+		}
+
+		private function onShowHideUpdate():void {
+			showHideUpdateSignal.dispatch( y / _bgHeight );
 		}
 
 		public function updateSubNavigation( subNavType:Class ):void {
@@ -252,6 +260,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if( y < 0 ) y = 0;
 //			trace( this, "pushing value: " + y + ", index: " + _reactiveHideStackY.newestIndex );
 			_reactiveHideStackY.pushValue( y );
+			showHideUpdateSignal.dispatch( y / _bgHeight );
 		}
 
 		// ---------------------------------------------------------------------
@@ -296,6 +305,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// TODO: this assumes that side buttons will always be set before center buttons, which is not enforced anywhere
 		// and will cause edge gaps to be set incorrectly
 		private function checkGap():void {
+			if( !_scroller ) return;
 			// Decide scroller gaps according to the presence of side buttons.
 			if( leftBtnSide.visible && rightBtnSide.visible ) {
 				_scroller.leftGap = _scroller.rightGap = 150;
