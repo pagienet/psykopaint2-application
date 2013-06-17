@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		function clear():void;
 		function addFirstPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0 ):void;
 		function addPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0, force:Boolean = false ):Boolean;
+		function addSamplePoint( p:SamplePoint, force:Boolean = false  ):Boolean;
 		//function addXY( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0,force:Boolean = false ):Boolean;
 		function getPointAt( index:int ):SamplePoint;
 		function clone( startIndex:int = 0, count:int = -1 ):IPathEngine;

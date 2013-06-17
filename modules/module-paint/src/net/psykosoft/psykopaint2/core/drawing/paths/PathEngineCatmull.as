@@ -24,9 +24,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		public function PathEngineCatmull()
 		{
-			_minSamplesPerStep.intValue = 4;
-			_outputStepSize.numberValue = 3;
 			init();
+			_minSamplesPerStep.intValue = 4;
+			
 		}
 		
 		override public function get type():int

@@ -365,7 +365,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<parameter id="Bumpyness" path="brush" value="0" />
 					<parameter id="Size Factor" path="brush" value1="1" value2="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="dot" showInUI="0"/>
-					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+					<pathengine type={PathManager.ENGINE_TYPE_CATMULL}>
 						<parameter id="Output Step Size" path="pathengine" value="6"  />
 						<ColorDecorator>
 							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="0" />

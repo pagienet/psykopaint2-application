@@ -172,14 +172,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if ( startIndex < nextIndex )
 			{
 				if ( count == -1 ) count = nextIndex - startIndex;
-				var p:SamplePoint = _sampledPoints[startIndex];
+				//var p:SamplePoint = _sampledPoints[startIndex];
 				while ( count > 0)
 				{
-					result.addPoint(p.x,p.y,p.pressure,p.penButtonState, true);
-					if ( ++startIndex < nextIndex )
-						p = _sampledPoints[startIndex];
-					else 
-						break;
+					result.addSamplePoint( _sampledPoints[startIndex++].getClone(), true);
+					//result.addPoint(p.x,p.y,p.pressure,p.penButtonState, true);
+					//if ( ++startIndex == nextIndex )
+					//	break;
 					count--;
 				}
 			}
