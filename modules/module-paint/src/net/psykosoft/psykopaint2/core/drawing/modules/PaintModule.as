@@ -156,6 +156,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Offset Angle" path="pathengine.pointdecorator_2" value1="0" value2="0" showInUI="1"/>
 							<parameter id="Brush Angle Variation" path="pathengine.pointdecorator_2" value1="-10" value2="10" showInUI="1"/>
 							<parameter id="Bristle Variation" path="pathengine.pointdecorator_2" value="1" showInUI="1"/>
+							<parameter id="Auto Rotate" path="pathengine.pointdecorator_2" value="0" showInUI="1"/>
 						</SpawnDecorator>
 						<ColorDecorator>
 							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />

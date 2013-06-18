@@ -61,14 +61,14 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 			// Specific parameter ui components will show up when clicking on a button.
 			var list:XMLList = _parametersXML.descendants( "parameter" );
 			var numParameters:uint = list.length();
-			var firstParamId:String = list[ 0 ].@id;
+			var firstParamId:String = "";//list[ 0 ].@id;
 //			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
 			for( var i:uint; i < numParameters; ++i ) {
 				var parameter:XML = list[ i ];
 				if ( CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS || ( parameter.hasOwnProperty("@showInUI") && parameter.@showInUI == "1" ) )
 				{
 					//if( firstParamId == "" ) firstParamId = parameter.@id;
-					var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter().indexOf( parameter.@id ) != -1;
+					var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter(_parametersXML.@name).indexOf( parameter.@id ) != -1;
 					if( matchesLast ) firstParamId = parameter.@id;
 //					trace( ">>> " + parameter.toXMLString() );
 					addCenterButton( parameter.@id, "param" + parameter.@type, "btnLabelCenter",null,false );
@@ -78,14 +78,18 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 
 			// Select and <<< activate >>> the first parameter.
 //			trace( this, "first: >>>" + firstParamId + "<<<" );
-			selectButtonWithLabel( firstParamId );
-			openParameter( firstParamId );
+			//Mario: I changed this again. I do not want the first button to be automatically selected. Only if there was a previous selection
+			if ( firstParamId != "" )
+			{
+				selectButtonWithLabel( firstParamId );
+				openParameter( firstParamId );
+			}
 		}
 		
 		public function updateParameters( xml:XML ):void 
 		{
 			_parametersXML = xml;
-			var currentParameterID:String = EditBrushCache.getLastSelectedParameter();
+			var currentParameterID:String = EditBrushCache.getLastSelectedParameter(_parametersXML.@name);
 			if ( currentParameterID != "" )
 			{
 				openParameter( currentParameterID );
@@ -104,8 +108,10 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 			_uiElements = new Vector.<DisplayObject>();
 
 			_parameter = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ];
+			if ( _parameter == null ) return;
+			
 			var parameterType:uint = uint( _parameter.@type );
-			EditBrushCache.setLastSelectedParameter( _parameter.@id );
+			EditBrushCache.setLastSelectedParameter( _parameter.@id, _parametersXML.@name );
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {

@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var brushAngleRange:PsykoParameter;
 		private var bristleVariation:PsykoParameter;
 		private var maxSpeed:PsykoParameter;
+		private var autorotate:PsykoParameter;
 		
 		private var rng:LCG;
 		
@@ -30,9 +31,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			this.offsetAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, "Offset Angle",0,0,-180,180);
 			this.brushAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, "Brush Angle Variation",0,0,-180,180);
 			this.bristleVariation  = new PsykoParameter( PsykoParameter.NumberParameter, "Bristle Variation",1,0,1);
+			autorotate      = new PsykoParameter( PsykoParameter.BooleanParameter, "Auto Rotate",1);
 			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,"Maximum Speed",20,1,100);
 			
-			_parameters.push(this.multiples,this.maxOffset, offsetMode, offsetAngleRange, brushAngleRange, bristleVariation,maxSpeed);
+			_parameters.push(this.multiples,this.maxOffset, offsetMode, offsetAngleRange, brushAngleRange, bristleVariation,maxSpeed,autorotate);
 			rng = new LCG(Math.random() * 0xffffffff);
 		}
 		
@@ -42,6 +44,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			var count:int = points.length;
 			var ms:Number = maxSpeed.numberValue;
+			var ar:Boolean = autorotate.booleanValue;
 			for ( var j:int = 0; j < count; j++ )
 			{
 				var spawnCount:int = 1 + rng.getNumber(multiples.lowerRangeValue, multiples.upperRangeValue);
@@ -68,7 +71,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				for ( var i:int = 0; i < spawnCount; i++ )
 				{
 					var p:SamplePoint = points[j].getClone();
-					var offsetAngle:Number = (p.angle + Math.PI * 0.5 +  rng.getNumber( offsetAngleRange.lowerRangeValue, offsetAngleRange.upperRangeValue ));;// * (rng.getChance() ? 1 : -1);
+					var offsetAngle:Number = ((ar ? p.angle + Math.PI * 0.5 : 0 ) +  rng.getNumber( offsetAngleRange.lowerRangeValue, offsetAngleRange.upperRangeValue ));
 					var radius:Number = (i-spawnCount/2) * distance + rng.getNumber(-distance,distance)*0.5*bristleVariation.numberValue;
 					p.angle += rng.getNumber( brushAngleRange.lowerRangeValue, brushAngleRange.upperRangeValue );
 					p.x +=  Math.cos(offsetAngle) * radius; 
