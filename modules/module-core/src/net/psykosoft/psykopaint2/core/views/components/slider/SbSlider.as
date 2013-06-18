@@ -8,6 +8,10 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 	public class SbSlider extends Sprite
 	{
+		public static var LABEL_VALUE:int = 0;
+		public static var LABEL_PERCENT:int = 1;
+		public static var LABEL_DEGREES:int = 2;
+			
 		// Declared in Fla.
 		public var handleView:Sprite;
 		public var bgView:Sprite;
@@ -23,7 +27,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _mouseIsDown:Boolean;
 		private var _clickOffset:Number;
 		private var _valueRange:Number = 1;
-
+		private var _labelMode:int = 1;
+		
 		public function SbSlider() {
 			super();
 			_xRange = _maxX - _minX;
@@ -56,8 +61,19 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 
 		private function updateLabel():void {
-			var percentage:Number = Math.round( _valueRatio * 100 );
-			valueLabel.text = String( percentage + "%" );
+			switch ( _labelMode )
+			{
+				case LABEL_VALUE:
+					valueLabel.text = String( _value );
+					break;
+				case LABEL_PERCENT:
+					var percentage:Number = Math.round( _valueRatio * 100 );
+					valueLabel.text = String( percentage + "%" );
+					break;
+				case LABEL_DEGREES:
+					valueLabel.text = String( _value + "°" );
+					break;
+			}
 		}
 
 		private function valueToRatio( value:Number ):Number {
@@ -116,6 +132,10 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		public function get value():Number {
 			return _value;
+		}
+		
+		public function set labelMode( value:int ):void {
+			_labelMode = value;
 		}
 
 		// ---------------------------------------------------------------------

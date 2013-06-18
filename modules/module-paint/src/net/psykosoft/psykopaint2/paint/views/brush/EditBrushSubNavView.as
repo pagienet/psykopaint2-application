@@ -129,12 +129,26 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 
 			// Range slider.
-			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter || parameterType == PsykoParameter.AngleRangeParameter ) {
+			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter  ) {
 				var rangeSlider:SbRangedSlider = new SbRangedSlider();
 				rangeSlider.minValue = _parameter.minLimit;
 				rangeSlider.maxValue = _parameter.maxLimit;
 				rangeSlider.value1 = _parameter.lowerRangeValue;
 				rangeSlider.value2 =_parameter.upperRangeValue;
+				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
+				rangeSlider.setWidth ( 451 );
+				positionUiElement( rangeSlider );
+				addChild( rangeSlider );
+				_uiElements.push( rangeSlider );
+			}
+			
+			else if(  parameterType == PsykoParameter.AngleRangeParameter ) {
+				rangeSlider = new SbRangedSlider();
+				rangeSlider.labelMode = SbRangedSlider.LABEL_DEGREES;
+				rangeSlider.minValue = _parameter.minLimit;
+				rangeSlider.maxValue = _parameter.maxLimit;
+				rangeSlider.value1 = _parameter.lowerDegreesValue;
+				rangeSlider.value2 =_parameter.upperDegreesValue;
 				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
 				rangeSlider.setWidth ( 451 );
 				positionUiElement( rangeSlider );
@@ -240,11 +254,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			element.y = UI_ELEMENT_Y + offsetY;
 		}
 
-		/*
-		private function notifyParameterChange():void {
-			brushParameterChangedSignal.dispatch( _parameter );
-		}
-		*/
 
 		// ---------------------------------------------------------------------
 		// Listeners.
@@ -253,25 +262,21 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private function onKnobChanged( event:Event ):void {
 		    var knob:Knob = event.target as Knob;
 			_parameter.degrees = knob.value;
-			//notifyParameterChange();
 		}
 
 		private function onCheckBoxChanged( event:Event ):void {
 			var checkBox:SbCheckBox = event.target as SbCheckBox;
 			_parameter.booleanValue = checkBox.selected;
-			//notifyParameterChange();
 		}
 
 		private function onComboBoxChanged( event:Event ):void {
 			var comboBox:SbComboboxView = event.target as SbComboboxView;
 			_parameter.index = comboBox.selectedIndex;
-			//notifyParameterChange();
 		}
 
 		private function onSliderChanged( event:Event ):void {
 			var slider:SbSlider = event.target as SbSlider;
 			_parameter.value = slider.value;
-			//notifyParameterChange();
 		}
 
 		private function onRangeSliderChanged( event:Event ):void {
@@ -284,7 +289,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				_parameter.lowerRangeValue = slider.value1;
 				_parameter.upperRangeValue = slider.value2;
 			}
-			//notifyParameterChange();
 		}
 	}
 }

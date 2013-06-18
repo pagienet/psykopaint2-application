@@ -9,6 +9,10 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 
 	public class SbRangedSlider extends Sprite
 	{
+		public static var LABEL_VALUE:int = 0;
+		public static var LABEL_PERCENT:int = 1;
+		public static var LABEL_DEGREES:int = 2
+			
 		// Declared in Fla.
 		public var leftHandleView:Sprite;
 		public var rightHandleView:Sprite;
@@ -31,7 +35,8 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 		private var _valueRange:Number = 1;
 		private var _width:Number = 451;
 		private var _activeHandle:Sprite;
-
+		private var _labelMode:int = 1;
+		
 		public function SbRangedSlider() {
 			super();
 			_minX = leftHandleView.x;
@@ -123,14 +128,28 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 			updateAccordion();
 		}
 
-		private function updateLabel():void {
-			var percentage:Number = Math.round(_valueRatio1*100);
-			value1Label.text = String( percentage + "%" );
-
-			percentage = Math.round(_valueRatio2*100);
-			value2Label.text = String( percentage + "%"  );
+		private function updateLabel():void 
+		{
+			switch ( _labelMode )
+			{
+				case LABEL_VALUE:
+					value1Label.text = String( _value1 );
+					value2Label.text = String( _value2 );
+					break;
+				case LABEL_PERCENT:
+					var percentage:Number = Math.round(_valueRatio1*100);
+					value1Label.text = String( percentage + "%" );
+					
+					percentage = Math.round(_valueRatio2*100);
+					value2Label.text = String( percentage + "%"  );
+					break;
+				case LABEL_DEGREES:
+					value1Label.text = String( int(_value1+0.5) + "°" );
+					value2Label.text = String( int(_value2+0.5) + "°" );
+					break;
+			}
 		}
-
+		
 		private function valueToRatio( value:Number ):Number {
 			return ( value - _minValue ) / _valueRange;
 		}
@@ -210,6 +229,10 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 			value2Label.x = newWidth - 70;
 			_xRange = _maxX - _minX;
 			updateViewFromValue();
+		}
+		
+		public function set labelMode( value:int ):void {
+			_labelMode = value;
 		}
 
 		// ---------------------------------------------------------------------
