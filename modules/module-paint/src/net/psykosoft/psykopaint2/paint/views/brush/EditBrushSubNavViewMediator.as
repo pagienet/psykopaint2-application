@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 {
 
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
@@ -31,21 +30,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Post init.
 			view.setParameters( paintModule.getCurrentBrushParameters() );
 
-			// From view.
-			//view.brushParameterChangedSignal.add( onBrushParameterChanged );
-			
 			notifyActivateBrushChangedSignal.add( onBrushParameterChangedFromOutside );
 		}
-
-		// -----------------------
-		// From view.
-		// -----------------------
-		/*
-		private function onBrushParameterChanged( parameter:PsykoParameter ):void {
-			trace( this, "param changed: " + parameter.toString() );
-			paintModule.setBrushParameter( parameter );
-		}
-		*/
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {

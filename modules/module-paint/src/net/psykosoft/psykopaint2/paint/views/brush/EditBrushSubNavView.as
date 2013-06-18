@@ -24,8 +24,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	public class EditBrushSubNavView extends SubNavigationViewBase
 	{
 		private var _uiElements:Vector.<DisplayObject>;
-		//private var _parametersXML:XML;
-		//private var _parameter:XML;
 		private var _parameterSetVO:ParameterSetVO;
 		private var _parameter:PsykoParameter;
 
@@ -33,11 +31,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private const UI_ELEMENT_Y:uint = 560;
 
-		//public var brushParameterChangedSignal:Signal;
-
 		public function EditBrushSubNavView() {
 			super();
-		//	brushParameterChangedSignal = new Signal();
 		}
 
 		override protected function onEnabled():void {
@@ -57,24 +52,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		public function setParameters( parameterSetVO:ParameterSetVO ):void {
 
-			//_parametersXML = xml;
 			_parameterSetVO = parameterSetVO;
-//			trace( this, "receiving parameters: " + _parametersXML );
+//			trace( this, "receiving parameters: " + parameterSetVO.length );
 
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
-			//var list:XMLList = _parametersXML.descendants( "parameter" );
-			//var numParameters:uint = list.length();
+			
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
 			
-			var firstParamId:String = "";//list[ 0 ].@id;
+			var firstParamId:String = "";
 //			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
 			for( var i:uint; i < numParameters; ++i ) 
 			{
 				var parameter:PsykoParameter = list[ i ];
-				
-				//if( firstParamId == "" ) firstParamId = parameter.@id;
 				var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter(_parameterSetVO.brushName).indexOf( parameter.id ) != -1;
 				if( matchesLast ) firstParamId = parameter.id;
 //				trace( ">>> " + parameter.toXMLString() );
@@ -285,8 +276,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onRangeSliderChanged( event:Event ):void {
 			var slider:SbRangedSlider = event.target as SbRangedSlider;
-			_parameter.lowerRangeValue = slider.value1;
-			_parameter.upperRangeValue = slider.value2;
+			if ( _parameter.type == PsykoParameter.AngleRangeParameter )
+			{
+				_parameter.lowerDegreesValue = slider.value1;
+				_parameter.upperDegreesValue = slider.value2;
+			} else {
+				_parameter.lowerRangeValue = slider.value1;
+				_parameter.upperRangeValue = slider.value2;
+			}
 			//notifyParameterChange();
 		}
 	}

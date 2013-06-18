@@ -66,5 +66,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		protected function selectButtonWithLabel( value:String ):void {
 			_navigation.selectButtonWithLabel( value );
 		}
+		
+		protected function selectButtonByIndex( index:int ):void {
+			_navigation.selectButtonByIndex( index );
+		}
 	}
 }

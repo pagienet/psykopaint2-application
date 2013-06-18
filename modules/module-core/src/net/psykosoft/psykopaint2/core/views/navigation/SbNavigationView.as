@@ -402,6 +402,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				button.toggleSelect( button.labelText == value );
 			}
 		}
+		
+		public function selectButtonByIndex( index:int ):void {
+			if( !_areButtonsSelectable ) return;
+			for( var i:Number = 0; i < _centerButtons.length; ++i ) {
+				_centerButtons[ i ].toggleSelect( i == index );
+			}
+		}
 
 		// ---------------------------------------------------------------------
 		// Handlers.

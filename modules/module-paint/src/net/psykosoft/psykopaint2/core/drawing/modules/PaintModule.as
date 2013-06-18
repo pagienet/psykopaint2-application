@@ -523,7 +523,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				setBrushShape( brushShapes.shape[0].@type );
 			}
 			*/
-			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSetAsXML() );
+			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSet( !CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS ) );
 		}
 
 		
