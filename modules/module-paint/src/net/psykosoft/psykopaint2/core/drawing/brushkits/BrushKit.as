@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.brushes.UncoloredSprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterDamageBrush;
+	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
@@ -111,11 +112,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			return _brushEngine;
 		}
 		
-		public function getParameterSet():XML
+		public function getParameterSetAsXML():XML
 		{
-			var result:XML = _brushEngine.getParameterSet([]);
+			var result:XML = _brushEngine.getParameterSetAsXML([]);
 			result.@name = _brushName;
 			return result;
+		}
+		
+		public function getParameterSet( showInUIOnly:Boolean = true):ParameterSetVO
+		{
+			var vo:ParameterSetVO = new ParameterSetVO(_brushName);
+			_brushEngine.getParameterSet(vo,showInUIOnly);
+			return vo;
 		}
 		
 		public function setBrushParameter( parameter:XML):void
@@ -173,7 +181,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		protected function sendBrushKitParameterSet():void
 		{
 			var message:XML = <msg src="ActiveBrushKit.parameterSet" />;
-			message.appendChild(getParameterSet());
+			message.appendChild(getParameterSetAsXML());
 			PsykoSocket.sendString( message.toXMLString() );
 		}
 		

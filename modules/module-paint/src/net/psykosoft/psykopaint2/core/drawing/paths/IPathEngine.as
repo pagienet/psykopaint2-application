@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 {
 	import flash.geom.Point;
 	
+	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 
 	public interface IPathEngine
@@ -15,7 +16,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		function clone( startIndex:int = 0, count:int = -1 ):IPathEngine;
 		function update( forceUpdate:Boolean = false ):Vector.<SamplePoint>;
 		function updateParametersFromXML(xml:XML):void;
-		function getParameterSet( path:Array ):XML;
+		function getParameterSetAsXML( path:Array ):XML;
+		function getParameterSet(vo:ParameterSetVO, showInUiOnly:Boolean ):void;
 		
 		function get type():int;
 		function get minSamplesPerStep():PsykoParameter;

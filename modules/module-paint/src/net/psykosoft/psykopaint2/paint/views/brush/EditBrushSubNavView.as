@@ -9,10 +9,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.text.TextField;
 	
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
-import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
-import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
+	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
+	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	
@@ -23,18 +24,20 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 	public class EditBrushSubNavView extends SubNavigationViewBase
 	{
 		private var _uiElements:Vector.<DisplayObject>;
-		private var _parametersXML:XML;
-		private var _parameter:XML;
+		//private var _parametersXML:XML;
+		//private var _parameter:XML;
+		private var _parameterSetVO:ParameterSetVO;
+		private var _parameter:PsykoParameter;
 
 		public static const LBL_BACK:String = "Pick a Brush";
 
 		private const UI_ELEMENT_Y:uint = 560;
 
-		public var brushParameterChangedSignal:Signal;
+		//public var brushParameterChangedSignal:Signal;
 
 		public function EditBrushSubNavView() {
 			super();
-			brushParameterChangedSignal = new Signal();
+		//	brushParameterChangedSignal = new Signal();
 		}
 
 		override protected function onEnabled():void {
@@ -52,27 +55,30 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 		// Parameter listing.
 		// ---------------------------------------------------------------------
 
-		public function setParameters( xml:XML ):void {
+		public function setParameters( parameterSetVO:ParameterSetVO ):void {
 
-			_parametersXML = xml;
+			//_parametersXML = xml;
+			_parameterSetVO = parameterSetVO;
 //			trace( this, "receiving parameters: " + _parametersXML );
 
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
-			var list:XMLList = _parametersXML.descendants( "parameter" );
-			var numParameters:uint = list.length();
+			//var list:XMLList = _parametersXML.descendants( "parameter" );
+			//var numParameters:uint = list.length();
+			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
+			var numParameters:uint = list.length;
+			
 			var firstParamId:String = "";//list[ 0 ].@id;
 //			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
-			for( var i:uint; i < numParameters; ++i ) {
-				var parameter:XML = list[ i ];
-				if ( CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS || ( parameter.hasOwnProperty("@showInUI") && parameter.@showInUI == "1" ) )
-				{
-					//if( firstParamId == "" ) firstParamId = parameter.@id;
-					var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter(_parametersXML.@name).indexOf( parameter.@id ) != -1;
-					if( matchesLast ) firstParamId = parameter.@id;
-//					trace( ">>> " + parameter.toXMLString() );
-					addCenterButton( parameter.@id, "param" + parameter.@type, "btnLabelCenter",null,false );
-				}
+			for( var i:uint; i < numParameters; ++i ) 
+			{
+				var parameter:PsykoParameter = list[ i ];
+				
+				//if( firstParamId == "" ) firstParamId = parameter.@id;
+				var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter(_parameterSetVO.brushName).indexOf( parameter.id ) != -1;
+				if( matchesLast ) firstParamId = parameter.id;
+//				trace( ">>> " + parameter.toXMLString() );
+				addCenterButton( parameter.id, "param" + parameter.type, "btnLabelCenter",null,false );
 			}
 			invalidateContent();
 
@@ -86,10 +92,10 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 			}
 		}
 		
-		public function updateParameters( xml:XML ):void 
+		public function updateParameters( parameterSetVO:ParameterSetVO ):void 
 		{
-			_parametersXML = xml;
-			var currentParameterID:String = EditBrushCache.getLastSelectedParameter(_parametersXML.@name);
+			_parameterSetVO = parameterSetVO;
+			var currentParameterID:String = EditBrushCache.getLastSelectedParameter(_parameterSetVO.brushName);
 			if ( currentParameterID != "" )
 			{
 				openParameter( currentParameterID );
@@ -106,19 +112,24 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 
 			var i:uint;
 			_uiElements = new Vector.<DisplayObject>();
-
-			_parameter = _parametersXML.descendants( "parameter" ).( @id == id )[ 0 ];
+			for (  i = 0; i < _parameterSetVO.parameters.length; i++ )
+			{
+				if ( _parameterSetVO.parameters[i].id == id  ) {
+					_parameter = _parameterSetVO.parameters[i];
+					break;
+				}
+			}
 			if ( _parameter == null ) return;
 			
-			var parameterType:uint = uint( _parameter.@type );
-			EditBrushCache.setLastSelectedParameter( _parameter.@id, _parametersXML.@name );
+			var parameterType:int = _parameter.type;
+			EditBrushCache.setLastSelectedParameter( _parameter.id, _parameterSetVO.brushName );
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
 				var slider:SbSlider = new SbSlider();
-				slider.minValue = Number( _parameter.@minValue );
-				slider.maxValue = Number( _parameter.@maxValue );
-				slider.value = Number( _parameter.@value );
+				slider.minValue = _parameter.minLimit;
+				slider.maxValue = _parameter.maxLimit;
+				slider.value =  _parameter.numberValue;
 				slider.addEventListener( Event.CHANGE, onSliderChanged );
 				slider.setWidth ( 276 );
 				positionUiElement( slider );
@@ -129,10 +140,10 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 			// Range slider.
 			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter || parameterType == PsykoParameter.AngleRangeParameter ) {
 				var rangeSlider:SbRangedSlider = new SbRangedSlider();
-				rangeSlider.minValue = Number( _parameter.@minValue );
-				rangeSlider.maxValue = Number( _parameter.@maxValue );
-				rangeSlider.value1 = Number( _parameter.@value1 );
-				rangeSlider.value2 = Number( _parameter.@value2 );
+				rangeSlider.minValue = _parameter.minLimit;
+				rangeSlider.maxValue = _parameter.maxLimit;
+				rangeSlider.value1 = _parameter.lowerRangeValue;
+				rangeSlider.value2 =_parameter.upperRangeValue;
 				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
 				rangeSlider.setWidth ( 451 );
 				positionUiElement( rangeSlider );
@@ -143,9 +154,9 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 			// Angle.
 			else if( parameterType == PsykoParameter.AngleParameter ) {
 				var knob:Knob = new Knob( this );
-				knob.value = Number( _parameter.@value );
-				knob.minimum = Number( _parameter.@minValue );
-				knob.maximum = Number( _parameter.@maxValue );
+				knob.value = _parameter.degrees;
+				knob.minimum = _parameter.minLimit;
+				knob.maximum = _parameter.maxLimit;
 				knob.addEventListener( Event.CHANGE, onKnobChanged );
 				knob.draw();
 				positionUiElement( knob as DisplayObject, 0, -20 );
@@ -172,7 +183,7 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 				_uiElements.push( comboBox );
 				trace("STRINGLIST PARAM");*/
 
-				var list:Array = String(_parameter.@list).split(",");
+				var list:Vector.<String> = _parameter.stringList;
 				var len:uint = list.length;
 				var combobox:SbComboboxView = new SbComboboxView( );
 				for( i = 0; i < len; ++i ) {
@@ -187,7 +198,7 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 			// Check box
 			else if( parameterType == PsykoParameter.BooleanParameter ) {
 				var checkBox:SbCheckBox = new SbCheckBox();
-				checkBox.selected = int( _parameter.@value ) == 1;
+				checkBox.selected = _parameter.booleanValue;
 				checkBox.addEventListener( Event.CHANGE, onCheckBoxChanged );
 				positionUiElement( checkBox );
 				addChild( checkBox );
@@ -238,9 +249,11 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 			element.y = UI_ELEMENT_Y + offsetY;
 		}
 
+		/*
 		private function notifyParameterChange():void {
 			brushParameterChangedSignal.dispatch( _parameter );
 		}
+		*/
 
 		// ---------------------------------------------------------------------
 		// Listeners.
@@ -248,33 +261,33 @@ import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlide
 
 		private function onKnobChanged( event:Event ):void {
 		    var knob:Knob = event.target as Knob;
-			_parameter.@value = knob.value;
-			notifyParameterChange();
+			_parameter.degrees = knob.value;
+			//notifyParameterChange();
 		}
 
 		private function onCheckBoxChanged( event:Event ):void {
 			var checkBox:SbCheckBox = event.target as SbCheckBox;
-			_parameter.@value = checkBox.selected ? "1" : "0";
-			notifyParameterChange();
+			_parameter.booleanValue = checkBox.selected;
+			//notifyParameterChange();
 		}
 
 		private function onComboBoxChanged( event:Event ):void {
 			var comboBox:SbComboboxView = event.target as SbComboboxView;
-			_parameter.@index = comboBox.selectedIndex;
-			notifyParameterChange();
+			_parameter.index = comboBox.selectedIndex;
+			//notifyParameterChange();
 		}
 
 		private function onSliderChanged( event:Event ):void {
 			var slider:SbSlider = event.target as SbSlider;
-			_parameter.@value = slider.value;
-			notifyParameterChange();
+			_parameter.value = slider.value;
+			//notifyParameterChange();
 		}
 
 		private function onRangeSliderChanged( event:Event ):void {
 			var slider:SbRangedSlider = event.target as SbRangedSlider;
-			_parameter.@value1 = slider.value1;
-			_parameter.@value2 = slider.value2;
-			notifyParameterChange();
+			_parameter.lowerRangeValue = slider.value1;
+			_parameter.upperRangeValue = slider.value2;
+			//notifyParameterChange();
 		}
 	}
 }

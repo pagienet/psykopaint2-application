@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
 	
+	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.EndConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
@@ -467,15 +468,25 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_view.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
 		}
 
-		public function getParameterSet( path:Array ):XML
+		public function getParameterSetAsXML( path:Array ):XML
 		{
-			var result:XML = _pathEngine.getParameterSet(path);
+			var result:XML = _pathEngine.getParameterSetAsXML(path);
 			for ( var i:int = 0; i < _pointDecorators.length; i++ )
 			{
 				var subPath:Array = path.concat(["pointdecorator_"+i]);
-				result.appendChild(_pointDecorators[i].getParameterSet(subPath) );
+				result.appendChild(_pointDecorators[i].getParameterSetAsXML(subPath) );
 			}
 			return result;
+		}
+		
+		public function getParameterSet( vo:ParameterSetVO, showInUiOnly:Boolean ):void
+		{
+			_pathEngine.getParameterSet( vo, showInUiOnly );
+			for ( var i:int = 0; i < _pointDecorators.length; i++ )
+			{
+				_pointDecorators[i].getParameterSet(vo, showInUiOnly);
+			}
+			
 		}
 		
 		public function updateParametersFromXML(message:XML):void

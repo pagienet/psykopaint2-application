@@ -6,13 +6,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.display.Stage3D;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
+	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
@@ -520,7 +523,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				setBrushShape( brushShapes.shape[0].@type );
 			}
 			*/
-			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSet() );
+			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSetAsXML() );
 		}
 
 		
@@ -589,7 +592,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		private function onActiveBrushKitChanged( event:Event ):void
 		{
-			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSet() );
+			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSetAsXML() );
 		}
 		/*
 		public function getAvailableBrushShapes() : Array
@@ -608,10 +611,15 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		}
 		*/
 
+		/*
 		public function getCurrentBrushParameters():XML {
-			return _activeBrushKit.getParameterSet();
+			return _activeBrushKit.getParameterSetAsXML();
 		}
-
+		*/
+		public function getCurrentBrushParameters():ParameterSetVO {
+			return _activeBrushKit.getParameterSet(!CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS );
+		}
+		
 		/*
 		public function setBrushShape(id : String) : void
 		{
@@ -630,11 +638,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_activeBrushKit.brushEngine.setBrushSizeFactors( minSizeFactor, maxSizeFactor );
 		}
 		*/
-
-		public function setBrushParameter( parameter:XML ):void 
+		/*
+		public function setBrushParameter( parameter:PsykoParameter ):void 
 		{
 			_activeBrushKit.setBrushParameter( parameter );
 		}
+		*/
 
 		public function render() : void
 		{

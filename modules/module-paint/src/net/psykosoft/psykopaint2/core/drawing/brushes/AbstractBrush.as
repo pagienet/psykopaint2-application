@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.AbstractBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.StrokeAppendVO;
+	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
@@ -392,7 +393,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			return _snapshot;
 		}
 		
-		public function getParameterSet( path:Array ):XML
+		public function getParameterSetAsXML( path:Array ):XML
 		{
 			var brushParameters:XML = <brush/>;
 			var brushPath:Array = path.concat(["brush"])
@@ -401,9 +402,22 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				brushParameters.appendChild( _parameters[i].toXML(brushPath) );
 			}
 			
-			brushParameters.appendChild( _pathManager.getParameterSet(path) );
+			brushParameters.appendChild( _pathManager.getParameterSetAsXML(path) );
 			//brushParameters.appendChild( getAvailableBrushShapes() );
 			return brushParameters;
+		}
+		
+		
+		public function getParameterSet( vo:ParameterSetVO, showInUiOnly:Boolean ):void
+		{
+			for ( var i:int = 0; i < _parameters.length; i++ )
+			{
+				if ( !showInUiOnly || _parameters[i].showInUI )
+					vo.parameters.push( _parameters[i] );
+			}
+			
+			_pathManager.getParameterSet( vo, showInUiOnly);
+			
 		}
 		
 		public function updateParametersFromXML(message:XML):void

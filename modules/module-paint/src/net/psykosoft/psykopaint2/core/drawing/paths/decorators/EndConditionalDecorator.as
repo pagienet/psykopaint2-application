@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			super();
 		}
 		
-		override public function getParameterSet( path:Array ):XML
+		override public function getParameterSetAsXML( path:Array ):XML
 		{
 			return <EndConditionalDecorator />;
 		}

@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 {
+	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
@@ -26,10 +27,20 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			return result;
 		}
 		
-		public function getParameterSet( path:Array ):XML
+		public function getParameterSetAsXML( path:Array ):XML
 		{
 			throw("override this");
 			return null;
+		}
+		
+		public function getParameterSet( vo:ParameterSetVO, showInUiOnly:Boolean  ):void
+		{
+			for ( var i:int = 0; i < _parameters.length; i++ )
+			{
+				if ( !showInUiOnly || _parameters[i].showInUI )
+					vo.parameters.push( _parameters[i] );
+			}
+			
 		}
 		
 		public function updateParametersFromXML(message:XML):void

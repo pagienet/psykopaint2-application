@@ -166,7 +166,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			return points;
 		}
 		
-		override public function getParameterSet(path:Array ):XML
+		override public function getParameterSetAsXML(path:Array ):XML
 		{
 			var result:XML = <ParticleDecorator/>;
 			

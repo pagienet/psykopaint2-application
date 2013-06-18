@@ -337,6 +337,16 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
+		public function get stringList():Vector.<String>
+		{
+			return _stringValues;
+		}
+		
+		public function get numberList():Vector.<Number>
+		{
+			return _numberValues;
+		}
+		
 		public function set minLimit( value:Number ):void
 		{
 			if ( type == AngleParameter || type == AngleRangeParameter ) value = value / 180 * Math.PI;
@@ -382,6 +392,40 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		public function set label( value:String ):void
 		{
 			_label = value;
+		}
+		
+		public function get showInUI():Boolean
+		{
+			return _showInUI;
+		}
+		
+		public function set showInUI( value:Boolean ):void
+		{
+			_showInUI = value;
+		}
+		
+		public function set value( v:Number ):void
+		{
+			switch ( type )
+			{
+				case NumberParameter:
+				case IntParameter:
+					numberValue = v;
+					break;
+				case AngleParameter:
+					degrees = v;
+					break;
+				case NumberRangeParameter:
+				case IntRangeParameter:
+					lowerRangeValue = upperRangeValue = v;
+					break;
+				case AngleRangeParameter:
+					lowerDegreesValue = upperDegreesValue = v;
+					break;
+				case BooleanParameter:
+					booleanValue = int( value ) == 1;
+					break;
+			}
 		}
 		
 		public function updateValueFromXML( message:XML ):void
