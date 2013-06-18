@@ -54,62 +54,91 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				if ( d > 0 )
 				{
 					d = Math.sqrt(d);
-					
 					var angle:Number = Math.atan2( dy,dx);
-					
 					_accumulatedDistance += d;
 					
-					var speed:Number = _accumulatedDistance / outputStep;
-					
-					if ( _lastSpeed > 0 )
+					if ( _accumulatedDistance >= outputStep )
 					{
-						if ( speed > 2 * _lastSpeed )
-						{
-							speed = 2 * _lastSpeed
-						} else if ( speed < 0.5 *_lastSpeed)
-						{
-							speed = 0.5 * _lastSpeed
-						}
-					}	
-					
-					var stepSize:Number = outputStep / _accumulatedDistance;
-					var ds:Number = (speed - _lastSpeed) * stepSize;
-					var da:Number = (angle -_lastAngle);
-					if ( da < -pi )
-					{
-						da += 2 * pi;
-					} else if ( da > pi )
-					{
-						da -=pi * 2;
-					}
-					if ( da > pi * 0.5 || da < -pi * 0.5 )
-					{
-						_lastAngle = angle;
-						da = 0;
-					}
-					
-					var dp:Number = (target.pressure - _lastPressure)  * stepSize;
-					var pb:int = target.penButtonState;	
-					var step:Number = stepSize;
-					angle = _lastAngle;
-					
-					d /= outputStep;
-					dx /= d;
-					dy /= d;
-					while ( _accumulatedDistance > outputStep )
-					{
-						_lastX += dx;
-						_lastY += dy;
-						_lastSpeed += ds;
 						
+						var speed:Number = _accumulatedDistance / outputStep;
+						if ( _lastSpeed > 0 )
+						{
+							if ( speed > 2 * _lastSpeed )
+							{
+								speed = 2 * _lastSpeed
+							} else if ( speed < 0.5 *_lastSpeed)
+							{
+								speed = 0.5 * _lastSpeed
+							}
+						}	
+						
+					//	var stepSize:Number = outputStep / _accumulatedDistance;
+						
+						var stepSize:Number = (d -( _accumulatedDistance - outputStep )) / d;
+						var ds:Number = (speed - _lastSpeed) * stepSize;
+						var dp:Number = (target.pressure - _lastPressure)  * stepSize;
+						
+						var da:Number = (angle -_lastAngle);
+						if ( da < -pi )
+						{
+							da += 2 * pi;
+						} else if ( da > pi )
+						{
+							da -=pi * 2;
+						}
+						if ( da > pi * 0.5 || da < -pi * 0.5 )
+						{
+							_lastAngle = angle;
+							da = 0;
+						}
+						
+						var pb:int = target.penButtonState;	
+						var step:Number = stepSize;
+						angle = _lastAngle;
+						
+						var ddx:Number = dx * stepSize / d;
+						var ddy:Number = dy * stepSize / d;
+						_lastX += ddx;
+						_lastY += ddy;
+						_lastSpeed += ds;
 						_lastAngle = angle + da *(-Math.pow(2, -10 * step) + 1);
 						_lastPressure += dp;
 						step+=stepSize;
 						result.push( PathManager.getSamplePoint( _lastX, _lastY, _lastSpeed,0, _lastAngle, _lastPressure, pb ) );
 						_accumulatedDistance-=outputStep;
+						
+						if ( _accumulatedDistance > outputStep )
+						{
+							stepSize = outputStep / _accumulatedDistance;
+							ds = (speed - _lastSpeed) * stepSize;
+							dp = (target.pressure - _lastPressure)  * stepSize;
+							d /= outputStep;
+							dx /= d;
+							dy /= d;
+							while ( _accumulatedDistance > outputStep )
+							{
+								_lastX += dx;
+								_lastY += dy;
+								_lastSpeed += ds;
+								
+								_lastAngle = angle + da *(-Math.pow(2, -10 * step) + 1);
+								_lastPressure += dp;
+								step+=stepSize;
+								result.push( PathManager.getSamplePoint( _lastX, _lastY, _lastSpeed,0, _lastAngle, _lastPressure, pb ) );
+								_accumulatedDistance-=outputStep;
+							}
+						}
+						_lastAngle %= 2 * pi;
+						
+					} else {
+						_lastAngle = angle; 
+						_lastPressure = target.pressure;
+						_lastX += dx;
+						_lastY += dy;
+						_lastSpeed = _accumulatedDistance / outputStep;
+						
 					}
-					
-					_lastAngle %= 2 * pi;
+						
 				}
 			}
 			

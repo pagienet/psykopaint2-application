@@ -142,21 +142,21 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				<brush engine={BrushType.SPRAY_CAN} name="Bristle Brush">
 					<parameter id="Bumpyness" path="brush" value="0.6" />
 					<parameter id="Shapes" path="brush" index="0" list="line,splat,splat3,basic,noisy" showInUI="1"/>
+
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<parameter id="Send Taps" path="pathengine" value="0" />
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0.1" value2="0.5" minValue="0" maxValue="10"/>
+							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0.1" value2="0.5" minValue="0" maxValue="10" showInUI="1"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2"/>
 						</SizeDecorator>
 						
 						<SpawnDecorator>
 							<parameter id="Multiples" value1="8" value2="8" path="pathengine.pointdecorator_2" />
 							<parameter id="Maximum Offset" path="pathengine.pointdecorator_2" value="16" minValue="0" maxValue="200" showInUI="1"/>
-							<parameter id="Offset Angle" path="pathengine.pointdecorator_2" value1="0" value2="0" showInUI="1"/>
-							<parameter id="Brush Angle Variation" path="pathengine.pointdecorator_2" value1="-10" value2="10" showInUI="1"/>
+							<parameter id="Offset Angle" path="pathengine.pointdecorator_2" value1="-2" value2="2" showInUI="1"/>
+							<parameter id="Brush Angle Variation" path="pathengine.pointdecorator_2" value1="-5" value2="5" showInUI="1"/>
 							<parameter id="Bristle Variation" path="pathengine.pointdecorator_2" value="1" showInUI="1"/>
-							<parameter id="Auto Rotate" path="pathengine.pointdecorator_2" value="0" showInUI="1"/>
 						</SpawnDecorator>
 						<ColorDecorator>
 							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
@@ -399,8 +399,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<parameter id="Bumpyness" path="brush" value="0" />
 					<parameter id="Size Factor" path="brush" value1="1" value2="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="dot" showInUI="0"/>
-					<pathengine type={PathManager.ENGINE_TYPE_CATMULL}>
-						<parameter id="Output Step Size" path="pathengine" value="6"  />
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<parameter id="Output Step Size" path="pathengine" value="16"  />
 						<ColorDecorator>
 							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="0" />
 							<parameter id="Fixed Color"  path="pathengine.pointdecorator_0" value="1" />
