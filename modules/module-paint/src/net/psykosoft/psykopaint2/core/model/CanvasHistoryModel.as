@@ -78,6 +78,7 @@ package net.psykosoft.psykopaint2.core.model
 				--_currentHistoryIndex;
 				snapshot.dispose();
 			} else { 
+				throw(new Error("Snapshot null!"));
 				return false;
 			}
 			return true;

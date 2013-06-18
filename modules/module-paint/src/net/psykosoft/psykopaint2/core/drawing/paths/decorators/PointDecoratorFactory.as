@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			registerDecorator( PointDecoratorType.END_CONDITIONAL, EndConditionalDecorator );
 			registerDecorator( PointDecoratorType.STATIONARY, StationaryDecorator );
 			registerDecorator( PointDecoratorType.SIZE, SizeDecorator );
+			registerDecorator( PointDecoratorType.ORDER, OrderDecorator );
 			
 			_initialized = true;
 			

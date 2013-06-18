@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const END_CONDITIONAL:String = "EndConditionalDecorator";
 		public static const STATIONARY:String = "StationaryDecorator";
 		public static const SIZE:String = "SizeDecorator";
+		public static const ORDER:String = "OrderDecorator";
 		
 		
 	}

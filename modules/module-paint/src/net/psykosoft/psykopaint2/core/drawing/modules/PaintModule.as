@@ -100,6 +100,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<parameter id="Bumpyness" path="brush" value="0.02" showInUI="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="splat3,splat,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<OrderDecorator>
+						</OrderDecorator>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="3" />
 							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.4" minValue="0" maxValue="10" showInUI="1"/>
@@ -168,6 +170,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<parameter id="Bumpyness" path="brush" value="0.12" showInUI="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<OrderDecorator>
+						</OrderDecorator>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
 							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.9" minValue="0" maxValue="10"/>
@@ -185,6 +189,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_2" value="30" />
 							<parameter id="Size Factor" path="pathengine.pointdecorator_2" value="0.8" />
 						</SplatterDecorator>
+						
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Gravity Spray">
