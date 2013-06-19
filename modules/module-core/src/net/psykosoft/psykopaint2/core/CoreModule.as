@@ -185,6 +185,7 @@ package net.psykosoft.psykopaint2.core
 			trace( this, "VERSION: " + CoreSettings.VERSION );
 			_xmLoader.dispose();
 			_xmLoader = null;
+			_coreRootView.refreshVersion();
 		}
 
 		private function initDisplay():void {

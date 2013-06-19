@@ -80,6 +80,11 @@ package net.psykosoft.psykopaint2.core.views.base
 		// Interface.
 		// ---------------------------------------------------------------------
 
+		public function refreshVersion():void {
+			var resMsg:String = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? "2048x1536" : "1024x768";
+			_versionTextField.text = CoreSettings.NAME + ", " + resMsg + ", version: " + CoreSettings.VERSION;
+		}
+
 		public function initialize():void {
 			// Core module's main views.
 			addRegisteredView( new SbNavigationView(), _applicationLayer );
@@ -149,7 +154,6 @@ package net.psykosoft.psykopaint2.core.views.base
 				_versionTextField.scaleX = _versionTextField.scaleY = CoreSettings.GLOBAL_SCALING;
 				_versionTextField.width = 200;
 				_versionTextField.mouseEnabled = _versionTextField.selectable = false;
-				_versionTextField.text = CoreSettings.NAME + ", version: " + CoreSettings.VERSION;
 				_versionTextField.y = CoreSettings.GLOBAL_SCALING * 25;
 				_debugLayer.addChild( _versionTextField );
 			}
