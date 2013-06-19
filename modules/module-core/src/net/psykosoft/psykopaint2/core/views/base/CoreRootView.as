@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.base.utils.StackUtil;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 
@@ -338,13 +339,13 @@ package net.psykosoft.psykopaint2.core.views.base
 			 addChild( checkbox );*/
 
 			//Combobox test.
-			/*var combobox:SbComboboxView = new SbComboboxView();
+			var combobox:SbComboboxView = new SbComboboxView();
 			 for( var i:uint; i < 10; i++ ) {
 			 combobox.addItem( { label:"item" + i } );
 			 }
 			 combobox.x = 100;
 			 combobox.y = 200;
-			 addChild( combobox );*/
+			 addChild( combobox );
 		}
 	}
 }

@@ -1,96 +1,105 @@
-package net.psykosoft.psykopaint2.core.views.components.combobox {
+package net.psykosoft.psykopaint2.core.views.components.combobox
+{
 
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.geom.Rectangle;
+	import com.greensock.TweenLite;
 
-import net.psykosoft.psykopaint2.base.utils.DraggableDecorator;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
 
-public class SbComboboxView extends Sprite {
+	public class SbComboboxView extends Sprite
+	{
+		private var _clickOffsetY:Number = 0;
+		private var _listView:SbListView;
+		private var _mouseIsDown:Boolean;
 
-	private var _listView:SbListView;
-	private var _listViewContainer:Sprite;
-	private var _dragDecorator:DraggableDecorator;
-	private var _selectedIndex:int;
-	private var _mouseIsDown:Boolean;
+		public function SbComboboxView() {
+			super();
 
-	public function SbComboboxView() {
-		super();
+			_listView = new SbListView();
+			addChildAt( _listView, 0 );
 
-		_listView = new SbListView();
-		_listViewContainer = new Sprite();
+			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+		}
 
-		_listViewContainer.x = 43; // TODO: remove unneeded layer
-		_listViewContainer.y = 20;
+		private function onListChange( e:Event ):void {
+			dispatchEvent( new Event( Event.CHANGE ) );
+		}
 
-		_listViewContainer.addChild(_listView);
-		this.addChildAt(_listViewContainer, 0);
+		public function addItem( params:Object ):void {
+			_listView.addItem( params );
+		}
 
-		_dragDecorator = new DraggableDecorator(_listView, new Rectangle(0, 0, _listView.width, _listView.height));
-		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		public function addItemAt( params:Object, index:int ):void {
+			_listView.addItemAt( params, index );
+		}
+
+		public function removeItemAt( index:int ):void {
+			_listView.removeItemAt( index );
+		}
+
+		public function removeAll():void {
+			_listView.removeAll();
+		}
+
+		public function get selectedIndex():int {
+			return _listView.selectedIndex;
+		}
+
+		public function get selectedItem():SbListItemVO {
+			return _listView.selectedItem;
+		}
+
+		// ---------------------------------------------------------------------
+		// Listeners.
+		// ---------------------------------------------------------------------
+
+		private function onListMouseDown( e:MouseEvent ):void {
+			if( _mouseIsDown ) return;
+			_mouseIsDown = true;
+			_listView.expand();
+			_clickOffsetY = _listView.y - stage.mouseY;
+			if( !hasEventListener( Event.ENTER_FRAME ) ) {
+				addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			}
+		}
+
+		private function onStageMouseUp( event:MouseEvent ):void {
+			if( !_mouseIsDown ) return;
+			_mouseIsDown = false;
+			// Update list selected index from Y.
+			if( !_listView.animating ) {
+				var offset:Number = _listView.selectedIndex * _listView.itemHeight;
+				var resY:Number = _listView.y - offset;
+				var ratio:Number = -resY / _listView.itemHeight;
+				var selectedIndex:uint = Math.round( ratio );
+				if( _listView.selectedIndex != selectedIndex ) {
+					_listView.selectedIndex = selectedIndex;
+				}
+			}
+			_listView.y = 0;
+			_listView.collapse();
+			if( hasEventListener( Event.ENTER_FRAME ) ) {
+				removeEventListener( Event.ENTER_FRAME, onEnterFrame );
+			}
+		}
+
+		private function onEnterFrame( event:Event ):void {
+			// Drag Y.
+			var targetY:Number = _clickOffsetY + stage.mouseY;
+			var offset:Number = _listView.selectedIndex * _listView.itemHeight;
+			var topLimit:Number = -_listView.expandedHeight + _listView.itemHeight + offset;
+			if( targetY < topLimit ) targetY = topLimit;
+			else if( targetY > offset ) targetY = offset;
+			_listView.y = targetY;
+		}
+
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			_listView.addEventListener( MouseEvent.MOUSE_DOWN, onListMouseDown );
+			_listView.addEventListener( SbListView.CHANGE, onListChange );
+			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp )
+		}
 	}
-
-	private function onChangeList(e:Event):void {
-		_selectedIndex = _listView.selectedIndex;
-		dispatchEvent(new Event(Event.CHANGE));
-	}
-
-	public function addItem(params:Object):void {
-		_listView.addItem(params);
-		//UPDATE DRAG DECORATOR
-		_dragDecorator.setBounds(new Rectangle(0, -_listView.height, 0, _listView.height + 10));
-	}
-
-
-	public function addItemAt(params:Object, index:int):void {
-		_listView.addItemAt(params, index);
-		//UPDATE DRAG DECORATOR
-		_dragDecorator.setBounds(new Rectangle(0, -_listView.height, 0, _listView.height + 10));
-	}
-
-	public function removeItemAt(index:int):void {
-		_listView.removeItemAt(index);
-		//UPDATE DRAG DECORATOR
-		_dragDecorator.setBounds(new Rectangle(0, -_listView.height, 0, _listView.height + 10));
-	}
-
-	public function removeAll():void {
-		_listView.removeAll();
-		//UPDATE DRAG DECORATOR
-		_dragDecorator.setBounds(new Rectangle(0, -_listView.height, 0, _listView.height + 10));
-	}
-
-	public function get selectedIndex():int {
-		return _selectedIndex;
-	}
-
-	public function get selectedItem():SbListItemVO {
-		return _listView.selectedItem;
-	}
-
-	// ---------------------------------------------------------------------
-	// Listeners.
-	// ---------------------------------------------------------------------
-
-	private function onMouseDownEvent(e:MouseEvent):void {
-		_mouseIsDown = true;
-		_listView.expand();
-		_dragDecorator.shiftPosition += _listView.selectedIndex * _listView.height / _listView.length;
-	}
-
-
-	private function onMouseUp(event:MouseEvent):void {
-		if( !_mouseIsDown ) return;
-		_mouseIsDown = false;
-		_listView.collapse();
-	}
-
-	private function onAddedToStage(event:Event):void {
-		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		_listView.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownEvent);
-		_listView.addEventListener(SbListView.CHANGE, onChangeList);
-		stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp)
-	}
-}
 }

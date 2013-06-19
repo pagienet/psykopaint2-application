@@ -13,12 +13,7 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
         private var _data:SbListItemVO;
 
         public function SbListItemView() {
-
             super();
-
-			tf.background = true;
-			tf.backgroundColor = 0xFF0000;
-
 			bg.stop();
         }
 
