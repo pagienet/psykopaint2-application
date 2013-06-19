@@ -79,14 +79,17 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 		public function dispose() : uint
 		{
 			var freedBytes:uint = 0;
+
 			if (_colorTexture){
 				freedBytes += _colorTexture.size;
 				_colorTexture.dispose();
 			}
+
 			if (_normalSpecularTexture) {
 				freedBytes += _normalSpecularTexture.size;
 				_normalSpecularTexture.dispose();
 			}
+
 			return freedBytes;
 		}
 

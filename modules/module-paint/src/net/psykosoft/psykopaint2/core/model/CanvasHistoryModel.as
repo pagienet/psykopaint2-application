@@ -68,20 +68,14 @@ package net.psykosoft.psykopaint2.core.model
 			notifyStackChange();
 		}
 
-		private function cleanUpOldest() : Boolean
+		private function cleanUpOldest() : void
 		{
+			if (_currentHistoryIndex == 0)
+				throw new Error("No history items to be freed!");
+
 			var snapshot : CanvasSnapShot = _snapShots.shift();
-			//PATCH Mario: this check is only a temporary fix to avoid errors during the demo.
-			// the real cause for this error must still be found:
-			if ( snapshot != null )
-			{
-				--_currentHistoryIndex;
-				snapshot.dispose();
-			} else { 
-				throw(new Error("Snapshot null!"));
-				return false;
-			}
-			return true;
+			--_currentHistoryIndex;
+			snapshot.dispose();
 		}
 
 		public function get history() : Vector.<CanvasSnapShot>
@@ -161,9 +155,7 @@ package net.psykosoft.psykopaint2.core.model
 				throw ResourceError("Stroke data larger than reserved space!");
 
 			while (_bytesAvailable < size)
-			{
-				if (!cleanUpOldest()) break;
-			}
+				cleanUpOldest();
 		}
 
 		public function freeTexture(textureProxy : TextureProxy) : void
@@ -171,7 +163,6 @@ package net.psykosoft.psykopaint2.core.model
 			_bytesAvailable += textureProxy.size;
 			trace ("CanvasHistoryModel.freeTexture: " + (MAX_TEXTURE_MEMORY_USAGE - _bytesAvailable)/(1024*1024) + "MB used");
 			textureProxy.texture.dispose();
-			textureProxy.setTexture(null);
 		}
 	}
 }

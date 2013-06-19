@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.core.resources
 		private var _persistent : Boolean = false;
 		private var _size : int;
 
-		public function TextureProxy(width : uint, height : uint, format : String, isRenderTarget : Boolean, textureManager : ITextureManager = null)
+		public function TextureProxy(width : uint, height : uint, format : String, isRenderTarget : Boolean, textureManager : ITextureManager = null, deferred : Boolean = false)
 		{
 			_textureManager = textureManager || FreeTextureManager.getInstance() as ITextureManager;
 			_width = width;
@@ -35,6 +35,9 @@ package net.psykosoft.psykopaint2.core.resources
 			_listeners = new Vector.<Listener>();
 			_mipData = new Vector.<MipData>();
 			_size = _width*_height*4 * 4/3;
+
+			if (!deferred)
+				initTexture();
 		}
 
 		public function get persistent() : Boolean
@@ -56,11 +59,17 @@ package net.psykosoft.psykopaint2.core.resources
 		{
 			// may need to replace this with a global property
 			_usageMark = getTimer();
-			if (!_texture) {
-				_textureManager.initTexture(this);
-				InitListeners();
-			}
+
+			if (!_texture)
+				initTexture();
+
 			return _texture;
+		}
+
+		private function initTexture() : void
+		{
+			_textureManager.initTexture(this);
+			InitListeners();
 		}
 
 		public function dispose() : void
@@ -107,7 +116,6 @@ package net.psykosoft.psykopaint2.core.resources
 
 		public function get size() : uint
 		{
-			// this is not guaranteed for compressed textures, but I don't think we're using them yet (and I don't think there's a way to get that)
 			return _size;
 		}
 
