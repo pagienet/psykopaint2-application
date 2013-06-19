@@ -340,7 +340,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			//Combobox test.
 			/*var combobox:SbComboboxView = new SbComboboxView();
 			 for( var i:uint; i < 10; i++ ) {
-			 combobox.addItem( { label:"item_" + i } );
+			 combobox.addItem( { label:"item" + i } );
 			 }
 			 combobox.x = 100;
 			 combobox.y = 200;

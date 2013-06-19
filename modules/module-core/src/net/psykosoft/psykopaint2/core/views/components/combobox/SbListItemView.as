@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 
 		// Declared in Fla.
         public var tf:TextField;
+		public var bg:MovieClip;
 
         private var _data:SbListItemVO;
 
@@ -15,15 +16,15 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 
             super();
 
-			tf.x = 30;
-            tf.y = 10;
-            tf.width = this.width;
-            tf.height = this.height - tf.y;
+			tf.background = true;
+			tf.backgroundColor = 0xFF0000;
+
+			bg.stop();
         }
 
         public function setData(value:SbListItemVO):void {
 
-            gotoAndStop( value.odd ? 1 : 2 );
+            bg.gotoAndStop( value.odd ? 1 : 2 );
 
             if (value.label != tf.text) {
                 tf.text = value.label;

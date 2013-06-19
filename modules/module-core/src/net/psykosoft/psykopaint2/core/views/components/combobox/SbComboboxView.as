@@ -1,8 +1,5 @@
 package net.psykosoft.psykopaint2.core.views.components.combobox {
 
-import com.greensock.TweenLite;
-import com.greensock.easing.Elastic;
-
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
@@ -24,7 +21,7 @@ public class SbComboboxView extends Sprite {
 		_listView = new SbListView();
 		_listViewContainer = new Sprite();
 
-		_listViewContainer.x = 43;
+		_listViewContainer.x = 43; // TODO: remove unneeded layer
 		_listViewContainer.y = 20;
 
 		_listViewContainer.addChild(_listView);
@@ -35,47 +32,31 @@ public class SbComboboxView extends Sprite {
 	}
 
 	private function onChangeList(e:Event):void {
-		_selectedIndex = getPositionIndex();
+		_selectedIndex = _listView.selectedIndex;
 		dispatchEvent(new Event(Event.CHANGE));
 	}
 
-	private function getPositionIndex():int {
-
-		var positionRatio:Number = -_listView.y / _listView.height;
-
-		return Math.max(Math.min(Math.round(positionRatio * _listView.length), _listView.length - 1), 0);
-	}
-
 	public function addItem(params:Object):void {
-
 		_listView.addItem(params);
-
 		//UPDATE DRAG DECORATOR
 		_dragDecorator.setBounds(new Rectangle(0, -_listView.height, 0, _listView.height + 10));
 	}
 
 
 	public function addItemAt(params:Object, index:int):void {
-
 		_listView.addItemAt(params, index);
-
 		//UPDATE DRAG DECORATOR
 		_dragDecorator.setBounds(new Rectangle(0, -_listView.height, 0, _listView.height + 10));
 	}
 
-
 	public function removeItemAt(index:int):void {
-
 		_listView.removeItemAt(index);
-
 		//UPDATE DRAG DECORATOR
 		_dragDecorator.setBounds(new Rectangle(0, -_listView.height, 0, _listView.height + 10));
 	}
 
 	public function removeAll():void {
-
 		_listView.removeAll();
-
 		//UPDATE DRAG DECORATOR
 		_dragDecorator.setBounds(new Rectangle(0, -_listView.height, 0, _listView.height + 10));
 	}
@@ -83,14 +64,6 @@ public class SbComboboxView extends Sprite {
 	public function get selectedIndex():int {
 		return _selectedIndex;
 	}
-
-	public function set selectedIndex(value:int):void {
-		_selectedIndex = value;
-
-		TweenLite.to(_listView, _listView.tweenSpeed, { y: -1, height: 1, ease: Elastic.easeOut });
-		_listView.collapse(_selectedIndex);
-	}
-
 
 	public function get selectedItem():SbListItemVO {
 		return _listView.selectedItem;
@@ -100,17 +73,9 @@ public class SbComboboxView extends Sprite {
 	// Listeners.
 	// ---------------------------------------------------------------------
 
-	private function onAddedToStage(event:Event):void {
-		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		_listView.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownEvent);
-		_listView.addEventListener(SbListView.CHANGE, onChangeList);
-		stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp)
-	}
-
 	private function onMouseDownEvent(e:MouseEvent):void {
 		_mouseIsDown = true;
 		_listView.expand();
-		TweenLite.to(_listView, _listView.tweenSpeed, { y: -_listView.selectedIndex * _listView.height / _listView.length, ease: Elastic.easeOut });
 		_dragDecorator.shiftPosition += _listView.selectedIndex * _listView.height / _listView.length;
 	}
 
@@ -118,11 +83,14 @@ public class SbComboboxView extends Sprite {
 	private function onMouseUp(event:MouseEvent):void {
 		if( !_mouseIsDown ) return;
 		_mouseIsDown = false;
-		var positionIndex:int = getPositionIndex();
-		TweenLite.to(_listView, _listView.tweenSpeed, { y: 0, ease: Elastic.easeOut });
-		_listView.collapse(positionIndex);
+		_listView.collapse();
 	}
 
-
+	private function onAddedToStage(event:Event):void {
+		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		_listView.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownEvent);
+		_listView.addEventListener(SbListView.CHANGE, onChangeList);
+		stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp)
+	}
 }
 }
