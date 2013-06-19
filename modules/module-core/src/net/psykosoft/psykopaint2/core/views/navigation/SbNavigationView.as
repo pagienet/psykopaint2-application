@@ -95,13 +95,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_leftButton.setTextAlign( TextAlign.LEFT );
 //			_leftButton.useLabelBg( true );
 			_leftButton.autoCenterLabel( false );
-			_leftButton.displaceLabelTf( -20, -15 );
+			_leftButton.displaceLabelTf( 20, -15 );
 			_leftButton.displaceLabelBg( -27, -10 );
 
 			_rightButton.setTextAlign( TextAlign.RIGHT );
 //			_rightButton.useLabelBg( true );
 			_rightButton.autoCenterLabel( false );
-			_rightButton.displaceLabelTf( -35, -15 );
+			_rightButton.displaceLabelTf( 10, -15 );
 			_rightButton.displaceLabelBg( -15, -5 );
 
 			_scroller = new HItemScroller();
