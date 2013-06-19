@@ -47,6 +47,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		public function updateParametersFromXML(message:XML):void
 		{
+			if ( message.hasOwnProperty("@active"))
+			{
+				active = int(message.@active) != 0;	
+			}
 			for ( var j:int = 0; j < message.parameter.length(); j++ )
 			{
 				var parameter:XML = message.parameter[j];

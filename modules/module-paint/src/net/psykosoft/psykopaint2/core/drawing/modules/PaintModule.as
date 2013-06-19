@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
@@ -146,8 +147,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Bristle Brush">
 					<parameterMapping>
-						<parameter type={PsykoParameter.NumberParameter} path="parameterMapping" id="Test" value="5" minValue="0" maxValue="10" showInUI="1" />
-						<proxy type="0" src="Test" target="pathengine.pointdecorator_1.Multiples" minValue="0" maxValue="5" />
+						<parameter type={PsykoParameter.StringListParameter} path="parameterMapping" id="Condition" index="0" list="Normal, Grid" showInUI="1" />
+						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Condition" target="pathengine.pointdecorator_2" condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE} index="1" />
 					</parameterMapping>
 					<parameter id="Bumpyness" path="brush" value="0.6" />
 					<parameter id="Shapes" path="brush" index="0" list="line,splat,splat3,basic,noisy" />
@@ -167,8 +168,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Brush Angle Variation" path="pathengine.pointdecorator_1" value1="-5" value2="5" showInUI="1"/>
 							<parameter id="Bristle Variation" path="pathengine.pointdecorator_1" value="1" showInUI="1"/>
 						</SpawnDecorator>
+						<GridDecorator active="0"> 
+							<parameter id="Cell Width"  path="pathengine.pointdecorator_2" value="32" />
+							<parameter id="Cell Height"  path="pathengine.pointdecorator_2" value="32"/>
+						</GridDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_2" value="1" />
+							<parameter id="Pick Color"  path="pathengine.pointdecorator_3" value="1" />
 						</ColorDecorator>
 					</pathengine>
 				</brush>
