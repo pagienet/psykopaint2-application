@@ -245,5 +245,15 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			}
 		}
 		
+		public function getParameterByPath(path:Array ):PsykoParameter
+		{
+			for ( var i:int = 0; i < _parameters.length; i++ )
+			{
+				if ( _parameters[i].id == path[path.length -1] ) return  _parameters[i];
+			}
+			throw("AbstractPathEngine.getParameterByPath parameter not found: "+path.join("."));
+			
+			return null;
+		}
 	}
 }

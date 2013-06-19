@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		function updateParametersFromXML(xml:XML):void;
 		function getParameterSetAsXML( path:Array ):XML;
 		function getParameterSet(vo:ParameterSetVO, showInUiOnly:Boolean ):void;
+		function getParameterByPath(path:Array):PsykoParameter;
 		
 		function get type():int;
 		function get minSamplesPerStep():PsykoParameter;

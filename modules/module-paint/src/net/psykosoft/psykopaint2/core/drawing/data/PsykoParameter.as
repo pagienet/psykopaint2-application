@@ -58,6 +58,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		
 		public static function fromXML( data:XML ):PsykoParameter
 		{
+			if ( !data.hasOwnProperty("@id") ) throw("Psykoparameter is missing @id: "+data.toXMLString());
 			var pp:PsykoParameter;
 			switch ( int(data.@type) )
 			{
@@ -105,7 +106,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			}
 			
 			if ( data.hasOwnProperty("@label") ) pp.label = data.@label;
-			
+			if ( data.hasOwnProperty("@showInUI") ) pp.showInUI = ( data.@showInUI == "1");
 			return pp;
 		}
 		

@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.errors.AbstractMethodError;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -469,5 +470,25 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		}
 		*/
 		
+		public function getParameterByPath(path:Array):PsykoParameter
+		{
+			if ( path.length == 1 && path[0] == "brush" )
+			{
+				var parameterID:String = path[1];
+				for ( var i:int = 0; i < _parameters.length; i++ )
+				{
+					if( _parameters[i].id == parameterID )
+					{
+						return _parameters[i];
+					}
+				}
+			}
+			return _pathManager.getParameterByPath( path );
+		}
+		
+		public function getDecoratorByPath(target_path:String):IPointDecorator
+		{
+			return _pathManager.getDecoratorByPath(target_path);
+		}
 	}
 }

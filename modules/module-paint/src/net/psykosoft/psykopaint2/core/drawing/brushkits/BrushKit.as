@@ -19,6 +19,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterDamageBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
@@ -41,11 +44,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				var engine:AbstractBrush = new _brushClassFromBrushType[ String(xml.@engine) ]();
 				kit.brushEngine = engine;
 				
+				for ( var i:int = 0; i < xml.parameterMapping.length(); i++ )
+				{
+					kit.addParameterMappingFromXML( xml.parameterMapping[i] );
+				}
+				
 				if ( xml.pathengine[0] )
 				{
 					engine.setPathEngine(xml.pathengine[0]);
 				}
 				kit.brushEngine.updateParametersFromXML( xml );
+				
+				kit.linkParameterMappings();
+				
 				
 			} else {
 				throw("Brush type "+xml.@engine+" does not exist");
@@ -53,6 +64,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			return kit;
 		}
+import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 		
 		private static function init():void
 		{
@@ -77,10 +89,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		private var _brushEngine:AbstractBrush;
 		private var _brushName:String;
+		private var _parameterMappings:Vector.<PsykoParameterMapping>;
 
 		public function BrushKit( name:String ) 
 		{
 			_brushName = name;
+			_parameterMappings = new Vector.<PsykoParameterMapping>();
 		}
 
 		public function stopProgression() : void
@@ -122,8 +136,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		public function getParameterSet( showInUIOnly:Boolean = true):ParameterSetVO
 		{
 			var vo:ParameterSetVO = new ParameterSetVO(_brushName);
+			for ( var i:int = 0; i < _parameterMappings.length; i++ )
+			{
+				_parameterMappings[i].getParameterSet( vo, showInUIOnly );
+			}
 			_brushEngine.getParameterSet(vo,showInUIOnly);
 			return vo;
+		}
+		
+		public function addParameterMappingFromXML( xml:XML ):void
+		{
+			_parameterMappings.push( PsykoParameterMapping.fromXML( xml ));
 		}
 		
 		public function setBrushParameter( parameter:XML):void
@@ -194,6 +217,46 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		public function set canvasRect(canvasRect : Rectangle) : void
 		{
 			_brushEngine.pathManager.setCanvasRect(canvasRect);
+		}
+		
+		public function linkParameterMappings():void
+		{
+			for ( var i:int = 0; i < _parameterMappings.length; i++ )
+			{
+				var mapping:PsykoParameterMapping = _parameterMappings[i];
+				for ( var j:int = 0; j < mapping.parameterProxies.length; j++ )
+				{
+					switch ( mapping.parameterProxies[j].type )
+					{
+						case PsykoParameterProxy.TYPE_VALUE_MAP:
+							var parameter:PsykoParameter = getParameterByPath(mapping.parameterProxies[j].target_path );
+							if ( parameter == null ) throw( "BrushKit.linkParameterMappings: "+mapping.parameterProxies[j].target_path+" not found");
+							mapping.parameterProxies[j].linkTargetParameter(parameter);
+							break;
+						case PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION:
+							var decorator:IPointDecorator = brushEngine.getDecoratorByPath(mapping.parameterProxies[j].target_path );
+							if ( decorator == null ) throw( "BrushKit.linkParameterMappings: "+mapping.parameterProxies[j].target_path+" not found");
+							mapping.parameterProxies[j].linkTargetDecorator(decorator);
+							break;
+					}
+				}
+			}
+			
+		}
+		
+		private function getParameterByPath(target_path:String):PsykoParameter
+		{
+			var path:Array = target_path.split(".");
+			if ( path[0] == "parameterMapping" ) 
+			{
+				for ( var i:int = 0; i < _parameterMappings.length; i++ )
+				{
+					var parameter:PsykoParameter =  _parameterMappings[i].getParameterByPath( path );
+					if ( parameter != null ) return parameter;
+				}
+				throw("BrushKit.getParameterByPath "+target_path+" not found");
+			}
+			return _brushEngine.getParameterByPath(path);
 		}
 	}
 }

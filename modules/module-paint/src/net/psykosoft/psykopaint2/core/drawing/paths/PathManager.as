@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.utils.getTimer;
 	
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.EndConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
@@ -298,6 +299,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		protected function onSampleStart(stageX : Number, stageY : Number) : void
 		{
+			//attempt to prevent sending new start before end
+			if ( _startCallbacksSent )
+			{
+				sendEndCallbacks();
+			}
+			
 			var px : Number = (stageX - _canvasRect.x) * scaleX;
 			var py : Number = (stageY - _canvasRect.y) * scaleY;
 			
@@ -359,24 +366,27 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			var inCondition:int = -1;
 			for ( var i:int = 0; i < _pointDecorators.length; i++ )
 			{
-				if ( _pointDecorators[i] is ConditionalDecorator )
+				if ( _pointDecorators[i].active )
 				{
-					conditionalStack = _pointDecorators[i].compare( _accumulatedResults, this );
-					inCondition = 0;
-				} else if (  _pointDecorators[i] is EndConditionalDecorator )
-				{
-					inCondition++;
-					if ( inCondition == 2 )
+					if ( _pointDecorators[i] is ConditionalDecorator )
 					{
-						_accumulatedResults = conditionalStack[0].concat(conditionalStack[1]);
-						inCondition = -1;
-					}
-				} else {
-					if ( inCondition == -1 )
+						conditionalStack = _pointDecorators[i].compare( _accumulatedResults, this );
+						inCondition = 0;
+					} else if (  _pointDecorators[i] is EndConditionalDecorator )
 					{
-						_accumulatedResults = _pointDecorators[i].process( _accumulatedResults, this, _listeningToTouch || _listeningToMouse );
+						inCondition++;
+						if ( inCondition == 2 )
+						{
+							_accumulatedResults = conditionalStack[0].concat(conditionalStack[1]);
+							inCondition = -1;
+						}
 					} else {
-						conditionalStack[inCondition] = _pointDecorators[i].process( conditionalStack[inCondition], this, _listeningToTouch || _listeningToMouse );
+						if ( inCondition == -1 )
+						{
+							_accumulatedResults = _pointDecorators[i].process( _accumulatedResults, this, _listeningToTouch || _listeningToMouse );
+						} else {
+							conditionalStack[inCondition] = _pointDecorators[i].process( conditionalStack[inCondition], this, _listeningToTouch || _listeningToMouse );
+						}
 					}
 				}
 			}
@@ -563,6 +573,28 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				scaleX = _view.stage.stageWidth/_canvasRect.width;
 				scaleY = _view.stage.stageHeight/_canvasRect.height;
 			}		
+		}
+		
+		public function getParameterByPath(path:Array):PsykoParameter
+		{
+			if ( path.length == 2 && path[0] == "pathengine" )
+			{
+				return _pathEngine.getParameterByPath(path);
+			} else if ( path.length > 1 && path[1].indexOf("pointdecorator") == 0 )
+			{
+				var parameter:PsykoParameter = _pointDecorators[int(path[1].split("_")[1])].getParameterByPath(path);
+				if ( parameter != null ) return parameter;
+			}
+			throw("PathManager.getParameterByPath parameter not found: "+path.join("."));
+			return null;
+		}
+		
+		public function getDecoratorByPath(path:String):IPointDecorator
+		{
+			var index:int = int(path.split(".").pop().split("_")[1]);
+			if ( index >= _pointDecorators.length ) throw("PathManager.getDecoratorByPath decorator not found: "+path);
+			
+			return _pointDecorators[index];
 		}
 	}
 }

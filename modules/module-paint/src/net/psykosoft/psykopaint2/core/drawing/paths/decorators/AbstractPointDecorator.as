@@ -8,10 +8,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	public class AbstractPointDecorator implements IPointDecorator
 	{
 		protected var _parameters:Vector.<PsykoParameter>;
+		protected var _active:Boolean;
 		
 		public function AbstractPointDecorator()
 		{
 			_parameters = new Vector.<PsykoParameter>();
+			_active = true;
 		}
 		
 		public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
@@ -59,6 +61,18 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			}
 		}
 		
+		public function getParameterByPath(path:Array):PsykoParameter
+		{
+			for ( var i:int = 0; i < _parameters.length; i++ )
+			{
+				if ( _parameters[i].id == path[path.length -1] ) return  _parameters[i];
+			}
+			throw("AbstractPointDecorator.getParameterByPath parameter not found: "+path.join("."));
+			
+			return null;
+			
+		}
+		
 		public function hasActivePoints():Boolean
 		{
 			return false;
@@ -67,6 +81,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function clearActivePoints():void
 		{
 			
+		}
+		
+		public function set active( value:Boolean ):void
+		{
+			_active = value;
+		}
+		
+		public function get active():Boolean
+		{
+			return _active ;
 		}
 	}
 }

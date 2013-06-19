@@ -145,8 +145,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Bristle Brush">
+					<parameterMapping>
+						<parameter type={PsykoParameter.NumberParameter} path="parameterMapping" id="Test" value="5" minValue="0" maxValue="10" showInUI="1" />
+						<proxy type="0" src="Test" target="pathengine.pointdecorator_1.Multiples" minValue="0" maxValue="5" />
+					</parameterMapping>
 					<parameter id="Bumpyness" path="brush" value="0.6" />
-					<parameter id="Shapes" path="brush" index="0" list="line,splat,splat3,basic,noisy" showInUI="1"/>
+					<parameter id="Shapes" path="brush" index="0" list="line,splat,splat3,basic,noisy" />
 
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<parameter id="Send Taps" path="pathengine" value="0" />
@@ -157,14 +161,14 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</SizeDecorator>
 						
 						<SpawnDecorator>
-							<parameter id="Multiples" value1="8" value2="8" path="pathengine.pointdecorator_2" />
-							<parameter id="Maximum Offset" path="pathengine.pointdecorator_2" value="16" minValue="0" maxValue="200" showInUI="1"/>
-							<parameter id="Offset Angle" path="pathengine.pointdecorator_2" value1="-2" value2="2" showInUI="1"/>
-							<parameter id="Brush Angle Variation" path="pathengine.pointdecorator_2" value1="-5" value2="5" showInUI="1"/>
-							<parameter id="Bristle Variation" path="pathengine.pointdecorator_2" value="1" showInUI="1"/>
+							<parameter id="Multiples" value1="8" value2="8" path="pathengine.pointdecorator_1" />
+							<parameter id="Maximum Offset" path="pathengine.pointdecorator_1" value="16" minValue="0" maxValue="200" showInUI="1"/>
+							<parameter id="Offset Angle" path="pathengine.pointdecorator_1" value1="-2" value2="2" showInUI="1"/>
+							<parameter id="Brush Angle Variation" path="pathengine.pointdecorator_1" value1="-5" value2="5" showInUI="1"/>
+							<parameter id="Bristle Variation" path="pathengine.pointdecorator_1" value="1" showInUI="1"/>
 						</SpawnDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
+							<parameter id="Pick Color"  path="pathengine.pointdecorator_2" value="1" />
 						</ColorDecorator>
 					</pathengine>
 				</brush>
