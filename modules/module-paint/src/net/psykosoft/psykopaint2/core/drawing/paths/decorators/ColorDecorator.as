@@ -40,11 +40,15 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		override public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
-			
-			cm.reset();
-			cm.adjustSaturation( saturationAdjustment.numberValue );
-			cm.adjustHue( hueAdjustment.degrees );
-			cm.adjustBrightness( brightnessAdjustment.numberValue );
+			var applyMatrix:Boolean = ( saturationAdjustment.numberValue != 1 || hueAdjustment.degrees != 0 || brightnessAdjustment.numberValue != 0 );
+				
+			if ( applyMatrix )
+			{
+				cm.reset();
+				cm.adjustSaturation( saturationAdjustment.numberValue );
+				cm.adjustHue( hueAdjustment.degrees );
+				cm.adjustBrightness( brightnessAdjustment.numberValue );
+			}
 			
 			if ( fixedColor.booleanValue ) 
 			{
@@ -72,7 +76,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					rgba[3] = rgba[7] = rgba[11] = rgba[15] = a;
 				}
 				//TODO: this could be skipped if there is no color adjustment:
-				cm.applyMatrixToVector( points[i].colorsRGBA );
+				if ( applyMatrix ) cm.applyMatrixToVector( points[i].colorsRGBA );
 			}
 			return points;
 		}
