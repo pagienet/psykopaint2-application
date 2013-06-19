@@ -1,11 +1,12 @@
 package net.psykosoft.psykopaint2.core.signals
 {
-	import org.osflash.signals.Signal;
 
-	public class RequestRedoSignal extends Signal
+	import net.psykosoft.psykopaint2.base.robotlegs.signals.TracingSignal;
+
+	public class RequestRedoSignal extends TracingSignal
 	{
-		public function RequestRedoSignal()
-		{
+		public function RequestRedoSignal() {
+			super();
 		}
 	}
 }

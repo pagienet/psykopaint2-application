@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.PanGesture;
 	import org.gestouch.gestures.PanGestureDirection;
+	import org.gestouch.gestures.SwipeGesture;
+	import org.gestouch.gestures.SwipeGestureDirection;
 	import org.gestouch.input.NativeInputAdapter;
 
 	public class GestureManager
@@ -35,11 +37,40 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function initializeGestures():void {
-//			initTwoFingerVerticalSwipe();
+			initTwoFingerSwipes();
 			initOneFingerHorizontalPan();
 			initOneFingerVerticalPan();
 //			initPinch();
 //			initTap();
+		}
+
+		// ---------------------------------------------------------------------
+		// Two finger swipes.
+		// ---------------------------------------------------------------------
+
+		private function initTwoFingerSwipes():void {
+
+			var twoFingerSwipeGestureRight:SwipeGesture = new SwipeGesture( _stage );
+			twoFingerSwipeGestureRight.numTouchesRequired = 2;
+			twoFingerSwipeGestureRight.direction = SwipeGestureDirection.RIGHT;
+			twoFingerSwipeGestureRight.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTwoFingerSwipeRight );
+
+			var twoFingerSwipeGestureLeft:SwipeGesture = new SwipeGesture( _stage );
+			twoFingerSwipeGestureLeft.numTouchesRequired = 2;
+			twoFingerSwipeGestureLeft.direction = SwipeGestureDirection.LEFT;
+			twoFingerSwipeGestureLeft.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTwoFingerSwipeLeft );
+		}
+
+		private function onTwoFingerSwipeRight( event:GestureEvent ):void {
+			if( !gesturesEnabled ) return;
+			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_RIGHT );
+			notifyBlockingGestureSignal.dispatch( false );
+		}
+
+		private function onTwoFingerSwipeLeft( event:GestureEvent ):void {
+			if( !gesturesEnabled ) return;
+			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_LEFT );
+			notifyBlockingGestureSignal.dispatch( false );
 		}
 
 		// ---------------------------------------------------------------------
@@ -48,13 +79,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function initOneFingerHorizontalPan():void {
 			var panGestureHorizontal:PanGesture = new PanGesture( _stage );
+			panGestureHorizontal.minNumTouchesRequired = panGestureHorizontal.maxNumTouchesRequired = 1;
 			panGestureHorizontal.direction = PanGestureDirection.HORIZONTAL;
 			panGestureHorizontal.addEventListener( GestureEvent.GESTURE_BEGAN, onHorizontalPanGestureBegan );
 			panGestureHorizontal.addEventListener( GestureEvent.GESTURE_ENDED, onHorizontalPanGestureEnded );
 		}
 
 		private function onHorizontalPanGestureBegan( event:GestureEvent ):void {
-			
 			if ( gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN );
 		}
@@ -70,6 +101,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function initOneFingerVerticalPan():void {
 			var panGestureVertical:PanGesture = new PanGesture( _stage );
+			panGestureVertical.minNumTouchesRequired = panGestureVertical.maxNumTouchesRequired = 1;
 			panGestureVertical.direction = PanGestureDirection.VERTICAL;
 			panGestureVertical.addEventListener( GestureEvent.GESTURE_BEGAN, onVerticalPanGestureBegan );
 			panGestureVertical.addEventListener( GestureEvent.GESTURE_ENDED, onVerticalPanGestureEnded );
@@ -136,33 +168,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onPinchGestureChanged( event:GestureEvent ):void {
-		}*/
-
-		// ---------------------------------------------------------------------
-		// Two finger vertical swipe.
-		// ---------------------------------------------------------------------
-
-		/*private function initTwoFingerVerticalSwipe():void {
-
-			var twoFingerSwipeGestureUp:SwipeGesture = new SwipeGesture( _stage );
-			twoFingerSwipeGestureUp.numTouchesRequired = 2;
-			twoFingerSwipeGestureUp.direction = SwipeGestureDirection.UP;
-			twoFingerSwipeGestureUp.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTwoFingerSwipeUp );
-
-			var twoFingerSwipeGestureDown:SwipeGesture = new SwipeGesture( _stage );
-			twoFingerSwipeGestureDown.numTouchesRequired = 2;
-			twoFingerSwipeGestureDown.direction = SwipeGestureDirection.DOWN;
-			twoFingerSwipeGestureDown.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTwoFingerSwipeDown );
-		}
-
-		private function onTwoFingerSwipeUp( event:GestureEvent ):void {
-			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_UP );
-			notifyBlockingGestureSignal.dispatch( false );
-		}
-
-		private function onTwoFingerSwipeDown( event:GestureEvent ):void {
-			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_DOWN );
-			notifyBlockingGestureSignal.dispatch( false );
 		}*/
 	}
 }

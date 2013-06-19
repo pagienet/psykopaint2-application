@@ -9,18 +9,22 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestRedoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
@@ -74,6 +78,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var requestDrawingCoreStartupSignal:RequestDrawingCoreStartupSignal;
 
 		[Inject]
+		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
+
+		[Inject]
+		public var requestUndoSignal:RequestUndoSignal;
+
+		[Inject]
+		public var requestRedoSignal:RequestRedoSignal;
+
+		[Inject]
 		public var stage3D:Stage3D;
 
 		override public function initialize():void {
@@ -100,31 +113,26 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyNavigationToggledSignal.add( onNavigationToggled );
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			notifyNavigationMovingSignal.add( onNavigationMoving );
-		}
-
-		// -----------------------
-		// Rendering.
-		// -----------------------
-
-		private function paintModulePreRenderingStep():void {
-			if( !view.visible ) return;
-			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
-				trace( this, "pre rendering canvas" );
-			}
-			lightingModel.update();
-		}
-
-		private function paintModuleNormalRenderingsStep():void {
-			if( !view.visible ) return;
-			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
-				trace( this, "rendering canvas" );
-			}
-			moduleManager.render();
+			notifyGlobalGestureSignal.add( onGlobalGesture );
 		}
 
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onGlobalGesture( type:String ):void {
+			trace( this, "onGlobalGesture: " + type );
+			switch( type ) {
+				case GestureType.TWO_FINGER_SWIPE_LEFT: {
+					requestUndoSignal.dispatch();
+					break;
+				}
+				case GestureType.TWO_FINGER_SWIPE_RIGHT: {
+					requestRedoSignal.dispatch();
+					break;
+				}
+			}
+		}
 
 		private function onExpensiveUiTask( started:Boolean, id:String ):void {
 			// TODO: analyze id properly to manage activity queues...
@@ -161,6 +169,26 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			else if( !StartUpDrawingCoreCommand.ran ) {
 				requestDrawingCoreStartupSignal.dispatch();
 			}
+		}
+
+		// -----------------------
+		// Rendering.
+		// -----------------------
+
+		private function paintModulePreRenderingStep():void {
+			if( !view.visible ) return;
+			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
+				trace( this, "pre rendering canvas" );
+			}
+			lightingModel.update();
+		}
+
+		private function paintModuleNormalRenderingsStep():void {
+			if( !view.visible ) return;
+			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
+				trace( this, "rendering canvas" );
+			}
+			moduleManager.render();
 		}
 
 		// -----------------------

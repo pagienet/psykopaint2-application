@@ -152,7 +152,7 @@ package net.psykosoft.psykopaint2.core.views.base
 				_versionTextField = new TextField();
 				_versionTextField.name = "version text field";
 				_versionTextField.scaleX = _versionTextField.scaleY = CoreSettings.GLOBAL_SCALING;
-				_versionTextField.width = 200;
+				_versionTextField.width = 250;
 				_versionTextField.mouseEnabled = _versionTextField.selectable = false;
 				_versionTextField.y = CoreSettings.GLOBAL_SCALING * 25;
 				_debugLayer.addChild( _versionTextField );
