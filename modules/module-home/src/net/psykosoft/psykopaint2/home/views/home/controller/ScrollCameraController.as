@@ -121,6 +121,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		}
 
 		private function onZoomComplete():void {
+			trace( this, "zoom complete" );
 			_perspectiveFactorDirty = true;
 			zoomCompleteSignal.dispatch();
 		}
@@ -208,11 +209,11 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			var halfSceneWidth:Number = collisionPoint.x - _camera.x;
 			var halfViewWidth:Number = _stageWidth / 2;
 			var multiplier:Number = halfSceneWidth / halfViewWidth;
-			trace( this, ">>>> input multiplier: " + multiplier );
-			trace( this, "half scene: " + halfSceneWidth );
-			trace( this, "half view: " + halfViewWidth );
-			trace( this, "camera x: " + _camera.x );
-			trace( this, "collision x: " + collisionPoint.x );
+//			trace( this, ">>>> input multiplier: " + multiplier );
+//			trace( this, "half scene: " + halfSceneWidth );
+//			trace( this, "half view: " + halfViewWidth );
+//			trace( this, "camera x: " + _camera.x );
+//			trace( this, "collision x: " + collisionPoint.x );
 			_interactionManager.scrollInputMultiplier = multiplier/* * ViewCore.globalScaling*/;
 		}
 

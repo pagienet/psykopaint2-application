@@ -20,13 +20,13 @@ package net.psykosoft.psykopaint2.base.ui.base
 		protected function addRegisteredView( view:ViewBase, toContainer:Sprite ):void {
 			trace( this, "registering view: " + view );
 			_registeredViewCount++;
-			view.addedToStageSignal.addOnce( onViewReady );
+			view.viewReadySignal.addOnce( onViewReady );
 			toContainer.addChild( view );
 		}
 
-		private function onViewReady( view:ViewBase ):void {
-			trace( this, "view ready: " + view );
+		private function onViewReady():void {
 			_readyViewCount++;
+			trace( this, "view ready: " + _readyViewCount + "/" + _registeredViewCount );
 			if( _readyViewCount == _registeredViewCount ) {
 				trace( this, "<<< all views ready >>>" );
 				allViewsReadySignal.dispatch();

@@ -1,32 +1,21 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
-	import com.quasimondo.delaunay.BoundingTriangleNodeProperties;
-	import com.quasimondo.delaunay.Delaunay;
-	import com.quasimondo.delaunay.DelaunayEdge;
-	import com.quasimondo.delaunay.DelaunayTriangle;
+
 	import com.quasimondo.geom.Circle;
 	import com.quasimondo.geom.Triangle;
 	import com.quasimondo.geom.Vector2;
-	
+
+	import de.popforge.math.LCG;
+
 	import flash.display.DisplayObject;
 	import flash.display3D.Context3D;
-	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
-	
-	import de.popforge.math.LCG;
-	
+
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.BasicRibbonMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TexturedAntialiasedColoredTriangleStroke;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TexturedColoredTriangleStroke;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TexturedTriangleStroke;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TriangleStroke;
-	import net.psykosoft.psykopaint2.core.drawing.data.DelaunayMetaData;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;

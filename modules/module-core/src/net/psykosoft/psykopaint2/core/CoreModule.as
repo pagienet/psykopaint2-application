@@ -7,30 +7,22 @@ package net.psykosoft.psykopaint2.core
 
 	import com.bit101.MinimalComps;
 
-	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 	import flash.display.Stage3D;
 	import flash.display.StageAlign;
 	import flash.display.StageQuality;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.events.UncaughtErrorEvent;
-	import flash.geom.ColorTransform;
-	import flash.text.TextField;
 	import flash.ui.Keyboard;
-	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
 	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
 	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
-	import net.psykosoft.psykopaint2.base.utils.StackUtil;
 	import net.psykosoft.psykopaint2.base.utils.XMLLoader;
-	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.config.CoreConfig;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -40,7 +32,6 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 
-	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
 
 	public class CoreModule extends ModuleBase
@@ -60,8 +51,6 @@ package net.psykosoft.psykopaint2.core
 		private var _requestNavigationToggleSignal:RequestNavigationToggleSignal;
 		private var _xmLoader:XMLLoader;
 
-		public var updateActive:Boolean = true;
-
 		public function CoreModule( injector:Injector = null ) {
 			super();
 			_injector = injector;
@@ -77,12 +66,18 @@ package net.psykosoft.psykopaint2.core
 			_coreRootView.addToMainLayer( child );
 		}
 
+		public function startEnterFrame():void {
+			setTimeout( function():void {
+				addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			}, 2000 );
+		}
+
 		// ---------------------------------------------------------------------
 		// Loop.
 		// ---------------------------------------------------------------------
 
 		private function update():void {
-			if( !updateActive ) return;
+//			trace( this, "updating----" );
 			_requestGpuRenderingSignal.dispatch();
 		}
 
@@ -284,15 +279,19 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function onViewsReady():void {
-			if( isStandalone ) {
-				// Show navigation.
-				_requestNavigationToggleSignal.dispatch( 1 );
-			}
+
 			_stateSignal.dispatch( StateType.IDLE );
-			addEventListener( Event.ENTER_FRAME, onEnterFrame );
+
+			if( isStandalone ) {
+				// Remove splash screen.
+				_coreRootView.removeSplashScreen();
+				// Show Navigation.
+				var showNavigationSignal:RequestNavigationToggleSignal = _injector.getInstance( RequestNavigationToggleSignal );
+				showNavigationSignal.dispatch( 1 );
+				startEnterFrame();
+			}
+
 			moduleReadySignal.dispatch();
-			// Remove splash screen.
-			_coreRootView.removeSplashScreenWhenReady();
 		}
 	}
 }

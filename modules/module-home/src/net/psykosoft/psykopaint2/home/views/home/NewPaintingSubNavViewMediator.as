@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 
 	import flash.display.BitmapData;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.models.StateType;

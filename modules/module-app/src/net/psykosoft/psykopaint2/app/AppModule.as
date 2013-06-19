@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.HomeModule;
@@ -50,7 +51,6 @@ package net.psykosoft.psykopaint2.app
 		private function createCoreModule():void {
 			trace( this, "creating core module..." );
 			_coreModule = new CoreModule();
-			_coreModule.updateActive = false;
 			_coreModule.isStandalone = false;
 			_coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
 			addChild( _coreModule );
@@ -100,24 +100,19 @@ package net.psykosoft.psykopaint2.app
 		}
 
 		private function onViewsReady():void {
-
+			// Hide splash.
+			_coreModule.coreRootView.removeSplashScreen();
+			// Wait for zoom out.
+			_coreModule.injector.getInstance( NotifyZoomCompleteSignal ).addOnce( onFirstZoomOut );
 			// Trigger initial state...
 			_coreModule.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
-
-			// Listen for splash out.
-			_coreModule.coreRootView.splashScreenRemovedSignal.addOnce( onSplashOut );
-
-			// Launch core updates.
-			_coreModule.updateActive = true;
+			_coreModule.startEnterFrame();
 		}
 
-		private function onSplashOut():void {
-
-			// Show navigation.
-			setTimeout( function ():void { // Wait a bit while the view is zooming out...
-				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-				showNavigationSignal.dispatch( 1 );
-			}, 2000 );
+		private function onFirstZoomOut():void {
+			// Show Navigation.
+			var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
+			showNavigationSignal.dispatch( 1 );
 		}
 	}
 }

@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
+	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 
 	import flash.display.BitmapData;
@@ -30,6 +31,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			trace( this, "creating picture with dimensions: " + _width + "x" + _height );
 
 			_plane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( diffuseBitmap, view.stage3DProxy );
+//			_plane = new Mesh( new PlaneGeometry( _width, _height ), new TextureMaterial( new BitmapTexture( diffuseBitmap ) ) ); // TODO: test non power of 2 textures with air 3.8
 			_plane.rotationX = -90;
 			_material = _plane.material as TextureMaterial;
 			_diffuseTexture = _material.texture as BitmapTexture;

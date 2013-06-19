@@ -102,8 +102,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onViewSetup():void {
 			// TODO: will cause trouble if view was disposed by a memory warning and the listener is set up again...
-			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
-			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
+//			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
+//			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
 		}
 
 		private function onViewAssetsReady():void {
@@ -118,6 +118,9 @@ package net.psykosoft.psykopaint2.home.views.home
 					view.zoomOut();
 				}, 1000 );
 			}
+			// TODO: check if previously added
+			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
+			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
 		}
 
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
@@ -166,6 +169,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _waitingForSnapShotOfHomeView:Boolean;
 
 		private function onCameraZoomComplete():void {
+
+			trace( this, "zoom complete" );
+
 			notifyZoomCompleteSignal.dispatch();
 
 			// Clicked on easel before zoom in.

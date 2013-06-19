@@ -22,6 +22,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
+	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 
 	public class CanvasViewMediator extends MediatorBase
@@ -67,6 +69,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var lightingModel:LightingModel;
+
+		[Inject]
+		public var requestDrawingCoreStartupSignal:RequestDrawingCoreStartupSignal;
 
 		[Inject]
 		public var stage3D:Stage3D;
@@ -152,9 +157,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			if( newState != StateType.PAINT ) {
 				paintModule.stopAnimations();
 			}
+			else if( !StartUpDrawingCoreCommand.ran ) {
+				requestDrawingCoreStartupSignal.dispatch();
+			}
 		}
 
-// -----------------------
+		// -----------------------
 		// Proxying.
 		// -----------------------
 

@@ -52,6 +52,8 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var stage:Stage;
 
+		public static var ran:Boolean;
+
 		override public function execute():void {
 
 			super.execute();
@@ -76,6 +78,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 				// Init canvas size.
 				requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight ) );
+
+				ran = true;
 
 			}, 10 );
 		}

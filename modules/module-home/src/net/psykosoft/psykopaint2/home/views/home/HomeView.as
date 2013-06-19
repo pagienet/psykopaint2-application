@@ -28,7 +28,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _loader:AssetBundleLoader;
 		private var _view:View3D;
 		private var _stage3dProxy:Stage3DProxy;
-		private var _fpsCache:Number;
 		private var _introZoomOutPending:Boolean = true;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
@@ -36,6 +35,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function HomeView() {
 			super();
 			scalesToRetina = false;
+			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
 
 		// -----------------------
@@ -60,11 +60,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// -----------------------
 
 			// TODO: make distinctions between first set up and potentially later ones because of memory warning cleanups.
-
-			// Detain frame rate so that app retains splash screen during setup.
-			_fpsCache = stage.frameRate;
-			trace( this, "detaining fps: " + _fpsCache );
-			stage.frameRate = 5;
 
 			_view = new View3D();
 			_view.stage3DProxy = _stage3dProxy;
@@ -108,8 +103,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Prepare external assets.
 			// -------------------------
 
-			initializeBundledAssets( HOME_BUNDLE_ID );
-
 			var rootUrl:String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
 			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
 
@@ -140,9 +133,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
 			_frameContainer.loadDefaultHomeFrames();
-
-			// Release fps detainment ( releases the splash screen ).
-			stage.frameRate = _fpsCache;
 		}
 
 		override protected function onDisposed():void {
@@ -203,7 +193,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			if( _introZoomOutPending && stage.frameRate > 30 ) {
 				_introZoomOutPending = false;
 				setTimeout( function():void {
-					_cameraController.zoomOut();
+					trace( this, "zooming out 1st..." );
+					zoomOut();
 				}, 1500 );
 			}
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
@@ -220,7 +211,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function zoomIn():void {
 			// TODO: evaluate zoom in y and z for current snap point
 
-			var zoomY:Number = DEFAULT_ZOOM_IN.x; // Default values.
+			var zoomY:Number = DEFAULT_ZOOM_IN.x;
 			var zoomZ:Number = DEFAULT_ZOOM_IN.y;
 
 			var index:uint = _cameraController.positionManager.closestSnapPointIndex;
@@ -310,6 +301,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
 			_stage3dProxy = stage3dProxy;
+			setup();
 		}
 
 		public function getCurrentPaintingIndex():uint {

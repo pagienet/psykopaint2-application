@@ -8,13 +8,12 @@ package net.psykosoft.psykopaint2.home
 	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.config.HomeConfig;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
-
-	import org.swiftsuspenders.Injector;
 
 	public class HomeModule extends ModuleBase
 	{
@@ -73,25 +72,26 @@ package net.psykosoft.psykopaint2.home
 
 		private function onViewsReady():void {
 
+			trace( this, "HomeModule views are ready." );
+
 			if( isStandalone ) {
+				// Remove splash screen.
+				_coreModule.coreRootView.removeSplashScreen();
+				// Wait for zoom out.
+				_coreModule.injector.getInstance( NotifyZoomCompleteSignal ).addOnce( onFirstZoomOut );
 				// Trigger initial state...
 				_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
+				_coreModule.startEnterFrame();
 			}
-
-			// Listen for splash out.
-			_coreModule.coreRootView.splashScreenRemovedSignal.addOnce( onSplashOut );
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );
 		}
 
-		private function onSplashOut():void {
-			if( isStandalone ) { // Show navigation.
-				setTimeout( function ():void { // Wait a bit while the view is zooming out...
-					var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-					showNavigationSignal.dispatch( 1 );
-				}, 1500 );
-			}
+		private function onFirstZoomOut():void {
+			// Show Navigation.
+			var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
+			showNavigationSignal.dispatch( 1 );
 		}
 	}
 }

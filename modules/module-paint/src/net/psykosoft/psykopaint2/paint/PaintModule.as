@@ -77,30 +77,32 @@ package net.psykosoft.psykopaint2.paint
 		}
 
 		private function onViewsReady():void {
-			// Listen for splash out.
-			_coreModule.coreRootView.splashScreenRemovedSignal.addOnce( onSplashOut );
 			// Load default surface.
 			_loader = new BitmapLoader();
 			_loader.loadAsset( "/paint-packaged/surfaces/canvas-height-specular0.png", onDefaultSurfaceLoaded );
 		}
 
 		private function onDefaultSurfaceLoaded( bmd:BitmapData ):void {
+
 			_loader.dispose();
 			_loader = null;
+
 			// Set default surface.
 			_paintConfig.injector.getInstance( RequestSurfaceImageSetSignal ).dispatch( bmd );
-			// Init drawing core.
-			_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Start drawing core, causes first "real" application states...
-			// Notify potential super modules.
-			moduleReadySignal.dispatch( _coreModule.injector );
-		}
 
-		private function onSplashOut():void {
 			if( isStandalone ) {
+				// Init drawing core.
+				_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Start drawing core, causes first "real" application states...
 				// Show navigation.
 				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
 				showNavigationSignal.dispatch( 1 );
+				// Remove splash screen.
+				_coreModule.coreRootView.removeSplashScreen();
+				_coreModule.startEnterFrame();
 			}
+
+			// Notify potential super modules.
+			moduleReadySignal.dispatch( _coreModule.injector );
 		}
 	}
 }

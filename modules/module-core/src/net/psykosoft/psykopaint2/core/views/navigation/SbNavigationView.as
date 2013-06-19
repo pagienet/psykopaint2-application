@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _scroller:HItemScroller;
 		private var _areButtonsSelectable:Boolean;
 		private var _animating:Boolean;
-		private var _showing:Boolean = true;
+		private var _showing:Boolean;
 		private var _needGapCheck:Boolean = true;
 
 		private var _onReactiveHide:Boolean;
@@ -78,7 +78,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_rightButton = rightBtnSide.getChildByName( "btn" ) as SbButton;
 			_bgHeight *= CoreSettings.GLOBAL_SCALING;
 			_targetReactiveY = 768 * scaleX - _bgHeight;
-			hide( 0.01 );
+
+			enable();
+
+			// Starts hidden.
+			visible = false;
+			_hidden = true;
+			y = _bgHeight;
 		}
 
 		override protected function onSetup():void {
@@ -144,8 +150,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function show():void {
+			trace( this, "trying to show: animating: " + _animating + ", on reactive hide: " + _onReactiveHide + ", showing: " + _showing );
 			if( _animating ) return;
-			if( !_onReactiveHide &&_showing ) return;
+			if( !_onReactiveHide && _showing ) return;
 			trace( this, "show" );
 			_showing = true;
 			_animating = true;
@@ -170,8 +177,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			if( subNavType == null ) return;
 
-			enable();
-
 			trace( this, "updating sub-nav: " + subNavType );
 
 			// Reset.
@@ -181,7 +186,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			rightBtnSide.visible = false;
 			_areButtonsSelectable = false;
 			resetCenterButtons();
-			if( _scroller ) _scroller.reset();
+			_scroller.reset();
 
 			// Disable old view.
 			if( _currentSubNavView ) {
@@ -208,12 +213,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function evaluateScrollingInteractionStart():void {
-			if( !_scroller ) return;
 			_scroller.evaluateInteractionStart();
 		}
 
 		public function evaluateScrollingInteractionEnd():void {
-			if( !_scroller ) return;
 			_scroller.evaluateInteractionEnd();
 		}
 
@@ -268,7 +271,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// ---------------------------------------------------------------------
 
 		private function resetCenterButtons():void {
-			if( !_scroller ) return;
 			_buttonPositionOffsetX = _leftButton.width / 2;
 			if( _centerButtons && _centerButtons.length > 0 ) {
 				var len:uint = _centerButtons.length;
@@ -305,7 +307,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// TODO: this assumes that side buttons will always be set before center buttons, which is not enforced anywhere
 		// and will cause edge gaps to be set incorrectly
 		private function checkGap():void {
-			if( !_scroller ) return;
 			// Decide scroller gaps according to the presence of side buttons.
 			if( leftBtnSide.visible && rightBtnSide.visible ) {
 				_scroller.leftGap = _scroller.rightGap = 150;

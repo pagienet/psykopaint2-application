@@ -1,28 +1,26 @@
 package net.psykosoft.psykopaint2.core.views.base
 {
 
-import flash.display.Bitmap;
-import flash.display.DisplayObject;
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.events.TimerEvent;
-import flash.events.UncaughtErrorEvent;
-import flash.geom.ColorTransform;
-import flash.text.TextField;
-import flash.utils.Timer;
-import flash.utils.getTimer;
+	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.events.UncaughtErrorEvent;
+	import flash.geom.ColorTransform;
+	import flash.text.TextField;
+	import flash.utils.Timer;
+	import flash.utils.getTimer;
 
-import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
-import net.psykosoft.psykopaint2.base.utils.StackUtil;
-import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
-import net.psykosoft.psykopaint2.core.config.CoreSettings;
-import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
-import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
+	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
+	import net.psykosoft.psykopaint2.base.utils.StackUtil;
+	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 
-import org.osflash.signals.Signal;
-
-public class CoreRootView extends RootViewBase
+	public class CoreRootView extends RootViewBase
 	{
 		[Embed(source="../../../../../../../../../modules/module-core/assets/embedded/images/launch/ipad-hr/Default-Landscape@2x.png")]
 		private var SplashImageAsset:Class;
@@ -42,14 +40,10 @@ public class CoreRootView extends RootViewBase
 		private var _applicationLayer:Sprite;
 		private var _debugLayer:Sprite;
 
-		public var splashScreenRemovedSignal:Signal;
-
 		public function CoreRootView() {
 			super();
 
 			trace( this, "constructor" );
-
-			splashScreenRemovedSignal = new Signal();
 
 			// Setup root layers.
 			_applicationLayer = new Sprite();
@@ -109,21 +103,16 @@ public class CoreRootView extends RootViewBase
 			_memoryIcon.visible = true;
 		}
 
-		public function removeSplashScreenWhenReady():void {
-			// Start another enterframe to evaluate when to remove the splash image ( will be removed shortly ).
-			addEventListener( Event.ENTER_FRAME, onSplashEnterFrame );
+		public function removeSplashScreen():void {
+			trace( this, "removing splash ---" );
+			_debugLayer.removeChild( _splashScreen );
+			_splashScreen.bitmapData.dispose();
+			_splashScreen = null;
 		}
 
 		// ---------------------------------------------------------------------
 		// Private
 		// ---------------------------------------------------------------------
-
-		private function removeSplashScreen():void {
-			_debugLayer.removeChild( _splashScreen );
-			_splashScreen.bitmapData.dispose();
-			_splashScreen = null;
-			splashScreenRemovedSignal.dispatch();
-		}
 
 		private function initMemoryWarningDisplay():void {
 			if( !CoreSettings.SHOW_MEMORY_WARNINGS ) return;
@@ -213,16 +202,6 @@ public class CoreRootView extends RootViewBase
 		// ---------------------------------------------------------------------
 		// Listeners.
 		// ---------------------------------------------------------------------
-
-		private function onSplashEnterFrame( event:Event ):void {
-			var targetFPS:Number = 12;
-			trace( this, "waiting for frame rate to increase before removing splash screen - current fps: " + _fps + "/60, minimum: " + targetFPS );
-			if( _fps >= targetFPS ) {
-				trace( this, "--- SPLASH REMOVED ---" );
-				removeEventListener( Event.ENTER_FRAME, onSplashEnterFrame );
-				removeSplashScreen();
-			}
-		}
 
 		private function onMemoryIconTimerTick( event:TimerEvent ):void {
 			_memoryIconTimer.reset();

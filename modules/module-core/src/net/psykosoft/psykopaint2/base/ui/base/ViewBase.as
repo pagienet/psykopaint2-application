@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.utils.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
@@ -17,6 +18,9 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 		private var _loader:AssetBundleLoader;
 		private var _bundleId:String;
+		private var _added:Boolean;
+		protected var _reported:Boolean;
+		private var _requiresLoading:Boolean;
 
 		protected var _assetsLoaded:Boolean;
 
@@ -27,14 +31,18 @@ package net.psykosoft.psykopaint2.base.ui.base
 		public var enabledSignal:Signal;
 		public var setupSignal:Signal;
 		public var assetsReadySignal:Signal;
+		public var viewReadySignal:Signal;
 
 		public function ViewBase() {
 			super();
 			trace( this, "constructor" );
+
 			addedToStageSignal = new Signal();
 			enabledSignal = new Signal();
 			setupSignal = new Signal();
 			assetsReadySignal = new Signal();
+			viewReadySignal = new Signal();
+
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			visible = false;
 		}
@@ -74,19 +82,33 @@ package net.psykosoft.psykopaint2.base.ui.base
 			onDisposed();
 		}
 
+		public function setup():void {
+			trace( this, "setup" );
+			onSetup();
+			if( _requiresLoading ) {
+				if( !_assetsLoaded ) {
+					trace( this, "load started..." );
+					_loader.startLoad();
+				}
+			}
+			else {
+				if( _added ) {
+					trace( this, "-view ready with no assets-" );
+					reportReady();
+				}
+			}
+			setupSignal.dispatch();
+			_initialized = true;
+		}
+
 		// ---------------------------------------------------------------------
 		// Private.
 		// ---------------------------------------------------------------------
 
-		private function setup():void {
-			trace( this, "setup" );
-			onSetup();
-			if( !_assetsLoaded && _loader ) {
-				trace( this, "load started..." );
-				_loader.startLoad();
-			}
-			setupSignal.dispatch();
-			_initialized = true;
+		protected function reportReady():void {
+			if( _reported ) return;
+			_reported = true;
+			viewReadySignal.dispatch();
 		}
 
 		// ---------------------------------------------------------------------
@@ -95,6 +117,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 		protected function initializeBundledAssets( bundleId:String ):void {
 			_bundleId = bundleId;
+			_requiresLoading = true;
 			_loader = new AssetBundleLoader( bundleId );
 			_loader.addEventListener( Event.COMPLETE, onBundledAssetsReady );
 		}
@@ -145,6 +168,24 @@ package net.psykosoft.psykopaint2.base.ui.base
 			}
 
 			addedToStageSignal.dispatch( this );
+
+			_added = true;
+
+			if( !_reported ) {
+				if( _requiresLoading ) {
+					if( _assetsLoaded ) {
+						trace( this, "-view ready from added and assets already loaded-" );
+						reportReady();
+					}
+					else {
+						trace( this, "added but assets not loaded yet" );
+					}
+				}
+				else {
+					trace( this, "-view ready from added and no need to load assets-" );
+					reportReady();
+				}
+			}
 		}
 
 		private function onEnterFrame( event:Event ):void {
@@ -155,6 +196,15 @@ package net.psykosoft.psykopaint2.base.ui.base
 			trace( this, "assets ready" );
 			onAssetsReady();
 			assetsReadySignal.dispatch();
+
+			if( _added ) {
+				trace( this, "-view ready with assets-" );
+				reportReady();
+			}
+			else {
+				trace( this, "assets loaded but not yet added" );
+			}
+
 			_assetsLoaded = true;
 			_loader.removeEventListener( Event.COMPLETE, onBundledAssetsReady );
 		}
