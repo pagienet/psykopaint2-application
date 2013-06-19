@@ -140,6 +140,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function onNavigationMoving( ratio:Number ):void {
+			if( !view.visible ) return;
 			requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight * ( 1 - .24 * ( 1 - ratio ) ) ) );
 		}
 
