@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import flash.display.DisplayObjectContainer;
 	
 	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
-	import net.psykosoft.psykopaint2.core.commands.RedoCanvasActionCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderRubberMeshCommand;
 	import net.psykosoft.psykopaint2.core.commands.UndoCanvasActionCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
@@ -48,7 +47,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestColorStyleMatrixChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestRedoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestRenderRubberMeshSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
@@ -143,7 +141,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_commandMap.map(RequestClearCanvasSignal).toCommand(ClearCanvasCommand);
 //			_commandMap.map(RequestResizeCanvasSignal).toCommand(ResizeCanvasCommand);
 			_commandMap.map(RequestUndoSignal).toCommand(UndoCanvasActionCommand);
-			_commandMap.map(RequestRedoSignal).toCommand(RedoCanvasActionCommand);
 
 			_commandMap.map(RequestRenderRubberMeshSignal).toCommand(RenderRubberMeshCommand);
 		}

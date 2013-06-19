@@ -29,19 +29,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	public class AbstractBrush extends EventDispatcher
 	{
+		public static var STROKE_STARTED : String = "strokeStarted";
+		public static var STROKE_ENDED : String = "strokeEnded";
+
 		public static var brushShapeLibrary:BrushShapeLibrary;
 		
 		protected var _canvasModel : CanvasModel;
 		protected var _view : DisplayObject;
 
 		protected var _pathManager : PathManager;
-		protected var _textureManager : ITextureManager;
 
 		protected var _colorStrategy : IColorStrategy;
 
 		protected var _brushShape : AbstractBrushShape;
-
-	//	protected var _maxShapeRenderSize : Number;
 
 		protected var shapeVariations : Vector.<Number>;
 		protected var rotationRange : Number;
@@ -66,13 +66,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected var _bounds : Rectangle;
 		protected var _renderInvalid : Boolean;
 
-		private var _snapshot : CanvasSnapShot;
 		protected var _context : Context3D;
 		private var _inProgress : Boolean;
 		private var _incremental : Boolean;
 		private var _depthStencil : Boolean;
 
 		private var _drawNormalsOrSpecular : Boolean;
+		private var _snapshot : CanvasSnapShot;
 
 		public function AbstractBrush(drawNormalsOrSpecular : Boolean, incremental : Boolean = true, useDepthStencil : Boolean = false)
 		{
@@ -170,7 +170,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		}
 		
 		
-		public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, textureManager : ITextureManager) : void
+		public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel) : void
 		{
 			_brushMesh = createBrushMesh();
 			brushShape = brushShapeLibrary.getBrushShape(_shapes.stringValue);
@@ -178,7 +178,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_view = view;
 			_canvasModel = canvasModel;
 			_context = context;
-			_textureManager = textureManager;
 			_pathManager.activate(view,canvasModel);
 			_shapes.addEventListener( Event.CHANGE, onShapeChanged );
 		}
@@ -192,13 +191,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function finalizeStroke() : void
 		{
-			_snapshot.trim(_bounds);
-
-			dispatchEvent(new Event(Event.COMPLETE));
+			dispatchEvent(new Event(STROKE_ENDED));
 		}
 
 		protected function onPathStart() : void
 		{
+			dispatchEvent(new Event(STROKE_STARTED));
+
 			_inProgress = true;
 			if (_brushShape) _brushShape.update();
 			_brushMesh.clear();
@@ -207,7 +206,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_canvasScaleH = 2.0 / _canvasModel.textureHeight;	// 0 - 1
 			_bounds.setEmpty();
 
-			_snapshot = new CanvasSnapShot(_canvasModel.stage3D.context3D, _canvasModel, _textureManager, _drawNormalsOrSpecular);
+			// TODO: REQUEST SNAPSHOT
 
 			_firstPoint = true;
 		}
@@ -389,11 +388,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_brushMesh.drawNormalsAndSpecular(_context, _canvasModel, _shininess.numberValue, _glossiness.numberValue, _bumpiness.numberValue);
 		}
 
-		public function get snapshot() : CanvasSnapShot
-		{
-			return _snapshot;
-		}
-		
 		public function getParameterSetAsXML( path:Array ):XML
 		{
 			var brushParameters:XML = <brush/>;
@@ -489,6 +483,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function getDecoratorByPath(target_path:String):IPointDecorator
 		{
 			return _pathManager.getDecoratorByPath(target_path);
+		}
+
+		public function set snapShot(value : CanvasSnapShot) : void
+		{
+			_snapshot = value;
 		}
 	}
 }

@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.core.signals
 	{
 		public function NotifyHistoryStackChangedSignal()
 		{
-			// amount of undo items, amount of redo items
-			super(int, int);
+			// whether or not undo is available
+			super(Boolean);
 		}
 	}
 }

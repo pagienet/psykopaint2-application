@@ -2,25 +2,16 @@ package net.psykosoft.psykopaint2.core.model
 {
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
-	import flash.display3D.textures.Texture;
 
 	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
-	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
-	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
-	import net.psykosoft.psykopaint2.core.resources.TextureProxy;
 	import net.psykosoft.psykopaint2.core.resources.texture_management;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
 
-	import net.psykosoft.psykopaint2.core.errors.ResourceError;
-
 	use namespace texture_management;
 
-	public class CanvasHistoryModel implements ITextureManager
+	public class CanvasHistoryModel
 	{
-		public static var MAX_TEXTURE_MEMORY_USAGE : uint = 150*1024*1024;
-		public static var MAX_HISTORY_LENGTH : int = 10;
-
 		[Inject]
 		public var notifyHistoryStackChanged : NotifyHistoryStackChangedSignal;
 
@@ -30,139 +21,68 @@ package net.psykosoft.psykopaint2.core.model
 		[Inject]
 		public var canvas : CanvasModel;
 
-		private var _snapShots : Vector.<CanvasSnapShot>;
-		private var _currentHistoryIndex : uint;
-
-		private var _bytesAvailable : uint;
-
 		private var _context : Context3D;
+
+		private var _hasHistory : Boolean;
+
+		private var _snapShot : CanvasSnapShot;	// contains the current state
 
 		public function CanvasHistoryModel()
 		{
-			_snapShots = new Vector.<CanvasSnapShot>();
 		}
 
 		[PostConstruct]
 		public function init() : void
 		{
-			_bytesAvailable = MAX_TEXTURE_MEMORY_USAGE;
-			trace ("CanvasHistoryModel.init: " + (MAX_TEXTURE_MEMORY_USAGE - _bytesAvailable)/(1024*1024) + "MB used");
 			_context = stage3d.context3D;
+			_snapShot = new CanvasSnapShot(_context, canvas);
 		}
 
-		public function addSnapShot(snapshot : CanvasSnapShot) : void
+		public function swapSnapshots() : void
 		{
-			//PATCH to avoid adding of null strokes when active brush is changed. this probably needs proper fixing:
-			if ( snapshot == null ) {
-				throw("CanvasHistoryModel.addAction() - adding an empty stroke should not happen here");
-				return;
-			}
-			
-			cleanUpFuture();
-
-			if (MAX_HISTORY_LENGTH != -1 && _currentHistoryIndex == MAX_HISTORY_LENGTH-1)
-				cleanUpOldest();
-
-			_snapShots[_currentHistoryIndex++] = snapshot;
-
-			notifyStackChange();
+			_hasHistory = true;
 		}
 
-		private function cleanUpOldest() : void
+		public function get hasHistory() : Boolean
 		{
-			if (_currentHistoryIndex == 0)
-				throw new Error("No history items to be freed!");
-
-			var snapshot : CanvasSnapShot = _snapShots.shift();
-			--_currentHistoryIndex;
-			snapshot.dispose();
-		}
-
-		public function get history() : Vector.<CanvasSnapShot>
-		{
-			return _snapShots.slice(0, _currentHistoryIndex);
-		}
-
-		public function get future() : Vector.<CanvasSnapShot>
-		{
-			return _snapShots.slice(_currentHistoryIndex);
-		}
-
-		private function cleanUpFuture() : void
-		{
-			var len : uint = _snapShots.length;
-
-			for (var i : int = _currentHistoryIndex; i < len; ++i)
-				_snapShots[i].dispose();
-
-			_snapShots.length = _currentHistoryIndex;
+			return _hasHistory;
 		}
 
 		public function undo() : void
 		{
-			if (_currentHistoryIndex > 0) {
-				--_currentHistoryIndex;
-				swapSnapShots();
-			}
-
-			notifyStackChange();
+			restoreSnapshot();
 		}
 
-		public function redo() : void
+		private function restoreSnapshot() : void
 		{
-			if (_currentHistoryIndex < _snapShots.length) {
-				swapSnapShots();
-				++_currentHistoryIndex;
-			}
+			var temp : CanvasSnapShot = new CanvasSnapShot(_context, canvas);
+			temp.updateSnapshot();
 
-			notifyStackChange();
-		}
-
-		private function swapSnapShots() : void
-		{
-			var oldSnap : CanvasSnapShot = _snapShots[_currentHistoryIndex];
-			var newSnap : CanvasSnapShot = new CanvasSnapShot(_context, canvas, this, oldSnap.normalSpecularTexture != null, oldSnap.canvasBounds);
-
-			_context.setRenderToTexture(canvas.fullSizeBackBuffer);
+			_context.setRenderToTexture(canvas.colorTexture);
 			_context.clear(0, 0, 0, 0);
-			CopyTexture.copy(canvas.colorTexture, _context, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio);
-			oldSnap.drawColor();
+			_snapShot.drawColor();
+
+			_context.setRenderToTexture(canvas.normalSpecularMap);
+			_context.clear(0, 0, 0, 0);
+			_snapShot.drawNormalsSpecular();
+
 			_context.setRenderToBackBuffer();
-			canvas.swapColorLayer();
 
+			_snapShot.dispose();
+			_snapShot = temp;
+		}
 
-			oldSnap.dispose();
-			_snapShots[_currentHistoryIndex] = newSnap;
+		// returned snapshot is READ-ONLY!
+		public function takeSnapshot() : CanvasSnapShot
+		{
+			_snapShot.updateSnapshot();
+			notifyStackChange();
+			return _snapShot;
 		}
 
 		private function notifyStackChange() : void
 		{
-			notifyHistoryStackChanged.dispatch(_currentHistoryIndex, _snapShots.length - _currentHistoryIndex);
-		}
-
-		public function initTexture(textureProxy : TextureProxy) : void
-		{
-			assureFreeSpace(textureProxy.size);
-			var texture : Texture = _context.createTexture(textureProxy.width, textureProxy.height, textureProxy.format, textureProxy.isRenderTarget);
-			textureProxy.setTexture(texture);
-			_bytesAvailable -= textureProxy.size;
-			trace ("CanvasHistoryModel.initTexture: " + (MAX_TEXTURE_MEMORY_USAGE - _bytesAvailable)/(1024*1024) + "MB used");
-		}
-
-		private function assureFreeSpace(size : uint) : void
-		{
-			if (size > MAX_TEXTURE_MEMORY_USAGE)
-				throw ResourceError("Stroke data larger than reserved space!");
-
-			while (_bytesAvailable < size)
-				cleanUpOldest();
-		}
-
-		public function freeTexture(textureProxy : TextureProxy) : void
-		{
-			_bytesAvailable += textureProxy.size;
-			trace ("CanvasHistoryModel.freeTexture: " + (MAX_TEXTURE_MEMORY_USAGE - _bytesAvailable)/(1024*1024) + "MB used");
-			textureProxy.texture.dispose();
+			notifyHistoryStackChanged.dispatch(_hasHistory);
 		}
 	}
 }
