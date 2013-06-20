@@ -84,9 +84,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var requestUndoSignal:RequestUndoSignal;
 
 		[Inject]
-		public var requestRedoSignal:RequestRedoSignal;
-
-		[Inject]
 		public var stage3D:Stage3D;
 
 		override public function initialize():void {
@@ -125,10 +122,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			switch( type ) {
 				case GestureType.TWO_FINGER_SWIPE_LEFT: {
 					requestUndoSignal.dispatch();
-					break;
-				}
-				case GestureType.TWO_FINGER_SWIPE_RIGHT: {
-					requestRedoSignal.dispatch();
 					break;
 				}
 			}
