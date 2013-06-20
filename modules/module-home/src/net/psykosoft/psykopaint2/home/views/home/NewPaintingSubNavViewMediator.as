@@ -63,6 +63,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_waitingForZoom = false;
 			_waitingForSnapShot = true;
 			requestStateChange( StateType.GOING_TO_PAINT );
+			RenderGpuCommand.snapshotScale = 1;
 			RenderGpuCommand.snapshotRequested = true;
 		}
 

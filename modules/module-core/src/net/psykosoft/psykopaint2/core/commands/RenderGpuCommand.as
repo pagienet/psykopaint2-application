@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.core.commands
 	public class RenderGpuCommand extends Command
 	{
 		public static var renderTime:Number = 0;
+		public static var snapshotScale:Number = 1;
 		public static var snapshotRequested:Boolean;
 
 		[Inject]
@@ -59,18 +60,19 @@ package net.psykosoft.psykopaint2.core.commands
 			for( i = 0; i < len; ++i ) steps[ i ]();
 
 			if( snapshotRequested ) {
-				trace( this, "taking snapshot ------------------------------"  );
+				trace( this, "taking snapshot with scale: " + snapshotScale  );
 				var bmd:BitmapData = new BitmapData( stage3DProxy.width, stage3DProxy.height, true, 0 );
 				stage3DProxy.context3D.drawToBitmapData( bmd );
-				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
+				if( snapshotScale != 1 ) {
 					var matrix:Matrix = new Matrix();
-					matrix.scale( 1 / CoreSettings.GLOBAL_SCALING, 1 / CoreSettings.GLOBAL_SCALING );
-					var scaledDownBmd:BitmapData = new BitmapData( stage3DProxy.width / CoreSettings.GLOBAL_SCALING, stage3DProxy.height / CoreSettings.GLOBAL_SCALING, false, 0 );
+					matrix.scale( snapshotScale, snapshotScale );
+					var scaledDownBmd:BitmapData = new BitmapData( stage3DProxy.width * snapshotScale, stage3DProxy.height * snapshotScale, false, 0 );
 					scaledDownBmd.draw( bmd, matrix );
 					bmd = scaledDownBmd;
 				}
 				notifyCanvasBitmapSignal.dispatch( bmd );
 				snapshotRequested = false;
+				snapshotScale = 1;
 			}
 
 			// Present.

@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			super.execute();
 
 			// Request a snapshot and wait for it.
+			RenderGpuCommand.snapshotScale = 1;
 			RenderGpuCommand.snapshotRequested = true; // TODO: request full snapshot here, atm it produces scaled down snapshots...
 			notifyCanvasSnapshotSignal.addOnce( onSnapshotRetrieved );
 			context.detain( this );

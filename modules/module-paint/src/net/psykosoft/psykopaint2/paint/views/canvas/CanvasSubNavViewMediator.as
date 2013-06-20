@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
@@ -88,6 +89,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// Before changing state.
 			_waitingForSnapshot = true;
 			requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, view.stage.stageWidth, view.stage.stageHeight ) );
+			RenderGpuCommand.snapshotScale = 1 / CoreSettings.GLOBAL_SCALING;
 			RenderGpuCommand.snapshotRequested = true;
 		}
 

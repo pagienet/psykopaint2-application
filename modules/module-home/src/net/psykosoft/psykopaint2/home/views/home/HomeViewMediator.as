@@ -181,6 +181,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				requestStateChange( StateType.GOING_TO_PAINT );
 				var p:Point = HomeView.EASEL_FAR_ZOOM_IN;
 				view.adjustCamera( p.x, p.y );
+				RenderGpuCommand.snapshotScale = 1;
 				RenderGpuCommand.snapshotRequested = true;
 			}
 		}
