@@ -12,7 +12,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public static const LBL_PICK_A_BRUSH:String = "Pick a Brush";
 		public static const LBL_CLEAR:String = "Clear Canvas";
 		public static const LBL_EXPORT:String = "Export Painting";
-		public static const LBL_PUBLISH:String = "Publish Painting";
+		public static const LBL_SAVE:String = "Save Painting"; // TODO: remove when auto-saving is developed
+		public static const LBL_PUBLISH:String = "[Publish Painting]";
 		public static const LBL_HOME:String = "Home";
 
 		public function CanvasSubNavView() {
@@ -32,6 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			addCenterButton( LBL_PICK_A_SURFACE );
 			addCenterButton( LBL_CLEAR );
 			addCenterButton( LBL_EXPORT );
+			addCenterButton( LBL_SAVE );
 			addCenterButton( LBL_PUBLISH );
 
 			invalidateContent();

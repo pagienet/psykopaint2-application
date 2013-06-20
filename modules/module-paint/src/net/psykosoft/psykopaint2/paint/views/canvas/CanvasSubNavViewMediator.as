@@ -72,6 +72,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					requestCanvasExportSignal.dispatch();
 					break;
 				}
+				case CanvasSubNavView.LBL_SAVE: {
+					// TODO: save stuff to disk
+					break;
+				}
 				case CanvasSubNavView.LBL_PUBLISH: {
 					// TODO: trigger publish process
 					break;
