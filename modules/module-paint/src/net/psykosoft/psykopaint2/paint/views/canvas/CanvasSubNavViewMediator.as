@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 
 	public class CanvasSubNavViewMediator extends MediatorBase
 	{
@@ -28,6 +29,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
+
+		[Inject]
+		public var requestCanvasExportSignal:RequestCanvasExportSignal;
 
 		private var _waitingForSnapshot:Boolean;
 
@@ -60,7 +64,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 				case CanvasSubNavView.LBL_HOME: {
-					navigateToHomeWithSnapshot();
+					navigateToHomeWithCanvasSnapshot();
+					break;
+				}
+				case CanvasSubNavView.LBL_EXPORT: {
+					// TODO: call export service
+					break;
+				}
+				case CanvasSubNavView.LBL_PUBLISH: {
+					// TODO: trigger publish process
 					break;
 				}
 				case CanvasSubNavView.LBL_CLEAR: {
@@ -70,9 +82,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 		}
 
-		private function navigateToHomeWithSnapshot():void {
+		private function navigateToHomeWithCanvasSnapshot():void {
 			trace( this, "requesting canvas snapshot..." );
-
 			// Request a snapshot from the core and wait for it.
 			// Before changing state.
 			_waitingForSnapshot = true;

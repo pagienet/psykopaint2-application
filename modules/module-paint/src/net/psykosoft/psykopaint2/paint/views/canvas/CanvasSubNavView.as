@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public static const LBL_PICK_A_SURFACE:String = "Pick a Surface";
 		public static const LBL_PICK_A_BRUSH:String = "Pick a Brush";
 		public static const LBL_CLEAR:String = "Clear Canvas";
+		public static const LBL_EXPORT:String = "Export Painting";
+		public static const LBL_PUBLISH:String = "Publish Painting";
 		public static const LBL_HOME:String = "Home";
 
 		public function CanvasSubNavView() {
@@ -29,6 +31,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			addCenterButton( LBL_PICK_AN_IMAGE, ButtonIconType.GALLERY );
 			addCenterButton( LBL_PICK_A_SURFACE, ButtonIconType.GALLERY );
 			addCenterButton( LBL_CLEAR, ButtonIconType.GALLERY );
+			addCenterButton( LBL_EXPORT, ButtonIconType.GALLERY );
+			addCenterButton( LBL_PUBLISH, ButtonIconType.GALLERY );
 
 			invalidateContent();
 		}
