@@ -74,9 +74,7 @@ import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 			}
 			invalidateContent();
 
-			// Select and <<< activate >>> the first parameter.
-//			trace( this, "first: >>>" + firstParamId + "<<<" );
-			//Mario: I changed this again. I do not want the first button to be automatically selected. Only if there was a previous selection
+			// Select and <<< activate >>> if a parameter was previously selected.
 			if ( firstParamId != "" )
 			{
 				selectButtonWithLabel( firstParamId );
