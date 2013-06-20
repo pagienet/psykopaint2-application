@@ -401,7 +401,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			
 			_active = true;
 			_view = view;
-			_view.stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+//			_view.stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 			_view.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			_view.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
 			

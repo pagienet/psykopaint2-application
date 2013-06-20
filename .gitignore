@@ -42,4 +42,7 @@ bin-debug
 .actionScriptProperties
 src/net/psykosoft/psykopaint2/app/tests/
 
+# IDE Files #
+#############
+*.iml
 

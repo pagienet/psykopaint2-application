@@ -571,9 +571,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			deactivateBrushKit();
 		}
 
-		private function onBrushComplete(event : Event) : void
+		private function onStrokeStarted(event : Event) : void
 		{
-			canvasHistory.addSnapShot(_activeBrushKit.brushEngine.snapshot);
+			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
 		}
 
 		private function activateBrushKit() : void
@@ -581,8 +581,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( _activeBrushKit )
 			{
 				_activeBrushKit.canvasRect = _canvasRect;
-				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, canvasHistory);
-				_activeBrushKit.brushEngine.addEventListener(Event.COMPLETE, onBrushComplete);
+				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel);
+				_activeBrushKit.brushEngine.addEventListener(AbstractBrush.STROKE_STARTED, onStrokeStarted);
 				_activeBrushKit.addEventListener( Event.CHANGE, onActiveBrushKitChanged );
 			}
 		}
@@ -592,7 +592,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( _activeBrushKit )
 			{
 				_activeBrushKit.deactivate();
-				_activeBrushKit.brushEngine.removeEventListener(Event.COMPLETE, onBrushComplete);
+				_activeBrushKit.brushEngine.removeEventListener(AbstractBrush.STROKE_STARTED, onStrokeStarted);
 				_activeBrushKit.removeEventListener( Event.CHANGE, onActiveBrushKitChanged );
 				_activeBrushKit = null;
 				_activeBrushKitName = "";

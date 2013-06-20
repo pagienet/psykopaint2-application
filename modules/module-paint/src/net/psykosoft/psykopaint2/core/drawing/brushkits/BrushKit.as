@@ -102,9 +102,9 @@ import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 			_brushEngine.stopProgression();
 		}
 
-		public function activate( view : DisplayObject, context : Context3D, canvasModel : CanvasModel, textureManager : ITextureManager ):void
+		public function activate( view : DisplayObject, context : Context3D, canvasModel : CanvasModel):void
 		{
-			_brushEngine.activate(view, context, canvasModel, textureManager );
+			_brushEngine.activate(view, context, canvasModel);
 			PsykoSocket.addMessageCallback("ActiveBrushKit.*", this, onSocketMessage );
 			sendBrushKitParameterSet();
 		}

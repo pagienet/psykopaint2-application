@@ -20,12 +20,9 @@ package net.psykosoft.psykopaint2.core.commands
 		public function execute():void
 		{
 			paintModule.stopAnimations();
-
-			var snapshot : CanvasSnapShot = new CanvasSnapShot(canvas.stage3D.context3D, canvas, history, true);
-			history.addSnapShot(snapshot);
+			history.takeSnapshot();
 			canvas.clearColorTexture();
 			canvas.clearNormalSpecularTexture();
-
 		}
 	}
 }
