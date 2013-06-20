@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.base.utils
+package net.psykosoft.psykopaint2.base.utils.gpu
 {
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;

@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.base.utils
+package net.psykosoft.psykopaint2.base.utils.gpu
 {
 
 	import away3d.containers.ObjectContainer3D;

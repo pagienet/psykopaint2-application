@@ -19,10 +19,10 @@ package net.psykosoft.psykopaint2.core
 
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
-	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
-	import net.psykosoft.psykopaint2.base.utils.PlatformUtil;
-	import net.psykosoft.psykopaint2.base.utils.ShakeAndBakeConnector;
-	import net.psykosoft.psykopaint2.base.utils.XMLLoader;
+	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
+	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
+	import net.psykosoft.psykopaint2.base.utils.io.ShakeAndBakeConnector;
+	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreConfig;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;

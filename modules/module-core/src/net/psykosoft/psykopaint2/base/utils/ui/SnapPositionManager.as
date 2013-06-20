@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.base.utils
+package net.psykosoft.psykopaint2.base.utils.ui
 {
 
 	import org.osflash.signals.Signal;

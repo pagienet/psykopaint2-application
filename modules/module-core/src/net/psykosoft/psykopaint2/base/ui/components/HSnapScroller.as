@@ -7,8 +7,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
-	import net.psykosoft.psykopaint2.base.utils.ScrollInteractionManager;
-	import net.psykosoft.psykopaint2.base.utils.SnapPositionManager;
+	import net.psykosoft.psykopaint2.base.utils.ui.ScrollInteractionManager;
+	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 
 	import org.osflash.signals.Signal;

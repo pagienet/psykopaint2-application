@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 
 	public class Picture extends ObjectContainer3D
 	{

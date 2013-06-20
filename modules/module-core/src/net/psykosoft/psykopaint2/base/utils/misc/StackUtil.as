@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.base.utils
+package net.psykosoft.psykopaint2.base.utils.misc
 {
 	/*
 	* Pushes values into an array and keeps the array at constant length.

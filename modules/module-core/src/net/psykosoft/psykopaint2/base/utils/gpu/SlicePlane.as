@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.base.utils
+package net.psykosoft.psykopaint2.base.utils.gpu
 {
 
 	import away3d.core.base.CompactSubGeometry;
@@ -7,6 +7,8 @@ package net.psykosoft.psykopaint2.base.utils
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
+
+	import net.psykosoft.psykopaint2.base.utils.gpu.GeomUtil;
 
 	public class SlicePlane extends Mesh
 	{

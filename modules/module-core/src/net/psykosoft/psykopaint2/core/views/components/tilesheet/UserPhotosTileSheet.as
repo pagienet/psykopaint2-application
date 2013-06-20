@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.photos.data.SheetVO;
-	import net.psykosoft.psykopaint2.base.utils.IosImagesFetcher;
+	import net.psykosoft.psykopaint2.base.utils.io.IosImagesFetcher;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 
 	import org.osflash.signals.Signal;

@@ -16,8 +16,8 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 	import flash.display.Stage;
 	import flash.geom.Vector3D;
 
-	import net.psykosoft.psykopaint2.base.utils.ScrollInteractionManager;
-	import net.psykosoft.psykopaint2.base.utils.SnapPositionManager;
+	import net.psykosoft.psykopaint2.base.utils.ui.ScrollInteractionManager;
+	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 

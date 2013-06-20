@@ -12,8 +12,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import flash.utils.ByteArray;
 
-	import net.psykosoft.psykopaint2.base.utils.SlicePlane;
-	import net.psykosoft.psykopaint2.base.utils.TextureUtil;
+	import net.psykosoft.psykopaint2.base.utils.gpu.SlicePlane;
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
 	public class Room extends ObjectContainer3D

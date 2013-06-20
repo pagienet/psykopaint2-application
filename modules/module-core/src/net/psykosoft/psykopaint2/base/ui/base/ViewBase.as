@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 	import flash.events.Event;
 	import flash.utils.setTimeout;
 
-	import net.psykosoft.psykopaint2.base.utils.AssetBundleLoader;
+	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 
 	import org.osflash.signals.Signal;

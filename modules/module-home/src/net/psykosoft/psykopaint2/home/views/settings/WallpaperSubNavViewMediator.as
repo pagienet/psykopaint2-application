@@ -4,9 +4,9 @@ package net.psykosoft.psykopaint2.home.views.settings
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
-	import net.psykosoft.psykopaint2.base.utils.AtlasLoader;
-	import net.psykosoft.psykopaint2.base.utils.BinaryLoader;
-	import net.psykosoft.psykopaint2.base.utils.BitmapAtlas;
+	import net.psykosoft.psykopaint2.base.utils.io.AtlasLoader;
+	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
+	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;

@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.home
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.CoreModule;
-	import net.psykosoft.psykopaint2.base.utils.ModuleBase;
+	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;

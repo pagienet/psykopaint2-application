@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 	import flash.display.Bitmap;
 
-	import net.psykosoft.psykopaint2.base.utils.BitmapAtlas;
+	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 

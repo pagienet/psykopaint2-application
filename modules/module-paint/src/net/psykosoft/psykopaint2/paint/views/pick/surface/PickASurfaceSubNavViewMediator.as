@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.surface
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.base.utils.BitmapLoader;
+	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;

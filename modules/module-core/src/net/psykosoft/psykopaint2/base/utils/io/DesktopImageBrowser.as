@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.base.utils
+package net.psykosoft.psykopaint2.base.utils.io
 {
 
 	import flash.display.BitmapData;
@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.base.utils
 	import flash.filesystem.File;
 	import flash.net.FileFilter;
 
-	import net.psykosoft.psykopaint2.base.utils.BitmapLoader;
+	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 
 	public class DesktopImageBrowser
 	{
