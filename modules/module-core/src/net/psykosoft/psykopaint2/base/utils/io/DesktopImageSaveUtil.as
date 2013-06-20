@@ -11,10 +11,6 @@ package net.psykosoft.psykopaint2.base.utils.io
 
 	public class DesktopImageSaveUtil
 	{
-		public function DesktopImageSaveUtil() {
-			super();
-		}
-
 		public static function saveImageToDesktop( bmd:BitmapData ):void {
 
 			// Encode to jpeg or png.

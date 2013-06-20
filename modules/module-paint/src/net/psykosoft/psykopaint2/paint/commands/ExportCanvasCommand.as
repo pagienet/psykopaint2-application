@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopImageSaveUtil;
+	import net.psykosoft.psykopaint2.base.utils.io.IosImageSaveUtil;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
@@ -36,14 +37,9 @@ package net.psykosoft.psykopaint2.paint.commands
 			trace( this, "snapshot retrieved: " + snapshot.width + "x" + snapshot.height );
 
 			// Chose the appropriate saving service and trigger it.
-			if( CoreSettings.RUNNING_ON_iPAD ) {
-				// TODO...
-			}
-			else {
-				DesktopImageSaveUtil.saveImageToDesktop( snapshot );
-			}
+			if( CoreSettings.RUNNING_ON_iPAD ) IosImageSaveUtil.saveImageToCameraRoll( snapshot );
+			else DesktopImageSaveUtil.saveImageToDesktop( snapshot );
 
-			// Release the command.
 			context.release( this );
 		}
 	}
