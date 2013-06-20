@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 			var fileName:String = "psykopaint-2-snapshot - " + nowDate.toString() + ".png";
 			trace( "DesktopImageSaveUtil - saving image: " + fileName );
 
-			// Ask user where to save the image.
+			// Save image to desktop.
 			var file:File = File.desktopDirectory.resolvePath( fileName );
 			var fileStream:FileStream = new FileStream();
 			fileStream.open( file, FileMode.WRITE );

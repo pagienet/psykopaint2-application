@@ -62,7 +62,7 @@ package net.psykosoft.psykopaint2.core.commands
 			if( snapshotRequested ) {
 				trace( this, "taking snapshot with scale: " + snapshotScale  );
 				var bmd:BitmapData = new BitmapData( stage3DProxy.width, stage3DProxy.height, true, 0 );
-				stage3DProxy.context3D.drawToBitmapData( bmd );
+				stage3DProxy.context3D.drawToBitmapData( bmd ); // TODO: use BitmapDataUtils.scaleBitmap()
 				if( snapshotScale != 1 ) {
 					var matrix:Matrix = new Matrix();
 					matrix.scale( snapshotScale, snapshotScale );

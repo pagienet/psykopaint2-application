@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 	
-	import net.psykosoft.psykopaint2.base.utils.gpu.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;

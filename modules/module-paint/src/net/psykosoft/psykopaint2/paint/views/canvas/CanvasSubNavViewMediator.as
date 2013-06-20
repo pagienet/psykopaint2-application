@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 
 	public class CanvasSubNavViewMediator extends MediatorBase
 	{
@@ -33,6 +34,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestCanvasExportSignal:RequestCanvasExportSignal;
+
+		[Inject]
+		public var requestPaintingSaveSignal:RequestPaintingSaveSignal;
 
 		private var _waitingForSnapshot:Boolean;
 
@@ -73,7 +77,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 				case CanvasSubNavView.LBL_SAVE: {
-					// TODO: save stuff to disk
+					requestPaintingSaveSignal.dispatch( CanvasCache.currentPaintingId );
 					break;
 				}
 				case CanvasSubNavView.LBL_PUBLISH: {

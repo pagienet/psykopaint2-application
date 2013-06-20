@@ -2,11 +2,13 @@ package net.psykosoft.psykopaint2.paint.config
 {
 
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
+	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
@@ -105,6 +107,7 @@ package net.psykosoft.psykopaint2.paint.config
 			_commandMap.map( RequestDrawingCoreStartupSignal ).toCommand( StartUpDrawingCoreCommand );
 			_commandMap.map( RequestSurfaceImageSetSignal ).toCommand( SetSurfaceImageCommand );
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
+			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
 		}
 
 		// -----------------------
