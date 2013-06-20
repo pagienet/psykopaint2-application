@@ -9,8 +9,8 @@ package net.psykosoft.psykopaint2.base.utils.io
 	public class DesktopBinarySaveUtil
 	{
 		public static function saveToDesktop( bytes:ByteArray, fileName:String ):void {
-			// Save data to desktop folder 'psykopaint2data'.
-			var file:File = File.desktopDirectory.resolvePath( "psykopaint2data/" + fileName );
+			// Save data to desktop.
+			var file:File = File.desktopDirectory.resolvePath( fileName );
 			var fileStream:FileStream = new FileStream();
 			fileStream.open( file, FileMode.WRITE );
 			fileStream.writeBytes( bytes );

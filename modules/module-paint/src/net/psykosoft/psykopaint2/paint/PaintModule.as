@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSavedDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 
@@ -91,15 +92,21 @@ package net.psykosoft.psykopaint2.paint
 			_paintConfig.injector.getInstance( RequestSurfaceImageSetSignal ).dispatch( bmd );
 
 			if( isStandalone ) {
+
 				// Init drawing core.
 				_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Start drawing core, causes first "real" application states...
+
 				// Show navigation.
 				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
 				showNavigationSignal.dispatch( 1 );
+
 				// Remove splash screen.
 				_coreModule.coreRootView.removeSplashScreen();
 				_coreModule.startEnterFrame();
 			}
+
+			// Start loading painting data.
+			_paintConfig.injector.getInstance( RequestPaintingSavedDataRetrievalSignal ).dispatch();
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );

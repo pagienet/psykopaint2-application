@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopBinarySaveUtil;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
 	import net.psykosoft.psykopaint2.paint.data.PaintingVO;
 
 	public class SavePaintingCommand extends TracingCommand
@@ -52,7 +53,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			if( CoreSettings.RUNNING_ON_iPAD ) {
 				// TODO...
 			}
-			else DesktopBinarySaveUtil.saveToDesktop( voBytes, "painting-" + paintingId );
+			else DesktopBinarySaveUtil.saveToDesktop( voBytes, PaintSettings.saveDataFolderName + "/painting-" + paintingId );
 		}
 	}
 }
