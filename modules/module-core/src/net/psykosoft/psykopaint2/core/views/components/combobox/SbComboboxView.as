@@ -4,14 +4,22 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
-	public class SbComboboxView extends Sprite
+	import org.osflash.signals.Signal;
+
+public class SbComboboxView extends Sprite
 	{
 		private var _clickOffsetY:Number = 0;
 		private var _listView:SbListView;
 		private var _mouseIsDown:Boolean;
 
+		public var interactionStartedSignal:Signal;
+		public var interactionEndedSignal:Signal;
+
 		public function SbComboboxView() {
 			super();
+
+			interactionStartedSignal = new Signal();
+			interactionEndedSignal = new Signal();
 
 			_listView = new SbListView();
 			addChildAt( _listView, 0 );
@@ -52,6 +60,8 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 		// ---------------------------------------------------------------------
 
 		private function onListMouseDown( e:MouseEvent ):void {
+			interactionStartedSignal.dispatch();
+
 			if( _mouseIsDown ) return;
 			_mouseIsDown = true;
 			_listView.expand();
@@ -62,6 +72,8 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 		}
 
 		private function onStageMouseUp( event:MouseEvent ):void {
+			interactionEndedSignal.dispatch();
+
 			if( !_mouseIsDown ) return;
 			_mouseIsDown = false;
 			// Update list selected index from Y.

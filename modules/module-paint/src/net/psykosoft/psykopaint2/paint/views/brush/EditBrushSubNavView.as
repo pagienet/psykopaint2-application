@@ -11,7 +11,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
+import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
 	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
@@ -168,29 +169,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				_uiElements.push( knob );
 			}
 
-			// Combo box. // TODO: implement real combobox, design is ready
+			// Combo box.
 			else if( parameterType == PsykoParameter.StringListParameter || parameterType == PsykoParameter.IconListParameter ) {
-
-				/*var comboBox:ComboBox = new ComboBox( this );
-				comboBox.alternateRows = true;
-				comboBox.openPosition = ComboBox.TOP;
-				var list:Array = String( _parameter.@list ).split( "," );
-				var len:uint = list.length;
-				for( i = 0; i < len; ++i ) {
-					var option:String = list[ i ];
-					comboBox.addItem( option );
-				}
-				comboBox.defaultLabel = list[ uint( _parameter.@index ) ];
-				comboBox.numVisibleItems = Math.min( 6, len );
-				comboBox.addEventListener( Event.SELECT, onComboBoxChanged );
-				comboBox.draw();
-				positionUiElement( comboBox as DisplayObject );
-				_uiElements.push( comboBox );
-				trace("STRINGLIST PARAM");*/
-
 				var list:Vector.<String> = _parameter.stringList;
 				var len:uint = list.length;
 				var combobox:SbComboboxView = new SbComboboxView( );
+				combobox.interactionStartedSignal.add( onComboboxInteractionStarted );
+				combobox.interactionEndedSignal.add( onComboboxInteractionEnded );
 				for( i = 0; i < len; ++i ) {
 					combobox.addItem( { label: list[ i ] } );
 				}
@@ -272,6 +257,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private function onComboBoxChanged( event:Event ):void {
 			var comboBox:SbComboboxView = event.target as SbComboboxView;
 			_parameter.index = comboBox.selectedIndex;
+		}
+
+		private function onComboboxInteractionEnded():void {
+			GestureManager.gesturesEnabled = true;
+		}
+
+		private function onComboboxInteractionStarted():void {
+			GestureManager.gesturesEnabled = false;
 		}
 
 		private function onSliderChanged( event:Event ):void {
