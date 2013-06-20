@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 				case CanvasSubNavView.LBL_EXPORT: {
-					// TODO: call export service
+					requestCanvasExportSignal.dispatch();
 					break;
 				}
 				case CanvasSubNavView.LBL_PUBLISH: {
