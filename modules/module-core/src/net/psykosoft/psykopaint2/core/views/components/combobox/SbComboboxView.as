@@ -1,12 +1,8 @@
 package net.psykosoft.psykopaint2.core.views.components.combobox
 {
-
-	import com.greensock.TweenLite;
-
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.geom.ColorTransform;
 
 	public class SbComboboxView extends Sprite
 	{
