@@ -206,11 +206,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				</brush>
 
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
-					<parameter id="Bumpyness" path="brush" value="0.12" showInUI="1"/>
+					<parameter id="Bumpyness" path="brush" value="0.25" showInUI="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
-						<OrderDecorator>
-						</OrderDecorator>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
 							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.9" minValue="0" maxValue="10"/>
@@ -220,14 +218,17 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_1" index="0" />
 							<parameter id="Opacity"  path="pathengine.pointdecorator_1" showInUI="1"/>
 							<parameter id="Color Blending"  path="pathengine.pointdecorator_1" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.5" value2="0.7" showInUI="1"/>
 						</ColorDecorator>
+						<OrderDecorator>
+						</OrderDecorator>
 						<SplatterDecorator>
-							<parameter id="Mode" path="pathengine.pointdecorator_2" index="1" />
-							<parameter id="Offset Mapping" path="pathengine.pointdecorator_2" value="0" showInUI="1" />
-							<parameter id="Splat Factor"  path="pathengine.pointdecorator_2" value="40" />
-							<parameter id="Minimum Offset" path="pathengine.pointdecorator_2" value="0" />
-							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_2" value="30" />
-							<parameter id="Size Factor" path="pathengine.pointdecorator_2" value="0.8" />
+							<parameter id="Mode" path="pathengine.pointdecorator_3" index="1" />
+							<parameter id="Offset Mapping" path="pathengine.pointdecorator_3" value="0" showInUI="1" />
+							<parameter id="Splat Factor"  path="pathengine.pointdecorator_3" value="40" />
+							<parameter id="Minimum Offset" path="pathengine.pointdecorator_3" value="0" />
+							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_3" value="30" />
+							<parameter id="Size Factor" path="pathengine.pointdecorator_3" value="0.8" />
 						</SplatterDecorator>
 						
 					</pathengine>
