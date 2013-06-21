@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
-	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.textures.Texture;
@@ -50,7 +49,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			super(false);
 
-			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.3, 0, 1);
+			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.3, 0, 5);
 			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter, "Gravity influence", 0.1, 0, .3);
 			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, "Viscosity", .1, 0, 1);
 			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, "Drag", .01, 0, .2);

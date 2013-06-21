@@ -90,6 +90,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 				</brush>
 				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
+					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
+					<parameter id="Pigment flow" path="brush" value="0.5" showInUI="1"/>
+					<parameter id="Pigment bleaching" path="brush" value="0.07" showInUI="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="wet" showInUI="0"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 				</brush>
