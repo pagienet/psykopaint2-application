@@ -9,6 +9,9 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	import flash.utils.ByteArray;
+
+	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.NormalSpecularMapGenerator;
@@ -262,6 +265,50 @@ package net.psykosoft.psykopaint2.core.model
 		public function clearNormalSpecularTexture() : void
 		{
 			_normalSpecularMap.uploadFromBitmapData(_normalSpecularOriginal);
+		}
+
+
+		/**
+		 * Returns a list of 3 ByteArrays containing data:
+		 * 0: painted color layer
+		 * 1: normal/specular layer
+		 * 2: the source texture
+		 *
+		 * IMPORTANT: THE DATA IS SAVED IN RGBA ORDER - UNLIKE THE LOAD ORDER
+		 */
+		public function saveLayersRGBA() : Vector.<ByteArray>
+		{
+			var bmp : BitmapData = new BitmapData(_width, _height, true);
+			var layers : Vector.<ByteArray> = new Vector.<ByteArray>();
+			layers.push(saveLayer(_colorTexture, bmp));
+			layers.push(saveLayer(_normalSpecularMap, bmp));
+			layers.push(saveLayer(_sourceTexture, bmp));
+			bmp.dispose();
+			return layers;
+		}
+
+		// IMPORTANT, DATA INPUT MUST BE IN BGRA ORDER TO AVOID PRE-MULTIPLICATION ISSUES.
+		// Conversion is not done here to allow fast native conversion
+		public function loadLayersBGRA(data : Vector.<ByteArray>) : void
+		{
+			_colorTexture.uploadFromByteArray(data[0], 0, 0);
+			_normalSpecularMap.uploadFromByteArray(data[1], 0, 0);
+			_sourceTexture.uploadFromByteArray(data[2], 0, 0);
+		}
+
+		private function saveLayer(layer : Texture, workerBitmapData : BitmapData) : ByteArray
+		{
+			var data : ByteArray = new ByteArray();
+			var context : Context3D = stage3D.context3D;
+			var sourceRect : Rectangle = new Rectangle(0, 0, usedTextureWidthRatio, usedTextureHeightRatio);
+			var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
+
+			context.setRenderToBackBuffer();
+			context.clear();
+			CopySubTexture.copy(layer, sourceRect, destRect, context);
+			context.drawToBitmapData(workerBitmapData);
+			workerBitmapData.copyPixelsToByteArray(workerBitmapData.rect, data);
+			return data;
 		}
 	}
 }
