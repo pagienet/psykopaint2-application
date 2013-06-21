@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _clickOffset:Number;
 		private var _valueRange:Number = 1;
 		private var _labelMode:int = 1;
+		private var _digits:int = 2;
 		
 		public function SbSlider() {
 			super();
@@ -64,14 +65,13 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			switch ( _labelMode )
 			{
 				case LABEL_VALUE:
-					valueLabel.text = String( _value );
+					valueLabel.text = formatLabel(_value);
 					break;
 				case LABEL_PERCENT:
-					var percentage:Number = Math.round( _valueRatio * 100 );
-					valueLabel.text = String( percentage + "%" );
+					valueLabel.text = formatLabel(_valueRatio * 100,"%" );
 					break;
 				case LABEL_DEGREES:
-					valueLabel.text = String( _value + "°" );
+					valueLabel.text = formatLabel(_value, "°" );
 					break;
 			}
 		}
@@ -82,6 +82,11 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private function ratioToValue( ratio:Number ):Number {
 			return ratio * _valueRange + _minValue;
+		}
+		
+		private function formatLabel( value:Number, suffix:String = "" ):String
+		{
+			return String( int(value * Math.pow( 10, _digits) + 0.5) / Math.pow( 10, _digits)) + suffix;
 		}
 
 		private function containValue():void {
@@ -134,8 +139,20 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			return _value;
 		}
 		
+		public function get labelMode( ):int {
+			return _labelMode;
+		}
+		
 		public function set labelMode( value:int ):void {
 			_labelMode = value;
+		}
+		
+		public function get digits( ):int {
+			return _digits;
+		}
+		
+		public function set digits( value:int ):void {
+			_digits = value;
 		}
 
 		// ---------------------------------------------------------------------

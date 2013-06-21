@@ -9,13 +9,19 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	
 	import de.popforge.math.LCG;
 	
-	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 
-	public class SizeDecorator extends AbstractPointDecorator
+	final public class SizeDecorator extends AbstractPointDecorator
 	{
+		static public const PARAMETER_MODE:String = "Mode";
+		static public const PARAMETER_FACTOR:String = "Factor";
+		static public const PARAMETER_MAPPING:String = "Mapping";
+		static public const PARAMETER_INVERT_MAPPING:String = "Invert Mapping";
+		static public const PARAMETER_MAXIMUM_SPEED:String  = "Maximum Speed";
+		
+		
 		private var mappingMode:PsykoParameter;
 		private var mappingFactor:PsykoParameter;
 		private var mappingFunction:PsykoParameter;
@@ -29,11 +35,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function SizeDecorator()
 		{
 			super();
-			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed","Pressure","Automatic","Multiply","Add"]);
-			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,"Factor",0,1,0,10);
-			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,"Mapping",0,["Linear","Quadratic In","Quadratic InOut","Quadratic Out","Quartic In","Quartic InOut","Quartic Out","Quintic In","Quintic InOut","Quintic Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
-			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,"Invert Mapping",0);
-			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,"Maximum Speed",20,1,100);
+			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_MODE,0,["Fixed","Speed","Pressure","Automatic","Multiply","Add"]);
+			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_FACTOR,0,1,0,1);
+			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_MAPPING,0,["Linear","Quadratic In","Quadratic InOut","Quadratic Out","Quartic In","Quartic InOut","Quartic Out","Quintic In","Quintic InOut","Quintic Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
+			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_INVERT_MAPPING,0);
+			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_MAXIMUM_SPEED,20,1,100);
 			
 			_parameters.push(mappingMode,mappingFactor,mappingFunction,invertMapping,maxSpeed );
 			

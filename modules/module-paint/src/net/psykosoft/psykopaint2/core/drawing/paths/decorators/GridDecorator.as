@@ -4,8 +4,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 
-	public class GridDecorator  extends AbstractPointDecorator
+	final public class GridDecorator  extends AbstractPointDecorator
 	{
+		public static const PARAMETER_CELL_WIDTH:String = "Cell Width";
+		public static const PARAMETER_CELL_HEIGHT:String = "Cell Height";
+		public static const PARAMETER_COLUMN_OFFSET:String = "Column Offset";
+		public static const PARAMETER_ROW_OFFSET:String = "Row Offset";
+		public static const PARAMETER_ANGLE_STEP:String = "Angle Step";
+		public static const PARAMETER_ANGLE_OFFSET:String = "Angle Offset";
+		
+		
 		private var stepX:PsykoParameter;
 		private var stepY:PsykoParameter;
 		private var offsetCol:PsykoParameter;
@@ -16,25 +24,38 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function GridDecorator( stepX:Number = 64, stepY:Number = 64, angleStep:Number = -1, angleOffset:Number = 0,  offsetCol:Number = 0, offsetRow:Number = 0)
 		{
 			super();
-			this.stepX       = new PsykoParameter( PsykoParameter.NumberParameter,"Cell Width",stepX,1,512);
-			this.stepY       = new PsykoParameter( PsykoParameter.NumberParameter,"Cell Height",stepX,1,512);
-			this.offsetCol   = new PsykoParameter( PsykoParameter.NumberParameter,"Column Offset",offsetCol,-512,512);
-			this.offsetRow   = new PsykoParameter( PsykoParameter.NumberParameter,"Row Offset",offsetRow,-512,512);
-			this.angleStep   = new PsykoParameter( PsykoParameter.AngleParameter,"Angle Step",angleStep,-1,360);
-			this.angleOffset = new PsykoParameter( PsykoParameter.AngleParameter,"Angle Offset",angleOffset,-360,360);
+			this.stepX       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_CELL_WIDTH,stepX,0,512);
+			this.stepY       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_CELL_HEIGHT,stepX,0,512);
+			this.offsetCol   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_COLUMN_OFFSET,offsetCol,-512,512);
+			this.offsetRow   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_ROW_OFFSET,offsetRow,-512,512);
+			this.angleStep   = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_ANGLE_STEP,angleStep,-1,360);
+			this.angleOffset = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_ANGLE_OFFSET,angleOffset,-360,360);
 			_parameters.push(this.stepX,this.stepY,this.angleStep,this.angleOffset,this.offsetCol, this.offsetRow);
 		}
 		
 		override public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
+			var sx:Number = stepX.numberValue;
+			var sy:Number = stepY.numberValue;
+			var col:Number = 1;
+			var row:Number = 1;
 			for ( var i:int = 0; i < points.length; i++ )
 			{
-				points[i].x = points[i].x - (points[i].x % stepX.numberValue) + 0.5 * stepX.numberValue;
-				points[i].y = points[i].y - (points[i].y % stepY.numberValue) + 0.5 * stepY.numberValue;
-				var col:Number = int(points[i].x / stepX.numberValue);
-				var row:Number = int(points[i].y / stepY.numberValue);
-				points[i].x += (row * offsetRow.numberValue) % stepX.numberValue;
-				points[i].y += (col * offsetCol.numberValue) % stepY.numberValue;
+				if ( sx > 0 ) 
+				{
+					points[i].x = points[i].x - (points[i].x % sx) + 0.5 * sx;
+					col = int(points[i].x / sx);
+				}
+				if ( sy > 0 ) 
+				{
+					points[i].y = points[i].y - (points[i].y % sy) + 0.5 * sy;
+					row = int(points[i].y / sy);
+				}
+				
+				if ( sx > 0 ) 
+					points[i].x += (row * offsetRow.numberValue) % sx;
+				if ( sy > 0 ) 
+					points[i].y += (col * offsetCol.numberValue) % sy;
 				
 				if ( angleStep.degrees > -1 ) points[i].angle = (angleStep.numberValue > 0 ? (points[i].angle - points[i].angle % angleStep.numberValue) : 0 ) + angleOffset.numberValue;
 				if ( i > 0 )

@@ -24,12 +24,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			var bitmapData : BitmapData = new BitmapData(size, size, false,0xff000000);
 			shp.graphics.beginFill(0xffffff);
 			
-			//shp.graphics.drawRect(4,4, size-8, size-8);
+			//tiny padding to allow for antialiasing:
+			shp.graphics.drawRect(1,1, size-2, size-2);
+			/*
 			shp.graphics.moveTo(size * 0.5,2);
 			shp.graphics.lineTo(size - 2,size * 0.5);
 			shp.graphics.lineTo(size * 0.5,size-2);
 			shp.graphics.lineTo(2,size * 0.5);
-			
+			*/
 			shp.graphics.endFill();
 			var scaleTransform:Matrix = new Matrix(); 
 			var mipLevel:int = 0; 

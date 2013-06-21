@@ -93,11 +93,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		override protected function createColorStrategy() : IColorStrategy
 		{
 			var strategy : PyramidMapTdsiStrategy = new PyramidMapTdsiStrategy(_canvasModel);
-			strategy.setBlendFactors(1,1);
+			//strategy.setBlendFactors(1,1);
 			return strategy;
 		}
 		
-		override protected function onPickColor( point : SamplePoint ) : void
+		override protected function onPickColor( point : SamplePoint, colorsRGBA:Vector.<Number> ) : void
 		{
 			
 		}

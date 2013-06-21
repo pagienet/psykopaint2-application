@@ -25,7 +25,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.errors.AbstractMethodError;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
-	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
 	
 	public class AbstractBrush extends EventDispatcher
 	{
@@ -82,8 +81,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_parameters = new Vector.<PsykoParameter>();
 			_shapes    = new PsykoParameter( PsykoParameter.IconListParameter, "Shapes",0,["basic"]);
 			
-			_opacity    = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Opacity",0.5,1,0,1);
-			_colorBlend = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Color Blending",0.5,1,0,1);
+		//	_opacity    = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Opacity",0.5,1,0,1);
+		//	_colorBlend = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Color Blending",0.5,1,0,1);
 			_sizeFactor = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Size Factor",0,1,0,1 );
 			
 			_shininess    = new PsykoParameter( PsykoParameter.NumberParameter, "Shininess",0.4,0,1);
@@ -91,7 +90,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_bumpiness = new PsykoParameter( PsykoParameter.NumberParameter, "Bumpyness",1,0,1 );
 			
 			
-			_parameters.push( _shapes, _opacity, _colorBlend, _sizeFactor);
+			_parameters.push( _shapes, _sizeFactor); //_opacity, _colorBlend, 
 
 			if (drawNormalsOrSpecular)
 				_parameters.push(_shininess,_glossiness,_bumpiness);
@@ -255,9 +254,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_renderInvalid = false;
 		}
 		
-		protected function onPickColor( point : SamplePoint ) : void
+		protected function onPickColor( point : SamplePoint, colorsRGBA:Vector.<Number> ) : void
 		{
-			_colorStrategy.getColors(point.x, point.y, _brushShape.size, _brushShape.size, point.colorsRGBA );
+			_colorStrategy.getColors(point, _brushShape.size, _brushShape.size, colorsRGBA );
 		}
 
 		protected function invalidateRender() : void
@@ -297,6 +296,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_type = value;
 		}
 
+		/*
 		public function setColorBlending(minColorBlendFactor : Number, maxColorBlendFactor : Number, minimumOpacity : Number, maximumOpacity : Number) : void
 		{
 			_colorBlend.lowerRangeValue = minColorBlendFactor;
@@ -304,7 +304,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_opacity.lowerRangeValue = minimumOpacity;
 			_opacity.upperRangeValue = maximumOpacity;
 		}
-
+		*/
 		public function setBrushSizeFactors(minSizeFactor : Number, maxSizeFactor : Number) : void
 		{
 			_sizeFactor.lowerRangeValue = minSizeFactor;

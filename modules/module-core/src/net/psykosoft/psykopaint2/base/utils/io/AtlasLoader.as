@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.base.utils.io
 {
 
-	import net.psykosoft.psykopaint2.base.utils.*;
-
 	import flash.display.BitmapData;
 
 	public class AtlasLoader

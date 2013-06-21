@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	
-	public class StationaryDecorator extends AbstractPointDecorator
+	final public class StationaryDecorator extends AbstractPointDecorator
 	{
 		
 		private var delay:PsykoParameter;

@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 			_loader.addEventListener( Event.COMPLETE, onBundledAssetsReady );
 		}
 
-		protected function registerBundledAsset( url:String, assetId:String, isBinary:Boolean = false ) {
+		protected function registerBundledAsset( url:String, assetId:String, isBinary:Boolean = false ):void {
 			if( isBinary ) _loader.registerAsset( url, assetId, BulkLoader.TYPE_BINARY );
 			else _loader.registerAsset( url, assetId );
 		}

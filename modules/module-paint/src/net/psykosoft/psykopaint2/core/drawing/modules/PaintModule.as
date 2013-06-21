@@ -18,7 +18,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
-	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -90,7 +92,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				<brush engine={BrushType.PENCIL} name="Pencil">
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<ColorDecorator>
-							<parameter id="Pick Color" path="pathengine.pointdecorator_0" value="1" showInUI="0" />
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_0" index="0" />
 						</ColorDecorator>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_1" index="1" />
@@ -100,6 +102,31 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					</pathengine>
 					<parameter id="Shapes" path="brush" index="0" list="pencil" showInUI="0"/>
 				</brush>
+
+				<brush engine={BrushType.SPRAY_CAN} name="Precision Test">
+					<parameter id="Bumpyness" path="brush" value="0" />
+					<parameter id="Size Factor" path="brush" value1="0" value2="1"/>
+					<parameter id="Shapes" path="brush" index="0" list="basic" showInUI="0"/>
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<GridDecorator active="0" > 
+							<parameter id={GridDecorator.PARAMETER_CELL_WIDTH}  path="pathengine.pointdecorator_0" value="64" />
+							<parameter id={GridDecorator.PARAMETER_CELL_HEIGHT}  path="pathengine.pointdecorator_0" value="64"/>
+							<parameter id={GridDecorator.PARAMETER_ANGLE_STEP}  path="pathengine.pointdecorator_0" value="0"/>
+							<parameter id={GridDecorator.PARAMETER_ANGLE_OFFSET}  path="pathengine.pointdecorator_0" value="0" showInUI="1"/>
+						</GridDecorator>
+						<SizeDecorator>
+							<parameter id={SizeDecorator.PARAMETER_MODE} path="pathengine.pointdecorator_1" index="0" />
+							<parameter id={SizeDecorator.PARAMETER_FACTOR} path="pathengine.pointdecorator_1" value1="0" value2="1" showInUI="1"/>
+
+						</SizeDecorator>
+						<ColorDecorator>
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_2" index="0" />
+							<parameter id={ColorDecorator.PARAMETER_COLOR_BLENDING}  path="pathengine.pointdecorator_2" value1="1" value2="1" showInUI="1" />
+							<parameter id={ColorDecorator.PARAMETER_OPACITY}  path="pathengine.pointdecorator_2" value1="1" value2="1" showInUI="1" />
+						</ColorDecorator>
+					</pathengine>
+				</brush>
+
 				<brush engine={BrushType.SPRAY_CAN} name="Pressure Pen">
 					<parameter id="Bumpyness" path="brush" value="0.02" showInUI="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="splat3,splat,line,basic,noisy" showInUI="1"/>
@@ -134,12 +161,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Test Property"  path="pathengine.pointdecorator_6" index="6" />
 						</ConditionalDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_7" value="0" />
-							<parameter id="Fixed Color"  path="pathengine.pointdecorator_7" value="1" />
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_7" index="1" />
 						</ColorDecorator>
 						<EndConditionalDecorator/>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_8" value="1" />
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_8" index="0" />
 						</ColorDecorator>
 						<EndConditionalDecorator/>
 						
@@ -173,7 +199,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Cell Height"  path="pathengine.pointdecorator_2" value="32"/>
 						</GridDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_3" value="1" />
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_3" index="0" />
 						</ColorDecorator>
 					</pathengine>
 				</brush>
@@ -190,8 +216,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" showInUI="1"/>
 						</SizeDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
-							<parameter id="Saturation"  path="pathengine.pointdecorator_1" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_1" index="0" />
+							<parameter id="Opacity"  path="pathengine.pointdecorator_1" showInUI="1"/>
+							<parameter id="Color Blending"  path="pathengine.pointdecorator_1" showInUI="1"/>
 						</ColorDecorator>
 						<SplatterDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_2" index="1" />
@@ -223,7 +250,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</StationaryDecorator>
 						<ColorDecorator>
 							<!-- pick color at current point -->
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_2" value="1" />
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_2" index="0" />
 						</ColorDecorator>
 						<SplatterDecorator>
 							<!-- randomize position -->
@@ -258,7 +285,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<parameter id="Shapes" path="brush" index="0" list="inkdots1,test,splat,line,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_0" index="0" />
 						</ColorDecorator>
 						<ConditionalDecorator>
 							<parameter id="Test Property"  path="pathengine.pointdecorator_1" index="0" />
@@ -327,7 +354,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_1" index="0" />
 						</ColorDecorator>
 						<CircularRotationDecorator>
 							<parameter id="Angle Adjustment"  path="pathengine.pointdecorator_2" value={90} />
@@ -342,18 +369,18 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						
 						<SpawnDecorator>
-							<parameter id="Multiples" value1="1" value2="4" path="pathengine.pointdecorator1" />
-							<parameter id="Maximum Offset" path="pathengine.pointdecorator_1" value="16" showInUI="1"/>
-							<parameter id="Offset Angle" path="pathengine.pointdecorator_1" value1="-180" value2="180"/>
+							<parameter id="Multiples" value1="1" value2="4" path="pathengine.pointdecorator0" />
+							<parameter id="Maximum Offset" path="pathengine.pointdecorator_0" value="16" showInUI="1"/>
+							<parameter id="Offset Angle" path="pathengine.pointdecorator_0" value1="-180" value2="180"/>
 						</SpawnDecorator>
 						<SizeDecorator>
 							<!-- Mapping drawing speed to size -->
-							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="0" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0.001" value2="0.6" showInUI="1"/>
-							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="7" showInUI="1"/>
+							<parameter id="Mode"  path="pathengine.pointdecorator_1" index="0" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_1" value1="0.001" value2="0.6" showInUI="1"/>
+							<parameter id="Mapping" path="pathengine.pointdecorator_1" value="7" showInUI="1"/>
 						</SizeDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="1" />
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_2" index="0" />
 						</ColorDecorator>
 						<!--
 						<SplatterDecorator>
@@ -373,11 +400,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Cell Height"  path="pathengine.pointdecorator_0" value="8"/>
 						</GridDecorator>
 						<SizeDecorator>
-							<parameter id="Mode"  path="pathengine.pointdecorator_0" index="0" />
-							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0.1" value2="0.1"/>
+							<parameter id="Mode"  path="pathengine.pointdecorator_1" index="0" />
+							<parameter id="Factor"  path="pathengine.pointdecorator_1" value1="0.1" value2="0.1"/>
 						</SizeDecorator>
 						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_1" value="1" />
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_2" index="0" />
 						</ColorDecorator>
 						<SpawnDecorator>
 							<parameter id="Multiples" value1="4"  value2="12" path="pathengine.pointdecorator_2"/>
@@ -412,18 +439,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					</pathengine>
 				</brush>
 				
-				<brush engine={BrushType.SPRAY_CAN} name="Precision Test">
-					<parameter id="Bumpyness" path="brush" value="0" />
-					<parameter id="Size Factor" path="brush" value1="1" value2="1"/>
-					<parameter id="Shapes" path="brush" index="0" list="dot" showInUI="0"/>
-					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
-						<parameter id="Output Step Size" path="pathengine" value="16"  />
-						<ColorDecorator>
-							<parameter id="Pick Color"  path="pathengine.pointdecorator_0" value="0" />
-							<parameter id="Fixed Color"  path="pathengine.pointdecorator_0" value="1" />
-					</ColorDecorator>
-					</pathengine>
-				</brush>
+				
 			</brushkits>
 
 		private var _canvasRect : Rectangle;

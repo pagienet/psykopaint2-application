@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	
 	
-	public class ConditionalDecorator extends AbstractPointDecorator
+	final public class ConditionalDecorator extends AbstractPointDecorator
 	{
 		private var testProperty:PsykoParameter;
 		private var speedThreshold:PsykoParameter;

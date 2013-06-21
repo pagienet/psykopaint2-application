@@ -157,6 +157,8 @@ import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 
 			// Angle.
 			else if( parameterType == PsykoParameter.AngleParameter ) {
+				//sorry, but unfortunately knob is pretty unusable right now, replaced it with regular slider
+				/*
 				var knob:Knob = new Knob( this );
 				knob.value = _parameter.degrees;
 				knob.minimum = _parameter.minLimit;
@@ -165,6 +167,17 @@ import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 				knob.draw();
 				positionUiElement( knob as DisplayObject, 0, -20 );
 				_uiElements.push( knob );
+				*/
+				slider = new SbSlider();
+				slider.minValue = _parameter.minLimit;
+				slider.maxValue = _parameter.maxLimit;
+				slider.value =  _parameter.degrees;
+				slider.labelMode = SbRangedSlider.LABEL_DEGREES;
+				slider.addEventListener( Event.CHANGE, onSliderChanged );
+				slider.setWidth ( 276 );
+				positionUiElement( slider );
+				addChild( slider );
+				_uiElements.push( slider );
 			}
 
 			// Combo box.

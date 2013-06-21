@@ -61,7 +61,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		override protected function createColorStrategy() : IColorStrategy
 		{
 			var strategy : PyramidMapTdsiStrategy = new PyramidMapTdsiStrategy(_canvasModel);
-			strategy.setBlendFactors(.7,1);
+			//strategy.setBlendFactors(.7,1);
 			return strategy;
 		}
 

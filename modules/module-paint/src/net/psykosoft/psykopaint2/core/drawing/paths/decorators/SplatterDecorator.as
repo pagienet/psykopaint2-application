@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 
-	public class SplatterDecorator extends AbstractPointDecorator
+	final public class SplatterDecorator extends AbstractPointDecorator
 	{
 		private var minOffset:PsykoParameter;
 		private var splatFactor:PsykoParameter;
@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			this.minOffset   	  = new PsykoParameter( PsykoParameter.NumberParameter,"Minimum Offset",minOffset,0,64);
 			this.offsetAngleRange = new PsykoParameter( PsykoParameter.AngleParameter,"Offset Angle Range",offsetAngleRange,0,180);
 			this.sizeFactor 	  = new PsykoParameter( PsykoParameter.NumberParameter,"Size Factor",sizeFactor,0,2);
-			_parameters.push(mappingMode, this.splatFactor,this.minOffset,this.offsetAngleRange,this.sizeFactor );
+			_parameters.push(mappingMode,mappingFunction, this.splatFactor,this.minOffset,this.offsetAngleRange,this.sizeFactor );
 			
 			rng = new LCG( Math.random() * 0xffffff );
 		}
