@@ -99,8 +99,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			}
 		}
 		
-		public function getColors(point:SamplePoint, radius:Number, sampleSize : Number, targets : Vector.<Number>) : void
+		public function getColors(point:SamplePoint, radius:Number, sampleSize : Number) : void
 		{
+			var targets : Vector.<Number> = point.colorsRGBA;
 			var j:int = 0;
 			for ( var i:int = 0; i < 4; i++ )
 			{

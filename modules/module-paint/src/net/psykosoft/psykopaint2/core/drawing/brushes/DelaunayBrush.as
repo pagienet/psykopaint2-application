@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			return strategy;
 		}
 		
-		override protected function onPickColor( point : SamplePoint, colorsRGBA:Vector.<Number> ) : void
+		override protected function onPickColor( point : SamplePoint, pickRadius:Number ) : void
 		{
 			
 		}

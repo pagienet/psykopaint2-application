@@ -106,7 +106,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				<brush engine={BrushType.SPRAY_CAN} name="Precision Test">
 					<parameter id="Bumpyness" path="brush" value="0" />
 					<parameter id="Size Factor" path="brush" value1="0" value2="1"/>
-					<parameter id="Shapes" path="brush" index="0" list="basic" showInUI="0"/>
+					<parameter id="Shapes" path="brush" index="0" list="basic"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<GridDecorator active="0" > 
 							<parameter id={GridDecorator.PARAMETER_CELL_WIDTH}  path="pathengine.pointdecorator_0" value="64" />
@@ -123,6 +123,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_2" index="0" />
 							<parameter id={ColorDecorator.PARAMETER_COLOR_BLENDING}  path="pathengine.pointdecorator_2" value1="1" value2="1" showInUI="1" />
 							<parameter id={ColorDecorator.PARAMETER_OPACITY}  path="pathengine.pointdecorator_2" value1="1" value2="1" showInUI="1" />
+							<parameter id={ColorDecorator.PARAMETER_PICK_RADIUS}  path="pathengine.pointdecorator_2" value1="1" value2="1" showInUI="1" />
 						</ColorDecorator>
 					</pathengine>
 				</brush>
@@ -315,7 +316,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				</brush>
 				<brush engine={BrushType.SHATTER} name="Shatter">
 					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic" showInUI="1"/>
-					<parameter id="Opacity" path="brush" value1="0.5" value2="0.75" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<parameter id="Output Step Size" path="pathengine" value="3"/>
 						<SizeDecorator>
@@ -324,11 +324,15 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="0.0" value2="0.9"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
+						<ColorDecorator>
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_1" index="1" />
+							<parameter id={ColorDecorator.PARAMETER_OPACITY} path="pathengine.pointdecorator_1" value1="0.5" value2="0.75" showInUI="1"/>
+					
+						</ColorDecorator>
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.SHATTER} name="Grid Shatter">
 					<parameter id="Shapes" path="brush" index="0" list="basic" showInUI="1"/>
-					<parameter id="Opacity" path="brush" value1="1" value2="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<parameter id="Output Step Size" path="pathengine" value="3"/>
 						<SizeDecorator>
@@ -337,11 +341,14 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Factor"  path="pathengine.pointdecorator_0" value1="1" value2="1"/>
 						</SizeDecorator>
 						<GridDecorator> 
-							<parameter id="Cell Width"  path="pathengine.pointdecorator_1" value="44" />
-							<parameter id="Cell Height"  path="pathengine.pointdecorator_1" value="44"/>
+							<parameter id="Cell Width"  path="pathengine.pointdecorator_1" value="64" />
+							<parameter id="Cell Height"  path="pathengine.pointdecorator_1" value="64"/>
 							<parameter id="Angle Step"  path="pathengine.pointdecorator_1" value="90"/>
-							<parameter id="Angle Offset"  path="pathengine.pointdecorator_1" value="45"/>
 						</GridDecorator>
+						<ColorDecorator>
+							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_1" index="1" />
+							<parameter id={ColorDecorator.PARAMETER_OPACITY} path="pathengine.pointdecorator_1" value1="0.5" value2="0.75" showInUI="1"/>
+						</ColorDecorator>
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Circular">

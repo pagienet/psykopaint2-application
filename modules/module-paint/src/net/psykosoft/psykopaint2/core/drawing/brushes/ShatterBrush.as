@@ -144,11 +144,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			
 			appendVO.point = point;
+			/*
 			point.colorsRGBA[3] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
 			point.colorsRGBA[7] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
 			point.colorsRGBA[11] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
 			point.colorsRGBA[15] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
-			
+			*/
 			_brushMesh.append( appendVO );
 			
 			

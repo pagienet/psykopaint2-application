@@ -71,8 +71,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 		}
 		
 		
-		public function getColors(p:SamplePoint, radius : Number, sampleSize:Number, target : Vector.<Number> ) : void
+		public function getColors(p:SamplePoint, radius : Number, sampleSize:Number  ) : void
 		{
+			var target: Vector.<Number> = p.colorsRGBA;
 			var angle: Number = Math.PI *0.5;
 			var baseAngle:Number = 1.25 * Math.PI;
 			//1,0,-1,0

@@ -51,8 +51,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected var _firstPoint : Boolean;
 		
 		protected var _parameters:Vector.<PsykoParameter>;
-		protected var _opacity:PsykoParameter;
-		protected var _colorBlend:PsykoParameter;
+		//protected var _opacity:PsykoParameter;
+		//protected var _colorBlend:PsykoParameter;
 		protected var _sizeFactor:PsykoParameter;
 		protected var _shininess:PsykoParameter;
 		protected var _glossiness:PsykoParameter;
@@ -254,9 +254,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_renderInvalid = false;
 		}
 		
-		protected function onPickColor( point : SamplePoint, colorsRGBA:Vector.<Number> ) : void
+		protected function onPickColor( point : SamplePoint, pickRadius:Number ) : void
 		{
-			_colorStrategy.getColors(point, _brushShape.size, _brushShape.size, colorsRGBA );
+			_colorStrategy.getColors(point, _brushShape.size * Math.SQRT1_2 * pickRadius, _brushShape.size * 0.5 );
 		}
 
 		protected function invalidateRender() : void

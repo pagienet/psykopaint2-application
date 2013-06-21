@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 	{
 		function getColor( x:Number, y:Number, size : Number, target :  Vector.<Number>, targetIndexMask:int = 15) : void;
 		
-		function getColors(point:SamplePoint, radius : Number, sampleSize : Number, target :Vector.<Number>) : void;
+		function getColors(point:SamplePoint, radius : Number, sampleSize : Number) : void;
 		
 		
 		//function setBlendFactors(colorBlendFactor : Number, alphaBlendFactor : Number) : void;

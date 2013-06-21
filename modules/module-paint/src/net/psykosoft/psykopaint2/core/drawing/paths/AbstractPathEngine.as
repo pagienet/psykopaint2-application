@@ -73,17 +73,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public function addFirstPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0):void
 		{
 			clear();
-			addPoint(x, y, pressure, penButtonState, true);
+			addPoint(x, y, pressure, penButtonState, true, true);
 		}
 		
-		public function addPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0, force:Boolean = false ):Boolean
+		public function addPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0, force:Boolean = false, first:Boolean = false ):Boolean
 		{
 			if ( !force && nextIndex > 0 && _sampledPoints[nextIndex-1].x == x && _sampledPoints[nextIndex-1].y == y) 
 			{
 				return false;
 			}
 				
-			_sampledPoints[nextIndex++] = PathManager.getSamplePoint( x,y, 0, 0, 0, pressure, penButtonState );
+			_sampledPoints[nextIndex++] = PathManager.getSamplePoint( x,y, 0, 0, 0, pressure, penButtonState, null, first );
 			return true;
 		}
 		

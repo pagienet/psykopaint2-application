@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			return new PyramidMapTdsiStrategy(_canvasModel);
 		}
 
-		override protected function onPickColor( point : SamplePoint, colorsRGBA:Vector.<Number> ) : void
+		override protected function onPickColor( point : SamplePoint, pickRadius:Number ) : void
 		{
 			
 			var minSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.lowerRangeValue);
@@ -76,7 +76,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			else if (rsize < minSize) rsize = minSize;
 			
 			//_colorStrategy.setBlendFactors(_firstPoint ? 1 : rng.getNumber(_colorBlend.lowerRangeValue, _colorBlend.lowerRangeValue + (_colorBlend.upperRangeValue - _colorBlend.lowerRangeValue) * (1 - Math.min(1, point.size))), rng.getNumber(_opacity.lowerRangeValue, _opacity.upperRangeValue));
-			_colorStrategy.getColors(point, rsize * Math.SQRT1_2, rsize* 0.5, colorsRGBA);
+			_colorStrategy.getColors(point, rsize * Math.SQRT1_2 * pickRadius, rsize* 0.5);
 
 		}
 
