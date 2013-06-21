@@ -72,7 +72,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function WaterColorBrush()
 		{
 			super(false);
-			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.5, 0, 1);
+			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.5, 7.5, 10);
 			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter, "Gravity influence", 0.1, 0, .3);
 			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, "Viscosity", .2, 0, 1);
 			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, "Drag", .1, 0, .2);
@@ -229,7 +229,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_velocityPressureFieldBackBuffer = tmp;
 		}
 
-		public function applySlope() : void
+		private function applySlope() : void
 		{
 			var gravity : Vector3D = AccelerometerManager.gravityVector;
 			_applySlope.surfaceRelief = _surfaceRelief.numberValue;

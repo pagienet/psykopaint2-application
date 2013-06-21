@@ -83,6 +83,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private const brushKitData:XML = 
 			<brushkits>
 				<brush engine={BrushType.WATER_COLOR} name="Water Color">
+					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
+					<parameter id="Pigment staining" path="brush" value="5.5" showInUI="1"/>
+					<parameter id="Pigment granulation" path="brush" value=".81" showInUI="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="wet,basic" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 				</brush>
