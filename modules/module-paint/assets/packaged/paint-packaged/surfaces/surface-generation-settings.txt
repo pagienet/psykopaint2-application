@@ -1,0 +1,3 @@
+Canvas:
+png2surface.exe -n canvas_NRM_1024.png -s canvas_SPEC_1024.png -o canvas_normal_specular_1024.surf -ms .25
+png2surface.exe -n canvas_NRM_2048.png -s canvas_SPEC_2048.png -o canvas_normal_specular_2048.surf -ms .25

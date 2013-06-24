@@ -2,6 +2,9 @@ package net.psykosoft.psykopaint2.paint.views.pick.surface
 {
 
 	import flash.display.BitmapData;
+	import flash.utils.ByteArray;
+
+	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -17,7 +20,7 @@ public class PickASurfaceSubNavViewMediator extends MediatorBase
 		[Inject]
 		public var requestSurfaceImageSetSignal:RequestSurfaceImageSetSignal;
 
-		private var _loader:BitmapLoader;
+		private var _loader:BinaryLoader;
 
 		override public function initialize():void {
 
@@ -52,12 +55,12 @@ public class PickASurfaceSubNavViewMediator extends MediatorBase
 		}
 
 		private function pickSurfaceByIndex( index:uint ):void {
-			_loader = new BitmapLoader();
-			_loader.loadAsset( "/paint-packaged/surfaces/canvas-height-specular" + index + ".png", onSurfaceLoaded );
+			_loader = new BinaryLoader();
+			_loader.loadAsset( "/paint-packaged/surfaces/canvas-height-specular" + index + ".atf", onSurfaceLoaded );
 		}
 
-		private function onSurfaceLoaded( bmd:BitmapData ):void {
-			requestSurfaceImageSetSignal.dispatch( bmd );
+		private function onSurfaceLoaded( byteArray:ByteArray ):void {
+			requestSurfaceImageSetSignal.dispatch( byteArray );
 			_loader.dispose();
 			_loader = null;
 		}

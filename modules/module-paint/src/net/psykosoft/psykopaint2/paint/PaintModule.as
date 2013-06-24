@@ -3,6 +3,9 @@ package net.psykosoft.psykopaint2.paint
 
 	import flash.display.BitmapData;
 	import flash.events.Event;
+	import flash.utils.ByteArray;
+
+	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 
@@ -22,7 +25,7 @@ package net.psykosoft.psykopaint2.paint
 	{
 		private var _coreModule:CoreModule;
 		private var _paintConfig:PaintConfig;
-		private var _loader:BitmapLoader;
+		private var _loader:BinaryLoader;
 
 		public function PaintModule( core:CoreModule = null ) {
 			super();
@@ -79,17 +82,18 @@ package net.psykosoft.psykopaint2.paint
 
 		private function onViewsReady():void {
 			// Load default surface.
-			_loader = new BitmapLoader();
-			_loader.loadAsset( "/paint-packaged/surfaces/canvas-height-specular0.png", onDefaultSurfaceLoaded );
+			_loader = new BinaryLoader();
+			var size : int = stage.stageWidth;
+			_loader.loadAsset( "/paint-packaged/surfaces/canvas_normal_specular_" + size + ".surf", onDefaultSurfaceLoaded );
 		}
 
-		private function onDefaultSurfaceLoaded( bmd:BitmapData ):void {
+		private function onDefaultSurfaceLoaded( byteArray:ByteArray ):void {
 
 			_loader.dispose();
 			_loader = null;
 
 			// Set default surface.
-			_paintConfig.injector.getInstance( RequestSurfaceImageSetSignal ).dispatch( bmd );
+			_paintConfig.injector.getInstance( RequestSurfaceImageSetSignal ).dispatch( byteArray );
 
 			if( isStandalone ) {
 

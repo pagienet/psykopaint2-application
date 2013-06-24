@@ -1,14 +1,13 @@
 package net.psykosoft.psykopaint2.paint.signals
 {
+	import flash.utils.ByteArray;
 
-	import flash.display.BitmapData;
+	import org.osflash.signals.Signal;
 
-	import net.psykosoft.psykopaint2.base.robotlegs.signals.TracingSignal;
-
-	public class RequestSurfaceImageSetSignal extends TracingSignal
+	public class RequestSurfaceImageSetSignal extends Signal
 	{
 		public function RequestSurfaceImageSetSignal() {
-			super( BitmapData );
+			super( ByteArray );
 		}
 	}
 }
