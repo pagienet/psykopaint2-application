@@ -32,6 +32,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static var STROKE_ENDED : String = "strokeEnded";
 
 		public static var brushShapeLibrary:BrushShapeLibrary;
+
+		public static const PARAMETER_SHAPES : String = "Shapes";
+		public static const PARAMETER_SIZE_FACTOR : String = "Size Factor";
+		public static const PARAMETER_SHININESS : String = "Shininess";
+		public static const PARAMETER_GLOSSINESS : String = "Glossiness";
+		public static const PARAMETER_BUMPYNESS : String = "Bumpyness";
+
 		
 		protected var _canvasModel : CanvasModel;
 		protected var _view : DisplayObject;
@@ -79,15 +86,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_depthStencil = useDepthStencil;
 			_incremental = incremental;
 			_parameters = new Vector.<PsykoParameter>();
-			_shapes    = new PsykoParameter( PsykoParameter.IconListParameter, "Shapes",0,["basic"]);
+			_shapes    = new PsykoParameter( PsykoParameter.IconListParameter, PARAMETER_SHAPES,0,["basic"]);
 			
 		//	_opacity    = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Opacity",0.5,1,0,1);
 		//	_colorBlend = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Color Blending",0.5,1,0,1);
-			_sizeFactor = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Size Factor",0,1,0,1 );
+			_sizeFactor = new PsykoParameter( PsykoParameter.NumberRangeParameter, PARAMETER_SIZE_FACTOR,0,1,0,1 );
 			
-			_shininess    = new PsykoParameter( PsykoParameter.NumberParameter, "Shininess",0.4,0,1);
-			_glossiness = new PsykoParameter( PsykoParameter.NumberParameter, "Glossiness",0.4,0.01,1);
-			_bumpiness = new PsykoParameter( PsykoParameter.NumberParameter, "Bumpyness",1,0,1 );
+			_shininess    = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_SHININESS,0.4,0,1);
+			_glossiness = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_GLOSSINESS,0.4,0.01,1);
+			_bumpiness = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_BUMPYNESS,1,0,1 );
 			
 			
 			_parameters.push( _shapes, _sizeFactor); //_opacity, _colorBlend, 
@@ -254,12 +261,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_renderInvalid = false;
 		}
 		
-		protected function onPickColor( point : SamplePoint, pickRadius:Number ) : void
+		protected function onPickColor( point : SamplePoint, pickRadius:Number, smoothFactor:Number ) : void
 		{
 			
 			appendVO.size =  _brushShape.size * pickRadius;
 			appendVO.point = point;
-			_colorStrategy.getColorsByVO( appendVO,  _brushShape.size* 0.5);
+			_colorStrategy.getColorsByVO( appendVO,  _brushShape.size* 0.5*smoothFactor);
 			
 			
 			//_colorStrategy.getColors(point, _brushShape.size * Math.SQRT1_2 * pickRadius, _brushShape.size * 0.5 );

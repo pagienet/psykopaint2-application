@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_COLOR_BLENDING:String = "Color Blending";
 		public static const PARAMETER_OPACITY:String = "Opacity";
 		public static const PARAMETER_PICK_RADIUS:String = "Color Pick Radius";
+		public static const PARAMETER_SMOOTH_FACTOR:String = "Color Smooth Factor";
 		
 		
 		private var colorMode:PsykoParameter;
@@ -31,6 +32,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var colorBlending:PsykoParameter;
 		private var brushOpacity:PsykoParameter;
 		private var pickRadius:PsykoParameter;
+		private var smoothFactor:PsykoParameter;
 		
 		private var rng:LCG;
 		private var cm:ColorMatrix;
@@ -47,9 +49,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			colorBlending  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_COLOR_BLENDING,0.7,0.7,0, 1);
 			brushOpacity  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_OPACITY,0.9,0.9,0,1);
 			pickRadius  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_PICK_RADIUS,1,1,0,1);
+			smoothFactor  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_SMOOTH_FACTOR,1,1,0,1);
 			
 			
-			_parameters.push(colorMode, presetColor, saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,pickRadius);
+			_parameters.push(colorMode, presetColor, saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,pickRadius,smoothFactor);
 			rng = new LCG(Math.random() * 0xffffffff);
 			cm = new ColorMatrix();
 		}
@@ -84,7 +87,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				
 				if ( mode == 0 )
 				{
-					if ( cb.onPickColor ) cb.onPickColor.apply(cb.callbackObject, [points[i], rng.getNumber(pickRadius.lowerRangeValue,pickRadius.upperRangeValue)] );
+					if ( cb.onPickColor ) cb.onPickColor.apply(cb.callbackObject, [points[i], rng.getNumber(pickRadius.lowerRangeValue,pickRadius.upperRangeValue), rng.getNumber(smoothFactor.lowerRangeValue,smoothFactor.upperRangeValue)] );
 				} else {
 					prgba[0] = prgba[4] = prgba[8] = prgba[12] = r;
 					prgba[1] = prgba[5] = prgba[9] = prgba[13] = g;
