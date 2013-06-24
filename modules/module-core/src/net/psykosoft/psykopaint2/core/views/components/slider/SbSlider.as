@@ -35,6 +35,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			_xRange = _maxX - _minX;
 			valueLabel.selectable = valueLabel.mouseEnabled = false;
 			handleView.addEventListener( MouseEvent.MOUSE_DOWN, onHandleMouseDown );
+			bgView.addEventListener( MouseEvent.MOUSE_DOWN, onBgMouseDown );
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
@@ -162,6 +163,11 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function onHandleMouseDown( event:MouseEvent ):void {
 			_mouseIsDown = true;
 			_clickOffset = handleView.x - mouseX;
+		}
+
+		private function onBgMouseDown( event:MouseEvent ):void {
+			_clickOffset = -handleView.width/2;
+			updateHandlePositionFromMouse();
 		}
 
 		private function onAddedToStage( event:Event ):void {
