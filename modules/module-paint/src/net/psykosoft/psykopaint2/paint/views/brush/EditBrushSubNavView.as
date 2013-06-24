@@ -190,6 +190,7 @@ import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 				for( i = 0; i < len; ++i ) {
 					combobox.addItem( { label: list[ i ] } );
 				}
+				combobox.selectedIndex = _parameter.index;
 				addChild( combobox );
 				combobox.addEventListener( Event.CHANGE, onComboBoxChanged );
 				positionUiElement( combobox as DisplayObject, 0, -17 );
