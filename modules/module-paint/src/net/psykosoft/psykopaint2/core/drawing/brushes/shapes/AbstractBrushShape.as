@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			_scaleFactor = scaleFactor;
 			_context = context3D;
 			size = 64;
-			_variationFactors = Vector.<Number>([1,1,1,1]); //cols,rows,u_step,v_step
+			_variationFactors = Vector.<Number>([1,1,1,1,Math.atan2(1,1)]); //cols,rows,u_step,v_step,rectangle diagonal angle
 			_rotationRange = Math.PI;
 			_YUVWeights = Vector.<Number>([1,1,1]);
 		}

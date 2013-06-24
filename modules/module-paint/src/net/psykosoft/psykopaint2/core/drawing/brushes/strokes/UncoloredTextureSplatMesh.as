@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (_numVertices >= 65531) return;
 			
 			var uvBounds:Rectangle = appendVO.uvBounds;
-			var baseAngle : Number = Math.atan2(uvBounds.height, uvBounds.width);
+			var baseAngle : Number = appendVO.diagonalAngle;//Math.atan2(uvBounds.height, uvBounds.width);
 			var halfSize : Number = appendVO.size * .5;
 			var angle : Number = appendVO.point.angle;
 			var cos1 : Number =  halfSize * Math.cos(baseAngle + angle);

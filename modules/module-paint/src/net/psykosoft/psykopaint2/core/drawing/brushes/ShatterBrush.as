@@ -81,7 +81,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			uvBounds.x = int(rng.getNumber(0,shapeVariations[0])) * shapeVariations[2];
 			uvBounds.y = int(rng.getNumber(0,shapeVariations[1])) * shapeVariations[3];
 			
-			var baseAngle:Number = Math.atan2(uvBounds.height,uvBounds.width);
+			var baseAngle:Number = appendVO.diagonalAngle; //Math.atan2(uvBounds.height,uvBounds.width);
 			var halfSize : Number = rsize * _canvasScaleW * Math.SQRT2 * 0.5;
 			
 			//var halfSize : Number = rsize * _canvasScaleW*.5;

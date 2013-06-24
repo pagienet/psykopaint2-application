@@ -159,7 +159,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			shapeVariations = _brushShape.variationFactors;
 			appendVO.uvBounds.width = shapeVariations[2];
 			appendVO.uvBounds.height = shapeVariations[3];
-
+			appendVO.diagonalAngle = shapeVariations[4];
 			rotationRange = _brushShape.rotationRange;
 		}
 		
