@@ -256,7 +256,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		protected function onPickColor( point : SamplePoint, pickRadius:Number ) : void
 		{
-			_colorStrategy.getColors(point, _brushShape.size * Math.SQRT1_2 * pickRadius, _brushShape.size * 0.5 );
+			
+			appendVO.size =  _brushShape.size * pickRadius;
+			appendVO.point = point;
+			_colorStrategy.getColorsByVO( appendVO,  _brushShape.size* 0.5);
+			
+			
+			//_colorStrategy.getColors(point, _brushShape.size * Math.SQRT1_2 * pickRadius, _brushShape.size * 0.5 );
 		}
 
 		protected function invalidateRender() : void

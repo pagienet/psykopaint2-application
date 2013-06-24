@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 {
 	import flash.utils.ByteArray;
 	
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.StrokeAppendVO;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 
 	// todo: allow setting colour, but for now it's just a test class
@@ -111,6 +112,20 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 				targets[j++] = _a;// * _brushAlpha;
 			}
 		}
+		
+		public function getColorsByVO( appendVO:StrokeAppendVO, sampleSize : Number) : void
+		{
+			var targets : Vector.<Number> = appendVO.point.colorsRGBA;
+			var j:int = 0;
+			for ( var i:int = 0; i < 4; i++ )
+			{
+				targets[j++] = _r;// * _brushAlpha;
+				targets[j++] = _g;// * _brushAlpha;
+				targets[j++] = _b;// * _brushAlpha;
+				targets[j++] = _a;// * _brushAlpha;
+			}
+		}
+		
 		
 		/*
 		public function setBlendFactors(colorBlendFactor : Number, alphaBlendFactor : Number) : void

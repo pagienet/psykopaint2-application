@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes.color
 {
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.StrokeAppendVO;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 
 	public interface IColorStrategy
@@ -8,6 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 		
 		function getColors(point:SamplePoint, radius : Number, sampleSize : Number) : void;
 		
+		function getColorsByVO(appendVO:StrokeAppendVO, sampleSize : Number) : void;
 		
 		//function setBlendFactors(colorBlendFactor : Number, alphaBlendFactor : Number) : void;
 			

@@ -38,8 +38,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			var sin1 : Number =  -halfSize * Math.sin(  baseAngle + angle);
 			var cos2 : Number =   halfSize * Math.cos( -baseAngle + angle);
 			var sin2 : Number =  -halfSize * Math.sin( -baseAngle + angle);
-			//var rotCos : Number = Math.cos(angle);
-			//var rotSin : Number = Math.sin(angle);
 			
 			var point:SamplePoint = appendVO.point;
 			var pnx:Number = point.normalX;
@@ -54,48 +52,31 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if ((v = pny - m) < _minY) _minY = v;
 			
 			var data:Vector.<Number> = _tmpData;
-			data[0] = pnx - cos1;
-			data[1] = pny - sin1;
-			data[2] = uvBounds.left;
-			data[3] = uvBounds.top;
-			/*
-			data[4] = rotCos;
-			data[5] = -rotSin;
-			data[6] = rotSin;
-			data[7] = rotCos;
-			*/
-			data[8] = pnx + cos2;
-			data[9] = pny + sin2;
-			data[10] = uvBounds.right;
-			data[11] = uvBounds.top;
-			/*
-			data[12] = rotCos;
-			data[13] = -rotSin;
-			data[14] = rotSin;
-			data[15] = rotCos;
-			*/
+			data[0]  = pnx - cos1;
+			data[1]  = pny - sin1;
+			data[8]  = pnx + cos2;
+			data[9]  = pny + sin2;
 			data[16] = pnx + cos1;
 			data[17] = pny + sin1;
-			data[18] = uvBounds.right;
-			data[19] = uvBounds.bottom;
-			/*
-			data[20] = rotCos;
-			data[21] = -rotSin;
-			data[22] = rotSin;
-			data[23] = rotCos;
-			*/
 			data[24] = pnx - cos2;
 			data[25] = pny - sin2;
-			data[26] = uvBounds.left;
-			data[27] = uvBounds.bottom;
-			/*
-			data[28] = rotCos;
-			data[29] = -rotSin;
-			data[30] = rotSin;
-			data[31] = rotCos;
-			*/
-			_fastBuffer.addInterleavedFloatsToVertices(data,_vIndex,8,4);
-			_fastBuffer.addInterleavedFloatsToVertices(appendVO.point.colorsRGBA,_vIndex+32,4,8);
+			
+			data[2]  = data[26] = uvBounds.left;
+			data[3]  = data[11] = uvBounds.top;
+			data[10] = data[18] = uvBounds.right;
+			data[19] = data[27] = uvBounds.bottom;
+			
+			//used by bump map:
+			var rotCos : Number = Math.cos(angle);
+			var rotSin : Number = Math.sin(angle);
+			data[4] = data[12] = data[20] = data[28] = rotCos;
+			data[5] = data[13] = data[21] = data[29] =-rotSin;
+			data[6] = data[14] = data[22] = data[30] = rotSin;
+			data[7] = data[15] = data[23] = data[31] = rotCos;
+			 
+			
+			_fastBuffer.addInterleavedFloatsToVertices( data,_vIndex,8,4);
+			_fastBuffer.addInterleavedFloatsToVertices( point.colorsRGBA,_vIndex+32,4,8);
 
 			_vIndex += 192;
 			_numVertices += 4;

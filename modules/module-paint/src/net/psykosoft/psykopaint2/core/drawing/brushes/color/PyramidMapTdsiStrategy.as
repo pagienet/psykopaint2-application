@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 {
 	import flash.display.BitmapData;
 	
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.StrokeAppendVO;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 
@@ -40,12 +41,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			var index:int = (targetIndexMask & 1) == 1 ? 0 : (targetIndexMask & 2) == 2 ? 4 : (targetIndexMask & 4) == 4 ? 8 : (targetIndexMask & 8) == 8 ? 12 : -1;
 			_canvasModel.pyramidMap.getRGB(x,y,size,tmpRGB );
 			
-			/*
-			var t1:Number = ( target[index] 	   += (tmpRGB[0] * _brushAlpha - target[index] )	    * _colorBlendFactor );
-			var t2:Number = ( target[int(index+1)] += (tmpRGB[1] * _brushAlpha - target[int(index+1)] ) * _colorBlendFactor );
-			var t3:Number = ( target[int(index+2)] += (tmpRGB[2] * _brushAlpha - target[int(index+2)] ) * _colorBlendFactor );
-			var t4:Number = ( target[int(index+3)] += (_brushAlpha - target[int(index+3)]) * _colorBlendFactor );
-			*/
 			var t1:Number = target[index] 	     = tmpRGB[0];
 			var t2:Number = target[int(index+1)] = tmpRGB[1]; 
 			var t3:Number = target[int(index+2)] = tmpRGB[2];
@@ -84,16 +79,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 				var px:Number = p.x + radius * Math.cos( baseAngle + i * angle + p.angle );
 				var py:Number = p.y + radius * Math.sin( baseAngle + i * angle + p.angle );
 				_canvasModel.pyramidMap.getRGB(px,py,sampleSize,tmpRGB);
-				/*
-				target[j] += (tmpRGB[0] * _brushAlpha - target[j]) * _colorBlendFactor;
-				j++;
-				target[j] += (tmpRGB[1] * _brushAlpha - target[j]) * _colorBlendFactor;
-				j++;
-				target[j] += (tmpRGB[2] * _brushAlpha - target[j]) * _colorBlendFactor;
-				j++;
-				target[j] +=  (_brushAlpha - target[j] ) * _colorBlendFactor;
-				j++;
-				*/
+				
 				target[j] = tmpRGB[0];
 				j++;
 				target[j] = tmpRGB[1];
@@ -104,20 +90,46 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 				j++;
 			}
 		}
-/*
-		private function updateColor(x : Number, y : Number, size : Number) : void
-		{
-			var channelScale : Number = 1/0xff;
-			var c : uint = _colorLookupMap.getPixel32(x, y, size);
-			var r : Number = ((c >> 16) & 0xff) * channelScale;
-			var g : Number = ((c >> 8) & 0xff) * channelScale;
-			var b : Number = (c & 0xff) * channelScale;
-
-			_currentR += (r - _currentR) * _colorBlendFactor;
-			_currentG += (g - _currentG) * _colorBlendFactor;
-			_currentB += (b - _currentB) * _colorBlendFactor;
 		
+		public function getColorsByVO(appendVO:StrokeAppendVO, sampleSize : Number) : void
+		{
+			var target: Vector.<Number> = appendVO.point.colorsRGBA;
+			
+			var baseAngle:Number = appendVO.diagonalAngle; 
+			var halfSize : Number = appendVO.size * Math.SQRT1_2;
+			var angle : Number = appendVO.point.angle;
+			var cos1 : Number =   halfSize * Math.cos(  baseAngle + angle);
+			var sin1 : Number =   halfSize * Math.sin(  baseAngle + angle);
+			var cos2 : Number =   halfSize * Math.cos( -baseAngle + angle);
+			var sin2 : Number =   halfSize * Math.sin( -baseAngle + angle);
+			
+			var px:Number = appendVO.point.x;
+			var py:Number = appendVO.point.y;
+			
+			_canvasModel.pyramidMap.getRGB(px - cos1,py - sin1,sampleSize,tmpRGB);
+			target[0] = tmpRGB[0];
+			target[1] = tmpRGB[1];
+			target[2] = tmpRGB[2];
+			target[3] = 1;
+			
+			_canvasModel.pyramidMap.getRGB(px + cos2,py + sin2,sampleSize,tmpRGB);
+			target[4] = tmpRGB[0];
+			target[5] = tmpRGB[1];
+			target[6] = tmpRGB[2];
+			target[7] = 1;
+			
+			_canvasModel.pyramidMap.getRGB(px + cos1,py + sin1,sampleSize,tmpRGB);
+			target[8] = tmpRGB[0];
+			target[9] = tmpRGB[1];
+			target[10] = tmpRGB[2];
+			target[11] = 1;
+			
+			_canvasModel.pyramidMap.getRGB(px - cos2,py - sin2,sampleSize,tmpRGB);
+			target[12] = tmpRGB[0];
+			target[13] = tmpRGB[1];
+			target[14] = tmpRGB[2];
+			target[15] = 1;
 		}
-*/
+
 	}
 }
