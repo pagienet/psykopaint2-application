@@ -309,18 +309,19 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private function checkGap():void {
 			// Decide scroller gaps according to the presence of side buttons.
 			if( leftBtnSide.visible && rightBtnSide.visible ) {
-				_scroller.leftGap = _scroller.rightGap = 150;
+				_scroller.leftGap =  60;
+				_scroller.rightGap = 210;
 			}
 			else if( leftBtnSide.visible && !rightBtnSide.visible ) {
-				_scroller.leftGap = 150;
-				_scroller.rightGap = 0;
+				_scroller.leftGap = 60;
+				_scroller.rightGap = 60;
 			}
 			else if( !leftBtnSide.visible && rightBtnSide.visible ) {
-				_scroller.leftGap = 0;
-				_scroller.rightGap = 150;
+				_scroller.leftGap = 10;
+				_scroller.rightGap = 210;
 			}
 			else {
-				_scroller.leftGap = _scroller.rightGap = 0;
+				_scroller.leftGap = _scroller.rightGap = 10;
 			}
 			_needGapCheck = false;
 		}
@@ -389,8 +390,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function invalidateContent():void {
 			_scroller.invalidateContent();
 			_scroller.x = 1024 / 2 - _scroller.minWidth / 2;
-			if( leftBtnSide.visible ) _scroller.x += leftBtnSide.width / 2;
-			else if( rightBtnSide.visible ) _scroller.x -= rightBtnSide.width / 2;
+
+			if( leftBtnSide.visible && rightBtnSide.visible && _centerButtons.length <= 5) {}
+			else if( leftBtnSide.visible && _centerButtons.length >= 6 ) _scroller.x += leftBtnSide.width / 2;
+			else if( rightBtnSide.visible && _centerButtons.length >= 6 ) _scroller.x -= rightBtnSide.width / 2;
+
 			_scroller.dock();
 		}
 
