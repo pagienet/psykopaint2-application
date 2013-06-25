@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.models
 		public static const HOME:String = "state/home";
 		public static const HOME_ON_EMPTY_EASEL:String = "state/home/on_empty_easel";
 		public static const HOME_ON_UNFINISHED_PAINTING:String = "state/home/on_unfinished_painting";
-		public static const HOME_ON_PAINTING:String = "state/home/on_painting";
+		public static const HOME_ON_FINISHED_PAINTING:String = "state/home/on_painting";
 		public static const SETTINGS:String = "state/home/settings";
 
 		public static const SETTINGS_WALLPAPER:String = "state/settings/wallpaper";

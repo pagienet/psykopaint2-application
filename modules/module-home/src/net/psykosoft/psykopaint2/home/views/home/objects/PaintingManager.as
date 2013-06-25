@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _view:View3D;
 		private var _snapPointForPainting:Dictionary;
 		private var _shadowForPainting:Dictionary;
+		private var _homePaintingIndex:int = 2;
 
 		private var _atlasXml:XML;
 
@@ -92,7 +93,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		public function createPaintingAtIndex( paintingBmd:BitmapData, frameType:String, index:uint ):void {
 
-			// Paintings.
+			// Update indices.
+			if( index <= _homePaintingIndex ) _homePaintingIndex++;
+
+			// Painting.
 			var painting:Painting = new Painting( paintingBmd, _view );
 
 			// Frame.
@@ -157,6 +161,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private function removePaintingAtIndex( index:uint ):void {
 			// TODO... remove painting, remove shadow, remove snap point
+		}
+
+		public function getHomePaintingIndex():uint {
+			return _homePaintingIndex;
 		}
 	}
 }

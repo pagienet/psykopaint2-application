@@ -63,6 +63,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var notifyPaintingDataRetrievedSignal:NotifyPaintingDataRetrievedSignal;
 
 		private var _waitingForPaintModeAfterZoomIn:Boolean;
+		private var _waitingForSnapShotOfHomeView:Boolean;
 
 		override public function initialize():void {
 
@@ -71,7 +72,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerView( view );
 			registerEnablingState( StateType.HOME );
 			registerEnablingState( StateType.HOME_ON_EMPTY_EASEL );
-			registerEnablingState( StateType.HOME_ON_PAINTING );
+			registerEnablingState( StateType.HOME_ON_UNFINISHED_PAINTING );
+			registerEnablingState( StateType.HOME_ON_FINISHED_PAINTING );
 			registerEnablingState( StateType.GOING_TO_PAINT );
 			registerEnablingState( StateType.SETTINGS );
 			registerEnablingState( StateType.SETTINGS_WALLPAPER );
@@ -133,6 +135,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			trace( this, "closest painting changed to index: " + paintingIndex );
 
+			// Variable.
+			var homePaintingIndex:uint = view.paintingManager.getHomePaintingIndex();
+
 			// Trigger settings state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState != StateType.SETTINGS && paintingIndex == 0 ) {
 				requestStateChange( StateType.SETTINGS );
@@ -145,8 +150,14 @@ package net.psykosoft.psykopaint2.home.views.home
 				return;
 			}
 
+			// Trigger continue painting state if closest to an in progress painting ( index > 1 and < homePaintingIndex ).
+			if( stateModel.currentState != StateType.HOME_ON_UNFINISHED_PAINTING && paintingIndex < homePaintingIndex ) {
+				requestStateChange( StateType.HOME_ON_UNFINISHED_PAINTING );
+				return;
+			}
+
 			// Restore home state if closest to home painting ( index 2 ).
-			if( stateModel.currentState != StateType.HOME && paintingIndex == 2 ) {
+			if( stateModel.currentState != StateType.HOME && paintingIndex == homePaintingIndex ) {
 				requestStateChange( StateType.HOME );
 				return;
 			}
@@ -155,7 +166,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: use proper names
 			// TODO: implement painting sub-nav
 			var temporaryPaintingNames:Array = [ "house on country side", "digital cowboy", "microcosmos", "patio", "jesse", "flower spots", "beautiful danger" ];
-			if( paintingIndex > 2 ) {
+			if( paintingIndex > homePaintingIndex ) {
 
 				// TODO: delete this bit
 				if( stateModel.currentState != StateType.HOME ) {
@@ -171,8 +182,6 @@ package net.psykosoft.psykopaint2.home.views.home
 //				notifyFocusedPaintingChangedSignal.dispatch( temporaryPaintingName );
 			}
 		}
-
-		private var _waitingForSnapShotOfHomeView:Boolean;
 
 		private function onCameraZoomComplete():void {
 
@@ -198,6 +207,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
 			view.createInProgressPaintings( data );
+			view.cameraController.jumpToSnapPointIndex( data.length + 2 ); // always snap at home: settings, empty easel, ...paintings, -->HOME<---
 		}
 
 		private function onCanvasSnapShot( bmd:BitmapData ):void {
