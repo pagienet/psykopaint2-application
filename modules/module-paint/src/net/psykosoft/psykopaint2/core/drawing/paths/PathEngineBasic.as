@@ -43,6 +43,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if ( isNaN(_lastAngle) && nextIndex > 1 ) _lastAngle = Math.atan2(sampledPoints[1].y - sampledPoints[0].y, sampledPoints[1].x - sampledPoints[0].x);
 			
 			if ( _lastPressure == -1 && sampledPoints[_lastOutputIndex].pressure != -1 ) _lastPressure = 0;
+			var speedSmoothingFactor:Number = _speedSmoothing.numberValue;
 			var pi:Number = Math.PI;
 			var outputStep:Number = _outputStepSize.numberValue;
 			for ( var i:int = _lastOutputIndex; i < nextIndex; i++ )
@@ -60,17 +61,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					if ( _accumulatedDistance >= outputStep )
 					{
 						
-						var speed:Number = _accumulatedDistance / outputStep;
-						if ( _lastSpeed > 0 )
-						{
-							if ( speed > 2 * _lastSpeed )
-							{
-								speed = 2 * _lastSpeed
-							} else if ( speed < 0.5 *_lastSpeed)
-							{
-								speed = 0.5 * _lastSpeed
-							}
-						}	
+						var speed:Number = ((1-speedSmoothingFactor) * ( _accumulatedDistance / outputStep) + speedSmoothingFactor * _lastSpeed )
 						
 					//	var stepSize:Number = outputStep / _accumulatedDistance;
 						

@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
+	import net.psykosoft.psykopaint2.core.drawing.paths.AbstractPathEngine;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
@@ -206,14 +207,14 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				</brush>
 
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
-					<parameter id={AbstractBrush.PARAMETER_SIZE_FACTOR} path="brush" value1="1" value2="2" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_SIZE_FACTOR} path="brush" value1="0" value2="1"/>
 					<parameter id={AbstractBrush.PARAMETER_BUMPYNESS} path="brush" value="0.25" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_SHAPES} path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
 							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.9" minValue="0" maxValue="10"/>
-							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="2" />
+							<parameter id="Mapping" path="pathengine.pointdecorator_0" index="1" showInUI="1"/>
 						</SizeDecorator>
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_COLOR_MODE}  path="pathengine.pointdecorator_1" index="0" />

@@ -85,9 +85,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 				target[j] = tmpRGB[1];
 				j++;
 				target[j] = tmpRGB[2];
-				j++;
-				target[j] =  1;
-				j++;
+				j+=2;
+				//target[j] =  1;
+				//j++;
 			}
 		}
 		
@@ -110,25 +110,25 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			target[0] = tmpRGB[0];
 			target[1] = tmpRGB[1];
 			target[2] = tmpRGB[2];
-			target[3] = 1;
+			//target[3] = 1;
 			
 			_canvasModel.pyramidMap.getRGB(px + cos2,py + sin2,sampleSize,tmpRGB);
 			target[4] = tmpRGB[0];
 			target[5] = tmpRGB[1];
 			target[6] = tmpRGB[2];
-			target[7] = 1;
+			//target[7] = 1;
 			
 			_canvasModel.pyramidMap.getRGB(px + cos1,py + sin1,sampleSize,tmpRGB);
 			target[8] = tmpRGB[0];
 			target[9] = tmpRGB[1];
 			target[10] = tmpRGB[2];
-			target[11] = 1;
+			//target[11] = 1;
 			
 			_canvasModel.pyramidMap.getRGB(px - cos2,py - sin2,sampleSize,tmpRGB);
 			target[12] = tmpRGB[0];
 			target[13] = tmpRGB[1];
 			target[14] = tmpRGB[2];
-			target[15] = 1;
+			//target[15] = 1;
 		}
 
 	}
