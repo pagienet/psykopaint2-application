@@ -166,6 +166,7 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 			currentItemView.visible = true;
 			currentItemView.y = 0;
 			currentItemView.scaleY = 1;
+			animationUpdate();
 		}
 
 		public function get selectedItem():SbListItemVO {

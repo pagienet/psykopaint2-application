@@ -60,8 +60,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					if( _parameters[i].id == parameterID )
 					{
 						_parameters[i].updateValueFromXML(parameter);
+						break;
 					}
 				}
+				if ( i == _parameters.length ) throw("AbstractPointDecorator: parameter id not found: "+parameterID);
 			}
 		}
 		

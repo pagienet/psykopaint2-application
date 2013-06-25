@@ -11,29 +11,48 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	
 	
-	public class ColorDecorator extends AbstractPointDecorator
+	final public class ColorDecorator extends AbstractPointDecorator
 	{
-		private var pickColor:PsykoParameter;
+		public static const PARAMETER_COLOR_MODE:String = "Color Mode";
+		public static const PARAMETER_COLOR:String = "Color";
+		public static const PARAMETER_SATURATION:String = "Saturation";
+		public static const PARAMETER_HUE:String = "Hue";
+		public static const PARAMETER_BRIGHTNESS:String = "Brightness";
+		public static const PARAMETER_COLOR_BLENDING:String = "Color Blending";
+		public static const PARAMETER_OPACITY:String = "Opacity";
+		public static const PARAMETER_PICK_RADIUS:String = "Color Pick Radius";
+		public static const PARAMETER_SMOOTH_FACTOR:String = "Color Smooth Factor";
+		
+		
+		private var colorMode:PsykoParameter;
 		private var saturationAdjustment:PsykoParameter;
 		private var hueAdjustment:PsykoParameter;
 		private var brightnessAdjustment:PsykoParameter;
 		private var presetColor:PsykoParameter;
-		private var fixedColor:PsykoParameter;
+		private var colorBlending:PsykoParameter;
+		private var brushOpacity:PsykoParameter;
+		private var pickRadius:PsykoParameter;
+		private var smoothFactor:PsykoParameter;
 		
 		private var rng:LCG;
 		private var cm:ColorMatrix;
+		private const lastRGBA:Vector.<Number> = new Vector.<Number>(16,true);
 		
 		public function ColorDecorator()
 		{
 			super();
-			pickColor  = new PsykoParameter( PsykoParameter.BooleanParameter,"Pick Color",1 );
-			fixedColor  = new PsykoParameter( PsykoParameter.BooleanParameter,"Fixed Color",0 );
-			presetColor = new PsykoParameter( PsykoParameter.IntListParameter,"Colors",0,[0xff000000,0xffffffff,0xff808080]);
-			saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,"Saturation",1,-3, 3);
-			hueAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,"Hue",0,-180, 180);
-			brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,"Brightness",0,-255, 255);
+			colorMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_COLOR_MODE,0,["Pick Color","Fixed Color"] );
+			presetColor = new PsykoParameter( PsykoParameter.IntListParameter,PARAMETER_COLOR,0,[0x000000,0xffffff,0x808080]);
+			saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_SATURATION,1,-3, 3);
+			hueAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_HUE,0,-180, 180);
+			brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_BRIGHTNESS,0,-255, 255);
+			colorBlending  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_COLOR_BLENDING,0.7,0.7,0, 1);
+			brushOpacity  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_OPACITY,0.9,0.9,0,1);
+			pickRadius  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_PICK_RADIUS,1,1,0,1);
+			smoothFactor  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_SMOOTH_FACTOR,1,1,0,1);
 			
-			_parameters.push(pickColor, fixedColor, presetColor, saturationAdjustment, hueAdjustment, brightnessAdjustment);
+			
+			_parameters.push(colorMode, presetColor, saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,pickRadius,smoothFactor);
 			rng = new LCG(Math.random() * 0xffffffff);
 			cm = new ColorMatrix();
 		}
@@ -50,33 +69,95 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				cm.adjustBrightness( brightnessAdjustment.numberValue );
 			}
 			
-			if ( fixedColor.booleanValue ) 
+			var mode:int = colorMode.index;
+			
+			if ( mode == 1 ) 
 			{
 				var c:uint = presetColor.intValue;
-				var a:Number = ((c >>> 24) & 0xff) / 255;
-				var r:Number = ((c >>> 16) & 0xff) / 255;
-				var g:Number = ((c >>> 8) & 0xff) / 255;
-				var b:Number = (c & 0xff) / 255;
+				var r:Number = (((c >>> 16) & 0xff) / 255);
+				var g:Number = (((c >>> 8) & 0xff) / 255);
+				var b:Number = ((c & 0xff) / 255);
 				
 			}
 			
 			var cb:PathManagerCallbackInfo =  manager.callbacks;
 			for ( var i:int = 0; i < points.length; i++ )
 			{
-				if (pickColor.booleanValue && cb.onPickColor ) 
+				var prgba:Vector.<Number> = points[i].colorsRGBA;
+				
+				if ( mode == 0 )
 				{
-					cb.onPickColor.apply(cb.callbackObject, [points[i]] );
-				} 
-				if ( fixedColor.booleanValue ) 
-				{
-					var rgba:Vector.<Number> = points[i].colorsRGBA;
-					rgba[0] = rgba[4] = rgba[8] = rgba[12] = r;
-					rgba[1] = rgba[5] = rgba[9] = rgba[13] = g;
-					rgba[2] = rgba[6] = rgba[10] = rgba[14] = b;
-					rgba[3] = rgba[7] = rgba[11] = rgba[15] = a;
+					if ( cb.onPickColor ) cb.onPickColor.apply(cb.callbackObject, [points[i], rng.getNumber(pickRadius.lowerRangeValue,pickRadius.upperRangeValue), rng.getNumber(smoothFactor.lowerRangeValue,smoothFactor.upperRangeValue)] );
+				} else {
+					prgba[0] = prgba[4] = prgba[8] = prgba[12] = r;
+					prgba[1] = prgba[5] = prgba[9] = prgba[13] = g;
+					prgba[2] = prgba[6] = prgba[10] = prgba[14] = b;
+					prgba[3] = prgba[7] = prgba[11] = prgba[15] = 1;
 				}
 				//TODO: this could be skipped if there is no color adjustment:
-				if ( applyMatrix ) cm.applyMatrixToVector( points[i].colorsRGBA );
+				if ( applyMatrix ) cm.applyMatrixToVector( prgba );
+				
+				var lrgba:Vector.<Number> = lastRGBA;
+				
+				if (points[i].first )
+				{
+					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					lrgba[0] = prgba[0] * alpha;
+					lrgba[1] = prgba[1] * alpha;
+					lrgba[2] = prgba[2] * alpha;
+					lrgba[3] = alpha;
+					
+					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					lrgba[4] = prgba[4] * alpha;
+					lrgba[5] = prgba[5] * alpha;
+					lrgba[6] = prgba[6] * alpha;
+					lrgba[7] = alpha;
+					
+					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					lrgba[8] = prgba[8] * alpha;
+					lrgba[9] = prgba[9] * alpha;
+					lrgba[10] = prgba[10] * alpha;
+					lrgba[11] = alpha;
+					
+					
+					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					lrgba[12] = prgba[12] * alpha;
+					lrgba[13] = prgba[13] * alpha;
+					lrgba[14] = prgba[14] * alpha;
+					lrgba[15] = alpha;
+				} else {
+					var alpha:Number = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					var blend:Number = rng.getNumber( colorBlending.lowerRangeValue, colorBlending.upperRangeValue );
+					lrgba[0] += (prgba[0] * alpha - lrgba[0] )  * blend ;
+					lrgba[1] += (prgba[1] * alpha - lrgba[1] ) * blend ;
+					lrgba[2] += (prgba[2] * alpha - lrgba[2] ) * blend ;
+					lrgba[3] += (alpha - lrgba[3]) * blend ;
+					
+					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					blend = rng.getNumber( colorBlending.lowerRangeValue, colorBlending.upperRangeValue );
+					lrgba[4] += (prgba[4] * alpha - lrgba[4] )  * blend ;
+					lrgba[5] += (prgba[5] * alpha - lrgba[5] ) * blend ;
+					lrgba[6] += (prgba[6] * alpha - lrgba[6] ) * blend ;
+					lrgba[7] += (alpha - lrgba[7]) * blend ;
+					
+					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					blend = rng.getNumber( colorBlending.lowerRangeValue, colorBlending.upperRangeValue );
+					lrgba[8] += (prgba[8] * alpha - lrgba[8] )  * blend ;
+					lrgba[9] += (prgba[9] * alpha - lrgba[9] ) * blend ;
+					lrgba[10] += (prgba[10] * alpha - lrgba[10] ) * blend ;
+					lrgba[11] += (alpha - lrgba[11]) * blend ;
+					
+					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					blend = rng.getNumber( colorBlending.lowerRangeValue, colorBlending.upperRangeValue );
+					lrgba[12] += (prgba[12] * alpha - lrgba[12] )  * blend ;
+					lrgba[13] += (prgba[13] * alpha - lrgba[13] ) * blend ;
+					lrgba[14] += (prgba[14] * alpha - lrgba[14] ) * blend ;
+					lrgba[15] += (alpha - lrgba[15]) * blend ;
+				} 
+				for ( var j:int = 0; j < 16; j++ )
+				{
+					prgba[j] = lrgba[j];
+				}
 			}
 			return points;
 		}

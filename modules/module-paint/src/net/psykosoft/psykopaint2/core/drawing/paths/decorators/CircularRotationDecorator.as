@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import net.psykosoft.psykopaint2.core.drawing.paths.helpers.KDTreeNode;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 
-	public class CircularRotationDecorator extends AbstractPointDecorator
+	final public class CircularRotationDecorator extends AbstractPointDecorator
 	{
 		private var kdTree:BalancingKDTree;
 		private var centers:XML = <centers/>;

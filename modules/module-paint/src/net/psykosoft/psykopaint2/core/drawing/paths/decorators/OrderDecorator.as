@@ -1,20 +1,12 @@
 package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 {
-	import com.greensock.easing.Quad;
-	import com.greensock.easing.Quint;
-	import com.quasimondo.geom.ColorMatrix;
-	
-	import flash.geom.Matrix3D;
-	import flash.geom.Vector3D;
-	import flash.utils.getTimer;
-	
 	import de.popforge.math.LCG;
 	
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	
-	public class OrderDecorator extends AbstractPointDecorator
+	final public class OrderDecorator extends AbstractPointDecorator
 	{
 		
 		private var delay:PsykoParameter;

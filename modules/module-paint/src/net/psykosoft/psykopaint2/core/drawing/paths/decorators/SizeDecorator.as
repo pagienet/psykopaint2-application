@@ -1,21 +1,30 @@
 package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 {
 	import com.greensock.easing.Circ;
+	import com.greensock.easing.Cubic;
 	import com.greensock.easing.Expo;
 	import com.greensock.easing.Linear;
 	import com.greensock.easing.Quad;
 	import com.greensock.easing.Quart;
 	import com.greensock.easing.Quint;
-	
+	import com.greensock.easing.Sine;
+	import com.greensock.easing.Strong;
+	import com.greensock.easing.CircQuad;
 	import de.popforge.math.LCG;
 	
-	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 
-	public class SizeDecorator extends AbstractPointDecorator
+	final public class SizeDecorator extends AbstractPointDecorator
 	{
+		static public const PARAMETER_MODE:String = "Mode";
+		static public const PARAMETER_FACTOR:String = "Factor";
+		static public const PARAMETER_MAPPING:String = "Mapping";
+		static public const PARAMETER_INVERT_MAPPING:String = "Invert Mapping";
+		static public const PARAMETER_MAXIMUM_SPEED:String  = "Maximum Speed";
+		
+		
 		private var mappingMode:PsykoParameter;
 		private var mappingFactor:PsykoParameter;
 		private var mappingFunction:PsykoParameter;
@@ -24,16 +33,36 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		private var rng:LCG;
 		
-		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([Linear.easeNone,Quad.easeIn,Quad.easeInOut,Quad.easeOut, Quart.easeIn,Quart.easeInOut,Quart.easeOut, Quint.easeIn,Quint.easeInOut,Quint.easeOut,Expo.easeIn, Expo.easeInOut, Expo.easeOut, Circ.easeIn,Circ.easeInOut, Circ.easeOut ]);
+		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([
+			Linear.easeNone,
+			CircQuad.easeIn,
+			Circ.easeIn,
+			Sine.easeIn,
+			Quad.easeIn, 
+			Cubic.easeIn, 
+			Quart.easeIn, 
+			Quint.easeIn,
+			Strong.easeIn,
+			Expo.easeIn
+			]);
 		
 		public function SizeDecorator()
 		{
 			super();
-			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Fixed","Speed","Pressure","Automatic","Multiply","Add"]);
-			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,"Factor",0,1,0,10);
-			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,"Mapping",0,["Linear","Quadratic In","Quadratic InOut","Quadratic Out","Quartic In","Quartic InOut","Quartic Out","Quintic In","Quintic InOut","Quintic Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
-			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,"Invert Mapping",0);
-			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,"Maximum Speed",20,1,100);
+			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_MODE,0,["Fixed","Speed","Pressure","Automatic","Multiply","Add"]);
+			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_FACTOR,0,1,0,1);
+			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_MAPPING,0,["Linear",
+				"CircQuad",
+				"Circular",
+				"Sine",
+				"Quadratic",
+				"Cubic",
+				"Quartic",
+				"Quintic",
+				"Strong",
+				"Expo"]);
+			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_INVERT_MAPPING,0);
+			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_MAXIMUM_SPEED,20,1,100);
 			
 			_parameters.push(mappingMode,mappingFactor,mappingFunction,invertMapping,maxSpeed );
 			

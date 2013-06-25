@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes.color
 {
 	import flash.utils.ByteArray;
+	
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.StrokeAppendVO;
+	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 
 	// todo: allow setting colour, but for now it's just a test class
 	public class FlatColorStrategy implements IColorStrategy
@@ -9,8 +12,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 		private var _g : Number = 1;
 		private var _b : Number = 1;
 		private var _a : Number = 1;
-		private var _colorBlendFactor : Number = 1;
-		private var _brushAlpha : Number = 1;
+	//	private var _colorBlendFactor : Number = 1;
+	//	private var _brushAlpha : Number = 1;
 
 		public function FlatColorStrategy()
 		{
@@ -67,10 +70,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			if ( (targetIndexMask & 0xf) == 0 ) return;
 			var index:int = (targetIndexMask & 1) == 1 ? 0 : (targetIndexMask & 2) == 2 ? 4 : (targetIndexMask & 4) == 4 ? 8 : (targetIndexMask & 8) == 8 ? 12 : -1;
 			
-			var t1:Number = target[index]   = _r * _brushAlpha;
-			var t2:Number = target[index+1] = _g * _brushAlpha;
-			var t3:Number = target[index+2] = _b * _brushAlpha;
-			var t4:Number = target[index+3] = _a * _brushAlpha;
+			var t1:Number = target[index]   = _r;// * _brushAlpha;
+			var t2:Number = target[index+1] = _g;// * _brushAlpha;
+			var t3:Number = target[index+2] = _b;// * _brushAlpha;
+			var t4:Number = target[index+3] = _a;// * _brushAlpha;
 			if ( (targetIndexMask & 2) == 2 && index != 4)
 			{
 				target[4] = t1;
@@ -97,18 +100,34 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			}
 		}
 		
-		public function getColors(x : Number, y : Number, radius:Number, sampleSize : Number, targets : Vector.<Number>) : void
+		public function getColors(point:SamplePoint, radius:Number, sampleSize : Number) : void
 		{
+			var targets : Vector.<Number> = point.colorsRGBA;
 			var j:int = 0;
 			for ( var i:int = 0; i < 4; i++ )
 			{
-				targets[j++] = _r * _brushAlpha;
-				targets[j++] = _g * _brushAlpha;
-				targets[j++] = _b * _brushAlpha;
-				targets[j++] = _a * _brushAlpha;
+				targets[j++] = _r;// * _brushAlpha;
+				targets[j++] = _g;// * _brushAlpha;
+				targets[j++] = _b;// * _brushAlpha;
+				targets[j++] = _a;// * _brushAlpha;
 			}
 		}
 		
+		public function getColorsByVO( appendVO:StrokeAppendVO, sampleSize : Number) : void
+		{
+			var targets : Vector.<Number> = appendVO.point.colorsRGBA;
+			var j:int = 0;
+			for ( var i:int = 0; i < 4; i++ )
+			{
+				targets[j++] = _r;// * _brushAlpha;
+				targets[j++] = _g;// * _brushAlpha;
+				targets[j++] = _b;// * _brushAlpha;
+				targets[j++] = _a;// * _brushAlpha;
+			}
+		}
+		
+		
+		/*
 		public function setBlendFactors(colorBlendFactor : Number, alphaBlendFactor : Number) : void
 		{
 			if (colorBlendFactor < 0) colorBlendFactor = 0;
@@ -118,7 +137,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			_colorBlendFactor = colorBlendFactor;
 			_brushAlpha = alphaBlendFactor;
 		}
-		
+		*/
 	
 	}
 }

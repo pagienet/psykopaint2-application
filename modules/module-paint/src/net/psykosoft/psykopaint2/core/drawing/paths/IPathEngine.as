@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.core.drawing.paths
 {
-	import flash.geom.Point;
-	
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 
@@ -9,7 +7,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	{
 		function clear():void;
 		function addFirstPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0 ):void;
-		function addPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0, force:Boolean = false ):Boolean;
+		function addPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0, force:Boolean = false, first:Boolean  = false ):Boolean;
 		function addSamplePoint( p:SamplePoint, force:Boolean = false  ):Boolean;
 		//function addXY( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0,force:Boolean = false ):Boolean;
 		function getPointAt( index:int ):SamplePoint;

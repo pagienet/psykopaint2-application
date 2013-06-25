@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	
 	
-	public class RotationDecorator extends AbstractPointDecorator
+	final public class RotationDecorator extends AbstractPointDecorator
 	{
 		private var angleAdjustment:PsykoParameter;
 		private var rng:LCG;

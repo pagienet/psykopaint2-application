@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 
-	public class SpawnDecorator extends AbstractPointDecorator
+	final public class SpawnDecorator extends AbstractPointDecorator
 	{
 		private var multiples:PsykoParameter;
 		private var maxOffset:PsykoParameter;

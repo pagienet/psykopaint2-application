@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import com.greensock.easing.Quint;
 	import com.quasimondo.geom.ColorMatrix;
 	
-	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 	
 	import de.popforge.math.LCG;
@@ -13,9 +12,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.drawing.paths.helpers.ParticlePoint;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
-	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	
-	public class ParticleDecorator extends AbstractPointDecorator
+	final public class ParticleDecorator extends AbstractPointDecorator
 	{
 		
 		private var maxConcurrentParticles:PsykoParameter;

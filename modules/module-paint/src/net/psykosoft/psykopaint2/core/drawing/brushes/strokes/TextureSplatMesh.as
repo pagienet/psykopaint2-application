@@ -31,90 +31,54 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if ( _numVertices >= 65531 ) return;
 			
 			var uvBounds:Rectangle = appendVO.uvBounds;
-		
-			var baseAngle:Number = Math.atan2(uvBounds.height,uvBounds.width);
-			var halfSize : Number = appendVO.size* Math.SQRT2 * 0.5;
+			var baseAngle:Number = appendVO.diagonalAngle; //Math.atan2(uvBounds.height,uvBounds.width);
+			var halfSize : Number = appendVO.size * Math.SQRT1_2;
 			var angle : Number = appendVO.point.angle;
-			var cos1 : Number =   halfSize*Math.cos(baseAngle + angle);
-			var sin1 : Number =  -halfSize*Math.sin(baseAngle + angle);
-			var cos2 : Number =   halfSize*Math.cos( -baseAngle + angle);
-			var sin2 : Number =  -halfSize*Math.sin( -baseAngle + angle);
+			var cos1 : Number =   halfSize * Math.cos(  baseAngle + angle);
+			var sin1 : Number =  -halfSize * Math.sin(  baseAngle + angle);
+			var cos2 : Number =   halfSize * Math.cos( -baseAngle + angle);
+			var sin2 : Number =  -halfSize * Math.sin( -baseAngle + angle);
+			
+			var point:SamplePoint = appendVO.point;
+			var pnx:Number = point.normalX;
+			var pny:Number = point.normalY;
+			
+			var v : Number;
+			var m:Number = Math.max( cos1, -cos1, cos2, -cos2 );
+			if ((v = pnx + m) > _maxX) _maxX = v;
+			if ((v = pnx - m) < _minX) _minX = v;
+			m = Math.max( sin1, -sin1, sin2, -sin2 );
+			if ((v = pny + m) > _maxY) _maxY = v;
+			if ((v = pny - m) < _minY) _minY = v;
+			
+			var data:Vector.<Number> = _tmpData;
+			data[0]  = pnx - cos1;
+			data[1]  = pny - sin1;
+			data[8]  = pnx + cos2;
+			data[9]  = pny + sin2;
+			data[16] = pnx + cos1;
+			data[17] = pny + sin1;
+			data[24] = pnx - cos2;
+			data[25] = pny - sin2;
+			
+			data[2]  = data[26] = uvBounds.left;
+			data[3]  = data[11] = uvBounds.top;
+			data[10] = data[18] = uvBounds.right;
+			data[19] = data[27] = uvBounds.bottom;
+			
+			//used by bump map:
 			var rotCos : Number = Math.cos(angle);
 			var rotSin : Number = Math.sin(angle);
-
-			var point:SamplePoint = appendVO.point;
-			var vx : Number, vy : Number;
-			var data:Vector.<Number> = _tmpData;
-			vx = point.normalX - cos1;
-			vy = point.normalY - sin1;
-			data[0] = vx;
-			data[1] = vy;
-			data[2] = uvBounds.left;
-			data[3] = uvBounds.top;
-
-			data[4] = rotCos;
-			data[5] = -rotSin;
-			data[6] = rotSin;
-			data[7] = rotCos;
-
-			if (vx > _maxX) _maxX = vx;
-			else if (vx < _minX) _minX = vx;
-			if (vy > _maxY) _maxY = vy;
-			else if (vy < _minY) _minY = vy;
-
-			vx = point.normalX + cos2;
-			vy = point.normalY + sin2;
-			data[8] = vx;
-			data[9] = vy;
-			data[10] = uvBounds.right;
-			data[11] = uvBounds.top;
-			data[12] = rotCos;
-			data[13] = -rotSin;
-			data[14] = rotSin;
-			data[15] = rotCos;
-
-			if (vx > _maxX) _maxX = vx;
-			else if (vx < _minX) _minX = vx;
-			if (vy > _maxY) _maxY = vy;
-			else if (vy < _minY) _minY = vy;
-
-			vx = point.normalX + cos1;
-			vy = point.normalY + sin1;
-			data[16] = vx;
-			data[17] = vy;
-			data[18] = uvBounds.right;
-			data[19] = uvBounds.bottom;
-			data[20] = rotCos;
-			data[21] = -rotSin;
-			data[22] = rotSin;
-			data[23] = rotCos;
-
-			if (vx > _maxX) _maxX = vx;
-			else if (vx < _minX) _minX = vx;
-			if (vy > _maxY) _maxY = vy;
-			else if (vy < _minY) _minY = vy;
-
-			vx = point.normalX - cos2;
-			vy = point.normalY - sin2;
-			data[24] = vx;
-			data[25] = vy;
-			data[26] = uvBounds.left;
-			data[27] = uvBounds.bottom;
-			data[28] = rotCos;
-			data[29] = -rotSin;
-			data[30] = rotSin;
-			data[31] = rotCos;
-
-			if (vx > _maxX) _maxX = vx;
-			else if (vx < _minX) _minX = vx;
-			if (vy > _maxY) _maxY = vy;
-			else if (vy < _minY) _minY = vy;
-
-			_fastBuffer.addInterleavedFloatsToVertices(data,_vIndex,8,4);
-			_fastBuffer.addInterleavedFloatsToVertices(appendVO.point.colorsRGBA,_vIndex+32,4,8);
+			data[4] = data[12] = data[20] = data[28] = rotCos;
+			data[5] = data[13] = data[21] = data[29] =-rotSin;
+			data[6] = data[14] = data[22] = data[30] = rotSin;
+			data[7] = data[15] = data[23] = data[31] = rotCos;
+			 
+			
+			_fastBuffer.addInterleavedFloatsToVertices( data,_vIndex,8,4);
+			_fastBuffer.addInterleavedFloatsToVertices( point.colorsRGBA,_vIndex+32,4,8);
 
 			_vIndex += 192;
-
 			_numVertices += 4;
 			_numIndices += 6;
 

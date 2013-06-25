@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.base.utils.ui
 {
 
-	import net.psykosoft.psykopaint2.base.utils.*;
-
 	import flash.display.Stage;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;

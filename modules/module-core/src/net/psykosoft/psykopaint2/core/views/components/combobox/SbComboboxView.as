@@ -51,6 +51,10 @@ public class SbComboboxView extends Sprite
 			return _listView.selectedIndex;
 		}
 
+		public function set selectedIndex( value:int ):void {
+			_listView.selectedIndex = value;
+		}
+
 		public function get selectedItem():SbListItemVO {
 			return _listView.selectedItem;
 		}

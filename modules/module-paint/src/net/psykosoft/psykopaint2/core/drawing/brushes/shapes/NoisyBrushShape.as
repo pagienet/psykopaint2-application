@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			_variationFactors[1] = 2;
 			_variationFactors[2] = 1 / _variationFactors[0];
 			_variationFactors[3] = 1 / _variationFactors[1];
+			_variationFactors[4] = Math.atan2(_variationFactors[3],_variationFactors[2]);
 			
 			size = 256;
 		}

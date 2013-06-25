@@ -8,6 +8,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 	public class AbstractPathEngine implements IPathEngine
 	{
+		public static const PARAMETER_MIN_SAMPLES:String = "Minimum Samples Per Step";
+		public static const PARAMETER_OUTPUT_STEP:String = "Output Step Size";
+		public static const PARAMETER_SEND_TAPS:String = "Send Taps";
+		public static const PARAMETER_SPEED_SMOOTHING:String = "Speed Smoothing";
+		
+		
 		protected var _sampledPoints:Vector.<SamplePoint>;
 		protected var nextIndex:int;
 		protected var _lastOutputIndex : int;
@@ -15,6 +21,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected var _minSamplesPerStep : PsykoParameter;
 		protected var _outputStepSize:PsykoParameter;
 		protected var _sendTaps:PsykoParameter;
+		protected var _speedSmoothing:PsykoParameter;
 		protected var _parameters:Vector.<PsykoParameter>;
 		
 		public function AbstractPathEngine()
@@ -26,11 +33,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		{
 			_sampledPoints = new Vector.<SamplePoint>();
 			nextIndex = 0;
-			_minSamplesPerStep = new PsykoParameter( PsykoParameter.IntParameter,"Minimum Samples Per Step",1,1,10);
-			_outputStepSize = new PsykoParameter( PsykoParameter.NumberParameter,"Output Step Size",3,0.05,200);
-			_sendTaps = new PsykoParameter( PsykoParameter.BooleanParameter,"Send Taps",false);
+			_minSamplesPerStep = new PsykoParameter( PsykoParameter.IntParameter,PARAMETER_MIN_SAMPLES,1,1,10);
+			_outputStepSize = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_OUTPUT_STEP,3,0.05,200);
+			_sendTaps = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_SEND_TAPS,false);
+			_speedSmoothing = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_SPEED_SMOOTHING,0.9,0,1);
 			_parameters = new Vector.<PsykoParameter>();
-			_parameters.push(_minSamplesPerStep,_outputStepSize, _sendTaps);
+			_parameters.push(_minSamplesPerStep,_outputStepSize, _sendTaps,_speedSmoothing);
 		}
 		
 		public function get type():int
@@ -73,17 +81,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public function addFirstPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0):void
 		{
 			clear();
-			addPoint(x, y, pressure, penButtonState, true);
+			addPoint(x, y, pressure, penButtonState, true, true);
 		}
 		
-		public function addPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0, force:Boolean = false ):Boolean
+		public function addPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0, force:Boolean = false, first:Boolean = false ):Boolean
 		{
 			if ( !force && nextIndex > 0 && _sampledPoints[nextIndex-1].x == x && _sampledPoints[nextIndex-1].y == y) 
 			{
 				return false;
 			}
 				
-			_sampledPoints[nextIndex++] = PathManager.getSamplePoint( x,y, 0, 0, 0, pressure, penButtonState );
+			_sampledPoints[nextIndex++] = PathManager.getSamplePoint( x,y, 0, 0, 0, pressure, penButtonState, null, first );
 			return true;
 		}
 		

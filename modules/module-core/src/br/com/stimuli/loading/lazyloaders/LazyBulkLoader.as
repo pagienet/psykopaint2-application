@@ -22,7 +22,7 @@ package br.com.stimuli.loading.lazyloaders{
     *   
     */
 	public class LazyBulkLoader extends BulkLoader {
-	    namespace lazy_loader = "http://code.google.com/p/bulk-loader/"
+	    public namespace lazy_loader = "http://code.google.com/p/bulk-loader/"
 		lazy_loader var _lazyTheURL : URLRequest;
 		/** @private */
 		lazy_loader var _lazyLoader : URLLoader;

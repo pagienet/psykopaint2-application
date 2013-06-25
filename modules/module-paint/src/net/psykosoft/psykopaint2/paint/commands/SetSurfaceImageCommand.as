@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
 
-	import flash.display.BitmapData;
+	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -9,14 +9,14 @@ package net.psykosoft.psykopaint2.paint.commands
 	public class SetSurfaceImageCommand extends TracingCommand
 	{
 		[Inject]
-		public var bmd:BitmapData;
+		public var imageData:ByteArray;
 
 		[Inject]
 		public var canvasModel:CanvasModel;
 
 		override public function execute():void {
 			super.execute();
-			canvasModel.setHeightSpecularMap( bmd );
+			canvasModel.setNormalSpecularMap( imageData );
 		}
 	}
 }

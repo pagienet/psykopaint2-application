@@ -37,64 +37,47 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (_numVertices >= 65531) return;
 			
 			var uvBounds:Rectangle = appendVO.uvBounds;
-			var baseAngle : Number = Math.atan2(uvBounds.height, uvBounds.width);
-			var halfSize : Number = appendVO.size * .5;
+			var baseAngle : Number = appendVO.diagonalAngle;
+			var halfSize : Number = appendVO.size * Math.SQRT1_2;
 			var angle : Number = appendVO.point.angle;
-			var cos1 : Number =  halfSize * Math.cos(baseAngle + angle);
-			var sin1 : Number = -halfSize * Math.sin(baseAngle + angle);
+			var cos1 : Number =  halfSize * Math.cos( baseAngle + angle);
+			var sin1 : Number = -halfSize * Math.sin( baseAngle + angle);
 			var cos2 : Number =  halfSize * Math.cos(-baseAngle + angle);
 			var sin2 : Number = -halfSize * Math.sin(-baseAngle + angle);
 
+			
 			var point:SamplePoint = appendVO.point;
-			var vx : Number, vy : Number;
+			var pnx:Number = point.normalX;
+			var pny:Number = point.normalY;
+			
+			var v : Number;
+			var m:Number = Math.max( cos1, -cos1, cos2, -cos2 );
+			if ((v = pnx + m) > _maxX) _maxX = v;
+			if ((v = pnx - m) < _minX) _minX = v;
+			m = Math.max( sin1, -sin1, sin2, -sin2 );
+			if ((v = pny + m) > _maxY) _maxY = v;
+			if ((v = pny - m) < _minY) _minY = v;
+			
 			var data : Vector.<Number> = _tmpData;
-			vx = point.normalX - cos1;
-			vy = point.normalY - sin1;
-			data[0] = vx;
-			data[1] = vy;
+			data[0] = pnx - cos1;
+			data[1] = pny - sin1;
 			data[2] = uvBounds.left;
 			data[3] = uvBounds.top;
 
-			if (vx > _maxX) _maxX = vx;
-			else if (vx < _minX) _minX = vx;
-			if (vy > _maxY) _maxY = vy;
-			else if (vy < _minY) _minY = vy;
-
-			vx = point.normalX + cos2;
-			vy = point.normalY  + sin2;
-			data[4] = vx;
-			data[5] = vy;
+			data[4] = pnx + cos2;
+			data[5] = pny  + sin2;
 			data[6] = uvBounds.right;
 			data[7] = uvBounds.top;
 
-			if (vx > _maxX) _maxX = vx;
-			else if (vx < _minX) _minX = vx;
-			if (vy > _maxY) _maxY = vy;
-			else if (vy < _minY) _minY = vy;
-
-			vx = point.normalX + cos1;
-			vy = point.normalY  + sin1;
-			data[8] = vx;
-			data[9] = vy;
+			data[8] =  pnx + cos1;
+			data[9] = pny  + sin1;
 			data[10] = uvBounds.right;
 			data[11] = uvBounds.bottom;
 
-			if (vx > _maxX) _maxX = vx;
-			else if (vx < _minX) _minX = vx;
-			if (vy > _maxY) _maxY = vy;
-			else if (vy < _minY) _minY = vy;
-
-			vx = point.normalX - cos2;
-			vy = point.normalY  - sin2;
-			data[12] = vx;
-			data[13] = vy;
+			data[12] = pnx - cos2;
+			data[13] = pny  - sin2;
 			data[14] = uvBounds.left;
 			data[15] = uvBounds.bottom;
-
-			if (vx > _maxX) _maxX = vx;
-			else if (vx < _minX) _minX = vx;
-			if (vy > _maxY) _maxY = vy;
-			else if (vy < _minY) _minY = vy;
 
 			_fastBuffer.addInterleavedFloatsToVertices(data, _vIndex, 4, 4);
 			_fastBuffer.addInterleavedFloatsToVertices(appendVO.point.colorsRGBA, _vIndex + 16, 4, 4);

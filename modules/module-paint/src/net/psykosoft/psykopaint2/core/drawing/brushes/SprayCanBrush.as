@@ -14,7 +14,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
 	
 	public class SprayCanBrush extends SplatBrushBase
 	{
@@ -66,7 +65,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			return new PyramidMapTdsiStrategy(_canvasModel);
 		}
 
-		override protected function onPickColor( point : SamplePoint ) : void
+		override protected function onPickColor( point : SamplePoint, pickRadius:Number, smoothFactor:Number ) : void
 		{
 			
 			var minSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.lowerRangeValue);
@@ -75,9 +74,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (rsize > maxSize) rsize = maxSize;
 			else if (rsize < minSize) rsize = minSize;
 			
-			_colorStrategy.setBlendFactors(_firstPoint ? 1 : rng.getNumber(_colorBlend.lowerRangeValue, _colorBlend.lowerRangeValue + (_colorBlend.upperRangeValue - _colorBlend.lowerRangeValue) * (1 - Math.min(1, point.size))), rng.getNumber(_opacity.lowerRangeValue, _opacity.upperRangeValue));
-			_colorStrategy.getColors(point.x, point.y, rsize * rng.getNumber(0.1, 1), rsize, point.colorsRGBA);
-
+			appendVO.size = rsize * pickRadius;
+			appendVO.point = point;
+			//_colorStrategy.setBlendFactors(_firstPoint ? 1 : rng.getNumber(_colorBlend.lowerRangeValue, _colorBlend.lowerRangeValue + (_colorBlend.upperRangeValue - _colorBlend.lowerRangeValue) * (1 - Math.min(1, point.size))), rng.getNumber(_opacity.lowerRangeValue, _opacity.upperRangeValue));
+			//_colorStrategy.getColors(point, rsize * Math.SQRT1_2 * pickRadius, rsize* 0.5);
+			_colorStrategy.getColorsByVO( appendVO, rsize* 0.5 * smoothFactor);
 		}
 
 		

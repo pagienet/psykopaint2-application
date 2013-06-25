@@ -56,7 +56,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		override protected function createColorStrategy() : IColorStrategy
 		{
 			var strategy : FlatColorStrategy = new FlatColorStrategy();
-			strategy.setBlendFactors(1,1);
+			//strategy.setBlendFactors(1,1);
 			return strategy;
 		}
 
@@ -81,7 +81,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			uvBounds.x = int(rng.getNumber(0,shapeVariations[0])) * shapeVariations[2];
 			uvBounds.y = int(rng.getNumber(0,shapeVariations[1])) * shapeVariations[3];
 			
-			var baseAngle:Number = Math.atan2(uvBounds.height,uvBounds.width);
+			var baseAngle:Number = appendVO.diagonalAngle; //Math.atan2(uvBounds.height,uvBounds.width);
 			var halfSize : Number = rsize * _canvasScaleW * Math.SQRT2 * 0.5;
 			
 			//var halfSize : Number = rsize * _canvasScaleW*.5;
@@ -144,11 +144,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			
 			appendVO.point = point;
+			/*
 			point.colorsRGBA[3] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
 			point.colorsRGBA[7] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
 			point.colorsRGBA[11] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
 			point.colorsRGBA[15] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
-			
+			*/
 			_brushMesh.append( appendVO );
 			
 			

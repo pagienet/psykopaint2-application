@@ -9,6 +9,10 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	import flash.utils.ByteArray;
+	import flash.utils.ByteArray;
+
+	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.NormalSpecularMapGenerator;
@@ -40,7 +44,7 @@ package net.psykosoft.psykopaint2.core.model
 		private var _textureHeight : Number;
 
 		private var _viewport : Rectangle;
-		private var _normalSpecularOriginal : BitmapData;
+		private var _normalSpecularOriginal : ByteArray;
 
 		public function CanvasModel()
 		{
@@ -139,17 +143,20 @@ package net.psykosoft.psykopaint2.core.model
 		}
 
 		/**
-		 * A texture containing height and specular data. Height on red channel, glossiness on y, specular strength on z
+		 * A texture containing height and specular data. normals on red/blue channel, specular strength on z, glossiness on w
 		 */
-		public function setHeightSpecularMap(value : BitmapData) : void
+		public function setNormalSpecularMap(value : ByteArray) : void
 		{
-			var normalSpecularGenerator : NormalSpecularMapGenerator = new NormalSpecularMapGenerator();
-			_normalSpecularOriginal = normalSpecularGenerator.generate(value);
-			value.dispose();
+			_normalSpecularOriginal = value;
 
 			// not sure if this will be called before or after post construct
-			if (_normalSpecularMap)
-				_normalSpecularMap.uploadFromBitmapData(_normalSpecularOriginal);
+			if (_normalSpecularMap) {
+				var inflated : ByteArray = new ByteArray();
+				value.position = 0;
+				inflated.writeBytes(value, 0, value.length);
+				inflated.uncompress();
+				_normalSpecularMap.uploadFromByteArray(inflated, 0);
+			}
 		}
 
 		public function get sourceTexture() : Texture
@@ -182,7 +189,7 @@ package net.psykosoft.psykopaint2.core.model
 			_halfSizeBackBuffer = createCanvasTexture(true, .5);
 			_normalSpecularMap = createCanvasTexture(true);
 
-			if (_normalSpecularOriginal) setHeightSpecularMap(_normalSpecularOriginal);
+			if (_normalSpecularOriginal) setNormalSpecularMap(_normalSpecularOriginal);
 
 			var tempBitmapData : BitmapData = new BitmapData(_textureWidth, _textureHeight, true, 0);
 			_colorTexture.uploadFromBitmapData(tempBitmapData);
@@ -198,7 +205,6 @@ package net.psykosoft.psykopaint2.core.model
 		{
 			if (!_colorTexture) return;
 			if (_sourceTexture) _sourceTexture.dispose();
-			if (_normalSpecularOriginal) _normalSpecularOriginal.dispose();
 			_colorTexture.dispose();
 			_fullSizeBackBuffer.dispose();
 			_halfSizeBackBuffer.dispose();
@@ -261,7 +267,51 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function clearNormalSpecularTexture() : void
 		{
-			_normalSpecularMap.uploadFromBitmapData(_normalSpecularOriginal);
+			_normalSpecularMap.uploadFromByteArray(_normalSpecularOriginal, 0);
+		}
+
+
+		/**
+		 * Returns a list of 3 ByteArrays containing data:
+		 * 0: painted color layer
+		 * 1: normal/specular layer
+		 * 2: the source texture
+		 *
+		 * IMPORTANT: THE DATA IS SAVED IN RGBA ORDER - UNLIKE THE LOAD ORDER
+		 */
+		public function saveLayersRGBA() : Vector.<ByteArray>
+		{
+			var bmp : BitmapData = new BitmapData(_width, _height, true);
+			var layers : Vector.<ByteArray> = new Vector.<ByteArray>();
+			layers.push(saveLayer(_colorTexture, bmp));
+			layers.push(saveLayer(_normalSpecularMap, bmp));
+			layers.push(saveLayer(_sourceTexture, bmp));
+			bmp.dispose();
+			return layers;
+		}
+
+		// IMPORTANT, DATA INPUT MUST BE IN BGRA ORDER TO AVOID PRE-MULTIPLICATION ISSUES.
+		// Conversion is not done here to allow fast native conversion
+		public function loadLayersBGRA(data : Vector.<ByteArray>) : void
+		{
+			_colorTexture.uploadFromByteArray(data[0], 0, 0);
+			_normalSpecularMap.uploadFromByteArray(data[1], 0, 0);
+			_sourceTexture.uploadFromByteArray(data[2], 0, 0);
+		}
+
+		private function saveLayer(layer : Texture, workerBitmapData : BitmapData) : ByteArray
+		{
+			var data : ByteArray = new ByteArray();
+			var context : Context3D = stage3D.context3D;
+			var sourceRect : Rectangle = new Rectangle(0, 0, usedTextureWidthRatio, usedTextureHeightRatio);
+			var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
+
+			context.setRenderToBackBuffer();
+			context.clear();
+			CopySubTexture.copy(layer, sourceRect, destRect, context);
+			context.drawToBitmapData(workerBitmapData);
+			workerBitmapData.copyPixelsToByteArray(workerBitmapData.rect, data);
+			return data;
 		}
 	}
 }

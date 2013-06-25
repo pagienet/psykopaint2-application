@@ -288,10 +288,12 @@ package net.psykosoft.psykopaint2.core.rendering
 			code += _ambientModel.getFragmentCode() + "\n";
 			code += "add ft3.xyz, ft3.xyz, " + _ambientModel.outputRegister + ".xyz\n";
 
-			code += "tex ft6, v0, fs0 <2d, clamp, nearest, mipnone>\n";
+//			code += "tex ft6, v0, fs0 <2d, clamp, nearest, mipnone>\n";
+			code += "tex ft6, v0, fs0 <2d, clamp, linear, mipnone>\n";
 
 			if (_sourceTextureAlpha > 0) {
-				code += "tex ft5, v0, fs1 <2d, clamp, nearest, mipnone>\n" +
+				//code += "tex ft5, v0, fs1 <2d, clamp, nearest, mipnone>\n" +
+				code += "tex ft5, v0, fs1 <2d, clamp, linear, mipnone>\n" +
 						"sub ft0.w, fc0.z, ft6.w\n" +
 						"mul ft5, ft5, ft0.w\n" +
 						"add ft6, ft6, ft5\n";
