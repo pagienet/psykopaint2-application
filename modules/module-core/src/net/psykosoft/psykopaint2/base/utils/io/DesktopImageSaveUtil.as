@@ -5,8 +5,6 @@ package net.psykosoft.psykopaint2.base.utils.io
 
 	import flash.display.BitmapData;
 	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
 	import flash.utils.ByteArray;
 
 	public class DesktopImageSaveUtil

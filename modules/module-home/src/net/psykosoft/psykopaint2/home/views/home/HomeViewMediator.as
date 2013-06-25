@@ -197,7 +197,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
-			trace( this, "received painting data: " + data.length );
 			view.createInProgressPaintings( data );
 		}
 

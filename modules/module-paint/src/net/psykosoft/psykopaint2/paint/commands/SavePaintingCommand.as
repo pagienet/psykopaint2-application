@@ -29,6 +29,10 @@ package net.psykosoft.psykopaint2.paint.commands
 			// Produce data vo.
 			var vo:PaintingVO = new PaintingVO();
 			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayersARGB();
+			var hr:Boolean = CoreSettings.RUNNING_ON_RETINA_DISPLAY;
+			vo.width = hr ? 2048 : 1024;
+			vo.height = hr ? 1536 : 768;
+			vo.height = canvasModel.stage.stageHeight;
 			vo.colorImageARGB = imagesRGBA[ 0 ];
 			vo.heightmapImageARGB = imagesRGBA[ 1 ];
 			vo.sourceImageARGB = imagesRGBA[ 2 ];

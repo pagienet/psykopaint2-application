@@ -281,8 +281,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			for( var i:uint; i < len; i++ ) {
 				var vo:PaintingVO = _paintingVosPendingForCreation[ i ];
 				// TODO: we could use the ARGB data directly to produce a texture without the bmd step
-				var diffuseBmd:BitmapData = new BitmapData( 1024, 768, false, 0 ); // TODO: must account for different sizes
-				diffuseBmd.setPixels( new Rectangle( 0, 0, 1024, 768 ), vo.colorImageARGB );
+				var diffuseBmd:BitmapData = new BitmapData( vo.width, vo.height, false, 0xFFFFFF ); // TODO: must account for different sizes
+				diffuseBmd.setPixels( new Rectangle( 0, 0, vo.width, vo.height ), vo.colorImageARGB );
 				_paintingManager.createPaintingAtIndex( diffuseBmd, FrameType.WHITE, 2 + i );
 			}
 			_paintingVosPendingForCreation = null;

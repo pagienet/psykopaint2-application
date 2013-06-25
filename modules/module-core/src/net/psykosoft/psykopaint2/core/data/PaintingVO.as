@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.core.data
 		public var heightmapImageARGB:ByteArray;
 		public var sourceImageARGB:ByteArray;
 		public var id:String;
+		public var width:int;
+		public var height:int;
 
 		public function PaintingVO() {
 			super();
@@ -25,8 +27,10 @@ package net.psykosoft.psykopaint2.core.data
 
 			var bytes:ByteArray = new ByteArray();
 
-			// Write exposed string data.
+			// Write exposed single value data.
 			bytes.writeUTF( id );
+			bytes.writeInt( width );
+			bytes.writeInt( height );
 
 			// Write images.
 			encodeImage( bytes, colorImageARGB );
@@ -48,8 +52,10 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function deSerialize( bytes:ByteArray ):void {
 
-			// Read and set exposed string data.
+			// Read and set exposed single value data.
 			id = bytes.readUTF();
+			width = bytes.readInt();
+			height = bytes.readInt();
 
 			// Read images.
 			colorImageARGB = decodeImage( bytes );
