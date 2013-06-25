@@ -318,6 +318,16 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
+		public function get randomValue():Number
+		{
+			return _numberValues[0] + Math.random() * ( _numberValues[1] - _numberValues[0] );
+		}
+		
+		public function get chance():Boolean
+		{
+			return Math.random() < numberValue;
+		}
+		
 		public function get rangeValue():Number
 		{
 			return _numberValues[1] - _numberValues[0];

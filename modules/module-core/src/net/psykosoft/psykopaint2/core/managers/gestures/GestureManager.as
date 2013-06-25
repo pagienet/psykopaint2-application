@@ -91,7 +91,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onHorizontalPanGestureEnded( event:GestureEvent ):void {
-			if ( gesturesEnabled )
+		//	if ( gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_ENDED );
 		}
 
@@ -113,7 +113,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onVerticalPanGestureEnded( event:GestureEvent ):void {
-			if ( gesturesEnabled )
+		//	if ( gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_ENDED );
 		}
 

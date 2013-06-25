@@ -15,6 +15,15 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 
 	final public class SplatterDecorator extends AbstractPointDecorator
 	{
+		
+		public static const PARAMETER_SL_MODE:String = "Mode";
+		public static const PARAMETER_SL_OFFSET_MAPPING:String = "Offset Mapping";
+		public static const PARAMETER_N_SPLAT_FACTOR:String = "Splat Factor";
+		public static const PARAMETER_N_MINIMUM_OFFSET:String = "Minimum Offset";
+		public static const PARAMETER_A_OFFSET_ANGLE_RANGE:String = "Offset Angle Range";
+		public static const PARAMETER_N_SIZE_FACTOR:String = "Size Factor";
+		
+		
 		private var minOffset:PsykoParameter;
 		private var splatFactor:PsykoParameter;
 		private var sizeFactor:PsykoParameter;
@@ -37,13 +46,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function SplatterDecorator( splatFactor:Number = 2, minOffset:Number = 2, offsetAngleRange:Number = 1.57079632679, sizeFactor:Number = 0.3 )
 		{
 			super();
-			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,"Mode",0,["Speed","Size", "Pressure", "Fixed"]);
-			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,"Offset Mapping",1,["Linear","Quadratic In","Quadratic InOut","Quadratic Out","Quartic In","Quartic InOut","Quartic Out","Quintic In","Quintic InOut","Quintic Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
+			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Speed","Size", "Pressure", "Fixed"]);
+			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_OFFSET_MAPPING,1,["Linear","Quadratic In","Quadratic InOut","Quadratic Out","Quartic In","Quartic InOut","Quartic Out","Quintic In","Quintic InOut","Quintic Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
 			
-			this.splatFactor  	  = new PsykoParameter( PsykoParameter.NumberParameter,"Splat Factor",splatFactor,0,500);
-			this.minOffset   	  = new PsykoParameter( PsykoParameter.NumberParameter,"Minimum Offset",minOffset,0,64);
-			this.offsetAngleRange = new PsykoParameter( PsykoParameter.AngleParameter,"Offset Angle Range",offsetAngleRange,0,180);
-			this.sizeFactor 	  = new PsykoParameter( PsykoParameter.NumberParameter,"Size Factor",sizeFactor,0,2);
+			this.splatFactor  	  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SPLAT_FACTOR,splatFactor,0,500);
+			this.minOffset   	  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MINIMUM_OFFSET,minOffset,0,64);
+			this.offsetAngleRange = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_OFFSET_ANGLE_RANGE,offsetAngleRange,0,180);
+			this.sizeFactor 	  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SIZE_FACTOR,sizeFactor,0,2);
 			_parameters.push(mappingMode,mappingFunction, this.splatFactor,this.minOffset,this.offsetAngleRange,this.sizeFactor );
 			
 			rng = new LCG( Math.random() * 0xffffff );

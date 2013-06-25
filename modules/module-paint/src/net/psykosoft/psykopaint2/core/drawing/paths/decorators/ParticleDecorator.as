@@ -17,9 +17,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	{
 		
 		private var maxConcurrentParticles:PsykoParameter;
-		
 		private var minSpawnDistance:PsykoParameter;
-
 		private var spawnProbability:PsykoParameter;
 		private var lifeSpan:PsykoParameter;
 		private var acceleration:PsykoParameter;
@@ -129,7 +127,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			for ( j = 0; j < count && maxConcurrentParticles.intValue > activeParticles.length; j++ )
 			{
-				if ( rng.getChance(spawnProbability.numberValue) && ( lastSpawnLocation == null || lastSpawnLocation.squaredDistance(points[j]) >= minSpawnDistance.numberValue ))
+				if ( spawnProbability.chance && ( lastSpawnLocation == null || lastSpawnLocation.squaredDistance(points[j]) >= minSpawnDistance.numberValue ))
 				{
 					var f:Number = rng.getChance() ? 1 : -1;
 					var pc:SamplePoint = points[j].getClone();
@@ -140,21 +138,21 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 						particle = new ParticlePoint(pc, 
 							pc.speed > 0 ? lifeSpan.lowerRangeValue + rng.getNumber(0, lifeSpan.rangeValue * pc.speed ) : 20, 
 							0,
-							rng.getNumber(acceleration.lowerRangeValue, acceleration.upperRangeValue ),
+							acceleration.randomValue,
 							0,
 							0,
 							0,
-							rng.getNumber(updateProbability.lowerRangeValue,updateProbability.upperRangeValue )
+							updateProbability.randomValue
 						);
 					} else {
 						particle = new ParticlePoint(pc, 
 							lifeSpan.lowerRangeValue + rng.getNumber(0, lifeSpan.rangeValue * pc.speed ), 
-							rng.getNumber(speed.lowerRangeValue, speed.upperRangeValue ),
-							rng.getNumber(acceleration.lowerRangeValue, acceleration.upperRangeValue ),
-							rng.getNumber(offsetAngle.lowerRangeValue, offsetAngle.upperRangeValue ) * f,
+							speed.randomValue,
+							acceleration.randomValue,
+							offsetAngle.randomValue * f,
 							rng.getMappedNumber(curlAngle.lowerRangeValue, curlAngle.upperRangeValue, Quint.easeIn ) * f,
-							rng.getNumber(curlFlipProbability.lowerRangeValue, curlFlipProbability.upperRangeValue ),
-							rng.getNumber(updateProbability.lowerRangeValue,updateProbability.upperRangeValue )
+							curlFlipProbability.randomValue,
+							updateProbability.randomValue
 						);
 					}
 					activeParticles.push( particle );

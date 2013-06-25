@@ -13,15 +13,15 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	
 	final public class ColorDecorator extends AbstractPointDecorator
 	{
-		public static const PARAMETER_COLOR_MODE:String = "Color Mode";
-		public static const PARAMETER_COLOR:String = "Color";
-		public static const PARAMETER_SATURATION:String = "Saturation";
-		public static const PARAMETER_HUE:String = "Hue";
-		public static const PARAMETER_BRIGHTNESS:String = "Brightness";
-		public static const PARAMETER_COLOR_BLENDING:String = "Color Blending";
-		public static const PARAMETER_OPACITY:String = "Opacity";
-		public static const PARAMETER_PICK_RADIUS:String = "Color Pick Radius";
-		public static const PARAMETER_SMOOTH_FACTOR:String = "Color Smooth Factor";
+		public static const PARAMETER_SL_COLOR_MODE:String = "Color Mode";
+		public static const PARAMETER_IL_COLOR:String = "Color";
+		public static const PARAMETER_N_SATURATION:String = "Saturation";
+		public static const PARAMETER_A_HUE:String = "Hue";
+		public static const PARAMETER_N_BRIGHTNESS:String = "Brightness";
+		public static const PARAMETER_NR_COLOR_BLENDING:String = "Color Blending";
+		public static const PARAMETER_NR_OPACITY:String = "Opacity";
+		public static const PARAMETER_NR_PICK_RADIUS:String = "Color Pick Radius";
+		public static const PARAMETER_NR_SMOOTH_FACTOR:String = "Color Smooth Factor";
 		
 		
 		private var colorMode:PsykoParameter;
@@ -34,26 +34,24 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var pickRadius:PsykoParameter;
 		private var smoothFactor:PsykoParameter;
 		
-		private var rng:LCG;
 		private var cm:ColorMatrix;
 		private const lastRGBA:Vector.<Number> = new Vector.<Number>(16,true);
 		
 		public function ColorDecorator()
 		{
 			super();
-			colorMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_COLOR_MODE,0,["Pick Color","Fixed Color"] );
-			presetColor = new PsykoParameter( PsykoParameter.IntListParameter,PARAMETER_COLOR,0,[0x000000,0xffffff,0x808080]);
-			saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_SATURATION,1,-3, 3);
-			hueAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_HUE,0,-180, 180);
-			brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_BRIGHTNESS,0,-255, 255);
-			colorBlending  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_COLOR_BLENDING,0.7,0.7,0, 1);
-			brushOpacity  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_OPACITY,0.9,0.9,0,1);
-			pickRadius  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_PICK_RADIUS,1,1,0,1);
-			smoothFactor  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_SMOOTH_FACTOR,1,1,0,1);
+			colorMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_COLOR_MODE,0,["Pick Color","Fixed Color"] );
+			presetColor = new PsykoParameter( PsykoParameter.IntListParameter,PARAMETER_IL_COLOR,0,[0x000000,0xffffff,0x808080]);
+			saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SATURATION,1,-3, 3);
+			hueAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_HUE,0,-180, 180);
+			brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_BRIGHTNESS,0,-255, 255);
+			colorBlending  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_COLOR_BLENDING,0.7,0.7,0, 1);
+			brushOpacity  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_OPACITY,0.9,0.9,0,1);
+			pickRadius  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_PICK_RADIUS,1,1,0,1);
+			smoothFactor  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_SMOOTH_FACTOR,1,1,0,1);
 			
 			
 			_parameters.push(colorMode, presetColor, saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,pickRadius,smoothFactor);
-			rng = new LCG(Math.random() * 0xffffffff);
 			cm = new ColorMatrix();
 		}
 		
@@ -87,7 +85,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				
 				if ( mode == 0 )
 				{
-					if ( cb.onPickColor ) cb.onPickColor.apply(cb.callbackObject, [points[i], rng.getNumber(pickRadius.lowerRangeValue,pickRadius.upperRangeValue), rng.getNumber(smoothFactor.lowerRangeValue,smoothFactor.upperRangeValue)] );
+					if ( cb.onPickColor ) cb.onPickColor.apply(cb.callbackObject, [points[i], pickRadius.randomValue, smoothFactor.randomValue] );
 				} else {
 					prgba[0] = prgba[4] = prgba[8] = prgba[12] = r;
 					prgba[1] = prgba[5] = prgba[9] = prgba[13] = g;
@@ -101,54 +99,54 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				
 				if (points[i].first )
 				{
-					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					alpha = brushOpacity.randomValue;
 					lrgba[0] = prgba[0] * alpha;
 					lrgba[1] = prgba[1] * alpha;
 					lrgba[2] = prgba[2] * alpha;
 					lrgba[3] = alpha;
 					
-					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					alpha = brushOpacity.randomValue;
 					lrgba[4] = prgba[4] * alpha;
 					lrgba[5] = prgba[5] * alpha;
 					lrgba[6] = prgba[6] * alpha;
 					lrgba[7] = alpha;
 					
-					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					alpha = brushOpacity.randomValue;
 					lrgba[8] = prgba[8] * alpha;
 					lrgba[9] = prgba[9] * alpha;
 					lrgba[10] = prgba[10] * alpha;
 					lrgba[11] = alpha;
 					
 					
-					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
+					alpha = brushOpacity.randomValue;
 					lrgba[12] = prgba[12] * alpha;
 					lrgba[13] = prgba[13] * alpha;
 					lrgba[14] = prgba[14] * alpha;
 					lrgba[15] = alpha;
 				} else {
-					var alpha:Number = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
-					var blend:Number = rng.getNumber( colorBlending.lowerRangeValue, colorBlending.upperRangeValue );
+					var alpha:Number = brushOpacity.randomValue;
+					var blend:Number = colorBlending.randomValue;
 					lrgba[0] += (prgba[0] * alpha - lrgba[0] )  * blend ;
 					lrgba[1] += (prgba[1] * alpha - lrgba[1] ) * blend ;
 					lrgba[2] += (prgba[2] * alpha - lrgba[2] ) * blend ;
 					lrgba[3] += (alpha - lrgba[3]) * blend ;
 					
-					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
-					blend = rng.getNumber( colorBlending.lowerRangeValue, colorBlending.upperRangeValue );
+					alpha = brushOpacity.randomValue;
+					blend = colorBlending.randomValue;
 					lrgba[4] += (prgba[4] * alpha - lrgba[4] )  * blend ;
 					lrgba[5] += (prgba[5] * alpha - lrgba[5] ) * blend ;
 					lrgba[6] += (prgba[6] * alpha - lrgba[6] ) * blend ;
 					lrgba[7] += (alpha - lrgba[7]) * blend ;
 					
-					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
-					blend = rng.getNumber( colorBlending.lowerRangeValue, colorBlending.upperRangeValue );
+					alpha = brushOpacity.randomValue;
+					blend = colorBlending.randomValue;
 					lrgba[8] += (prgba[8] * alpha - lrgba[8] )  * blend ;
 					lrgba[9] += (prgba[9] * alpha - lrgba[9] ) * blend ;
 					lrgba[10] += (prgba[10] * alpha - lrgba[10] ) * blend ;
 					lrgba[11] += (alpha - lrgba[11]) * blend ;
 					
-					alpha = rng.getNumber( brushOpacity.lowerRangeValue, brushOpacity.upperRangeValue );
-					blend = rng.getNumber( colorBlending.lowerRangeValue, colorBlending.upperRangeValue );
+					alpha = brushOpacity.randomValue;
+					blend = colorBlending.randomValue;
 					lrgba[12] += (prgba[12] * alpha - lrgba[12] )  * blend ;
 					lrgba[13] += (prgba[13] * alpha - lrgba[13] ) * blend ;
 					lrgba[14] += (prgba[14] * alpha - lrgba[14] ) * blend ;

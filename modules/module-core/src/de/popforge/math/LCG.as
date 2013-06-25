@@ -40,6 +40,7 @@ package de.popforge.math
 			return min + getNextInt() / uint( 0xffffffff) * ( max - min );
 		}
 		
+		
 		public function getNextInt(): uint
 		{
 			m_seed0 = ((( m_seed0 & 4294967294) << 12 )& 0xffffffff)^((((m_seed0<<13)&0xffffffff)^m_seed0) >>> 19 );

@@ -9,12 +9,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.EndConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 
@@ -96,6 +98,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var playbackOffset:int;
 		private var playBackOffsetX:Number;
 		private var playBackOffsetY:Number;
+		
+		private var gestureStopTimeout:int;
+		private var GESTURE_RECOGNITION_TIME:Number = 500;
 
 		public function PathManager( type:int )
 		{
@@ -198,13 +203,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onTouchMove(event : TouchEvent) : void
 		{
 			if (event.touchPointID == _touchID)
+			{
+				if ( gestureStopTimeout == -1 && GestureManager.gesturesEnabled ) gestureStopTimeout = setTimeout(enableGestureRecognition,GESTURE_RECOGNITION_TIME,false);
 				onSamplePoint(event.stageX, event.stageY);
+			}
 		}
 
 		protected function onTouchEnd(event : TouchEvent) : void
 		{
 			if ( event.touchPointID == _touchID ) 
 			{
+				enableGestureRecognition(true);
 				_listeningToTouch = false;
 				onSampleEnd(event.stageX, event.stageY);
 				_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
@@ -257,6 +266,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onMouseDown(event : MouseEvent) : void
 		{
 			if (_listeningToTouch) return;
+			
+			
 			var stage : Stage = event.target as Stage;
 			if (!stage) return;
 			
@@ -279,6 +290,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onMouseUp(event : MouseEvent) : void
 		{
 			_listeningToMouse = false;
+			enableGestureRecognition(true);
 			if ( !playbackActive )
 			{
 				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
@@ -294,6 +306,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			{
 				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
 			}
+			if ( gestureStopTimeout == -1 && GestureManager.gesturesEnabled ) gestureStopTimeout = setTimeout(enableGestureRecognition,GESTURE_RECOGNITION_TIME,false);
+			
 			onSamplePoint(event.stageX, event.stageY);
 		}
 
@@ -595,6 +609,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if ( index >= _pointDecorators.length ) throw("PathManager.getDecoratorByPath decorator not found: "+path);
 			
 			return _pointDecorators[index];
+		}
+		
+		private function enableGestureRecognition( enable:Boolean ):void
+		{
+			GestureManager.gesturesEnabled = enable;
+			gestureStopTimeout = -1;
 		}
 	}
 }
