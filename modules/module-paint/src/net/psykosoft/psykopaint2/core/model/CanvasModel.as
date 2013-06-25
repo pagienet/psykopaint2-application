@@ -285,7 +285,7 @@ package net.psykosoft.psykopaint2.core.model
 			var layers : Vector.<ByteArray> = new Vector.<ByteArray>();
 			layers.push(saveLayer(_colorTexture, bmp));
 			layers.push(saveLayer(_normalSpecularMap, bmp));
-			layers.push(saveLayer(_sourceTexture, bmp));
+			layers.push(saveLayer(sourceTexture, bmp));
 			bmp.dispose();
 			return layers;
 		}
@@ -296,7 +296,7 @@ package net.psykosoft.psykopaint2.core.model
 		{
 			_colorTexture.uploadFromByteArray(data[0], 0, 0);
 			_normalSpecularMap.uploadFromByteArray(data[1], 0, 0);
-			_sourceTexture.uploadFromByteArray(data[2], 0, 0);
+			sourceTexture.uploadFromByteArray(data[2], 0, 0);
 		}
 
 		private function saveLayer(layer : Texture, workerBitmapData : BitmapData) : ByteArray
