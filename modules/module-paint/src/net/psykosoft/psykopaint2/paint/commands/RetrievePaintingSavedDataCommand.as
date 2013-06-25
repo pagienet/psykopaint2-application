@@ -26,7 +26,6 @@ package net.psykosoft.psykopaint2.paint.commands
 		private var _numPaintingFiles:uint;
 		private var _indexOfPaintingFileBeingRead:uint;
 		private var _paintingVos:Vector.<PaintingVO>;
-		private var _currentVoBeingDeSerialized:PaintingVO;
 
 		public function RetrievePaintingSavedDataCommand() {
 			super();
@@ -79,14 +78,11 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Read the contents of the file to a value object.
 			trace( this, "file read: " + _currentFileBeingLoaded.data.length + " bytes" );
-			_currentVoBeingDeSerialized = new PaintingVO();
-			_paintingVos.push( _currentVoBeingDeSerialized );
+			var vo:PaintingVO = new PaintingVO();
+			_paintingVos.push( vo );
 			trace( this, "de-serializing vo..." );
-			_currentVoBeingDeSerialized.deSerialize( _currentFileBeingLoaded.data, onVoDeSerialized );
-		}
+			vo.deSerialize( _currentFileBeingLoaded.data );
 
-		private function onVoDeSerialized():void {
-			trace( this, "vo de-serialized, id: " + _currentVoBeingDeSerialized.id );
 			// Continue reading next file.
 			_indexOfPaintingFileBeingRead++;
 			if( _indexOfPaintingFileBeingRead < _numPaintingFiles ) {

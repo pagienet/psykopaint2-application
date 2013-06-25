@@ -85,7 +85,8 @@ package net.psykosoft.psykopaint2.paint
 		private function onViewsReady():void {
 			// Load default surface.
 			_loader = new BinaryLoader();
-			var size : int = stage.stageWidth;
+//			var size : int = stage.stageWidth; // TODO: fix bug, stage not available
+			var size:int = 1024;
 			_loader.loadAsset( "/paint-packaged/surfaces/canvas_normal_specular_" + size + ".surf", onDefaultSurfaceLoaded );
 		}
 

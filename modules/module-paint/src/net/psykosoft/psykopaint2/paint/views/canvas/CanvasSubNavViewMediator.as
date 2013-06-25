@@ -106,7 +106,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			trace( this, "snapshot retrieved, changing state" );
 			requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, view.stage.stageWidth, view.stage.stageHeight * 0.76 ) );
 			_waitingForSnapshot = false;
-			requestStateChange( StateType.HOME_ON_EASEL );
+			requestStateChange( StateType.HOME_ON_EMPTY_EASEL );
 		}
 	}
 }

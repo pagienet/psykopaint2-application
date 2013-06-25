@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
 
@@ -279,7 +280,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			var len:uint = _paintingVosPendingForCreation.length;
 			for( var i:uint; i < len; i++ ) {
 				var vo:PaintingVO = _paintingVosPendingForCreation[ i ];
-				_paintingManager.createPaintingAtIndex( vo.diffuseImage, FrameType.WHITE, 2 + i );
+				// TODO: we could use the ARGB data directly to produce a texture without the bmd step
+				var diffuseBmd:BitmapData = new BitmapData( 1024, 768, false, 0 ); // TODO: must account for different sizes
+				diffuseBmd.setPixels( new Rectangle( 0, 0, 1024, 768 ), vo.colorImageARGB );
+				_paintingManager.createPaintingAtIndex( diffuseBmd, FrameType.WHITE, 2 + i );
 			}
 			_paintingVosPendingForCreation = null;
 		}

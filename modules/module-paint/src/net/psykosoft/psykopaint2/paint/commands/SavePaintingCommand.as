@@ -26,17 +26,12 @@ package net.psykosoft.psykopaint2.paint.commands
 		override public function execute():void {
 			super.execute();
 
-			// Obtain full scale images that composite the painting.
-			// TODO... using dummy images for now.
-			var diffuseImage:BitmapData = new BitmapData( 1024, 768, false, 0xFF0000 ); diffuseImage.perlinNoise( 50, 50, 8, Math.floor( 1000 * Math.random() ), false, true, 7 );
-			var heightmapImage:BitmapData = new BitmapData( 1024, 768, false, 0x00FF00 ); heightmapImage.perlinNoise( 5, 5, 8, Math.floor( 1000 * Math.random() ), true, true, 7 );
-			var compositeImage:BitmapData = new BitmapData( 1024, 768, false, 0x0000FF ); compositeImage.perlinNoise( 250, 250, 8, Math.floor( 1000 * Math.random() ), false, true, 7 );
-
 			// Produce data vo.
 			var vo:PaintingVO = new PaintingVO();
-			vo.diffuseImage = diffuseImage;
-			vo.heightmapImage = heightmapImage;
-			vo.compositeImage = compositeImage;
+			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayersARGB();
+			vo.colorImageARGB = imagesRGBA[ 0 ];
+			vo.heightmapImageARGB = imagesRGBA[ 1 ];
+			vo.sourceImageARGB = imagesRGBA[ 2 ];
 			vo.id = paintingId;
 
 			// Serialize data.

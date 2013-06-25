@@ -277,9 +277,9 @@ package net.psykosoft.psykopaint2.core.model
 		 * 1: normal/specular layer
 		 * 2: the source texture
 		 *
-		 * IMPORTANT: THE DATA IS SAVED IN RGBA ORDER - UNLIKE THE LOAD ORDER
+		 * IMPORTANT: THE DATA IS SAVED IN ARGB ORDER - UNLIKE THE LOAD ORDER
 		 */
-		public function saveLayersRGBA() : Vector.<ByteArray>
+		public function saveLayersARGB(): Vector.<ByteArray>
 		{
 			var bmp : BitmapData = new BitmapData(_width, _height, true);
 			var layers : Vector.<ByteArray> = new Vector.<ByteArray>();

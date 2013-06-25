@@ -70,7 +70,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			super.initialize();
 			registerView( view );
 			registerEnablingState( StateType.HOME );
-			registerEnablingState( StateType.HOME_ON_EASEL );
+			registerEnablingState( StateType.HOME_ON_EMPTY_EASEL );
 			registerEnablingState( StateType.HOME_ON_PAINTING );
 			registerEnablingState( StateType.GOING_TO_PAINT );
 			registerEnablingState( StateType.SETTINGS );
@@ -140,8 +140,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 
 			// Trigger new painting state if closest to easel ( index 1 ).
-			if( stateModel.currentState != StateType.HOME_ON_EASEL && paintingIndex == 1 ) {
-				requestStateChange( StateType.HOME_ON_EASEL );
+			if( stateModel.currentState != StateType.HOME_ON_EMPTY_EASEL && paintingIndex == 1 ) {
+				requestStateChange( StateType.HOME_ON_EMPTY_EASEL );
 				return;
 			}
 
