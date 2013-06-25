@@ -101,8 +101,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_rightButton.setTextAlign( TextAlign.RIGHT );
 //			_rightButton.useLabelBg( true );
 			_rightButton.autoCenterLabel( false );
+			_rightButton.snapLabelToRight( true );
 			_rightButton.displaceLabelTf( 10, -15 );
-			_rightButton.displaceLabelBg( -15, -5 );
+			_rightButton.displaceLabelBg( 128, -5 );
 
 			_scroller = new HItemScroller();
 			_scroller.visibleHeight = 130;

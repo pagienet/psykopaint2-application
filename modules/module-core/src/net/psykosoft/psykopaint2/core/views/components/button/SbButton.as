@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		private var _btnLblPos:Point;
         private var _isSelectable:Boolean = false;
 		private var _autoCenter:Boolean = true;
+		private var _snapToRight:Boolean = false;
 		private var _parentOnMouseDownX:Number;
 
 		public function SbButton() {
@@ -121,6 +122,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 				tf.x = -tf.width / 2;
 				labelBg.x = -labelBg.width / 2;
 			}
+			if( _snapToRight ) tf.x = labelBg.x - labelBg.width + 3;
 		}
 
 		public function displaceLabelBg( dx:Number, dy:Number ):void {
@@ -139,6 +141,10 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 		public function autoCenterLabel( value:Boolean ):void {
 			_autoCenter = value;
+		}
+
+		public function snapLabelToRight( value:Boolean ):void {
+			_snapToRight = value;
 		}
 
 		public function useLabelBg( value:Boolean ):void {
