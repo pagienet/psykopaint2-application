@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
+	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
@@ -34,6 +35,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _introZoomOutPending:Boolean = true;
 		private var _shiftMultiplier:Number = 1;
 		private var _paintingVosPendingForCreation:Vector.<PaintingVO>;
+		private var _paintingIdForPaintingAtIndex:Dictionary;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
 		public static const DEFAULT_ZOOM_IN:Point = new Point( 400, -800 );
@@ -43,6 +45,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function HomeView() {
 			super();
 			scalesToRetina = false;
+			_paintingIdForPaintingAtIndex = new Dictionary();
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
 
@@ -283,9 +286,16 @@ package net.psykosoft.psykopaint2.home.views.home
 				// TODO: we could use the ARGB data directly to produce a texture without the bmd step
 				var diffuseBmd:BitmapData = new BitmapData( vo.width, vo.height, false, 0xFFFFFF ); // TODO: must account for different sizes
 				diffuseBmd.setPixels( new Rectangle( 0, 0, vo.width, vo.height ), vo.colorImageARGB );
-				_paintingManager.createPaintingAtIndex( diffuseBmd, FrameType.WHITE, 2 + i );
+				var index:uint = 2 + i;
+				_paintingManager.createPaintingAtIndex( diffuseBmd, FrameType.WHITE, index );
+				_paintingIdForPaintingAtIndex[ index ] = vo.id;
 			}
 			_paintingVosPendingForCreation = null;
+		}
+
+		public function getPaintingIdAtIndex( index:uint ):String {
+			if( index < 3 || index == _paintingManager.getHomePaintingIndex() ) throw new Error( "HomeView.as - there are no dynamic paintings at this index" );
+			return _paintingIdForPaintingAtIndex[ index ];
 		}
 
 		// ---------------------------------------------------------------------

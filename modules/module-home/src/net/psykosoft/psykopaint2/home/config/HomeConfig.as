@@ -1,7 +1,9 @@
 package net.psykosoft.psykopaint2.home.config
 {
 
+	import net.psykosoft.psykopaint2.home.commands.ZoomThenChangeStateCommand;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 	import net.psykosoft.psykopaint2.home.views.home.ContinuePaintingSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.ContinuePaintingSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
@@ -85,7 +87,7 @@ package net.psykosoft.psykopaint2.home.config
 		// -----------------------
 
 		private function mapCommands():void {
-
+			_commandMap.map( RequestZoomThenChangeStateSignal ).toCommand( ZoomThenChangeStateCommand );
 		}
 
 		// -----------------------

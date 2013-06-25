@@ -1,7 +1,9 @@
 package net.psykosoft.psykopaint2.paint.config
 {
 
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingLoadSignal;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
+	import net.psykosoft.psykopaint2.paint.commands.LoadPaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.RetrievePaintingSavedDataCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
@@ -112,6 +114,7 @@ package net.psykosoft.psykopaint2.paint.config
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
 			_commandMap.map( RequestPaintingSavedDataRetrievalSignal ).toCommand( RetrievePaintingSavedDataCommand );
+			_commandMap.map( RequestPaintingLoadSignal ).toCommand( LoadPaintingCommand );
 		}
 
 		// -----------------------

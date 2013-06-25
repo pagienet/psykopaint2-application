@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.paint.model
 {
 
+	import flash.utils.ByteArray;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 
@@ -16,9 +18,21 @@ package net.psykosoft.psykopaint2.paint.model
 		}
 
 		public function setPaintingData( data:Vector.<PaintingVO> ):void {
-			trace( this, "setting painting data: " + data );
 			_paintingData = data;
 			notifyPaintingDataRetrievedSignal.dispatch( _paintingData );
+		}
+
+		public function getRgbaDataForPaintingWithId( id:String ):Vector.<ByteArray> {
+			// Find vo with id.
+			var len:uint = _paintingData.length;
+			var vo:PaintingVO;
+			for( var i:uint; i < len; ++i ) {
+				vo = _paintingData[ i ];
+				if( vo.id == id ) {
+					return Vector.<ByteArray>( [ vo.colorImageARGB, vo.heightmapImageARGB, vo.sourceImageARGB ] );
+				}
+			}
+			throw new Error( this, "unable to find saved painting with id: " + id );
 		}
 	}
 }

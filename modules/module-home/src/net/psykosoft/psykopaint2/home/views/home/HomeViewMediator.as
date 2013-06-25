@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
+	import net.psykosoft.psykopaint2.home.models.CurrentPaintingCache;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	public class HomeViewMediator extends MediatorBase
@@ -138,27 +139,29 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Variable.
 			var homePaintingIndex:uint = view.paintingManager.getHomePaintingIndex();
 
-			// Trigger settings state if closest to settings painting ( index 0 ).
+			// Trigger SETTINGS state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState != StateType.SETTINGS && paintingIndex == 0 ) {
 				requestStateChange( StateType.SETTINGS );
 				return;
 			}
 
-			// Trigger new painting state if closest to easel ( index 1 ).
+			// Trigger NEW PAINTING state if closest to easel ( index 1 ).
 			if( stateModel.currentState != StateType.HOME_ON_EMPTY_EASEL && paintingIndex == 1 ) {
 				requestStateChange( StateType.HOME_ON_EMPTY_EASEL );
 				return;
 			}
 
-			// Trigger continue painting state if closest to an in progress painting ( index > 1 and < homePaintingIndex ).
-			if( stateModel.currentState != StateType.HOME_ON_UNFINISHED_PAINTING && paintingIndex < homePaintingIndex ) {
-				requestStateChange( StateType.HOME_ON_UNFINISHED_PAINTING );
+			// Restore HOME state if closest to home painting ( index 2 ).
+			if( stateModel.currentState != StateType.HOME && paintingIndex == homePaintingIndex ) {
+				requestStateChange( StateType.HOME );
 				return;
 			}
 
-			// Restore home state if closest to home painting ( index 2 ).
-			if( stateModel.currentState != StateType.HOME && paintingIndex == homePaintingIndex ) {
-				requestStateChange( StateType.HOME );
+			CurrentPaintingCache.currentPaintingId = view.getPaintingIdAtIndex( paintingIndex );
+
+			// Trigger CONTINUE PAINTING state if closest to an in progress painting ( index > 1 and < homePaintingIndex ).
+			if( stateModel.currentState != StateType.HOME_ON_UNFINISHED_PAINTING && paintingIndex < homePaintingIndex ) {
+				requestStateChange( StateType.HOME_ON_UNFINISHED_PAINTING );
 				return;
 			}
 
