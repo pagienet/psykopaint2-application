@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
@@ -14,14 +13,13 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 	public class ViewBase extends Sprite
 	{
-		protected var _initialized:Boolean;
-
 		private var _loader:AssetBundleLoader;
 		private var _bundleId:String;
 		private var _added:Boolean;
-		protected var _reported:Boolean;
 		private var _requiresLoading:Boolean;
 
+		protected var _setupHasRan:Boolean;
+		protected var _viewIsReady:Boolean;
 		protected var _assetsLoaded:Boolean;
 
 		public var autoUpdates:Boolean = false;
@@ -53,7 +51,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 		public function enable():void {
 			if( visible ) return;
-			if( !_initialized ) setup();
+			if( !_setupHasRan ) setup();
 			trace( this, "enabled" );
 			onEnabled();
 			visible = true;
@@ -74,7 +72,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 		}
 
 		public function dispose():void {
-			_initialized = false;
+			_setupHasRan = false;
 			if( _loader ) {
 				_loader.dispose();
 				_loader = null;
@@ -98,7 +96,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 				}
 			}
 			setupSignal.dispatch();
-			_initialized = true;
+			_setupHasRan = true;
 		}
 
 		// ---------------------------------------------------------------------
@@ -106,8 +104,8 @@ package net.psykosoft.psykopaint2.base.ui.base
 		// ---------------------------------------------------------------------
 
 		protected function reportReady():void {
-			if( _reported ) return;
-			_reported = true;
+			if( _viewIsReady ) return;
+			_viewIsReady = true;
 			viewReadySignal.dispatch();
 		}
 
@@ -171,7 +169,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 			_added = true;
 
-			if( !_reported ) {
+			if( !_viewIsReady ) {
 				if( _requiresLoading ) {
 					if( _assetsLoaded ) {
 						trace( this, "-view ready from added and assets already loaded-" );
@@ -207,6 +205,14 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 			_assetsLoaded = true;
 			_loader.removeEventListener( Event.COMPLETE, onBundledAssetsReady );
+		}
+
+		// ---------------------------------------------------------------------
+		// Getters.
+		// ---------------------------------------------------------------------
+
+		public function get viewIsReady():Boolean {
+			return _viewIsReady;
 		}
 	}
 }

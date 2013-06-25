@@ -15,22 +15,29 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
-	import net.psykosoft.psykopaint2.home.views.home.objects.PictureFrameContainer;
-	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
+	import net.psykosoft.psykopaint2.home.views.home.data.FrameType;
+	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
+	import net.psykosoft.psykopaint2.home.views.home.objects.WallRoom;
 
 	public class HomeView extends ViewBase
 	{
 		private var _cameraController:ScrollCameraController;
-		private var _room:Room;
-		private var _frameContainer:PictureFrameContainer;
+		private var _room:WallRoom;
+		private var _paintingManager:PaintingManager;
 		private var _loader:AssetBundleLoader;
 		private var _view:View3D;
 		private var _stage3dProxy:Stage3DProxy;
 		private var _introZoomOutPending:Boolean = true;
+		private var _shiftMultiplier:Number = 1;
+		private var _paintingVosPendingForCreation:Vector.<PaintingVO>;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
+		public static const DEFAULT_ZOOM_IN:Point = new Point( 400, -800 );
+		public static const EASEL_CLOSE_ZOOM_IN:Point = new Point( 315, -900 );
+		public static const EASEL_FAR_ZOOM_IN:Point = new Point( 170, -1160 );
 
 		public function HomeView() {
 			super();
@@ -38,9 +45,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
 
-		// -----------------------
-		// Protected.
-		// -----------------------
+		// ---------------------------------------------------------------------
+		// Creation...
+		// ---------------------------------------------------------------------
 
 		override protected function onEnabled():void {
 			addChild( _view );
@@ -74,6 +81,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Key debugging.
 			// -----------------------
 
+			// TODO: remove on release
 			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
 			stage.addEventListener( KeyboardEvent.KEY_UP, onStageKeyUp );
 
@@ -85,19 +93,19 @@ package net.psykosoft.psykopaint2.home.views.home
 //			var tri:Trident = new Trident( 500 );
 //			_view.scene.addChild( tri );
 
-			_room = new Room( _view );
+			_room = new WallRoom( _view );
 			var cameraTarget:Object3D = new Object3D();
 			_cameraController = new ScrollCameraController( _view.camera, cameraTarget, stage );
-			_frameContainer = new PictureFrameContainer( _cameraController, _room, _view );
-			_frameContainer.y = 400;
+			_paintingManager = new PaintingManager( _cameraController, _room, _view );
+			_paintingManager.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
 			_cameraController.cameraY = cameraTarget.y = 400;
 			_cameraController.cameraZ = -800;
-			_frameContainer.z = _room.wallZ - 2;
+			_paintingManager.z = _room.wallZ - 2;
 			cameraTarget.z = _room.wallZ;
 			_view.scene.addChild( _cameraController );
 			_view.scene.addChild( _room );
-			_view.scene.addChild( _frameContainer );
+			_view.scene.addChild( _paintingManager );
 
 			// -------------------------
 			// Prepare external assets.
@@ -129,10 +137,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		override protected function onAssetsReady():void {
-
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
-			_frameContainer.loadDefaultHomeFrames();
+			_paintingManager.createDefaultPaintings();
+			if( _paintingVosPendingForCreation ) createPendingInProgressPaintings();
 		}
 
 		override protected function onDisposed():void {
@@ -144,7 +152,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			*
 			* Getting an error in the drawing core now. Away3D disposal fucks up something in the GPU.
 			* */
-			_initialized = true;
+			_setupHasRan = true;
  			return;
 
 			if( _loader ) {
@@ -160,9 +168,9 @@ package net.psykosoft.psykopaint2.home.views.home
 				_room = null;
 			}
 
-			if( _frameContainer ) {
-				_frameContainer.dispose();
-				_frameContainer = null;
+			if( _paintingManager ) {
+				_paintingManager.dispose();
+				_paintingManager = null;
 			}
 
 			if( _cameraController ) {
@@ -182,8 +190,29 @@ package net.psykosoft.psykopaint2.home.views.home
 		// Interface.
 		// ---------------------------------------------------------------------
 
+		public function get paintingManager():PaintingManager {
+			return _paintingManager;
+		}
+
+		public function get room():WallRoom {
+			return _room;
+		}
+
+		public function get cameraController():ScrollCameraController {
+			return _cameraController;
+		}
+
+		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
+			_stage3dProxy = stage3dProxy;
+			setup();
+		}
+
+		public function getCurrentPaintingIndex():uint {
+			return _cameraController.positionManager.closestSnapPointIndex;
+		}
+
 		public function updateEasel( bmd:BitmapData ):void {
-			_frameContainer.updateEasel( bmd );
+//			_paintingManager.updateEasel( bmd );
 		}
 
 		public function renderScene():void {
@@ -203,10 +232,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController.update();
 			_view.render();
 		}
-
-		public static const DEFAULT_ZOOM_IN:Point = new Point( 400, -800 );
-		public static const EASEL_CLOSE_ZOOM_IN:Point = new Point( 315, -900 );
-		public static const EASEL_FAR_ZOOM_IN:Point = new Point( 170, -1160 );
 
 		public function zoomIn():void {
 			// TODO: evaluate zoom in y and z for current snap point
@@ -242,11 +267,26 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController.zoomOut();
 		}
 
+		public function createInProgressPaintings( data:Vector.<PaintingVO> ):void {
+			trace( this, "receiving in progress painting data." );
+			// Store data for later creation.
+			_paintingVosPendingForCreation = data;
+			if( _viewIsReady ) createPendingInProgressPaintings();
+		}
+
+		private function createPendingInProgressPaintings():void {
+			trace( this, "creating painting data." );
+			var len:uint = _paintingVosPendingForCreation.length;
+			for( var i:uint; i < len; i++ ) {
+				var vo:PaintingVO = _paintingVosPendingForCreation[ i ];
+				_paintingManager.createPaintingAtIndex( vo.diffuseImage, FrameType.WHITE, 2 + i );
+			}
+			_paintingVosPendingForCreation = null;
+		}
+
 		// ---------------------------------------------------------------------
 		// Listeners.
 		// ---------------------------------------------------------------------
-
-		private var _shiftMultiplier:Number = 1;
 
 		private function onStageKeyUp( event:KeyboardEvent ):void {
 			switch( event.keyCode ) {
@@ -281,31 +321,6 @@ package net.psykosoft.psykopaint2.home.views.home
 				}
 			}
 			trace( this, "positioning camera, Y: " + _cameraController.camera.y + ", Z: " + _cameraController.camera.z );
-		}
-
-		// -----------------------
-		// Getters.
-		// -----------------------
-
-		public function get frameContainer():PictureFrameContainer {
-			return _frameContainer;
-		}
-
-		public function get room():Room {
-			return _room;
-		}
-
-		public function get cameraController():ScrollCameraController {
-			return _cameraController;
-		}
-
-		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
-			_stage3dProxy = stage3dProxy;
-			setup();
-		}
-
-		public function getCurrentPaintingIndex():uint {
-			return _cameraController.positionManager.closestSnapPointIndex;
 		}
 	}
 }

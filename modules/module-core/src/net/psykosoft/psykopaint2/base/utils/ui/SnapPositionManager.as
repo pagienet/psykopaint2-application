@@ -39,19 +39,19 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			_positionChange = 0;
 		}
 
-		public function addSnapPoint( value:Number ):void {
+		public function pushSnapPoint( value:Number ):void {
 			_snapPoints.push( value );
 		}
 
-		public function updateSnapPointAt( index:uint, value:Number ):void {
+		public function updateSnapPointAtIndex( index:uint, value:Number ):void {
 			_snapPoints[ index ] = value;
 		}
 
-		public function getSnapPointAt( index:uint ):Number {
+		public function getSnapPointAtIndex( index:uint ):Number {
 			return _snapPoints[ index ];
 		}
 
-		public function removeSnapPointAt( index:uint ):void {
+		public function removeSnapPointAtIndex( index:uint ):void {
 			_snapPoints.splice( index, 1 );
 		}
 

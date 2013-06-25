@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		override protected function evaluateNewSnapPointFromPosition( px:Number ):void {
-			_positionManager.addSnapPoint( px );
+			_positionManager.pushSnapPoint( px );
 		}
 	}
 }

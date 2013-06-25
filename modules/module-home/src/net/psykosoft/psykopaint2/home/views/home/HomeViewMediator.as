@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
@@ -19,6 +20,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -57,6 +59,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var requestZoomToggleSignal:RequestZoomToggleSignal;
 
+		[Inject]
+		public var notifyPaintingDataRetrievedSignal:NotifyPaintingDataRetrievedSignal;
+
 		private var _waitingForPaintModeAfterZoomIn:Boolean;
 
 		override public function initialize():void {
@@ -81,6 +86,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyNavigationToggleSignal.add( onNavigationToggled );
 			notifyCanvasBitmapSignal.add( onCanvasSnapShot );
 			requestZoomToggleSignal.add( onZoomRequested );
+			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 
 			// From view.
 			view.enabledSignal.add( onViewEnabled );
@@ -108,7 +114,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onViewAssetsReady():void {
 			// TODO: will cause trouble if view was disposed by a memory warning and the listener is set up again...
-			view.frameContainer.easel.clickedSignal.add( onEaselClicked );
+//			view.paintingManager.easel.clickedSignal.add( onEaselClicked );
 		}
 
 		private function onViewEnabled():void {
@@ -189,6 +195,11 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
+			trace( this, "received painting data: " + data.length );
+			view.createInProgressPaintings( data );
+		}
 
 		private function onCanvasSnapShot( bmd:BitmapData ):void {
 			// TODO: also updates when the edge bgs are being updated from a click on NewPaintSubNav's paint button, and it shouldn't

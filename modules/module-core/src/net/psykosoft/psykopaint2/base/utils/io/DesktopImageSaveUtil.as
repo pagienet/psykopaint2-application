@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.base.utils.io
 {
 
-	import com.adobe.images.PNGEncoder;
+	import by.blooddy.crypto.image.PNG24Encoder;
 
 	import flash.display.BitmapData;
 	import flash.filesystem.File;
@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		public static function saveImageToDesktop( bmd:BitmapData ):void {
 
 			// Encode to jpeg or png.
-			var pngBytes:ByteArray = PNGEncoder.encode( bmd );
+			var pngBytes:ByteArray = PNG24Encoder.encode( bmd );
 
 			// Generate a dated image name.
 			var nowDate:Date = new Date();

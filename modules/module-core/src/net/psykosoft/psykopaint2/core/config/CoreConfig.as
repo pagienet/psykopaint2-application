@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
@@ -120,6 +121,7 @@ package net.psykosoft.psykopaint2.core.config
 			_injector.map( RequestZoomToggleSignal ).asSingleton();
 			_injector.map( NotifyZoomCompleteSignal ).asSingleton();
 			_injector.map( NotifyNavigationMovingSignal ).asSingleton();
+			_injector.map( NotifyPaintingDataRetrievedSignal ).asSingleton();
 		}
 
 		// -----------------------

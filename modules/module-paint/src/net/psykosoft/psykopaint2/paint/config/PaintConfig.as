@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint.config
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
+	import net.psykosoft.psykopaint2.paint.model.PaintingDataModel;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSavedDataRetrievalSignal;
@@ -71,7 +72,7 @@ package net.psykosoft.psykopaint2.paint.config
 		// -----------------------
 
 		private function mapModels():void {
-
+			_injector.map( PaintingDataModel ).asSingleton();
 		}
 
 		// -----------------------

@@ -145,9 +145,9 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_perspectiveFactorDirty = true;
 		}
 
-		public function addSnapPoint( value:Number ):void {
+		/*public function addSnapPoint( value:Number ):void {
 			_positionManager.addSnapPoint( value );
-		}
+		}*/
 
 		public function jumpToSnapPointIndex( value:uint ):void {
 			_positionManager.snapAtIndexWithoutEasing( value );

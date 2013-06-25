@@ -122,28 +122,28 @@ package net.psykosoft.psykopaint2.base.ui.components
 			var minAllowed:Number = visibleWidth / 2 - leftGap;
 			var maxAllowed:Number = maxWidth + rightGap - visibleWidth / 2;
 			for( var i:uint; i < len; i++ ) {
-				var snapPoint:Number = _positionManager.getSnapPointAt( i );
+				var snapPoint:Number = _positionManager.getSnapPointAtIndex( i );
 				// Left containment.
 				if( snapPoint < minAllowed ) {
 					if( leftEdgeSnapPointMatched ) {
-						_positionManager.removeSnapPointAt( i );
+						_positionManager.removeSnapPointAtIndex( i );
 						i--; len--;
 						continue;
 					}
 					else {
-						_positionManager.updateSnapPointAt( i, minAllowed );
+						_positionManager.updateSnapPointAtIndex( i, minAllowed );
 						leftEdgeSnapPointMatched = true;
 					}
 				}
 				// Right containment.
 				if( snapPoint > maxAllowed ) {
 					if( rightEdgeSnapPointMatched ) {
-						_positionManager.removeSnapPointAt( i );
+						_positionManager.removeSnapPointAtIndex( i );
 						i--; len--;
 						continue;
 					}
 					else {
-						_positionManager.updateSnapPointAt( i, maxAllowed );
+						_positionManager.updateSnapPointAtIndex( i, maxAllowed );
 						rightEdgeSnapPointMatched = true;
 					}
 				}

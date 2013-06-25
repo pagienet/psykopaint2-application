@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint
 
 	import flash.display.BitmapData;
 	import flash.events.Event;
+	import flash.net.registerClassAlias;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 
@@ -13,6 +14,7 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSavedDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
@@ -106,6 +108,7 @@ package net.psykosoft.psykopaint2.paint
 			}
 
 			// Start loading painting data.
+			registerClassAlias( "PaintingVO", PaintingVO );
 			_paintConfig.injector.getInstance( RequestPaintingSavedDataRetrievalSignal ).dispatch();
 
 			// Notify potential super modules.
