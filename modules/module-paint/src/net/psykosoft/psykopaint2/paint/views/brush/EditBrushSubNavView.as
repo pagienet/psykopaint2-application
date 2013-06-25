@@ -3,22 +3,19 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import com.bit101.components.ComboBox;
 	import com.bit101.components.Knob;
-	
+
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.text.TextField;
-	
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
-import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
 	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-	
-	import org.osflash.signals.Signal;
 
 	// TODO: remove minimalcomps dependency when done
 

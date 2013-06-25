@@ -389,6 +389,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function invalidateContent():void {
 			_scroller.invalidateContent();
 			_scroller.x = 1024 / 2 - _scroller.minWidth / 2;
+			if( leftBtnSide.visible ) _scroller.x += leftBtnSide.width / 2;
+			else if( rightBtnSide.visible ) _scroller.x -= rightBtnSide.width / 2;
 			_scroller.dock();
 		}
 
