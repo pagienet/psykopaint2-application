@@ -2,6 +2,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 {
 
 	import away3d.containers.ObjectContainer3D;
+	import away3d.containers.View3D;
+	import away3d.entities.Mesh;
+	import away3d.materials.TextureMaterial;
+	import away3d.primitives.PlaneGeometry;
+
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
 	/*
 	* Contains a painting within a frame.
@@ -10,9 +17,27 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	{
 		private var _painting:Painting;
 		private var _frame:Frame;
+		private var _easel:Mesh;
+		private var _view:View3D;
 
-		public function FramedPainting() {
+		public function FramedPainting( view:View3D ) {
 			super();
+			_view = view;
+		}
+
+		public function set easelVisible( visible:Boolean ):void {
+			if( !_easel ) {
+				var easelMaterial:TextureMaterial = TextureUtil.getAtfMaterial( HomeView.HOME_BUNDLE_ID, "easelImage", _view );
+				easelMaterial.alphaBlending = true;
+				easelMaterial.mipmap = false;
+				_easel = new Mesh( new PlaneGeometry( 1024, 1024 ), easelMaterial );
+				_easel.y = -210;
+				if( _frame ) _easel.z = _frame.depth / 2 + 1;
+				_easel.scale( 1.575 );
+				_easel.rotationX = -90;
+				addChild( _easel );
+			}
+			_easel.visible = visible;
 		}
 
 		override public function dispose():void {
@@ -40,6 +65,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				removeChild( _frame );
 			}
 			_frame = frame;
+			if( _easel ) _easel.z = _frame.depth / 2 + 1;
 			addChild( _frame );
 		}
 

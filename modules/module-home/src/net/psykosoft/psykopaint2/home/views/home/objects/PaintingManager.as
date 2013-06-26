@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.data.FrameType;
+	import net.psykosoft.psykopaint2.home.views.home.objects.FramedPainting;
 	import net.psykosoft.psykopaint2.home.views.home.vos.FrameTextureAtlasDescriptorVO;
 
 	public class PaintingManager extends ObjectContainer3D
@@ -79,9 +80,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_frameMaterial.smooth = true;
 
 			// Default paintings.
-			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ), FrameType.DANGER, 0 );
-			createPaintingAtIndex( new BitmapData( 512, 512, false, 0xFF0000 ), FrameType.EASEL, 1 );
-			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ), FrameType.WHITE, 2 );
+			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ), FrameType.DANGER, 0, true );
+			var easelPainting:FramedPainting = createPaintingAtIndex( new BitmapData( 512, 512, false, 0xFF0000 ), FrameType.EASEL, 1, false );
+			easelPainting.easelVisible = true;
+			easelPainting.z -= 500;
+			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ), FrameType.WHITE, 2, true );
 			homePaintingIndex = 2;
 
 			// Sample paintings. // TODO: remove when we are ready to show published paintings
@@ -90,7 +93,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 //			}
 		}
 
-		public function createPaintingAtIndex( paintingBmd:BitmapData, frameType:String, index:uint ):void {
+		public function createPaintingAtIndex( paintingBmd:BitmapData, frameType:String, index:uint, addShadow:Boolean ):FramedPainting {
 
 			trace( this, "creating painting at index: " + index );
 
@@ -102,7 +105,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var frame:Frame = new Frame( _frameMaterial, frameDescriptor, painting.width, painting.height );
 
 			// Both.
-			var framedPainting:FramedPainting = new FramedPainting();
+			var framedPainting:FramedPainting = new FramedPainting( _view );
 			framedPainting.setPainting( painting );
 			framedPainting.setFrame( frame );
 
@@ -112,18 +115,20 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			else _paintings.push( framedPainting );
 			numPaintings++;
 			addChild( framedPainting );
-			autoPositionPaintingAtIndex( framedPainting, index );
+			autoPositionPaintingAtIndex( framedPainting, index, addShadow );
 
 			// Need to update paintings to the right of this one?
 			if( index < numPaintings - 1 ) {
 				trace( this, "repositioning higher paintings..." );
 				for( var i:uint = index + 1; i < numPaintings; i++ ) {
-					autoPositionPaintingAtIndex( _paintings[ i ], i );
+					autoPositionPaintingAtIndex( _paintings[ i ], i, addShadow );
 				}
 			}
+
+			return framedPainting;
 		}
 
-		private function autoPositionPaintingAtIndex( framedPainting:FramedPainting, index:uint ):void {
+		private function autoPositionPaintingAtIndex( framedPainting:FramedPainting, index:uint, addShadow:Boolean ):void {
 
 			// Position painting.
 			var px:Number = 0;
@@ -155,7 +160,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				shadow.x = px;
 			}
 			else {
-				_room.addShadow( framedPainting.x, this.y, framedPainting.width, framedPainting.height );
+				if( addShadow ) {
+					_room.addShadow( framedPainting.x, this.y, framedPainting.width, framedPainting.height );
+				}
 			}
 		}
 

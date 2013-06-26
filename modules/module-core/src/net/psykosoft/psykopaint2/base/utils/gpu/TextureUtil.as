@@ -141,6 +141,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 		}
 
 		public static function getAtfMaterial( bundle:String, id:String, view:View3D ):TextureMaterial {
+			// TODO: cache?
 			return new TextureMaterial( getAtfTexture( bundle, id, view ) );
 		}
 
