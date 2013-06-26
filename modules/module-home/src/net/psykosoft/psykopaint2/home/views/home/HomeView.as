@@ -46,6 +46,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			super();
 			scalesToRetina = false;
 			_paintingIdForPaintingAtIndex = new Dictionary();
+			_cameraController = new ScrollCameraController();
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
 
@@ -99,7 +100,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_room = new WallRoom( _view );
 			var cameraTarget:Object3D = new Object3D();
-			_cameraController = new ScrollCameraController( _view.camera, cameraTarget, stage );
+			_cameraController.setCamera( _view.camera, cameraTarget );
+			_cameraController.stage = stage;
 			_paintingManager = new PaintingManager( _cameraController, _room, _view );
 			_paintingManager.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
@@ -145,6 +147,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_room.initialize();
 			_paintingManager.createDefaultPaintings();
 			if( _paintingVosPendingForCreation ) createPendingInProgressPaintings();
+			_cameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
 		}
 
 		override protected function onDisposed():void {
@@ -275,9 +278,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			trace( this, "receiving in progress painting data." );
 			// Store data for later creation.
 			_paintingVosPendingForCreation = data;
-			if( _viewIsReady ) createPendingInProgressPaintings();
+			if( _viewIsReady ) {
+				createPendingInProgressPaintings();
+				_cameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
+			}
 		}
 
+		// TODO: move to painting manager
 		private function createPendingInProgressPaintings():void {
 			trace( this, "creating painting data." );
 			var len:uint = _paintingVosPendingForCreation.length;
@@ -290,11 +297,12 @@ package net.psykosoft.psykopaint2.home.views.home
 				_paintingManager.createPaintingAtIndex( diffuseBmd, FrameType.WHITE, index );
 				_paintingIdForPaintingAtIndex[ index ] = vo.id;
 			}
+			_paintingManager.homePaintingIndex += len;
 			_paintingVosPendingForCreation = null;
 		}
 
 		public function getPaintingIdAtIndex( index:uint ):String {
-			if( index < 3 || index == _paintingManager.getHomePaintingIndex() ) throw new Error( "HomeView.as - there are no dynamic paintings at this index" );
+			if( index < 3 || index == _paintingManager.homePaintingIndex ) throw new Error( "HomeView.as - there are no dynamic paintings at this index" );
 			return _paintingIdForPaintingAtIndex[ index ];
 		}
 

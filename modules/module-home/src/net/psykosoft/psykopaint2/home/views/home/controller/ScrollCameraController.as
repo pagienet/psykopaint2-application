@@ -45,20 +45,14 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 		public var zoomCompleteSignal:Signal;
 
-		public function ScrollCameraController( camera:Camera3D, target:Object3D, stage:Stage ) {
+		public function ScrollCameraController() {
 
 			super();
 
 			zoomCompleteSignal = new Signal();
 
-			_camera = camera;
-			_cameraTarget = target;
-			_stageWidth = stage.stageWidth;
-			_stageHeight = stage.stageHeight;
-
 			_positionManager = new SnapPositionManager();
 			_interactionManager = new ScrollInteractionManager( _positionManager );
-			_interactionManager.stage = stage;
 
 			_interactionManager.throwInputMultiplier = 2;
 			_interactionManager.useDetailedDelta = false;
@@ -71,6 +65,17 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			// Ensures that the scrolling snaps to finger 100%, if right, the tracer should be placed just at the edge of the screen -
 //			_perspectiveTracer = new Mesh( new CubeGeometry(), new ColorMaterial( 0xFF0000 ) );
 //			addChild( _perspectiveTracer );
+		}
+
+		public function setCamera( camera:Camera3D, cameraTarget:Object3D ):void {
+			_camera = camera;
+			_cameraTarget = cameraTarget;
+		}
+
+		public function set stage( value:Stage ):void {
+			_stageWidth = value.stageWidth;
+			_stageHeight = value.stageHeight;
+			_interactionManager.stage = value;
 		}
 
 		private function onSnapMotionEnded():void {

@@ -95,6 +95,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.enabledSignal.add( onViewEnabled );
 			view.setupSignal.add( onViewSetup );
 			view.assetsReadySignal.add( onViewAssetsReady );
+			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
+			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
 		}
 
 		// -----------------------
@@ -127,9 +129,6 @@ package net.psykosoft.psykopaint2.home.views.home
 					view.zoomOut();
 				}, 1000 );
 			}
-			// TODO: check if previously added
-			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
-			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
 		}
 
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
@@ -137,7 +136,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			trace( this, "closest painting changed to index: " + paintingIndex );
 
 			// Variable.
-			var homePaintingIndex:uint = view.paintingManager.getHomePaintingIndex();
+			var homePaintingIndex:uint = view.paintingManager.homePaintingIndex;
 
 			// Trigger SETTINGS state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState != StateType.SETTINGS && paintingIndex == 0 ) {
@@ -210,7 +209,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
 			view.createInProgressPaintings( data );
-			view.cameraController.jumpToSnapPointIndex( data.length + 2 ); // always snap at home: settings, empty easel, ...paintings, -->HOME<---
 		}
 
 		private function onCanvasSnapShot( bmd:BitmapData ):void {

@@ -26,9 +26,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _view:View3D;
 		private var _snapPointForPainting:Dictionary;
 		private var _shadowForPainting:Dictionary;
-		private var _homePaintingIndex:int = 2;
-
 		private var _atlasXml:XML;
+
+		// TODO: make private
+		public var homePaintingIndex:int = -1;
 
 		private const FRAME_GAP:Number = 300;
 
@@ -81,20 +82,17 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ), FrameType.DANGER, 0 );
 			createPaintingAtIndex( new BitmapData( 512, 512, false, 0xFF0000 ), FrameType.EASEL, 1 );
 			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ), FrameType.WHITE, 2 );
+			homePaintingIndex = 2;
 
 			// Sample paintings. // TODO: remove when we are ready to show published paintings
 //			for( var i:uint; i < 7; i++ ) {
 //				createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "samplePainting" + i, true ), FrameType.BLUE, i + 2 );
 //			}
-
-			// Go to initial painting.
-			_cameraController.jumpToSnapPointIndex( 2 ); // TODO: move outside of method
 		}
 
 		public function createPaintingAtIndex( paintingBmd:BitmapData, frameType:String, index:uint ):void {
 
-			// Update indices.
-			if( index <= _homePaintingIndex ) _homePaintingIndex++;
+			trace( this, "creating painting at index: " + index );
 
 			// Painting.
 			var painting:Painting = new Painting( paintingBmd, _view );
@@ -142,9 +140,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// Create or update snap point.
 			var snapPoint:Number = _snapPointForPainting[ framedPainting ];
 			if( snapPoint ) {
+				trace( this, "reusing snap point: " + index );
 				_cameraController.positionManager.updateSnapPointAtIndex( index, px );
 			}
 			else {
+				trace( this, "pushing snap point: " + index );
 				_cameraController.positionManager.pushSnapPoint( px );
 			}
 			_snapPointForPainting[ framedPainting ] = px;
@@ -161,10 +161,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private function removePaintingAtIndex( index:uint ):void {
 			// TODO... remove painting, remove shadow, remove snap point
-		}
-
-		public function getHomePaintingIndex():uint {
-			return _homePaintingIndex;
 		}
 	}
 }
