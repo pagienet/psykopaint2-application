@@ -76,6 +76,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public function dock():void {
 			if( width < visibleWidth ) return;
 			_positionManager.snapAtIndexWithoutEasing( 0 );
+			refreshToPosition();
+		}
+
+		public function refreshToPosition():void {
 			_container.x = visibleWidth / 2 - _positionManager.position;
 		}
 
@@ -206,7 +210,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 //			trace( this, ">>> updating scroller <<<" ); // This should trace only when there is motion in the scroller.
 			_interactionManager.update();
 			_positionManager.update();
-			_container.x = visibleWidth / 2 - _positionManager.position;
+			refreshToPosition();
 		}
 
 		// ---------------------------------------------------------------------

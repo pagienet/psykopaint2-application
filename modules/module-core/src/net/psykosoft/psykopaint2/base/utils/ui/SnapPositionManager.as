@@ -177,6 +177,11 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			return _position;
 		}
 
+		public function set position( value:Number ):void {
+			_position = value;
+			evaluateClosestSnapPointPosition( _position );
+		}
+
 		public function set frictionFactor( value:Number ):void {
 			_frictionFactor = value;
 		}

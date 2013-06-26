@@ -27,18 +27,20 @@ import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
 			view.setSelectedBrush( paintModule.activeBrushKit );
 			view.toggleRightButtonVisibility( hasParameters() );
-
+			view.setScrollerPosition( EditBrushCache.lastScrollerPosition );
 		//	view.setAvailableShapes( paintModule.getCurrentBrushShapes() );
 		//	view.setSelectedShape( paintModule.activeBrushKitShape );
 		}
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
-				case SelectBrushSubNavView.LBL_BACK: 
+				case SelectBrushSubNavView.LBL_BACK:
+					EditBrushCache.lastScrollerPosition = view.getScrollerPosition();
 					requestStateChange( StateType.PREVIOUS );
 					break;
 				
-				case SelectBrushSubNavView.LBL_EDIT_BRUSH: 
+				case SelectBrushSubNavView.LBL_EDIT_BRUSH:
+					EditBrushCache.lastScrollerPosition = view.getScrollerPosition();
 					requestStateChange( StateType.PAINT_ADJUST_BRUSH );
 					break;
 				

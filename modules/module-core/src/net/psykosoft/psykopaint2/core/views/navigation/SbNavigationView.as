@@ -221,6 +221,19 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_scroller.evaluateInteractionEnd();
 		}
 
+		public function jumpScrollerToSnapPointIndex( value:uint ):void {
+			_scroller.positionManager.snapAtIndexWithoutEasing( value );
+		}
+
+		public function getScrollerPosition():Number {
+			return _scroller.positionManager.position;
+		}
+
+		public function setScrollerPosition( value:Number ):void {
+			_scroller.positionManager.position = value;
+			_scroller.refreshToPosition();
+		}
+
 		public function evaluateReactiveHideStart():void {
 			if( _animating ) return;
 			if( _onReactiveHide ) return;
@@ -391,13 +404,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function toggleLeftButtonVisibility( value:Boolean ):void {
 			_leftButton.visible = value;
 			leftBtnSide.visible = value;
-			//TODO: migth have to review gaps and snapPoints
+			//TODO: might have to review gaps and snapPoints
 		}
 
 		public function toggleRightButtonVisibility( value:Boolean ):void {
 			_rightButton.visible = value;
 			rightBtnSide.visible = value;
-			//TODO: migth have to review gaps and snapPoints
+			//TODO: might have to review gaps and snapPoints
 		}
 
 		public function invalidateContent():void {

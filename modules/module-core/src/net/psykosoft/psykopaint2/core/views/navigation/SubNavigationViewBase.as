@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import flash.display.Bitmap;
-	import flash.display.Sprite;
 
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
@@ -77,6 +76,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		
 		protected function selectButtonByIndex( index:int ):void {
 			_navigation.selectButtonByIndex( index );
+		}
+
+		public function getScrollerPosition():Number{
+			return _navigation.getScrollerPosition();
+		}
+
+		public function setScrollerPosition( value:Number ):void{
+			 _navigation.setScrollerPosition( value );
 		}
 	}
 }
