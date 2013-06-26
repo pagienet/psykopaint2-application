@@ -90,7 +90,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyNavigationToggleSignal.add( onNavigationToggled );
 			notifyCanvasBitmapSignal.add( onCanvasSnapShot );
 			requestZoomToggleSignal.add( onZoomRequested );
-			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 
 			// From view.
 			view.enabledSignal.add( onViewEnabled );
@@ -147,7 +146,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Trigger NEW PAINTING state if closest to easel ( index 1 ).
 			if( stateModel.currentState != StateType.HOME_ON_EMPTY_EASEL && paintingIndex == 1 ) {
-				paintingModel.focusedPaintingId = "easel";
 				requestStateChange( StateType.HOME_ON_EMPTY_EASEL );
 				return;
 			}
@@ -160,7 +158,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Trigger CONTINUE PAINTING state if closest to an in progress painting ( index > 1 and < homePaintingIndex ).
 			if( stateModel.currentState != StateType.HOME_ON_UNFINISHED_PAINTING && paintingIndex < homePaintingIndex ) {
-				paintingModel.focusedPaintingId = view.getPaintingIdAtIndex( paintingIndex );
 				requestStateChange( StateType.HOME_ON_UNFINISHED_PAINTING );
 				return;
 			}
@@ -207,10 +204,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 		// From app.
 		// -----------------------
-
-		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
-			view.createInProgressPaintings( data );
-		}
 
 		private function onCanvasSnapShot( bmd:BitmapData ):void {
 			// TODO: also updates when the edge bgs are being updated from a click on NewPaintSubNav's paint button, and it shouldn't

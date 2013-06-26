@@ -34,8 +34,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _stage3dProxy:Stage3DProxy;
 		private var _introZoomOutPending:Boolean = true;
 		private var _shiftMultiplier:Number = 1;
-		private var _paintingVosPendingForCreation:Vector.<PaintingVO>;
-		private var _paintingIdForPaintingAtIndex:Dictionary;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
 		public static const DEFAULT_ZOOM_IN:Point = new Point( 400, -800 );
@@ -45,7 +43,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function HomeView() {
 			super();
 			scalesToRetina = false;
-			_paintingIdForPaintingAtIndex = new Dictionary();
 			_cameraController = new ScrollCameraController();
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
@@ -146,7 +143,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
 			_paintingManager.createDefaultPaintings();
-			if( _paintingVosPendingForCreation ) createInProgressPaintingsNow();
 			_cameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
 		}
 
@@ -272,38 +268,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function zoomOut():void {
 			_cameraController.zoomOut();
-		}
-
-		public function createInProgressPaintings( data:Vector.<PaintingVO> ):void {
-			trace( this, "receiving in progress painting data." );
-			// Store data for later creation.
-			_paintingVosPendingForCreation = data;
-			if( _viewIsReady ) {
-				createInProgressPaintingsNow();
-				_cameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
-			}
-		}
-
-		// TODO: move to painting manager
-		private function createInProgressPaintingsNow():void {
-			trace( this, "creating painting data." );
-			var len:uint = _paintingVosPendingForCreation.length;
-			for( var i:uint; i < len; i++ ) {
-				var vo:PaintingVO = _paintingVosPendingForCreation[ i ];
-				// TODO: we could use the ARGB data directly to produce a texture without the bmd step
-				var diffuseBmd:BitmapData = new BitmapData( vo.width, vo.height, false, 0xFFFFFF ); // TODO: must account for different sizes
-				diffuseBmd.setPixels( new Rectangle( 0, 0, vo.width, vo.height ), vo.colorImageARGB );
-				var index:uint = 2 + i;
-				_paintingManager.createPaintingAtIndex( diffuseBmd, FrameType.WHITE, index );
-				_paintingIdForPaintingAtIndex[ index ] = vo.id;
-			}
-			_paintingManager.homePaintingIndex += len;
-			_paintingVosPendingForCreation = null;
-		}
-
-		public function getPaintingIdAtIndex( index:uint ):String {
-			if( index < 2 || index == _paintingManager.homePaintingIndex ) throw new Error( "HomeView.as - there are no dynamic paintings at this index" );
-			return _paintingIdForPaintingAtIndex[ index ];
 		}
 
 		// ---------------------------------------------------------------------
