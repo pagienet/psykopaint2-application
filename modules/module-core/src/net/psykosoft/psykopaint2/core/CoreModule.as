@@ -206,6 +206,8 @@ package net.psykosoft.psykopaint2.core
 			CoreSettings.RUNNING_ON_RETINA_DISPLAY = PlatformUtil.isRunningOnDisplayWithDpi( CoreSettings.RESOLUTION_DPI_RETINA );
 			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
 				CoreSettings.GLOBAL_SCALING = 2;
+				CoreSettings.STAGE_WIDTH = 2048;
+				CoreSettings.STAGE_HEIGHT = 1536;
 				// TODO: remove ( temporary )
 				MinimalComps.globalScaling = 2;
 			}

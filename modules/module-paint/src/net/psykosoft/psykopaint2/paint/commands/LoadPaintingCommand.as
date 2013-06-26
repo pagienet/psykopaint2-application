@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			var transposedColor:ByteArray = as3ArgbToBgra( data[ 0 ] );
 			var transposedHeight:ByteArray = as3ArgbToBgra( data[ 1 ] );
 			var transposedSource:ByteArray = as3ArgbToBgra( data[ 2 ] );
-			canvasModel.loadLayersBGRA( Vector.<ByteArray>( [ transposedColor, transposedHeight, transposedSource ] ) );
+//			canvasModel.loadLayersBGRA( Vector.<ByteArray>( [ transposedColor, transposedHeight, transposedSource ] ) ); // TODO: disabled because it causes a runtime error
 		}
 
 		// TODO: probably very slow, find alternative

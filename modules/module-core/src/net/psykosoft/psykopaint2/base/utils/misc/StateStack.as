@@ -34,5 +34,9 @@ package net.psykosoft.psykopaint2.base.utils.misc
 			if( _stateStack.length < 2 ) return ""; // Not enough states.
 			return _stateStack[ _stateStack.length - 2 ];
 		}
+
+		public function get stack():Vector.<String> {
+			return _stateStack;
+		}
 	}
 }

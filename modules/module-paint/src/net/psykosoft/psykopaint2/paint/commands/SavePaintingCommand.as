@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.paint.commands
 				// TODO...
 			}
 			else {
-				DesktopBinarySaveUtil.saveToDesktop( voBytes, PaintSettings.desktopDataFolderName + "/painting-" + paintingId + PaintSettings.paintingFileExtension );
+				DesktopBinarySaveUtil.saveToDesktop( voBytes, CoreSettings.paintingDesktopDataFolderName + "/painting-" + paintingId + CoreSettings.paintingFileExtension );
 			}
 		}
 	}

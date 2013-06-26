@@ -1,18 +1,13 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
-	import flash.display.BitmapData;
-	import flash.geom.Rectangle;
-
-	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestGoToHomeWithCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 
 	public class CanvasSubNavViewMediator extends MediatorBase
@@ -24,12 +19,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var requestClearCanvasSignal:RequestClearCanvasSignal;
 
 		[Inject]
-		public var notifyCanvasSnapshotSignal:NotifyCanvasSnapshotSignal;
-
-		[Inject]
-		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
-
-		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
 		[Inject]
@@ -38,7 +27,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestPaintingSaveSignal:RequestPaintingSaveSignal;
 
-		private var _waitingForSnapshot:Boolean;
+		[Inject]
+		public var requestGoToHomeWithCanvasSnapshotSignal:RequestGoToHomeWithCanvasSnapshotSignal;
+
+		[Inject]
+		public var stateModel:StateModel;
+
+		private var _incomingState:String;
 
 		override public function initialize():void {
 
@@ -49,8 +44,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			manageMemoryWarnings = false;
 			view.setButtonClickCallback( onButtonClicked );
 
-			// From app.
-			notifyCanvasSnapshotSignal.add( onCanvasSnapshotRetrieved );
+			// Remember incoming state for when exiting the paint module.
+			_incomingState = stateModel.getLastStateOfCategory( "home" );
+			trace( this, "previous home state was: " + _incomingState );
 		}
 
 		private function onButtonClicked( label:String ):void {
@@ -69,7 +65,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 				case CanvasSubNavView.LBL_HOME: {
-					navigateToHomeWithCanvasSnapshot();
+					requestGoToHomeWithCanvasSnapshotSignal.dispatch( _incomingState );
 					break;
 				}
 				case CanvasSubNavView.LBL_EXPORT: {
@@ -89,24 +85,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 			}
-		}
-
-		private function navigateToHomeWithCanvasSnapshot():void {
-			trace( this, "requesting canvas snapshot..." );
-			// Request a snapshot from the core and wait for it.
-			// Before changing state.
-			_waitingForSnapshot = true;
-			requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, view.stage.stageWidth, view.stage.stageHeight ) );
-			RenderGpuCommand.snapshotScale = 1 / CoreSettings.GLOBAL_SCALING;
-			RenderGpuCommand.snapshotRequested = true;
-		}
-
-		private function onCanvasSnapshotRetrieved( bmd:BitmapData ):void {
-			if( !_waitingForSnapshot ) return;
-			trace( this, "snapshot retrieved, changing state" );
-			requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, view.stage.stageWidth, view.stage.stageHeight * 0.76 ) );
-			_waitingForSnapshot = false;
-			requestStateChange( StateType.HOME_ON_EMPTY_EASEL );
 		}
 	}
 }
