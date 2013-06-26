@@ -1,25 +1,18 @@
 package net.psykosoft.psykopaint2.paint
 {
 
-	import flash.display.BitmapData;
 	import flash.events.Event;
-	import flash.net.registerClassAlias;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
-
-	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
-
-	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
+	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSavedDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 
@@ -111,10 +104,6 @@ package net.psykosoft.psykopaint2.paint
 				_coreModule.coreRootView.removeSplashScreen();
 				_coreModule.startEnterFrame();
 			}
-
-			// Start loading painting data.
-			registerClassAlias( "PaintingVO", PaintingVO );
-			_paintConfig.injector.getInstance( RequestPaintingSavedDataRetrievalSignal ).dispatch();
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );

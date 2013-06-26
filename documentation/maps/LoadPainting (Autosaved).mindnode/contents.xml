@@ -1,0 +1,1053 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>author</key>
+	<string></string>
+	<key>comments</key>
+	<string></string>
+	<key>isUsingConstrainedLayout</key>
+	<false/>
+	<key>keywords</key>
+	<string></string>
+	<key>mindMap</key>
+	<dict>
+		<key>associations</key>
+		<array>
+			<dict>
+				<key>endArrow</key>
+				<integer>2</integer>
+				<key>endNodeID</key>
+				<string>692D6790-E5AE-40D2-AED3-BC07DE379116</string>
+				<key>startArrow</key>
+				<integer>0</integer>
+				<key>startNodeID</key>
+				<string>33F7B02E-3D6B-4572-AB19-FCE19E55EEBC</string>
+				<key>strokeColor</key>
+				<string>{0.000, 0.500, 1.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>3</integer>
+				<key>strokeWidth</key>
+				<real>1</real>
+				<key>wayPointOffset</key>
+				<string>{71.6191, -24.4941}</string>
+			</dict>
+			<dict>
+				<key>endArrow</key>
+				<integer>2</integer>
+				<key>endNodeID</key>
+				<string>BA19959F-726E-444D-80BF-30FC57CC0641</string>
+				<key>startArrow</key>
+				<integer>0</integer>
+				<key>startNodeID</key>
+				<string>D79BAF3F-013C-41A0-84F3-8951F65A0629</string>
+				<key>strokeColor</key>
+				<string>{0.000, 0.500, 1.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>3</integer>
+				<key>strokeWidth</key>
+				<real>1</real>
+				<key>wayPointOffset</key>
+				<string>{-1.02148, 61.8086}</string>
+			</dict>
+			<dict>
+				<key>endArrow</key>
+				<integer>2</integer>
+				<key>endNodeID</key>
+				<string>41CE4595-A225-48AD-AD6C-C1FDC2086B3E</string>
+				<key>startArrow</key>
+				<integer>0</integer>
+				<key>startNodeID</key>
+				<string>B01C0020-83FF-4A1C-9695-13D7421F95D9</string>
+				<key>strokeColor</key>
+				<string>{0.000, 0.500, 1.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>3</integer>
+				<key>strokeWidth</key>
+				<real>1</real>
+				<key>wayPointOffset</key>
+				<string>{-20.9766, -79.2168}</string>
+			</dict>
+			<dict>
+				<key>endArrow</key>
+				<integer>2</integer>
+				<key>endNodeID</key>
+				<string>33F7B02E-3D6B-4572-AB19-FCE19E55EEBC</string>
+				<key>startArrow</key>
+				<integer>0</integer>
+				<key>startNodeID</key>
+				<string>41CE4595-A225-48AD-AD6C-C1FDC2086B3E</string>
+				<key>strokeColor</key>
+				<string>{0.000, 0.500, 1.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>3</integer>
+				<key>strokeWidth</key>
+				<real>1</real>
+				<key>wayPointOffset</key>
+				<string>{75.9317, 61.041}</string>
+			</dict>
+			<dict>
+				<key>endArrow</key>
+				<integer>2</integer>
+				<key>endNodeID</key>
+				<string>1AC6AAC6-91D7-4809-80E0-EE122B9339AF</string>
+				<key>startArrow</key>
+				<integer>0</integer>
+				<key>startNodeID</key>
+				<string>07333A7C-BB65-4073-B61B-43947130FCB6</string>
+				<key>strokeColor</key>
+				<string>{0.000, 0.500, 1.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>3</integer>
+				<key>strokeWidth</key>
+				<real>1</real>
+				<key>wayPointOffset</key>
+				<string>{-31.9102, 62.3496}</string>
+			</dict>
+			<dict>
+				<key>endArrow</key>
+				<integer>2</integer>
+				<key>endNodeID</key>
+				<string>07333A7C-BB65-4073-B61B-43947130FCB6</string>
+				<key>startArrow</key>
+				<integer>0</integer>
+				<key>startNodeID</key>
+				<string>692D6790-E5AE-40D2-AED3-BC07DE379116</string>
+				<key>strokeColor</key>
+				<string>{0.000, 0.500, 1.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>3</integer>
+				<key>strokeWidth</key>
+				<real>1</real>
+				<key>wayPointOffset</key>
+				<string>{17.1093, 50.9825}</string>
+			</dict>
+			<dict>
+				<key>endArrow</key>
+				<integer>2</integer>
+				<key>endNodeID</key>
+				<string>AE14A6BF-85AF-43DC-87BA-3CB23E82AD1F</string>
+				<key>startArrow</key>
+				<integer>0</integer>
+				<key>startNodeID</key>
+				<string>20652A8C-BF1F-4F10-812E-89BA04DAA62F</string>
+				<key>strokeColor</key>
+				<string>{0.000, 0.500, 1.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>3</integer>
+				<key>strokeWidth</key>
+				<real>1</real>
+				<key>wayPointOffset</key>
+				<string>{-54.5195, 26.25}</string>
+			</dict>
+			<dict>
+				<key>endArrow</key>
+				<integer>2</integer>
+				<key>endNodeID</key>
+				<string>20652A8C-BF1F-4F10-812E-89BA04DAA62F</string>
+				<key>startArrow</key>
+				<integer>0</integer>
+				<key>startNodeID</key>
+				<string>30C3DDFF-2C58-469E-A213-37ED7FB910C4</string>
+				<key>strokeColor</key>
+				<string>{0.000, 0.500, 1.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>3</integer>
+				<key>strokeWidth</key>
+				<real>1</real>
+				<key>wayPointOffset</key>
+				<string>{77.133, 20.5117}</string>
+			</dict>
+			<dict>
+				<key>endArrow</key>
+				<integer>2</integer>
+				<key>endNodeID</key>
+				<string>FC79F622-3532-4EF8-B746-4046F3AADE93</string>
+				<key>startArrow</key>
+				<integer>0</integer>
+				<key>startNodeID</key>
+				<string>1AC6AAC6-91D7-4809-80E0-EE122B9339AF</string>
+				<key>strokeColor</key>
+				<string>{0.000, 0.500, 1.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>3</integer>
+				<key>strokeWidth</key>
+				<real>1</real>
+				<key>wayPointOffset</key>
+				<string>{-84.6543, 47.2129}</string>
+			</dict>
+			<dict>
+				<key>endArrow</key>
+				<integer>2</integer>
+				<key>endNodeID</key>
+				<string>82CD9283-40DE-4BE0-ADBA-9625929C23A8</string>
+				<key>startArrow</key>
+				<integer>0</integer>
+				<key>startNodeID</key>
+				<string>AE14A6BF-85AF-43DC-87BA-3CB23E82AD1F</string>
+				<key>strokeColor</key>
+				<string>{0.000, 0.500, 1.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>3</integer>
+				<key>strokeWidth</key>
+				<real>1</real>
+				<key>wayPointOffset</key>
+				<string>{-41.5469, 30.6387}</string>
+			</dict>
+			<dict>
+				<key>endArrow</key>
+				<integer>2</integer>
+				<key>endNodeID</key>
+				<string>BBFDC84F-8B5B-4993-A761-ACBEF9F7F4CA</string>
+				<key>startArrow</key>
+				<integer>0</integer>
+				<key>startNodeID</key>
+				<string>82CD9283-40DE-4BE0-ADBA-9625929C23A8</string>
+				<key>strokeColor</key>
+				<string>{0.000, 0.500, 1.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>3</integer>
+				<key>strokeWidth</key>
+				<real>1</real>
+				<key>wayPointOffset</key>
+				<string>{-185.777, 9.07031}</string>
+			</dict>
+		</array>
+		<key>color</key>
+		<string>{1.000, 1.000, 1.000, 1.000}</string>
+		<key>mainNodes</key>
+		<array>
+			<dict>
+				<key>contentAlignment</key>
+				<integer>1</integer>
+				<key>fillColor</key>
+				<string>{1.000, 1.000, 1.000, 1.000}</string>
+				<key>isDecreasingBranchThickness</key>
+				<true/>
+				<key>isDrawingFill</key>
+				<true/>
+				<key>isLeftAligned</key>
+				<false/>
+				<key>location</key>
+				<string>{-541.10156, -123.14453}</string>
+				<key>nodeID</key>
+				<string>D79BAF3F-013C-41A0-84F3-8951F65A0629</string>
+				<key>strokeColor</key>
+				<string>{0.000, 1.000, 0.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>0</integer>
+				<key>strokeWidth</key>
+				<real>2</real>
+				<key>subnodes</key>
+				<array/>
+				<key>title</key>
+				<dict>
+					<key>constrainedWidth</key>
+					<integer>300</integer>
+					<key>shrinkToFitContent</key>
+					<integer>1</integer>
+					<key>text</key>
+					<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs26 \cf0 RequestPaintingSavedDataRetrievalSignal ( core )}</string>
+				</dict>
+			</dict>
+			<dict>
+				<key>contentAlignment</key>
+				<integer>1</integer>
+				<key>fillColor</key>
+				<string>{1.000, 1.000, 1.000, 1.000}</string>
+				<key>isDecreasingBranchThickness</key>
+				<true/>
+				<key>isDrawingFill</key>
+				<true/>
+				<key>isLeftAligned</key>
+				<false/>
+				<key>location</key>
+				<string>{-529.64453, 0.47265625}</string>
+				<key>nodeID</key>
+				<string>BA19959F-726E-444D-80BF-30FC57CC0641</string>
+				<key>strokeColor</key>
+				<string>{0.000, 1.000, 0.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>0</integer>
+				<key>strokeWidth</key>
+				<real>2</real>
+				<key>subnodes</key>
+				<array>
+					<dict>
+						<key>contentAlignment</key>
+						<integer>1</integer>
+						<key>fillColor</key>
+						<string>{1.000, 1.000, 1.000, 1.000}</string>
+						<key>isDecreasingBranchThickness</key>
+						<true/>
+						<key>isDrawingFill</key>
+						<false/>
+						<key>isLeftAligned</key>
+						<false/>
+						<key>location</key>
+						<string>{-204.08984, -54.769531}</string>
+						<key>nodeID</key>
+						<string>8527EDE6-C025-4D4C-A9EB-7A47085ED37D</string>
+						<key>strokeColor</key>
+						<string>{0.000, 1.000, 0.000, 1.000}</string>
+						<key>strokeStyle</key>
+						<integer>0</integer>
+						<key>strokeWidth</key>
+						<real>6</real>
+						<key>subnodes</key>
+						<array>
+							<dict>
+								<key>contentAlignment</key>
+								<integer>1</integer>
+								<key>fillColor</key>
+								<string>{1.000, 1.000, 1.000, 1.000}</string>
+								<key>isDecreasingBranchThickness</key>
+								<true/>
+								<key>isDrawingFill</key>
+								<false/>
+								<key>isLeftAligned</key>
+								<false/>
+								<key>location</key>
+								<string>{-99.21875, -178.51562}</string>
+								<key>nodeID</key>
+								<string>083B1295-52AF-4BC5-9359-F2116642BC6A</string>
+								<key>strokeColor</key>
+								<string>{0.000, 1.000, 0.000, 1.000}</string>
+								<key>strokeStyle</key>
+								<integer>0</integer>
+								<key>strokeWidth</key>
+								<real>5</real>
+								<key>subnodes</key>
+								<array>
+									<dict>
+										<key>contentAlignment</key>
+										<integer>1</integer>
+										<key>fillColor</key>
+										<string>{1.000, 1.000, 1.000, 1.000}</string>
+										<key>isDecreasingBranchThickness</key>
+										<true/>
+										<key>isDrawingFill</key>
+										<false/>
+										<key>isLeftAligned</key>
+										<false/>
+										<key>location</key>
+										<string>{228.83203, -270.81641}</string>
+										<key>nodeID</key>
+										<string>30C3DDFF-2C58-469E-A213-37ED7FB910C4</string>
+										<key>strokeColor</key>
+										<string>{0.000, 1.000, 0.000, 1.000}</string>
+										<key>strokeStyle</key>
+										<integer>0</integer>
+										<key>strokeWidth</key>
+										<real>4</real>
+										<key>subnodes</key>
+										<array/>
+										<key>title</key>
+										<dict>
+											<key>constrainedWidth</key>
+											<integer>300</integer>
+											<key>shrinkToFitContent</key>
+											<integer>1</integer>
+											<key>text</key>
+											<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 read files in 'psykopaint2data' folder}</string>
+										</dict>
+									</dict>
+									<dict>
+										<key>contentAlignment</key>
+										<integer>1</integer>
+										<key>fillColor</key>
+										<string>{1.000, 1.000, 1.000, 1.000}</string>
+										<key>isDecreasingBranchThickness</key>
+										<true/>
+										<key>isDrawingFill</key>
+										<false/>
+										<key>isLeftAligned</key>
+										<false/>
+										<key>location</key>
+										<string>{256.05859, -177.29297}</string>
+										<key>nodeID</key>
+										<string>AE14A6BF-85AF-43DC-87BA-3CB23E82AD1F</string>
+										<key>strokeColor</key>
+										<string>{0.000, 1.000, 0.000, 1.000}</string>
+										<key>strokeStyle</key>
+										<integer>0</integer>
+										<key>strokeWidth</key>
+										<real>4</real>
+										<key>subnodes</key>
+										<array/>
+										<key>title</key>
+										<dict>
+											<key>constrainedWidth</key>
+											<integer>300</integer>
+											<key>shrinkToFitContent</key>
+											<integer>1</integer>
+											<key>text</key>
+											<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 filter read files to only consider painting files }</string>
+										</dict>
+									</dict>
+									<dict>
+										<key>contentAlignment</key>
+										<integer>1</integer>
+										<key>fillColor</key>
+										<string>{1.000, 1.000, 1.000, 1.000}</string>
+										<key>isDecreasingBranchThickness</key>
+										<true/>
+										<key>isDrawingFill</key>
+										<false/>
+										<key>isLeftAligned</key>
+										<false/>
+										<key>location</key>
+										<string>{275.96484, -116.01562}</string>
+										<key>nodeID</key>
+										<string>82CD9283-40DE-4BE0-ADBA-9625929C23A8</string>
+										<key>strokeColor</key>
+										<string>{0.000, 1.000, 0.000, 1.000}</string>
+										<key>strokeStyle</key>
+										<integer>0</integer>
+										<key>strokeWidth</key>
+										<real>4</real>
+										<key>subnodes</key>
+										<array/>
+										<key>title</key>
+										<dict>
+											<key>constrainedWidth</key>
+											<integer>300</integer>
+											<key>shrinkToFitContent</key>
+											<integer>1</integer>
+											<key>text</key>
+											<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 create vos and wait for all de-serialized}</string>
+										</dict>
+									</dict>
+								</array>
+								<key>title</key>
+								<dict>
+									<key>constrainedWidth</key>
+									<integer>300</integer>
+									<key>shrinkToFitContent</key>
+									<integer>1</integer>
+									<key>text</key>
+									<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 reads what's inside data folder, for each painting file "painting-xxx", create a PaintingVO and populate PaintingDataModel}</string>
+								</dict>
+							</dict>
+						</array>
+						<key>title</key>
+						<dict>
+							<key>constrainedWidth</key>
+							<integer>300</integer>
+							<key>shrinkToFitContent</key>
+							<integer>1</integer>
+							<key>text</key>
+							<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 desktop}</string>
+						</dict>
+					</dict>
+					<dict>
+						<key>contentAlignment</key>
+						<integer>1</integer>
+						<key>fillColor</key>
+						<string>{1.000, 1.000, 1.000, 1.000}</string>
+						<key>isDecreasingBranchThickness</key>
+						<true/>
+						<key>isDrawingFill</key>
+						<false/>
+						<key>isLeftAligned</key>
+						<false/>
+						<key>location</key>
+						<string>{-222.35547, 49.363281}</string>
+						<key>nodeID</key>
+						<string>865227B8-BFA9-4E7E-BC9A-B4EBFA988D6F</string>
+						<key>strokeColor</key>
+						<string>{1.000, 0.000, 0.000, 1.000}</string>
+						<key>strokeStyle</key>
+						<integer>0</integer>
+						<key>strokeWidth</key>
+						<real>6</real>
+						<key>subnodes</key>
+						<array>
+							<dict>
+								<key>contentAlignment</key>
+								<integer>1</integer>
+								<key>fillColor</key>
+								<string>{1.000, 1.000, 1.000, 1.000}</string>
+								<key>isDecreasingBranchThickness</key>
+								<true/>
+								<key>isDrawingFill</key>
+								<false/>
+								<key>isLeftAligned</key>
+								<false/>
+								<key>location</key>
+								<string>{-166.87109, 94.203125}</string>
+								<key>nodeID</key>
+								<string>B01C0020-83FF-4A1C-9695-13D7421F95D9</string>
+								<key>strokeColor</key>
+								<string>{1.000, 0.000, 0.000, 1.000}</string>
+								<key>strokeStyle</key>
+								<integer>0</integer>
+								<key>strokeWidth</key>
+								<real>5</real>
+								<key>subnodes</key>
+								<array/>
+								<key>title</key>
+								<dict>
+									<key>constrainedWidth</key>
+									<integer>300</integer>
+									<key>shrinkToFitContent</key>
+									<integer>1</integer>
+									<key>text</key>
+									<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 same as desktop}</string>
+								</dict>
+							</dict>
+						</array>
+						<key>title</key>
+						<dict>
+							<key>constrainedWidth</key>
+							<integer>300</integer>
+							<key>shrinkToFitContent</key>
+							<integer>1</integer>
+							<key>text</key>
+							<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 ios}</string>
+						</dict>
+					</dict>
+				</array>
+				<key>title</key>
+				<dict>
+					<key>constrainedWidth</key>
+					<integer>300</integer>
+					<key>shrinkToFitContent</key>
+					<integer>1</integer>
+					<key>text</key>
+					<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs26 \cf0 RetrievePaintingSavedDataCommand ( core )}</string>
+				</dict>
+			</dict>
+			<dict>
+				<key>contentAlignment</key>
+				<integer>1</integer>
+				<key>fillColor</key>
+				<string>{1.000, 1.000, 1.000, 1.000}</string>
+				<key>isDecreasingBranchThickness</key>
+				<true/>
+				<key>isDrawingFill</key>
+				<true/>
+				<key>isLeftAligned</key>
+				<false/>
+				<key>location</key>
+				<string>{-101.32422, -49.730469}</string>
+				<key>nodeID</key>
+				<string>41CE4595-A225-48AD-AD6C-C1FDC2086B3E</string>
+				<key>strokeColor</key>
+				<string>{0.000, 1.000, 0.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>0</integer>
+				<key>strokeWidth</key>
+				<real>2</real>
+				<key>subnodes</key>
+				<array>
+					<dict>
+						<key>contentAlignment</key>
+						<integer>1</integer>
+						<key>fillColor</key>
+						<string>{1.000, 1.000, 1.000, 1.000}</string>
+						<key>isDecreasingBranchThickness</key>
+						<true/>
+						<key>isDrawingFill</key>
+						<false/>
+						<key>isLeftAligned</key>
+						<false/>
+						<key>location</key>
+						<string>{-15.589844, -97.875}</string>
+						<key>nodeID</key>
+						<string>BBFDC84F-8B5B-4993-A761-ACBEF9F7F4CA</string>
+						<key>strokeColor</key>
+						<string>{0.000, 1.000, 0.000, 1.000}</string>
+						<key>strokeStyle</key>
+						<integer>0</integer>
+						<key>strokeWidth</key>
+						<real>6</real>
+						<key>subnodes</key>
+						<array/>
+						<key>title</key>
+						<dict>
+							<key>constrainedWidth</key>
+							<integer>300</integer>
+							<key>shrinkToFitContent</key>
+							<integer>1</integer>
+							<key>text</key>
+							<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 deSerialize()}</string>
+						</dict>
+					</dict>
+				</array>
+				<key>title</key>
+				<dict>
+					<key>constrainedWidth</key>
+					<integer>300</integer>
+					<key>shrinkToFitContent</key>
+					<integer>1</integer>
+					<key>text</key>
+					<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs26 \cf0 PaintingVO}</string>
+				</dict>
+			</dict>
+			<dict>
+				<key>contentAlignment</key>
+				<integer>1</integer>
+				<key>fillColor</key>
+				<string>{1.000, 1.000, 1.000, 1.000}</string>
+				<key>isDecreasingBranchThickness</key>
+				<true/>
+				<key>isDrawingFill</key>
+				<true/>
+				<key>isLeftAligned</key>
+				<false/>
+				<key>location</key>
+				<string>{85.804688, 142.66016}</string>
+				<key>nodeID</key>
+				<string>ADEFF9E1-1A76-49EE-B8EB-1C1BB7D17958</string>
+				<key>strokeColor</key>
+				<string>{0.000, 1.000, 0.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>0</integer>
+				<key>strokeWidth</key>
+				<real>2</real>
+				<key>subnodes</key>
+				<array>
+					<dict>
+						<key>contentAlignment</key>
+						<integer>1</integer>
+						<key>fillColor</key>
+						<string>{1.000, 1.000, 1.000, 1.000}</string>
+						<key>isDecreasingBranchThickness</key>
+						<true/>
+						<key>isDrawingFill</key>
+						<false/>
+						<key>isLeftAligned</key>
+						<true/>
+						<key>location</key>
+						<string>{36.039062, 72.851562}</string>
+						<key>nodeID</key>
+						<string>33F7B02E-3D6B-4572-AB19-FCE19E55EEBC</string>
+						<key>strokeColor</key>
+						<string>{0.000, 1.000, 0.000, 1.000}</string>
+						<key>strokeStyle</key>
+						<integer>0</integer>
+						<key>strokeWidth</key>
+						<real>6</real>
+						<key>subnodes</key>
+						<array/>
+						<key>title</key>
+						<dict>
+							<key>constrainedWidth</key>
+							<integer>300</integer>
+							<key>shrinkToFitContent</key>
+							<integer>1</integer>
+							<key>text</key>
+							<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 setPaintingData()}</string>
+						</dict>
+					</dict>
+					<dict>
+						<key>contentAlignment</key>
+						<integer>1</integer>
+						<key>fillColor</key>
+						<string>{1.000, 1.000, 1.000, 1.000}</string>
+						<key>isDecreasingBranchThickness</key>
+						<true/>
+						<key>isDrawingFill</key>
+						<false/>
+						<key>isLeftAligned</key>
+						<false/>
+						<key>location</key>
+						<string>{291.87109, 37.222656}</string>
+						<key>nodeID</key>
+						<string>692D6790-E5AE-40D2-AED3-BC07DE379116</string>
+						<key>strokeColor</key>
+						<string>{0.000, 1.000, 0.000, 1.000}</string>
+						<key>strokeStyle</key>
+						<integer>0</integer>
+						<key>strokeWidth</key>
+						<real>6</real>
+						<key>subnodes</key>
+						<array/>
+						<key>title</key>
+						<dict>
+							<key>constrainedWidth</key>
+							<integer>300</integer>
+							<key>shrinkToFitContent</key>
+							<integer>1</integer>
+							<key>text</key>
+							<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 notifyPaintingDataRetrieved}</string>
+						</dict>
+					</dict>
+				</array>
+				<key>title</key>
+				<dict>
+					<key>constrainedWidth</key>
+					<integer>300</integer>
+					<key>shrinkToFitContent</key>
+					<integer>1</integer>
+					<key>text</key>
+					<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs26 \cf0 PaintingDataModel ( core )}</string>
+				</dict>
+			</dict>
+			<dict>
+				<key>contentAlignment</key>
+				<integer>1</integer>
+				<key>fillColor</key>
+				<string>{1.000, 1.000, 1.000, 1.000}</string>
+				<key>isDecreasingBranchThickness</key>
+				<true/>
+				<key>isDrawingFill</key>
+				<true/>
+				<key>isLeftAligned</key>
+				<false/>
+				<key>location</key>
+				<string>{297.76953, 263.38672}</string>
+				<key>nodeID</key>
+				<string>1AC6AAC6-91D7-4809-80E0-EE122B9339AF</string>
+				<key>strokeColor</key>
+				<string>{0.000, 1.000, 0.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>0</integer>
+				<key>strokeWidth</key>
+				<real>2</real>
+				<key>subnodes</key>
+				<array/>
+				<key>title</key>
+				<dict>
+					<key>constrainedWidth</key>
+					<integer>300</integer>
+					<key>shrinkToFitContent</key>
+					<integer>1</integer>
+					<key>text</key>
+					<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs26 \cf0 views respond}</string>
+				</dict>
+			</dict>
+			<dict>
+				<key>contentAlignment</key>
+				<integer>1</integer>
+				<key>fillColor</key>
+				<string>{1.000, 1.000, 1.000, 1.000}</string>
+				<key>isDecreasingBranchThickness</key>
+				<true/>
+				<key>isDrawingFill</key>
+				<true/>
+				<key>isLeftAligned</key>
+				<false/>
+				<key>location</key>
+				<string>{318.58984, 138.6875}</string>
+				<key>nodeID</key>
+				<string>07333A7C-BB65-4073-B61B-43947130FCB6</string>
+				<key>strokeColor</key>
+				<string>{0.000, 1.000, 0.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>0</integer>
+				<key>strokeWidth</key>
+				<real>2</real>
+				<key>subnodes</key>
+				<array/>
+				<key>title</key>
+				<dict>
+					<key>constrainedWidth</key>
+					<integer>300</integer>
+					<key>shrinkToFitContent</key>
+					<integer>1</integer>
+					<key>text</key>
+					<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs26 \cf0 NotifyPaintingDataRetrievedSignal}</string>
+				</dict>
+			</dict>
+			<dict>
+				<key>contentAlignment</key>
+				<integer>1</integer>
+				<key>fillColor</key>
+				<string>{1.000, 1.000, 1.000, 1.000}</string>
+				<key>isDecreasingBranchThickness</key>
+				<true/>
+				<key>isDrawingFill</key>
+				<true/>
+				<key>isLeftAligned</key>
+				<false/>
+				<key>location</key>
+				<string>{435.59766, -230.29297}</string>
+				<key>nodeID</key>
+				<string>20652A8C-BF1F-4F10-812E-89BA04DAA62F</string>
+				<key>strokeColor</key>
+				<string>{0.000, 1.000, 0.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>0</integer>
+				<key>strokeWidth</key>
+				<real>2</real>
+				<key>subnodes</key>
+				<array/>
+				<key>title</key>
+				<dict>
+					<key>constrainedWidth</key>
+					<integer>300</integer>
+					<key>shrinkToFitContent</key>
+					<integer>1</integer>
+					<key>text</key>
+					<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs26 \cf0 DesktopFolderReadUtil}</string>
+				</dict>
+			</dict>
+			<dict>
+				<key>contentAlignment</key>
+				<integer>1</integer>
+				<key>fillColor</key>
+				<string>{1.000, 1.000, 1.000, 1.000}</string>
+				<key>isDecreasingBranchThickness</key>
+				<true/>
+				<key>isDrawingFill</key>
+				<true/>
+				<key>isLeftAligned</key>
+				<false/>
+				<key>location</key>
+				<string>{-32.28125, 308.35547}</string>
+				<key>nodeID</key>
+				<string>7745FA12-FC2B-40E6-9669-A8D4232CEA3E</string>
+				<key>strokeColor</key>
+				<string>{0.000, 1.000, 0.000, 1.000}</string>
+				<key>strokeStyle</key>
+				<integer>0</integer>
+				<key>strokeWidth</key>
+				<real>2</real>
+				<key>subnodes</key>
+				<array>
+					<dict>
+						<key>contentAlignment</key>
+						<integer>1</integer>
+						<key>fillColor</key>
+						<string>{1.000, 1.000, 1.000, 1.000}</string>
+						<key>isDecreasingBranchThickness</key>
+						<true/>
+						<key>isDrawingFill</key>
+						<false/>
+						<key>isLeftAligned</key>
+						<false/>
+						<key>location</key>
+						<string>{102.46094, 358.3125}</string>
+						<key>nodeID</key>
+						<string>FC79F622-3532-4EF8-B746-4046F3AADE93</string>
+						<key>strokeColor</key>
+						<string>{0.000, 1.000, 0.000, 1.000}</string>
+						<key>strokeStyle</key>
+						<integer>0</integer>
+						<key>strokeWidth</key>
+						<real>6</real>
+						<key>subnodes</key>
+						<array>
+							<dict>
+								<key>contentAlignment</key>
+								<integer>1</integer>
+								<key>fillColor</key>
+								<string>{1.000, 1.000, 1.000, 1.000}</string>
+								<key>isDecreasingBranchThickness</key>
+								<true/>
+								<key>isDrawingFill</key>
+								<false/>
+								<key>isLeftAligned</key>
+								<false/>
+								<key>location</key>
+								<string>{289.57812, 337.98438}</string>
+								<key>nodeID</key>
+								<string>84DA1D9D-7B23-4E52-9A70-C515C12CF9E8</string>
+								<key>strokeColor</key>
+								<string>{0.000, 1.000, 0.000, 1.000}</string>
+								<key>strokeStyle</key>
+								<integer>0</integer>
+								<key>strokeWidth</key>
+								<real>5</real>
+								<key>subnodes</key>
+								<array/>
+								<key>title</key>
+								<dict>
+									<key>constrainedWidth</key>
+									<integer>300</integer>
+									<key>shrinkToFitContent</key>
+									<integer>1</integer>
+									<key>text</key>
+									<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 creates user in progress paintings}</string>
+								</dict>
+							</dict>
+							<dict>
+								<key>contentAlignment</key>
+								<integer>1</integer>
+								<key>fillColor</key>
+								<string>{1.000, 1.000, 1.000, 1.000}</string>
+								<key>isDecreasingBranchThickness</key>
+								<true/>
+								<key>isDrawingFill</key>
+								<false/>
+								<key>isLeftAligned</key>
+								<false/>
+								<key>location</key>
+								<string>{290.76953, 382.37109}</string>
+								<key>nodeID</key>
+								<string>FF5F5D7E-ECC9-4A52-9F9C-C7F517E9DABF</string>
+								<key>strokeColor</key>
+								<string>{1.000, 0.000, 0.000, 1.000}</string>
+								<key>strokeStyle</key>
+								<integer>0</integer>
+								<key>strokeWidth</key>
+								<real>5</real>
+								<key>subnodes</key>
+								<array/>
+								<key>title</key>
+								<dict>
+									<key>constrainedWidth</key>
+									<integer>300</integer>
+									<key>shrinkToFitContent</key>
+									<integer>1</integer>
+									<key>text</key>
+									<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 creates user published paintings?}</string>
+								</dict>
+							</dict>
+						</array>
+						<key>title</key>
+						<dict>
+							<key>constrainedWidth</key>
+							<integer>300</integer>
+							<key>shrinkToFitContent</key>
+							<integer>1</integer>
+							<key>text</key>
+							<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 onPaintingDataRetrieved}</string>
+						</dict>
+					</dict>
+				</array>
+				<key>title</key>
+				<dict>
+					<key>constrainedWidth</key>
+					<integer>300</integer>
+					<key>shrinkToFitContent</key>
+					<integer>1</integer>
+					<key>text</key>
+					<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs26 \cf0 HomeViewMediator}</string>
+				</dict>
+			</dict>
+		</array>
+	</dict>
+	<key>printInfo</key>
+	<data>
+	BAtzdHJlYW10eXBlZIHoA4QBQISEhAtOU1ByaW50SW5mbwGEhAhOU09iamVjdACFkoSE
+	hBNOU011dGFibGVEaWN0aW9uYXJ5AISEDE5TRGljdGlvbmFyeQCUhAFpCZKEhIQITlNT
+	dHJpbmcBlIQBKw9wcmludEJhY2tncm91bmSGkoSEhAhOU051bWJlcgCEhAdOU1ZhbHVl
+	AJSEASqEl5cAhpKEmZkNTlNSaWdodE1hcmdpboaShJuchIQBZp1IhpKEmZkVTlNIb3Jp
+	em9uYWxQYWdpbmF0aW9uhpKEm5ydlwGGkoSZmRZOU0hvcml6b250YWxseUNlbnRlcmVk
+	hpKikoSZmQxOU0xlZnRNYXJnaW6GkoSbnKCdSIaShJmZC05TVG9wTWFyZ2luhpKEm5yg
+	nVqGkoSZmRROU1ZlcnRpY2FsUGFnaW5hdGlvboaSopKEmZkUTlNWZXJ0aWNhbGx5Q2Vu
+	dGVyZWSGkqKShJmZDk5TQm90dG9tTWFyZ2luhpKEm5ygnVqGhoY=
+	</data>
+	<key>title</key>
+	<string>PaintModule</string>
+	<key>version</key>
+	<integer>4</integer>
+	<key>windowConfig</key>
+	<dict>
+		<key>windowFrame</key>
+		<string>1916 66 1440 818 1440 0 1920 1080 </string>
+		<key>windowScrollPoint</key>
+		<string>{25.5, 40.5}</string>
+		<key>windowZoomLevel</key>
+		<real>1</real>
+	</dict>
+</dict>
+</plist>

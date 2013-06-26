@@ -302,7 +302,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		public function getPaintingIdAtIndex( index:uint ):String {
-			if( index < 3 || index == _paintingManager.homePaintingIndex ) throw new Error( "HomeView.as - there are no dynamic paintings at this index" );
+			if( index < 2 || index == _paintingManager.homePaintingIndex ) throw new Error( "HomeView.as - there are no dynamic paintings at this index" );
 			return _paintingIdForPaintingAtIndex[ index ];
 		}
 

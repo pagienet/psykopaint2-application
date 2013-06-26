@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.model
+package net.psykosoft.psykopaint2.core.models
 {
 
 	import flash.utils.ByteArray;

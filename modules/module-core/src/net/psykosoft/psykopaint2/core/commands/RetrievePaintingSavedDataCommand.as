@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.commands
+package net.psykosoft.psykopaint2.core.commands
 {
 
 	import flash.events.Event;
@@ -8,8 +8,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopFolderReadUtil;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
-	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
-	import net.psykosoft.psykopaint2.paint.model.PaintingDataModel;
+	import net.psykosoft.psykopaint2.core.models.PaintingDataModel;
 
 	import robotlegs.bender.framework.api.IContext;
 
@@ -41,7 +40,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			else {
 
 				// Read all files in data folder.
-				var files:Array = DesktopFolderReadUtil.readFilesInFolder( PaintSettings.desktopDataFolderName );
+				var files:Array = DesktopFolderReadUtil.readFilesInFolder( CoreSettings.paintingDesktopDataFolderName );
 				var len:uint = files.length;
 				trace( this, "found files in paint data " + len + ": " );
 
@@ -50,7 +49,7 @@ package net.psykosoft.psykopaint2.paint.commands
 				for( var i:uint; i < len; i++ ) {
 					var file:File = files[ i ];
 					trace( "  file: " + file.name );
-					if( file.name.indexOf( PaintSettings.paintingFileExtension ) != -1 ) {
+					if( file.name.indexOf( CoreSettings.paintingFileExtension ) != -1 ) {
 						_paintingFiles.push( file );
 					}
 				}

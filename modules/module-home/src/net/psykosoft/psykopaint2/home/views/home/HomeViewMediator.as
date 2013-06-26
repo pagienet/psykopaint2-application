@@ -156,10 +156,9 @@ package net.psykosoft.psykopaint2.home.views.home
 				return;
 			}
 
-			CurrentPaintingCache.currentPaintingId = view.getPaintingIdAtIndex( paintingIndex );
-
 			// Trigger CONTINUE PAINTING state if closest to an in progress painting ( index > 1 and < homePaintingIndex ).
 			if( stateModel.currentState != StateType.HOME_ON_UNFINISHED_PAINTING && paintingIndex < homePaintingIndex ) {
+				CurrentPaintingCache.currentPaintingId = view.getPaintingIdAtIndex( paintingIndex );
 				requestStateChange( StateType.HOME_ON_UNFINISHED_PAINTING );
 				return;
 			}

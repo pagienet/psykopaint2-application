@@ -10,20 +10,24 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
+	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingSavedDataCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.core.models.PaintingDataModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
-	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingLoadSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingSavedDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
@@ -84,6 +88,7 @@ package net.psykosoft.psykopaint2.core.config
 
 		private function mapModels():void {
 			_injector.map( StateModel ).asSingleton();
+			_injector.map( PaintingDataModel ).asSingleton();
 		}
 
 		// -----------------------
@@ -122,6 +127,7 @@ package net.psykosoft.psykopaint2.core.config
 			_injector.map( NotifyZoomCompleteSignal ).asSingleton();
 			_injector.map( NotifyNavigationMovingSignal ).asSingleton();
 			_injector.map( NotifyPaintingDataRetrievedSignal ).asSingleton();
+			_injector.map( RequestPaintingLoadSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -131,6 +137,7 @@ package net.psykosoft.psykopaint2.core.config
 		private function mapCommands():void {
 			_commandMap.map( RequestStateChangeSignal ).toCommand( ChangeStateCommand );
 			_commandMap.map( RequestGpuRenderingSignal ).toCommand( RenderGpuCommand );
+			_commandMap.map( RequestPaintingSavedDataRetrievalSignal ).toCommand( RetrievePaintingSavedDataCommand );
 		}
 
 		// -----------------------

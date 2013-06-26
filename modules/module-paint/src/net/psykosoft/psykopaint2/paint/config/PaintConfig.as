@@ -4,20 +4,17 @@ package net.psykosoft.psykopaint2.paint.config
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingLoadSignal;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.LoadPaintingCommand;
-	import net.psykosoft.psykopaint2.paint.commands.RetrievePaintingSavedDataCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
-	import net.psykosoft.psykopaint2.paint.model.PaintingDataModel;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSavedDataRetrievalSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
@@ -74,7 +71,7 @@ package net.psykosoft.psykopaint2.paint.config
 		// -----------------------
 
 		private function mapModels():void {
-			_injector.map( PaintingDataModel ).asSingleton();
+
 		}
 
 		// -----------------------
@@ -113,7 +110,7 @@ package net.psykosoft.psykopaint2.paint.config
 			_commandMap.map( RequestSurfaceImageSetSignal ).toCommand( SetSurfaceImageCommand );
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
-			_commandMap.map( RequestPaintingSavedDataRetrievalSignal ).toCommand( RetrievePaintingSavedDataCommand );
+			_injector.unmap( RequestPaintingLoadSignal ); // Mapped in the core as singleton for compatibility.
 			_commandMap.map( RequestPaintingLoadSignal ).toCommand( LoadPaintingCommand );
 		}
 

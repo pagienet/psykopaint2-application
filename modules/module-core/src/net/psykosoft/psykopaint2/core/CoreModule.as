@@ -29,6 +29,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingSavedDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 
@@ -291,6 +292,9 @@ package net.psykosoft.psykopaint2.core
 				showNavigationSignal.dispatch( 1 );
 				startEnterFrame();
 			}
+
+			// Start loading painting data.
+			_injector.getInstance( RequestPaintingSavedDataRetrievalSignal ).dispatch();
 
 			moduleReadySignal.dispatch();
 		}
