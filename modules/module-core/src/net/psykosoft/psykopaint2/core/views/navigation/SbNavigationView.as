@@ -392,9 +392,17 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_scroller.invalidateContent();
 			_scroller.x = 1024 / 2 - _scroller.minWidth / 2;
 
-			if( leftBtnSide.visible && rightBtnSide.visible && _centerButtons.length <= 5) {}
-			else if( leftBtnSide.visible && _centerButtons.length >= 6 ) _scroller.x += leftBtnSide.width / 2;
-			else if( rightBtnSide.visible && _centerButtons.length >= 6 ) _scroller.x -= rightBtnSide.width / 2;
+			if( leftBtnSide.visible && rightBtnSide.visible && _centerButtons.length <= 5) _scroller.scrollable = false;
+			else if( leftBtnSide.visible && _centerButtons.length >= 6 ){
+				_scroller.x += leftBtnSide.width / 2;
+				_scroller.scrollable = true;
+			}
+			else if( rightBtnSide.visible && _centerButtons.length >= 6 ){
+				_scroller.x -= rightBtnSide.width / 2;
+				_scroller.scrollable = true;
+			}
+			else if ( _centerButtons.length >= 7 ) _scroller.scrollable = true;
+			else _scroller.scrollable = false;
 
 			_scroller.dock();
 		}

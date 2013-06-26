@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public var leftGap:Number = 0;
 		public var rightGap:Number = 0;
+		public var scrollable:Boolean = true;
 
 		public var visibleHeight:Number = 100;
 		public var visibleWidth:Number = 600;
@@ -168,7 +169,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function evaluateInteractionStart():void {
-			if( maxWidth <= visibleWidth ) return; // No need for scrolling if all content is visible in 1 page.
+			if( !scrollable ) return; // No need for scrolling if all content is visible in 1 page.
+//			if( maxWidth <= visibleWidth ) return; // No need for scrolling if all content is visible in 1 page.
 			if( !mouseHitsInteractiveArea() ) return; // Hit test.
 			_interactionManager.startInteraction();
 			startEnterframe();
