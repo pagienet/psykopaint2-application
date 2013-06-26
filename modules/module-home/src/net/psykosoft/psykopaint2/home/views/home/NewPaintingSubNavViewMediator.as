@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
+	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
@@ -24,6 +25,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotSignal;
 
+		[Inject]
+		public var paintingModel:PaintingModel;
+
 		private var _waitingForZoom:Boolean;
 		private var _waitingForSnapShot:Boolean;
 
@@ -36,6 +40,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			manageMemoryWarnings = false;
 			view.setButtonClickCallback( onButtonClicked );
 
+			// Post-init.
+			view.setInProgressPaintings( paintingModel.getPaintingData() );
+
 			// From app.
 			notifyZoomCompleteSignal.add( onZoomComplete );
 			notifyCanvasBitmapSignal.add( onCanvasSnapshot );
@@ -47,7 +54,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
-				case NewPaintingSubNavView.LBL_PAINT: {
+				case NewPaintingSubNavView.LBL_NEW: {
 					navigateToPaintStateWithZoomIn();
 					break;
 				}

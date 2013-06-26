@@ -23,6 +23,10 @@ package net.psykosoft.psykopaint2.core.models
 			notifyPaintingDataRetrievedSignal.dispatch( _paintingData );
 		}
 
+		public function getPaintingData():Vector.<PaintingVO> {
+			return _paintingData;
+		}
+
 		public function getRgbaDataForPaintingWithId( id:String ):Vector.<ByteArray> {
 			// Find vo with id.
 			var len:uint = _paintingData.length;
