@@ -9,13 +9,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import br.com.stimuli.loading.BulkLoader;
 
 	import flash.display.BitmapData;
+	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.data.FrameType;
-	import net.psykosoft.psykopaint2.home.views.home.objects.FramedPainting;
 	import net.psykosoft.psykopaint2.home.views.home.vos.FrameTextureAtlasDescriptorVO;
 
 	public class PaintingManager extends ObjectContainer3D
@@ -28,6 +29,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _snapPointForPainting:Dictionary;
 		private var _shadowForPainting:Dictionary;
 		private var _atlasXml:XML;
+		private var _easel:FramedPainting;
 
 		// TODO: make private
 		public var homePaintingIndex:int = -1;
@@ -67,9 +69,19 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		// ---------------------------------------------------------------------
-		// Painting creation.
-		// ---------------------------------------------------------------------
+		private var _pendingEaselPaintingVo:PaintingVO;
+		public function setEaselPainting( vo:PaintingVO ):void {
+			 _pendingEaselPaintingVo = vo;
+			if( _easel ) setEaselPaintingNow();
+		}
+
+		private function setEaselPaintingNow():void {
+		    var bmd:BitmapData = new BitmapData( _pendingEaselPaintingVo.width, _pendingEaselPaintingVo.height, false, 0 );
+			bmd.setPixels( new Rectangle( 0, 0, _pendingEaselPaintingVo.width, _pendingEaselPaintingVo.height ), _pendingEaselPaintingVo.colorImageARGB );
+			var painting:Painting = new Painting( bmd, _view );
+			_easel.setPainting( painting );
+			_pendingEaselPaintingVo = null;
+		}
 
 		public function createDefaultPaintings():void {
 
@@ -81,9 +93,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Default paintings.
 			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ), FrameType.DANGER, 0, true );
-			var easelPainting:FramedPainting = createPaintingAtIndex( new BitmapData( 512, 512, false, 0xFF0000 ), FrameType.EASEL, 1, false );
-			easelPainting.easelVisible = true;
-			easelPainting.z -= 500;
+			_easel = createPaintingAtIndex( null, null, 1, false );
+			_easel.easelVisible = true;
+			_easel.z -= 500;
+			if( _pendingEaselPaintingVo ) setEaselPaintingNow();
 			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ), FrameType.WHITE, 2, true );
 			homePaintingIndex = 2;
 
@@ -98,16 +111,24 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			trace( this, "creating painting at index: " + index );
 
 			// Painting.
-			var painting:Painting = new Painting( paintingBmd, _view );
+			if( paintingBmd ) {
+				var painting:Painting = new Painting( paintingBmd, _view );
+			}
 
 			// Frame.
-			var frameDescriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO( frameType, _atlasXml, 1024, 512 );
-			var frame:Frame = new Frame( _frameMaterial, frameDescriptor, painting.width, painting.height );
+			if( frameType ) {
+				var frameDescriptor:FrameTextureAtlasDescriptorVO = new FrameTextureAtlasDescriptorVO( frameType, _atlasXml, 1024, 512 );
+				var frame:Frame = new Frame( _frameMaterial, frameDescriptor, painting.width, painting.height );
+			}
 
 			// Both.
 			var framedPainting:FramedPainting = new FramedPainting( _view );
-			framedPainting.setPainting( painting );
-			framedPainting.setFrame( frame );
+			if( painting ) {
+				framedPainting.setPainting( painting );
+			}
+			if( frame ) {
+				framedPainting.setFrame( frame );
+			}
 
 			// Add to display, store, and position.
 			var numPaintings:uint = _paintings.length;
@@ -168,6 +189,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private function removePaintingAtIndex( index:uint ):void {
 			// TODO... remove painting, remove shadow, remove snap point
+		}
+
+		public function get easel():FramedPainting {
+			return _easel;
 		}
 	}
 }

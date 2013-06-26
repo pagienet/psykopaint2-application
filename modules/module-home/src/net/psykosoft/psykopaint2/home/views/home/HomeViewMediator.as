@@ -73,8 +73,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			super.initialize();
 			registerView( view );
 			registerEnablingState( StateType.HOME );
-			registerEnablingState( StateType.HOME_ON_EMPTY_EASEL );
-			registerEnablingState( StateType.HOME_ON_UNFINISHED_PAINTING );
+			registerEnablingState( StateType.HOME_ON_EASEL );
 			registerEnablingState( StateType.HOME_ON_FINISHED_PAINTING );
 			registerEnablingState( StateType.GOING_TO_PAINT );
 			registerEnablingState( StateType.SETTINGS );
@@ -90,6 +89,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyNavigationToggleSignal.add( onNavigationToggled );
 			notifyCanvasBitmapSignal.add( onCanvasSnapShot );
 			requestZoomToggleSignal.add( onZoomRequested );
+			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 
 			// From view.
 			view.enabledSignal.add( onViewEnabled );
@@ -97,6 +97,76 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.assetsReadySignal.add( onViewAssetsReady );
 			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
 			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
+		}
+
+		// -----------------------
+		// From app.
+		// -----------------------
+
+		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
+			if( data.length > 0 ) {
+				var vo:PaintingVO;
+				if( data.length == 1 ) {
+					vo = data[ 0 ];
+					view.paintingManager.setEaselPainting( vo );
+				}
+				else {
+					var len:uint = data.length;
+					var latestDate:int = int.MIN_VALUE;
+					var latestVo:PaintingVO = vo;
+					for( var i:uint; i < len; i++ ) {
+						vo = data[ i ];
+						if( vo.lastSavedOnDateMs > latestDate ) {
+							latestDate = vo.lastSavedOnDateMs;
+							latestVo = vo;
+						}
+					}
+					view.paintingManager.setEaselPainting( latestVo );
+				}
+			}
+		}
+
+		private function onCanvasSnapShot( bmd:BitmapData ):void {
+			// TODO: also updates when the edge bgs are being updated from a click on NewPaintSubNav's paint button, and it shouldn't
+			if( _waitingForSnapShotOfHomeView ) {
+				_waitingForSnapShotOfHomeView = false;
+				var p:Point = NavigationCache.isHidden ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
+				view.adjustCamera( p.x, p.y );
+				requestStateChange( StateType.PAINT );
+			}
+			else {
+				view.updateEasel( bmd );
+			}
+		}
+
+		private function onZoomRequested( zoomIn:Boolean ):void {
+			if( !view.visible ) return;
+			if( zoomIn ) view.zoomIn();
+			else view.zoomOut();
+		}
+
+		private function onNavigationToggled( shown:Boolean ):void {
+			view.cameraController.limitInteractionToUpperPartOfTheScreen( shown );
+			if( !view.visible ) {
+				var p:Point = shown ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
+				view.adjustCamera( p.x, p.y );
+			}
+		}
+
+		private function onGlobalGesture( gestureType:String ):void {
+//			trace( this, "onGlobalGesture: " + gestureType );
+			if( !view.visible ) return;
+			if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN || gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
+				view.cameraController.startPanInteraction();
+			}
+			else if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_ENDED || gestureType == GestureType.VERTICAL_PAN_GESTURE_ENDED ) {
+				view.cameraController.endPanInteraction();
+			}
+		}
+
+		private function onWallPaperChanged( atf:ByteArray ):void {
+			if( !view.visible ) return;
+			view.room.changeWallpaper( atf );
 		}
 
 		// -----------------------
@@ -145,20 +215,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 
 			// Trigger NEW PAINTING state if closest to easel ( index 1 ).
-			if( stateModel.currentState != StateType.HOME_ON_EMPTY_EASEL && paintingIndex == 1 ) {
-				requestStateChange( StateType.HOME_ON_EMPTY_EASEL );
+			if( stateModel.currentState != StateType.HOME_ON_EASEL && paintingIndex == 1 ) {
+				requestStateChange( StateType.HOME_ON_EASEL );
 				return;
 			}
 
 			// Restore HOME state if closest to home painting ( index 2 ).
 			if( stateModel.currentState != StateType.HOME && paintingIndex == homePaintingIndex ) {
 				requestStateChange( StateType.HOME );
-				return;
-			}
-
-			// Trigger CONTINUE PAINTING state if closest to an in progress painting ( index > 1 and < homePaintingIndex ).
-			if( stateModel.currentState != StateType.HOME_ON_UNFINISHED_PAINTING && paintingIndex < homePaintingIndex ) {
-				requestStateChange( StateType.HOME_ON_UNFINISHED_PAINTING );
 				return;
 			}
 
@@ -199,53 +263,6 @@ package net.psykosoft.psykopaint2.home.views.home
 				RenderGpuCommand.snapshotScale = 1;
 				RenderGpuCommand.snapshotRequested = true;
 			}
-		}
-
-		// -----------------------
-		// From app.
-		// -----------------------
-
-		private function onCanvasSnapShot( bmd:BitmapData ):void {
-			// TODO: also updates when the edge bgs are being updated from a click on NewPaintSubNav's paint button, and it shouldn't
-			if( _waitingForSnapShotOfHomeView ) {
-				_waitingForSnapShotOfHomeView = false;
-				var p:Point = NavigationCache.isHidden ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
-				view.adjustCamera( p.x, p.y );
-				requestStateChange( StateType.PAINT );
-			}
-			else {
-				view.updateEasel( bmd );
-			}
-		}
-
-		private function onZoomRequested( zoomIn:Boolean ):void {
-			if( !view.visible ) return;
-			if( zoomIn ) view.zoomIn();
-			else view.zoomOut();
-		}
-
-		private function onNavigationToggled( shown:Boolean ):void {
-			view.cameraController.limitInteractionToUpperPartOfTheScreen( shown );
-			if( !view.visible ) {
-				var p:Point = shown ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
-				view.adjustCamera( p.x, p.y );
-			}
-		}
-
-		private function onGlobalGesture( gestureType:String ):void {
-//			trace( this, "onGlobalGesture: " + gestureType );
-			if( !view.visible ) return;
-			if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN || gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
-				view.cameraController.startPanInteraction();
-			}
-			else if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_ENDED || gestureType == GestureType.VERTICAL_PAN_GESTURE_ENDED ) {
-				view.cameraController.endPanInteraction();
-			}
-		}
-
-		private function onWallPaperChanged( atf:ByteArray ):void {
-			if( !view.visible ) return;
-			view.room.changeWallpaper( atf );
 		}
 	}
 }

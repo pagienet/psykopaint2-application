@@ -33,6 +33,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				_easel = new Mesh( new PlaneGeometry( 1024, 1024 ), easelMaterial );
 				_easel.y = -210;
 				if( _frame ) _easel.z = _frame.depth / 2 + 1;
+				else _easel.z = 50;
 				_easel.scale( 1.575 );
 				_easel.rotationX = -90;
 				addChild( _easel );
@@ -70,15 +71,20 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		}
 
 		public function get width():Number {
-			return _frame.width;
+			if( _easel ) return 1024;
+			if( _frame ) return _frame.width;
+			return 0;
 		}
 
 		public function get height():Number {
-			return _frame.height;
+			if( _easel ) return 1024;
+			if( _frame ) return _frame.height;
+			return 0;
 		}
 
 		public function get depth():Number {
-			return _frame.depth;
+			if( _frame ) return _frame.depth;
+			return 0;
 		}
 	}
 }

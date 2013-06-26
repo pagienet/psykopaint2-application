@@ -32,15 +32,17 @@ package net.psykosoft.psykopaint2.paint.commands
 			// NOTE: The incoming signal's id is populated from the home module. If it's empty
 			// or is 'easel', we're supposed to create a new file. If it is anything else,
 			// we're coming from a painting that was saved before at some point.
+			var nowDate:Date = new Date();
+			var dateMs:int = Math.floor( nowDate.getTime() );
 			if( paintingId == "easel" || paintingId == "" ) {
-				var nowDate:Date = new Date();
-				paintingId = userModel.uniqueUserId + "-" + Math.floor( nowDate.getTime() );
+				paintingId = userModel.uniqueUserId + "-" + dateMs;
 			}
 
 			// Produce data vo.
 			var vo:PaintingVO = new PaintingVO();
 			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayersARGB();
 			var hr:Boolean = CoreSettings.RUNNING_ON_RETINA_DISPLAY;
+			vo.lastSavedOnDateMs = dateMs;
 			vo.width = hr ? 2048 : 1024;
 			vo.height = hr ? 1536 : 768;
 			vo.height = canvasModel.stage.stageHeight;
@@ -48,6 +50,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			vo.heightmapImageARGB = imagesRGBA[ 1 ];
 			vo.sourceImageARGB = imagesRGBA[ 2 ];
 			vo.id = paintingId;
+			trace( this, "generated vo: " + vo );
 
 			// Serialize data.
 			var voBytes:ByteArray = vo.serialize();

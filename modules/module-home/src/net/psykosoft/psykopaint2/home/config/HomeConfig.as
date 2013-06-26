@@ -4,8 +4,6 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.commands.ZoomThenChangeStateCommand;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
-	import net.psykosoft.psykopaint2.home.views.home.ContinuePaintingSubNavView;
-	import net.psykosoft.psykopaint2.home.views.home.ContinuePaintingSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
@@ -101,7 +99,6 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( WallpaperSubNavView ).toMediator( WallpaperSubNavViewMediator );
 			_mediatorMap.map( HomeSubNavView ).toMediator( HomeSubNavViewMediator );
 			_mediatorMap.map( HomeSnapShotView ).toMediator( HomeSnapShotViewMediator );
-			_mediatorMap.map( ContinuePaintingSubNavView ).toMediator( ContinuePaintingSubNavViewMediator );
 		}
 	}
 }

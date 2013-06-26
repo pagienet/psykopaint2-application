@@ -12,9 +12,16 @@ package net.psykosoft.psykopaint2.core.data
 		public var id:String;
 		public var width:int;
 		public var height:int;
+		public var lastSavedOnDateMs:int;
 
 		public function PaintingVO() {
 			super();
+		}
+
+		public function toString():String {
+			return "PaintingVO --------- \n" +
+					"id: " + id + "\n" +
+					"lastSavedOnDateMs: " + lastSavedOnDateMs + "\n";
 		}
 
 		// ---------------------------------------------------------------------
@@ -31,6 +38,7 @@ package net.psykosoft.psykopaint2.core.data
 			bytes.writeUTF( id );
 			bytes.writeInt( width );
 			bytes.writeInt( height );
+			bytes.writeInt( lastSavedOnDateMs );
 
 			// Write images.
 			encodeImage( bytes, colorImageARGB );
@@ -56,6 +64,7 @@ package net.psykosoft.psykopaint2.core.data
 			id = bytes.readUTF();
 			width = bytes.readInt();
 			height = bytes.readInt();
+			lastSavedOnDateMs = bytes.readInt();
 
 			// Read images.
 			colorImageARGB = decodeImage( bytes );
