@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.core.models.PaintingDataModel;
+	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 
 	public class LoadPaintingCommand extends TracingCommand
 	{
@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var paintingId:String; // From signal.
 
 		[Inject]
-		public var paintingDataModel:PaintingDataModel;
+		public var paintingDataModel:PaintingModel;
 
 		[Inject]
 		public var canvasModel:CanvasModel;

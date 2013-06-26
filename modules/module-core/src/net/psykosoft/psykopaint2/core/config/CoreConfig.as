@@ -12,8 +12,9 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingSavedDataCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
-	import net.psykosoft.psykopaint2.core.models.PaintingDataModel;
+	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
+	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
@@ -88,7 +89,8 @@ package net.psykosoft.psykopaint2.core.config
 
 		private function mapModels():void {
 			_injector.map( StateModel ).asSingleton();
-			_injector.map( PaintingDataModel ).asSingleton();
+			_injector.map( PaintingModel ).asSingleton();
+			_injector.map( UserModel ).asSingleton();
 		}
 
 		// -----------------------

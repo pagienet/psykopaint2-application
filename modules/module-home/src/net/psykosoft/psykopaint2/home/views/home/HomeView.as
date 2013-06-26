@@ -146,7 +146,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
 			_paintingManager.createDefaultPaintings();
-			if( _paintingVosPendingForCreation ) createPendingInProgressPaintings();
+			if( _paintingVosPendingForCreation ) createInProgressPaintingsNow();
 			_cameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
 		}
 
@@ -279,13 +279,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Store data for later creation.
 			_paintingVosPendingForCreation = data;
 			if( _viewIsReady ) {
-				createPendingInProgressPaintings();
+				createInProgressPaintingsNow();
 				_cameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
 			}
 		}
 
 		// TODO: move to painting manager
-		private function createPendingInProgressPaintings():void {
+		private function createInProgressPaintingsNow():void {
 			trace( this, "creating painting data." );
 			var len:uint = _paintingVosPendingForCreation.length;
 			for( var i:uint; i < len; i++ ) {

@@ -6,14 +6,15 @@ package net.psykosoft.psykopaint2.core.models
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 
-	public class PaintingDataModel
+	public class PaintingModel
 	{
 		[Inject]
 		public var notifyPaintingDataRetrievedSignal:NotifyPaintingDataRetrievedSignal;
 
 		private var _paintingData:Vector.<PaintingVO>;
+		private var _focusedPaintingId:String = "";
 
-		public function PaintingDataModel() {
+		public function PaintingModel() {
 			super();
 		}
 
@@ -33,6 +34,14 @@ package net.psykosoft.psykopaint2.core.models
 				}
 			}
 			throw new Error( this, "unable to find saved painting with id: " + id );
+		}
+
+		public function get focusedPaintingId():String {
+			return _focusedPaintingId;
+		}
+
+		public function set focusedPaintingId( id:String ):void {
+			_focusedPaintingId = id;
 		}
 	}
 }

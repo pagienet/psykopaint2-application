@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
 
-	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
@@ -9,7 +8,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
+	import net.psykosoft.psykopaint2.core.models.UserModel;
 
 	public class SavePaintingCommand extends TracingCommand
 	{
@@ -19,12 +18,24 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var canvasModel:CanvasModel;
 
+		[Inject]
+		public var userModel:UserModel;
+
 		public function SavePaintingCommand() {
 			super();
 		}
 
 		override public function execute():void {
 			super.execute();
+
+			// Need to create a new id?
+			// NOTE: The incoming signal's id is populated from the home module. If it's empty
+			// or is 'easel', we're supposed to create a new file. If it is anything else,
+			// we're coming from a painting that was saved before at some point.
+			if( paintingId == "easel" || paintingId == "" ) {
+				var nowDate:Date = new Date();
+				paintingId = userModel.uniqueUserId + "-" + Math.floor( nowDate.getTime() );
+			}
 
 			// Produce data vo.
 			var vo:PaintingVO = new PaintingVO();

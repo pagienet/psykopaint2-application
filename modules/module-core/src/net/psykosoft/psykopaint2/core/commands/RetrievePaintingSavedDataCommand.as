@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.commands
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopFolderReadUtil;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
-	import net.psykosoft.psykopaint2.core.models.PaintingDataModel;
+	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 
 	import robotlegs.bender.framework.api.IContext;
 
@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.core.commands
 		public var context:IContext;
 
 		[Inject]
-		public var model:PaintingDataModel;
+		public var model:PaintingModel;
 
 		private var _currentFileBeingLoaded:File;
 		private var _paintingFiles:Vector.<File>;

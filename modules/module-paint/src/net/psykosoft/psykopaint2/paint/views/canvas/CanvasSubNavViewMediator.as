@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
+	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
@@ -32,6 +33,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var stateModel:StateModel;
+
+		[Inject]
+		public var paintingModel:PaintingModel;
 
 		private var _incomingState:String;
 
@@ -73,7 +77,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 				case CanvasSubNavView.LBL_SAVE: {
-					requestPaintingSaveSignal.dispatch( CanvasCache.currentPaintingId );
+					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId );
 					break;
 				}
 				case CanvasSubNavView.LBL_PUBLISH: {

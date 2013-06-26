@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.core.managers.Stage3DProxy;
 
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
@@ -11,10 +10,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
-
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
+	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
@@ -25,7 +24,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
-	import net.psykosoft.psykopaint2.home.models.CurrentPaintingCache;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	public class HomeViewMediator extends MediatorBase
@@ -62,6 +60,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var notifyPaintingDataRetrievedSignal:NotifyPaintingDataRetrievedSignal;
+
+		[Inject]
+		public var paintingModel:PaintingModel;
 
 		private var _waitingForPaintModeAfterZoomIn:Boolean;
 		private var _waitingForSnapShotOfHomeView:Boolean;
@@ -146,6 +147,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Trigger NEW PAINTING state if closest to easel ( index 1 ).
 			if( stateModel.currentState != StateType.HOME_ON_EMPTY_EASEL && paintingIndex == 1 ) {
+				paintingModel.focusedPaintingId = "easel";
 				requestStateChange( StateType.HOME_ON_EMPTY_EASEL );
 				return;
 			}
@@ -158,7 +160,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Trigger CONTINUE PAINTING state if closest to an in progress painting ( index > 1 and < homePaintingIndex ).
 			if( stateModel.currentState != StateType.HOME_ON_UNFINISHED_PAINTING && paintingIndex < homePaintingIndex ) {
-				CurrentPaintingCache.currentPaintingId = view.getPaintingIdAtIndex( paintingIndex );
+				paintingModel.focusedPaintingId = view.getPaintingIdAtIndex( paintingIndex );
 				requestStateChange( StateType.HOME_ON_UNFINISHED_PAINTING );
 				return;
 			}
