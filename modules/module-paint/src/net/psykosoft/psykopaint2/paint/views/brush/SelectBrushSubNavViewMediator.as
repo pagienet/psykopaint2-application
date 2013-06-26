@@ -1,7 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
+import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -23,9 +24,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			view.setButtonClickCallback( onButtonClicked );
 
 			// Post init.
-
 			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
 			view.setSelectedBrush( paintModule.activeBrushKit );
+			view.toggleRightButtonVisibility( hasParameters() );
 
 		//	view.setAvailableShapes( paintModule.getCurrentBrushShapes() );
 		//	view.setSelectedShape( paintModule.activeBrushKitShape );
@@ -44,9 +45,15 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				default: // Center buttons select a brush.
 					paintModule.activeBrushKit = label;
 					EditBrushCache.setLastSelectedBrush( label );
+					view.toggleRightButtonVisibility( hasParameters() );
 					break;
 				
 			}
+		}
+
+		public function hasParameters():Boolean{
+			var parameterSet:ParameterSetVO = paintModule.getCurrentBrushParameters();
+			return parameterSet.parameters.length > 0;
 		}
 	}
 }

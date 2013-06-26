@@ -55,6 +55,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_navigation.setRightButton( label );
 		}
 
+		public function toggleLeftButtonVisibility( value:Boolean ):void {
+			_navigation.toggleLeftButtonVisibility( value );
+		}
+
+		public function toggleRightButtonVisibility( value:Boolean ):void {
+			_navigation.toggleRightButtonVisibility( value );
+		}
+
 		protected function invalidateContent():void {
 			_navigation.invalidateContent();
 		}

@@ -388,6 +388,18 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			rightBtnSide.visible = true;
 		}
 
+		public function toggleLeftButtonVisibility( value:Boolean ):void {
+			_leftButton.visible = value;
+			leftBtnSide.visible = value;
+			//TODO: migth have to review gaps and snapPoints
+		}
+
+		public function toggleRightButtonVisibility( value:Boolean ):void {
+			_rightButton.visible = value;
+			rightBtnSide.visible = value;
+			//TODO: migth have to review gaps and snapPoints
+		}
+
 		public function invalidateContent():void {
 			_scroller.invalidateContent();
 			_scroller.x = 1024 / 2 - _scroller.minWidth / 2;
