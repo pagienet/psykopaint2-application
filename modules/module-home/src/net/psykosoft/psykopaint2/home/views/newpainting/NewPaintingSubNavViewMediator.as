@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			switch( label ) {
 				case NewPaintingSubNavView.LBL_NEW: {
 					// Pick one...
-					requestStateChange( StateType.HOME_PICK_SURFACE );
+//					requestStateChange( StateType.HOME_PICK_SURFACE );
 //					navigateToPaintStateWithZoomIn(); // Temporary implementation. TODO: remove when ready
 					break;
 				}
