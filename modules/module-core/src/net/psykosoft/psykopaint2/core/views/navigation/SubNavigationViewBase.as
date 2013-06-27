@@ -70,6 +70,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_navigation.areButtonsSelectable( value );
 		}
 
+		protected function setButtonWithLabelSelectable( label:String, selectable:Boolean ):void {
+			_navigation.setButtonWithLabelSelectable( label, selectable );
+		}
+
 		protected function selectButtonWithLabel( value:String ):void {
 			_navigation.selectButtonWithLabel( value );
 		}

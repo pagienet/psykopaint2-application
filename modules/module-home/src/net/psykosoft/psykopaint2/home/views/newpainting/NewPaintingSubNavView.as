@@ -29,8 +29,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 			if( !HomeSettings.isStandalone ) {
 				setRightButton( LBL_CONTINUE );
-				addCenterButton( LBL_NEW );
 			}
+
+			addCenterButton( LBL_NEW );
+			setButtonWithLabelSelectable ( LBL_NEW, false );
 
 			invalidateContent();
 		}

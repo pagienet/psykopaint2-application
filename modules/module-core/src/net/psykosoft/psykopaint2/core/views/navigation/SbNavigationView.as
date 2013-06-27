@@ -302,18 +302,21 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
 
-			var button:SbButton = event.target as SbButton;
-			if( !button ) button = event.target.parent as SbButton;
-			var label:String = button.labelText;
-			trace( this, "button clicked: " + button.labelText );
+			var clickedButton:SbButton = event.target as SbButton;
+			if( !clickedButton ) clickedButton = event.target.parent as SbButton;
+			var label:String = clickedButton.labelText;
+			trace( this, "button clicked: " + clickedButton.labelText );
 
 			// Deselects all buttons except the one just clicked.
-			if( _areButtonsSelectable && button != _leftButton && button != _rightButton ) {
+			if( _areButtonsSelectable && clickedButton.isSelectable ) {
 				var len:uint = _centerButtons.length;
 				for( var i:uint = 0; i < len; ++i ) {
-					_centerButtons[ i ].toggleSelect( false );
+					var otherButton:SbButton = _centerButtons[ i ];
+					if ( otherButton.isSelectable ) {
+						otherButton.toggleSelect(false);
+					}
 				}
-				button.toggleSelect( true );
+				clickedButton.toggleSelect( true );
 			}
 
 			buttonClickedCallback( label );
@@ -446,6 +449,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function areButtonsSelectable( value:Boolean ):void {
 			_areButtonsSelectable = value;
+		}
+
+		public function setButtonWithLabelSelectable( label:String, selectable:Boolean ):void {
+			var len:uint = _centerButtons.length;
+			for( var i:uint; i < len; ++i ) {
+				var centerButton:SbButton = _centerButtons[ i ];
+				if( centerButton.labelText == label ) centerButton.isSelectable = selectable ;
+			}
 		}
 
 		public function selectButtonWithLabel( value:String ):void {
