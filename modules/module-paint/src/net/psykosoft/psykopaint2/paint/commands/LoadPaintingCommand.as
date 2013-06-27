@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 
 	import flash.utils.ByteArray;
+	import flash.utils.Endian;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -30,24 +31,24 @@ package net.psykosoft.psykopaint2.paint.commands
 			var transposedColor:ByteArray = as3ArgbToBgra( data[ 0 ] );
 			var transposedHeight:ByteArray = as3ArgbToBgra( data[ 1 ] );
 			var transposedSource:ByteArray = as3ArgbToBgra( data[ 2 ] );
-//			canvasModel.loadLayersBGRA( Vector.<ByteArray>( [ transposedColor, transposedHeight, transposedSource ] ) ); // TODO: disabled because it causes a runtime error
+			canvasModel.loadLayersBGRA( Vector.<ByteArray>( [ transposedColor, transposedHeight, transposedSource ] ) );
 		}
 
 		// TODO: probably very slow, find alternative
 		private function as3ArgbToBgra( input:ByteArray ):ByteArray {
 			input.position = 0;
-			var a:int, r:int, g:int, b:int;
 			var output:ByteArray = new ByteArray();
-			while( input.bytesAvailable > 0 ) {
-				r = input.readInt();
-				g = input.readInt();
-				b = input.readInt();
-				a = input.readInt();
-				output.writeInt( b );
-				output.writeInt( g );
-				output.writeInt( r );
-				output.writeInt( a );
-			}
+			var len : int = input.length/4;
+			var i : int = 0;
+
+			input.endian =  Endian.BIG_ENDIAN;
+			output.endian =  Endian.LITTLE_ENDIAN;
+
+			while(i++ < len)
+				output.writeUnsignedInt(input.readUnsignedInt());
+
+			output.length = canvasModel.textureWidth * canvasModel.textureHeight * 4;
+
 			return output;
 		}
 	}

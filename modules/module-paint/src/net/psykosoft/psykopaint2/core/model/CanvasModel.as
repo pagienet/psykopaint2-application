@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
@@ -281,6 +282,7 @@ package net.psykosoft.psykopaint2.core.model
 		 */
 		public function saveLayersARGB(): Vector.<ByteArray>
 		{
+			stage3D.context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			var bmp : BitmapData = new BitmapData(_width, _height, true);
 			var layers : Vector.<ByteArray> = new Vector.<ByteArray>();
 			layers.push(saveLayer(_colorTexture, bmp));

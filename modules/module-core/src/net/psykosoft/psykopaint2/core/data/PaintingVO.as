@@ -50,14 +50,15 @@ package net.psykosoft.psykopaint2.core.data
 			bytes.writeFloat( lastSavedOnDateMs );
 
 			// Write images.
-			encodeImage( bytes, colorImageARGB );
-			encodeImage( bytes, heightmapImageARGB );
-			encodeImage( bytes, sourceImageARGB );
+			encodeImage( bytes, colorImageARGB, width, height );
+			encodeImage( bytes, heightmapImageARGB, width, height );
+			encodeImage( bytes, sourceImageARGB, width, height );
 
 			return bytes;
 		}
 
-		private function encodeImage( bytes:ByteArray, imageBytes:ByteArray ):void {
+		private function encodeImage( bytes:ByteArray, imageBytes:ByteArray , width : int, height : int):void {
+			imageBytes.length = width*height*4;
 			//Mario question: why is every image zipped separately instead of zipping the entire bytearray at the end?
 			imageBytes.compress( CompressionAlgorithm.ZLIB );
 			bytes.writeInt( imageBytes.length );
