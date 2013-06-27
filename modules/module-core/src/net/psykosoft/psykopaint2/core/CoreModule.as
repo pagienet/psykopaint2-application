@@ -25,10 +25,13 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreConfig;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingLoadSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingSavedDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
@@ -297,8 +300,15 @@ package net.psykosoft.psykopaint2.core
 
 			// Start loading painting data.
 			_injector.getInstance( RequestPaintingSavedDataRetrievalSignal ).dispatch();
+			_injector.getInstance( NotifyPaintingDataRetrievedSignal ).addOnce( testLoadingAPainting ); // Just for testing.
 
 			moduleReadySignal.dispatch();
+		}
+
+		private function testLoadingAPainting( data:Vector.<PaintingVO> ):void {
+			var aVo:PaintingVO = data[ 0 ];
+			trace( this, "painting data loaded, testing painting load: " + aVo.id );
+			_injector.getInstance( RequestPaintingLoadSignal ).dispatch( aVo.id );
 		}
 	}
 }
