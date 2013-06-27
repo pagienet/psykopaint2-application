@@ -372,7 +372,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if( icon ) btn.setIcon( icon );
 			btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			// Defaults to 1st button as selected.
-			if( _areButtonsSelectable ) {
+			if( _areButtonsSelectable && btn.isSelectable ) {
 				btn.isSelectable = true;
 				if( autoSelect && _centerButtons.length == 0 ) {
 					btn.toggleSelect( true );
@@ -461,7 +461,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function selectButtonWithLabel( value:String ):void {
 			if( !_areButtonsSelectable ) return;
-			for( var i:Number = 0; i < _centerButtons.length; ++i ) {
+			var len = _centerButtons.length;
+			for( var i:uint = 0; i < len; ++i ) {
 				var button:SbButton = _centerButtons[ i ];
 				button.toggleSelect( button.labelText == value );
 			}
@@ -469,7 +470,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		
 		public function selectButtonByIndex( index:int ):void {
 			if( !_areButtonsSelectable ) return;
-			for( var i:Number = 0; i < _centerButtons.length; ++i ) {
+			var len = _centerButtons.length;
+			for( var i:uint = 0; i < len; ++i ) {
 				_centerButtons[ i ].toggleSelect( i == index );
 			}
 		}
