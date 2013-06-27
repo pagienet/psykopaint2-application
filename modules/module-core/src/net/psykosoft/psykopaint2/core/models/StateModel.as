@@ -46,16 +46,16 @@ package net.psykosoft.psykopaint2.core.models
 		}
 
 		public function getLastStateOfCategory( categoryName:String ):String {
-			var i:uint;
-			var len:uint = _stateStackUtil.stack.length;
-			for( i = len - 1; i >= 0; i-- ) {
+			for( var i:int = _stateStackUtil.stack.length; --i > -1; ) {
 				var state:String = _stateStackUtil.stack[ i ];
 				var dump:Array = state.split( "/" );
 				if( dump[ 1 ] == categoryName ) {
 					return state;
 				}
 			}
-			throw new Error( this, "unable to find last state for required category: " + categoryName );
+			
+			return "undefined/"+categoryName;
+			//throw new Error( this, "unable to find last state for required category: " + categoryName );
 		}
 	}
 }

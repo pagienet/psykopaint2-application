@@ -6,6 +6,10 @@ package net.psykosoft.psykopaint2.core.data
 
 	public class PaintingVO
 	{
+		//Mario: I strongly recommend to also add a "save format versionID" 
+		//since the time might come when we will want to store more but still
+		//want to open old files
+		
 		public var colorImageARGB:ByteArray;
 		public var heightmapImageARGB:ByteArray;
 		public var sourceImageARGB:ByteArray;
@@ -49,6 +53,7 @@ package net.psykosoft.psykopaint2.core.data
 		}
 
 		private function encodeImage( bytes:ByteArray, imageBytes:ByteArray ):void {
+			//Mario question: why is every image zipped separately instead of zipping the entire bytearray at the end?
 			imageBytes.compress( CompressionAlgorithm.ZLIB );
 			bytes.writeInt( imageBytes.length );
 			bytes.writeBytes( imageBytes );

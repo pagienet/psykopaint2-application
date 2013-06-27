@@ -78,10 +78,18 @@ package net.psykosoft.psykopaint2.core.commands
 			// Read the contents of the file to a value object.
 			trace( this, "file read: " + _currentFileBeingLoaded.data.length + " bytes" );
 			var vo:PaintingVO = new PaintingVO();
-			_paintingVos.push( vo );
+			
 			trace( this, "de-serializing vo..." );
-			vo.deSerialize( _currentFileBeingLoaded.data );
-
+			//Mario: I had to patch this since the deserializing process failed on my machine
+			try
+			{
+				vo.deSerialize( _currentFileBeingLoaded.data );
+				_paintingVos.push( vo );
+			} catch ( error:Error )
+			{
+				trace("Error deserializing "+_currentFileBeingLoaded.nativePath);
+				
+			}
 			// Continue reading next file.
 			_indexOfPaintingFileBeingRead++;
 			if( _indexOfPaintingFileBeingRead < _numPaintingFiles ) {
