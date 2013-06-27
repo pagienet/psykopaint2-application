@@ -309,7 +309,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			// Deselects all buttons except the one just clicked.
 			if( _areButtonsSelectable && button != _leftButton && button != _rightButton ) {
-				for( var i:Number = 0; i < _centerButtons.length; ++i ) {
+				for( var i:uint = 0; i < _centerButtons.length; ++i ) {
 					_centerButtons[ i ].toggleSelect( false );
 				}
 				button.toggleSelect( true );
