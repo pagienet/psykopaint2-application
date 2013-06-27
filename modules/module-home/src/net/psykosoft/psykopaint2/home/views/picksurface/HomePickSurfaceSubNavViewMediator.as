@@ -1,17 +1,24 @@
 package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
+	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
+	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.home.signals.RequestEaselUpdateSignal;
 
 	public class HomePickSurfaceSubNavViewMediator extends MediatorBase
 	{
 		[Inject]
 		public var view:HomePickSurfaceSubNavView;
 
-		private var _loader:BinaryLoader;
+		[Inject]
+		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
+
+		private var _loader:BitmapLoader;
 
 		override public function initialize():void {
 
@@ -45,13 +52,12 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		}
 
 		private function pickSurfaceByIndex( index:uint ):void {
-			_loader = new BinaryLoader();
-			_loader.loadAsset( "/paint-packaged/surfaces/canvas-height-specular" + index + ".atf", onSurfaceLoaded );
+			_loader = new BitmapLoader();
+			_loader.loadAsset( "/core-packaged/images/surfaces/canvas-height-specular" + index + "-sample.jpg", onSurfaceLoaded );
 		}
 
-		private function onSurfaceLoaded( byteArray:ByteArray ):void {
-//			requestSurfaceImageSetSignal.dispatch( byteArray );
-			// TODO: order easel to change
+		private function onSurfaceLoaded( bmd:BitmapData ):void {
+			requestEaselPaintingUpdateSignal.dispatch( bmd );
 			_loader.dispose();
 			_loader = null;
 		}

@@ -70,17 +70,16 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		private var _pendingEaselPaintingVo:PaintingVO;
-		public function setEaselPainting( vo:PaintingVO ):void {
-			 _pendingEaselPaintingVo = vo;
+		private var _pendingEaselContent:BitmapData;
+		public function setEaselContent( bmd:BitmapData ):void {
+			 _pendingEaselContent = bmd;
 			if( _easel ) setEaselPaintingNow();
 		}
 
 		private function setEaselPaintingNow():void {
-		    var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( _pendingEaselPaintingVo.colorImageARGB, _pendingEaselPaintingVo.width, _pendingEaselPaintingVo.height );
-			var painting:Painting = new Painting( bmd, _view );
+			var painting:Painting = new Painting( _pendingEaselContent, _view );
 			_easel.setPainting( painting );
-			_pendingEaselPaintingVo = null;
+			_pendingEaselContent = null;
 		}
 
 		public function createDefaultPaintings():void {
@@ -96,7 +95,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_easel = createPaintingAtIndex( null, null, 1, false );
 			_easel.easelVisible = true;
 			_easel.z -= 500;
-			if( _pendingEaselPaintingVo ) setEaselPaintingNow();
+			if( _pendingEaselContent ) setEaselPaintingNow();
 			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ), FrameType.WHITE, 2, true );
 			homePaintingIndex = 2;
 

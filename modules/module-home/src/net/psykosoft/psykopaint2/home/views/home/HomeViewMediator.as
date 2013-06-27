@@ -8,6 +8,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
 
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
@@ -25,7 +27,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
-	import net.psykosoft.psykopaint2.home.signals.RequestEaselPaintingUpdateSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 
@@ -70,7 +72,7 @@ public class HomeViewMediator extends MediatorBase
 		public var paintingModel:PaintingModel;
 
 		[Inject]
-		public var requestEaselPaintingUpdateSignal:RequestEaselPaintingUpdateSignal;
+		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
 
 		[Inject]
 		public var notifyPaintingActivatedSignal:NotifyPaintingActivatedSignal;
@@ -124,16 +126,18 @@ public class HomeViewMediator extends MediatorBase
 			requestZoomThenChangeStateSignal.dispatch( true, StateType.PAINT );
 		}
 
-		private function onEaselUpdateRequest( vo:PaintingVO ):void {
-			view.paintingManager.setEaselPainting( vo );
+		private function onEaselUpdateRequest( bmd:BitmapData ):void {
+			view.paintingManager.setEaselContent( bmd );
 		}
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
 			if( data.length > 0 ) {
 				var vo:PaintingVO;
+				var bmd:BitmapData;
 				if( data.length == 1 ) {
 					vo = data[ 0 ];
-					view.paintingManager.setEaselPainting( vo );
+					bmd = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
+					view.paintingManager.setEaselContent( bmd );
 				}
 				else {
 					var len:uint = data.length;
@@ -146,7 +150,8 @@ public class HomeViewMediator extends MediatorBase
 							latestVo = vo;
 						}
 					}
-					view.paintingManager.setEaselPainting( latestVo );
+					bmd = BitmapDataUtils.getBitmapDataFromBytes( latestVo.colorImageARGB, latestVo.width, latestVo.height );
+					view.paintingManager.setEaselContent( bmd );
 				}
 			}
 		}

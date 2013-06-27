@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.home.views.newpainting
 {
 
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.home.views.home.*;
 
 	import flash.display.BitmapData;
@@ -13,7 +15,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.home.signals.RequestEaselPaintingUpdateSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestEaselUpdateSignal;
 
 	public class NewPaintingSubNavViewMediator extends MediatorBase
 	{
@@ -30,7 +32,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotSignal;
 
 		[Inject]
-		public var requestEaselPaintingUpdateSignal:RequestEaselPaintingUpdateSignal;
+		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
 
 		[Inject]
 		public var requestPaintingLoadSignal:RequestPaintingActivationSignal;
@@ -79,7 +81,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					break;
 				}
 				default: { // Default buttons are supposed to be in progress painting buttons.
-					requestEaselPaintingUpdateSignal.dispatch( paintingModel.getVoWithId( label ) );
+					var vo:PaintingVO = paintingModel.getVoWithId( label );
+					var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
+					requestEaselPaintingUpdateSignal.dispatch( bmd );
 					break;
 				}
 			}
