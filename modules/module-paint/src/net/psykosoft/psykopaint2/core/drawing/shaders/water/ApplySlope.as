@@ -62,11 +62,11 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 					"mov oc, ft0";
 		}
 
-		public function execute(context : Context3D, gravity : Vector3D, stroke : SimulationMesh, velocityDensity : Texture, target : Texture) : void
+		public function execute(context : Context3D, gravity : Vector3D, stroke : SimulationMesh, velocityDensity : Texture, slopeMap : Texture, target : Texture) : void
 		{
 			context.setRenderToTexture(target, false);
 			context.setTextureAt(0, velocityDensity);
-			context.setTextureAt(1, _canvas.normalSpecularMap);
+			context.setTextureAt(1, slopeMap);
 			_fragmentProps[4] = -gravity.x*_gravityStrength;
 			_fragmentProps[5] = gravity.y*_gravityStrength;
 

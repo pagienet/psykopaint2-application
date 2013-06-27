@@ -234,7 +234,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var gravity : Vector3D = AccelerometerManager.gravityVector;
 			_applySlope.surfaceRelief = _surfaceRelief.numberValue;
 			_applySlope.gravityStrength = _gravityStrength.numberValue;
-			_applySlope.execute(_context, gravity, SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer);
+			_applySlope.execute(_context, gravity, SimulationMesh(_brushMesh), _velocityPressureField, _canvasModel.normalSpecularMap, _velocityPressureFieldBackBuffer);
 			swapVelocityBuffer();
 		}
 

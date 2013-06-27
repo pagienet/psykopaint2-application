@@ -382,9 +382,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			if (_incremental)
 				CopyTexture.copy(_canvasModel.normalSpecularMap, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-			else
-				throw "Non-incremental normal/speculars not supported yet";
-
+			else {
+				_context.setStencilReferenceValue(1);
+				_context.setStencilActions("frontAndBack", "always", Context3DStencilAction.SET, Context3DStencilAction.SET, Context3DStencilAction.SET);
+				_snapshot.drawNormalsSpecular();
+				_context.setStencilReferenceValue(0);
+				_context.setStencilActions("frontAndBack", Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);
+				if (!_inProgress) CopyTexture.copy(_canvasModel.normalSpecularMap, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+				_context.setStencilActions();
+			}
 			drawBrushNormalsAndSpecular();
 
 			_canvasModel.swapNormalSpecularLayer();
