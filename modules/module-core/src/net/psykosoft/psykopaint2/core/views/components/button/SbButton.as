@@ -81,7 +81,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		}
 
 		private function onThisMouseClick( event:MouseEvent ):void {
-			if( isSelectable && parent.x == _parentOnMouseDownX ) toggleSelect( true );
+			if( isSelectable && parent && parent.x == _parentOnMouseDownX ) toggleSelect( true );
 		}
 
 		private function onStageMouseUp( event:MouseEvent ):void {
