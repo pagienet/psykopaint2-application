@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
@@ -76,8 +77,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		}
 
 		private function setEaselPaintingNow():void {
-		    var bmd:BitmapData = new BitmapData( _pendingEaselPaintingVo.width, _pendingEaselPaintingVo.height, false, 0 );
-			bmd.setPixels( new Rectangle( 0, 0, _pendingEaselPaintingVo.width, _pendingEaselPaintingVo.height ), _pendingEaselPaintingVo.colorImageARGB );
+		    var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( _pendingEaselPaintingVo.colorImageARGB, _pendingEaselPaintingVo.width, _pendingEaselPaintingVo.height );
 			var painting:Painting = new Painting( bmd, _view );
 			_easel.setPainting( painting );
 			_pendingEaselPaintingVo = null;
