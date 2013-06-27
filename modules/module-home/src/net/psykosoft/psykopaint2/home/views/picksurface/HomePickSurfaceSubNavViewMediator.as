@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 //					requestStateChange( StateType.PREVIOUS );
 					break;
 				case HomePickSurfaceSubNavView.LBL_CONTINUE:
-
+					// TODO: notify drawing core of selected surface
 					break;
 				case HomePickSurfaceSubNavView.LBL_SURF1:
 					pickSurfaceByIndex( 0 );
