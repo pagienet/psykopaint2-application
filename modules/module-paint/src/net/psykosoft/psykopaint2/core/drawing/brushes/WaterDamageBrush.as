@@ -60,8 +60,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.3, 0, 5);
 			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter, "Gravity influence", 0.1, 0, .3);
-			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, "Viscosity", .2, 0, 1);
-			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, "Drag", .1, 0, .2);
+			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, "Viscosity", .1, 0, 1);
+			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, "Drag",.1, 0, .2);
 			_pigmentFlow = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment flow", .5, 0, 1);
 
 			_parameters.push( _surfaceRelief, _gravityStrength, _pigmentFlow);
