@@ -15,7 +15,8 @@ package net.psykosoft.psykopaint2.core.models
 		public static const COLOR_STYLE:String = "state/color_style";
 		public static const CROP:String = "state/crop";
 		public static const PICK_IMAGE:String = "state/pick_image";
-		public static const PICK_SURFACE:String = "state/pick_surface";
+		public static const PAINT_PICK_SURFACE:String = "state/paint/pick_surface";
+		public static const HOME_PICK_SURFACE:String = "state/home/pick_surface";
 
 		public static const GOING_TO_PAINT:String = "state/will_paint";
 		public static const PAINT:String = "state/paint";

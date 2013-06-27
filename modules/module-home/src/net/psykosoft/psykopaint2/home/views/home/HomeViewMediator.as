@@ -90,6 +90,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerEnablingState( StateType.GOING_TO_PAINT );
 			registerEnablingState( StateType.SETTINGS );
 			registerEnablingState( StateType.SETTINGS_WALLPAPER );
+			registerEnablingState( StateType.HOME_PICK_SURFACE );
 			view.stage3dProxy = stage3dProxy;
 
 			// Register view gpu rendering in core.

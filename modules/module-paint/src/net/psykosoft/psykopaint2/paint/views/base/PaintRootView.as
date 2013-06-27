@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_SELECT_BRUSH, SelectBrushSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.CROP, CropSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_ADJUST_BRUSH, EditBrushSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.PICK_SURFACE, PickASurfaceSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_PICK_SURFACE, PickASurfaceSubNavView );
 		}
 	}
 }

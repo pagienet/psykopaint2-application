@@ -1,19 +1,15 @@
-package net.psykosoft.psykopaint2.paint.views.pick.surface
+package net.psykosoft.psykopaint2.home.views.picksurface
 {
+
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
-	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
 
-	public class PickASurfaceSubNavViewMediator extends MediatorBase
+	public class HomePickSurfaceSubNavViewMediator extends MediatorBase
 	{
 		[Inject]
-		public var view:PickASurfaceSubNavView;
-
-		[Inject]
-		public var requestSurfaceImageSetSignal:RequestSurfaceImageSetSignal;
+		public var view:HomePickSurfaceSubNavView;
 
 		private var _loader:BinaryLoader;
 
@@ -25,25 +21,24 @@ package net.psykosoft.psykopaint2.paint.views.pick.surface
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
 			view.setButtonClickCallback( onButtonClicked );
-			view.setSelectedSurfaceBtn();
 		}
 
 		private function onButtonClicked( label:String ):void {
 
 			switch( label ) {
-				case PickASurfaceSubNavView.LBL_BACK:
-					requestStateChange( StateType.PREVIOUS );
+				case HomePickSurfaceSubNavView.LBL_BACK:
+//					requestStateChange( StateType.PREVIOUS );
 					break;
-				case PickASurfaceSubNavView.LBL_SURF1:
-					PickASurfaceCache.setLastSelectedSurface( label );
+				case HomePickSurfaceSubNavView.LBL_CONTINUE:
+
+					break;
+				case HomePickSurfaceSubNavView.LBL_SURF1:
 					pickSurfaceByIndex( 0 );
 					break;
-				case PickASurfaceSubNavView.LBL_SURF2:
-					PickASurfaceCache.setLastSelectedSurface( label );
+				case HomePickSurfaceSubNavView.LBL_SURF2:
 					pickSurfaceByIndex( 1 );
 					break;
-				case PickASurfaceSubNavView.LBL_SURF3:
-					PickASurfaceCache.setLastSelectedSurface( label );
+				case HomePickSurfaceSubNavView.LBL_SURF3:
 					pickSurfaceByIndex( 2 );
 					break;
 			}
@@ -55,7 +50,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.surface
 		}
 
 		private function onSurfaceLoaded( byteArray:ByteArray ):void {
-			requestSurfaceImageSetSignal.dispatch( byteArray );
+//			requestSurfaceImageSetSignal.dispatch( byteArray );
+			// TODO: order easel to change
 			_loader.dispose();
 			_loader = null;
 		}
