@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			// or is 'easel', we're supposed to create a new file. If it is anything else,
 			// we're coming from a painting that was saved before at some point.
 			var nowDate:Date = new Date();
-			var dateMs:int = Math.floor( nowDate.getTime() );
+			var dateMs:Number = nowDate.getTime();
 			if( paintingId == "easel" || paintingId == "" ) {
 				paintingId = userModel.uniqueUserId + "-" + dateMs;
 			}
@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			var vo:PaintingVO = new PaintingVO();
 			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayersARGB();
 			var hr:Boolean = CoreSettings.RUNNING_ON_RETINA_DISPLAY;
+			vo.fileVersion = CoreSettings.PAINTING_FILE_VERSION;
 			vo.lastSavedOnDateMs = dateMs;
 			vo.width = hr ? 2048 : 1024;
 			vo.height = hr ? 1536 : 768;
@@ -60,7 +61,7 @@ package net.psykosoft.psykopaint2.paint.commands
 				// TODO...
 			}
 			else {
-				DesktopBinarySaveUtil.saveToDesktop( voBytes, CoreSettings.paintingDesktopDataFolderName + "/painting-" + paintingId + CoreSettings.paintingFileExtension );
+				DesktopBinarySaveUtil.saveToDesktop( voBytes, CoreSettings.PAINTING_DESKTOP_DATA_FOLDER_NAME + "/painting-" + paintingId + CoreSettings.PAINTING_FILE_EXTENSION );
 			}
 		}
 	}

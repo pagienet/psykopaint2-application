@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.data
 	import flash.utils.ByteArray;
 	import flash.utils.CompressionAlgorithm;
 
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+
 	public class PaintingVO
 	{
 		//Mario: I strongly recommend to also add a "save format versionID" 
@@ -16,7 +18,8 @@ package net.psykosoft.psykopaint2.core.data
 		public var id:String;
 		public var width:int;
 		public var height:int;
-		public var lastSavedOnDateMs:int;
+		public var lastSavedOnDateMs:Number;
+		public var fileVersion:String;
 
 		public function PaintingVO() {
 			super();
@@ -24,6 +27,7 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function toString():String {
 			return "PaintingVO --------- \n" +
+					"fileVersion: " + fileVersion + "\n" +
 					"id: " + id + "\n" +
 					"lastSavedOnDateMs: " + lastSavedOnDateMs + "\n";
 		}
@@ -39,10 +43,11 @@ package net.psykosoft.psykopaint2.core.data
 			var bytes:ByteArray = new ByteArray();
 
 			// Write exposed single value data.
+			bytes.writeUTF( fileVersion );
 			bytes.writeUTF( id );
 			bytes.writeInt( width );
 			bytes.writeInt( height );
-			bytes.writeInt( lastSavedOnDateMs );
+			bytes.writeFloat( lastSavedOnDateMs );
 
 			// Write images.
 			encodeImage( bytes, colorImageARGB );
@@ -63,18 +68,28 @@ package net.psykosoft.psykopaint2.core.data
 		// De-serialization.
 		// ---------------------------------------------------------------------
 
-		public function deSerialize( bytes:ByteArray ):void {
+		public function deSerialize( bytes:ByteArray ):Boolean {
+
+			// Check version first.
+			fileVersion = bytes.readUTF();
+			if( fileVersion != CoreSettings.PAINTING_FILE_VERSION ) {
+				trace( "PaintingVO deSerialize() - ***WARNING*** Unable to interpret loaded painting file, version is [" + fileVersion + "] and app is using version [" + CoreSettings.PAINTING_FILE_VERSION + "]" );
+				return false;
+			}
 
 			// Read and set exposed single value data.
 			id = bytes.readUTF();
 			width = bytes.readInt();
 			height = bytes.readInt();
-			lastSavedOnDateMs = bytes.readInt();
+			lastSavedOnDateMs = bytes.readFloat();
 
 			// Read images.
 			colorImageARGB = decodeImage( bytes );
 			heightmapImageARGB = decodeImage( bytes );
 			sourceImageARGB = decodeImage( bytes );
+
+			// Report ok.
+			return true;
 		}
 
 		private function decodeImage( bytes:ByteArray ):ByteArray {

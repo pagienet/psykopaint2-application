@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.core.commands
 			else {
 
 				// Read all files in data folder.
-				var files:Array = DesktopFolderReadUtil.readFilesInFolder( CoreSettings.paintingDesktopDataFolderName );
+				var files:Array = DesktopFolderReadUtil.readFilesInFolder( CoreSettings.PAINTING_DESKTOP_DATA_FOLDER_NAME );
 				var len:uint = files.length;
 				trace( this, "found files in paint data " + len + ": " );
 
@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.core.commands
 				for( var i:uint; i < len; i++ ) {
 					var file:File = files[ i ];
 					trace( "  file: " + file.name );
-					if( file.name.indexOf( CoreSettings.paintingFileExtension ) != -1 ) {
+					if( file.name.indexOf( CoreSettings.PAINTING_FILE_EXTENSION ) != -1 ) {
 						_paintingFiles.push( file );
 					}
 				}
@@ -80,23 +80,23 @@ package net.psykosoft.psykopaint2.core.commands
 			var vo:PaintingVO = new PaintingVO();
 			
 			trace( this, "de-serializing vo..." );
-			//Mario: I had to patch this since the deserializing process failed on my machine
-			try
-			{
-				vo.deSerialize( _currentFileBeingLoaded.data );
-				_paintingVos.push( vo );
-			} catch ( error:Error )
-			{
-				trace("Error deserializing "+_currentFileBeingLoaded.nativePath);
-				
+			try {
+				var deSerializeSuccessful:Boolean = vo.deSerialize( _currentFileBeingLoaded.data );
+				trace( this, "de-serialization successful: " + deSerializeSuccessful );
+				if( deSerializeSuccessful ) {
+					_paintingVos.push( vo );
+				}
+			} catch ( error:Error ) {
+				trace("***WARNING*** Error de-serializing file " + _currentFileBeingLoaded.nativePath );
 			}
+
 			// Continue reading next file.
 			_indexOfPaintingFileBeingRead++;
 			if( _indexOfPaintingFileBeingRead < _numPaintingFiles ) {
 				readNextFile();
 			}
 			else {
-				trace( this, "all painting files read." );
+				trace( this, "all painting files read. Retrieved " + _paintingVos.length + " usable painting files." );
 				model.setPaintingData( _paintingVos );
 				context.release();
 			}
