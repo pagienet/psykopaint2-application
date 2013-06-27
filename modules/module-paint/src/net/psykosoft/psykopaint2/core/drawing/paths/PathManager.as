@@ -611,6 +611,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			return _pointDecorators[index];
 		}
 		
+		public function get strokeInProgress():Boolean
+		{
+			return _startCallbacksSent;
+		}
+			
+		
 		private function enableGestureRecognition( enable:Boolean ):void
 		{
 			GestureManager.gesturesEnabled = enable;

@@ -9,8 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.smeartools.SmearTool;
 	import net.psykosoft.psykopaint2.core.model.RubberMeshModel;
 	import net.psykosoft.psykopaint2.core.rendering.RubberMeshRenderer;
-	import net.psykosoft.psykopaint2.core.signals.NotifySmearModuleActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySmearStylePresetsAvailableSignal;
+	
 	import net.psykosoft.psykopaint2.core.signals.RequestRenderRubberMeshSignal;
 
 	// TODO: commented by li, we don't use starling anymore
@@ -27,15 +26,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 //		[Inject]
 //		public var rubberMeshHistory :  RubberMeshHistoryModel;
 
-		[Inject]
-		public var requestRubberMeshRenderSignal : RequestRenderRubberMeshSignal;
-
-		[Inject]
-		public var notifySmearModuleActivatedSignal : NotifySmearModuleActivatedSignal;
 		
-		[Inject]
-		public var notifySmearStylePresetsAvailableSignal : NotifySmearStylePresetsAvailableSignal;
-
+		
 		// TODO: commented by li, we don't use starling anymore
 		/*private var _view : DisplayObject;*/
 
@@ -86,7 +78,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 			activateTool();
 			rubberMeshModel.sourceBitmapData = bitmapData;
-			notifySmearModuleActivatedSignal.dispatch();
+			
 		}
 
 		public function deactivate() : void
@@ -99,7 +91,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		private function onRender(event : Event) : void
 		{
-			requestRubberMeshRenderSignal.dispatch();
+			//requestRubberMeshRenderSignal.dispatch();
 		}
 
 		private function onToolComplete(event : Event) : void

@@ -11,7 +11,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.drawing.modules.CropModule;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.SmearModule;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
@@ -97,11 +96,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_injector.map( NotifyColorStyleConfirmSignal ).asSingleton();
 			_injector.map( RequestColorStyleMatrixChangedSignal ).asSingleton();
 
-			_injector.map( NotifySmearCompleteSignal ).asSingleton();
-			_injector.map( NotifySmearModuleActivatedSignal ).asSingleton();
-			_injector.map( NotifySmearStylePresetsAvailableSignal ).asSingleton();
-			_injector.map( NotifySmearStyleChangedSignal ).asSingleton();
-			_injector.map( NotifySmearConfirmSignal ).asSingleton();
 			_injector.map( NotifyNavigationHideSignal ).asSingleton();
 
 			_injector.map( NotifyPaintModuleActivatedSignal ).asSingleton();
@@ -123,7 +117,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_injector.map(PaintModule).asSingleton();
 			_injector.map(CropModule).asSingleton();
 			_injector.map(ColorStyleModule).asSingleton();
-			_injector.map(SmearModule).asSingleton();
 			_injector.map(ModuleManager).asSingleton();
 
 			_injector.map(CanvasRenderer).asSingleton();
@@ -142,7 +135,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 //			_commandMap.map(RequestResizeCanvasSignal).toCommand(ResizeCanvasCommand);
 			_commandMap.map(RequestUndoSignal).toCommand(UndoCanvasActionCommand);
 
-			_commandMap.map(RequestRenderRubberMeshSignal).toCommand(RenderRubberMeshCommand);
 		}
 
 		public function get injector():Injector {

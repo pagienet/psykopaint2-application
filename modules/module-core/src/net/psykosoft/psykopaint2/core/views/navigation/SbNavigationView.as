@@ -214,7 +214,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function evaluateScrollingInteractionStart():void {
-			_scroller.evaluateInteractionStart();
+			if (!_hidden ) _scroller.evaluateInteractionStart();
 		}
 
 		public function evaluateScrollingInteractionEnd():void {
@@ -235,9 +235,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function evaluateReactiveHideStart():void {
-			if( _animating ) return;
-			if( _onReactiveHide ) return;
-			if( stage.mouseY < _targetReactiveY ) return; // reject interactions outside of the navigation area
+			if( _animating || _onReactiveHide || stage.mouseY < _targetReactiveY) return;
+			//if( _onReactiveHide ) return;
+			//if( stage.mouseY < _targetReactiveY ) return; // reject interactions outside of the navigation area
 			_onReactiveHide = true;
 			if( _hidden ) {
 				visible = true;

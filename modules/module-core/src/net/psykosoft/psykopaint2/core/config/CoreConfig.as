@@ -1,12 +1,12 @@
 package net.psykosoft.psykopaint2.core.config
 {
 
-	import away3d.core.managers.Stage3DProxy;
-
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
-
+	
+	import away3d.core.managers.Stage3DProxy;
+	
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
@@ -37,9 +37,9 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketViewMediator;
-
+	
 	import org.swiftsuspenders.Injector;
-
+	
 	import robotlegs.bender.bundles.mvcs.MVCSBundle;
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;

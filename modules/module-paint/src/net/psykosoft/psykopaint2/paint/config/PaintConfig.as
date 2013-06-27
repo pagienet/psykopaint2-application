@@ -37,9 +37,9 @@ package net.psykosoft.psykopaint2.paint.config
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.pick.surface.PickASurfaceSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.surface.PickASurfaceSubNavViewMediator;
-
+	
 	import org.swiftsuspenders.Injector;
-
+	
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 
@@ -115,6 +115,8 @@ package net.psykosoft.psykopaint2.paint.config
 			_injector.unmap( RequestPaintingLoadSignal ); // Mapped in the core as singleton for compatibility.
 			_commandMap.map( RequestPaintingLoadSignal ).toCommand( LoadPaintingCommand );
 			_commandMap.map( RequestGoToHomeWithCanvasSnapshotSignal ).toCommand( GoToHomeWithCanvasSnapShotCommand );
+			
+			
 		}
 
 		// -----------------------

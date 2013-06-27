@@ -10,8 +10,7 @@ package net.psykosoft.psykopaint2.core.model
 	import net.psykosoft.psykopaint2.core.resources.TextureProxy;
 	import net.psykosoft.psykopaint2.core.resources.texture_management;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestRenderRubberMeshSignal;
-
+	
 	use namespace texture_management;
 
 	public class RubberMeshHistoryModel implements ITextureManager
@@ -19,9 +18,7 @@ package net.psykosoft.psykopaint2.core.model
 		public static var MAX_TEXTURE_MEMORY_USAGE : uint = 192*1024*1024;
 		public static var MAX_HISTORY_LENGTH : uint = 20;
 
-		[Inject]
-		public var requestRenderRubberMeshSignal : RequestRenderRubberMeshSignal;
-
+		
 		[Inject]
 		public var notifyHistoryStackChanged : NotifyHistoryStackChangedSignal;
 
@@ -56,7 +53,7 @@ package net.psykosoft.psykopaint2.core.model
 
 			_actions[_currentHistoryIndex++] = stroke;
 
-			requestRenderRubberMeshSignal.dispatch();
+			//requestRenderRubberMeshSignal.dispatch();
 			notifyStackChange();
 		}
 
@@ -92,7 +89,7 @@ package net.psykosoft.psykopaint2.core.model
 			if (_currentHistoryIndex > 0)
 				--_currentHistoryIndex;
 
-			requestRenderRubberMeshSignal.dispatch();
+			//requestRenderRubberMeshSignal.dispatch();
 			notifyStackChange();
 		}
 
@@ -101,7 +98,7 @@ package net.psykosoft.psykopaint2.core.model
 			if (_currentHistoryIndex < _actions.length)
 				++_currentHistoryIndex;
 
-			requestRenderRubberMeshSignal.dispatch();
+			//requestRenderRubberMeshSignal.dispatch();
 			notifyStackChange();
 		}
 

@@ -20,12 +20,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterDamageBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
-	
+
 	public class BrushKit extends EventDispatcher
 	{
 		
@@ -64,7 +64,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			return kit;
 		}
-import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 		
 		private static function init():void
 		{
@@ -257,6 +256,11 @@ import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 				throw("BrushKit.getParameterByPath "+target_path+" not found");
 			}
 			return _brushEngine.getParameterByPath(path);
+		}
+		
+		public function get strokeInProgress():Boolean
+		{
+			return _brushEngine.pathManager.strokeInProgress;
 		}
 	}
 }

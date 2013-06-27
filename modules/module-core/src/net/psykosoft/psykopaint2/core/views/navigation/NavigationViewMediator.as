@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestCancelTouchHandlerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -29,6 +30,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
+		
+		
 		override public function initialize():void {
 
 			super.initialize();

@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
@@ -66,15 +67,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		[Inject]
 		public var requestChangeRenderRect : RequestChangeRenderRectSignal;
-
+		
+		
 		private var _view : DisplayObject;
 
-		//private var _activeBrush : AbstractBrush;
 		private var _active : Boolean;
-
-		//private var _availableBrushTypes:Vector.<String>;
-		//private var _brushClassFromBrushType:Dictionary;
-		//private var _activeBrushType : String = null;
 		private var _availableBrushKits:Vector.<BrushKit>;
 		private var _availableBrushKitNames:Vector.<String>;
 		private var _activeBrushKit : BrushKit;
@@ -149,7 +146,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
-							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.9" minValue="0" maxValue="1"/>
+							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0.05" value2="1" minValue="0" maxValue="1"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" index="1" showInUI="1"/>
 						</SizeDecorator>
 						<ColorDecorator>
@@ -497,7 +494,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if (_activeBrushKit)
 				_activeBrushKit.canvasRect = _canvasRect;
 		}
-
+		
 		public function stopAnimations() : void
 		{
 			if (_activeBrushKit)
@@ -509,21 +506,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		}
 
 		private function initializeDefaultBrushes():void {
-			//notifyAvailableBrushTypesSignal.dispatch( _availableBrushTypes );
-			//activeBrush = BrushType.SPRAY_CAN;
+			
 			notifyAvailableBrushTypesSignal.dispatch( _availableBrushKitNames );
 		
 		}
 
-		/*
-		private function registerBrush( brushName:String, brushClass:Class ):void {
-			if( !_availableBrushTypes ) _availableBrushTypes = new Vector.<String>();
-			if( !_brushClassFromBrushType ) _brushClassFromBrushType = new Dictionary();
-			_availableBrushTypes.push( brushName );
-			_brushClassFromBrushType[ brushName ] = brushClass;
-		}
-		*/
-		
 		private function registerBrushKit( brushKit:BrushKit, kitName:String ):void {
 			if( !_availableBrushKits ) _availableBrushKits = new Vector.<BrushKit>();
 			_availableBrushKits.push(brushKit);
@@ -535,13 +522,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			return _activeBrushKitName;
 		}
-
-		/*
-		public function get activeBrushKitShape():String {
-			return _activeBrushKit.getActiveBrushShape;
-		}
-		*/
-		
 
 		public function set activeBrushKit( brushKitName:String ) : void
 		{
@@ -555,15 +535,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			
 			//trace( this, "activating brush kit: " + _activeBrushKitName + ", engine: " + _activeBrushKit.brushEngine + " --------------------" );
 			
-			//var brushShapes:XML = _activeBrushKit.getShapeSet();
-			
-			//trace( this, "available shapes: " +brushShapes );
-			
-			/*
-			if (!_activeBrushKit.brushEngine.brushShape && brushShapes != null && brushShapes.shape.length() > 0 ) {
-				setBrushShape( brushShapes.shape[0].@type );
-			}
-			*/
 			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSet( !CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS ) );
 		}
 
@@ -635,57 +606,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSetAsXML() );
 		}
-		/*
-		public function getAvailableBrushShapes() : Array
-		{
-			return _activeBrushKit.brushEngine.getAvailable BrushShapes();
-		}
-		*/
-
+		
 		public function getAvailableBrushTypes() : Vector.<String> {
 			return _availableBrushKitNames;
 		}
 
-		/*
-		public function getCurrentBrushShapes():XML {
-			return _activeBrushKit.getShapeSet();
-		}
-		*/
-
-		/*
-		public function getCurrentBrushParameters():XML {
-			return _activeBrushKit.getParameterSetAsXML();
-		}
-		*/
+		
 		public function getCurrentBrushParameters():ParameterSetVO {
 			return _activeBrushKit.getParameterSet(!CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS );
 		}
 		
-		/*
-		public function setBrushShape(id : String) : void
-		{
-			_activeBrushKit.setBrushShape( id );
-		}
-		*/
-		
-		/*
-		public function setColorBlending( minColorBlendFactor:Number, maxColorBlendFactor:Number, minimumOpacity:Number, maximumOpacity:Number ):void 
-		{
-			_activeBrushKit.brushEngine.setColorBlending( minColorBlendFactor, maxColorBlendFactor, minimumOpacity, maximumOpacity );
-		}
-		
-		public function setBrushSizeFactors( minSizeFactor:Number,  maxSizeFactor:Number ):void 
-		{
-			_activeBrushKit.brushEngine.setBrushSizeFactors( minSizeFactor, maxSizeFactor );
-		}
-		*/
-		/*
-		public function setBrushParameter( parameter:PsykoParameter ):void 
-		{
-			_activeBrushKit.setBrushParameter( parameter );
-		}
-		*/
-
 		public function render() : void
 		{
 			if ( _activeBrushKit ) _activeBrushKit.brushEngine.draw();

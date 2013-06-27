@@ -9,16 +9,13 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import net.psykosoft.psykopaint2.core.signals.RequestRenderRubberMeshSignal;
 	
 	public class RubberMeshModel
 	{
 		[Inject]
 		public var stage3D : Stage3D;
 
-		[Inject]
-		public var requestRenderRubberMeshSignal : RequestRenderRubberMeshSignal;
-
+	
 		private var _sourceBitmapData : BitmapData;
 		private var _sourceHeightBitmapData : BitmapData;
 		private var _triangleBitmapData : BitmapData;
@@ -86,7 +83,7 @@ package net.psykosoft.psykopaint2.core.model
 			_sourceBitmapData = sourceBitmapData;
 			_sourceTexture.uploadFromBitmapData(_sourceBitmapData);
 
-			requestRenderRubberMeshSignal.dispatch();
+			//requestRenderRubberMeshSignal.dispatch();
 		}
 
 		

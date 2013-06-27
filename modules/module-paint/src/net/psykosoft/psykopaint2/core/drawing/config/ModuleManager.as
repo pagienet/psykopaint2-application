@@ -11,12 +11,10 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.drawing.modules.CropModule;
 	import net.psykosoft.psykopaint2.core.drawing.modules.IModule;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.SmearModule;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySmearCompleteSignal;
 	
 	import org.osflash.signals.Signal;
 
@@ -32,16 +30,10 @@ package net.psykosoft.psykopaint2.core.drawing.config
 		public var colorStyleModule:ColorStyleModule;
 
 		[Inject]
-		public var smearModule:SmearModule;
-
-		[Inject]
 		public var notifyCropCompleteSignal:NotifyCropCompleteSignal;
 
 		[Inject]
 		public var notifyColorStyleCompleteSignal:NotifyColorStyleCompleteSignal;
-
-		[Inject]
-		public var notifySmearCompleteSignal:NotifySmearCompleteSignal;
 
 		[Inject]
 		public var notifyNavigationHideSignal:NotifyNavigationHideSignal;
@@ -66,7 +58,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			//concatenateModule( notifyCropCompleteSignal, cropModule, colorStyleModule);
 			concatenateModule( notifyCropCompleteSignal, cropModule, paintModule);
 			concatenateModule( notifyColorStyleCompleteSignal, colorStyleModule, paintModule );
-			concatenateModule( notifySmearCompleteSignal, smearModule, paintModule );
 		}
 
 
