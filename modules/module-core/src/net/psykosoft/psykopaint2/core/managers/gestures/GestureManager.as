@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			initTwoFingerSwipes();
 			initOneFingerHorizontalPan();
 			initOneFingerVerticalPan();
-			initTransform();
+			//initTransform();
 //			initPinch();
 //			initTap();
 		}
@@ -182,16 +182,22 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_transformGesture = new TransformGesture( _stage );
 			
 			_transformGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onTransformGestureStarted );
-			_transformGesture.addEventListener( GestureEvent.GESTURE_ENDED, onTransformGestureEnded );
-			_transformGesture.addEventListener( GestureEvent.GESTURE_CHANGED, onTransformGestureChanged );
+			
 		}
 		
 		private function onTransformGestureStarted( event:GestureEvent ):void {
-			notifyGlobalGestureSignal.dispatch( GestureType.TRANSFORM_GESTURE_BEGAN, event );
+			if ( gesturesEnabled )
+			{
+				notifyGlobalGestureSignal.dispatch( GestureType.TRANSFORM_GESTURE_BEGAN, event );
+				_transformGesture.addEventListener( GestureEvent.GESTURE_ENDED, onTransformGestureEnded );
+				_transformGesture.addEventListener( GestureEvent.GESTURE_CHANGED, onTransformGestureChanged );	
+			}
 		}
 		
 		private function onTransformGestureEnded( event:GestureEvent ):void {
 			notifyGlobalGestureSignal.dispatch( GestureType.TRANSFORM_GESTURE_ENDED, event );
+			_transformGesture.removeEventListener( GestureEvent.GESTURE_ENDED, onTransformGestureEnded );
+			_transformGesture.removeEventListener( GestureEvent.GESTURE_CHANGED, onTransformGestureChanged );	
 		}
 		
 		private function onTransformGestureChanged( event:GestureEvent ):void {
