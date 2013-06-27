@@ -198,6 +198,7 @@ package net.psykosoft.psykopaint2.core.model
 		}
 
 		public function saveEmptyLayers():void {
+			trace( this, "empty layers saved" );
 			_emptyLayersARGB = saveLayersARGB();
 		}
 
