@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	
 	import com.quasimondo.geom.ColorMatrix;
 	
-	import de.popforge.math.LCG;
 	
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
