@@ -29,7 +29,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 
-	public class HomeViewMediator extends MediatorBase
+import org.gestouch.events.GestureEvent;
+
+public class HomeViewMediator extends MediatorBase
 	{
 		[Inject]
 		public var view:HomeView;
@@ -176,7 +178,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 		}
 
-		private function onGlobalGesture( gestureType:String ):void {
+		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
 //			trace( this, "onGlobalGesture: " + gestureType );
 			if( !view.visible ) return;
 			if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN || gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
