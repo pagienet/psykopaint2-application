@@ -24,11 +24,12 @@ package net.psykosoft.psykopaint2.base.utils.images
 			var matrix:Matrix = new Matrix();
 			matrix.scale( scale, scale );
 			var scaledBmd:BitmapData = new BitmapData( source.width * scale, source.height * scale, false, 0 );
-			scaledBmd.draw( scaledBmd, matrix );
+			scaledBmd.draw( source, matrix );
 			return scaledBmd;
 		}
 
 		static public function getBitmapDataFromBytes( bytes:ByteArray, width:Number, height:Number ):BitmapData {
+			bytes.position = 0;
 			var bmd:BitmapData = new BitmapData( width, height, false, 0 );
 			bmd.setPixels( new Rectangle( 0, 0, width, height ), bytes );
 			return bmd;

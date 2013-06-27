@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
+	import net.psykosoft.psykopaint2.home.signals.RequestEaselPaintingUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	public class HomeViewMediator extends MediatorBase
@@ -64,6 +65,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var paintingModel:PaintingModel;
 
+		[Inject]
+		public var requestEaselPaintingUpdateSignal:RequestEaselPaintingUpdateSignal;
+
 		private var _waitingForPaintModeAfterZoomIn:Boolean;
 		private var _waitingForSnapShotOfHomeView:Boolean;
 
@@ -90,6 +94,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyCanvasBitmapSignal.add( onCanvasSnapShot );
 			requestZoomToggleSignal.add( onZoomRequested );
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
+			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
 
 			// From view.
 			view.enabledSignal.add( onViewEnabled );
@@ -102,6 +107,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onEaselUpdateRequest( vo:PaintingVO ):void {
+			view.paintingManager.setEaselPainting( vo );
+		}
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
 			if( data.length > 0 ) {

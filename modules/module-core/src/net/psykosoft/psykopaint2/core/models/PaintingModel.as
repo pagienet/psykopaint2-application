@@ -28,13 +28,18 @@ package net.psykosoft.psykopaint2.core.models
 		}
 
 		public function getRgbaDataForPaintingWithId( id:String ):Vector.<ByteArray> {
+			var vo:PaintingVO = getVoWithId( id );
+			return Vector.<ByteArray>( [ vo.colorImageARGB, vo.heightmapImageARGB, vo.sourceImageARGB ] );
+		}
+
+		public function getVoWithId( id:String ):PaintingVO {
 			// Find vo with id.
 			var len:uint = _paintingData.length;
 			var vo:PaintingVO;
 			for( var i:uint; i < len; ++i ) {
 				vo = _paintingData[ i ];
 				if( vo.id == id ) {
-					return Vector.<ByteArray>( [ vo.colorImageARGB, vo.heightmapImageARGB, vo.sourceImageARGB ] );
+					return vo;
 				}
 			}
 			throw new Error( this, "unable to find saved painting with id: " + id );

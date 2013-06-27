@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.home.signals.RequestEaselPaintingUpdateSignal;
 
 	public class NewPaintingSubNavViewMediator extends MediatorBase
 	{
@@ -24,6 +25,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotSignal;
+
+		[Inject]
+		public var requestEaselPaintingUpdateSignal:RequestEaselPaintingUpdateSignal;
 
 		[Inject]
 		public var paintingModel:PaintingModel;
@@ -56,6 +60,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			switch( label ) {
 				case NewPaintingSubNavView.LBL_NEW: {
 					navigateToPaintStateWithZoomIn();
+					break;
+				}
+				case NewPaintingSubNavView.LBL_CONTINUE: {
+
+					break;
+				}
+				default: { // Default buttons are supposed to be in progress painting buttons.
+					requestEaselPaintingUpdateSignal.dispatch( paintingModel.getVoWithId( label ) );
 					break;
 				}
 			}

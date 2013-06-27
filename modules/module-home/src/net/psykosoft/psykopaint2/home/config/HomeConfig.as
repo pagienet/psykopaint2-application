@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.config
 {
 
 	import net.psykosoft.psykopaint2.home.commands.ZoomThenChangeStateCommand;
+	import net.psykosoft.psykopaint2.home.signals.RequestEaselPaintingUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
@@ -78,6 +79,7 @@ package net.psykosoft.psykopaint2.home.config
 
 		private function mapNotifications():void {
 	   		_injector.map( RequestWallpaperChangeSignal ).asSingleton();
+	   		_injector.map( RequestEaselPaintingUpdateSignal ).asSingleton();
 		}
 
 		// -----------------------
