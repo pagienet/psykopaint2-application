@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				setRightButton( LBL_CONTINUE );
 			}
 
-			addCenterButton( LBL_NEW );
+			addCenterButton( LBL_NEW, ButtonIconType.NEW, ButtonLabelType.NONE );
 			setButtonWithLabelSelectable ( LBL_NEW, false );
 
 			invalidateContent();

@@ -67,9 +67,16 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			labelBg = null;
 			var newClipClass:Class = Class( getDefinitionByName( labelType ) );
 			labelBg = new newClipClass();
+			tf.visible = true;
+			labelBg.visible = true;
 			labelBg.x = _btnLblPos.x;
 			labelBg.y = _btnLblPos.y;
-			addChildAt( labelBg, 2 );
+			addChildAt(labelBg, 2);
+
+			if ( labelType == ButtonLabelType.NONE ) {
+				tf.visible = false;
+				labelBg.visible = false;
+			}
 		}
 
 		private function onAddedToStage( event:Event ):void {
