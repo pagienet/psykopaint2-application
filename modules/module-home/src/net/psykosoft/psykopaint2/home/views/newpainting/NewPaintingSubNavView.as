@@ -36,6 +36,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		}
 
 		public function setInProgressPaintings( data:Vector.<PaintingVO> ):void {
+			if( !data ) return;
 			var len:uint = data.length;
 			for( var i:uint; i < len; i++ ) {
 				var vo:PaintingVO = data[ i ];
