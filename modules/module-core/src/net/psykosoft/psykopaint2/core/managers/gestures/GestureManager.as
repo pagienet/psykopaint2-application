@@ -2,17 +2,17 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 {
 
 	import flash.display.Stage;
-
+	
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
-
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-
+	
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.PanGesture;
 	import org.gestouch.gestures.PanGestureDirection;
 	import org.gestouch.gestures.SwipeGesture;
 	import org.gestouch.gestures.SwipeGestureDirection;
+	import org.gestouch.gestures.TransformGesture;
 	import org.gestouch.input.NativeInputAdapter;
 
 	public class GestureManager
@@ -40,6 +40,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			initTwoFingerSwipes();
 			initOneFingerHorizontalPan();
 			initOneFingerVerticalPan();
+			initTransform();
 //			initPinch();
 //			initTap();
 		}
@@ -63,13 +64,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onTwoFingerSwipeRight( event:GestureEvent ):void {
 			if( !gesturesEnabled ) return;
-			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_RIGHT );
+			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_RIGHT, event );
 			notifyBlockingGestureSignal.dispatch( false );
 		}
 
 		private function onTwoFingerSwipeLeft( event:GestureEvent ):void {
 			if( !gesturesEnabled ) return;
-			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_LEFT );
+			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_LEFT, event );
 			notifyBlockingGestureSignal.dispatch( false );
 		}
 
@@ -87,12 +88,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onHorizontalPanGestureBegan( event:GestureEvent ):void {
 			if ( gesturesEnabled )
-				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN );
+				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN, event );
 		}
 
 		private function onHorizontalPanGestureEnded( event:GestureEvent ):void {
 		//	if ( gesturesEnabled )
-				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_ENDED );
+				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_ENDED, event );
 		}
 
 		// ---------------------------------------------------------------------
@@ -101,7 +102,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function initOneFingerVerticalPan():void {
 			var panGestureVertical:PanGesture = new PanGesture( _stage );
-			panGestureVertical.minNumTouchesRequired = panGestureVertical.maxNumTouchesRequired = 1;
+			panGestureVertical.minNumTouchesRequired = panGestureVertical.maxNumTouchesRequired = 2;
 			panGestureVertical.direction = PanGestureDirection.VERTICAL;
 			panGestureVertical.addEventListener( GestureEvent.GESTURE_BEGAN, onVerticalPanGestureBegan );
 			panGestureVertical.addEventListener( GestureEvent.GESTURE_ENDED, onVerticalPanGestureEnded );
@@ -109,12 +110,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onVerticalPanGestureBegan( event:GestureEvent ):void {
 			if ( gesturesEnabled )
-				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_BEGAN );
+				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_BEGAN, event );
 		}
 
 		private function onVerticalPanGestureEnded( event:GestureEvent ):void {
 		//	if ( gesturesEnabled )
-				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_ENDED );
+				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_ENDED, event );
 		}
 
 		// ---------------------------------------------------------------------
@@ -136,8 +137,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		// ---------------------------------------------------------------------
 		// Pinch.
 		// ---------------------------------------------------------------------
-
-		/*private var _pinchGesture:ZoomGesture;
+ 		/*
+		private var _pinchGesture:ZoomGesture;
 		private var _initialPinchDistance:Number;
 		private var _finalPinchDistance:Number;
 
@@ -168,6 +169,34 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onPinchGestureChanged( event:GestureEvent ):void {
-		}*/
+		}
+		*/
+		
+		// ---------------------------------------------------------------------
+		// Transform.
+		// ---------------------------------------------------------------------
+		
+		private var _transformGesture:TransformGesture;
+		
+		private function initTransform():void {
+			_transformGesture = new TransformGesture( _stage );
+			
+			_transformGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onTransformGestureStarted );
+			_transformGesture.addEventListener( GestureEvent.GESTURE_ENDED, onTransformGestureEnded );
+			_transformGesture.addEventListener( GestureEvent.GESTURE_CHANGED, onTransformGestureChanged );
+		}
+		
+		private function onTransformGestureStarted( event:GestureEvent ):void {
+			notifyGlobalGestureSignal.dispatch( GestureType.TRANSFORM_GESTURE_BEGAN, event );
+		}
+		
+		private function onTransformGestureEnded( event:GestureEvent ):void {
+			notifyGlobalGestureSignal.dispatch( GestureType.TRANSFORM_GESTURE_ENDED, event );
+		}
+		
+		private function onTransformGestureChanged( event:GestureEvent ):void {
+			notifyGlobalGestureSignal.dispatch( GestureType.TRANSFORM_GESTURE_CHANGED, event );
+		}
+		
 	}
 }

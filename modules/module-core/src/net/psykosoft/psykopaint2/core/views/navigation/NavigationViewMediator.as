@@ -9,6 +9,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.signals.RequestCancelTouchHandlerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	
+	import org.gestouch.events.GestureEvent;
 
 	public class NavigationViewMediator extends MediatorBase
 	{
@@ -97,7 +99,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// From app.
 		// -----------------------
 
-		private function onGlobalGesture( gestureType:String ):void {
+		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
 			trace( this, "onGlobalGesture: " + gestureType );
 			switch( gestureType ) {
 				case GestureType.HORIZONTAL_PAN_GESTURE_BEGAN: {

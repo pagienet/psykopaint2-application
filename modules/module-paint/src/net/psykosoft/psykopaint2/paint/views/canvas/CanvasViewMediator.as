@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
@@ -15,19 +15,22 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
+	
+	import org.gestouch.events.GestureEvent;
+	import org.gestouch.gestures.TransformGesture;
 
 	public class CanvasViewMediator extends MediatorBase
 	{
@@ -116,13 +119,23 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// From app.
 		// -----------------------
 
-		private function onGlobalGesture( type:String ):void {
+		private function onGlobalGesture( type:String, event:GestureEvent ):void {
 			trace( this, "onGlobalGesture: " + type );
 			switch( type ) {
-				case GestureType.TWO_FINGER_SWIPE_LEFT: {
+				case GestureType.TWO_FINGER_SWIPE_LEFT: 
 					requestUndoSignal.dispatch();
 					break;
-				}
+					
+				case GestureType.TRANSFORM_GESTURE_CHANGED:
+					var rect:Rectangle = renderer.renderRect;
+					var tg:TransformGesture = (event.target as TransformGesture);
+					rect.offset( -0.5 * ( rect.width - tg.scale * rect.width ),- 0.5 * ( rect.height - tg.scale * rect.height ));
+					rect.width *= tg.scale;
+					rect.height *= tg.scale;
+					
+					renderer.renderRect = rect;
+					break;
+				
 			}
 		}
 

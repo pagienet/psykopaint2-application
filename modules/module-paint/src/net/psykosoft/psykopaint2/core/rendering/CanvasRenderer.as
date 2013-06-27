@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.display3D.Context3DCompareMode;
 	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
-
+	
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		[Inject]
 		public var requestChangeRenderRect : RequestChangeRenderRectSignal;
-
+		
 		private var _paintModule : PaintModule;
 
 		private var _context3D : Context3D;
@@ -73,6 +73,17 @@ package net.psykosoft.psykopaint2.core.rendering
 		private function freezeRendering() : void
 		{
 			_lightingRenderer.freezeRender = true;
+		}
+		
+		//Mario - I will probably land in hell for this:
+		public function get renderRect():Rectangle
+		{
+			return _lightingRenderer.renderRect;
+		}
+		
+		public function set renderRect( rect : Rectangle):void
+		{
+			_lightingRenderer.renderRect  = rect;
 		}
 
 		public function init(module : PaintModule = null) : void
