@@ -1,10 +1,10 @@
 package net.psykosoft.psykopaint2.paint.config
 {
 
-	import net.psykosoft.psykopaint2.core.signals.RequestPaintingLoadSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.GoToHomeWithCanvasSnapShotCommand;
-	import net.psykosoft.psykopaint2.paint.commands.LoadPaintingCommand;
+	import net.psykosoft.psykopaint2.paint.commands.ActivatePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
@@ -112,8 +112,8 @@ package net.psykosoft.psykopaint2.paint.config
 			_commandMap.map( RequestSurfaceImageSetSignal ).toCommand( SetSurfaceImageCommand );
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
-			_injector.unmap( RequestPaintingLoadSignal ); // Mapped in the core as singleton for compatibility.
-			_commandMap.map( RequestPaintingLoadSignal ).toCommand( LoadPaintingCommand );
+			_injector.unmap( RequestPaintingActivationSignal ); // Mapped in the core as singleton for compatibility.
+			_commandMap.map( RequestPaintingActivationSignal ).toCommand( ActivatePaintingCommand );
 			_commandMap.map( RequestGoToHomeWithCanvasSnapshotSignal ).toCommand( GoToHomeWithCanvasSnapShotCommand );
 			
 			

@@ -85,5 +85,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function setScrollerPosition( value:Number ):void{
 			 _navigation.setScrollerPosition( value );
 		}
+
+		public function getSelectedButtonLabel():String {
+			return _navigation.getSelectedButtonLabel();
+		}
 	}
 }

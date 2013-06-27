@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestPaintingLoadSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingSavedDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
@@ -308,7 +308,7 @@ package net.psykosoft.psykopaint2.core
 		private function testLoadingAPainting( data:Vector.<PaintingVO> ):void {
 			var aVo:PaintingVO = data[ 0 ];
 			trace( this, "painting data loaded, testing painting load: " + aVo.id );
-			_injector.getInstance( RequestPaintingLoadSignal ).dispatch( aVo.id );
+			_injector.getInstance( RequestPaintingActivationSignal ).dispatch( aVo.id );
 		}
 	}
 }

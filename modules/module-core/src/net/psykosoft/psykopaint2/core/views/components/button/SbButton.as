@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		private var _autoCenter:Boolean = true;
 		private var _snapToRight:Boolean = false;
 		private var _parentOnMouseDownX:Number;
+		private var _isSelected:Boolean;
 
 		public function SbButton() {
 			super();
@@ -160,6 +161,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 				btnSelected.scaleY = Math.random() > 0.5 ? 1 : -1;
 			}
 			mouseEnabled = mouseChildren = !selected;
+			_isSelected = selected;
 		}
 
 		public function get isSelectable():Boolean {
@@ -171,6 +173,10 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			if( !value && btnSelected.visible ) {
 				btnSelected.visible = false;
 			}
+		}
+
+		public function get isSelected():Boolean {
+			return _isSelected;
 		}
 	}
 }

@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestEaselPaintingUpdateSignal;
@@ -28,6 +29,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var requestEaselPaintingUpdateSignal:RequestEaselPaintingUpdateSignal;
+
+		[Inject]
+		public var requestPaintingLoadSignal:RequestPaintingActivationSignal;
 
 		[Inject]
 		public var paintingModel:PaintingModel;
@@ -63,7 +67,11 @@ package net.psykosoft.psykopaint2.home.views.home
 					break;
 				}
 				case NewPaintingSubNavView.LBL_CONTINUE: {
-
+					var selectedLabel:String = view.getSelectedButtonLabel();
+					trace( this, "selected label: " + selectedLabel );
+					if( selectedLabel != "" && selectedLabel != NewPaintingSubNavView.LBL_NEW ) {
+						requestPaintingLoadSignal.dispatch( selectedLabel );
+					}
 					break;
 				}
 				default: { // Default buttons are supposed to be in progress painting buttons.

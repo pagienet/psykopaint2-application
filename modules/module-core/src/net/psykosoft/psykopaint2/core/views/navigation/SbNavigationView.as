@@ -318,6 +318,17 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			buttonClickedCallback( label );
 		}
 
+		public function getSelectedButtonLabel():String {
+			var len:uint = _centerButtons.length;
+			for( var i:uint; i < len; ++i ) {
+				var btn:SbButton = _centerButtons[ i ];
+				if( btn.isSelected ) {
+					return btn.labelText;
+				}
+			}
+			return "";
+		}
+
 		// TODO: this assumes that side buttons will always be set before center buttons, which is not enforced anywhere
 		// and will cause edge gaps to be set incorrectly
 		private function checkGap():void {

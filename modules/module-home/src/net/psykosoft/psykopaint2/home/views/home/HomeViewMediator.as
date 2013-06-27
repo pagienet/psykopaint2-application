@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
@@ -26,6 +27,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
 	import net.psykosoft.psykopaint2.home.signals.RequestEaselPaintingUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 
 	public class HomeViewMediator extends MediatorBase
 	{
@@ -68,6 +70,12 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var requestEaselPaintingUpdateSignal:RequestEaselPaintingUpdateSignal;
 
+		[Inject]
+		public var notifyPaintingActivatedSignal:NotifyPaintingActivatedSignal;
+
+		[Inject]
+		public var requestZoomThenChangeStateSignal:RequestZoomThenChangeStateSignal;
+
 		private var _waitingForPaintModeAfterZoomIn:Boolean;
 		private var _waitingForSnapShotOfHomeView:Boolean;
 
@@ -95,6 +103,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestZoomToggleSignal.add( onZoomRequested );
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
+			notifyPaintingActivatedSignal.add( onPaintingActivated );
 
 			// From view.
 			view.enabledSignal.add( onViewEnabled );
@@ -107,6 +116,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onPaintingActivated():void {
+			requestZoomThenChangeStateSignal.dispatch( true, StateType.PAINT );
+		}
 
 		private function onEaselUpdateRequest( vo:PaintingVO ):void {
 			view.paintingManager.setEaselPainting( vo );

@@ -22,12 +22,13 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestPaintingLoadSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingSavedDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
@@ -129,7 +130,8 @@ package net.psykosoft.psykopaint2.core.config
 			_injector.map( NotifyZoomCompleteSignal ).asSingleton();
 			_injector.map( NotifyNavigationMovingSignal ).asSingleton();
 			_injector.map( NotifyPaintingDataRetrievedSignal ).asSingleton();
-			_injector.map( RequestPaintingLoadSignal ).asSingleton();
+			_injector.map( RequestPaintingActivationSignal ).asSingleton();
+			_injector.map( NotifyPaintingActivatedSignal ).asSingleton();
 		}
 
 		// -----------------------
