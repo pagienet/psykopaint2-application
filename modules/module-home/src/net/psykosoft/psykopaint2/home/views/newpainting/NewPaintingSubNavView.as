@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.home.views.home
+package net.psykosoft.psykopaint2.home.views.newpainting
 {
 
 	import flash.display.Bitmap;

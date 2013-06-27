@@ -1,5 +1,7 @@
-package net.psykosoft.psykopaint2.home.views.home
+package net.psykosoft.psykopaint2.home.views.newpainting
 {
+
+	import net.psykosoft.psykopaint2.home.views.home.*;
 
 	import flash.display.BitmapData;
 
@@ -63,7 +65,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case NewPaintingSubNavView.LBL_NEW: {
-					navigateToPaintStateWithZoomIn();
+					// Pick one...
+					requestStateChange( StateType.HOME_PICK_SURFACE );
+//					navigateToPaintStateWithZoomIn(); // Temporary implementation. TODO: remove when ready
 					break;
 				}
 				case NewPaintingSubNavView.LBL_CONTINUE: {
