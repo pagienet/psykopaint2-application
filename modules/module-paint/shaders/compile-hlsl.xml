@@ -1,0 +1,11 @@
+<project name="compile-hlsl" default="pre-build">
+	<target name="pre-build">
+		<property environment="env"/>
+		<property name="executable-full-path" location="../../../../psykopaint2-drawing-core/shaders/"/>
+		<exec dir="../../../../psykopaint2-drawing-core/shaders/" executable="cmd">
+			<env key="WINDOWSKITS_BIN" value="${env.WINDOWSKITS_BIN}"/>
+			<arg value="/c"/>
+			<arg value="hlsl2agal.bat"/>
+		</exec>
+	</target>
+</project>

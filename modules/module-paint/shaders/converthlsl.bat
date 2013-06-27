@@ -8,7 +8,7 @@ if "%WINDOWSKITS_BIN%" == "" (
 		"%WINDOWSKITS_BIN%\fxc" %%f /E "main" /T ps_3_0 /nologo /Fc %%~nf.asm /I includes
 	)
 
-    ps3agal *.asm -y
+    hlsl2agal *.asm -y
     move /Y *.asm asm
     move /Y *.agal agal-intermediate
     popd

@@ -1,0 +1,100 @@
+///
+// Parameters:
+//
+//   Texture2D linearSampler+pigmentField;
+//   Texture2D linearSampler+velocityField;
+//   float pigmentFlow;
+//
+//
+// Registers:
+//
+//   Name                        Reg   Size
+//   --------------------------- ----- ----
+//   pigmentFlow                 c0       1
+//   linearSampler+velocityField s0       1
+//   linearSampler+pigmentField  s1       1
+//
+// Declarations:
+// Define c1, 1, -0.5, 0, -0
+//
+tex ft0, v2.xyxy, fs1 <2d, clamp, linear, mipnone>
+tex ft1, v2.xyxy, fs0 <2d, clamp, linear, mipnone>
+add ft1.x, ft1.x, fc1.y
+mul ft1.x, ft1.x, fc0.x
+mul ft2.x, ft0.w, ft1.x
+sub ft0.xyz, fc1.x, ft0.xyzz
+mul ft0.xyz, ft0.xyzz, ft1.x
+tex ft3, v4.xyxy, fs1 <2d, clamp, linear, mipnone>
+tex ft4, v4.xyxy, fs0 <2d, clamp, linear, mipnone>
+add ft1.y, ft4.y, fc1.y
+mul ft1.y, ft1.y, fc0.x
+mul ft2.z, ft3.w, ft1.y
+sub ft3.xyz, fc1.x, ft3.xyzz
+mul ft3.xyz, ft1.y, ft3.xyzz
+max ft4.xz, ft2.xzzz, fc1.z
+tex ft2, v1.xyxy, fs1 <2d, clamp, linear, mipnone>
+tex ft5, v0.xyxy, fs0 <2d, clamp, linear, mipnone>
+add ft1.zw, ft5.xyxy, fc1.y
+mul ft1.zw, ft1.zzzw, fc0.x
+mul ft5.y, ft2.w, ft1.z
+sub ft2.xyz, fc1.x, ft2.xyzz
+mul ft2.xyz, ft1.z, ft2.xyzz
+tex ft6, v3.xyxy, fs1 <2d, clamp, linear, mipnone>
+mul ft5.w, ft1.w, ft6.w
+sub ft6.xyz, fc1.x, ft6.xyzz
+mul ft6.xyw, ft1.w, ft6.zxzy
+neg ft7.yw, ft5.yyww
+max ft4.yw, ft7.yyww, fc1.w
+tex ft5, v0.xyxy, fs1 <2d, clamp, linear, mipnone>
+mul ft7.yw, ft1.xxzy, ft5.w
+neg ft7.yw, ft7.yyww
+max ft7.zw, ft7.yyww, fc1.w
+mul ft7.xy, ft1.zwzw, ft5.w
+max ft7.xy, ft7.xyyw, fc1.z
+sub ft4.yw, ft4.yyww, ft7.zzww
+sub ft4.xz, ft4.xxzz, ft7.xxyy
+dp4 ft4.x, ft4, fc1.x
+add ft6.w, ft4.x, ft5.w
+sub ft4.xyz, fc1.x, ft5.xyzz
+mov ft2.w, ft6.x
+neg ft7, ft2.xzzw
+max ft5.yw, ft7.yyww, fc1.w
+mov ft6.xz, ft2.xyyw
+neg ft7, ft6
+max ft2, ft7, fc1.w
+mul ft6.xyw, ft1.y, ft4.zxzy
+mov ft7.w, ft6.x
+mul ft7.xyz, ft1.x, ft4.xyzz
+neg ft7, ft7.xzzw
+mov ft0.w, ft3.x
+mov ft5.z, ft3.z
+max ft3.yw, ft7.yyww, fc1.w
+mov ft6.xz, ft7.xyyw
+neg ft7, ft6.xzyw
+mov ft6.z, ft5.z
+max ft7, ft7, fc1.w
+mov ft6.x, ft0.z
+max ft5.xz, ft6.xzzz, fc1.z
+mul ft1.xy, ft1.zwzw, ft4.z
+mul ft6, ft1.zwzw, ft4.xxyy
+max ft3.xz, ft1.xyyw, fc1.z
+sub ft1, ft5, ft3
+dp4 ft0.z, ft1, fc1.x
+add ft1.z, ft0.z, ft4.z
+max ft5.xz, ft0.xyww, fc1.z
+mov ft3.w, ft0.y
+max ft0.xz, ft3.wyyw, fc1.z
+mov ft5.yw, ft2.xxzy
+mov ft0.yw, ft2.xzzw
+mov ft2.yw, ft7.xxzz
+max ft6, ft6, fc1.z
+mov ft2.xz, ft6.xyyw
+mov ft7.xz, ft6.zyww
+sub ft0, ft0, ft7
+dp4 ft0.x, ft0, fc1.x
+add ft1.y, ft0.x, ft4.y
+sub ft0, ft5, ft2
+dp4 ft0.x, ft0, fc1.x
+add ft1.x, ft0.x, ft4.x
+sub ft4.xyz, fc1.x, ft1.xyzz
+mov oc, ft4

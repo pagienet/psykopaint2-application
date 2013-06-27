@@ -1,0 +1,107 @@
+///
+// Parameters:
+//
+//   Texture2D linearSampler+pigmentField;
+//   Texture2D linearSampler+velocityField;
+//   float pigmentFlow;
+//
+//
+// Registers:
+//
+//   Name                        Reg   Size
+//   --------------------------- ----- ----
+//   pigmentFlow                 c0       1
+//   linearSampler+velocityField s0       1
+//   linearSampler+pigmentField  s1       1
+//
+// Declarations:
+// Define c1, -0.5, 0, 1, 0
+//
+
+// Define c2 0, 0, 0, 0
+tex ft0, v4.xyxy, fs1 <2d, clamp, linear, mipnone>
+div ft0.xyz, ft0.xyz, ft0.w
+sub ft0.xyz, fc1.z, ft0
+tex ft1, v4.xyxy, fs0 <2d, clamp, linear, mipnone>
+add ft1.x, ft1.y, fc1.x
+mul ft1.x, ft1.x, fc0.x
+mul ft0, ft0, ft1.x
+max ft2, ft0, fc1.y
+tex ft0, v2.xyxy, fs1 <2d, clamp, linear, mipnone>
+div ft0.xyz, ft0.xyz, ft0.w
+sub ft0.xyz, fc1.z, ft0
+tex ft3, v2.xyxy, fs0 <2d, clamp, linear, mipnone>
+add ft1.y, ft3.x, fc1.x
+mul ft1.y, ft1.y, fc0.x
+mul ft0, ft0, ft1.y
+max ft3, ft0, fc1.y
+tex ft0, v0.xyxy, fs0 <2d, clamp, linear, mipnone>
+add ft0, ft0.xyxy, fc1.x
+mul ft0, ft0, fc0.x
+tex ft4, v0.xyxy, fs1 <2d, clamp, linear, mipnone>
+div ft4.xyz, ft4.xyz, ft4.w
+sub ft4.xyz, fc1.z, ft4
+mul ft5, ft0.zwzw, ft4.xxyy
+
+// cmp r5, r5, -r5, c1.z
+// r5 = r5 >= 0? -r5 : 0
+// r5 = -r5 < 0? -r5 : 0
+
+neg ft5, ft5
+min ft5, ft5, fc2
+
+add ft1.zw, ft3.xyxy, ft5.xyxz
+add ft1.zw, ft2.xyxy, ft1.zzzw
+add ft1.zw, ft5.xyyw, ft1.zzzw
+mul ft5, ft1.y, ft4
+
+// cmp r5, -r5, r5, c1.y
+// r5 = -r5 >= 0? r5 : 0
+// r5 = r5 < 0? r5 : 0 = r5 * (r5 < 0)
+slt ft7, ft5, fc2
+mul ft5, ft5, ft7
+
+add ft1.yz, ft1.xzww, ft5.xxyw
+tex ft6, v1.xyxy, fs1 <2d, clamp, linear, mipnone>
+div ft6.xyz, ft6.xyz, ft6.w
+sub ft6.xyz, fc1.z, ft6
+mul ft6, ft0.z, ft6
+neg ft7, ft6
+max ft7, ft7, fc1.y
+add ft1.yz, ft1.yyzz, ft7.xxyw
+mul ft6, ft1.x, ft4
+// cmp r6, -r6, r6, c1.y
+// r6 = -r6 >= 0? r6 : 0
+// r6 = r6 < 0? r6 : 0
+add ft5.zw, ft7.zwzw, ft5.zwzw
+
+slt ft7, ft6, fc2
+mul ft6, ft6, ft7
+
+add ft1.xy, ft1.yzzw, ft6.xyyy
+tex ft7, v3.xyxy, fs1 <2d, clamp, linear, mipnone>
+div ft7.xyz, ft7.xyz, ft7.w
+sub ft7.xyz, fc1.z, ft7
+mul ft7, ft0.w, ft7
+neg ft7, ft7
+max ft7, ft7, fc1.y
+add ft1.xy, ft1, ft7
+mul ft0, ft0, ft4.zzww
+// cmp r0, r0, -r0, c1.z
+// r0 = -r0 < 0? r0 : -r0 : 0
+neg ft0, ft0
+min ft0, ft0, fc2
+
+add ft6.xy, ft1, ft4
+add ft0.xz, ft0, ft3.zyww
+add ft0.xz, ft2.zyww, ft0
+add ft0.xy, ft0.ywzw, ft0.xzzw
+add ft0.xy, ft5.zwzw, ft0
+add ft0.xy, ft6.zwzw, ft0
+add ft0.xy, ft7.zwzw, ft0
+add ft6.zw, ft0.xyxy, ft4
+
+sub ft6.xyz, fc1.z, ft6
+mul ft6.xyz, ft6.xyz, ft6.w
+
+mov oc, ft6
