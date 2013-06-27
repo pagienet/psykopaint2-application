@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
+	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
@@ -52,6 +53,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var stage:Stage;
 
+		[Inject]
+		public var canvasModel:CanvasModel;
+
 		public static var ran:Boolean;
 
 		override public function execute():void {
@@ -78,6 +82,10 @@ package net.psykosoft.psykopaint2.paint.commands
 
 				// Init canvas size.
 				requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight ) );
+
+				// Sample empty layers for new painting creation.
+				// See ActivateNewPaintingCommand.
+				canvasModel.saveEmptyLayers();
 
 				ran = true;
 

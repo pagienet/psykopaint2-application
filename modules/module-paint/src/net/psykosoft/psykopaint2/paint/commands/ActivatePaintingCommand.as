@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import flash.utils.Endian;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
@@ -31,7 +32,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			super.execute();
 
 			// Get painting data, translate and pass on to the drawing core.
-			var data:Vector.<ByteArray> = paintingDataModel.getRgbaDataForPaintingWithId( paintingId );
+			var data:Vector.<ByteArray> = paintingId == PaintingVO.DEFAULT_ID ? canvasModel.getEmptyLayersARGB() : paintingDataModel.getRgbaDataForPaintingWithId( paintingId );
 			var transposedColor:ByteArray = as3ArgbToBgra( data[ 0 ] );
 			var transposedHeight:ByteArray = as3ArgbToBgra( data[ 1 ] );
 			var transposedSource:ByteArray = as3ArgbToBgra( data[ 2 ] );

@@ -1,12 +1,12 @@
 package net.psykosoft.psykopaint2.core.config
 {
 
+	import away3d.core.managers.Stage3DProxy;
+
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
-	
-	import away3d.core.managers.Stage3DProxy;
-	
+
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNewPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingSavedDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
@@ -38,9 +39,9 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketViewMediator;
-	
+
 	import org.swiftsuspenders.Injector;
-	
+
 	import robotlegs.bender.bundles.mvcs.MVCSBundle;
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
@@ -131,6 +132,7 @@ package net.psykosoft.psykopaint2.core.config
 			_injector.map( NotifyNavigationMovingSignal ).asSingleton();
 			_injector.map( NotifyPaintingDataRetrievedSignal ).asSingleton();
 			_injector.map( RequestPaintingActivationSignal ).asSingleton();
+			_injector.map( RequestNewPaintingActivationSignal ).asSingleton();
 			_injector.map( NotifyPaintingActivatedSignal ).asSingleton();
 		}
 

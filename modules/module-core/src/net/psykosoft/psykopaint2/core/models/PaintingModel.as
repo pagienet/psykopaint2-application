@@ -45,10 +45,15 @@ package net.psykosoft.psykopaint2.core.models
 			throw new Error( this, "unable to find saved painting with id: " + id );
 		}
 
+		public function addSinglePaintingData( vo:PaintingVO ):void {
+			if( !_paintingData ) _paintingData = new Vector.<PaintingVO>();
+			_paintingData.push( vo );
+		}
+
+		// TODO: used?
 		public function get focusedPaintingId():String {
 			return _focusedPaintingId;
 		}
-
 		public function set focusedPaintingId( id:String ):void {
 			_focusedPaintingId = id;
 		}

@@ -8,10 +8,8 @@ package net.psykosoft.psykopaint2.core.data
 
 	public class PaintingVO
 	{
-		//Mario: I strongly recommend to also add a "save format versionID" 
-		//since the time might come when we will want to store more but still
-		//want to open old files
-		
+		public static const DEFAULT_ID:String = "defaultPaintingId";
+
 		public var colorImageARGB:ByteArray;
 		public var heightmapImageARGB:ByteArray;
 		public var sourceImageARGB:ByteArray;
