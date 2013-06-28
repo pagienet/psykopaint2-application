@@ -83,10 +83,6 @@ package net.psykosoft.psykopaint2.paint.commands
 				// Init canvas size.
 				requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight ) );
 
-				// Sample empty layers for new painting creation.
-				// See ActivateNewPaintingCommand.
-				canvasModel.saveEmptyLayers();
-
 				ran = true;
 
 			}, 10 );

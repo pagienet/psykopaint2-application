@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
-	import net.psykosoft.psykopaint2.core.signals.RequestNewPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestEaselUpdateSignal;
 
@@ -15,9 +14,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		[Inject]
 		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
-
-		[Inject]
-		public var requestNewPaintingActivationSignal:RequestNewPaintingActivationSignal;
 
 		private var _loader:BitmapLoader;
 
@@ -38,7 +34,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 //					requestStateChange( StateType.PREVIOUS );
 					break;
 				case HomePickSurfaceSubNavView.LBL_CONTINUE:
-					requestNewPaintingActivationSignal.dispatch();
+					// TODO...
 					break;
 				case HomePickSurfaceSubNavView.LBL_SURF1:
 					pickSurfaceByIndex( 0 );

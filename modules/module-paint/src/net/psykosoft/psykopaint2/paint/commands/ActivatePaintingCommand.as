@@ -35,8 +35,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Get painting data, translate and pass on to the drawing core.
 			var data:Vector.<ByteArray>;
-			if( paintingId == PaintingVO.DEFAULT_ID ) {
-				data = canvasModel.getEmptyLayersARGB();
+			if( paintingId == PaintingVO.DEFAULT_ID ) { // TODO: remove this
+//				data = canvasModel.getEmptyLayersARGB();
 			}
 			else {
 				var vo:PaintingVO = paintingDataModel.getVoWithId( paintingId );
