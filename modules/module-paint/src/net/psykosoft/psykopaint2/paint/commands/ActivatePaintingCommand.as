@@ -34,16 +34,10 @@ package net.psykosoft.psykopaint2.paint.commands
 			super.execute();
 
 			// Get painting data, translate and pass on to the drawing core.
-			var data:Vector.<ByteArray>;
-			if( paintingId == PaintingVO.DEFAULT_ID ) { // TODO: remove this
-//				data = canvasModel.getEmptyLayersARGB();
-			}
-			else {
-				var vo:PaintingVO = paintingDataModel.getVoWithId( paintingId );
-				data = Vector.<ByteArray>( [ vo.colorImageARGB, vo.heightmapImageARGB, vo.sourceImageARGB ] );
-				var sourceBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( data[ 2 ], vo.width, vo.height );
-				canvasModel.setSourceBitmapData( sourceBmd );
-			}
+			var vo:PaintingVO = paintingDataModel.getVoWithId( paintingId );
+			var data:Vector.<ByteArray> = Vector.<ByteArray>( [ vo.colorImageARGB, vo.heightmapImageARGB, vo.sourceImageARGB ] );
+			var sourceBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( data[ 2 ], vo.width, vo.height );
+			canvasModel.setSourceBitmapData( sourceBmd );
 			var transposedColor:ByteArray = as3ArgbToBgra( data[ 0 ] );
 			var transposedHeight:ByteArray = as3ArgbToBgra( data[ 1 ] );
 			var transposedSource:ByteArray = as3ArgbToBgra( data[ 2 ] );
