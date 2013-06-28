@@ -141,7 +141,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					transformMatrix.identity();
 					transformMatrix.translate(-tg.location.x, -tg.location.y);
 					transformMatrix.scale(tg.scale, tg.scale);
-					transformMatrix.translate(tg.location.x, tg.location.y);
+					transformMatrix.translate(tg.location.x + tg.offsetX, tg.location.y + tg.offsetY);
 					
 					var topLeft:Point = transformMatrix.transformPoint(rect.topLeft);
 					var bottomRight:Point = transformMatrix.transformPoint(rect.bottomRight);
