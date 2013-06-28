@@ -89,6 +89,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var _brushEngine:AbstractBrush;
 		private var _brushName:String;
 		private var _parameterMappings:Vector.<PsykoParameterMapping>;
+		
 
 		public function BrushKit( name:String ) 
 		{

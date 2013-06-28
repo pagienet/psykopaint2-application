@@ -3,11 +3,15 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 	import flash.display.Stage;
 	
+	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.events.GestureEvent;
+	import org.gestouch.gestures.LongPressGesture;
 	import org.gestouch.gestures.PanGesture;
 	import org.gestouch.gestures.PanGestureDirection;
 	import org.gestouch.gestures.SwipeGesture;
@@ -23,11 +27,24 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		[Inject]
 		public var notifyBlockingGestureSignal:NotifyBlockingGestureSignal;
 
+		[Inject]
+		public var notifyStateChangeSignal:NotifyStateChangeSignal;
+		
+		[Inject]
+		public var requestStateChangeSignal:RequestStateChangeSignal;
+		
 		private var _stage:Stage;
 		
 		public static var gesturesEnabled:Boolean = true;
-
+		
 		public function GestureManager() {
+			
+		}
+		
+		[PostConstruct]
+		public function postConstruct() : void
+		{
+			notifyStateChangeSignal.add( onStateChange );
 		}
 
 		public function set stage( value:Stage ):void {
@@ -40,7 +57,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			initTwoFingerSwipes();
 			initOneFingerHorizontalPan();
 			initOneFingerVerticalPan();
-			//initTransform();
+			initTransform();
+			initLongPressGesture();
 //			initPinch();
 //			initTap();
 		}
@@ -180,7 +198,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		
 		private function initTransform():void {
 			_transformGesture = new TransformGesture( _stage );
-			
+			_transformGesture.enabled = false;
 			_transformGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onTransformGestureStarted );
 			
 		}
@@ -204,5 +222,29 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			notifyGlobalGestureSignal.dispatch( GestureType.TRANSFORM_GESTURE_CHANGED, event );
 		}
 		
+		
+		// ---------------------------------------------------------------------
+		// Long Press.
+		// ---------------------------------------------------------------------
+		
+		private var _longPressGesture:LongPressGesture;
+		
+		private function initLongPressGesture():void {
+			_longPressGesture = new LongPressGesture( _stage );
+			_longPressGesture.minPressDuration = 350;
+			_longPressGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onLongPressGestureStarted );
+			
+		}
+		
+		private function onLongPressGestureStarted( event:GestureEvent ):void {
+			if ( gesturesEnabled )
+			{
+				notifyGlobalGestureSignal.dispatch( GestureType.LONG_PRESS_GESTURE_BEGAN, event );
+			}
+		}
+		
+		protected function onStateChange( newState:String ):void {
+			_transformGesture.enabled = ( newState == StateType.PAINT_TRANSFORM );
+		}
 	}
 }

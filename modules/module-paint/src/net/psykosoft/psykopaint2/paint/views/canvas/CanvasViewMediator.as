@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
@@ -87,6 +89,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var stage3D:Stage3D;
+		
+		private var transformMatrix:Matrix;
 
 		override public function initialize():void {
 
@@ -96,7 +100,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
 			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
 			registerEnablingState( StateType.PAINT_PICK_SURFACE );
-
+			registerEnablingState( StateType.PAINT_TRANSFORM );
+			
 			// Init.
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
 			paintModule.view = view;
@@ -113,12 +118,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			notifyNavigationMovingSignal.add( onNavigationMoving );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
+			
+			transformMatrix = new Matrix();
 		}
 
 		// -----------------------
 		// From app.
 		// -----------------------
 
+		
 		private function onGlobalGesture( type:String, event:GestureEvent ):void {
 			trace( this, "onGlobalGesture: " + type );
 			switch( type ) {
@@ -127,12 +135,27 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 					
 				case GestureType.TRANSFORM_GESTURE_CHANGED:
+					
 					var rect:Rectangle = renderer.renderRect;
 					var tg:TransformGesture = (event.target as TransformGesture);
+					transformMatrix.identity();
+					transformMatrix.translate(-tg.location.x, -tg.location.y);
+					transformMatrix.scale(tg.scale, tg.scale);
+					transformMatrix.translate(tg.location.x, tg.location.y);
+					
+					var topLeft:Point = transformMatrix.transformPoint(rect.topLeft);
+					var bottomRight:Point = transformMatrix.transformPoint(rect.bottomRight);
+					
+					rect.x = topLeft.x;
+					rect.y = topLeft.y;
+					rect.width = bottomRight.x - topLeft.x;
+					rect.height = bottomRight.y - topLeft.y;
+					
+					/*
 					rect.offset( -0.5 * ( rect.width - tg.scale * rect.width ),- 0.5 * ( rect.height - tg.scale * rect.height ));
 					rect.width *= tg.scale;
 					rect.height *= tg.scale;
-					
+					*/
 					renderer.renderRect = rect;
 					break;
 				
@@ -174,6 +197,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			else if( !StartUpDrawingCoreCommand.ran ) {
 				requestDrawingCoreStartupSignal.dispatch();
 			}
+			view.showTranformView(  newState == StateType.PAINT_TRANSFORM )
+			
 		}
 
 		// -----------------------

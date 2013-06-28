@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
+	import flash.utils.clearTimeout;
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
 	
@@ -488,8 +489,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 			_view.stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			_view.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_view.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
+			
+			enableGestureRecognition( true );
 		}
 
 		public function getParameterSetAsXML( path:Array ):XML
@@ -619,6 +622,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		private function enableGestureRecognition( enable:Boolean ):void
 		{
+			if ( gestureStopTimeout != -1 ) clearTimeout( gestureStopTimeout );
 			GestureManager.gesturesEnabled = enable;
 			gestureStopTimeout = -1;
 		}

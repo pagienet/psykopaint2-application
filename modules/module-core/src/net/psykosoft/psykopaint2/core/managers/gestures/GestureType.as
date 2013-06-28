@@ -15,5 +15,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public static const TRANSFORM_GESTURE_BEGAN:String   = "transform/began";
 		public static const TRANSFORM_GESTURE_ENDED:String   = "transform/ended";
 		public static const TRANSFORM_GESTURE_CHANGED:String   = "transform/changed";
+		public static const LONG_PRESS_GESTURE_BEGAN:String   = "longpress/began";
+		public static const LONG_PRESS_GESTURE_ENDED:String   = "longpress/ended";
+		public static const LONG_PRESS_GESTURE_CHANGED:String   = "longpress/changed";
 	}
 }

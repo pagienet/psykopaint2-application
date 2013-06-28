@@ -22,15 +22,22 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	
+	import org.gestouch.events.GestureEvent;
 
 	public class PaintModule implements IModule
 	{
@@ -67,6 +74,15 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var requestChangeRenderRect : RequestChangeRenderRectSignal;
 		
+		[Inject]
+		public var requestStateChangeSignal:RequestStateChangeSignal;
+
+		[Inject]
+		public var notifyStateChangeSignal:NotifyStateChangeSignal;
+		
+		
+		[Inject]
+		public var notifyGlobalGestureSignal : NotifyGlobalGestureSignal;
 		
 		private var _view : DisplayObject;
 
@@ -75,6 +91,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _availableBrushKitNames:Vector.<String>;
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
+		private var _transformModeActive:Boolean;
 		
 		private const brushKitData:XML = 
 			<brushkits>
@@ -465,6 +482,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			{
 				registerBrushKit( BrushKit.fromXML(brushKitData.brush[i]), brushKitData.brush[i].@name);
 			}
+			
+			_transformModeActive = false;
 			/*
 			registerBrush( BrushType.WATER_COLOR, WaterColorBrush );
 			registerBrush( BrushType.WATER_DAMAGE, WaterDamageBrush );
@@ -483,8 +502,36 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			
 			memoryWarningSignal.add(onMemoryWarning);
 			requestChangeRenderRect.add(onChangeRenderRect);
+			notifyGlobalGestureSignal.add( onGlobalGesture );
+			notifyStateChangeSignal.add( onStateChange )
 		}
-
+		
+		private function onStateChange( stateType:String ):void
+		{
+			if ( _transformModeActive && stateType != StateType.PAINT_TRANSFORM )
+			{
+				_transformModeActive = false;
+				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel);
+			} else if ( !_transformModeActive && stateType == StateType.PAINT_TRANSFORM )
+			{
+				_transformModeActive = true;
+				_activeBrushKit.deactivate();
+			} 
+		}
+		
+		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
+		{
+			if ( gestureType == GestureType.LONG_PRESS_GESTURE_BEGAN )
+			{
+				if ( _transformModeActive )
+				{
+					requestStateChangeSignal.dispatch( StateType.PREVIOUS );
+				} else {
+					requestStateChangeSignal.dispatch( StateType.PAINT_TRANSFORM );
+				}
+			}
+		}
+		
 		private function onChangeRenderRect(rect : Rectangle) : void
 		{
 			var scale : Number = rect.height/canvasModel.height;
