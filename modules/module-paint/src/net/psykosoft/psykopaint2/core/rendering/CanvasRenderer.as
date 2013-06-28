@@ -85,6 +85,11 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			_lightingRenderer.renderRect  = rect;
 		}
+		
+		public function get scale():Number
+		{
+			return _lightingRenderer.scale;
+		}
 
 		public function init(module : PaintModule = null) : void
 		{

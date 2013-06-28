@@ -1,11 +1,9 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
 	import com.greensock.easing.Quad;
-
+	
 	import flash.display.DisplayObject;
-
 	import flash.display3D.Context3D;
-
 	import flash.geom.Rectangle;
 	
 	import de.popforge.math.LCG;
@@ -16,9 +14,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SourceCopyMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SourceCopyMesh;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
 	
 	public class ShatterBrush extends SplatBrushBase
@@ -37,9 +35,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			}
 		}
 
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel) : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
 		{
-			super.activate(view, context, canvasModel);
+			super.activate(view, context, canvasModel, renderer);
 		}
 		
 		override protected function createBrushMesh() : IBrushMesh

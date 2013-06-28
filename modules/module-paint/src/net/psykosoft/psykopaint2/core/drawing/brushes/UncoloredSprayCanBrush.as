@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
 
 	public class UncoloredSprayCanBrush extends SplatBrushBase
@@ -35,9 +36,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		}
 
 
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel) : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
 		{
-			super.activate(view, context, canvasModel);
+			super.activate(view, context, canvasModel, renderer);
 		}
 
 		override protected function createBrushMesh() : IBrushMesh

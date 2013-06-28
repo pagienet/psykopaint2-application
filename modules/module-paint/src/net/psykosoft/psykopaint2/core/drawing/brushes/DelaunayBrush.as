@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.data.DelaunayMetaData;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
 
 	public class DelaunayBrush extends SplatBrushBase
@@ -55,9 +56,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			//appendVO.colorsRGBA[3] = appendVO.colorsRGBA[7] = appendVO.colorsRGBA[11] = 1;
 		}
 
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel) : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
 		{
-			super.activate(view, context, canvasModel);
+			super.activate(view, context, canvasModel,renderer);
 			pathManager.callbacks.onPickColor = null;
 			
 			delaunay.createBoundingTriangle(canvasModel.width * 0.5,canvasModel.height * 0.5 );

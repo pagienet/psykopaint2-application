@@ -231,7 +231,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		
 		private function initLongPressGesture():void {
 			_longPressGesture = new LongPressGesture( _stage );
-			_longPressGesture.minPressDuration = 350;
+			_longPressGesture.minPressDuration = 230;
 			_longPressGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onLongPressGestureStarted );
 			
 		}

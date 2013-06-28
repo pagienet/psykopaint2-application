@@ -2,16 +2,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 {
 	import flash.display.DisplayObject;
 	import flash.display3D.Context3D;
-
+	
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.RubbedStrokeMesh;
-    import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-    import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
-    import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
+	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
 
 	public class PencilBrush extends AbstractBrush
@@ -30,9 +31,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			setBrushSizeFactors(.2,.4);
 		}
 
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel) : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
 		{
-			super.activate(view, context, canvasModel);
+			super.activate(view, context, canvasModel, renderer);
 			if (_brushShape)
 				assignBrushShape();
 		}

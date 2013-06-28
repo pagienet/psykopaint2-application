@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
-	import de.popforge.math.LCG;
 	import flash.display.DisplayObject;
 	import flash.display3D.Context3D;
 	
@@ -14,6 +13,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	
 	public class SprayCanBrush extends SplatBrushBase
 	{
@@ -32,9 +32,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_bumpiness.numberValue = .6;
 		}
 
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel) : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
 		{
-			super.activate(view, context, canvasModel);
+			super.activate(view, context, canvasModel, renderer);
 			if (_brushShape)
 				assignBrushShape();
 		}

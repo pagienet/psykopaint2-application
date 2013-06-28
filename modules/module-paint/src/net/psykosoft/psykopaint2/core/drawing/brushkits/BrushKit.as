@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 
 	public class BrushKit extends EventDispatcher
 	{
@@ -102,9 +103,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_brushEngine.stopProgression();
 		}
 
-		public function activate( view : DisplayObject, context : Context3D, canvasModel : CanvasModel):void
+		public function activate( view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer : CanvasRenderer):void
 		{
-			_brushEngine.activate(view, context, canvasModel);
+			_brushEngine.activate(view, context, canvasModel, renderer);
 			PsykoSocket.addMessageCallback("ActiveBrushKit.*", this, onSocketMessage );
 			sendBrushKitParameterSet();
 		}

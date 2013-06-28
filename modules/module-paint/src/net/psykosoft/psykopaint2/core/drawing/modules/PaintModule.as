@@ -511,7 +511,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( _transformModeActive && stateType != StateType.PAINT_TRANSFORM )
 			{
 				_transformModeActive = false;
-				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel);
+				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
 			} else if ( !_transformModeActive && stateType == StateType.PAINT_TRANSFORM )
 			{
 				_transformModeActive = true;
@@ -630,7 +630,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( _activeBrushKit )
 			{
 				_activeBrushKit.canvasRect = _canvasRect;
-				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel);
+				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
 				_activeBrushKit.brushEngine.addEventListener(AbstractBrush.STROKE_STARTED, onStrokeStarted);
 				_activeBrushKit.addEventListener( Event.CHANGE, onActiveBrushKitChanged );
 			}

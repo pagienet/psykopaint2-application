@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.rendering
 {
 	import com.adobe.utils.AGALMiniAssembler;
-
+	
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DProgramType;
@@ -10,9 +10,8 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.display3D.Program3D;
 	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 
 	public class LightingRenderer
@@ -36,6 +35,8 @@ package net.psykosoft.psykopaint2.core.rendering
 		private var _needBake : Boolean;
 		private var _freezeRender : Boolean = false;
 		private var _renderRect : Rectangle;
+		
+		private var _scale:Number;
 
 		public function LightingRenderer(lightingModel : LightingModel, context3d : Context3D)
 		{
@@ -45,6 +46,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_context3d = context3d;
 			_globalVertexData = new <Number>[0, 0, 0, 1, -1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 			_globalFragmentData = new <Number>[.5, 0, 1, 0, 0, -1, 0, 0];
+			_scale = 1;
 			initBuffers();
 			onLightingModelChanged();
 		}
@@ -57,11 +59,17 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function set renderRect(value : Rectangle) : void
 		{
 			_renderRect = value;
+			
 		}
 
 		public function get freezeRender() : Boolean
 		{
 			return _freezeRender;
+		}
+		
+		public function get scale() : Number
+		{
+			return _scale;
 		}
 
 		public function set freezeRender(value : Boolean) : void
@@ -83,10 +91,10 @@ package net.psykosoft.psykopaint2.core.rendering
 				copyBakedRender(canvas);
 			}
 			else {
-				var scale : Number = _renderRect.height/canvas.height;
+				_scale = _renderRect.height/canvas.height;
 				var offsetX : Number = _renderRect.x / canvas.width;//(1 - scale)*.5 
 				var offsetY : Number = _renderRect.y / canvas.height;//(1 - scale)*.5;
-				renderLighting(offsetX, offsetY, scale, scale, canvas);
+				renderLighting(offsetX, offsetY, _scale, _scale, canvas);
 			}
 		}
 

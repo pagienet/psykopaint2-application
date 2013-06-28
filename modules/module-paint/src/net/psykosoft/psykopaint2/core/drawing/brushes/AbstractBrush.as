@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.errors.AbstractMethodError;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	
 	public class AbstractBrush extends EventDispatcher
@@ -176,7 +177,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		}
 		
 		
-		public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel) : void
+		public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer : CanvasRenderer) : void
 		{
 			_brushMesh = createBrushMesh();
 			brushShape = brushShapeLibrary.getBrushShape(_shapes.stringValue);
@@ -184,7 +185,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_view = view;
 			_canvasModel = canvasModel;
 			_context = context;
-			_pathManager.activate(view,canvasModel);
+			_pathManager.activate(view,canvasModel,renderer);
 			_shapes.addEventListener( Event.CHANGE, onShapeChanged );
 		}
 		

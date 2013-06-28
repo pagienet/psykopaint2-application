@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 
 	final public class PathManager
 	{
@@ -91,6 +92,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var _canvasRect : Rectangle;
 		private var scaleX:Number;
 		private var scaleY:Number;
+		private var offsetX:Number;
+		private var offsetY:Number;
 		private var recordedData:Vector.<Number>;
 		private var playbackActive:Boolean;
 		private var singleStepPlaybackActive:Boolean;
@@ -102,6 +105,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		private var gestureStopTimeout:int;
 		private var GESTURE_RECOGNITION_TIME:Number = 500;
+		private var renderer:CanvasRenderer;
 
 		public function PathManager( type:int )
 		{
@@ -320,8 +324,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				sendEndCallbacks();
 			}
 			
-			var px : Number = (stageX - _canvasRect.x) * scaleX;
-			var py : Number = (stageY - _canvasRect.y) * scaleY;
+			var px : Number = (stageX - _canvasRect.x - renderer.renderRect.x) * scaleX;
+			var py : Number = (stageY - _canvasRect.y - renderer.renderRect.y) * scaleY;
 			
 			_pathEngine.clear();
 			if ( WacomPenManager.hasPen )
@@ -339,8 +343,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		protected function onSamplePoint(stageX : Number, stageY : Number) : void
 		{
-			var px : Number = (stageX - _canvasRect.x) * scaleX;
-			var py : Number = (stageY - _canvasRect.y) * scaleY;
+			var px : Number = (stageX - _canvasRect.x - renderer.renderRect.x) * scaleX;
+			var py : Number = (stageY - _canvasRect.y - renderer.renderRect.y) * scaleY;
 			
 			if ( WacomPenManager.hasPen )
 			{
@@ -352,8 +356,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		protected function onSampleEnd(stageX : Number, stageY : Number) : void
 		{
-			var px : Number = (stageX - _canvasRect.x) * scaleX;
-			var py : Number = (stageY - _canvasRect.y) * scaleY;
+			var px : Number = (stageX - _canvasRect.x - renderer.renderRect.x) * scaleX;
+			var py : Number = (stageY - _canvasRect.y - renderer.renderRect.y ) * scaleY;
 			if ( WacomPenManager.hasPen )
 				_pathEngine.addPoint( px, py, WacomPenManager.currentPressure, WacomPenManager.buttonState, true); 
 			 else 
@@ -407,11 +411,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			}
 		}
 
-		public function activate(view : DisplayObject, canvasModel:CanvasModel ) : void
+		public function activate(view : DisplayObject, canvasModel:CanvasModel, renderer : CanvasRenderer ) : void
 		{
 			_touchID = -1;
 			_startCallbacksSent = false;
 			this.canvasModel = canvasModel;
+			this.renderer = renderer;
 			if (_active) return;
 			
 			_active = true;
@@ -587,8 +592,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		{
 			if ( _canvasRect && _view && _view.stage )
 			{
-				scaleX = _view.stage.stageWidth/_canvasRect.width;
-				scaleY = _view.stage.stageHeight/_canvasRect.height;
+				scaleX = (_view.stage.stageWidth/_canvasRect.width) / renderer.scale;
+				scaleY = ( _view.stage.stageHeight/_canvasRect.height ) / renderer.scale;
 			}		
 		}
 		
