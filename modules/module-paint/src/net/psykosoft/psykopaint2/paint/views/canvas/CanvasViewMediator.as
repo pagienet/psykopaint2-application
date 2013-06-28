@@ -53,13 +53,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestStateUpdateFromModuleActivationSignal:RequestStateUpdateFromModuleActivationSignal;
-
+/*
 		[Inject]
 		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
 
 		[Inject]
 		public var notifyNavigationMovingSignal:NotifyNavigationMovingSignal;
-
+*/
 		[Inject]
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
 
@@ -114,9 +114,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyModuleActivatedSignal.add( onDrawingCoreModuleActivated );
 
 			// From app.
-			notifyNavigationToggledSignal.add( onNavigationToggled );
+			//notifyNavigationToggledSignal.add( onNavigationToggled );
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
-			notifyNavigationMovingSignal.add( onNavigationMoving );
+			//notifyNavigationMovingSignal.add( onNavigationMoving );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			
 			transformMatrix = new Matrix();
@@ -151,11 +151,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					rect.width = bottomRight.x - topLeft.x;
 					rect.height = bottomRight.y - topLeft.y;
 					
-					/*
-					rect.offset( -0.5 * ( rect.width - tg.scale * rect.width ),- 0.5 * ( rect.height - tg.scale * rect.height ));
-					rect.width *= tg.scale;
-					rect.height *= tg.scale;
-					*/
 					renderer.renderRect = rect;
 					break;
 				
@@ -175,6 +170,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 		}
 
+		/*
 		private function onNavigationMoving( ratio:Number ):void {
 			if( !view.visible ) return;
 			requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight * ( 1 - .24 * ( 1 - ratio ) ) ) );
@@ -188,6 +184,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight ) );
 			}
 		}
+		*/
 
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );

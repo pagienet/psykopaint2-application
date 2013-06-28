@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 	import org.gestouch.gestures.PanGestureDirection;
 	import org.gestouch.gestures.SwipeGesture;
 	import org.gestouch.gestures.SwipeGestureDirection;
+	import org.gestouch.gestures.TapGesture;
 	import org.gestouch.gestures.TransformGesture;
 	import org.gestouch.input.NativeInputAdapter;
 
@@ -58,7 +59,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			initOneFingerHorizontalPan();
 			initOneFingerVerticalPan();
 			initTransform();
-			initLongPressGesture();
+			initTapGesture();
+			//initDoubleTapGesture();
 //			initPinch();
 //			initTap();
 		}
@@ -136,22 +138,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_ENDED, event );
 		}
 
-		// ---------------------------------------------------------------------
-		// Tap.
-		// ---------------------------------------------------------------------
-
-		/*private var _tapGesture:TapGesture;
-
-		private function initTap():void {
-			// TODO: do we need the tap gesture here?
-			_tapGesture = new TapGesture( _stage );
-			_tapGesture.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTapGestureRecognized );
-		}
-
-		private function onTapGestureRecognized( event:GestureEvent ):void {
-			trace( this, "tap recognized" );
-		}*/
-
+		
 		// ---------------------------------------------------------------------
 		// Pinch.
 		// ---------------------------------------------------------------------
@@ -224,27 +211,52 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		
 		
 		// ---------------------------------------------------------------------
-		// Long Press.
+		// Tap.
 		// ---------------------------------------------------------------------
 		
-		private var _longPressGesture:LongPressGesture;
+		//private var _tapGesture:TapGesture;
 		
-		private function initLongPressGesture():void {
-			_longPressGesture = new LongPressGesture( _stage );
-			_longPressGesture.minPressDuration = 230;
-			_longPressGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onLongPressGestureStarted );
-			
+		//temporary fix until tap conflict with buttons has been resolved:
+		private var _tapGesture:LongPressGesture;
+		
+		private function initTapGesture():void {
+			_tapGesture = new LongPressGesture( _stage );
+			_tapGesture.minPressDuration = 150;
+			//_tapGesture.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTapGestureRecognized );
+			_tapGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onTapGestureRecognized );
 		}
 		
-		private function onLongPressGestureStarted( event:GestureEvent ):void {
+		private function onTapGestureRecognized( event:GestureEvent ):void {
 			if ( gesturesEnabled )
 			{
-				notifyGlobalGestureSignal.dispatch( GestureType.LONG_PRESS_GESTURE_BEGAN, event );
+				notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
 			}
 		}
 		
 		protected function onStateChange( newState:String ):void {
 			_transformGesture.enabled = ( newState == StateType.PAINT_TRANSFORM );
 		}
+		
+		
+		// ---------------------------------------------------------------------
+		// Double Tap.
+		// ---------------------------------------------------------------------
+		
+		private var _doubleTapGesture:TapGesture;
+		
+		private function initDoubleTapGesture():void {
+			_doubleTapGesture = new TapGesture( _stage );
+			_doubleTapGesture.numTapsRequired = 2;
+			_doubleTapGesture.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onDoubleTapGestureRecognized );
+		}
+		
+		private function onDoubleTapGestureRecognized( event:GestureEvent ):void {
+			if ( gesturesEnabled )
+			{
+				notifyGlobalGestureSignal.dispatch( GestureType.DOUBLE_TAP_GESTURE_RECOGNIZED, event );
+			}
+		}
+		
+		
 	}
 }

@@ -521,8 +521,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
-			if ( gestureType == GestureType.LONG_PRESS_GESTURE_BEGAN )
+			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED )
 			{
+				
 				if ( _transformModeActive )
 				{
 					requestStateChangeSignal.dispatch( StateType.PREVIOUS );
