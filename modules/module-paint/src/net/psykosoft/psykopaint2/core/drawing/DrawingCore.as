@@ -8,6 +8,8 @@ package net.psykosoft.psykopaint2.core.drawing
 
 	import org.swiftsuspenders.Injector;
 
+	import robotlegs.bender.framework.api.IInjector;
+
 	// TODO:
 	/*
 	* This class is no longer a proxy. It will simply setup the core in a RL fashion.
@@ -36,7 +38,7 @@ package net.psykosoft.psykopaint2.core.drawing
 		public static var stageWidth : Number;
 		public static var stageHeight : Number;
 
-		public function DrawingCore( injector:Injector ) {
+		public function DrawingCore( injector:IInjector ) {
 
 			trace( this );
 

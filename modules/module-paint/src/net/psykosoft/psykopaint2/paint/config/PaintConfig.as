@@ -44,14 +44,15 @@ package net.psykosoft.psykopaint2.paint.config
 	
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
+	import robotlegs.bender.framework.api.IInjector;
 
 	public class PaintConfig
 	{
-		private var _injector:Injector;
+		private var _injector:IInjector;
 		private var _mediatorMap:IMediatorMap;
 		private var _commandMap:ISignalCommandMap;
 
-		public function PaintConfig( injector:Injector ) {
+		public function PaintConfig( injector:IInjector ) {
 			super();
 
 			_injector = injector;
@@ -66,7 +67,7 @@ package net.psykosoft.psykopaint2.paint.config
 			mapModels();
 		}
 
-		public function get injector():Injector {
+		public function get injector():IInjector {
 			return _injector;
 		}
 

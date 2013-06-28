@@ -38,10 +38,12 @@ package net.psykosoft.psykopaint2.core
 
 	import org.swiftsuspenders.Injector;
 
+	import robotlegs.bender.framework.api.IInjector;
+
 	public class CoreModule extends ModuleBase
 	{
 		private var _coreConfig:CoreConfig;
-		private var _injector:Injector;
+		private var _injector:IInjector;
 		private var _stage3dInitialized:Boolean;
 		private var _shakeAndBakeInitialized:Boolean;
 		private var _shakeAndBakeConnector:ShakeAndBakeConnector;
@@ -55,7 +57,7 @@ package net.psykosoft.psykopaint2.core
 		private var _requestNavigationToggleSignal:RequestNavigationToggleSignal;
 		private var _xmLoader:XMLLoader;
 
-		public function CoreModule( injector:Injector = null ) {
+		public function CoreModule( injector:IInjector = null ) {
 			super();
 			_injector = injector;
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CoreModule";
@@ -150,7 +152,7 @@ package net.psykosoft.psykopaint2.core
 		// Getters.
 		// ---------------------------------------------------------------------
 
-		public function get injector():Injector {
+		public function get injector():IInjector {
 			return _injector;
 		}
 

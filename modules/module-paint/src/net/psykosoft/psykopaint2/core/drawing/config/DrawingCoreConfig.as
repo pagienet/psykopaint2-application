@@ -2,9 +2,8 @@ package net.psykosoft.psykopaint2.core.drawing.config
 {
 
 	import flash.display.DisplayObjectContainer;
-	
+
 	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
-	import net.psykosoft.psykopaint2.core.commands.RenderRubberMeshCommand;
 	import net.psykosoft.psykopaint2.core.commands.UndoCanvasActionCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
@@ -37,36 +36,31 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySetColorStyleSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySmearCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySmearConfirmSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySmearModuleActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySmearStyleChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySmearStylePresetsAvailableSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestColorStyleMatrixChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestRenderRubberMeshSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
-	
+
 	import org.swiftsuspenders.Injector;
-	
+
 	import robotlegs.bender.bundles.mvcs.MVCSBundle;
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IContext;
+	import robotlegs.bender.framework.api.IInjector;
 	import robotlegs.bender.framework.impl.Context;
 
 	public class DrawingCoreConfig
 	{
 		private var _childContext : IContext;
-		private var _injector : Injector;
+		private var _injector : IInjector;
 		private var _mediatorMap : IMediatorMap;
 		private var _commandMap : ISignalCommandMap;
 
-		public function DrawingCoreConfig(childDisplay : DisplayObjectContainer, injector : Injector)
+		public function DrawingCoreConfig(childDisplay : DisplayObjectContainer, injector : IInjector)
 		{
 
 			trace(this);
@@ -137,7 +131,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 
 		}
 
-		public function get injector():Injector {
+		public function get injector():IInjector {
 			return _injector;
 		}
 	}

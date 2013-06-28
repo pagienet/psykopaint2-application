@@ -47,6 +47,7 @@ package net.psykosoft.psykopaint2.core.config
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IContext;
+	import robotlegs.bender.framework.api.IInjector;
 	import robotlegs.bender.framework.impl.Context;
 
 	public class CoreConfig
@@ -54,7 +55,7 @@ package net.psykosoft.psykopaint2.core.config
 		private var _stage:Stage;
 		private var _stage3d:Stage3D;
 		private var _stage3dProxy:Stage3DProxy;
-		private var _injector:Injector;
+		private var _injector:IInjector;
 		private var _mediatorMap:IMediatorMap;
 		private var _commandMap:ISignalCommandMap;
 
@@ -81,7 +82,7 @@ package net.psykosoft.psykopaint2.core.config
 			mapModels();
 		}
 
-		public function get injector():Injector {
+		public function get injector():IInjector {
 			return _injector;
 		}
 
