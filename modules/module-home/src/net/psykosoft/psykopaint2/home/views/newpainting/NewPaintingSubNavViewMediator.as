@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		private var _waitingForZoom:Boolean;
 		private var _waitingForSnapShot:Boolean;
+		private var _lastClickedInProgressPaintingBtnLabel:String; // TODO: remove when HButtonScroller component is ready, use selected btn label instead
 
 		override public function initialize():void {
 
@@ -73,17 +74,20 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					break;
 				}
 				case NewPaintingSubNavView.LBL_CONTINUE: {
-					var selectedLabel:String = view.getSelectedButtonLabel();
+					requestPaintingLoadSignal.dispatch( _lastClickedInProgressPaintingBtnLabel ); // TODO: remove when HButtonScroller component is ready
+					// TODO: restore when HButtonScroller component is ready
+					/*var selectedLabel:String = view.getSelectedButtonLabel();
 					trace( this, "selected label: " + selectedLabel );
 					if( selectedLabel != "" && selectedLabel != NewPaintingSubNavView.LBL_NEW ) {
 						requestPaintingLoadSignal.dispatch( selectedLabel );
-					}
+					}*/
 					break;
 				}
 				default: { // Default buttons are supposed to be in progress painting buttons.
 					var vo:PaintingVO = paintingModel.getVoWithId( label );
 					var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
 					requestEaselPaintingUpdateSignal.dispatch( bmd );
+					_lastClickedInProgressPaintingBtnLabel = label;
 					break;
 				}
 			}

@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			}
 
 			addCenterButton( LBL_NEW, ButtonIconType.NEW, ButtonLabelType.NONE );
-			setButtonWithLabelSelectable ( LBL_NEW, false );
+//			setButtonWithLabelSelectable ( LBL_NEW, false );
 
 			invalidateContent();
 		}
