@@ -185,5 +185,13 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public function get isSelected():Boolean {
 			return _isSelected;
 		}
+
+		override public function get width():Number {
+			return 115;
+		}
+
+		override public function get height():Number {
+			return 105;
+		}
 	}
 }
