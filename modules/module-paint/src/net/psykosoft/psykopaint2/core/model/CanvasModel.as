@@ -197,11 +197,6 @@ package net.psykosoft.psykopaint2.core.model
 			tempBitmapData.dispose();
 		}
 
-		public function saveEmptyLayers():void {
-			trace( this, "empty layers saved" );
-			_emptyLayersARGB = saveLayersARGB();
-		}
-
 		public function createCanvasTexture(isRenderTarget : Boolean, scale : Number = 1) : Texture
 		{
 			return stage3D.context3D.createTexture(_textureWidth * scale, _textureHeight * scale, Context3DTextureFormat.BGRA, isRenderTarget, 0);
@@ -274,11 +269,6 @@ package net.psykosoft.psykopaint2.core.model
 		public function clearNormalSpecularTexture() : void
 		{
 			_normalSpecularMap.uploadFromByteArray(_normalSpecularOriginal, 0);
-		}
-
-		private var _emptyLayersARGB:Vector.<ByteArray>;
-		public function getEmptyLayersARGB():Vector.<ByteArray> {
-			return _emptyLayersARGB;
 		}
 
 		/**
