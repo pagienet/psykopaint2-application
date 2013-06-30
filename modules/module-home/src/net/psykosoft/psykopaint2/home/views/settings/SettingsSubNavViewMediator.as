@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 			registerView( view );
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
-			view.setButtonClickCallback( onButtonClicked );
+			view.navigation.buttonClickedCallback = onButtonClicked;
 		}
 
 		private function onButtonClicked( label:String ):void {

@@ -51,7 +51,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			registerView( view );
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
-			view.setButtonClickCallback( onButtonClicked );
+			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post-init.
 			view.setInProgressPaintings( paintingModel.getPaintingData() );

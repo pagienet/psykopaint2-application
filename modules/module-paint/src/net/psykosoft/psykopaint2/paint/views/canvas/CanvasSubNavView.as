@@ -22,21 +22,21 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		override protected function onEnabled():void {
 
-			setLabel( "Do some painting!" );
+			navigation.setHeader( "Do some painting!" );
 
 			if( !PaintSettings.isStandalone ) {
-				setLeftButton( LBL_HOME );
+				navigation.setLeftButton( LBL_HOME );
 			}
-			setRightButton( LBL_PICK_A_BRUSH );
+			navigation.setRightButton( LBL_PICK_A_BRUSH );
 
-			addCenterButton( LBL_PICK_AN_IMAGE, ButtonIconType.GALLERY );
-			addCenterButton( LBL_PICK_A_SURFACE );
-			addCenterButton( LBL_CLEAR );
-			addCenterButton( LBL_EXPORT );
-			addCenterButton( LBL_SAVE );
-			addCenterButton( LBL_PUBLISH );
+			navigation.addCenterButton( LBL_PICK_AN_IMAGE, ButtonIconType.GALLERY );
+			navigation.addCenterButton( LBL_PICK_A_SURFACE );
+			navigation.addCenterButton( LBL_CLEAR );
+			navigation.addCenterButton( LBL_EXPORT );
+			navigation.addCenterButton( LBL_SAVE );
+			navigation.addCenterButton( LBL_PUBLISH );
 
-			invalidateContent();
+			navigation.layout();
 		}
 	}
 }

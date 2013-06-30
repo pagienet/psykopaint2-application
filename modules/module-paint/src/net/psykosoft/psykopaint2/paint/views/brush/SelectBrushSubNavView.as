@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
+	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class SelectBrushSubNavView extends SubNavigationViewBase
@@ -8,32 +10,33 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public static const LBL_BACK:String = "Paint";
 		public static const LBL_EDIT_BRUSH:String = "Edit Brush";
 
+		private var _group:ButtonGroup;
+
 		public function SelectBrushSubNavView() {
 			super();
 		}
 
 		override protected function onEnabled():void {
-
-			setLabel( "Pick a Brush" );
-
-			setLeftButton( LBL_BACK );
-			setRightButton( LBL_EDIT_BRUSH );
-
-			invalidateContent();
+			navigation.setHeader( "Pick a Brush" );
+			navigation.setLeftButton( LBL_BACK );
+			navigation.setRightButton( LBL_EDIT_BRUSH );
+			navigation.layout();
 		}
 
 		public function setAvailableBrushes( availableBrushTypes:Vector.<String> ):void {
-			areButtonsSelectable( true );
 			var len:uint = availableBrushTypes.length;
+			_group = new ButtonGroup();
 			for( var i:uint; i < len; ++i ) {
-				addCenterButton( availableBrushTypes[ i ] );
+				var btn:SbButton = navigation.createButton( availableBrushTypes[ i ] );
+				_group.addButton( btn );
 			}
-			invalidateContent();
+			navigation.addCenterButtonGroup( _group );
+			navigation.layout();
 		}
 
 		public function setSelectedBrush( activeBrushKit:String ):void {
 			EditBrushCache.setLastSelectedBrush( activeBrushKit );
-			selectButtonWithLabel( activeBrushKit );
+			_group.setSelectedButtonByLabel( activeBrushKit );
 		}
 	}
 }

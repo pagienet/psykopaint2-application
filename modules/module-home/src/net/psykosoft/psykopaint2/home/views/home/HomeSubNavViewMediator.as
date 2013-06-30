@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 
-	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class HomeSubNavViewMediator extends MediatorBase
@@ -16,7 +15,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerView( view );
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
-			view.setButtonClickCallback( onButtonClicked );
+			view.navigation.buttonClickedCallback = onButtonClicked;
 		}
 
 		private function onButtonClicked( label:String ):void {

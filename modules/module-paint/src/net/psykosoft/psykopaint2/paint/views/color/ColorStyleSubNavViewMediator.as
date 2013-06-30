@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			registerView( view );
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
-			view.setButtonClickCallback( onButtonClicked );
+			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post init.
 			view.setAvailableColorStyles( colorStyleModule.getAvailableColorStylePresets() );

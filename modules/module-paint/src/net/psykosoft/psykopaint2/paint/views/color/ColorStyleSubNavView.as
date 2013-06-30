@@ -14,22 +14,22 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 		override protected function onEnabled():void {
 
-			setLabel( "Pick a Color Style" );
+			navigation.setHeader( "Pick a Color Style" );
 
-			areButtonsSelectable( true );
 
-			setLeftButton( LBL_PICK_AN_IMAGE );
-			setRightButton( LBL_CONFIRM );
 
-			invalidateContent();
+			navigation.setLeftButton( LBL_PICK_AN_IMAGE );
+			navigation.setRightButton( LBL_CONFIRM );
+
+			navigation.layout();
 		}
 
 		public function setAvailableColorStyles( availableColorStylePresets:Array ):void {
 			var len:uint = availableColorStylePresets.length;
 			for( var i:uint; i < len; ++i ) {
-				addCenterButton( availableColorStylePresets[ i ] );
+				navigation.addCenterButton( availableColorStylePresets[ i ] );
 			}
-			invalidateContent();
+			navigation.layout();
 		}
 	}
 }

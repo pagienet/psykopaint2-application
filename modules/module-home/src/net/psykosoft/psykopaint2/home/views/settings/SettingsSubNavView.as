@@ -13,16 +13,16 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		override protected function onEnabled():void {
 
-			setLabel( "Settings" );
-//			areButtonsSelectable( true );
+			navigation.setHeader( "Settings" );
+//
 
-			addCenterButton( LBL_WALLPAPER );
-			addCenterButton( "[setting1]" );
-			addCenterButton( "[setting2]" );
-			addCenterButton( "[setting3]" );
-			addCenterButton( "[setting4]" );
+			navigation.addCenterButton( LBL_WALLPAPER );
+			navigation.addCenterButton( "[setting1]" );
+			navigation.addCenterButton( "[setting2]" );
+			navigation.addCenterButton( "[setting3]" );
+			navigation.addCenterButton( "[setting4]" );
 
-			invalidateContent();
+			navigation.layout();
 		}
 	}
 }

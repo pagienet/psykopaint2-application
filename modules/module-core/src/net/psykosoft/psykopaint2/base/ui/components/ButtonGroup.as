@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 	{
 
 		private var _buttonPositionOffsetX:Number; //TODO
-		private var _buttons:Array = [];
+		private var _buttons:Array;
 		private var _selected:SbButton;
 
 		private const BUTTON_GAP_X:Number = 8;
@@ -17,6 +17,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public function ButtonGroup() {
 			super();
 			reset();
+		}
+
+		public function get numButtons():uint {
+			return _buttons.length;
 		}
 
 		public function addButton( btn:SbButton ):void {
@@ -67,7 +71,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			return labelBtn;
 		}
 
-		public function setButtonSelected( btnLabel:String ):void {
+		public function setSelectedButtonByLabel( btnLabel:String ):void {
 			var len:uint = _buttons.length;
 			for( var i:uint; i < len; ++i ) {
 				var btn:SbButton = _buttons[ i ];
@@ -92,6 +96,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 		override public function get height():Number {
 			var aButton:SbButton = _buttons[ 0 ];
 			return aButton.height;
+		}
+
+		public function get buttons():Array {
+			return _buttons;
 		}
 	}
 }

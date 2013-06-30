@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.pick.surface
 {
 
+	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class PickASurfaceSubNavView extends SubNavigationViewBase
@@ -10,23 +11,27 @@ package net.psykosoft.psykopaint2.paint.views.pick.surface
 		public static const LBL_SURF2:String = "Wood";
 		public static const LBL_SURF3:String = "Fur";
 
+		private var _group:ButtonGroup;
+
 		public function PickASurfaceSubNavView() {
 			super();
 		}
 
 		override protected function onEnabled():void {
-			setLabel( "Pick a Surface" );
-			areButtonsSelectable( true );
-			setLeftButton( LBL_BACK );
-			addCenterButton( LBL_SURF1 );
-			addCenterButton( LBL_SURF2 );
-			addCenterButton( LBL_SURF3 );
-			invalidateContent();
+			navigation.setHeader( "Pick a Surface" );
+
+			navigation.setLeftButton( LBL_BACK );
+
+			_group = new ButtonGroup();
+			_group.addButton( navigation.createButton( LBL_SURF1 ) );
+			_group.addButton( navigation.createButton( LBL_SURF2 ) );
+			_group.addButton( navigation.createButton( LBL_SURF3 ) );
+
+			navigation.layout();
 		}
 
 		public function setSelectedSurfaceBtn( ):void {
-			selectButtonWithLabel( PickASurfaceCache.getLastSelectedSurface() );
-			trace( PickASurfaceCache.getLastSelectedSurface() );
+			_group.setSelectedButtonByLabel( PickASurfaceCache.getLastSelectedSurface() );
 		}
 	}
 }

@@ -21,35 +21,32 @@ import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 			registerView( view );
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
-			view.setButtonClickCallback( onButtonClicked );
+			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post init.
 			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
 			view.setSelectedBrush( paintModule.activeBrushKit );
-			view.toggleRightButtonVisibility( hasParameters() );
-			view.setScrollerPosition( EditBrushCache.lastScrollerPosition );
-		//	view.setAvailableShapes( paintModule.getCurrentBrushShapes() );
-		//	view.setSelectedShape( paintModule.activeBrushKitShape );
+			view.navigation.toggleRightButtonVisibility( hasParameters() );
+			view.navigation.setScrollerPosition( EditBrushCache.lastScrollerPosition );
 		}
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case SelectBrushSubNavView.LBL_BACK:
-					EditBrushCache.lastScrollerPosition = view.getScrollerPosition();
+					EditBrushCache.lastScrollerPosition = view.navigation.getScrollerPosition();
 					requestStateChange( StateType.PREVIOUS );
 					break;
 				
 				case SelectBrushSubNavView.LBL_EDIT_BRUSH:
-					EditBrushCache.lastScrollerPosition = view.getScrollerPosition();
+					EditBrushCache.lastScrollerPosition = view.navigation.getScrollerPosition();
 					requestStateChange( StateType.PAINT_ADJUST_BRUSH );
 					break;
 				
 				default: // Center buttons select a brush.
 					paintModule.activeBrushKit = label;
 					EditBrushCache.setLastSelectedBrush( label );
-					view.toggleRightButtonVisibility( hasParameters() );
+					view.navigation.toggleRightButtonVisibility( hasParameters() );
 					break;
-				
 			}
 		}
 

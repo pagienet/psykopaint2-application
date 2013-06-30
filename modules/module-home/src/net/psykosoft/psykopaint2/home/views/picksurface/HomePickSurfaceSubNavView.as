@@ -16,14 +16,14 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		}
 
 		override protected function onEnabled():void {
-			setLabel( "Pick a Surface" );
-			areButtonsSelectable( true );
-			setLeftButton( LBL_BACK );
-			setRightButton( LBL_CONTINUE );
-			addCenterButton( LBL_SURF1 );
-			addCenterButton( LBL_SURF2 );
-			addCenterButton( LBL_SURF3 );
-			invalidateContent();
+			navigation.setHeader( "Pick a Surface" );
+
+			navigation.setLeftButton( LBL_BACK );
+			navigation.setRightButton( LBL_CONTINUE );
+			navigation.addCenterButton( LBL_SURF1 );
+			navigation.addCenterButton( LBL_SURF2 );
+			navigation.addCenterButton( LBL_SURF3 );
+			navigation.layout();
 		}
 	}
 }

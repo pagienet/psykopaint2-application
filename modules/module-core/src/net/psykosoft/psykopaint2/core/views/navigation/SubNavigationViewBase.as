@@ -1,10 +1,6 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
-	import flash.display.Bitmap;
-
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 
 	/*
@@ -21,77 +17,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			super();
 		}
 
-		public function setNavigation( navigation:SbNavigationView ):void {
+		public function set navigation( navigation:SbNavigationView ):void {
 			_navigation = navigation;
 		}
 
-		public function setButtonClickCallback( callback:Function ):void {
-			_navigation.buttonClickedCallback = callback;
-		}
-
-		// ---------------------------------------------------------------------
-		// Methods forwarded to NavigationView.
-		// ---------------------------------------------------------------------
-
-		protected function setLabel( value:String ):void {
-			_navigation.setLabel( value );
-		}
-
-		protected function addCenterButton( label:String,
-											iconType:String = ButtonIconType.DEFAULT,
-											labelType:String = ButtonLabelType.CENTER,
-											icon:Bitmap = null,
-											autoSelect:Boolean = true
-				):void {
-			_navigation.addCenterButton( label, iconType, labelType, icon, autoSelect );
-		}
-
-		protected function setLeftButton( label:String ):void {
-			_navigation.setLeftButton( label );
-		}
-
-		protected function setRightButton( label:String ):void {
-			_navigation.setRightButton( label );
-		}
-
-		public function toggleLeftButtonVisibility( value:Boolean ):void {
-			_navigation.toggleLeftButtonVisibility( value );
-		}
-
-		public function toggleRightButtonVisibility( value:Boolean ):void {
-			_navigation.toggleRightButtonVisibility( value );
-		}
-
-		protected function invalidateContent():void {
-			_navigation.invalidateContent();
-		}
-
-		protected function areButtonsSelectable( value:Boolean ):void {
-			_navigation.areButtonsSelectable( value );
-		}
-
-		protected function setButtonWithLabelSelectable( label:String, selectable:Boolean ):void {
-			_navigation.setButtonWithLabelSelectable( label, selectable );
-		}
-
-		protected function selectButtonWithLabel( value:String ):void {
-			_navigation.selectButtonWithLabel( value );
-		}
-		
-		protected function selectButtonByIndex( index:int ):void {
-			_navigation.selectButtonByIndex( index );
-		}
-
-		public function getScrollerPosition():Number{
-			return _navigation.getScrollerPosition();
-		}
-
-		public function setScrollerPosition( value:Number ):void{
-			 _navigation.setScrollerPosition( value );
-		}
-
-		public function getSelectedButtonLabel():String {
-			return _navigation.getSelectedButtonLabel();
+		public function get navigation():SbNavigationView {
+			return _navigation;
 		}
 	}
 }

@@ -23,18 +23,18 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		override protected function onEnabled():void {
 
-			setLabel( "New Painting" );
+			navigation.setHeader( "New Painting" );
 
-			areButtonsSelectable( true );
+
 
 			if( !HomeSettings.isStandalone ) {
-				setRightButton( LBL_CONTINUE );
+				navigation.setRightButton( LBL_CONTINUE );
 			}
 
-			addCenterButton( LBL_NEW, ButtonIconType.NEW, ButtonLabelType.NONE );
+			navigation.addCenterButton( LBL_NEW, ButtonIconType.NEW, ButtonLabelType.NONE );
 //			setButtonWithLabelSelectable ( LBL_NEW, false );
 
-			invalidateContent();
+			navigation.layout();
 		}
 
 		public function setInProgressPaintings( data:Vector.<PaintingVO> ):void {
@@ -44,9 +44,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var vo:PaintingVO = data[ i ];
 				var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
 				bmd = BitmapDataUtils.scaleBitmapData( bmd, 0.25 ); // TODO: scale differently depending on file resolution and display resolution
-				addCenterButton( vo.id, ButtonIconType.DEFAULT, ButtonLabelType.CENTER, new Bitmap( bmd ) );
+				navigation.addCenterButton( vo.id, ButtonIconType.DEFAULT, ButtonLabelType.CENTER, new Bitmap( bmd ) );
 			}
-			invalidateContent();
+			navigation.layout();
 		}
 	}
 }

@@ -3,24 +3,24 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
-	
+
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
-	import flash.utils.getDefinitionByName;
-	import flash.utils.getQualifiedClassName;
-	
+
 	import flashx.textLayout.formats.TextAlign;
-	
+
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
 	import net.psykosoft.psykopaint2.base.ui.components.HItemScroller;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
-	
+
 	import org.osflash.signals.Signal;
 
 	public class SbNavigationView extends ViewBase
@@ -34,10 +34,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _leftButton:SbButton;
 		private var _rightButton:SbButton;
 		private var _currentSubNavView:SubNavigationViewBase;
-		private var _buttonPositionOffsetX:Number;
-		private var _centerButtons:Array;
 		private var _scroller:HItemScroller;
-		private var _areButtonsSelectable:Boolean;
 		private var _animating:Boolean;
 		private var _showing:Boolean;
 		private var _needGapCheck:Boolean = true;
@@ -50,7 +47,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _hidden:Boolean;
 		private var _bgHeight:uint = 250;
 
-		private const BUTTON_GAP_X:Number = 8;
 		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 100;
 
 		public var buttonClickedCallback:Function;
@@ -185,8 +181,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			header.visible = false;
 			leftBtnSide.visible = false;
 			rightBtnSide.visible = false;
-			_areButtonsSelectable = false;
-			resetCenterButtons();
 			_scroller.reset();
 
 			// Disable old view.
@@ -208,7 +202,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			// Create new view.
 			_currentSubNavView = new subNavType();
-			_currentSubNavView.setNavigation( this );
+			_currentSubNavView.navigation = this;
 			_currentSubNavView.enable();
 			addChild( _currentSubNavView );
 		}
@@ -284,20 +278,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Private.
 		// ---------------------------------------------------------------------
 
-		private function resetCenterButtons():void {
-			_buttonPositionOffsetX = _leftButton.width / 2;
-			if( _centerButtons && _centerButtons.length > 0 ) {
-				var len:uint = _centerButtons.length;
-				for( var i:uint; i < len; ++i ) {
-					var centerButton:SbButton = _centerButtons[ i ];
-					centerButton.removeEventListener( MouseEvent.CLICK, onButtonClicked );
-					centerButton.dispose();
-					centerButton = null;
-				}
-			}
-			_centerButtons = [];
-		}
-
 		private function onButtonClicked( event:MouseEvent ):void {
 
 			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
@@ -307,30 +287,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			var label:String = clickedButton.labelText;
 			trace( this, "button clicked: " + clickedButton.labelText );
 
-			// Deselects all buttons except the one just clicked.
-			if( _areButtonsSelectable && clickedButton.isSelectable ) {
-				var len:uint = _centerButtons.length;
-				for( var i:uint = 0; i < len; ++i ) {
-					var otherButton:SbButton = _centerButtons[ i ];
-					if ( otherButton.isSelectable ) {
-						otherButton.toggleSelect(false);
-					}
-				}
-				clickedButton.toggleSelect( true );
-			}
-
 			buttonClickedCallback( label );
-		}
-
-		public function getSelectedButtonLabel():String {
-			var len:uint = _centerButtons.length;
-			for( var i:uint; i < len; ++i ) {
-				var btn:SbButton = _centerButtons[ i ];
-				if( btn.isSelected ) {
-					return btn.labelText;
-				}
-			}
-			return "";
 		}
 
 		// TODO: this assumes that side buttons will always be set before center buttons, which is not enforced anywhere
@@ -359,31 +316,33 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Methods called by SubNavigationViewBase.
 		// ---------------------------------------------------------------------
 
-		public function addCenterButton( label:String, iconType:String, labelType:String, icon:Bitmap, autoSelect:Boolean = true ):void {
-			if( _needGapCheck ) checkGap();
+		public function addCenterButtonGroup( group:ButtonGroup ):void {
+			// Make sure all of the group's buttons have listeners.
+			var len:uint = group.numButtons;
+			for( var i:uint; i < len; i++ ) {
+				var btn:SbButton = group.buttons[ i ];
+				btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
+			}
+			_scroller.addItem( group, false );
+		}
 
-			var specificButtonClass:Class = Class( getDefinitionByName( getQualifiedClassName( _leftButton ) ) );
-			var btn:SbButton = new specificButtonClass();
+		public function addCenterButton( label:String, iconType:String = ButtonIconType.DEFAULT, labelType:String = ButtonLabelType.CENTER, icon:Bitmap = null ):void {
+			if( _needGapCheck ) checkGap();
+			var btn:SbButton = createButton( label, iconType, labelType, icon );
+			btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
+			_scroller.addItem( btn );
+		}
+
+		public function createButton( label:String, iconType:String = ButtonIconType.DEFAULT, labelType:String = ButtonLabelType.CENTER, icon:Bitmap = null ):SbButton {
+			var btn:SbButton = new SbButton();
 			btn.labelText = label;
 			if( iconType != "" ) btn.setIconType( iconType );
 			btn.setLabelType( labelType );
-			btn.x = _buttonPositionOffsetX;
-			btn.y = _scroller.visibleHeight / 2;
 			if( icon ) btn.setIcon( icon );
-			btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
-			// Defaults to 1st button as selected.
-			if( _areButtonsSelectable && btn.isSelectable ) {
-				btn.isSelectable = true;
-				if( autoSelect && _centerButtons.length == 0 ) {
-					btn.toggleSelect( true );
-				}
-			}
-			_scroller.addChild( btn );
-			_centerButtons.push( btn );
-			_buttonPositionOffsetX += 140 + BUTTON_GAP_X;
+			return btn;
 		}
 
-		public function setLabel( value:String ):void {
+		public function setHeader( value:String ):void {
 
 			if( value == "" ) {
 				header.visible = headerBg.visible = false;
@@ -428,11 +387,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			//TODO: might have to review gaps and snapPoints
 		}
 
-		public function invalidateContent():void {
+		public function layout():void {
+
 			_scroller.invalidateContent();
 			_scroller.x = 1024 / 2 - _scroller.minWidth / 2;
 
-			if( leftBtnSide.visible && rightBtnSide.visible && _centerButtons.length <= 5) _scroller.scrollable = false;
+			// TODO: review - afterwards leave comment as to what this does
+			/*if( leftBtnSide.visible && rightBtnSide.visible && _centerButtons.length <= 5) _scroller.scrollable = false;
 			else if( leftBtnSide.visible && _centerButtons.length >= 6 ){
 				_scroller.x += leftBtnSide.width / 2;
 				_scroller.scrollable = true;
@@ -442,38 +403,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				_scroller.scrollable = true;
 			}
 			else if ( _centerButtons.length >= 7 ) _scroller.scrollable = true;
-			else _scroller.scrollable = false;
+			else _scroller.scrollable = false;*/
 
 			_scroller.dock();
-		}
-
-		public function areButtonsSelectable( value:Boolean ):void {
-			_areButtonsSelectable = value;
-		}
-
-		public function setButtonWithLabelSelectable( label:String, selectable:Boolean ):void {
-			var len:uint = _centerButtons.length;
-			for( var i:uint; i < len; ++i ) {
-				var centerButton:SbButton = _centerButtons[ i ];
-				if( centerButton.labelText == label ) centerButton.isSelectable = selectable ;
-			}
-		}
-
-		public function selectButtonWithLabel( value:String ):void {
-			if( !_areButtonsSelectable ) return;
-			var len = _centerButtons.length;
-			for( var i:uint = 0; i < len; ++i ) {
-				var button:SbButton = _centerButtons[ i ];
-				button.toggleSelect( button.labelText == value );
-			}
-		}
-		
-		public function selectButtonByIndex( index:int ):void {
-			if( !_areButtonsSelectable ) return;
-			var len = _centerButtons.length;
-			for( var i:uint = 0; i < len; ++i ) {
-				_centerButtons[ i ].toggleSelect( i == index );
-			}
 		}
 
 		// ---------------------------------------------------------------------

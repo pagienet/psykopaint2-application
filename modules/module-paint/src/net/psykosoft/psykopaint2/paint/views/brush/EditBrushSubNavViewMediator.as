@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			registerView( view );
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
-			view.setButtonClickCallback( onButtonClicked );
+			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post init.
 			view.setParameters( paintModule.getCurrentBrushParameters() );

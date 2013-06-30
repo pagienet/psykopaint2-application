@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.utils.ui.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;

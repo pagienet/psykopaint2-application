@@ -8,9 +8,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.events.Event;
 	import flash.text.TextField;
 
+	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
 	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
@@ -34,10 +36,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onEnabled():void {
-			setLabel( "" );
-			areButtonsSelectable( true );
-			setLeftButton( LBL_BACK );
-			invalidateContent();
+			navigation.setHeader( "" );
+			navigation.setLeftButton( LBL_BACK );
+			navigation.layout();
 		}
 
 		override protected function onDisposed():void {
@@ -55,36 +56,35 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
-			
+
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
-			
+
 			var firstParamId:String = "";
 //			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
-			for( var i:uint; i < numParameters; ++i ) 
-			{
+			var group:ButtonGroup = new ButtonGroup();
+			for( var i:uint; i < numParameters; ++i ) {
 				var parameter:PsykoParameter = list[ i ];
-				var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter(_parameterSetVO.brushName).indexOf( parameter.id ) != -1;
+				var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter( _parameterSetVO.brushName ).indexOf( parameter.id ) != -1;
 				if( matchesLast ) firstParamId = parameter.id;
 //				trace( ">>> " + parameter.toXMLString() );
-				addCenterButton( parameter.id, "param" + parameter.type, "btnLabelCenter",null,false );
+				var btn:SbButton = navigation.createButton( parameter.id, "param" + parameter.type, "btnLabelCenter", null )
+				group.addButton( btn );
 			}
-			invalidateContent();
+			navigation.addCenterButtonGroup( group );
+			navigation.layout();
 
 			// Select and <<< activate >>> if a parameter was previously selected.
-			if ( firstParamId != "" )
-			{
-				selectButtonWithLabel( firstParamId );
+			if( firstParamId != "" ) {
+				group.setSelectedButtonByLabel( firstParamId );
 				openParameter( firstParamId );
 			}
 		}
-		
-		public function updateParameters( parameterSetVO:ParameterSetVO ):void 
-		{
+
+		public function updateParameters( parameterSetVO:ParameterSetVO ):void {
 			_parameterSetVO = parameterSetVO;
-			var currentParameterID:String = EditBrushCache.getLastSelectedParameter(_parameterSetVO.brushName);
-			if ( currentParameterID != "" )
-			{
+			var currentParameterID:String = EditBrushCache.getLastSelectedParameter( _parameterSetVO.brushName );
+			if( currentParameterID != "" ) {
 				openParameter( currentParameterID );
 			}
 		}
@@ -99,15 +99,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			var i:uint;
 			_uiElements = new Vector.<DisplayObject>();
-			for (  i = 0; i < _parameterSetVO.parameters.length; i++ )
-			{
-				if ( _parameterSetVO.parameters[i].id == id  ) {
+			for( i = 0; i < _parameterSetVO.parameters.length; i++ ) {
+				if( _parameterSetVO.parameters[i].id == id ) {
 					_parameter = _parameterSetVO.parameters[i];
 					break;
 				}
 			}
-			if ( _parameter == null ) return;
-			
+			if( _parameter == null ) return;
+
 			var parameterType:int = _parameter.type;
 			EditBrushCache.setLastSelectedParameter( _parameter.id, _parameterSetVO.brushName );
 
@@ -116,37 +115,37 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var slider:SbSlider = new SbSlider();
 				slider.minValue = _parameter.minLimit;
 				slider.maxValue = _parameter.maxLimit;
-				slider.value =  _parameter.numberValue;
+				slider.value = _parameter.numberValue;
 				slider.addEventListener( Event.CHANGE, onSliderChanged );
-				slider.setWidth ( 276 );
+				slider.setWidth( 276 );
 				positionUiElement( slider );
 				addChild( slider );
 				_uiElements.push( slider );
 			}
 
 			// Range slider.
-			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter  ) {
+			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter ) {
 				var rangeSlider:SbRangedSlider = new SbRangedSlider();
 				rangeSlider.minValue = _parameter.minLimit;
 				rangeSlider.maxValue = _parameter.maxLimit;
 				rangeSlider.value1 = _parameter.lowerRangeValue;
-				rangeSlider.value2 =_parameter.upperRangeValue;
+				rangeSlider.value2 = _parameter.upperRangeValue;
 				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
-				rangeSlider.setWidth ( 451 );
+				rangeSlider.setWidth( 451 );
 				positionUiElement( rangeSlider );
 				addChild( rangeSlider );
 				_uiElements.push( rangeSlider );
 			}
-			
-			else if(  parameterType == PsykoParameter.AngleRangeParameter ) {
+
+			else if( parameterType == PsykoParameter.AngleRangeParameter ) {
 				rangeSlider = new SbRangedSlider();
 				rangeSlider.labelMode = SbRangedSlider.LABEL_DEGREES;
 				rangeSlider.minValue = _parameter.minLimit;
 				rangeSlider.maxValue = _parameter.maxLimit;
 				rangeSlider.value1 = _parameter.lowerDegreesValue;
-				rangeSlider.value2 =_parameter.upperDegreesValue;
+				rangeSlider.value2 = _parameter.upperDegreesValue;
 				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
-				rangeSlider.setWidth ( 451 );
+				rangeSlider.setWidth( 451 );
 				positionUiElement( rangeSlider );
 				addChild( rangeSlider );
 				_uiElements.push( rangeSlider );
@@ -156,22 +155,22 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			else if( parameterType == PsykoParameter.AngleParameter ) {
 				//sorry, but unfortunately knob is pretty unusable right now, replaced it with regular slider
 				/*
-				var knob:Knob = new Knob( this );
-				knob.value = _parameter.degrees;
-				knob.minimum = _parameter.minLimit;
-				knob.maximum = _parameter.maxLimit;
-				knob.addEventListener( Event.CHANGE, onKnobChanged );
-				knob.draw();
-				positionUiElement( knob as DisplayObject, 0, -20 );
-				_uiElements.push( knob );
-				*/
+				 var knob:Knob = new Knob( this );
+				 knob.value = _parameter.degrees;
+				 knob.minimum = _parameter.minLimit;
+				 knob.maximum = _parameter.maxLimit;
+				 knob.addEventListener( Event.CHANGE, onKnobChanged );
+				 knob.draw();
+				 positionUiElement( knob as DisplayObject, 0, -20 );
+				 _uiElements.push( knob );
+				 */
 				slider = new SbSlider();
 				slider.minValue = _parameter.minLimit;
 				slider.maxValue = _parameter.maxLimit;
-				slider.value =  _parameter.degrees;
+				slider.value = _parameter.degrees;
 				slider.labelMode = SbRangedSlider.LABEL_DEGREES;
 				slider.addEventListener( Event.CHANGE, onSliderChanged );
-				slider.setWidth ( 276 );
+				slider.setWidth( 276 );
 				positionUiElement( slider );
 				addChild( slider );
 				_uiElements.push( slider );
@@ -181,7 +180,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			else if( parameterType == PsykoParameter.StringListParameter || parameterType == PsykoParameter.IconListParameter ) {
 				var list:Vector.<String> = _parameter.stringList;
 				var len:uint = list.length;
-				var combobox:SbComboboxView = new SbComboboxView( );
+				var combobox:SbComboboxView = new SbComboboxView();
 				combobox.interactionStartedSignal.add( onComboboxInteractionStarted );
 				combobox.interactionEndedSignal.add( onComboboxInteractionEnded );
 				for( i = 0; i < len; ++i ) {
@@ -254,7 +253,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// ---------------------------------------------------------------------
 
 		private function onKnobChanged( event:Event ):void {
-		    var knob:Knob = event.target as Knob;
+			var knob:Knob = event.target as Knob;
 			_parameter.degrees = knob.value;
 		}
 
@@ -283,8 +282,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onRangeSliderChanged( event:Event ):void {
 			var slider:SbRangedSlider = event.target as SbRangedSlider;
-			if ( _parameter.type == PsykoParameter.AngleRangeParameter )
-			{
+			if( _parameter.type == PsykoParameter.AngleRangeParameter ) {
 				_parameter.lowerDegreesValue = slider.value1;
 				_parameter.upperDegreesValue = slider.value2;
 			} else {

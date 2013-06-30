@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerView( view );
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
-			view.setButtonClickCallback( onButtonClicked );
+			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Remember incoming state for when exiting the paint module.
 			_incomingState = stateModel.getLastStateOfCategory( "home" );

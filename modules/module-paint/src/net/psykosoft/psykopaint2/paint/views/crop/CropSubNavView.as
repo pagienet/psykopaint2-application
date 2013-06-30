@@ -13,13 +13,11 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		}
 
 		override protected function onEnabled():void {
+			navigation.setHeader( "Crop!" );
+			navigation.setLeftButton( LBL_PICK_AN_IMAGE );
+			navigation.setRightButton( LBL_CONFIRM_CROP );
 
-			setLabel( "Crop!" );
-
-			setLeftButton( LBL_PICK_AN_IMAGE );
-			setRightButton( LBL_CONFIRM_CROP );
-
-			invalidateContent();
+			navigation.layout();
 		}
 	}
 }

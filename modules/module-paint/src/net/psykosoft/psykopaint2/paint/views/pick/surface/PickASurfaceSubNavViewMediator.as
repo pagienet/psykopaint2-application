@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.surface
 			registerView( view );
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
-			view.setButtonClickCallback( onButtonClicked );
+			view.navigation.buttonClickedCallback = onButtonClicked;
 			view.setSelectedSurfaceBtn();
 		}
 
