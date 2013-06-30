@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.paint.config
 {
 
+	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
+	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.GoToHomeWithCanvasSnapShotCommand;
@@ -113,6 +115,8 @@ package net.psykosoft.psykopaint2.paint.config
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
 			_injector.unmap( RequestPaintingActivationSignal ); // Mapped in the core as singleton for compatibility.
 			_commandMap.map( RequestPaintingActivationSignal ).toCommand( ActivatePaintingCommand );
+			_injector.unmap( RequestDrawingCoreResetSignal ); // Mapped in the core as singleton for compatibility.
+			_commandMap.map( RequestDrawingCoreResetSignal ).toCommand( ClearCanvasCommand );
 			_commandMap.map( RequestGoToHomeWithCanvasSnapshotSignal ).toCommand( GoToHomeWithCanvasSnapShotCommand );
 		}
 

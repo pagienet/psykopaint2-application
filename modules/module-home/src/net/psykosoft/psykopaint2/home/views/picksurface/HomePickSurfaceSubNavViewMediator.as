@@ -4,8 +4,11 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
+	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 
 	public class HomePickSurfaceSubNavViewMediator extends MediatorBase
 	{
@@ -14,6 +17,12 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		[Inject]
 		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
+
+		[Inject]
+		public var requestDrawingCoreResetSignal:RequestDrawingCoreResetSignal;
+
+		[Inject]
+		public var requestZoomThenChangeStateSignal:RequestZoomThenChangeStateSignal;
 
 		private var _loader:BitmapLoader;
 
@@ -34,7 +43,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 //					requestStateChange( StateType.PREVIOUS );
 					break;
 				case HomePickSurfaceSubNavView.LBL_CONTINUE:
-					// TODO...
+					// TODO: this is a temporary implementation, need to go through source image selection, cropping, etc
+					requestDrawingCoreResetSignal.dispatch();
+					requestZoomThenChangeStateSignal.dispatch( 1, StateType.PAINT );
 					break;
 				case HomePickSurfaceSubNavView.LBL_SURF1:
 					pickSurfaceByIndex( 0 );

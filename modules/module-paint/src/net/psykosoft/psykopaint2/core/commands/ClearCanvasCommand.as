@@ -1,8 +1,7 @@
 package net.psykosoft.psykopaint2.core.commands
 {
-	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 
+	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 
