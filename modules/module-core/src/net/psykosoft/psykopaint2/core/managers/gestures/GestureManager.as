@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 {
 
 	import flash.display.Stage;
+	import flash.events.MouseEvent;
 	
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
