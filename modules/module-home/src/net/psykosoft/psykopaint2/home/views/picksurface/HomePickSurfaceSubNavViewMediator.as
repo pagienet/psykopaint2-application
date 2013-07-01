@@ -51,7 +51,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 			switch( label ) {
 				case HomePickSurfaceSubNavView.LBL_BACK:
-//					requestStateChange( StateType.PREVIOUS );
+					requestStateChange( StateType.PREVIOUS );
 					break;
 				case HomePickSurfaceSubNavView.LBL_CONTINUE:
 					pickSurfaceByIndex( view.getSelectedCenterButtonIndex() );
