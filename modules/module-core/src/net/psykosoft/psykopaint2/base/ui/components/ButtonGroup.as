@@ -71,6 +71,18 @@ package net.psykosoft.psykopaint2.base.ui.components
 			return labelBtn;
 		}
 
+		public function setSelectedButtonByIndex( index:uint ):void {
+			var len:uint = _buttons.length;
+			for( var i:uint; i < len; ++i ) {
+				var btn:SbButton = _buttons[ i ];
+				if( i == index ) {
+					_selected = btn;
+					btn.toggleSelect( true );
+				}
+				else btn.toggleSelect( false );
+			}
+		}
+
 		public function setSelectedButtonByLabel( btnLabel:String ):void {
 			var len:uint = _buttons.length;
 			for( var i:uint; i < len; ++i ) {
