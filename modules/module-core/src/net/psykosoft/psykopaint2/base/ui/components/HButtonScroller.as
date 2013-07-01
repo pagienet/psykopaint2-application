@@ -58,7 +58,7 @@ public class HButtonScroller extends HSnapScroller
 
 		public function addItem( item:DisplayObject, centerObject:Boolean = true ):DisplayObject {
 			item.x = _itemPositionOffsetX;
-			item.y = 0;
+			item.y = 10;
 			if( centerObject ) {
 				item.x += item.width / 2;
 				item.y += item.height / 2;

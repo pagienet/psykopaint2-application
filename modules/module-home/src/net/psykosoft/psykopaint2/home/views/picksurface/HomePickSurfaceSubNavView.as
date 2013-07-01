@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			_group.addButton( navigation.createButton( LBL_SURF3 ) );
 			navigation.addCenterButtonGroup( _group );
 
-			 _group.setSelectedButtonByLabel( LBL_SURF1 );
+			 _group.setSelectedButtonByIndex( 0 );
 			navigation.layout();
 		}
 
