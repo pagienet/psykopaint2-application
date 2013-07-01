@@ -9,15 +9,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import br.com.stimuli.loading.BulkLoader;
 
 	import flash.display.BitmapData;
-	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.data.FrameType;
+	import net.psykosoft.psykopaint2.home.views.home.objects.FramedPainting;
+	import net.psykosoft.psykopaint2.home.views.home.objects.FramedPainting;
 	import net.psykosoft.psykopaint2.home.views.home.vos.FrameTextureAtlasDescriptorVO;
 
 	public class PaintingManager extends ObjectContainer3D
@@ -90,13 +89,18 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_frameMaterial.mipmap = false;
 			_frameMaterial.smooth = true;
 
-			// Default paintings.
-			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ), FrameType.DANGER, 0, true );
+			// Settings painting.
+			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ), FrameType.DANGER, 0, true, 1.5 );
+
+			// Easel.
 			_easel = createPaintingAtIndex( null, null, 1, false );
 			_easel.easelVisible = true;
-			_easel.z -= 500;
 			if( _pendingEaselContent ) setEaselPaintingNow();
-			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ), FrameType.WHITE, 2, true );
+			autoPositionPaintingAtIndex( _easel, 1, false, 1 );
+			_easel.z -= 500;
+
+			// Home painting.
+			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ), FrameType.WHITE, 2, true, 1.5 );
 			homePaintingIndex = 2;
 
 			// Sample paintings. // TODO: remove when we are ready to show published paintings
@@ -105,7 +109,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 //			}
 		}
 
-		public function createPaintingAtIndex( paintingBmd:BitmapData, frameType:String, index:uint, addShadow:Boolean ):FramedPainting {
+		public function createPaintingAtIndex( paintingBmd:BitmapData, frameType:String, index:uint, addShadow:Boolean, paintingScale:Number = 1 ):FramedPainting {
 
 			trace( this, "creating painting at index: " + index );
 
@@ -122,6 +126,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Both.
 			var framedPainting:FramedPainting = new FramedPainting( _view );
+			framedPainting.scaleX = framedPainting.scaleY = framedPainting.scaleZ = paintingScale;
 			if( painting ) {
 				framedPainting.setPainting( painting );
 			}
@@ -135,20 +140,20 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			else _paintings.push( framedPainting );
 			numPaintings++;
 			addChild( framedPainting );
-			autoPositionPaintingAtIndex( framedPainting, index, addShadow );
+			autoPositionPaintingAtIndex( framedPainting, index, addShadow, paintingScale );
 
 			// Need to update paintings to the right of this one?
 			if( index < numPaintings - 1 ) {
 				trace( this, "repositioning higher paintings..." );
 				for( var i:uint = index + 1; i < numPaintings; i++ ) {
-					autoPositionPaintingAtIndex( _paintings[ i ], i, addShadow );
+					autoPositionPaintingAtIndex( _paintings[ i ], i, addShadow, paintingScale );
 				}
 			}
 
 			return framedPainting;
 		}
 
-		private function autoPositionPaintingAtIndex( framedPainting:FramedPainting, index:uint, addShadow:Boolean ):void {
+		private function autoPositionPaintingAtIndex( framedPainting:FramedPainting, index:uint, addShadow:Boolean, paintingScale:Number = 1 ):void {
 
 			// Position painting.
 			var px:Number = 0;
@@ -178,10 +183,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var shadow:Mesh = _shadowForPainting[ framedPainting ];
 			if( shadow ) {
 				shadow.x = px;
+				shadow.scaleX = shadow.scaleY = shadow.scaleZ = ( paintingScale );
 			}
 			else {
 				if( addShadow ) {
-					_room.addShadow( framedPainting.x, this.y, framedPainting.width, framedPainting.height );
+					var shadow:Mesh = _room.addShadow( framedPainting.x, this.y, framedPainting.width, framedPainting.height );
+					shadow.scaleX = shadow.scaleY = shadow.scaleZ = ( paintingScale );
 				}
 			}
 		}
