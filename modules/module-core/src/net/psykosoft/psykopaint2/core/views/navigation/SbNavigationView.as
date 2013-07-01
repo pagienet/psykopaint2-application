@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
-	import net.psykosoft.psykopaint2.base.ui.components.HItemScroller;
+	import net.psykosoft.psykopaint2.base.ui.components.HButtonScroller;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _leftButton:SbButton;
 		private var _rightButton:SbButton;
 		private var _currentSubNavView:SubNavigationViewBase;
-		private var _scroller:HItemScroller;
+		private var _scroller:HButtonScroller;
 		private var _animating:Boolean;
 		private var _showing:Boolean;
 		private var _needGapCheck:Boolean = true;
@@ -101,7 +101,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_rightButton.displaceLabelTf( 10, -15 );
 			_rightButton.displaceLabelBg( 128, -5 );
 
-			_scroller = new HItemScroller();
+			_scroller = new HButtonScroller();
 			_scroller.visibleHeight = 130;
 			_scroller.visibleWidth = 1024;
 			_scroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _scroller.visibleHeight / 2;

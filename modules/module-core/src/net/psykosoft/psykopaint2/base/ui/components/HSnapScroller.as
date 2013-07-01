@@ -111,14 +111,14 @@ package net.psykosoft.psykopaint2.base.ui.components
 			// Override...
 		}
 
-		private function evaluateDimensionsFromChild( lastElement:DisplayObject ):void {
+		protected function evaluateDimensionsFromChild( lastElement:DisplayObject ):void {
 			var minX:Number = lastElement.x - lastElement.width / 2; // Note: assumes elements will be registered at their center
 			var maxX:Number = lastElement.x + lastElement.width / 2;
 			if( minX < _minContentX ) _minContentX = minX;
 			if( maxX > _maxContentX ) _maxContentX = maxX;
 		}
 
-		private function containEdgeSnapPoints():void {
+		protected function containEdgeSnapPoints():void {
 			// Sweep current snap points.
 			var len:uint = _positionManager.numSnapPoints;
 			var leftEdgeSnapPointMatched:Boolean = false;
