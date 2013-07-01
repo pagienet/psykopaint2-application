@@ -77,9 +77,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var lightingModel:LightingModel;
 
 		[Inject]
-		public var requestDrawingCoreStartupSignal:RequestDrawingCoreStartupSignal;
-
-		[Inject]
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
 
 		[Inject]
@@ -186,14 +183,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
+
 			if( newState != StateType.PAINT ) {
 				paintModule.stopAnimations();
 			}
-			else if( !StartUpDrawingCoreCommand.ran ) {
-				requestDrawingCoreStartupSignal.dispatch();
-			}
+
 			view.showTranformView(  newState == StateType.PAINT_TRANSFORM )
-			
 		}
 
 		// -----------------------

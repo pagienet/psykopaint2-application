@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
@@ -76,6 +77,8 @@ package net.psykosoft.psykopaint2.paint
 		}
 
 		private function onViewsReady():void {
+			// Startup core.
+			_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch();
 			// Load default surface.
 			_loader = new BinaryLoader();
 			var size:int = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
