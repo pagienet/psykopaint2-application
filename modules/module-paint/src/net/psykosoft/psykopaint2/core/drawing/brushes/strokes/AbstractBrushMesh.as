@@ -399,7 +399,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		}
 
 		// default height mapping expects default vertex layout: pos=0, brush uv=1, rotation vectors = 2
-		public function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, shininess : Number, glossiness : Number, bumpiness : Number) : void
+		public function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, shininess : Number, glossiness : Number, bumpiness : Number, influence : Number ) : void
 		{
 			var vertexBuffer : VertexBuffer3D = getVertexBuffer(context3d);
 
@@ -417,7 +417,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_normalSpecularFragmentData[3] = glossiness;
 			_normalSpecularFragmentData[4] = bumpiness*2;
 			_normalSpecularFragmentData[5] = shininess;
-			_normalSpecularFragmentData[6] = .6;
+			_normalSpecularFragmentData[6] = influence;
 			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _normalSpecularVertexData, 3);
 			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _normalSpecularFragmentData, 2);
 			context3d.drawTriangles(getIndexBuffer(context3d), 0, _numIndices/3);

@@ -70,8 +70,37 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		}
 		
 		// default height mapping expects default vertex layout: pos=0, uv=1, rotation matrix = 2 + 3
-		override public function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, shininess : Number, glossiness : Number, bumpiness : Number) : void
+		override public function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, shininess : Number, glossiness : Number, bumpiness : Number, influence : Number) : void
 		{
+			
+			var vertexBuffer : VertexBuffer3D = getVertexBuffer(context3d);
+			
+			context3d.setProgram(getNormalSpecularProgram(context3d));
+			context3d.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+			context3d.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
+			context3d.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4);
+			
+			context3d.setTextureAt(0, _normalTexture);
+			context3d.setTextureAt(1, canvas.normalSpecularMap);
+			_normalSpecularVertexData[0] = 1/512;
+			_normalSpecularVertexData[1] = 1/512;
+			_normalSpecularVertexData[8] = 1/canvas.textureWidth;
+			_normalSpecularVertexData[9] = 1/canvas.textureHeight;
+			_normalSpecularFragmentData[3] = glossiness;
+			_normalSpecularFragmentData[4] = bumpiness*2;
+			_normalSpecularFragmentData[5] = shininess;
+			_normalSpecularFragmentData[6] = influence;
+			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _normalSpecularVertexData, 3);
+			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _normalSpecularFragmentData, 2);
+			context3d.drawTriangles(getIndexBuffer(context3d), 0, _numIndices/3);
+			context3d.setTextureAt(0, null);
+			context3d.setTextureAt(1, null);
+			
+			context3d.setVertexBufferAt(0, null);
+			context3d.setVertexBufferAt(1, null);
+			context3d.setVertexBufferAt(2, null);
+			
+			/*
 			var vertexBuffer : VertexBuffer3D = getVertexBuffer(context3d);
 			
 			context3d.setProgram(getNormalSpecularProgram(context3d));
@@ -91,7 +120,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			context3d.setVertexBufferAt(0, null);
 			context3d.setVertexBufferAt(1, null);
 			context3d.setVertexBufferAt(2, null);
-			
+			*/
 		}
 
 		override protected function getColorVertexCode() : String

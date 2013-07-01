@@ -86,6 +86,16 @@ package net.psykosoft.psykopaint2.core.rendering
 			_lightingRenderer.renderRect  = rect;
 		}
 		
+		public function get offsetX():Number
+		{
+			return _lightingRenderer.offsetX;
+		}
+		
+		public function get offsetY():Number
+		{
+			return _lightingRenderer.offsetY;
+		}
+		
 		public function get scale():Number
 		{
 			return _lightingRenderer.scale;

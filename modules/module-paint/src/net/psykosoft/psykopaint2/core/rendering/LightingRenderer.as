@@ -37,7 +37,9 @@ package net.psykosoft.psykopaint2.core.rendering
 		private var _renderRect : Rectangle;
 		
 		private var _scale:Number;
-
+		private var _offsetX:Number;
+		private var _offsetY:Number;
+		
 		public function LightingRenderer(lightingModel : LightingModel, context3d : Context3D)
 		{
 			_lightingModel = lightingModel;
@@ -47,6 +49,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_globalVertexData = new <Number>[0, 0, 0, 1, -1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 			_globalFragmentData = new <Number>[.5, 0, 1, 0, 0, -1, 0, 0];
 			_scale = 1;
+			_offsetX = _offsetY = 0;
 			initBuffers();
 			onLightingModelChanged();
 		}
@@ -72,6 +75,16 @@ package net.psykosoft.psykopaint2.core.rendering
 			return _scale;
 		}
 
+		public function get offsetX() : Number
+		{
+			return _offsetX;
+		}
+		
+		public function get offsetY() : Number
+		{
+			return _offsetY;
+		}
+		
 		public function set freezeRender(value : Boolean) : void
 		{
 			if (_freezeRender == value) return;
@@ -92,18 +105,34 @@ package net.psykosoft.psykopaint2.core.rendering
 			}
 			else {
 				_scale = _renderRect.height/canvas.height;
-				if ( _scale < 0.1 ) _scale = 0.1;
-				else if ( _scale > 4 ) _scale = 4;
+				if ( _scale < 0.1 ) {
+					_scale = 0.1;
+				} else if ( _scale > 4 ) {
+					_scale = 4;
+				}
+				
 				
 				var offsetX : Number = _renderRect.x / canvas.width;//(1 - scale)*.5 
-				var offsetY : Number = _renderRect.y / canvas.height;//(1 - scale)*.5;
-				if ( _scale > 0.98 && _scale < 1.02 )
+				if ( scale < 1 )
 				{
-					_scale == 1;
-					if ( Math.abs(offsetX) < 0.02 ) offsetX = 0;
-					if ( Math.abs(offsetY) < 0.02 ) offsetY = 0;
+					offsetX = (1 - _scale)*.5;
+				}
+				
+				var offsetY : Number = _renderRect.y / canvas.height;//(1 - scale)*.5;
+				if ( scale < 1 )
+				{
+					offsetY = (1 - _scale)*.333;
+				}
+				
+				if ( _scale != 1 &&  _scale > 0.95 && _scale < 1.05 )
+				{
+					_scale = 1;
+					offsetX = 0;
+					offsetY = 0;
 					
 				}
+				_offsetX = offsetX * canvas.width;
+				_offsetY = offsetY * canvas.height;
 				renderLighting(offsetX, offsetY, _scale, _scale, canvas);
 			}
 		}
@@ -133,6 +162,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function renderLighting(offsetX : Number, offsetY : Number,widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
 		{
+			
 			updateGlobalVertexData(offsetX, offsetY, widthRatio, heightRatio, canvas);
 			updateGlobalFragmentData(canvas);
 

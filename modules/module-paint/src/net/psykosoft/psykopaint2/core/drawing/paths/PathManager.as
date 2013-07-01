@@ -106,7 +106,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var gestureStopTimeout:int;
 		private var GESTURE_RECOGNITION_TIME:Number = 500;
 		private var renderer:CanvasRenderer;
-
+		
+		private var twoFingerGestureTimeout:int
+		private var singleTouchBeginEvent:TouchEvent;
+		
 		public function PathManager( type:int )
 		{
 			_pathEngine = getPathEngine( type );
@@ -189,26 +192,50 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		{
 			if (_listeningToMouse) return;
 			
+			//Navbar touched?
 			var stage : Stage = event.target as Stage;
 			if (!stage) return;
 			
 			if (_touchID == -1) {
-				_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
-				
 				_listeningToTouch = true;
 				_touchID = event.touchPointID;
+				/*
+				_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+				
+				
+				
 
 				_view.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 				_view.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 
 				onSampleStart(event.stageX, event.stageY);
+				*/
+				singleTouchBeginEvent = event;
+				twoFingerGestureTimeout = setTimeout( onSingleTouchBegin, 40 );
+			} else {
+				clearTimeout(twoFingerGestureTimeout);
+				_listeningToTouch = false;
+				_touchID = -1;
 			}
+		}
+		
+		protected function onSingleTouchBegin() : void
+		{
+			clearTimeout(twoFingerGestureTimeout);
+			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+			_touchID = singleTouchBeginEvent.touchPointID;
+			
+			_view.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			_view.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			
+			onSampleStart(singleTouchBeginEvent.stageX, singleTouchBeginEvent.stageY);
 		}
 
 		protected function onTouchMove(event : TouchEvent) : void
 		{
 			if (event.touchPointID == _touchID)
 			{
+				onSingleTouchBegin();
 				if ( gestureStopTimeout == -1 && GestureManager.gesturesEnabled ) gestureStopTimeout = setTimeout(enableGestureRecognition,GESTURE_RECOGNITION_TIME,false);
 				onSamplePoint(event.stageX, event.stageY);
 			}
@@ -324,8 +351,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				sendEndCallbacks();
 			}
 			
-			var px : Number = (stageX - _canvasRect.x - renderer.renderRect.x) * scaleX;
-			var py : Number = (stageY - _canvasRect.y - renderer.renderRect.y) * scaleY;
+			var px : Number = (stageX - _canvasRect.x - renderer.offsetX) * scaleX;
+			var py : Number = (stageY - _canvasRect.y - renderer.offsetY) * scaleY;
 			
 			_pathEngine.clear();
 			if ( WacomPenManager.hasPen )
@@ -343,8 +370,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		protected function onSamplePoint(stageX : Number, stageY : Number) : void
 		{
-			var px : Number = (stageX - _canvasRect.x - renderer.renderRect.x) * scaleX;
-			var py : Number = (stageY - _canvasRect.y - renderer.renderRect.y) * scaleY;
+			var px : Number = (stageX - _canvasRect.x - renderer.offsetX) * scaleX;
+			var py : Number = (stageY - _canvasRect.y - renderer.offsetY) * scaleY;
 			
 			if ( WacomPenManager.hasPen )
 			{
@@ -356,8 +383,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		protected function onSampleEnd(stageX : Number, stageY : Number) : void
 		{
-			var px : Number = (stageX - _canvasRect.x - renderer.renderRect.x) * scaleX;
-			var py : Number = (stageY - _canvasRect.y - renderer.renderRect.y ) * scaleY;
+			var px : Number = (stageX - _canvasRect.x - renderer.offsetX) * scaleX;
+			var py : Number = (stageY - _canvasRect.y - renderer.offsetY ) * scaleY;
 			if ( WacomPenManager.hasPen )
 				_pathEngine.addPoint( px, py, WacomPenManager.currentPressure, WacomPenManager.buttonState, true); 
 			 else 

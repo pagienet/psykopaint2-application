@@ -17,7 +17,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
-	import net.psykosoft.psykopaint2.core.drawing.paths.AbstractPathEngine;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
@@ -99,14 +98,14 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
 					<parameter id="Pigment staining" path="brush" value="5.5" showInUI="1"/>
 					<parameter id="Pigment granulation" path="brush" value=".81" showInUI="1"/>
-					<parameter id={AbstractBrush.PARAMETER_SHAPES}  path="brush" index="0" list="wet,basic" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet,basic" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 				</brush>
 				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
 					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
 					<parameter id="Pigment flow" path="brush" value="0.5" showInUI="1"/>
 					<parameter id="Pigment bleaching" path="brush" value="0.07" showInUI="1"/>
-					<parameter id={AbstractBrush.PARAMETER_SHAPES}  path="brush" index="0" list="wet" showInUI="0"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet" showInUI="0"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
 				</brush>
 				<brush engine={BrushType.PENCIL} name="Pencil">
@@ -127,7 +126,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<parameter type={PsykoParameter.StringListParameter} path="parameterMapping" id="Condition" index="0" list="Normal, Grid" showInUI="1" />
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Condition" target="pathengine.pointdecorator_2" condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE} index="1" />
 					</parameterMapping>
-					<parameter id={AbstractBrush.PARAMETER_BUMPYNESS} path="brush" value="0.6" />
+					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0.6" />
 					<parameter id="Shapes" path="brush" index="0" list="line,splat,splat3,basic,noisy" />
 
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
@@ -156,9 +155,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				</brush>
 
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
-					<parameter id={AbstractBrush.PARAMETER_SIZE_FACTOR} path="brush" value1="0" value2="1" showInUI="1"/>
-					<parameter id={AbstractBrush.PARAMETER_BUMPYNESS} path="brush" value="0.25" showInUI="1"/>
-					<parameter id={AbstractBrush.PARAMETER_SHAPES} path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0.25" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
@@ -185,9 +184,30 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						
 					</pathengine>
 				</brush>
+
+				<brush engine={BrushType.SPRAY_CAN} name="Gravure Pen">
+					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="1" showInUI="1" minValue="-1" maxValue="1"/>
+					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value="0.6" showInUI="1" minValue="0" maxValue="1"/>
+					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<SizeDecorator>
+							<parameter id="Mode" path="pathengine.pointdecorator_0" index="3" />
+							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.4" minValue="0" maxValue="10" showInUI="1"/>
+							<parameter id="Mapping" path="pathengine.pointdecorator_0" value="0" showInUI="1"/>
+						</SizeDecorator>
+						<ColorDecorator>
+							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index="1" />
+							<parameter id={ColorDecorator.PARAMETER_IL_COLOR}  path="pathengine.pointdecorator_1" index="2" />
+							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_1" value1="1" value2="1"/>
+						</ColorDecorator>
+					</pathengine>
+				</brush>
+
+
+
 				<brush engine={BrushType.SPRAY_CAN} name="Gravity Spray">
 					<parameter id="Shapes" path="brush" index="0" list="noisy"/>
-					<parameter id={AbstractBrush.PARAMETER_BUMPYNESS} path="brush" value="0.12" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0.12" showInUI="1"/>
 					
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
@@ -268,7 +288,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Precision Test">
-					<parameter id={AbstractBrush.PARAMETER_BUMPYNESS} path="brush" value="0" />
+					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0" />
 					<parameter id="Size Factor" path="brush" value1="0" value2="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="basic"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
@@ -293,7 +313,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				</brush>
 
 				<brush engine={BrushType.SPRAY_CAN} name="Pressure Pen">
-					<parameter id={AbstractBrush.PARAMETER_BUMPYNESS} path="brush" value="0.02" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0.02" showInUI="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="splat3,splat,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<OrderDecorator>

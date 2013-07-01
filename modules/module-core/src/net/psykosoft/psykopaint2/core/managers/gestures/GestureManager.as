@@ -62,7 +62,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			initTransform();
 			initTapGesture();
 			//initDoubleTapGesture();
-//			initPinch();
+			//initPinch();
 //			initTap();
 		}
 
