@@ -92,8 +92,18 @@ package net.psykosoft.psykopaint2.core.rendering
 			}
 			else {
 				_scale = _renderRect.height/canvas.height;
+				if ( _scale < 0.1 ) _scale = 0.1;
+				else if ( _scale > 4 ) _scale = 4;
+				
 				var offsetX : Number = _renderRect.x / canvas.width;//(1 - scale)*.5 
 				var offsetY : Number = _renderRect.y / canvas.height;//(1 - scale)*.5;
+				if ( _scale > 0.98 && _scale < 1.02 )
+				{
+					_scale == 1;
+					if ( Math.abs(offsetX) < 0.02 ) offsetX = 0;
+					if ( Math.abs(offsetY) < 0.02 ) offsetY = 0;
+					
+				}
 				renderLighting(offsetX, offsetY, _scale, _scale, canvas);
 			}
 		}

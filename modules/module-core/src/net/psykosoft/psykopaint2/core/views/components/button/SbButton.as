@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 	import flash.text.TextField;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
+	
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 
 	public class SbButton extends Sprite
 	{

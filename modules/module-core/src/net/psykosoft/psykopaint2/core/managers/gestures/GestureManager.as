@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 {
 
 	import flash.display.Stage;
+	import flash.events.MouseEvent;
 	
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
@@ -214,23 +215,24 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		// Tap.
 		// ---------------------------------------------------------------------
 		
-		//private var _tapGesture:TapGesture;
+		private var _tapGesture:TapGesture;
 		
 		//temporary fix until tap conflict with buttons has been resolved:
-		private var _tapGesture:LongPressGesture;
+		//private var _tapGesture:LongPressGesture;
 		
 		private function initTapGesture():void {
+			/*
 			_tapGesture = new LongPressGesture( _stage );
 			_tapGesture.minPressDuration = 150;
-			//_tapGesture.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTapGestureRecognized );
-			_tapGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onTapGestureRecognized );
+			*/
+			_tapGesture = new TapGesture( _stage );
+			_tapGesture.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTapGestureRecognized );
+			//_tapGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onTapGestureRecognized );
 		}
 		
 		private function onTapGestureRecognized( event:GestureEvent ):void {
-			if ( gesturesEnabled )
-			{
+			if ( Stage(TapGesture(event.target).target).getObjectsUnderPoint(TapGesture(event.target).location).length == 0 )
 				notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
-			}
 		}
 		
 		protected function onStateChange( newState:String ):void {

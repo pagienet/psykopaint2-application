@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -115,12 +116,34 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			
 			transformMatrix = new Matrix();
+			
+		
 		}
 
 		// -----------------------
 		// From app.
 		// -----------------------
-
+		
+		//TODO: this is for desktop testing - remove in final version
+		private function onMouseWheel( event:MouseEvent ):void
+		{
+			var rect:Rectangle = renderer.renderRect;
+			
+			transformMatrix.identity();
+			transformMatrix.translate(-event.localX, -event.localY);
+			transformMatrix.scale(1 + event.delta / 50, 1 + event.delta / 50);
+			transformMatrix.translate(event.localX, event.localY);
+			
+			var topLeft:Point = transformMatrix.transformPoint(rect.topLeft);
+			var bottomRight:Point = transformMatrix.transformPoint(rect.bottomRight);
+			
+			rect.x = topLeft.x;
+			rect.y = topLeft.y;
+			rect.width = bottomRight.x - topLeft.x;
+			rect.height = bottomRight.y - topLeft.y;
+			
+			renderer.renderRect = rect;
+		}
 		
 		private function onGlobalGesture( type:String, event:GestureEvent ):void {
 			trace( this, "onGlobalGesture: " + type );
@@ -189,6 +212,14 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 
 			view.showTranformView(  newState == StateType.PAINT_TRANSFORM )
+
+			//TODO: this is for desktop testing - remove in final version
+			if ( newState == StateType.PAINT_TRANSFORM )
+			{
+				view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+			} else {
+				view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+			}
 		}
 
 		// -----------------------
