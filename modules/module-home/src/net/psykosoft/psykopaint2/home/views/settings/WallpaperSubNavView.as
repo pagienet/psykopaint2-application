@@ -3,8 +3,11 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 	import flash.display.Bitmap;
 
+	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
+
 	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class WallpaperSubNavView extends SubNavigationViewBase
@@ -12,6 +15,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		public static const LBL_BACK:String = "Settings";
 
 		private var _atlas:BitmapAtlas;
+		private var _group:ButtonGroup;
 
 		public function WallpaperSubNavView() {
 			super();
@@ -19,7 +23,6 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		override protected function onEnabled():void {
 			navigation.setHeader( "Settings" );
-
 			navigation.setLeftButton( LBL_BACK );
 			navigation.layout();
 		}
@@ -30,16 +33,19 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		public function setImages( atlas:BitmapAtlas ):void {
 			_atlas = atlas;
+			_group = new ButtonGroup();
 			var names:Vector.<String> = atlas.names;
 			for( var i:uint; i < names.length; i++ ) {
 				var name:String = names[ i ];
-				navigation.addCenterButton( name, "", ButtonLabelType.CENTER, new Bitmap( atlas.getSubTextureForId( name ) ) );
+				var btn:SbButton = navigation.createButton( name, "", ButtonLabelType.CENTER, new Bitmap( atlas.getSubTextureForId( name ) ) );
+				_group.addButton( btn );
 			}
+			navigation.addCenterButtonGroup( _group );
 			navigation.layout();
 		}
 
-		public function setSelectedWallpaperBtn( ):void {
-			selectButtonWithLabel( WallpaperCache.getLastSelectedWallpaper() );
+		public function setSelectedWallpaperBtn():void {
+			_group.setSelectedButtonByLabel( WallpaperCache.getLastSelectedWallpaper() );
 		}
 	}
 }

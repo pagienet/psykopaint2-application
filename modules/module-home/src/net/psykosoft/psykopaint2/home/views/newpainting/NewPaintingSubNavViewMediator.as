@@ -1,13 +1,11 @@
 package net.psykosoft.psykopaint2.home.views.newpainting
 {
 
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
-	import net.psykosoft.psykopaint2.home.views.home.*;
-
 	import flash.display.BitmapData;
 
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
