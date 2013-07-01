@@ -101,5 +101,16 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public function get buttons():Array {
 			return _buttons;
 		}
+
+		public function getSelectedBtnIndex():int {
+			var len:uint = _buttons.length;
+			for( var i:uint; i < len; i++ ) {
+				var btn:SbButton = _buttons[ i ];
+				if( btn.isSelected ) {
+					return i;
+				}
+			}
+			return -1;
+		}
 	}
 }

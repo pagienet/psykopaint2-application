@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
+	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class HomePickSurfaceSubNavView extends SubNavigationViewBase
@@ -11,6 +12,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		public static const LBL_SURF2:String = "Wood";
 		public static const LBL_SURF3:String = "Fur";
 
+		private var _group:ButtonGroup;
+
 		public function HomePickSurfaceSubNavView() {
 			super();
 		}
@@ -19,10 +22,18 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			navigation.setHeader( "Pick a Surface" );
 			navigation.setLeftButton( LBL_BACK );
 			navigation.setRightButton( LBL_CONTINUE );
-			navigation.addCenterButton( LBL_SURF1 );
-			navigation.addCenterButton( LBL_SURF2 );
-			navigation.addCenterButton( LBL_SURF3 );
+
+			_group = new ButtonGroup();
+			_group.addButton( navigation.createButton( LBL_SURF1 ) );
+			_group.addButton( navigation.createButton( LBL_SURF2 ) );
+			_group.addButton( navigation.createButton( LBL_SURF3 ) );
+			navigation.addCenterButtonGroup( _group );
+
 			navigation.layout();
+		}
+
+		public function getSelectedCenterButtonIndex():int {
+			return _group.getSelectedBtnIndex();
 		}
 	}
 }

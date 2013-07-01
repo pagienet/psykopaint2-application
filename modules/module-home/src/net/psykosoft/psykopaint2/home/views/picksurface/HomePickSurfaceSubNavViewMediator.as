@@ -2,10 +2,15 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
 	import flash.display.BitmapData;
+	import flash.utils.ByteArray;
+
+	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
@@ -24,7 +29,11 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		[Inject]
 		public var requestZoomThenChangeStateSignal:RequestZoomThenChangeStateSignal;
 
-		private var _loader:BitmapLoader;
+		[Inject]
+		public var requestDrawingCoreSurfaceSetSignal:RequestDrawingCoreSurfaceSetSignal;
+
+		private var _bitmapLoader:BitmapLoader;
+		private var _byteLoader:BinaryLoader;
 
 		override public function initialize():void {
 
@@ -34,6 +43,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
 			view.navigation.buttonClickedCallback = onButtonClicked;
+
+			// TODO: must display thumbnails, assets are on /core-packaged/images/surfaces/ as jpgs
 		}
 
 		private function onButtonClicked( label:String ):void {
@@ -43,31 +54,43 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 //					requestStateChange( StateType.PREVIOUS );
 					break;
 				case HomePickSurfaceSubNavView.LBL_CONTINUE:
-					// TODO: this is a temporary implementation, need to go through source image selection, cropping, etc
-					requestDrawingCoreResetSignal.dispatch();
-					requestZoomThenChangeStateSignal.dispatch( 1, StateType.PAINT );
+					pickSurfaceByIndex( view.getSelectedCenterButtonIndex() );
 					break;
 				case HomePickSurfaceSubNavView.LBL_SURF1:
-					pickSurfaceByIndex( 0 );
+					previewSurfaceByIndex( 0 );
 					break;
 				case HomePickSurfaceSubNavView.LBL_SURF2:
-					pickSurfaceByIndex( 1 );
+					previewSurfaceByIndex( 1 );
 					break;
 				case HomePickSurfaceSubNavView.LBL_SURF3:
-					pickSurfaceByIndex( 2 );
+					previewSurfaceByIndex( 2 );
 					break;
 			}
 		}
 
-		private function pickSurfaceByIndex( index:uint ):void {
-			_loader = new BitmapLoader();
-			_loader.loadAsset( "/core-packaged/images/surfaces/canvas-height-specular" + index + "-sample.jpg", onSurfaceLoaded );
+		private function pickSurfaceByIndex( index:int ):void {
+			if( index <= 0 ) return;
+			_byteLoader = new BinaryLoader();
+			var size:int = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
+			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + size + ".surf", onSurfaceLoaded );
 		}
 
-		private function onSurfaceLoaded( bmd:BitmapData ):void {
+		private function onSurfaceLoaded( bytes:ByteArray ):void {
+			requestDrawingCoreSurfaceSetSignal.dispatch( bytes );
+			requestStateChange( StateType.PICK_IMAGE );
+			_byteLoader.dispose();
+			_byteLoader = null;
+		}
+
+		private function previewSurfaceByIndex( index:uint ):void {
+			_bitmapLoader = new BitmapLoader();
+			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_sample.jpg", onSurfacePreviewLoaded );
+		}
+
+		private function onSurfacePreviewLoaded( bmd:BitmapData ):void {
 			requestEaselPaintingUpdateSignal.dispatch( bmd );
-			_loader.dispose();
-			_loader = null;
+			_bitmapLoader.dispose();
+			_bitmapLoader = null;
 		}
 	}
 }

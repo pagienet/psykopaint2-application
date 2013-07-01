@@ -4,12 +4,10 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.models.StateType;
-
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
-	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageView;
 
 	public class PickAnImageViewMediator extends MediatorBase
 	{

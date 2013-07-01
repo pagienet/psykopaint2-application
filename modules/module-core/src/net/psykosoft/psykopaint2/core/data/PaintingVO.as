@@ -24,10 +24,10 @@ package net.psykosoft.psykopaint2.core.data
 		}
 
 		public function toString():String {
-			return "PaintingVO --------- \n" +
-					"fileVersion: " + fileVersion + "\n" +
-					"id: " + id + "\n" +
-					"lastSavedOnDateMs: " + lastSavedOnDateMs + "\n";
+			return "PaintingVO - " +
+					"fileVersion: " + fileVersion +
+					", id: " + id +
+					", lastSavedOnDateMs: " + lastSavedOnDateMs;
 		}
 
 		// ---------------------------------------------------------------------

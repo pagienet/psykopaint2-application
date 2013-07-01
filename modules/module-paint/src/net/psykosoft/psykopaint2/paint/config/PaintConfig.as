@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint.config
 
 	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.GoToHomeWithCanvasSnapShotCommand;
@@ -113,11 +114,15 @@ package net.psykosoft.psykopaint2.paint.config
 			_commandMap.map( RequestSurfaceImageSetSignal ).toCommand( SetSurfaceImageCommand );
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
-			_injector.unmap( RequestPaintingActivationSignal ); // Mapped in the core as singleton for compatibility.
-			_commandMap.map( RequestPaintingActivationSignal ).toCommand( ActivatePaintingCommand );
-			_injector.unmap( RequestDrawingCoreResetSignal ); // Mapped in the core as singleton for compatibility.
-			_commandMap.map( RequestDrawingCoreResetSignal ).toCommand( ClearCanvasCommand );
 			_commandMap.map( RequestGoToHomeWithCanvasSnapshotSignal ).toCommand( GoToHomeWithCanvasSnapShotCommand );
+
+			// Mapped in the core as singleton for compatibility and remapped here.
+			_injector.unmap( RequestPaintingActivationSignal );
+			_commandMap.map( RequestPaintingActivationSignal ).toCommand( ActivatePaintingCommand );
+			_injector.unmap( RequestDrawingCoreResetSignal );
+			_commandMap.map( RequestDrawingCoreResetSignal ).toCommand( ClearCanvasCommand );
+			_injector.unmap( RequestDrawingCoreSurfaceSetSignal );
+			_commandMap.map( RequestDrawingCoreSurfaceSetSignal ).toCommand( SetSurfaceImageCommand );
 		}
 
 		// -----------------------

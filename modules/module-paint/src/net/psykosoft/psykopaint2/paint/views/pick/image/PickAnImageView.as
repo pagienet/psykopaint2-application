@@ -1,14 +1,10 @@
 package net.psykosoft.psykopaint2.paint.views.pick.image
 {
 
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
 
-	import net.psykosoft.photos.data.SheetVO;
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.base.ui.components.HPageScroller;
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopImageBrowser;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.tilesheet.UserPhotosTileSheet;
