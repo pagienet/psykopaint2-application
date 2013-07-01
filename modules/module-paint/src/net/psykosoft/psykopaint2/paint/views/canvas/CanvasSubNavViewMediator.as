@@ -55,21 +55,27 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
-				case CanvasSubNavView.LBL_PICK_AN_IMAGE: {
+
+				case CanvasSubNavView.LBL_HOME: {
+					requestGoToHomeWithCanvasSnapshotSignal.dispatch( _incomingState );
+					break;
+				}
+
+				case CanvasSubNavView.LBL_DESTROY: {
+					// TODO: trigger delete process
+					break;
+				}
+				case CanvasSubNavView.LBL_CLEAR: {
+					requestClearCanvasSignal.dispatch();
+					break;
+				}
+				case CanvasSubNavView.LBL_MODEL: {
 					requestNavigationToggleSignal.dispatch( -1 );
 					requestStateChange( StateType.PICK_IMAGE );
 					break;
 				}
-				case CanvasSubNavView.LBL_PICK_A_SURFACE: {
-					requestStateChange( StateType.PAINT_PICK_SURFACE );
-					break;
-				}
-				case CanvasSubNavView.LBL_PICK_A_BRUSH: {
-					requestStateChange( StateType.PAINT_SELECT_BRUSH );
-					break;
-				}
-				case CanvasSubNavView.LBL_HOME: {
-					requestGoToHomeWithCanvasSnapshotSignal.dispatch( _incomingState );
+				case CanvasSubNavView.LBL_COLOR: {
+					requestStateChange( StateType.COLOR_STYLE );
 					break;
 				}
 				case CanvasSubNavView.LBL_EXPORT: {
@@ -84,8 +90,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					// TODO: trigger publish process
 					break;
 				}
-				case CanvasSubNavView.LBL_CLEAR: {
-					requestClearCanvasSignal.dispatch();
+
+				case CanvasSubNavView.LBL_PICK_A_BRUSH: {
+					requestStateChange( StateType.PAINT_SELECT_BRUSH );
 					break;
 				}
 			}
