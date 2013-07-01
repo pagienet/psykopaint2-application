@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
+	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.config.PaintConfig;

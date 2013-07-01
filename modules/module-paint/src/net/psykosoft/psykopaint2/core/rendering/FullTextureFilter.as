@@ -71,7 +71,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_quadIndices.uploadFromVector(new <uint>[0, 1, 2, 0, 2, 3], 0, 6);
 		}
 
-		public function draw(source : TextureBase, context3D : Context3D, width : Number, height : Number) : void
+		public function init(context3D : Context3D) : void
 		{
 			if (context3D != _context3D) {
 				this.dispose();
@@ -79,6 +79,11 @@ package net.psykosoft.psykopaint2.core.rendering
 			}
 			if (!_program) initProgram();
 			if (!_quadVertices) initGeometry();
+		}
+
+		public function draw(source : TextureBase, context3D : Context3D, width : Number, height : Number) : void
+		{
+			init(context3D);
 
 			_vertexShaderData[4] = width*2;
 			_vertexShaderData[5] = height*2;

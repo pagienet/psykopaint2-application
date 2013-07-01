@@ -18,6 +18,12 @@ package net.psykosoft.psykopaint2.core.rendering
 			_instance.draw(source, context3D, width, height);
 		}
 
+		public static function init(context3D : Context3D) : void
+		{
+			_instance ||= new CopyTexture();
+			_instance.init(context3D);
+		}
+
 		public static function dispose() : void
 		{
 			if (_instance) _instance.dispose();
