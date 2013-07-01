@@ -275,7 +275,11 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function clearNormalSpecularTexture() : void
 		{
-			_normalSpecularMap.uploadFromByteArray(_normalSpecularOriginal, 0);
+			var inflated : ByteArray = new ByteArray();
+			_normalSpecularOriginal.position = 0;
+			inflated.writeBytes(_normalSpecularOriginal, 0, _normalSpecularOriginal.length);
+			inflated.uncompress();
+			_normalSpecularMap.uploadFromByteArray(inflated, 0);
 		}
 
 		/**
