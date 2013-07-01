@@ -55,8 +55,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 
 			// Define module linking here...
 
-			//concatenateModule( notifyCropCompleteSignal, cropModule, colorStyleModule);
-			concatenateModule( notifyCropCompleteSignal, cropModule, paintModule);
+			concatenateModule( notifyCropCompleteSignal, cropModule, colorStyleModule );
 			concatenateModule( notifyColorStyleCompleteSignal, colorStyleModule, paintModule );
 		}
 
