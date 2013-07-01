@@ -27,6 +27,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.surface
 			_group.addButton( navigation.createButton( LBL_SURF2 ) );
 			_group.addButton( navigation.createButton( LBL_SURF3 ) );
 
+			 _group.setSelectedButtonByLabel( LBL_SURF1 );
+
 			navigation.layout();
 		}
 

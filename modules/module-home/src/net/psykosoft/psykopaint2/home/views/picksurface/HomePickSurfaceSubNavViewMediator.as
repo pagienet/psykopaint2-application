@@ -43,7 +43,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
 			view.navigation.buttonClickedCallback = onButtonClicked;
-
+			previewSurfaceByIndex( 0 );
 			// TODO: must display thumbnails, assets are on /core-packaged/images/surfaces/ as jpgs
 		}
 
