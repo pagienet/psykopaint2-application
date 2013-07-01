@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.model
 {
 
 	import flash.display.BitmapData;
+	import flash.display.BitmapDataChannel;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
@@ -9,11 +10,14 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.utils.ByteArray;
+	import flash.utils.Endian;
 
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
+	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.NormalSpecularMapGenerator;
@@ -46,6 +50,9 @@ package net.psykosoft.psykopaint2.core.model
 
 		private var _viewport : Rectangle;
 		private var _normalSpecularOriginal : ByteArray;
+
+		private var _copySubTextureChannelsRGB : CopySubTextureChannels;
+		private var _copySubTextureChannelsA : CopySubTextureChannels;
 
 		public function CanvasModel()
 		{
@@ -282,12 +289,15 @@ package net.psykosoft.psykopaint2.core.model
 		public function saveLayersARGB(): Vector.<ByteArray>
 		{
 			stage3D.context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			var bmp : BitmapData = new BitmapData(_width, _height, true);
+			var bmp : BitmapData = new BitmapData(_width, _height, false);
+			var bmp2 : BitmapData = new BitmapData(_width, _height, false);
 			var layers : Vector.<ByteArray> = new Vector.<ByteArray>();
-			layers.push(saveLayer(_colorTexture, bmp));
-			layers.push(saveLayer(_normalSpecularMap, bmp));
-			layers.push(saveLayer(sourceTexture, bmp));
+			layers.push(saveLayerWithAlpha(_colorTexture, bmp, bmp2));
+			layers.push(saveLayerWithAlpha(_normalSpecularMap, bmp, bmp2));
+			layers.push(saveLayerNoAlpha(sourceTexture, bmp));
 			bmp.dispose();
+			bmp2.dispose();
+			layers[2].length = _textureWidth*_height*4;
 			return layers;
 		}
 
@@ -300,7 +310,7 @@ package net.psykosoft.psykopaint2.core.model
 			sourceTexture.uploadFromByteArray(data[2], 0, 0);
 		}
 
-		private function saveLayer(layer : Texture, workerBitmapData : BitmapData) : ByteArray
+		private function saveLayerNoAlpha(layer : Texture, workerBitmapData : BitmapData) : ByteArray
 		{
 			var data : ByteArray = new ByteArray();
 			var context : Context3D = stage3D.context3D;
@@ -308,11 +318,49 @@ package net.psykosoft.psykopaint2.core.model
 			var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
 
 			context.setRenderToBackBuffer();
-			context.clear();
+			context.clear(0, 0, 0, 0);
+			context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopySubTexture.copy(layer, sourceRect, destRect, context);
 			context.drawToBitmapData(workerBitmapData);
-			workerBitmapData.copyPixelsToByteArray(workerBitmapData.rect, data);
+			data = workerBitmapData.getPixels(workerBitmapData.rect);
 			return data;
+		}
+
+		private function saveLayerWithAlpha(layer : Texture, workerBitmapData1 : BitmapData, workerBitmapData2 : BitmapData) : ByteArray
+		{
+			var context : Context3D = stage3D.context3D;
+			var sourceRect : Rectangle = new Rectangle(0, 0, usedTextureWidthRatio, usedTextureHeightRatio);
+			var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
+
+			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
+			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
+
+			context.setRenderToBackBuffer();
+			context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+
+			context.clear(0, 0, 0, 1);
+			_copySubTextureChannelsRGB.copy(layer, sourceRect, destRect, context);
+			context.drawToBitmapData(workerBitmapData1);
+
+			context.clear(0, 0, 0, 1);
+			_copySubTextureChannelsA.copy(layer, sourceRect, destRect, context);
+			context.drawToBitmapData(workerBitmapData2);
+
+			var rgbData : ByteArray = workerBitmapData1.getPixels(workerBitmapData1.rect);
+			var alphaData : ByteArray = workerBitmapData2.getPixels(workerBitmapData2.rect);
+
+			rgbData.position = 0;
+			alphaData.position = 0;
+			var outputData : ByteArray = new ByteArray();
+			var len : int = _width * _height;
+			for (var i : int = 0; i < len; ++i) {
+				var rgb : uint = rgbData.readUnsignedInt() & 0x00ffffff;
+				var a : uint = alphaData.readUnsignedInt() & 0x000000ff;
+
+				outputData.writeUnsignedInt(rgb | (a << 24));
+			}
+
+			return outputData;
 		}
 	}
 }
