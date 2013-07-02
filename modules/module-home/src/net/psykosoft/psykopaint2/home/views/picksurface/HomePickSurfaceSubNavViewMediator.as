@@ -84,7 +84,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		private function previewSurfaceByIndex( index:uint ):void {
 			_bitmapLoader = new BitmapLoader();
-			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_sample.jpg", onSurfacePreviewLoaded );
+			var size:int = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
+			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + size + "_sample.jpg", onSurfacePreviewLoaded );
 		}
 
 		private function onSurfacePreviewLoaded( bmd:BitmapData ):void {
