@@ -1,7 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
-	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+import net.psykosoft.psykopaint2.core.data.PaintingVO;
+import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
@@ -9,7 +10,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
+import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
+import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 
 	public class CanvasSubNavViewMediator extends MediatorBase
 	{
@@ -36,6 +38,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var paintingModel:PaintingModel;
+
+		[Inject]
+		public var requestPaintingDeletionSignal:RequestPaintingDeletionSignal;
 
 		private var _incomingState:String;
 
@@ -64,7 +69,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				}
 
 				case CanvasSubNavView.LBL_DESTROY: {
-					// TODO: trigger delete process
+					if( paintingModel.focusedPaintingId != PaintingVO.DEFAULT_VO_ID ) {
+						requestPaintingDeletionSignal.dispatch( paintingModel.focusedPaintingId );
+					}
 					break;
 				}
 				case CanvasSubNavView.LBL_CLEAR: {

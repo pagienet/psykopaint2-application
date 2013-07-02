@@ -69,6 +69,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, true );
 				requestEaselUpdateSignal.dispatch( bmd, null );
 			}
+			else{
+				requestEaselUpdateSignal.dispatch( null );
+			}
 
 			// From app.
 			notifyZoomCompleteSignal.add( onZoomComplete );
@@ -89,7 +92,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			switch( label ) {
 				case NewPaintingSubNavView.LBL_NEW: {
 					requestDrawingCoreResetSignal.dispatch();
-					paintingModel.focusedPaintingId = "new";
+					paintingModel.focusedPaintingId = PaintingVO.DEFAULT_VO_ID;
 					requestStateChange( StateType.HOME_PICK_SURFACE );
 					break;
 				}

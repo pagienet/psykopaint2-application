@@ -72,12 +72,15 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		public function setEaselContent( bmd:BitmapData ):void {
 			_pendingEaselContentBmd = bmd;
-			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) _pendingEaselContentBmd = BitmapDataUtils.scaleBitmapData( _pendingEaselContentBmd, 0.5 );
+			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY && _pendingEaselContentBmd ) _pendingEaselContentBmd = BitmapDataUtils.scaleBitmapData( _pendingEaselContentBmd, 0.5 );
 			if( _easel ) setEaselPaintingNow();
 		}
 
 		private function setEaselPaintingNow():void {
-			var painting:Painting = new Painting( _pendingEaselContentBmd, _view );
+			var painting:Painting;
+			if( _pendingEaselContentBmd ){
+				painting = new Painting( _pendingEaselContentBmd, _view );
+			}
 			_easel.setPainting( painting );
 			_pendingEaselContentBmd = null;
 		}

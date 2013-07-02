@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			var vo:PaintingVO;
 			var nowDate:Date = new Date();
 			var dateMs:Number = nowDate.getTime();
-			if( paintingId == "new" || paintingId == "" ) {
+			if( paintingId == PaintingVO.DEFAULT_VO_ID ) {
 
 				// Create id and focus model on it.
 				paintingId = userModel.uniqueUserId + "-" + dateMs;
