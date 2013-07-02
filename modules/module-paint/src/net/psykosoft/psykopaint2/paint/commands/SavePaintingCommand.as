@@ -65,11 +65,10 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Update vo.
 			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayers();
-			var hr:Boolean = CoreSettings.RUNNING_ON_RETINA_DISPLAY;
 			vo.fileVersion = CoreSettings.PAINTING_FILE_VERSION;
 			vo.lastSavedOnDateMs = dateMs;
-			vo.width = hr ? 2048 : 1024;
-			vo.height = hr ? 1536 : 768;
+			vo.width = canvasModel.width;
+			vo.height = canvasModel.height;
 			vo.colorImageARGB = imagesRGBA[ 0 ];
 			vo.heightmapImageARGB = imagesRGBA[ 1 ];
 			vo.sourceImageARGB = imagesRGBA[ 2 ];

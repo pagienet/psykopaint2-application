@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.paint
 			// Load default surface.
 			_loader = new BinaryLoader();
 			var size:int = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
-			_loader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_1_" + size + ".surf", onDefaultSurfaceLoaded );
+			_loader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_0_" + size + ".surf", onDefaultSurfaceLoaded );
 		}
 
 		private function onDefaultSurfaceLoaded( byteArray:ByteArray ):void {
