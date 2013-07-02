@@ -31,9 +31,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotSignal;
 
 		[Inject]
-		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
-
-		[Inject]
 		public var requestPaintingLoadSignal:RequestPaintingActivationSignal;
 
 		[Inject]
@@ -70,7 +67,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				requestEaselUpdateSignal.dispatch( bmd, null );
 			}
 			else{
-				requestEaselUpdateSignal.dispatch( null );
+				requestEaselUpdateSignal.dispatch( null, null );
 			}
 
 			// From app.
@@ -105,7 +102,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					var diffuseBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, true );
 					var normalBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, false );
 					paintingModel.focusedPaintingId = label;
-					requestEaselPaintingUpdateSignal.dispatch( diffuseBmd, normalBmd );
+					requestEaselUpdateSignal.dispatch( diffuseBmd, normalBmd );
 					break;
 				}
 			}

@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.signals
 	public class RequestEaselUpdateSignal extends TracingSignal
 	{
 		public function RequestEaselUpdateSignal() {
-			super( BitmapData, BitmapData );
+			super( BitmapData, BitmapData ); //difusse data, normal data
 		}
 	}
 }

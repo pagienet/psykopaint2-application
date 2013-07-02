@@ -127,6 +127,7 @@ public class HomeViewMediator extends MediatorBase
 		}
 
 		private function onEaselUpdateRequest( diffuseContent:BitmapData, normalContent:BitmapData ):void {
+			//TODO use normal content
 			view.paintingManager.setEaselContent( diffuseContent );
 		}
 
