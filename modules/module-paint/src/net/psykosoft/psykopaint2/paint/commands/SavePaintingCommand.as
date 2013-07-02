@@ -65,7 +65,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Update vo.
 			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayers();
-			vo.fileVersion = CoreSettings.PAINTING_FILE_VERSION;
 			vo.lastSavedOnDateMs = dateMs;
 			vo.width = canvasModel.width;
 			vo.height = canvasModel.height;

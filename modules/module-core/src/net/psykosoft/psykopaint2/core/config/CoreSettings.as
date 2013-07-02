@@ -24,7 +24,6 @@ package net.psykosoft.psykopaint2.core.config
 
 		public static const PAINTING_DESKTOP_DATA_FOLDER_NAME:String = "psykopaint2-data-paint";
 		public static const PAINTING_FILE_EXTENSION:String = ".ppp2";
-		public static const PAINTING_FILE_VERSION:String = "1";
 
 		// ---------------------------------------------------------------------
 		// Variables ( automatically set by framework ).

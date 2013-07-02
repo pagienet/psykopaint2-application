@@ -300,7 +300,6 @@ package net.psykosoft.psykopaint2.core.model
 			layers.push(saveLayerNoAlpha(sourceTexture, bmp));
 			bmp.dispose();
 			bmp2.dispose();
-			layers[2].length = _textureWidth * _height * 4;
 			return layers;
 		}
 
