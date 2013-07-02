@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.home.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 
 	public class NewPaintingSubNavViewMediator extends MediatorBase
 	{
@@ -39,8 +39,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var paintingModel:PaintingModel;
 
 		private var _waitingForZoom:Boolean;
-		private var _waitingForSnapShot:Boolean;
-		private var _selectedInProgressPaintingLabel:String; // TODO: remove when HButtonScroller component is ready, use selected btn label instead
+		private var _waitingForSnapShot:Boolean; // TODO: remove these 2
 
 		override public function initialize():void {
 
@@ -52,7 +51,11 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post-init.
-			_selectedInProgressPaintingLabel = view.setInProgressPaintings( paintingModel.getPaintingData() );
+			var data:Vector.<PaintingVO> = paintingModel.getPaintingData();
+			if( data.length > 0 ) {
+				view.setInProgressPaintings( data );
+				paintingModel.focusedPaintingId = view.getIdForSelectedInProgressPainting();
+			}
 
 			// From app.
 			notifyZoomCompleteSignal.add( onZoomComplete );
@@ -66,26 +69,19 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case NewPaintingSubNavView.LBL_NEW: {
-					// Pick one...
+					paintingModel.focusedPaintingId = "new";
 					requestStateChange( StateType.HOME_PICK_SURFACE );
-//					navigateToPaintStateWithZoomIn(); // Temporary implementation. TODO: remove when ready
 					break;
 				}
 				case NewPaintingSubNavView.LBL_CONTINUE: {
-					requestPaintingLoadSignal.dispatch( _selectedInProgressPaintingLabel ); // TODO: remove when HButtonScroller component is ready
-					// TODO: restore when HButtonScroller component is ready
-					/*var selectedLabel:String = view.getSelectedButtonLabel();
-					trace( this, "selected label: " + selectedLabel );
-					if( selectedLabel != "" && selectedLabel != NewPaintingSubNavView.LBL_NEW ) {
-						requestPaintingLoadSignal.dispatch( selectedLabel );
-					}*/
+					requestPaintingLoadSignal.dispatch( paintingModel.focusedPaintingId );
 					break;
 				}
 				default: { // Default buttons are supposed to be in progress painting buttons.
 					var vo:PaintingVO = paintingModel.getVoWithId( label );
 					var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
+					paintingModel.focusedPaintingId = label;
 					requestEaselPaintingUpdateSignal.dispatch( bmd );
-					_selectedInProgressPaintingLabel = label;
 					break;
 				}
 			}

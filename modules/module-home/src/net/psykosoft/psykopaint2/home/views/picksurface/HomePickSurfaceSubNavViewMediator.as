@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.home.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 
 	public class HomePickSurfaceSubNavViewMediator extends MediatorBase
@@ -54,6 +54,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 					requestStateChange( StateType.PREVIOUS );
 					break;
 				case HomePickSurfaceSubNavView.LBL_CONTINUE:
+					trace( this, "continue, selected: " + view.getSelectedCenterButtonIndex() );
 					pickSurfaceByIndex( view.getSelectedCenterButtonIndex() );
 					break;
 				case HomePickSurfaceSubNavView.LBL_SURF1:
@@ -69,7 +70,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		}
 
 		private function pickSurfaceByIndex( index:int ):void {
-			if( index <= 0 ) return;
 			_byteLoader = new BinaryLoader();
 			var size:int = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
 			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + size + ".surf", onSurfaceLoaded );

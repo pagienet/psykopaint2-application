@@ -55,8 +55,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 			for( var i:uint; i < len; ++i ) {
 				var btn:SbButton = _buttons[ i ];
 				var clickedButton:Boolean = btn == _selected;
-				btn.mouseEnabled = !clickedButton;
-				btn.mouseChildren = !clickedButton;
 				btn.toggleSelect( clickedButton );
 			}
 		}
