@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		private var _buttonPositionOffsetX:Number;
 		private var _buttons:Array;
 		private var _selected:SbButton;
+		private var _selectionEnabled:Boolean = true;
 
 		private const BUTTON_GAP_X:Number = 8;
 
@@ -32,7 +33,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function reset():void {
-			// Reset offset to half a btn's width.
 			_buttonPositionOffsetX = 0;
 			// Clear buttons.
 			if( _buttons && _buttons.length > 0 ) {
@@ -48,6 +48,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		private function onButtonClicked( event:MouseEvent ):void {
+			if( !_selectionEnabled ) return;
 			_selected = event.target.parent;
 			var len:uint = _buttons.length;
 			for( var i:uint; i < len; ++i ) {
@@ -122,6 +123,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 				}
 			}
 			return -1;
+		}
+
+		public function set selectionEnabled( value:Boolean ):void {
+			_selectionEnabled = value;
 		}
 	}
 }

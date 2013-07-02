@@ -136,6 +136,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_animating = true;
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, time, { y: _bgHeight, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease:Strong.easeOut } );
+			TweenLite.to( this, time, { y: _bgHeight, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease:Strong.easeOut } );
 		}
 		private function onHideAnimatedComplete():void {
 			hiddenSignal.dispatch();
@@ -181,6 +182,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			header.visible = false;
 			leftBtnSide.visible = false;
 			rightBtnSide.visible = false;
+			_buttonGroups = new Vector.<ButtonGroup>(); // TODO: sweep and remove listeners first
 			_scroller.reset();
 
 			// Disable old view.
@@ -316,6 +318,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Methods called by SubNavigationViewBase.
 		// ---------------------------------------------------------------------
 
+		private var _buttonGroups:Vector.<ButtonGroup>;
+
 		public function addCenterButtonGroup( group:ButtonGroup ):void {
 			// Make sure all of the group's buttons have listeners.
 			var len:uint = group.numButtons;
@@ -323,6 +327,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				var btn:SbButton = group.buttons[ i ];
 				btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			}
+			_buttonGroups.push( group );
 			_scroller.addItem( group, false );
 		}
 
@@ -416,10 +421,20 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onCenterScrollerMotionEnd():void {
 			scrollingEndedSignal.dispatch();
+			toggleButtonGroupInteractivity( true );
 		}
 
 		private function onCenterScrollerMotionStart():void {
 			scrollingStartedSignal.dispatch();
+			toggleButtonGroupInteractivity( false );
+		}
+
+		private function toggleButtonGroupInteractivity( enabled:Boolean ):void {
+			var len:uint = _buttonGroups.length;
+			for( var i:uint; i < len; i++ ) {
+				var group:ButtonGroup = _buttonGroups[ i ];
+				group.selectionEnabled = enabled;
+			}
 		}
 	}
 }
