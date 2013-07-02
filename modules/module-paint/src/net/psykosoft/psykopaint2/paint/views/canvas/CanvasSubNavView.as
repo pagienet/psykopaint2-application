@@ -8,10 +8,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	{
 		public static const LBL_HOME:String = "Home";
 
-		public static const LBL_DESTROY:String = "Destroy";
+		public static const LBL_DESTROY:String = "[Destroy]";
 		public static const LBL_CLEAR:String = "Clear Canvas";
 		public static const LBL_MODEL:String = "Source Image";
-		public static const LBL_COLOR:String = "Color Style";
+		public static const LBL_COLOR:String = "[Color Style]";
 		public static const LBL_EXPORT:String = "Export Painting";
 		public static const LBL_SAVE:String = "Save Painting"; // TODO: remove when auto-saving is developed
 		public static const LBL_PUBLISH:String = "[Publish Painting]";
