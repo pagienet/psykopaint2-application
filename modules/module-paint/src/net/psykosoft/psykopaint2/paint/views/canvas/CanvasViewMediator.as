@@ -7,8 +7,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
-	import net.psykosoft.psykopaint2.core.config.CoreConfig;
+
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
@@ -27,10 +26,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
-	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
-	
+
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.TransformGesture;
 
@@ -96,7 +93,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( StateType.PAINT );
 			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
 			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
-			registerEnablingState( StateType.PAINT_PICK_SURFACE );
 			registerEnablingState( StateType.PAINT_TRANSFORM );
 			
 			// Init.

@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
-	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingSavedDataCommand;
+	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.core.config
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestPaintingSavedDataRetrievalSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
@@ -148,7 +148,7 @@ package net.psykosoft.psykopaint2.core.config
 		private function mapCommands():void {
 			_commandMap.map( RequestStateChangeSignal ).toCommand( ChangeStateCommand );
 			_commandMap.map( RequestGpuRenderingSignal ).toCommand( RenderGpuCommand );
-			_commandMap.map( RequestPaintingSavedDataRetrievalSignal ).toCommand( RetrievePaintingSavedDataCommand );
+			_commandMap.map( RequestPaintingDataRetrievalSignal ).toCommand( RetrievePaintingDataCommand );
 		}
 
 		// -----------------------

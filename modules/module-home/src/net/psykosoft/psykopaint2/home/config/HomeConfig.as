@@ -10,8 +10,8 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.home.HomeViewMediator;
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavView;
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavViewMediator;
-	import net.psykosoft.psykopaint2.home.views.picksurface.HomePickSurfaceSubNavView;
-	import net.psykosoft.psykopaint2.home.views.picksurface.HomePickSurfaceSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.picksurface.PickSurfaceSubNavView;
+	import net.psykosoft.psykopaint2.home.views.picksurface.PickSurfaceSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavView;
@@ -100,7 +100,7 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( WallpaperSubNavView ).toMediator( WallpaperSubNavViewMediator );
 			_mediatorMap.map( HomeSubNavView ).toMediator( HomeSubNavViewMediator );
 			_mediatorMap.map( HomeSnapShotView ).toMediator( HomeSnapShotViewMediator );
-			_mediatorMap.map( HomePickSurfaceSubNavView ).toMediator( HomePickSurfaceSubNavViewMediator );
+			_mediatorMap.map( PickSurfaceSubNavView ).toMediator( PickSurfaceSubNavViewMediator );
 		}
 	}
 }

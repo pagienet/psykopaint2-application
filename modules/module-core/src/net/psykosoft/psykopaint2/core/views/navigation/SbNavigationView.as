@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _hidden:Boolean;
 		private var _bgHeight:uint = 250;
 
-		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 100;
+		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 90;
 
 		public var buttonClickedCallback:Function;
 		public var shownSignal:Signal;
@@ -136,6 +136,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_animating = true;
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, time, { y: _bgHeight, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease:Strong.easeOut } );
+			TweenLite.to( this, time, { y: _bgHeight, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease:Strong.easeOut } );
 		}
 		private function onHideAnimatedComplete():void {
 			hiddenSignal.dispatch();
@@ -181,6 +182,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			header.visible = false;
 			leftBtnSide.visible = false;
 			rightBtnSide.visible = false;
+			_buttonGroups = new Vector.<ButtonGroup>(); // TODO: sweep and remove listeners first
 			_scroller.reset();
 
 			// Disable old view.
@@ -294,7 +296,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// and will cause edge gaps to be set incorrectly
 		private function checkGap():void {
 			// Decide scroller gaps according to the presence of side buttons.
-			if( leftBtnSide.visible && rightBtnSide.visible ) {
+			/*if( leftBtnSide.visible && rightBtnSide.visible ) {
 				_scroller.leftGap =  60;
 				_scroller.rightGap = 210;
 			}
@@ -308,13 +310,15 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			}
 			else {
 				_scroller.leftGap = _scroller.rightGap = 10;
-			}
+			}*/
 			_needGapCheck = false;
 		}
 
 		// ---------------------------------------------------------------------
 		// Methods called by SubNavigationViewBase.
 		// ---------------------------------------------------------------------
+
+		private var _buttonGroups:Vector.<ButtonGroup>;
 
 		public function addCenterButtonGroup( group:ButtonGroup ):void {
 			// Make sure all of the group's buttons have listeners.
@@ -323,6 +327,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				var btn:SbButton = group.buttons[ i ];
 				btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			}
+			_buttonGroups.push( group );
 			_scroller.addItem( group, false );
 		}
 
@@ -406,6 +411,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			else _scroller.scrollable = false;*/
 
 			_scroller.dock();
+
+			trace( this, "layout() - scroller width: " + _scroller.minWidth );
 		}
 
 		// ---------------------------------------------------------------------
@@ -414,10 +421,20 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onCenterScrollerMotionEnd():void {
 			scrollingEndedSignal.dispatch();
+			toggleButtonGroupInteractivity( true );
 		}
 
 		private function onCenterScrollerMotionStart():void {
 			scrollingStartedSignal.dispatch();
+			toggleButtonGroupInteractivity( false );
+		}
+
+		private function toggleButtonGroupInteractivity( enabled:Boolean ):void {
+			var len:uint = _buttonGroups.length;
+			for( var i:uint; i < len; i++ ) {
+				var group:ButtonGroup = _buttonGroups[ i ];
+				group.selectionEnabled = enabled;
+			}
 		}
 	}
 }

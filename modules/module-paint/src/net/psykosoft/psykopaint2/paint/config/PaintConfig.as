@@ -5,9 +5,8 @@ package net.psykosoft.psykopaint2.paint.config
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
-	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
-	import net.psykosoft.psykopaint2.paint.commands.GoToHomeWithCanvasSnapShotCommand;
 	import net.psykosoft.psykopaint2.paint.commands.ActivatePaintingCommand;
+	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
@@ -15,7 +14,6 @@ package net.psykosoft.psykopaint2.paint.config
 	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestGoToHomeWithCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
@@ -38,9 +36,7 @@ package net.psykosoft.psykopaint2.paint.config
 	import net.psykosoft.psykopaint2.paint.views.crop.CropViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageViewMediator;
-	import net.psykosoft.psykopaint2.paint.views.pick.surface.PickASurfaceSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.pick.surface.PickASurfaceSubNavViewMediator;
-	
+
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IInjector;
@@ -114,7 +110,6 @@ package net.psykosoft.psykopaint2.paint.config
 			_commandMap.map( RequestSurfaceImageSetSignal ).toCommand( SetSurfaceImageCommand );
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
-			_commandMap.map( RequestGoToHomeWithCanvasSnapshotSignal ).toCommand( GoToHomeWithCanvasSnapShotCommand );
 
 			// Mapped in the core as singleton for compatibility and remapped here.
 			_injector.unmap( RequestPaintingActivationSignal );
@@ -139,7 +134,6 @@ package net.psykosoft.psykopaint2.paint.config
 			_mediatorMap.map( CropSubNavView ).toMediator( CropSubNavViewMediator );
 			_mediatorMap.map( CropView ).toMediator( CropViewMediator );
 			_mediatorMap.map( PickAnImageView ).toMediator( PickAnImageViewMediator );
-			_mediatorMap.map( PickASurfaceSubNavView ).toMediator( PickASurfaceSubNavViewMediator );
 		}
 	}
 }

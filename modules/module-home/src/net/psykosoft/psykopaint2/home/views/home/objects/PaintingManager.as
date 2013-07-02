@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
-	import away3d.materials.lightpickers.StaticLightPicker;
 
 	import br.com.stimuli.loading.BulkLoader;
 
@@ -13,11 +12,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.data.FrameType;
-	import net.psykosoft.psykopaint2.home.views.home.objects.FramedPainting;
-	import net.psykosoft.psykopaint2.home.views.home.objects.FramedPainting;
 	import net.psykosoft.psykopaint2.home.views.home.vos.FrameTextureAtlasDescriptorVO;
 
 	public class PaintingManager extends ObjectContainer3D
@@ -31,19 +30,18 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _shadowForPainting:Dictionary;
 		private var _atlasXml:XML;
 		private var _easel:FramedPainting;
+		private var _pendingEaselContentBmd:BitmapData;
 
 		// TODO: make private
 		public var homePaintingIndex:int = -1;
 
 		private const FRAME_GAP:Number = 300;
-		private var _lightPicker : StaticLightPicker;
 
-		public function PaintingManager( cameraController:ScrollCameraController, room:WallRoom, lightPicker : StaticLightPicker, view:View3D ) {
+		public function PaintingManager( cameraController:ScrollCameraController, room:WallRoom, view:View3D ) {
 			super();
 			_cameraController = cameraController;
 			_room = room;
 			_view = view;
-			_lightPicker = lightPicker;
 			_paintings = new Vector.<FramedPainting>();
 			_snapPointForPainting = new Dictionary();
 			_shadowForPainting = new Dictionary();
@@ -72,20 +70,16 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		private var _pendingEaselContentDiffuse:BitmapData;
-		private var _pendingEaselContentNormal:BitmapData;
-
-		public function setEaselContent( diffuse:BitmapData, normal:BitmapData ):void {
-			 _pendingEaselContentDiffuse = diffuse;
-			 _pendingEaselContentNormal = normal;
+		public function setEaselContent( bmd:BitmapData ):void {
+			_pendingEaselContentBmd = bmd;
+			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) _pendingEaselContentBmd = BitmapDataUtils.scaleBitmapData( _pendingEaselContentBmd, 0.5 );
 			if( _easel ) setEaselPaintingNow();
 		}
 
 		private function setEaselPaintingNow():void {
-			var painting:Painting = new Painting( _pendingEaselContentDiffuse, _pendingEaselContentNormal, _view, _lightPicker );
+			var painting:Painting = new Painting( _pendingEaselContentBmd, _view );
 			_easel.setPainting( painting );
-			_pendingEaselContentDiffuse = null;
-			_pendingEaselContentNormal = null;
+			_pendingEaselContentBmd = null;
 		}
 
 		public function createDefaultPaintings():void {
@@ -102,7 +96,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// Easel.
 			_easel = createPaintingAtIndex( null, null, 1, false );
 			_easel.easelVisible = true;
-			if( _pendingEaselContentDiffuse ) setEaselPaintingNow();
+			if( _pendingEaselContentBmd ) setEaselPaintingNow();
 			autoPositionPaintingAtIndex( _easel, 1, false, 1 );
 			_easel.z -= 500;
 
@@ -122,7 +116,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Painting.
 			if( paintingBmd ) {
-				var painting:Painting = new Painting( paintingBmd, null, _view, null);
+				var painting:Painting = new Painting( paintingBmd, _view );
 			}
 
 			// Frame.

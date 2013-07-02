@@ -45,11 +45,11 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Need to create a new id and vo?
 			var vo:PaintingVO;
+			var nowDate:Date = new Date();
+			var dateMs:Number = nowDate.getTime();
 			if( paintingId == "new" || paintingId == "" ) {
 
 				// Create id and focus model on it.
-				var nowDate:Date = new Date();
-				var dateMs:Number = nowDate.getTime();
 				paintingId = userModel.uniqueUserId + "-" + dateMs;
 				trace( this, "creating a new id: " + paintingId );
 				paintingModel.focusedPaintingId = paintingId;
@@ -64,10 +64,10 @@ package net.psykosoft.psykopaint2.paint.commands
 			}
 
 			// Update vo.
-			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayers();
 			vo.lastSavedOnDateMs = dateMs;
 			vo.width = canvasModel.width;
 			vo.height = canvasModel.height;
+			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayers();
 			vo.colorImageARGB = imagesRGBA[ 0 ];
 			vo.heightmapImageARGB = imagesRGBA[ 1 ];
 			vo.sourceImageARGB = imagesRGBA[ 2 ];

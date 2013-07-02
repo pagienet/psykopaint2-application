@@ -44,12 +44,13 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			}
 			_buttonGroup.setSelectedButtonByIndex( _buttonGroup.numButtons - 1 );
 			navigation.addCenterButtonGroup( _buttonGroup );
-			navigation.layout();
 
 			// Show right button.
 			if( !HomeSettings.isStandalone ) {
 				navigation.setRightButton( LBL_CONTINUE );
 			}
+
+			navigation.layout();
 
 			return btn.labelText;
 		}

@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestPaintingSavedDataRetrievalSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 
@@ -301,7 +301,7 @@ package net.psykosoft.psykopaint2.core
 			}
 
 			// Start loading painting data.
-			_injector.getInstance( RequestPaintingSavedDataRetrievalSignal ).dispatch();
+			_injector.getInstance( RequestPaintingDataRetrievalSignal ).dispatch();
 //			_injector.getInstance( NotifyPaintingDataRetrievedSignal ).addOnce( testLoadingAPainting ); // Just for testing.
 
 			moduleReadySignal.dispatch();

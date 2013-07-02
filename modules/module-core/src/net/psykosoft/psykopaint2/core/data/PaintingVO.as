@@ -2,9 +2,6 @@ package net.psykosoft.psykopaint2.core.data
 {
 
 	import flash.utils.ByteArray;
-	import flash.utils.CompressionAlgorithm;
-
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 
 	public class PaintingVO
 	{
@@ -25,9 +22,9 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function toString():String {
 			return "PaintingVO - " +
-					"fileVersion: " + fileVersion +
-					", id: " + id +
-					", lastSavedOnDateMs: " + lastSavedOnDateMs;
+				   "fileVersion: " + fileVersion +
+				   ", id: " + id +
+				   ", lastSavedOnDateMs: " + lastSavedOnDateMs;
 		}
 
 		// ---------------------------------------------------------------------
@@ -65,6 +62,7 @@ package net.psykosoft.psykopaint2.core.data
 			bytes.uncompress();
 
 			// Check version first.
+			// TODO: try/catch on RetrievePaintingSavedDataCommand makes this warning never trace
 			fileVersion = bytes.readUTF();
 			if( fileVersion != PAINTING_FILE_VERSION ) {
 				trace( "PaintingVO deSerialize() - ***WARNING*** Unable to interpret loaded painting file, version is [" + fileVersion + "] and app is using version [" + PAINTING_FILE_VERSION + "]" );

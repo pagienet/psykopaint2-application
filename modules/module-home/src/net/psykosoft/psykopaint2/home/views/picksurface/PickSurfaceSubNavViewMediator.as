@@ -15,10 +15,10 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 
-	public class HomePickSurfaceSubNavViewMediator extends MediatorBase
+	public class PickSurfaceSubNavViewMediator extends MediatorBase
 	{
 		[Inject]
-		public var view:HomePickSurfaceSubNavView;
+		public var view:PickSurfaceSubNavView;
 
 		[Inject]
 		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
@@ -50,20 +50,19 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		private function onButtonClicked( label:String ):void {
 
 			switch( label ) {
-				case HomePickSurfaceSubNavView.LBL_BACK:
+				case PickSurfaceSubNavView.LBL_BACK:
 					requestStateChange( StateType.PREVIOUS );
 					break;
-				case HomePickSurfaceSubNavView.LBL_CONTINUE:
-					trace( this, "continue, selected: " + view.getSelectedCenterButtonIndex() );
+				case PickSurfaceSubNavView.LBL_CONTINUE:
 					pickSurfaceByIndex( view.getSelectedCenterButtonIndex() );
 					break;
-				case HomePickSurfaceSubNavView.LBL_SURF1:
+				case PickSurfaceSubNavView.LBL_SURF1:
 					previewSurfaceByIndex( 0 );
 					break;
-				case HomePickSurfaceSubNavView.LBL_SURF2:
+				case PickSurfaceSubNavView.LBL_SURF2:
 					previewSurfaceByIndex( 1 );
 					break;
-				case HomePickSurfaceSubNavView.LBL_SURF3:
+				case PickSurfaceSubNavView.LBL_SURF3:
 					previewSurfaceByIndex( 2 );
 					break;
 			}
@@ -84,7 +83,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		private function previewSurfaceByIndex( index:uint ):void {
 			_bitmapLoader = new BitmapLoader();
-			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_sample.jpg", onSurfacePreviewLoaded );
+			var size:int = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
+			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + size + "_sample.jpg", onSurfacePreviewLoaded );
 		}
 
 		private function onSurfacePreviewLoaded( diffuseBmd:BitmapData):void {

@@ -189,7 +189,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				combobox.selectedIndex = _parameter.index;
 				addChild( combobox );
 				combobox.addEventListener( Event.CHANGE, onComboBoxChanged );
-				positionUiElement( combobox as DisplayObject, 0, -17 );
+				positionUiElement( combobox as DisplayObject, 0, 10 );
 				_uiElements.push( combobox );
 			}
 

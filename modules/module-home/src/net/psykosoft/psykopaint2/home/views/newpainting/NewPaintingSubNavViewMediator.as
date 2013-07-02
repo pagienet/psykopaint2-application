@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -36,6 +37,12 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var requestPaintingLoadSignal:RequestPaintingActivationSignal;
 
 		[Inject]
+		public var requestEaselUpdateSignal:RequestEaselUpdateSignal;
+
+		[Inject]
+		public var requestDrawingCoreResetSignal:RequestDrawingCoreResetSignal;
+
+		[Inject]
 		public var paintingModel:PaintingModel;
 
 		private var _waitingForZoom:Boolean;
@@ -53,13 +60,25 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			// Post-init.
 			var data:Vector.<PaintingVO> = paintingModel.getPaintingData();
 			if( data.length > 0 ) {
+				if( data.length > 1 ) {
+					data.sort( sortOnLastSavedOnDateMs );
+				}
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = view.getIdForSelectedInProgressPainting();
+				var vo:PaintingVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
+				var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
+				requestEaselUpdateSignal.dispatch( bmd );
 			}
 
 			// From app.
 			notifyZoomCompleteSignal.add( onZoomComplete );
 			notifyCanvasBitmapSignal.add( onCanvasSnapshot );
+		}
+
+		private function sortOnLastSavedOnDateMs( paintingVOA:PaintingVO, paintingVOB:PaintingVO ):Number {
+			if( paintingVOA.lastSavedOnDateMs > paintingVOB.lastSavedOnDateMs ) return 1;
+			else if( paintingVOA.lastSavedOnDateMs < paintingVOB.lastSavedOnDateMs ) return -1;
+			else return 0;
 		}
 
 		// -----------------------
@@ -69,6 +88,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case NewPaintingSubNavView.LBL_NEW: {
+					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.focusedPaintingId = "new";
 					requestStateChange( StateType.HOME_PICK_SURFACE );
 					break;
