@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.commands
 
 	import robotlegs.bender.framework.api.IContext;
 
-	public class RetrievePaintingSavedDataCommand extends TracingCommand
+	public class RetrievePaintingDataCommand extends TracingCommand
 	{
 		[Inject]
 		public var context:IContext;
@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.core.commands
 		private var _indexOfPaintingFileBeingRead:uint;
 		private var _paintingVos:Vector.<PaintingVO>;
 
-		public function RetrievePaintingSavedDataCommand() {
+		public function RetrievePaintingDataCommand() {
 			super();
 		}
 
