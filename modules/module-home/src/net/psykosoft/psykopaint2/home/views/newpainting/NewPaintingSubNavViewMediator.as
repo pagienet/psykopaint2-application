@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -37,6 +38,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		[Inject]
 		public var requestEaselUpdateSignal:RequestEaselUpdateSignal;
+
+		[Inject]
+		public var requestDrawingCoreResetSignal:RequestDrawingCoreResetSignal;
 
 		[Inject]
 		public var paintingModel:PaintingModel;
@@ -75,6 +79,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case NewPaintingSubNavView.LBL_NEW: {
+					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.focusedPaintingId = "new";
 					requestStateChange( StateType.HOME_PICK_SURFACE );
 					break;

@@ -27,9 +27,11 @@ package net.psykosoft.psykopaint2.paint.commands
 		override public function execute():void {
 			super.execute();
 
+			// TODO: should we be using snapshots or obtain color image from canvas model?
+
 			// Request a snapshot and wait for it.
 			RenderGpuCommand.snapshotScale = 1;
-			RenderGpuCommand.snapshotRequested = true; // TODO: request full snapshot here, atm it produces scaled down snapshots...
+			RenderGpuCommand.snapshotRequested = true;
 			notifyCanvasSnapshotSignal.addOnce( onSnapshotRetrieved );
 			context.detain( this );
 		}

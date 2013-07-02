@@ -63,6 +63,8 @@ package net.psykosoft.psykopaint2.base.utils.ui
 
 		public function moveFreelyByAmount( amount:Number ):void {
 
+			if( _snapPoints.length == 0 ) return;
+
 			_direction = amount > 0 ? 1 : -1;
 
 			_positionChange = amount;
