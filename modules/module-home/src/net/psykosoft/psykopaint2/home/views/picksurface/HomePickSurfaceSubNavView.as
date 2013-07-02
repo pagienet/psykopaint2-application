@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		}
 
 		override protected function onEnabled():void {
+
 			navigation.setHeader( "Pick a Surface" );
 			navigation.setLeftButton( LBL_BACK );
 			navigation.setRightButton( LBL_CONTINUE );
@@ -28,8 +29,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			_group.addButton( navigation.createButton( LBL_SURF2 ) );
 			_group.addButton( navigation.createButton( LBL_SURF3 ) );
 			navigation.addCenterButtonGroup( _group );
-
 			 _group.setSelectedButtonByLabel( LBL_SURF1 );
+
 			navigation.layout();
 		}
 
