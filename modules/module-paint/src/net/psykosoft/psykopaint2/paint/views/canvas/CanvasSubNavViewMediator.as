@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestGoToHomeWithCanvasSnapshotSignal;
@@ -31,6 +32,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestGoToHomeWithCanvasSnapshotSignal:RequestGoToHomeWithCanvasSnapshotSignal;
+		// TODO: delete this one
+
+		[Inject]
+		public var requestZoomToggleSignal:RequestZoomToggleSignal;
 
 		[Inject]
 		public var stateModel:StateModel;
@@ -59,8 +64,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case CanvasSubNavView.LBL_HOME: {
 					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, true );
-					// TODO: change to home state
-					// TODO: zoom out on home view
+					requestStateChange( StateType.HOME_ON_EASEL );
+					requestZoomToggleSignal.dispatch( false );
 					break;
 				}
 

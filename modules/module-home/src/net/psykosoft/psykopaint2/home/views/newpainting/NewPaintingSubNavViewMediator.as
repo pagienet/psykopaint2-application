@@ -39,8 +39,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var paintingModel:PaintingModel;
 
 		private var _waitingForZoom:Boolean;
-		private var _waitingForSnapShot:Boolean;
-		private var _selectedInProgressPaintingLabel:String = ""; // TODO: remove when HButtonScroller component is ready, use selected btn label instead
+		private var _waitingForSnapShot:Boolean; // TODO: remove these 2
 
 		override public function initialize():void {
 
@@ -54,7 +53,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			// Post-init.
 			var data:Vector.<PaintingVO> = paintingModel.getPaintingData();
 			if( data.length > 0 ) {
-				_selectedInProgressPaintingLabel = view.setInProgressPaintings( data );
+				view.setInProgressPaintings( data );
+				paintingModel.focusedPaintingId = view.getIdForSelectedInProgressPainting();
 			}
 
 			// From app.
@@ -69,19 +69,19 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case NewPaintingSubNavView.LBL_NEW: {
+					paintingModel.focusedPaintingId = "new";
 					requestStateChange( StateType.HOME_PICK_SURFACE );
 					break;
 				}
 				case NewPaintingSubNavView.LBL_CONTINUE: {
-					if( _selectedInProgressPaintingLabel == "" ) return;
-					requestPaintingLoadSignal.dispatch( _selectedInProgressPaintingLabel );
+					requestPaintingLoadSignal.dispatch( paintingModel.focusedPaintingId );
 					break;
 				}
 				default: { // Default buttons are supposed to be in progress painting buttons.
 					var vo:PaintingVO = paintingModel.getVoWithId( label );
 					var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
+					paintingModel.focusedPaintingId = label;
 					requestEaselPaintingUpdateSignal.dispatch( bmd );
-					_selectedInProgressPaintingLabel = label;
 					break;
 				}
 			}

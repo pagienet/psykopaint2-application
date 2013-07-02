@@ -50,10 +50,10 @@ package net.psykosoft.psykopaint2.core.models
 			_paintingData.push( vo );
 		}
 
-		// TODO: used?
 		public function get focusedPaintingId():String {
 			return _focusedPaintingId;
 		}
+
 		public function set focusedPaintingId( id:String ):void {
 			_focusedPaintingId = id;
 		}
