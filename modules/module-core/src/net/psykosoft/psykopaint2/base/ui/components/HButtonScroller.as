@@ -19,6 +19,7 @@ public class HButtonScroller extends HSnapScroller
 		}
 
 		override protected function evaluateNewSnapPointFromPosition( px:Number ):void {
+			trace( this, "pushing snap point: " + px );
 			_positionManager.pushSnapPoint( px );
 		}
 
@@ -38,15 +39,14 @@ public class HButtonScroller extends HSnapScroller
 					var groupLen:uint = childAsButtonGroup.numButtons;
 					for( j = 0; j < groupLen; j++ ) {
 						var aButton:SbButton = childAsButtonGroup.buttons[ j ];
-						evaluateDimensionsFromChild( aButton );
-						evaluateNewSnapPointFromPosition( aButton.x );
+						evaluateDimensionsFromChild( aButton, childAsButtonGroup.x );
+						evaluateNewSnapPointFromPosition( childAsButtonGroup.x + aButton.x );
 					}
 				}
 				else {
 					evaluateDimensionsFromChild( child );
 					evaluateNewSnapPointFromPosition( child.x );
 				}
-
 			}
 			// Contain edges.
 			containEdgeSnapPoints();

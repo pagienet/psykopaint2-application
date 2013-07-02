@@ -7,8 +7,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 	public class ButtonGroup extends Sprite
 	{
-
-		private var _buttonPositionOffsetX:Number; //TODO
+		private var _buttonPositionOffsetX:Number;
 		private var _buttons:Array;
 		private var _selected:SbButton;
 
@@ -99,8 +98,11 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		override public function get width():Number {
 			var numButtons:uint = _buttons.length;
-			var aButton:SbButton = _buttons[ 0 ];
-			return numButtons * aButton.width + ( numButtons - 1 ) * BUTTON_GAP_X;
+			if( numButtons == 0 ) return 0;
+			var firstButton:SbButton = _buttons[ 0 ];
+			if( numButtons == 1 ) return firstButton.width;
+			var lastButton:SbButton = _buttons[ numButtons - 1 ];
+			return ( lastButton.x + lastButton.width / 2 ) - ( firstButton.x - firstButton.width / 2 );
 		}
 
 		override public function get height():Number {
