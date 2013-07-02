@@ -8,8 +8,6 @@ package net.psykosoft.psykopaint2.core.data
 
 	public class PaintingVO
 	{
-		public static const DEFAULT_ID:String = "defaultPaintingId";
-
 		public var colorImageARGB:ByteArray;
 		public var heightmapImageARGB:ByteArray;
 		public var sourceImageARGB:ByteArray;

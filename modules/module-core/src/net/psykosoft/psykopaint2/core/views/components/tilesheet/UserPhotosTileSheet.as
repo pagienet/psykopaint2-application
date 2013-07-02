@@ -5,14 +5,14 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.photos.data.SheetVO;
-	import net.psykosoft.psykopaint2.base.utils.io.IosImagesFetcher;
+	import net.psykosoft.psykopaint2.base.utils.io.IosUserImagesFetcher;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 
 	import org.osflash.signals.Signal;
 
 	public class UserPhotosTileSheet extends TileSheet
 	{
-		private var _fetcher:IosImagesFetcher;
+		private var _fetcher:IosUserImagesFetcher;
 		private var _maxPageFetched:uint;
 
 		public var fullImageFetchedSignal:Signal;
@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 
 		public function fetchPhotos():void {
 			_maxPageFetched = 0;
-			_fetcher = new IosImagesFetcher( CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 150 : 75 );
+			_fetcher = new IosUserImagesFetcher( CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 150 : 75 );
 			_fetcher.thumbnailsLoadedSignal.add( onThumbnailsLoaded );
 			_fetcher.extensionInitializedSignal.addOnce( onExtensionReady );
 			_fetcher.imageLoadedSignal.add( onFullImageLoaded );

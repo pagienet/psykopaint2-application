@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.core.config
 		public static const RESOLUTION_DPI_RETINA:uint = 264;
 		public static const STAGE_3D_ANTI_ALIAS:uint = 0;
 
-		public static const PAINTING_DESKTOP_DATA_FOLDER_NAME:String = "psykopaint2-data-paint";
+		public static const PAINTING_DATA_FOLDER_NAME:String = "psykopaint2-data-paint";
 		public static const PAINTING_FILE_EXTENSION:String = ".ppp2";
 		public static const PAINTING_FILE_VERSION:String = "1";
 
