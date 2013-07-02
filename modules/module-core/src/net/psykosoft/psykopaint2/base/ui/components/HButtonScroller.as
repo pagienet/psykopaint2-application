@@ -19,7 +19,6 @@ public class HButtonScroller extends HSnapScroller
 		}
 
 		override protected function evaluateNewSnapPointFromPosition( px:Number ):void {
-			trace( this, "pushing snap point: " + px );
 			_positionManager.pushSnapPoint( px );
 		}
 
