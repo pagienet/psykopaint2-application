@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			var data:Vector.<PaintingVO> = paintingModel.getPaintingData();
 			if( data.length > 0 ) {
 				if( data.length > 1 ) {
-					data.sort( sortOnLastSavedOnDateMs );
+					data.sort( sortOnLastSaved );
 				}
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = view.getIdForSelectedInProgressPainting();
@@ -75,7 +75,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			notifyCanvasBitmapSignal.add( onCanvasSnapshot );
 		}
 
-		private function sortOnLastSavedOnDateMs( paintingVOA:PaintingVO, paintingVOB:PaintingVO ):Number {
+		private function sortOnLastSaved( paintingVOA:PaintingVO, paintingVOB:PaintingVO ):Number {
 			if( paintingVOA.lastSavedOnDateMs > paintingVOB.lastSavedOnDateMs ) return 1;
 			else if( paintingVOA.lastSavedOnDateMs < paintingVOB.lastSavedOnDateMs ) return -1;
 			else return 0;
