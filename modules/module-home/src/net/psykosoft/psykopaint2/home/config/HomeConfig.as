@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.home.config
 {
 
 	import net.psykosoft.psykopaint2.home.commands.ZoomThenChangeStateCommand;
-	import net.psykosoft.psykopaint2.home.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
@@ -19,8 +18,6 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.snapshot.HomeSnapShotView;
 	import net.psykosoft.psykopaint2.home.views.snapshot.HomeSnapShotViewMediator;
-
-	import org.swiftsuspenders.Injector;
 
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
@@ -82,7 +79,6 @@ package net.psykosoft.psykopaint2.home.config
 
 		private function mapNotifications():void {
 	   		_injector.map( RequestWallpaperChangeSignal ).asSingleton();
-	   		_injector.map( RequestEaselUpdateSignal ).asSingleton();
 		}
 
 		// -----------------------

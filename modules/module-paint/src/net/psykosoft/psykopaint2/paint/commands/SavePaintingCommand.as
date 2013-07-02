@@ -1,14 +1,17 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
 
+	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopBinarySaveUtil;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
+	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 
 	public class SavePaintingCommand extends TracingCommand
 	{
@@ -16,10 +19,16 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var paintingId:String; // From signal.
 
 		[Inject]
+		public var updateEasel:Boolean; // From signal.
+
+		[Inject]
 		public var canvasModel:CanvasModel;
 
 		[Inject]
 		public var userModel:UserModel;
+
+		[Inject]
+		public var requestEaselUpdateSignal:RequestEaselUpdateSignal;
 
 		public function SavePaintingCommand() {
 			super();
@@ -27,6 +36,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		override public function execute():void {
 			super.execute();
+
+			trace( this, "incoming painting id: " + paintingId );
 
 			// Need to create a new id?
 			// NOTE: The incoming signal's id is populated from the home module. If it's empty
@@ -52,6 +63,14 @@ package net.psykosoft.psykopaint2.paint.commands
 			vo.sourceImageARGB = imagesRGBA[ 2 ];
 			vo.id = paintingId;
 			trace( this, "generated vo: " + vo );
+
+			// Update easel.
+			if( updateEasel ) {
+				var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height )
+				requestEaselUpdateSignal.dispatch( bmd );
+			}
+
+			// TODO: set or update model vo
 
 			// Serialize data.
 			var voBytes:ByteArray = vo.serialize();

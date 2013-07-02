@@ -26,15 +26,11 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		override protected function onEnabled():void {
 			navigation.setHeader( "New Painting" );
-			if( !HomeSettings.isStandalone ) {
-				navigation.setRightButton( LBL_CONTINUE );
-			}
 			navigation.addCenterButton( LBL_NEW, ButtonIconType.NEW, ButtonLabelType.NONE );
 			navigation.layout();
 		}
 
 		public function setInProgressPaintings( data:Vector.<PaintingVO> ):String {
-			if( !data ) return "";
 			var len:uint = data.length;
 			var group:ButtonGroup = new ButtonGroup();
 			for( var i:uint; i < len; i++ ) {
@@ -47,6 +43,12 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			group.setSelectedButtonByIndex( group.numButtons - 1 );
 			navigation.addCenterButtonGroup( group );
 			navigation.layout();
+
+			// Show right button.
+			if( !HomeSettings.isStandalone ) {
+				navigation.setRightButton( LBL_CONTINUE );
+			}
+
 			return btn.labelText;
 		}
 	}

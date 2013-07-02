@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.paint.signals
 	public class RequestPaintingSaveSignal extends TracingSignal
 	{
 		public function RequestPaintingSaveSignal() {
-			super( String ); // Painting id.
+			super( String, Boolean ); // Painting id, update easel
 		}
 	}
 }

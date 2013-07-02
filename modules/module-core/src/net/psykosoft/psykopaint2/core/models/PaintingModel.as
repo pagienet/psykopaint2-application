@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		public function PaintingModel() {
 			super();
+			_paintingData = new Vector.<PaintingVO>();
 		}
 
 		public function setPaintingData( data:Vector.<PaintingVO> ):void {
@@ -46,7 +47,6 @@ package net.psykosoft.psykopaint2.core.models
 		}
 
 		public function addSinglePaintingData( vo:PaintingVO ):void {
-			if( !_paintingData ) _paintingData = new Vector.<PaintingVO>();
 			_paintingData.push( vo );
 		}
 
