@@ -60,6 +60,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			// Post-init.
 			var data:Vector.<PaintingVO> = paintingModel.getPaintingData();
 			if( data.length > 0 ) {
+				if( data.length > 1 ) {
+					data.sort( sortOnLastSavedOnDateMs );
+				}
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = view.getIdForSelectedInProgressPainting();
 				var vo:PaintingVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
@@ -70,6 +73,12 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			// From app.
 			notifyZoomCompleteSignal.add( onZoomComplete );
 			notifyCanvasBitmapSignal.add( onCanvasSnapshot );
+		}
+
+		private function sortOnLastSavedOnDateMs( paintingVOA:PaintingVO, paintingVOB:PaintingVO ):Number {
+			if( paintingVOA.lastSavedOnDateMs > paintingVOB.lastSavedOnDateMs ) return 1;
+			else if( paintingVOA.lastSavedOnDateMs < paintingVOB.lastSavedOnDateMs ) return -1;
+			else return 0;
 		}
 
 		// -----------------------
