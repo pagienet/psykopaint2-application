@@ -77,7 +77,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 				case CanvasSubNavView.LBL_COLOR: {
-					requestStateChange( StateType.COLOR_STYLE );
+//					requestStateChange( StateType.COLOR_STYLE );
 					break;
 				}
 				case CanvasSubNavView.LBL_EXPORT: {
