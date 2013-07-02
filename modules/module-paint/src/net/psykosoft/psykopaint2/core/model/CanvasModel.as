@@ -16,6 +16,8 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
 
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 
@@ -123,8 +125,8 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function setSourceBitmapData(sourceBitmapData : BitmapData) : void
 		{
-			sourceBitmapData = fixSourceDimensions( sourceBitmapData );
-			
+			sourceBitmapData = fixSourceDimensions(sourceBitmapData);
+
 			if (_pyramidMap)
 				_pyramidMap.setSource(sourceBitmapData);
 			else
@@ -133,17 +135,16 @@ package net.psykosoft.psykopaint2.core.model
 			if (_sourceTexture)
 				_pyramidMap.uploadMipLevel(_sourceTexture, 0);
 		}
-		
-		private function fixSourceDimensions(sourceBitmapData:BitmapData):BitmapData
+
+		private function fixSourceDimensions(sourceBitmapData : BitmapData) : BitmapData
 		{
 			// this is only required for the quickstart test where images are loaded in the wrong dimensions
-			if ( sourceBitmapData.width != _textureWidth || sourceBitmapData.height != _textureHeight )
-			{
-				var tmpBmd:BitmapData = new BitmapData( _textureWidth,_textureHeight ,false,0xffffffff);
-				var scl:Number = Math.min(textureWidth /  sourceBitmapData.width, textureHeight /  sourceBitmapData.height );
-				
-				var m:Matrix = new Matrix(scl,0,0,scl, 0.5 * (_textureWidth - sourceBitmapData.width*scl), 0)
-				tmpBmd.draw(sourceBitmapData,m,null,"normal",null,true);
+			if (sourceBitmapData.width != _textureWidth || sourceBitmapData.height != _textureHeight) {
+				var tmpBmd : BitmapData = new BitmapData(_textureWidth, _textureHeight, false, 0xffffffff);
+				var scl : Number = Math.min(textureWidth / sourceBitmapData.width, textureHeight / sourceBitmapData.height);
+
+				var m : Matrix = new Matrix(scl, 0, 0, scl, 0.5 * (_textureWidth - sourceBitmapData.width * scl), 0)
+				tmpBmd.draw(sourceBitmapData, m, null, "normal", null, true);
 				return tmpBmd;
 			} else {
 				return sourceBitmapData;
@@ -287,10 +288,8 @@ package net.psykosoft.psykopaint2.core.model
 		 * 0: painted color layer
 		 * 1: normal/specular layer
 		 * 2: the source texture
-		 *
-		 * IMPORTANT: THE DATA IS SAVED IN ARGB ORDER - UNLIKE THE LOAD ORDER
 		 */
-		public function saveLayersARGB(): Vector.<ByteArray>
+		public function saveLayers() : Vector.<ByteArray>
 		{
 			stage3D.context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			var bmp : BitmapData = new BitmapData(_width, _height, false);
@@ -301,22 +300,12 @@ package net.psykosoft.psykopaint2.core.model
 			layers.push(saveLayerNoAlpha(sourceTexture, bmp));
 			bmp.dispose();
 			bmp2.dispose();
-			layers[2].length = _textureWidth*_height*4;
+			layers[2].length = _textureWidth * _height * 4;
 			return layers;
-		}
-
-		// IMPORTANT, DATA INPUT MUST BE IN BGRA ORDER TO AVOID PRE-MULTIPLICATION ISSUES.
-		// Conversion is not done here to allow fast native conversion
-		public function loadLayersBGRA(data : Vector.<ByteArray>) : void
-		{
-			_colorTexture.uploadFromByteArray(data[0], 0, 0);
-			_normalSpecularMap.uploadFromByteArray(data[1], 0, 0);
-			sourceTexture.uploadFromByteArray(data[2], 0, 0);
 		}
 
 		private function saveLayerNoAlpha(layer : Texture, workerBitmapData : BitmapData) : ByteArray
 		{
-			var data : ByteArray = new ByteArray();
 			var context : Context3D = stage3D.context3D;
 			var sourceRect : Rectangle = new Rectangle(0, 0, usedTextureWidthRatio, usedTextureHeightRatio);
 			var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
@@ -326,8 +315,7 @@ package net.psykosoft.psykopaint2.core.model
 			context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopySubTexture.copy(layer, sourceRect, destRect, context);
 			context.drawToBitmapData(workerBitmapData);
-			data = workerBitmapData.getPixels(workerBitmapData.rect);
-			return data;
+			return workerBitmapData.getPixels(workerBitmapData.rect);
 		}
 
 		private function saveLayerWithAlpha(layer : Texture, workerBitmapData1 : BitmapData, workerBitmapData2 : BitmapData) : ByteArray
@@ -365,6 +353,35 @@ package net.psykosoft.psykopaint2.core.model
 			}
 
 			return outputData;
+		}
+
+		public function loadLayers(data : Vector.<ByteArray>) : void
+		{
+			_colorTexture.uploadFromByteArray(translateARGBtoBGRA(data[0]), 0, 0);
+			_normalSpecularMap.uploadFromByteArray(translateARGBtoBGRA(data[1]), 0, 0);
+
+			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(data[2], _width, _height);
+			setSourceBitmapData(sourceBmd);
+			sourceBmd.dispose();
+		}
+
+		// TODO: probably very slow, find alternative - note: david has altered this to be faster, but probably still need to do this outside of as3
+		private function translateARGBtoBGRA(input : ByteArray) : ByteArray
+		{
+			input.position = 0;
+			var output : ByteArray = new ByteArray();
+			var len : int = input.length / 4;
+			var i : int = 0;
+
+			input.endian = Endian.BIG_ENDIAN;
+			output.endian = Endian.LITTLE_ENDIAN;
+
+			while (i++ < len)
+				output.writeUnsignedInt(input.readUnsignedInt());
+
+			output.length = _textureWidth * _textureHeight * 4;
+
+			return output;
 		}
 	}
 }

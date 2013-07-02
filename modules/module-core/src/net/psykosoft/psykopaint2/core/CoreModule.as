@@ -302,7 +302,7 @@ package net.psykosoft.psykopaint2.core
 
 			// Start loading painting data.
 			_injector.getInstance( RequestPaintingSavedDataRetrievalSignal ).dispatch();
-//			_injector.getInstance( NotifyPaintingDataRetrievedSignal ).addOnce( testLoadingAPainting ); // Just for testing.
+			_injector.getInstance( NotifyPaintingDataRetrievedSignal ).addOnce( testLoadingAPainting ); // Just for testing.
 
 			moduleReadySignal.dispatch();
 		}

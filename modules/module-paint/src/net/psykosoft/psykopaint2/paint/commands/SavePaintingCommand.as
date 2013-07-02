@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Produce data vo.
 			var vo:PaintingVO = new PaintingVO();
-			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayersARGB();
+			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayers();
 			var hr:Boolean = CoreSettings.RUNNING_ON_RETINA_DISPLAY;
 			vo.fileVersion = CoreSettings.PAINTING_FILE_VERSION;
 			vo.lastSavedOnDateMs = dateMs;
