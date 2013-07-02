@@ -63,7 +63,6 @@ package net.psykosoft.psykopaint2.core.models
 
 			// Delete from array.
 			_paintingData.splice( index, 1 );
-			trace("PAINTING DATA", _paintingData);
 		}
 
 		public function addSinglePaintingData( vo:PaintingVO ):void {

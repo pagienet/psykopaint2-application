@@ -69,7 +69,7 @@ import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 				}
 
 				case CanvasSubNavView.LBL_DESTROY: {
-					if( paintingModel.focusedPaintingId != PaintingVO.DEFAULT_VO_ID ) {
+					if( paintingModel.focusedPaintingId != PaintingVO.DEFAULT_VO_ID && paintingModel.focusedPaintingId != "" ) {
 						requestPaintingDeletionSignal.dispatch( paintingModel.focusedPaintingId );
 					}
 					break;
@@ -92,7 +92,9 @@ import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 					break;
 				}
 				case CanvasSubNavView.LBL_SAVE: {
-					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, false );
+					if( paintingModel.focusedPaintingId != "" ) {
+						requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, false );
+					}
 					break;
 				}
 				case CanvasSubNavView.LBL_PUBLISH: {
