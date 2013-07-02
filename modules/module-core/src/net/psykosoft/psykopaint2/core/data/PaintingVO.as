@@ -22,9 +22,9 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function toString():String {
 			return "PaintingVO - " +
-					"fileVersion: " + fileVersion +
-					", id: " + id +
-					", lastSavedOnDateMs: " + lastSavedOnDateMs;
+				   "fileVersion: " + fileVersion +
+				   ", id: " + id +
+				   ", lastSavedOnDateMs: " + lastSavedOnDateMs;
 		}
 
 		// ---------------------------------------------------------------------
