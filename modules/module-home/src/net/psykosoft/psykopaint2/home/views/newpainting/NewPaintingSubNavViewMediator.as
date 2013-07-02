@@ -36,6 +36,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var requestPaintingLoadSignal:RequestPaintingActivationSignal;
 
 		[Inject]
+		public var requestEaselUpdateSignal:RequestEaselUpdateSignal;
+
+		[Inject]
 		public var paintingModel:PaintingModel;
 
 		private var _waitingForZoom:Boolean;
@@ -55,6 +58,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			if( data.length > 0 ) {
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = view.getIdForSelectedInProgressPainting();
+				var vo:PaintingVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
+				var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
+				requestEaselUpdateSignal.dispatch( bmd );
 			}
 
 			// From app.

@@ -54,7 +54,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 					requestStateChange( StateType.PREVIOUS );
 					break;
 				case PickSurfaceSubNavView.LBL_CONTINUE:
-					trace( this, "continue, selected: " + view.getSelectedCenterButtonIndex() );
 					pickSurfaceByIndex( view.getSelectedCenterButtonIndex() );
 					break;
 				case PickSurfaceSubNavView.LBL_SURF1:
