@@ -188,7 +188,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				<brush engine={BrushType.SPRAY_CAN} name="Gravure Pen">
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="1" showInUI="1" minValue="-1" maxValue="1"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value="0.6" showInUI="1" minValue="0" maxValue="1"/>
-					<parameter id="Shapes" path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
+					<parameter id="Shapes" path="brush" index="0" list="sphere,splat,splat3,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="3" />
@@ -198,7 +198,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index="1" />
 							<parameter id={ColorDecorator.PARAMETER_IL_COLOR}  path="pathengine.pointdecorator_1" index="2" />
-							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_1" value1="1" value2="1"/>
+							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_1" value1="0" value2="0"/>
 						</ColorDecorator>
 					</pathengine>
 				</brush>
