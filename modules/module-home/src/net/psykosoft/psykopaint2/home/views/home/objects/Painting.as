@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
-	import away3d.textures.BitmapTexture;
+	import away3d.materials.lightpickers.StaticLightPicker;
 
 	import flash.display.BitmapData;
 
@@ -22,9 +22,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private var _plane:Mesh;
 		private var _material:TextureMaterial;
-		private var _diffuseTexture:BitmapTexture;
 
-		public function Painting( diffuseBitmap:BitmapData, view:View3D ) {
+		public function Painting( diffuseBitmap:BitmapData, normalBitmap:BitmapData, view:View3D, lightPicker : StaticLightPicker ) {
 
 			super();
 
@@ -32,11 +31,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_height = diffuseBitmap.height;
 			trace( this, "creating picture with dimensions: " + _width + "x" + _height );
 
-			_plane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( diffuseBitmap, view.stage3DProxy );
+			_plane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( diffuseBitmap, normalBitmap, view.stage3DProxy );
 //			_plane = new Mesh( new PlaneGeometry( _width, _height ), new TextureMaterial( new BitmapTexture( diffuseBitmap ) ) ); // TODO: test non power of 2 textures with air 3.8
 			_plane.rotationX = -90;
-			_material = _plane.material as TextureMaterial;
-			_diffuseTexture = _material.texture as BitmapTexture;
+			_material = TextureMaterial(_plane.material);
+//			_material.lightPicker = lightPicker;
 			addChild( _plane );
 		}
 
@@ -46,9 +45,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			_plane.dispose();
 			_material.dispose();
-			_diffuseTexture.dispose();
+			_material.texture.dispose();
+			if (_material.normalMap) _material.normalMap.dispose();
 
-			_diffuseTexture = null;
 			_plane = null;
 			_material = null;
 

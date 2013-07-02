@@ -75,8 +75,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Update easel.
 			if( updateEasel ) {
-				var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
-				requestEaselUpdateSignal.dispatch( bmd );
+				var diffuseBitmapData:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, true );
+				var normalBitmapData:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.heightmapImageARGB, vo.width, vo.height, false );
+				requestEaselUpdateSignal.dispatch( diffuseBitmapData, normalBitmapData );
 			}
 
 			// Serialize data.

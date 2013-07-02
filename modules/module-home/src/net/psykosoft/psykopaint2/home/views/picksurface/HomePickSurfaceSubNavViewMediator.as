@@ -87,8 +87,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_sample.jpg", onSurfacePreviewLoaded );
 		}
 
-		private function onSurfacePreviewLoaded( bmd:BitmapData ):void {
-			requestEaselPaintingUpdateSignal.dispatch( bmd );
+		private function onSurfacePreviewLoaded( diffuseBmd:BitmapData):void {
+			requestEaselPaintingUpdateSignal.dispatch( diffuseBmd, null );
 			_bitmapLoader.dispose();
 			_bitmapLoader = null;
 		}

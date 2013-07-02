@@ -359,7 +359,7 @@ package net.psykosoft.psykopaint2.core.model
 			_colorTexture.uploadFromByteArray(translateARGBtoBGRA(data[0]), 0, 0);
 			_normalSpecularMap.uploadFromByteArray(translateARGBtoBGRA(data[1]), 0, 0);
 
-			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(data[2], _width, _height);
+			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(data[2], _width, _height, false);
 			setSourceBitmapData(sourceBmd);
 			sourceBmd.dispose();
 		}

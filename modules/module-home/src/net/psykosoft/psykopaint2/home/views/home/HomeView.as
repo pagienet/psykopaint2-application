@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 	import away3d.core.managers.Stage3DProxy;
+	import away3d.lights.DirectionalLight;
+	import away3d.materials.lightpickers.StaticLightPicker;
 
 	import flash.display.BitmapData;
 	import flash.events.Event;
@@ -33,11 +35,14 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _stage3dProxy:Stage3DProxy;
 		private var _introZoomOutPending:Boolean = true;
 		private var _shiftMultiplier:Number = 1;
+		private var _light : DirectionalLight;
+		private var _lightPicker : StaticLightPicker;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
 		public static const DEFAULT_ZOOM_IN:Point = new Point( 400, -800 );
 		public static const EASEL_CLOSE_ZOOM_IN:Point = new Point( 315, -900 );
 		public static const EASEL_FAR_ZOOM_IN:Point = new Point( 170, -1160 );
+
 
 		public function HomeView() {
 			super();
@@ -94,11 +99,13 @@ package net.psykosoft.psykopaint2.home.views.home
 //			var tri:Trident = new Trident( 500 );
 //			_view.scene.addChild( tri );
 
+			_light = new DirectionalLight(-1, -1, 2);
+			_lightPicker = new StaticLightPicker([_light]);
 			_room = new WallRoom( _view );
 			var cameraTarget:Object3D = new Object3D();
 			_cameraController.setCamera( _view.camera, cameraTarget );
 			_cameraController.stage = stage;
-			_paintingManager = new PaintingManager( _cameraController, _room, _view );
+			_paintingManager = new PaintingManager( _cameraController, _room, _lightPicker, _view );
 			_paintingManager.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
 			_cameraController.cameraY = cameraTarget.y = 400;
@@ -108,6 +115,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.scene.addChild( _cameraController );
 			_view.scene.addChild( _room );
 			_view.scene.addChild( _paintingManager );
+			_view.scene.addChild( _light );
 
 			// -------------------------
 			// Prepare external assets.

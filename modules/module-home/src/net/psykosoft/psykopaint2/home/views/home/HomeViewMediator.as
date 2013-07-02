@@ -126,34 +126,26 @@ public class HomeViewMediator extends MediatorBase
 			requestZoomThenChangeStateSignal.dispatch( true, StateType.PAINT );
 		}
 
-		private function onEaselUpdateRequest( bmd:BitmapData ):void {
-			view.paintingManager.setEaselContent( bmd );
+		private function onEaselUpdateRequest( diffuseContent:BitmapData, normalContent:BitmapData ):void {
+			view.paintingManager.setEaselContent( diffuseContent, normalContent );
 		}
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
-			if( data.length > 0 ) {
-				var vo:PaintingVO;
-				var bmd:BitmapData;
-				if( data.length == 1 ) {
-					vo = data[ 0 ];
-					bmd = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
-					view.paintingManager.setEaselContent( bmd );
-				}
-				else {
-					var len:uint = data.length;
-					var latestDate:int = int.MIN_VALUE;
-					var latestVo:PaintingVO = vo;
-					for( var i:uint; i < len; i++ ) {
-						vo = data[ i ];
-						if( vo.lastSavedOnDateMs > latestDate ) {
-							latestDate = vo.lastSavedOnDateMs;
-							latestVo = vo;
-						}
-					}
-					bmd = BitmapDataUtils.getBitmapDataFromBytes( latestVo.colorImageARGB, latestVo.width, latestVo.height );
-					view.paintingManager.setEaselContent( bmd );
-				}
+			if( data.length == 0 ) return;
+
+			var latestVo:PaintingVO = data[ 0 ];
+			var len:uint = data.length;
+			var vo:PaintingVO;
+
+			for( var i:uint = 1; i < len; i++ ) {
+				vo = data[ i ];
+				if( vo.lastSavedOnDateMs > latestVo.lastSavedOnDateMs )
+					latestVo = vo;
 			}
+
+			var diffuseBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.colorImageARGB, latestVo.width, latestVo.height, true );
+			var normalBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.heightmapImageARGB, latestVo.width, latestVo.height, false );
+			view.paintingManager.setEaselContent( diffuseBmd, normalBmd );
 		}
 
 		private function onCanvasSnapShot( bmd:BitmapData ):void {

@@ -79,9 +79,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				}
 				default: { // Default buttons are supposed to be in progress painting buttons.
 					var vo:PaintingVO = paintingModel.getVoWithId( label );
-					var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
+					var diffuseBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, true );
+					var normalBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, false );
 					paintingModel.focusedPaintingId = label;
-					requestEaselPaintingUpdateSignal.dispatch( bmd );
+					requestEaselPaintingUpdateSignal.dispatch( diffuseBmd, normalBmd );
 					break;
 				}
 			}

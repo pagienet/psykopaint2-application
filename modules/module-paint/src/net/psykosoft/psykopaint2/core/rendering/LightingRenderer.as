@@ -160,9 +160,8 @@ package net.psykosoft.psykopaint2.core.rendering
 			CopySubTexture.copy(canvas.fullSizeBackBuffer, sourceRect, destRect, _context3d);
 		}
 
-		private function renderLighting(offsetX : Number, offsetY : Number,widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
+		private function renderLighting(offsetX : Number, offsetY : Number, widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
 		{
-			
 			updateGlobalVertexData(offsetX, offsetY, widthRatio, heightRatio, canvas);
 			updateGlobalFragmentData(canvas);
 

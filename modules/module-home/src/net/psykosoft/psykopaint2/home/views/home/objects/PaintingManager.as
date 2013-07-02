@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
+	import away3d.materials.lightpickers.StaticLightPicker;
 
 	import br.com.stimuli.loading.BulkLoader;
 
@@ -35,12 +36,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		public var homePaintingIndex:int = -1;
 
 		private const FRAME_GAP:Number = 300;
+		private var _lightPicker : StaticLightPicker;
 
-		public function PaintingManager( cameraController:ScrollCameraController, room:WallRoom, view:View3D ) {
+		public function PaintingManager( cameraController:ScrollCameraController, room:WallRoom, lightPicker : StaticLightPicker, view:View3D ) {
 			super();
 			_cameraController = cameraController;
 			_room = room;
 			_view = view;
+			_lightPicker = lightPicker;
 			_paintings = new Vector.<FramedPainting>();
 			_snapPointForPainting = new Dictionary();
 			_shadowForPainting = new Dictionary();
@@ -69,16 +72,20 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		private var _pendingEaselContent:BitmapData;
-		public function setEaselContent( bmd:BitmapData ):void {
-			 _pendingEaselContent = bmd;
+		private var _pendingEaselContentDiffuse:BitmapData;
+		private var _pendingEaselContentNormal:BitmapData;
+
+		public function setEaselContent( diffuse:BitmapData, normal:BitmapData ):void {
+			 _pendingEaselContentDiffuse = diffuse;
+			 _pendingEaselContentNormal = normal;
 			if( _easel ) setEaselPaintingNow();
 		}
 
 		private function setEaselPaintingNow():void {
-			var painting:Painting = new Painting( _pendingEaselContent, _view );
+			var painting:Painting = new Painting( _pendingEaselContentDiffuse, _pendingEaselContentNormal, _view, _lightPicker );
 			_easel.setPainting( painting );
-			_pendingEaselContent = null;
+			_pendingEaselContentDiffuse = null;
+			_pendingEaselContentNormal = null;
 		}
 
 		public function createDefaultPaintings():void {
@@ -95,7 +102,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// Easel.
 			_easel = createPaintingAtIndex( null, null, 1, false );
 			_easel.easelVisible = true;
-			if( _pendingEaselContent ) setEaselPaintingNow();
+			if( _pendingEaselContentDiffuse ) setEaselPaintingNow();
 			autoPositionPaintingAtIndex( _easel, 1, false, 1 );
 			_easel.z -= 500;
 
@@ -115,7 +122,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Painting.
 			if( paintingBmd ) {
-				var painting:Painting = new Painting( paintingBmd, _view );
+				var painting:Painting = new Painting( paintingBmd, null, _view, null);
 			}
 
 			// Frame.

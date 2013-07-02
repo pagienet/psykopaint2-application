@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 	import away3d.core.base.CompactSubGeometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.materials.MaterialBase;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.ATFTexture;
@@ -17,33 +18,31 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
 
+
 	public class TextureUtil
 	{
 		private static const MAX_SIZE:uint = 2048;
 
-		public static function createPlaneThatFitsNonPowerOf2TransparentImage( image:BitmapData, stage3dProxy:Stage3DProxy ):Mesh {
+		public static function createPlaneThatFitsNonPowerOf2TransparentImage( diffuseImage:BitmapData, normalImage:BitmapData, stage3dProxy:Stage3DProxy ):Mesh {
+			// Remember original diffuseImage and safe diffuseImage dimensions.
+			var imageDimensions:Point = new Point( diffuseImage.width, diffuseImage.height );
 
-			// Obtain "safe" ( power of 2 sized image ) from the original.
-			var safeImage:BitmapData = TextureUtil.ensurePowerOf2ByCentering( image );
-
-			// Remember original image and safe image dimensions.
-			var imageDimensions:Point = new Point( image.width, image.height );
-			var textureDimensions:Point = new Point( safeImage.width, safeImage.height );
-
-			// Create texture from image.
-			var texture:BitmapTexture = new BitmapTexture( safeImage );
-			texture.getTextureForStage3D( stage3dProxy ); // Force image creation before the disposal of the bitmap data.
-			image.dispose();
-			safeImage.dispose();
+			var diffuseTexture : BitmapTexture = createPow2TextureFromBitmap(diffuseImage, stage3dProxy);
+			var textureDimensions:Point = new Point( diffuseTexture.width, diffuseTexture.height );
 
 			// Create material.
-			var material:TextureMaterial = new TextureMaterial( texture );
-			material.mipmap = false;
-			material.smooth = true;
+			var material:TextureMaterial = new TextureMaterial( diffuseTexture, true, false, false );
+
+//			if (normalImage) {
+//				material.diffuseMethod = new PaintingDiffuseMethod();
+//				var normalTexture : BitmapTexture = createPow2TextureFromBitmap(normalImage, stage3dProxy);
+//				material.normalMap = normalTexture;
+//				material.specularMap = normalTexture;
+//			}
 
 			// Build geometry.
-			// Note: Plane takes original image size ( not power of 2 dimensions ) and shifts and re-scales uvs
-			// so that the image perfectly fits in the plane without using transparency on the edges.
+			// Note: Plane takes original diffuseImage size ( not power of 2 dimensions ) and shifts and re-scales uvs
+			// so that the diffuseImage perfectly fits in the plane without using transparency on the edges.
 			var dw:Number = ( ( textureDimensions.x - imageDimensions.x ) / 2 ) / textureDimensions.x; // TODO: math can be optimized
 			var dh:Number = ( ( textureDimensions.y - imageDimensions.y ) / 2 ) / textureDimensions.y;
 			var dsw:Number = textureDimensions.x / imageDimensions.x;
@@ -64,6 +63,19 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 
 			return plane;
 
+		}
+
+		private static function createPow2TextureFromBitmap(diffuseImage : BitmapData, stage3dProxy : Stage3DProxy) : BitmapTexture
+		{
+			// Obtain "safe" ( power of 2 sized image ) from the original.
+			var diffuseSafeImage : BitmapData = TextureUtil.ensurePowerOf2ByCentering(diffuseImage);
+
+			// Create texture from image.
+			var diffuseTexture : BitmapTexture = new BitmapTexture(diffuseSafeImage);
+			diffuseTexture.getTextureForStage3D(stage3dProxy); // Force diffuseImage creation before the disposal of the bitmap data.
+			diffuseImage.dispose();
+			diffuseSafeImage.dispose();
+			return diffuseTexture;
 		}
 
 		public static function ensurePowerOf2ByScaling( bitmapData:BitmapData, scale:Number = 1 ):BitmapData {
