@@ -88,6 +88,7 @@ package net.psykosoft.psykopaint2.core.commands
 			} catch ( error:Error ) {
 				trace("***WARNING*** Error de-serializing file " + _currentFileBeingLoaded.nativePath );
 			}
+			trace( this, "produced vo: " + vo );
 
 			// Continue reading next file.
 			_indexOfPaintingFileBeingRead++;

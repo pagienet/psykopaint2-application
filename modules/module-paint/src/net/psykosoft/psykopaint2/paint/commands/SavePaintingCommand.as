@@ -52,7 +52,6 @@ package net.psykosoft.psykopaint2.paint.commands
 				// Create id and focus model on it.
 				paintingId = userModel.uniqueUserId + "-" + dateMs;
 				trace( this, "creating a new id: " + paintingId );
-				paintingModel.focusedPaintingId = paintingId;
 
 				// Produce data vo.
 				vo = new PaintingVO();
@@ -62,6 +61,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			else { // Otherwise just retrieve the vo.
 				vo = paintingModel.getVoWithId( paintingId );
 			}
+			paintingModel.focusedPaintingId = paintingId;
 
 			// Update vo.
 			vo.lastSavedOnDateMs = dateMs;
@@ -71,7 +71,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			vo.colorImageARGB = imagesRGBA[ 0 ];
 			vo.heightmapImageARGB = imagesRGBA[ 1 ];
 			vo.sourceImageARGB = imagesRGBA[ 2 ];
-			trace( this, "using vo: " + vo );
+			trace( this, "saving vo: " + vo );
 
 			// Update easel.
 			if( updateEasel ) {
