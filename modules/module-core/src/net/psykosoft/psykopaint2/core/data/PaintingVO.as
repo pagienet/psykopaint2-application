@@ -2,13 +2,13 @@ package net.psykosoft.psykopaint2.core.data
 {
 
 	import flash.utils.ByteArray;
+	import flash.utils.CompressionAlgorithm;
 
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 
 	public class PaintingVO
 	{
 		public static const PAINTING_FILE_VERSION:String = "2";
-		public static const DEFAULT_ID:String = "defaultPaintingId";
 
 		public var colorImageARGB:ByteArray;
 		public var heightmapImageARGB:ByteArray;
