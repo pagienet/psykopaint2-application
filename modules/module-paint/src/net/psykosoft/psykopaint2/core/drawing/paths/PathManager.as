@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
 	
+	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ConditionalDecorator;
@@ -84,9 +85,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var _brushAngleRange:Number = Math.PI;
 		public var canvasModel:CanvasModel;
 
-		// these two is to prevent both mouse & touch handling to happen, which sometimes causes double start/end path triggers
-		private var _listeningToMouse : Boolean;
-		private var _listeningToTouch : Boolean;
+		
 		private var _startCallbacksSent : Boolean;
 		
 		private var _canvasRect : Rectangle;
@@ -107,8 +106,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var GESTURE_RECOGNITION_TIME:Number = 500;
 		private var renderer:CanvasRenderer;
 		
-		private var twoFingerGestureTimeout:int
-		private var singleTouchBeginEvent:TouchEvent;
+		//private var twoFingerGestureTimeout:int
+		//private var singleTouchBeginEvent:TouchEvent;
+		private var _strokeInProgress:Boolean;
 		
 		public function PathManager( type:int )
 		{
@@ -182,78 +182,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		protected function sendEndCallbacks() : void
 		{
-			if (!_listeningToMouse && !_listeningToTouch) _view.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame, false );
+			if (!_strokeInProgress) _view.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame, false );
 		
 			if (_startCallbacksSent && _callbacks.onPathEnd) _callbacks.onPathEnd.apply(_callbacks.callbackObject);
 			_startCallbacksSent = false;
 		}
 
-		protected function onTouchBegin(event : TouchEvent) : void
-		{
-			if (_listeningToMouse) return;
-			
-			//Navbar touched?
-			var stage : Stage = event.target as Stage;
-			if (!stage) return;
-			
-			if (_touchID == -1) {
-				_listeningToTouch = true;
-				_touchID = event.touchPointID;
-				/*
-				_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
-				
-				
-				
-
-				_view.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-				_view.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-
-				onSampleStart(event.stageX, event.stageY);
-				*/
-				singleTouchBeginEvent = event;
-				twoFingerGestureTimeout = setTimeout( onSingleTouchBegin, 40 );
-			} else {
-				clearTimeout(twoFingerGestureTimeout);
-				_listeningToTouch = false;
-				_touchID = -1;
-			}
-		}
-		
-		protected function onSingleTouchBegin() : void
-		{
-			clearTimeout(twoFingerGestureTimeout);
-			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
-			_touchID = singleTouchBeginEvent.touchPointID;
-			
-			_view.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-			_view.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-			
-			onSampleStart(singleTouchBeginEvent.stageX, singleTouchBeginEvent.stageY);
-		}
-
-		protected function onTouchMove(event : TouchEvent) : void
-		{
-			if (event.touchPointID == _touchID)
-			{
-				onSingleTouchBegin();
-				if ( gestureStopTimeout == -1 && GestureManager.gesturesEnabled ) gestureStopTimeout = setTimeout(enableGestureRecognition,GESTURE_RECOGNITION_TIME,false);
-				onSamplePoint(event.stageX, event.stageY);
-			}
-		}
-
-		protected function onTouchEnd(event : TouchEvent) : void
-		{
-			if ( event.touchPointID == _touchID ) 
-			{
-				enableGestureRecognition(true);
-				_listeningToTouch = false;
-				onSampleEnd(event.stageX, event.stageY);
-				_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-				_view.stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-				_touchID = -1;
-			}
-		}
-		
 		protected function onEnterFrame(event : Event) : void
 		{
 			if ( playbackActive && event != null )
@@ -287,24 +221,58 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				_accumulatedResults.length = 0;
 			}
 			
-			if (!playbackActive && !singleStepPlaybackActive &&!_listeningToTouch && !_listeningToMouse && !hasActiveDecorators() )
+			if (!playbackActive && !singleStepPlaybackActive && !_strokeInProgress && !hasActiveDecorators() )
 			{
 				sendEndCallbacks();
 			}
 			
 		}
 
+		protected function onTouchBegin(event : TouchEvent) : void
+		{
+			
+			//Navbar touched?
+			var stage : Stage = event.target as Stage;
+			if (!stage) return;
+			
+			if (_touchID == -1) {
+				_strokeInProgress = true;
+				_touchID = event.touchPointID;
+				/*
+				singleTouchBeginEvent = event;
+				twoFingerGestureTimeout = setTimeout( onSingleTouchBegin, 40 );
+				*/
+				onSingleTouchBegin(event);
+			}
+			/*
+			else {
+				clearTimeout(twoFingerGestureTimeout);
+				_strokeInProgress = false;
+				_touchID = -1;
+			}
+			*/
+		}
+		
+		protected function onSingleTouchBegin( event : TouchEvent ) : void
+		{
+			//clearTimeout(twoFingerGestureTimeout);
+			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+			
+			_view.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			_view.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			
+			onSampleStart(event.stageX, event.stageY);
+		}
+		
 		// for purposes of le debug
 		protected function onMouseDown(event : MouseEvent) : void
 		{
-			if (_listeningToTouch) return;
-			
 			
 			var stage : Stage = event.target as Stage;
 			if (!stage) return;
 			
 			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
-			_listeningToMouse = true;
+			_strokeInProgress = true;
 			
 			//TEMPORARY RECORDING FOR TESTS:
 			playbackActive = false;
@@ -318,10 +286,24 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_view.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_view.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		}
+		
+		protected function onTouchEnd(event : TouchEvent) : void
+		{
+			if ( event.touchPointID == _touchID ) 
+			{
+				//clearTimeout(twoFingerGestureTimeout);
+				enableGestureRecognition(true);
+				_strokeInProgress = false;
+				onSampleEnd(event.stageX, event.stageY);
+				_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+				_view.stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+				_touchID = -1;
+			}
+		}
 
 		protected function onMouseUp(event : MouseEvent) : void
 		{
-			_listeningToMouse = false;
+			_strokeInProgress = false;
 			enableGestureRecognition(true);
 			if ( !playbackActive )
 			{
@@ -330,6 +312,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			onSampleEnd(event.stageX, event.stageY);
 			_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		}
+		
+		protected function onTouchMove(event : TouchEvent) : void
+		{
+			if (event.touchPointID == _touchID)
+			{
+				//onSingleTouchBegin();
+				if ( gestureStopTimeout == -1 && GestureManager.gesturesEnabled ) gestureStopTimeout = setTimeout(enableGestureRecognition,GESTURE_RECOGNITION_TIME,false);
+				onSamplePoint(event.stageX, event.stageY);
+			}
 		}
 
 		private function onMouseMove(event : MouseEvent) : void
@@ -429,9 +421,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					} else {
 						if ( inCondition == -1 )
 						{
-							_accumulatedResults = _pointDecorators[i].process( _accumulatedResults, this, _listeningToTouch || _listeningToMouse );
+							_accumulatedResults = _pointDecorators[i].process( _accumulatedResults, this, _strokeInProgress );
 						} else {
-							conditionalStack[inCondition] = _pointDecorators[i].process( conditionalStack[inCondition], this, _listeningToTouch || _listeningToMouse );
+							conditionalStack[inCondition] = _pointDecorators[i].process( conditionalStack[inCondition], this, _strokeInProgress );
 						}
 					}
 				}
@@ -442,16 +434,20 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		{
 			_touchID = -1;
 			_startCallbacksSent = false;
+			_strokeInProgress = false;
 			this.canvasModel = canvasModel;
 			this.renderer = renderer;
 			if (_active) return;
 			
 			_active = true;
 			_view = view;
-//			_view.stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-			_view.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			_view.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
-			
+			if ( CoreSettings.RUNNING_ON_iPAD )
+			{
+				_view.stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+			} else {
+				_view.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				_view.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
+			}
 			updateStageScaleFactors();
 		}
 		
@@ -513,17 +509,19 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public function deactivate() : void
 		{
 			_active = false;
-			_view.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-			_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-			_view.stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-
 			_view.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame );
 
-			_view.stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			_view.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
-			
+			if ( CoreSettings.RUNNING_ON_iPAD )
+			{
+				_view.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+				_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+				_view.stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			} else {
+				_view.stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+				_view.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
+			}
 			enableGestureRecognition( true );
 		}
 

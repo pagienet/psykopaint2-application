@@ -9,10 +9,11 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.events.TimerEvent;
 	import flash.events.UncaughtErrorEvent;
 	import flash.geom.ColorTransform;
+	import flash.system.Capabilities;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;

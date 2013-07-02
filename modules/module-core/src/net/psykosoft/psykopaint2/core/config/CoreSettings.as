@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.core.config
 {
-
 	public class CoreSettings
 	{
 		// ---------------------------------------------------------------------
@@ -38,5 +37,6 @@ package net.psykosoft.psykopaint2.core.config
 		public static var GLOBAL_SCALING:Number = 1;
 		public static var STAGE_WIDTH:Number = 1024;
 		public static var STAGE_HEIGHT:Number = 768;
+		
 	}
 }
