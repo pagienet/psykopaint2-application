@@ -1,12 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 {
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.StageQuality;
 	import flash.display3D.Context3D;
-	import flash.display3D.textures.Texture;
-	import flash.geom.Matrix;
-	
+
 	public class SplatBrushShape2 extends EmbeddedBrushShape
 	{
 		[Embed(source="assets/brushset2.png", mimeType="image/png")]
