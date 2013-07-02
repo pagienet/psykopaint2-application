@@ -9,17 +9,14 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
-	import net.psykosoft.psykopaint2.home.views.home.objects.Painting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
 	import net.psykosoft.psykopaint2.home.views.home.objects.WallRoom;
 

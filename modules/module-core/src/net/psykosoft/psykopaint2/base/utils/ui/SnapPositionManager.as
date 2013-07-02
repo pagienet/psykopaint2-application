@@ -40,7 +40,9 @@ package net.psykosoft.psykopaint2.base.utils.ui
 		}
 
 		public function pushSnapPoint( value:Number ):void {
-			_snapPoints.push( value );
+			if( _snapPoints.indexOf( value ) == -1 ) {
+				_snapPoints.push( value );
+			}
 		}
 
 		public function updateSnapPointAtIndex( index:uint, value:Number ):void {

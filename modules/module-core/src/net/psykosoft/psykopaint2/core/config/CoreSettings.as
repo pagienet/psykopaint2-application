@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.core.config
 {
-
 	public class CoreSettings
 	{
 		// ---------------------------------------------------------------------
@@ -23,9 +22,8 @@ package net.psykosoft.psykopaint2.core.config
 		public static const RESOLUTION_DPI_RETINA:uint = 264;
 		public static const STAGE_3D_ANTI_ALIAS:uint = 0;
 
-		public static const PAINTING_DESKTOP_DATA_FOLDER_NAME:String = "psykopaint2-data-paint";
+		public static const PAINTING_DATA_FOLDER_NAME:String = "psykopaint2-data-paint";
 		public static const PAINTING_FILE_EXTENSION:String = ".ppp2";
-		public static const PAINTING_FILE_VERSION:String = "1";
 
 		// ---------------------------------------------------------------------
 		// Variables ( automatically set by framework ).
@@ -36,7 +34,8 @@ package net.psykosoft.psykopaint2.core.config
 		public static var VERSION:String;
 		public static var NAME:String = "";
 		public static var GLOBAL_SCALING:Number = 1;
-		public static var STAGE_WIDTH:Number = 1024;
+		public static var STAGE_WIDTH:Number = 1024; // Doubled dynamically if on retina iPad.
 		public static var STAGE_HEIGHT:Number = 768;
+		
 	}
 }

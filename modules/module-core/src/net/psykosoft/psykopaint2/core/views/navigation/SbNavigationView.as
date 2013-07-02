@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _hidden:Boolean;
 		private var _bgHeight:uint = 250;
 
-		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 100;
+		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 90;
 
 		public var buttonClickedCallback:Function;
 		public var shownSignal:Signal;
@@ -294,7 +294,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// and will cause edge gaps to be set incorrectly
 		private function checkGap():void {
 			// Decide scroller gaps according to the presence of side buttons.
-			if( leftBtnSide.visible && rightBtnSide.visible ) {
+			/*if( leftBtnSide.visible && rightBtnSide.visible ) {
 				_scroller.leftGap =  60;
 				_scroller.rightGap = 210;
 			}
@@ -308,7 +308,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			}
 			else {
 				_scroller.leftGap = _scroller.rightGap = 10;
-			}
+			}*/
 			_needGapCheck = false;
 		}
 
@@ -406,6 +406,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			else _scroller.scrollable = false;*/
 
 			_scroller.dock();
+
+			trace( this, "layout() - scroller width: " + _scroller.minWidth );
 		}
 
 		// ---------------------------------------------------------------------

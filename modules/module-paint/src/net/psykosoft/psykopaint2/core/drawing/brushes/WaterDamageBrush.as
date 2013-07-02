@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		public function WaterDamageBrush()
 		{
-			super(true);
+			super(false);
 
 			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.3, 0, 5);
 			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter, "Gravity influence", 0.1, 0, .3);

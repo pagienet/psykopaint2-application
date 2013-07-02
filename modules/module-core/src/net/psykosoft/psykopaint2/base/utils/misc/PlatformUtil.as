@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.base.utils.misc
 	{
 		public static function isRunningOnIPad():Boolean {
 			var os:String = Capabilities.os;
-			return os.indexOf( "iPad" ) != -1;
+			return os.toLowerCase().indexOf( "ipad" ) != -1;
 		}
 
 		public static function isRunningOnDisplayWithDpi( displayDpi:uint ):Boolean {

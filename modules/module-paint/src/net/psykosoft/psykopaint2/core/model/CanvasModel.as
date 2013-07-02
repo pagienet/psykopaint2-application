@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.model
 {
 
 	import flash.display.BitmapData;
+	import flash.display.BitmapDataChannel;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
@@ -9,11 +10,16 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.utils.ByteArray;
+	import flash.utils.Endian;
+
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
+	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.NormalSpecularMapGenerator;
@@ -46,6 +52,9 @@ package net.psykosoft.psykopaint2.core.model
 
 		private var _viewport : Rectangle;
 		private var _normalSpecularOriginal : ByteArray;
+
+		private var _copySubTextureChannelsRGB : CopySubTextureChannels;
+		private var _copySubTextureChannelsA : CopySubTextureChannels;
 
 		public function CanvasModel()
 		{
@@ -116,8 +125,8 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function setSourceBitmapData(sourceBitmapData : BitmapData) : void
 		{
-			sourceBitmapData = fixSourceDimensions( sourceBitmapData );
-			
+			sourceBitmapData = fixSourceDimensions(sourceBitmapData);
+
 			if (_pyramidMap)
 				_pyramidMap.setSource(sourceBitmapData);
 			else
@@ -126,17 +135,16 @@ package net.psykosoft.psykopaint2.core.model
 			if (_sourceTexture)
 				_pyramidMap.uploadMipLevel(_sourceTexture, 0);
 		}
-		
-		private function fixSourceDimensions(sourceBitmapData:BitmapData):BitmapData
+
+		private function fixSourceDimensions(sourceBitmapData : BitmapData) : BitmapData
 		{
 			// this is only required for the quickstart test where images are loaded in the wrong dimensions
-			if ( sourceBitmapData.width != _textureWidth || sourceBitmapData.height != _textureHeight )
-			{
-				var tmpBmd:BitmapData = new BitmapData( _textureWidth,_textureHeight ,false,0xffffffff);
-				var scl:Number = Math.min(textureWidth /  sourceBitmapData.width, textureHeight /  sourceBitmapData.height );
-				
-				var m:Matrix = new Matrix(scl,0,0,scl, 0.5 * (_textureWidth - sourceBitmapData.width*scl), 0)
-				tmpBmd.draw(sourceBitmapData,m,null,"normal",null,true);
+			if (sourceBitmapData.width != _textureWidth || sourceBitmapData.height != _textureHeight) {
+				var tmpBmd : BitmapData = new BitmapData(_textureWidth, _textureHeight, false, 0xffffffff);
+				var scl : Number = Math.min(textureWidth / sourceBitmapData.width, textureHeight / sourceBitmapData.height);
+
+				var m : Matrix = new Matrix(scl, 0, 0, scl, 0.5 * (_textureWidth - sourceBitmapData.width * scl), 0)
+				tmpBmd.draw(sourceBitmapData, m, null, "normal", null, true);
 				return tmpBmd;
 			} else {
 				return sourceBitmapData;
@@ -268,7 +276,11 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function clearNormalSpecularTexture() : void
 		{
-			_normalSpecularMap.uploadFromByteArray(_normalSpecularOriginal, 0);
+			var inflated : ByteArray = new ByteArray();
+			_normalSpecularOriginal.position = 0;
+			inflated.writeBytes(_normalSpecularOriginal, 0, _normalSpecularOriginal.length);
+			inflated.uncompress();
+			_normalSpecularMap.uploadFromByteArray(inflated, 0);
 		}
 
 		/**
@@ -276,43 +288,99 @@ package net.psykosoft.psykopaint2.core.model
 		 * 0: painted color layer
 		 * 1: normal/specular layer
 		 * 2: the source texture
-		 *
-		 * IMPORTANT: THE DATA IS SAVED IN ARGB ORDER - UNLIKE THE LOAD ORDER
 		 */
-		public function saveLayersARGB(): Vector.<ByteArray>
+		public function saveLayers() : Vector.<ByteArray>
 		{
 			stage3D.context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			var bmp : BitmapData = new BitmapData(_width, _height, true);
+			var bmp : BitmapData = new BitmapData(_width, _height, false);
+			var bmp2 : BitmapData = new BitmapData(_width, _height, false);
 			var layers : Vector.<ByteArray> = new Vector.<ByteArray>();
-			layers.push(saveLayer(_colorTexture, bmp));
-			layers.push(saveLayer(_normalSpecularMap, bmp));
-			layers.push(saveLayer(sourceTexture, bmp));
+			layers.push(saveLayerWithAlpha(_colorTexture, bmp, bmp2));
+			layers.push(saveLayerWithAlpha(_normalSpecularMap, bmp, bmp2));
+			layers.push(saveLayerNoAlpha(sourceTexture, bmp));
 			bmp.dispose();
+			bmp2.dispose();
 			return layers;
 		}
 
-		// IMPORTANT, DATA INPUT MUST BE IN BGRA ORDER TO AVOID PRE-MULTIPLICATION ISSUES.
-		// Conversion is not done here to allow fast native conversion
-		public function loadLayersBGRA(data : Vector.<ByteArray>) : void
+		private function saveLayerNoAlpha(layer : Texture, workerBitmapData : BitmapData) : ByteArray
 		{
-			_colorTexture.uploadFromByteArray(data[0], 0, 0);
-			_normalSpecularMap.uploadFromByteArray(data[1], 0, 0);
-			sourceTexture.uploadFromByteArray(data[2], 0, 0);
-		}
-
-		private function saveLayer(layer : Texture, workerBitmapData : BitmapData) : ByteArray
-		{
-			var data : ByteArray = new ByteArray();
 			var context : Context3D = stage3D.context3D;
 			var sourceRect : Rectangle = new Rectangle(0, 0, usedTextureWidthRatio, usedTextureHeightRatio);
 			var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
 
 			context.setRenderToBackBuffer();
-			context.clear();
+			context.clear(0, 0, 0, 0);
+			context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopySubTexture.copy(layer, sourceRect, destRect, context);
 			context.drawToBitmapData(workerBitmapData);
-			workerBitmapData.copyPixelsToByteArray(workerBitmapData.rect, data);
-			return data;
+			return workerBitmapData.getPixels(workerBitmapData.rect);
+		}
+
+		private function saveLayerWithAlpha(layer : Texture, workerBitmapData1 : BitmapData, workerBitmapData2 : BitmapData) : ByteArray
+		{
+			var context : Context3D = stage3D.context3D;
+			var sourceRect : Rectangle = new Rectangle(0, 0, usedTextureWidthRatio, usedTextureHeightRatio);
+			var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
+
+			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
+			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
+
+			context.setRenderToBackBuffer();
+			context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+
+			context.clear(0, 0, 0, 1);
+			_copySubTextureChannelsRGB.copy(layer, sourceRect, destRect, context);
+			context.drawToBitmapData(workerBitmapData1);
+
+			context.clear(0, 0, 0, 1);
+			_copySubTextureChannelsA.copy(layer, sourceRect, destRect, context);
+			context.drawToBitmapData(workerBitmapData2);
+
+			var rgbData : ByteArray = workerBitmapData1.getPixels(workerBitmapData1.rect);
+			var alphaData : ByteArray = workerBitmapData2.getPixels(workerBitmapData2.rect);
+
+			rgbData.position = 0;
+			alphaData.position = 0;
+			var outputData : ByteArray = new ByteArray();
+			var len : int = _width * _height;
+			for (var i : int = 0; i < len; ++i) {
+				var rgb : uint = rgbData.readUnsignedInt() & 0x00ffffff;
+				var a : uint = alphaData.readUnsignedInt() & 0x000000ff;
+
+				outputData.writeUnsignedInt(rgb | (a << 24));
+			}
+
+			return outputData;
+		}
+
+		public function loadLayers(data : Vector.<ByteArray>) : void
+		{
+			_colorTexture.uploadFromByteArray(translateARGBtoBGRA(data[0]), 0, 0);
+			_normalSpecularMap.uploadFromByteArray(translateARGBtoBGRA(data[1]), 0, 0);
+
+			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(data[2], _width, _height);
+			setSourceBitmapData(sourceBmd);
+			sourceBmd.dispose();
+		}
+
+		// TODO: probably very slow, find alternative - note: david has altered this to be faster, but probably still need to do this outside of as3
+		private function translateARGBtoBGRA(input : ByteArray) : ByteArray
+		{
+			input.position = 0;
+			var output : ByteArray = new ByteArray();
+			var len : int = input.length / 4;
+			var i : int = 0;
+
+			input.endian = Endian.BIG_ENDIAN;
+			output.endian = Endian.LITTLE_ENDIAN;
+
+			while (i++ < len)
+				output.writeUnsignedInt(input.readUnsignedInt());
+
+			output.length = _textureWidth * _textureHeight * 4;
+
+			return output;
 		}
 	}
 }

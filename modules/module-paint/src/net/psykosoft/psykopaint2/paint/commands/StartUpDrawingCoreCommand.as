@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
@@ -59,6 +60,8 @@ package net.psykosoft.psykopaint2.paint.commands
 		override public function execute():void {
 
 			super.execute();
+
+			CopyTexture.init(stage3D.context3D);
 
 			lightController.enabled = true;
 

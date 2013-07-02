@@ -26,8 +26,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
-	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 
 	import org.gestouch.events.GestureEvent;
@@ -95,7 +93,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( StateType.PAINT );
 			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
 			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
-			registerEnablingState( StateType.PAINT_PICK_SURFACE );
 			registerEnablingState( StateType.PAINT_TRANSFORM );
 			
 			// Init.
@@ -214,11 +211,14 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			view.showTranformView(  newState == StateType.PAINT_TRANSFORM )
 
 			//TODO: this is for desktop testing - remove in final version
-			if ( newState == StateType.PAINT_TRANSFORM )
+			if ( !CoreSettings.RUNNING_ON_iPAD )
 			{
-				view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
-			} else {
-				view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+				if ( newState == StateType.PAINT_TRANSFORM )
+				{
+					view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+				} else {
+					view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+				}
 			}
 		}
 

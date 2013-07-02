@@ -160,7 +160,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 				btnSelected.scaleX = Math.random() > 0.5 ? 1 : -1;
 				btnSelected.scaleY = Math.random() > 0.5 ? 1 : -1;
 			}
-//			mouseEnabled = mouseChildren = !selected;
+			mouseEnabled = mouseChildren = !selected;
 			_isSelected = selected;
 		}
 

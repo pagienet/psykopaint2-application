@@ -2,13 +2,10 @@ package net.psykosoft.psykopaint2.core.data
 {
 
 	import flash.utils.ByteArray;
-	import flash.utils.CompressionAlgorithm;
-
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 
 	public class PaintingVO
 	{
-		public static const DEFAULT_ID:String = "defaultPaintingId";
+		public static const PAINTING_FILE_VERSION:String = "2";
 
 		public var colorImageARGB:ByteArray;
 		public var heightmapImageARGB:ByteArray;
@@ -17,7 +14,7 @@ package net.psykosoft.psykopaint2.core.data
 		public var width:int;
 		public var height:int;
 		public var lastSavedOnDateMs:Number;
-		public var fileVersion:String;
+		public var fileVersion:String = PaintingVO.PAINTING_FILE_VERSION;
 
 		public function PaintingVO() {
 			super();
@@ -48,19 +45,13 @@ package net.psykosoft.psykopaint2.core.data
 			bytes.writeFloat( lastSavedOnDateMs );
 
 			// Write images.
-			encodeImage( bytes, colorImageARGB, width, height );
-			encodeImage( bytes, heightmapImageARGB, width, height );
-			encodeImage( bytes, sourceImageARGB, width, height );
+			bytes.writeBytes( colorImageARGB );
+			bytes.writeBytes( heightmapImageARGB );
+			bytes.writeBytes( sourceImageARGB );
+
+			bytes.compress();
 
 			return bytes;
-		}
-
-		private function encodeImage( bytes:ByteArray, imageBytes:ByteArray , width : int, height : int):void {
-			imageBytes.length = width*height*4;
-			//Mario question: why is every image zipped separately instead of zipping the entire bytearray at the end?
-			imageBytes.compress( CompressionAlgorithm.ZLIB );
-			bytes.writeInt( imageBytes.length );
-			bytes.writeBytes( imageBytes );
 		}
 
 		// ---------------------------------------------------------------------
@@ -68,11 +59,13 @@ package net.psykosoft.psykopaint2.core.data
 		// ---------------------------------------------------------------------
 
 		public function deSerialize( bytes:ByteArray ):Boolean {
+			bytes.uncompress();
 
 			// Check version first.
+			// TODO: try/catch on RetrievePaintingSavedDataCommand makes this warning never trace
 			fileVersion = bytes.readUTF();
-			if( fileVersion != CoreSettings.PAINTING_FILE_VERSION ) {
-				trace( "PaintingVO deSerialize() - ***WARNING*** Unable to interpret loaded painting file, version is [" + fileVersion + "] and app is using version [" + CoreSettings.PAINTING_FILE_VERSION + "]" );
+			if( fileVersion != PAINTING_FILE_VERSION ) {
+				trace( "PaintingVO deSerialize() - ***WARNING*** Unable to interpret loaded painting file, version is [" + fileVersion + "] and app is using version [" + PAINTING_FILE_VERSION + "]" );
 				return false;
 			}
 
@@ -92,10 +85,9 @@ package net.psykosoft.psykopaint2.core.data
 		}
 
 		private function decodeImage( bytes:ByteArray ):ByteArray {
-			var numBytes:int = bytes.readInt();
+			var numBytes:int = width * height * 4;
 			var imageBytes:ByteArray = new ByteArray();
 			bytes.readBytes( imageBytes, 0, numBytes );
-			imageBytes.uncompress( CompressionAlgorithm.ZLIB );
 			return imageBytes;
 		}
 	}

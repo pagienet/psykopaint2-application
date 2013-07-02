@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.home.signals
+package net.psykosoft.psykopaint2.core.signals
 {
 
 	import flash.display.BitmapData;

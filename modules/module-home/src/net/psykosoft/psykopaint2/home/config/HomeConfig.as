@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.home.config
 {
 
 	import net.psykosoft.psykopaint2.home.commands.ZoomThenChangeStateCommand;
-	import net.psykosoft.psykopaint2.home.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
@@ -11,16 +10,14 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.home.HomeViewMediator;
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavView;
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavViewMediator;
-	import net.psykosoft.psykopaint2.home.views.picksurface.HomePickSurfaceSubNavView;
-	import net.psykosoft.psykopaint2.home.views.picksurface.HomePickSurfaceSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.picksurface.PickSurfaceSubNavView;
+	import net.psykosoft.psykopaint2.home.views.picksurface.PickSurfaceSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.snapshot.HomeSnapShotView;
 	import net.psykosoft.psykopaint2.home.views.snapshot.HomeSnapShotViewMediator;
-
-	import org.swiftsuspenders.Injector;
 
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
@@ -82,7 +79,6 @@ package net.psykosoft.psykopaint2.home.config
 
 		private function mapNotifications():void {
 	   		_injector.map( RequestWallpaperChangeSignal ).asSingleton();
-	   		_injector.map( RequestEaselUpdateSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -104,7 +100,7 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( WallpaperSubNavView ).toMediator( WallpaperSubNavViewMediator );
 			_mediatorMap.map( HomeSubNavView ).toMediator( HomeSubNavViewMediator );
 			_mediatorMap.map( HomeSnapShotView ).toMediator( HomeSnapShotViewMediator );
-			_mediatorMap.map( HomePickSurfaceSubNavView ).toMediator( HomePickSurfaceSubNavViewMediator );
+			_mediatorMap.map( PickSurfaceSubNavView ).toMediator( PickSurfaceSubNavViewMediator );
 		}
 	}
 }

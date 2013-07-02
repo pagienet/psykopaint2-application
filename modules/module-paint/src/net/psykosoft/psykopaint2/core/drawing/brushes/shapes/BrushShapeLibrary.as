@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			registerShape(new ScalesBrushShape(context3D));
 			registerShape(new AntialiasedTriangleBrushShape(context3D));
 			registerShape(new PrecisionTestShape(context3D));
+			registerShape(new SphereBrushShape(context3D));
 			sendAvailableShapes();
 			PsykoSocket.addMessageCallback("BrushShapeLibrary.*",this, onSocketMessage );
 		}

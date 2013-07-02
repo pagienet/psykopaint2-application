@@ -5,14 +5,14 @@ package net.psykosoft.psykopaint2.core.commands
 	import flash.filesystem.File;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
-	import net.psykosoft.psykopaint2.base.utils.io.DesktopFolderReadUtil;
+	import net.psykosoft.psykopaint2.base.utils.io.FolderReadUtil;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 
 	import robotlegs.bender.framework.api.IContext;
 
-	public class RetrievePaintingSavedDataCommand extends TracingCommand
+	public class RetrievePaintingDataCommand extends TracingCommand
 	{
 		[Inject]
 		public var context:IContext;
@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.core.commands
 		private var _indexOfPaintingFileBeingRead:uint;
 		private var _paintingVos:Vector.<PaintingVO>;
 
-		public function RetrievePaintingSavedDataCommand() {
+		public function RetrievePaintingDataCommand() {
 			super();
 		}
 
@@ -34,34 +34,33 @@ package net.psykosoft.psykopaint2.core.commands
 			super.execute();
 
 			// Read files in app data folder or bundle.
+			var files:Array;
 			if( CoreSettings.RUNNING_ON_iPAD ) {
-				// TODO...
+				files = FolderReadUtil.readFilesInIosFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
 			}
 			else {
+				files = FolderReadUtil.readFilesInDesktopFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
+			}
+			var len:uint = files.length;
+			trace( this, "found files in paint data " + len + ": " );
 
-				// Read all files in data folder.
-				var files:Array = DesktopFolderReadUtil.readFilesInFolder( CoreSettings.PAINTING_DESKTOP_DATA_FOLDER_NAME );
-				var len:uint = files.length;
-				trace( this, "found files in paint data " + len + ": " );
-
-				// Sweep files and focus on the ones that have the .psy extension, which represents paintings.
-				_paintingFiles = new Vector.<File>();
-				for( var i:uint; i < len; i++ ) {
-					var file:File = files[ i ];
-					trace( "  file: " + file.name );
-					if( file.name.indexOf( CoreSettings.PAINTING_FILE_EXTENSION ) != -1 ) {
-						_paintingFiles.push( file );
-					}
+			// Sweep files and focus on the ones that have the .psy extension, which represents paintings.
+			_paintingFiles = new Vector.<File>();
+			for( var i:uint; i < len; i++ ) {
+				var file:File = files[ i ];
+				trace( "  file: " + file.name );
+				if( file.name.indexOf( CoreSettings.PAINTING_FILE_EXTENSION ) != -1 ) {
+					_paintingFiles.push( file );
 				}
-				_numPaintingFiles = _paintingFiles.length;
+			}
+			_numPaintingFiles = _paintingFiles.length;
 
-				// Detain command and start reading the painting files.
-				if( _numPaintingFiles > 0 ) {
-					trace( this, "starting to read painting files... ( " + _numPaintingFiles + " )" );
-					context.detain( this );
-					_paintingVos = new Vector.<PaintingVO>();
-					readNextFile();
-				}
+			// Detain command and start reading the painting files.
+			if( _numPaintingFiles > 0 ) {
+				trace( this, "starting to read painting files... ( " + _numPaintingFiles + " )" );
+				context.detain( this );
+				_paintingVos = new Vector.<PaintingVO>();
+				readNextFile();
 			}
 		}
 

@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 
 	import org.osflash.signals.Signal;
 
-	public class IosImagesFetcher
+	public class IosUserImagesFetcher
 	{
 		private var _extension:UserPhotosExtension;
 		private var _totalItems:uint;
@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		public var thumbnailsLoadedSignal:Signal;
 		public var extensionInitializedSignal:Signal;
 
-		public function IosImagesFetcher( thumbSize:Number ) {
+		public function IosUserImagesFetcher( thumbSize:Number ) {
 			_thumbSize = thumbSize;
 			imageLoadedSignal = new Signal();
 			thumbnailsLoadedSignal = new Signal();
