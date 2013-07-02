@@ -127,7 +127,7 @@ public class HomeViewMediator extends MediatorBase
 		}
 
 		private function onEaselUpdateRequest( diffuseContent:BitmapData, normalContent:BitmapData ):void {
-			view.paintingManager.setEaselContent( diffuseContent, normalContent );
+			view.paintingManager.setEaselContent( diffuseContent );
 		}
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
@@ -144,8 +144,8 @@ public class HomeViewMediator extends MediatorBase
 			}
 
 			var diffuseBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.colorImageARGB, latestVo.width, latestVo.height, true );
-			var normalBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.heightmapImageARGB, latestVo.width, latestVo.height, false );
-			view.paintingManager.setEaselContent( diffuseBmd, normalBmd );
+//			var normalBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.heightmapImageARGB, latestVo.width, latestVo.height, false );
+			view.paintingManager.setEaselContent( diffuseBmd );
 		}
 
 		private function onCanvasSnapShot( bmd:BitmapData ):void {

@@ -102,7 +102,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			var cameraTarget:Object3D = new Object3D();
 			_cameraController.setCamera( _view.camera, cameraTarget );
 			_cameraController.stage = stage;
-			_paintingManager = new PaintingManager( _cameraController, _room, _lightPicker, _view );
+			_paintingManager = new PaintingManager( _cameraController, _room, _view );
 			_paintingManager.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
 			_cameraController.cameraY = cameraTarget.y = 400;

@@ -66,8 +66,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = view.getIdForSelectedInProgressPainting();
 				var vo:PaintingVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
-				var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height );
-				requestEaselUpdateSignal.dispatch( bmd );
+				var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, true );
+				requestEaselUpdateSignal.dispatch( bmd, null );
 			}
 
 			// From app.
