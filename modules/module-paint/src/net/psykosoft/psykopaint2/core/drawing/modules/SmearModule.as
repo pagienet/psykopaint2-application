@@ -10,11 +10,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.model.RubberMeshModel;
 	import net.psykosoft.psykopaint2.core.rendering.RubberMeshRenderer;
 	
-	import net.psykosoft.psykopaint2.core.signals.RequestRenderRubberMeshSignal;
-
-	// TODO: commented by li, we don't use starling anymore
-//	import starling.display.DisplayObject;
-
 	public class SmearModule implements IModule
 	{
 		[Inject]

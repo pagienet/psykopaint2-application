@@ -187,7 +187,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			}
 			else {
 				if( addShadow ) {
-					var shadow:Mesh = _room.addShadow( framedPainting.x, this.y, framedPainting.width, framedPainting.height );
+					shadow = _room.addShadow( framedPainting.x, this.y, framedPainting.width, framedPainting.height );
 					shadow.scaleX = shadow.scaleY = shadow.scaleZ = ( paintingScale );
 				}
 			}
