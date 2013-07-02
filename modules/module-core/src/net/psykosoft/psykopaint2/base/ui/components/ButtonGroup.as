@@ -29,7 +29,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_buttons.push( btn );
 			_buttonPositionOffsetX += btn.width + BUTTON_GAP_X;
 			addChild( btn );
-			btn.isSelectable = true; //TODO: remove this from SbButton
 			btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
 		}
 
