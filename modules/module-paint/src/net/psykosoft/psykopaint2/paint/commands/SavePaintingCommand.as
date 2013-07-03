@@ -2,10 +2,13 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 
 	import flash.display.BitmapData;
+	import flash.events.Event;
+	import flash.events.OutputProgressEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	import flash.utils.ByteArray;
+	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
@@ -44,6 +47,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var renderer:CanvasRenderer;
+
+		private var _fileStream:FileStream;
+		private var _bytes:ByteArray;
 
 		public function SavePaintingCommand() {
 			super();
@@ -94,30 +100,40 @@ package net.psykosoft.psykopaint2.paint.commands
 			}
 
 			// Serialize data.
-			var voBytes:ByteArray = vo.serialize();
+			_bytes = vo.serialize();
 
 			// Write.
 			context.detain( this );
 			if( CoreSettings.RUNNING_ON_iPAD ) { // iOS
 				writeBytesAsync(
-					voBytes,
-					File.applicationStorageDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingVO.PAINTING_FILE_EXTENSION )
+						File.applicationStorageDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingVO.PAINTING_FILE_EXTENSION )
 				);
 			}
 			else { // Desktop
 				writeBytesAsync(
-					voBytes,
-					File.desktopDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingVO.PAINTING_FILE_EXTENSION )
+						File.desktopDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingVO.PAINTING_FILE_EXTENSION )
 				);
 			}
 		}
 
-		private function writeBytesAsync( bytes:ByteArray, file:File ):void {
-			// TODO: save async instead -> http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/filesystem/FileStream.html#openAsync%28%29
-			var fileStream:FileStream = new FileStream();
-			fileStream.open( file, FileMode.WRITE );
-			fileStream.writeBytes( bytes );
-			fileStream.close();
+		private function writeBytesAsync( file:File ):void {
+			trace( this, "writing bytes..." );
+			_fileStream = new FileStream();
+			_fileStream.addEventListener( Event.CLOSE, onWriteBytesAsyncClosed );
+			_fileStream.addEventListener( OutputProgressEvent.OUTPUT_PROGRESS, onWriteBytesAsyncProgress );
+			_fileStream.openAsync( file, FileMode.WRITE );
+			_fileStream.writeBytes( _bytes );
+		}
+
+		private function onWriteBytesAsyncProgress( event:OutputProgressEvent ):void {
+//			trace( this, "writing bytes progress: " + event.bytesPending );
+			if( event.bytesPending == 0 ) {
+				_fileStream.close();
+			}
+		}
+
+		private function onWriteBytesAsyncClosed( event:Event ):void {
+			trace( this, "done writing bytes." );
 			context.release( this );
 		}
 	}
