@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.base.utils.io
 	import flash.display.Loader;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
-	import flash.net.URLLoader;
 	import flash.utils.ByteArray;
 
 	public class PngDecodeUtil

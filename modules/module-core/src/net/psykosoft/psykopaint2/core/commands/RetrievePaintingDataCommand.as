@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.core.commands
 		public var model:PaintingModel;
 
 		private var _currentFileBeingLoaded:File;
+		private var _currentVoBeingDeSerialized:PaintingVO;
 		private var _paintingFiles:Vector.<File>;
 		private var _numPaintingFiles:uint;
 		private var _indexOfPaintingFileBeingRead:uint;
@@ -49,7 +50,7 @@ package net.psykosoft.psykopaint2.core.commands
 			for( var i:uint; i < len; i++ ) {
 				var file:File = files[ i ];
 				trace( "  file: " + file.name );
-				if( file.name.indexOf( CoreSettings.PAINTING_FILE_EXTENSION ) != -1 ) {
+				if( file.name.indexOf( PaintingVO.PAINTING_FILE_EXTENSION ) != -1 ) {
 					_paintingFiles.push( file );
 				}
 			}
@@ -76,19 +77,19 @@ package net.psykosoft.psykopaint2.core.commands
 
 			// Read the contents of the file to a value object.
 			trace( this, "file read: " + _currentFileBeingLoaded.data.length + " bytes" );
-			var vo:PaintingVO = new PaintingVO();
-			
+			_currentVoBeingDeSerialized = new PaintingVO();
+
 			trace( this, "de-serializing vo..." );
 			try {
-				var deSerializeSuccessful:Boolean = vo.deSerialize( _currentFileBeingLoaded.data );
-				trace( this, "de-serialization successful: " + deSerializeSuccessful );
-				if( deSerializeSuccessful ) {
-					_paintingVos.push( vo );
-				}
-			} catch ( error:Error ) {
-				trace("***WARNING*** Error de-serializing file " + _currentFileBeingLoaded.nativePath );
+				_currentVoBeingDeSerialized.deSerialize( _currentFileBeingLoaded.data, onVoDeSerialized );
+			} catch( error:Error ) {
+				trace( this, "***WARNING*** Error de-serializing file: " + _currentFileBeingLoaded.nativePath );
 			}
-			trace( this, "produced vo: " + vo );
+		}
+
+		private function onVoDeSerialized():void {
+			trace( this, "produced vo: " + _currentVoBeingDeSerialized );
+			_paintingVos.push( _currentVoBeingDeSerialized );
 
 			// Continue reading next file.
 			_indexOfPaintingFileBeingRead++;

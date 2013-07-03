@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 
 	import robotlegs.bender.framework.api.IContext;
@@ -40,6 +41,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var context:IContext;
+
+		[Inject]
+		public var renderer:CanvasRenderer;
 
 		public function SavePaintingCommand() {
 			super();
@@ -80,6 +84,10 @@ package net.psykosoft.psykopaint2.paint.commands
 			vo.sourceImageARGB = imagesRGBA[ 2 ];
 			trace( this, "saving vo: " + vo );
 
+			// Save thumbnail.
+			var thumbnail:BitmapData = renderer.renderToBitmapData();
+			vo.thumbnail = BitmapDataUtils.scaleBitmapData( thumbnail, 0.25 ); // TODO: apply different scales depending on source and target resolutions
+
 			// Update easel.
 			if( updateEasel ) {
 				requestEaselUpdateSignal.dispatch( vo );
@@ -93,13 +101,13 @@ package net.psykosoft.psykopaint2.paint.commands
 			if( CoreSettings.RUNNING_ON_iPAD ) { // iOS
 				writeBytesAsync(
 					voBytes,
-					File.applicationStorageDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + CoreSettings.PAINTING_FILE_EXTENSION )
+					File.applicationStorageDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingVO.PAINTING_FILE_EXTENSION )
 				);
 			}
 			else { // Desktop
 				writeBytesAsync(
 					voBytes,
-					File.desktopDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + CoreSettings.PAINTING_FILE_EXTENSION )
+					File.desktopDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingVO.PAINTING_FILE_EXTENSION )
 				);
 			}
 		}

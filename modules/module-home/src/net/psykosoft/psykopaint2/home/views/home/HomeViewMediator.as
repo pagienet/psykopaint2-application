@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.core.managers.Stage3DProxy;
 
+	import flash.display.Bitmap;
+
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
@@ -145,9 +147,6 @@ public class HomeViewMediator extends MediatorBase
 				}
 			}
 			trace( this, "data retrieved - latest: " + latestVo );
-
-//			var diffuseBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.colorImageARGB, latestVo.width, latestVo.height, true );
-//			var normalBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.heightmapImageARGB, latestVo.width, latestVo.height, false );
 			view.paintingManager.setEaselContent( latestVo );
 		}
 
