@@ -312,7 +312,7 @@ package net.psykosoft.psykopaint2.core
 			for( var i:uint; i < 10; i++ ) {
 				setTimeout( function():void {
 					_injector.getInstance( AsyncTestSignal ).dispatch();
-				}, 500 );
+				}, i * 50 );
 			}
 		}
 

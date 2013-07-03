@@ -2,17 +2,21 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 
 	import flash.display.BitmapData;
+	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
-	import net.psykosoft.psykopaint2.base.utils.io.BinarySaveUtil;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+
+	import robotlegs.bender.framework.api.IContext;
 
 	public class SavePaintingCommand extends TracingCommand
 	{
@@ -33,6 +37,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var requestEaselUpdateSignal:RequestEaselUpdateSignal;
+
+		[Inject]
+		public var context:IContext;
 
 		public function SavePaintingCommand() {
 			super();
@@ -81,13 +88,29 @@ package net.psykosoft.psykopaint2.paint.commands
 			// Serialize data.
 			var voBytes:ByteArray = vo.serialize();
 
-			// Deliver to binary writer.
-			if( CoreSettings.RUNNING_ON_iPAD ) {
-				BinarySaveUtil.saveToIos( voBytes, CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + CoreSettings.PAINTING_FILE_EXTENSION );
+			// Write.
+			context.detain( this );
+			if( CoreSettings.RUNNING_ON_iPAD ) { // iOS
+				writeBytesAsync(
+					voBytes,
+					File.applicationStorageDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + CoreSettings.PAINTING_FILE_EXTENSION )
+				);
 			}
-			else {
-				BinarySaveUtil.saveToDesktop( voBytes, CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + CoreSettings.PAINTING_FILE_EXTENSION );
+			else { // Desktop
+				writeBytesAsync(
+					voBytes,
+					File.desktopDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + CoreSettings.PAINTING_FILE_EXTENSION )
+				);
 			}
+		}
+
+		private function writeBytesAsync( bytes:ByteArray, file:File ):void {
+			// TODO: save async instead -> http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/filesystem/FileStream.html#openAsync%28%29
+			var fileStream:FileStream = new FileStream();
+			fileStream.open( file, FileMode.WRITE );
+			fileStream.writeBytes( bytes );
+			fileStream.close();
+			context.release( this );
 		}
 	}
 }

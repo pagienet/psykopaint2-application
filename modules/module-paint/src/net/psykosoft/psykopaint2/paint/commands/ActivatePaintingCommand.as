@@ -1,12 +1,9 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
 
-	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
-	import flash.utils.Endian;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
