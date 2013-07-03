@@ -36,21 +36,20 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		private var _bitmapLoader:BitmapLoader;
 		private var _byteLoader:BinaryLoader;
+		private var _selectedIndex : int = -1;
+		private var _loadedSurface : ByteArray;
 
 		override public function initialize():void {
 
 			// Init.
 			super.initialize();
 			registerView( view );
-			manageStateChanges = false;
+			_selectedIndex = -1;
 			manageMemoryWarnings = false;
 			view.navigation.buttonClickedCallback = onButtonClicked;
-			previewSurfaceByIndex( 0 );
+			loadSurfaceByIndex( 0 );
+			view.showRightButton( false );
 			// TODO: must display thumbnails, assets are on /core-packaged/images/surfaces/ as jpgs
-
-			setTimeout( function():void {
-				view.showRightButton( false );
-			}, 2000 );
 		}
 
 		private function onButtonClicked( label:String ):void {
@@ -60,43 +59,50 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 					requestStateChange( StateType.PREVIOUS );
 					break;
 				case PickSurfaceSubNavView.LBL_CONTINUE:
-					pickSurfaceByIndex( view.getSelectedCenterButtonIndex() );
+					requestDrawingCoreSurfaceSetSignal.dispatch( _loadedSurface );
+					requestStateChange( StateType.PICK_IMAGE );
 					break;
 				case PickSurfaceSubNavView.LBL_SURF1:
-					previewSurfaceByIndex( 0 );
+					loadSurfaceByIndex( 0 );
 					break;
 				case PickSurfaceSubNavView.LBL_SURF2:
-					previewSurfaceByIndex( 1 );
+					loadSurfaceByIndex( 1 );
 					break;
 				case PickSurfaceSubNavView.LBL_SURF3:
-					previewSurfaceByIndex( 2 );
+					loadSurfaceByIndex( 2 );
 					break;
 			}
 		}
 
-		private function pickSurfaceByIndex( index:int ):void {
+		private function loadSurfaceByIndex( index:int ):void {
+			if (_selectedIndex == index) return;
+			_loadedSurface = null;
+			view.showRightButton( false );
+			_selectedIndex = index;
 			_byteLoader = new BinaryLoader();
 			var size:int = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
 			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + size + ".surf", onSurfaceLoaded );
 		}
 
 		private function onSurfaceLoaded( bytes:ByteArray ):void {
-			requestDrawingCoreSurfaceSetSignal.dispatch( bytes );
-			requestStateChange( StateType.PICK_IMAGE );
+			_loadedSurface = bytes;
+			view.showRightButton( true );
 			_byteLoader.dispose();
 			_byteLoader = null;
+
+			requestEaselPaintingUpdateSignal.dispatch( createPaintingVO() );
 		}
 
-		private function previewSurfaceByIndex( index:uint ):void {
-			trace ("TODO: LOAD SURF FILE INSTEAD AND UPDATE USING PAINTINGVO!!!");
-//			_bitmapLoader = new BitmapLoader();
-//			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_sample.jpg", onSurfacePreviewLoaded );
-		}
-
-		private function onSurfacePreviewLoaded( vo : PaintingVO ):void {
-			requestEaselPaintingUpdateSignal.dispatch( vo );
-			_bitmapLoader.dispose();
-			_bitmapLoader = null;
+		private function createPaintingVO() : PaintingVO
+		{
+			var vo : PaintingVO = new PaintingVO();
+			vo.width = CoreSettings.STAGE_WIDTH;
+			vo.height = CoreSettings.STAGE_HEIGHT;
+			vo.colorImageBGRA = new ByteArray();
+			vo.colorImageBGRA.length = vo.textureWidth*vo.textureHeight*4;	// will fill with zeroes
+			vo.heightmapImageBGRA = _loadedSurface;
+			// nothing else necessary
+			return vo;
 		}
 	}
 }

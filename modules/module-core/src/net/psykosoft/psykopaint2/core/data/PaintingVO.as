@@ -79,6 +79,8 @@ package net.psykosoft.psykopaint2.core.data
 
 			var bytes:ByteArray = new ByteArray();
 
+			trace ("[serialize]", _width, _height);
+
 			// Write exposed single value data.
 			bytes.writeUTF( fileVersion );
 			bytes.writeUTF( id );
@@ -87,9 +89,10 @@ package net.psykosoft.psykopaint2.core.data
 			bytes.writeFloat( lastSavedOnDateMs );
 
 			// Write images.
-			bytes.writeBytes( colorImageBGRA );
-			bytes.writeBytes( heightmapImageBGRA );
-			bytes.writeBytes( sourceImageARGB );
+			var len : int = _width*_height*4;
+			bytes.writeBytes( colorImageBGRA, 0, len );
+			bytes.writeBytes( heightmapImageBGRA, 0, len );
+			bytes.writeBytes( sourceImageARGB, 0, len );
 
 			bytes.compress();
 
@@ -127,6 +130,7 @@ package net.psykosoft.psykopaint2.core.data
 		}
 
 		private function decodeImage( bytes:ByteArray ):ByteArray {
+			trace ("[decode]", _width, _height);
 			var numBytes:int = _width * _height * 4;
 			var imageBytes:ByteArray = new ByteArray();
 			bytes.readBytes( imageBytes, 0, numBytes );

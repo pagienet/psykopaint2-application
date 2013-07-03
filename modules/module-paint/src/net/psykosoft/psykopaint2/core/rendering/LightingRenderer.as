@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		private var _diffuseModel : BDRFModel;
 		private var _ambientModel : BDRFModel;
 		private var _specularModel : BDRFModel;
-		private var _shadowModel : BDRFModel;
+//		private var _shadowModel : BDRFModel;
 
 		private var _program : Program3D;
 		private var _context3d : Context3D;
@@ -168,7 +168,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_diffuseModel.setRenderState(_context3d);
 			_ambientModel.setRenderState(_context3d);
 			_specularModel.setRenderState(_context3d);
-			if (_shadowModel) _shadowModel.setRenderState(_context3d);
+//			if (_shadowModel) _shadowModel.setRenderState(_context3d);
 
 			_context3d.setDepthTest(false, Context3DCompareMode.ALWAYS);
 			_context3d.setProgram(_program);
@@ -190,7 +190,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_diffuseModel.clearRenderState(_context3d);
 			_ambientModel.clearRenderState(_context3d);
 			_specularModel.clearRenderState(_context3d);
-			if (_shadowModel) _shadowModel.clearRenderState(_context3d);
+//			if (_shadowModel) _shadowModel.clearRenderState(_context3d);
 		}
 
 		private function updateGlobalVertexData(offsetX : Number, offsetY : Number,widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
@@ -236,8 +236,8 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			var code : String = getInitFragmentCode();
 
-			if (_shadowModel)
-				code += _shadowModel.getFragmentCode() + "\n";
+//			if (_shadowModel)
+//				code += _shadowModel.getFragmentCode() + "\n";
 
 			code += _diffuseModel.getFragmentCode() + "\n";
 			code += applyDiffuseLight();
@@ -249,6 +249,9 @@ package net.psykosoft.psykopaint2.core.rendering
 //					"add ft0.xy, ft0.xy, fc0.x\n" +
 //					"mov ft0.w, ft7.w\n" +
 //					"mov oc, ft0\n";
+//			code += "mov ft0.zw, fc0.yzyz\n" +
+//					"mov ft0.xy, ft7.zwzw\n" +
+//					"mov oc, ft0";
 
 
 
@@ -281,7 +284,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		// FT1 = HEIGHT GRADIENT X, Y (unscaled)
 		// FT3 = LIGHT ACCUMULATION
 		// FT4 = MODEL OUTPUT (x for strength)
-		// FT7 = PACKED NORMAL X, NORMAL Y, SPECULAR STRENGTH + GLOSS (4 bits each), SHADOW STRENGTH (if used)
+		// FT7 = PACKED NORMAL X, NORMAL Y, SPECULAR STRENGTH, GLOSS
 
 		// FC0 = (0.5, 0, 1, bumpiness)
 		// FC1 = SOURCE BLEND ALPHA, -1, ?, ?
@@ -311,8 +314,8 @@ package net.psykosoft.psykopaint2.core.rendering
 					"nrm vt1.xyz, vt1.xyz\n" +
 					"mov v5, vt1\n";
 
-			if (_shadowModel)
-				code += _shadowModel.getVertexCode();
+//			if (_shadowModel)
+//				code += _shadowModel.getVertexCode();
 
 			return code;
 		}
@@ -331,8 +334,8 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			var code : String = "";
 
-			if (_shadowModel)
-				code += "mul ft3.xyz, ft3.xyz, ft7.w\n";
+//			if (_shadowModel)
+//				code += "mul ft3.xyz, ft3.xyz, ft7.w\n";
 
 			code += _ambientModel.getFragmentCode() + "\n";
 			code += "add ft3.xyz, ft3.xyz, " + _ambientModel.outputRegister + ".xyz\n";
@@ -364,8 +367,8 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			var code : String = "";
 
-			if (_shadowModel)
-				code += "mul ft4.xyz, ft4.xyz, ft7.w\n";
+//			if (_shadowModel)
+//				code += "mul ft4.xyz, ft4.xyz, ft7.w\n";
 
 			code += "add ft3.xyz, ft3, ft4\n";
 
@@ -379,13 +382,13 @@ package net.psykosoft.psykopaint2.core.rendering
 				_diffuseModel = _lightingModel.diffuseModel;
 				_specularModel = _lightingModel.specularModel;
 				_ambientModel = _lightingModel.ambientModel;
-				_shadowModel = _lightingModel.shadowModel;
+//				_shadowModel = _lightingModel.shadowModel;
 			}
 
 			_diffuseModel.updateLightingModel(_lightingModel);
 			_ambientModel.updateLightingModel(_lightingModel);
 			_specularModel.updateLightingModel(_lightingModel);
-			if (_shadowModel) _shadowModel.updateLightingModel(_lightingModel);
+//			if (_shadowModel) _shadowModel.updateLightingModel(_lightingModel);
 
 			// bumpiness
 			_globalFragmentData[3] = _lightingModel.surfaceBumpiness;

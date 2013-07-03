@@ -133,7 +133,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function renderToBitmapData() : BitmapData
 		{
 			// I am sure there is some way to make the more elegant, but this works for now:
-			var map : BitmapData = new BitmapData(canvas.viewport.width, canvas.viewport.height, false, 0xffffffff);
+			var map : BitmapData = new BitmapData(canvas.width, canvas.height, false, 0xffffffff);
 
 			_context3D.setRenderToBackBuffer();
 			_context3D.clear(1, 1, 1, 1);

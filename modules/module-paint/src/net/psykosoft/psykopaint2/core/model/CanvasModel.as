@@ -360,9 +360,14 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function loadLayers(data : Vector.<ByteArray>) : void
 		{
-			data[0].length = data[1].length = _textureWidth*_textureHeight*4;
+			var oldLength : int = data[0].length;
+			var newLength : int = _textureWidth*_textureHeight*4;
+			data[0].length = newLength;
+			data[1].length = newLength;
 			_colorTexture.uploadFromByteArray(data[0], 0, 0);
 			_normalSpecularMap.uploadFromByteArray(data[1], 0, 0);
+			data[0].length = oldLength;
+			data[1].length = oldLength;
 
 			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(data[2], _width, _height, false);
 			setSourceBitmapData(sourceBmd);
