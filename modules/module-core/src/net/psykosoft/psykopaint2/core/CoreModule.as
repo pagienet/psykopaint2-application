@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.AsyncTestSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
@@ -305,6 +306,14 @@ package net.psykosoft.psykopaint2.core
 //			_injector.getInstance( NotifyPaintingDataRetrievedSignal ).addOnce( testLoadingAPainting ); // Just for testing.
 
 			moduleReadySignal.dispatch();
+
+			// TODO: remove, also remove signal and command
+			// Test async commands.
+			for( var i:uint; i < 10; i++ ) {
+				setTimeout( function():void {
+					_injector.getInstance( AsyncTestSignal ).dispatch();
+				}, 500 );
+			}
 		}
 
 		private function testLoadingAPainting( data:Vector.<PaintingVO> ):void {
