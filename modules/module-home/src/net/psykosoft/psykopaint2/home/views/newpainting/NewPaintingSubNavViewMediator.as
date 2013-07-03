@@ -65,9 +65,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var vo:PaintingVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
 				requestEaselUpdateSignal.dispatch( vo );
 			}
-			else{
-				requestEaselUpdateSignal.dispatch( null, null );
-			}
+//			else{
+//				requestEaselUpdateSignal.dispatch( null );
+//			}
 
 			// From app.
 			notifyZoomCompleteSignal.add( onZoomComplete );
