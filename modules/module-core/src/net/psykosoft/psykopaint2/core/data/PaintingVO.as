@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.data
 	public class PaintingVO
 	{
 		public static const DEFAULT_VO_ID:String = "new";
-		public static const PAINTING_FILE_VERSION:String = "7";
+		public static const PAINTING_FILE_VERSION:String = "8";
 		public static const PAINTING_FILE_EXTENSION:String = ".ppp2";
 
 		public var thumbnail:BitmapData;
@@ -66,9 +66,10 @@ package net.psykosoft.psykopaint2.core.data
 
 			// Write images.
 			bytes.writeBytes( thumbnailJpgBytes );
-			bytes.writeBytes( colorImageBGRA );
-			bytes.writeBytes( heightmapImageBGRA );
-			bytes.writeBytes( sourceImageARGB );
+			var len : int = _width*_height*4;
+			bytes.writeBytes( colorImageBGRA, 0, len );
+			bytes.writeBytes( heightmapImageBGRA, 0, len );
+			bytes.writeBytes( sourceImageARGB, 0, len );
 
 			bytes.compress();
 
@@ -120,6 +121,7 @@ package net.psykosoft.psykopaint2.core.data
 		}
 
 		private function decodeImage( bytes:ByteArray ):ByteArray {
+			trace ("[decode]", _width, _height);
 			var numBytes:int = _width * _height * 4;
 			var imageBytes:ByteArray = new ByteArray();
 			bytes.readBytes( imageBytes, 0, numBytes );

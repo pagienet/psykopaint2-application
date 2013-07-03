@@ -60,7 +60,7 @@ package net.psykosoft.psykopaint2.core.controllers
 			targetPos.x = 0;
 			targetPos.y = 0;
 			targetPos.z = -_lightDistance;
-			targetPos.normalize();
+			
 			/*
 			defaultPos.normalize();
 			targetPos.x = defaultPos.x;

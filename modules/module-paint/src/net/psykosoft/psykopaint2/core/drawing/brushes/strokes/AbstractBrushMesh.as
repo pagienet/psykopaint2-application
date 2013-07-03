@@ -272,67 +272,35 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		// analytical solutions may be more optimal if possible
 		protected function getNormalSpecularFragmentCode() : String
 		{
-			/*
 			return 	"tex ft1, v0, fs0 <2d, clamp, linear, miplinear >\n" +
 					"tex ft2, v1, fs0 <2d, clamp, linear, miplinear >\n" +
 					"tex ft3, v2, fs0 <2d, clamp, linear, miplinear >\n" +
 					"sub ft0.x, ft1.x, ft2.x\n" +
 					"sub ft0.y, ft1.x, ft3.x\n" +
 
-					"mul ft0.xy, ft0.xy, fc1.x\n" +	// bumpiness
+					"mul ft0.xy, ft0.xy, v4.y\n" +	// bumpiness
 
-				// add brush normal to canvas normals
+					// add brush normal to canvas normals
 					"tex ft3, v3, fs1 <2d, clamp, linear, nomip>\n" +
 
-				// smooth out underneath
+					// smooth out underneath
 					"sub ft4.xy, fc0.xx, ft3.xy\n" +
-					"mul ft4.xy, ft4.xy, fc1.z\n" +
+					"mul ft4.xy, ft4.xy, v4.w\n" +
 					"add ft4.xy, ft4.xy, ft3.xy\n" +
 
-				// set specular
-					"mul ft0.z, ft1.y, fc1.y\n" +
-					"mov ft0.w, fc0.w\n" +
+					// set specular
+					"mul ft0.z, ft1.y, v4.z\n" +
+					"mov ft0.w, v4.x\n" +
 
-//					"mul ft0.xy, ft0.xy, fc0.x\n" +
+					//					"mul ft0.xy, ft0.xy, fc0.x\n" +
 					"add ft0.xy, ft0.xy, ft4.xy\n" +
 
-//					"mul ft5.w, fc1.z, ft1.x\n" +
+					//					"mul ft5.w, fc1.z, ft1.x\n" +
 					"sub ft0, ft0, ft3\n" +
 					"mul ft0, ft0, ft1.x\n" +
 					"add ft0, ft0, ft3\n" +
 
 					"mov oc, ft0";
-			*/
-			
-			return 	"tex ft1, v0, fs0 <2d, clamp, linear, miplinear >\n" +
-				"tex ft2, v1, fs0 <2d, clamp, linear, miplinear >\n" +
-				"tex ft3, v2, fs0 <2d, clamp, linear, miplinear >\n" +
-				"sub ft0.x, ft1.x, ft2.x\n" +
-				"sub ft0.y, ft1.x, ft3.x\n" +
-				
-				"mul ft0.xy, ft0.xy, v4.y\n" +	// bumpiness
-				
-				// add brush normal to canvas normals
-				"tex ft3, v3, fs1 <2d, clamp, linear, nomip>\n" +
-				
-				// smooth out underneath
-				"sub ft4.xy, fc0.xx, ft3.xy\n" +
-				"mul ft4.xy, ft4.xy, v4.w\n" +
-				"add ft4.xy, ft4.xy, ft3.xy\n" +
-				
-				// set specular
-				"mul ft0.z, ft1.y, v4.z\n" +
-				"mov ft0.w, v4.x\n" +
-				
-				//					"mul ft0.xy, ft0.xy, fc0.x\n" +
-				"add ft0.xy, ft0.xy, ft4.xy\n" +
-				
-				//					"mul ft5.w, fc1.z, ft1.x\n" +
-				"sub ft0, ft0, ft3\n" +
-				"mul ft0, ft0, ft1.x\n" +
-				"add ft0, ft0, ft3\n" + 
-				
-				"mov oc, ft0";
 			
 		}
 
