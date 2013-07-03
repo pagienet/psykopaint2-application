@@ -139,9 +139,12 @@ public class HomeViewMediator extends MediatorBase
 
 			for( var i:uint = 1; i < len; i++ ) {
 				vo = data[ i ];
-				if( vo.lastSavedOnDateMs > latestVo.lastSavedOnDateMs )
+				trace( this, "data retrieved - vo: " + vo );
+				if( vo.lastSavedOnDateMs > latestVo.lastSavedOnDateMs ) {
 					latestVo = vo;
+				}
 			}
+			trace( this, "data retrieved - latest: " + latestVo );
 
 //			var diffuseBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.colorImageARGB, latestVo.width, latestVo.height, true );
 //			var normalBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.heightmapImageARGB, latestVo.width, latestVo.height, false );

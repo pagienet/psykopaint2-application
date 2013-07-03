@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
@@ -156,20 +157,20 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" showInUI="1"/>
-					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0.25" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0"/>
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
 							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0.05" value2="1" minValue="0" maxValue="1"/>
-							<parameter id="Mapping" path="pathengine.pointdecorator_0" index="1" showInUI="1"/>
+							<parameter id="Mapping" path="pathengine.pointdecorator_0" index="1"/>
 						</SizeDecorator>
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index="0" />
 							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_1" showInUI="1"/>
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" showInUI="1"/>
-							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.25" value2="0.33" showInUI="1"/>
-							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_1" value1="0.8" value2="1" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.25" value2="0.33" />
+							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_1" value1="0.8" value2="1" />
 						</ColorDecorator>
 						<OrderDecorator>
 						</OrderDecorator>
@@ -181,13 +182,15 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_3" value="30" />
 							<parameter id="Size Factor" path="pathengine.pointdecorator_3" value="0.8" />
 						</SplatterDecorator>
-						
+						<BumpDecorator>
+							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_4" index="1" />
+							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_4" value="1" />
+							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_4" value1="0" value2="1" showInUI="1" />
+						</BumpDecorator>
 					</pathengine>
 				</brush>
 
 				<brush engine={BrushType.SPRAY_CAN} name="Gravure Pen">
-					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="1" showInUI="1" minValue="-1" maxValue="1"/>
-					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value="0.6" showInUI="1" minValue="0" maxValue="1"/>
 					<parameter id="Shapes" path="brush" index="0" list="sphere,splat,splat3,line,basic,noisy" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
@@ -200,6 +203,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id={ColorDecorator.PARAMETER_IL_COLOR}  path="pathengine.pointdecorator_1" index="2" />
 							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_1" value1="0" value2="0"/>
 						</ColorDecorator>
+						<BumpDecorator>
+							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index="3" />
+							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_2"  showInUI="1" value1="0" value2="2" minValue="-2" maxValue="2" />
+						</BumpDecorator>
 					</pathengine>
 				</brush>
 

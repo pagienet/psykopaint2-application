@@ -58,12 +58,15 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			var data:Vector.<PaintingVO> = paintingModel.getPaintingData();
 			if( data.length > 0 ) {
 				if( data.length > 1 ) {
-					data.sort( sortOnLastSavedOnDateMs );
+					data.sort( sortOnLastSaved );
 				}
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = view.getIdForSelectedInProgressPainting();
 				var vo:PaintingVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
 				requestEaselUpdateSignal.dispatch( vo );
+			}
+			else{
+				requestEaselUpdateSignal.dispatch( null, null );
 			}
 
 			// From app.
@@ -71,7 +74,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			notifyCanvasBitmapSignal.add( onCanvasSnapshot );
 		}
 
-		private function sortOnLastSavedOnDateMs( paintingVOA:PaintingVO, paintingVOB:PaintingVO ):Number {
+		private function sortOnLastSaved( paintingVOA:PaintingVO, paintingVOB:PaintingVO ):Number {
 			if( paintingVOA.lastSavedOnDateMs > paintingVOB.lastSavedOnDateMs ) return 1;
 			else if( paintingVOA.lastSavedOnDateMs < paintingVOB.lastSavedOnDateMs ) return -1;
 			else return 0;
@@ -85,7 +88,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			switch( label ) {
 				case NewPaintingSubNavView.LBL_NEW: {
 					requestDrawingCoreResetSignal.dispatch();
-					paintingModel.focusedPaintingId = "new";
+					paintingModel.focusedPaintingId = PaintingVO.DEFAULT_VO_ID;
 					requestStateChange( StateType.HOME_PICK_SURFACE );
 					break;
 				}
@@ -94,10 +97,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					break;
 				}
 				default: { // Default buttons are supposed to be in progress painting buttons.
-					var vo:PaintingVO = paintingModel.getVoWithId( label );
 					paintingModel.focusedPaintingId = label;
+					var vo:PaintingVO = paintingModel.getVoWithId( label );					
 					requestEaselUpdateSignal.dispatch( vo );
-					break;
 				}
 			}
 		}

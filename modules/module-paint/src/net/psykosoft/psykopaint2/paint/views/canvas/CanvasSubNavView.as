@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	{
 		public static const LBL_HOME:String = "Home";
 
-		public static const LBL_DESTROY:String = "[Destroy]";
+		public static const LBL_DESTROY:String = "Destroy";
 		public static const LBL_CLEAR:String = "Clear Canvas";
 		public static const LBL_MODEL:String = "Source Image";
 		public static const LBL_COLOR:String = "[Color Style]";

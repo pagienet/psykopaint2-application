@@ -47,13 +47,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			}
 		}
 
-		static public function getSamplePoint( x: Number, y:Number, speed : Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, first:Boolean = false) : SamplePoint
+		static public function getSamplePoint( x: Number, y:Number, speed : Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, bumpFactors:Vector.<Number> = null, first:Boolean = false) : SamplePoint
 		{
 			if (_samplePointDepot.length > 0) {
 				var p : SamplePoint = _samplePointDepot.pop();
-				return p.resetData(x, y, speed, size, angle, pressure, penButtonState, colors, first);
+				return p.resetData(x, y, speed, size, angle, pressure, penButtonState, colors, bumpFactors, first);
 			} else {
-				return new SamplePoint(x, y,  speed, size, angle, pressure, penButtonState, colors, first);
+				return new SamplePoint(x, y,  speed, size, angle, pressure, penButtonState, colors, bumpFactors, first);
 			}
 		}
 
@@ -75,6 +75,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_samplePointDepot.push(value);
 		}
 
+		
+		
 		private var _view : DisplayObject;
 		private var _active : Boolean;
 		private var _pathEngine : IPathEngine;
@@ -106,6 +108,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var GESTURE_RECOGNITION_TIME:Number = 500;
 		private var renderer:CanvasRenderer;
 		
+			
 		//private var twoFingerGestureTimeout:int
 		//private var singleTouchBeginEvent:TouchEvent;
 		private var _strokeInProgress:Boolean;
@@ -115,6 +118,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_pathEngine = getPathEngine( type );
 			_accumulatedResults = new Vector.<SamplePoint>();
 			_pointDecorators = new Vector.<IPointDecorator>();
+			
 			
 			//FOR DEBUGGING ONLY:
 			recordedData = new Vector.<Number>();
@@ -437,10 +441,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_strokeInProgress = false;
 			this.canvasModel = canvasModel;
 			this.renderer = renderer;
-			if (_active) return;
-			
-			_active = true;
 			_view = view;
+			updateStageScaleFactors();
+			
+			if (_active) return;
+			_active = true;
+			
 			if ( CoreSettings.RUNNING_ON_iPAD )
 			{
 				_view.stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
@@ -448,7 +454,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				_view.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 				_view.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
 			}
-			updateStageScaleFactors();
+			
 		}
 		
 		protected function onKeyDown(event:KeyboardEvent):void
@@ -538,6 +544,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		public function getParameterSet( vo:ParameterSetVO, showInUiOnly:Boolean ):void
 		{
+			
 			_pathEngine.getParameterSet( vo, showInUiOnly );
 			for ( var i:int = 0; i < _pointDecorators.length; i++ )
 			{

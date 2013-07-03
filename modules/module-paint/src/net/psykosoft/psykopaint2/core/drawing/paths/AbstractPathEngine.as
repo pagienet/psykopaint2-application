@@ -91,7 +91,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				return false;
 			}
 				
-			_sampledPoints[nextIndex++] = PathManager.getSamplePoint( x,y, 0, 0, 0, pressure, penButtonState, null, first );
+			_sampledPoints[nextIndex++] = PathManager.getSamplePoint( x,y, 0, 0, 0, pressure, penButtonState, null, null, first );
 			return true;
 		}
 		

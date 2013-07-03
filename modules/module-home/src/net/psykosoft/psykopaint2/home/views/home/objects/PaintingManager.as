@@ -99,7 +99,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_easel.easelVisible = true;
 			if( _pendingEaselContent ) setEaselPaintingNow();
 			autoPositionPaintingAtIndex( _easel, 1, false, 1 );
-			_easel.z -= 500;
+			_easel.z -= 750;
+			_easel.y -= 150;
 
 			// Home painting.
 			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ), FrameType.WHITE, 2, true, 1.5 );

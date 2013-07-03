@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			registerDecorator( PointDecoratorType.STATIONARY, StationaryDecorator );
 			registerDecorator( PointDecoratorType.SIZE, SizeDecorator );
 			registerDecorator( PointDecoratorType.ORDER, OrderDecorator );
+			registerDecorator( PointDecoratorType.BUMP, BumpDecorator );
 			
 			_initialized = true;
 			

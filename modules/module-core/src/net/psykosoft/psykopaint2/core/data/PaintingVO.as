@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.data
 
 	public class PaintingVO
 	{
+		public static const DEFAULT_VO_ID:String = "new";
 		public static const PAINTING_FILE_VERSION:String = "3";
 
 		public var colorImageBGRA:ByteArray;

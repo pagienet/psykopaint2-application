@@ -57,8 +57,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			if( _painting ) {
 				removeChild( _painting );
 			}
-			_painting = value;
-			addChild( _painting );
+			if ( value ) {
+				_painting = value;
+				addChild(_painting);
+			}
 		}
 
 		public function setFrame( frame:Frame ):void {

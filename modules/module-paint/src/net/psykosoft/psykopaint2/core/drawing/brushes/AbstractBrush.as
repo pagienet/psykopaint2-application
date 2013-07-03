@@ -40,7 +40,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static const PARAMETER_N_GLOSSINESS : String = "Glossiness";
 		public static const PARAMETER_N_BUMPYNESS : String = "Bumpyness";
 		public static const PARAMETER_N_BUMP_INFLUENCE : String = "Bump Influence";
-
 		
 		protected var _canvasModel : CanvasModel;
 		protected var _view : DisplayObject;
@@ -60,15 +59,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected var _firstPoint : Boolean;
 		
 		protected var _parameters:Vector.<PsykoParameter>;
-		//protected var _opacity:PsykoParameter;
-		//protected var _colorBlend:PsykoParameter;
 		protected var _sizeFactor:PsykoParameter;
 		protected var _shininess:PsykoParameter;
 		protected var _glossiness:PsykoParameter;
 		protected var _bumpiness:PsykoParameter;
 		protected var _bumpInfluence:PsykoParameter;
 		protected var _shapes:PsykoParameter;
-
 		
 		protected var appendVO : StrokeAppendVO;
 		protected var _brushMesh : IBrushMesh;
@@ -88,21 +84,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_drawNormalsOrSpecular = drawNormalsOrSpecular;
 			_depthStencil = useDepthStencil;
 			_incremental = incremental;
+			
 			_parameters = new Vector.<PsykoParameter>();
-			_shapes    = new PsykoParameter( PsykoParameter.IconListParameter, PARAMETER_IL_SHAPES,0,["basic"]);
+			_shapes        = new PsykoParameter( PsykoParameter.IconListParameter,    PARAMETER_IL_SHAPES,0,["basic"]);
+			_sizeFactor    = new PsykoParameter( PsykoParameter.NumberRangeParameter, PARAMETER_NR_SIZE_FACTOR, 0, 1, 0, 1 );
 			
-		//	_opacity    = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Opacity",0.5,1,0,1);
-		//	_colorBlend = new PsykoParameter( PsykoParameter.NumberRangeParameter, "Color Blending",0.5,1,0,1);
-			_sizeFactor = new PsykoParameter( PsykoParameter.NumberRangeParameter, PARAMETER_NR_SIZE_FACTOR,0,1,0,1 );
-			
-			_shininess    = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SHININESS,0.4,0,1);
-			_glossiness = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_GLOSSINESS,0.4,0.01,1);
-			_bumpiness = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPYNESS,1,0,1 );
-			_bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMP_INFLUENCE,0.6,0,1 );
+			_shininess     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_SHININESS, 0.4, 0, 1);
+			_glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 1);
+			_bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMPYNESS, 1, 0, 1 );
+			_bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, 0, 1 );
 			
 			
-			_parameters.push( _shapes, _sizeFactor); //_opacity, _colorBlend, 
-
+			_parameters.push( _shapes, _sizeFactor ); 
 			if (drawNormalsOrSpecular)
 				_parameters.push(_shininess,_glossiness,_bumpiness,_bumpInfluence);
 
@@ -188,7 +181,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_view = view;
 			_canvasModel = canvasModel;
 			_context = context;
-			_pathManager.activate(view,canvasModel,renderer);
+			_pathManager.activate( view, canvasModel, renderer );
 			_shapes.addEventListener( Event.CHANGE, onShapeChanged );
 		}
 		

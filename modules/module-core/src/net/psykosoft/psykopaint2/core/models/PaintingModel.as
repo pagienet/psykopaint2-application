@@ -46,6 +46,25 @@ package net.psykosoft.psykopaint2.core.models
 			throw new Error( this, "unable to find saved painting with id: " + id );
 		}
 
+		public function deleteVoWithId( id:String ):void{
+
+			// Nullify vo and identify index.
+			var len:uint = _paintingData.length;
+			var index:uint;
+			var vo:PaintingVO;
+			for( var i:uint; i < len; ++i ) {
+				vo = _paintingData[ i ];
+				if( vo.id == id ) {
+					index = i;
+					vo = null;
+					break;
+				}
+			}
+
+			// Delete from array.
+			_paintingData.splice( index, 1 );
+		}
+
 		public function addSinglePaintingData( vo:PaintingVO ):void {
 			_paintingData.push( vo );
 		}
