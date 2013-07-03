@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.data
 	public class PaintingVO
 	{
 		public static const DEFAULT_VO_ID:String = "new";
-		public static const PAINTING_FILE_VERSION:String = "8";
+		public static const PAINTING_FILE_VERSION:String = "9";
 		public static const PAINTING_FILE_EXTENSION:String = ".ppp2";
 
 		public var thumbnail:BitmapData;
@@ -71,7 +71,13 @@ package net.psykosoft.psykopaint2.core.data
 			bytes.writeBytes( heightmapImageBGRA, 0, len );
 			bytes.writeBytes( sourceImageARGB, 0, len );
 
-			bytes.compress();
+			// TODO: re-enable compression
+			/*
+			* It's too slow. Try to find an alternative way to compress, perhaps natively or asynchronically.
+			* Compressed file sizes are around 1mb-3mb, uncompressed 9mb-10mb.
+			* Default compression time is around 3500ms.
+			* */
+//			bytes.compress();
 
 			return bytes;
 		}
@@ -85,7 +91,7 @@ package net.psykosoft.psykopaint2.core.data
 			_onDeSerializationCompleteCallback = onComplete;
 			_bytes = bytes;
 
-			bytes.uncompress();
+//			bytes.uncompress();
 
 			// Check version first.
 			// TODO: try/catch on RetrievePaintingSavedDataCommand makes this warning never trace

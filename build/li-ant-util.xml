@@ -5,8 +5,9 @@
 	<!-- properties -->
 	<!-- **************************************** -->
 
-	<property name="debug" value="false"/>
-	<property name="inline" value=""/> <!-- '-inline' or '' -->
+	<property name="debug" value="true"/>
+	<property name="inline" value=""/> <!-- '-inline' or '' (empty) -->
+	<property name="telemetry" value="-advanced-telemetry=true"/> <!-- '-advanced-telemetry=true' or '' (empty) -->
 
 	<property name="rootDir" value="../../../workspaces/psykopaint2-official"/>
 
@@ -49,69 +50,69 @@
 	<target name="set-compiler-arguments">
 		<xmltask source="${launcherCoreIpadPath}" dest="${launcherCoreIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${launcherHomeIpadPath}" dest="${launcherHomeIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${launcherPaintIpadPath}" dest="${launcherPaintIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${launcherPaintDesktopPath}" dest="${launcherPaintDesktopPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${launcherHomeDesktopPath}" dest="${launcherHomeDesktopPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${launcherCoreDesktopPath}" dest="${launcherCoreDesktopPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${launcherAppIpadPath}" dest="${launcherAppIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${launcherAppDesktopPath}" dest="${launcherAppDesktopPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 
 		<xmltask source="${away3dPath}" dest="${away3dPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${gestouchPath}" dest="${gestouchPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline}"/>
 		</xmltask>
 		<xmltask source="${robotlegs2Path}" dest="${robotlegs2Path}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${robotlegs2SignalsPath}" dest="${robotlegs2SignalsPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 
 		<xmltask source="${appPath}" dest="${appPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${corePath}" dest="${corePath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${paintPath}" dest="${paintPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry}"/>
 		</xmltask>
 		<xmltask source="${homePath}" dest="${homePath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry}"/>
 		</xmltask>
 	</target>
 
