@@ -7,8 +7,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
@@ -27,7 +28,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
-
+	
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.TransformGesture;
 
@@ -150,9 +151,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 					
 				case GestureType.TRANSFORM_GESTURE_CHANGED:
+					var tg:TransformGesture = (event.target as TransformGesture);
+					
 					
 					var rect:Rectangle = renderer.renderRect;
-					var tg:TransformGesture = (event.target as TransformGesture);
 					transformMatrix.identity();
 					transformMatrix.translate(-tg.location.x, -tg.location.y);
 					transformMatrix.scale(tg.scale, tg.scale);
@@ -167,6 +169,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					rect.height = bottomRight.y - topLeft.y;
 					
 					renderer.renderRect = rect;
+					
+					/*
+					var angle:Number = Math.atan2(384 -tg.location.y,512 -tg.location.x );
+					GyroscopeLightController.defaultPos.x = Math.cos(angle) ;
+					GyroscopeLightController.defaultPos.y =  Math.sin(angle) ;
+					*/
 					break;
 				
 			}

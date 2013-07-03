@@ -30,8 +30,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		
 		private static var _engineDepot : Vector.<Vector.<IPathEngine>> = Vector.<Vector.<IPathEngine>>([new Vector.<IPathEngine>(),new Vector.<IPathEngine>(),]);
-		private static var _samplePointDepot : Vector.<SamplePoint> = new Vector.<SamplePoint>();
-	
+		private static var _samplePointDepot : Vector.<SamplePoint> = new Vector.<SamplePoint>(500);
+		private static var _recycleCount:int = 0;
 
 		static public function getPathEngine( type:int ) : IPathEngine
 		{
@@ -49,8 +49,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		static public function getSamplePoint( x: Number, y:Number, speed : Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, bumpFactors:Vector.<Number> = null, first:Boolean = false) : SamplePoint
 		{
-			if (_samplePointDepot.length > 0) {
-				var p : SamplePoint = _samplePointDepot.pop();
+			if (_recycleCount > 0) {
+				var p : SamplePoint = _samplePointDepot[--_recycleCount];
 				return p.resetData(x, y, speed, size, angle, pressure, penButtonState, colors, bumpFactors, first);
 			} else {
 				return new SamplePoint(x, y,  speed, size, angle, pressure, penButtonState, colors, bumpFactors, first);
@@ -66,13 +66,18 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		static public function recycleSamplePoints(value : Vector.<SamplePoint>) : void
 		{
-			_samplePointDepot = _samplePointDepot.concat(value);
+			for ( var i:int = 0; i < value.length; i++ )
+			{
+				_samplePointDepot[_recycleCount++] = value[i];
+			}
+			//_samplePointDepot = _samplePointDepot.concat(value);
 			value.length = 0;
 		}
 
 		static public function recycleSamplePoint(value:SamplePoint):void
 		{
-			_samplePointDepot.push(value);
+			_samplePointDepot[_recycleCount++] = value;
+			//_samplePointDepot.push(value);
 		}
 
 		

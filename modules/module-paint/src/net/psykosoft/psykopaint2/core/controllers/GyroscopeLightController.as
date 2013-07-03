@@ -26,6 +26,8 @@ package net.psykosoft.psykopaint2.core.controllers
 		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightInterpolation : Number = .99;
 
+		//public static var defaultPos : Vector3D = new Vector3D(0, 0, -1);
+		
 		public function GyroscopeLightController()
 		{
 		}
@@ -58,6 +60,13 @@ package net.psykosoft.psykopaint2.core.controllers
 			targetPos.x = 0;
 			targetPos.y = 0;
 			targetPos.z = -_lightDistance;
+			targetPos.normalize();
+			/*
+			defaultPos.normalize();
+			targetPos.x = defaultPos.x;
+			targetPos.y = defaultPos.y;
+			targetPos.z = defaultPos.z;
+			*/
 			targetPos = orientationMatrix.transformVector(targetPos);
 			pos.x += (targetPos.x - pos.x)*_lightInterpolation;
 			pos.y += (targetPos.y - pos.y)*_lightInterpolation;
