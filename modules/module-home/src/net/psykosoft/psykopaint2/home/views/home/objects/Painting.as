@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_height = diffuseBitmap.height;
 			trace( this, "creating picture with dimensions: " + _width + "x" + _height );
 
-			_plane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( diffuseBitmap, null, view.stage3DProxy );
+			_plane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( diffuseBitmap, view.stage3DProxy );
 //			_plane = new Mesh( new PlaneGeometry( _width, _height ), new TextureMaterial( new BitmapTexture( diffuseBitmap ) ) ); // TODO: test non power of 2 textures with air 3.8
 			_plane.rotationX = -90;
 			_material = TextureMaterial(_plane.material);

@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Get painting data, translate and pass on to the drawing core.
 			var vo:PaintingVO = paintingDataModel.getVoWithId( paintingId );
-			var data:Vector.<ByteArray> = Vector.<ByteArray>( [ vo.colorImageARGB, vo.heightmapImageARGB, vo.sourceImageARGB ] );
+			var data:Vector.<ByteArray> = Vector.<ByteArray>( [ vo.colorImageBGRA, vo.heightmapImageBGRA, vo.sourceImageARGB ] );
 
 			canvasModel.loadLayers(data);
 

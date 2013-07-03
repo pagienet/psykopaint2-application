@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	* */
 	public class FramedPainting extends ObjectContainer3D
 	{
-		private var _painting:Painting;
+		private var _painting:ObjectContainer3D;
 		private var _frame:Frame;
 		private var _easel:Mesh;
 		private var _view:View3D;
@@ -53,7 +53,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		public function setPainting( value:Painting ):void {
+		public function setPainting( value:ObjectContainer3D ):void {
 			if( _painting ) {
 				removeChild( _painting );
 			}

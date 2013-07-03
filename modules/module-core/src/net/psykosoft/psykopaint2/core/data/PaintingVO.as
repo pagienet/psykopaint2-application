@@ -1,23 +1,64 @@
 package net.psykosoft.psykopaint2.core.data
 {
 
+	import away3d.tools.utils.TextureUtils;
+
+	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
+
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 
 	public class PaintingVO
 	{
-		public static const PAINTING_FILE_VERSION:String = "2";
+		public static const PAINTING_FILE_VERSION:String = "3";
 
-		public var colorImageARGB:ByteArray;
-		public var heightmapImageARGB:ByteArray;
+		public var colorImageBGRA:ByteArray;
+		public var heightmapImageBGRA:ByteArray;
 		public var sourceImageARGB:ByteArray;
 		public var id:String;
-		public var width:int;
-		public var height:int;
+		private var _width:int;
+		private var _height:int;
+		private var _textureWidth:int;
+		private var _textureHeight:int;
 		public var lastSavedOnDateMs:Number;
 		public var fileVersion:String = PaintingVO.PAINTING_FILE_VERSION;
 
 		public function PaintingVO() {
 			super();
+		}
+
+		public function get width() : int
+		{
+			return _width;
+		}
+
+		public function set width(value : int) : void
+		{
+			_width = value;
+			_textureWidth = TextureUtils.getBestPowerOf2(_width);
+		}
+
+		public function get height() : int
+		{
+			return _height;
+		}
+
+		public function set height(value : int) : void
+		{
+			_height = value;
+			_textureHeight = TextureUtils.getBestPowerOf2(_height);
+		}
+
+		public function get textureWidth() : int
+		{
+			return _textureWidth;
+		}
+
+		public function get textureHeight() : int
+		{
+			return _textureHeight;
 		}
 
 		public function toString():String {
@@ -40,13 +81,13 @@ package net.psykosoft.psykopaint2.core.data
 			// Write exposed single value data.
 			bytes.writeUTF( fileVersion );
 			bytes.writeUTF( id );
-			bytes.writeInt( width );
-			bytes.writeInt( height );
+			bytes.writeInt( _width );
+			bytes.writeInt( _height );
 			bytes.writeFloat( lastSavedOnDateMs );
 
 			// Write images.
-			bytes.writeBytes( colorImageARGB );
-			bytes.writeBytes( heightmapImageARGB );
+			bytes.writeBytes( colorImageBGRA );
+			bytes.writeBytes( heightmapImageBGRA );
 			bytes.writeBytes( sourceImageARGB );
 
 			bytes.compress();
@@ -76,8 +117,8 @@ package net.psykosoft.psykopaint2.core.data
 			lastSavedOnDateMs = bytes.readFloat();
 
 			// Read images.
-			colorImageARGB = decodeImage( bytes );
-			heightmapImageARGB = decodeImage( bytes );
+			colorImageBGRA = decodeImage( bytes );
+			heightmapImageBGRA = decodeImage( bytes );
 			sourceImageARGB = decodeImage( bytes );
 
 			// Report ok.
@@ -85,7 +126,7 @@ package net.psykosoft.psykopaint2.core.data
 		}
 
 		private function decodeImage( bytes:ByteArray ):ByteArray {
-			var numBytes:int = width * height * 4;
+			var numBytes:int = _width * _height * 4;
 			var imageBytes:ByteArray = new ByteArray();
 			bytes.readBytes( imageBytes, 0, numBytes );
 			return imageBytes;

@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 	{
 		private static const MAX_SIZE:uint = 2048;
 
-		public static function createPlaneThatFitsNonPowerOf2TransparentImage( diffuseImage:BitmapData, normalImage:BitmapData, stage3dProxy:Stage3DProxy ):Mesh {
+		public static function createPlaneThatFitsNonPowerOf2TransparentImage( diffuseImage:BitmapData, stage3dProxy:Stage3DProxy ):Mesh {
 			// Remember original diffuseImage and safe diffuseImage dimensions.
 			var imageDimensions:Point = new Point( diffuseImage.width, diffuseImage.height );
 
@@ -32,13 +32,6 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 
 			// Create material.
 			var material:TextureMaterial = new TextureMaterial( diffuseTexture, true, false, false );
-
-//			if (normalImage) {
-//				material.diffuseMethod = new PaintingDiffuseMethod();
-//				var normalTexture : BitmapTexture = createPow2TextureFromBitmap(normalImage, stage3dProxy);
-//				material.normalMap = normalTexture;
-//				material.specularMap = normalTexture;
-//			}
 
 			// Build geometry.
 			// Note: Plane takes original diffuseImage size ( not power of 2 dimensions ) and shifts and re-scales uvs

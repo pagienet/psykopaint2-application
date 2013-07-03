@@ -68,16 +68,14 @@ package net.psykosoft.psykopaint2.paint.commands
 			vo.width = canvasModel.width;
 			vo.height = canvasModel.height;
 			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayers();
-			vo.colorImageARGB = imagesRGBA[ 0 ];
-			vo.heightmapImageARGB = imagesRGBA[ 1 ];
+			vo.colorImageBGRA = imagesRGBA[ 0 ];
+			vo.heightmapImageBGRA = imagesRGBA[ 1 ];
 			vo.sourceImageARGB = imagesRGBA[ 2 ];
 			trace( this, "using vo: " + vo );
 
 			// Update easel.
 			if( updateEasel ) {
-				var diffuseBitmapData:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, true );
-				var normalBitmapData:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.heightmapImageARGB, vo.width, vo.height, false );
-				requestEaselUpdateSignal.dispatch( diffuseBitmapData, normalBitmapData );
+				requestEaselUpdateSignal.dispatch( vo );
 			}
 
 			// Serialize data.

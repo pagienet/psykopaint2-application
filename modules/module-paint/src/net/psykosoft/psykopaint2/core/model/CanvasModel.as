@@ -285,9 +285,9 @@ package net.psykosoft.psykopaint2.core.model
 
 		/**
 		 * Returns a list of 3 ByteArrays containing data:
-		 * 0: painted color layer
-		 * 1: normal/specular layer
-		 * 2: the source texture
+		 * 0: painted color layer, in BGRA
+		 * 1: normal/specular layer, in BGRA
+		 * 2: the source texture, in RGBA!!! (because it's always used primarily as BitmapData)
 		 */
 		public function saveLayers() : Vector.<ByteArray>
 		{
@@ -343,12 +343,16 @@ package net.psykosoft.psykopaint2.core.model
 			rgbData.position = 0;
 			alphaData.position = 0;
 			var outputData : ByteArray = new ByteArray();
+
 			var len : int = _width * _height;
 			for (var i : int = 0; i < len; ++i) {
-				var rgb : uint = rgbData.readUnsignedInt() & 0x00ffffff;
+				var rgb : uint = rgbData.readUnsignedInt();
+				var r : uint = rgb & 0x00ff0000;
+				var g : uint = rgb & 0x0000ff00;
+				var b : uint = rgb & 0x000000ff;
 				var a : uint = alphaData.readUnsignedInt() & 0x000000ff;
 
-				outputData.writeUnsignedInt(rgb | (a << 24));
+				outputData.writeUnsignedInt((r >> 8) | (g << 8) | (b << 24) | a);
 			}
 
 			return outputData;
@@ -356,8 +360,9 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function loadLayers(data : Vector.<ByteArray>) : void
 		{
-			_colorTexture.uploadFromByteArray(translateARGBtoBGRA(data[0]), 0, 0);
-			_normalSpecularMap.uploadFromByteArray(translateARGBtoBGRA(data[1]), 0, 0);
+			data[0].length = data[1].length = _textureWidth*_textureHeight*4;
+			_colorTexture.uploadFromByteArray(data[0], 0, 0);
+			_normalSpecularMap.uploadFromByteArray(data[1], 0, 0);
 
 			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(data[2], _width, _height, false);
 			setSourceBitmapData(sourceBmd);

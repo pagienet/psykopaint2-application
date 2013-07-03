@@ -31,9 +31,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotSignal;
 
 		[Inject]
-		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
-
-		[Inject]
 		public var requestPaintingLoadSignal:RequestPaintingActivationSignal;
 
 		[Inject]
@@ -66,8 +63,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = view.getIdForSelectedInProgressPainting();
 				var vo:PaintingVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
-				var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, true );
-				requestEaselUpdateSignal.dispatch( bmd, null );
+				requestEaselUpdateSignal.dispatch( vo );
 			}
 
 			// From app.
@@ -99,10 +95,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				}
 				default: { // Default buttons are supposed to be in progress painting buttons.
 					var vo:PaintingVO = paintingModel.getVoWithId( label );
-					var diffuseBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, true );
-					var normalBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, false );
 					paintingModel.focusedPaintingId = label;
-					requestEaselPaintingUpdateSignal.dispatch( diffuseBmd, normalBmd );
+					requestEaselUpdateSignal.dispatch( vo );
 					break;
 				}
 			}

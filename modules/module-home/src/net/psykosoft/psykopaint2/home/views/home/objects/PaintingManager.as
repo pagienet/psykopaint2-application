@@ -14,9 +14,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.data.FrameType;
+	import net.psykosoft.psykopaint2.home.views.home.objects.EaselPainting;
 	import net.psykosoft.psykopaint2.home.views.home.vos.FrameTextureAtlasDescriptorVO;
 
 	public class PaintingManager extends ObjectContainer3D
@@ -30,7 +32,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _shadowForPainting:Dictionary;
 		private var _atlasXml:XML;
 		private var _easel:FramedPainting;
-		private var _pendingEaselContentBmd:BitmapData;
+		private var _pendingEaselContent:PaintingVO;
 
 		// TODO: make private
 		public var homePaintingIndex:int = -1;
@@ -70,16 +72,15 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		public function setEaselContent( bmd:BitmapData ):void {
-			_pendingEaselContentBmd = bmd;
-			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) _pendingEaselContentBmd = BitmapDataUtils.scaleBitmapData( _pendingEaselContentBmd, 0.5 );
+		public function setEaselContent( vo : PaintingVO ):void {
+			_pendingEaselContent = vo;
 			if( _easel ) setEaselPaintingNow();
 		}
 
 		private function setEaselPaintingNow():void {
-			var painting:Painting = new Painting( _pendingEaselContentBmd, _view );
+			var painting:EaselPainting = new EaselPainting( _pendingEaselContent, _view );
 			_easel.setPainting( painting );
-			_pendingEaselContentBmd = null;
+			_pendingEaselContent = null;
 		}
 
 		public function createDefaultPaintings():void {
@@ -96,7 +97,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// Easel.
 			_easel = createPaintingAtIndex( null, null, 1, false );
 			_easel.easelVisible = true;
-			if( _pendingEaselContentBmd ) setEaselPaintingNow();
+			if( _pendingEaselContent ) setEaselPaintingNow();
 			autoPositionPaintingAtIndex( _easel, 1, false, 1 );
 			_easel.z -= 500;
 

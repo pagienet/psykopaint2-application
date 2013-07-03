@@ -126,8 +126,8 @@ public class HomeViewMediator extends MediatorBase
 			requestZoomThenChangeStateSignal.dispatch( true, StateType.PAINT );
 		}
 
-		private function onEaselUpdateRequest( diffuseContent:BitmapData, normalContent:BitmapData ):void {
-			view.paintingManager.setEaselContent( diffuseContent );
+		private function onEaselUpdateRequest( paintingVO : PaintingVO ):void {
+			view.paintingManager.setEaselContent( paintingVO );
 		}
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
@@ -143,9 +143,9 @@ public class HomeViewMediator extends MediatorBase
 					latestVo = vo;
 			}
 
-			var diffuseBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.colorImageARGB, latestVo.width, latestVo.height, true );
+//			var diffuseBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.colorImageARGB, latestVo.width, latestVo.height, true );
 //			var normalBmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( latestVo.heightmapImageARGB, latestVo.width, latestVo.height, false );
-			view.paintingManager.setEaselContent( diffuseBmd );
+			view.paintingManager.setEaselContent( latestVo );
 		}
 
 		private function onCanvasSnapShot( bmd:BitmapData ):void {

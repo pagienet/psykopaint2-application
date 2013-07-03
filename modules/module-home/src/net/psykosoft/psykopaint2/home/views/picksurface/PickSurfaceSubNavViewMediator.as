@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
@@ -82,13 +83,13 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		}
 
 		private function previewSurfaceByIndex( index:uint ):void {
-			_bitmapLoader = new BitmapLoader();
-			var size:int = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
-			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + size + "_sample.jpg", onSurfacePreviewLoaded );
+			trace ("TODO: LOAD SURF FILE INSTEAD AND UPDATE USING PAINTINGVO!!!");
+//			_bitmapLoader = new BitmapLoader();
+//			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_sample.jpg", onSurfacePreviewLoaded );
 		}
 
-		private function onSurfacePreviewLoaded( diffuseBmd:BitmapData):void {
-			requestEaselPaintingUpdateSignal.dispatch( diffuseBmd, null );
+		private function onSurfacePreviewLoaded( vo : PaintingVO ):void {
+			requestEaselPaintingUpdateSignal.dispatch( vo );
 			_bitmapLoader.dispose();
 			_bitmapLoader = null;
 		}
