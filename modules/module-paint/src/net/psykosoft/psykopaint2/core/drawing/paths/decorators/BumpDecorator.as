@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			shininess     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_SHININESS, 0.4, 0, 1);
 			glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 1);
 			bumpiness     = new PsykoParameter( PsykoParameter.NumberRangeParameter, PARAMETER_NR_BUMPYNESS, 0, 2, -2, 2 );
-			bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, 0, 1 );
+			bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, -1, 1 );
 			
 			_parameters.push(shininess, glossiness, bumpiness, bumpInfluence, mappingMode,mappingFactor,mappingFunction,invertMapping,maxSpeed);
 			

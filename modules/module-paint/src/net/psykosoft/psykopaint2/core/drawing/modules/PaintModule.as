@@ -177,7 +177,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</OrderDecorator>
 						<SplatterDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_3" index="1" />
-							<parameter id="Offset Mapping" path="pathengine.pointdecorator_3" value="0"  />
+							<parameter id="Offset Mapping" path="pathengine.pointdecorator_3" value="	0"  />
 							<parameter id="Splat Factor"  path="pathengine.pointdecorator_3" value="40" />
 							<parameter id="Minimum Offset" path="pathengine.pointdecorator_3" value="0" />
 							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_3" value="30" />
@@ -200,36 +200,30 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
 							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0" value2="0.4" minValue="0" maxValue="1" showInUI="1"/>
 						</SizeDecorator>
-					
+						<ColorDecorator>
+							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_2" index="1" />
+							<parameter id={ColorDecorator.PARAMETER_IL_COLOR}  path="pathengine.pointdecorator_2" index="0" />
+							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_2" value1="0" value2="0" />
+						</ColorDecorator>
 						<ConditionalDecorator>
 							<!-- if pen button 1 pressed -->
-							<parameter id={ConditionalDecorator.PARAMETER_SL_TEST_PROPERTY}  path="pathengine.pointdecorator_2" index="5" />
+							<parameter id={ConditionalDecorator.PARAMETER_SL_TEST_PROPERTY}  path="pathengine.pointdecorator_3" index={ConditionalDecorator.PROPERTY_INDEX_PEN_BUTTON_1} />
 						</ConditionalDecorator>
-						<ColorDecorator>
-							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index="1" />
-							<parameter id={ColorDecorator.PARAMETER_IL_COLOR}  path="pathengine.pointdecorator_1" index="0" />
-						</ColorDecorator>
 						<BumpDecorator>
-							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_3" index="3" />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_3" value1="0" value2="2" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_3"  value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_3"  value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_3"  value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_3"  value="1" />
+							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_4" index="3" />
+							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_4" value1="0" value2="2" />
+							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_4"  value="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_4"  value="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_4"  value="1" />
 						</BumpDecorator>
 						<EndConditionalDecorator/>
-						<ColorDecorator>
-							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index="1" />
-							<parameter id={ColorDecorator.PARAMETER_IL_COLOR}  path="pathengine.pointdecorator_1" index="1" />
-						</ColorDecorator>
 						<BumpDecorator>
-							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_5" index="3" />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_5" value1="-2" value2="0" />
-							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_5" value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_5"  value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_5"  value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_5"  value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_3"  value="1" />
+							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_6" index="3" />
+							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_6" value1="-2" value2="0" />
+							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_6"  value="1" />
+							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_6"  value="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_6"  value="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_6"  value="1" />
 						</BumpDecorator>
 						<EndConditionalDecorator/>
 					</pathengine>

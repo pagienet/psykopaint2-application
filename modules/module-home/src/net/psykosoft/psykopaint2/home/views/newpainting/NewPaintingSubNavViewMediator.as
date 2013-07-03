@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -11,10 +10,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 
 	public class NewPaintingSubNavViewMediator extends MediatorBase
 	{
@@ -65,6 +64,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var vo:PaintingVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
 				requestEaselUpdateSignal.dispatch( vo );
 			}
+			// TODO: re-enable this, it use to empty the easel when coming back from paint with no data ( i.e. after deleting the last data item )
 //			else{
 //				requestEaselUpdateSignal.dispatch( null );
 //			}

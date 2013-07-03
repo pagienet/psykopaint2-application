@@ -259,8 +259,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 					"mul vt0, va0, vc1.xyww\n" +
 					"add vt0, vt0, vc1.xxzz\n" +
 					"mov v3, vt0\n" +
-					
-					"add v4, va3, vc4\n"; //multiplication does not work for some reason so add it is for now
+					"mov v4, va3\n";
+					//"add v4, va3, vc4\n"; //multiplication does not work for some reason so add it is for now
 					
 		}
 

@@ -37,10 +37,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			_buttonGroup = new ButtonGroup();
 			for( var i:uint; i < len; i++ ) {
 				var vo:PaintingVO = data[ i ];
-				// Disabled while ppp2 format is being updated.
-//				var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( vo.colorImageARGB, vo.width, vo.height, true );
-//				bmd = BitmapDataUtils.scaleBitmapData( bmd, 0.25 ); // TODO: scale differently depending on file resolution and display resolution
-				var btn:SbButton = navigation.createButton( vo.id, ButtonIconType.DEFAULT, ButtonLabelType.CENTER/*, new Bitmap( bmd )*/ );
+				var btn:SbButton = navigation.createButton( vo.id, ButtonIconType.DEFAULT, ButtonLabelType.CENTER, new Bitmap( vo.thumbnail ) );
 				_buttonGroup.addButton( btn );
 			}
 			_buttonGroup.setSelectedButtonByIndex( _buttonGroup.numButtons - 1 );
