@@ -34,7 +34,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		[Inject]
 		public var requestDrawingCoreSurfaceSetSignal:RequestDrawingCoreSurfaceSetSignal;
 
-		private var _bitmapLoader:BitmapLoader;
 		private var _byteLoader:BinaryLoader;
 		private var _selectedIndex : int = -1;
 		private var _loadedSurface : ByteArray;
@@ -100,7 +99,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			vo.height = CoreSettings.STAGE_HEIGHT;
 			vo.colorImageBGRA = new ByteArray();
 			vo.colorImageBGRA.length = vo.textureWidth*vo.textureHeight*4;	// will fill with zeroes
-			vo.heightmapImageBGRA = _loadedSurface;
+			vo.heightmapImageBGRA = new ByteArray();
+			vo.heightmapImageBGRA.writeBytes(_loadedSurface, 0, 0);
+			vo.heightmapImageBGRA.uncompress();
 			// nothing else necessary
 			return vo;
 		}

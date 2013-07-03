@@ -15,7 +15,6 @@ package net.psykosoft.psykopaint2.core.model
 
 	import net.psykosoft.psykopaint2.core.rendering.DiffuseLambertModel;
 	import net.psykosoft.psykopaint2.core.rendering.BDRFModel;
-	import net.psykosoft.psykopaint2.core.rendering.SoftShadowModel;
 	import net.psykosoft.psykopaint2.core.rendering.SpecularBlinnModel;
 
 	import org.osflash.signals.Signal;

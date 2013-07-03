@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.materials.PaintingDiffuseMethod;
+	import net.psykosoft.psykopaint2.core.materials.PaintingNormalMethod;
+	import net.psykosoft.psykopaint2.core.materials.PaintingSpecularMethod;
 
 	/*
 	 * Represents just the "paper" rectangle of a painting with no frame or glass.
@@ -40,20 +42,26 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			addChild( _plane );
 		}
 
-		private function createPlane( paintingVO:PaintingVO, lightPicker:LightPickerBase ):Mesh {
-			var width:int = paintingVO.width;
-			var height:int = paintingVO.height;
-			var textureWidth:int = paintingVO.textureWidth;
-			var textureHeight:int = paintingVO.textureHeight;
-			var diffuseTexture:ByteArrayTexture = new ByteArrayTexture( paintingVO.lowResColorImageBGRA, textureWidth, textureHeight );
+		private function createPlane(paintingVO : PaintingVO, lightPicker : LightPickerBase) : Mesh
+		{
+			var width : int = paintingVO.width;
+			var height : int = paintingVO.height;
+			var textureWidth : int = paintingVO.textureWidth;
+			var textureHeight : int = paintingVO.textureHeight;
+			var diffuseTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.lowResColorImageBGRA, textureWidth, textureHeight);
+			var normalSpecularTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.heightmapImageBGRA, textureWidth, textureHeight);
 
 			// Create material.
 			_material = new TextureMaterial( diffuseTexture, true, false, false );
 			_material.diffuseMethod = new PaintingDiffuseMethod();
+			_material.normalMethod = new PaintingNormalMethod();
+			_material.specularMethod = new PaintingSpecularMethod();
 			_material.lightPicker = lightPicker;
 			_material.ambientColor = 0xffffff;
 			_material.ambient = 1;
-			_material.specular = .2;
+			_material.specular = .5;
+			_material.gloss = 200;
+			_material.normalMap = normalSpecularTexture;
 
 			// Build geometry.
 			var planeGeometry:PlaneGeometry = new PlaneGeometry( width, height );
