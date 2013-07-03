@@ -18,9 +18,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_N_RANDOM_THRESHOLD : String = "Random Threshold";
 		public static const PARAMETER_N_PRESSURE_THRESHOLD : String = "Pressure Threshold";
 		
+		public static const PROPERTY_INDEX_SPEED : int = 0;
+		public static const PROPERTY_INDEX_LUMINANCE : int = 1;
+		public static const PROPERTY_INDEX_RANDOM : int = 2;
+		public static const PROPERTY_INDEX_PEN_AVAILABLE : int = 3;
+		public static const PROPERTY_INDEX_PEN_PRESSURE : int = 4;
+		public static const PROPERTY_INDEX_PEN_BUTTON_1 : int = 5;
+		public static const PROPERTY_INDEX_PEN_BUTTON_2 : int = 6;
+		
 		
 		private var testProperty:PsykoParameter;
-		private var speedThreshold:PsykoParameter;
+		private var speedThreshold:PsykoParameter;111
 		private var luminanceThreshold:PsykoParameter;
 		private var randomThreshold:PsykoParameter;
 		private var pressureThreshold:PsykoParameter;

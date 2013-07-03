@@ -117,6 +117,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		//private var twoFingerGestureTimeout:int
 		//private var singleTouchBeginEvent:TouchEvent;
 		private var _strokeInProgress:Boolean;
+		private var _key1isDown:Boolean;
+		private var _key2isDown:Boolean;
 		
 		public function PathManager( type:int )
 		{
@@ -360,7 +362,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			{
 				_pathEngine.addFirstPoint( px, py, WacomPenManager.currentPressure, WacomPenManager.buttonState);
 			} else {
-			 	_pathEngine.addFirstPoint( px, py, -1, 0);
+			 	_pathEngine.addFirstPoint( px, py, -1, (_key1isDown ? 1 : 0) | (_key2isDown ? 2 : 0));
 			}
 			sendStartCallbacks();
 			if ( _pathEngine.sendTaps ) {
@@ -378,7 +380,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			{
 				if ( _pathEngine.addPoint(px,py, WacomPenManager.currentPressure, WacomPenManager.buttonState) ) update();
 			} else {
-				if ( _pathEngine.addPoint(px,py, -1, 0) ) update();
+				if ( _pathEngine.addPoint(px,py, -1,  (_key1isDown ? 1 : 0) | (_key2isDown ? 2 : 0)) ) update();
 			}
 		}
 
@@ -389,7 +391,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if ( WacomPenManager.hasPen )
 				_pathEngine.addPoint( px, py, WacomPenManager.currentPressure, WacomPenManager.buttonState, true); 
 			 else 
-				_pathEngine.addPoint( px, py, -1, 0, true); 
+				_pathEngine.addPoint( px, py, -1,  (_key1isDown ? 1 : 0) | (_key2isDown ? 2 : 0), true); 
 			update(true);
 			onEnterFrame(null);
 			if (!hasActiveDecorators() )
@@ -458,6 +460,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			} else {
 				_view.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 				_view.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
+				_view.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp );
 			}
 			
 		}
@@ -513,8 +516,25 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					}
 					playbackIndex += 3;
 				}
+			} else if ( event.keyCode == Keyboard.NUMBER_1)
+			{
+				_key1isDown  = true;
+			} else if ( event.keyCode == Keyboard.NUMBER_2)
+			{
+				_key2isDown  = true;
 			}
 			
+		}
+		
+		protected function onKeyUp(event:KeyboardEvent):void
+		{
+			if ( event.keyCode == Keyboard.NUMBER_1)
+			{
+				_key1isDown  = false;
+			} else if ( event.keyCode == Keyboard.NUMBER_2)
+			{
+				_key2isDown  = false;
+			}
 		}
 		
 		public function deactivate() : void
@@ -532,6 +552,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 				_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 				_view.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown );
+				_view.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp );
 			}
 			enableGestureRecognition( true );
 		}

@@ -124,7 +124,7 @@ package net.psykosoft.psykopaint2.core.rendering
 					offsetY = (1 - _scale)*.333;
 				}
 				
-				if ( _scale != 1 &&  _scale > 0.95 && _scale < 1.05 )
+				if ( _scale > 0.95 && _scale < 1.05 )
 				{
 					_scale = 1;
 					offsetX = 0;
