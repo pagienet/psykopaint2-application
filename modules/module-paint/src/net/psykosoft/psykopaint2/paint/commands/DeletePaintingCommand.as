@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.paint.commands {
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingSerializer;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.paint.commands {
 			super.execute();
 
 			//identify file name
-			var fileName:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingVO.PAINTING_FILE_EXTENSION;
+			var fileName:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingSerializer.PAINTING_FILE_EXTENSION;
 
 			//delete file name
 			var file:File;

@@ -8,11 +8,11 @@ package net.psykosoft.psykopaint2.paint.commands
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	import flash.utils.ByteArray;
-	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingSerializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -100,18 +100,19 @@ package net.psykosoft.psykopaint2.paint.commands
 			}
 
 			// Serialize data.
-			_bytes = vo.serialize();
+			var serializer:PaintingSerializer = new PaintingSerializer();
+			_bytes = serializer.serializePaintingVO( vo );
 
 			// Write.
 			context.detain( this );
 			if( CoreSettings.RUNNING_ON_iPAD ) { // iOS
 				writeBytesAsync(
-						File.applicationStorageDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingVO.PAINTING_FILE_EXTENSION )
+						File.applicationStorageDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingSerializer.PAINTING_FILE_EXTENSION )
 				);
 			}
 			else { // Desktop
 				writeBytesAsync(
-						File.desktopDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingVO.PAINTING_FILE_EXTENSION )
+						File.desktopDirectory.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingSerializer.PAINTING_FILE_EXTENSION )
 				);
 			}
 		}

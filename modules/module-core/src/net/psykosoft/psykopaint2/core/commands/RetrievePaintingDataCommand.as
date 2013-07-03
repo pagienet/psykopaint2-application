@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.core.commands
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.io.FolderReadUtil;
 	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingSerializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 
@@ -50,7 +51,7 @@ package net.psykosoft.psykopaint2.core.commands
 			for( var i:uint; i < len; i++ ) {
 				var file:File = files[ i ];
 				trace( "  file: " + file.name );
-				if( file.name.indexOf( PaintingVO.PAINTING_FILE_EXTENSION ) != -1 ) {
+				if( file.name.indexOf( PaintingSerializer.PAINTING_FILE_EXTENSION ) != -1 ) {
 					_paintingFiles.push( file );
 				}
 			}
@@ -81,7 +82,8 @@ package net.psykosoft.psykopaint2.core.commands
 
 			trace( this, "de-serializing vo..." );
 			try {
-				_currentVoBeingDeSerialized.deSerialize( _currentFileBeingLoaded.data, onVoDeSerialized );
+				var serializer:PaintingSerializer = new PaintingSerializer();
+				serializer.deSerializePaintingVO( _currentFileBeingLoaded.data, _currentVoBeingDeSerialized, onVoDeSerialized );
 			} catch( error:Error ) {
 				trace( this, "***WARNING*** Error de-serializing file: " + _currentFileBeingLoaded.nativePath );
 			}
