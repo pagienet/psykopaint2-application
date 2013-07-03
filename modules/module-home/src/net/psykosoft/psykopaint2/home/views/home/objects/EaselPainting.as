@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.materials.PaintingDiffuseMethod;
 	import net.psykosoft.psykopaint2.core.materials.PaintingNormalMethod;
+	import net.psykosoft.psykopaint2.core.materials.PaintingSpecularMethod;
 
 	/*
 	* Represents just the "paper" rectangle of a painting with no frame or glass.
@@ -54,10 +55,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_material = new TextureMaterial( diffuseTexture, true, false, false );
 			_material.diffuseMethod = new PaintingDiffuseMethod();
 			_material.normalMethod = new PaintingNormalMethod();
+			_material.specularMethod = new PaintingSpecularMethod();
 			_material.lightPicker = lightPicker;
 			_material.ambientColor = 0xffffff;
 			_material.ambient = 1;
-			_material.specular = .2;
+			_material.specular = .5;
+			_material.gloss = 200;
 			_material.normalMap = normalSpecularTexture;
 
 			// Build geometry.
