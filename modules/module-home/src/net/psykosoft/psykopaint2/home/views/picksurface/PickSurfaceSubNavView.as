@@ -33,6 +33,10 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			navigation.layout();
 		}
 
+		public function showRightButton( show:Boolean ):void {
+			navigation.toggleRightButtonVisibility( show );
+		}
+
 		public function getSelectedCenterButtonIndex():int {
 			return _group.getSelectedBtnIndex();
 		}

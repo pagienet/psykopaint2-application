@@ -6,15 +6,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.core.base.CompactSubGeometry;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
-	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.BitmapTexture;
 	import away3d.textures.ByteArrayTexture;
 
-	import flash.display.BitmapData;
-	import flash.geom.Point;
-
-	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 
 	/*

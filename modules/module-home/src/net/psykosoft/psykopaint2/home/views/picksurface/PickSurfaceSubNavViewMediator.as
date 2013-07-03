@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 
@@ -46,6 +47,10 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			view.navigation.buttonClickedCallback = onButtonClicked;
 			previewSurfaceByIndex( 0 );
 			// TODO: must display thumbnails, assets are on /core-packaged/images/surfaces/ as jpgs
+
+			setTimeout( function():void {
+				view.showRightButton( false );
+			}, 2000 );
 		}
 
 		private function onButtonClicked( label:String ):void {
