@@ -64,7 +64,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		public function AbstractBrushMesh()
 		{
 			_normalSpecularFragmentData = new <Number>[.5,.5, 0, 0, 1, 0, 0, 1/5];
-			_normalSpecularVertexData = new <Number>[0, 0, 0, 1, .5, -.5, 0, 1, 0, 0, 0, 0];
+			_normalSpecularVertexData = new <Number>[0, 0, 0, 1, .5, -.5, 0, 1, 0, 0, 0, 0 ,0,0,0,0];
 			_bounds = new Rectangle();
 			_programKey = getQualifiedClassName(this);
 			_fastBuffer = FastBufferManager.getFastBuffer(topologyIndexType);
@@ -258,7 +258,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 				// canvas uvs
 					"mul vt0, va0, vc1.xyww\n" +
 					"add vt0, vt0, vc1.xxzz\n" +
-					"mov v3, vt0\n";
+					"mov v3, vt0\n" +
+					
+					"add v4, va3, vc4\n"; //multiplication does not work for some reason so add it is for now
+					
 		}
 
 		// default code expects a height map + alpha map
@@ -269,6 +272,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		// analytical solutions may be more optimal if possible
 		protected function getNormalSpecularFragmentCode() : String
 		{
+			/*
 			return 	"tex ft1, v0, fs0 <2d, clamp, linear, miplinear >\n" +
 					"tex ft2, v1, fs0 <2d, clamp, linear, miplinear >\n" +
 					"tex ft3, v2, fs0 <2d, clamp, linear, miplinear >\n" +
@@ -298,6 +302,38 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 					"add ft0, ft0, ft3\n" +
 
 					"mov oc, ft0";
+			*/
+			
+			return 	"tex ft1, v0, fs0 <2d, clamp, linear, miplinear >\n" +
+				"tex ft2, v1, fs0 <2d, clamp, linear, miplinear >\n" +
+				"tex ft3, v2, fs0 <2d, clamp, linear, miplinear >\n" +
+				"sub ft0.x, ft1.x, ft2.x\n" +
+				"sub ft0.y, ft1.x, ft3.x\n" +
+				
+				"mul ft0.xy, ft0.xy, v4.y\n" +	// bumpiness
+				
+				// add brush normal to canvas normals
+				"tex ft3, v3, fs1 <2d, clamp, linear, nomip>\n" +
+				
+				// smooth out underneath
+				"sub ft4.xy, fc0.xx, ft3.xy\n" +
+				"mul ft4.xy, ft4.xy, v4.w\n" +
+				"add ft4.xy, ft4.xy, ft3.xy\n" +
+				
+				// set specular
+				"mul ft0.z, ft1.y, v4.z\n" +
+				"mov ft0.w, v4.x\n" +
+				
+				//					"mul ft0.xy, ft0.xy, fc0.x\n" +
+				"add ft0.xy, ft0.xy, ft4.xy\n" +
+				
+				//					"mul ft5.w, fc1.z, ft1.x\n" +
+				"sub ft0, ft0, ft3\n" +
+				"mul ft0, ft0, ft1.x\n" +
+				"add ft0, ft0, ft3\n" + 
+				
+				"mov oc, ft0";
+			
 		}
 
 		protected function updateColorProgram(context3d : Context3D) : void
@@ -407,19 +443,29 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			context3d.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 			context3d.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
 			context3d.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4);
-
+			context3d.setVertexBufferAt(3, vertexBuffer, 12, Context3DVertexBufferFormat.FLOAT_4);
+			
 			context3d.setTextureAt(0, _normalTexture);
 			context3d.setTextureAt(1, canvas.normalSpecularMap);
 			_normalSpecularVertexData[0] = 1/512;
 			_normalSpecularVertexData[1] = 1/512;
+			
 			_normalSpecularVertexData[8] = 1/canvas.textureWidth;
 			_normalSpecularVertexData[9] = 1/canvas.textureHeight;
+			
+			_normalSpecularVertexData[12] = glossiness;
+			_normalSpecularVertexData[13] = bumpiness;
+			_normalSpecularVertexData[14] = shininess;
+			_normalSpecularVertexData[15] = influence;
+			/*
 			_normalSpecularFragmentData[3] = glossiness;
 			_normalSpecularFragmentData[4] = bumpiness*2;
 			_normalSpecularFragmentData[5] = shininess;
 			_normalSpecularFragmentData[6] = influence;
-			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _normalSpecularVertexData, 3);
-			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _normalSpecularFragmentData, 2);
+			*/
+			
+			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _normalSpecularVertexData, 4);
+			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _normalSpecularFragmentData, 1);
 			context3d.drawTriangles(getIndexBuffer(context3d), 0, _numIndices/3);
 			context3d.setTextureAt(0, null);
 			context3d.setTextureAt(1, null);
@@ -427,6 +473,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			context3d.setVertexBufferAt(0, null);
 			context3d.setVertexBufferAt(1, null);
 			context3d.setVertexBufferAt(2, null);
+			context3d.setVertexBufferAt(3, null);
 		}
 	}
 }

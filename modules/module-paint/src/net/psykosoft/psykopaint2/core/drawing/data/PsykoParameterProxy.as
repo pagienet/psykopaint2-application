@@ -7,12 +7,9 @@ package net.psykosoft.psykopaint2.core.drawing.data
 	import com.greensock.easing.Quart;
 	import com.greensock.easing.Quint;
 	
-	import apparat.asm.LessThan;
-	
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
 	
-	import org.osflash.signals.ISlot;
-
+	
 	public class PsykoParameterProxy
 	{
 		public static const TYPE_VALUE_MAP:int = 0;

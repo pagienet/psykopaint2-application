@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public var speed:Number;
 		public var angle:Number;
 		public var colorsRGBA:Vector.<Number>;
+		public var bumpFactors:Vector.<Number>;
 		public var normalX:Number;
 		public var normalY:Number;
 		public var size:Number;
@@ -14,13 +15,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public var penButtonState:int;
 		public var first:Boolean;
 		
-		public function SamplePoint( x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, first:Boolean = false)
+		public function SamplePoint( x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, bumpFactors:Vector.<Number> = null, first:Boolean = false)
 		{
-			colorsRGBA = new Vector.<Number>();
-			resetData(x, y, speed, size, angle, pressure, penButtonState, colors, first);
+			this.colorsRGBA = new Vector.<Number>(16,true);
+			this.bumpFactors = new Vector.<Number>(16,true);
+			resetData(x, y, speed, size, angle, pressure, penButtonState, colors,bumpFactors,first);
 		}
 		
-		public function resetData(x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, first:Boolean = false):SamplePoint
+		public function resetData(x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, bumpFactors:Vector.<Number> = null, first:Boolean = false):SamplePoint
 		{
 			this.x = x;
 			this.y = y;
@@ -42,6 +44,19 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					colorsRGBA[i] = colors[i];
 				}
 			}
+			if ( bumpFactors == null )
+			{
+				for ( i = 0; i < 16; i++ )
+				{
+					this.bumpFactors[i] = 0;
+				}
+			} else {
+				for ( i = 0; i < 16; i++ )
+				{
+					this.bumpFactors[i] = bumpFactors[i];
+				}
+			}
+			
 			return this;
 		}
 		
@@ -53,7 +68,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		public function getClone():SamplePoint
 		{
-			return PathManager.getSamplePoint(x,y,speed,size, angle, pressure, penButtonState, colorsRGBA, first);
+			return PathManager.getSamplePoint(x,y,speed,size, angle, pressure, penButtonState, colorsRGBA, bumpFactors, first);
 		}
 		
 		public function squaredDistance( p:SamplePoint ):Number

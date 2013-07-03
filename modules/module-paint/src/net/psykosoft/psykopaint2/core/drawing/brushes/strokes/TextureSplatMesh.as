@@ -75,10 +75,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			data[7] = data[15] = data[23] = data[31] = rotCos;
 			 
 			
-			_fastBuffer.addInterleavedFloatsToVertices( data,_vIndex,8,4);
-			_fastBuffer.addInterleavedFloatsToVertices( point.colorsRGBA,_vIndex+32,4,8);
+			//_fastBuffer.addInterleavedFloatsToVertices( data,_vIndex,8,4);
+			//_fastBuffer.addInterleavedFloatsToVertices( point.colorsRGBA,_vIndex+32,4,8);
+			_fastBuffer.addInterleavedFloatsToVertices( data,_vIndex,8,8);
+			_fastBuffer.addInterleavedFloatsToVertices( point.colorsRGBA,_vIndex+32,4,12);
+			_fastBuffer.addInterleavedFloatsToVertices( point.bumpFactors,_vIndex+48,4,12);
 
-			_vIndex += 192;
+			//_vIndex += 192;
+			_vIndex += 256;
+			
 			_numVertices += 4;
 			_numIndices += 6;
 
@@ -94,7 +99,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			context3d.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 			context3d.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
 			context3d.setVertexBufferAt(2, vertexBuffer, 8, Context3DVertexBufferFormat.FLOAT_4);
-
+			
 			context3d.setTextureAt(0, _brushTexture);
 			context3d.drawTriangles(getIndexBuffer(context3d), 0, _numIndices/3);
 
@@ -103,6 +108,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			context3d.setVertexBufferAt(0, null);
 			context3d.setVertexBufferAt(1, null);
 			context3d.setVertexBufferAt(2, null);
+			
 		}
 
 
@@ -121,7 +127,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		override protected function get numElementsPerVertex() : int
 		{
-			return 12;
+			return 16;
 		}
 
 		override protected function get topologyIndexType() : int
