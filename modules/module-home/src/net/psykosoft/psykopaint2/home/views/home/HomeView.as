@@ -97,12 +97,15 @@ package net.psykosoft.psykopaint2.home.views.home
 //			_view.scene.addChild( tri );
 
 			_light = new DirectionalLight(-1, -1, 2);
+			_light.ambient = 1;
+			_light.color = 0x989589;
+			_light.ambientColor = 0x808088;
 			_lightPicker = new StaticLightPicker([_light]);
 			_room = new WallRoom( _view );
 			var cameraTarget:Object3D = new Object3D();
 			_cameraController.setCamera( _view.camera, cameraTarget );
 			_cameraController.stage = stage;
-			_paintingManager = new PaintingManager( _cameraController, _room, _view );
+			_paintingManager = new PaintingManager( _cameraController, _room, _view, _lightPicker );
 			_paintingManager.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
 			_cameraController.cameraY = cameraTarget.y = 400;

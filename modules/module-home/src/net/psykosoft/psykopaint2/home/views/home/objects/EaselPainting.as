@@ -6,10 +6,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.core.base.CompactSubGeometry;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
+	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.ByteArrayTexture;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.materials.PaintingDiffuseMethod;
 
 	/*
 	* Represents just the "paper" rectangle of a painting with no frame or glass.
@@ -23,7 +25,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _plane:Mesh;
 		private var _material:TextureMaterial;
 
-		public function EaselPainting( paintingVO : PaintingVO, view:View3D) {
+		public function EaselPainting( paintingVO : PaintingVO, lightPicker : LightPickerBase) {
 
 			super();
 
@@ -31,14 +33,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_height = paintingVO.height;
 			trace( this, "creating picture with dimensions: " + _width + "x" + _height );
 
-			_plane = createPlane(paintingVO);
+			_plane = createPlane(paintingVO, lightPicker);
 //			_plane = new Mesh( new PlaneGeometry( _width, _height ), new TextureMaterial( new BitmapTexture( diffuseBitmap ) ) ); // TODO: test non power of 2 textures with air 3.8
 			_plane.rotationX = -90;
 //			_material.lightPicker = lightPicker;
 			addChild( _plane );
 		}
 
-		private function createPlane(paintingVO : PaintingVO) : Mesh
+		private function createPlane(paintingVO : PaintingVO, lightPicker : LightPickerBase) : Mesh
 		{
 			var width : int = paintingVO.width;
 			var height : int = paintingVO.height;
@@ -48,6 +50,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Create material.
 			_material = new TextureMaterial( diffuseTexture, true, false, false );
+			_material.diffuseMethod = new PaintingDiffuseMethod();
+			_material.lightPicker = lightPicker;
+			_material.ambientColor = 0xffffff;
+			_material.ambient = 1;
+			_material.specular = .2;
 
 			// Build geometry.
 			var planeGeometry:PlaneGeometry = new PlaneGeometry( width, height );

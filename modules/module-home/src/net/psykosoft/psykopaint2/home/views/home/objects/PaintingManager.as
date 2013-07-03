@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
+	import away3d.materials.lightpickers.LightPickerBase;
+	import away3d.materials.lightpickers.StaticLightPicker;
 
 	import br.com.stimuli.loading.BulkLoader;
 
@@ -33,13 +35,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _atlasXml:XML;
 		private var _easel:FramedPainting;
 		private var _pendingEaselContent:PaintingVO;
+		private var _lightPicker : LightPickerBase;
 
 		// TODO: make private
 		public var homePaintingIndex:int = -1;
 
 		private const FRAME_GAP:Number = 300;
 
-		public function PaintingManager( cameraController:ScrollCameraController, room:WallRoom, view:View3D ) {
+		public function PaintingManager( cameraController:ScrollCameraController, room:WallRoom, view:View3D, lightPicker : LightPickerBase ) {
 			super();
 			_cameraController = cameraController;
 			_room = room;
@@ -47,6 +50,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_paintings = new Vector.<FramedPainting>();
 			_snapPointForPainting = new Dictionary();
 			_shadowForPainting = new Dictionary();
+			_lightPicker = lightPicker;
 		}
 
 		override public function dispose():void {
@@ -78,7 +82,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		}
 
 		private function setEaselPaintingNow():void {
-			var painting:EaselPainting = new EaselPainting( _pendingEaselContent, _view );
+			var painting:EaselPainting = new EaselPainting( _pendingEaselContent, _lightPicker );
 			_easel.setPainting( painting );
 			_pendingEaselContent = null;
 		}
