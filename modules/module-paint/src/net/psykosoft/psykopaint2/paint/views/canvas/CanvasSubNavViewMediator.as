@@ -1,8 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
-import net.psykosoft.psykopaint2.core.data.PaintingVO;
-import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
@@ -10,8 +10,9 @@ import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
-import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
-import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeactivationSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 
 	public class CanvasSubNavViewMediator extends MediatorBase
 	{
@@ -42,6 +43,9 @@ import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 		[Inject]
 		public var requestPaintingDeletionSignal:RequestPaintingDeletionSignal;
 
+		[Inject]
+		public var requestPaintingDeactivationSignal:RequestPaintingDeactivationSignal;
+
 		private var _incomingState:String;
 
 		override public function initialize():void {
@@ -61,48 +65,62 @@ import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 
-				case CanvasSubNavView.LBL_HOME: {
+				case CanvasSubNavView.LBL_HOME:
+				{
+					trace( this, "leaving paint mode. Will 1) save, 2) change state to home, 3) request a zoom out on home, 4) deactivate painting" );
 					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, true );
 					requestStateChange( StateType.HOME_ON_EASEL );
 					requestZoomToggleSignal.dispatch( false );
+					if( paintingModel.focusedPaintingId != PaintingVO.DEFAULT_VO_ID && paintingModel.focusedPaintingId != "" ) {
+						requestPaintingDeactivationSignal.dispatch( paintingModel.focusedPaintingId );
+					}
 					break;
 				}
 
-				case CanvasSubNavView.LBL_DESTROY: {
+				case CanvasSubNavView.LBL_DESTROY:
+				{
 					if( paintingModel.focusedPaintingId != PaintingVO.DEFAULT_VO_ID && paintingModel.focusedPaintingId != "" ) {
+						requestPaintingDeactivationSignal.dispatch( paintingModel.focusedPaintingId );
 						requestPaintingDeletionSignal.dispatch( paintingModel.focusedPaintingId );
 					}
 					break;
 				}
-				case CanvasSubNavView.LBL_CLEAR: {
+				case CanvasSubNavView.LBL_CLEAR:
+				{
 					requestClearCanvasSignal.dispatch();
 					break;
 				}
-				case CanvasSubNavView.LBL_MODEL: {
+				case CanvasSubNavView.LBL_MODEL:
+				{
 					requestNavigationToggleSignal.dispatch( -1 );
 					requestStateChange( StateType.PICK_IMAGE );
 					break;
 				}
-				case CanvasSubNavView.LBL_COLOR: {
+				case CanvasSubNavView.LBL_COLOR:
+				{
 //					requestStateChange( StateType.COLOR_STYLE );
 					break;
 				}
-				case CanvasSubNavView.LBL_EXPORT: {
+				case CanvasSubNavView.LBL_EXPORT:
+				{
 					requestCanvasExportSignal.dispatch();
 					break;
 				}
-				case CanvasSubNavView.LBL_SAVE: {
+				case CanvasSubNavView.LBL_SAVE:
+				{
 					if( paintingModel.focusedPaintingId != "" ) {
 						requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, false );
 					}
 					break;
 				}
-				case CanvasSubNavView.LBL_PUBLISH: {
+				case CanvasSubNavView.LBL_PUBLISH:
+				{
 					// TODO: trigger publish process
 					break;
 				}
 
-				case CanvasSubNavView.LBL_PICK_A_BRUSH: {
+				case CanvasSubNavView.LBL_PICK_A_BRUSH:
+				{
 					requestStateChange( StateType.PAINT_SELECT_BRUSH );
 					break;
 				}

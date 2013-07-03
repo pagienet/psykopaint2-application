@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.paint.commands {
 		override public function execute():void {
 			super.execute();
 
-			//identify file name
+			/*//identify file name
 			var fileName:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingSerializer.PAINTING_FILE_EXTENSION;
 
 			//delete file name
@@ -51,8 +51,7 @@ package net.psykosoft.psykopaint2.paint.commands {
 			requestStateChangeSignal.dispatch( StateType.HOME_ON_EASEL );
 
 			//zoom out
-			requestZoomToggleSignal.dispatch( false );
-
+			requestZoomToggleSignal.dispatch( false );*/
 		}
 	}
 }

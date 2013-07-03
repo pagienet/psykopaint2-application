@@ -14,8 +14,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import net.psykosoft.psykopaint2.core.materials.PaintingDiffuseMethod;
 
 	/*
-	* Represents just the "paper" rectangle of a painting with no frame or glass.
-	* */
+	 * Represents just the "paper" rectangle of a painting with no frame or glass.
+	 * */
 	public class EaselPainting extends ObjectContainer3D
 	{
 		private var _width:Number;
@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _plane:Mesh;
 		private var _material:TextureMaterial;
 
-		public function EaselPainting( paintingVO : PaintingVO, lightPicker : LightPickerBase) {
+		public function EaselPainting( paintingVO:PaintingVO, lightPicker:LightPickerBase ) {
 
 			super();
 
@@ -33,20 +33,19 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_height = paintingVO.height;
 			trace( this, "creating picture with dimensions: " + _width + "x" + _height );
 
-			_plane = createPlane(paintingVO, lightPicker);
+			_plane = createPlane( paintingVO, lightPicker );
 //			_plane = new Mesh( new PlaneGeometry( _width, _height ), new TextureMaterial( new BitmapTexture( diffuseBitmap ) ) ); // TODO: test non power of 2 textures with air 3.8
 			_plane.rotationX = -90;
 //			_material.lightPicker = lightPicker;
 			addChild( _plane );
 		}
 
-		private function createPlane(paintingVO : PaintingVO, lightPicker : LightPickerBase) : Mesh
-		{
-			var width : int = paintingVO.width;
-			var height : int = paintingVO.height;
-			var textureWidth : int = paintingVO.textureWidth;
-			var textureHeight : int = paintingVO.textureHeight;
-			var diffuseTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.colorImageBGRA, textureWidth, textureHeight);
+		private function createPlane( paintingVO:PaintingVO, lightPicker:LightPickerBase ):Mesh {
+			var width:int = paintingVO.width;
+			var height:int = paintingVO.height;
+			var textureWidth:int = paintingVO.textureWidth;
+			var textureHeight:int = paintingVO.textureHeight;
+			var diffuseTexture:ByteArrayTexture = new ByteArrayTexture( paintingVO.lowResColorImageBGRA, textureWidth, textureHeight );
 
 			// Create material.
 			_material = new TextureMaterial( diffuseTexture, true, false, false );
@@ -58,8 +57,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Build geometry.
 			var planeGeometry:PlaneGeometry = new PlaneGeometry( width, height );
-			var subGeometry:CompactSubGeometry = CompactSubGeometry(planeGeometry.subGeometries[0]);
-			subGeometry.scaleUV(width/textureWidth, height/textureHeight);
+			var subGeometry:CompactSubGeometry = CompactSubGeometry( planeGeometry.subGeometries[0] );
+			subGeometry.scaleUV( width / textureWidth, height / textureHeight );
 
 			return new Mesh( planeGeometry, _material );
 		}
@@ -69,7 +68,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_plane.dispose();
 			_material.dispose();
 			_material.texture.dispose();
-			if (_material.normalMap) _material.normalMap.dispose();
+			if( _material.normalMap ) _material.normalMap.dispose();
 
 			_plane = null;
 			_material = null;
@@ -78,7 +77,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		}
 
 		public function get width():Number {
-		 	return _width * _scale;
+			return _width * _scale;
 		}
 
 		public function get height():Number {
