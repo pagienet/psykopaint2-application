@@ -36,7 +36,9 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.crop.CropSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropView;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropViewMediator;
-import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.PickASampleImageSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.PickASampleImageSubNavViewMediator;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageView;
 import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageViewMediator;
 import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavViewMediator;
@@ -140,6 +142,7 @@ import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 			_mediatorMap.map( CropView ).toMediator( CropViewMediator );
 			_mediatorMap.map( PickAnImageSubNavView ).toMediator( PickAnImageSubNavViewMediator );
 			_mediatorMap.map( PickAUserImageView ).toMediator( PickAUserImageViewMediator );
+			_mediatorMap.map( PickASampleImageSubNavView ).toMediator( PickASampleImageSubNavViewMediator );
 		}
 	}
 }

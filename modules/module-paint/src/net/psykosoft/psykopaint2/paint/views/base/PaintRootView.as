@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleView;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.PickASampleImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 
@@ -33,6 +34,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.CROP, CropSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_ADJUST_BRUSH, EditBrushSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.PICK_IMAGE, PickAnImageSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.PICK_SAMPLE_IMAGE, PickASampleImageSubNavView );
 		}
 	}
 }
