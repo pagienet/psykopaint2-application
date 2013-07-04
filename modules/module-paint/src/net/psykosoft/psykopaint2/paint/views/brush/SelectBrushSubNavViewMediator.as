@@ -27,7 +27,9 @@ import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
 			view.setSelectedBrush( paintModule.activeBrushKit );
 			view.navigation.toggleRightButtonVisibility( hasParameters() );
-			view.navigation.setScrollerPosition( EditBrushCache.lastScrollerPosition );
+			if( view.navigation.scroller.contentWidth > view.navigation.scroller.visibleWidth ) {
+				view.navigation.setScrollerPosition( EditBrushCache.lastScrollerPosition );
+			}
 		}
 
 		private function onButtonClicked( label:String ):void {

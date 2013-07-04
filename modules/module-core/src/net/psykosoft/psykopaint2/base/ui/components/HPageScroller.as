@@ -9,9 +9,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		override protected function evaluateNewSnapPointFromPosition( px:Number ):void {
-			var ratio:Number = Math.floor( px / visibleWidth );
+			var ratio:Number = Math.floor( px / _visibleWidth );
             if( ratio >= _positionManager.numSnapPoints ){
-				var snap:Number = ratio * visibleWidth + visibleWidth / 2;
+				var snap:Number = ratio * _visibleWidth + _visibleWidth / 2;
 			    _positionManager.pushSnapPoint( snap );
             }
 		}

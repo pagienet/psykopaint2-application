@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 		private function onClick( event:MouseEvent ):void {
 			var column:int = mouseX / _cellSize;
 			var row:int = mouseY / _cellSize;
-			var thumbIndex:uint = _numberOfItemsPerPage * _activePageIndex + row * int( visibleWidth / _cellSize ) + column;
+			var thumbIndex:uint = _numberOfItemsPerPage * _activePageIndex + row * int( _visibleWidth / _cellSize ) + column;
 			onTileClicked( thumbIndex );
 		}
 
@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 			var gap:Number = 20;
 			_tileSize = tileSize;
 			_cellSize = tileSize + gap;
-			_numberOfItemsPerPage = Math.floor( visibleWidth / _cellSize ) * Math.floor( visibleHeight / _cellSize );
+			_numberOfItemsPerPage = Math.floor( _visibleWidth / _cellSize ) * Math.floor( _visibleHeight / _cellSize );
 
 			var bmd:BitmapData = new BitmapData( tileSize, tileSize, false, 0xFFFFFF );
 
@@ -71,14 +71,14 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 				// Advance in scroller space.
 				_thumbX += _cellSize;
 				// Next x is off the right edge of the page?
-				if( _thumbX + _cellSize > _creatingPageNum * visibleWidth ) {
-					_thumbX = ( _creatingPageNum - 1 ) * visibleWidth;
+				if( _thumbX + _cellSize > _creatingPageNum * _visibleWidth ) {
+					_thumbX = ( _creatingPageNum - 1 ) * _visibleWidth;
 					_thumbY += tileSize + gap;
 				}
 				// Next y is off the bottom edge of the page?
-				if( _thumbY + _cellSize > visibleHeight ) {
+				if( _thumbY + _cellSize > _visibleHeight ) {
 					_creatingPageNum++;
-					_thumbX = ( _creatingPageNum - 1 ) * visibleWidth;
+					_thumbX = ( _creatingPageNum - 1 ) * _visibleWidth;
 					_thumbY = 0;
 				}
 			}

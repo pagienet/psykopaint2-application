@@ -36,8 +36,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			}
 			else {
 				_tileSheet = new UserPhotosTileSheet();
-				_tileSheet.visibleWidth = 1024;
-				_tileSheet.visibleHeight = 768;
+				_tileSheet.setVisibleDimensions( 1024, 768 );
 				_tileSheet.fullImageFetchedSignal.add( onIosFullImageRetrieved );
 				stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
 				stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );

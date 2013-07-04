@@ -72,6 +72,7 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		public function startEnterFrame():void {
+			// TODO: remove time out, why do we need this?
 			setTimeout( function():void {
 				addEventListener( Event.ENTER_FRAME, onEnterFrame );
 			}, 2000 );
