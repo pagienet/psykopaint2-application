@@ -188,7 +188,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 		public function endPanInteraction():void {
 			if( !isEnabled ) return;
-			_interactionManager.endInteraction();
+			_interactionManager.stopInteraction();
 		}
 
 		private function updatePerspectiveFactor():void {

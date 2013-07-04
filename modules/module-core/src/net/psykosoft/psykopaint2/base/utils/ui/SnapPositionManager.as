@@ -206,5 +206,9 @@ package net.psykosoft.psykopaint2.base.utils.ui
 		public function get closestSnapPointIndex():int {
 			return _closestSnapPointIndex;
 		}
+
+		public function get positionChange():Number {
+			return _positionChange;
+		}
 	}
 }

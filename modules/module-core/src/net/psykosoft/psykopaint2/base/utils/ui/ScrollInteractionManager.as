@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			if( _stage ) _pStack.pushValue( _stage.mouseX * _scrollInputMultiplier );
 		}
 
-		public function endInteraction():void {
+		public function stopInteraction():void {
 			if( !_isInteracting ) return;
 			_isInteracting = false;
 			var delta:Number = _throwInputMultiplier * ( useDetailedDelta ? _pStack.getAverageDeltaDetailed() : _pStack.getAverageDelta() );

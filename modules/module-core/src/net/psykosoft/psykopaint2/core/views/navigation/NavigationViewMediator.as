@@ -99,7 +99,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// -----------------------
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
-			trace( this, "onGlobalGesture: " + gestureType );
+//			trace( this, "onGlobalGesture: " + gestureType );
 			switch( gestureType ) {
 				case GestureType.HORIZONTAL_PAN_GESTURE_BEGAN: {
 					view.evaluateScrollingInteractionStart();
@@ -121,7 +121,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		override protected function onStateChange( newState:String ):void {
-			trace( this, "state change: " + newState );
+//			trace( this, "state change: " + newState );
 
 			// Evaluate a sub-nav change.
 			var cl:Class = StateToSubNavLinker.getSubNavClassForState( newState );
