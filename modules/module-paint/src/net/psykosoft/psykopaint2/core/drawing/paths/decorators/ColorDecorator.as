@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super();
 			colorMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_COLOR_MODE,0,["Pick Color","Fixed Color"] );
-			presetColor = new PsykoParameter( PsykoParameter.IntListParameter,PARAMETER_IL_COLOR,0,[0x000000,0xffffff,0x808080]);
+			presetColor = new PsykoParameter( PsykoParameter.IntListParameter,PARAMETER_IL_COLOR,0,[0x000000,0xffffff,0x808080,0xc00000]);
 			saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SATURATION,1,-3, 3);
 			hueAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_HUE,0,-180, 180);
 			brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_BRIGHTNESS,0,-255, 255);

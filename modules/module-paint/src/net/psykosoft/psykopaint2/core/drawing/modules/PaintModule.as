@@ -202,8 +202,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</SizeDecorator>
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_2" index="1" />
-							<parameter id={ColorDecorator.PARAMETER_IL_COLOR}  path="pathengine.pointdecorator_2" index="0" />
-							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_2" value1="0" value2="0" />
+							<parameter id={ColorDecorator.PARAMETER_IL_COLOR}  path="pathengine.pointdecorator_2" index="1" />
+							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_2" value1="1" value2="1" />
 						</ColorDecorator>
 						<ConditionalDecorator>
 							<!-- if pen button 1 pressed -->
@@ -211,26 +211,23 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						</ConditionalDecorator>
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_4" index="3" />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_4" value1="0" value2="2" />
-							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_4"  value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_4"  value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_4"  value="1" />
+							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_4" value1="0" value2="4"/>
+							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_4"  value="0.5" />
+							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_4"  value="0.5" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_4"  value="0.6" />
 						</BumpDecorator>
 						<EndConditionalDecorator/>
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_6" index="3" />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_6" value1="-2" value2="0" />
-							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_6"  value="1" />
+							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_6" value1="-4" value2="0" />
+							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_6"  value="0.5" />
 							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_6"  value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_6"  value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_6"  value="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_6"  value="0.5" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_6"  value="0.6" />
 						</BumpDecorator>
 						<EndConditionalDecorator/>
 					</pathengine>
 				</brush>
-
-
-
 				<brush engine={BrushType.SPRAY_CAN} name="Gravity Spray">
 					<parameter id="Shapes" path="brush" index="0" list="noisy"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0.12" showInUI="1"/>
