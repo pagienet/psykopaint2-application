@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopImageBrowser;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.tilesheet.UserPhotosTileSheet;
 
 	import org.osflash.signals.Signal;

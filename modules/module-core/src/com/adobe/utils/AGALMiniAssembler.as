@@ -38,7 +38,7 @@ package com.adobe.utils
 	//import flash.display3D.*;
 	import flash.utils.*;
 
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	// ===========================================================================
 	//	Class

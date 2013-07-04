@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 	import net.psykosoft.psykopaint2.base.utils.ui.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import org.osflash.signals.Signal;
 

@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
 	
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ConditionalDecorator;

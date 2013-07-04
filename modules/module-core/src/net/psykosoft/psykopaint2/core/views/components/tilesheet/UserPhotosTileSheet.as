@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 
 	import net.psykosoft.photos.data.SheetVO;
 	import net.psykosoft.psykopaint2.base.utils.io.IosUserImagesFetcher;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import org.osflash.signals.Signal;
 

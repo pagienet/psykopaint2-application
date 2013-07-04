@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.geom.Rectangle;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
