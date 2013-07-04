@@ -48,8 +48,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var height : int = paintingVO.height;
 			var textureWidth : int = paintingVO.textureWidth;
 			var textureHeight : int = paintingVO.textureHeight;
-			var diffuseTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.colorImageBGRA, textureWidth, textureHeight);
-			var normalSpecularTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.heightmapImageBGRA, textureWidth, textureHeight);
+			var diffuseTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.colorSurface, textureWidth, textureHeight);
+			var normalSpecularTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.normalsSurface, textureWidth, textureHeight);
 
 			// Create material.
 			_material = new TextureMaterial( diffuseTexture, true, false, false );

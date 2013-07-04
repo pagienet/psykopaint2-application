@@ -48,8 +48,8 @@ package net.psykosoft.psykopaint2.core.data
 			// Write images.
 			bytes.writeBytes( thumbnailJpgBytes );
 			var len:int = vo.width * vo.height * 4;
-			bytes.writeBytes( vo.lowResColorImageBGRA, 0, len );
-			bytes.writeBytes( vo.lowResHeightmapImageBGRA, 0, len );
+			bytes.writeBytes( vo.colorSurface, 0, len );
+			bytes.writeBytes( vo.normalsSurface, 0, len );
 
 			compressBytes( bytes );
 
@@ -57,15 +57,14 @@ package net.psykosoft.psykopaint2.core.data
 			return bytes;
 		}
 
-		public function serializePaintingVoData( vo:PaintingVO ):ByteArray {
+		public function serializePaintingVoData( surfaces:Vector.<ByteArray> ):ByteArray {
 
 			var bytes:ByteArray = new ByteArray();
 
 			// Write surfaces.
-			var len:int = vo.width * vo.height * 4;
-			bytes.writeBytes( vo.colorImageBGRA, 0, len );
-			bytes.writeBytes( vo.heightmapImageBGRA, 0, len );
-			bytes.writeBytes( vo.sourceImageARGB, 0, len );
+			bytes.writeBytes( surfaces[ 0 ], 0, surfaces[ 0 ].length );
+			bytes.writeBytes( surfaces[ 1 ], 0, surfaces[ 1 ].length );
+			bytes.writeBytes( surfaces[ 2 ], 0, surfaces[ 2 ].length );
 
 			compressBytes( bytes );
 
@@ -111,23 +110,22 @@ package net.psykosoft.psykopaint2.core.data
 			_vo.thumbnail = thumbBmd;
 
 			// Read low res surfaces.
-			_vo.lowResColorImageBGRA = decodeImage( _bytes, _vo.width / SURFACE_PREVIEW_SHRINK_FACTOR, _vo.height / SURFACE_PREVIEW_SHRINK_FACTOR );
-			_vo.lowResHeightmapImageBGRA = decodeImage( _bytes, _vo.width / SURFACE_PREVIEW_SHRINK_FACTOR, _vo.height / SURFACE_PREVIEW_SHRINK_FACTOR );
+			_vo.colorSurface = decodeImage( _bytes, _vo.width / SURFACE_PREVIEW_SHRINK_FACTOR, _vo.height / SURFACE_PREVIEW_SHRINK_FACTOR );
+			_vo.normalsSurface = decodeImage( _bytes, _vo.width / SURFACE_PREVIEW_SHRINK_FACTOR, _vo.height / SURFACE_PREVIEW_SHRINK_FACTOR );
 
-			_vo.infoDeSerialized = true;
 			_onDeSerializePaintingVoInfoCompleteCallback();
 		}
 
-		public function deSerializePaintingVoData( bytes:ByteArray, vo:PaintingVO ):void {
+		public function deSerializePaintingVoData( bytes:ByteArray, vo:PaintingVO ):Vector.<ByteArray> {
 
 			decompressBytes( bytes );
 
 			// Read painting surfaces.
-			vo.colorImageBGRA = decodeImage( bytes, vo.width, vo.height );
-			vo.heightmapImageBGRA = decodeImage( bytes, vo.width, vo.height );
-			vo.sourceImageARGB = decodeImage( bytes, vo.width, vo.height );
-
-			vo.dataDeSerialized = true;
+			return Vector.<ByteArray>( [
+				decodeImage( bytes, vo.width, vo.height ),
+				decodeImage( bytes, vo.width, vo.height ),
+				decodeImage( bytes, vo.width, vo.height )
+			] );
 		}
 
 		// ---------------------------------------------------------------------

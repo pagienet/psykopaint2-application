@@ -6,9 +6,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.paint.commands.ActivatePaintingCommand;
-	import net.psykosoft.psykopaint2.paint.commands.DeactivatePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.DeletePaintingCommand;
-import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
+	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
@@ -16,9 +15,8 @@ import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeactivationSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
-import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
@@ -115,7 +113,6 @@ import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
 			_commandMap.map( RequestPaintingDeletionSignal ).toCommand( DeletePaintingCommand );
-			_commandMap.map( RequestPaintingDeactivationSignal ).toCommand( DeactivatePaintingCommand );
 
 			// Mapped in the core as singleton for compatibility and remapped here.
 			_injector.unmap( RequestPaintingActivationSignal );

@@ -28,11 +28,6 @@ package net.psykosoft.psykopaint2.core.models
 			return _paintingData;
 		}
 
-		public function getRgbaDataForPaintingWithId( id:String ):Vector.<ByteArray> {
-			var vo:PaintingVO = getVoWithId( id );
-			return Vector.<ByteArray>( [ vo.colorImageBGRA, vo.heightmapImageBGRA, vo.sourceImageARGB ] );
-		}
-
 		public function getVoWithId( id:String ):PaintingVO {
 			// Find vo with id.
 			var len:uint = _paintingData.length;

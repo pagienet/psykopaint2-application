@@ -11,16 +11,11 @@ package net.psykosoft.psykopaint2.core.data
 		public static const DEFAULT_VO_ID:String = "new";
 
 		public var thumbnail:BitmapData;
-		public var colorImageBGRA:ByteArray;
-		public var lowResColorImageBGRA:ByteArray;
-		public var heightmapImageBGRA:ByteArray;
-		public var lowResHeightmapImageBGRA:ByteArray;
-		public var sourceImageARGB:ByteArray;
+		public var colorSurface:ByteArray;
+		public var normalsSurface:ByteArray;
 		public var id:String = DEFAULT_VO_ID;
 		public var lastSavedOnDateMs:Number;
 		public var fileVersion:String = PaintingSerializer.PAINTING_FILE_VERSION;
-		public var infoDeSerialized:Boolean;
-		public var dataDeSerialized:Boolean;
 
 		private var _width:int;
 		private var _height:int;
@@ -48,7 +43,7 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function set width( value:int ):void {
 			_width = value;
-			_textureWidth = TextureUtils.getBestPowerOf2( _width / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR );
+			_textureWidth = TextureUtils.getBestPowerOf2( _width );
 		}
 
 		public function get height():int {
@@ -57,7 +52,7 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function set height( value:int ):void {
 			_height = value;
-			_textureHeight = TextureUtils.getBestPowerOf2( _height / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR );
+			_textureHeight = TextureUtils.getBestPowerOf2( _height );
 		}
 
 		public function get textureWidth():int {

@@ -44,15 +44,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Get painting data, translate and pass on to the drawing core.
 			_vo = paintingDataModel.getVoWithId( paintingId );
-			if( _vo.dataDeSerialized ) applyVo();
-			else { // Need to read and de-serialize data.
-				readVoData();
-			}
-		}
 
-		private function readVoData():void {
+			// Read surface data.
 			context.detain( this );
-			// Identify file.
 			var file:File = CoreSettings.RUNNING_ON_iPAD ? File.applicationStorageDirectory : File.desktopDirectory;
 			_file = file.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingSerializer.PAINTING_DATA_FILE_EXTENSION );
 			_file.addEventListener( Event.COMPLETE, onFileRead );
@@ -61,15 +55,13 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function onFileRead( event:Event ):void {
 			_file.removeEventListener( Event.COMPLETE, onFileRead );
-			var serializer:PaintingSerializer = new PaintingSerializer();
-			serializer.deSerializePaintingVoData( _file.data, _vo );
-			_file = null;
-			applyVo();
-		}
 
-		private function applyVo():void {
-			var data:Vector.<ByteArray> = Vector.<ByteArray>( [ _vo.colorImageBGRA, _vo.heightmapImageBGRA, _vo.sourceImageARGB ] );
-			canvasModel.loadLayers(data);
+			// De-serialize.
+			var serializer:PaintingSerializer = new PaintingSerializer();
+			var surfaces:Vector.<ByteArray> = serializer.deSerializePaintingVoData( _file.data, _vo );
+			_file = null;
+
+			canvasModel.loadLayers( surfaces );
 			notifyPaintingActivatedSignal.dispatch();
 			context.release( this );
 		}

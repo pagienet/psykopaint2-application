@@ -77,12 +77,9 @@ package net.psykosoft.psykopaint2.paint.commands
 			vo.lastSavedOnDateMs = dateMs;
 			vo.width = canvasModel.width;
 			vo.height = canvasModel.height;
-			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayers();
-			vo.colorImageBGRA = imagesRGBA[ 0 ];
-			vo.heightmapImageBGRA = imagesRGBA[ 1 ];
-			vo.sourceImageARGB = imagesRGBA[ 2 ];
-			vo.lowResColorImageBGRA = reduceImage( imagesRGBA[ 0 ], vo.width, vo.height );
-			vo.lowResHeightmapImageBGRA = reduceImage( imagesRGBA[ 1 ], vo.width, vo.height );
+			var surfaces:Vector.<ByteArray> = canvasModel.saveLayers();
+			vo.colorSurface = reduceSurface( surfaces[ 0 ], vo.width, vo.height );
+			vo.normalsSurface = reduceSurface( surfaces[ 1 ], vo.width, vo.height );
 			trace( this, "saving vo: " + vo );
 
 			// Save thumbnail.
@@ -97,7 +94,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			// Serialize data.
 			var serializer:PaintingSerializer = new PaintingSerializer();
 			var bytesInfo:ByteArray = serializer.serializePaintingVoInfo( vo );
-			var bytesData:ByteArray = serializer.serializePaintingVoData( vo );
+			var bytesData:ByteArray = serializer.serializePaintingVoData( surfaces );
 			trace( this, "info num bytes: " + bytesInfo.length );
 			trace( this, "data num bytes: " + bytesData.length );
 
@@ -123,7 +120,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		// TODO: extremely slow, use native approach?
-		private function reduceImage( bytes:ByteArray, sourceWidth:uint, sourceHeight:uint ):ByteArray {
+		private function reduceSurface( bytes:ByteArray, sourceWidth:uint, sourceHeight:uint ):ByteArray {
 			// TODO: Li: remove and test code below
 			return bytes;
 

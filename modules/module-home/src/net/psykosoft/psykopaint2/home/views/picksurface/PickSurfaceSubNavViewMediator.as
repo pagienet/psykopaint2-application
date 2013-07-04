@@ -97,11 +97,11 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			var vo : PaintingVO = new PaintingVO();
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
-			vo.colorImageBGRA = new ByteArray();
-			vo.colorImageBGRA.length = vo.textureWidth*vo.textureHeight*4;	// will fill with zeroes
-			vo.heightmapImageBGRA = new ByteArray();
-			vo.heightmapImageBGRA.writeBytes(_loadedSurface, 0, 0);
-			vo.heightmapImageBGRA.uncompress();
+			vo.colorSurface = new ByteArray();
+			vo.colorSurface.length = vo.textureWidth*vo.textureHeight*4;	// will fill with zeroes
+			vo.normalsSurface = new ByteArray();
+			vo.normalsSurface.writeBytes(_loadedSurface, 0, 0);
+			vo.normalsSurface.uncompress();
 			// nothing else necessary
 			return vo;
 		}
