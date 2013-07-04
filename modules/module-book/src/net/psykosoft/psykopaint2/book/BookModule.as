@@ -1,28 +1,28 @@
-package net.psykosoft.psykopaint2.home
+package net.psykosoft.psykopaint2.book
 {
 
 	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
+	import net.psykosoft.psykopaint2.book.config.BookConfig;
+	import net.psykosoft.psykopaint2.book.config.BookSettings;
+	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.home.config.HomeConfig;
-	import net.psykosoft.psykopaint2.home.config.HomeSettings;
-	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
 
-	public class HomeModule extends ModuleBase
+	public class BookModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;
-		private var _homeConfig:HomeConfig;
+		private var _bookConfig:BookConfig;
 
-		public function HomeModule( core:CoreModule = null ) {
+		public function BookModule( core:CoreModule = null ) {
 			super();
 			_coreModule = core;
-			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "HomeModule";
+			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "BookModule";
 			if( !_coreModule ) {
 				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			}
@@ -45,14 +45,14 @@ package net.psykosoft.psykopaint2.home
 			trace( this, "initializing..." );
 			// Init core module.
 			if( !_coreModule ) {
-				HomeSettings.isStandalone = true;
+				BookSettings.isStandalone = true;
 				_coreModule = new CoreModule();
 				_coreModule.isStandalone = false;
 				_coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
 				addChild( _coreModule );
 			}
 			else {
-				HomeSettings.isStandalone = false;
+				BookSettings.isStandalone = false;
 				onCoreModuleReady();
 			}
 		}
@@ -61,17 +61,17 @@ package net.psykosoft.psykopaint2.home
 			trace( this, "core module is ready, injector: " + _coreModule.injector );
 
 			// Initialize the home module.
-			_homeConfig = new HomeConfig( _coreModule.injector );
+			_bookConfig = new BookConfig( _coreModule.injector );
 
 			// Init display tree for this module.
-			var homeRootView:HomeRootView = new HomeRootView();
-			homeRootView.allViewsReadySignal.addOnce( onViewsReady );
-			_coreModule.addModuleDisplay( homeRootView );
+			var bookRootView:BookRootView = new BookRootView();
+			bookRootView.allViewsReadySignal.addOnce( onViewsReady );
+			_coreModule.addModuleDisplay( bookRootView );
 		}
 
 		private function onViewsReady():void {
 
-			trace( this, "HomeModule views are ready." );
+			trace( this, "BookModule views are ready." );
 
 			if( isStandalone ) {
 				// Remove splash screen.
@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.home
 				// Wait for zoom out.
 				_coreModule.injector.getInstance( NotifyZoomCompleteSignal ).addOnce( onFirstZoomOut );
 				// Trigger initial state...
-				_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
+				_bookConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.PICK_IMAGE );
 				_coreModule.startEnterFrame();
 			}
 

@@ -15,12 +15,12 @@
 	<property name="homePath" value="${rootDir}/module-home/module-home.iml"/>
 	<property name="corePath" value="${rootDir}/module-core/module-core.iml"/>
 	<property name="appPath" value="${rootDir}/module-app/module-app.iml"/>
+	<property name="bookPath" value="${rootDir}/module-book/module-book.iml"/>
 
 	<property name="robotlegs2SignalsPath" value="${rootDir}/lib-robotlegs2-extension-SignalCommandMap/lib-robotlegs2-extension-SignalCommandMap.iml"/>
 	<property name="robotlegs2Path" value="${rootDir}/lib-robotlegs2-extension-SignalCommandMap/lib-robotlegs2-extension-SignalCommandMap.iml"/>
 	<property name="gestouchPath" value="${rootDir}/lib-gestouch/lib-gestouch.iml"/>
 	<property name="away3dPath" value="${rootDir}/lib-away3d-core-fp11/lib-away3d-core-fp11.iml"/>
-	<property name="signalsPath" value="${rootDir}/lib-as3-signals/lib-as3-signals.iml"/>
 	<property name="signalsPath" value="${rootDir}/lib-as3-signals/lib-as3-signals.iml"/>
 
 	<property name="launcherPaintIpadPath" value="${rootDir}/launcher-paint-ipad/launcher-paint-ipad.iml"/>
@@ -31,6 +31,8 @@
 	<property name="launcherAppDesktopPath" value="${rootDir}/launcher-app-desktop/launcher-app-desktop.iml"/>
 	<property name="launcherHomeIpadPath" value="${rootDir}/launcher-home-ipad/launcher-home-ipad.iml"/>
 	<property name="launcherCoreIpadPath" value="${rootDir}/launcher-core-ipad/launcher-core-ipad.iml"/>
+	<!--<property name="launcherBookIpadPath" value="${rootDir}/launcher-book-ipad/launcher-book-ipad.iml"/>-->
+	<property name="launcherBookDesktopPath" value="${rootDir}/launcher-book-desktop/launcher-book-desktop.iml"/>
 
 	<!-- ******************** -->
 	<!-- extensions -->
@@ -48,6 +50,16 @@
 	<target name="all" depends="set-compiler-arguments"/>
 
 	<target name="set-compiler-arguments">
+
+		<!-- launchers -->
+		<!--<xmltask source="${launcherBookIpadPath}" dest="${launcherBookIpadPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+		</xmltask>-->
+		<xmltask source="${launcherBookDesktopPath}" dest="${launcherBookDesktopPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+		</xmltask>
 		<xmltask source="${launcherCoreIpadPath}" dest="${launcherCoreIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
@@ -81,6 +93,7 @@
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 
+		<!-- libs -->
 		<xmltask source="${away3dPath}" dest="${away3dPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
@@ -98,6 +111,11 @@
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
 		</xmltask>
 
+		<!-- modules -->
+		<xmltask source="${bookPath}" dest="${bookPath}" report="true">
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry}"/>
+		</xmltask>
 		<xmltask source="${appPath}" dest="${appPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry}"/>
