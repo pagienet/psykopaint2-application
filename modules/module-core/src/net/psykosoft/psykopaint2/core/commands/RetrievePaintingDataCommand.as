@@ -7,7 +7,8 @@ package net.psykosoft.psykopaint2.core.commands
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.io.FolderReadUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingSerializer;
+	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoDeserializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 
@@ -22,7 +23,6 @@ package net.psykosoft.psykopaint2.core.commands
 		public var model:PaintingModel;
 
 		private var _currentFileBeingLoaded:File;
-		private var _currentVoBeingDeSerialized:PaintingInfoVO;
 		private var _paintingFiles:Vector.<File>;
 		private var _numPaintingFiles:uint;
 		private var _indexOfPaintingFileBeingRead:uint;
@@ -51,7 +51,7 @@ package net.psykosoft.psykopaint2.core.commands
 			for( var i:uint; i < len; i++ ) {
 				var file:File = files[ i ];
 				trace( "  file: " + file.name );
-				if( file.name.indexOf( PaintingSerializer.PAINTING_INFO_FILE_EXTENSION ) != -1 ) {
+				if( file.name.indexOf( PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION ) != -1 ) {
 					_paintingFiles.push( file );
 				}
 			}
@@ -78,20 +78,23 @@ package net.psykosoft.psykopaint2.core.commands
 
 			// Read the contents of the file to a value object.
 			trace( this, "file read: " + _currentFileBeingLoaded.data.length + " bytes" );
-			_currentVoBeingDeSerialized = new PaintingInfoVO();
 
 			trace( this, "de-serializing vo..." );
 			try {
-				var serializer:PaintingSerializer = new PaintingSerializer();
-				serializer.deSerializePaintingVoInfoAsync( _currentFileBeingLoaded.data, _currentVoBeingDeSerialized, onVoDeSerialized );
+				var deserializer:PaintingInfoDeserializer = new PaintingInfoDeserializer();
+				deserializer.addEventListener(Event.COMPLETE, onVODeserialized);
+				deserializer.deserialize( _currentFileBeingLoaded.data );
 			} catch( error:Error ) {
 				trace( this, "***WARNING*** Error de-serializing file: " + _currentFileBeingLoaded.nativePath );
 			}
 		}
 
-		private function onVoDeSerialized():void {
-			trace( this, "produced vo: " + _currentVoBeingDeSerialized );
-			_paintingVos.push( _currentVoBeingDeSerialized );
+		private function onVODeserialized(event : Event):void {
+			var deserializer : PaintingInfoDeserializer = PaintingInfoDeserializer(event.target);
+			var paintingInfoVO : PaintingInfoVO = deserializer.paintingInfoVO;
+			deserializer.removeEventListener(Event.COMPLETE, onVODeserialized);
+			trace( this, "produced vo: " + paintingInfoVO );
+			_paintingVos.push( paintingInfoVO );
 
 			// Continue reading next file.
 			_indexOfPaintingFileBeingRead++;

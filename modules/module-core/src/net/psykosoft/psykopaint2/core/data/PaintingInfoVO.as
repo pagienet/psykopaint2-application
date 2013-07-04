@@ -15,11 +15,11 @@ package net.psykosoft.psykopaint2.core.data
 		public var normalsSurfacePreview:ByteArray;
 		public var lastSavedOnDateMs:Number;
 
-		public var fileVersion:String = PaintingSerializer.PAINTING_FILE_VERSION;
+		public var fileVersion:String = PaintingFileUtils.PAINTING_FILE_VERSION;
 		public var id:String = DEFAULT_VO_ID;
 
-		private var _previewWidth:int;
-		private var _previewHeight:int;
+		private var _width:int;
+		private var _height:int;
 		private var _textureWidth:int;
 		private var _textureHeight:int;
 
@@ -38,22 +38,22 @@ package net.psykosoft.psykopaint2.core.data
 		// Setters and getters.
 		// ---------------------------------------------------------------------
 
-		public function set previewWidth( value:int ):void {
-			_previewWidth = value;
-			_textureWidth = TextureUtils.getBestPowerOf2( _previewWidth );
+		public function set width( value:int ):void {
+			_width = value;
+			_textureWidth = TextureUtils.getBestPowerOf2( _width );
 		}
 
-		public function get previewWidth():int {
-			return _previewWidth;
+		public function get width():int {
+			return _width;
 		}
 
-		public function set previewHeight( value:int ):void {
-			_previewHeight = value;
-			_textureHeight = TextureUtils.getBestPowerOf2( _previewHeight );
+		public function set height( value:int ):void {
+			_height = value;
+			_textureHeight = TextureUtils.getBestPowerOf2( _height );
 		}
 
-		public function get previewHeight():int {
-			return _previewHeight;
+		public function get height():int {
+			return _height;
 		}
 
 		public function get textureWidth():int {

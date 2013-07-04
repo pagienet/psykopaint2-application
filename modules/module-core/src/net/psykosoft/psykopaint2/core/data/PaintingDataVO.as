@@ -6,10 +6,11 @@ package net.psykosoft.psykopaint2.core.data
 	public class PaintingDataVO
 	{
 		public var surfaces:Vector.<ByteArray>;
-		public var fullWidth:uint;
-		public var fullHeight:uint;
+		public var width:uint;
+		public var height:uint;
 
-		public function PaintingDataVO() {
+		public function PaintingDataVO()
+		{
 			super();
 		}
 	}

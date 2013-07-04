@@ -31,8 +31,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			super();
 
-			_width = paintingVO.previewWidth;
-			_height = paintingVO.previewHeight;
+			_width = paintingVO.width;
+			_height = paintingVO.height;
 			trace( this, "creating picture with dimensions: " + _width + "x" + _height );
 
 			_plane = createPlane( paintingVO, lightPicker );
@@ -44,8 +44,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private function createPlane(paintingVO : PaintingInfoVO, lightPicker : LightPickerBase) : Mesh
 		{
-			var width : int = paintingVO.previewWidth;
-			var height : int = paintingVO.previewHeight;
+			var width : int = paintingVO.width;
+			var height : int = paintingVO.height;
 			var textureWidth : int = paintingVO.textureWidth;
 			var textureHeight : int = paintingVO.textureHeight;
 			var diffuseTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.colorSurfacePreview, textureWidth, textureHeight);

@@ -8,8 +8,11 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryIoUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingDataSerializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
-	import net.psykosoft.psykopaint2.core.data.PaintingSerializer;
+	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoDeserializer;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoSerializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -76,15 +79,15 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Update vo.
 			infoVO.lastSavedOnDateMs = dateMs;
-			infoVO.previewWidth = canvasModel.width / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
-			infoVO.previewHeight = canvasModel.height / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+			infoVO.width = canvasModel.width / PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+			infoVO.height = canvasModel.height / PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR;
 			var surfaces:Vector.<ByteArray> = canvasModel.saveLayers();
-			infoVO.colorSurfacePreview = reduceSurface( surfaces[ 0 ], canvasModel.width, canvasModel.height, PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR );
-			infoVO.normalsSurfacePreview = reduceSurface( surfaces[ 1 ], canvasModel.width, canvasModel.height, PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR );
+			infoVO.colorSurfacePreview = reduceSurface( surfaces[ 0 ], canvasModel.width, canvasModel.height, PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR );
+			infoVO.normalsSurfacePreview = reduceSurface( surfaces[ 1 ], canvasModel.width, canvasModel.height, PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR );
 			var dataVO:PaintingDataVO = new PaintingDataVO();
 			dataVO.surfaces = surfaces;
-			dataVO.fullWidth = canvasModel.width;
-			dataVO.fullHeight = canvasModel.height;
+			dataVO.width = canvasModel.width;
+			dataVO.height = canvasModel.height;
 			trace( this, "saving vo: " + infoVO );
 
 			// Save thumbnail.
@@ -97,9 +100,10 @@ package net.psykosoft.psykopaint2.paint.commands
 			}
 
 			// Serialize data.
-			var serializer:PaintingSerializer = new PaintingSerializer();
-			var bytesInfo:ByteArray = serializer.serializePaintingVoInfo( infoVO );
-			var bytesData:ByteArray = serializer.serializePaintingVoData( dataVO );
+			var infoSerializer:PaintingInfoSerializer = new PaintingInfoSerializer();
+			var dataSerializer:PaintingDataSerializer = new PaintingDataSerializer();
+			var bytesInfo:ByteArray = infoSerializer.serialize( infoVO );
+			var bytesData:ByteArray = dataSerializer.serialize( dataVO );
 			trace( this, "info num bytes: " + bytesInfo.length );
 			trace( this, "data num bytes: " + bytesData.length );
 
@@ -109,18 +113,18 @@ package net.psykosoft.psykopaint2.paint.commands
 			if( CoreSettings.RUNNING_ON_iPAD ) { // iOS
 				// Write info.
 				infoWriteUtil = new BinaryIoUtil( BinaryIoUtil.STORAGE_TYPE_IOS );
-				infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingSerializer.PAINTING_INFO_FILE_EXTENSION, bytesInfo, null );
+				infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, bytesInfo, null );
 				// Write data.
 				dataWriteUtil = new BinaryIoUtil( BinaryIoUtil.STORAGE_TYPE_IOS );
-				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingSerializer.PAINTING_DATA_FILE_EXTENSION, bytesData, null );
+				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, bytesData, null );
 			}
 			else { // Desktop
 				// Write info.
 				infoWriteUtil = new BinaryIoUtil( BinaryIoUtil.STORAGE_TYPE_DESKTOP );
-				infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingSerializer.PAINTING_INFO_FILE_EXTENSION, bytesInfo, null );
+				infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, bytesInfo, null );
 				// Write data.
 				dataWriteUtil = new BinaryIoUtil( BinaryIoUtil.STORAGE_TYPE_DESKTOP );
-				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingSerializer.PAINTING_DATA_FILE_EXTENSION, bytesData, null );
+				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, bytesData, null );
 			}
 		}
 
