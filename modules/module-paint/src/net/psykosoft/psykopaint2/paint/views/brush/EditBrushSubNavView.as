@@ -63,10 +63,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var firstParamId:String = "";
 //			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
 			var group:ButtonGroup = new ButtonGroup();
-			for( var i:uint; i < numParameters; ++i ) {
+			for( var i:uint = 0; i < numParameters; ++i ) {
 				var parameter:PsykoParameter = list[ i ];
 				var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter( _parameterSetVO.brushName ).indexOf( parameter.id ) != -1;
-				if( matchesLast ) firstParamId = parameter.id;
+				if( matchesLast || i == 0) firstParamId = parameter.id;
 //				trace( ">>> " + parameter.toXMLString() );
 				var btn:SbButton = navigation.createButton( parameter.id, "param" + parameter.type, "btnLabelCenter", null )
 				group.addButton( btn );
@@ -88,7 +88,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				openParameter( currentParameterID );
 			}
 		}
-
+		
 		// ---------------------------------------------------------------------
 		// Parameter components.
 		// ---------------------------------------------------------------------
