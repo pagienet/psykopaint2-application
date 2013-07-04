@@ -9,7 +9,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Rectangle;
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+<<<<<<< HEAD
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
+=======
+>>>>>>> 6fbb24df081a13b4286189a11926eb2ee65c475c
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;

@@ -29,7 +29,6 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.AsyncTestSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
@@ -37,8 +36,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 
-	import org.swiftsuspenders.Injector;
-
+	
 	import robotlegs.bender.framework.api.IInjector;
 
 	public class CoreModule extends ModuleBase
