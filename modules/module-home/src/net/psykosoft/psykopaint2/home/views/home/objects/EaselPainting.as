@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.ByteArrayTexture;
 
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.materials.PaintingDiffuseMethod;
 	import net.psykosoft.psykopaint2.core.materials.PaintingNormalMethod;
 	import net.psykosoft.psykopaint2.core.materials.PaintingSpecularMethod;
@@ -27,12 +27,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _plane:Mesh;
 		private var _material:TextureMaterial;
 
-		public function EaselPainting( paintingVO:PaintingVO, lightPicker:LightPickerBase ) {
+		public function EaselPainting( paintingVO:PaintingInfoVO, lightPicker:LightPickerBase ) {
 
 			super();
 
-			_width = paintingVO.width;
-			_height = paintingVO.height;
+			_width = paintingVO.previewWidth;
+			_height = paintingVO.previewHeight;
 			trace( this, "creating picture with dimensions: " + _width + "x" + _height );
 
 			_plane = createPlane( paintingVO, lightPicker );
@@ -42,14 +42,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			addChild( _plane );
 		}
 
-		private function createPlane(paintingVO : PaintingVO, lightPicker : LightPickerBase) : Mesh
+		private function createPlane(paintingVO : PaintingInfoVO, lightPicker : LightPickerBase) : Mesh
 		{
-			var width : int = paintingVO.width;
-			var height : int = paintingVO.height;
+			var width : int = paintingVO.previewWidth;
+			var height : int = paintingVO.previewHeight;
 			var textureWidth : int = paintingVO.textureWidth;
 			var textureHeight : int = paintingVO.textureHeight;
-			var diffuseTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.colorImageBGRA, textureWidth, textureHeight);
-			var normalSpecularTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.heightmapImageBGRA, textureWidth, textureHeight);
+			var diffuseTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.colorSurfacePreview, textureWidth, textureHeight);
+			var normalSpecularTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.normalsSurfacePreview, textureWidth, textureHeight);
 
 			// Create material.
 			_material = new TextureMaterial( diffuseTexture, true, false, false );

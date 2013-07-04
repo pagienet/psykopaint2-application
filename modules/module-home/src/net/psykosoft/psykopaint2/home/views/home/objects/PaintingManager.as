@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.data.FrameType;
@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _shadowForPainting:Dictionary;
 		private var _atlasXml:XML;
 		private var _easel:FramedPainting;
-		private var _pendingEaselContent:PaintingVO;
+		private var _pendingEaselContent:PaintingInfoVO;
 		private var _lightPicker : LightPickerBase;
 
 		// TODO: make private
@@ -76,7 +76,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		public function setEaselContent( vo : PaintingVO ):void {
+		public function setEaselContent( vo : PaintingInfoVO ):void {
 			_pendingEaselContent = vo;
 			if( _easel ) setEaselPaintingNow();
 		}

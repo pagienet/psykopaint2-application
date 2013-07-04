@@ -6,28 +6,24 @@ package net.psykosoft.psykopaint2.core.data
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
-	public class PaintingVO
+	public class PaintingInfoVO
 	{
 		public static const DEFAULT_VO_ID:String = "new";
 
 		public var thumbnail:BitmapData;
-		public var colorImageBGRA:ByteArray;
-		public var lowResColorImageBGRA:ByteArray;
-		public var heightmapImageBGRA:ByteArray;
-		public var lowResHeightmapImageBGRA:ByteArray;
-		public var sourceImageARGB:ByteArray;
-		public var id:String = DEFAULT_VO_ID;
+		public var colorSurfacePreview:ByteArray;
+		public var normalsSurfacePreview:ByteArray;
 		public var lastSavedOnDateMs:Number;
-		public var fileVersion:String = PaintingSerializer.PAINTING_FILE_VERSION;
-		public var infoDeSerialized:Boolean;
-		public var dataDeSerialized:Boolean;
 
-		private var _width:int;
-		private var _height:int;
+		public var fileVersion:String = PaintingSerializer.PAINTING_FILE_VERSION;
+		public var id:String = DEFAULT_VO_ID;
+
+		private var _previewWidth:int;
+		private var _previewHeight:int;
 		private var _textureWidth:int;
 		private var _textureHeight:int;
 
-		public function PaintingVO() {
+		public function PaintingInfoVO() {
 			super();
 		}
 
@@ -42,22 +38,22 @@ package net.psykosoft.psykopaint2.core.data
 		// Setters and getters.
 		// ---------------------------------------------------------------------
 
-		public function get width():int {
-			return _width;
+		public function set previewWidth( value:int ):void {
+			_previewWidth = value;
+			_textureWidth = TextureUtils.getBestPowerOf2( _previewWidth );
 		}
 
-		public function set width( value:int ):void {
-			_width = value;
-			_textureWidth = TextureUtils.getBestPowerOf2( _width / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR );
+		public function get previewWidth():int {
+			return _previewWidth;
 		}
 
-		public function get height():int {
-			return _height;
+		public function set previewHeight( value:int ):void {
+			_previewHeight = value;
+			_textureHeight = TextureUtils.getBestPowerOf2( _previewHeight );
 		}
 
-		public function set height( value:int ):void {
-			_height = value;
-			_textureHeight = TextureUtils.getBestPowerOf2( _height / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR );
+		public function get previewHeight():int {
+			return _previewHeight;
 		}
 
 		public function get textureWidth():int {

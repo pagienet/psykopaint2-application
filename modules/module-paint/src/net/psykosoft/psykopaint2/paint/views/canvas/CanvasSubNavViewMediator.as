@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeactivationSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 
@@ -43,9 +42,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestPaintingDeletionSignal:RequestPaintingDeletionSignal;
 
-		[Inject]
-		public var requestPaintingDeactivationSignal:RequestPaintingDeactivationSignal;
-
 		private var _incomingState:String;
 
 		override public function initialize():void {
@@ -71,16 +67,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, true );
 					requestStateChange( StateType.HOME_ON_EASEL );
 					requestZoomToggleSignal.dispatch( false );
-					if( paintingModel.focusedPaintingId != PaintingVO.DEFAULT_VO_ID && paintingModel.focusedPaintingId != "" ) {
-						requestPaintingDeactivationSignal.dispatch( paintingModel.focusedPaintingId );
-					}
 					break;
 				}
 
 				case CanvasSubNavView.LBL_DESTROY:
 				{
-					if( paintingModel.focusedPaintingId != PaintingVO.DEFAULT_VO_ID && paintingModel.focusedPaintingId != "" ) {
-						requestPaintingDeactivationSignal.dispatch( paintingModel.focusedPaintingId );
+					if( paintingModel.focusedPaintingId != PaintingInfoVO.DEFAULT_VO_ID && paintingModel.focusedPaintingId != "" ) {
 						requestPaintingDeletionSignal.dispatch( paintingModel.focusedPaintingId );
 					}
 					break;

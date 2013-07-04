@@ -23,12 +23,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _active:Boolean;
 		protected var _minContentX:Number = 0;
 		protected var _maxContentX:Number = 0;
+		protected var _visibleWidth:Number;
+		protected var _visibleHeight:Number;
 
 		public var scrollable:Boolean = true;
-
-		public var visibleHeight:Number = 100;
-		public var visibleWidth:Number = 600;
-
 		public var motionStartedSignal:Signal;
 		public var motionEndedSignal:Signal;
 
@@ -48,6 +46,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 			reset();
 
+			setVisibleDimensions( 800, 100 );
+
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
@@ -56,6 +56,16 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_interactionManager.stage = stage;
 			_positionManager.motionEndedSignal.add( onPositionManagerMotionEnded );
 			_interactionManager.scrollInputMultiplier = 1 / CoreSettings.GLOBAL_SCALING;
+		}
+
+		public function setVisibleDimensions( width:Number, height:Number ):void {
+			_visibleWidth = width;
+			_visibleHeight = height;
+			// Background - uncomment only for visual debugging, hinders performance.
+			/*graphics.clear();
+			graphics.beginFill( 0xFF0000, 1.0 );
+			graphics.drawRect( 0, 0, _visibleWidth, _visibleHeight );
+			graphics.endFill();*/
 		}
 
 		// ---------------------------------------------------------------------
@@ -71,13 +81,12 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function dock():void {
-			if( width < visibleWidth ) return;
 			_positionManager.snapAtIndexWithoutEasing( 0 );
 			refreshToPosition();
 		}
 
 		public function refreshToPosition():void {
-			_container.x = visibleWidth / 2 - _positionManager.position;
+			_container.x = _visibleWidth / 2 - _positionManager.position;
 		}
 
 		override public function addChild( value:DisplayObject ):DisplayObject {
@@ -117,14 +126,24 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		protected function containEdgeSnapPoints():void {
-			// Sweep current snap points.
+
+			// If scrollable content is smaller than visible width, just need one snap point.
+			if( contentWidth < _visibleWidth ) {
+				_positionManager.reset();
+				_positionManager.pushSnapPoint( contentWidth / 2 );
+				return;
+			}
+
+			// Sweep snap points looking for near edge positions.
 			var len:uint = _positionManager.numSnapPoints;
 			var leftEdgeSnapPointMatched:Boolean = false;
 			var rightEdgeSnapPointMatched:Boolean = false;
-			var minAllowed:Number = visibleWidth / 2;
-			var maxAllowed:Number = maxWidth + visibleWidth / 2;
+			var minAllowed:Number = _visibleWidth / 2;
+			var maxAllowed:Number = contentWidth - _visibleWidth / 2;
 			for( var i:uint; i < len; i++ ) {
+
 				var snapPoint:Number = _positionManager.getSnapPointAtIndex( i );
+
 				// Left containment.
 				if( snapPoint < minAllowed ) {
 					if( leftEdgeSnapPointMatched ) {
@@ -137,6 +156,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 						leftEdgeSnapPointMatched = true;
 					}
 				}
+
 				// Right containment.
 				if( snapPoint > maxAllowed ) {
 					if( rightEdgeSnapPointMatched ) {
@@ -155,7 +175,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		private function mouseHitsInteractiveArea():Boolean {
 
 			var topLeft:Point = new Point( 0, 0 );
-			var bottomRight:Point = new Point( visibleWidth, visibleHeight );
+			var bottomRight:Point = new Point( _visibleWidth, _visibleHeight );
 
 			topLeft = localToGlobal( topLeft );
 			bottomRight = localToGlobal( bottomRight );
@@ -228,19 +248,23 @@ package net.psykosoft.psykopaint2.base.ui.components
 		// ---------------------------------------------------------------------
 
 		override public function get height():Number {
-			return visibleHeight;
+			return _visibleHeight;
 		}
 
 		override public function get width():Number {
+			return _visibleWidth;
+		}
+
+		public function get contentWidth():Number {
 			return _maxContentX - _minContentX;
 		}
 
 		public function get minWidth():Number {
-			return Math.min( visibleWidth, width );
+			return Math.min( _visibleWidth, width );
 		}
 
 		public function get maxWidth():Number {
-			return Math.max( visibleWidth, width );
+			return Math.max( _visibleWidth, width );
 		}
 
 		public function get container():Sprite {
@@ -257,6 +281,14 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function get interactionManager():ScrollInteractionManager {
 			return _interactionManager;
+		}
+
+		public function get visibleHeight():Number {
+			return _visibleHeight;
+		}
+
+		public function get visibleWidth():Number {
+			return _visibleWidth;
 		}
 	}
 }

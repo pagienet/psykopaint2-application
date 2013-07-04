@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
@@ -32,11 +32,11 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			navigation.layout();
 		}
 
-		public function setInProgressPaintings( data:Vector.<PaintingVO> ):String {
+		public function setInProgressPaintings( data:Vector.<PaintingInfoVO> ):String {
 			var len:uint = data.length;
 			_buttonGroup = new ButtonGroup();
 			for( var i:uint; i < len; i++ ) {
-				var vo:PaintingVO = data[ i ];
+				var vo:PaintingInfoVO = data[ i ];
 				var btn:SbButton = navigation.createButton( vo.id, ButtonIconType.DEFAULT, ButtonLabelType.CENTER, new Bitmap( vo.thumbnail ) );
 				_buttonGroup.addButton( btn );
 			}

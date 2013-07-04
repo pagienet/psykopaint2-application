@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
@@ -54,14 +54,14 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post-init.
-			var data:Vector.<PaintingVO> = paintingModel.getPaintingData();
+			var data:Vector.<PaintingInfoVO> = paintingModel.getPaintingData();
 			if( data.length > 0 ) {
 				if( data.length > 1 ) {
 					data.sort( sortOnLastSaved );
 				}
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = view.getIdForSelectedInProgressPainting();
-				var vo:PaintingVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
+				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
 				requestEaselUpdateSignal.dispatch( vo );
 			}
 			// TODO: re-enable this, it use to empty the easel when coming back from paint with no data ( i.e. after deleting the last data item )
@@ -74,7 +74,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			notifyCanvasBitmapSignal.add( onCanvasSnapshot );
 		}
 
-		private function sortOnLastSaved( paintingVOA:PaintingVO, paintingVOB:PaintingVO ):Number {
+		private function sortOnLastSaved( paintingVOA:PaintingInfoVO, paintingVOB:PaintingInfoVO ):Number {
 			if( paintingVOA.lastSavedOnDateMs > paintingVOB.lastSavedOnDateMs ) return 1;
 			else if( paintingVOA.lastSavedOnDateMs < paintingVOB.lastSavedOnDateMs ) return -1;
 			else return 0;
@@ -88,7 +88,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			switch( label ) {
 				case NewPaintingSubNavView.LBL_NEW: {
 					requestDrawingCoreResetSignal.dispatch();
-					paintingModel.focusedPaintingId = PaintingVO.DEFAULT_VO_ID;
+					paintingModel.focusedPaintingId = PaintingInfoVO.DEFAULT_VO_ID;
 					requestStateChange( StateType.HOME_PICK_SURFACE );
 					break;
 				}
@@ -98,7 +98,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				}
 				default: { // Default buttons are supposed to be in progress painting buttons.
 					paintingModel.focusedPaintingId = label;
-					var vo:PaintingVO = paintingModel.getVoWithId( label );					
+					var vo:PaintingInfoVO = paintingModel.getVoWithId( label );
 					requestEaselUpdateSignal.dispatch( vo );
 				}
 			}

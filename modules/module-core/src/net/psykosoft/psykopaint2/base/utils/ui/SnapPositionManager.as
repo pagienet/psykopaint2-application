@@ -120,6 +120,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 		}
 
 		public function snapAtIndexWithoutEasing( index:uint ):void {
+			if( numSnapPoints == 0 ) return;
 			_position = _snapPoints[ index ];
 			evaluateClosestSnapPointPosition( _position );
 		}

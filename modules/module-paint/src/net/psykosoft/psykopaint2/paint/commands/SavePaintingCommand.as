@@ -8,8 +8,9 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryIoUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.PaintingSerializer;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
@@ -54,50 +55,51 @@ package net.psykosoft.psykopaint2.paint.commands
 			trace( this, "incoming painting id: " + paintingId );
 
 			// Need to create a new id and vo?
-			var vo:PaintingVO;
+			var infoVO:PaintingInfoVO;
 			var nowDate:Date = new Date();
 			var dateMs:Number = nowDate.getTime();
-			if( paintingId == PaintingVO.DEFAULT_VO_ID ) {
+			if( paintingId == PaintingInfoVO.DEFAULT_VO_ID ) {
 
 				// Create id and focus model on it.
 				paintingId = userModel.uniqueUserId + "-" + dateMs;
 				trace( this, "creating a new id: " + paintingId );
 
 				// Produce data vo.
-				vo = new PaintingVO();
-				vo.id = paintingId;
-				paintingModel.addSinglePaintingData( vo );
+				infoVO = new PaintingInfoVO();
+				infoVO.id = paintingId;
+				paintingModel.addSinglePaintingData( infoVO );
 			}
 			else { // Otherwise just retrieve the vo.
-				vo = paintingModel.getVoWithId( paintingId );
+				infoVO = paintingModel.getVoWithId( paintingId );
 			}
 			paintingModel.focusedPaintingId = paintingId;
 
 			// Update vo.
-			vo.lastSavedOnDateMs = dateMs;
-			vo.width = canvasModel.width;
-			vo.height = canvasModel.height;
-			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayers();
-			vo.colorImageBGRA = imagesRGBA[ 0 ];
-			vo.heightmapImageBGRA = imagesRGBA[ 1 ];
-			vo.sourceImageARGB = imagesRGBA[ 2 ];
-			vo.lowResColorImageBGRA = reduceImage( imagesRGBA[ 0 ], vo.width, vo.height );
-			vo.lowResHeightmapImageBGRA = reduceImage( imagesRGBA[ 1 ], vo.width, vo.height );
-			trace( this, "saving vo: " + vo );
+			infoVO.lastSavedOnDateMs = dateMs;
+			infoVO.previewWidth = canvasModel.width / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+			infoVO.previewHeight = canvasModel.height / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+			var surfaces:Vector.<ByteArray> = canvasModel.saveLayers();
+			infoVO.colorSurfacePreview = reduceSurface( surfaces[ 0 ], canvasModel.width, canvasModel.height, PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR );
+			infoVO.normalsSurfacePreview = reduceSurface( surfaces[ 1 ], canvasModel.width, canvasModel.height, PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR );
+			var dataVO:PaintingDataVO = new PaintingDataVO();
+			dataVO.surfaces = surfaces;
+			dataVO.fullWidth = canvasModel.width;
+			dataVO.fullHeight = canvasModel.height;
+			trace( this, "saving vo: " + infoVO );
 
 			// Save thumbnail.
 			var thumbnail:BitmapData = renderer.renderToBitmapData();
-			vo.thumbnail = BitmapDataUtils.scaleBitmapData( thumbnail, 0.25 ); // TODO: apply different scales depending on source and target resolutions
+			infoVO.thumbnail = BitmapDataUtils.scaleBitmapData( thumbnail, 0.25 ); // TODO: apply different scales depending on source and target resolutions
 
 			// Update easel.
 			if( updateEasel ) {
-				requestEaselUpdateSignal.dispatch( vo );
+				requestEaselUpdateSignal.dispatch( infoVO );
 			}
 
 			// Serialize data.
 			var serializer:PaintingSerializer = new PaintingSerializer();
-			var bytesInfo:ByteArray = serializer.serializePaintingVoInfo( vo );
-			var bytesData:ByteArray = serializer.serializePaintingVoData( vo );
+			var bytesInfo:ByteArray = serializer.serializePaintingVoInfo( infoVO );
+			var bytesData:ByteArray = serializer.serializePaintingVoData( dataVO );
 			trace( this, "info num bytes: " + bytesInfo.length );
 			trace( this, "data num bytes: " + bytesData.length );
 
@@ -123,25 +125,25 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		// TODO: extremely slow, use native approach?
-		private function reduceImage( bytes:ByteArray, sourceWidth:uint, sourceHeight:uint ):ByteArray {
+		private function reduceSurface( bytes:ByteArray, sourceWidth:uint, sourceHeight:uint, factor:uint ):ByteArray {
 			// TODO: Li: remove and test code below
 			return bytes;
 
-			var outputWidth : uint = sourceWidth / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
-			var outputHeight : uint = sourceHeight / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+			var outputWidth : uint = sourceWidth / factor;
+			var outputHeight : uint = sourceHeight / factor;
 			var reducedBytes:ByteArray = new ByteArray();
 			var startX : uint, startY : uint = 0;
 
 			for( var y : uint = 0; y < outputHeight; ++y ) {
 				startX = 0;
-				var endY : uint = startY + PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+				var endY : uint = startY + factor;
 				if (endY > sourceHeight) endY = sourceHeight;
 
 				for( var x : uint = 0; x < outputWidth; ++x ) {
 					var numSamples : uint = 0;
 					var sampledB : uint = 0, sampledG : uint = 0, sampledR : uint = 0, sampledA : uint = 0;
 
-					var endX : uint = startX + PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+					var endX : uint = startX + factor;
 					if (endX > sourceWidth) endX = sourceWidth;
 
 					for (var sampleY : uint = startY; sampleY < endY; ++sampleY) {
@@ -165,9 +167,9 @@ package net.psykosoft.psykopaint2.paint.commands
 					// Write average into destination.
 					reducedBytes.writeUnsignedInt( (sampledB << 24) | (sampledG << 16) | (sampledR << 8) | sampledA );
 
-					startX += PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+					startX += factor;
 				}
-				startY += PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+				startY += factor;
 			}
 			return reducedBytes;
 		}

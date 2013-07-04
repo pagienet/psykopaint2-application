@@ -4,7 +4,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	{
 		static private var _lastSelectedBrush:String = "";
 		static private var _lastSelectedParameter:Object = {};
-		static public var lastScrollerPosition:Number = 452;
+
+		static public var lastScrollerPosition:Number = 0;
 
 		static public function setLastSelectedBrush( value:String ):void {
 			if( _lastSelectedBrush == value ) return;

@@ -13,10 +13,10 @@ package net.psykosoft.psykopaint2.core.data
 		public static const PAINTING_INFO_FILE_EXTENSION:String = ".ipp2";
 		public static const PAINTING_DATA_FILE_EXTENSION:String = ".dpp2";
 		// Currently set at 1 because low res surfaces are being saved at full size, when that is fixed, set back to 2!
-		public static const SURFACE_PREVIEW_SHRINK_FACTOR:Number = 1;
+		public static const SURFACE_PREVIEW_SHRINK_FACTOR:Number = 4; // powers of 2, integers > 1
 
 		private var _onDeSerializePaintingVoInfoCompleteCallback:Function;
-		private var _vo:PaintingVO;
+		private var _vo:PaintingInfoVO;
 		private var _bytes:ByteArray;
 
 		public function PaintingSerializer() {
@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.core.data
 		// Serialize.
 		// ---------------------------------------------------------------------
 
-		public function serializePaintingVoInfo( vo:PaintingVO ):ByteArray {
+		public function serializePaintingVoInfo( vo:PaintingInfoVO ):ByteArray {
 
 			var bytes:ByteArray = new ByteArray();
 
@@ -40,16 +40,16 @@ package net.psykosoft.psykopaint2.core.data
 			// Write exposed single value data.
 			bytes.writeUTF( vo.fileVersion );
 			bytes.writeUTF( vo.id );
-			bytes.writeInt( vo.width );
-			bytes.writeInt( vo.height );
+			bytes.writeInt( vo.previewWidth );
+			bytes.writeInt( vo.previewHeight );
 			bytes.writeFloat( vo.lastSavedOnDateMs );
 			bytes.writeUnsignedInt( thumbnailBytesLength );
 
 			// Write images.
 			bytes.writeBytes( thumbnailJpgBytes );
-			var len:int = vo.width * vo.height * 4;
-			bytes.writeBytes( vo.lowResColorImageBGRA, 0, len );
-			bytes.writeBytes( vo.lowResHeightmapImageBGRA, 0, len );
+			var len:int = vo.previewWidth * vo.previewHeight * 4;
+			bytes.writeBytes( vo.colorSurfacePreview, 0, len );
+			bytes.writeBytes( vo.normalsSurfacePreview, 0, len );
 
 			compressBytes( bytes );
 
@@ -57,15 +57,19 @@ package net.psykosoft.psykopaint2.core.data
 			return bytes;
 		}
 
-		public function serializePaintingVoData( vo:PaintingVO ):ByteArray {
+		public function serializePaintingVoData( vo:PaintingDataVO ):ByteArray {
 
 			var bytes:ByteArray = new ByteArray();
 
+			// Write dimensions.
+			bytes.writeInt( vo.fullWidth );
+			bytes.writeInt( vo.fullHeight );
+
 			// Write surfaces.
-			var len:int = vo.width * vo.height * 4;
-			bytes.writeBytes( vo.colorImageBGRA, 0, len );
-			bytes.writeBytes( vo.heightmapImageBGRA, 0, len );
-			bytes.writeBytes( vo.sourceImageARGB, 0, len );
+			var len:uint = vo.fullWidth * vo.fullHeight * 4;
+			bytes.writeBytes( vo.surfaces[ 0 ], 0, len );
+			bytes.writeBytes( vo.surfaces[ 1 ], 0, len );
+			bytes.writeBytes( vo.surfaces[ 2 ], 0, len );
 
 			compressBytes( bytes );
 
@@ -77,7 +81,7 @@ package net.psykosoft.psykopaint2.core.data
 		// De-Serialize.
 		// ---------------------------------------------------------------------
 
-		public function deSerializePaintingVoInfoAsync( bytes:ByteArray, vo:PaintingVO, onComplete:Function ):void {
+		public function deSerializePaintingVoInfoAsync( bytes:ByteArray, vo:PaintingInfoVO, onComplete:Function ):void {
 
 			_onDeSerializePaintingVoInfoCompleteCallback = onComplete;
 			_vo = vo;
@@ -96,8 +100,8 @@ package net.psykosoft.psykopaint2.core.data
 
 			// Read and set exposed single value data.
 			vo.id = bytes.readUTF();
-			vo.width = bytes.readInt();
-			vo.height = bytes.readInt();
+			vo.previewWidth = bytes.readInt();
+			vo.previewHeight = bytes.readInt();
 			vo.lastSavedOnDateMs = bytes.readFloat();
 			var thumbnailBytesLength:uint = bytes.readUnsignedInt();
 
@@ -111,23 +115,26 @@ package net.psykosoft.psykopaint2.core.data
 			_vo.thumbnail = thumbBmd;
 
 			// Read low res surfaces.
-			_vo.lowResColorImageBGRA = decodeImage( _bytes, _vo.width / SURFACE_PREVIEW_SHRINK_FACTOR, _vo.height / SURFACE_PREVIEW_SHRINK_FACTOR );
-			_vo.lowResHeightmapImageBGRA = decodeImage( _bytes, _vo.width / SURFACE_PREVIEW_SHRINK_FACTOR, _vo.height / SURFACE_PREVIEW_SHRINK_FACTOR );
+			_vo.colorSurfacePreview = decodeImage( _bytes, _vo.previewWidth, _vo.previewWidth );
+			_vo.normalsSurfacePreview = decodeImage( _bytes, _vo.previewHeight, _vo.previewHeight );
 
-			_vo.infoDeSerialized = true;
 			_onDeSerializePaintingVoInfoCompleteCallback();
 		}
 
-		public function deSerializePaintingVoData( bytes:ByteArray, vo:PaintingVO ):void {
+		public function deSerializePaintingVoData( bytes:ByteArray, vo:PaintingDataVO ):void {
 
 			decompressBytes( bytes );
 
-			// Read painting surfaces.
-			vo.colorImageBGRA = decodeImage( bytes, vo.width, vo.height );
-			vo.heightmapImageBGRA = decodeImage( bytes, vo.width, vo.height );
-			vo.sourceImageARGB = decodeImage( bytes, vo.width, vo.height );
+			// Read dimensions.
+			vo.fullWidth = bytes.readInt();
+			vo.fullHeight = bytes.readInt();
 
-			vo.dataDeSerialized = true;
+			// Read painting surfaces.
+			vo.surfaces = Vector.<ByteArray>( [
+				decodeImage( bytes, vo.fullWidth, vo.fullHeight ),
+				decodeImage( bytes, vo.fullWidth, vo.fullHeight ),
+				decodeImage( bytes, vo.fullWidth, vo.fullHeight )
+			] );
 		}
 
 		// ---------------------------------------------------------------------
