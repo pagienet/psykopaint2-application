@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
+	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
 
 	public class CanvasSubNavView extends SubNavigationViewBase
 	{

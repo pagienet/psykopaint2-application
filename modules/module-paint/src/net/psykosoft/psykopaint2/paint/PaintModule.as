@@ -12,8 +12,8 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
-	import net.psykosoft.psykopaint2.paint.config.PaintConfig;
-	import net.psykosoft.psykopaint2.paint.config.PaintSettings;
+	import net.psykosoft.psykopaint2.paint.configuration.PaintConfig;
+	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;

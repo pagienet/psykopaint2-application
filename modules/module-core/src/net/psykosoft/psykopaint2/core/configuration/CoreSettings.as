@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.config
+package net.psykosoft.psykopaint2.core.configuration
 {
 	public class CoreSettings
 	{

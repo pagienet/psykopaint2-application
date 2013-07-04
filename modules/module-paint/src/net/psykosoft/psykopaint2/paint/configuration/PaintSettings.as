@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.config
+package net.psykosoft.psykopaint2.paint.configuration
 {
 
 	public class PaintSettings
