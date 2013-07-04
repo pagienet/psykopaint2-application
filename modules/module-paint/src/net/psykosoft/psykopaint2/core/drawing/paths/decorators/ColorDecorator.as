@@ -22,6 +22,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_NR_PICK_RADIUS:String = "Color Pick Radius";
 		public static const PARAMETER_NR_SMOOTH_FACTOR:String = "Color Smooth Factor";
 		
+		public static const INDEX_MODE_PICK_COLOR:int = 0;
+		public static const INDEX_MODE_FIXED_COLOR:int = 1;
+		
 		
 		private var colorMode:PsykoParameter;
 		private var saturationAdjustment:PsykoParameter;

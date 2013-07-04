@@ -13,37 +13,9 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 	public class BrushKitDefaultSet
 	{
-		
 		public static const brushKitData:XML = 
 			<brushkits>
-				<brush engine={BrushType.WATER_COLOR} name="Water Color">
-					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
-					<parameter id="Pigment staining" path="brush" value="5.5" showInUI="1"/>
-					<parameter id="Pigment granulation" path="brush" value=".81" showInUI="1"/>
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet,basic" showInUI="1"/>
-					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
-				</brush>
-				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
-					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
-					<parameter id="Pigment flow" path="brush" value="0.5" showInUI="1"/>
-					<parameter id="Pigment bleaching" path="brush" value="0.07" showInUI="1"/>
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet" showInUI="0"/>
-					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
-				</brush>
-				<brush engine={BrushType.PENCIL} name="Pencil">
-					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
-						<ColorDecorator>
-							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_0" index="0" />
-						</ColorDecorator>
-						<SizeDecorator>
-							<parameter id="Mode" path="pathengine.pointdecorator_1" index="1" />
-							<parameter id="Factor" path="pathengine.pointdecorator_1" value1=".1" value2=".1" showInUI="1" />
-							<parameter id="Mapping" path="pathengine.pointdecorator_1" value="2" />
-						</SizeDecorator>
-					</pathengine>
-					<parameter id="Shapes" path="brush" index="0" list="pencil" showInUI="0"/>
-				</brush>
-				<brush engine={BrushType.SPRAY_CAN} name="Bristle Brush">
+				<brush engine={BrushType.SPRAY_CAN} name="Paint Brush">
 					<parameterMapping>
 						<parameter type={PsykoParameter.StringListParameter} path="parameterMapping" id="Condition" index="0" list="Normal, Grid" showInUI="1" />
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Condition" target="pathengine.pointdecorator_2" condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE} index="1" />
@@ -75,7 +47,19 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</ColorDecorator>
 					</pathengine>
 				</brush>
-
+				<brush engine={BrushType.PENCIL} name="Pencil">
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<ColorDecorator>
+							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_0" index="0" />
+						</ColorDecorator>
+						<SizeDecorator>
+							<parameter id="Mode" path="pathengine.pointdecorator_1" index="1" />
+							<parameter id="Factor" path="pathengine.pointdecorator_1" value1=".1" value2=".1" showInUI="1" />
+							<parameter id="Mapping" path="pathengine.pointdecorator_1" value="2" />
+						</SizeDecorator>
+					</pathengine>
+					<parameter id="Shapes" path="brush" index="0" list="pencil" showInUI="0"/>
+				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0"/>
@@ -110,7 +94,43 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</BumpDecorator>
 					</pathengine>
 				</brush>
-
+				<brush engine={BrushType.WATER_COLOR} name="Water Color">
+					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
+					<parameter id="Pigment staining" path="brush" value="5.5" showInUI="1"/>
+					<parameter id="Pigment granulation" path="brush" value=".81" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet,basic" showInUI="1"/>
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
+				</brush>
+				<brush engine={BrushType.SPRAY_CAN} name="Eraser">
+					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+						<SizeDecorator>
+							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
+							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0.05" value2="1" minValue="0" maxValue="1"/>
+							<parameter id="Mapping" path="pathengine.pointdecorator_0" index="1"/>
+						</SizeDecorator>
+						<ColorDecorator>
+							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
+							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_1" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.25" value2="0.33" />
+							<parameter id={ColorDecorator.PARAMETER_IL_COLOR}  path="pathengine.pointdecorator_1" index="1"/>
+						</ColorDecorator>
+					</pathengine>
+				</brush>
+		</brushkits>	
+	/*
+		public static const brushKitData:XML = 
+			<brushkits>
+				
+				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
+					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
+					<parameter id="Pigment flow" path="brush" value="0.5" showInUI="1"/>
+					<parameter id="Pigment bleaching" path="brush" value="0.07" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet" showInUI="0"/>
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
+				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Gravure Pen">
 					<parameter id="Shapes" path="brush" index="0" list="sphere,splat,splat3,line,basic,noisy" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0"/>
@@ -433,7 +453,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 				
 				
 			</brushkits>
-		
+		*/
 		
 	}
 }
