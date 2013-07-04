@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.book.config
 {
 
+	import net.psykosoft.psykopaint2.book.views.book.BookView;
+	import net.psykosoft.psykopaint2.book.views.book.BookViewMediator;
+
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IInjector;
@@ -44,7 +47,6 @@ package net.psykosoft.psykopaint2.book.config
 
 		private function mapServices():void {
 
-
 		}
 
 		// -----------------------
@@ -76,7 +78,7 @@ package net.psykosoft.psykopaint2.book.config
 		// -----------------------
 
 		private function mapMediators():void {
-
+			_mediatorMap.map( BookView ).toMediator( BookViewMediator );
 		}
 	}
 }

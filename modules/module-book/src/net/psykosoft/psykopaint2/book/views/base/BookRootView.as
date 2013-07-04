@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.book.views.base
 {
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
+	import net.psykosoft.psykopaint2.book.views.book.BookView;
 
 	public class BookRootView extends RootViewBase
 	{
@@ -9,10 +10,10 @@ package net.psykosoft.psykopaint2.book.views.base
 			super();
 
 			// Add main views.
-			// TODO
+			addRegisteredView( new BookView(), this );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
-			// TODO
+			// TODO: will this module have any sub navs?
 		}
 	}
 }
