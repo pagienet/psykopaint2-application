@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public var btnSelected:Sprite;
 		public var icon:MovieClip;
 
-		private var _mouseIsDown:Boolean;
+		//private var _mouseIsDown:Boolean;
 		private var _btnLblPos:Point;
 		private var _autoCenter:Boolean = true;
 		private var _snapToRight:Boolean = false;
@@ -82,23 +82,25 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			addEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
-			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			
 			invalidateLayout();
 		}
 
 		private function onStageMouseUp( event:MouseEvent ):void {
-			if( !_mouseIsDown ) return;
+			//if( !_mouseIsDown ) return;
+			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			icon.scaleX = icon.scaleY = 1;
 			icon.x = -icon.width / 2;
 			icon.y = -icon.height / 2;
-			_mouseIsDown = false;
+			//_mouseIsDown = false;
 		}
 
 		private function onThisMouseDown( event:MouseEvent ):void {
+			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			icon.scaleX = icon.scaleY = 0.98; // TODO: scaling causes redraw - scroller needs better logic - can we use cacheAsBitmapMatrix or something?
 			icon.x = -icon.width / 2;
 			icon.y = -icon.height / 2;
-			_mouseIsDown = true;
+			//_mouseIsDown = true;
 		}
 
 		public function set labelText( value:String ):void {
