@@ -197,7 +197,10 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				if ( value > _maxLimit ) value = _maxLimit;
 				_numberValue = value;
 				dispatchEvent( new Event( Event.CHANGE ) );
-			} 
+			} else if ( type == NumberRangeParameter )
+			{
+				throw("NumberRangeValue.numberValue cannot be set!");
+			}
 		}
 		
 		public function get degrees():Number

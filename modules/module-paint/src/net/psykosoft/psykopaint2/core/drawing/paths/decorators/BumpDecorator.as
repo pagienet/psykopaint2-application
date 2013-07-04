@@ -32,6 +32,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const PARAMETER_B_INVERT_MAPPING:String = "Invert Mapping";
 		static public const PARAMETER_N_MAXIMUM_SPEED:String  = "Maximum Speed";
 		
+		static public const MODE_INDEX_FIXED:int = 0;
+		static public const MODE_INDEX_SPEED:int = 1;
+		static public const MODE_INDEX_PRESSURE:int = 2;
+		static public const MODE_INDEX_PRESSURE_SPEED:int = 3;
+		static public const MODE_INDEX_MULTIPLY:int = 4;
+		static public const MODE_INDEX_ADD:int = 5;
+		
+		
 		private var shininess:PsykoParameter;
 		private var glossiness:PsykoParameter;
 		private var bumpiness:PsykoParameter;
@@ -140,7 +148,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				} 
 				
 				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = glossiness.numberValue;
-				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = bmp;
+				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = bumpiness.lowerRangeValue + (bumpiness.rangeValue * bmp );
 				bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = shininess.numberValue;
 				bumpFactors[3] = bumpFactors[7] = bumpFactors[11] = bumpFactors[15] = bumpInfluence.numberValue;
 			}

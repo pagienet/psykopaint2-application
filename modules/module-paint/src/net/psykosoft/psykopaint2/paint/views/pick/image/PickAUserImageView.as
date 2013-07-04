@@ -11,14 +11,14 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	import org.osflash.signals.Signal;
 
-	public class PickAnImageView extends ViewBase
+	public class PickAUserImageView extends ViewBase
 	{
 		private var _browser:DesktopImageBrowser;
 		private var _tileSheet:UserPhotosTileSheet;
 
 		public var imagePickedSignal:Signal;
 
-		public function PickAnImageView() {
+		public function PickAUserImageView() {
 			super();
 			imagePickedSignal = new Signal();
 		}
