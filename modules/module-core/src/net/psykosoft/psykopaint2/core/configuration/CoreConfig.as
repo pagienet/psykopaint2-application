@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import flash.display.Stage3D;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
-	import net.psykosoft.psykopaint2.core.commands.AsyncTestCommand;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
@@ -16,7 +15,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
-	import net.psykosoft.psykopaint2.core.signals.AsyncTestSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
@@ -43,8 +41,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketViewMediator;
-
-	import org.swiftsuspenders.Injector;
 
 	import robotlegs.bender.bundles.mvcs.MVCSBundle;
 	import robotlegs.bender.extensions.contextView.ContextView;
@@ -151,7 +147,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_commandMap.map( RequestStateChangeSignal ).toCommand( ChangeStateCommand );
 			_commandMap.map( RequestGpuRenderingSignal ).toCommand( RenderGpuCommand );
 			_commandMap.map( RequestPaintingDataRetrievalSignal ).toCommand( RetrievePaintingDataCommand );
-			_commandMap.map( AsyncTestSignal ).toCommand( AsyncTestCommand ); // TODO: delete
 		}
 
 		// -----------------------
