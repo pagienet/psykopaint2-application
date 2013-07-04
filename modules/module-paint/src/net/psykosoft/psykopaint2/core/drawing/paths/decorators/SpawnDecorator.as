@@ -10,6 +10,18 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 
 	final public class SpawnDecorator extends AbstractPointDecorator
 	{
+		
+		public static const PARAMETER_IR_MULTIPLES:String = "Multiples";
+		public static const PARAMETER_N_MAXIMUM_OFFSET:String = "Maximum Offset";
+		public static const PARAMETER_SL_OFFSET_MODE:String = "Offset Mode";
+		public static const PARAMETER_AR_OFFSET_ANGLE:String = "Offset Angle";
+		public static const PARAMETER_AR_BRUSH_ANGLE_VARIATION:String = "Brush Angle Variation";
+		public static const PARAMETER_NR_BRISTLE_VARIATION:String = "Bristle Variation";
+		public static const PARAMETER_B_AUTOROTATE:String = "Auto Rotate";
+		public static const PARAMETER_N_MAXIMUM_SPEED:String = "Maximum Speed";
+		
+		
+		
 		private var multiples:PsykoParameter;
 		private var maxOffset:PsykoParameter;
 		private var offsetMode:PsykoParameter;
@@ -25,14 +37,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super( );
 			
-			this.multiples       = new PsykoParameter( PsykoParameter.IntRangeParameter,"Multiples",minMultiples,maxMultiples,1,16);
-			this.maxOffset       = new PsykoParameter( PsykoParameter.NumberParameter,"Maximum Offset",maxOffset,0,100);
-			this.offsetMode      = new PsykoParameter( PsykoParameter.StringListParameter, "Offset Mode",2,["Fixed","Random","Speed","Pressure"]);
-			this.offsetAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, "Offset Angle",0,0,-180,180);
-			this.brushAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, "Brush Angle Variation",0,0,-180,180);
-			this.bristleVariation  = new PsykoParameter( PsykoParameter.NumberParameter, "Bristle Variation",1,0,1);
-			autorotate      = new PsykoParameter( PsykoParameter.BooleanParameter, "Auto Rotate",1);
-			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,"Maximum Speed",20,1,100);
+			this.multiples       = new PsykoParameter( PsykoParameter.IntRangeParameter,PARAMETER_IR_MULTIPLES,minMultiples,maxMultiples,1,16);
+			this.maxOffset       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_OFFSET,maxOffset,0,100);
+			this.offsetMode      = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_OFFSET_MODE,2,["Fixed","Random","Speed","Pressure"]);
+			this.offsetAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_OFFSET_ANGLE,0,0,-180,180);
+			this.brushAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_BRUSH_ANGLE_VARIATION,0,0,-180,180);
+			this.bristleVariation  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_NR_BRISTLE_VARIATION,1,0,1);
+			autorotate      = new PsykoParameter( PsykoParameter.BooleanParameter, PARAMETER_B_AUTOROTATE,1);
+			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
 			_parameters.push(this.multiples,this.maxOffset, offsetMode, offsetAngleRange, brushAngleRange, bristleVariation,maxSpeed,autorotate);
 			rng = new LCG(Math.random() * 0xffffffff);
