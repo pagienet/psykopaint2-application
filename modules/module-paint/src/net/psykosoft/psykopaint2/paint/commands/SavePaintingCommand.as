@@ -2,11 +2,6 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 
 	import flash.display.BitmapData;
-	import flash.events.Event;
-	import flash.events.OutputProgressEvent;
-	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
@@ -129,62 +124,51 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		// TODO: extremely slow, use native approach?
 		private function reduceImage( bytes:ByteArray, sourceWidth:uint, sourceHeight:uint ):ByteArray {
-
-			// todo: implement properly, causes runtime error
+			// TODO: Li: remove and test code below
 			return bytes;
 
-			var i:uint, j:uint;
-			var li:uint = sourceWidth * PaintingSerializer.LOW_RES_SURFACE_MULTIPLIER;
-			var lj:uint = sourceHeight * PaintingSerializer.LOW_RES_SURFACE_MULTIPLIER;
-
+			var outputWidth : uint = sourceWidth / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+			var outputHeight : uint = sourceHeight / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
 			var reducedBytes:ByteArray = new ByteArray();
+			var startX : uint, startY : uint = 0;
 
-			bytes.position = 0;
-			for( i = 0; i < li; ++i ) {
-				for( j = 0; j < lj; ++j ) {
+			for( var y : uint = 0; y < outputHeight; ++y ) {
+				startX = 0;
+				var endY : uint = startY + PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+				if (endY > sourceHeight) endY = sourceHeight;
 
-					// Identify pixel positions.
-					var sourceX:uint = 2 * i;
-					var sourceY:uint = 2 * j;
-					var sourceIndexTL:uint = sourceX + sourceY * sourceWidth;
-					var sourceIndexBL:uint = sourceX + ( sourceY + 1 ) * sourceWidth;
+				for( var x : uint = 0; x < outputWidth; ++x ) {
+					var numSamples : uint = 0;
+					var sampledB : uint = 0, sampledG : uint = 0, sampledR : uint = 0, sampledA : uint = 0;
 
-					// Read top row pixel pair.
-					bytes.position = sourceIndexTL * 4;
-					var sourceTL_b:uint = bytes.readInt();
-					var sourceTL_g:uint = bytes.readInt();
-					var sourceTL_r:uint = bytes.readInt();
-					var sourceTL_a:uint = bytes.readInt();
-					var sourceTR_b:uint = bytes.readInt();
-					var sourceTR_g:uint = bytes.readInt();
-					var sourceTR_r:uint = bytes.readInt();
-					var sourceTR_a:uint = bytes.readInt();
+					var endX : uint = startX + PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+					if (endX > sourceWidth) endX = sourceWidth;
 
-					// Read bottom row pixel pair.
-					bytes.position = sourceIndexBL * 4;
-					var sourceBL_b:uint = bytes.readInt();
-					var sourceBL_g:uint = bytes.readInt();
-					var sourceBL_r:uint = bytes.readInt();
-					var sourceBL_a:uint = bytes.readInt();
-					var sourceBR_b:uint = bytes.readInt();
-					var sourceBR_g:uint = bytes.readInt();
-					var sourceBR_r:uint = bytes.readInt();
-					var sourceBR_a:uint = bytes.readInt();
+					for (var sampleY : uint = startY; sampleY < endY; ++sampleY) {
+						bytes.position = (startX + sampleY*sourceWidth) << 2;
+						for (var sampleX : uint = startX; sampleX < endX; ++sampleX) {
+							var val : uint = bytes.readUnsignedInt();
+							sampledB += (val & 0xff000000) >> 24;
+							sampledG += (val & 0x00ff0000) >> 16;
+							sampledR += (val & 0x0000ff00) >> 8;
+							sampledA += val & 0x000000ff;
+	                        ++numSamples;
+						}
+					}
 
-					// Average the 4 read pixels.
-					var avgB:int = ( sourceTL_b + sourceTR_b + sourceBL_b + sourceBR_b ) * 0.25;
-					var avgG:int = ( sourceTL_g + sourceTR_g + sourceBL_g + sourceBR_g ) * 0.25;
-					var avgR:int = ( sourceTL_r + sourceTR_r + sourceBL_r + sourceBR_r ) * 0.25;
-					var avgA:int = ( sourceTL_a + sourceTR_a + sourceBL_a + sourceBR_a ) * 0.25;
+					var invSamples : Number = 1/numSamples;
+					sampledB = uint(sampledB * invSamples) & 0xff;
+					sampledG = uint(sampledG * invSamples) & 0xff;
+					sampledR = uint(sampledR * invSamples) & 0xff;
+					sampledA = uint(sampledA * invSamples) & 0xff;
 
 					// Write average into destination.
-					reducedBytes.writeInt( avgB );
-					reducedBytes.writeInt( avgG );
-					reducedBytes.writeInt( avgR );
-					reducedBytes.writeInt( avgA );
-				}
-			}
+					reducedBytes.writeUnsignedInt( (sampledB << 24) | (sampledG << 16) | (sampledR << 8) | sampledA );
 
+					startX += PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+				}
+				startY += PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+			}
 			return reducedBytes;
 		}
 	}
