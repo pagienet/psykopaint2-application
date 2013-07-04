@@ -23,8 +23,8 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
-	import net.psykosoft.psykopaint2.core.config.CoreConfig;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.AsyncTestSignal;

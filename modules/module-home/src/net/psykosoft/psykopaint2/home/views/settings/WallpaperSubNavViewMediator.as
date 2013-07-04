@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 	import net.psykosoft.psykopaint2.base.utils.io.AtlasLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;

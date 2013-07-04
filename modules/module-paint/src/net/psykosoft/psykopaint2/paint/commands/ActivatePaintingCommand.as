@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingSerializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;

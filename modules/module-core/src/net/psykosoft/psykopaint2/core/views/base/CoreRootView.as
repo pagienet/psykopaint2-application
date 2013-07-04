@@ -17,7 +17,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 

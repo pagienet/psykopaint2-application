@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;

@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;

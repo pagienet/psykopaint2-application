@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;

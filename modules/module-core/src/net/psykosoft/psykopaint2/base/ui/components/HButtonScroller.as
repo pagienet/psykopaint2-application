@@ -1,14 +1,12 @@
 package net.psykosoft.psykopaint2.base.ui.components
 {
-
 	import flash.display.DisplayObject;
 
-import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 
 
-public class HButtonScroller extends HSnapScroller
+	public class HButtonScroller extends HSnapScroller
 	{
-
 		private var _itemPositionOffsetX:Number;
 
 		private const ITEM_GAP_X:Number = 8;
@@ -33,7 +31,7 @@ public class HButtonScroller extends HSnapScroller
 			var len:uint = _container.numChildren;
 			for( i = 0; i < len; i++ ) {
 				var child:DisplayObject = _container.getChildAt( i ) as DisplayObject;
-				if ( child is ButtonGroup ) {
+				if( child is ButtonGroup ) {
 					var childAsButtonGroup:ButtonGroup = child as ButtonGroup;
 					var groupLen:uint = childAsButtonGroup.numButtons;
 					for( j = 0; j < groupLen; j++ ) {

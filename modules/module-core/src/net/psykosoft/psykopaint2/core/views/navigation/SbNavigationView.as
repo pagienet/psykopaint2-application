@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
 	import net.psykosoft.psykopaint2.base.ui.components.HButtonScroller;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
@@ -37,7 +37,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _scroller:HButtonScroller;
 		private var _animating:Boolean;
 		private var _showing:Boolean;
-		private var _needGapCheck:Boolean = true;
 
 		private var _onReactiveHide:Boolean;
 		private var _reactiveHideMouseDownY:Number;
@@ -104,7 +103,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_scroller = new HButtonScroller();
 			_scroller.visibleHeight = 130;
 			_scroller.visibleWidth = 1024;
+			_scroller.x = 140;
 			_scroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _scroller.visibleHeight / 2;
+			_scroller.visibleWidth = 1024 - 280;
 			_scroller.positionManager.minimumThrowingSpeed = 15;
 			_scroller.positionManager.frictionFactor = 0.70;
 			_scroller.interactionManager.throwInputMultiplier = 2;
@@ -178,7 +179,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			trace( this, "updating sub-nav: " + subNavType );
 
 			// Reset.
-			_needGapCheck = true;
 			header.visible = false;
 			leftBtnSide.visible = false;
 			rightBtnSide.visible = false;
@@ -292,28 +292,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			buttonClickedCallback( label );
 		}
 
-		// TODO: this assumes that side buttons will always be set before center buttons, which is not enforced anywhere
-		// and will cause edge gaps to be set incorrectly
-		private function checkGap():void {
-			// Decide scroller gaps according to the presence of side buttons.
-			/*if( leftBtnSide.visible && rightBtnSide.visible ) {
-				_scroller.leftGap =  60;
-				_scroller.rightGap = 210;
-			}
-			else if( leftBtnSide.visible && !rightBtnSide.visible ) {
-				_scroller.leftGap = 60;
-				_scroller.rightGap = 60;
-			}
-			else if( !leftBtnSide.visible && rightBtnSide.visible ) {
-				_scroller.leftGap = 10;
-				_scroller.rightGap = 210;
-			}
-			else {
-				_scroller.leftGap = _scroller.rightGap = 10;
-			}*/
-			_needGapCheck = false;
-		}
-
 		// ---------------------------------------------------------------------
 		// Methods called by SubNavigationViewBase.
 		// ---------------------------------------------------------------------
@@ -332,7 +310,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function addCenterButton( label:String, iconType:String = ButtonIconType.DEFAULT, labelType:String = ButtonLabelType.CENTER, icon:Bitmap = null ):void {
-			if( _needGapCheck ) checkGap();
 			var btn:SbButton = createButton( label, iconType, labelType, icon );
 			btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			_scroller.addItem( btn );
@@ -393,26 +370,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function layout():void {
-
 			_scroller.invalidateContent();
-			_scroller.x = 1024 / 2 - _scroller.minWidth / 2;
-
-			// TODO: review - afterwards leave comment as to what this does
-			/*if( leftBtnSide.visible && rightBtnSide.visible && _centerButtons.length <= 5) _scroller.scrollable = false;
-			else if( leftBtnSide.visible && _centerButtons.length >= 6 ){
-				_scroller.x += leftBtnSide.width / 2;
-				_scroller.scrollable = true;
-			}
-			else if( rightBtnSide.visible && _centerButtons.length >= 6 ){
-				_scroller.x -= rightBtnSide.width / 2;
-				_scroller.scrollable = true;
-			}
-			else if ( _centerButtons.length >= 7 ) _scroller.scrollable = true;
-			else _scroller.scrollable = false;*/
-
 			_scroller.dock();
-
-			trace( this, "layout() - scroller width: " + _scroller.minWidth );
 		}
 
 		// ---------------------------------------------------------------------

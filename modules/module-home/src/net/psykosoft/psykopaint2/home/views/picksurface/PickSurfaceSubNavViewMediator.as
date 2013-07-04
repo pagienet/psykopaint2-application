@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingVO;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;

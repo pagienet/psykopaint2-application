@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 	import net.psykosoft.psykopaint2.base.utils.ui.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 
 	import org.osflash.signals.Signal;

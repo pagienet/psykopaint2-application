@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.commands
 	import flash.geom.Matrix;
 	import flash.utils.getTimer;
 
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 

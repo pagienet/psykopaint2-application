@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopImageSaveUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.IosImageSaveUtil;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 

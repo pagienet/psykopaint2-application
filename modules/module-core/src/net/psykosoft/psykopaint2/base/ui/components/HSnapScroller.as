@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 	import net.psykosoft.psykopaint2.base.utils.ui.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
-	import net.psykosoft.psykopaint2.core.config.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import org.osflash.signals.Signal;
 
@@ -24,8 +24,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _minContentX:Number = 0;
 		protected var _maxContentX:Number = 0;
 
-		public var leftGap:Number = 0;
-		public var rightGap:Number = 0;
 		public var scrollable:Boolean = true;
 
 		public var visibleHeight:Number = 100;
@@ -123,8 +121,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 			var len:uint = _positionManager.numSnapPoints;
 			var leftEdgeSnapPointMatched:Boolean = false;
 			var rightEdgeSnapPointMatched:Boolean = false;
-			var minAllowed:Number = visibleWidth / 2 - leftGap;
-			var maxAllowed:Number = maxWidth + rightGap - visibleWidth / 2;
+			var minAllowed:Number = visibleWidth / 2;
+			var maxAllowed:Number = maxWidth + visibleWidth / 2;
 			for( var i:uint; i < len; i++ ) {
 				var snapPoint:Number = _positionManager.getSnapPointAtIndex( i );
 				// Left containment.
