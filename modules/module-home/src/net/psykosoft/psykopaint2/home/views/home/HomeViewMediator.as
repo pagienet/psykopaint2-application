@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -128,16 +128,16 @@ public class HomeViewMediator extends MediatorBase
 			requestZoomThenChangeStateSignal.dispatch( true, StateType.PAINT );
 		}
 
-		private function onEaselUpdateRequest( paintingVO : PaintingVO ):void {
+		private function onEaselUpdateRequest( paintingVO : PaintingInfoVO ):void {
 			view.paintingManager.setEaselContent( paintingVO );
 		}
 
-		private function onPaintingDataRetrieved( data:Vector.<PaintingVO> ):void {
+		private function onPaintingDataRetrieved( data:Vector.<PaintingInfoVO> ):void {
 			if( data.length == 0 ) return;
 
-			var latestVo:PaintingVO = data[ 0 ];
+			var latestVo:PaintingInfoVO = data[ 0 ];
 			var len:uint = data.length;
-			var vo:PaintingVO;
+			var vo:PaintingInfoVO;
 
 			for( var i:uint = 1; i < len; i++ ) {
 				vo = data[ i ];

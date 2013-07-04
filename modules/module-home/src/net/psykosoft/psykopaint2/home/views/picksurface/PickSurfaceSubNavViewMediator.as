@@ -9,7 +9,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingSerializer;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
@@ -92,16 +93,16 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			requestEaselPaintingUpdateSignal.dispatch( createPaintingVO() );
 		}
 
-		private function createPaintingVO() : PaintingVO
+		private function createPaintingVO() : PaintingInfoVO
 		{
-			var vo : PaintingVO = new PaintingVO();
-			vo.width = CoreSettings.STAGE_WIDTH;
-			vo.height = CoreSettings.STAGE_HEIGHT;
-			vo.colorSurface = new ByteArray();
-			vo.colorSurface.length = vo.textureWidth*vo.textureHeight*4;	// will fill with zeroes
-			vo.normalsSurface = new ByteArray();
-			vo.normalsSurface.writeBytes(_loadedSurface, 0, 0);
-			vo.normalsSurface.uncompress();
+			var vo : PaintingInfoVO = new PaintingInfoVO();
+			vo.previewWidth = CoreSettings.STAGE_WIDTH / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+			vo.previewHeight = CoreSettings.STAGE_HEIGHT / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+			vo.colorSurfacePreview = new ByteArray();
+			vo.colorSurfacePreview.length = vo.textureWidth*vo.textureHeight*4;	// will fill with zeroes
+			vo.normalsSurfacePreview = new ByteArray();
+			vo.normalsSurfacePreview.writeBytes(_loadedSurface, 0, 0);
+			vo.normalsSurfacePreview.uncompress();
 			// nothing else necessary
 			return vo;
 		}

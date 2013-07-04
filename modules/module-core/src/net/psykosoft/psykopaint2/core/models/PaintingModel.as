@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.core.models
 
 	import flash.utils.ByteArray;
 
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 
 	public class PaintingModel
@@ -11,27 +11,27 @@ package net.psykosoft.psykopaint2.core.models
 		[Inject]
 		public var notifyPaintingDataRetrievedSignal:NotifyPaintingDataRetrievedSignal;
 
-		private var _paintingData:Vector.<PaintingVO>;
+		private var _paintingData:Vector.<PaintingInfoVO>;
 		private var _focusedPaintingId:String = "";
 
 		public function PaintingModel() {
 			super();
-			_paintingData = new Vector.<PaintingVO>();
+			_paintingData = new Vector.<PaintingInfoVO>();
 		}
 
-		public function setPaintingData( data:Vector.<PaintingVO> ):void {
+		public function setPaintingData( data:Vector.<PaintingInfoVO> ):void {
 			_paintingData = data;
 			notifyPaintingDataRetrievedSignal.dispatch( _paintingData );
 		}
 
-		public function getPaintingData():Vector.<PaintingVO> {
+		public function getPaintingData():Vector.<PaintingInfoVO> {
 			return _paintingData;
 		}
 
-		public function getVoWithId( id:String ):PaintingVO {
+		public function getVoWithId( id:String ):PaintingInfoVO {
 			// Find vo with id.
 			var len:uint = _paintingData.length;
-			var vo:PaintingVO;
+			var vo:PaintingInfoVO;
 			for( var i:uint; i < len; ++i ) {
 				vo = _paintingData[ i ];
 				if( vo.id == id ) {
@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.core.models
 			// Nullify vo and identify index.
 			var len:uint = _paintingData.length;
 			var index:uint;
-			var vo:PaintingVO;
+			var vo:PaintingInfoVO;
 			for( var i:uint; i < len; ++i ) {
 				vo = _paintingData[ i ];
 				if( vo.id == id ) {
@@ -60,7 +60,7 @@ package net.psykosoft.psykopaint2.core.models
 			_paintingData.splice( index, 1 );
 		}
 
-		public function addSinglePaintingData( vo:PaintingVO ):void {
+		public function addSinglePaintingData( vo:PaintingInfoVO ):void {
 			_paintingData.push( vo );
 		}
 

@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.commands
 	import net.psykosoft.psykopaint2.base.utils.io.FolderReadUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingSerializer;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 
 	import robotlegs.bender.framework.api.IContext;
@@ -22,11 +22,11 @@ package net.psykosoft.psykopaint2.core.commands
 		public var model:PaintingModel;
 
 		private var _currentFileBeingLoaded:File;
-		private var _currentVoBeingDeSerialized:PaintingVO;
+		private var _currentVoBeingDeSerialized:PaintingInfoVO;
 		private var _paintingFiles:Vector.<File>;
 		private var _numPaintingFiles:uint;
 		private var _indexOfPaintingFileBeingRead:uint;
-		private var _paintingVos:Vector.<PaintingVO>;
+		private var _paintingVos:Vector.<PaintingInfoVO>;
 
 		public function RetrievePaintingDataCommand() {
 			super();
@@ -61,7 +61,7 @@ package net.psykosoft.psykopaint2.core.commands
 			if( _numPaintingFiles > 0 ) {
 				trace( this, "starting to read painting files... ( " + _numPaintingFiles + " )" );
 				context.detain( this );
-				_paintingVos = new Vector.<PaintingVO>();
+				_paintingVos = new Vector.<PaintingInfoVO>();
 				readNextFile();
 			}
 		}
@@ -78,7 +78,7 @@ package net.psykosoft.psykopaint2.core.commands
 
 			// Read the contents of the file to a value object.
 			trace( this, "file read: " + _currentFileBeingLoaded.data.length + " bytes" );
-			_currentVoBeingDeSerialized = new PaintingVO();
+			_currentVoBeingDeSerialized = new PaintingInfoVO();
 
 			trace( this, "de-serializing vo..." );
 			try {

@@ -7,8 +7,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.PaintingSerializer;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
@@ -33,7 +34,6 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var context:IContext;
 
 		private var _file:File;
-		private var _vo:PaintingVO;
 
 		public function ActivatePaintingCommand() {
 			super();
@@ -41,9 +41,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		override public function execute():void {
 			super.execute();
-
-			// Get painting data, translate and pass on to the drawing core.
-			_vo = paintingDataModel.getVoWithId( paintingId );
 
 			// Read surface data.
 			context.detain( this );
@@ -57,11 +54,13 @@ package net.psykosoft.psykopaint2.paint.commands
 			_file.removeEventListener( Event.COMPLETE, onFileRead );
 
 			// De-serialize.
+			var vo:PaintingDataVO = new PaintingDataVO();
 			var serializer:PaintingSerializer = new PaintingSerializer();
-			var surfaces:Vector.<ByteArray> = serializer.deSerializePaintingVoData( _file.data, _vo );
+			serializer.deSerializePaintingVoData( _file.data, vo );
 			_file = null;
 
-			canvasModel.loadLayers( surfaces );
+			// TODO: if we ever need to consider incoming canvas size, read dimensions from vo here
+			canvasModel.loadLayers( vo.surfaces );
 			notifyPaintingActivatedSignal.dispatch();
 			context.release( this );
 		}

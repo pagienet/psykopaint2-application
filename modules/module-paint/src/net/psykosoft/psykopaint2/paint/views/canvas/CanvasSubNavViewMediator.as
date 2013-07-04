@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -72,7 +72,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case CanvasSubNavView.LBL_DESTROY:
 				{
-					if( paintingModel.focusedPaintingId != PaintingVO.DEFAULT_VO_ID && paintingModel.focusedPaintingId != "" ) {
+					if( paintingModel.focusedPaintingId != PaintingInfoVO.DEFAULT_VO_ID && paintingModel.focusedPaintingId != "" ) {
 						requestPaintingDeletionSignal.dispatch( paintingModel.focusedPaintingId );
 					}
 					break;

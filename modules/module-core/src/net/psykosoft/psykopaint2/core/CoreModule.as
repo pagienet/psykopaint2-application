@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.AsyncTestSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
@@ -315,8 +315,8 @@ package net.psykosoft.psykopaint2.core
 			}
 		}
 
-		private function testLoadingAPainting( data:Vector.<PaintingVO> ):void {
-			var aVo:PaintingVO = data[ 0 ];
+		private function testLoadingAPainting( data:Vector.<PaintingInfoVO> ):void {
+			var aVo:PaintingInfoVO = data[ 0 ];
 			trace( this, "painting data loaded, testing painting load: " + aVo.id );
 			_injector.getInstance( RequestPaintingActivationSignal ).dispatch( aVo.id );
 		}
