@@ -12,7 +12,8 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleView;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropView;
-	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 
 	public class PaintRootView extends RootViewBase
 	{
@@ -23,7 +24,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			addRegisteredView( new ColorStyleView(), this );
 			addRegisteredView( new CanvasView(), this );
 			addRegisteredView( new CropView(), this );
-			addRegisteredView( new PickAnImageView(), this );
+			addRegisteredView( new PickAUserImageView(), this );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( StateType.COLOR_STYLE, ColorStyleSubNavView );
@@ -31,6 +32,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_SELECT_BRUSH, SelectBrushSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.CROP, CropSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_ADJUST_BRUSH, EditBrushSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.PICK_IMAGE, PickAnImageSubNavView );
 		}
 	}
 }
