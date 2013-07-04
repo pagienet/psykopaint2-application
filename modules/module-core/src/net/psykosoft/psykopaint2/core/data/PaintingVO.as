@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function set width( value:int ):void {
 			_width = value;
-			_textureWidth = TextureUtils.getBestPowerOf2( _width );
+			_textureWidth = TextureUtils.getBestPowerOf2( _width / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR );
 		}
 
 		public function get height():int {
@@ -57,7 +57,7 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function set height( value:int ):void {
 			_height = value;
-			_textureHeight = TextureUtils.getBestPowerOf2( _height );
+			_textureHeight = TextureUtils.getBestPowerOf2( _height / PaintingSerializer.SURFACE_PREVIEW_SHRINK_FACTOR );
 		}
 
 		public function get textureWidth():int {

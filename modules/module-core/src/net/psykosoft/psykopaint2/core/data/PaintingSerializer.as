@@ -12,7 +12,8 @@ package net.psykosoft.psykopaint2.core.data
 		public static const PAINTING_FILE_VERSION:String = "11";
 		public static const PAINTING_INFO_FILE_EXTENSION:String = ".ipp2";
 		public static const PAINTING_DATA_FILE_EXTENSION:String = ".dpp2";
-		public static const SURFACE_PREVIEW_SHRINK_FACTOR:Number = 2; // Currently set at 1 because low res surfaces are being saved at full size, when that is fixed, set back to 0.5
+		// Currently set at 1 because low res surfaces are being saved at full size, when that is fixed, set back to 2!
+		public static const SURFACE_PREVIEW_SHRINK_FACTOR:Number = 1;
 
 		private var _onDeSerializePaintingVoInfoCompleteCallback:Function;
 		private var _vo:PaintingVO;
