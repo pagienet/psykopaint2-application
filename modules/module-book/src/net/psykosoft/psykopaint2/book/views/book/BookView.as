@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.book.views.book.content.NumericBookDataProvider;
 	import net.psykosoft.psykopaint2.book.views.book.objects.Book;
+	import net.psykosoft.psykopaint2.book.views.book.content.BookDataProviderBase;
 
 	public class BookView extends ViewBase
 	{
@@ -28,11 +29,11 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		override protected function onEnabled():void {
-			addChild( _view );
+
 		}
 
 		override protected function onDisabled():void {
-			removeChild( _view );
+
 		}
 
 		override protected function onSetup():void {
@@ -49,6 +50,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_view.camera.lens.far = 50000;
 			_view.camera.position = new Vector3D( 0, 1500, -600 );
 			_view.camera.lookAt( new Vector3D() );
+			addChild( _view );
 
 			// -----------------------
 			// Initialize objects.
