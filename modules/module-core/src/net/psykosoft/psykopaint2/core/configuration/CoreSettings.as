@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		// Variables ( automatically set by framework ).
 		// ---------------------------------------------------------------------
 
+		// TODO: these should be lower case
 		public static var RUNNING_ON_iPAD:Boolean;
 		public static var RUNNING_ON_RETINA_DISPLAY:Boolean;
 		public static var VERSION:String;

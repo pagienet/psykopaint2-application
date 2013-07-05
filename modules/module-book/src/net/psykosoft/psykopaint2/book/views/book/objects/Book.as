@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 	import net.psykosoft.psykopaint2.base.utils.ui.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
 	import net.psykosoft.psykopaint2.book.views.book.content.BookDataProviderBase;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	public class Book extends ObjectContainer3D
 	{
@@ -41,11 +42,13 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			_positionManager = new SnapPositionManager();
 			_positionManager.minimumThrowingSpeed = 10;
 			_positionManager.frictionFactor = 0.75;
+//			_positionManager.edgeContainmentFactor = 0.01; // TODO: analyze usage of this
 
 			_interactionManager = new ScrollInteractionManager( _positionManager );
-			_interactionManager.scrollInputMultiplier = 0.75;
-			_interactionManager.throwInputMultiplier = 1;
+			_interactionManager.scrollInputMultiplier = 0.75 / CoreSettings.GLOBAL_SCALING;
+			_interactionManager.throwInputMultiplier = 1 / CoreSettings.GLOBAL_SCALING;
 			_interactionManager.stage = stage;
+			_interactionManager.useDetailedDelta = false;
 
 			addChild( _leftPage = new Page( width, height ) );
 			addChild( _rightPage = new Page( width, height ) );
