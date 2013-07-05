@@ -72,5 +72,9 @@ package net.psykosoft.psykopaint2.base.utils.data
 			_frames = null;
 			_names = null;
 		}
+
+		public function get bmd():BitmapData {
+			return _bmd;
+		}
 	}
 }

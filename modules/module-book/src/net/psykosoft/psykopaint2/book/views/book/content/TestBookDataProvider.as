@@ -11,13 +11,8 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 	public class TestBookDataProvider extends BookDataProviderBase
 	{
-		private var _pageWidth:uint;
-		private var _pageHeight:uint;
-
-		public function TestBookDataProvider( pageWidth:uint, pageHeight:uint ) {
+		public function TestBookDataProvider() {
 			super();
-			_pageWidth = pageWidth;
-			_pageHeight = pageHeight;
 		}
 
 		// ---------------------------------------------------------------------
@@ -44,13 +39,17 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			// Registered textures are automatically disposed, but you may want to dispose other sheet data here.
 		}
 
-		// ---------------------------------------------------------------------
+		override protected function onClick( sheetIndex:uint, localX:Number, localY:Number ):void {
+			trace( this, "clicked sheet " + sheetIndex + ", at: " + localX + ", " + localY );
+		}
+
+// ---------------------------------------------------------------------
 		// Utils.
 		// ---------------------------------------------------------------------
 
 		private function generateTextureWithNumber( value:uint ):BitmapTexture {
 			trace( this, "created texture for index: " + value );
-			var bmd:BitmapData = new BitmapData( _pageWidth, _pageHeight, false, 0xFF0000 );
+			var bmd:BitmapData = new BitmapData( _sheetWidth, _sheetHeight, false, 0xFF0000 );
 			printNumberOnBmd( value, bmd );
 			return new BitmapTexture( bmd );
 		}

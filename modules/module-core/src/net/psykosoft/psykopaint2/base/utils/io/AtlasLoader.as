@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		private var _bitmapLoader:BitmapLoader;
 		private var _descriptorLoader:XMLLoader;
 		private var _bmd:BitmapData;
+		private var _xml:XML;
 		private var _descriptorUrl:String;
 		private var _finalCallback:Function;
 		private var _imageUrl:String
@@ -41,7 +42,16 @@ package net.psykosoft.psykopaint2.base.utils.io
 
 		private function onDescriptorLoaded( xml:XML ):void {
 			trace( this, "loaded: " + _imageUrl + ", " + _descriptorUrl );
-			_finalCallback( _bmd, xml );
+			_xml = xml;
+			_finalCallback( this );
+		}
+
+		public function get bmd():BitmapData {
+			return _bmd;
+		}
+
+		public function get xml():XML {
+			return _xml;
 		}
 	}
 }

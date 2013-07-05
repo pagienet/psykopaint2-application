@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.book.views.book.content.BookDataProviderBase;
 	import net.psykosoft.psykopaint2.book.views.book.content.TestBookDataProvider;
 	import net.psykosoft.psykopaint2.book.views.book.objects.Book;
 
@@ -33,6 +34,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		override protected function onDisabled():void {
 			removeChild( _view );
+			// TODO: dispose data provider?
 		}
 
 		override protected function onSetup():void {
@@ -47,7 +49,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
 			_view.camera.lens.far = 50000;
-			_view.camera.position = new Vector3D( 0, 1500, -600 );
+			_view.camera.position = new Vector3D( 0, 2000, -1000 );
 			_view.camera.lookAt( new Vector3D() );
 
 			// -----------------------
@@ -65,12 +67,14 @@ package net.psykosoft.psykopaint2.book.views.book
 			_book.y = 350;
 			_view.scene.addChild( _book );
 
-			// Set book data provider.
-			_book.dataProvider = new TestBookDataProvider( _book.pageWidth, _book.pageHeight );
-
 			// Interaction.
 			stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+		}
+
+		public function set dataProvider( value:BookDataProviderBase ):void {
+			value.setSheetDimensions( _book.pageWidth, _book.pageHeight );
+			_book.dataProvider = value;
 		}
 
 		private function onStageMouseDown( event:MouseEvent ):void {

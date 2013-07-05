@@ -41,8 +41,8 @@ package net.psykosoft.psykopaint2.home.views.settings
 			_atlasLoader.loadAsset( "/home-packaged/away3d/wallpapers/wallpapers.png", "/home-packaged/away3d/wallpapers/wallpapers.xml", onAtlasReady );
 		}
 
-		private function onAtlasReady( bmd:BitmapData, xml:XML ):void {
-			view.setImages( new BitmapAtlas( bmd, xml ) );
+		private function onAtlasReady( loader:AtlasLoader ):void {
+			view.setImages( new BitmapAtlas( loader.bmd, loader.xml ) );
 			_atlasLoader.dispose();
 			_atlasLoader = null;
 			view.setSelectedWallpaperBtn();

@@ -40,8 +40,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			_atlasLoader.loadAsset( "/paint-packaged/samples/samples.png", "/paint-packaged/samples/samples.xml", onAtlasReady );
 		}
 
-		private function onAtlasReady( bmd:BitmapData, xml:XML ):void {
-			view.setImages( new BitmapAtlas( bmd, xml ) );
+		private function onAtlasReady( loader:AtlasLoader ):void {
+			view.setImages( new BitmapAtlas( loader.bmd, loader.xml ) );
 			_atlasLoader.dispose();
 			_atlasLoader = null;
 		}

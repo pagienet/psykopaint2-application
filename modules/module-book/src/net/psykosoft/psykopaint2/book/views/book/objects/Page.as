@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 {
 
 	import away3d.containers.ObjectContainer3D;
+	import away3d.core.pick.PickingColliderType;
 	import away3d.entities.Mesh;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
@@ -40,13 +41,17 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 
 			// Front face.
 			_frontMesh = new Mesh( geometry, idleMaterial );
+			_frontMesh.mouseEnabled = true;
 			_frontMesh.x = _width / 2;
+			_frontMesh.pickingCollider = PickingColliderType.AS3_FIRST_ENCOUNTERED;
 			addChild( _frontMesh );
 
 			// Back face.
 			_backMesh = new Mesh( geometry.clone(), idleMaterial );
 			_backMesh.x = _width / 2;
 			_backMesh.rotationZ = 180;
+			_backMesh.mouseEnabled = true;
+			_backMesh.pickingCollider = PickingColliderType.AS3_FIRST_ENCOUNTERED;
 			addChild( _backMesh );
 		}
 

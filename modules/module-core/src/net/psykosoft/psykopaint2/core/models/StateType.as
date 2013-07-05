@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.models
 		public static const CROP:String = "state/crop";
 		public static const PICK_IMAGE:String = "state/pick_image";
 		public static const BOOK_PICK_SAMPLE_IMAGE:String = "state/book/pick_image";
+		public static const BOOK_STANDALONE:String = "state/book/test";
 		public static const PICK_USER_IMAGE:String = "state/pick_user_image";
 		public static const HOME_PICK_SURFACE:String = "state/home/pick_surface";
 
