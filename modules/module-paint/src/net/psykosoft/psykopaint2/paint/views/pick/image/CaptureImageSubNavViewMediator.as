@@ -3,11 +3,15 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraFlipRequest;
 
-	public class PickAnImageSubNavViewMediator extends MediatorBase
+	public class CaptureImageSubNavViewMediator extends MediatorBase
 	{
 		[Inject]
-		public var view:PickAnImageSubNavView;
+		public var view:CaptureImageSubNavView;
+
+		[Inject]
+		public var notifyCameraFlipRequest:NotifyCameraFlipRequest;
 
 		override public function initialize():void {
 
@@ -21,24 +25,19 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
-				case PickAnImageSubNavView.LBL_USER:
+				case CaptureImageSubNavView.LBL_BACK:
 				{
-					requestStateChange( StateType.PICK_USER_IMAGE );
+					requestStateChange( StateType.PICK_IMAGE );
 					break;
 				}
-				case PickAnImageSubNavView.LBL_SAMPLES:
+				case CaptureImageSubNavView.LBL_CAPTURE:
 				{
-					requestStateChange( StateType.PICK_SAMPLE_IMAGE );
+					requestStateChange( StateType.CONFIRM_CAPTURE_IMAGE );
 					break;
 				}
-				case PickAnImageSubNavView.LBL_FACEBOOK:
+				case CaptureImageSubNavView.LBL_FLIP:
 				{
-					//TODO.
-					break;
-				}
-				case PickAnImageSubNavView.LBL_CAMERA:
-				{
-					requestStateChange( StateType.CAPTURE_IMAGE );
+					notifyCameraFlipRequest.dispatch();
 					break;
 				}
 			}

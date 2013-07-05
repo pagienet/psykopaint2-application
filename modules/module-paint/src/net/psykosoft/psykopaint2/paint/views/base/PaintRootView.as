@@ -12,6 +12,9 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleView;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.ConfirmCaptureImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickASampleImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
@@ -26,6 +29,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			addRegisteredView( new CanvasView(), this );
 			addRegisteredView( new CropView(), this );
 			addRegisteredView( new PickAUserImageView(), this );
+			addRegisteredView( new CaptureImageView(), this );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( StateType.COLOR_STYLE, ColorStyleSubNavView );
@@ -35,6 +39,8 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_ADJUST_BRUSH, EditBrushSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.PICK_IMAGE, PickAnImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.PICK_SAMPLE_IMAGE, PickASampleImageSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.CAPTURE_IMAGE, CaptureImageSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.CONFIRM_CAPTURE_IMAGE, ConfirmCaptureImageSubNavView );
 		}
 	}
 }

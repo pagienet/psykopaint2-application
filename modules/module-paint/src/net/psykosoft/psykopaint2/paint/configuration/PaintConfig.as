@@ -13,6 +13,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraFlipRequest;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraSnapshotRequest;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
@@ -36,6 +38,12 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.crop.CropSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropView;
 	import net.psykosoft.psykopaint2.paint.views.crop.CropViewMediator;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageSubNavViewMediator;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageViewMediator;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.ConfirmCaptureImageSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.ConfirmCaptureImageSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickASampleImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickASampleImageSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageView;
@@ -102,7 +110,8 @@ import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 		// -----------------------
 
 		private function mapNotifications():void {
-
+			_injector.map( NotifyCameraSnapshotRequest ).asSingleton();
+			_injector.map( NotifyCameraFlipRequest ).asSingleton();
 		}
 
 		// -----------------------
@@ -143,6 +152,9 @@ import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 			_mediatorMap.map( PickAnImageSubNavView ).toMediator( PickAnImageSubNavViewMediator );
 			_mediatorMap.map( PickAUserImageView ).toMediator( PickAUserImageViewMediator );
 			_mediatorMap.map( PickASampleImageSubNavView ).toMediator( PickASampleImageSubNavViewMediator );
+			_mediatorMap.map( CaptureImageSubNavView ).toMediator( CaptureImageSubNavViewMediator );
+			_mediatorMap.map( ConfirmCaptureImageSubNavView ).toMediator( ConfirmCaptureImageSubNavViewMediator );
+			_mediatorMap.map( CaptureImageView ).toMediator( CaptureImageViewMediator );
 		}
 	}
 }
