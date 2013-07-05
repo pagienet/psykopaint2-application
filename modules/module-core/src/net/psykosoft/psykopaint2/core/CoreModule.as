@@ -19,15 +19,14 @@ package net.psykosoft.psykopaint2.core
 
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
-	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
-	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
+	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
+	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.AsyncTestSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
@@ -36,7 +35,6 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 
-	
 	import robotlegs.bender.framework.api.IInjector;
 
 	public class CoreModule extends ModuleBase
@@ -305,14 +303,6 @@ package net.psykosoft.psykopaint2.core
 //			_injector.getInstance( NotifyPaintingDataRetrievedSignal ).addOnce( testLoadingAPainting ); // Just for testing.
 
 			moduleReadySignal.dispatch();
-
-			// TODO: remove, also remove signal and command
-			// Test async commands.
-			for( var i:uint; i < 10; i++ ) {
-				setTimeout( function():void {
-					_injector.getInstance( AsyncTestSignal ).dispatch();
-				}, i * 50 );
-			}
 		}
 
 		private function testLoadingAPainting( data:Vector.<PaintingInfoVO> ):void {

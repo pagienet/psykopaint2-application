@@ -199,7 +199,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function evaluateInteractionEnd():void {
 			if( !_active ) return;
-			_interactionManager.endInteraction();
+			_interactionManager.stopInteraction();
 		}
 
 		// ---------------------------------------------------------------------

@@ -358,13 +358,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function toggleLeftButtonVisibility( value:Boolean ):void {
 			_leftButton.visible = value;
 			leftBtnSide.visible = value;
-			//TODO: might have to review gaps and snapPoints
 		}
 
 		public function toggleRightButtonVisibility( value:Boolean ):void {
 			_rightButton.visible = value;
 			rightBtnSide.visible = value;
-			//TODO: might have to review gaps and snapPoints
 		}
 
 		public function layout():void {

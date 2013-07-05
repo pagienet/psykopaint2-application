@@ -9,10 +9,10 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 
-	public class PickAnImageViewMediator extends MediatorBase
+	public class PickAUserImageViewMediator extends MediatorBase
 	{
 		[Inject]
-		public var view:PickAnImageView;
+		public var view:PickAUserImageView;
 
 		[Inject]
 		public var requestSourceImageSetSignal:RequestSourceImageSetSignal;
@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			// Init.
 			super.initialize();
 			registerView( view );
-			registerEnablingState( StateType.PICK_IMAGE );
+			registerEnablingState( StateType.PICK_USER_IMAGE );
 
 			// From view.
 			view.imagePickedSignal.add( onImagePicked );
