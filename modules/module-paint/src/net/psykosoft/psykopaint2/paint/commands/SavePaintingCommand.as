@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			var infoVO : PaintingInfoVO = factory.createFromData(dataVO, paintingId, userModel.uniqueUserId, thumbnail);
 
 			paintingModel.updatePaintingInfo( infoVO );
-			paintingModel.focusedPaintingId = paintingId;
+			paintingModel.focusedPaintingId = infoVO.id;
 
 			trace( this, "saving vo: " + infoVO );
 
@@ -89,18 +89,18 @@ package net.psykosoft.psykopaint2.paint.commands
 			if( CoreSettings.RUNNING_ON_iPAD ) { // iOS
 				// Write info.
 				infoWriteUtil = new BinaryIoUtil( BinaryIoUtil.STORAGE_TYPE_IOS );
-				infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, bytesInfo, null );
+				infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + infoVO.id + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, bytesInfo, null );
 				// Write data.
 				dataWriteUtil = new BinaryIoUtil( BinaryIoUtil.STORAGE_TYPE_IOS );
-				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, bytesData, null );
+				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + infoVO.id + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, bytesData, null );
 			}
 			else { // Desktop
 				// Write info.
 				infoWriteUtil = new BinaryIoUtil( BinaryIoUtil.STORAGE_TYPE_DESKTOP );
-				infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, bytesInfo, null );
+				infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + infoVO.id + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, bytesInfo, null );
 				// Write data.
 				dataWriteUtil = new BinaryIoUtil( BinaryIoUtil.STORAGE_TYPE_DESKTOP );
-				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, bytesData, null );
+				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + infoVO.id + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, bytesData, null );
 			}
 		}
 	}
