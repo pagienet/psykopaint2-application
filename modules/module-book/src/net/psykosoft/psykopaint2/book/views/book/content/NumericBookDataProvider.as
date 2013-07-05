@@ -11,14 +11,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 	public class NumericBookDataProvider extends BookDataProviderBase
 	{
-<<<<<<< HEAD:modules/module-book/src/net/psykosoft/psykopaint2/book/views/book/content/NumericBookDataProvider.as
-		private var _pageWidth:uint;
-		private var _pageHeight:uint;
-
-		public function NumericBookDataProvider( pageWidth:uint, pageHeight:uint ) {
-=======
-		public function TestBookDataProvider() {
->>>>>>> c40394182458403007ce571ddc02fe889795f430:modules/module-book/src/net/psykosoft/psykopaint2/book/views/book/content/TestBookDataProvider.as
+		public function NumericBookDataProvider() {
 			super();
 		}
 
@@ -56,11 +49,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 		private function generateTextureWithNumber( value:uint ):BitmapTexture {
 			trace( this, "created texture for index: " + value );
-<<<<<<< HEAD:modules/module-book/src/net/psykosoft/psykopaint2/book/views/book/content/NumericBookDataProvider.as
-			var bmd:BitmapData = new BitmapData( _pageWidth, _pageHeight, false, Math.floor( 0xFFFFFF * Math.random() ) );
-=======
 			var bmd:BitmapData = new BitmapData( _sheetWidth, _sheetHeight, false, 0xFF0000 );
->>>>>>> c40394182458403007ce571ddc02fe889795f430:modules/module-book/src/net/psykosoft/psykopaint2/book/views/book/content/TestBookDataProvider.as
 			printNumberOnBmd( value, bmd );
 			return new BitmapTexture( bmd );
 		}

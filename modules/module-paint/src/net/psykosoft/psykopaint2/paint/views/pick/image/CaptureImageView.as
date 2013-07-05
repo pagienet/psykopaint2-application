@@ -31,8 +31,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		override protected function onDisabled():void {
 			//TODO: check if anything else needs to be disposed.
 			_camera = null;
+			removeChild( _video );
 			_video = null;
-			removeChild( _video )
 		}
 
 		public function pause():void {

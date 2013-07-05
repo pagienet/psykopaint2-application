@@ -8,11 +8,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-<<<<<<< HEAD
-	import net.psykosoft.psykopaint2.book.views.book.content.NumericBookDataProvider;
-=======
-	import net.psykosoft.psykopaint2.book.views.book.content.BookDataProviderBase;
->>>>>>> c40394182458403007ce571ddc02fe889795f430
 	import net.psykosoft.psykopaint2.book.views.book.objects.Book;
 	import net.psykosoft.psykopaint2.book.views.book.content.BookDataProviderBase;
 
@@ -37,12 +32,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		override protected function onDisabled():void {
-<<<<<<< HEAD
-
-=======
 			removeChild( _view );
 			// TODO: dispose data provider?
->>>>>>> c40394182458403007ce571ddc02fe889795f430
 		}
 
 		override protected function onSetup():void {
@@ -76,12 +67,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			_book.rotationX = -90 + 15;
 			_view.scene.addChild( _book );
 
-<<<<<<< HEAD
-			// Set book data provider.
-			_book.dataProvider = new NumericBookDataProvider( _book.pageWidth, _book.pageHeight );
-
-=======
->>>>>>> c40394182458403007ce571ddc02fe889795f430
 			// Interaction.
 			stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
