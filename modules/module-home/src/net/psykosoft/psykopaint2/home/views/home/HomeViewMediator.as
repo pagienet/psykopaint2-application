@@ -99,6 +99,8 @@ public class HomeViewMediator extends MediatorBase
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
 			registerEnablingState( StateType.PICK_IMAGE );
 			registerEnablingState( StateType.PICK_USER_IMAGE );
+			registerEnablingState( StateType.CROP );
+
 			view.stage3dProxy = stage3dProxy;
 
 			// Register view gpu rendering in core.

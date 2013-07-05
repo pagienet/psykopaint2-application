@@ -2,8 +2,9 @@ package net.psykosoft.psykopaint2.paint.views.crop
 {
 
 	import flash.display.BitmapData;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.TouchSheet;
 
@@ -22,16 +23,17 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		override protected function onSetup():void {
 			_baseTextureSize = _canvasWidth = stage.stageWidth;
 			_canvasHeight = stage.stageHeight;
+			
 		}
 
 		
 		public function set sourceMap( map:BitmapData ):void {
 			
-			
+			/*
 			graphics.beginFill( 0xFFFFFF, 1.0 );
 			graphics.drawRect( 0, 0, stage.stageWidth, stage.stageHeight );
 			graphics.endFill();
-			
+			*/
 			if( _positioningSheet ) {
 				_positioningSheet.dispose();
 				removeChild( _positioningSheet );
@@ -40,10 +42,13 @@ package net.psykosoft.psykopaint2.paint.views.crop
 			_sourceMap = map;
 
 
-			_positioningSheet = new TouchSheet( _sourceMap );
-			_positioningSheet.minimumScale = Math.max( stage.stageWidth / _sourceMap.width, stage.stageHeight / _sourceMap.height );
-			_positioningSheet.limitsRect = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
-
+			_positioningSheet = new TouchSheet( _sourceMap, Math.max( 482/ _sourceMap.width, 364 / _sourceMap.height ) );
+			//_positioningSheet.minimumScale = Math.max( stage.stageWidth / _sourceMap.width, stage.stageHeight / _sourceMap.height );
+			//_positioningSheet.limitsRect = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
+			_positioningSheet.scrollRect = new Rectangle(0,0,482,364);
+			_positioningSheet.x = 270;
+			_positioningSheet.y = 81;
+			
 			addChildAt( _positioningSheet, 0 );
 		
 			
@@ -52,7 +57,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		public function renderPreviewToBitmapData():BitmapData 
 		{
 			var croppedMap:BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, false, 0xffffffff );
-			croppedMap.draw(_positioningSheet,null,null,"normal",null,true);
+			croppedMap.draw(_positioningSheet,new Matrix(stage.stageWidth/482,0,0,stage.stageHeight / 364),null,"normal",null,true);
 			return croppedMap;
 			
 		}
