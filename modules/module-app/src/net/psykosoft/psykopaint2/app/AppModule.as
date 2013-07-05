@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.views.base.AppRootView;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
+	import net.psykosoft.psykopaint2.book.BookModule;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -16,8 +17,6 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.paint.PaintModule;
 
 	import org.swiftsuspenders.Injector;
-
-	// TODO: fix rendering conflict between the paint and the home module...
 
 	public class AppModule extends ModuleBase
 	{
@@ -56,9 +55,6 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onCoreModuleReady():void {
 			trace( this, "core module is ready, injector: " + _coreModule.injector );
-
-			// TODO: remove time out calls, they are used because otherwise, usage of the paint and home modules simultaneously causes the core's injected stage3d.context3d to become null
-//			setTimeout( createPaintModule, 250 );
 			createPaintModule();
 		}
 
@@ -74,7 +70,19 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onPaintModuleReady( coreInjector:Injector ):void {
 		    trace( this, "paint module is ready" );
-//			setTimeout( createHomeModule, 250 );
+			createBookModule();
+		}
+
+		// Book module.
+		private function createBookModule():void {
+			trace( this, "creating book module..." );
+			var bookModule:BookModule = new BookModule( _coreModule );
+			bookModule.isStandalone = false;
+			bookModule.moduleReadySignal.addOnce( onBookModuleReady );
+			bookModule.initialize();
+		}
+		private function onBookModuleReady( coreInjector:Injector ):void {
+			trace( this, "book module is ready" );
 			createHomeModule();
 		}
 
