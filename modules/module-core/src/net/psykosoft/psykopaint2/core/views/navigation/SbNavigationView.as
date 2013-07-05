@@ -172,7 +172,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function updateSubNavigation( subNavType:Class ):void {
 
-			if( subNavType == null ) return;
+			if( subNavType == null ) {
+				visible = false;
+				return;
+			}
+			else {
+				visible = true;
+			}
 
 			trace( this, "updating sub-nav: " + subNavType );
 

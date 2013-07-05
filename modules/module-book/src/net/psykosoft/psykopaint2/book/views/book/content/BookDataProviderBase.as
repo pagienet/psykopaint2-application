@@ -13,8 +13,10 @@ package net.psykosoft.psykopaint2.book.views.book.content
 	{
 		private var _activeSheetIndices:Vector.<uint>;
 		private var _textureDictionary:Dictionary;
-
 		private var _defaultTexture:BitmapTexture;
+
+		protected var _sheetWidth:uint;
+		protected var _sheetHeight:uint;
 
 		public var textureReadySignal:Signal;
 
@@ -23,7 +25,11 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			textureReadySignal = new Signal();
 			_textureDictionary = new Dictionary();
 			_activeSheetIndices = new Vector.<uint>();
-			_defaultTexture = new BitmapTexture( new BitmapData( 512, 512, false, 0x666666 ) );
+		}
+
+		public function setSheetDimensions( pageWidth:Number, pageHeight:Number ):void {
+			_sheetWidth = pageWidth;
+			_sheetHeight = pageHeight;
 		}
 
 		public function getTextureForSheet( index:uint ):BitmapTexture {
@@ -51,7 +57,9 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		}
 
 		public function dispose():void {
-			_defaultTexture.dispose();
+			if( _defaultTexture ) {
+				_defaultTexture.dispose();
+			}
 			for each( var texture:BitmapTexture in _textureDictionary ) {
 				texture.dispose();
 			}
@@ -59,7 +67,12 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		}
 
 		public function get defaultTexture():BitmapTexture {
+			if( !_defaultTexture ) _defaultTexture = new BitmapTexture( new BitmapData( _sheetWidth, _sheetHeight, false, 0xFFFFFF ) );
 			return _defaultTexture;
+		}
+
+		public function notifyClickAt( sheetIndex:uint, mouseX:Number, mouseY:Number ):void {
+			onClick( sheetIndex, mouseX, mouseY );
 		}
 
 		// ---------------------------------------------------------------------
@@ -68,7 +81,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 		private function requestTextureForSheet( index:uint ):void {
 			_activeSheetIndices.push( index );
-			onSheetRequested( index );
+			onNonCachedSheetRequested( index );
 		}
 
 		private function disposeSheetAtIndex( index:uint ):void {
@@ -90,7 +103,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		// Obligatory overrides.
 		// ---------------------------------------------------------------------
 
-		protected function onSheetRequested( index:uint ):void {
+		protected function onNonCachedSheetRequested( index:uint ):void {
 			throw new AbstractMethodError();
 		}
 
@@ -101,6 +114,10 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		// ---------------------------------------------------------------------
 		// Optional overrides.
 		// ---------------------------------------------------------------------
+
+		protected function onClick( sheetIndex:uint, mouseX:Number, mouseY:Number ):void {
+			// Optional.
+		}
 
 		protected function onDispose():void {
 			// Optional.

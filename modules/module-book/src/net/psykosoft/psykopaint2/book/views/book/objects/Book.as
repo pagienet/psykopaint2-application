@@ -2,9 +2,12 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 {
 
 	import away3d.containers.ObjectContainer3D;
+	import away3d.entities.Mesh;
+	import away3d.events.MouseEvent3D;
 	import away3d.textures.BitmapTexture;
 
 	import flash.display.Stage;
+	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
 
@@ -52,6 +55,12 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			_rightPage.name = "rightPage";
 			_middlePage.name = "middlePage";
 
+			_leftPage.mouseEnabled = _rightPage.mouseEnabled = _middlePage.mouseEnabled = true;
+			_leftPage.mouseChildren = _rightPage.mouseChildren = _middlePage.mouseChildren = true;
+			_leftPage.addEventListener( MouseEvent3D.MOUSE_UP, onPageMouseUp );
+			_rightPage.addEventListener( MouseEvent3D.MOUSE_UP, onPageMouseUp );
+			_middlePage.addEventListener( MouseEvent3D.MOUSE_UP, onPageMouseUp );
+
 			// The position of these pages never moves, instead, their content changes.
 			// 0 degrees is a page fully on the right side.
 			// 180 degrees ia a page fully on the left side.
@@ -64,6 +73,21 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			_rightPage.y -= 1;
 
 			_leftPageBackSheetIndex = -1;
+
+			visible = false;
+		}
+
+		private function onPageMouseUp( event:MouseEvent3D ):void {
+			if( _positionManager.onMotion ) return;
+			var page:Page = event.target as Page;
+			var clickUV:Point = event.uv;
+			var pageClickX:Number = _pageWidth * clickUV.x;
+			var pageClickY:Number = _pageHeight * clickUV.y;
+			var sheetIndex:uint;
+			if( page == _leftPage ) sheetIndex = _leftPage.backSheetIndex;
+			else if( page == _rightPage ) sheetIndex = _rightPage.frontSheetIndex;
+			else sheetIndex = page.flipAngle < 90 ? _middlePage.frontSheetIndex : _middlePage.backSheetIndex;
+			_dataProvider.notifyClickAt( sheetIndex, pageClickX, pageClickY );
 		}
 
 		public function set dataProvider( value:BookDataProviderBase ):void {
@@ -86,12 +110,16 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 				xOffset += SNAP_POINT_SPACING;
 			}
 
+			visible = true;
+
 			update();
 		}
 
 		public function update():void {
 
 //			trace( this, "update -------------------" );
+
+			if( !_dataProvider ) return;
 
 			// Update input and position.
 			_interactionManager.update();

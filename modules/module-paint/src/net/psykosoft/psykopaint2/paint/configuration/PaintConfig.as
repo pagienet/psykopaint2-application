@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.paint.commands.ActivatePaintingCommand;
@@ -134,6 +135,8 @@ import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 			_commandMap.map( RequestDrawingCoreResetSignal ).toCommand( ClearCanvasCommand );
 			_injector.unmap( RequestDrawingCoreSurfaceSetSignal );
 			_commandMap.map( RequestDrawingCoreSurfaceSetSignal ).toCommand( SetSurfaceImageCommand );
+			_injector.unmap( RequestDrawingCoreSourceImageSetSignal );
+			_commandMap.map( RequestDrawingCoreSourceImageSetSignal ).toCommand( SetSourceImageCommand );
 		}
 
 		// -----------------------

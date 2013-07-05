@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 		private var _closestSnapPointIndex:int;
 		private var _onSnapMotion:Boolean;
 		private var _targetSnapPoint:Number = 0;
+		private var _onMotion:Boolean;
 
 		public var closestSnapPointChangedSignal:Signal;
 		public var motionEndedSignal:Signal;
@@ -87,6 +88,8 @@ package net.psykosoft.psykopaint2.base.utils.ui
 
 			// Apply motion.
 			_position += amount * multiplier;
+
+			_onMotion = true;
 		}
 
 		public function snap( speed:Number ):void {
@@ -116,7 +119,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			// Evaluate throw speed to reach target.
 			_snapMotionSpeed = ( _targetSnapPoint - _position ) / integralFriction;
 			_positionChange = _snapMotionSpeed;
-			_onSnapMotion = true;
+			_onMotion = _onSnapMotion = true;
 		}
 
 		public function snapAtIndexWithoutEasing( index:uint ):void {
@@ -137,7 +140,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			var absSpeed:Number = Math.abs( _snapMotionSpeed );
 			if( absSpeed < 0.1 && distanceToTarget < 1 ) {
 				_position = _targetSnapPoint;
-				_onSnapMotion = false;
+				_onSnapMotion = _onMotion = false;
 				motionEndedSignal.dispatch();
 			}
 		}
@@ -209,6 +212,10 @@ package net.psykosoft.psykopaint2.base.utils.ui
 
 		public function get positionChange():Number {
 			return _positionChange;
+		}
+
+		public function get onMotion():Boolean {
+			return _onMotion;
 		}
 	}
 }

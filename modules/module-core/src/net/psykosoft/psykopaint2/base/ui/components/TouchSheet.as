@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		private var content:Bitmap;
 		private var _transformGesture:TransformGesture;
 		
-        public function TouchSheet(map:BitmapData)
+        public function TouchSheet(map:BitmapData, initialContentScale:Number = 1)
         {
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
           	
@@ -41,7 +41,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			
 			content.bitmapData = map;
 			content.smoothing = true;
-          
+            content.scaleX =  content.scaleY =initialContentScale;
 			
 			_contentsWidth = map.width;
 			_contentsHeight = map.height;
@@ -87,8 +87,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 		{
 			if ( !stage || !content ) return;
 			
-			content.x = (stage.stageWidth - content.width) >> 1;
-			content.y = (stage.stageHeight - content.height) >> 1;
+			content.x = (scrollRect.width - content.width) >> 1;
+			content.y = (scrollRect.height - content.height) >> 1;
 		}
 		
 		

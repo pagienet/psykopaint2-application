@@ -40,8 +40,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			_atlasLoader.loadAsset( "/paint-packaged/samples/samples.png", "/paint-packaged/samples/samples.xml", onAtlasReady );
 		}
 
-		private function onAtlasReady( bmd:BitmapData, xml:XML ):void {
-			view.setImages( new BitmapAtlas( bmd, xml ) );
+		private function onAtlasReady( loader:AtlasLoader ):void {
+			view.setImages( new BitmapAtlas( loader.bmd, loader.xml ) );
 			_atlasLoader.dispose();
 			_atlasLoader = null;
 		}
@@ -73,8 +73,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			_imageLoader.loadAsset( rootUrl + "samples/fullsize/" + id + extra + ".jpg", onImageLoaded );
 		}
 
-		private function onImageLoaded( jpg:BitmapData ):void {
-			requestSourceImageSetSignal.dispatch( jpg );
+		private function onImageLoaded( bmd:BitmapData ):void {
+			requestSourceImageSetSignal.dispatch( bmd );
 			_imageLoader.dispose();
 			_imageLoader = null;
 		}

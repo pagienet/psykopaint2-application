@@ -26,64 +26,77 @@ package net.psykosoft.psykopaint2.paint.commands
 	public class SavePaintingCommand extends TracingCommand
 	{
 		[Inject]
-		public var paintingId:String; // From signal.
+		public var paintingId : String; // From signal.
 
 		[Inject]
-		public var updateEasel:Boolean; // From signal.
+		public var updateEasel : Boolean; // From signal.
 
 		[Inject]
-		public var canvasModel:CanvasModel;
+		public var canvasModel : CanvasModel;
 
 		[Inject]
-		public var userModel:UserModel;
+		public var userModel : UserModel;
 
 		[Inject]
-		public var paintingModel:PaintingModel;
+		public var paintingModel : PaintingModel;
 
 		[Inject]
-		public var requestEaselUpdateSignal:RequestEaselUpdateSignal;
+		public var requestEaselUpdateSignal : RequestEaselUpdateSignal;
 
 		[Inject]
-		public var context:IContext;
+		public var context : IContext;
 
 		[Inject]
-		public var renderer:CanvasRenderer;
+		public var renderer : CanvasRenderer;
 
-		public function SavePaintingCommand() {
+		public function SavePaintingCommand()
+		{
 			super();
 		}
 
-		override public function execute():void {
+		override public function execute() : void
+		{
 			super.execute();
 
-			trace( this, "incoming painting id: " + paintingId );
+			trace(this, "incoming painting id: " + paintingId);
 
 			var factory : PaintingInfoFactory = new PaintingInfoFactory();
-			var dataVO:PaintingDataVO = canvasModel.exportPaintingData();
-			// TODO: generate thumbnail by accepting scale in renderToBitmapData
-			var thumbnail:BitmapData = renderer.renderToBitmapData();
-			thumbnail = BitmapDataUtils.scaleBitmapData( thumbnail, 0.25 ); // TODO: apply different scales depending on source and target resolutions
-			var infoVO : PaintingInfoVO = factory.createFromData(dataVO, paintingId, userModel.uniqueUserId, thumbnail);
+			var dataVO : PaintingDataVO = canvasModel.exportPaintingData();
+			var infoVO : PaintingInfoVO = factory.createFromData(dataVO, paintingId, userModel.uniqueUserId, generateThumbnail());
 
-			paintingModel.updatePaintingInfo( infoVO );
+			paintingModel.updatePaintingInfo(infoVO);
 			paintingModel.focusedPaintingId = infoVO.id;
 
-			trace( this, "saving vo: " + infoVO );
+			trace(this, "saving vo: " + infoVO);
 
 			// Update easel.
-			if( updateEasel ) {
-				requestEaselUpdateSignal.dispatch( infoVO );
+			if (updateEasel) {
+				requestEaselUpdateSignal.dispatch(infoVO);
 			}
 
+			serializeDataToFiles(infoVO, dataVO);
+		}
+
+		private function serializeDataToFiles(infoVO : PaintingInfoVO, dataVO : PaintingDataVO) : void
+		{
 			// Serialize data.
-			var infoSerializer:PaintingInfoSerializer = new PaintingInfoSerializer();
-			var dataSerializer:PaintingDataSerializer = new PaintingDataSerializer();
-			var bytesInfo:ByteArray = infoSerializer.serialize( infoVO );
-			var bytesData:ByteArray = dataSerializer.serialize( dataVO );
-			trace( this, "info num bytes: " + bytesInfo.length );
-			trace( this, "data num bytes: " + bytesData.length );
+			var infoSerializer : PaintingInfoSerializer = new PaintingInfoSerializer();
+			var dataSerializer : PaintingDataSerializer = new PaintingDataSerializer();
+			var bytesInfo : ByteArray = infoSerializer.serialize(infoVO);
+			var bytesData : ByteArray = dataSerializer.serialize(dataVO);
+			trace(this, "info num bytes: " + bytesInfo.length);
+			trace(this, "data num bytes: " + bytesData.length);
 
 			writeData(infoVO.id, bytesInfo, bytesData);
+		}
+
+		private function generateThumbnail() : BitmapData
+		{
+			// TODO: generate thumbnail by accepting scale in renderToBitmapData
+			var thumbnail : BitmapData = renderer.renderToBitmapData();
+			var scaledThumbnail : BitmapData = BitmapDataUtils.scaleBitmapData(thumbnail, 0.25); // TODO: apply different scales depending on source and target resolutions
+			thumbnail.dispose();
+			return scaledThumbnail;
 		}
 
 		private function writeData(paintId : String, bytesInfo : ByteArray, bytesData : ByteArray) : void

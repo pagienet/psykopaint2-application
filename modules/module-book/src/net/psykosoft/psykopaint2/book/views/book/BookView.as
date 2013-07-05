@@ -8,7 +8,11 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+<<<<<<< HEAD
 	import net.psykosoft.psykopaint2.book.views.book.content.NumericBookDataProvider;
+=======
+	import net.psykosoft.psykopaint2.book.views.book.content.BookDataProviderBase;
+>>>>>>> c40394182458403007ce571ddc02fe889795f430
 	import net.psykosoft.psykopaint2.book.views.book.objects.Book;
 	import net.psykosoft.psykopaint2.book.views.book.content.BookDataProviderBase;
 
@@ -33,7 +37,12 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		override protected function onDisabled():void {
+<<<<<<< HEAD
 
+=======
+			removeChild( _view );
+			// TODO: dispose data provider?
+>>>>>>> c40394182458403007ce571ddc02fe889795f430
 		}
 
 		override protected function onSetup():void {
@@ -47,8 +56,8 @@ package net.psykosoft.psykopaint2.book.views.book
 			_view.shareContext = true;
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
-			_view.camera.lens.far = 50000;
-			_view.camera.position = new Vector3D( 0, 1500, -600 );
+			_view.camera.lens.far = 5000;
+			_view.camera.position = new Vector3D( 0, 0, -1350 );
 			_view.camera.lookAt( new Vector3D() );
 			addChild( _view );
 
@@ -64,15 +73,22 @@ package net.psykosoft.psykopaint2.book.views.book
 			// Initialize book.
 			// TODO: ability to have non power of 2 pages
 			_book = new Book( stage, 1024, 1024 );
-			_book.y = 350;
+			_book.rotationX = -90 + 15;
 			_view.scene.addChild( _book );
 
+<<<<<<< HEAD
 			// Set book data provider.
 			_book.dataProvider = new NumericBookDataProvider( _book.pageWidth, _book.pageHeight );
 
+=======
+>>>>>>> c40394182458403007ce571ddc02fe889795f430
 			// Interaction.
 			stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+		}
+
+		public function set dataProvider( value:BookDataProviderBase ):void {
+			_book.dataProvider = value;
 		}
 
 		private function onStageMouseDown( event:MouseEvent ):void {
@@ -87,6 +103,10 @@ package net.psykosoft.psykopaint2.book.views.book
 			if( !_view.parent ) return;
 			_book.update();
 			_view.render();
+		}
+
+		public function get book():Book {
+			return _book;
 		}
 	}
 }

@@ -11,20 +11,22 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 	public class NumericBookDataProvider extends BookDataProviderBase
 	{
+<<<<<<< HEAD:modules/module-book/src/net/psykosoft/psykopaint2/book/views/book/content/NumericBookDataProvider.as
 		private var _pageWidth:uint;
 		private var _pageHeight:uint;
 
 		public function NumericBookDataProvider( pageWidth:uint, pageHeight:uint ) {
+=======
+		public function TestBookDataProvider() {
+>>>>>>> c40394182458403007ce571ddc02fe889795f430:modules/module-book/src/net/psykosoft/psykopaint2/book/views/book/content/TestBookDataProvider.as
 			super();
-			_pageWidth = pageWidth;
-			_pageHeight = pageHeight;
 		}
 
 		// ---------------------------------------------------------------------
 		// Obligatory overrides.
 		// ---------------------------------------------------------------------
 
-		override protected function onSheetRequested( index:uint ):void {
+		override protected function onNonCachedSheetRequested( index:uint ):void {
 			// Simulate async texture creation.
 			setTimeout( function():void {
 				registerTextureForSheet( generateTextureWithNumber( index ), index );
@@ -44,13 +46,21 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			// Registered textures are automatically disposed, but you may want to dispose other sheet data here.
 		}
 
+		override protected function onClick( sheetIndex:uint, localX:Number, localY:Number ):void {
+			trace( this, "clicked sheet " + sheetIndex + ", at: " + localX + ", " + localY );
+		}
+
 		// ---------------------------------------------------------------------
 		// Utils.
 		// ---------------------------------------------------------------------
 
 		private function generateTextureWithNumber( value:uint ):BitmapTexture {
 			trace( this, "created texture for index: " + value );
+<<<<<<< HEAD:modules/module-book/src/net/psykosoft/psykopaint2/book/views/book/content/NumericBookDataProvider.as
 			var bmd:BitmapData = new BitmapData( _pageWidth, _pageHeight, false, Math.floor( 0xFFFFFF * Math.random() ) );
+=======
+			var bmd:BitmapData = new BitmapData( _sheetWidth, _sheetHeight, false, 0xFF0000 );
+>>>>>>> c40394182458403007ce571ddc02fe889795f430:modules/module-book/src/net/psykosoft/psykopaint2/book/views/book/content/TestBookDataProvider.as
 			printNumberOnBmd( value, bmd );
 			return new BitmapTexture( bmd );
 		}
