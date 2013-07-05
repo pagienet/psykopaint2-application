@@ -27,9 +27,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	{
 		public static const ENGINE_TYPE_BASIC:int = 0;
 		public static const ENGINE_TYPE_CATMULL:int = 1;
+		public static const ENGINE_TYPE_EXPERIMENTAL:int = 2;
 		
 		
-		private static var _engineDepot : Vector.<Vector.<IPathEngine>> = Vector.<Vector.<IPathEngine>>([new Vector.<IPathEngine>(),new Vector.<IPathEngine>(),]);
+		private static var _engineDepot : Vector.<Vector.<IPathEngine>> = Vector.<Vector.<IPathEngine>>([new Vector.<IPathEngine>(),new Vector.<IPathEngine>(),new Vector.<IPathEngine>()]);
 		private static var _samplePointDepot : Vector.<SamplePoint> = new Vector.<SamplePoint>(500);
 		private static var _recycleCount:int = 0;
 
@@ -38,12 +39,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if (_engineDepot[type].length > 0) {
 				return _engineDepot[type].pop();
 			} else {
-				if ( type == 1 )
+				if ( type == 0 )
+				{
+					return new PathEngineBasic();
+				} else if ( type == 1) 
 				{
 					return new PathEngineCatmull();
-				} else {
-					return new PathEngineBasic();
+				} else if ( type == 2)
+				{
+					return new PathEngineExperimental();
 				}
+				return null;
 			}
 		}
 
