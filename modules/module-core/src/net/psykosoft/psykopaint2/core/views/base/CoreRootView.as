@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.events.UncaughtErrorEvent;
 	import flash.geom.ColorTransform;
 	import flash.system.Capabilities;
+	import flash.system.System;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
@@ -155,7 +156,7 @@ package net.psykosoft.psykopaint2.core.views.base
 				_versionTextField.scaleX = _versionTextField.scaleY = CoreSettings.GLOBAL_SCALING;
 				_versionTextField.width = 250;
 				_versionTextField.mouseEnabled = _versionTextField.selectable = false;
-				_versionTextField.y = CoreSettings.GLOBAL_SCALING * 25;
+				_versionTextField.y = CoreSettings.GLOBAL_SCALING * 50;
 				_debugLayer.addChild( _versionTextField );
 			}
 		}
@@ -193,7 +194,8 @@ package net.psykosoft.psykopaint2.core.views.base
 			if( !CoreSettings.SHOW_STATS ) return;
 			_renderTimeStackUtil.pushValue( RenderGpuCommand.renderTime );
 			var renderTime:int = int( _renderTimeStackUtil.getAverageValue() );
-			_statsTextField.text = _fps + "/" + stage.frameRate + "fps \n" + "Render time: " + renderTime + "ms";
+			_statsTextField.text = _fps + "/" + stage.frameRate + "fps \n" + "Render time: " + renderTime + "ms\n" +
+									"Memory usage: " + uint(System.privateMemory/1024)/1024 + "MB";
 		}
 
 		private function initSplashScreen():void {

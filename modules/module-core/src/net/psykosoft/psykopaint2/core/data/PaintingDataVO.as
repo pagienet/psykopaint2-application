@@ -15,5 +15,15 @@ package net.psykosoft.psykopaint2.core.data
 		{
 			super();
 		}
+
+		public function dispose() : void
+		{
+			colorData.clear();
+			normalSpecularData.clear();
+			sourceBitmapData.clear();
+			colorData = null;
+			normalSpecularData = null;
+			sourceBitmapData = null;
+		}
 	}
 }

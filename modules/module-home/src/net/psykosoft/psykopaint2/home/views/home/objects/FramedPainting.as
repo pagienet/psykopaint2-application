@@ -56,6 +56,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		public function setPainting( value:ObjectContainer3D ):void {
 			if( _painting ) {
 				removeChild( _painting );
+				_painting.dispose();
 			}
 			if ( value ) {
 				_painting = value;

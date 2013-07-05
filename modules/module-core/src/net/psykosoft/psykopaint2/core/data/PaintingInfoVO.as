@@ -63,5 +63,15 @@ package net.psykosoft.psykopaint2.core.data
 		public function get textureHeight():int {
 			return _textureHeight;
 		}
+
+		public function dispose() : void
+		{
+			colorPreviewData.clear();
+			normalSpecularPreviewData.clear();
+			if (thumbnail) thumbnail.dispose();
+			colorPreviewData = null;
+			normalSpecularPreviewData = null;
+			thumbnail = null;
+		}
 	}
 }

@@ -77,12 +77,22 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		private function loadSurfaceByIndex( index:int ):void {
 			if (_selectedIndex == index) return;
-			_loadedSurface = null;
+			disposeSurface();
 			view.showRightButton( false );
 			_selectedIndex = index;
+			// cancel previous load
+			if (_byteLoader) _byteLoader.dispose();
 			_byteLoader = new BinaryLoader();
 			var size:int = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
 			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + size + ".surf", onSurfaceLoaded );
+		}
+
+		private function disposeSurface() : void
+		{
+			if (_loadedSurface) {
+				_loadedSurface.clear();
+				_loadedSurface = null;
+			}
 		}
 
 		private function onSurfaceLoaded( bytes:ByteArray ):void {
@@ -91,7 +101,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			_byteLoader.dispose();
 			_byteLoader = null;
 
-			requestEaselPaintingUpdateSignal.dispatch( createPaintingVO() );
+			var vo : PaintingInfoVO = createPaintingVO();
+			requestEaselPaintingUpdateSignal.dispatch( vo );
+			vo.dispose();
 		}
 
 		private function createPaintingVO() : PaintingInfoVO
