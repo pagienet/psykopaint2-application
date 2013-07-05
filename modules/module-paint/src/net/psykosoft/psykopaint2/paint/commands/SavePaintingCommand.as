@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoDeserializer;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoFactory;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoSerializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -57,39 +58,17 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			trace( this, "incoming painting id: " + paintingId );
 
-			// Need to create a new id and vo?
+			var factory : PaintingInfoFactory = new PaintingInfoFactory();
 			var dataVO:PaintingDataVO = canvasModel.exportPaintingData();
-			var infoVO:PaintingInfoVO;
-			var nowDate:Date = new Date();
-			var dateMs:Number = nowDate.getTime();
-			if( paintingId == PaintingInfoVO.DEFAULT_VO_ID ) {
+			// TODO: generate thumbnail by accepting scale in renderToBitmapData
+			var thumbnail:BitmapData = renderer.renderToBitmapData();
+			thumbnail = BitmapDataUtils.scaleBitmapData( thumbnail, 0.25 ); // TODO: apply different scales depending on source and target resolutions
+			var infoVO : PaintingInfoVO = factory.createFromData(dataVO, paintingId, userModel.uniqueUserId, thumbnail);
 
-				// Create id and focus model on it.
-				paintingId = userModel.uniqueUserId + "-" + dateMs;
-				trace( this, "creating a new id: " + paintingId );
-
-				// Produce data vo.
-				infoVO = new PaintingInfoVO();
-				infoVO.id = paintingId;
-				paintingModel.addSinglePaintingData( infoVO );
-			}
-			else { // Otherwise just retrieve the vo.
-				infoVO = paintingModel.getVoWithId( paintingId );
-			}
+			paintingModel.updatePaintingInfo( infoVO );
 			paintingModel.focusedPaintingId = paintingId;
 
-			// Update vo.
-			infoVO.lastSavedOnDateMs = dateMs;
-			infoVO.width = canvasModel.width / PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR;
-			infoVO.height = canvasModel.height / PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR;
-			infoVO.colorPreviewData = reduceSurface( dataVO.colorData, canvasModel.width, canvasModel.height, PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR );
-			infoVO.normalSpecularPreviewData = reduceSurface( dataVO.normalSpecularData, canvasModel.width, canvasModel.height, PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR );
-
 			trace( this, "saving vo: " + infoVO );
-
-			// Save thumbnail.
-			var thumbnail:BitmapData = renderer.renderToBitmapData();
-			infoVO.thumbnail = BitmapDataUtils.scaleBitmapData( thumbnail, 0.25 ); // TODO: apply different scales depending on source and target resolutions
 
 			// Update easel.
 			if( updateEasel ) {
@@ -123,60 +102,6 @@ package net.psykosoft.psykopaint2.paint.commands
 				dataWriteUtil = new BinaryIoUtil( BinaryIoUtil.STORAGE_TYPE_DESKTOP );
 				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, bytesData, null );
 			}
-		}
-
-		// TODO: extremely slow, use native approach?
-		private function reduceSurface( bytes:ByteArray, sourceWidth:uint, sourceHeight:uint, factor:uint ):ByteArray {
-			// TODO: Li: remove and test code below
-			{
-				var clone : ByteArray = new ByteArray();
-				clone.writeBytes(bytes, 0, 0);
-				return clone;
-			}
-
-			var outputWidth : uint = sourceWidth / factor;
-			var outputHeight : uint = sourceHeight / factor;
-			var reducedBytes:ByteArray = new ByteArray();
-			var startX : uint, startY : uint = 0;
-
-			for( var y : uint = 0; y < outputHeight; ++y ) {
-				startX = 0;
-				var endY : uint = startY + factor;
-				if (endY > sourceHeight) endY = sourceHeight;
-
-				for( var x : uint = 0; x < outputWidth; ++x ) {
-					var numSamples : uint = 0;
-					var sampledB : uint = 0, sampledG : uint = 0, sampledR : uint = 0, sampledA : uint = 0;
-
-					var endX : uint = startX + factor;
-					if (endX > sourceWidth) endX = sourceWidth;
-
-					for (var sampleY : uint = startY; sampleY < endY; ++sampleY) {
-						bytes.position = (startX + sampleY*sourceWidth) << 2;
-						for (var sampleX : uint = startX; sampleX < endX; ++sampleX) {
-							var val : uint = bytes.readUnsignedInt();
-							sampledB += (val & 0xff000000) >> 24;
-							sampledG += (val & 0x00ff0000) >> 16;
-							sampledR += (val & 0x0000ff00) >> 8;
-							sampledA += val & 0x000000ff;
-	                        ++numSamples;
-						}
-					}
-
-					var invSamples : Number = 1/numSamples;
-					sampledB = uint(sampledB * invSamples) & 0xff;
-					sampledG = uint(sampledG * invSamples) & 0xff;
-					sampledR = uint(sampledR * invSamples) & 0xff;
-					sampledA = uint(sampledA * invSamples) & 0xff;
-
-					// Write average into destination.
-					reducedBytes.writeUnsignedInt( (sampledB << 24) | (sampledG << 16) | (sampledR << 8) | sampledA );
-
-					startX += factor;
-				}
-				startY += factor;
-			}
-			return reducedBytes;
 		}
 	}
 }

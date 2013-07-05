@@ -54,7 +54,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post-init.
-			var data:Vector.<PaintingInfoVO> = paintingModel.getPaintingData();
+			var data:Vector.<PaintingInfoVO> = paintingModel.getPaintingCollection();
 			if( data.length > 0 ) {
 				if( data.length > 1 ) {
 					data.sort( sortOnLastSaved );

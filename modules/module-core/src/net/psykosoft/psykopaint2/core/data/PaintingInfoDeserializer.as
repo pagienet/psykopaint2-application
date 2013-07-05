@@ -7,9 +7,6 @@ package net.psykosoft.psykopaint2.core.data
 
 	public class PaintingInfoDeserializer extends EventDispatcher
 	{
-		// TODO: Move to PaintingInfo conversion tool
-		public static const SURFACE_PREVIEW_SHRINK_FACTOR : Number = 4; // powers of 2, integers > 1
-
 		private var _vo : PaintingInfoVO;
 		private var _bytes : ByteArray;
 

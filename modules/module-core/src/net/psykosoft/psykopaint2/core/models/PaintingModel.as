@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.models
 {
 
 	import flash.utils.ByteArray;
+	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
@@ -9,66 +10,70 @@ package net.psykosoft.psykopaint2.core.models
 	public class PaintingModel
 	{
 		[Inject]
-		public var notifyPaintingDataRetrievedSignal:NotifyPaintingDataRetrievedSignal;
+		public var notifyPaintingDataRetrievedSignal : NotifyPaintingDataRetrievedSignal;
 
-		private var _paintingData:Vector.<PaintingInfoVO>;
-		private var _focusedPaintingId:String = "";
+		private var _paintingData : Array;
+		private var _focusedPaintingId : String = "";
 
-		public function PaintingModel() {
+		public function PaintingModel()
+		{
 			super();
-			_paintingData = new Vector.<PaintingInfoVO>();
+			_paintingData = new Array();
 		}
 
-		public function setPaintingData( data:Vector.<PaintingInfoVO> ):void {
-			_paintingData = data;
-			notifyPaintingDataRetrievedSignal.dispatch( _paintingData );
+		public function setPaintingCollection(data : Vector.<PaintingInfoVO>) : void
+		{
+			for (var i : uint = 0; i < data.length; ++i)
+				_paintingData[data[i].id] = data[i];
+
+			notifyPaintingDataRetrievedSignal.dispatch(data);
 		}
 
-		public function getPaintingData():Vector.<PaintingInfoVO> {
-			return _paintingData;
+		public function getPaintingCollection() : Vector.<PaintingInfoVO>
+		{
+			var collection : Vector.<PaintingInfoVO> = new Vector.<PaintingInfoVO>();
+			var i : uint = 0;
+
+			for each(var vo : PaintingInfoVO in _paintingData)
+				collection[i++] = vo;
+
+			return collection;
 		}
 
-		public function getVoWithId( id:String ):PaintingInfoVO {
+		public function getVoWithId(id : String) : PaintingInfoVO
+		{
 			// Find vo with id.
-			var len:uint = _paintingData.length;
-			var vo:PaintingInfoVO;
-			for( var i:uint; i < len; ++i ) {
-				vo = _paintingData[ i ];
-				if( vo.id == id ) {
-					return vo;
-				}
-			}
-			throw new Error( this, "unable to find saved painting with id: " + id );
+			var vo : PaintingInfoVO = _paintingData[id];
+			if (!vo)
+				throw new Error(this, "unable to find saved painting with id: " + id);
+			return vo;
 		}
 
-		public function deleteVoWithId( id:String ):void{
-
-			// Nullify vo and identify index.
-			var len:uint = _paintingData.length;
-			var index:uint;
-			var vo:PaintingInfoVO;
-			for( var i:uint; i < len; ++i ) {
-				vo = _paintingData[ i ];
-				if( vo.id == id ) {
-					index = i;
-					vo = null;
-					break;
-				}
-			}
-
-			// Delete from array.
-			_paintingData.splice( index, 1 );
+		public function deleteVoWithId(id : String) : void
+		{
+			_paintingData[id] = null;
+			delete _paintingData[id];
 		}
 
-		public function addSinglePaintingData( vo:PaintingInfoVO ):void {
-			_paintingData.push( vo );
+		/**
+		 * Adds or updates a painting vo.
+		 * @param vo
+		 */
+		public function updatePaintingInfo(vo : PaintingInfoVO) : void
+		{
+			if (vo.id == PaintingInfoVO.DEFAULT_VO_ID)
+				throw "PaintingInfoVO id not set";
+
+			_paintingData[vo.id] = vo;
 		}
 
-		public function get focusedPaintingId():String {
+		public function get focusedPaintingId() : String
+		{
 			return _focusedPaintingId;
 		}
 
-		public function set focusedPaintingId( id:String ):void {
+		public function set focusedPaintingId(id : String) : void
+		{
 			_focusedPaintingId = id;
 		}
 	}

@@ -103,7 +103,7 @@ package net.psykosoft.psykopaint2.core.commands
 			}
 			else {
 				trace( this, "all painting files read. Retrieved " + _paintingVos.length + " usable painting files." );
-				if( _paintingVos.length > 0 ) model.setPaintingData( _paintingVos );
+				if( _paintingVos.length > 0 ) model.setPaintingCollection( _paintingVos );
 				context.release();
 			}
 		}

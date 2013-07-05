@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoDeserializer;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoFactory;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
@@ -93,14 +94,13 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			requestEaselPaintingUpdateSignal.dispatch( createPaintingVO() );
 		}
 
-		// TODO: Move this to PaintingDataVO -> PaintingInfoVO converter
 		private function createPaintingVO() : PaintingInfoVO
 		{
 			var vo : PaintingInfoVO = new PaintingInfoVO();
-			vo.width = CoreSettings.STAGE_WIDTH / PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR;
-			vo.height = CoreSettings.STAGE_HEIGHT / PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR;
+			vo.width = CoreSettings.STAGE_WIDTH;
+			vo.height = CoreSettings.STAGE_HEIGHT;
 			vo.colorPreviewData = new ByteArray();
-			vo.colorPreviewData.length = vo.textureWidth*vo.textureHeight*4;	// will fill with zeroes
+			vo.colorPreviewData.length = vo.width*vo.height*4;	// will fill with zeroes
 			vo.normalSpecularPreviewData = new ByteArray();
 			vo.normalSpecularPreviewData.writeBytes(_loadedSurface, 0, 0);
 			vo.normalSpecularPreviewData.uncompress();
