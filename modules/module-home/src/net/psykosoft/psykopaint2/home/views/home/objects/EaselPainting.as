@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.ByteArrayTexture;
 
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.materials.PaintingDiffuseMethod;
 	import net.psykosoft.psykopaint2.core.materials.PaintingNormalMethod;
@@ -64,7 +66,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_material.normalMap = normalSpecularTexture;
 
 			// Build geometry.
-			var planeGeometry:PlaneGeometry = new PlaneGeometry( width, height );
+			// easel always contains something scene-sized
+			var planeGeometry:PlaneGeometry = new PlaneGeometry( CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT );
 			var subGeometry:CompactSubGeometry = CompactSubGeometry( planeGeometry.subGeometries[0] );
 			subGeometry.scaleUV( width / textureWidth, height / textureHeight );
 

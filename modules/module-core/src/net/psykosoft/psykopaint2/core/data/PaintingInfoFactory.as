@@ -38,13 +38,6 @@ package net.psykosoft.psykopaint2.core.data
 
 		// TODO: extremely slow, use native approach?
 		private function reduceSurface( bytes:ByteArray, sourceWidth:uint, sourceHeight:uint, factor:uint ):ByteArray {
-			// TODO: Li: remove and test code below
-			{
-				var clone : ByteArray = new ByteArray();
-				clone.writeBytes(bytes, 0, 0);
-				return clone;
-			}
-
 			var outputWidth : uint = sourceWidth / factor;
 			var outputHeight : uint = sourceHeight / factor;
 			var reducedBytes:ByteArray = new ByteArray();
