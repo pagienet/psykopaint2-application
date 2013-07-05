@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
@@ -136,6 +137,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyPaintingActivatedSignal ).asSingleton();
 			_injector.map( RequestDrawingCoreResetSignal ).asSingleton();
 			_injector.map( RequestDrawingCoreSurfaceSetSignal ).asSingleton();
+			_injector.map( RequestDrawingCoreSourceImageSetSignal ).asSingleton();
 			_injector.map( RequestEaselUpdateSignal ).asSingleton();
 		}
 

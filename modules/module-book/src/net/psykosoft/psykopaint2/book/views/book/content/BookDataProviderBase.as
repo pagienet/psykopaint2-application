@@ -71,8 +71,8 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			return _defaultTexture;
 		}
 
-		public function notifyClickAt( sheetIndex:uint, localX:Number, localY:Number ):void {
-			onClick( sheetIndex, localX, localY );
+		public function notifyClickAt( sheetIndex:uint, mouseX:Number, mouseY:Number ):void {
+			onClick( sheetIndex, mouseX, mouseY );
 		}
 
 		// ---------------------------------------------------------------------
@@ -81,7 +81,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 		private function requestTextureForSheet( index:uint ):void {
 			_activeSheetIndices.push( index );
-			onSheetRequested( index );
+			onNonCachedSheetRequested( index );
 		}
 
 		private function disposeSheetAtIndex( index:uint ):void {
@@ -103,7 +103,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		// Obligatory overrides.
 		// ---------------------------------------------------------------------
 
-		protected function onSheetRequested( index:uint ):void {
+		protected function onNonCachedSheetRequested( index:uint ):void {
 			throw new AbstractMethodError();
 		}
 
@@ -115,7 +115,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		// Optional overrides.
 		// ---------------------------------------------------------------------
 
-		protected function onClick( sheetIndex:uint, localX:Number, localY:Number ):void {
+		protected function onClick( sheetIndex:uint, mouseX:Number, mouseY:Number ):void {
 			// Optional.
 		}
 

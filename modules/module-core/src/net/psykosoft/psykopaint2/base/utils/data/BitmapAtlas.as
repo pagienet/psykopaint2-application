@@ -57,6 +57,14 @@ package net.psykosoft.psykopaint2.base.utils.data
 			return bmd;
 		}
 
+		public function getRegionForId( id:String ) {
+			return _regions[ id ];
+		}
+
+		public function getNumItems():uint {
+			return _names.length;
+		}
+
 		public function get names():Vector.<String> {
 			return _names;
 		}

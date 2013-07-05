@@ -73,8 +73,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			_imageLoader.loadAsset( rootUrl + "samples/fullsize/" + id + extra + ".jpg", onImageLoaded );
 		}
 
-		private function onImageLoaded( jpg:BitmapData ):void {
-			requestSourceImageSetSignal.dispatch( jpg );
+		private function onImageLoaded( bmd:BitmapData ):void {
+			requestSourceImageSetSignal.dispatch( bmd );
 			_imageLoader.dispose();
 			_imageLoader = null;
 		}

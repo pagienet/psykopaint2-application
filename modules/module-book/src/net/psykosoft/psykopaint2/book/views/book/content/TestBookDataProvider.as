@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		// Obligatory overrides.
 		// ---------------------------------------------------------------------
 
-		override protected function onSheetRequested( index:uint ):void {
+		override protected function onNonCachedSheetRequested( index:uint ):void {
 			// Simulate async texture creation.
 			setTimeout( function():void {
 				registerTextureForSheet( generateTextureWithNumber( index ), index );
@@ -43,7 +43,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			trace( this, "clicked sheet " + sheetIndex + ", at: " + localX + ", " + localY );
 		}
 
-// ---------------------------------------------------------------------
+		// ---------------------------------------------------------------------
 		// Utils.
 		// ---------------------------------------------------------------------
 

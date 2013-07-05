@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.book.views.book.content.BookDataProviderBase;
-	import net.psykosoft.psykopaint2.book.views.book.content.TestBookDataProvider;
 	import net.psykosoft.psykopaint2.book.views.book.objects.Book;
 
 	public class BookView extends ViewBase
@@ -48,8 +47,8 @@ package net.psykosoft.psykopaint2.book.views.book
 			_view.shareContext = true;
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
-			_view.camera.lens.far = 50000;
-			_view.camera.position = new Vector3D( 0, 2000, -1000 );
+			_view.camera.lens.far = 5000;
+			_view.camera.position = new Vector3D( 0, 0, -1350 );
 			_view.camera.lookAt( new Vector3D() );
 
 			// -----------------------
@@ -64,7 +63,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			// Initialize book.
 			// TODO: ability to have non power of 2 pages
 			_book = new Book( stage, 1024, 1024 );
-			_book.y = 350;
+			_book.rotationX = -90 + 15;
 			_view.scene.addChild( _book );
 
 			// Interaction.
@@ -73,7 +72,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		public function set dataProvider( value:BookDataProviderBase ):void {
-			value.setSheetDimensions( _book.pageWidth, _book.pageHeight );
 			_book.dataProvider = value;
 		}
 
@@ -89,6 +87,10 @@ package net.psykosoft.psykopaint2.book.views.book
 			if( !_view.parent ) return;
 			_book.update();
 			_view.render();
+		}
+
+		public function get book():Book {
+			return _book;
 		}
 	}
 }

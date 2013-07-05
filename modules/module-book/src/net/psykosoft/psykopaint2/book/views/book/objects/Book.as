@@ -73,9 +73,12 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			_rightPage.y -= 1;
 
 			_leftPageBackSheetIndex = -1;
+
+			visible = false;
 		}
 
 		private function onPageMouseUp( event:MouseEvent3D ):void {
+			if( _positionManager.onMotion ) return;
 			var page:Page = event.target as Page;
 			var clickUV:Point = event.uv;
 			var pageClickX:Number = _pageWidth * clickUV.x;
@@ -107,12 +110,16 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 				xOffset += SNAP_POINT_SPACING;
 			}
 
+			visible = true;
+
 			update();
 		}
 
 		public function update():void {
 
 //			trace( this, "update -------------------" );
+
+			if( !_dataProvider ) return;
 
 			// Update input and position.
 			_interactionManager.update();

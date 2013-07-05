@@ -3,15 +3,13 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import away3d.core.managers.Stage3DProxy;
 
+	import flash.display.BitmapData;
+
 	import net.psykosoft.psykopaint2.book.views.book.content.SampleImagesBookDataProvider;
-
-	import net.psykosoft.psykopaint2.book.views.book.content.TestBookDataProvider;
-
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
-
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
-
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class BookViewMediator extends MediatorBase
@@ -21,6 +19,11 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		[Inject]
 		public var stage3dProxy:Stage3DProxy;
+
+		[Inject]
+		public var requestSourceImageSetSignal:RequestDrawingCoreSourceImageSetSignal;
+
+		private var _samplesDataProvider:SampleImagesBookDataProvider;
 
 		override public function initialize():void {
 
@@ -43,16 +46,31 @@ package net.psykosoft.psykopaint2.book.views.book
 
 				// Tests.
 				case StateType.BOOK_STANDALONE: {
-					view.dataProvider = new TestBookDataProvider();
-//					view.dataProvider = new SampleImagesBookDataProvider();
+//					view.dataProvider = new TestBookDataProvider();
+					initializeSamplesDataProvider();
 					break;
 				}
 
 				case StateType.BOOK_PICK_SAMPLE_IMAGE: {
-					view.dataProvider = new SampleImagesBookDataProvider();
+					initializeSamplesDataProvider();
 					break;
 				}
 			}
+		}
+
+		private function initializeSamplesDataProvider():void {
+			_samplesDataProvider = new SampleImagesBookDataProvider();
+			_samplesDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
+			_samplesDataProvider.fullImagePickedSignal.add( onFullImagePicked );
+			_samplesDataProvider.readySignal.addOnce( onSamplesDataProviderReady );
+		}
+
+		private function onFullImagePicked( bmd:BitmapData ):void {
+			requestSourceImageSetSignal.dispatch( bmd );
+		}
+
+		private function onSamplesDataProviderReady():void {
+			view.dataProvider = _samplesDataProvider;
 		}
 	}
 }
