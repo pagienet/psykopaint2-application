@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.book
 				// Wait for zoom out.
 				_coreModule.injector.getInstance( NotifyZoomCompleteSignal ).addOnce( onFirstZoomOut );
 				// Trigger initial state...
-				_bookConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.BOOK_PICK_IMAGE );
+				_bookConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.BOOK_PICK_SAMPLE_IMAGE );
 				_coreModule.startEnterFrame();
 			}
 

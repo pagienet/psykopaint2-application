@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.book.views.book.content.NumericBookDataProvider;
+	import net.psykosoft.psykopaint2.book.views.book.content.TestBookDataProvider;
 	import net.psykosoft.psykopaint2.book.views.book.objects.Book;
 
 	public class BookView extends ViewBase
@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_view.scene.addChild( _book );
 
 			// Set book data provider.
-			_book.dataProvider = new NumericBookDataProvider( _book.pageWidth, _book.pageHeight );
+			_book.dataProvider = new TestBookDataProvider( _book.pageWidth, _book.pageHeight );
 
 			// Interaction.
 			stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
