@@ -21,21 +21,25 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
+
 				case PickAnImageSubNavView.LBL_USER:
 				{
 					requestStateChange( StateType.PICK_USER_IMAGE );
 					break;
 				}
+
 				case PickAnImageSubNavView.LBL_SAMPLES:
 				{
-					requestStateChange( StateType.PICK_SAMPLE_IMAGE );
+					requestStateChange( StateType.BOOK_PICK_SAMPLE_IMAGE );
 					break;
 				}
+
 				case PickAnImageSubNavView.LBL_FACEBOOK:
 				{
 					//TODO.
 					break;
 				}
+
 				case PickAnImageSubNavView.LBL_CAMERA:
 				{
 					requestStateChange( StateType.CAPTURE_IMAGE );

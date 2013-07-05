@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.views.base.AppRootView;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
+	import net.psykosoft.psykopaint2.book.BookModule;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -74,7 +75,19 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onPaintModuleReady( coreInjector:Injector ):void {
 		    trace( this, "paint module is ready" );
-//			setTimeout( createHomeModule, 250 );
+			createBookModule();
+		}
+
+		// Book module.
+		private function createBookModule():void {
+			trace( this, "creating book module..." );
+			var bookModule:BookModule = new BookModule( _coreModule );
+			bookModule.isStandalone = false;
+			bookModule.moduleReadySignal.addOnce( onBookModuleReady );
+			bookModule.initialize();
+		}
+		private function onBookModuleReady( coreInjector:Injector ):void {
+			trace( this, "book module is ready" );
 			createHomeModule();
 		}
 
