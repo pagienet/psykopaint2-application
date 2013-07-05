@@ -98,6 +98,7 @@ public class HomeViewMediator extends MediatorBase
 			registerEnablingState( StateType.SETTINGS_WALLPAPER );
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
 			registerEnablingState( StateType.PICK_IMAGE );
+			registerEnablingState( StateType.PICK_SAMPLE_IMAGE );
 			registerEnablingState( StateType.PICK_USER_IMAGE );
 			view.stage3dProxy = stage3dProxy;
 

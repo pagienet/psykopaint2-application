@@ -9,12 +9,12 @@ package net.psykosoft.psykopaint2.book.views.book.content
 	import flash.text.TextFormat;
 	import flash.utils.setTimeout;
 
-	public class TestBookDataProvider extends BookDataProviderBase
+	public class NumericBookDataProvider extends BookDataProviderBase
 	{
 		private var _pageWidth:uint;
 		private var _pageHeight:uint;
 
-		public function TestBookDataProvider( pageWidth:uint, pageHeight:uint ) {
+		public function NumericBookDataProvider( pageWidth:uint, pageHeight:uint ) {
 			super();
 			_pageWidth = pageWidth;
 			_pageHeight = pageHeight;
@@ -50,7 +50,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 		private function generateTextureWithNumber( value:uint ):BitmapTexture {
 			trace( this, "created texture for index: " + value );
-			var bmd:BitmapData = new BitmapData( _pageWidth, _pageHeight, false, 0xFF0000 );
+			var bmd:BitmapData = new BitmapData( _pageWidth, _pageHeight, false, Math.floor( 0xFFFFFF * Math.random() ) );
 			printNumberOnBmd( value, bmd );
 			return new BitmapTexture( bmd );
 		}

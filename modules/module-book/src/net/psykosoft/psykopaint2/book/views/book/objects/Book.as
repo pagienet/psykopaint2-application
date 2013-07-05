@@ -124,8 +124,8 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 
 		public function updatePageContent():void {
 
-			trace( this, "updating page content ------------------------" );
-			trace( "left page back sheet index: " + _leftPageBackSheetIndex );
+//			trace( this, "updating page content ------------------------" );
+//			trace( "left page back sheet index: " + _leftPageBackSheetIndex );
 
 			// Set all textures to default until new textures are ready.
 			_leftPage.frontTexture = _leftPage.backTexture = _dataProvider.defaultTexture;
@@ -144,15 +144,15 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 
 			var texture:BitmapTexture;
 
-			trace( this, "assigning indices " + frontIndex + ", " + backIndex + ", to page " + page.name );
+//			trace( this, "assigning indices " + frontIndex + ", " + backIndex + ", to page " + page.name );
 
-			if( frontIndex >= 0 && frontIndex < _dataProvider.numSheets ) {
+			if( frontIndex >= 0 ) {
 				page.frontSheetIndex = frontIndex;
 				texture = _dataProvider.getTextureForSheet( frontIndex );
 				if( texture ) page.frontTexture = texture;
 			}
 
-			if( backIndex >= 0 && backIndex < _dataProvider.numSheets ) {
+			if( backIndex >= 0 ) {
 				page.backSheetIndex = backIndex;
 				texture = _dataProvider.getTextureForSheet( backIndex );
 				if( texture ) page.backTexture = texture;
@@ -160,22 +160,22 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 		}
 
 		private function onDataProviderTextureReady( sheetIndex:uint, texture:BitmapTexture ):void {
-			trace( this, "texture ready: " + sheetIndex );
+//			trace( this, "texture ready: " + sheetIndex );
 			if( _leftPage.backSheetIndex == sheetIndex ) {
 				_leftPage.backTexture = texture;
-				trace( "set to left back" );
+//				trace( "set to left back" );
 			}
 			else if( _middlePage.frontSheetIndex == sheetIndex ) {
 				_middlePage.frontTexture = texture;
-				trace( "set to middle front" );
+//				trace( "set to middle front" );
 			}
 			else if( _middlePage.backSheetIndex == sheetIndex ) {
 				_middlePage.backTexture = texture;
-				trace( "set to middle back" );
+//				trace( "set to middle back" );
 			}
 			else if( _rightPage.frontSheetIndex == sheetIndex ) {
 				_rightPage.frontTexture = texture;
-				trace( "set to right front" );
+//				trace( "set to right front" );
 			}
 		}
 

@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			// Init.
 			super.initialize();
 			registerView( view );
-			registerEnablingState( StateType.BOOK_PICK_SAMPLE_IMAGE );
+			registerEnablingState( StateType.BOOK_PICK_IMAGE );
 			view.stage3dProxy = stage3dProxy;
 
 			// Register view gpu rendering in core.

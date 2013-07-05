@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 				}
 				case PickAnImageSubNavView.LBL_SAMPLES:
 				{
-					requestStateChange( StateType.BOOK_PICK_SAMPLE_IMAGE );
+					requestStateChange( StateType.PICK_SAMPLE_IMAGE );
 					break;
 				}
 				case PickAnImageSubNavView.LBL_FACEBOOK:

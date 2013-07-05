@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.CROP, CropSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_ADJUST_BRUSH, EditBrushSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.PICK_IMAGE, PickAnImageSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.BOOK_PICK_SAMPLE_IMAGE, PickASampleImageSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.PICK_SAMPLE_IMAGE, PickASampleImageSubNavView );
 		}
 	}
 }
