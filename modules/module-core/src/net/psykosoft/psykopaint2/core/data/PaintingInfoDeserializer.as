@@ -55,8 +55,8 @@ package net.psykosoft.psykopaint2.core.data
 			_vo.thumbnail = thumbBmd;
 
 			// Read low res surfaces.
-			_vo.colorSurfacePreview = PaintingFileUtils.decodeImage(_bytes, _vo.width, _vo.height);
-			_vo.normalsSurfacePreview = PaintingFileUtils.decodeImage(_bytes, _vo.width, _vo.height);
+			_vo.colorPreviewData = PaintingFileUtils.decodeImage(_bytes, _vo.width, _vo.height);
+			_vo.normalSpecularPreviewData = PaintingFileUtils.decodeImage(_bytes, _vo.width, _vo.height);
 
 			dispatchEvent(new Event(Event.COMPLETE));
 		}

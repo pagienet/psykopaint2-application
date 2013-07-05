@@ -99,11 +99,11 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			var vo : PaintingInfoVO = new PaintingInfoVO();
 			vo.width = CoreSettings.STAGE_WIDTH / PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR;
 			vo.height = CoreSettings.STAGE_HEIGHT / PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR;
-			vo.colorSurfacePreview = new ByteArray();
-			vo.colorSurfacePreview.length = vo.textureWidth*vo.textureHeight*4;	// will fill with zeroes
-			vo.normalsSurfacePreview = new ByteArray();
-			vo.normalsSurfacePreview.writeBytes(_loadedSurface, 0, 0);
-			vo.normalsSurfacePreview.uncompress();
+			vo.colorPreviewData = new ByteArray();
+			vo.colorPreviewData.length = vo.textureWidth*vo.textureHeight*4;	// will fill with zeroes
+			vo.normalSpecularPreviewData = new ByteArray();
+			vo.normalSpecularPreviewData.writeBytes(_loadedSurface, 0, 0);
+			vo.normalSpecularPreviewData.uncompress();
 			// nothing else necessary
 			return vo;
 		}

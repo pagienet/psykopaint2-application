@@ -58,6 +58,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			trace( this, "incoming painting id: " + paintingId );
 
 			// Need to create a new id and vo?
+			var dataVO:PaintingDataVO = canvasModel.exportPaintingData();
 			var infoVO:PaintingInfoVO;
 			var nowDate:Date = new Date();
 			var dateMs:Number = nowDate.getTime();
@@ -81,13 +82,9 @@ package net.psykosoft.psykopaint2.paint.commands
 			infoVO.lastSavedOnDateMs = dateMs;
 			infoVO.width = canvasModel.width / PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR;
 			infoVO.height = canvasModel.height / PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR;
-			var surfaces:Vector.<ByteArray> = canvasModel.saveLayers();
-			infoVO.colorSurfacePreview = reduceSurface( surfaces[ 0 ], canvasModel.width, canvasModel.height, PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR );
-			infoVO.normalsSurfacePreview = reduceSurface( surfaces[ 1 ], canvasModel.width, canvasModel.height, PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR );
-			var dataVO:PaintingDataVO = new PaintingDataVO();
-			dataVO.surfaces = surfaces;
-			dataVO.width = canvasModel.width;
-			dataVO.height = canvasModel.height;
+			infoVO.colorPreviewData = reduceSurface( dataVO.colorData, canvasModel.width, canvasModel.height, PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR );
+			infoVO.normalSpecularPreviewData = reduceSurface( dataVO.normalSpecularData, canvasModel.width, canvasModel.height, PaintingInfoDeserializer.SURFACE_PREVIEW_SHRINK_FACTOR );
+
 			trace( this, "saving vo: " + infoVO );
 
 			// Save thumbnail.

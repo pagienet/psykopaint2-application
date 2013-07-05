@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			_file = null;
 
 			// TODO: if we ever need to consider incoming canvas size, read dimensions from vo here
-			canvasModel.loadLayers( vo.surfaces );
+			canvasModel.importPaintingData( vo );
 			notifyPaintingActivatedSignal.dispatch();
 			context.release( this );
 		}

@@ -72,12 +72,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function WaterColorBrush()
 		{
 			super(false);
-			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.5, 7.5, 10);
+			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.5, 0, 10);
 			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter, "Gravity influence", 0.1, 0, .3);
 			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, "Viscosity", .2, 0, 1);
 			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, "Drag", .1, 0, .2);
-			_pigmentDensity = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment density", .75, 0, 1);
-			_pigmentStaining = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment staining", 5.5, 1, 10);
+			_pigmentDensity = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment density", .25, 0, 1);
+			_pigmentStaining = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment staining", 2, .05, 3);
 			_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment granulation", .81, 0, 1);
 
 			_parameters.push( _surfaceRelief, _gravityStrength, _pigmentDensity, _pigmentStaining, _pigmentGranulation);

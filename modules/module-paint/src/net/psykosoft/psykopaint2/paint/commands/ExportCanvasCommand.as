@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopImageSaveUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.IosImageSaveUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
 
@@ -38,9 +39,9 @@ package net.psykosoft.psykopaint2.paint.commands
 			// -----------------------
 
 			// Retrieve bmd.
-			// TODO: can only save color image?
-			var imagesRGBA:Vector.<ByteArray> = canvasModel.saveLayers();
-			var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( imagesRGBA[ 0 ], canvasModel.width, canvasModel.height, true );
+			// TODO: should this use CanvasRenderer::renderToBitmapData instead?
+			var paintingDataVO : PaintingDataVO = canvasModel.exportPaintingData();
+			var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( paintingDataVO.colorData, canvasModel.width, canvasModel.height, true );
 
 			// Write bmd
 			if( CoreSettings.RUNNING_ON_iPAD ) IosImageSaveUtil.saveImageToCameraRoll( bmd );

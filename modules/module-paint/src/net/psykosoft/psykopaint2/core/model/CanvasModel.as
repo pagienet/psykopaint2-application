@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.utils.Endian;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
@@ -289,18 +290,22 @@ package net.psykosoft.psykopaint2.core.model
 		 * 1: normal/specular layer, in BGRA
 		 * 2: the source texture, in RGBA!!! (because it's always used primarily as BitmapData)
 		 */
-		public function saveLayers() : Vector.<ByteArray>
+		public function exportPaintingData() : PaintingDataVO
 		{
+			var paintingData : PaintingDataVO = new PaintingDataVO();
 			stage3D.context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			var bmp : BitmapData = new BitmapData(_width, _height, false);
 			var bmp2 : BitmapData = new BitmapData(_width, _height, false);
-			var layers : Vector.<ByteArray> = new Vector.<ByteArray>();
-			layers.push(saveLayerWithAlpha(_colorTexture, bmp, bmp2));
-			layers.push(saveLayerWithAlpha(_normalSpecularMap, bmp, bmp2));
-			layers.push(saveLayerNoAlpha(sourceTexture, bmp));
+
+			paintingData.width = _width;
+			paintingData.height = _height;
+			paintingData.colorData = saveLayerWithAlpha(_colorTexture, bmp, bmp2);
+			paintingData.normalSpecularData = saveLayerWithAlpha(_normalSpecularMap, bmp, bmp2);
+			paintingData.sourceBitmapData = saveLayerNoAlpha(sourceTexture, bmp);
+
 			bmp.dispose();
 			bmp2.dispose();
-			return layers;
+			return paintingData;
 		}
 
 		private function saveLayerNoAlpha(layer : Texture, workerBitmapData : BitmapData) : ByteArray
@@ -358,18 +363,21 @@ package net.psykosoft.psykopaint2.core.model
 			return outputData;
 		}
 
-		public function loadLayers(data : Vector.<ByteArray>) : void
+		public function importPaintingData(paintingData : PaintingDataVO) : void
 		{
-			var oldLength : int = data[0].length;
-			var newLength : int = _textureWidth*_textureHeight*4;
-			data[0].length = newLength;
-			data[1].length = newLength;
-			_colorTexture.uploadFromByteArray(data[0], 0, 0);
-			_normalSpecularMap.uploadFromByteArray(data[1], 0, 0);
-			data[0].length = oldLength;
-			data[1].length = oldLength;
+			if (_width != paintingData.width || _height != paintingData.height)
+				throw new Error("Different painting sizes currently not supported!");
 
-			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(data[2], _width, _height, false);
+			var oldLength : int = paintingData.colorData.length;
+			var newLength : int = _textureWidth*_textureHeight*4;
+			paintingData.colorData.length = newLength;
+			paintingData.normalSpecularData.length = newLength;
+			_colorTexture.uploadFromByteArray(paintingData.colorData, 0, 0);
+			_normalSpecularMap.uploadFromByteArray(paintingData.normalSpecularData, 0, 0);
+			paintingData.colorData.length = oldLength;
+			paintingData.normalSpecularData.length = oldLength;
+
+			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(paintingData.sourceBitmapData, _width, _height, false);
 			setSourceBitmapData(sourceBmd);
 			sourceBmd.dispose();
 		}

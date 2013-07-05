@@ -18,11 +18,9 @@ package net.psykosoft.psykopaint2.core.data
 			vo.height = bytes.readInt();
 
 			// Read painting surfaces.
-			vo.surfaces = Vector.<ByteArray>([
-				PaintingFileUtils.decodeImage(bytes, vo.width, vo.height),
-				PaintingFileUtils.decodeImage(bytes, vo.width, vo.height),
-				PaintingFileUtils.decodeImage(bytes, vo.width, vo.height)
-			]);
+			vo.colorData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
+			vo.normalSpecularData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
+			vo.sourceBitmapData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
 
 			return vo;
 		}

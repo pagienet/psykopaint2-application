@@ -28,8 +28,8 @@ package net.psykosoft.psykopaint2.core.data
 			// Write images.
 			bytes.writeBytes( thumbnailJpgBytes );
 			var len:int = vo.width * vo.height * 4;
-			bytes.writeBytes( vo.colorSurfacePreview, 0, len );
-			bytes.writeBytes( vo.normalsSurfacePreview, 0, len );
+			bytes.writeBytes( vo.colorPreviewData, 0, len );
+			bytes.writeBytes( vo.normalSpecularPreviewData, 0, len );
 
 			PaintingFileUtils.compressData( bytes );
 

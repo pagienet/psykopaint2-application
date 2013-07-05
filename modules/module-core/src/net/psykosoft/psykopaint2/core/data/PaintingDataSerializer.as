@@ -18,9 +18,9 @@ package net.psykosoft.psykopaint2.core.data
 
 			// Write surfaces.
 			var len : uint = vo.width * vo.height * 4;
-			bytes.writeBytes(vo.surfaces[ 0 ], 0, len);
-			bytes.writeBytes(vo.surfaces[ 1 ], 0, len);
-			bytes.writeBytes(vo.surfaces[ 2 ], 0, len);
+			bytes.writeBytes(vo.colorData, 0, len);
+			bytes.writeBytes(vo.normalSpecularData, 0, len);
+			bytes.writeBytes(vo.sourceBitmapData, 0, len);
 
 			PaintingFileUtils.compressData(bytes);
 

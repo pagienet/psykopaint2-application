@@ -11,8 +11,8 @@ package net.psykosoft.psykopaint2.core.data
 		public static const DEFAULT_VO_ID:String = "new";
 
 		public var thumbnail:BitmapData;
-		public var colorSurfacePreview:ByteArray;
-		public var normalsSurfacePreview:ByteArray;
+		public var colorPreviewData:ByteArray;
+		public var normalSpecularPreviewData:ByteArray;
 		public var lastSavedOnDateMs:Number;
 
 		public var fileVersion:String = PaintingFileUtils.PAINTING_FILE_VERSION;
