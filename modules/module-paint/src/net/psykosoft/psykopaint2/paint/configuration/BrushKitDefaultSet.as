@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 						<parameter id={AbstractPathEngine.PARAMETER_SEND_TAPS} path="pathengine" value="0" />
-						
+						<parameter id={AbstractPathEngine.PARAMETER_SPEED_SMOOTHING} path="pathengine" value="0.02" />
 						<SizeDecorator>
 							<parameter id={SizeDecorator.PARAMETER_SL_MODE} index={SizeDecorator.MODE_INDEX_PRESSURE_SPEED} path="pathengine.pointdecorator_1" />
 							<parameter id={SizeDecorator.PARAMETER_NR_FACTOR} label="Size" value1="0.3" value2="0.8" minValue="0" maxValue="2" showInUI="1" path="pathengine.pointdecorator_1" />
@@ -85,7 +85,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.PENCIL} name="Pencil">
-					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_0" index="0" />
 						</ColorDecorator>
@@ -98,10 +98,12 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id="Shapes" path="brush" index="0" list="pencil" showInUI="0"/>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
-					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0.01" value2="0.6" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0"/>
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,splat3,line,basic,noisy" showInUI="1"/>
-					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
+					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
+					<parameter id={AbstractPathEngine.PARAMETER_SPEED_SMOOTHING} path="pathengine" value="0.02" />
+						
 						<SizeDecorator>
 							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
 							<parameter id="Factor" path="pathengine.pointdecorator_0" value1="0.05" value2="1" minValue="0" maxValue="1"/>
@@ -136,7 +138,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id="Pigment staining" path="brush" value=".5" showInUI="1"/>
 					<parameter id="Pigment granulation" path="brush" value=".3" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet,basic" showInUI="1"/>
-					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
+					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}/>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Eraser">
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" showInUI="1"/>

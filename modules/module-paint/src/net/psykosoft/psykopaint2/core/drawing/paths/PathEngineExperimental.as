@@ -54,31 +54,39 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				var p2y:Number = p2.y;
 				
 				var speed1:Number = Math.sqrt(p1.squaredDistance(c));
-				
 				speed2 = Math.sqrt(p2.squaredDistance(c));
-				for ( var t:Number = 0; t < 0.5; t+= 0.02 )
+				if ( speed1 > 0 )
 				{
-					var ti: Number = 1-t;
-					var ti2:Number = ti*ti;
-					var tit:Number = ti*t*2;
-					var tt:Number = t*t;
-					var angle:Number = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
-					
-					var speed:Number = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
-					
-					var p:SamplePoint = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
-																	ti2*p1y+tit*cy+tt*p2y,
-																	((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
-																	ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
-																   angle);
-					
-					lastPointSpeed = speed;
-					result.push(p );
+					var ts:Number = 2 / speed1;
+					for ( var t:Number = 0; t < 0.5; t+= ts )
+					{
+						var ti: Number = 1-t;
+						var ti2:Number = ti*ti;
+						var tit:Number = ti*t*2;
+						var tt:Number = t*t;
+						var angle:Number = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
+						
+						var speed:Number = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
+						
+						var p:SamplePoint = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
+																		ti2*p1y+tit*cy+tt*p2y,
+																		((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
+																		ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
+																	   angle);
+						
+						lastPointSpeed = speed;
+						result.push(p );
+					}
+					p1 = result[result.length-1];
+					c = p2
+					lastSpeed = speed1;
+					_lastOutputIndex = 3;
+				} else {
+					_lastOutputIndex = 1;
+					p1 = sampledPoints[1];
+					c = sampledPoints[2];
 				}
-				p1 = result[result.length-1];
-				c = p2
-				lastSpeed = speed1;
-				_lastOutputIndex = 3
+				
 			}
 			
 			for ( var i:int = _lastOutputIndex; i < nextIndex; i++ )
@@ -92,36 +100,43 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				cy = c.y;
 				p2x = p2.x;
 				p2y = p2.y;
-				
-				for ( t = 0; t < 0.5; t+=0.02 )
+				if ( speed1 > 0 )
 				{
-					ti = 1-t;
-					ti2 = ti*ti;
-					tit = ti*t*2;
-					tt = t*t;
-					angle = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
-					speed = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
+					ts = 2 / speed1;
 					
-				 	p = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
-						ti2*p1y+tit*cy+tt*p2y,
-						((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
-						ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
-						angle);
-					
-					lastPointSpeed  = speed
-					result.push( p);
+					for ( t = 0; t < 0.5; t+=ts )
+					{
+						ti = 1-t;
+						ti2 = ti*ti;
+						tit = ti*t*2;
+						tt = t*t;
+						angle = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
+						speed = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
+						
+					 	p = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
+							ti2*p1y+tit*cy+tt*p2y,
+							((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
+							ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
+							angle);
+						
+						lastPointSpeed  = speed
+						result.push( p);
+					}
+					p1 =  result[result.length-1];
+					c = p2
+					lastSpeed = speed1;	
+				} else {
+					p1 = c;
+					c = p2;
 				}
-				p1 =  result[result.length-1];
-				c = p2
-				lastSpeed = speed1;	
 			}
 			p1 = p1.getClone();
 			c = c.getClone();
 			_lastOutputIndex = nextIndex;
 		
-			if ( forceUpdate )
+			if ( forceUpdate && !isNaN(ts))
 			{
-				for ( t = 0.5; t < 1; t+=0.02 )
+				for ( t = 0.5; t < 1; t+=ts )
 				{
 					ti = 1-t;
 					ti2 = ti*ti;

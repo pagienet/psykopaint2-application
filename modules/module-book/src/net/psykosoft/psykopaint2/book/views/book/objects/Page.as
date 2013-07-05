@@ -18,6 +18,9 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 		private var _height:uint;
 		private var _flipAngle:Number = 0;
 
+		public var frontSheetIndex:uint;
+		public var backSheetIndex:uint;
+
 		public function Page( width:uint, height:Number ) {
 			_width = width;
 			_height = height;
@@ -33,37 +36,34 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			// Same type of geometry for the front and back faces.
 			var geometry:PlaneGeometry = new PlaneGeometry( _width, _height );
 
+			var idleMaterial:ColorMaterial = new ColorMaterial( 0x0000FF, 1 );
+
 			// Front face.
-			var frontMaterial:ColorMaterial = new ColorMaterial( 0x666666, 1 );
-			_frontMesh = new Mesh( geometry, frontMaterial );
+			_frontMesh = new Mesh( geometry, idleMaterial );
 			_frontMesh.x = _width / 2;
 			addChild( _frontMesh );
 
 			// Back face.
-			var backMaterial:ColorMaterial = new ColorMaterial( 0xFF0000, 1 );
-			_backMesh = new Mesh( geometry.clone(), backMaterial );
+			_backMesh = new Mesh( geometry.clone(), idleMaterial );
 			_backMesh.x = _width / 2;
 			_backMesh.rotationZ = 180;
 			addChild( _backMesh );
 		}
 
-		public function setImages( frontTexture:BitmapTexture, backTexture:BitmapTexture ):void {
-
-			if( frontTexture ) {
-				if( !_frontMaterial ) {
-					_frontMaterial = new TextureMaterial( frontTexture, true, false, false );
-					_frontMesh.material = _frontMaterial;
-				}
-				else _frontMaterial.texture = frontTexture;
+		public function set frontTexture( value:BitmapTexture ):void {
+			if( !_frontMaterial ) {
+				_frontMaterial = new TextureMaterial( value, true, false, false );
+				_frontMesh.material = _frontMaterial;
 			}
+			else _frontMaterial.texture = value;
+		}
 
-			if( backTexture ) {
-				if( !_backMaterial ) {
-					_backMaterial = new TextureMaterial( backTexture, true, false, false );
-					_backMesh.material = _backMaterial;
-				}
-				else _backMaterial.texture = backTexture;
+		public function set backTexture( value:BitmapTexture ):void {
+			if( !_backMaterial ) {
+				_backMaterial = new TextureMaterial( value, true, false, false );
+				_backMesh.material = _backMaterial;
 			}
+			else _backMaterial.texture = value;
 		}
 
 		public function set flipAngle( angleDegrees:Number ):void {
