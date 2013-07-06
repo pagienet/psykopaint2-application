@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		override protected function onDisabled():void {
 			removeChild( _view );
-			// TODO: dispose data provider?
+			_book.reset();
 		}
 
 		override protected function onSetup():void {
@@ -62,7 +62,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function initializeBook():void {
 
 			// Initialize book.
-			// TODO: ability to have non power of 2 pages
 			_book = new Book( stage, 1024, 1024 );
 			_book.rotationX = -90 + 15;
 			_view.scene.addChild( _book );

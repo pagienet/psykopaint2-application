@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.book.views.book.content.SampleImagesBookDataProvider;
+	import net.psykosoft.psykopaint2.book.views.book.content.UserPhotosBookDataProvider;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -24,6 +25,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var requestSourceImageSetSignal:RequestDrawingCoreSourceImageSetSignal;
 
 		private var _samplesDataProvider:SampleImagesBookDataProvider;
+		private var _userPhotosDataProvider:UserPhotosBookDataProvider;
 
 		override public function initialize():void {
 
@@ -32,6 +34,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			registerView( view );
 			registerEnablingState( StateType.BOOK_STANDALONE );
 			registerEnablingState( StateType.BOOK_PICK_SAMPLE_IMAGE );
+			registerEnablingState( StateType.BOOK_PICK_USER_IMAGE_IOS );
 			view.stage3dProxy = stage3dProxy;
 
 			// Register view gpu rendering in core.
@@ -41,21 +44,46 @@ package net.psykosoft.psykopaint2.book.views.book
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
 
+			view.book.reset();
+
 			// Decide which data provider to set.
 			switch( newState ) {
 
 				// Tests.
 				case StateType.BOOK_STANDALONE: {
 //					view.dataProvider = new TestBookDataProvider();
-					initializeSamplesDataProvider();
+//					initializeSamplesDataProvider();
+					initializeUserPhotosDataProvider();
 					break;
 				}
 
+				// Sample images.
 				case StateType.BOOK_PICK_SAMPLE_IMAGE: {
 					initializeSamplesDataProvider();
 					break;
 				}
+
+				// User photos iOS.
+				case StateType.BOOK_PICK_USER_IMAGE_IOS: {
+					initializeUserPhotosDataProvider();
+					break;
+				}
 			}
+		}
+
+		private function onFullImagePicked( bmd:BitmapData ):void {
+			requestSourceImageSetSignal.dispatch( bmd );
+		}
+
+		private function initializeUserPhotosDataProvider():void {
+			_userPhotosDataProvider = new UserPhotosBookDataProvider();
+			_userPhotosDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
+			_userPhotosDataProvider.fullImagePickedSignal.add( onFullImagePicked );
+			_userPhotosDataProvider.readySignal.addOnce( onUserPhotosDataProviderReady );
+		}
+
+		private function onUserPhotosDataProviderReady():void {
+			view.dataProvider = _userPhotosDataProvider;
 		}
 
 		private function initializeSamplesDataProvider():void {
@@ -63,10 +91,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			_samplesDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_samplesDataProvider.fullImagePickedSignal.add( onFullImagePicked );
 			_samplesDataProvider.readySignal.addOnce( onSamplesDataProviderReady );
-		}
-
-		private function onFullImagePicked( bmd:BitmapData ):void {
-			requestSourceImageSetSignal.dispatch( bmd );
 		}
 
 		private function onSamplesDataProviderReady():void {

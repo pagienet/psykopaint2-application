@@ -16,15 +16,16 @@ package net.psykosoft.psykopaint2.base.utils.io
 		private var _thumbSize:uint;
 		private var _currentVO:SheetVO;
 		private var _sheetVOs:Vector.<SheetVO>;
+		private var _busy:Boolean;
 
-		public var imageLoadedSignal:Signal;
-		public var thumbnailsLoadedSignal:Signal;
+		public var fullImageLoadedSignal:Signal;
+		public var thumbSheetLoadedSignal:Signal;
 		public var extensionInitializedSignal:Signal;
 
 		public function IosUserImagesFetcher( thumbSize:Number ) {
 			_thumbSize = thumbSize;
-			imageLoadedSignal = new Signal();
-			thumbnailsLoadedSignal = new Signal();
+			fullImageLoadedSignal = new Signal();
+			thumbSheetLoadedSignal = new Signal();
 			extensionInitializedSignal = new Signal();
 			_sheetVOs = new Vector.<SheetVO>();
 		}
@@ -61,6 +62,10 @@ package net.psykosoft.psykopaint2.base.utils.io
 		}
 
 		public function getThumbnailSheet( fromIndex:uint, toIndex:uint ):SheetVO {
+			if( _busy ) {
+				throw new Error( "IosUserImagesFetcher - please do not request thumbs while the fetcher is busy fetching a set of thumbs already." );
+			}
+			_busy = true;
 			_extension.addEventListener( UserPhotosExtensionEvent.SPRITE_SHEET_READY, onSpriteSheetReady );
 			_currentVO = _extension.getThumbnailSheetFromIndexToIndex( fromIndex, toIndex, _thumbSize );
 			_sheetVOs.push( _currentVO );
@@ -68,15 +73,16 @@ package net.psykosoft.psykopaint2.base.utils.io
 		}
 
 		private function onSpriteSheetReady( event:UserPhotosExtensionEvent ):void {
+			_busy = false;
 			_extension.removeEventListener( UserPhotosExtensionEvent.SPRITE_SHEET_READY, onSpriteSheetReady );
-			thumbnailsLoadedSignal.dispatch( _currentVO );
+			thumbSheetLoadedSignal.dispatch( _currentVO );
 		}
 
 		public function loadFullImage( id:String ):void {
 			var index:uint = uint( id );
 			trace( this, "loading full image image at: " + index );
 			var bmd:BitmapData = _extension.getFullImageAtIndex( index );
-			imageLoadedSignal.dispatch( bmd );
+			fullImageLoadedSignal.dispatch( bmd );
 		}
 
 		public function get totalItems():uint {
@@ -85,6 +91,10 @@ package net.psykosoft.psykopaint2.base.utils.io
 
 		public function get thumbSize():uint {
 			return _thumbSize;
+		}
+
+		public function get busy():Boolean {
+			return _busy;
 		}
 	}
 }

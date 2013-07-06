@@ -51,7 +51,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			var len:uint = numSheets;
 			for( i = 0; i < len; i++ ) {
 				if( _activeSheetIndices.indexOf( i ) == -1 ) {
-					disposeSheetAtIndex( i );
+					onSheetAtIndexNotNeeded( i );
 				}
 			}
 		}
@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		}
 
 		public function get defaultTexture():BitmapTexture {
-			if( !_defaultTexture ) _defaultTexture = new BitmapTexture( new BitmapData( _sheetWidth, _sheetHeight, false, 0xFFFFFF ) );
+			if( !_defaultTexture ) _defaultTexture = new BitmapTexture( new BitmapData( _sheetWidth, _sheetHeight, false, 0xCCCCCC ) );
 			return _defaultTexture;
 		}
 
@@ -84,14 +84,13 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			onNonCachedSheetRequested( index );
 		}
 
-		private function disposeSheetAtIndex( index:uint ):void {
+		protected function disposeSheetTextureAtIndex( index:uint ):void {
 			var texture:BitmapTexture = _textureDictionary[ index ];
 			if( texture ) {
-				trace( this, "disposing texture: " + index );
+				trace( this, "disposing sheet: " + index );
 				texture.dispose();
 				_textureDictionary[ index ] = null;
 			}
-			onDisposeSheetAtIndex( index );
 		}
 
 		protected function registerTextureForSheet( texture:BitmapTexture, index:uint ):void {
@@ -123,7 +122,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			// Optional.
 		}
 
-		protected function onDisposeSheetAtIndex( index:uint ):void {
+		protected function onSheetAtIndexNotNeeded( index:uint ):void {
 			// Optional.
 		}
 	}

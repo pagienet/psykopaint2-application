@@ -33,6 +33,9 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 
 		// TODO: remove traces and cleanup, also in related classes
 
+		/*
+		* Dimensions need to be a power of 2, not necessarily equal.
+		* */
 		public function Book( stage:Stage, width:Number, height:Number ) {
 			super();
 
@@ -40,15 +43,15 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			_pageHeight = height;
 
 			_positionManager = new SnapPositionManager();
-			_positionManager.minimumThrowingSpeed = 10;
-			_positionManager.frictionFactor = 0.75;
+			_positionManager.minimumThrowingSpeed = 5;
+			_positionManager.frictionFactor = 0.65;
 //			_positionManager.edgeContainmentFactor = 0.01; // TODO: analyze usage of this
 
 			_interactionManager = new ScrollInteractionManager( _positionManager );
 			_interactionManager.scrollInputMultiplier = 0.75 / CoreSettings.GLOBAL_SCALING;
 			_interactionManager.throwInputMultiplier = 1 / CoreSettings.GLOBAL_SCALING;
 			_interactionManager.stage = stage;
-			_interactionManager.useDetailedDelta = false;
+//			_interactionManager.useDetailedDelta = false;
 
 			addChild( _leftPage = new Page( width, height ) );
 			addChild( _rightPage = new Page( width, height ) );
@@ -74,6 +77,15 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			// A little offset on static pages to avoid z-fighting.
 			_leftPage.y -= 1;
 			_rightPage.y -= 1;
+
+			reset();
+		}
+
+		public function reset():void {
+			if( _dataProvider ) {
+				_dataProvider.dispose();
+			}
+			_dataProvider = null;
 
 			_leftPageBackSheetIndex = -1;
 

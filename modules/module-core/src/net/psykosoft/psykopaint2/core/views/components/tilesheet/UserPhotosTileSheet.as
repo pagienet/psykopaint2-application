@@ -29,9 +29,9 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 		public function fetchPhotos():void {
 			_maxPageFetched = 0;
 			_fetcher = new IosUserImagesFetcher( CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 150 : 75 );
-			_fetcher.thumbnailsLoadedSignal.add( onThumbnailsLoaded );
+			_fetcher.thumbSheetLoadedSignal.add( onThumbnailsLoaded );
 			_fetcher.extensionInitializedSignal.addOnce( onExtensionReady );
-			_fetcher.imageLoadedSignal.add( onFullImageLoaded );
+			_fetcher.fullImageLoadedSignal.add( onFullImageLoaded );
 			_fetcher.initializeExtension();
 		}
 

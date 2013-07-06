@@ -5,7 +5,7 @@
 	<!-- properties -->
 	<!-- **************************************** -->
 
-	<property name="debug" value="true"/>
+	<property name="debug" value="false"/>
 	<property name="inline" value=""/> <!-- '-inline' or '' (empty) -->
 	<property name="telemetry" value="-advanced-telemetry=false"/> <!-- '-advanced-telemetry=true' or '' (empty) -->
 
@@ -31,7 +31,7 @@
 	<property name="launcherAppDesktopPath" value="${rootDir}/launcher-app-desktop/launcher-app-desktop.iml"/>
 	<property name="launcherHomeIpadPath" value="${rootDir}/launcher-home-ipad/launcher-home-ipad.iml"/>
 	<property name="launcherCoreIpadPath" value="${rootDir}/launcher-core-ipad/launcher-core-ipad.iml"/>
-	<!--<property name="launcherBookIpadPath" value="${rootDir}/launcher-book-ipad/launcher-book-ipad.iml"/>-->
+	<property name="launcherBookIpadPath" value="${rootDir}/launcher-book-ipad/launcher-book-ipad.iml"/>
 	<property name="launcherBookDesktopPath" value="${rootDir}/launcher-book-desktop/launcher-book-desktop.iml"/>
 
 	<!-- ******************** -->
@@ -52,10 +52,10 @@
 	<target name="set-compiler-arguments">
 
 		<!-- launchers -->
-		<!--<xmltask source="${launcherBookIpadPath}" dest="${launcherBookIpadPath}" report="true">
+		<xmltask source="${launcherBookIpadPath}" dest="${launcherBookIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
-		</xmltask>-->
+		</xmltask>
 		<xmltask source="${launcherBookDesktopPath}" dest="${launcherBookDesktopPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>

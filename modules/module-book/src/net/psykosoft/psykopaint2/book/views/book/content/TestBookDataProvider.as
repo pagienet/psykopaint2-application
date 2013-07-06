@@ -9,9 +9,9 @@ package net.psykosoft.psykopaint2.book.views.book.content
 	import flash.text.TextFormat;
 	import flash.utils.setTimeout;
 
-	public class NumericBookDataProvider extends BookDataProviderBase
+	public class TestBookDataProvider extends BookDataProviderBase
 	{
-		public function NumericBookDataProvider() {
+		public function TestBookDataProvider() {
 			super();
 		}
 
@@ -34,9 +34,10 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		// Optional overrides.
 		// ---------------------------------------------------------------------
 
-		override protected function onDisposeSheetAtIndex( index:uint ):void {
-//			trace( this, "disposing sheet: " + index );
-			// Registered textures are automatically disposed, but you may want to dispose other sheet data here.
+		override protected function onSheetAtIndexNotNeeded( index:uint ):void {
+			// If desired, disposed data here.
+			// You can dispose the texture too, using:
+//			disposeSheetTextureAtIndex( index );
 		}
 
 		override protected function onClick( sheetIndex:uint, localX:Number, localY:Number ):void {

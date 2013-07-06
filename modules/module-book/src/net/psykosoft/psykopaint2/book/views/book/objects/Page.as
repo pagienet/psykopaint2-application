@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			// Same type of geometry for the front and back faces.
 			var geometry:PlaneGeometry = new PlaneGeometry( _width, _height );
 
-			var idleMaterial:ColorMaterial = new ColorMaterial( 0x0000FF, 1 );
+			var idleMaterial:ColorMaterial = new ColorMaterial( 0xFFFFFF, 1 );
 
 			// Front face.
 			_frontMesh = new Mesh( geometry, idleMaterial );
