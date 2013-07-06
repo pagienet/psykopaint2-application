@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.pick.image
 {
 
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -24,7 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 				case PickAnImageSubNavView.LBL_USER:
 				{
-					requestStateChange( StateType.PICK_USER_IMAGE );
+					requestStateChange( CoreSettings.RUNNING_ON_iPAD ? StateType.BOOK_PICK_USER_IMAGE_IOS : StateType.PICK_USER_IMAGE_DESKTOP );
 					break;
 				}
 

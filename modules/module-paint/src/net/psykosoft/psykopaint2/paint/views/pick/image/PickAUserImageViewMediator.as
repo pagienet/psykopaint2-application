@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 
@@ -20,15 +19,12 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		[Inject]
 		public var notifyColorStyleCompleteSignal:NotifyColorStyleCompleteSignal;
 
-		[Inject]
-		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
-
 		override public function initialize():void {
 
 			// Init.
 			super.initialize();
 			registerView( view );
-			registerEnablingState( StateType.PICK_USER_IMAGE );
+			registerEnablingState( StateType.PICK_USER_IMAGE_DESKTOP );
 
 			// From view.
 			view.imagePickedSignal.add( onImagePicked );
@@ -39,16 +35,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		// -----------------------
 
 		private function onImagePicked( bmd:BitmapData ):void {
-			if( bmd ) {
-				// Show navigation.
-				requestNavigationToggleSignal.dispatch( 1 );
-				// Change drawing core state.
-				requestSourceImageSetSignal.dispatch( bmd ); // Goes through crop, color style, etc...
-	//			notifyColorStyleCompleteSignal.dispatch( bmd ); // Goes straight to paint mode.
-			}
-			else {
-				requestStateChange( StateType.PREVIOUS );
-			}
+			if( bmd ) requestSourceImageSetSignal.dispatch( bmd );
+			else requestStateChange( StateType.PREVIOUS );
 		}
 	}
 }
