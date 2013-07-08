@@ -21,11 +21,13 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
@@ -82,6 +84,12 @@ public class HomeViewMediator extends MediatorBase
 		[Inject]
 		public var requestZoomThenChangeStateSignal:RequestZoomThenChangeStateSignal;
 
+		[Inject]
+		public var requestEaselRectInfoSignal:RequestEaselRectInfoSignal;
+
+		[Inject]
+		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
+
 		private var _waitingForPaintModeAfterZoomIn:Boolean;
 		private var _waitingForSnapShotOfHomeView:Boolean;
 
@@ -124,6 +132,7 @@ public class HomeViewMediator extends MediatorBase
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
 			notifyPaintingActivatedSignal.add( onPaintingActivated );
+			requestEaselRectInfoSignal.add( onEaselRectInfoRequested );
 
 			// From view.
 			view.enabledSignal.add( onViewEnabled );
@@ -141,6 +150,10 @@ public class HomeViewMediator extends MediatorBase
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onEaselRectInfoRequested():void {
+			notifyEaselRectInfoSignal.dispatch( view.getEaselScreenRect() );
+		}
 
 		private function onPaintingActivated():void {
 			requestZoomThenChangeStateSignal.dispatch( true, StateType.PAINT );

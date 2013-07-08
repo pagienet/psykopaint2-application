@@ -34,6 +34,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
+	import net.psykosoft.psykopaint2.home.views.home.objects.EaselPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.Painting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
 	import net.psykosoft.psykopaint2.home.views.home.objects.WallRoom;
@@ -109,7 +110,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		// TODO: make method to zoom camera to fit a rect
 
 		public function getEaselScreenRect():Rectangle {
-			var plane:Mesh = Painting( _paintingManager.easel.painting ).plane;
+			var plane:Mesh = EaselPainting( _paintingManager.easel.painting ).plane;
 			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
 			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 ) );
 			var brCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsZ, 0 ) );
@@ -118,29 +119,25 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function objectSpaceToScreenSpace( plane:Mesh, offset:Vector3D ):Vector3D {
 
-			// Object space.
-			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
-			var tlCorner:Vector3D = new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 );
-
 			// Scene space.
-			tlCorner.scaleBy( plane.scaleX );
+			offset.scaleBy( plane.scaleX );
 			var center:Vector3D = plane.sceneTransform.transformVector( new Vector3D() );
-			tlCorner = tlCorner.add( center );
+			offset = offset.add( center );
 			// Uncomment to visualize 3d point.
-			/*var tracer3d:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
-			tracer3d.position = tlCorner;
-			_freezeScene.addChild( tracer3d );*/
+			var tracer3d:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
+			tracer3d.position = offset;
+			_freezeScene.addChild( tracer3d );
 
 			// View space.
-			var screenPosition:Vector3D = _view.camera.project( tlCorner );
+			var screenPosition:Vector3D = _view.camera.project( offset );
 			screenPosition.x = 0.5 * stage.width * ( 1 + screenPosition.x );
 			screenPosition.y = 0.5 * stage.height * ( 1 + screenPosition.y );
 			// Uncomment to visualize 2d point.
-			/*var tracer2d:Sprite = new Sprite();
+			var tracer2d:Sprite = new Sprite();
 			tracer2d.graphics.beginFill( 0xFF0000, 0.25 );
 			tracer2d.graphics.drawCircle( screenPosition.x, screenPosition.y, 10 );
 			tracer2d.graphics.endFill();
-			addChild( tracer2d );*/
+			addChild( tracer2d );
 
 //			trace( "screen position: " + screenPosition );
 			return screenPosition;

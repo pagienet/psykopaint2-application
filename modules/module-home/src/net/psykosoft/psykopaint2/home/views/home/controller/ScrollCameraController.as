@@ -245,11 +245,9 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		public function set isEnabled( value:Boolean ):void {
 			_isEnabled = value;
 			if( !_isEnabled ) {
-				trace( this, "CAMERA POSITION RESET" );
 				_cachedCameraPosition = _camera.position.clone();
 				_camera.transform.identity();
-//				_camera.position = HomeSettings.DEFAULT_CAMERA_POSITION;
-				_camera.position = new Vector3D( 0, 0, -1000 );
+				_camera.position = HomeSettings.DEFAULT_CAMERA_POSITION;
 			}
 			else {
 				if( _cachedCameraPosition ) {

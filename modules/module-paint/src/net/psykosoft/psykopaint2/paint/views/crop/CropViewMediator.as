@@ -2,11 +2,14 @@ package net.psykosoft.psykopaint2.paint.views.crop
 {
 
 	import flash.display.BitmapData;
-	
+	import flash.geom.Rectangle;
+
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class CropViewMediator extends MediatorBase
@@ -22,7 +25,14 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 		[Inject]
 		public var notifyCropConfirmSignal:NotifyCropConfirmSignal;
-		
+
+		[Inject]
+		public var requestEaselRectInfoSignal:RequestEaselRectInfoSignal;
+
+		[Inject]
+		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
+
+		private var _sourceMap:BitmapData;
 		
 		override public function initialize():void {
 
@@ -33,8 +43,9 @@ package net.psykosoft.psykopaint2.paint.views.crop
 			// From app.
 			notifyCropModuleActivatedSignal.add( onCropModuleActivated );
 			notifyCropConfirmSignal.add( onCropConfirmed );
+			notifyEaselRectInfoSignal.add( onEaselRectInfoRetrieved );
 		}
-		
+
 		// -----------------------
 		// From app.
 		// -----------------------
@@ -44,7 +55,13 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		}
 
 		private function onCropModuleActivated( bitmapData:BitmapData ):void {
-			view.sourceMap = bitmapData;
+			_sourceMap = bitmapData;
+			requestEaselRectInfoSignal.dispatch();
+		}
+
+		private function onEaselRectInfoRetrieved( rect:Rectangle ):void {
+			view.easelRect = rect;
+			view.sourceMap = _sourceMap;
 		}
 	}
 }
