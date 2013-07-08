@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.core.model
 
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
+	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.NormalSpecularMapGenerator;
@@ -52,7 +53,10 @@ package net.psykosoft.psykopaint2.core.model
 		private var _textureHeight : Number;
 
 		private var _viewport : Rectangle;
+
+		// TODO: should originals be a string to packaged
 		private var _normalSpecularOriginal : ByteArray;
+		private var _colorBackgroundOriginal : ByteArray;
 
 		private var _copySubTextureChannelsRGB : CopySubTextureChannels;
 		private var _copySubTextureChannelsA : CopySubTextureChannels;
@@ -200,10 +204,13 @@ package net.psykosoft.psykopaint2.core.model
 			_normalSpecularMap = createCanvasTexture(true);
 
 			if (_normalSpecularOriginal) setNormalSpecularMap(_normalSpecularOriginal);
-
-			var tempBitmapData : BitmapData = new BitmapData(_textureWidth, _textureHeight, true, 0);
-			_colorTexture.uploadFromBitmapData(tempBitmapData);
-			tempBitmapData.dispose();
+			if (_colorBackgroundOriginal)
+				uploadColorBackgroundOriginal(_colorTexture);
+			else {
+				var tempBitmapData : BitmapData = new BitmapData(_textureWidth, _textureHeight, true, 0);
+				_colorTexture.uploadFromBitmapData(tempBitmapData);
+				tempBitmapData.dispose();
+			}
 		}
 
 		public function createCanvasTexture(isRenderTarget : Boolean, scale : Number = 1) : Texture
@@ -269,10 +276,26 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function clearColorTexture() : void
 		{
+			if (_colorBackgroundOriginal) {
+				uploadColorBackgroundOriginal(_colorTexture);
+			}
+			else {
+				var context3d : Context3D = stage3D.context3D;
+				context3d.setRenderToTexture(_colorTexture);
+				context3d.clear(0, 0, 0, 0);
+				context3d.setRenderToBackBuffer();
+			}
+		}
+
+		// TODO: should background original be a string
+		private function uploadColorBackgroundOriginal(target : Texture) : void
+		{
 			var context3d : Context3D = stage3D.context3D;
-			context3d.setRenderToTexture(_colorTexture);
-			context3d.clear(0, 0, 0, 0);
-			context3d.setRenderToBackBuffer();
+			_normalSpecularOriginal.position = 0;
+			var inflated : ByteArray = new ByteArray();
+			inflated.writeBytes(_normalSpecularOriginal, 0, _normalSpecularOriginal.length);
+			inflated.uncompress();
+			target.uploadFromByteArray(inflated, 0);
 		}
 
 		public function clearNormalSpecularTexture() : void

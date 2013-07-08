@@ -22,7 +22,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSurfaceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
@@ -123,7 +122,6 @@ import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 			_commandMap.map( RequestStateUpdateFromModuleActivationSignal ).toCommand( UpdateAppStateFromActivatedDrawingCoreModuleCommand );
 			_commandMap.map( RequestSourceImageSetSignal ).toCommand( SetSourceImageCommand );
 			_commandMap.map( RequestDrawingCoreStartupSignal ).toCommand( StartUpDrawingCoreCommand );
-			_commandMap.map( RequestSurfaceImageSetSignal ).toCommand( SetSurfaceImageCommand );
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
 			_commandMap.map( RequestPaintingDeletionSignal ).toCommand( DeletePaintingCommand );
