@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 
+	import away3d.arcane;
 	import away3d.bounds.AxisAlignedBoundingBox;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
@@ -38,6 +39,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.views.home.objects.Painting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
 	import net.psykosoft.psykopaint2.home.views.home.objects.WallRoom;
+
+	use namespace arcane;
 
 	public class HomeView extends ViewBase
 	{
@@ -84,8 +87,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			_freezeScene.addChild( _freezePlane );
 			selectScene( _freezeScene );
 			disable3d();
-			renderScene();
 			_frozen = true;
+
+			// TODO: remove, testing getEaselScreenRect()
+			_freezePlane.z += 5000;
+			var bounds:AxisAlignedBoundingBox = _freezePlane.bounds as AxisAlignedBoundingBox;
+			var tlCorner:Vector3D = objectSpaceToScreenSpace( _freezePlane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 ) );
+			var brCorner:Vector3D = objectSpaceToScreenSpace( _freezePlane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsZ, 0 ) );
 		}
 
 		public function unFreeze():void {
@@ -121,6 +129,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function objectSpaceToScreenSpace( plane:Mesh, offset:Vector3D ):Vector3D {
 
+			trace( this, "objectSpaceToScreenSpace --------------------" );
+
+			trace( "ratio: " + _view.camera.lens.aspectRatio );
+
 			// Scene space.
 			offset.scaleBy( plane.scaleX );
 			var center:Vector3D = plane.sceneTransform.transformVector( new Vector3D() );
@@ -136,12 +148,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			screenPosition.y = 0.5 * stage.height * ( 1 + screenPosition.y );
 			// Uncomment to visualize 2d point.
 			var tracer2d:Sprite = new Sprite();
-			tracer2d.graphics.beginFill( 0xFF0000, 0.25 );
+			tracer2d.graphics.beginFill( 0xFF0000, 1 );
 			tracer2d.graphics.drawCircle( screenPosition.x, screenPosition.y, 10 );
 			tracer2d.graphics.endFill();
 			addChild( tracer2d );
 
-//			trace( "screen position: " + screenPosition );
+			trace( "screen position: " + screenPosition );
 			return screenPosition;
 		}
 
