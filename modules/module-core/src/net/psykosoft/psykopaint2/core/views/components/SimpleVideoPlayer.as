@@ -63,12 +63,13 @@ package net.psykosoft.psykopaint2.core.views.components
 			// video
 			_video = new Video();
 			_video.attachNetStream( _ns );
-			
+		
 			// container
 			_container = new Sprite();
 			_container.addChild( _video );
 			_container.mouseEnabled = false;
 			_container.mouseChildren = false;
+			
 		}
 		
 		
