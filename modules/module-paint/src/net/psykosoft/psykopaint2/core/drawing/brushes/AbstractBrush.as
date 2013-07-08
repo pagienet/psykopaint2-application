@@ -187,6 +187,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		public function deactivate() : void
 		{
+			_renderInvalid = false;
 			_pathManager.deactivate();
 			_shapes.removeEventListener( Event.CHANGE, onShapeChanged );
 			if (_brushShape) _brushShape.freeMemory();
