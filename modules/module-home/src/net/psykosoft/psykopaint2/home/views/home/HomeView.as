@@ -7,9 +7,12 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.lights.DirectionalLight;
 	import away3d.materials.lightpickers.StaticLightPicker;
 
+	import flash.display.Bitmap;
+
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
@@ -48,6 +51,28 @@ package net.psykosoft.psykopaint2.home.views.home
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
 
+		private var _freezeBitmap:Bitmap;
+		private var _frozen:Boolean;
+
+		public function freeze( bmd:BitmapData ):void {
+			if( _frozen ) return;
+			unFreeze();
+			_freezeBitmap = new Bitmap();
+			_freezeBitmap.transform.colorTransform = new ColorTransform( -1, -1, -1 );
+			_freezeBitmap.bitmapData = bmd;
+			addChild( _freezeBitmap );
+			disable();
+			_frozen = true;
+		}
+
+		private function unFreeze():void {
+			if( _freezeBitmap ) {
+				_freezeBitmap.bitmapData.dispose();
+				removeChild( _freezeBitmap );
+				_freezeBitmap = null;
+			}
+		}
+
 		// ---------------------------------------------------------------------
 		// Creation...
 		// ---------------------------------------------------------------------
@@ -61,6 +86,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: review if we need to do any clean up when view is disabled
 			removeChild( _view );
 			_cameraController.isEnabled = false;
+			_frozen = false;
 		}
 
 		override protected function onSetup():void {

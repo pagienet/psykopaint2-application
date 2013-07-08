@@ -85,11 +85,14 @@ public class HomeViewMediator extends MediatorBase
 		private var _waitingForPaintModeAfterZoomIn:Boolean;
 		private var _waitingForSnapShotOfHomeView:Boolean;
 
+		private var _freezingStates:Vector.<String>;
+
 		override public function initialize():void {
 
 			// Init.
 			super.initialize();
 			registerView( view );
+			_freezingStates = new Vector.<String>();
 			registerEnablingState( StateType.HOME );
 			registerEnablingState( StateType.HOME_ON_EASEL );
 			registerEnablingState( StateType.HOME_ON_FINISHED_PAINTING );
@@ -97,10 +100,10 @@ public class HomeViewMediator extends MediatorBase
 			registerEnablingState( StateType.SETTINGS );
 			registerEnablingState( StateType.SETTINGS_WALLPAPER );
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
-			registerEnablingState( StateType.PICK_IMAGE );
 			registerEnablingState( StateType.PICK_SAMPLE_IMAGE );
 			registerEnablingState( StateType.PICK_USER_IMAGE_DESKTOP );
 			registerEnablingState( StateType.CROP );
+			registerFreezingState( StateType.PICK_IMAGE );
 
 			view.stage3dProxy = stage3dProxy;
 
@@ -123,6 +126,11 @@ public class HomeViewMediator extends MediatorBase
 			view.assetsReadySignal.add( onViewAssetsReady );
 			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
 			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
+		}
+
+		private function registerFreezingState( stateName:String ):void {
+//			_freezingStates.push( stateName ); // TODO: re-enable
+			registerEnablingState( stateName );
 		}
 
 		// -----------------------
@@ -155,19 +163,6 @@ public class HomeViewMediator extends MediatorBase
 			view.paintingManager.setEaselContent( latestVo );
 		}
 
-		private function onCanvasSnapShot( bmd:BitmapData ):void {
-			// TODO: also updates when the edge bgs are being updated from a click on NewPaintSubNav's paint button, and it shouldn't
-			if( _waitingForSnapShotOfHomeView ) {
-				_waitingForSnapShotOfHomeView = false;
-				var p:Point = NavigationCache.isHidden ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
-				view.adjustCamera( p.x, p.y );
-				requestStateChange( StateType.PAINT );
-			}
-			else {
-				view.updateEasel( bmd );
-			}
-		}
-
 		private function onZoomRequested( zoomIn:Boolean ):void {
 			if( !view.visible ) return;
 			if( zoomIn ) view.zoomIn();
@@ -196,6 +191,41 @@ public class HomeViewMediator extends MediatorBase
 		private function onWallPaperChanged( atf:ByteArray ):void {
 			if( !view.visible ) return;
 			view.room.changeWallpaper( atf );
+		}
+
+		override protected function onStateChange( newState:String ):void {
+			if( _freezingStates.indexOf( newState ) != -1 ) freezeView();
+			super.onStateChange( newState );
+		}
+
+		private var _waitingForFreezeSnapshot:Boolean;
+
+		private function freezeView():void {
+			trace( this, "freezing..." );
+			// TODO: freeze is all black
+			if( _waitingForFreezeSnapshot ) return;
+			if( view.isEnabled ) {
+				_waitingForFreezeSnapshot = true;
+				RenderGpuCommand.snapshotScale = 1;
+				RenderGpuCommand.snapshotRequested = true;
+			}
+			else throw new Error( "HomeViewMediator - freeze requested while the view is not active." ); // TODO: ability to freeze while view is inactive might be needed
+		}
+
+		private function onCanvasSnapShot( bmd:BitmapData ):void {
+			if( _waitingForFreezeSnapshot ) {
+				view.freeze( bmd );
+				_waitingForFreezeSnapshot = false;
+			}
+			else if( _waitingForSnapShotOfHomeView ) { // TODO: clean up, what else are we using snapshots for?
+				_waitingForSnapShotOfHomeView = false;
+				var p:Point = NavigationCache.isHidden ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
+				view.adjustCamera( p.x, p.y );
+				requestStateChange( StateType.PAINT );
+			}
+			/*else { // TODO: clean up, easel updates no longer work this way
+				view.updateEasel( bmd );
+			}*/
 		}
 
 		// -----------------------

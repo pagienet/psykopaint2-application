@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 		protected var _setupHasRan:Boolean;
 		protected var _viewIsReady:Boolean;
 		protected var _assetsLoaded:Boolean;
+		protected var _isEnabled:Boolean;
 
 		public var autoUpdates:Boolean = false;
 		public var scalesToRetina:Boolean = true;
@@ -54,7 +55,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 			if( !_setupHasRan ) setup();
 			trace( this, "enabled" );
 			onEnabled();
-			visible = true;
+			_isEnabled = visible = true;
 			enabledSignal.dispatch();
 			if( autoUpdates && !hasEventListener( Event.ENTER_FRAME ) ) {
 				addEventListener( Event.ENTER_FRAME, onEnterFrame );
@@ -65,13 +66,14 @@ package net.psykosoft.psykopaint2.base.ui.base
 			if( !visible ) return;
 			trace( this, "disabled" );
 			onDisabled();
-			visible = false;
+			_isEnabled = visible = false;
 			if( hasEventListener( Event.ENTER_FRAME ) ) {
 				removeEventListener( Event.ENTER_FRAME, onEnterFrame );
 			}
 		}
 
 		public function dispose():void {
+			_isEnabled = false;
 			_setupHasRan = false;
 			if( _loader ) {
 				_loader.dispose();
@@ -213,6 +215,10 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 		public function get viewIsReady():Boolean {
 			return _viewIsReady;
+		}
+
+		public function get isEnabled():Boolean {
+			return _isEnabled;
 		}
 	}
 }
