@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.paint
 			_loader = null;
 
 			// Set default surface.
-			_paintConfig.injector.getInstance( RequestDrawingCoreSurfaceSetSignal ).dispatch( byteArray );
+			_paintConfig.injector.getInstance( RequestDrawingCoreSurfaceSetSignal ).dispatch( byteArray, null );
 
 			if( isStandalone ) {
 

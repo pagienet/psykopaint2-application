@@ -9,7 +9,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.primitives.PlaneGeometry;
+	import away3d.textures.BitmapTexture;
 	import away3d.textures.ByteArrayTexture;
+	import away3d.textures.Texture2DBase;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
@@ -51,7 +53,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var height : int = paintingVO.height;
 			var textureWidth : int = paintingVO.textureWidth;
 			var textureHeight : int = paintingVO.textureHeight;
-			var diffuseTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.colorPreviewData, textureWidth, textureHeight);
+			var diffuseTexture : Texture2DBase;
+			if (paintingVO.colorPreviewData)
+				diffuseTexture = new ByteArrayTexture(paintingVO.colorPreviewData, textureWidth, textureHeight);
+			else
+				diffuseTexture = new BitmapTexture(paintingVO.colorPreviewBitmap);
+
 			var normalSpecularTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.normalSpecularPreviewData, textureWidth, textureHeight);
 			diffuseTexture.getTextureForStage3D(stage3DProxy);
 			normalSpecularTexture.getTextureForStage3D(stage3DProxy);
@@ -63,7 +70,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_material.lightPicker = lightPicker;
 			_material.ambientColor = 0xffffff;
 			_material.ambient = 1;
-			_material.specular = .5;
+			_material.specular = .25;
 			_material.gloss = 200;
 			_material.normalMap = normalSpecularTexture;
 

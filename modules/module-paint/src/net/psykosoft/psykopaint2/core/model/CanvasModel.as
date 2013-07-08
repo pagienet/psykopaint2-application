@@ -54,9 +54,9 @@ package net.psykosoft.psykopaint2.core.model
 
 		private var _viewport : Rectangle;
 
-		// TODO: should originals be a string to packaged
+		// TODO: should originals be a string path to packaged asset
 		private var _normalSpecularOriginal : ByteArray;
-		private var _colorBackgroundOriginal : ByteArray;
+		private var _colorBackgroundOriginal : BitmapData;
 
 		private var _copySubTextureChannelsRGB : CopySubTextureChannels;
 		private var _copySubTextureChannelsA : CopySubTextureChannels;
@@ -156,21 +156,27 @@ package net.psykosoft.psykopaint2.core.model
 			}
 		}
 
+		public function setColorBackgroundOriginal(value : BitmapData) : void
+		{
+			if (_colorBackgroundOriginal) _colorBackgroundOriginal.dispose();
+			_colorBackgroundOriginal = value;
+
+			if (_colorTexture)
+				uploadColorBackgroundOriginal();
+		}
+
 		/**
 		 * A texture containing height and specular data. normals on red/blue channel, specular strength on z, glossiness on w
 		 */
 		public function setNormalSpecularMap(value : ByteArray) : void
 		{
+			if (_normalSpecularOriginal) _normalSpecularOriginal.clear();
+
 			_normalSpecularOriginal = value;
 
 			// not sure if this will be called before or after post construct
-			if (_normalSpecularMap) {
-				var inflated : ByteArray = new ByteArray();
-				value.position = 0;
-				inflated.writeBytes(value, 0, value.length);
-				inflated.uncompress();
-				_normalSpecularMap.uploadFromByteArray(inflated, 0);
-			}
+			if (_normalSpecularMap)
+				uploadNormalSpecularOriginal();
 		}
 
 		public function get sourceTexture() : Texture
@@ -204,13 +210,7 @@ package net.psykosoft.psykopaint2.core.model
 			_normalSpecularMap = createCanvasTexture(true);
 
 			if (_normalSpecularOriginal) setNormalSpecularMap(_normalSpecularOriginal);
-			if (_colorBackgroundOriginal)
-				uploadColorBackgroundOriginal(_colorTexture);
-			else {
-				var tempBitmapData : BitmapData = new BitmapData(_textureWidth, _textureHeight, true, 0);
-				_colorTexture.uploadFromBitmapData(tempBitmapData);
-				tempBitmapData.dispose();
-			}
+			uploadColorBackgroundOriginal();
 		}
 
 		public function createCanvasTexture(isRenderTarget : Boolean, scale : Number = 1) : Texture
@@ -226,12 +226,15 @@ package net.psykosoft.psykopaint2.core.model
 			_fullSizeBackBuffer.dispose();
 			_halfSizeBackBuffer.dispose();
 			_normalSpecularMap.dispose();    	// storing height as well, you never know what we can use it for (raymarching for offline rendering \o/)
+			_normalSpecularOriginal.clear();
+			_colorBackgroundOriginal.dispose();
 			_sourceTexture = null;
 			_colorTexture = null;
 			_fullSizeBackBuffer = null;
 			_halfSizeBackBuffer = null;
 			_normalSpecularMap = null;
 			_normalSpecularOriginal = null;
+			_colorBackgroundOriginal = null;
 		}
 
 		public function swapColorLayer() : void
@@ -276,29 +279,24 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function clearColorTexture() : void
 		{
-			if (_colorBackgroundOriginal) {
-				uploadColorBackgroundOriginal(_colorTexture);
-			}
-			else {
-				var context3d : Context3D = stage3D.context3D;
-				context3d.setRenderToTexture(_colorTexture);
-				context3d.clear(0, 0, 0, 0);
-				context3d.setRenderToBackBuffer();
-			}
+			uploadColorBackgroundOriginal();
 		}
 
-		// TODO: should background original be a string
-		private function uploadColorBackgroundOriginal(target : Texture) : void
+		private function uploadColorBackgroundOriginal() : void
 		{
-			var context3d : Context3D = stage3D.context3D;
-			_normalSpecularOriginal.position = 0;
-			var inflated : ByteArray = new ByteArray();
-			inflated.writeBytes(_normalSpecularOriginal, 0, _normalSpecularOriginal.length);
-			inflated.uncompress();
-			target.uploadFromByteArray(inflated, 0);
+			var tempBitmapData : BitmapData = new BitmapData(_textureWidth, _textureHeight, true, 0);
+			if (_colorBackgroundOriginal)
+				tempBitmapData.draw(_colorBackgroundOriginal);
+			_colorTexture.uploadFromBitmapData(tempBitmapData, 0);
+			tempBitmapData.dispose();
 		}
 
 		public function clearNormalSpecularTexture() : void
+		{
+			uploadNormalSpecularOriginal();
+		}
+
+		private function uploadNormalSpecularOriginal() : void
 		{
 			var inflated : ByteArray = new ByteArray();
 			_normalSpecularOriginal.position = 0;
@@ -392,7 +390,7 @@ package net.psykosoft.psykopaint2.core.model
 				throw new Error("Different painting sizes currently not supported!");
 
 			var oldLength : int = paintingData.colorData.length;
-			var newLength : int = _textureWidth*_textureHeight*4;
+			var newLength : int = _textureWidth * _textureHeight * 4;
 			paintingData.colorData.length = newLength;
 			paintingData.normalSpecularData.length = newLength;
 			_colorTexture.uploadFromByteArray(paintingData.colorData, 0, 0);

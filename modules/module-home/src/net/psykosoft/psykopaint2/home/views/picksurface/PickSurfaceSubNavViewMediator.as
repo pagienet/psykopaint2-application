@@ -1,7 +1,11 @@
 package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
+	import away3d.tools.utils.TextureUtils;
+
 	import flash.display.BitmapData;
+	import flash.display.Loader;
+	import flash.events.Event;
 	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
 
@@ -37,13 +41,17 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		public var requestDrawingCoreSurfaceSetSignal:RequestDrawingCoreSurfaceSetSignal;
 
 		private var _byteLoader:BinaryLoader;
+		private var _bitmapLoader : BitmapLoader;
 		private var _selectedIndex : int = -1;
-		private var _loadedSurface : ByteArray;
+		private var _loadedNormalSpecularData : ByteArray;
+		private var _loadedColorData : BitmapData;
+		private var _assetSize : int;
 
 		override public function initialize():void {
 
 			// Init.
 			super.initialize();
+			_assetSize = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
 			registerView( view );
 			_selectedIndex = -1;
 			manageMemoryWarnings = false;
@@ -60,7 +68,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 					requestStateChange( StateType.PREVIOUS );
 					break;
 				case PickSurfaceSubNavView.LBL_CONTINUE:
-					requestDrawingCoreSurfaceSetSignal.dispatch( _loadedSurface );
+					requestDrawingCoreSurfaceSetSignal.dispatch( _loadedNormalSpecularData, _loadedColorData );
 					requestStateChange( StateType.PICK_IMAGE );
 					break;
 				case PickSurfaceSubNavView.LBL_SURF1:
@@ -81,22 +89,49 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			view.showRightButton( false );
 			_selectedIndex = index;
 			// cancel previous load
-			if (_byteLoader) _byteLoader.dispose();
-			_byteLoader = new BinaryLoader();
-			var size:int = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
-			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + size + ".surf", onSurfaceLoaded );
+			if (_byteLoader) {
+				_byteLoader.dispose();
+				_byteLoader = null;
+			}
+			if (_bitmapLoader) {
+				_bitmapLoader.dispose();
+				_bitmapLoader = null;
+			}
+			loadColorData();
 		}
 
-		private function disposeSurface() : void
+		private function loadColorData() : void
 		{
-			if (_loadedSurface) {
-				_loadedSurface.clear();
-				_loadedSurface = null;
-			}
+			_bitmapLoader = new BitmapLoader();
+			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_color_" + _selectedIndex + "_" + _assetSize + ".jpg",
+				onColorDataLoaded,
+				onColorDataError);
+		}
+
+		private function onColorDataError() : void
+		{
+			_bitmapLoader.dispose();
+			_bitmapLoader = null;
+			trace ("Error loading '/core-packaged/images/surfaces/canvas_color_" + _selectedIndex + "_" + _assetSize + ".surf'")
+			loadNormalSpecularData();
+		}
+
+		private function onColorDataLoaded(bitmap : BitmapData) : void
+		{
+			_loadedColorData = bitmap;
+			_bitmapLoader.dispose();
+			_bitmapLoader = null;
+			loadNormalSpecularData();
+		}
+
+		private function loadNormalSpecularData() : void
+		{
+			_byteLoader = new BinaryLoader();
+			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + _selectedIndex + "_" + _assetSize + ".surf", onSurfaceLoaded );
 		}
 
 		private function onSurfaceLoaded( bytes:ByteArray ):void {
-			_loadedSurface = bytes;
+			_loadedNormalSpecularData = bytes;
 			view.showRightButton( true );
 			_byteLoader.dispose();
 			_byteLoader = null;
@@ -106,15 +141,33 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			vo.dispose();
 		}
 
+		private function disposeSurface() : void
+		{
+			if (_loadedColorData) {
+				_loadedColorData.dispose();
+				_loadedColorData = null;
+			}
+			if (_loadedNormalSpecularData) {
+				_loadedNormalSpecularData.clear();
+				_loadedNormalSpecularData = null;
+			}
+		}
+
 		private function createPaintingVO() : PaintingInfoVO
 		{
 			var vo : PaintingInfoVO = new PaintingInfoVO();
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
-			vo.colorPreviewData = new ByteArray();
-			vo.colorPreviewData.length = vo.width*vo.height*4;	// will fill with zeroes
+			if (_loadedColorData) {
+				vo.colorPreviewBitmap = new BitmapData(vo.textureWidth, vo.textureHeight, false, 0);
+				vo.colorPreviewBitmap.draw(_loadedColorData);
+			}
+			else {
+				vo.colorPreviewData = new ByteArray();
+				vo.colorPreviewData.length = vo.width*vo.height*4;	// will fill with zeroes
+			}
 			vo.normalSpecularPreviewData = new ByteArray();
-			vo.normalSpecularPreviewData.writeBytes(_loadedSurface, 0, 0);
+			vo.normalSpecularPreviewData.writeBytes(_loadedNormalSpecularData, 0, 0);
 			vo.normalSpecularPreviewData.uncompress();
 			// nothing else necessary
 			return vo;

@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.base.utils.io
 {
 
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.events.Event;
@@ -10,42 +11,54 @@ package net.psykosoft.psykopaint2.base.utils.io
 	public class BitmapLoader
 	{
 		private var _loader:Loader;
-		private var _callback:Function;
+		private var _successCallback:Function;
 		private var _url:String;
+		private var _errorCallback : Function;
 
 		public function BitmapLoader() {
 			super();
+		}
+
+		public function loadAsset( url:String, successCallback:Function, errorCallback:Function=null ):void {
 			_loader = new Loader();
 			_loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onLoaderComplete );
 			_loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onLoaderError );
-		}
-
-		public function loadAsset( url:String, callback:Function ):void {
 			trace( this, "loading asset: " + url );
 			_url = url;
-			_callback = callback;
+			_successCallback = successCallback;
+			_errorCallback = errorCallback
 			_loader.load( new URLRequest( url ) );
 			_url = url;
 		}
 
 		public function dispose():void {
-			// TODO: if disposed, make sure all potential previous loading is stopped
-			_callback = null;
-			_loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, onLoaderComplete );
-			_loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, onLoaderError );
-			_loader = null;
+			_successCallback = null;
+			_errorCallback = null;
+			if (_loader) {
+				_loader.close();
+				_loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, onLoaderComplete );
+				_loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, onLoaderError );
+				_loader = null;
+			}
 			_url = null;
 		}
 
 		private function onLoaderComplete( event:Event ):void {
-			trace( this, "loaded: " + _url );
-			var bmd:BitmapData = new BitmapData( _loader.width, _loader.height, true, 0 );
-			bmd.draw( _loader );
-			_callback( bmd );
+			_loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, onLoaderComplete );
+			_loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, onLoaderError );
+
+			var bmd : BitmapData = Bitmap(_loader.content).bitmapData;
+
+			_loader = null;
+
+			_successCallback( bmd );
 		}
 
 		private function onLoaderError( event:IOErrorEvent ):void {
-			throw new Error( this + event +" cannot find "+_url);
+			if (_errorCallback)
+				_errorCallback();
+			else
+				throw new Error( this + event +" cannot find "+_url);
 		}
 	}
 }

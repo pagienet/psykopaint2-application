@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.data
 
 		public var thumbnail:BitmapData;
 		public var colorPreviewData:ByteArray;
+		public var colorPreviewBitmap:BitmapData;
 		public var normalSpecularPreviewData:ByteArray;
 		public var lastSavedOnDateMs:Number;
 
@@ -66,10 +67,16 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function dispose() : void
 		{
-			colorPreviewData.clear();
+			if (colorPreviewData)
+				colorPreviewData.clear();
+
+			if (colorPreviewBitmap)
+				colorPreviewBitmap.dispose();
+
 			normalSpecularPreviewData.clear();
 			if (thumbnail) thumbnail.dispose();
 			colorPreviewData = null;
+			colorPreviewBitmap = null;
 			normalSpecularPreviewData = null;
 			thumbnail = null;
 		}

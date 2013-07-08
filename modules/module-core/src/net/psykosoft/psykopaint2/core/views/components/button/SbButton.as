@@ -27,6 +27,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		private var _snapToRight:Boolean = false;
 		private var _isSelected:Boolean = false;
 
+		private var _id : String;
+
 		public function SbButton() {
 			super();
 
@@ -42,6 +44,19 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			icon.stop();
 
 			_btnLblPos = new Point( labelBg.x, labelBg.y );
+		}
+
+		/**
+		 * Used by data-based buttons
+		 */
+		public function get id() : String
+		{
+			return _id;
+		}
+
+		public function set id(value : String) : void
+		{
+			_id = value;
 		}
 
 		public function setIcon( image:Bitmap ):void {

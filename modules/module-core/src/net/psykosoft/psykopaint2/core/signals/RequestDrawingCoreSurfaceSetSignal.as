@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.signals
 {
 
+	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
 	import org.osflash.signals.Signal;
@@ -8,7 +9,7 @@ package net.psykosoft.psykopaint2.core.signals
 	public class RequestDrawingCoreSurfaceSetSignal extends Signal
 	{
 		public function RequestDrawingCoreSurfaceSetSignal() {
-			super( ByteArray );
+			super( ByteArray, BitmapData );
 		}
 	}
 }

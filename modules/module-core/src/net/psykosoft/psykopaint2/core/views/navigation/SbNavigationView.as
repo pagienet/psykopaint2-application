@@ -290,7 +290,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			var clickedButton:SbButton = event.target as SbButton;
 			if( !clickedButton ) clickedButton = event.target.parent as SbButton;
-			var label:String = clickedButton.labelText;
+			var label:String = clickedButton.id? clickedButton.id : clickedButton.labelText;
 			trace( this, "button clicked: " + clickedButton.labelText );
 
 			buttonClickedCallback( label );
