@@ -75,19 +75,6 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onPaintModuleReady( coreInjector:Injector ):void {
 		    trace( this, "paint module is ready" );
-			createBookModule();
-		}
-
-		// Book module.
-		private function createBookModule():void {
-			trace( this, "creating book module..." );
-			var bookModule:BookModule = new BookModule( _coreModule );
-			bookModule.isStandalone = false;
-			bookModule.moduleReadySignal.addOnce( onBookModuleReady );
-			bookModule.initialize();
-		}
-		private function onBookModuleReady( coreInjector:Injector ):void {
-			trace( this, "book module is ready" );
 			createHomeModule();
 		}
 
@@ -101,6 +88,19 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onHomeModuleReady( coreInjector:Injector ):void {
 			trace( this, "home module is ready" );
+			createBookModule();
+		}
+
+		// Book module.
+		private function createBookModule():void {
+			trace( this, "creating book module..." );
+			var bookModule:BookModule = new BookModule( _coreModule );
+			bookModule.isStandalone = false;
+			bookModule.moduleReadySignal.addOnce( onBookModuleReady );
+			bookModule.initialize();
+		}
+		private function onBookModuleReady( coreInjector:Injector ):void {
+			trace( this, "book module is ready" );
 
 			// Initialize the app module.
 			new AppConfig( _coreModule.injector );

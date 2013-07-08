@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.LightPickerBase;
-	import away3d.materials.lightpickers.StaticLightPicker;
 
 	import br.com.stimuli.loading.BulkLoader;
 
@@ -14,13 +13,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.data.FrameType;
-	import net.psykosoft.psykopaint2.home.views.home.objects.EaselPainting;
 	import net.psykosoft.psykopaint2.home.views.home.vos.FrameTextureAtlasDescriptorVO;
 
 	public class PaintingManager extends ObjectContainer3D

@@ -93,6 +93,9 @@ public class HomeViewMediator extends MediatorBase
 			super.initialize();
 			registerView( view );
 			_freezingStates = new Vector.<String>();
+			view.stage3dProxy = stage3dProxy;
+
+			// Fully active states.
 			registerEnablingState( StateType.HOME );
 			registerEnablingState( StateType.HOME_ON_EASEL );
 			registerEnablingState( StateType.HOME_ON_FINISHED_PAINTING );
@@ -100,12 +103,14 @@ public class HomeViewMediator extends MediatorBase
 			registerEnablingState( StateType.SETTINGS );
 			registerEnablingState( StateType.SETTINGS_WALLPAPER );
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
-			registerEnablingState( StateType.PICK_SAMPLE_IMAGE );
-			registerEnablingState( StateType.PICK_USER_IMAGE_DESKTOP );
-			registerEnablingState( StateType.CROP );
-			registerFreezingState( StateType.PICK_IMAGE );
+			registerEnablingState( StateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
 
-			view.stage3dProxy = stage3dProxy;
+			// Frozen states.
+			registerFreezingState( StateType.PICK_IMAGE );
+			registerFreezingState( StateType.BOOK_PICK_SAMPLE_IMAGE );
+			registerFreezingState( StateType.BOOK_PICK_USER_IMAGE_IOS );
+			registerFreezingState( StateType.CROP );
+			registerFreezingState( StateType.PICK_USER_IMAGE_DESKTOP );
 
 			// Register view gpu rendering in core.
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
@@ -129,7 +134,7 @@ public class HomeViewMediator extends MediatorBase
 		}
 
 		private function registerFreezingState( stateName:String ):void {
-//			_freezingStates.push( stateName ); // TODO: re-enable
+			_freezingStates.push( stateName );
 			registerEnablingState( stateName );
 		}
 
@@ -195,7 +200,10 @@ public class HomeViewMediator extends MediatorBase
 
 		override protected function onStateChange( newState:String ):void {
 			if( _freezingStates.indexOf( newState ) != -1 ) freezeView();
-			super.onStateChange( newState );
+			else {
+				view.unFreeze();
+				super.onStateChange( newState );
+			}
 		}
 
 		private var _waitingForFreezeSnapshot:Boolean;
@@ -214,6 +222,7 @@ public class HomeViewMediator extends MediatorBase
 
 		private function onCanvasSnapShot( bmd:BitmapData ):void {
 			if( _waitingForFreezeSnapshot ) {
+				trace( this, "applying freeze snapshot..." );
 				view.freeze( bmd );
 				_waitingForFreezeSnapshot = false;
 			}

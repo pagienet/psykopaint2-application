@@ -89,5 +89,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			if( _frame ) return _frame.depth;
 			return 0;
 		}
+
+		public function get painting():ObjectContainer3D {
+			return _painting;
+		}
 	}
 }
