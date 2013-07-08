@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.bounds.AxisAlignedBoundingBox;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
-	import away3d.core.base.CompactSubGeometry;
 	import away3d.core.base.Object3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
@@ -21,7 +20,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.ColorTransform;
-	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
@@ -32,11 +30,11 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.objects.EaselPainting;
-	import net.psykosoft.psykopaint2.home.views.home.objects.Painting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
 	import net.psykosoft.psykopaint2.home.views.home.objects.WallRoom;
 
@@ -59,6 +57,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _freezeScene:ObjectContainer3D;
 		private var _freezePlane:Mesh;
 		private var _frozen:Boolean;
+		private var _easelRect:Rectangle;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
 		public static const DEFAULT_ZOOM_IN:Point = new Point( 400, -800 );
@@ -88,12 +87,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			selectScene( _freezeScene );
 			disable3d();
 			_frozen = true;
-
-			// TODO: remove, testing getEaselScreenRect()
-			_freezePlane.z += 5000;
-			var bounds:AxisAlignedBoundingBox = _freezePlane.bounds as AxisAlignedBoundingBox;
-			var tlCorner:Vector3D = objectSpaceToScreenSpace( _freezePlane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 ) );
-			var brCorner:Vector3D = objectSpaceToScreenSpace( _freezePlane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsZ, 0 ) );
 		}
 
 		public function unFreeze():void {
@@ -119,7 +112,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		// TODO: make method to zoom camera to fit a rect
 
-		public function getEaselScreenRect():Rectangle {
+		private function calculateEaselScreenRect():Rectangle {
 			var plane:Mesh = EaselPainting( _paintingManager.easel.painting ).plane;
 			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
 			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 ) );
@@ -129,31 +122,31 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function objectSpaceToScreenSpace( plane:Mesh, offset:Vector3D ):Vector3D {
 
-			trace( this, "objectSpaceToScreenSpace --------------------" );
+//			trace( this, "objectSpaceToScreenSpace --------------------" );
 
-			trace( "ratio: " + _view.camera.lens.aspectRatio );
+//			trace( "ratio: " + _view.camera.lens.aspectRatio );
 
 			// Scene space.
 			offset.scaleBy( plane.scaleX );
 			var center:Vector3D = plane.sceneTransform.transformVector( new Vector3D() );
 			offset = offset.add( center );
 			// Uncomment to visualize 3d point.
-			var tracer3d:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
+			/*var tracer3d:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
 			tracer3d.position = offset;
-			_freezeScene.addChild( tracer3d );
+			_freezeScene.addChild( tracer3d );*/
 
 			// View space.
 			var screenPosition:Vector3D = _view.camera.project( offset );
 			screenPosition.x = 0.5 * stage.width * ( 1 + screenPosition.x );
 			screenPosition.y = 0.5 * stage.height * ( 1 + screenPosition.y );
 			// Uncomment to visualize 2d point.
-			var tracer2d:Sprite = new Sprite();
+			/*var tracer2d:Sprite = new Sprite();
 			tracer2d.graphics.beginFill( 0xFF0000, 1 );
 			tracer2d.graphics.drawCircle( screenPosition.x, screenPosition.y, 10 );
 			tracer2d.graphics.endFill();
-			addChild( tracer2d );
+			addChild( tracer2d );*/
 
-			trace( "screen position: " + screenPosition );
+//			trace( "screen position: " + screenPosition );
 			return screenPosition;
 		}
 
@@ -473,6 +466,15 @@ package net.psykosoft.psykopaint2.home.views.home
 				}
 			}
 			trace( this, "positioning camera, Y: " + _cameraController.camera.y + ", Z: " + _cameraController.camera.z );
+		}
+
+		public function setEaselContent( data:PaintingInfoVO ):void {
+			_paintingManager.setEaselContent( data );
+			_easelRect = calculateEaselScreenRect();
+		}
+
+		public function get easelRect():Rectangle {
+			return _easelRect;
 		}
 	}
 }

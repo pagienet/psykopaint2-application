@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		public function set sourceMap( map:BitmapData ):void {
 
 			// TODO: implement proper easel rect - info already here
-			this.graphics.beginFill( 0xFF0000, 0.25 );
+			this.graphics.beginFill( 0x00FF00, 1 );
 			this.graphics.drawRect( _easelRect.x, _easelRect.y, _easelRect.width, _easelRect.height );
 			this.graphics.endFill();
 

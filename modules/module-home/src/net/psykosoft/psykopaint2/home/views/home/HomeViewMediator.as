@@ -152,7 +152,7 @@ public class HomeViewMediator extends MediatorBase
 		// -----------------------
 
 		private function onEaselRectInfoRequested():void {
-			notifyEaselRectInfoSignal.dispatch( view.getEaselScreenRect() );
+			notifyEaselRectInfoSignal.dispatch( view.easelRect );
 		}
 
 		private function onPaintingActivated():void {
@@ -160,7 +160,7 @@ public class HomeViewMediator extends MediatorBase
 		}
 
 		private function onEaselUpdateRequest( paintingVO : PaintingInfoVO ):void {
-			view.paintingManager.setEaselContent( paintingVO );
+			view.setEaselContent( paintingVO );
 		}
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingInfoVO> ):void {
