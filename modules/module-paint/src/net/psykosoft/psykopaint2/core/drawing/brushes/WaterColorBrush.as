@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
+	import flash.display.DisplayObject;
+	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.textures.Texture;
@@ -23,6 +25,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.TransferPigment;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.UpdateVelocities;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
+	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
 	public class WaterColorBrush extends SimulationBrush
@@ -170,11 +174,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			}
 		}
 
-		override protected function resetSimulation() : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer : CanvasRenderer) : void
 		{
+			super.activate(view, context, canvasModel, renderer);
+
 			if (!_velocityPressureField)
 				initBuffers();
+		}
 
+		override protected function resetSimulation() : void
+		{
 			_context.setRenderToTexture(_pigmentDensityField, true);
 			_context.clear(0, 0, 0, 0);
 			_context.setRenderToTexture(_pigmentColorField, true);
@@ -183,7 +192,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.setRenderToTexture(_velocityPressureField, true);
 			_context.clear(.5,.5, 0, 1);
 			_context.setRenderToBackBuffer();
-
 
 			_addPigmentToPigmentDensity.reset();
 			_addPigmentToPigmentColor.reset();
