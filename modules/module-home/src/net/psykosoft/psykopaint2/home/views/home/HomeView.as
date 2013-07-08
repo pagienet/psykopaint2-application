@@ -101,7 +101,9 @@ package net.psykosoft.psykopaint2.home.views.home
 					}
 					freezePlaneMaterial.dispose(); // TODO: review if this is being disposed
 				}
-				_freezeScene.removeChild( _freezePlane );
+				if( _freezeScene.contains( _freezePlane ) ) {
+					_freezeScene.removeChild( _freezePlane );
+				}
 				_freezePlane = null;
 			}
 			selectScene( _mainScene );
