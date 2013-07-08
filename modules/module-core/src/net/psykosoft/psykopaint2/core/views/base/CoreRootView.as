@@ -19,9 +19,11 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
-
+	
+	
 	public class CoreRootView extends RootViewBase
 	{
 		[Embed(source="../../../../../../../../../modules/module-core/assets/embedded/images/launch/ipad-hr/Default-Landscape@2x.png")]
@@ -88,6 +90,19 @@ package net.psykosoft.psykopaint2.core.views.base
 		}
 
 		public function initialize():void {
+			
+			//this is only here for testing purposes:
+			if ( CoreSettings.SHOW_INTRO_VIDEO )
+			{
+				var videoPlayer:SimpleVideoPlayer = new SimpleVideoPlayer();
+				videoPlayer.source = "core-packaged/video/TransparentVideo.flv";
+				videoPlayer.loop = false;
+				videoPlayer.removeOnComplete = true;
+				videoPlayer.play();
+				videoPlayer.width = stage.stageWidth;
+				videoPlayer.height = stage.stageHeight;
+				_applicationLayer.addChild( videoPlayer.container );
+			}
 			// Core module's main views.
 			addRegisteredView( new SbNavigationView(), _applicationLayer );
 			if( CoreSettings.SHOW_PSYKOSOCKET_CONNECTION_UI ) {
