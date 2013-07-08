@@ -79,13 +79,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			if( HomeSettings.TINT_FREEZES ) {
 				bmd.colorTransform( bmd.rect, new ColorTransform( 0.75, 0.75, 1, 1 ) );
 			}
+			selectScene( _freezeScene );
+			disable3d();
+			renderScene();
 			_freezePlane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( bmd, _stage3dProxy );
 			_freezePlane.rotationX = -90;
 			_freezePlane.z = 10000; // TODO: adjust mathematically, probably will be different on HR too
 			ensurePlaneFitsViewport( _freezePlane );
 			_freezeScene.addChild( _freezePlane );
-			selectScene( _freezeScene );
-			disable3d();
 			_frozen = true;
 		}
 
@@ -93,6 +94,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			if( !_frozen ) return;
 			trace( this, "unFreeze()" );
 			if( _freezePlane ) {
+				if( _freezeScene.contains( _freezePlane ) ) {
+					_freezeScene.removeChild( _freezePlane );
+				}
 				_freezePlane.dispose();
 				var freezePlaneMaterial:TextureMaterial = _freezePlane.material as TextureMaterial;
 				if( freezePlaneMaterial ) {
@@ -102,12 +106,10 @@ package net.psykosoft.psykopaint2.home.views.home
 					}
 					freezePlaneMaterial.dispose(); // TODO: review if this is being disposed
 				}
-				if( _freezeScene.contains( _freezePlane ) ) {
-					_freezeScene.removeChild( _freezePlane );
-				}
 				_freezePlane = null;
 			}
 			selectScene( _mainScene );
+			enable3d();
 		}
 
 		// TODO: make method to zoom camera to fit a rect

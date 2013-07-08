@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 				case PickAnImageSubNavView.LBL_BACK:
 				{
-					requestStateChange( StateType.PREVIOUS );
+					requestStateChange( StateType.HOME_PICK_SURFACE );
 					break;
 				}
 
