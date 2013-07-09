@@ -94,14 +94,13 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 		}
 
 		public function reset():void {
+
 			if( _dataProvider ) {
 				_dataProvider.dispose();
+				_dataProvider = null;
 			}
-			_dataProvider = null;
 
 			_leftPageBackSheetIndex = -1;
-
-			visible = false;
 		}
 
 		private function onPageMouseUp( event:MouseEvent3D ):void {
@@ -121,6 +120,8 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 
 			if( _dataProvider ) {
 				_dataProvider.dispose();
+				_dataProvider.textureReadySignal.remove( onDataProviderTextureReady );
+				_dataProvider = null;
 			}
 
 			_dataProvider = value;
@@ -136,8 +137,6 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 				_positionManager.pushSnapPoint( xOffset );
 				xOffset += SNAP_POINT_SPACING;
 			}
-
-			visible = true;
 
 			update();
 		}
@@ -262,6 +261,10 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 
 		public function get pageHeight():uint {
 			return _pageHeight;
+		}
+
+		public function get dataProvider():BookDataProviderBase {
+			return _dataProvider;
 		}
 	}
 }

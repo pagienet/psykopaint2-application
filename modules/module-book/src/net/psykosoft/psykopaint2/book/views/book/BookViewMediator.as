@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 					var provider:TestBookDataProvider = new TestBookDataProvider();
 					provider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
-					view.dataProvider = provider;
+					view.book.dataProvider = provider;
 
 //					initializeSamplesDataProvider();
 //					initializeUserPhotosDataProvider();
@@ -81,25 +81,29 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		private function initializeUserPhotosDataProvider():void {
+			trace( this, "init user photos provider..." );
 			_userPhotosDataProvider = new UserPhotosBookDataProvider();
 			_userPhotosDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_userPhotosDataProvider.fullImagePickedSignal.add( onFullImagePicked );
-			_userPhotosDataProvider.readySignal.addOnce( onUserPhotosDataProviderReady );
+			_userPhotosDataProvider.readySignal.add( onUserPhotosDataProviderReady );
 		}
 
 		private function onUserPhotosDataProviderReady():void {
-			view.dataProvider = _userPhotosDataProvider;
+			trace( this, "user photos provider ready" );
+			view.book.dataProvider = _userPhotosDataProvider;
 		}
 
 		private function initializeSamplesDataProvider():void {
+			trace( this, "init sample images provider..." );
 			_samplesDataProvider = new SampleImagesBookDataProvider();
 			_samplesDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_samplesDataProvider.fullImagePickedSignal.add( onFullImagePicked );
-			_samplesDataProvider.readySignal.addOnce( onSamplesDataProviderReady );
+			_samplesDataProvider.readySignal.add( onSamplesDataProviderReady );
 		}
 
 		private function onSamplesDataProviderReady():void {
-			view.dataProvider = _samplesDataProvider;
+			trace( this, "sample images provider ready" );
+			view.book.dataProvider = _samplesDataProvider;
 		}
 	}
 }

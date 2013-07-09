@@ -73,10 +73,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 		}
 
-		public function set dataProvider( value:BookDataProviderBase ):void {
-			_book.dataProvider = value;
-		}
-
 		private function onStageMouseDown( event:MouseEvent ):void {
 			_book.startInteraction();
 		}
@@ -88,8 +84,9 @@ package net.psykosoft.psykopaint2.book.views.book
 		public function renderScene():void {
 
 			if( !_view.parent ) return;
+			if( !_book.dataProvider ) return;
 
-			var target:Number = -80 + 35 * mouseY / 768;
+			var target:Number = -75 + 15 * mouseY / 768;
 			_book.rotationX += ( target - _book.rotationX ) * 0.25;
 
 			_book.update();
