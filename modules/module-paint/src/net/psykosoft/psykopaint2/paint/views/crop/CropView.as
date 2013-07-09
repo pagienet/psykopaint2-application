@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 {
 
 	import flash.display.BitmapData;
+	import flash.display.StageQuality;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
@@ -30,7 +31,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		public function set sourceMap( map:BitmapData ):void {
 
 			// TODO: implement proper easel rect - info already here
-			this.graphics.beginFill( 0x00FF00, 1 );
+			this.graphics.beginFill( 0xffffff, 0 );
 			this.graphics.drawRect( _easelRect.x, _easelRect.y, _easelRect.width, _easelRect.height );
 			this.graphics.endFill();
 
@@ -47,12 +48,12 @@ package net.psykosoft.psykopaint2.paint.views.crop
 			_sourceMap = map;
 
 
-			_positioningSheet = new TouchSheet( _sourceMap, Math.max( 482/ _sourceMap.width, 364 / _sourceMap.height ) );
+			_positioningSheet = new TouchSheet( _sourceMap, Math.max( _easelRect.width/ _sourceMap.width, _easelRect.height / _sourceMap.height ) );
 			//_positioningSheet.minimumScale = Math.max( stage.stageWidth / _sourceMap.width, stage.stageHeight / _sourceMap.height );
 			//_positioningSheet.limitsRect = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
-			_positioningSheet.scrollRect = new Rectangle(0,0,482,364);
-			_positioningSheet.x = 270;
-			_positioningSheet.y = 81;
+			_positioningSheet.scrollRect = new Rectangle(0,0,_easelRect.width,_easelRect.height);
+			_positioningSheet.x = _easelRect.x;
+			_positioningSheet.y = _easelRect.y;
 			
 			addChildAt( _positioningSheet, 0 );
 		
@@ -62,7 +63,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		public function renderPreviewToBitmapData():BitmapData 
 		{
 			var croppedMap:BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, false, 0xffffffff );
-			croppedMap.draw(_positioningSheet,new Matrix(stage.stageWidth/482,0,0,stage.stageHeight / 364),null,"normal",null,true);
+			croppedMap.draw(_positioningSheet,new Matrix(stage.stageWidth/_easelRect.width,0,0,stage.stageHeight / _easelRect.height),null,"normal",null,true);
 			return croppedMap;
 			
 		}
@@ -70,6 +71,18 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		public function set easelRect( value:Rectangle ):void {
 			trace( this, "easel rect retrieved: " + value );
 			_easelRect = value;
+		}
+		
+		override public function enable():void
+		{
+			super.enable();
+			stage.quality = StageQuality.HIGH;
+		}
+		
+		override public function disable():void
+		{
+			super.disable();
+			stage.quality = StageQuality.LOW;
 		}
 	}
 }

@@ -191,18 +191,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</BumpDecorator>
 					</pathengine>
 				</brush>
-		</brushkits>	
-	/*
-		public static const brushKitData:XML = 
-			<brushkits>
-				
-				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
-					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
-					<parameter id="Pigment flow" path="brush" value="0.5" showInUI="1"/>
-					<parameter id="Pigment bleaching" path="brush" value="0.07" showInUI="1"/>
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet" showInUI="0"/>
-					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
-				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Gravure Pen">
 					<parameter id="Shapes" path="brush" index="0" list="sphere,splat,splat3,line,basic,noisy" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0"/>
@@ -240,6 +228,19 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<EndConditionalDecorator/>
 					</pathengine>
 				</brush>
+		</brushkits>	
+	/*
+		public static const brushKitData:XML = 
+			<brushkits>
+				
+				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
+					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
+					<parameter id="Pigment flow" path="brush" value="0.5" showInUI="1"/>
+					<parameter id="Pigment bleaching" path="brush" value="0.07" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet" showInUI="0"/>
+					<pathengine type={PathManager.ENGINE_TYPE_BASIC}/>
+				</brush>
+				
 				<brush engine={BrushType.SPRAY_CAN} name="Gravity Spray">
 					<parameter id="Shapes" path="brush" index="0" list="noisy"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0.12" showInUI="1"/>
