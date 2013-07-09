@@ -110,6 +110,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			selectScene( _mainScene );
 			enable3d();
+			_frozen = false;
 		}
 
 		// TODO: make method to zoom camera to fit a rect
