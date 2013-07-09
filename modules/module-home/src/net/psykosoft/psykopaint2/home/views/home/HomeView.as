@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.ColorTransform;
+	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
@@ -121,7 +122,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
 			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 ) );
 			var brCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsZ, 0 ) );
-			return new Rectangle( tlCorner.x, tlCorner.y, brCorner.x - tlCorner.x, brCorner.y - tlCorner.y );
+			return new Rectangle(
+					tlCorner.x / CoreSettings.GLOBAL_SCALING,
+					tlCorner.y / CoreSettings.GLOBAL_SCALING,
+					( brCorner.x - tlCorner.x ) / CoreSettings.GLOBAL_SCALING,
+					( brCorner.y - tlCorner.y ) / CoreSettings.GLOBAL_SCALING
+			);
 		}
 
 		private function objectSpaceToScreenSpace( plane:Mesh, offset:Vector3D ):Vector3D {
@@ -131,9 +137,14 @@ package net.psykosoft.psykopaint2.home.views.home
 //			trace( "ratio: " + _view.camera.lens.aspectRatio );
 
 			// Scene space.
-			offset.scaleBy( plane.scaleX );
-			var center:Vector3D = plane.sceneTransform.transformVector( new Vector3D() );
-			offset = offset.add( center );
+			var sceneTransform:Matrix3D = plane.sceneTransform.clone();
+			var comps:Vector.<Vector3D> = sceneTransform.decompose();
+			sceneTransform.recompose( Vector.<Vector3D>( [ // Remove rotation data from transform.
+				comps[ 0 ],
+				new Vector3D(),
+				comps[ 2 ]
+			] ) );
+			offset = sceneTransform.transformVector( offset );
 			// Uncomment to visualize 3d point.
 			/*var tracer3d:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
 			tracer3d.position = offset;
@@ -141,8 +152,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// View space.
 			var screenPosition:Vector3D = _view.camera.project( offset );
-			screenPosition.x = 0.5 * stage.width * ( 1 + screenPosition.x );
-			screenPosition.y = 0.5 * stage.height * ( 1 + screenPosition.y );
+			screenPosition.x = 0.5 * _stage3dProxy.width * ( 1 + screenPosition.x );
+			screenPosition.y = 0.5 * _stage3dProxy.height * ( 1 + screenPosition.y );
 			// Uncomment to visualize 2d point.
 			/*var tracer2d:Sprite = new Sprite();
 			tracer2d.graphics.beginFill( 0xFF0000, 1 );
