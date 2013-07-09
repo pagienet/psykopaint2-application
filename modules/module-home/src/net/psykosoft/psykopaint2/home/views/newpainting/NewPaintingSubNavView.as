@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var vo:PaintingInfoVO = data[ i ];
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
-				var btn:SbButton = navigation.createButton( str, "polaroid", ButtonLabelType.NO_BACKGROUND, new Bitmap( vo.thumbnail ) );
+				var btn:SbButton = navigation.createButton( str, ButtonIconType.POLAROID, ButtonLabelType.NO_BACKGROUND, new Bitmap( vo.thumbnail ) );
 				_buttonGroup.addButton( btn );
 			}
 			_buttonGroup.setSelectedButtonByIndex( _buttonGroup.numButtons - 1 );

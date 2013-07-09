@@ -65,7 +65,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 			switch( label ) {
 				case PickSurfaceSubNavView.LBL_BACK:
-					requestStateChange( StateType.PREVIOUS );
+					requestStateChange( StateType.HOME_ON_EASEL );
 					break;
 				case PickSurfaceSubNavView.LBL_CONTINUE:
 					requestDrawingCoreSurfaceSetSignal.dispatch( _loadedNormalSpecularData, _loadedColorData );

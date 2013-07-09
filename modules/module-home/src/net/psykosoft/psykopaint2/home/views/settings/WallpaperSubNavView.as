@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 			var names:Vector.<String> = atlas.names;
 			for( var i:uint; i < names.length; i++ ) {
 				var name:String = names[ i ];
-				var btn:SbButton = navigation.createButton( name, "polaroid", ButtonLabelType.NO_BACKGROUND, new Bitmap( atlas.getSubTextureForId( name ) ) );
+				var btn:SbButton = navigation.createButton( name, ButtonIconType.POLAROID, ButtonLabelType.NO_BACKGROUND, new Bitmap( atlas.getSubTextureForId( name ) ) );
 				_group.addButton( btn );
 			}
 			navigation.addCenterButtonGroup( _group );
