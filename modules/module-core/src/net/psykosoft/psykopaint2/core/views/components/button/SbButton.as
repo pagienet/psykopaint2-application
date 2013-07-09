@@ -10,8 +10,6 @@ package net.psykosoft.psykopaint2.core.views.components.button
 	import flash.text.TextField;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
-	
-	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 
 	public class SbButton extends Sprite
 	{
@@ -61,9 +59,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 		public function setIcon( image:Bitmap ):void {
 			// TODO: account for possibility of previously set icon
-			image.width = image.height = 100;
-			image.x = icon.width / 2 - 50;
-			image.y = icon.height / 2 - 50;
+			image.width = image.height = 105;
+			image.x = 15;
+			image.y = 31;
 			icon.addChild( image );
 		}
 
@@ -76,21 +74,23 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		}
 
 		public function setLabelType( labelType:String ):void {
+
 			var currentName:String = getQualifiedClassName( labelBg );
 			if( labelType == currentName ) return;
+
 			removeChild( labelBg );
 			labelBg = null;
-			var newClipClass:Class = Class( getDefinitionByName( labelType ) );
-			labelBg = new newClipClass();
-			tf.visible = true;
-			labelBg.visible = true;
-			labelBg.x = _btnLblPos.x;
-			labelBg.y = _btnLblPos.y;
-			addChildAt(labelBg, 2);
 
-			if ( labelType == ButtonLabelType.NONE ) {
-				tf.visible = false;
-				labelBg.visible = false;
+			tf.visible = true;
+			if( labelType != ButtonLabelType.NONE && labelType != ButtonLabelType.NO_BACKGROUND ) {
+				var newClipClass:Class = Class( getDefinitionByName( labelType ) );
+				labelBg = new newClipClass();
+				labelBg.x = _btnLblPos.x;
+				labelBg.y = _btnLblPos.y;
+				addChildAt( labelBg, 2 );
+			}
+			else {
+				tf.visible = labelType == ButtonLabelType.NO_BACKGROUND;
 			}
 		}
 
@@ -136,12 +136,18 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			// Update label.
 			tf.width = tf.textWidth + 10;
 			tf.height = 1.25 * tf.textHeight;
-            labelBg.width = Math.max ( tf.width + 30, 100 );
+			if( labelBg ) {
+				labelBg.width = Math.max( tf.width + 30, 100 );
+			}
 			if( _autoCenter ) {
 				tf.x = -tf.width / 2;
-				labelBg.x = -labelBg.width / 2;
+				if( labelBg ) {
+					labelBg.x = -labelBg.width / 2;
+				}
 			}
-			if( _snapToRight ) tf.x = labelBg.x - labelBg.width + 3;
+			if( labelBg ) {
+				if( _snapToRight ) tf.x = labelBg.x - labelBg.width + 3;
+			}
 		}
 
 		public function displaceLabelBg( dx:Number, dy:Number ):void {

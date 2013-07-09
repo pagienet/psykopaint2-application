@@ -60,7 +60,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					data.sort( sortOnLastSaved );
 				}
 				view.setInProgressPaintings( data );
-				paintingModel.focusedPaintingId = view.getIdForSelectedInProgressPainting();
+				paintingModel.focusedPaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
 				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
 				requestEaselUpdateSignal.dispatch( vo );
 			}
@@ -97,8 +97,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					break;
 				}
 				default: { // Default buttons are supposed to be in progress painting buttons.
-					paintingModel.focusedPaintingId = label;
-					var vo:PaintingInfoVO = paintingModel.getVoWithId( label );
+					paintingModel.focusedPaintingId = "uniqueUserId-" + label;
+					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + label );
 					requestEaselUpdateSignal.dispatch( vo );
 				}
 			}

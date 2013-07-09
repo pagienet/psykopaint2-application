@@ -329,6 +329,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			var btn:SbButton = new SbButton();
 			btn.labelText = label;
 			if( iconType != "" ) btn.setIconType( iconType );
+			if( iconType == "polaroid" ) {
+				btn.displaceLabelTf( 0, -8 );
+			}
 			btn.setLabelType( labelType );
 			if( icon ) btn.setIcon( icon );
 			return btn;
