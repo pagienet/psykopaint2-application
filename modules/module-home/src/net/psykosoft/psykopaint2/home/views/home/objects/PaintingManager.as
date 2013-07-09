@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
-	import away3d.entities.Mesh;
 	import away3d.materials.lightpickers.LightPickerBase;
 
 	import br.com.stimuli.loading.BulkLoader;
