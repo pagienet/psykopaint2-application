@@ -128,10 +128,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( _transformModeActive && stateType != StateType.PAINT_TRANSFORM )
 			{
 				_transformModeActive = false;
+				renderer.sourceTextureAlpha = 0;
 				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
 			} else if ( !_transformModeActive && stateType == StateType.PAINT_TRANSFORM )
 			{
 				_transformModeActive = true;
+				renderer.sourceTextureAlpha = 1;
 				_activeBrushKit.deactivate();
 			} 
 		}

@@ -430,7 +430,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			if (_sourceTextureAlpha == value) return;
 			_sourceTextureAlpha = value;
-			if (_sourceTextureAlpha == 0 || value == 0)
+			//if (_sourceTextureAlpha == 0 || value == 0)
 				invalidateProgram();
 
 			_globalFragmentData[4] = value*2;
