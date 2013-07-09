@@ -157,7 +157,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			return _brushAngleRange;
 		}
 
-		public function setCallbacks(callbackObject : Object, onPathPoints : Function, onPathStart : Function = null, onPathEnd : Function = null, onPickColor : Function = null) : void
+		public function setCallbacks( callbackObject : Object, onPathPoints : Function, onPathStart : Function = null, onPathEnd : Function = null, onPickColor : Function = null) : void
 		{
 			_callbacks = new PathManagerCallbackInfo(callbackObject, onPathPoints, onPathStart, onPathEnd, onPickColor );
 		}
@@ -279,6 +279,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_view.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			
 			onSampleStart(event.stageX, event.stageY);
+		
 		}
 		
 		// for purposes of le debug
@@ -407,7 +408,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			
 			
 		}
-
+		
 		protected function update(forceUpdate : Boolean = false) : void
 		{
 			_accumulatedResults = _accumulatedResults.concat(_pathEngine.update( forceUpdate ) );
@@ -447,7 +448,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			}
 		}
 
-		public function activate(view : DisplayObject, canvasModel:CanvasModel, renderer : CanvasRenderer ) : void
+		public function activate( view : DisplayObject, canvasModel:CanvasModel, renderer : CanvasRenderer ) : void
 		{
 			_touchID = -1;
 			_startCallbacksSent = false;

@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.display.Stage3D;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -24,9 +25,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	
@@ -44,6 +47,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var canvasHistory : CanvasHistoryModel;
 
 		[Inject]
+		public var stage3D : Stage3D;
+		
+		[Inject]
+		public var penManager : WacomPenManager;
+		
+		[Inject]
 		public var notifyPaintModuleActivatedSignal : NotifyPaintModuleActivatedSignal;
 
 		[Inject]
@@ -59,12 +68,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var memoryWarningSignal : NotifyMemoryWarningSignal;
 
 		[Inject]
-		public var stage3D : Stage3D;
-		
-		[Inject]
-		public var penManager : WacomPenManager;
-
-		[Inject]
 		public var requestChangeRenderRect : RequestChangeRenderRectSignal;
 		
 		[Inject]
@@ -73,23 +76,25 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var notifyStateChangeSignal:NotifyStateChangeSignal;
 		
-		
 		[Inject]
 		public var notifyGlobalGestureSignal : NotifyGlobalGestureSignal;
 		
-		private var _view : DisplayObject;
+		[Inject]
+		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
+		[Inject]
+		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
+
+		private var _view : DisplayObject;
 		private var _active : Boolean;
 		private var _availableBrushKits:Vector.<BrushKit>;
 		private var _availableBrushKitNames:Vector.<String>;
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
 		private var _transformModeActive:Boolean;
-		
-		
-
 		private var _canvasRect : Rectangle;
-		
+		private var _navigationIsShown:Boolean;
+		private var _autoRevealNavigation:Object;
 		
 		public function PaintModule()
 		{
@@ -101,15 +106,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			}
 			
 			_transformModeActive = false;
-			/*
-			registerBrush( BrushType.WATER_COLOR, WaterColorBrush );
-			registerBrush( BrushType.WATER_DAMAGE, WaterDamageBrush );
-			registerBrush( BrushType.SPRAY_CAN, SprayCanBrush );
-			registerBrush( BrushType.INK_DOTS, UncoloredSprayCanBrush );
-			registerBrush( BrushType.POINTILLIST, PointillistBrush );
-			registerBrush( BrushType.DELAUNAY, DelaunayBrush );
-			registerBrush( BrushType.SHATTER, ShatterBrush );
-			*/
+			
 		}
 
 		[PostConstruct]
@@ -120,7 +117,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			memoryWarningSignal.add(onMemoryWarning);
 			requestChangeRenderRect.add(onChangeRenderRect);
 			notifyGlobalGestureSignal.add( onGlobalGesture );
-			notifyStateChangeSignal.add( onStateChange )
+			notifyStateChangeSignal.add( onStateChange );
+			notifyNavigationToggledSignal.add( onNavigationToggled );
 		}
 		
 		private function onStateChange( stateType:String ):void
@@ -128,10 +126,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( _transformModeActive && stateType != StateType.PAINT_TRANSFORM )
 			{
 				_transformModeActive = false;
+				renderer.sourceTextureAlpha = 0;
 				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
 			} else if ( !_transformModeActive && stateType == StateType.PAINT_TRANSFORM )
 			{
 				_transformModeActive = true;
+				renderer.sourceTextureAlpha = 1;
 				_activeBrushKit.deactivate();
 			} 
 		}
@@ -140,7 +140,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED )
 			{
-				
 				if ( _transformModeActive )
 				{
 					requestStateChangeSignal.dispatch( StateType.PREVIOUS );
@@ -241,6 +240,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private function onStrokeStarted(event : Event) : void
 		{
 			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
+			if ( _navigationIsShown ) setTimeout( triggerToogleNavBar, 1000, false );
+		}
+		
+		private function onStrokeEnded(event : Event) : void
+		{
+			if ( _autoRevealNavigation ) setTimeout( triggerToogleNavBar, 1000, true );
 		}
 
 		private function activateBrushKit() : void
@@ -248,8 +253,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( _activeBrushKit )
 			{
 				_activeBrushKit.canvasRect = _canvasRect;
-				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
-				_activeBrushKit.brushEngine.addEventListener(AbstractBrush.STROKE_STARTED, onStrokeStarted);
+				_activeBrushKit.activate( _view, stage3D.context3D, canvasModel, renderer);
+				_activeBrushKit.brushEngine.addEventListener( AbstractBrush.STROKE_STARTED, onStrokeStarted);
+				_activeBrushKit.brushEngine.addEventListener( AbstractBrush.STROKE_ENDED, onStrokeEnded );
 				_activeBrushKit.addEventListener( Event.CHANGE, onActiveBrushKitChanged );
 			}
 		}
@@ -260,6 +266,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			{
 				_activeBrushKit.deactivate();
 				_activeBrushKit.brushEngine.removeEventListener(AbstractBrush.STROKE_STARTED, onStrokeStarted);
+				_activeBrushKit.brushEngine.removeEventListener( AbstractBrush.STROKE_ENDED, onStrokeEnded );
 				_activeBrushKit.removeEventListener( Event.CHANGE, onActiveBrushKitChanged );
 				_activeBrushKit = null;
 				_activeBrushKitName = "";
@@ -269,6 +276,17 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private function onActiveBrushKitChanged( event:Event ):void
 		{
 			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSetAsXML() );
+		}
+		
+		private function triggerToogleNavBar( show:Boolean ):void
+		{
+			_autoRevealNavigation = !show;
+			requestNavigationToggleSignal.dispatch(show ? 1 : -1);
+		}
+		
+		private function onNavigationToggled( shown:Boolean ):void
+		{
+			_navigationIsShown = shown;
 		}
 		
 		public function getAvailableBrushTypes() : Vector.<String> {
