@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	{
 		private var _paintings:Vector.<FramedPainting>;
 		private var _cameraController:ScrollCameraController;
-		private var _room:WallRoom;
+		private var _room:Room;
 		private var _view:View3D;
 		private var _snapPointForPainting:Dictionary;
 		private var _shadowForPainting:Dictionary;
@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private const FRAME_GAP:Number = 300;
 
-		public function PaintingManager( cameraController:ScrollCameraController, room:WallRoom, view:View3D, lightPicker:LightPickerBase, stage3dProxy:Stage3DProxy ) {
+		public function PaintingManager( cameraController:ScrollCameraController, room:Room, view:View3D, lightPicker:LightPickerBase, stage3dProxy:Stage3DProxy ) {
 			super();
 			_cameraController = cameraController;
 			_room = room;

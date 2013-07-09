@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
-	public class WallRoom extends ObjectContainer3D
+	public class Room extends ObjectContainer3D
 	{
 		private var _wall:Mesh;
 		private var _floor:Mesh;
@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private const FLOOR_DEPTH:Number = 1750;
 
-		public function WallRoom( view:View3D ) {
+		public function Room( view:View3D ) {
 			super();
 			_view = view;
 		}
@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Geometry.
 			var wallGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
-			var uvScale:Number = 1;
+			var uvScale:Number = 2;
 			wallGeometry.scaleUV( uvScale * WALL_WIDTH / wallGeometry.width, uvScale );
 
 			// Mesh.

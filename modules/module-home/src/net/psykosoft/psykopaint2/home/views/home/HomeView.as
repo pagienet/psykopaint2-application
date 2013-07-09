@@ -37,14 +37,14 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.objects.EaselPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
-	import net.psykosoft.psykopaint2.home.views.home.objects.WallRoom;
+	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
 
 	use namespace arcane;
 
 	public class HomeView extends ViewBase
 	{
 		private var _cameraController:ScrollCameraController;
-		private var _room:WallRoom;
+		private var _room:Room;
 		private var _paintingManager:PaintingManager;
 		private var _loader:AssetBundleLoader;
 		private var _view:View3D;
@@ -268,7 +268,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_light.color = 0x989589;
 			_light.ambientColor = 0x808088;
 			_lightPicker = new StaticLightPicker([_light]);
-			_room = new WallRoom( _view );
+			_room = new Room( _view );
 			var cameraTarget:Object3D = new Object3D();
 			_cameraController.setCamera( _view.camera, cameraTarget );
 			_cameraController.stage = stage;
@@ -368,7 +368,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _paintingManager;
 		}
 
-		public function get room():WallRoom {
+		public function get room():Room {
 			return _room;
 		}
 
