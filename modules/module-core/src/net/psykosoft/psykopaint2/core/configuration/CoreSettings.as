@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static const SHOW_PSYKOSOCKET_CONNECTION_UI:Boolean = false; /*false on release*/
 		public static const SHOW_HIDDEN_BRUSH_PARAMETERS:Boolean = false; /*false on release*/
 		public static const SHOW_INTRO_VIDEO:Boolean = false; /*false on release*/
+		public static const TINT_SPLASH_SCREEN:Boolean = false; /*false on release*/
 
 		public static const RESOLUTION_DPI_RETINA:uint = 264;
 		public static const STAGE_3D_ANTI_ALIAS:uint = 0;

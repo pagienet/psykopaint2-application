@@ -216,7 +216,9 @@ package net.psykosoft.psykopaint2.core.views.base
 		private function initSplashScreen():void {
 			_splashScreen = new SplashImageAsset();
 			_splashScreen.name = "splash screen";
-			//_splashScreen.transform.colorTransform = new ColorTransform( -1, -1, -1, 1, 255, 255, 255 );
+			if( CoreSettings.TINT_SPLASH_SCREEN ) {
+				_splashScreen.transform.colorTransform = new ColorTransform( -1, -1, -1, 1, 255, 255, 255 );
+			}
 			_debugLayer.addChild( _splashScreen );
 			_splashScreen.scaleX = _splashScreen.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1 : 0.5;
 		}
