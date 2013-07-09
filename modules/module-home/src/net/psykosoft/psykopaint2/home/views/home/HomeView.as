@@ -272,7 +272,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			var cameraTarget:Object3D = new Object3D();
 			_cameraController.setCamera( _view.camera, cameraTarget );
 			_cameraController.stage = stage;
-			_paintingManager = new PaintingManager( _cameraController, _room, _view, _lightPicker );
+			_paintingManager = new PaintingManager( _cameraController, _room, _view, _lightPicker, _stage3dProxy );
 			_paintingManager.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
 			_cameraController.cameraY = cameraTarget.y = HomeSettings.DEFAULT_CAMERA_POSITION.y;
@@ -291,9 +291,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			var rootUrl:String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
 			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
 
-			// Picture frame assets.
-			registerBundledAsset( rootUrl + "away3d/frames/frames" + extra + ".atf", "framesAtlasImage", true );
-			registerBundledAsset( "/home-packaged/away3d/frames/frames.xml", "framesAtlasXml" );
 			// Default paintings.
 			registerBundledAsset( "/home-packaged/away3d/paintings/home_painting.jpg", "homePainting" );
 			registerBundledAsset( "/home-packaged/away3d/paintings/settings_painting.jpg", "settingsPainting" );

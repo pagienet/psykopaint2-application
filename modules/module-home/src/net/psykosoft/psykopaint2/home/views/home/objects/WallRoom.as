@@ -12,7 +12,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import flash.utils.ByteArray;
 
-	import net.psykosoft.psykopaint2.base.utils.gpu.SlicePlane;
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
@@ -20,8 +19,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	{
 		private var _wall:Mesh;
 		private var _floor:Mesh;
-		private var _shadows:Vector.<Mesh>;
-		private var _shadowMaterial:TextureMaterial;
 		private var _floorMaterial:TextureMaterial;
 		private var _wallMaterial:TextureMaterial;
 		private var _view:View3D;
@@ -41,7 +38,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		public function initialize():void {
 			loadWall();
-			loadShadow();
 			loadFloor();
 		}
 
@@ -67,23 +63,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_wall.y = WALL_BASE_Y + WALL_HEIGHT / 2;
 			_wall.z = WALL_Z;
 			addChild( _wall );
-		}
-
-		// -----------------------
-		// Shadow.
-		// -----------------------
-
-		private function loadShadow():void {
-
-			// Material.
-			_shadowMaterial = TextureUtil.getAtfMaterial( HomeView.HOME_BUNDLE_ID, "frameShadow", _view );
-			_shadowMaterial.smooth = true;
-			_shadowMaterial.mipmap = false;
-			_shadowMaterial.alpha = 0.9;
-			_shadowMaterial.alphaBlending = true;
-
-			// Clone holder.
-			_shadows = new Vector.<Mesh>();
 		}
 
 		// -----------------------
@@ -131,36 +110,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 //			_wallMaterial.dispose();
 			_wall.dispose();
 			_wall = null;
-
-			for( var i:uint; i < _shadows.length; i++ ) {
-				var shadow:Mesh = _shadows[ i ];
-				shadow.dispose();
-				shadow = null;
-			}
-			_shadows = null;
-
-//			_shadowTexture.dispose();
-//			_shadowMaterial.dispose();
-			_shadowMaterial = null;
 		}
 
 		// -----------------------
 		// Public.
 		// -----------------------
-
-		public function addShadow( x:Number, y:Number, width:Number, height:Number ):Mesh {
-			var shadow:SlicePlane = new SlicePlane( _shadowMaterial, 1024, 1024 );
-			shadow.setSlices( 100, 100, 275, 275 );
-			shadow.rotationX = -90;
-			shadow.x = x - 10;
-			shadow.y = y;
-			shadow.z = WALL_Z - 1;
-			shadow.width = width + 148;
-			shadow.height = height + 450;
-			_shadows.push( shadow );
-			addChild( shadow );
-			return shadow;
-		}
 
 		public function changeWallpaper( atf:ByteArray ):void {
 
