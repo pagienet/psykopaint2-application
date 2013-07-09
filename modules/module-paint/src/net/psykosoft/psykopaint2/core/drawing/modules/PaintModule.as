@@ -224,7 +224,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			initializeDefaultBrushes();
 
 			_active = true;
-			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[3];
+			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
 			renderer.init(this);
 			canvasModel.setSourceBitmapData(bitmapData);

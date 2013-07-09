@@ -48,6 +48,9 @@ import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 					paintModule.activeBrushKit = label;
 					EditBrushCache.setLastSelectedBrush( label );
 					view.navigation.toggleRightButtonVisibility( hasParameters() );
+					
+					EditBrushCache.lastScrollerPosition = view.navigation.getScrollerPosition();
+					requestStateChange( StateType.PAINT_ADJUST_BRUSH );
 					break;
 			}
 		}

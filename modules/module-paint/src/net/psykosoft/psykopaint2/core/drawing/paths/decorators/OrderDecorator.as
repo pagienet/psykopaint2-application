@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	
 	final public class OrderDecorator extends AbstractPointDecorator
 	{
+		static public const PARAMETER_I_BUFFER_SIZE:String = "Buffer Size";
 		
 		private var delay:PsykoParameter;
 		
