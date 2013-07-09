@@ -107,5 +107,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		public function scalePainting( value:Number ):void {
 			_scale = _plane.scaleX = _plane.scaleZ = value;
 		}
+
+		public function get plane():Mesh {
+			return _plane;
+		}
 	}
 }

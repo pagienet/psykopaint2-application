@@ -1,26 +1,44 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 
+	import away3d.arcane;
+	import away3d.bounds.AxisAlignedBoundingBox;
+	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 	import away3d.core.managers.Stage3DProxy;
+	import away3d.entities.Mesh;
 	import away3d.lights.DirectionalLight;
+	import away3d.materials.ColorMaterial;
+	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
+	import away3d.primitives.SphereGeometry;
+	import away3d.textures.BitmapTexture;
 
 	import flash.display.BitmapData;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.geom.ColorTransform;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
+	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
+	import net.psykosoft.psykopaint2.home.views.home.objects.EaselPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
 	import net.psykosoft.psykopaint2.home.views.home.objects.WallRoom;
+
+	use namespace arcane;
 
 	public class HomeView extends ViewBase
 	{
@@ -34,6 +52,12 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _shiftMultiplier:Number = 1;
 		private var _light : DirectionalLight;
 		private var _lightPicker : StaticLightPicker;
+		private var _isEnabled3d:Boolean;
+		private var _mainScene:ObjectContainer3D;
+		private var _freezeScene:ObjectContainer3D;
+		private var _freezePlane:Mesh;
+		private var _frozen:Boolean;
+		private var _easelRect:Rectangle;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
 		public static const DEFAULT_ZOOM_IN:Point = new Point( 400, -800 );
@@ -48,19 +72,139 @@ package net.psykosoft.psykopaint2.home.views.home
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
 
+		public function freeze( bmd:BitmapData ):void {
+			if( _frozen ) return;
+			unFreeze();
+			trace( this, "freeze()" );
+			if( HomeSettings.TINT_FREEZES ) {
+				bmd.colorTransform( bmd.rect, new ColorTransform( 0.75, 0.75, 1, 1 ) );
+			}
+			selectScene( _freezeScene );
+			disable3d();
+			renderScene();
+			_freezePlane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( bmd, _stage3dProxy );
+			_freezePlane.rotationX = -90;
+			_freezePlane.z = 10000; // TODO: adjust mathematically, probably will be different on HR too
+			ensurePlaneFitsViewport( _freezePlane );
+			_freezeScene.addChild( _freezePlane );
+			_frozen = true;
+		}
+
+		public function unFreeze():void {
+			if( !_frozen ) return;
+			trace( this, "unFreeze()" );
+			if( _freezePlane ) {
+				if( _freezeScene.contains( _freezePlane ) ) {
+					_freezeScene.removeChild( _freezePlane );
+				}
+				_freezePlane.dispose();
+				var freezePlaneMaterial:TextureMaterial = _freezePlane.material as TextureMaterial;
+				if( freezePlaneMaterial ) {
+					var freezePlaneTexture:BitmapTexture = freezePlaneMaterial.texture as BitmapTexture;
+					if( freezePlaneTexture ) {
+						freezePlaneTexture.dispose(); // TODO: review if this is being disposed
+					}
+					freezePlaneMaterial.dispose(); // TODO: review if this is being disposed
+				}
+				_freezePlane = null;
+			}
+			selectScene( _mainScene );
+			enable3d();
+		}
+
+		// TODO: make method to zoom camera to fit a rect
+
+		private function calculateEaselScreenRect():Rectangle {
+			var plane:Mesh = EaselPainting( _paintingManager.easel.painting ).plane;
+			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
+			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 ) );
+			var brCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsZ, 0 ) );
+			return new Rectangle( tlCorner.x, tlCorner.y, brCorner.x - tlCorner.x, brCorner.y - tlCorner.y );
+		}
+
+		private function objectSpaceToScreenSpace( plane:Mesh, offset:Vector3D ):Vector3D {
+
+//			trace( this, "objectSpaceToScreenSpace --------------------" );
+
+//			trace( "ratio: " + _view.camera.lens.aspectRatio );
+
+			// Scene space.
+			offset.scaleBy( plane.scaleX );
+			var center:Vector3D = plane.sceneTransform.transformVector( new Vector3D() );
+			offset = offset.add( center );
+			// Uncomment to visualize 3d point.
+			/*var tracer3d:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
+			tracer3d.position = offset;
+			_freezeScene.addChild( tracer3d );*/
+
+			// View space.
+			var screenPosition:Vector3D = _view.camera.project( offset );
+			screenPosition.x = 0.5 * stage.width * ( 1 + screenPosition.x );
+			screenPosition.y = 0.5 * stage.height * ( 1 + screenPosition.y );
+			// Uncomment to visualize 2d point.
+			/*var tracer2d:Sprite = new Sprite();
+			tracer2d.graphics.beginFill( 0xFF0000, 1 );
+			tracer2d.graphics.drawCircle( screenPosition.x, screenPosition.y, 10 );
+			tracer2d.graphics.endFill();
+			addChild( tracer2d );*/
+
+//			trace( "screen position: " + screenPosition );
+			return screenPosition;
+		}
+
+		private function ensurePlaneFitsViewport( plane:Mesh ):void {
+
+//			trace( this, "fitting plane to viewport..." );
+
+			// Use a ray to determine the target width of the plane.
+			var rayPosition:Vector3D = _view.camera.unproject( 0, 0, 0 );
+			var rayDirection:Vector3D = _view.camera.unproject( 1, 0, 1 );
+			rayDirection = rayDirection.subtract( rayPosition );
+			rayDirection.normalize();
+			var t:Number = -( -rayPosition.z + plane.z ) / -rayDirection.z; // Typical ray-plane intersection calculation ( simplified because of zero's ).
+			var targetPlaneHalfWidth:Number = rayPosition.x + t * rayDirection.x;
+//			trace( "targetPlaneHalfWidth: " + targetPlaneHalfWidth );
+
+			// Scale the plane so that it fits.
+			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
+//			trace( "actual width: " + bounds.halfExtentsX );
+			var sc:Number = targetPlaneHalfWidth / bounds.halfExtentsX;
+//			trace( "scale: " + sc );
+			plane.scale( sc );
+		}
+
 		// ---------------------------------------------------------------------
 		// Creation...
 		// ---------------------------------------------------------------------
 
 		override protected function onEnabled():void {
 			addChild( _view );
-			_cameraController.isEnabled = true;
+			enable3d();
 		}
 
 		override protected function onDisabled():void {
 			// TODO: review if we need to do any clean up when view is disabled
 			removeChild( _view );
+			disable3d();
+			_frozen = false;
+		}
+
+		private function enable3d():void {
+			if( _isEnabled3d ) return;
+			_cameraController.isEnabled = true;
+			_isEnabled3d = true;
+		}
+
+		private function disable3d():void {
+			if( !_isEnabled3d ) return;
 			_cameraController.isEnabled = false;
+			_isEnabled3d = false;
+		}
+
+		private function selectScene( scene:ObjectContainer3D ):void {
+			var otherScene:ObjectContainer3D = scene == _mainScene ? _freezeScene : _mainScene;
+			if( _view.scene.contains( otherScene ) ) _view.scene.removeChild( otherScene );
+			_view.scene.addChild( scene );
 		}
 
 		override protected function onSetup():void {
@@ -89,6 +233,16 @@ package net.psykosoft.psykopaint2.home.views.home
 			stage.addEventListener( KeyboardEvent.KEY_UP, onStageKeyUp );
 
 			// -----------------------
+			// Scenes.
+			// -----------------------
+
+			_mainScene = new ObjectContainer3D();
+
+			_freezeScene = new ObjectContainer3D();
+
+			selectScene( _mainScene );
+
+			// -----------------------
 			// Initialize objects.
 			// -----------------------
 
@@ -108,14 +262,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			_paintingManager = new PaintingManager( _cameraController, _room, _view, _lightPicker );
 			_paintingManager.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
-			_cameraController.cameraY = cameraTarget.y = 400;
-			_cameraController.cameraZ = -800;
+			_cameraController.cameraY = cameraTarget.y = HomeSettings.DEFAULT_CAMERA_POSITION.y;
+			_cameraController.cameraZ = HomeSettings.DEFAULT_CAMERA_POSITION.z;
 			_paintingManager.z = _room.wallZ - 2;
 			cameraTarget.z = _room.wallZ;
-			_view.scene.addChild( _cameraController );
-			_view.scene.addChild( _room );
-			_view.scene.addChild( _paintingManager );
-			_view.scene.addChild( _light );
+			_mainScene.addChild( _cameraController );
+			_mainScene.addChild( _room );
+			_mainScene.addChild( _paintingManager );
+			_mainScene.addChild( _light );
 
 			// -------------------------
 			// Prepare external assets.
@@ -314,6 +468,15 @@ package net.psykosoft.psykopaint2.home.views.home
 				}
 			}
 			trace( this, "positioning camera, Y: " + _cameraController.camera.y + ", Z: " + _cameraController.camera.z );
+		}
+
+		public function setEaselContent( data:PaintingInfoVO ):void {
+			_paintingManager.setEaselContent( data );
+			_easelRect = calculateEaselScreenRect();
+		}
+
+		public function get easelRect():Rectangle {
+			return _easelRect;
 		}
 	}
 }

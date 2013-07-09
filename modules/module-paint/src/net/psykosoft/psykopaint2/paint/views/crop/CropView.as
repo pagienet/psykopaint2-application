@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		private var _sourceMap:BitmapData;
 		private var _canvasWidth:int;
 		private var _canvasHeight:int;
+		private var _easelRect:Rectangle;
 
 		public function CropView() {
 			super();
@@ -23,12 +24,15 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		override protected function onSetup():void {
 			_baseTextureSize = _canvasWidth = stage.stageWidth;
 			_canvasHeight = stage.stageHeight;
-			
 		}
 
-		
 		public function set sourceMap( map:BitmapData ):void {
-			
+
+			// TODO: implement proper easel rect - info already here
+			this.graphics.beginFill( 0x00FF00, 1 );
+			this.graphics.drawRect( _easelRect.x, _easelRect.y, _easelRect.width, _easelRect.height );
+			this.graphics.endFill();
+
 			/*
 			graphics.beginFill( 0xFFFFFF, 1.0 );
 			graphics.drawRect( 0, 0, stage.stageWidth, stage.stageHeight );
@@ -60,6 +64,11 @@ package net.psykosoft.psykopaint2.paint.views.crop
 			croppedMap.draw(_positioningSheet,new Matrix(stage.stageWidth/482,0,0,stage.stageHeight / 364),null,"normal",null,true);
 			return croppedMap;
 			
+		}
+
+		public function set easelRect( value:Rectangle ):void {
+			trace( this, "easel rect retrieved: " + value );
+			_easelRect = value;
 		}
 	}
 }

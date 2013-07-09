@@ -27,11 +27,12 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 			// Remember original diffuseImage and safe diffuseImage dimensions.
 			var imageDimensions:Point = new Point( diffuseImage.width, diffuseImage.height );
 
-			var diffuseTexture : BitmapTexture = createPow2TextureFromBitmap(diffuseImage, stage3dProxy);
+			var diffuseTexture:BitmapTexture = createPow2TextureFromBitmap( diffuseImage, stage3dProxy );
 			var textureDimensions:Point = new Point( diffuseTexture.width, diffuseTexture.height );
 
 			// Create material.
 			var material:TextureMaterial = new TextureMaterial( diffuseTexture, true, false, false );
+//			material.alphaBlending = true; // TODO: remove
 
 			// Build geometry.
 			// Note: Plane takes original diffuseImage size ( not power of 2 dimensions ) and shifts and re-scales uvs
@@ -58,14 +59,13 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 
 		}
 
-		private static function createPow2TextureFromBitmap(diffuseImage : BitmapData, stage3dProxy : Stage3DProxy) : BitmapTexture
-		{
+		private static function createPow2TextureFromBitmap( diffuseImage:BitmapData, stage3dProxy:Stage3DProxy ):BitmapTexture {
 			// Obtain "safe" ( power of 2 sized image ) from the original.
-			var diffuseSafeImage : BitmapData = TextureUtil.ensurePowerOf2ByCentering(diffuseImage);
+			var diffuseSafeImage:BitmapData = TextureUtil.ensurePowerOf2ByCentering( diffuseImage );
 
 			// Create texture from image.
-			var diffuseTexture : BitmapTexture = new BitmapTexture(diffuseSafeImage);
-			diffuseTexture.getTextureForStage3D(stage3dProxy); // Force diffuseImage creation before the disposal of the bitmap data.
+			var diffuseTexture:BitmapTexture = new BitmapTexture( diffuseSafeImage );
+			diffuseTexture.getTextureForStage3D( stage3dProxy ); // Force diffuseImage creation before the disposal of the bitmap data.
 			diffuseImage.dispose();
 			diffuseSafeImage.dispose();
 			return diffuseTexture;

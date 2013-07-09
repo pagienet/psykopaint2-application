@@ -1,7 +1,12 @@
 package net.psykosoft.psykopaint2.paint.commands {
 
+	import flash.filesystem.File;
+
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 
@@ -26,18 +31,23 @@ package net.psykosoft.psykopaint2.paint.commands {
 		override public function execute():void {
 			super.execute();
 
-			/*//identify file name
-			var fileName:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/painting-" + paintingId + PaintingSerializer.PAINTING_FILE_EXTENSION;
+			//identify file names
+			var dataFileName:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION;
+			var infoFileName:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION;
 
-			//delete file name
-			var file:File;
+			//delete files
+			var dataFile:File;
+			var infoFile:File;
 			if( CoreSettings.RUNNING_ON_iPAD ) {
-				file = File.applicationStorageDirectory.resolvePath( fileName );
+				dataFile = File.applicationStorageDirectory.resolvePath( dataFileName );
+				infoFile = File.applicationStorageDirectory.resolvePath( infoFileName );
 			}
 			else {
-				file = File.desktopDirectory.resolvePath( fileName );
+				dataFile = File.desktopDirectory.resolvePath( dataFileName );
+				infoFile = File.desktopDirectory.resolvePath( infoFileName );
 			}
-			file.deleteFile();
+			dataFile.deleteFile();
+			infoFile.deleteFile();
 
 			//delete painting vo
 			paintingModel.deleteVoWithId( paintingId );
@@ -46,7 +56,7 @@ package net.psykosoft.psykopaint2.paint.commands {
 			requestStateChangeSignal.dispatch( StateType.HOME_ON_EASEL );
 
 			//zoom out
-			requestZoomToggleSignal.dispatch( false );*/
+			requestZoomToggleSignal.dispatch( false );
 		}
 	}
 }

@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		static private var _lastSelectedBrush:String = "";
 		static private var _lastSelectedParameter:Object = {};
 
-		static public var lastScrollerPosition:Number = 0;
+		static public var lastScrollerPosition:Number = 372; //TODO: harcode works, might want to do it cleaner.
 
 		static public function setLastSelectedBrush( value:String ):void {
 			if( _lastSelectedBrush == value ) return;

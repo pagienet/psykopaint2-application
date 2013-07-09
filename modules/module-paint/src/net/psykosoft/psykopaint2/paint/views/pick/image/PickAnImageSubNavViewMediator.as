@@ -23,6 +23,12 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 
+				case PickAnImageSubNavView.LBL_BACK:
+				{
+					requestStateChange( StateType.HOME_PICK_SURFACE );
+					break;
+				}
+
 				case PickAnImageSubNavView.LBL_USER:
 				{
 					requestStateChange( CoreSettings.RUNNING_ON_iPAD ? StateType.BOOK_PICK_USER_IMAGE_IOS : StateType.PICK_USER_IMAGE_DESKTOP );

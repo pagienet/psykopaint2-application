@@ -25,6 +25,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	public class SbNavigationView extends ViewBase
 	{
+//		[Embed(source="/../.png"]
+//		private var _btnIconsPng : Class;
+
+//		[Embed(source="/../.xml", mimeType="application/octet-stream")]
+//		private var _btnIconsXml : Class;
+
 		// Declared in Flash.
 		public var header:TextField;
 		public var headerBg:Sprite;

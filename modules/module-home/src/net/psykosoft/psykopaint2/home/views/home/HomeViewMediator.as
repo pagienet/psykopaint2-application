@@ -21,11 +21,13 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
@@ -82,14 +84,26 @@ public class HomeViewMediator extends MediatorBase
 		[Inject]
 		public var requestZoomThenChangeStateSignal:RequestZoomThenChangeStateSignal;
 
+		[Inject]
+		public var requestEaselRectInfoSignal:RequestEaselRectInfoSignal;
+
+		[Inject]
+		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
+
 		private var _waitingForPaintModeAfterZoomIn:Boolean;
 		private var _waitingForSnapShotOfHomeView:Boolean;
+
+		private var _freezingStates:Vector.<String>;
 
 		override public function initialize():void {
 
 			// Init.
 			super.initialize();
 			registerView( view );
+			_freezingStates = new Vector.<String>();
+			view.stage3dProxy = stage3dProxy;
+
+			// Fully active states.
 			registerEnablingState( StateType.HOME );
 			registerEnablingState( StateType.HOME_ON_EASEL );
 			registerEnablingState( StateType.HOME_ON_FINISHED_PAINTING );
@@ -97,12 +111,14 @@ public class HomeViewMediator extends MediatorBase
 			registerEnablingState( StateType.SETTINGS );
 			registerEnablingState( StateType.SETTINGS_WALLPAPER );
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
-			registerEnablingState( StateType.PICK_IMAGE );
-			registerEnablingState( StateType.PICK_SAMPLE_IMAGE );
-			registerEnablingState( StateType.PICK_USER_IMAGE_DESKTOP );
-			registerEnablingState( StateType.CROP );
+			registerEnablingState( StateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
 
-			view.stage3dProxy = stage3dProxy;
+			// Frozen states.
+			registerFreezingState( StateType.PICK_IMAGE );
+			registerFreezingState( StateType.BOOK_PICK_SAMPLE_IMAGE );
+			registerFreezingState( StateType.BOOK_PICK_USER_IMAGE_IOS );
+			registerFreezingState( StateType.CROP );
+			registerFreezingState( StateType.PICK_USER_IMAGE_DESKTOP );
 
 			// Register view gpu rendering in core.
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
@@ -116,6 +132,7 @@ public class HomeViewMediator extends MediatorBase
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
 			notifyPaintingActivatedSignal.add( onPaintingActivated );
+			requestEaselRectInfoSignal.add( onEaselRectInfoRequested );
 
 			// From view.
 			view.enabledSignal.add( onViewEnabled );
@@ -125,16 +142,25 @@ public class HomeViewMediator extends MediatorBase
 			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
 		}
 
+		private function registerFreezingState( stateName:String ):void {
+			_freezingStates.push( stateName );
+			registerEnablingState( stateName );
+		}
+
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onEaselRectInfoRequested():void {
+			notifyEaselRectInfoSignal.dispatch( view.easelRect );
+		}
 
 		private function onPaintingActivated():void {
 			requestZoomThenChangeStateSignal.dispatch( true, StateType.PAINT );
 		}
 
 		private function onEaselUpdateRequest( paintingVO : PaintingInfoVO ):void {
-			view.paintingManager.setEaselContent( paintingVO );
+			view.setEaselContent( paintingVO );
 		}
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingInfoVO> ):void {
@@ -153,19 +179,6 @@ public class HomeViewMediator extends MediatorBase
 			}
 			trace( this, "data retrieved - latest: " + latestVo );
 			view.paintingManager.setEaselContent( latestVo );
-		}
-
-		private function onCanvasSnapShot( bmd:BitmapData ):void {
-			// TODO: also updates when the edge bgs are being updated from a click on NewPaintSubNav's paint button, and it shouldn't
-			if( _waitingForSnapShotOfHomeView ) {
-				_waitingForSnapShotOfHomeView = false;
-				var p:Point = NavigationCache.isHidden ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
-				view.adjustCamera( p.x, p.y );
-				requestStateChange( StateType.PAINT );
-			}
-			else {
-				view.updateEasel( bmd );
-			}
 		}
 
 		private function onZoomRequested( zoomIn:Boolean ):void {
@@ -196,6 +209,45 @@ public class HomeViewMediator extends MediatorBase
 		private function onWallPaperChanged( atf:ByteArray ):void {
 			if( !view.visible ) return;
 			view.room.changeWallpaper( atf );
+		}
+
+		override protected function onStateChange( newState:String ):void {
+			if( _freezingStates.indexOf( newState ) != -1 ) freezeView();
+			else {
+				view.unFreeze();
+				super.onStateChange( newState );
+			}
+		}
+
+		private var _waitingForFreezeSnapshot:Boolean;
+
+		private function freezeView():void {
+			trace( this, "freezing..." );
+			// TODO: freeze is all black
+			if( _waitingForFreezeSnapshot ) return;
+			if( view.isEnabled ) {
+				_waitingForFreezeSnapshot = true;
+				RenderGpuCommand.snapshotScale = 1;
+				RenderGpuCommand.snapshotRequested = true;
+			}
+			else throw new Error( "HomeViewMediator - freeze requested while the view is not active." ); // TODO: ability to freeze while view is inactive might be needed
+		}
+
+		private function onCanvasSnapShot( bmd:BitmapData ):void {
+			if( _waitingForFreezeSnapshot ) {
+				trace( this, "applying freeze snapshot..." );
+				view.freeze( bmd );
+				_waitingForFreezeSnapshot = false;
+			}
+			else if( _waitingForSnapShotOfHomeView ) { // TODO: clean up, what else are we using snapshots for?
+				_waitingForSnapShotOfHomeView = false;
+				var p:Point = NavigationCache.isHidden ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
+				view.adjustCamera( p.x, p.y );
+				requestStateChange( StateType.PAINT );
+			}
+			/*else { // TODO: clean up, easel updates no longer work this way
+				view.updateEasel( bmd );
+			}*/
 		}
 
 		// -----------------------

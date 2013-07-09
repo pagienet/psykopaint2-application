@@ -6,11 +6,8 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.base.Object3D;
 	import away3d.entities.Mesh;
-	import away3d.materials.ColorMaterial;
-	import away3d.primitives.CubeGeometry;
 
 	import com.greensock.TweenLite;
-	import com.greensock.easing.Expo;
 	import com.greensock.easing.Strong;
 
 	import flash.display.Stage;
@@ -38,8 +35,9 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		private var _zoomedIn:Boolean;
 		private var _perspectiveTracer:Mesh;
 		private var _onMotion:Boolean;
+		private var _cachedCameraPosition:Vector3D;
 
-		public var isEnabled:Boolean = true;
+		private var _isEnabled:Boolean = true;
 
 		private const TARGET_EASE_FACTOR:Number = 0.5;
 
@@ -161,6 +159,8 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 		public function update():void {
 
+			if( !_isEnabled ) return;
+
 			if( _perspectiveFactorDirty ) {
 				updatePerspectiveFactor();
 				_perspectiveFactorDirty = false;
@@ -236,6 +236,25 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 		public function get camera():Camera3D {
 			return _camera;
+		}
+
+		public function get isEnabled():Boolean {
+			return _isEnabled;
+		}
+
+		public function set isEnabled( value:Boolean ):void {
+			_isEnabled = value;
+			if( !_isEnabled ) {
+				_cachedCameraPosition = _camera.position.clone();
+				_camera.transform.identity();
+				_camera.position = HomeSettings.DEFAULT_CAMERA_POSITION;
+			}
+			else {
+				if( _cachedCameraPosition ) {
+					_camera.position = _cachedCameraPosition;
+					_camera.lookAt( _cameraTarget.position );
+				}
+			}
 		}
 	}
 }

@@ -210,7 +210,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			_renderTimeStackUtil.pushValue( RenderGpuCommand.renderTime );
 			var renderTime:int = int( _renderTimeStackUtil.getAverageValue() );
 			_statsTextField.text = _fps + "/" + stage.frameRate + "fps \n" + "Render time: " + renderTime + "ms\n" +
-									"Memory usage: " + uint(System.privateMemory/1024)/1024 + "MB";
+									( CoreSettings.SHOW_MEMORY_USAGE ? "Memory usage: " + uint(System.privateMemory/1024)/1024 + "MB" : "");
 		}
 
 		private function initSplashScreen():void {

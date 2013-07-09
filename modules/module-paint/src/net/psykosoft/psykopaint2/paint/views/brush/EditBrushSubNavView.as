@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter( _parameterSetVO.brushName ).indexOf( parameter.id ) != -1;
 				if( matchesLast || i == 0) firstParamId = parameter.id;
 //				trace( ">>> " + parameter.toXMLString() );
-				var btn:SbButton = navigation.createButton( parameter.id, "param" + parameter.type, "btnLabelCenter", null )
+				var btn:SbButton = navigation.createButton( parameter.label, "param" + parameter.type, "btnLabelCenter", null )
 				group.addButton( btn );
 			}
 			navigation.addCenterButtonGroup( group );
@@ -100,7 +100,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var i:uint;
 			_uiElements = new Vector.<DisplayObject>();
 			for( i = 0; i < _parameterSetVO.parameters.length; i++ ) {
-				if( _parameterSetVO.parameters[i].id == id ) {
+				//this is a hack to work around the weird "select by label" thing -
+				//parameters can have an id AND a diffferent label
+				if( _parameterSetVO.parameters[i].id == id ||  _parameterSetVO.parameters[i].label == id ) {
 					_parameter = _parameterSetVO.parameters[i];
 					break;
 				}

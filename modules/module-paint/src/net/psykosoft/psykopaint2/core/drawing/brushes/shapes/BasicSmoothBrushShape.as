@@ -27,7 +27,22 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			shp.graphics.endFill();
 			bitmapData.draw(shp);
 			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(), new BlurFilter(absBlur, absBlur, 3));
-			texture.uploadFromBitmapData(bitmapData);
+			uploadMips(_textureSize, bitmapData, texture);
+			bitmapData.dispose();
+		}
+		
+		override protected function uploadNormalSpecularMap(texture : Texture) : void
+		{
+			var size : Number = _textureSize;
+			var shp : Shape = new Shape();
+			var bitmapData : BitmapData = new BitmapData(size, size, true, 0);
+			shp.graphics.beginFill(0xffffff);
+			var absBlur : Number = size * _blurAmount * .5;
+			shp.graphics.drawCircle(size *.5, size *.5, size - absBlur);
+			shp.graphics.endFill();
+			bitmapData.draw(shp);
+			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(), new BlurFilter(absBlur, absBlur, 3));
+			uploadMips(_textureSize, bitmapData, texture);
 			bitmapData.dispose();
 		}
 	}

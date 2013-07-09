@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	public class PickAnImageSubNavView extends SubNavigationViewBase
 	{
+		public static const LBL_BACK:String = "Back";
 		public static const LBL_USER:String = "Your files";
 		public static const LBL_SAMPLES:String = "Our samples";
 		public static const LBL_CAMERA:String = "Your camera";
@@ -18,6 +19,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 			navigation.setHeader( "Pick an Image" );
 
+			navigation.setLeftButton( LBL_BACK );
 			navigation.addCenterButton( LBL_USER );
 			navigation.addCenterButton( LBL_SAMPLES );
 			navigation.addCenterButton( LBL_CAMERA );

@@ -66,6 +66,7 @@ package net.psykosoft.psykopaint2.core
 		// ---------------------------------------------------------------------
 
 		public function addModuleDisplay( child:DisplayObject ):void {
+			trace( this, "adding module display: " + child );
 			_coreRootView.addToMainLayer( child );
 		}
 
