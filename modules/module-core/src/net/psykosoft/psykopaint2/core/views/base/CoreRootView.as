@@ -237,10 +237,16 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		private function onGlobalError( event:UncaughtErrorEvent ):void {
 			_errorCount++;
-			var error:Error = Error( event.error );
-			var stack:String = error.getStackTrace();
-			_errorsTextField.htmlText += "<font color='#FF0000'><b>RUNTIME ERROR - " + _errorCount + "</b></font>: " + error + " - stack: " + stack + "<br>";
-			_errorsTextField.visible = true;
+			var error:Error = event.error as Error;
+			if (!error) {
+				_errorsTextField.htmlText += "Anonymous error: " + event.error + "<br>";
+				_errorsTextField.visible = true;
+			}
+			else {
+				var stack:String = error.getStackTrace();
+				_errorsTextField.htmlText += "<font color='#FF0000'><b>RUNTIME ERROR - " + _errorCount + "</b></font>: " + error + " - stack: " + stack + "<br>";
+				_errorsTextField.visible = true;
+			}
 		}
 
 		private function onErrorsMouseUp( event:MouseEvent ):void {

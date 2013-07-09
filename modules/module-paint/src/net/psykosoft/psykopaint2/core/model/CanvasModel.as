@@ -381,6 +381,9 @@ package net.psykosoft.psykopaint2.core.model
 				outputData.writeUnsignedInt((r >> 8) | (g << 8) | (b << 24) | a);
 			}
 
+			rgbData.clear();
+			alphaData.clear();
+
 			return outputData;
 		}
 

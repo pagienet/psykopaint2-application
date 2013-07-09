@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core.data
 			bytes.readBytes( pngBytesOnly, 0, numBytes );
 			// Decode.
 			var decoder:PngDecodeUtil = new PngDecodeUtil();
-			decoder.decode( pngBytesOnly, onComplete );
+			decoder.decode( pngBytesOnly, onComplete, true );
 		}
 	}
 }

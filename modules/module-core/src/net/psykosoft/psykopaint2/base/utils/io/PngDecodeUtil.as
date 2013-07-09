@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.base.utils.io
 	{
 		private var _pngDecodeCallback:Function;
 		private var _loader:Loader;
+		private var _bytes : ByteArray;
+		private var _disposeWhenReady : Boolean;
 
 		public function PngDecodeUtil() {
 			super();
@@ -28,14 +30,18 @@ package net.psykosoft.psykopaint2.base.utils.io
 			trace( this, "decoding error: " + event );
 		}
 
-		public function decode( bytes:ByteArray, onComplete:Function ):void {
+		public function decode( bytes:ByteArray, onComplete:Function, disposeWhenReady : Boolean = false ):void {
 			trace( this, "decoding: " + bytes.length + " bytes." );
 			_pngDecodeCallback = onComplete;
-			_loader.loadBytes( bytes );
+			_disposeWhenReady = disposeWhenReady;
+			_bytes = bytes;
+			_loader.loadBytes( _bytes );
 		}
 
 		private function onDecodingComplete( event:Event ):void {
 			trace( this, "decoded." );
+			if (_disposeWhenReady)
+				_bytes.clear();
 			var bmd:BitmapData = new BitmapData( _loader.width, _loader.height, false, 0 );
 			bmd.draw( _loader );
 			_pngDecodeCallback( bmd );

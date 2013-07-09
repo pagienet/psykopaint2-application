@@ -70,7 +70,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_material.lightPicker = lightPicker;
 			_material.ambientColor = 0xffffff;
 			_material.ambient = 1;
-			_material.specular = .25;
+			_material.specular = .5;
 			_material.gloss = 200;
 			_material.normalMap = normalSpecularTexture;
 
