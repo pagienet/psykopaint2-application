@@ -16,10 +16,12 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _stage3dProxy:Stage3DProxy;
 		private var _view:View3D;
 		private var _book:Book;
+		private var _origin:Vector3D;
 
 		public function BookView() {
 			super();
 			scalesToRetina = false;
+			_origin = new Vector3D();
 		}
 
 		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
@@ -49,7 +51,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_view.height = stage.stageHeight;
 			_view.camera.lens.far = 5000;
 			_view.camera.position = new Vector3D( 0, 0, -1350 );
-			_view.camera.lookAt( new Vector3D() );
+			_view.camera.lookAt( _origin );
 			addChild( _view );
 
 			// -----------------------
@@ -63,7 +65,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			// Initialize book.
 			_book = new Book( stage, 1024, 1024 );
-			_book.rotationX = -90 + 15;
+			_book.rotationX = -75;
 			_view.scene.addChild( _book );
 
 			// Interaction.
@@ -84,7 +86,12 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		public function renderScene():void {
+
 			if( !_view.parent ) return;
+
+			var target:Number = -80 + 35 * mouseY / 768;
+			_book.rotationX += ( target - _book.rotationX ) * 0.25;
+
 			_book.update();
 			_view.render();
 		}

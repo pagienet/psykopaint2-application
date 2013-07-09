@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.book.views.book.content.SampleImagesBookDataProvider;
+	import net.psykosoft.psykopaint2.book.views.book.content.TestBookDataProvider;
 	import net.psykosoft.psykopaint2.book.views.book.content.UserPhotosBookDataProvider;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -51,9 +52,13 @@ package net.psykosoft.psykopaint2.book.views.book
 
 				// Tests.
 				case StateType.BOOK_STANDALONE: {
-//					view.dataProvider = new TestBookDataProvider();
+
+					var provider:TestBookDataProvider = new TestBookDataProvider();
+					provider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
+					view.dataProvider = provider;
+
 //					initializeSamplesDataProvider();
-					initializeUserPhotosDataProvider();
+//					initializeUserPhotosDataProvider();
 					break;
 				}
 
