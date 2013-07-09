@@ -81,12 +81,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			selectScene( _freezeScene );
 			disable3d();
-			renderScene();
+			renderScene(); // TODO: needed?
 			_freezePlane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( bmd, _stage3dProxy );
 			_freezePlane.rotationX = -90;
+			_freezePlane.y = HomeSettings.DEFAULT_CAMERA_POSITION.y;
 			_freezePlane.z = 10000; // TODO: adjust mathematically, probably will be different on HR too
-			ensurePlaneFitsViewport( _freezePlane );
 			_freezeScene.addChild( _freezePlane );
+			ensurePlaneFitsViewport( _freezePlane );
 			_frozen = true;
 		}
 
