@@ -305,8 +305,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting5.jpg", "samplePainting5" );
 			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting6.jpg", "samplePainting6" );
 			// Room assets.
-			registerBundledAsset( rootUrl + "away3d/wallpapers/fullsize/default" + extra + ".atf", "defaultWallpaper", true );
-			registerBundledAsset( "/home-packaged/away3d/frames/frame-shadow-uncompressed.atf", "frameShadow", true );
+			registerBundledAsset( rootUrl + "away3d/wallpapers/fullsize/white" + extra + ".atf", "defaultWallpaper", true );
 			registerBundledAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", true );
 		}
 

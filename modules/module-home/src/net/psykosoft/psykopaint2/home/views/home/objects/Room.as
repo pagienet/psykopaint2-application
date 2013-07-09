@@ -49,8 +49,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Geometry.
 			var wallGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
-			var uvScale:Number = 2;
-			wallGeometry.scaleUV( uvScale * WALL_WIDTH / wallGeometry.width, uvScale );
+			var uvScale:Number = 0.5;
+			wallGeometry.scaleUV( uvScale * WALL_WIDTH / wallGeometry.width, 1 );
 
 			// Mesh.
 			_wall = new Mesh( wallGeometry, null );
