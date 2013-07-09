@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.display.Stage3D;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
@@ -82,9 +83,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
-		[Inject]
-		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
-
+		
 		private var _view : DisplayObject;
 		private var _active : Boolean;
 		private var _availableBrushKits:Vector.<BrushKit>;
@@ -93,8 +92,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _activeBrushKitName : String;
 		private var _transformModeActive:Boolean;
 		private var _canvasRect : Rectangle;
-		private var _navigationIsShown:Boolean;
-		private var _autoRevealNavigation:Object;
+		private var _navHideTimeout:int = -1;
+		private var _navShowTimeout:int = -1;
 		
 		public function PaintModule()
 		{
@@ -118,7 +117,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			requestChangeRenderRect.add(onChangeRenderRect);
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyStateChangeSignal.add( onStateChange );
-			notifyNavigationToggledSignal.add( onNavigationToggled );
+			
 		}
 		
 		private function onStateChange( stateType:String ):void
@@ -240,12 +239,29 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private function onStrokeStarted(event : Event) : void
 		{
 			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
-			if ( _navigationIsShown ) setTimeout( triggerToogleNavBar, 1000, false );
+			if ( _navShowTimeout != -1 ) 
+			{
+				clearTimeout( _navShowTimeout );
+				_navShowTimeout = -1;
+			}
+			
+			if ( _navHideTimeout == -1 ) _navHideTimeout = setTimeout( triggerToogleNavBar, 1000, false );
+			
 		}
 		
 		private function onStrokeEnded(event : Event) : void
 		{
-			if ( _autoRevealNavigation ) setTimeout( triggerToogleNavBar, 1000, true );
+			if ( _navHideTimeout != -1 ) {
+				clearTimeout( _navHideTimeout );
+				_navHideTimeout = -1;
+			}
+			
+			if ( _navShowTimeout != -1 ) {
+				clearTimeout( _navShowTimeout );
+				_navShowTimeout = -1;
+			}
+			_navShowTimeout = setTimeout( triggerToogleNavBar, 500, true );
+			
 		}
 
 		private function activateBrushKit() : void
@@ -280,14 +296,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function triggerToogleNavBar( show:Boolean ):void
 		{
-			_autoRevealNavigation = !show;
+			_navHideTimeout = _navShowTimeout = -1;
 			requestNavigationToggleSignal.dispatch(show ? 1 : -1);
 		}
 		
-		private function onNavigationToggled( shown:Boolean ):void
-		{
-			_navigationIsShown = shown;
-		}
+		
 		
 		public function getAvailableBrushTypes() : Vector.<String> {
 			return _availableBrushKitNames;
