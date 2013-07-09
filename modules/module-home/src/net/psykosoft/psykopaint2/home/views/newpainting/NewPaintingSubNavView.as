@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 			// Show right button.
 			if( !HomeSettings.isStandalone ) {
-				navigation.setRightButton( LBL_CONTINUE );
+				navigation.setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
 			}
 
 			navigation.layout();

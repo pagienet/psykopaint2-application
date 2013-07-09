@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
 	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
@@ -22,7 +23,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		override protected function onEnabled():void {
 			navigation.setHeader( "Pick a sample image" );
-			navigation.setLeftButton( LBL_BACK );
+			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
 			navigation.layout();
 		}
 

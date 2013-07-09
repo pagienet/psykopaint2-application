@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
 
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class ColorStyleSubNavView extends SubNavigationViewBase
@@ -18,8 +19,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 
 
-			navigation.setLeftButton( LBL_PICK_AN_IMAGE );
-			navigation.setRightButton( LBL_CONFIRM );
+			navigation.setLeftButton( LBL_PICK_AN_IMAGE, ButtonIconType.BACK );
+			navigation.setRightButton( LBL_CONFIRM, ButtonIconType.OK );
 
 			navigation.layout();
 		}

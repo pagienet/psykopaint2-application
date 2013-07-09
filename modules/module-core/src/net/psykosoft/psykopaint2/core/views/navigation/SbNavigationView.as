@@ -358,14 +358,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			headerBg.x = 1024 / 2 - headerBg.width / 2 + 5;
 		}
 
-		public function setLeftButton( label:String ):void {
+		public function setLeftButton( label:String, iconType:String = ButtonIconType.BACK ):void {
 			_leftButton.labelText = label;
+			_leftButton.setIconType( iconType );
 			_leftButton.visible = true;
 			leftBtnSide.visible = true;
 		}
 
-		public function setRightButton( label:String ):void {
+		public function setRightButton( label:String, iconType:String = ButtonIconType.CONTINUE ):void {
 			_rightButton.labelText = label;
+			_rightButton.setIconType( iconType );
 			_rightButton.visible = true;
 			rightBtnSide.visible = true;
 		}

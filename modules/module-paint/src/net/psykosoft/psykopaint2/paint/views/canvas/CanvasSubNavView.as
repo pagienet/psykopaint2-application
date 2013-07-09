@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
 
@@ -27,18 +28,18 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			navigation.setHeader( "Do some painting!" );
 
 			if( !PaintSettings.isStandalone ) {
-				navigation.setLeftButton( LBL_HOME );
+				navigation.setLeftButton( LBL_HOME, ButtonIconType.HOME );
 			}
 
-			navigation.addCenterButton( LBL_DESTROY );
-			navigation.addCenterButton( LBL_CLEAR );
-			navigation.addCenterButton( LBL_MODEL );
+			navigation.addCenterButton( LBL_DESTROY, ButtonIconType.DESTROY );
+			navigation.addCenterButton( LBL_CLEAR, ButtonIconType.BLANK_CANVAS );
+			navigation.addCenterButton( LBL_MODEL, ButtonIconType.MODEL );
 //			navigation.addCenterButton( LBL_COLOR );
 			navigation.addCenterButton( LBL_EXPORT );
 			navigation.addCenterButton( LBL_SAVE );
-//			navigation.addCenterButton( LBL_PUBLISH );
+//			navigation.addCenterButton( LBL_PUBLISH, ButtonIconType.PUBLISH );
 
-			navigation.setRightButton( LBL_PICK_A_BRUSH );
+			navigation.setRightButton( LBL_PICK_A_BRUSH, ButtonIconType.BRUSH );
 
 			navigation.layout();
 		}
