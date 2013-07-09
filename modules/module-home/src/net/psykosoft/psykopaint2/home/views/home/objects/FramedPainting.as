@@ -64,7 +64,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			disposePainting();
 			if ( value ) {
 				_painting = new ObjectContainer3D();
-				_painting.addChild( TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( value, proxy ) );
+				_painting.addChild( TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( value, proxy, true ) );
 				_painting.rotationX = -90;
 				addChild( _painting );
 			}
@@ -74,7 +74,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			disposeFrame();
 			if( value ) {
 				_frame = new ObjectContainer3D();
-				_frame.addChild( TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( value, proxy ) );
+				_frame.addChild( TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( value, proxy, true ) );
 				_frame.rotationX = -90;
 				addChild( _frame );
 			}
