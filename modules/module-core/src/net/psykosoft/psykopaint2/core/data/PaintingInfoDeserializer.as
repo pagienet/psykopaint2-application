@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.core.data
 			var thumbnailBytesLength : uint = bytes.readUnsignedInt();
 
 			// Read and decode thumb.
+			trace (thumbnailBytesLength);
 			PaintingFileUtils.decodePNG(bytes, thumbnailBytesLength, onDecodePNGComplete);
 		}
 

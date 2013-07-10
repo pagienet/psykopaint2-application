@@ -130,15 +130,17 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function setSourceBitmapData(sourceBitmapData : BitmapData) : void
 		{
-			sourceBitmapData = fixSourceDimensions(sourceBitmapData);
+			var fixed : BitmapData = fixSourceDimensions(sourceBitmapData);
 
 			if (_pyramidMap)
-				_pyramidMap.setSource(sourceBitmapData);
+				_pyramidMap.setSource(fixed);
 			else
-				_pyramidMap = new PyramidMapTdsi(sourceBitmapData);
+				_pyramidMap = new PyramidMapTdsi(fixed);
 
 			if (_sourceTexture)
 				_pyramidMap.uploadMipLevel(_sourceTexture, 0);
+
+			fixed.dispose();
 		}
 
 		private function fixSourceDimensions(sourceBitmapData : BitmapData) : BitmapData
@@ -404,25 +406,6 @@ package net.psykosoft.psykopaint2.core.model
 			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(paintingData.sourceBitmapData, _width, _height, false);
 			setSourceBitmapData(sourceBmd);
 			sourceBmd.dispose();
-		}
-
-		// TODO: probably very slow, find alternative - note: david has altered this to be faster, but probably still need to do this outside of as3
-		private function translateARGBtoBGRA(input : ByteArray) : ByteArray
-		{
-			input.position = 0;
-			var output : ByteArray = new ByteArray();
-			var len : int = input.length / 4;
-			var i : int = 0;
-
-			input.endian = Endian.BIG_ENDIAN;
-			output.endian = Endian.LITTLE_ENDIAN;
-
-			while (i++ < len)
-				output.writeUnsignedInt(input.readUnsignedInt());
-
-			output.length = _textureWidth * _textureHeight * 4;
-
-			return output;
 		}
 	}
 }
