@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_4" index="1" />
 							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_4" value="1" />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_4" value1="0" value2="1" showInUI="1" />
+							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_4" value1="0" value2="1" minValue="0" maxValue="1" showInUI="1" />
 						</BumpDecorator>
 					</pathengine>
 				</brush>
