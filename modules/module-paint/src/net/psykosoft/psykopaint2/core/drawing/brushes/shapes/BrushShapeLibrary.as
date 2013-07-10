@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.display3D.Context3D;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	
 	public class BrushShapeLibrary
 	{
@@ -43,8 +44,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			registerShape(new AntialiasedTriangleBrushShape(context3D));
 			registerShape(new PrecisionTestShape(context3D));
 			registerShape(new SphereBrushShape(context3D));
-			sendAvailableShapes();
-			PsykoSocket.addMessageCallback("BrushShapeLibrary.*",this, onSocketMessage );
+			
+			if ( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION )
+			{
+				sendAvailableShapes();
+				PsykoSocket.addMessageCallback("BrushShapeLibrary.*",this, onSocketMessage );
+			}
 		}
 
 		public function registerShape(shape : AbstractBrushShape) : void

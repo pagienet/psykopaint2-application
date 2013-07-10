@@ -118,7 +118,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var gestureStopTimeout:int;
 		private var GESTURE_RECOGNITION_TIME:Number = 500;
 		private var renderer:CanvasRenderer;
-		
+		private const _applyArray:Array = [];
 			
 		//private var twoFingerGestureTimeout:int
 		//private var singleTouchBeginEvent:TouchEvent;
@@ -186,7 +186,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function sendPointsCallbacks(points : Vector.<SamplePoint>) : void
 		{
 			if(_callbacks.onPathPoints) {
-				_callbacks.onPathPoints.apply(_callbacks.callbackObject, [points]);
+				_applyArray[0] = points;
+				_callbacks.onPathPoints.apply(_callbacks.callbackObject, _applyArray );
 				PathManager.recycleSamplePoints(points);
 			}
 		}

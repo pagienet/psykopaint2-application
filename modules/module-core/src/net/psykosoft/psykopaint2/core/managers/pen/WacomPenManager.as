@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.core.managers.pen
 {
 
-	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.wacom.WacomExtension;
 	import net.psykosoft.wacom.events.WacomExtensionEvent;
 

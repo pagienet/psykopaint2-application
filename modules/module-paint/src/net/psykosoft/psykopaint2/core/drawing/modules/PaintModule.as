@@ -319,7 +319,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		private function onMemoryWarning() : void
 		{
-			PsykoSocket.sendString( '<msg src="PaintModule.onMemoryWarning" />' );
+			if ( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION )
+			{
+				PsykoSocket.sendString( '<msg src="PaintModule.onMemoryWarning" />' );
+			}
 			if (_activeBrushKit)
 				_activeBrushKit.brushEngine.freeExpendableMemory();
 		}

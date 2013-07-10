@@ -50,6 +50,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var invertMapping:PsykoParameter;
 		private var maxSpeed:PsykoParameter;
 		
+		private const _applyArray:Array = [0,0,1,1];
 		
 		
 		
@@ -98,6 +99,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		override public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
+			var applyArray:Array = _applyArray;
+			
 			var mode:int = mappingMode.index;
 			var minFactor:Number = mappingFactor.lowerRangeValue;
 			var maxFactor:Number = mappingFactor.upperRangeValue;
@@ -116,14 +119,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					bmp = mappingFactor.randomValue;
 				} else if ( mode == 1 )
 				{
-					bmp = mapping.apply( null, [Math.min(point.speed,ms) / ms,0,1,1]);
+					applyArray[0] = Math.min(point.speed,ms) / ms;
+					bmp = mapping.apply( null, applyArray);
 					if ( inv ) bmp = 1 -bmp;
 					bmp = minFactor + bmp * (maxFactor - minFactor );
 				}  else if ( mode == 2 )
 				{
 					if ( point.pressure > 0 )
 					{
-						bmp = mapping.apply( null, [point.pressure / 2000,0,1,1]);
+						applyArray[0] = point.pressure / 2000;
+						bmp = mapping.apply( null, applyArray);
 						if ( inv ) bmp = 1 - bmp;
 						bmp = minFactor + bmp * (maxFactor - minFactor );
 					} else {
@@ -133,9 +138,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				{
 					if ( point.pressure > 0 )
 					{
-						bmp = mapping.apply( null, [point.pressure / 2000,0,1,1]);
+						applyArray[0] = point.pressure / 2000;
+						bmp = mapping.apply( null, applyArray);
 					} else {
-						bmp = mapping.apply( null, [Math.min(point.speed,ms) / ms,0,1,1]);
+						applyArray[0] = Math.min(point.speed,ms) / ms;
+						bmp = mapping.apply( null, applyArray);
 					}
 					if ( inv ) bmp = 1 - bmp;
 					bmp = minFactor + bmp * (maxFactor - minFactor );

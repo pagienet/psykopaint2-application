@@ -38,6 +38,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		private var cm:ColorMatrix;
 		private const lastRGBA:Vector.<Number> = new Vector.<Number>(16,true);
+		private const _applyArray:Array = [];
 		
 		public function ColorDecorator()
 		{
@@ -60,7 +61,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		override public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
 			var applyMatrix:Boolean = ( saturationAdjustment.numberValue != 1 || hueAdjustment.degrees != 0 || brightnessAdjustment.numberValue != 0 );
-				
+			var applyArray:Array = _applyArray;
+			
 			if ( applyMatrix )
 			{
 				cm.reset();
@@ -87,7 +89,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				
 				if ( mode == 0 )
 				{
-					if ( cb.onPickColor ) cb.onPickColor.apply(cb.callbackObject, [points[i], pickRadius.randomValue, smoothFactor.randomValue] );
+					if ( cb.onPickColor ) {
+						applyArray[0] = points[i];
+						applyArray[1] = pickRadius.randomValue;
+						applyArray[2] = smoothFactor.randomValue;
+						cb.onPickColor.apply(cb.callbackObject, applyArray );
+					}
 				} else {
 					prgba[0] = prgba[4] = prgba[8] = prgba[12] = r;
 					prgba[1] = prgba[5] = prgba[9] = prgba[13] = g;
