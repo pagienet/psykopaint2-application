@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPYNESS} path="brush" value="0"/>
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,splat3,noisy" />
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,splat3,noisy"/>
 
 					<parameterMapping>
 						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush, Grid Brush, Unused Brush, Later Brush, Banana Brush, You Get The Idea Brush" showInUI="1"/>
