@@ -93,6 +93,15 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			reset();
 		}
 
+		override public function dispose():void {
+
+			reset();
+
+			// TODO...
+
+			super.dispose();
+		}
+
 		public function reset():void {
 
 			if( _dataProvider ) {

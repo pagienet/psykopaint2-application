@@ -45,8 +45,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
 
-			view.book.reset();
-
 			// Decide which data provider to set.
 			switch( newState ) {
 

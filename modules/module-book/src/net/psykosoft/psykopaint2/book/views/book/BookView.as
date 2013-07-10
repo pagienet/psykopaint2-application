@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.book.views.book.objects.Book;
-	import net.psykosoft.psykopaint2.book.views.book.content.BookDataProviderBase;
 
 	public class BookView extends ViewBase
 	{
@@ -31,19 +30,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		override protected function onEnabled():void {
 
-		}
-
-		override protected function onDisabled():void {
-			removeChild( _view );
-			_book.reset();
-		}
-
-		override protected function onSetup():void {
-
-			// -----------------------
 			// Initialize view.
-			// -----------------------
-
 			_view = new View3D();
 			_view.stage3DProxy = _stage3dProxy;
 			_view.shareContext = true;
@@ -54,23 +41,25 @@ package net.psykosoft.psykopaint2.book.views.book
 			_view.camera.lookAt( _origin );
 			addChild( _view );
 
-			// -----------------------
-			// Initialize objects.
-			// -----------------------
-
-			initializeBook();
-		}
-
-		private function initializeBook():void {
-
 			// Initialize book.
 			_book = new Book( stage, 1024, 1024 );
 			_book.rotationX = -75;
 			_view.scene.addChild( _book );
+		}
 
-			// Interaction.
-			stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
-			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+		override protected function onDisabled():void {
+
+			// Dispose book.
+			_view.scene.removeChild( _book );
+			_book.dispose();
+
+			// Dispose view.
+			_view.dispose();
+			removeChild( _view );
+
+			// Clean up interaction.
+			stage.removeEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
+			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 		}
 
 		private function onStageMouseDown( event:MouseEvent ):void {
@@ -83,6 +72,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		public function renderScene():void {
 
+			if( !_isEnabled ) return;
+			if( !_view ) return;
 			if( !_view.parent ) return;
 			if( !_book.dataProvider ) return;
 
