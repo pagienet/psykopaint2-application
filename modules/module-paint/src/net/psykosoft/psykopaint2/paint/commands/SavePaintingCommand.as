@@ -63,6 +63,10 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var stage:Stage;
 
+		private var _paintId:String;
+		private var _infoBytes:ByteArray;
+		private var _dataBytes:ByteArray;
+
 		public function SavePaintingCommand() {
 			super();
 		}
@@ -106,13 +110,44 @@ package net.psykosoft.psykopaint2.paint.commands
 			// Serialize data.
 			var infoSerializer:PaintingInfoSerializer = new PaintingInfoSerializer();
 			var dataSerializer:PaintingDataSerializer = new PaintingDataSerializer();
-			var bytesInfo:ByteArray = infoSerializer.serialize( infoVO );
-			var bytesData:ByteArray = dataSerializer.serialize( dataVO );
-			trace( this, "info num bytes: " + bytesInfo.length );
-			trace( this, "data num bytes: " + bytesData.length );
+			_infoBytes = infoSerializer.serialize( infoVO );
+			_dataBytes = dataSerializer.serialize( dataVO );
+			trace( this, "info num bytes: " + _infoBytes.length );
+			trace( this, "data num bytes: " + _dataBytes.length );
 
-			writeData( infoVO.id, bytesInfo, bytesData );
+			_paintId = infoVO.id;
+
+			writeInfoBytes();
 		}
+
+		private function writeInfoBytes():void {
+
+			var infoWriteUtil:BinaryIoUtil;
+			var storageType:String = CoreSettings.RUNNING_ON_iPAD ? BinaryIoUtil.STORAGE_TYPE_IOS : BinaryIoUtil.STORAGE_TYPE_DESKTOP;
+
+			// Write info.
+			infoWriteUtil = new BinaryIoUtil( storageType );
+			infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, _infoBytes, writeDataBytes );
+//			infoWriteUtil.writeBytesSync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, _infoBytes );
+		}
+
+		private function writeDataBytes():void {
+
+			var dataWriteUtil:BinaryIoUtil;
+			var storageType:String = CoreSettings.RUNNING_ON_iPAD ? BinaryIoUtil.STORAGE_TYPE_IOS : BinaryIoUtil.STORAGE_TYPE_DESKTOP;
+
+			// Write data.
+			dataWriteUtil = new BinaryIoUtil( storageType );
+			dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, _dataBytes, null );
+//			dataWriteUtil.writeBytesSync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, _dataBytes );
+
+			context.release( this );
+			requestPopUpRemovalSignal.dispatch();
+		}
+
+		// ---------------------------------------------------------------------
+		// Utils.
+		// ---------------------------------------------------------------------
 
 		private function generateThumbnail():BitmapData {
 			// TODO: generate thumbnail by accepting scale in renderToBitmapData
@@ -120,24 +155,6 @@ package net.psykosoft.psykopaint2.paint.commands
 			var scaledThumbnail:BitmapData = BitmapDataUtils.scaleBitmapData( thumbnail, 0.25 ); // TODO: apply different scales depending on source and target resolutions
 			thumbnail.dispose();
 			return scaledThumbnail;
-		}
-
-		private function writeData( paintId:String, bytesInfo:ByteArray, bytesData:ByteArray ):void {
-
-			var infoWriteUtil:BinaryIoUtil;
-			var dataWriteUtil:BinaryIoUtil;
-			var storageType:String = CoreSettings.RUNNING_ON_iPAD ? BinaryIoUtil.STORAGE_TYPE_IOS : BinaryIoUtil.STORAGE_TYPE_DESKTOP;
-
-			// Write info.
-			infoWriteUtil = new BinaryIoUtil( storageType );
-			infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, bytesInfo, null );
-
-			// Write data.
-			dataWriteUtil = new BinaryIoUtil( storageType );
-			dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, bytesData, null );
-
-			context.release( this );
-			requestPopUpRemovalSignal.dispatch();
 		}
 	}
 }

@@ -35,6 +35,14 @@ package net.psykosoft.psykopaint2.base.utils.io
 			}
 		}
 
+		public function writeBytesSync( fileName:String, bytes:ByteArray ):void {
+			var file:File = _rootFile.resolvePath( fileName );
+			var fileStream:FileStream = new FileStream();
+			fileStream.open( file, FileMode.WRITE );
+			fileStream.writeBytes( bytes );
+			fileStream.close();
+		}
+
 		public function writeBytesAsync( fileName:String, bytes:ByteArray, onComplete:Function ):void {
 			_onWriteCompleteCallback = onComplete;
 			_fileName = fileName;
