@@ -45,6 +45,13 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			loadThumbnailsAtlas();
 		}
 
+		override public function dispose():void {
+
+			// TODO...
+
+			super.dispose();
+		}
+
 		private function loadThumbnailsAtlas():void {
 			var loader:AtlasLoader = new AtlasLoader();
 			var date:Date = new Date();

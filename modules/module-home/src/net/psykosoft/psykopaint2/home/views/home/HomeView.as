@@ -9,17 +9,15 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.lights.DirectionalLight;
-	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
-	import away3d.primitives.SphereGeometry;
 	import away3d.textures.BitmapTexture;
 
 	import flash.display.BitmapData;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.ColorTransform;
+	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
@@ -36,14 +34,16 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.objects.EaselPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
-	import net.psykosoft.psykopaint2.home.views.home.objects.WallRoom;
+	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
 
 	use namespace arcane;
+
+	// TODO: whole view is in need of a serious clean-up
 
 	public class HomeView extends ViewBase
 	{
 		private var _cameraController:ScrollCameraController;
-		private var _room:WallRoom;
+		private var _room:Room;
 		private var _paintingManager:PaintingManager;
 		private var _loader:AssetBundleLoader;
 		private var _view:View3D;
@@ -81,12 +81,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			selectScene( _freezeScene );
 			disable3d();
-			renderScene();
+			renderScene(); // TODO: needed?
 			_freezePlane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( bmd, _stage3dProxy );
 			_freezePlane.rotationX = -90;
+			_freezePlane.y = HomeSettings.DEFAULT_CAMERA_POSITION.y;
 			_freezePlane.z = 10000; // TODO: adjust mathematically, probably will be different on HR too
-			ensurePlaneFitsViewport( _freezePlane );
 			_freezeScene.addChild( _freezePlane );
+			ensurePlaneFitsViewport( _freezePlane );
 			_frozen = true;
 		}
 
@@ -110,6 +111,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			selectScene( _mainScene );
 			enable3d();
+			_frozen = false;
 		}
 
 		// TODO: make method to zoom camera to fit a rect
@@ -119,7 +121,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
 			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 ) );
 			var brCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsZ, 0 ) );
-			return new Rectangle( tlCorner.x, tlCorner.y, brCorner.x - tlCorner.x, brCorner.y - tlCorner.y );
+			return new Rectangle(
+					tlCorner.x / CoreSettings.GLOBAL_SCALING,
+					tlCorner.y / CoreSettings.GLOBAL_SCALING,
+					( brCorner.x - tlCorner.x ) / CoreSettings.GLOBAL_SCALING,
+					( brCorner.y - tlCorner.y ) / CoreSettings.GLOBAL_SCALING
+			);
 		}
 
 		private function objectSpaceToScreenSpace( plane:Mesh, offset:Vector3D ):Vector3D {
@@ -129,9 +136,14 @@ package net.psykosoft.psykopaint2.home.views.home
 //			trace( "ratio: " + _view.camera.lens.aspectRatio );
 
 			// Scene space.
-			offset.scaleBy( plane.scaleX );
-			var center:Vector3D = plane.sceneTransform.transformVector( new Vector3D() );
-			offset = offset.add( center );
+			var sceneTransform:Matrix3D = plane.sceneTransform.clone();
+			var comps:Vector.<Vector3D> = sceneTransform.decompose();
+			sceneTransform.recompose( Vector.<Vector3D>( [ // Remove rotation data from transform.
+				comps[ 0 ],
+				new Vector3D(),
+				comps[ 2 ]
+			] ) );
+			offset = sceneTransform.transformVector( offset );
 			// Uncomment to visualize 3d point.
 			/*var tracer3d:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
 			tracer3d.position = offset;
@@ -139,8 +151,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// View space.
 			var screenPosition:Vector3D = _view.camera.project( offset );
-			screenPosition.x = 0.5 * stage.width * ( 1 + screenPosition.x );
-			screenPosition.y = 0.5 * stage.height * ( 1 + screenPosition.y );
+			screenPosition.x = 0.5 * _stage3dProxy.width * ( 1 + screenPosition.x );
+			screenPosition.y = 0.5 * _stage3dProxy.height * ( 1 + screenPosition.y );
 			// Uncomment to visualize 2d point.
 			/*var tracer2d:Sprite = new Sprite();
 			tracer2d.graphics.beginFill( 0xFF0000, 1 );
@@ -255,11 +267,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			_light.color = 0x989589;
 			_light.ambientColor = 0x808088;
 			_lightPicker = new StaticLightPicker([_light]);
-			_room = new WallRoom( _view );
+			_room = new Room( _view );
 			var cameraTarget:Object3D = new Object3D();
 			_cameraController.setCamera( _view.camera, cameraTarget );
 			_cameraController.stage = stage;
-			_paintingManager = new PaintingManager( _cameraController, _room, _view, _lightPicker );
+			_paintingManager = new PaintingManager( _cameraController, _room, _view, _lightPicker, _stage3dProxy );
 			_paintingManager.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
 			_cameraController.cameraY = cameraTarget.y = HomeSettings.DEFAULT_CAMERA_POSITION.y;
@@ -278,25 +290,21 @@ package net.psykosoft.psykopaint2.home.views.home
 			var rootUrl:String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
 			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
 
-			// Picture frame assets.
-			registerBundledAsset( rootUrl + "away3d/frames/frames" + extra + ".atf", "framesAtlasImage", true );
-			registerBundledAsset( "/home-packaged/away3d/frames/frames.xml", "framesAtlasXml" );
 			// Default paintings.
-			registerBundledAsset( "/home-packaged/away3d/paintings/home_painting.jpg", "homePainting" );
-			registerBundledAsset( "/home-packaged/away3d/paintings/settings_painting.jpg", "settingsPainting" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/HomeScreen.png", "homePainting" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/settings.png", "settingsPainting" );
 			// Other room stuff.
 			registerBundledAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", true );
 			// Sample paintings. TODO: should be removed once we have save capabilities
-			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting0.jpg", "samplePainting0" );
-			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting1.jpg", "samplePainting1" );
-			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting2.jpg", "samplePainting2" );
-			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting3.jpg", "samplePainting3" );
-			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting4.jpg", "samplePainting4" );
-			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting5.jpg", "samplePainting5" );
-			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting6.jpg", "samplePainting6" );
+//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting0.jpg", "samplePainting0" );
+//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting1.jpg", "samplePainting1" );
+//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting2.jpg", "samplePainting2" );
+//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting3.jpg", "samplePainting3" );
+//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting4.jpg", "samplePainting4" );
+//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting5.jpg", "samplePainting5" );
+//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting6.jpg", "samplePainting6" );
 			// Room assets.
-			registerBundledAsset( rootUrl + "away3d/wallpapers/fullsize/default" + extra + ".atf", "defaultWallpaper", true );
-			registerBundledAsset( "/home-packaged/away3d/frames/frame-shadow-uncompressed.atf", "frameShadow", true );
+			registerBundledAsset( rootUrl + "away3d/wallpapers/fullsize/white" + extra + ".atf", "defaultWallpaper", true );
 			registerBundledAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", true );
 		}
 
@@ -358,7 +366,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _paintingManager;
 		}
 
-		public function get room():WallRoom {
+		public function get room():Room {
 			return _room;
 		}
 
@@ -375,12 +383,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _cameraController.positionManager.closestSnapPointIndex;
 		}
 
-		public function updateEasel( bmd:BitmapData ):void {
-//			_paintingManager.updateEasel( bmd );
-		}
-
 		public function renderScene():void {
 //			trace( this, "rendering 3d?" );
+			if( !_isEnabled ) return;
 			if( !_assetsLoaded ) return; // Bounces off 3d rendering when the scene is not ready or active.
 			if( !_view.parent ) return;
 			if( _introZoomOutPending && stage.frameRate > 30 ) {

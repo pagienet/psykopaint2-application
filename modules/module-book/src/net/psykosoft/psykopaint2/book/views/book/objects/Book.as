@@ -4,12 +4,12 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 	import away3d.containers.ObjectContainer3D;
 	import away3d.entities.Mesh;
 	import away3d.events.MouseEvent3D;
+	import away3d.materials.ColorMaterial;
+	import away3d.primitives.CubeGeometry;
 	import away3d.textures.BitmapTexture;
 
 	import flash.display.Stage;
 	import flash.geom.Point;
-	import flash.utils.Dictionary;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.utils.ui.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
@@ -28,8 +28,11 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 		private var _dataProvider:BookDataProviderBase;
 		private var _numSnapPoints:uint;
 		private var _leftPageBackSheetIndex:int;
+		private var _leftVolume:Mesh;
+		private var _rightVolume:Mesh;
 
 		private const SNAP_POINT_SPACING:uint = 100;
+		private const BOOK_THICKNESS:uint = 256;
 
 		// TODO: remove traces and cleanup, also in related classes
 
@@ -52,6 +55,15 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			_interactionManager.throwInputMultiplier = 1 / CoreSettings.GLOBAL_SCALING;
 			_interactionManager.stage = stage;
 //			_interactionManager.useDetailedDelta = false;
+
+			var volumeGeometry:CubeGeometry = new CubeGeometry( width, 1, height );
+			var volumeMaterial:ColorMaterial = new ColorMaterial( 0x666666 );
+			_leftVolume = new Mesh( volumeGeometry, volumeMaterial );
+			_rightVolume = new Mesh( volumeGeometry, volumeMaterial );
+			_leftVolume.x = -width / 2;
+			_rightVolume.x = width / 2;
+			addChild( _leftVolume );
+			addChild( _rightVolume );
 
 			addChild( _leftPage = new Page( width, height ) );
 			addChild( _rightPage = new Page( width, height ) );
@@ -81,15 +93,23 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			reset();
 		}
 
+		override public function dispose():void {
+
+			reset();
+
+			// TODO...
+
+			super.dispose();
+		}
+
 		public function reset():void {
+
 			if( _dataProvider ) {
 				_dataProvider.dispose();
+				_dataProvider = null;
 			}
-			_dataProvider = null;
 
 			_leftPageBackSheetIndex = -1;
-
-			visible = false;
 		}
 
 		private function onPageMouseUp( event:MouseEvent3D ):void {
@@ -109,6 +129,8 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 
 			if( _dataProvider ) {
 				_dataProvider.dispose();
+				_dataProvider.textureReadySignal.remove( onDataProviderTextureReady );
+				_dataProvider = null;
 			}
 
 			_dataProvider = value;
@@ -124,8 +146,6 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 				_positionManager.pushSnapPoint( xOffset );
 				xOffset += SNAP_POINT_SPACING;
 			}
-
-			visible = true;
 
 			update();
 		}
@@ -181,6 +201,16 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			assignSheetIndicesToPage( _leftPageBackSheetIndex + 1, _leftPageBackSheetIndex + 2, _middlePage );
 			assignSheetIndicesToPage( _leftPageBackSheetIndex + 3, -1, _rightPage );
 			_dataProvider.disposeInactiveSheets();
+
+			updateVolumes();
+		}
+
+		private function updateVolumes():void {
+			var progressRatio:Number = ( 1 + _leftPageBackSheetIndex ) / _dataProvider.numSheets;
+			_leftVolume.scaleY = BOOK_THICKNESS * ( progressRatio );
+			_rightVolume.scaleY = BOOK_THICKNESS * ( 1 - progressRatio );
+			_leftVolume.y = -_leftVolume.scaleY / 2 - 2;
+			_rightVolume.y = -_rightVolume.scaleY / 2 - 2;
 		}
 
 		private function assignSheetIndicesToPage( frontIndex:int, backIndex:int, page:Page ):void {
@@ -240,6 +270,10 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 
 		public function get pageHeight():uint {
 			return _pageHeight;
+		}
+
+		public function get dataProvider():BookDataProviderBase {
+			return _dataProvider;
 		}
 	}
 }

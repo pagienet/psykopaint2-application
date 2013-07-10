@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -13,6 +14,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.system.System;
 	import flash.text.TextField;
 	import flash.utils.Timer;
+	import flash.utils.getDefinitionByName;
 	import flash.utils.getTimer;
 	
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
@@ -35,7 +37,8 @@ package net.psykosoft.psykopaint2.core.views.base
 		private var _errorsTextField:TextField;
 		private var _fpsStackUtil:StackUtil;
 		private var _renderTimeStackUtil:StackUtil;
-		private var _splashScreen:Bitmap;
+		private var _splashScreen:Sprite;
+		private var _splashScreenBM:Bitmap;
 		private var _fps:Number = 0;
 		private var _errorCount:uint;
 		private var _memoryIcon:TextField;
@@ -128,7 +131,8 @@ package net.psykosoft.psykopaint2.core.views.base
 		public function removeSplashScreen():void {
 			trace( this, "removing splash ---" );
 			_debugLayer.removeChild( _splashScreen );
-			_splashScreen.bitmapData.dispose();
+			_splashScreenBM.bitmapData.dispose();
+			_splashScreenBM = null;
 			_splashScreen = null;
 		}
 
@@ -214,11 +218,26 @@ package net.psykosoft.psykopaint2.core.views.base
 		}
 
 		private function initSplashScreen():void {
-			_splashScreen = new SplashImageAsset();
-			_splashScreen.name = "splash screen";
-			//_splashScreen.transform.colorTransform = new ColorTransform( -1, -1, -1, 1, 255, 255, 255 );
+
+			_splashScreen = new Sprite();
 			_debugLayer.addChild( _splashScreen );
-			_splashScreen.scaleX = _splashScreen.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1 : 0.5;
+
+			_splashScreenBM = new SplashImageAsset();
+			_splashScreenBM.scaleX = _splashScreenBM.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1 : 0.5;
+			_splashScreenBM.name = "splash screen";
+			if( CoreSettings.TINT_SPLASH_SCREEN ) {
+				_splashScreenBM.transform.colorTransform = new ColorTransform( -1, -1, -1, 1, 255, 255, 255 );
+			}
+			_splashScreen.addChild( _splashScreenBM );
+		}
+
+		public function addQuotes():void {
+			var newClipClass:Class = Class( getDefinitionByName( "quotesClip" ) );
+			var quotes:MovieClip = new newClipClass();
+			quotes.x = stage.stageWidth / 2;
+			quotes.y = stage.stageHeight / 2 + 250;
+			quotes.gotoAndStop( Math.floor( 17 * Math.random() ) + 1 );
+			_splashScreen.addChild( quotes );
 		}
 
 		// ---------------------------------------------------------------------

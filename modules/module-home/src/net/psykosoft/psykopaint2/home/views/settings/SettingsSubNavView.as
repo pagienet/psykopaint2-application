@@ -17,10 +17,10 @@ package net.psykosoft.psykopaint2.home.views.settings
 //
 
 			navigation.addCenterButton( LBL_WALLPAPER );
-			navigation.addCenterButton( "[setting1]" );
+			/*navigation.addCenterButton( "[setting1]" );
 			navigation.addCenterButton( "[setting2]" );
 			navigation.addCenterButton( "[setting3]" );
-			navigation.addCenterButton( "[setting4]" );
+			navigation.addCenterButton( "[setting4]" );*/
 
 			navigation.layout();
 		}

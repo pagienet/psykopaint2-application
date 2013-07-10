@@ -41,11 +41,11 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 					break;
 				}
 
-				case PickAnImageSubNavView.LBL_FACEBOOK:
+/*				case PickAnImageSubNavView.LBL_FACEBOOK:
 				{
 					//TODO.
 					break;
-				}
+				}*/
 
 				case PickAnImageSubNavView.LBL_CAMERA:
 				{

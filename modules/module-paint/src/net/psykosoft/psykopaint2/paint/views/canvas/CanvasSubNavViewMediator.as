@@ -77,27 +77,32 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					}
 					break;
 				}
+
 				case CanvasSubNavView.LBL_CLEAR:
 				{
 					requestClearCanvasSignal.dispatch();
 					break;
 				}
+
 				case CanvasSubNavView.LBL_MODEL:
 				{
 					requestNavigationToggleSignal.dispatch( -1 );
 					requestStateChange( StateType.PICK_IMAGE );
 					break;
 				}
-				case CanvasSubNavView.LBL_COLOR:
+
+				/*case CanvasSubNavView.LBL_COLOR:
 				{
 //					requestStateChange( StateType.COLOR_STYLE );
 					break;
-				}
+				}*/
+
 				case CanvasSubNavView.LBL_EXPORT:
 				{
 					requestCanvasExportSignal.dispatch();
 					break;
 				}
+
 				case CanvasSubNavView.LBL_SAVE:
 				{
 					if( paintingModel.focusedPaintingId != "" ) {
@@ -105,11 +110,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					}
 					break;
 				}
-				case CanvasSubNavView.LBL_PUBLISH:
+
+				/*case CanvasSubNavView.LBL_PUBLISH:
 				{
 					// TODO: trigger publish process
 					break;
-				}
+				}*/
 
 				case CanvasSubNavView.LBL_PICK_A_BRUSH:
 				{

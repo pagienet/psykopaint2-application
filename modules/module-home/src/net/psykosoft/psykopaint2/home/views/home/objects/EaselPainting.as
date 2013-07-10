@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 {
 
 	import away3d.containers.ObjectContainer3D;
-	import away3d.containers.View3D;
 	import away3d.core.base.CompactSubGeometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
@@ -14,7 +13,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.textures.Texture2DBase;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.materials.PaintingDiffuseMethod;
 	import net.psykosoft.psykopaint2.core.materials.PaintingNormalMethod;
@@ -26,8 +24,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	public class EaselPainting extends ObjectContainer3D
 	{
 		private var _width:Number;
-		private var _height:Number;
-		private var _scale:Number = 1;
 
 		private var _plane:Mesh;
 		private var _material:TextureMaterial;
@@ -37,8 +33,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super();
 
 			_width = paintingVO.width;
-			_height = paintingVO.height;
-			trace( this, "creating picture with dimensions: " + _width + "x" + _height );
 
 			_plane = createPlane( paintingVO, lightPicker, stage3DProxy );
 //			_plane = new Mesh( new PlaneGeometry( _width, _height ), new TextureMaterial( new BitmapTexture( diffuseBitmap ) ) ); // TODO: test non power of 2 textures with air 3.8
@@ -97,15 +91,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		}
 
 		public function get width():Number {
-			return _width * _scale;
-		}
-
-		public function get height():Number {
-			return _height * _scale;
-		}
-
-		public function scalePainting( value:Number ):void {
-			_scale = _plane.scaleX = _plane.scaleZ = value;
+			return _width;
 		}
 
 		public function get plane():Mesh {

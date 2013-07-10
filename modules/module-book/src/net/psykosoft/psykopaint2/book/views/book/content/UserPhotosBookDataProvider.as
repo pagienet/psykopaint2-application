@@ -44,6 +44,13 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			initializeFetcher();
 		}
 
+		override public function dispose():void {
+
+			// TODO...
+
+			super.dispose();
+		}
+
 		private function initializeFetcher():void {
 			_fetcher = new IosUserImagesFetcher( CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 150 : 75 );
 			_fetcher.thumbSheetLoadedSignal.add( onThumbSheetLoaded );

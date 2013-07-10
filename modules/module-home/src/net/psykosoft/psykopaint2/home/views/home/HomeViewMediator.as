@@ -92,6 +92,7 @@ public class HomeViewMediator extends MediatorBase
 
 		private var _waitingForPaintModeAfterZoomIn:Boolean;
 		private var _waitingForSnapShotOfHomeView:Boolean;
+		private var _waitingForFreezeSnapshot:Boolean;
 
 		private var _freezingStates:Vector.<String>;
 
@@ -172,12 +173,10 @@ public class HomeViewMediator extends MediatorBase
 
 			for( var i:uint = 1; i < len; i++ ) {
 				vo = data[ i ];
-				trace( this, "data retrieved - vo: " + vo );
 				if( vo.lastSavedOnDateMs > latestVo.lastSavedOnDateMs ) {
 					latestVo = vo;
 				}
 			}
-			trace( this, "data retrieved - latest: " + latestVo );
 			view.paintingManager.setEaselContent( latestVo );
 		}
 
@@ -218,8 +217,6 @@ public class HomeViewMediator extends MediatorBase
 				super.onStateChange( newState );
 			}
 		}
-
-		private var _waitingForFreezeSnapshot:Boolean;
 
 		private function freezeView():void {
 			trace( this, "freezing..." );

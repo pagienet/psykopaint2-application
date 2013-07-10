@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		private var minValue:Number;
 		private var maxValue:Number;
 		private var value:Number;
-		private var index:int;
+		private var indices:Vector.<int>;
 		private var mapping:Function;
 		
 		private var condition:String;
@@ -54,7 +54,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( xml.hasOwnProperty("@minValue" )) result.minValue = Number( xml.@minValue );
 			if ( xml.hasOwnProperty("@maxValue" )) result.maxValue = Number( xml.@maxValue );
 			if ( xml.hasOwnProperty("@value" )) result.value = Number( xml.@value );
-			if ( xml.hasOwnProperty("@index" )) result.index = int( xml.@index );
+			if ( xml.hasOwnProperty("@indices" )) result.indices = Vector.<int>(String( xml.@indices ).split(","));
 			if ( xml.hasOwnProperty("@condition" )) result.condition = String( xml.@condition );
 			if ( xml.hasOwnProperty("@mapping" )) result.mapping = mappingFunctions[int( xml.@mapping )];
 				
@@ -64,6 +64,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		public function PsykoParameterProxy()
 		{
 			mapping = mappingFunctions[0];
+			indices = new Vector.<int>();
 		}
 		
 		public function linkTargetParameter( parameter:PsykoParameter ):void
@@ -126,7 +127,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case PsykoParameter.StringListParameter:
 				case PsykoParameter.NumberListParameter:
 				case PsykoParameter.IconListParameter:	
-					return parameter.index == index;
+					return indices.indexOf(parameter.index) > -1;
 					break;
 				case PsykoParameter.NumberParameter:
 				case PsykoParameter.IntParameter:
@@ -145,7 +146,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case PsykoParameter.StringListParameter:
 				case PsykoParameter.NumberListParameter:
 				case PsykoParameter.IconListParameter:	
-					return parameter.index != index;
+					return indices.indexOf(parameter.index) == -1
 					break;
 				case PsykoParameter.NumberParameter:
 				case PsykoParameter.IntParameter:

@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
@@ -37,7 +38,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override protected function onEnabled():void {
 			navigation.setHeader( "" );
-			navigation.setLeftButton( LBL_BACK );
+			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
 			navigation.layout();
 		}
 

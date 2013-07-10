@@ -37,7 +37,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			_buttonGroup = new ButtonGroup();
 			for( var i:uint; i < len; i++ ) {
 				var vo:PaintingInfoVO = data[ i ];
-				var btn:SbButton = navigation.createButton( vo.id, ButtonIconType.DEFAULT, ButtonLabelType.CENTER, new Bitmap( vo.thumbnail ) );
+				var dump:Array = vo.id.split( "-" );
+				var str:String = dump[ dump.length - 1 ];
+				var btn:SbButton = navigation.createButton( str, ButtonIconType.POLAROID, ButtonLabelType.NO_BACKGROUND, new Bitmap( vo.thumbnail ) );
 				_buttonGroup.addButton( btn );
 			}
 			_buttonGroup.setSelectedButtonByIndex( _buttonGroup.numButtons - 1 );
@@ -45,7 +47,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 			// Show right button.
 			if( !HomeSettings.isStandalone ) {
-				navigation.setRightButton( LBL_CONTINUE );
+				navigation.setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
 			}
 
 			navigation.layout();

@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.book.views.book.content.SampleImagesBookDataProvider;
+	import net.psykosoft.psykopaint2.book.views.book.content.TestBookDataProvider;
 	import net.psykosoft.psykopaint2.book.views.book.content.UserPhotosBookDataProvider;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -44,16 +45,18 @@ package net.psykosoft.psykopaint2.book.views.book
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
 
-			view.book.reset();
-
 			// Decide which data provider to set.
 			switch( newState ) {
 
 				// Tests.
 				case StateType.BOOK_STANDALONE: {
-//					view.dataProvider = new TestBookDataProvider();
+
+					var provider:TestBookDataProvider = new TestBookDataProvider();
+					provider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
+					view.book.dataProvider = provider;
+
 //					initializeSamplesDataProvider();
-					initializeUserPhotosDataProvider();
+//					initializeUserPhotosDataProvider();
 					break;
 				}
 
@@ -79,22 +82,22 @@ package net.psykosoft.psykopaint2.book.views.book
 			_userPhotosDataProvider = new UserPhotosBookDataProvider();
 			_userPhotosDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_userPhotosDataProvider.fullImagePickedSignal.add( onFullImagePicked );
-			_userPhotosDataProvider.readySignal.addOnce( onUserPhotosDataProviderReady );
+			_userPhotosDataProvider.readySignal.add( onUserPhotosDataProviderReady );
 		}
 
 		private function onUserPhotosDataProviderReady():void {
-			view.dataProvider = _userPhotosDataProvider;
+			view.book.dataProvider = _userPhotosDataProvider;
 		}
 
 		private function initializeSamplesDataProvider():void {
 			_samplesDataProvider = new SampleImagesBookDataProvider();
 			_samplesDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_samplesDataProvider.fullImagePickedSignal.add( onFullImagePicked );
-			_samplesDataProvider.readySignal.addOnce( onSamplesDataProviderReady );
+			_samplesDataProvider.readySignal.add( onSamplesDataProviderReady );
 		}
 
 		private function onSamplesDataProviderReady():void {
-			view.dataProvider = _samplesDataProvider;
+			view.book.dataProvider = _samplesDataProvider;
 		}
 	}
 }

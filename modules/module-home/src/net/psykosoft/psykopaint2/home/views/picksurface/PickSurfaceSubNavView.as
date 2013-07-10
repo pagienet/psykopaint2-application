@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
 	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class PickSurfaceSubNavView extends SubNavigationViewBase
@@ -21,8 +22,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		override protected function onEnabled():void {
 
 			navigation.setHeader( "Pick a Surface" );
-			navigation.setLeftButton( LBL_BACK );
-			navigation.setRightButton( LBL_CONTINUE );
+			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
+			navigation.setRightButton( LBL_CONTINUE, ButtonIconType.MODEL );
 
 			_group = new ButtonGroup();
 			_group.addButton( navigation.createButton( LBL_SURF1 ) );

@@ -22,7 +22,7 @@
         <key>dataFormat</key>
         <string>sparrow</string>
         <key>textureFileName</key>
-        <filename>thumbs/wallpaper.png</filename>
+        <filename>wallpapers.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>ditherType</key>
@@ -105,7 +105,7 @@
             <enum type="AndEngine::MagFilter">MagLinear</enum>
         </struct>
         <key>dataFileName</key>
-        <filename>thumbs/wallpaper.xml</filename>
+        <filename>wallpapers.xml</filename>
         <key>mainExtension</key>
         <string></string>
         <key>forceIdenticalLayout</key>
