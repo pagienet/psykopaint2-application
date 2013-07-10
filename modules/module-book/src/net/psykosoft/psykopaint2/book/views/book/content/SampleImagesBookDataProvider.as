@@ -5,7 +5,10 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.GradientType;
+	import flash.display.SpreadMethod;
 	import flash.display.Sprite;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 
@@ -35,6 +38,8 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 		private const THUMB_SIZE:uint = 150; // TODO: 150 for HR, 75 for LR
 		private const THUMB_GAP:uint = 20;
+		private const GAP_LEFT:uint = 10;
+		private const GAP_TOP:uint = 10;
 
 		public function SampleImagesBookDataProvider() {
 			super();
@@ -88,8 +93,8 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 			// Produces a sprite containing the thumbnails as bitmaps.
 			var i:uint;
-			var offsetX:Number = 0;
-			var offsetY:Number = 0;
+			var offsetX:Number = GAP_LEFT;
+			var offsetY:Number = GAP_TOP;
 			var drawSprite:Sprite = new Sprite();
 			var thumbNames:Vector.<String> = _atlas.names;
 			var regions:Vector.<Rectangle> = new Vector.<Rectangle>();
@@ -114,7 +119,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 				// Advance target positioning offsets.
 				if( offsetX + _cellSize >= _sheetWidth - THUMB_SIZE ) {
-					offsetX = 0;
+					offsetX = GAP_LEFT;
 					offsetY += _cellSize;
 				}
 				else {
@@ -122,9 +127,25 @@ package net.psykosoft.psykopaint2.book.views.book.content
 				}
 			}
 
-			// Draw sprite into a bitmap data, into a bitmap texture, and register the texture for this sheet.
+			// Use a bitmap data to create a texture..
 			var sheetBmd:BitmapData = new BitmapData( _sheetWidth, _sheetHeight, false, 0xFFFFFF );
+
+			// Draw gradient.
+			var fillType:String = GradientType.LINEAR;
+			var colors:Array = [ 0xFFFFFF, 0x999999 ];
+			var alphas:Array = [ 1, 1 ];
+			var ratios:Array = [ 125, 255 ];
+			var matrix:Matrix = new Matrix();
+			matrix.createGradientBox( _sheetWidth, _sheetHeight, sheetIndex % 2 == 0 ? 0 : Math.PI, 0, 0 );
+			var spreadMethod:String = SpreadMethod.PAD;
+			var gradSprite:Sprite = new Sprite();
+			gradSprite.graphics.beginGradientFill( fillType, colors, alphas, ratios, matrix, spreadMethod );
+			gradSprite.graphics.drawRect( 0, 0, _sheetWidth, _sheetHeight );
+			sheetBmd.draw( gradSprite );
+
+			// Draw sprite.
 			sheetBmd.draw( drawSprite );
+
 			registerTextureForSheet( new BitmapTexture( sheetBmd ), sheetIndex );
 
 			// Store the sprite for interaction.
