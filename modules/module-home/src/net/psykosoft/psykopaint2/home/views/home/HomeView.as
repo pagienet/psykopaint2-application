@@ -270,7 +270,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_light.color = 0x989589;
 			_light.ambientColor = 0x808088;
 			_lightPicker = new StaticLightPicker([_light]);
-			_room = new Room( _view );
+			_room = new Room( _view, _stage3dProxy );
 			var cameraTarget:Object3D = new Object3D();
 			_cameraController.setCamera( _view.camera, cameraTarget );
 			_cameraController.stage = stage;
@@ -298,6 +298,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerBundledAsset( "/home-packaged/away3d/paintings/settings.png", "settingsPainting" );
 			// Other room stuff.
 			registerBundledAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", true );
+			registerBundledAsset( "/home-packaged/away3d/objects/settingsPanel.png", "settingsPanel" );
 			// Sample paintings. TODO: should be removed once we have save capabilities
 //			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting0.jpg", "samplePainting0" );
 //			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting1.jpg", "samplePainting1" );
@@ -455,19 +456,23 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onStageKeyDown( event:KeyboardEvent ):void {
 			switch( event.keyCode ) {
 				case Keyboard.UP: {
+					_room.settingsPanel.y += _shiftMultiplier;
 //					_cameraController.offsetY( _shiftMultiplier );
 					break;
 				}
 				case Keyboard.DOWN: {
+					_room.settingsPanel.y -= _shiftMultiplier;
 //					_cameraController.offsetY( -_shiftMultiplier );
 					break;
 				}
 				case Keyboard.RIGHT: {
+					_room.settingsPanel.x += _shiftMultiplier;
 //					_room.wall.x += _shiftMultiplier;
 //					_cameraController.offsetZ( _shiftMultiplier );
 					break;
 				}
 				case Keyboard.LEFT: {
+					_room.settingsPanel.x -= _shiftMultiplier;
 //					_room.wall.x -= _shiftMultiplier;
 //					_cameraController.offsetZ( -_shiftMultiplier );
 					break;
@@ -478,6 +483,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				}
 			}
 
+			trace( this, "positioning settings panel - x: " + _room.settingsPanel.x + ", y: " + _room.settingsPanel.y );
 //			trace( this, "positioning wall - x: " + _room.wall.x );
 //			trace( this, "positioning camera, Y: " + _cameraController.camera.y + ", Z: " + _cameraController.camera.z );
 		}
