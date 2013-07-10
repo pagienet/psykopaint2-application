@@ -114,8 +114,7 @@ public class HomeViewMediator extends MediatorBase
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
 			registerEnablingState( StateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
 
-			registerEnablingState( StateType.PAINT_TRANSFORM ); // TODO: delete this state
-
+			
 			// Frozen states.
 			registerFreezingState( StateType.PICK_IMAGE );
 			registerFreezingState( StateType.BOOK_PICK_SAMPLE_IMAGE );
