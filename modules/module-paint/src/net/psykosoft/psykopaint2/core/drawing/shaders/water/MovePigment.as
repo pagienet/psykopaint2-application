@@ -20,8 +20,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		[Embed(source="/../shaders/agal/MovePigment.agal", mimeType="application/octet-stream")]
 		private var Shader : Class;
 
-		public function MovePigment(canvas : CanvasModel)
+		public function MovePigment(context : Context3D, canvas : CanvasModel)
 		{
+			super(context);
 			_canvas = canvas;
 			_vertexProps = Vector.<Number>([2/canvas.textureWidth, 2/canvas.textureHeight, 0, 0]);
 			_fragmentProps = Vector.<Number>([-0.5, 0, -0, 1]);
@@ -42,16 +43,16 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			return EmbedUtils.StringFromEmbed(Shader);
 		}
 
-		public function execute(context : Context3D, stroke : SimulationMesh, pigment : Texture, velocityDensity : Texture) : void
+		public function execute(stroke : SimulationMesh, pigment : Texture, velocityDensity : Texture) : void
 		{
-			context.setRenderToTexture(_canvas.halfSizeBackBuffer, true);
-			context.setTextureAt(0, velocityDensity);
-			context.setTextureAt(1, pigment);
-			context.clear();
-			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertexProps, 1);
-			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 1);
-			render(context, stroke);
-			context.setTextureAt(1, null);
+			_context.setRenderToTexture(_canvas.halfSizeBackBuffer, true);
+			_context.setTextureAt(0, velocityDensity);
+			_context.setTextureAt(1, pigment);
+			_context.clear();
+			_context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertexProps, 1);
+			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 1);
+			render(stroke);
+			_context.setTextureAt(1, null);
 		}
 	}
 }

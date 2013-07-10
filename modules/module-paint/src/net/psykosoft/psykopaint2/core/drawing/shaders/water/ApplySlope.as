@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.shaders.water
 {
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Vector3D;
@@ -16,8 +17,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		private var _vertexProps : Vector.<Number>;
 		private var _gravityStrength : Number = .1;
 
-		public function ApplySlope(canvas : CanvasModel)
+		public function ApplySlope(context : Context3D, canvas : CanvasModel)
 		{
+			super(context);
 			_canvas = canvas;
 			_vertexProps = Vector.<Number>([1/canvas.textureWidth, 1/canvas.textureHeight, 0, 0]);
 			_fragmentProps = Vector.<Number>([.5, 2, 0, 0, 0, 0, 0, 0]);
@@ -62,21 +64,21 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 					"mov oc, ft0";
 		}
 
-		public function execute(context : Context3D, gravity : Vector3D, stroke : SimulationMesh, velocityDensity : Texture, slopeMap : Texture, target : Texture) : void
+		public function execute(gravity : Vector3D, stroke : SimulationMesh, velocityDensity : Texture, slopeMap : Texture, target : Texture) : void
 		{
-			context.setRenderToTexture(target, false);
-			context.setTextureAt(0, velocityDensity);
-			context.setTextureAt(1, slopeMap);
+			_context.setRenderToTexture(target, false);
+			_context.setTextureAt(0, velocityDensity);
+			_context.setTextureAt(1, slopeMap);
 			_fragmentProps[4] = -gravity.x*_gravityStrength;
 			_fragmentProps[5] = gravity.y*_gravityStrength;
 
-			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertexProps, 1);
-			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 2);
-			context.clear(.5,.5, 0, 0);
+			_context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertexProps, 1);
+			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 2);
+			_context.clear(.5,.5, 0, 0);
 
-			render(context, stroke);
+			render(stroke);
 
-			context.setTextureAt(1, null);
+			_context.setTextureAt(1, null);
 		}
 
 

@@ -89,12 +89,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_addPigmentToPressure = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, "xw");
 			}
 
-			_applySlope = new ApplySlope(_canvasModel);
-			_updateVelocities = new UpdateVelocities(_canvasModel);
-			_relaxDivergence = new RelaxDivergence(_canvasModel);
-			_movePigmentCMYA = new MovePigmentCMYA(_canvasModel);
-			_movePigmentXYBA = new MovePigmentXYBA(_canvasModel);
-			_renderPigment = new RenderPigmentRGB(_canvasModel);
+			_applySlope = new ApplySlope(_context, _canvasModel);
+			_updateVelocities = new UpdateVelocities(_context, _canvasModel);
+			_relaxDivergence = new RelaxDivergence(_context, _canvasModel);
+			_movePigmentCMYA = new MovePigmentCMYA(_context, _canvasModel);
+			_movePigmentXYBA = new MovePigmentXYBA(_context, _canvasModel);
+			_renderPigment = new RenderPigmentRGB(_context, _canvasModel);
 		}
 
 		override public function deactivate() : void
@@ -193,14 +193,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var gravity : Vector3D = AccelerometerManager.gravityVector;
 			_applySlope.surfaceRelief = _surfaceRelief.numberValue;
 			_applySlope.gravityStrength = _gravityStrength.numberValue;
-			_applySlope.execute(_context, gravity, SimulationMesh(_brushMesh), _velocityPressureField, _normalField, _velocityPressureFieldBackBuffer);
+			_applySlope.execute(gravity, SimulationMesh(_brushMesh), _velocityPressureField, _normalField, _velocityPressureFieldBackBuffer);
 			swapVelocityBuffer();
 		}
 
 		private function updateVelocities() : void
 		{
 			// we keep wetness in velocityPressureField (for now it's always 1)
-			_updateVelocities.execute(_context, SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer, _dt, _waterViscosity.numberValue, _waterDrag.numberValue);
+			_updateVelocities.execute(SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer, _dt, _waterViscosity.numberValue, _waterDrag.numberValue);
 			swapVelocityBuffer();
 		}
 
@@ -208,7 +208,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			_relaxDivergence.activate(_context);
 			for (var i : int = 0; i < _relaxationSteps; ++i) {
-				_relaxDivergence.execute(_context, SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer);
+				_relaxDivergence.execute(SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer);
 				swapVelocityBuffer();
 			}
 			_relaxDivergence.deactivate(_context);
@@ -216,23 +216,23 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function movePigment() : void
 		{
-			_movePigmentCMYA.execute(_context, SimulationMesh(_brushMesh), _pigmentColorField, _velocityPressureField, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
+			_movePigmentCMYA.execute(SimulationMesh(_brushMesh), _pigmentColorField, _velocityPressureField, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
 			_pigmentColorField = _canvasModel.swapHalfSized(_pigmentColorField);
 
-			_movePigmentXYBA.execute(_context, SimulationMesh(_brushMesh), _normalField, _velocityPressureField, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
+			_movePigmentXYBA.execute(SimulationMesh(_brushMesh), _normalField, _velocityPressureField, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
 			_normalField = _canvasModel.swapHalfSized(_normalField);
 		}
 
 		override protected function drawBrushColor() : void
 		{
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			_renderPigment.execute(_context, SimulationMesh(_brushMesh), _pigmentColorField);
+			_renderPigment.execute(SimulationMesh(_brushMesh), _pigmentColorField);
 		}
 
 		override protected function drawBrushNormalsAndSpecular() : void
 		{
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			_renderPigment.execute(_context, SimulationMesh(_brushMesh), _normalField);
+			_renderPigment.execute(SimulationMesh(_brushMesh), _normalField);
 		}
 
 		override public function freeExpendableMemory() : void
