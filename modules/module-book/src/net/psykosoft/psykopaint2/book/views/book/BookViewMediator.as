@@ -79,7 +79,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		private function initializeUserPhotosDataProvider():void {
-			trace( this, "init user photos provider..." );
 			_userPhotosDataProvider = new UserPhotosBookDataProvider();
 			_userPhotosDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_userPhotosDataProvider.fullImagePickedSignal.add( onFullImagePicked );
@@ -87,12 +86,10 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		private function onUserPhotosDataProviderReady():void {
-			trace( this, "user photos provider ready" );
 			view.book.dataProvider = _userPhotosDataProvider;
 		}
 
 		private function initializeSamplesDataProvider():void {
-			trace( this, "init sample images provider..." );
 			_samplesDataProvider = new SampleImagesBookDataProvider();
 			_samplesDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_samplesDataProvider.fullImagePickedSignal.add( onFullImagePicked );
@@ -100,7 +97,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		private function onSamplesDataProviderReady():void {
-			trace( this, "sample images provider ready" );
 			view.book.dataProvider = _samplesDataProvider;
 		}
 	}
