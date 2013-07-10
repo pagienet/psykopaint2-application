@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraFlipRequest;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraSnapshotRequest;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
@@ -112,6 +113,7 @@ import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 		private function mapNotifications():void {
 			_injector.map( NotifyCameraSnapshotRequest ).asSingleton();
 			_injector.map( NotifyCameraFlipRequest ).asSingleton();
+			_injector.map( NotifyPaintingSavedSignal ).asSingleton();
 		}
 
 		// -----------------------

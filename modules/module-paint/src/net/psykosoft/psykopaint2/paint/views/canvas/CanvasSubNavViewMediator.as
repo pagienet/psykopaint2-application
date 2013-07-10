@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
@@ -42,7 +43,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestPaintingDeletionSignal:RequestPaintingDeletionSignal;
 
+		[Inject]
+		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
+
 		private var _incomingState:String;
+		private var _waitingForSaveToContinueToHomeState:Boolean;
 
 		override public function initialize():void {
 
@@ -53,20 +58,26 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			manageMemoryWarnings = false;
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
+			// From app.
+			notifyPaintingSavedSignal.add( onPaintingSaved );
+
 			// Remember incoming state for when exiting the paint module.
 			_incomingState = stateModel.getLastStateOfCategory( "home" );
 			trace( this, "previous home state was: " + _incomingState );
 		}
+
+		// ---------------------------------------------------------------------
+		// From view.
+		// ---------------------------------------------------------------------
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 
 				case CanvasSubNavView.LBL_HOME:
 				{
-					trace( this, "leaving paint mode. Will 1) save, 2) change state to home, 3) request a zoom out on home, 4) deactivate painting" );
+					trace( this, "leaving paint mode. Will 1) save, 2) change state to home, 3) request a zoom out on home" );
 					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, true );
-					requestStateChange( StateType.HOME_ON_EASEL );
-					requestZoomToggleSignal.dispatch( false );
+					_waitingForSaveToContinueToHomeState = true;
 					break;
 				}
 
@@ -122,6 +133,18 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					requestStateChange( StateType.PAINT_SELECT_BRUSH );
 					break;
 				}
+			}
+		}
+
+		// ---------------------------------------------------------------------
+		// From app.
+		// ---------------------------------------------------------------------
+
+		private function onPaintingSaved():void {
+			if( _waitingForSaveToContinueToHomeState ) {
+			    requestStateChange( StateType.HOME_ON_EASEL );
+				requestZoomToggleSignal.dispatch( false );
+				_waitingForSaveToContinueToHomeState = false;
 			}
 		}
 	}

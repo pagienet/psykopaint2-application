@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintingSavedSignal;
 
 	import robotlegs.bender.framework.api.IContext;
 
@@ -63,9 +64,15 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var stage:Stage;
 
+		[Inject]
+		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
+
 		private var _paintId:String;
+		private var _infoVO:PaintingInfoVO;
 		private var _infoBytes:ByteArray;
 		private var _dataBytes:ByteArray;
+
+		private const ASYNC_MODE:Boolean = false;
 
 		public function SavePaintingCommand() {
 			super();
@@ -91,19 +98,14 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			var factory:PaintingInfoFactory = new PaintingInfoFactory();
 			var dataVO:PaintingDataVO = canvasModel.exportPaintingData();
-			var infoVO:PaintingInfoVO = factory.createFromData( dataVO, paintingId, userModel.uniqueUserId, generateThumbnail() );
+			_infoVO = factory.createFromData( dataVO, paintingId, userModel.uniqueUserId, generateThumbnail() );
 
-			paintingModel.updatePaintingInfo( infoVO );
-			paintingModel.focusedPaintingId = infoVO.id;
+			paintingModel.updatePaintingInfo( _infoVO );
+			paintingModel.focusedPaintingId = _infoVO.id;
 
-			trace( this, "saving vo: " + infoVO );
+			trace( this, "saving vo: " + _infoVO );
 
-			// Update easel.
-			if( updateEasel ) {
-				requestEaselUpdateSignal.dispatch( infoVO );
-			}
-
-			serializeDataToFiles( infoVO, dataVO );
+			serializeDataToFiles( _infoVO, dataVO );
 		}
 
 		private function serializeDataToFiles( infoVO:PaintingInfoVO, dataVO:PaintingDataVO ):void {
@@ -122,13 +124,20 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function writeInfoBytes():void {
 
+			// TODO: using sync saving for now, async makes writing fail on ipad slow packaging, see notes here: https://github.com/psykosoft/psykopaint2-application/issues/47
+
 			var infoWriteUtil:BinaryIoUtil;
 			var storageType:String = CoreSettings.RUNNING_ON_iPAD ? BinaryIoUtil.STORAGE_TYPE_IOS : BinaryIoUtil.STORAGE_TYPE_DESKTOP;
 
 			// Write info.
 			infoWriteUtil = new BinaryIoUtil( storageType );
-			infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, _infoBytes, writeDataBytes );
-//			infoWriteUtil.writeBytesSync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, _infoBytes );
+			if( ASYNC_MODE ) {
+				infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, _infoBytes, writeDataBytes );
+			}
+			else {
+				infoWriteUtil.writeBytesSync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, _infoBytes );
+				writeDataBytes();
+			}
 		}
 
 		private function writeDataBytes():void {
@@ -138,11 +147,31 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Write data.
 			dataWriteUtil = new BinaryIoUtil( storageType );
-			dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, _dataBytes, null );
-//			dataWriteUtil.writeBytesSync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, _dataBytes );
 
-			context.release( this );
+			if( ASYNC_MODE ) {
+				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, _dataBytes, wrapItUp );
+			}
+			else {
+				dataWriteUtil.writeBytesSync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, _dataBytes );
+				wrapItUp();
+			}
+		}
+
+		private function wrapItUp():void {
+
+			// Update easel.
+			if( updateEasel ) {
+				requestEaselUpdateSignal.dispatch( _infoVO );
+			}
+
+			// Remove saving pop up.
 			requestPopUpRemovalSignal.dispatch();
+
+			// Notify.
+			notifyPaintingSavedSignal.dispatch();
+
+			// Release command.
+			context.release( this );
 		}
 
 		// ---------------------------------------------------------------------
