@@ -87,6 +87,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private function disposePainting():void {
 			if( _painting ) {
 				removeChild( _painting );
+				_painting = null;
 			}
 		}
 

@@ -31,6 +31,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const MODE_INDEX_MULTIPLY:int = 4;
 		static public const MODE_INDEX_ADD:int = 5;
 		
+		private const _applyArray:Array = [0,0,1,1];
 		
 		private var mappingMode:PsykoParameter;
 		private var mappingFactor:PsykoParameter;
@@ -75,6 +76,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		override public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
+			var applyArray:Array = _applyArray;
 			var mode:int = mappingMode.index;
 			var minFactor:Number = mappingFactor.lowerRangeValue;
 			var maxFactor:Number = mappingFactor.upperRangeValue;
@@ -90,14 +92,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					point.size = mappingFactor.randomValue;
 				} else if ( mode == 1 )
 				{
-					point.size = mapping.apply( null, [Math.min(point.speed,ms) / ms,0,1,1]);
+					applyArray[0] = Math.min(point.speed,ms) / ms;
+					point.size = mapping.apply( null, applyArray);
 					if ( inv ) point.size = 1 - point.size;
 					point.size = minFactor + point.size * (maxFactor - minFactor );
 				}  else if ( mode == 2 )
 				{
 					if ( point.pressure > 0 )
 					{
-						point.size = mapping.apply( null, [point.pressure / 2000,0,1,1]);
+						applyArray[0] = point.pressure / 2000;
+						point.size = mapping.apply( null, applyArray);
 						if ( inv ) point.size = 1 - point.size;
 						point.size = minFactor + point.size * (maxFactor - minFactor );
 					} else {
@@ -107,9 +111,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				{
 					if ( point.pressure > 0 )
 					{
-						point.size = mapping.apply( null, [point.pressure / 2000,0,1,1]);
+						applyArray[0] = point.pressure / 2000;
+						point.size = mapping.apply( null, applyArray);
 					} else {
-						point.size = mapping.apply( null, [Math.min(point.speed,ms) / ms,0,1,1]);
+						applyArray[0] = Math.min(point.speed,ms) / ms;
+						point.size = mapping.apply( null, applyArray);
 					}
 					if ( inv ) point.size = 1 - point.size;
 					point.size = minFactor + point.size * (maxFactor - minFactor );

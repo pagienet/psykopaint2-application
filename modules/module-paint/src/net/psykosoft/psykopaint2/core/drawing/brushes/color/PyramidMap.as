@@ -18,12 +18,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 		public function dispose() : void
 		{
 			_scaled.dispose();
+			_scaled = null;
 		}
 		
 		public function setSource( map:BitmapData ):void
 		{
 			this._source = map;
-			
+
+			if (_scaled) _scaled.dispose();
 			_scaled = new BitmapData( Math.ceil(map.width * 0.75), Math.ceil(map.height * 0.5), true, 0 );
 			var m:Matrix = new Matrix(0.5,0,0,0.5);
 			_scaled.draw( map, m, null, "normal",null,true);

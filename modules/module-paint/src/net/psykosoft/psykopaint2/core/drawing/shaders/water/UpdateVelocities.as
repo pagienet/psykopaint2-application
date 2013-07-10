@@ -19,8 +19,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		[Embed(source="/../shaders/agal/UpdateVelocities.agal", mimeType="application/octet-stream")]
 		private var Shader : Class;
 
-		public function UpdateVelocities(canvas : CanvasModel)
+		public function UpdateVelocities(context : Context3D, canvas : CanvasModel)
 		{
+			super(context);
 			_canvas = canvas;
 
 			_vertexProps = Vector.<Number>([
@@ -58,17 +59,17 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			return EmbedUtils.StringFromEmbed(Shader);
 		}
 
-		public function execute(context : Context3D, stroke : SimulationMesh, velocityDensity : Texture, target : Texture, dt : Number = 1, waterViscosity : Number = .1, waterDrag : Number = .01) : void
+		public function execute(stroke : SimulationMesh, velocityDensity : Texture, target : Texture, dt : Number = 1, waterViscosity : Number = .1, waterDrag : Number = .01) : void
 		{
-			context.setRenderToTexture(target, true);
-			context.setTextureAt(0, velocityDensity);
-			context.clear(.5, .5, 0, 1);
+			_context.setRenderToTexture(target, true);
+			_context.setTextureAt(0, velocityDensity);
+			_context.clear(.5, .5, 0, 1);
 			_fragmentProps[0] = waterViscosity;
 			_fragmentProps[4] = waterDrag;
 			_fragmentProps[8] = dt;
-			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertexProps, 3);
-			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 4);
-			render(context, stroke);
+			_context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertexProps, 3);
+			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 4);
+			render(stroke);
 		}
 	}
 }

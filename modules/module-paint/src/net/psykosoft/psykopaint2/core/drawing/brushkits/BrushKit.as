@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.utils.Dictionary;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.DelaunayBrush;
@@ -106,13 +107,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		public function activate( view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer : CanvasRenderer):void
 		{
 			_brushEngine.activate(view, context, canvasModel, renderer);
-			PsykoSocket.addMessageCallback("ActiveBrushKit.*", this, onSocketMessage );
-			sendBrushKitParameterSet();
+			if ( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION )
+			{
+				PsykoSocket.addMessageCallback("ActiveBrushKit.*", this, onSocketMessage );
+				sendBrushKitParameterSet();
+			}
 		}
 		
 		public function deactivate():void
 		{
-			PsykoSocket.removeMessageCallback("ActiveBrushKit.*", this, onSocketMessage );
+			if ( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION )
+			{
+				PsykoSocket.removeMessageCallback("ActiveBrushKit.*", this, onSocketMessage );
+			}
 			_brushEngine.deactivate();
 		}
 		
@@ -204,9 +211,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function sendBrushKitParameterSet():void
 		{
+			
 			var message:XML = <msg src="ActiveBrushKit.parameterSet" />;
 			message.appendChild(getParameterSetAsXML());
 			PsykoSocket.sendString( message.toXMLString() );
+			
 		}
 		
 		/*

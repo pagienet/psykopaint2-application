@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.shaders.water
 {
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Point;
@@ -15,9 +16,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		private var _canvas : CanvasModel;
 		private var _props : Vector.<Number>;
 
-		public function PreviewPigmentRGB(canvas : CanvasModel)
+		public function PreviewPigmentRGB(context : Context3D, canvas : CanvasModel)
 		{
-			super(false);
+			super(context, false);
 			_canvas = canvas;
 			_props = Vector.<Number>([0, 0, 0, 1]);
 		}
@@ -38,14 +39,14 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 					"mov oc, ft0";
 		}
 
-		public function execute(context : Context3D, stroke : SimulationMesh, pigment : Texture, scaleX : Number = 1, scaleY : Number = 1) : void
+		public function execute(stroke : SimulationMesh, pigment : Texture, scaleX : Number = 1, scaleY : Number = 1) : void
 		{
-			context.setTextureAt(0, pigment);
+			_context.setTextureAt(0, pigment);
 			_props[0] = scaleX;
 			_props[1] = scaleY;
-			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _props, 1);
-			render(context, stroke);
-			context.setTextureAt(0, null);
+			_context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _props, 1);
+			render(stroke);
+			_context.setTextureAt(0, null);
 		}
 	}
 }

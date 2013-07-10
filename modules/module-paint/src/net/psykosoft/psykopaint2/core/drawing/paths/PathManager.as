@@ -72,18 +72,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		static public function recycleSamplePoints(value : Vector.<SamplePoint>) : void
 		{
-			for ( var i:int = 0; i < value.length; i++ )
+			for ( var i:int =  value.length; --i > -1; )
 			{
 				_samplePointDepot[_recycleCount++] = value[i];
 			}
-			//_samplePointDepot = _samplePointDepot.concat(value);
 			value.length = 0;
 		}
 
 		static public function recycleSamplePoint(value:SamplePoint):void
 		{
 			_samplePointDepot[_recycleCount++] = value;
-			//_samplePointDepot.push(value);
 		}
 
 		
@@ -118,7 +116,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var gestureStopTimeout:int;
 		private var GESTURE_RECOGNITION_TIME:Number = 500;
 		private var renderer:CanvasRenderer;
-		
+		private const _applyArray:Array = [];
 			
 		//private var twoFingerGestureTimeout:int
 		//private var singleTouchBeginEvent:TouchEvent;
@@ -186,7 +184,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function sendPointsCallbacks(points : Vector.<SamplePoint>) : void
 		{
 			if(_callbacks.onPathPoints) {
-				_callbacks.onPathPoints.apply(_callbacks.callbackObject, [points]);
+				_applyArray[0] = points;
+				_callbacks.onPathPoints.apply(_callbacks.callbackObject, _applyArray );
 				PathManager.recycleSamplePoints(points);
 			}
 		}

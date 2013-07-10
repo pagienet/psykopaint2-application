@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.shaders.water
 {
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
@@ -22,8 +23,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		[Embed(source="/../shaders/agal/MovePigmentRGBA_fixed.agal", mimeType="application/octet-stream")]
 		private var Shader : Class;
 
-		public function MovePigmentRGBA(canvas : CanvasModel)
+		public function MovePigmentRGBA(context : Context3D, canvas : CanvasModel)
 		{
+			super(context);
 			_canvas = canvas;
 			_vertexProps = Vector.<Number>([2/canvas.textureWidth, 2/canvas.textureHeight, 0, 0]);
 			_fragmentProps = Vector.<Number>([0, 0, 0, 0, -0.5, 0, -0, 0, 0, 0, 0, 0]);
@@ -44,19 +46,19 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			return EmbedUtils.StringFromEmbed(Shader);
 		}
 
-		public function execute(context : Context3D, stroke : SimulationMesh, pigment : Texture, velocityDensity : Texture, width : Number, height : Number, pigmentFlow : Number) : void
+		public function execute(stroke : SimulationMesh, pigment : Texture, velocityDensity : Texture, width : Number, height : Number, pigmentFlow : Number) : void
 		{
-			context.setRenderToTexture(_canvas.halfSizeBackBuffer, true);
-			context.clear(0, 0, 0, 0);
-			context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			CopyTexture.copy(pigment, context, width, height);
-			context.setTextureAt(0, velocityDensity);
-			context.setTextureAt(1, pigment);
+			_context.setRenderToTexture(_canvas.halfSizeBackBuffer, true);
+			_context.clear(0, 0, 0, 0);
+			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+			CopyTexture.copy(pigment, _context, width, height);
+			_context.setTextureAt(0, velocityDensity);
+			_context.setTextureAt(1, pigment);
 			_fragmentProps[0] = 2 * pigmentFlow;
-			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertexProps, 1);
-			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 3);
-			render(context, stroke);
-			context.setTextureAt(1, null);
+			_context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertexProps, 1);
+			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 3);
+			render(stroke);
+			_context.setTextureAt(1, null);
 		}
 	}
 }

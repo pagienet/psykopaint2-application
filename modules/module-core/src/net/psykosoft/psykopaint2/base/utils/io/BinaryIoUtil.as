@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		private function onWriteBytesAsyncProgress( event:OutputProgressEvent ):void {
 			trace( this, "writing bytes progress - filename: " + _fileName + ", bytes pending: " + event.bytesPending );
 			if( event.bytesPending == 0 ) {
-				_fileStream.addEventListener( OutputProgressEvent.OUTPUT_PROGRESS, onWriteBytesAsyncProgress );
+				_fileStream.removeEventListener( OutputProgressEvent.OUTPUT_PROGRESS, onWriteBytesAsyncProgress );
 				_fileStream.close();
 			}
 		}
