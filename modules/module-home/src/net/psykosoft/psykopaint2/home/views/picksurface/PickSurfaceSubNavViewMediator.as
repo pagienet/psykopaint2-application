@@ -56,8 +56,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			_selectedIndex = -1;
 			manageMemoryWarnings = false;
 			view.navigation.buttonClickedCallback = onButtonClicked;
-			loadSurfaceByIndex( 0 );
+//			loadSurfaceByIndex( 0 );
 			view.showRightButton( false );
+			requestEaselPaintingUpdateSignal.dispatch( null );
 			// TODO: must display thumbnails, assets are on /core-packaged/images/surfaces/ as jpgs
 		}
 

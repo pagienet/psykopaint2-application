@@ -117,7 +117,11 @@ package net.psykosoft.psykopaint2.home.views.home
 		// TODO: make method to zoom camera to fit a rect
 
 		private function calculateEaselScreenRect():Rectangle {
-			var plane:Mesh = EaselPainting( _paintingManager.easel.painting ).plane;
+			var painting:EaselPainting = EaselPainting( _paintingManager.easel.painting );
+
+			if (!painting) return new Rectangle(0, 0, 0, 0);
+
+			var plane:Mesh = painting.plane;
 			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
 			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 ) );
 			var brCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsZ, 0 ) );

@@ -71,9 +71,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		}
 
 		private function setEaselPaintingNow():void {
-			var painting:EaselPainting = new EaselPainting( _pendingEaselContent, _lightPicker, _view.stage3DProxy );
-			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) painting.scale( 0.5 );
-			_easel.setPainting( painting );
+			if (_pendingEaselContent) {
+				var painting:EaselPainting = new EaselPainting( _pendingEaselContent, _lightPicker, _view.stage3DProxy );
+				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) painting.scale( 0.5 );
+				_easel.setPainting( painting );
+			}
+			else {
+				_easel.setPainting(null);
+			}
 		}
 
 		public function createDefaultPaintings():void {
