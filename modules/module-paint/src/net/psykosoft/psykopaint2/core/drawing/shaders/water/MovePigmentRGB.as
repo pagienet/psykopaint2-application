@@ -17,8 +17,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		private var _vertextProps : Vector.<Number>;
 		private var _fragmentProps : Vector.<Number>;
 
-		public function MovePigmentRGB(canvas : CanvasModel, scale : Number = 1)
+		public function MovePigmentRGB(context : Context3D, canvas : CanvasModel, scale : Number = 1)
 		{
+			super(context);
 			_canvas = canvas;
 			_vertextProps = Vector.<Number>([2/canvas.textureWidth, 2/canvas.textureHeight, 0, 0]);
 			_fragmentProps = Vector.<Number>([.5, 2, 1, 0, 1/canvas.textureWidth/scale, 1/canvas.textureHeight/scale, 0, 0]);
@@ -55,20 +56,20 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 					"mov oc, ft0"
 		}
 
-		public function execute(context : Context3D, stroke : SimulationMesh, pigment : Texture, target : Texture, velocityDensity : Texture, flow : Number, bleaching : Number, textureRatioX : Number, textureRatioY : Number) : void
+		public function execute(stroke : SimulationMesh, pigment : Texture, target : Texture, velocityDensity : Texture, flow : Number, bleaching : Number, textureRatioX : Number, textureRatioY : Number) : void
 		{
 			_fragmentProps[2] = bleaching;
 			_fragmentProps[4] = 2*flow/_canvas.textureWidth;
 			_fragmentProps[5] = 2*flow/_canvas.textureHeight;
-			context.setRenderToTexture(target, true);
-			context.clear();
-			CopyTexture.copy(pigment, context, textureRatioX, textureRatioY);
-			context.setTextureAt(0, velocityDensity);
-			context.setTextureAt(1, pigment);
-			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertextProps, 1);
-			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 2);
-			render(context, stroke);
-			context.setTextureAt(1, null);
+			_context.setRenderToTexture(target, true);
+			_context.clear();
+			CopyTexture.copy(pigment, _context, textureRatioX, textureRatioY);
+			_context.setTextureAt(0, velocityDensity);
+			_context.setTextureAt(1, pigment);
+			_context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _vertextProps, 1);
+			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 2);
+			render(stroke);
+			_context.setTextureAt(1, null);
 		}
 	}
 }

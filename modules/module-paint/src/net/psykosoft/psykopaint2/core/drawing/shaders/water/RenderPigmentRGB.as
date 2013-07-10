@@ -11,15 +11,15 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 	import net.psykosoft.psykopaint2.core.drawing.shaders.SimStepRenderer;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 
+	import robotlegs.bender.framework.impl.Context;
+
 	public class RenderPigmentRGB extends SimStepRenderer
 	{
 		private var _canvas : CanvasModel;
 
-		private var _fragmentData : Vector.<Number>;
-
-		public function RenderPigmentRGB(canvas : CanvasModel)
+		public function RenderPigmentRGB(context : Context3D, canvas : CanvasModel)
 		{
-			super(false);
+			super(context, false);
 			_canvas = canvas;
 //			_fragmentData = Vector.<Number>([0, 0, 0, .1]);
 		}
@@ -30,13 +30,13 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 					"add oc, ft0, fc0";                      */
 		}
 
-		public function execute(context : Context3D, stroke : SimulationMesh, pigment : Texture) : void
+		public function execute(stroke : SimulationMesh, pigment : Texture) : void
 		{
-			context.setTextureAt(0, pigment);
-			context.clear(0, 0, 0, 0, 0, 0, Context3DClearMask.STENCIL);
-//			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentData, 1);
-			render(context, stroke, false);
-			context.setTextureAt(0, null);
+			_context.setTextureAt(0, pigment);
+			_context.clear(0, 0, 0, 0, 0, 0, Context3DClearMask.STENCIL);
+//			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentData, 1);
+			render(stroke, false);
+			_context.setTextureAt(0, null);
 		}
 	}
 }

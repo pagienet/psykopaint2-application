@@ -16,23 +16,25 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 	{
 		protected var _program : Program3D;
 		private var _useColor : Boolean;
+		protected var _context : Context3D;
 
-		public function SimStepRenderer(useColor : Boolean = false)
+		public function SimStepRenderer(context : Context3D, useColor : Boolean = false)
 		{
 			_useColor = useColor;
+			_context = context;
+			initProgram(context);
 		}
 
-		protected function render(context : Context3D, stroke : SimulationMesh, stencil : Boolean = true) : void
+		protected function render(stroke : SimulationMesh, stencil : Boolean = true) : void
 		{
-			if (!_program) initProgram(context);
-			context.setProgram(_program);
+			_context.setProgram(_program);
 
 			if (stencil) {
-				context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
-				context.setStencilReferenceValue(0);
+				_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
+				_context.setStencilReferenceValue(0);
 			}
-			stroke.drawMesh(context, SimulationMesh.CANVAS_TEXTURE_UVS, 1, _useColor);
-			context.setStencilActions();
+			stroke.drawMesh(_context, SimulationMesh.CANVAS_TEXTURE_UVS, 1, _useColor);
+			_context.setStencilActions();
 		}
 
 		protected function initProgram(context : Context3D) : void

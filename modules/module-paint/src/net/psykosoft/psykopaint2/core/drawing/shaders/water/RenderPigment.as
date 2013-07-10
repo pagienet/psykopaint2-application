@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.core.drawing.shaders.water
 {
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3D;
 	import flash.display3D.Context3DClearMask;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
@@ -16,9 +18,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		private var _canvas : CanvasModel;
 		private var _fragmentProps : Vector.<Number>;
 
-		public function RenderPigment(canvas : CanvasModel)
+		public function RenderPigment(context : Context3D, canvas : CanvasModel)
 		{
-			super(false);
+			super(context, false);
 			_canvas = canvas;
 			_fragmentProps = Vector.<Number>([.5, 1, 0, 0]);
 		}
@@ -30,15 +32,15 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 					"mul oc, ft1, ft0.y\n";
 		}
 
-		public function execute(context : Context3D, stroke : SimulationMesh, pigment : Texture, color : Texture) : void
+		public function execute(stroke : SimulationMesh, pigment : Texture, color : Texture) : void
 		{
-			context.setTextureAt(0, pigment);
-			context.setTextureAt(1, color);
-			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 1);
-			context.clear(0, 0, 0, 0, 0, 0, Context3DClearMask.STENCIL);
-			render(context, stroke);
-			context.setTextureAt(0, null);
-			context.setTextureAt(1, null);
+			_context.setTextureAt(0, pigment);
+			_context.setTextureAt(1, color);
+			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentProps, 1);
+			_context.clear(0, 0, 0, 0, 0, 0, Context3DClearMask.STENCIL);
+			render(stroke);
+			_context.setTextureAt(0, null);
+			_context.setTextureAt(1, null);
 		}
 	}
 }

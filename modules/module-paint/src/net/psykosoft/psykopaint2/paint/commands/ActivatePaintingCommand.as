@@ -56,12 +56,14 @@ package net.psykosoft.psykopaint2.paint.commands
 			// De-serialize.
 			var deserializer:PaintingDataDeserializer = new PaintingDataDeserializer();
 			var vo:PaintingDataVO = deserializer.deserialize( _file.data );
+			_file.data.clear();
 			_file = null;
 
 			// TODO: if we ever need to consider incoming canvas size, read dimensions from vo here
 			canvasModel.importPaintingData( vo );
 			notifyPaintingActivatedSignal.dispatch();
 			context.release( this );
+			vo.dispose();
 		}
 	}
 }

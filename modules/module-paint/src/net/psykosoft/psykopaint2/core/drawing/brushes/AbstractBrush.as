@@ -210,8 +210,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_canvasScaleH = 2.0 / _canvasModel.textureHeight;	// 0 - 1
 			_bounds.setEmpty();
 
-			// TODO: REQUEST SNAPSHOT
-
 			_firstPoint = true;
 		}
 

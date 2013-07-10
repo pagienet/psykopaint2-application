@@ -23,8 +23,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 		private var Shader : Class;
 
 
-		public function RelaxDivergence(canvas : CanvasModel)
+		public function RelaxDivergence(context : Context3D, canvas : CanvasModel)
 		{
+			super(context);
 			_canvas = canvas;
 
 			// canvas dimensions *2 because we're using a half-sized buffer (texels are bigger)
@@ -53,12 +54,12 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			return EmbedUtils.StringFromEmbed(Shader);
 		}
 
-		public function execute(context : Context3D, stroke : SimulationMesh, velocityDensity : Texture, target : Texture) : void
+		public function execute(stroke : SimulationMesh, velocityDensity : Texture, target : Texture) : void
 		{
-			context.setRenderToTexture(target, true);
-			context.setTextureAt(0, velocityDensity);
-			context.clear(.5, .5, 0, 1);
-			render(context, stroke);
+			_context.setRenderToTexture(target, true);
+			_context.setTextureAt(0, velocityDensity);
+			_context.clear(.5, .5, 0, 1);
+			render(stroke);
 		}
 
 		public function activate(context : Context3D) : void
