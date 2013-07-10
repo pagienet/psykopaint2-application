@@ -456,23 +456,23 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onStageKeyDown( event:KeyboardEvent ):void {
 			switch( event.keyCode ) {
 				case Keyboard.UP: {
-					_room.settingsPanel.y += _shiftMultiplier;
+//					_room.settingsPanel.y += _shiftMultiplier;
 //					_cameraController.offsetY( _shiftMultiplier );
 					break;
 				}
 				case Keyboard.DOWN: {
-					_room.settingsPanel.y -= _shiftMultiplier;
+//					_room.settingsPanel.y -= _shiftMultiplier;
 //					_cameraController.offsetY( -_shiftMultiplier );
 					break;
 				}
 				case Keyboard.RIGHT: {
-					_room.settingsPanel.x += _shiftMultiplier;
+//					_room.settingsPanel.x += _shiftMultiplier;
 //					_room.wall.x += _shiftMultiplier;
 //					_cameraController.offsetZ( _shiftMultiplier );
 					break;
 				}
 				case Keyboard.LEFT: {
-					_room.settingsPanel.x -= _shiftMultiplier;
+//					_room.settingsPanel.x -= _shiftMultiplier;
 //					_room.wall.x -= _shiftMultiplier;
 //					_cameraController.offsetZ( -_shiftMultiplier );
 					break;
@@ -483,7 +483,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				}
 			}
 
-			trace( this, "positioning settings panel - x: " + _room.settingsPanel.x + ", y: " + _room.settingsPanel.y );
+//			trace( this, "positioning settings panel - x: " + _room.settingsPanel.x + ", y: " + _room.settingsPanel.y );
 //			trace( this, "positioning wall - x: " + _room.wall.x );
 //			trace( this, "positioning camera, Y: " + _cameraController.camera.y + ", Z: " + _cameraController.camera.z );
 		}

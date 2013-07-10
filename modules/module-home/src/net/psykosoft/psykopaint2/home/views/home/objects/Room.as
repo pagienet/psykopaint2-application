@@ -61,7 +61,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_settingsPanel.x = 735;
 			_settingsPanel.y = 805;
 			_settingsPanel.rotationX = -90;
-			_view.scene.addChild( _settingsPanel );
+			addChild( _settingsPanel );
 
 		}
 

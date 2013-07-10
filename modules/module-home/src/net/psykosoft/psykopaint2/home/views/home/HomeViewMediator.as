@@ -35,9 +35,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 
-import org.gestouch.events.GestureEvent;
+	import org.gestouch.events.GestureEvent;
 
-public class HomeViewMediator extends MediatorBase
+	public class HomeViewMediator extends MediatorBase
 	{
 		[Inject]
 		public var view:HomeView;
@@ -114,9 +114,10 @@ public class HomeViewMediator extends MediatorBase
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
 			registerEnablingState( StateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
 
-			
 			// Frozen states.
 			registerFreezingState( StateType.PICK_IMAGE );
+			registerFreezingState( StateType.CAPTURE_IMAGE );
+			registerFreezingState( StateType.CONFIRM_CAPTURE_IMAGE );
 			registerFreezingState( StateType.BOOK_PICK_SAMPLE_IMAGE );
 			registerFreezingState( StateType.BOOK_PICK_USER_IMAGE_IOS );
 			registerFreezingState( StateType.CROP );
@@ -161,7 +162,7 @@ public class HomeViewMediator extends MediatorBase
 			requestZoomThenChangeStateSignal.dispatch( true, StateType.PAINT );
 		}
 
-		private function onEaselUpdateRequest( paintingVO : PaintingInfoVO ):void {
+		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO ):void {
 			view.setEaselContent( paintingVO );
 		}
 
@@ -244,8 +245,8 @@ public class HomeViewMediator extends MediatorBase
 				requestStateChange( StateType.PAINT );
 			}
 			/*else { // TODO: clean up, easel updates no longer work this way
-				view.updateEasel( bmd );
-			}*/
+			 view.updateEasel( bmd );
+			 }*/
 		}
 
 		// -----------------------
@@ -274,7 +275,7 @@ public class HomeViewMediator extends MediatorBase
 		private function onViewEnabled():void {
 			// Zoom out when coming from paint state ( view zooms out, when activated, if it was zoomed in when deactivated ).
 			if( view.cameraController.zoomedIn ) {
-				setTimeout( function():void { // TODO: review time out - ipad seems to need it for animation to be visible when coming from the paint state
+				setTimeout( function ():void { // TODO: review time out - ipad seems to need it for animation to be visible when coming from the paint state
 					view.zoomOut();
 				}, 1000 );
 			}
@@ -318,8 +319,8 @@ public class HomeViewMediator extends MediatorBase
 				}
 
 				/*if( stateModel.currentState.name != ApplicationStateType.HOME_SCREEN_ON_PAINTING ) {
-					requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN_ON_PAINTING ) );
-				}*/
+				 requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN_ON_PAINTING ) );
+				 }*/
 
 //				var temporaryPaintingName:String = temporaryPaintingNames[ paintingIndex - 3 ];
 //				notifyFocusedPaintingChangedSignal.dispatch( temporaryPaintingName );
