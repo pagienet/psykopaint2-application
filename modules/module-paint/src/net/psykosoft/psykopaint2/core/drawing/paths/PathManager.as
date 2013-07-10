@@ -72,18 +72,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		static public function recycleSamplePoints(value : Vector.<SamplePoint>) : void
 		{
-			for ( var i:int = 0; i < value.length; i++ )
+			for ( var i:int =  value.length; --i > -1; )
 			{
 				_samplePointDepot[_recycleCount++] = value[i];
 			}
-			//_samplePointDepot = _samplePointDepot.concat(value);
 			value.length = 0;
 		}
 
 		static public function recycleSamplePoint(value:SamplePoint):void
 		{
 			_samplePointDepot[_recycleCount++] = value;
-			//_samplePointDepot.push(value);
 		}
 
 		
