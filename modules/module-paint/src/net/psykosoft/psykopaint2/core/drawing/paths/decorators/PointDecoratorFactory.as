@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import flash.utils.Dictionary;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	
 	public class PointDecoratorFactory
 	{
@@ -27,9 +28,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			registerDecorator( PointDecoratorType.BUMP, BumpDecorator );
 			
 			_initialized = true;
-			
-			sendAvailableDecorators();
-			PsykoSocket.addMessageCallback("PointDecoratorFactory.getAvailableDecorators",PointDecoratorFactory, onSocketMessage );
+			if ( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION )
+			{
+				sendAvailableDecorators();
+				PsykoSocket.addMessageCallback("PointDecoratorFactory.getAvailableDecorators",PointDecoratorFactory, onSocketMessage );
+			}
 		}
 		
 		private static function registerDecorator( decoratorName:String, decoratorClass:Class ):void 

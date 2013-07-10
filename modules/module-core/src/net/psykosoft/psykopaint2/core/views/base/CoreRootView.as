@@ -80,7 +80,8 @@ package net.psykosoft.psykopaint2.core.views.base
 				loaderInfo.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onGlobalError );
 
 			// Start enterframe.
-			addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			if( CoreSettings.SHOW_STATS || CoreSettings.SHOW_MEMORY_USAGE )
+				addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
 
 		// ---------------------------------------------------------------------
@@ -88,8 +89,11 @@ package net.psykosoft.psykopaint2.core.views.base
 		// ---------------------------------------------------------------------
 
 		public function refreshVersion():void {
-			var resMsg:String = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? "2048x1536" : "1024x768";
-			_versionTextField.text = CoreSettings.NAME + ", " + resMsg + ", version: " + CoreSettings.VERSION;
+			if ( _versionTextField )
+			{
+				var resMsg:String = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? "2048x1536" : "1024x768";
+				_versionTextField.text = CoreSettings.NAME + ", " + resMsg + ", version: " + CoreSettings.VERSION;
+			}
 		}
 
 		public function initialize():void {
@@ -108,7 +112,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			}
 			// Core module's main views.
 			addRegisteredView( new SbNavigationView(), _applicationLayer );
-			if( CoreSettings.SHOW_PSYKOSOCKET_CONNECTION_UI ) {
+			if( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION ) {
 				addRegisteredView( new PsykoSocketView(), _applicationLayer );
 			}
 		}

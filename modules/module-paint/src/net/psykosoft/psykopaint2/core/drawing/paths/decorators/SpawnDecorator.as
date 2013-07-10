@@ -32,6 +32,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var autorotate:PsykoParameter;
 		
 		private var rng:LCG;
+		private var swapVector:Vector.<SamplePoint>;
 		
 		public function SpawnDecorator( minMultiples:int = 1, maxMultiples:int = 4, maxOffset:Number = 16 )
 		{
@@ -48,11 +49,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			_parameters.push(this.multiples,this.maxOffset, offsetMode, offsetAngleRange, brushAngleRange, bristleVariation,maxSpeed,autorotate);
 			rng = new LCG(Math.random() * 0xffffffff);
+			swapVector = new Vector.<SamplePoint>()
 		}
 		
 		override public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
-			var result:Vector.<SamplePoint> = new Vector.<SamplePoint>();
+			var result:Vector.<SamplePoint> = swapVector;
 			
 			var count:int = points.length;
 			var ms:Number = maxSpeed.numberValue;
@@ -92,6 +94,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				}
 			}
 			points.length = 0;
+			swapVector = points;
 			return result;
 		}
 		

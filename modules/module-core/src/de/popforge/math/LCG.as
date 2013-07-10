@@ -8,6 +8,7 @@ package de.popforge.math
 		private var m_seed0:uint;
 		private var m_seed1:uint;
 		private var m_seed2:uint;
+		private const applyArray:Array = [0,0,1,1];
 		
 		public function LCG( seed: uint )
 		{
@@ -52,7 +53,11 @@ package de.popforge.math
 		public function getMappedNumber( min: Number = 0, max: Number = 1, easingFunction:Function = null):Number
 		{
 			var v:Number =  getNextInt() / uint( 0xffffffff);
-			if ( easingFunction ) v = easingFunction.apply( null, [v,0,1,1]);
+			if ( easingFunction ) 
+			{
+				applyArray[0] = v;
+				v = easingFunction.apply( null, applyArray );
+			}
 			return min + v * ( max -min );
 		}
 		

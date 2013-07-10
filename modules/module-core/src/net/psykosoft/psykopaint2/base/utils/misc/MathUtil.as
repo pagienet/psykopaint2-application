@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.base.utils.misc
 
 	public class MathUtil
 	{
+		private static const applyArray:Array = [0,0,1,1];
+		
 		public static function rand( min:Number, max:Number ):Number {
 			return (max - min) * Math.random() + min;
 		}
@@ -13,7 +15,8 @@ package net.psykosoft.psykopaint2.base.utils.misc
 		
 		public static function mapNormalizedNumber( value:Number, easingFunction:Function ):Number
 		{
-			return easingFunction.apply( null, [value,0,1,1]);
+			applyArray[0] = value;
+			return easingFunction.apply( null, applyArray);
 		}
 		
 		public static function mapNormalizedToRange( value:Number, min:Number, max:Number ):Number
