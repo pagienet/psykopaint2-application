@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpManagerView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 	
 	
@@ -108,6 +109,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			}
 			// Core module's main views.
 			addRegisteredView( new SbNavigationView(), _applicationLayer );
+			addRegisteredView( new PopUpManagerView(), _applicationLayer );
 			if( CoreSettings.SHOW_PSYKOSOCKET_CONNECTION_UI ) {
 				addRegisteredView( new PsykoSocketView(), _applicationLayer );
 			}

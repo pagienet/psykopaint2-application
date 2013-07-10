@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		public function writeBytesAsync( fileName:String, bytes:ByteArray, onComplete:Function ):void {
 			_onWriteCompleteCallback = onComplete;
 			_fileName = fileName;
-			trace( this, "writing bytes - " + _fileName );
+			trace( this, "writing bytes - filename: " + _fileName + ", numBytes: " + bytes.length );
 			var file:File = _rootFile.resolvePath( fileName );
 			_fileStream = new FileStream();
 			_fileStream.addEventListener( Event.CLOSE, onWriteBytesAsyncClosed );
@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		}
 
 		private function onWriteBytesAsyncProgress( event:OutputProgressEvent ):void {
-			trace( this, "writing bytes progress - " + _fileName + ": " + event.bytesPending );
+			trace( this, "writing bytes progress - filename: " + _fileName + ", bytes pending: " + event.bytesPending );
 			if( event.bytesPending == 0 ) {
 				_fileStream.addEventListener( OutputProgressEvent.OUTPUT_PROGRESS, onWriteBytesAsyncProgress );
 				_fileStream.close();
@@ -56,7 +56,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		}
 
 		private function onWriteBytesAsyncClosed( event:Event ):void {
-			trace( this, "done writing bytes - " + _fileName );
+			trace( this, "done writing bytes - filename: " + _fileName );
 			_fileStream.removeEventListener( Event.CLOSE, onWriteBytesAsyncClosed );
 			if( _onWriteCompleteCallback ) {
 				_onWriteCompleteCallback();

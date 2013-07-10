@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public var paintModule:PaintModule;
 		
 		[Inject]
-		public var notifyActivateBrushChangedSignal:NotifyActivateBrushChangedSignal
+		public var notifyActivateBrushChangedSignal:NotifyActivateBrushChangedSignal;
 
 		override public function initialize():void {
 
