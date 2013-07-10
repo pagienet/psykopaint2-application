@@ -32,6 +32,9 @@ package net.psykosoft.psykopaint2.core.views.base
 		[Embed(source="../../../../../../../../../modules/module-core/assets/embedded/images/launch/ipad-hr/Default-Landscape@2x.png")]
 		private var SplashImageAsset:Class;
 
+		[Embed(source="../../../../../../../../../modules/module-core/assets/packaged/core-packaged/swf/quotes.swf", symbol="quotes")]
+		private var QuotesAsset:Class;
+
 		private var _time:Number = 0;
 		private var _statsTextField:TextField;
 		private var _versionTextField:TextField;
@@ -40,6 +43,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		private var _renderTimeStackUtil:StackUtil;
 		private var _splashScreen:Sprite;
 		private var _splashScreenBM:Bitmap;
+		private var _quotes:MovieClip;
 		private var _fps:Number = 0;
 		private var _errorCount:uint;
 		private var _memoryIcon:TextField;
@@ -98,7 +102,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		}
 
 		public function initialize():void {
-			
+
 			//this is only here for testing purposes:
 			if ( CoreSettings.SHOW_INTRO_VIDEO )
 			{
@@ -139,6 +143,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			_debugLayer.removeChild( _splashScreen );
 			_splashScreenBM.bitmapData.dispose();
 			_splashScreenBM = null;
+			_quotes = null;
 			_splashScreen = null;
 		}
 
@@ -235,15 +240,11 @@ package net.psykosoft.psykopaint2.core.views.base
 				_splashScreenBM.transform.colorTransform = new ColorTransform( -1, -1, -1, 1, 255, 255, 255 );
 			}
 			_splashScreen.addChild( _splashScreenBM );
-		}
-
-		public function addQuotes():void {
-			var newClipClass:Class = Class( getDefinitionByName( "quotesClip" ) );
-			var quotes:MovieClip = new newClipClass();
-			quotes.x = stage.stageWidth / 2;
-			quotes.y = stage.stageHeight / 2 + 250;
-			quotes.gotoAndStop( Math.floor( 17 * Math.random() ) + 1 );
-			_splashScreen.addChild( quotes );
+			_quotes = MovieClip( new QuotesAsset() );
+			_quotes.x = 0;
+			_quotes.y = 50;
+			_quotes.gotoAndStop( Math.floor( 17 * Math.random() ) + 1 );
+			_splashScreen.addChild( _quotes );
 		}
 
 		// ---------------------------------------------------------------------
@@ -284,7 +285,6 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		// TODO: remove
 		public function runUiTests():void {
-
 			// Bg fill.
 			/*this.graphics.beginFill(0xCCCCCC, 1.0);
 			 this.graphics.drawRect(0, 0, 1024, 768);

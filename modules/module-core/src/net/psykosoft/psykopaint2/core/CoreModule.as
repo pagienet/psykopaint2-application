@@ -119,7 +119,6 @@ package net.psykosoft.psykopaint2.core
 			trace( this, "shake and bake connected" );
 			_shakeAndBakeInitialized = true;
 			_shakeAndBakeConnector = null;
-			_coreRootView.addQuotes();
 			checkInitialized();
 		}
 
@@ -288,7 +287,6 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function onViewsReady():void {
-
 			_stateSignal.dispatch( StateType.IDLE );
 
 			if( isStandalone ) {
