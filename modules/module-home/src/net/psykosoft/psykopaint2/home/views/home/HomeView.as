@@ -64,7 +64,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public static const EASEL_CLOSE_ZOOM_IN:Point = new Point( 315, -900 );
 		public static const EASEL_FAR_ZOOM_IN:Point = new Point( 170, -1160 );
 
-
 		public function HomeView() {
 			super();
 			scalesToRetina = false;
@@ -456,19 +455,21 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onStageKeyDown( event:KeyboardEvent ):void {
 			switch( event.keyCode ) {
 				case Keyboard.UP: {
-					_cameraController.offsetY( _shiftMultiplier );
+//					_cameraController.offsetY( _shiftMultiplier );
 					break;
 				}
 				case Keyboard.DOWN: {
-					_cameraController.offsetY( -_shiftMultiplier );
+//					_cameraController.offsetY( -_shiftMultiplier );
 					break;
 				}
 				case Keyboard.RIGHT: {
-					_cameraController.offsetZ( _shiftMultiplier );
+//					_room.wall.x += _shiftMultiplier;
+//					_cameraController.offsetZ( _shiftMultiplier );
 					break;
 				}
 				case Keyboard.LEFT: {
-					_cameraController.offsetZ( -_shiftMultiplier );
+//					_room.wall.x -= _shiftMultiplier;
+//					_cameraController.offsetZ( -_shiftMultiplier );
 					break;
 				}
 				case Keyboard.SHIFT: {
@@ -476,7 +477,9 @@ package net.psykosoft.psykopaint2.home.views.home
 					break;
 				}
 			}
-			trace( this, "positioning camera, Y: " + _cameraController.camera.y + ", Z: " + _cameraController.camera.z );
+
+//			trace( this, "positioning wall - x: " + _room.wall.x );
+//			trace( this, "positioning camera, Y: " + _cameraController.camera.y + ", Z: " + _cameraController.camera.z );
 		}
 
 		public function setEaselContent( data:PaintingInfoVO ):void {

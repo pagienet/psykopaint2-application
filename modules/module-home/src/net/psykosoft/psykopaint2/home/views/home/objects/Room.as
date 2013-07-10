@@ -60,6 +60,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_wall.scaleX = WALL_WIDTH / wallGeometry.width;
 			_wall.scaleZ = WALL_HEIGHT / wallGeometry.height;
 			_wall.rotationX = -90;
+			_wall.x = 370; // Aligns wallpaper lights with paintings.
 			_wall.y = WALL_BASE_Y + WALL_HEIGHT / 2;
 			_wall.z = WALL_Z;
 			addChild( _wall );
@@ -134,6 +135,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		public function get wallZ():Number {
 			return WALL_Z;
+		}
+
+		public function get wall():Mesh {
+			return _wall;
 		}
 	}
 }
