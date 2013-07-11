@@ -215,8 +215,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				paintModule.stopAnimations();
 			}
 
-			view.showTranformView(  newState == StateType.PAINT_TRANSFORM )
-
 			//TODO: this is for desktop testing - remove in final version
 			if ( !CoreSettings.RUNNING_ON_iPAD )
 			{

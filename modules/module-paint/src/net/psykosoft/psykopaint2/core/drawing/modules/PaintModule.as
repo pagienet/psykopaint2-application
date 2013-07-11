@@ -122,6 +122,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function onStateChange( stateType:String ):void
 		{
+			
 			if ( _transformModeActive && stateType != StateType.PAINT_TRANSFORM )
 			{
 				_transformModeActive = false;
@@ -135,6 +136,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				renderer.paintAlpha = 0.5;
 				_activeBrushKit.deactivate();
 			} 
+			
+			
 		}
 		
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
@@ -299,7 +302,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private function triggerToogleNavBar( show:Boolean ):void
 		{
 			_navHideTimeout = _navShowTimeout = -1;
-			requestNavigationToggleSignal.dispatch(show ? 1 : -1);
+			requestNavigationToggleSignal.dispatch(show ? 1 : -1, 0.1);
 		}
 		
 		

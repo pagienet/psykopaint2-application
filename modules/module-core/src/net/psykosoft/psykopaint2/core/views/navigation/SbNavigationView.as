@@ -127,9 +127,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Interface to be used by the view's mediator.
 		// ---------------------------------------------------------------------
 
-		public function toggle():void {
-			if( _showing ) hide();
-			else show();
+		public function toggle( time:Number = 0.5):void {
+			if( _showing ) hide( time );
+			else show( time );
 		}
 
 		public function hide( time:Number = 0.5 ):void {
@@ -152,7 +152,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			NavigationCache.isHidden = true;
 		}
 
-		public function show():void {
+		public function show( time: Number = 0.5 ):void {
 			trace( this, "trying to show: animating: " + _animating + ", on reactive hide: " + _onReactiveHide + ", showing: " + _showing );
 			if( _animating ) return;
 			if( !_onReactiveHide && _showing ) return;
@@ -162,7 +162,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			showingSignal.dispatch();
 			this.visible = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 0.5, { y: 0, onUpdate: onShowHideUpdate, onComplete: onShowAnimatedComplete, ease:Strong.easeOut } );
+			TweenLite.to( this, time, { y: 0, onUpdate: onShowHideUpdate, onComplete: onShowAnimatedComplete, ease:Strong.easeOut } );
 		}
 		private function onShowAnimatedComplete():void {
 			_animating = false;

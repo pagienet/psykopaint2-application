@@ -88,10 +88,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			notifyNavigationToggledSignal.dispatch( true );
 		}
 
-		private function onToggleRequest( value:int ):void {
-			if( value == 1 ) view.show();
-			else if( value == -1 ) view.hide();
-			else view.toggle();
+		private function onToggleRequest( value:int, time: Number = 0.5 ):void {
+			if( value == 1 ) view.show( time );
+			else if( value == -1 ) view.hide( time );
+			else view.toggle(time);
 		}
 
 		// -----------------------
