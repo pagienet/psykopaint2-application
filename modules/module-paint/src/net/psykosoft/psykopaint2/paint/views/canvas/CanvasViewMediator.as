@@ -114,7 +114,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			
 			transformMatrix = new Matrix();
 			
-		
+			//TODO: this is for desktop testing - remove in final version
+			
 		}
 
 		// -----------------------
@@ -213,18 +214,19 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			if( newState != StateType.PAINT ) {
 				paintModule.stopAnimations();
-			}
-
-			//TODO: this is for desktop testing - remove in final version
-			if ( !CoreSettings.RUNNING_ON_iPAD )
-			{
-				if ( newState == StateType.PAINT_TRANSFORM )
+				if ( !CoreSettings.RUNNING_ON_iPAD )
 				{
-					view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
-				} else {
 					view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
 				}
+			} else {
+				if ( !CoreSettings.RUNNING_ON_iPAD )
+				{
+					view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+				}
 			}
+			
+			
+			
 		}
 
 		// -----------------------

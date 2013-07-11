@@ -120,12 +120,14 @@ package net.psykosoft.psykopaint2.core.rendering
 				if (scale < 1)
 					offsetY = (1 - _scale) * .333;
 
+				
 				if (_scale > 0.95 && _scale < 1.05) {
 					_scale = 1;
 					offsetX = 0;
 					offsetY = 0;
 
 				}
+				
 				_offsetX = offsetX * canvas.width;
 				_offsetY = offsetY * canvas.height;
 				renderLighting(offsetX, offsetY, _scale, _scale, canvas);

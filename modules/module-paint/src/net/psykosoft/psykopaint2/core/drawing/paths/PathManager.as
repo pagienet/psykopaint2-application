@@ -366,6 +366,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			{
 				sendEndCallbacks();
 			}
+			updateStageScaleFactors();
 			
 			var px : Number = (stageX - _canvasRect.x - renderer.offsetX) * scaleX;
 			var py : Number = (stageY - _canvasRect.y - renderer.offsetY) * scaleY;
@@ -463,7 +464,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			this.canvasModel = canvasModel;
 			this.renderer = renderer;
 			_view = view;
-			updateStageScaleFactors();
 			
 			if (_active) return;
 			_active = true;

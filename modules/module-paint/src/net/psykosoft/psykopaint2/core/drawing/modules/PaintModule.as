@@ -128,13 +128,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_transformModeActive = false;
 				renderer.sourceTextureAlpha = 0;
 				renderer.paintAlpha = 1;
-				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
+				//_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
 			} else if ( !_transformModeActive && stateType == StateType.PAINT_TRANSFORM )
 			{
 				_transformModeActive = true;
 				renderer.sourceTextureAlpha = 1;
 				renderer.paintAlpha = 0.5;
-				_activeBrushKit.deactivate();
+				//_activeBrushKit.deactivate();
 			} 
 			
 			
@@ -150,6 +150,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				} else {
 					requestStateChangeSignal.dispatch( StateType.PAINT_TRANSFORM );
 				}
+			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
+			{
+				_activeBrushKit.deactivate();
+			}  else if ( gestureType == GestureType.TRANSFORM_GESTURE_ENDED )
+			{
+				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
 			}
 		}
 		
