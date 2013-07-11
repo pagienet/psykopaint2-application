@@ -54,10 +54,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		}
 
 
-		override public function update(forceUpdate : Boolean = false) : Vector.<SamplePoint>
+		override public function update(result:Vector.<SamplePoint>, forceUpdate : Boolean = false) : void
 		{
-			var result : Vector.<SamplePoint> = new Vector.<SamplePoint>();
-		 
+			
 			if (forceUpdate || pointCount - _lastOutputIndex > _minSamplesPerStep.intValue || ( pointCount - _lastOutputIndex > 1 )) 
 			{
 				
@@ -164,7 +163,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					result.pop();
 				}
 			}
-			return result;
 		}
 		
 		public function simplify2( startIndex:int = 0, endIndex:int = -1, timeRadius:int = 1000, distanceThreshold:Number = 10 ):void

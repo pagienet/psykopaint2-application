@@ -32,11 +32,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			lastPointSpeed = 0;
 		}
 		
-		override public function update(forceUpdate : Boolean = false) : Vector.<SamplePoint>
+		override public function update(result:Vector.<SamplePoint>, forceUpdate : Boolean = false) : void
 		{
-			
-			var result : Vector.<SamplePoint> = new Vector.<SamplePoint>();
-			if ( pointCount < 3 ) return result;
+			if ( pointCount < 3 ) return ;
 			
 			var speedSmoothingFactor:Number = _speedSmoothing.numberValue;
 			
@@ -122,7 +120,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						lastPointSpeed  = speed
 						result.push( p);
 					}
+					PathManager.recycleSamplePoint(p1);
 					p1 =  result[result.length-1];
+					PathManager.recycleSamplePoint(c);
 					c = p2
 					lastSpeed = speed1;	
 				} else {
@@ -130,8 +130,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					c = p2;
 				}
 			}
+			//TODO - potentially not recycling these
 			p1 = p1.getClone();
 			c = c.getClone();
+			
 			_lastOutputIndex = nextIndex;
 		
 			if ( forceUpdate && !isNaN(ts))
@@ -157,7 +159,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			}
 			
 			
-			return result;
 		}
 		
 		/*
