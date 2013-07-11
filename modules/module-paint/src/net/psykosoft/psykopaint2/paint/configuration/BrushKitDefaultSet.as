@@ -166,7 +166,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<pathengine type={PathManager.ENGINE_TYPE_BASIC}>
 						<SizeDecorator>
 							<parameter id={SizeDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_0" index={SizeDecorator.MODE_INDEX_FIXED} />
-							<parameter id={SizeDecorator.PARAMETER_NR_FACTOR} path="pathengine.pointdecorator_0" value1="0.4" value2="0.4" minValue="0" maxValue="1" />
+							<parameter id={SizeDecorator.PARAMETER_NR_FACTOR} path="pathengine.pointdecorator_0" label="Size" value1="0.4" value2="0.4" minValue="0" maxValue="1" showInUI="1" />
 							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} path="pathengine.pointdecorator_0" index="1"/>
 						</SizeDecorator>
 						<ColorDecorator>
