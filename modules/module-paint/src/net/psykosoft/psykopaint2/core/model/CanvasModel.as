@@ -2,29 +2,18 @@ package net.psykosoft.psykopaint2.core.model
 {
 
 	import flash.display.BitmapData;
-	import flash.display.BitmapDataChannel;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
-	import flash.display3D.Context3D;
-	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
-	import flash.utils.ByteArray;
-	import flash.utils.Endian;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
-
-	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
-	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
-
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
-	import net.psykosoft.psykopaint2.core.utils.NormalSpecularMapGenerator;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
 
@@ -57,9 +46,6 @@ package net.psykosoft.psykopaint2.core.model
 		// TODO: should originals be a string path to packaged asset
 		private var _normalSpecularOriginal : ByteArray;
 		private var _colorBackgroundOriginal : BitmapData;
-
-		private var _copySubTextureChannelsRGB : CopySubTextureChannels;
-		private var _copySubTextureChannelsA : CopySubTextureChannels;
 
 		public function CanvasModel()
 		{
@@ -305,88 +291,6 @@ package net.psykosoft.psykopaint2.core.model
 			inflated.writeBytes(_normalSpecularOriginal, 0, _normalSpecularOriginal.length);
 			inflated.uncompress();
 			_normalSpecularMap.uploadFromByteArray(inflated, 0);
-		}
-
-		/**
-		 * Returns a list of 3 ByteArrays containing data:
-		 * 0: painted color layer, in BGRA
-		 * 1: normal/specular layer, in BGRA
-		 * 2: the source texture, in RGBA!!! (because it's always used primarily as BitmapData)
-		 */
-		public function exportPaintingData() : PaintingDataVO
-		{
-			var paintingData : PaintingDataVO = new PaintingDataVO();
-			stage3D.context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			var bmp : BitmapData = new BitmapData(_width, _height, false);
-			var bmp2 : BitmapData = new BitmapData(_width, _height, false);
-
-			paintingData.width = _width;
-			paintingData.height = _height;
-			paintingData.colorData = saveLayerWithAlpha(_colorTexture, bmp, bmp2);
-			paintingData.normalSpecularData = saveLayerWithAlpha(_normalSpecularMap, bmp, bmp2);
-			paintingData.sourceBitmapData = saveLayerNoAlpha(sourceTexture, bmp);
-
-			bmp.dispose();
-			bmp2.dispose();
-			return paintingData;
-		}
-
-		private function saveLayerNoAlpha(layer : Texture, workerBitmapData : BitmapData) : ByteArray
-		{
-			var context : Context3D = stage3D.context3D;
-			var sourceRect : Rectangle = new Rectangle(0, 0, usedTextureWidthRatio, usedTextureHeightRatio);
-			var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
-
-			context.setRenderToBackBuffer();
-			context.clear(0, 0, 0, 0);
-			context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			CopySubTexture.copy(layer, sourceRect, destRect, context);
-			context.drawToBitmapData(workerBitmapData);
-			return workerBitmapData.getPixels(workerBitmapData.rect);
-		}
-
-		private function saveLayerWithAlpha(layer : Texture, workerBitmapData1 : BitmapData, workerBitmapData2 : BitmapData) : ByteArray
-		{
-			var context : Context3D = stage3D.context3D;
-			var sourceRect : Rectangle = new Rectangle(0, 0, usedTextureWidthRatio, usedTextureHeightRatio);
-			var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
-
-			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
-			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
-
-			context.setRenderToBackBuffer();
-			context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-
-			context.clear(0, 0, 0, 1);
-			_copySubTextureChannelsRGB.copy(layer, sourceRect, destRect, context);
-			context.drawToBitmapData(workerBitmapData1);
-
-			context.clear(0, 0, 0, 1);
-			_copySubTextureChannelsA.copy(layer, sourceRect, destRect, context);
-			context.drawToBitmapData(workerBitmapData2);
-
-			var rgbData : ByteArray = workerBitmapData1.getPixels(workerBitmapData1.rect);
-			var alphaData : ByteArray = workerBitmapData2.getPixels(workerBitmapData2.rect);
-
-			rgbData.position = 0;
-			alphaData.position = 0;
-			var outputData : ByteArray = new ByteArray();
-
-			var len : int = _width * _height;
-			for (var i : int = 0; i < len; ++i) {
-				var rgb : uint = rgbData.readUnsignedInt();
-				var r : uint = rgb & 0x00ff0000;
-				var g : uint = rgb & 0x0000ff00;
-				var b : uint = rgb & 0x000000ff;
-				var a : uint = alphaData.readUnsignedInt() & 0x000000ff;
-
-				outputData.writeUnsignedInt((r >> 8) | (g << 8) | (b << 24) | a);
-			}
-
-			rgbData.clear();
-			alphaData.clear();
-
-			return outputData;
 		}
 
 		public function importPaintingData(paintingData : PaintingDataVO) : void

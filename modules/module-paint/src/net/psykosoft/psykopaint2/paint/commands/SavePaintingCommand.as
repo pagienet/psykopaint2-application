@@ -17,6 +17,8 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoFactory;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoSerializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.io.CanvasExportEvent;
+	import net.psykosoft.psykopaint2.core.io.CanvasExporter;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
@@ -68,11 +70,12 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
 
 		private var _paintId:String;
-		private var _infoVO:PaintingInfoVO;
 		private var _infoBytes:ByteArray;
 		private var _dataBytes:ByteArray;
+		private var _infoVO : PaintingInfoVO;
 
 		private const ASYNC_MODE:Boolean = false;
+
 
 		public function SavePaintingCommand() {
 			super();
@@ -96,8 +99,16 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function save():void {
 
+			var canvasExporter : CanvasExporter = new CanvasExporter();
+			canvasExporter.addEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
+			canvasExporter.export(canvasModel);
+		}
+
+		private function onExportComplete(event : CanvasExportEvent) : void
+		{
+			event.target.removeEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
 			var factory:PaintingInfoFactory = new PaintingInfoFactory();
-			var dataVO:PaintingDataVO = canvasModel.exportPaintingData();
+			var dataVO : PaintingDataVO = event.paintingDataVO;
 			_infoVO = factory.createFromData( dataVO, paintingId, userModel.uniqueUserId, generateThumbnail() );
 
 			paintingModel.updatePaintingInfo( _infoVO );

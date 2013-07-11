@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.base.utils.io.IosImageSaveUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
+	import net.psykosoft.psykopaint2.core.io.CanvasExportEvent;
+	import net.psykosoft.psykopaint2.core.io.CanvasExporter;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotTakenSignal;
 
@@ -33,40 +35,20 @@ package net.psykosoft.psykopaint2.paint.commands
 		override public function execute():void {
 			super.execute();
 
-			// -----------------------
-			// Approach 1.
-			// PROBLEM: This approach generates an image that lacks the bg.
-			// -----------------------
+			// TODO: Replace this with CanvasRenderer::renderToBitmapData
+			var canvasExporter : CanvasExporter = new CanvasExporter();
+			canvasExporter.addEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
+			canvasExporter.export(canvasModel);
+		}
 
-			// Retrieve bmd.
-			// TODO: should this use CanvasRenderer::renderToBitmapData instead?
-			var paintingDataVO : PaintingDataVO = canvasModel.exportPaintingData();
-			var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( paintingDataVO.colorData, canvasModel.width, canvasModel.height, true );
+		private function onExportComplete(event : CanvasExportEvent) : void
+		{
+			event.target.removeEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
+			var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( event.paintingDataVO.colorData, canvasModel.width, canvasModel.height, true );
 
 			// Write bmd
 			if( CoreSettings.RUNNING_ON_iPAD ) IosImageSaveUtil.saveImageToCameraRoll( bmd );
 			else DesktopImageSaveUtil.saveImageToDesktop( bmd );
-
-			// -----------------------
-			// Approach 2.
-			// PROBLEM: This approach generates the correct image, but causes subsequent clear canvas calls to fail.
-			// -----------------------
-
-			// Request a snapshot and wait for it.
-			/*RenderGpuCommand.snapshotScale = 1;
-			RenderGpuCommand.snapshotRequested = true;
-			notifyCanvasSnapshotSignal.addOnce( onSnapshotRetrieved );
-			context.detain( this );*/
 		}
-
-		/*private function onSnapshotRetrieved( snapshot:BitmapData ):void {
-			trace( this, "snapshot retrieved: " + snapshot.width + "x" + snapshot.height );
-
-			// Chose the appropriate saving service and trigger it.
-			if( CoreSettings.RUNNING_ON_iPAD ) IosImageSaveUtil.saveImageToCameraRoll( snapshot );
-			else DesktopImageSaveUtil.saveImageToDesktop( snapshot );
-
-			context.release( this );
-		}*/
 	}
 }

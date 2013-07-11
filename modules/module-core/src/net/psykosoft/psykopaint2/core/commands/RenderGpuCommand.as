@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.commands
 
 	public class RenderGpuCommand extends Command
 	{
+		// holy abomination, batman!
 		public static var renderTime:Number = 0;
 		public static var snapshotScale:Number = 1;
 		public static var snapshotRequested:Boolean;

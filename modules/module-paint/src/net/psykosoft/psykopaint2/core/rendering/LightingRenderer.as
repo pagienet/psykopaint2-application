@@ -53,6 +53,8 @@ package net.psykosoft.psykopaint2.core.rendering
 			_offsetX = _offsetY = 0;
 			initBuffers();
 			onLightingModelChanged();
+			paintAlpha = 1;
+			sourceTextureAlpha = 0;
 		}
 
 		public function get renderRect() : Rectangle
