@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.core.io
 	{
 		private static var _copySubTextureChannelsRGB : CopySubTextureChannels;
 		private static var _copySubTextureChannelsA : CopySubTextureChannels;
+
 		private var _canvas : CanvasModel;
 		private var _paintingData : PaintingDataVO;
 		private var _stage : int;
@@ -36,9 +37,29 @@ package net.psykosoft.psykopaint2.core.io
 		private var _sourceRect : Rectangle;
 		private var _destRect : Rectangle;
 
+		private var _stages : Array;
+
 		public function CanvasExporter()
 		{
+			_stages = [
+				saveColorRGB,
+				saveColorAlpha,
+				mergeColorData,
+
+				extractNormalsColor,
+				extractNormalsAlpha,
+				mergeNormalData,
+
+				saveSourceData,
+
+				onComplete
+			];
+
+			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
+			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
 		}
+
+
 
 		public function export(canvas : CanvasModel) : void
 		{
@@ -47,24 +68,8 @@ package net.psykosoft.psykopaint2.core.io
 
 			init();
 
-			_paintingData = new PaintingDataVO();
-
-			_workerBitmapData = new BitmapData(canvas.width, canvas.height, false);
-
-			_paintingData.width = canvas.width;
-			_paintingData.height = canvas.height;
-
-			saveColorRGB();
-			saveColorAlpha();
-			mergeColorData();
-
-			extractNormalsColor();
-			extractNormalsAlpha();
-			mergeNormalData();
-
-			saveSourceData();
-
-			onComplete();
+			_stage = 0;
+			executeStage();
 		}
 
 		private function init() : void
@@ -74,16 +79,29 @@ package net.psykosoft.psykopaint2.core.io
 			_sourceRect = new Rectangle(0, 0, _canvas.usedTextureWidthRatio, _canvas.usedTextureHeightRatio);
 			_destRect = new Rectangle(0, 0, 1, 1);
 
-
 			_ticker = new Sprite();
 			_ticker.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
-			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
-			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
+			_paintingData = new PaintingDataVO();
 
-			_stage = 0;
+			_workerBitmapData = new BitmapData(_canvas.width, _canvas.height, false);
+
+			_paintingData.width = _canvas.width;
+			_paintingData.height = _canvas.height;
 		}
 
+		private function onEnterFrame(event : Event) : void
+		{
+			++_stage;
+			executeStage();
+		}
+
+		private function executeStage() : void
+		{
+			_stages[_stage]();
+		}
+
+	// the stages:
 		private function saveColorRGB() : void
 		{
 			_rgbData = extractChannels(_canvas.colorTexture, _copySubTextureChannelsRGB);
@@ -119,9 +137,19 @@ package net.psykosoft.psykopaint2.core.io
 			_paintingData.sourceBitmapData = saveLayerNoAlpha(_canvas.sourceTexture);
 		}
 
-		private function onEnterFrame(event : Event) : void
+		private function onComplete() : void
 		{
-
+			_ticker.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			_ticker = null;
+			_canvas = null;
+			_context3D = null;
+			_sourceRect = null;
+			_destRect = null;
+			_workerBitmapData.dispose();
+			_workerBitmapData = null;
+			_rgbData = null;
+			_alphaData = null;
+			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.COMPLETE, _paintingData));
 		}
 
 		private function saveLayerNoAlpha(layer : Texture) : ByteArray
@@ -168,21 +196,6 @@ package net.psykosoft.psykopaint2.core.io
 			_context3D.drawToBitmapData(_workerBitmapData);
 
 			return _workerBitmapData.getPixels(_workerBitmapData.rect);
-		}
-
-		private function onComplete() : void
-		{
-			_ticker.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			_ticker = null;
-			_canvas = null;
-			_context3D = null;
-			_sourceRect = null;
-			_destRect = null;
-			_workerBitmapData.dispose();
-			_workerBitmapData = null;
-			_rgbData = null;
-			_alphaData = null;
-			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.COMPLETE, _paintingData));
 		}
 	}
 }
