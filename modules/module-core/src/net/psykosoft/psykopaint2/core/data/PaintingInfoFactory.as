@@ -41,44 +41,20 @@ package net.psykosoft.psykopaint2.core.data
 			var outputWidth : uint = sourceWidth / factor;
 			var outputHeight : uint = sourceHeight / factor;
 			var reducedBytes:ByteArray = new ByteArray();
-			var startX : uint, startY : uint = 0;
+			var sampleX : uint, sampleY : uint = 0;
 
 			for( var y : uint = 0; y < outputHeight; ++y ) {
-				startX = 0;
-				var endY : uint = startY + factor;
-				if (endY > sourceHeight) endY = sourceHeight;
+				sampleX = 0;
 
 				for( var x : uint = 0; x < outputWidth; ++x ) {
-					var numSamples : uint = 0;
-					var sampledB : uint = 0, sampledG : uint = 0, sampledR : uint = 0, sampledA : uint = 0;
-
-					var endX : uint = startX + factor;
-					if (endX > sourceWidth) endX = sourceWidth;
-
-					for (var sampleY : uint = startY; sampleY < endY; ++sampleY) {
-						bytes.position = (startX + sampleY*sourceWidth) << 2;
-						for (var sampleX : uint = startX; sampleX < endX; ++sampleX) {
-							var val : uint = bytes.readUnsignedInt();
-							sampledB += (val & 0xff000000) >> 24;
-							sampledG += (val & 0x00ff0000) >> 16;
-							sampledR += (val & 0x0000ff00) >> 8;
-							sampledA += val & 0x000000ff;
-							++numSamples;
-						}
-					}
-
-					var invSamples : Number = 1/numSamples;
-					sampledB = uint(sampledB * invSamples) & 0xff;
-					sampledG = uint(sampledG * invSamples) & 0xff;
-					sampledR = uint(sampledR * invSamples) & 0xff;
-					sampledA = uint(sampledA * invSamples) & 0xff;
+					bytes.position = (sampleX + sampleY*sourceWidth) << 2;
 
 					// Write average into destination.
-					reducedBytes.writeUnsignedInt( (sampledB << 24) | (sampledG << 16) | (sampledR << 8) | sampledA );
+					reducedBytes.writeUnsignedInt( bytes.readUnsignedInt() );
 
-					startX += factor;
+					sampleX += factor;
 				}
-				startY += factor;
+				sampleY += factor;
 			}
 			return reducedBytes;
 		}
