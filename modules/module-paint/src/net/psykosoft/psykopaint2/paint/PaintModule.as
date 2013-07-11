@@ -99,7 +99,7 @@ package net.psykosoft.psykopaint2.paint
 
 				// Show navigation.
 				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-				showNavigationSignal.dispatch( 1 );
+				showNavigationSignal.dispatch( 1, 0.5 );
 
 				// Remove splash screen.
 				_coreModule.coreRootView.removeSplashScreen();
