@@ -50,9 +50,7 @@ package net.psykosoft.psykopaint2.core.io
 				extractNormalsAlpha,
 				mergeNormalData,
 
-				saveSourceData,
-
-				onComplete
+				saveSourceData
 			];
 
 			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
@@ -92,13 +90,16 @@ package net.psykosoft.psykopaint2.core.io
 
 		private function onEnterFrame(event : Event) : void
 		{
-			++_stage;
-			executeStage();
+			if (++_stage < _stages.length)
+				executeStage();
+			else
+				onComplete();
 		}
 
 		private function executeStage() : void
 		{
 			_stages[_stage]();
+			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.PROGRESS, _paintingData, _stage, _stages.length));
 		}
 
 	// the stages:
