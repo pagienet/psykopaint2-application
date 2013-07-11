@@ -149,7 +149,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			var cameraPosCache:Vector3D = _view.camera.position.clone();
 			_view.camera.y = planeWorldSpace.y;
 			var easelScreenRect:Rectangle = calculateEaselScreenRect();
-			var widthRatio:Number = easelScreenRect.width / _stage3dProxy.width;
+			var widthRatio:Number = easelScreenRect.width / 1024;
 			var distanceToCamera:Number = Math.abs( _view.camera.z - planeWorldSpace.z );
 			var targetDistance:Number = distanceToCamera * widthRatio;
 			zoom.z = planeWorldSpace.z - targetDistance;
