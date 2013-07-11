@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.book
 		private function onFirstZoomOut():void {
 			// Show Navigation.
 			var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-			showNavigationSignal.dispatch( 1 );
+			showNavigationSignal.dispatch( 1, 0.5 );
 		}
 	}
 }

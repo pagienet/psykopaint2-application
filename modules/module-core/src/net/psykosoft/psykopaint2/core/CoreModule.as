@@ -99,7 +99,7 @@ package net.psykosoft.psykopaint2.core
 				}
 				case Keyboard.SPACE:
 				{
-					_requestNavigationToggleSignal.dispatch( 0 );
+					_requestNavigationToggleSignal.dispatch( 0, 0.5 );
 					break;
 				}
 			}
