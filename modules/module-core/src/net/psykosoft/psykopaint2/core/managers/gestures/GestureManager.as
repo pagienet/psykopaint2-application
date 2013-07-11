@@ -194,9 +194,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private function onTransformGestureStarted( event:GestureEvent ):void {
 			if ( gesturesEnabled )
 			{
-				notifyGlobalGestureSignal.dispatch( GestureType.TRANSFORM_GESTURE_BEGAN, event );
-				_transformGesture.addEventListener( GestureEvent.GESTURE_ENDED, onTransformGestureEnded );
-				_transformGesture.addEventListener( GestureEvent.GESTURE_CHANGED, onTransformGestureChanged );	
+				if (TransformGesture( event.target).touchesCount > 1 )
+				{
+					notifyGlobalGestureSignal.dispatch( GestureType.TRANSFORM_GESTURE_BEGAN, event );
+					_transformGesture.addEventListener( GestureEvent.GESTURE_ENDED, onTransformGestureEnded );
+					_transformGesture.addEventListener( GestureEvent.GESTURE_CHANGED, onTransformGestureChanged );
+				}
 			}
 		}
 		
@@ -236,7 +239,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		protected function onStateChange( newState:String ):void {
-			_transformGesture.enabled = ( newState == StateType.PAINT_TRANSFORM );
+			//_transformGesture.enabled = ( newState == StateType.PAINT_TRANSFORM );
+			_transformGesture.enabled = ( newState != null && newState.indexOf("paint") > -1 );
 		}
 		
 		

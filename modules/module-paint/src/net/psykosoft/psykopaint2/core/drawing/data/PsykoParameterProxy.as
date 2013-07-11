@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 	{
 		public static const TYPE_VALUE_MAP:int = 0;
 		public static const TYPE_DECORATOR_ACTIVATION:int = 1;
+		public static const TYPE_PARAMETER_CHANGE:int = 2;
 		
 		public static const CONDITION_LOWER_THAN_VALUE:String = "<";
 		public static const CONDITION_HIGHER_THAN_VALUE:String = ">";
@@ -37,7 +38,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		private var value:Number;
 		private var indices:Vector.<int>;
 		private var mapping:Function;
-		
+		private var parameterXML:XML;
 		private var condition:String;
 		public var type:int;
 		
@@ -48,6 +49,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( !xml.hasOwnProperty("@target" )) throw("PsykoParameterProxy requires @target attribute");
 			if ( !xml.hasOwnProperty("@type" )) throw("PsykoParameterProxy requires @type attribute");
 			
+			result.parameterXML = xml;
 			result.type = int(xml.@type);
 			result.source_id = xml.@src;
 			result.target_path = xml.@target;
@@ -88,36 +90,46 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					break;
 				case TYPE_DECORATOR_ACTIVATION:
 					if ( target_decorator == null ) throw("PsykoParameterProxy - target decorator not linked yet");
-					switch ( String( condition ) )
-					{
-						case CONDITION_LOWER_THAN_VALUE:
-							target_decorator.active = isLower( parameter );
-							break;
-						case CONDITION_HIGHER_THAN_VALUE:
-							target_decorator.active = isHigher( parameter );
-							break;
-						case CONDITION_EQUALS_VALUE:
-							target_decorator.active = isEqual( parameter );
-							break;
-						case CONDITION_NOT_EQUALS_VALUE:
-							target_decorator.active = isUnequal( parameter );
-							break;
-						case CONDITION_INSIDE_RANGE:
-							target_decorator.active = isInRange( parameter );
-							break;
-						case CONDITION_OUTSIDE_RANGE:
-							target_decorator.active = isOutOfRange( parameter );
-							break;
-						case CONDITION_TRUE:
-							target_decorator.active = parameter.booleanValue;
-							break;
-						case CONDITION_FALSE:
-							target_decorator.active = !parameter.booleanValue;
-							break;
-					}
+					target_decorator.active = conditionResult(parameter);
 					break;
-				
+				case TYPE_PARAMETER_CHANGE:
+					if ( target_parameter == null ) throw("PsykoParameterProxy - target parameter not linked yet");
+					if ( conditionResult(parameter) ) target_parameter.updateValueFromXML( parameterXML );
+					break;
 			}
+		}
+		
+		private function conditionResult( parameter:PsykoParameter ):Boolean
+		{
+			var result:Boolean = false;
+			switch ( String( condition ) )
+			{
+				case CONDITION_LOWER_THAN_VALUE:
+					result = isLower( parameter );
+					break;
+				case CONDITION_HIGHER_THAN_VALUE:
+					result = isHigher( parameter );
+					break;
+				case CONDITION_EQUALS_VALUE:
+					result = isEqual( parameter );
+					break;
+				case CONDITION_NOT_EQUALS_VALUE:
+					result = isUnequal( parameter );
+					break;
+				case CONDITION_INSIDE_RANGE:
+					result = isInRange( parameter );
+					break;
+				case CONDITION_OUTSIDE_RANGE:
+					result = isOutOfRange( parameter );
+					break;
+				case CONDITION_TRUE:
+					result = parameter.booleanValue;
+					break;
+				case CONDITION_FALSE:
+					result = !parameter.booleanValue;
+					break;
+			}
+			return result;
 		}
 		
 		private function isEqual( parameter:PsykoParameter ):Boolean

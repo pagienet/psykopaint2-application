@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 {
-	import com.greensock.easing.Quad;
 	
 	import de.popforge.math.LCG;
 	
@@ -92,6 +91,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					p.y +=  Math.sin(offsetAngle) * radius; 
 					result.push(p );
 				}
+				PathManager.recycleSamplePoint(points[j]);
 			}
 			points.length = 0;
 			swapVector = points;

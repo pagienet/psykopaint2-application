@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		//function addXY( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0,force:Boolean = false ):Boolean;
 		function getPointAt( index:int ):SamplePoint;
 		function clone( startIndex:int = 0, count:int = -1 ):IPathEngine;
-		function update( forceUpdate:Boolean = false ):Vector.<SamplePoint>;
+		function update( result:Vector.<SamplePoint>, forceUpdate:Boolean = false ):void;
 		function updateParametersFromXML(xml:XML):void;
 		function getParameterSetAsXML( path:Array ):XML;
 		function getParameterSet(vo:ParameterSetVO, showInUiOnly:Boolean ):void;

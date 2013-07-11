@@ -85,7 +85,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		public function addPoint( x:Number, y:Number, pressure:Number = -1, penButtonState:int = 0, force:Boolean = false, first:Boolean = false ):Boolean
 		{
-			if ( !force && nextIndex > 0 && _sampledPoints[nextIndex-1].x == x && _sampledPoints[nextIndex-1].y == y) 
+			if ( !force && nextIndex > 0 && _sampledPoints[int(nextIndex-1)].x == x && _sampledPoints[int(nextIndex-1)].y == y) 
 			{
 				return false;
 			}
@@ -96,7 +96,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		public function addSamplePoint( p:SamplePoint, force:Boolean = false ):Boolean
 		{
-			if ( !force && nextIndex > 0 && _sampledPoints[nextIndex-1].x == p.x && _sampledPoints[nextIndex-1].y == p.y) 
+			if ( !force && nextIndex > 0 && _sampledPoints[int(nextIndex-1)].x == p.x && _sampledPoints[int(nextIndex-1)].y == p.y) 
 			{
 				return false;
 			}
@@ -210,10 +210,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_sendTaps.booleanValue = value;
 		}
 		
-		public function update(forceUpdate : Boolean = false) :Vector.<SamplePoint>
+		public function update(result:Vector.<SamplePoint>, forceUpdate : Boolean = false) :void
 		{
 			throw("Override this");
-			return null;
 		}
 		
 		public function updateParametersFromXML(message:XML):void

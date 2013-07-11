@@ -33,7 +33,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private static var _engineDepot : Vector.<Vector.<IPathEngine>> = Vector.<Vector.<IPathEngine>>([new Vector.<IPathEngine>(),new Vector.<IPathEngine>(),new Vector.<IPathEngine>()]);
 		private static var _samplePointDepot : Vector.<SamplePoint> = new Vector.<SamplePoint>(500);
 		private static var _recycleCount:int = 0;
-
+		
+		
 		static public function getPathEngine( type:int ) : IPathEngine
 		{
 			if (_engineDepot[type].length > 0) {
@@ -59,6 +60,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				var p : SamplePoint = _samplePointDepot[--_recycleCount];
 				return p.resetData(x, y, speed, size, angle, pressure, penButtonState, colors, bumpFactors, first);
 			} else {
+				
 				return new SamplePoint(x, y,  speed, size, angle, pressure, penButtonState, colors, bumpFactors, first);
 			}
 		}
@@ -132,7 +134,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			
 			
 			//FOR DEBUGGING ONLY:
-			recordedData = new Vector.<Number>();
+			if (!CoreSettings.RUNNING_ON_iPAD ) recordedData = new Vector.<Number>();
 		}
 		
 		public function set minSamplesPerStep( value:int ):void
@@ -202,6 +204,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 			if (_startCallbacksSent && _callbacks.onPathEnd) _callbacks.onPathEnd.apply(_callbacks.callbackObject);
 			_startCallbacksSent = false;
+			
+			
 		}
 
 		protected function onEnterFrame(event : Event) : void
@@ -295,9 +299,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			playbackActive = false;
 			singleStepPlaybackActive = false;
 			playbackOffset = getTimer();
-			recordedData.length = 0;
-			recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
-			 
+			
+			if ( !CoreSettings.RUNNING_ON_iPAD )
+			{
+				recordedData.length = 0;
+				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
+			} 
 			
 			onSampleStart(event.stageX, event.stageY);
 			_view.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
@@ -322,7 +329,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		{
 			_strokeInProgress = false;
 			enableGestureRecognition(true);
-			if ( !playbackActive )
+			if ( !CoreSettings.RUNNING_ON_iPAD && !playbackActive )
 			{
 				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
 			}
@@ -343,7 +350,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		private function onMouseMove(event : MouseEvent) : void
 		{
-			if ( !playbackActive )
+			if (!CoreSettings.RUNNING_ON_iPAD && !playbackActive )
 			{
 				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
 			}
@@ -359,6 +366,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			{
 				sendEndCallbacks();
 			}
+			updateStageScaleFactors();
 			
 			var px : Number = (stageX - _canvasRect.x - renderer.offsetX) * scaleX;
 			var py : Number = (stageY - _canvasRect.y - renderer.offsetY) * scaleY;
@@ -410,7 +418,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		protected function update(forceUpdate : Boolean = false) : void
 		{
-			_accumulatedResults = _accumulatedResults.concat(_pathEngine.update( forceUpdate ) );
+			_pathEngine.update( _accumulatedResults, forceUpdate )
+			//_accumulatedResults = _accumulatedResults.concat( );
 			//updateDecorators();
 		}
 		
@@ -455,7 +464,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			this.canvasModel = canvasModel;
 			this.renderer = renderer;
 			_view = view;
-			updateStageScaleFactors();
 			
 			if (_active) return;
 			_active = true;

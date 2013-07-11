@@ -34,11 +34,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			super.addFirstPoint(x,y,pressure,penButtonState);
 		}
 		
-		override public function update(forceUpdate : Boolean = false) : Vector.<SamplePoint>
+		override public function update(result:Vector.<SamplePoint>, forceUpdate : Boolean = false) : void
 		{
 			
-			var result : Vector.<SamplePoint> = new Vector.<SamplePoint>();
-			if ( !forceUpdate && (pointCount - _lastOutputIndex < _minSamplesPerStep.intValue)) return result;
+			if ( !forceUpdate && (pointCount - _lastOutputIndex < _minSamplesPerStep.intValue)) return;
 			
 			if ( isNaN(_lastAngle) && nextIndex > 1 ) _lastAngle = Math.atan2(sampledPoints[1].y - sampledPoints[0].y, sampledPoints[1].x - sampledPoints[0].x);
 			
@@ -140,7 +139,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			
 			_lastOutputIndex = nextIndex;
 		
-			return result;
 		}
 		
 	}
