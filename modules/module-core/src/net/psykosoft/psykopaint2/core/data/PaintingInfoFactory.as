@@ -45,13 +45,9 @@ package net.psykosoft.psykopaint2.core.data
 
 			for( var y : uint = 0; y < outputHeight; ++y ) {
 				sampleX = 0;
-
 				for( var x : uint = 0; x < outputWidth; ++x ) {
 					bytes.position = (sampleX + sampleY*sourceWidth) << 2;
-
-					// Write average into destination.
 					reducedBytes.writeUnsignedInt( bytes.readUnsignedInt() );
-
 					sampleX += factor;
 				}
 				sampleY += factor;
