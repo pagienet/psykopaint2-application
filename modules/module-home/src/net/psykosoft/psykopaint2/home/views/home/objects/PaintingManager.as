@@ -136,6 +136,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			return framedPainting;
 		}
 
+		public function getPaintingAtIndex( index:uint ):FramedPainting {
+			return _paintings[ index ];
+		}
+
 		private function autoPositionPaintingAtIndex( framedPainting:FramedPainting, index:uint ):void {
 
 			// Position painting.

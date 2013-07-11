@@ -64,6 +64,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			disposePainting();
 			if ( value ) {
 				_painting = new ObjectContainer3D();
+				// TODO: not all the paintings will need transparency, frames might do tho for shadows
 				_painting.addChild( TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( value, proxy, true ) );
 				_painting.rotationX = -90;
 				addChild( _painting );

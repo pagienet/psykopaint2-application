@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 
 	import away3d.arcane;
-	import away3d.bounds.AxisAlignedBoundingBox;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
@@ -17,8 +16,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.ColorTransform;
-	import flash.geom.Matrix3D;
-	import flash.geom.Point;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
@@ -30,10 +27,10 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
-	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.objects.EaselPainting;
+	import net.psykosoft.psykopaint2.home.views.home.objects.FramedPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
 	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
 
@@ -61,9 +58,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _easelRect:Rectangle;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
-		public static const DEFAULT_ZOOM_IN:Point = new Point( 400, -800 );
-		public static const EASEL_CLOSE_ZOOM_IN:Point = new Point( 315, -900 );
-		public static const EASEL_FAR_ZOOM_IN:Point = new Point( 170, -1160 );
 
 		public function HomeView() {
 			super();
@@ -87,7 +81,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_freezePlane.y = HomeSettings.DEFAULT_CAMERA_POSITION.y;
 			_freezePlane.z = 10000; // TODO: adjust mathematically, probably will be different on HR too
 			_freezeScene.addChild( _freezePlane );
-			ensurePlaneFitsViewport( _freezePlane );
+			HomeViewUtils.ensurePlaneFitsViewport( _freezePlane, _view );
 			_frozen = true;
 		}
 
@@ -115,116 +109,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		// TODO: make method to zoom camera to fit a rect
-
-		private function calculateEaselScreenRect():Rectangle {
-			var painting:EaselPainting = EaselPainting( _paintingManager.easel.painting );
-
-			if (!painting) return new Rectangle(0, 0, 0, 0);
-
-			var plane:Mesh = painting.plane;
-			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
-			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 ) );
-			var brCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsZ, 0 ) );
-			return new Rectangle(
-					tlCorner.x / CoreSettings.GLOBAL_SCALING,
-					tlCorner.y / CoreSettings.GLOBAL_SCALING,
-					( brCorner.x - tlCorner.x ) / CoreSettings.GLOBAL_SCALING,
-					( brCorner.y - tlCorner.y ) / CoreSettings.GLOBAL_SCALING
-			);
-		}
-
-		private function calculateCameraYZToFitEaselOnViewport():Vector3D {
-
-			var zoom:Vector3D = new Vector3D();
-
-			// Identify easel plane.
-			var painting:EaselPainting = EaselPainting( _paintingManager.easel.painting );
-			var plane:Mesh = painting.plane;
-
-			// Camera y must match world space y.
-			var planeWorldSpace:Vector3D = objectSpaceToWorldSpace( plane, new Vector3D() );
-			zoom.y = planeWorldSpace.y;
-
-			// Evaluate how much of the screen the easel is taking and use this to calculate the target camera z position.
-			var cameraPosCache:Vector3D = _view.camera.position.clone();
-			_view.camera.y = planeWorldSpace.y;
-			var easelScreenRect:Rectangle = calculateEaselScreenRect();
-			var widthRatio:Number = easelScreenRect.width / 1024;
-			var distanceToCamera:Number = Math.abs( _view.camera.z - planeWorldSpace.z );
-			var targetDistance:Number = distanceToCamera * widthRatio;
-			zoom.z = planeWorldSpace.z - targetDistance;
-			_view.camera.y = cameraPosCache.y;
-
-			return zoom;
-		}
-
-		private function objectSpaceToWorldSpace( plane:Mesh, offset:Vector3D ):Vector3D {
-			var sceneTransform:Matrix3D = plane.sceneTransform.clone();
-			var comps:Vector.<Vector3D> = sceneTransform.decompose();
-			sceneTransform.recompose( Vector.<Vector3D>( [ // Remove rotation data from transform.
-				comps[ 0 ],
-				new Vector3D(),
-				comps[ 2 ]
-			] ) );
-			offset = sceneTransform.transformVector( offset );
-			return offset;
-		}
-
-		private function objectSpaceToScreenSpace( plane:Mesh, offset:Vector3D ):Vector3D {
-
-//			trace( this, "objectSpaceToScreenSpace --------------------" );
-
-//			trace( "ratio: " + _view.camera.lens.aspectRatio );
-
-			// Scene space.
-			var sceneTransform:Matrix3D = plane.sceneTransform.clone();
-			var comps:Vector.<Vector3D> = sceneTransform.decompose();
-			sceneTransform.recompose( Vector.<Vector3D>( [ // Remove rotation data from transform.
-				comps[ 0 ],
-				new Vector3D(),
-				comps[ 2 ]
-			] ) );
-			offset = sceneTransform.transformVector( offset );
-			// Uncomment to visualize 3d point.
-			/*var tracer3d:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
-			tracer3d.position = offset;
-			_freezeScene.addChild( tracer3d );*/
-
-			// View space.
-			var screenPosition:Vector3D = _view.camera.project( offset );
-			screenPosition.x = 0.5 * _stage3dProxy.width * ( 1 + screenPosition.x );
-			screenPosition.y = 0.5 * _stage3dProxy.height * ( 1 + screenPosition.y );
-			// Uncomment to visualize 2d point.
-			/*var tracer2d:Sprite = new Sprite();
-			tracer2d.graphics.beginFill( 0xFF0000, 1 );
-			tracer2d.graphics.drawCircle( screenPosition.x, screenPosition.y, 10 );
-			tracer2d.graphics.endFill();
-			addChild( tracer2d );*/
-
-//			trace( "screen position: " + screenPosition );
-			return screenPosition;
-		}
-
-		private function ensurePlaneFitsViewport( plane:Mesh ):void {
-
-//			trace( this, "fitting plane to viewport..." );
-
-			// Use a ray to determine the target width of the plane.
-			var rayPosition:Vector3D = _view.camera.unproject( 0, 0, 0 );
-			var rayDirection:Vector3D = _view.camera.unproject( 1, 0, 1 );
-			rayDirection = rayDirection.subtract( rayPosition );
-			rayDirection.normalize();
-			var t:Number = -( -rayPosition.z + plane.z ) / -rayDirection.z; // Typical ray-plane intersection calculation ( simplified because of zero's ).
-			var targetPlaneHalfWidth:Number = rayPosition.x + t * rayDirection.x;
-//			trace( "targetPlaneHalfWidth: " + targetPlaneHalfWidth );
-
-			// Scale the plane so that it fits.
-			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
-//			trace( "actual width: " + bounds.halfExtentsX );
-			var sc:Number = targetPlaneHalfWidth / bounds.halfExtentsX;
-//			trace( "scale: " + sc );
-			plane.scale( sc );
-		}
 
 		// ---------------------------------------------------------------------
 		// Creation...
@@ -315,8 +199,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_paintingManager = new PaintingManager( _cameraController, _room, _view, _lightPicker, _stage3dProxy );
 			_paintingManager.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
-			_cameraController.cameraY = cameraTarget.y = HomeSettings.DEFAULT_CAMERA_POSITION.y;
-			_cameraController.cameraZ = HomeSettings.DEFAULT_CAMERA_POSITION.z;
+			_cameraController.dock( HomeSettings.DEFAULT_CAMERA_POSITION.y, HomeSettings.DEFAULT_CAMERA_POSITION.z );
 			_paintingManager.z = _room.wallZ - 2;
 			cameraTarget.z = _room.wallZ;
 			_mainScene.addChild( _cameraController );
@@ -354,7 +237,18 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
 			_paintingManager.createDefaultPaintings();
+
+			// Start docked at home painting.
 			_cameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
+			dockAtCurrentPainting();
+		}
+
+		private function dockAtCurrentPainting():void {
+			trace( this, "docking at current painting ----------" );
+			var framedPainting:FramedPainting = _paintingManager.getPaintingAtIndex( _cameraController.positionManager.closestSnapPointIndex );
+			var plane:Mesh = framedPainting.painting.getChildAt( 0 ) as Mesh;
+			var zoom:Vector3D = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( plane, _view, 768 / 1024 );
+			_cameraController.dock( zoom.y, zoom.z );
 		}
 
 		override protected function onDisposed():void {
@@ -445,29 +339,18 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		public function zoomIn():void {
-			// TODO: evaluate zoom in y and z for current snap point
 
-			var zoomY:Number = DEFAULT_ZOOM_IN.x;
-			var zoomZ:Number = DEFAULT_ZOOM_IN.y;
-
+			var zoom:Vector3D;
 			var index:uint = _cameraController.positionManager.closestSnapPointIndex;
 
 			// Easel.
 			if( index == 1 ) {
 				// Assuming navigation can't be hidden in home state.
-				var coords:Vector3D = calculateCameraYZToFitEaselOnViewport();
-				zoomY = coords.y;
-				zoomZ = coords.z;
+				zoom = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( _paintingManager.easel.painting.getChildAt( 0 ) as Mesh, _view, 1 );
 			}
 
-			trace( this, "zooming in to Y: " + zoomY + ", Z: " + zoomZ );
-
-			_cameraController.zoomIn( zoomY, zoomZ );
-		}
-
-		public function adjustCamera( py:Number, pz:Number ):void {
-			_cameraController.adjustY( py );
-			_cameraController.adjustZ( pz );
+			trace( this, "zooming in to Y: " + zoom.y + ", Z: " + zoom.z );
+			_cameraController.zoomIn( zoom.y, zoom.z );
 		}
 
 		public function zoomOut():void {
@@ -524,7 +407,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function setEaselContent( data:PaintingInfoVO ):void {
 			_paintingManager.setEaselContent( data );
-			_easelRect = calculateEaselScreenRect();
+			_easelRect = HomeViewUtils.calculatePlaneScreenRect( _paintingManager.easel.painting.getChildAt( 0 ) as Mesh, _view, 1 );
 		}
 
 		public function get easelRect():Rectangle {

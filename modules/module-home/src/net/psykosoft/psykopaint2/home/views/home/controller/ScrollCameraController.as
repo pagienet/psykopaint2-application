@@ -92,19 +92,30 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		public function offsetY( offY:Number ):void {
 			_camera.y += offY;
 			_cameraTarget.y = _camera.y;
+			_perspectiveFactorDirty = true;
 		}
 
 		public function offsetZ( offZ:Number ):void {
 			_camera.z += offZ;
+			_perspectiveFactorDirty = true;
 		}
 
 		public function adjustY( posY:Number ):void {
 			_camera.y = posY;
 			_cameraTarget.y = _camera.y;
+			_perspectiveFactorDirty = true;
 		}
 
 		public function adjustZ( posZ:Number ):void {
 			_camera.z = posZ;
+			_perspectiveFactorDirty = true;
+		}
+
+		public function dock( posY:Number, posZ:Number ):void {
+			_camera.y = posY;
+			_cameraTarget.y = _camera.y;
+			_camera.z = posZ;
+			_perspectiveFactorDirty = true;
 		}
 
 		public function zoomIn( targetY:Number, targetZ:Number ):void {
@@ -119,8 +130,9 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_zoomedIn = false;
 			TweenLite.killTweensOf( _cameraTarget );
 			TweenLite.killTweensOf( _camera );
-			TweenLite.to( _cameraTarget, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, ease:Strong.easeInOut } );
-			TweenLite.to( _camera, 1, { y: HomeSettings.CAMERA_ZOOM_OUT_Y, z: HomeSettings.CAMERA_ZOOM_OUT_Z, ease:Strong.easeInOut, onComplete:onZoomComplete } );
+			var pos:Vector3D = HomeSettings.DEFAULT_CAMERA_POSITION;
+			TweenLite.to( _cameraTarget, 1, { y: pos.y, ease:Strong.easeInOut } );
+			TweenLite.to( _camera, 1, { y: pos.y, z: pos.z, ease:Strong.easeInOut, onComplete:onZoomComplete } );
 		}
 
 		private function onZoomComplete():void {
@@ -131,16 +143,6 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 		public function limitInteractionToUpperPartOfTheScreen( value:Boolean ):void {
 			_isScrollingLimited = value;
-		}
-
-		public function set cameraY( value:Number ):void {
-			_camera.y = value;
-			_perspectiveFactorDirty = true;
-		}
-
-		public function set cameraZ( value:Number ):void {
-			_camera.z = value;
-			_perspectiveFactorDirty = true;
 		}
 
 		public function set interactionSurfaceZ( value:Number ):void {

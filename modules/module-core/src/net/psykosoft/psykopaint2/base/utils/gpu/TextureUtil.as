@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 		private static const MAX_SIZE:uint = 2048;
 
 		public static function createPlaneThatFitsNonPowerOf2TransparentImage( diffuseImage:BitmapData, stage3dProxy:Stage3DProxy, transparent:Boolean = false ):Mesh {
+
 			// Remember original diffuseImage and safe diffuseImage dimensions.
 			var imageDimensions:Point = new Point( diffuseImage.width, diffuseImage.height );
 

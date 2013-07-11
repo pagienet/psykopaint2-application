@@ -20,7 +20,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
@@ -167,10 +166,11 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onNavigationToggled( shown:Boolean ):void {
 			view.cameraController.limitInteractionToUpperPartOfTheScreen( shown );
-			if( !view.visible ) {
+			// TODO: will the navigation be hidable in home?
+			/*if( !view.visible ) {
 				var p:Point = shown ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
 				view.adjustCamera( p.x, p.y );
-			}
+			}*/
 		}
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {

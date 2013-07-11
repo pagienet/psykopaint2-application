@@ -207,6 +207,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 		}
 
 		public function get closestSnapPointIndex():int {
+			trace( this, "closest snap: " + _closestSnapPointIndex );
 			return _closestSnapPointIndex;
 		}
 
