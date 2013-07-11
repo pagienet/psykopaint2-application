@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case CanvasSubNavView.LBL_MODEL:
 				{
-					requestNavigationToggleSignal.dispatch( -1 );
+					requestNavigationToggleSignal.dispatch( -1, 0.5 );
 					requestStateChange( StateType.PICK_IMAGE );
 					break;
 				}
