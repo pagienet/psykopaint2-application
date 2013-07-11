@@ -2,9 +2,8 @@ package net.psykosoft.psykopaint2.paint.views.crop
 {
 
 	import flash.display.BitmapData;
-	import flash.display.StageQuality;
 	import flash.geom.Rectangle;
-	
+
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
