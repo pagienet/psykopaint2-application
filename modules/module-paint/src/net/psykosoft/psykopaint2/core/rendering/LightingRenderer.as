@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.rendering
 {
 	import com.adobe.utils.AGALMiniAssembler;
-	
+
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DProgramType;
@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.display3D.Program3D;
 	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Rectangle;
-	
+
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 
@@ -31,15 +31,16 @@ package net.psykosoft.psykopaint2.core.rendering
 		private var _quadVertices : VertexBuffer3D;
 		private var _quadIndices : IndexBuffer3D;
 		private var _sourceTextureAlpha : Number = 0;
+		private var _paintAlpha : Number;
 
 		private var _needBake : Boolean;
 		private var _freezeRender : Boolean = false;
 		private var _renderRect : Rectangle;
-		
-		private var _scale:Number;
-		private var _offsetX:Number;
-		private var _offsetY:Number;
-		
+
+		private var _scale : Number;
+		private var _offsetX : Number;
+		private var _offsetY : Number;
+
 		public function LightingRenderer(lightingModel : LightingModel, context3d : Context3D)
 		{
 			_lightingModel = lightingModel;
@@ -62,14 +63,14 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function set renderRect(value : Rectangle) : void
 		{
 			_renderRect = value;
-			
+
 		}
 
 		public function get freezeRender() : Boolean
 		{
 			return _freezeRender;
 		}
-		
+
 		public function get scale() : Number
 		{
 			return _scale;
@@ -79,12 +80,12 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			return _offsetX;
 		}
-		
+
 		public function get offsetY() : Number
 		{
 			return _offsetY;
 		}
-		
+
 		public function set freezeRender(value : Boolean) : void
 		{
 			if (_freezeRender == value) return;
@@ -104,32 +105,26 @@ package net.psykosoft.psykopaint2.core.rendering
 				copyBakedRender(canvas);
 			}
 			else {
-				_scale = _renderRect.height/canvas.height;
-				if ( _scale < 0.1 ) {
+				_scale = _renderRect.height / canvas.height;
+				if (_scale < 0.1)
 					_scale = 0.1;
-				} else if ( _scale > 4 ) {
+				else if (_scale > 4)
 					_scale = 4;
-				}
-				
-				
+
+
 				var offsetX : Number = _renderRect.x / canvas.width;//(1 - scale)*.5 
-				if ( scale < 1 )
-				{
-					offsetX = (1 - _scale)*.5;
-				}
-				
+				if (scale < 1)
+					offsetX = (1 - _scale) * .5;
+
 				var offsetY : Number = _renderRect.y / canvas.height;//(1 - scale)*.5;
-				if ( scale < 1 )
-				{
-					offsetY = (1 - _scale)*.333;
-				}
-				
-				if ( _scale > 0.95 && _scale < 1.05 )
-				{
+				if (scale < 1)
+					offsetY = (1 - _scale) * .333;
+
+				if (_scale > 0.95 && _scale < 1.05) {
 					_scale = 1;
 					offsetX = 0;
 					offsetY = 0;
-					
+
 				}
 				_offsetX = offsetX * canvas.width;
 				_offsetY = offsetY * canvas.height;
@@ -153,8 +148,8 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function copyBakedRender(canvas : CanvasModel) : void
 		{
-			var scale : Number = _renderRect.height/canvas.height;
-			var offsetX : Number = (1 - scale)*.5;
+			var scale : Number = _renderRect.height / canvas.height;
+			var offsetX : Number = (1 - scale) * .5;
 			var sourceRect : Rectangle = new Rectangle(0, 0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio);
 			var destRect : Rectangle = new Rectangle(offsetX, 0, scale, scale);
 			CopySubTexture.copy(canvas.fullSizeBackBuffer, sourceRect, destRect, _context3d);
@@ -193,12 +188,12 @@ package net.psykosoft.psykopaint2.core.rendering
 //			if (_shadowModel) _shadowModel.clearRenderState(_context3d);
 		}
 
-		private function updateGlobalVertexData(offsetX : Number, offsetY : Number,widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
+		private function updateGlobalVertexData(offsetX : Number, offsetY : Number, widthRatio : Number, heightRatio : Number, canvas : CanvasModel) : void
 		{
-			_globalVertexData[0] = widthRatio*2;
-			_globalVertexData[1] = heightRatio*2;
-			_globalVertexData[4] = offsetX*2 - 1;
-			_globalVertexData[5] = -(offsetY*2 - 1);
+			_globalVertexData[0] = widthRatio * 2;
+			_globalVertexData[1] = heightRatio * 2;
+			_globalVertexData[4] = offsetX * 2 - 1;
+			_globalVertexData[5] = -(offsetY * 2 - 1);
 
 			_globalVertexData[8] = canvas.usedTextureWidthRatio;
 			_globalVertexData[9] = canvas.usedTextureHeightRatio;
@@ -206,11 +201,11 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function updateGlobalFragmentData(canvas : CanvasModel) : void
 		{
-			var textureRatioX : Number  = canvas.usedTextureWidthRatio;
-			var textureRatioY : Number  = canvas.usedTextureHeightRatio;
+			var textureRatioX : Number = canvas.usedTextureWidthRatio;
+			var textureRatioY : Number = canvas.usedTextureHeightRatio;
 
-			_globalVertexData[20] = 1/canvas.textureWidth;
-			_globalVertexData[21] = 1/canvas.textureHeight;
+			_globalVertexData[20] = 1 / canvas.textureWidth;
+			_globalVertexData[21] = 1 / canvas.textureHeight;
 
 			// light position
 			_globalVertexData[12] = (_lightingModel.lightPosition.x + 1) * .5 * textureRatioX;
@@ -254,7 +249,6 @@ package net.psykosoft.psykopaint2.core.rendering
 //					"mov oc, ft0";
 
 
-
 			return code;
 		}
 
@@ -287,7 +281,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		// FT7 = PACKED NORMAL X, NORMAL Y, SPECULAR STRENGTH, GLOSS
 
 		// FC0 = (0.5, 0, 1, bumpiness)
-		// FC1 = SOURCE BLEND ALPHA, -1, ?, ?
+		// FC1 = SOURCE BLEND ALPHA, -1, PAINT BLEND ALPHA, ?
 
 		// FC5-9 = DIFFUSE STATE
 		// FC10-14 = AMBIENT STATE
@@ -298,21 +292,21 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			var code : String =
 					"mul vt0, va0, vc0\n" +
-					"add op, vt0, vc1\n" +
-					"mul vt0, vc2, va1\n" +
-					"mov v0, vt0\n" +
+							"add op, vt0, vc1\n" +
+							"mul vt0, vc2, va1\n" +
+							"mov v0, vt0\n" +
 
-					"sub vt4, vc3, vt0\n" +
-					"nrm vt4.xyz, vt4\n" +
-					"mov v1, vt4\n" +
+							"sub vt4, vc3, vt0\n" +
+							"nrm vt4.xyz, vt4\n" +
+							"mov v1, vt4\n" +
 
-					"sub vt2, vc4, vt0\n" +
-					"nrm vt2.xyz, vt2\n" +
-					"mov v2, vt2\n" +
+							"sub vt2, vc4, vt0\n" +
+							"nrm vt2.xyz, vt2\n" +
+							"mov v2, vt2\n" +
 
-					"add vt1, vt4, vt2\n" +
-					"nrm vt1.xyz, vt1.xyz\n" +
-					"mov v5, vt1\n";
+							"add vt1, vt4, vt2\n" +
+							"nrm vt1.xyz, vt1.xyz\n" +
+							"mov v5, vt1\n";
 
 //			if (_shadowModel)
 //				code += _shadowModel.getVertexCode();
@@ -322,7 +316,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function getInitFragmentCode() : String
 		{
-			return 	"tex ft7, v0, fs2 <2d, clamp, linear, mipnone>\n" +
+			return    "tex ft7, v0, fs2 <2d, clamp, linear, mipnone>\n" +
 					"sub ft0.xy, ft7.xy, fc0.x\n" +
 					"mul ft0.xy, ft0.xy, fc0.w\n" +	// multiply by bumpiness
 
@@ -340,13 +334,24 @@ package net.psykosoft.psykopaint2.core.rendering
 			code += _ambientModel.getFragmentCode() + "\n";
 			code += "add ft3.xyz, ft3.xyz, " + _ambientModel.outputRegister + ".xyz\n";
 
-//			code += "tex ft6, v0, fs0 <2d, clamp, nearest, mipnone>\n";
 			code += "tex ft6, v0, fs0 <2d, clamp, linear, mipnone>\n";
+
+			if (_paintAlpha) {
+				code += "mul ft6, ft6, fc1.z\n";
+			}
 
 			if (_sourceTextureAlpha > 0) {
 				//code += "tex ft5, v0, fs1 <2d, clamp, nearest, mipnone>\n" +
-				code += "tex ft5, v0, fs1 <2d, clamp, linear, mipnone>\n" +
-						"sub ft0.w, fc0.z, ft6.w\n" +
+				code += "tex ft5, v0, fs1 <2d, clamp, linear, mipnone>\n";
+
+				if (_sourceTextureAlpha < 1) {
+					// ft5 = ft5 * _sourceTextureAlpha - _sourceTextureAlpha + 1
+					code += "mul ft5, ft5, fc1.x\n" +
+							"sub ft5, ft5, fc1.x\n" +
+							"add ft5, ft5, fc0.z\n";
+				}
+
+				code += "sub ft0.w, fc0.z, ft6.w\n" +
 						"mul ft5, ft5, ft0.w\n" +
 						"add ft6, ft6, ft5\n";
 			}
@@ -405,9 +410,9 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function initBuffers() : void
 		{
-			_quadVertices = _context3d.createVertexBuffer(4,4);
+			_quadVertices = _context3d.createVertexBuffer(4, 4);
 			_quadIndices = _context3d.createIndexBuffer(6);
-			_quadVertices.uploadFromVector(new <Number>[	0.0, -1.0, 0.0, 1.0,
+			_quadVertices.uploadFromVector(new <Number>[    0.0, -1.0, 0.0, 1.0,
 				1.0, -1.0, 1.0, 1.0,
 				1.0, 0.0, 1.0, 0.0,
 				0.0, 0.0, 0.0, 0.0], 0, 4);
@@ -429,11 +434,29 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function set sourceTextureAlpha(value : Number) : void
 		{
 			if (_sourceTextureAlpha == value) return;
-			_sourceTextureAlpha = value;
-			//if (_sourceTextureAlpha == 0 || value == 0)
+
+			if (_sourceTextureAlpha == 0 || value == 0 || _sourceTextureAlpha == 1 || value == 1)
 				invalidateProgram();
 
-			_globalFragmentData[4] = value*2;
+			_sourceTextureAlpha = value;
+
+			_globalFragmentData[4] = value;
+		}
+
+		public function get paintAlpha() : Number
+		{
+			return _sourceTextureAlpha;
+		}
+
+		public function set paintAlpha(value : Number) : void
+		{
+			if (_paintAlpha == value) return;
+			_paintAlpha = value;
+
+			if (_paintAlpha == 1 || value == 1)
+				invalidateProgram();
+
+			_globalFragmentData[6] = value;
 		}
 	}
 }
