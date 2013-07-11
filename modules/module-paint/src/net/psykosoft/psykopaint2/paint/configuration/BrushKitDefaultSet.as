@@ -32,18 +32,24 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,splat3,noisy"/>
 
 					<parameterMapping>
-						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush, Grid Brush, Unused Brush, Later Brush, Banana Brush, You Get The Idea Brush" showInUI="1"/>
-						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Brush Style" 
-							target="pathengine.pointdecorator_2" 
+						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush, Speed Brush, Unused Brush, Later Brush, Banana Brush, You Get The Idea Brush" showInUI="1"/>
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Brush Style" 
+							target="pathengine.pointdecorator_0.Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="1"/>
+							indices="1"
+							value1="0.05" value2="0.3"/>
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Brush Style" 
+							target="pathengine.pointdecorator_0.Factor" 
+							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
+							indices="0"
+							value1="0.47" value2="0.5"/>
 					</parameterMapping>
 
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 					<parameter id={AbstractPathEngine.PARAMETER_SPEED_SMOOTHING} path="pathengine" value="0.02" />
 						
 						<SizeDecorator>
-							<parameter id="Mode" path="pathengine.pointdecorator_0" index="1" />
+							<parameter id="Mode" path="pathengine.pointdecorator_0" index={SizeDecorator.MODE_INDEX_PRESSURE_SPEED} />
 							<parameter id="Factor" path="pathengine.pointdecorator_0" label="Brush Size" value1="0.47" value2="0.5" minValue="0" maxValue="1" showInUI="1"/>
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" index="1"/>
 						</SizeDecorator>
@@ -54,23 +60,18 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.25" value2="0.33" />
 							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_1" value1="0.8" value2="1" />
 						</ColorDecorator>
-						<GridDecorator active="0">
-							<parameter id={GridDecorator.PARAMETER_N_CELL_WIDTH}  path="pathengine.pointdecorator_2" value="64" />
-							<parameter id={GridDecorator.PARAMETER_N_CELL_HEIGHT}  path="pathengine.pointdecorator_2" value="64" />
-						</GridDecorator>
-
 						<SplatterDecorator>
-							<parameter id="Mode" path="pathengine.pointdecorator_3" index="1" />
-							<parameter id="Offset Mapping" path="pathengine.pointdecorator_3" value="	0"  />
-							<parameter id="Splat Factor"  path="pathengine.pointdecorator_3" value="40" />
-							<parameter id="Minimum Offset" path="pathengine.pointdecorator_3" value="0" />
-							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_3" value="30" />
-							<parameter id="Size Factor" path="pathengine.pointdecorator_3" value="0.8" />
+							<parameter id="Mode" path="pathengine.pointdecorator_2" index="1" />
+							<parameter id="Offset Mapping" path="pathengine.pointdecorator_2" value="	0"  />
+							<parameter id="Splat Factor"  path="pathengine.pointdecorator_2" value="40" />
+							<parameter id="Minimum Offset" path="pathengine.pointdecorator_2" value="0" />
+							<parameter id="Offset Angle Range" path="pathengine.pointdecorator_2" value="30" />
+							<parameter id="Size Factor" path="pathengine.pointdecorator_2" value="0.8" />
 						</SplatterDecorator>
 						<BumpDecorator>
-							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_4" index="1" />
-							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_4" value="1" />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_4" value1="0" value2="1" minValue="0" maxValue="1" showInUI="1" />
+							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_3" index="1" />
+							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_3" value="1" />
+							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_3" value1="0" value2="1" minValue="0" maxValue="1" showInUI="1" />
 						</BumpDecorator>
 					</pathengine>
 				</brush>

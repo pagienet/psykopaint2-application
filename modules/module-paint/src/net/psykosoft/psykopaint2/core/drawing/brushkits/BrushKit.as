@@ -239,6 +239,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					switch ( mapping.parameterProxies[j].type )
 					{
 						case PsykoParameterProxy.TYPE_VALUE_MAP:
+						case PsykoParameterProxy.TYPE_PARAMETER_CHANGE:
 							var parameter:PsykoParameter = getParameterByPath(mapping.parameterProxies[j].target_path );
 							if ( parameter == null ) throw( "BrushKit.linkParameterMappings: "+mapping.parameterProxies[j].target_path+" not found");
 							mapping.parameterProxies[j].linkTargetParameter(parameter);
