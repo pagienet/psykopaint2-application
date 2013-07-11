@@ -54,8 +54,14 @@ package net.psykosoft.psykopaint2.core.io
 			_paintingData.width = canvas.width;
 			_paintingData.height = canvas.height;
 
-			saveColorData();
-			saveNormalData();
+			saveColorRGB();
+			saveColorAlpha();
+			mergeColorData();
+
+			extractNormalsColor();
+			extractNormalsAlpha();
+			mergeNormalData();
+
 			saveSourceData();
 
 			onComplete();
@@ -80,27 +86,31 @@ package net.psykosoft.psykopaint2.core.io
 
 		private function saveColorRGB() : void
 		{
-
+			_rgbData = extractChannels(_canvas.colorTexture, _copySubTextureChannelsRGB);
 		}
 
 		private function saveColorAlpha() : void
 		{
-
+			_alphaData = extractChannels(_canvas.colorTexture, _copySubTextureChannelsA);
 		}
 
-		private function saveColorData() : void
+		private function mergeColorData() : void
 		{
-			_rgbData = extractRGBData(_canvas.colorTexture, _copySubTextureChannelsRGB);
-			_alphaData = extractRGBData(_canvas.colorTexture, _copySubTextureChannelsA);
-
 			_paintingData.colorData = mergeRGBAData();
 		}
 
-		private function saveNormalData() : void
+		private function extractNormalsColor() : void
 		{
-			_rgbData = extractRGBData(_canvas.normalSpecularMap, _copySubTextureChannelsRGB);
-			_alphaData = extractRGBData(_canvas.normalSpecularMap, _copySubTextureChannelsA);
+			_rgbData = extractChannels(_canvas.normalSpecularMap, _copySubTextureChannelsRGB);
+		}
 
+		private function extractNormalsAlpha() : void
+		{
+			_alphaData = extractChannels(_canvas.normalSpecularMap, _copySubTextureChannelsA);
+		}
+
+		private function mergeNormalData() : void
+		{
 			_paintingData.normalSpecularData = mergeRGBAData();
 		}
 
@@ -148,7 +158,7 @@ package net.psykosoft.psykopaint2.core.io
 			return outputData;
 		}
 
-		private function extractRGBData(layer : Texture, copier : CopySubTextureChannels) : ByteArray
+		private function extractChannels(layer : Texture, copier : CopySubTextureChannels) : ByteArray
 		{
 			_context3D.setRenderToBackBuffer();
 			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
@@ -170,6 +180,8 @@ package net.psykosoft.psykopaint2.core.io
 			_destRect = null;
 			_workerBitmapData.dispose();
 			_workerBitmapData = null;
+			_rgbData = null;
+			_alphaData = null;
 			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.COMPLETE, _paintingData));
 		}
 	}
