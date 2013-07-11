@@ -1,27 +1,18 @@
 package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
-	import away3d.tools.utils.TextureUtils;
-
 	import flash.display.BitmapData;
-	import flash.display.Loader;
-	import flash.events.Event;
 	import flash.utils.ByteArray;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
-
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingInfoDeserializer;
-	import net.psykosoft.psykopaint2.core.data.PaintingInfoFactory;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
+	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class PickSurfaceSubNavViewMediator extends MediatorBase
 	{
@@ -33,9 +24,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		[Inject]
 		public var requestDrawingCoreResetSignal:RequestDrawingCoreResetSignal;
-
-		[Inject]
-		public var requestZoomThenChangeStateSignal:RequestZoomThenChangeStateSignal;
 
 		[Inject]
 		public var requestDrawingCoreSurfaceSetSignal:RequestDrawingCoreSurfaceSetSignal;

@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.commands
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotTakenSignal;
 
 	import robotlegs.bender.bundles.mvcs.Command;
 
@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.core.commands
 		public var stage3DProxy:Stage3DProxy;
 
 		[Inject]
-		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotSignal;
+		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotTakenSignal;
 
 		override public function execute():void {
 			super.execute();

@@ -11,14 +11,14 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotTakenSignal;
 
 	import robotlegs.bender.framework.api.IContext;
 
 	public class ExportCanvasCommand extends TracingCommand
 	{
 		[Inject]
-		public var notifyCanvasSnapshotSignal:NotifyCanvasSnapshotSignal;
+		public var notifyCanvasSnapshotSignal:NotifyCanvasSnapshotTakenSignal;
 
 		[Inject]
 		public var context:IContext;

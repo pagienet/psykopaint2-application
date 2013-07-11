@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix3D;
 	import flash.geom.Point;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
@@ -63,7 +64,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public static const DEFAULT_ZOOM_IN:Point = new Point( 400, -800 );
 		public static const EASEL_CLOSE_ZOOM_IN:Point = new Point( 315, -900 );
 		public static const EASEL_FAR_ZOOM_IN:Point = new Point( 170, -1160 );
-
 
 		public function HomeView() {
 			super();
@@ -131,6 +131,43 @@ package net.psykosoft.psykopaint2.home.views.home
 					( brCorner.x - tlCorner.x ) / CoreSettings.GLOBAL_SCALING,
 					( brCorner.y - tlCorner.y ) / CoreSettings.GLOBAL_SCALING
 			);
+		}
+
+		private function calculateCameraYZToFitEaselOnViewport():Vector3D {
+
+			var zoom:Vector3D = new Vector3D();
+
+			// Identify easel plane.
+			var painting:EaselPainting = EaselPainting( _paintingManager.easel.painting );
+			var plane:Mesh = painting.plane;
+
+			// Camera y must match world space y.
+			var planeWorldSpace:Vector3D = objectSpaceToWorldSpace( plane, new Vector3D() );
+			zoom.y = planeWorldSpace.y;
+
+			// Evaluate how much of the screen the easel is taking and use this to calculate the target camera z position.
+			var cameraPosCache:Vector3D = _view.camera.position.clone();
+			_view.camera.y = planeWorldSpace.y;
+			var easelScreenRect:Rectangle = calculateEaselScreenRect();
+			var widthRatio:Number = easelScreenRect.width / _stage3dProxy.width;
+			var distanceToCamera:Number = Math.abs( _view.camera.z - planeWorldSpace.z );
+			var targetDistance:Number = distanceToCamera * widthRatio;
+			zoom.z = planeWorldSpace.z - targetDistance;
+			_view.camera.y = cameraPosCache.y;
+
+			return zoom;
+		}
+
+		private function objectSpaceToWorldSpace( plane:Mesh, offset:Vector3D ):Vector3D {
+			var sceneTransform:Matrix3D = plane.sceneTransform.clone();
+			var comps:Vector.<Vector3D> = sceneTransform.decompose();
+			sceneTransform.recompose( Vector.<Vector3D>( [ // Remove rotation data from transform.
+				comps[ 0 ],
+				new Vector3D(),
+				comps[ 2 ]
+			] ) );
+			offset = sceneTransform.transformVector( offset );
+			return offset;
 		}
 
 		private function objectSpaceToScreenSpace( plane:Mesh, offset:Vector3D ):Vector3D {
@@ -271,7 +308,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_light.color = 0x989589;
 			_light.ambientColor = 0x808088;
 			_lightPicker = new StaticLightPicker([_light]);
-			_room = new Room( _view );
+			_room = new Room( _view, _stage3dProxy );
 			var cameraTarget:Object3D = new Object3D();
 			_cameraController.setCamera( _view.camera, cameraTarget );
 			_cameraController.stage = stage;
@@ -299,6 +336,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerBundledAsset( "/home-packaged/away3d/paintings/settings.png", "settingsPainting" );
 			// Other room stuff.
 			registerBundledAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", true );
+			registerBundledAsset( "/home-packaged/away3d/objects/settingsPanel.png", "settingsPanel" );
 			// Sample paintings. TODO: should be removed once we have save capabilities
 //			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting0.jpg", "samplePainting0" );
 //			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting1.jpg", "samplePainting1" );
@@ -416,14 +454,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Easel.
 			if( index == 1 ) {
-				if( !NavigationCache.isHidden ) {
-					zoomY = EASEL_FAR_ZOOM_IN.x;
-					zoomZ = EASEL_FAR_ZOOM_IN.y;
-				}
-				else {
-					zoomY = EASEL_CLOSE_ZOOM_IN.x;
-					zoomZ = EASEL_CLOSE_ZOOM_IN.y;
-				}
+				// Assuming navigation can't be hidden in home state.
+				var coords:Vector3D = calculateCameraYZToFitEaselOnViewport();
+				zoomY = coords.y;
+				zoomZ = coords.z;
 			}
 
 			trace( this, "zooming in to Y: " + zoomY + ", Z: " + zoomZ );
@@ -456,19 +490,25 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onStageKeyDown( event:KeyboardEvent ):void {
 			switch( event.keyCode ) {
 				case Keyboard.UP: {
-					_cameraController.offsetY( _shiftMultiplier );
+//					_room.settingsPanel.y += _shiftMultiplier;
+//					_cameraController.offsetY( _shiftMultiplier );
 					break;
 				}
 				case Keyboard.DOWN: {
-					_cameraController.offsetY( -_shiftMultiplier );
+//					_room.settingsPanel.y -= _shiftMultiplier;
+//					_cameraController.offsetY( -_shiftMultiplier );
 					break;
 				}
 				case Keyboard.RIGHT: {
-					_cameraController.offsetZ( _shiftMultiplier );
+//					_room.settingsPanel.x += _shiftMultiplier;
+//					_room.wall.x += _shiftMultiplier;
+//					_cameraController.offsetZ( _shiftMultiplier );
 					break;
 				}
 				case Keyboard.LEFT: {
-					_cameraController.offsetZ( -_shiftMultiplier );
+//					_room.settingsPanel.x -= _shiftMultiplier;
+//					_room.wall.x -= _shiftMultiplier;
+//					_cameraController.offsetZ( -_shiftMultiplier );
 					break;
 				}
 				case Keyboard.SHIFT: {
@@ -476,7 +516,10 @@ package net.psykosoft.psykopaint2.home.views.home
 					break;
 				}
 			}
-			trace( this, "positioning camera, Y: " + _cameraController.camera.y + ", Z: " + _cameraController.camera.z );
+
+//			trace( this, "positioning settings panel - x: " + _room.settingsPanel.x + ", y: " + _room.settingsPanel.y );
+//			trace( this, "positioning wall - x: " + _room.wall.x );
+//			trace( this, "positioning camera, Y: " + _cameraController.camera.y + ", Z: " + _cameraController.camera.z );
 		}
 
 		public function setEaselContent( data:PaintingInfoVO ):void {

@@ -51,12 +51,14 @@ package net.psykosoft.psykopaint2.book.views.book
 				// Tests.
 				case StateType.BOOK_STANDALONE: {
 
-					var provider:TestBookDataProvider = new TestBookDataProvider();
-					provider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
-					view.book.dataProvider = provider;
+//					var provider:TestBookDataProvider = new TestBookDataProvider();
+//					provider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
+//					view.book.dataProvider = provider;
 
-//					initializeSamplesDataProvider();
+					initializeSamplesDataProvider();
+
 //					initializeUserPhotosDataProvider();
+
 					break;
 				}
 

@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureMorphingSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -41,7 +42,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createBrushMesh() : IBrushMesh
 		{
-			return new TextureSplatMesh();
+			return new TextureMorphingSplatMesh();
 		}
 
 		override protected function set brushShape(brushShape : AbstractBrushShape) : void
@@ -54,9 +55,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function assignBrushShape() : void
 		{
-			TextureSplatMesh(_brushMesh).brushTexture = _brushShape.texture;
-			TextureSplatMesh(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
-			TextureSplatMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
+			TextureMorphingSplatMesh(_brushMesh).brushTexture = _brushShape.texture;
+			TextureMorphingSplatMesh(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
+			TextureMorphingSplatMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
 			_pathManager.brushAngleRange = brushShape.rotationRange;
 		}
 

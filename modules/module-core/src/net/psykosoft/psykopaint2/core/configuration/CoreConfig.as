@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotTakenSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
@@ -36,12 +37,17 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+	import net.psykosoft.psykopaint2.core.views.popups.SavingPopUpView;
+	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpManagerView;
+	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpManagerViewMediator;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketViewMediator;
 
@@ -77,6 +83,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_stage3d = stage3d;
 			_stage3dProxy = stage3dProxy;
 
+			mapClasses();
 			mapMediators();
 			mapCommands();
 			mapNotifications();
@@ -87,6 +94,17 @@ package net.psykosoft.psykopaint2.core.configuration
 
 		public function get injector():IInjector {
 			return _injector;
+		}
+
+		// -----------------------
+		// Classes.
+		// -----------------------
+
+		/*
+		* These need to be mentioned somewhere so that getDefinitionByName works.
+		* */
+		private function mapClasses():void {
+			SavingPopUpView;
 		}
 
 		// -----------------------
@@ -130,7 +148,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyMemoryWarningSignal ).asSingleton();
 			_injector.map( NotifyBlockingGestureSignal ).asSingleton();
 			_injector.map( RequestNavigationToggleSignal ).asSingleton();
-			_injector.map( NotifyCanvasSnapshotSignal ).asSingleton();
+			_injector.map( NotifyCanvasSnapshotTakenSignal ).asSingleton();
 			_injector.map( RequestZoomToggleSignal ).asSingleton();
 			_injector.map( NotifyZoomCompleteSignal ).asSingleton();
 			_injector.map( NotifyNavigationMovingSignal ).asSingleton();
@@ -143,6 +161,9 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestEaselUpdateSignal ).asSingleton();
 			_injector.map( RequestEaselRectInfoSignal ).asSingleton();
 			_injector.map( NotifyEaselRectInfoSignal ).asSingleton();
+			_injector.map( NotifyPopUpRemovedSignal ).asSingleton();
+			_injector.map( RequestPopUpDisplaySignal ).asSingleton();
+			_injector.map( RequestPopUpRemovalSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -163,6 +184,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_mediatorMap.map( CoreRootView ).toMediator( CoreRootViewMediator );
 			_mediatorMap.map( SbNavigationView ).toMediator( NavigationViewMediator );
 			_mediatorMap.map( PsykoSocketView ).toMediator( PsykoSocketViewMediator );
+			_mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
 		}
 	}
 }

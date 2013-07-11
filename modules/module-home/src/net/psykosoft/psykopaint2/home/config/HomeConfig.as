@@ -1,9 +1,7 @@
 package net.psykosoft.psykopaint2.home.config
 {
 
-	import net.psykosoft.psykopaint2.home.commands.ZoomThenChangeStateCommand;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
@@ -16,8 +14,6 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavViewMediator;
-	import net.psykosoft.psykopaint2.home.views.snapshot.HomeSnapShotView;
-	import net.psykosoft.psykopaint2.home.views.snapshot.HomeSnapShotViewMediator;
 
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
@@ -86,7 +82,7 @@ package net.psykosoft.psykopaint2.home.config
 		// -----------------------
 
 		private function mapCommands():void {
-			_commandMap.map( RequestZoomThenChangeStateSignal ).toCommand( ZoomThenChangeStateCommand );
+
 		}
 
 		// -----------------------
@@ -99,7 +95,6 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( SettingsSubNavView ).toMediator( SettingsSubNavViewMediator );
 			_mediatorMap.map( WallpaperSubNavView ).toMediator( WallpaperSubNavViewMediator );
 			_mediatorMap.map( HomeSubNavView ).toMediator( HomeSubNavViewMediator );
-			_mediatorMap.map( HomeSnapShotView ).toMediator( HomeSnapShotViewMediator );
 			_mediatorMap.map( PickSurfaceSubNavView ).toMediator( PickSurfaceSubNavViewMediator );
 		}
 	}

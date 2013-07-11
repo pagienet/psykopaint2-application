@@ -186,6 +186,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				visible = true;
 			}
 
+			// Keep current nav when incoming class is the abstract one.
+			if( subNavType == SubNavigationViewBase ) {
+				return;
+			}
+
 			trace( this, "updating sub-nav: " + subNavType );
 
 			// Reset.

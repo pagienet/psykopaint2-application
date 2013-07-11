@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
+	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
@@ -22,6 +23,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _floorMaterial:TextureMaterial;
 		private var _wallMaterial:TextureMaterial;
 		private var _view:View3D;
+		private var _proxy:Stage3DProxy;
 
 		private const WALL_WIDTH:Number = 100000;
 		private const WALL_HEIGHT:Number = 2000;
@@ -31,14 +33,36 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private const FLOOR_DEPTH:Number = 1750;
 
-		public function Room( view:View3D ) {
+		public function Room( view:View3D, proxy:Stage3DProxy ) {
 			super();
 			_view = view;
+			_proxy = proxy;
 		}
 
 		public function initialize():void {
 			loadWall();
 			loadFloor();
+			loadPanels();
+		}
+
+		// -----------------------
+		// Signs.
+		// -----------------------
+
+		private var _settingsPanel:Mesh;
+
+		private function loadPanels():void {
+
+			_settingsPanel = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage(
+					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPanel", true ),
+					_proxy,
+					true
+			);
+			_settingsPanel.x = 735;
+			_settingsPanel.y = 805;
+			_settingsPanel.rotationX = -90;
+			addChild( _settingsPanel );
+
 		}
 
 		// -----------------------
@@ -60,6 +84,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_wall.scaleX = WALL_WIDTH / wallGeometry.width;
 			_wall.scaleZ = WALL_HEIGHT / wallGeometry.height;
 			_wall.rotationX = -90;
+			_wall.x = 370; // Aligns wallpaper lights with paintings.
 			_wall.y = WALL_BASE_Y + WALL_HEIGHT / 2;
 			_wall.z = WALL_Z;
 			addChild( _wall );
@@ -134,6 +159,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		public function get wallZ():Number {
 			return WALL_Z;
+		}
+
+		public function get wall():Mesh {
+			return _wall;
+		}
+
+		public function get settingsPanel():Mesh {
+			return _settingsPanel;
 		}
 	}
 }
