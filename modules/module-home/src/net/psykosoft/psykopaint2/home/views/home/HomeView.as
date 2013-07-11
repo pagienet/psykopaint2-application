@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix3D;
 	import flash.geom.Point;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
@@ -130,6 +131,45 @@ package net.psykosoft.psykopaint2.home.views.home
 					( brCorner.x - tlCorner.x ) / CoreSettings.GLOBAL_SCALING,
 					( brCorner.y - tlCorner.y ) / CoreSettings.GLOBAL_SCALING
 			);
+		}
+
+		private function calculateCameraYZToFitEaselOnViewport():Vector3D {
+
+			var zoom:Vector3D = new Vector3D();
+
+			// Identify easel plane.
+			var painting:EaselPainting = EaselPainting( _paintingManager.easel.painting );
+			var plane:Mesh = painting.plane;
+
+			// Camera y must match world space y.
+			var planeWorldSpace:Vector3D = objectSpaceToWorldSpace( plane, new Vector3D() );
+			zoom.y = planeWorldSpace.y;
+
+			// Evaluate how much of the screen the easel is taking and use this to calculate the target camera z position.
+			var cameraPosCache:Vector3D = _view.camera.position.clone();
+			_view.camera.y = planeWorldSpace.y;
+			// TODO: might need to align camera with plane Y for doing the rect calculation
+			var easelScreenRect:Rectangle = calculateEaselScreenRect();
+			var widthRatio:Number = easelScreenRect.width / _stage3dProxy.width;
+			trace( this, ">>>>>> RATIO: " + widthRatio );
+			var distanceToCamera:Number = Math.abs( _view.camera.z - planeWorldSpace.z );
+			var targetDistance:Number = distanceToCamera * widthRatio;
+			zoom.z = planeWorldSpace.z - targetDistance;
+			_view.camera.y = cameraPosCache.y;
+
+			return zoom;
+		}
+
+		private function objectSpaceToWorldSpace( plane:Mesh, offset:Vector3D ):Vector3D {
+			var sceneTransform:Matrix3D = plane.sceneTransform.clone();
+			var comps:Vector.<Vector3D> = sceneTransform.decompose();
+			sceneTransform.recompose( Vector.<Vector3D>( [ // Remove rotation data from transform.
+				comps[ 0 ],
+				new Vector3D(),
+				comps[ 2 ]
+			] ) );
+			offset = sceneTransform.transformVector( offset );
+			return offset;
 		}
 
 		private function objectSpaceToScreenSpace( plane:Mesh, offset:Vector3D ):Vector3D {
@@ -416,14 +456,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Easel.
 			if( index == 1 ) {
-				if( !NavigationCache.isHidden ) {
-					zoomY = EASEL_FAR_ZOOM_IN.x;
-					zoomZ = EASEL_FAR_ZOOM_IN.y;
-				}
-				else {
-					zoomY = EASEL_CLOSE_ZOOM_IN.x;
-					zoomZ = EASEL_CLOSE_ZOOM_IN.y;
-				}
+				// Assuming navigation can't be hidden in home state.
+				var coords:Vector3D = calculateCameraYZToFitEaselOnViewport();
+				zoomY = coords.y;
+				zoomZ = coords.z;
 			}
 
 			trace( this, "zooming in to Y: " + zoomY + ", Z: " + zoomZ );

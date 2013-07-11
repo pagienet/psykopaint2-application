@@ -12,7 +12,9 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 
 	import robotlegs.bender.framework.api.IContext;
 
@@ -32,6 +34,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var context:IContext;
+
+		[Inject]
+		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		private var _file:File;
 
@@ -62,6 +67,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			// TODO: if we ever need to consider incoming canvas size, read dimensions from vo here
 			canvasModel.importPaintingData( vo );
 			notifyPaintingActivatedSignal.dispatch();
+			requestStateChangeSignal.dispatch( StateType.TRANSITION_TO_PAINT_MODE );
 			context.release( this );
 			vo.dispose();
 		}

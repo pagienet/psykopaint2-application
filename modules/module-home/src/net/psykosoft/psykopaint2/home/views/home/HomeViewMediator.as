@@ -28,7 +28,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 
 	import org.gestouch.events.GestureEvent;
 
@@ -71,12 +70,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
 
 		[Inject]
-		public var notifyPaintingActivatedSignal:NotifyPaintingActivatedSignal;
-
-		[Inject]
-		public var requestZoomThenChangeStateSignal:RequestZoomThenChangeStateSignal;
-
-		[Inject]
 		public var requestEaselRectInfoSignal:RequestEaselRectInfoSignal;
 
 		[Inject]
@@ -100,6 +93,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerEnablingState( StateType.SETTINGS );
 			registerEnablingState( StateType.SETTINGS_WALLPAPER );
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
+			registerEnablingState( StateType.TRANSITION_TO_PAINT_MODE );
 			registerEnablingState( StateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
 
 			// Frozen states.
@@ -122,7 +116,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestZoomToggleSignal.add( onZoomRequested );
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
-			notifyPaintingActivatedSignal.add( onPaintingActivated );
 			requestEaselRectInfoSignal.add( onEaselRectInfoRequested );
 
 			// From view.
@@ -144,10 +137,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onEaselRectInfoRequested():void {
 			notifyEaselRectInfoSignal.dispatch( view.easelRect );
-		}
-
-		private function onPaintingActivated():void {
-			requestZoomThenChangeStateSignal.dispatch( true, StateType.PAINT );
 		}
 
 		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO ):void {
@@ -200,10 +189,27 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.room.changeWallpaper( atf );
 		}
 
+		private var _onTransitionToPaint:Boolean;
+
 		override protected function onStateChange( newState:String ):void {
 			if( _freezingStates.indexOf( newState ) != -1 ) freezeView();
 			else {
 				view.unFreeze();
+
+				if( newState == StateType.TRANSITION_TO_PAINT_MODE ) {
+
+					// Looking at easel?
+					if( _dockedAtPaintingIndex != 1 ) {
+						throw new Error( "HomeViewMediator - requested to transition to paint and not at easel." );
+					}
+
+					setTimeout( function():void {
+						_onTransitionToPaint = true;
+						view.zoomIn();
+					}, 50 );
+
+				}
+
 				super.onStateChange( newState );
 			}
 		}
@@ -252,9 +258,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 		}
 
+		private var _dockedAtPaintingIndex:int = -1;
+
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
 
 			trace( this, "closest painting changed to index: " + paintingIndex );
+			_dockedAtPaintingIndex = paintingIndex;
 
 			// Variable.
 			var homePaintingIndex:uint = view.paintingManager.homePaintingIndex;
@@ -300,6 +309,12 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onCameraZoomComplete():void {
 			trace( this, "zoom complete" );
+
+			if( _onTransitionToPaint ) {
+			    requestStateChange( StateType.PAINT );
+				_onTransitionToPaint = false;
+			}
+
 			notifyZoomCompleteSignal.dispatch();
 		}
 	}
