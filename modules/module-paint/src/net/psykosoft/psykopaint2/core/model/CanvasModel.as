@@ -292,24 +292,5 @@ package net.psykosoft.psykopaint2.core.model
 			inflated.uncompress();
 			_normalSpecularMap.uploadFromByteArray(inflated, 0);
 		}
-
-		public function importPaintingData(paintingData : PaintingDataVO) : void
-		{
-			if (_width != paintingData.width || _height != paintingData.height)
-				throw new Error("Different painting sizes currently not supported!");
-
-			var oldLength : int = paintingData.colorData.length;
-			var newLength : int = _textureWidth * _textureHeight * 4;
-			paintingData.colorData.length = newLength;
-			paintingData.normalSpecularData.length = newLength;
-			_colorTexture.uploadFromByteArray(paintingData.colorData, 0, 0);
-			_normalSpecularMap.uploadFromByteArray(paintingData.normalSpecularData, 0, 0);
-			paintingData.colorData.length = oldLength;
-			paintingData.normalSpecularData.length = oldLength;
-
-			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(paintingData.sourceBitmapData, _width, _height, false);
-			setSourceBitmapData(sourceBmd);
-			sourceBmd.dispose();
-		}
 	}
 }

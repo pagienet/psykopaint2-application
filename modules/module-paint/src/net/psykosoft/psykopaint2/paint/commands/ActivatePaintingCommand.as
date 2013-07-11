@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingDataDeserializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
+	import net.psykosoft.psykopaint2.core.io.CanvasImporter;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -64,8 +65,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			_file.data.clear();
 			_file = null;
 
-			// TODO: if we ever need to consider incoming canvas size, read dimensions from vo here
-			canvasModel.importPaintingData( vo );
+			var canvasImporter : CanvasImporter = new CanvasImporter();
+			canvasImporter.importPainting(canvasModel, vo);
 			notifyPaintingActivatedSignal.dispatch();
 			requestStateChangeSignal.dispatch( StateType.TRANSITION_TO_PAINT_MODE );
 			context.release( this );
