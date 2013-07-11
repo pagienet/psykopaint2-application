@@ -148,10 +148,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Evaluate how much of the screen the easel is taking and use this to calculate the target camera z position.
 			var cameraPosCache:Vector3D = _view.camera.position.clone();
 			_view.camera.y = planeWorldSpace.y;
-			// TODO: might need to align camera with plane Y for doing the rect calculation
 			var easelScreenRect:Rectangle = calculateEaselScreenRect();
 			var widthRatio:Number = easelScreenRect.width / _stage3dProxy.width;
-			trace( this, ">>>>>> RATIO: " + widthRatio );
 			var distanceToCamera:Number = Math.abs( _view.camera.z - planeWorldSpace.z );
 			var targetDistance:Number = distanceToCamera * widthRatio;
 			zoom.z = planeWorldSpace.z - targetDistance;

@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.home.views.base
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavView;
@@ -25,6 +26,7 @@ package net.psykosoft.psykopaint2.home.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.SETTINGS, SettingsSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.SETTINGS_WALLPAPER, WallpaperSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.HOME_PICK_SURFACE, PickSurfaceSubNavView );
+			StateToSubNavLinker.linkSubNavToState( StateType.TRANSITION_TO_PAINT_MODE, SubNavigationViewBase );
 		}
 	}
 }
