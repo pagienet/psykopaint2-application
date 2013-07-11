@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotTakenSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
@@ -148,7 +148,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyMemoryWarningSignal ).asSingleton();
 			_injector.map( NotifyBlockingGestureSignal ).asSingleton();
 			_injector.map( RequestNavigationToggleSignal ).asSingleton();
-			_injector.map( NotifyCanvasSnapshotSignal ).asSingleton();
+			_injector.map( NotifyCanvasSnapshotTakenSignal ).asSingleton();
 			_injector.map( RequestZoomToggleSignal ).asSingleton();
 			_injector.map( NotifyZoomCompleteSignal ).asSingleton();
 			_injector.map( NotifyNavigationMovingSignal ).asSingleton();

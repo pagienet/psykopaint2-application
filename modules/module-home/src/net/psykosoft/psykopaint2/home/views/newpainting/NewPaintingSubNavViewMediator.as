@@ -1,13 +1,10 @@
 package net.psykosoft.psykopaint2.home.views.newpainting
 {
 
-	import flash.display.BitmapData;
-
-	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotTakenSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
@@ -27,7 +24,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var notifyZoomCompleteSignal:NotifyZoomCompleteSignal;
 
 		[Inject]
-		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotSignal;
+		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotTakenSignal;
 
 		[Inject]
 		public var requestPaintingLoadSignal:RequestPaintingActivationSignal;
@@ -41,9 +38,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		[Inject]
 		public var paintingModel:PaintingModel;
 
-		private var _waitingForZoom:Boolean;
-		private var _waitingForSnapShot:Boolean; // TODO: remove these 2
-
 		override public function initialize():void {
 
 			// Init.
@@ -53,7 +47,49 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			manageMemoryWarnings = false;
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
-			// Post-init.
+			displaySavedPaintings();
+		}
+
+		// -----------------------
+		// From view.
+		// -----------------------
+
+		private function onButtonClicked( label:String ):void {
+			switch( label ) {
+
+				// +
+				case NewPaintingSubNavView.LBL_NEW: {
+					requestDrawingCoreResetSignal.dispatch();
+					paintingModel.focusedPaintingId = PaintingInfoVO.DEFAULT_VO_ID;
+					requestStateChange( StateType.HOME_PICK_SURFACE );
+					break;
+				}
+
+				// >
+				case NewPaintingSubNavView.LBL_CONTINUE: {
+					requestPaintingLoadSignal.dispatch( paintingModel.focusedPaintingId );
+					break;
+				}
+
+				//  Paintings.
+				default: {
+					paintingModel.focusedPaintingId = "uniqueUserId-" + label;
+					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + label );
+					requestEaselUpdateSignal.dispatch( vo );
+				}
+			}
+		}
+
+		// -----------------------
+		// Private.
+		// -----------------------
+
+		private function displaySavedPaintings():void {
+
+			// Retrieve saved paintings and populate nav.
+			// Ordered from newest -> oldest.
+			// Always selects the latest one, i.e. index 0.
+			// Also requests an easel update on the home view.
 			var data:Vector.<PaintingInfoVO> = paintingModel.getPaintingCollection();
 			if( data.length > 0 ) {
 				if( data.length > 1 ) {
@@ -64,72 +100,16 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
 				requestEaselUpdateSignal.dispatch( vo );
 			}
-			// TODO: re-enable this, it use to empty the easel when coming back from paint with no data ( i.e. after deleting the last data item )
-//			else{
-//				requestEaselUpdateSignal.dispatch( null );
-//			}
-
-			// From app.
-			notifyZoomCompleteSignal.add( onZoomComplete );
-			notifyCanvasBitmapSignal.add( onCanvasSnapshot );
 		}
+
+		// -----------------------
+		// Utils.
+		// -----------------------
 
 		private function sortOnLastSaved( paintingVOA:PaintingInfoVO, paintingVOB:PaintingInfoVO ):Number {
 			if( paintingVOA.lastSavedOnDateMs > paintingVOB.lastSavedOnDateMs ) return -1;
 			else if( paintingVOA.lastSavedOnDateMs < paintingVOB.lastSavedOnDateMs ) return 1;
 			else return 0;
-		}
-
-		// -----------------------
-		// From view.
-		// -----------------------
-
-		private function onButtonClicked( label:String ):void {
-			switch( label ) {
-				case NewPaintingSubNavView.LBL_NEW: {
-					requestDrawingCoreResetSignal.dispatch();
-					paintingModel.focusedPaintingId = PaintingInfoVO.DEFAULT_VO_ID;
-					requestStateChange( StateType.HOME_PICK_SURFACE );
-					break;
-				}
-				case NewPaintingSubNavView.LBL_CONTINUE: {
-					requestPaintingLoadSignal.dispatch( paintingModel.focusedPaintingId );
-					break;
-				}
-				default: { // Default buttons are supposed to be in progress painting buttons.
-					paintingModel.focusedPaintingId = "uniqueUserId-" + label;
-					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + label );
-					requestEaselUpdateSignal.dispatch( vo );
-				}
-			}
-		}
-
-		// -----------------------
-		// From app.
-		// -----------------------
-
-		private function onZoomComplete():void {
-			if( !_waitingForZoom ) return;
-			_waitingForZoom = false;
-			_waitingForSnapShot = true;
-			requestStateChange( StateType.GOING_TO_PAINT );
-			RenderGpuCommand.snapshotScale = 1;
-			RenderGpuCommand.snapshotRequested = true;
-		}
-
-		private function onCanvasSnapshot( bmd:BitmapData ):void {
-			if( !_waitingForSnapShot ) return;
-			_waitingForSnapShot = false;
-			requestStateChange( StateType.PAINT );
-		}
-
-		// -----------------------
-		// Private.
-		// -----------------------
-
-		private function navigateToPaintStateWithZoomIn():void {
-			_waitingForZoom = true;
-		    requestZoomToggleSignal.dispatch( true );
 		}
 	}
 }

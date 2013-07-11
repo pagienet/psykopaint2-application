@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.home.views.base
 	import net.psykosoft.psykopaint2.home.views.picksurface.PickSurfaceSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavView;
-	import net.psykosoft.psykopaint2.home.views.snapshot.HomeSnapShotView;
 
 	public class HomeRootView extends RootViewBase
 	{
@@ -19,7 +18,6 @@ package net.psykosoft.psykopaint2.home.views.base
 
 			// Add main views.
 			addRegisteredView( new HomeView(), this );
-			addRegisteredView( new HomeSnapShotView(), this );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( StateType.HOME, HomeSubNavView );

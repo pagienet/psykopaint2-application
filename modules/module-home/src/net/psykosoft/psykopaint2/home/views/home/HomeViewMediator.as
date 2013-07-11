@@ -3,14 +3,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.core.managers.Stage3DProxy;
 
-	import flash.display.Bitmap;
-
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
-
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
@@ -20,7 +16,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotTakenSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
@@ -28,10 +24,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.core.views.navigation.NavigationCache;
-	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestZoomThenChangeStateSignal;
 
@@ -54,11 +49,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyNavigationToggleSignal:NotifyNavigationToggledSignal;
 
-//		[Inject]
-//		public var notifyFocusedPaintingChangedSignal:RequestActivePaintingChangeSignal;
-
 		[Inject]
-		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotSignal;
+		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotTakenSignal;
 
 		[Inject]
 		public var stage3dProxy:Stage3DProxy;
@@ -90,10 +82,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
 
-		private var _waitingForPaintModeAfterZoomIn:Boolean;
-		private var _waitingForSnapShotOfHomeView:Boolean;
 		private var _waitingForFreezeSnapshot:Boolean;
-
 		private var _freezingStates:Vector.<String>;
 
 		override public function initialize():void {
@@ -108,7 +97,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerEnablingState( StateType.HOME );
 			registerEnablingState( StateType.HOME_ON_EASEL );
 			registerEnablingState( StateType.HOME_ON_FINISHED_PAINTING );
-			registerEnablingState( StateType.GOING_TO_PAINT );
 			registerEnablingState( StateType.SETTINGS );
 			registerEnablingState( StateType.SETTINGS_WALLPAPER );
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
@@ -238,28 +226,11 @@ package net.psykosoft.psykopaint2.home.views.home
 				view.freeze( bmd );
 				_waitingForFreezeSnapshot = false;
 			}
-			else if( _waitingForSnapShotOfHomeView ) { // TODO: clean up, what else are we using snapshots for?
-				_waitingForSnapShotOfHomeView = false;
-				var p:Point = NavigationCache.isHidden ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
-				view.adjustCamera( p.x, p.y );
-				requestStateChange( StateType.PAINT );
-			}
-			/*else { // TODO: clean up, easel updates no longer work this way
-			 view.updateEasel( bmd );
-			 }*/
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
-
-		private function onEaselClicked():void {
-			if( view.getCurrentPaintingIndex() != 1 ) return; // Ignore clicks on easel if not looking at it.
-			if( view.cameraController.onMotion ) return; // Ignore clicks on easel if view is scrolling
-			if( view.cameraController.zoomedIn ) return;
-			_waitingForPaintModeAfterZoomIn = true;
-			view.zoomIn();
-		}
 
 		private function onViewSetup():void {
 			// TODO: will cause trouble if view was disposed by a memory warning and the listener is set up again...
@@ -328,21 +299,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onCameraZoomComplete():void {
-
 			trace( this, "zoom complete" );
-
 			notifyZoomCompleteSignal.dispatch();
-
-			// Clicked on easel before zoom in.
-			if( _waitingForPaintModeAfterZoomIn ) {
-				_waitingForPaintModeAfterZoomIn = false;
-				_waitingForSnapShotOfHomeView = true;
-				requestStateChange( StateType.GOING_TO_PAINT );
-				var p:Point = HomeView.EASEL_FAR_ZOOM_IN;
-				view.adjustCamera( p.x, p.y );
-				RenderGpuCommand.snapshotScale = 1;
-				RenderGpuCommand.snapshotRequested = true;
-			}
 		}
 	}
 }
