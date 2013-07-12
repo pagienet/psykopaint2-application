@@ -95,7 +95,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				if( _freezeScene.contains( _freezePlane ) ) {
 					_freezeScene.removeChild( _freezePlane );
 				}
-				_freezePlane.dispose();
+
 				var freezePlaneMaterial:TextureMaterial = _freezePlane.material as TextureMaterial;
 				if( freezePlaneMaterial ) {
 					var freezePlaneTexture:BitmapTexture = freezePlaneMaterial.texture as BitmapTexture;
@@ -104,6 +104,7 @@ package net.psykosoft.psykopaint2.home.views.home
 					}
 					freezePlaneMaterial.dispose(); // TODO: review if this is being disposed
 				}
+				_freezePlane.dispose();
 				_freezePlane = null;
 			}
 			_view.camera.transform = _freezeCameraTransformCache;
