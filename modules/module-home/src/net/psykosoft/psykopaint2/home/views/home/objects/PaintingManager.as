@@ -18,13 +18,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	public class PaintingManager extends ObjectContainer3D
 	{
-		private var _paintings:Vector.<FramedPainting>;
+		private var _paintings:Vector.<GalleryPainting>;
 		private var _cameraController:ScrollCameraController;
 		private var _room:Room;
 		private var _view:View3D;
 		private var _snapPointForPainting:Dictionary;
 		private var _shadowForPainting:Dictionary;
-		private var _easel:FramedPainting;
+		private var _easel:Easel;
 		private var _pendingEaselContent:PaintingInfoVO;
 		private var _lightPicker : LightPickerBase;
 		private var _stage3dProxy:Stage3DProxy;
@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_cameraController = cameraController;
 			_room = room;
 			_view = view;
-			_paintings = new Vector.<FramedPainting>();
+			_paintings = new Vector.<GalleryPainting>();
 			_snapPointForPainting = new Dictionary();
 			_shadowForPainting = new Dictionary();
 			_lightPicker = lightPicker;
@@ -51,7 +51,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			trace( "dispose()" );
 
 			for( var i:uint; i < _paintings.length; i++ ) {
-				var frame:FramedPainting = _paintings[ i ];
+				var frame:GalleryPainting = _paintings[ i ];
 				frame.dispose();
 				frame = null;
 			}
@@ -89,7 +89,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ), null, 0, 1.5 );
 
 			// Easel.
-			_easel = createPaintingAtIndex( null, null, 1 );
+			_easel = createEaselAtIndex( 1 );
 			_easel.easelVisible = true;
 			if( _pendingEaselContent ) setEaselPaintingNow();
 			autoPositionPaintingAtIndex( _easel, 1 );
@@ -114,35 +114,50 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var framedPainting:FramedPainting = new FramedPainting( _view );
 			framedPainting.scaleX = framedPainting.scaleY = framedPainting.scaleZ = paintingScale;
 			if( paintingBmd ) {
-				framedPainting.setPaintingBmd( paintingBmd, _stage3dProxy );
+				framedPainting.setPaintingBitmapData( paintingBmd, _stage3dProxy );
 			}
 			if( frameBmd ) {
-				framedPainting.setFrameBmd( frameBmd, _stage3dProxy );
+				framedPainting.setFrameBitmapData( frameBmd, _stage3dProxy );
 			}
 
-			// Add to display, store, and position.
-			var numPaintings:uint = _paintings.length;
-			if( index < numPaintings ) _paintings.splice( index, 0, framedPainting );
-			else _paintings.push( framedPainting );
-			numPaintings++;
-			addChild( framedPainting );
-			autoPositionPaintingAtIndex( framedPainting, index );
-
-			// Need to update paintings to the right of this one?
-			if( index < numPaintings - 1 ) {
-				for( var i:uint = index + 1; i < numPaintings; i++ ) {
-					autoPositionPaintingAtIndex( _paintings[ i ], i );
-				}
-			}
+			addPaintingAt(index, framedPainting);
 
 			return framedPainting;
 		}
 
-		public function getPaintingAtIndex( index:uint ):FramedPainting {
+		public function createEaselAtIndex( index:uint ):Easel {
+
+			trace( this, "creating easel at index: " + index );
+
+			// Painting and frame.
+			var easel:Easel = new Easel( _view );
+			addPaintingAt(index, easel);
+			return easel;
+		}
+
+		private function addPaintingAt(index : uint, painting : GalleryPainting) : void
+		{
+// Add to display, store, and position.
+			var numPaintings : uint = _paintings.length;
+			if (index < numPaintings) _paintings.splice(index, 0, painting);
+			else _paintings.push(painting);
+			numPaintings++;
+			addChild(painting);
+			autoPositionPaintingAtIndex(painting, index);
+
+			// Need to update paintings to the right of this one?
+			if (index < numPaintings - 1) {
+				for (var i : uint = index + 1; i < numPaintings; i++) {
+					autoPositionPaintingAtIndex(_paintings[ i ], i);
+				}
+			}
+		}
+
+		public function getPaintingAtIndex( index:uint ):GalleryPainting {
 			return _paintings[ index ];
 		}
 
-		private function autoPositionPaintingAtIndex( framedPainting:FramedPainting, index:uint ):void {
+		private function autoPositionPaintingAtIndex( framedPainting:GalleryPainting, index:uint ):void {
 
 			// Position painting.
 			var px:Number = 0;
@@ -150,7 +165,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				px = framedPainting.width / 2;
 			}
 			else {
-				var previousPainting:FramedPainting = _paintings[ index - 1 ];
+				var previousPainting:GalleryPainting = _paintings[ index - 1 ];
 				px = previousPainting.x + previousPainting.width / 2 + FRAME_GAP + framedPainting.width / 2;
 			}
 			framedPainting.x = px;
@@ -173,7 +188,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// TODO... remove painting, remove shadow, remove snap point
 		}
 
-		public function get easel():FramedPainting {
+		public function get easel():Easel {
 			return _easel;
 		}
 	}

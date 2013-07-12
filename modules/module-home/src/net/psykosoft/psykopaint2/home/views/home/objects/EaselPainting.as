@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
+	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
@@ -21,27 +22,20 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	/*
 	 * Represents just the "paper" rectangle of a painting with no frame or glass.
 	 * */
-	public class EaselPainting extends ObjectContainer3D
+	public class EaselPainting extends Mesh
 	{
 		private var _width:Number;
 
-		private var _plane:Mesh;
-		private var _material:TextureMaterial;
-
 		public function EaselPainting( paintingVO:PaintingInfoVO, lightPicker:LightPickerBase, stage3DProxy : Stage3DProxy ) {
 
-			super();
+			super(null);
 
+			createPlane( paintingVO, lightPicker, stage3DProxy );
 			_width = paintingVO.width;
-
-			_plane = createPlane( paintingVO, lightPicker, stage3DProxy );
-//			_plane = new Mesh( new PlaneGeometry( _width, _height ), new TextureMaterial( new BitmapTexture( diffuseBitmap ) ) ); // TODO: test non power of 2 textures with air 3.8
-			_plane.rotationX = -90;
-//			_material.lightPicker = lightPicker;
-			addChild( _plane );
+			rotationX = -90;
 		}
 
-		private function createPlane(paintingVO : PaintingInfoVO, lightPicker : LightPickerBase, stage3DProxy : Stage3DProxy) : Mesh
+		private function createPlane(paintingVO : PaintingInfoVO, lightPicker : LightPickerBase, stage3DProxy : Stage3DProxy) : void
 		{
 			var width : int = paintingVO.width;
 			var height : int = paintingVO.height;
@@ -57,16 +51,16 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			diffuseTexture.getTextureForStage3D(stage3DProxy);
 			normalSpecularTexture.getTextureForStage3D(stage3DProxy);
 			// Create material.
-			_material = new TextureMaterial( diffuseTexture, true, false, false );
-			_material.diffuseMethod = new PaintingDiffuseMethod();
-			_material.normalMethod = new PaintingNormalMethod();
-			_material.specularMethod = new PaintingSpecularMethod();
-			_material.lightPicker = lightPicker;
-			_material.ambientColor = 0xffffff;
-			_material.ambient = 1;
-			_material.specular = .5;
-			_material.gloss = 200;
-			_material.normalMap = normalSpecularTexture;
+			var textureMaterial : TextureMaterial = new TextureMaterial( diffuseTexture, true, false, false );
+			textureMaterial.diffuseMethod = new PaintingDiffuseMethod();
+			textureMaterial.normalMethod = new PaintingNormalMethod();
+			textureMaterial.specularMethod = new PaintingSpecularMethod();
+			textureMaterial.lightPicker = lightPicker;
+			textureMaterial.ambientColor = 0xffffff;
+			textureMaterial.ambient = 1;
+			textureMaterial.specular = .5;
+			textureMaterial.gloss = 200;
+			textureMaterial.normalMap = normalSpecularTexture;
 
 			// Build geometry.
 			// easel always contains something scene-sized
@@ -74,28 +68,21 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var subGeometry:CompactSubGeometry = CompactSubGeometry( planeGeometry.subGeometries[0] );
 			subGeometry.scaleUV( width / textureWidth, height / textureHeight );
 
-			return new Mesh( planeGeometry, _material );
+			geometry = planeGeometry;
+			material = textureMaterial;
 		}
 
-		override public function dispose():void {
-
-			_plane.dispose();
-			_material.texture.dispose();
-			if( _material.normalMap ) _material.normalMap.dispose();
-			_material.dispose();
-
-			_plane = null;
-			_material = null;
-
+		override public function dispose():void
+		{
+			var textureMaterial : TextureMaterial = TextureMaterial(material);
+			textureMaterial.texture.dispose();
+			if( textureMaterial.normalMap ) textureMaterial.normalMap.dispose();
+			textureMaterial.dispose();
 			super.dispose();
 		}
 
 		public function get width():Number {
 			return _width;
-		}
-
-		public function get plane():Mesh {
-			return _plane;
 		}
 	}
 }

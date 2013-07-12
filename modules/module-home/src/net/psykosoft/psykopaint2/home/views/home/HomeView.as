@@ -32,6 +32,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.objects.EaselPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.FramedPainting;
+	import net.psykosoft.psykopaint2.home.views.home.objects.GalleryPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
 	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
 
@@ -249,8 +250,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function dockAtCurrentPainting():void {
 			trace( this, "docking at current painting ----------" );
-			var framedPainting:FramedPainting = _paintingManager.getPaintingAtIndex( _cameraController.positionManager.closestSnapPointIndex );
-			var plane:Mesh = framedPainting.painting.getChildAt( 0 ) as Mesh;
+			var framedPainting:GalleryPainting = _paintingManager.getPaintingAtIndex( _cameraController.positionManager.closestSnapPointIndex );
+			var plane:Mesh = framedPainting.painting;
 			var zoom:Vector3D = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( plane, _view, 768 / 1024 );
 			_cameraController.dock( zoom.y, zoom.z );
 		}
@@ -350,7 +351,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Easel.
 			if( index == 1 ) {
 				// Assuming navigation can't be hidden in home state.
-				zoom = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( _paintingManager.easel.painting.getChildAt( 0 ) as Mesh, _view, 1 );
+				zoom = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( _paintingManager.easel.painting, _view, 1 );
 			}
 
 			trace( this, "zooming in to Y: " + zoom.y + ", Z: " + zoom.z );
@@ -415,7 +416,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function get easelRect():Rectangle {
 			if( _frozen ) _view.camera.transform = _freezeCameraTransformCache;
-			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( _paintingManager.easel.painting.getChildAt( 0 ) as Mesh, _view, 1 );
+			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( _paintingManager.easel.painting, _view, 1 );
 			if( _frozen ) _view.camera.transform = new Matrix3D();
 			return rect;
 		}
