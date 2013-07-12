@@ -45,7 +45,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var btn:SbButton = navigation.createButton( str, ButtonIconType.POLAROID, ButtonLabelType.NO_BACKGROUND, new Bitmap( vo.thumbnail ) );
 				_buttonGroup.addButton( btn );
 			}
-			_buttonGroup.setSelectedButtonByLabel( _lastSelectedPainting );
+//			_buttonGroup.setSelectedButtonByLabel( _lastSelectedPainting );    //TODO: initialize _lastSelectedPainting with last file saved
+			_buttonGroup.setSelectedButtonByIndex( 0 );
 			navigation.addCenterButtonGroup( _buttonGroup );
 
 			// Show right button.

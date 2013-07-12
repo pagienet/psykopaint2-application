@@ -73,7 +73,14 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		// Overrride.
 		// -----------------------
 
-
+		//TODO: finish this, so that when you create a new painting it is set as selected and put in the easel
+		/*override protected function onStateChange( newState:String ):void {
+			if( newState == StateType.TRANSITION_TO_PAINT_MODE ){
+				var data:Vector.<PaintingInfoVO> = paintingModel.getPaintingCollection();
+				NewPaintingSubNavView.setLastSelectedPainting(  )
+			}
+			super.onStateChange( newState );
+		}*/
 
 
 		// -----------------------
