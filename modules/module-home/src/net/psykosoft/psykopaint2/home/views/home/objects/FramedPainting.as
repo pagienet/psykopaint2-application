@@ -19,12 +19,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	public class FramedPainting extends GalleryPainting
 	{
 		private var _painting:Mesh;
-		private var _frame:ObjectContainer3D;
+		private var _frame:Mesh;
 		private var _view:View3D;
 
 		public function FramedPainting( view:View3D ) {
 			super();
 			_view = view;
+			rotationX = -90;
 		}
 
 		override public function dispose():void {
@@ -39,7 +40,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				// TODO: not all the paintings will need transparency, frames might do tho for shadows
 				// TODO: THIS IS A MASSIVE MEMORY LEAK BECAUSE NOTHING IS DISPOSED!!!
 				_painting = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( value, proxy, true );
-				_painting.rotationX = -90;
 				addChild( _painting );
 			}
 		}
@@ -47,9 +47,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		public function setFrameBitmapData( value:BitmapData, proxy:Stage3DProxy ):void {
 			disposeFrame();
 			if( value ) {
-				_frame = new ObjectContainer3D();
-				_frame.addChild( TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( value, proxy, true ) );
-				_frame.rotationX = -90;
+				_frame = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( value, proxy, true );
 				addChild( _frame );
 			}
 		}
