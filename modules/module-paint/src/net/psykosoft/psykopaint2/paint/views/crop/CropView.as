@@ -5,10 +5,9 @@ package net.psykosoft.psykopaint2.paint.views.crop
 	import flash.display.StageQuality;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	
+
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.TouchSheet;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	public class CropView extends ViewBase
 	{
@@ -30,10 +29,11 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 		public function set sourceMap( map:BitmapData ):void {
 
-			// TODO: implement proper easel rect - info already here
-			this.graphics.beginFill( 0xffffff, 0 );
+//			trace( this, "setting source map, rect: " + _easelRect );
+
+			/*this.graphics.beginFill( 0xffffff, 0 );
 			this.graphics.drawRect( _easelRect.x, _easelRect.y, _easelRect.width, _easelRect.height );
-			this.graphics.endFill();
+			this.graphics.endFill();*/
 
 			/*
 			graphics.beginFill( 0xFFFFFF, 1.0 );

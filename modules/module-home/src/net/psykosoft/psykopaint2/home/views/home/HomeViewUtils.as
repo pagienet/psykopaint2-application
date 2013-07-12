@@ -3,15 +3,12 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.bounds.AxisAlignedBoundingBox;
 	import away3d.containers.View3D;
-	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.materials.ColorMaterial;
 	import away3d.primitives.SphereGeometry;
 
 	import flash.display.Sprite;
-
 	import flash.geom.Matrix3D;
-
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 
@@ -23,12 +20,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
 			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 ), view, ratio );
 			var brCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsZ, 0 ), view, ratio );
-			return new Rectangle(
+			var rect:Rectangle = new Rectangle(
 					tlCorner.x / CoreSettings.GLOBAL_SCALING,
 					tlCorner.y / CoreSettings.GLOBAL_SCALING,
 					( brCorner.x - tlCorner.x ) / CoreSettings.GLOBAL_SCALING,
 					( brCorner.y - tlCorner.y ) / CoreSettings.GLOBAL_SCALING
 			);
+			return rect;
 		}
 
 		public static function ensurePlaneFitsViewport( plane:Mesh, view:View3D ):void {
@@ -57,10 +55,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			var zoom:Vector3D = new Vector3D();
 
 			// Camera y must match world space y.
-			var planeWorldSpace:Vector3D = HomeViewUtils.objectSpaceToWorldSpace( plane, new Vector3D() );
+			var planeWorldSpace:Vector3D = HomeViewUtils.objectSpaceToWorldSpace( plane, new Vector3D(), view );
 			zoom.y = planeWorldSpace.y;
 
-			// Evaluate how much of the screen the easel is taking and use this to calculate the target camera z position.
+			// Evaluate the portion of the screen the easel would take when aligned with the target in y,
+			// and use this info to calculate the target camera z position.
 			var cameraTransformCache:Matrix3D = view.camera.transform.clone();
 			view.camera.y = planeWorldSpace.y;
 			view.camera.lookAt( planeWorldSpace );
@@ -74,7 +73,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			return zoom;
 		}
 
-		public static function objectSpaceToWorldSpace( plane:Mesh, offset:Vector3D ):Vector3D {
+		public static function objectSpaceToWorldSpace( plane:Mesh, objSpacePosition:Vector3D, view:View3D ):Vector3D {
 			var sceneTransform:Matrix3D = plane.sceneTransform.clone();
 			var comps:Vector.<Vector3D> = sceneTransform.decompose();
 			sceneTransform.recompose( Vector.<Vector3D>( [ // Remove rotation data from transform.
@@ -82,8 +81,14 @@ package net.psykosoft.psykopaint2.home.views.home
 				new Vector3D(),
 				comps[ 2 ]
 			] ) );
-			offset = sceneTransform.transformVector( offset );
-			return offset;
+			var worldSpacePosition:Vector3D = sceneTransform.transformVector( objSpacePosition );
+
+			// Uncomment to visualize 3d point.
+			/*var tracer3d:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
+			tracer3d.position = worldSpacePosition;
+			view.scene.addChild( tracer3d );*/
+
+			return worldSpacePosition;
 		}
 
 		public static function objectSpaceToScreenSpace( plane:Mesh, objSpacePosition:Vector3D, view:View3D, ratio:Number ):Vector3D {
@@ -93,23 +98,13 @@ package net.psykosoft.psykopaint2.home.views.home
 //			trace( "ratio: " + _view.camera.lens.aspectRatio );
 
 			// Scene space.
-			var sceneTransform:Matrix3D = plane.sceneTransform.clone();
-			var comps:Vector.<Vector3D> = sceneTransform.decompose();
-			sceneTransform.recompose( Vector.<Vector3D>( [ // Remove rotation data from transform.
-				comps[ 0 ],
-				new Vector3D(),
-				comps[ 2 ]
-			] ) );
-			objSpacePosition = sceneTransform.transformVector( objSpacePosition );
-			// Uncomment to visualize 3d point.
-			/*var tracer3d:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
-			tracer3d.position = objSpacePosition;
-			view.scene.addChild( tracer3d );*/
+			var worldSpacePosition:Vector3D = objectSpaceToWorldSpace( plane, objSpacePosition, view );
 
 			// View space.
-			var screenPosition:Vector3D = view.camera.project( objSpacePosition );
+			var screenPosition:Vector3D = view.camera.project( worldSpacePosition );
 			screenPosition.x = 0.5 * 1024 * ( 1 + ratio * screenPosition.x );
 			screenPosition.y = 0.5 * 768 * ( 1 + screenPosition.y );
+
 			// Uncomment to visualize 2d point.
 			/*var tracer2d:Sprite = new Sprite();
 			tracer2d.graphics.beginFill( 0xFF0000, 1 );

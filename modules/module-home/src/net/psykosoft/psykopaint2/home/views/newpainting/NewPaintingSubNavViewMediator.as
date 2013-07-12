@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotTakenSignal;
 
 		[Inject]
-		public var requestPaintingLoadSignal:RequestPaintingActivationSignal;
+		public var requestPaintingActivationSignal:RequestPaintingActivationSignal;
 
 		[Inject]
 		public var requestEaselUpdateSignal:RequestEaselUpdateSignal;
@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				// >
 				case NewPaintingSubNavView.LBL_CONTINUE: {
-					requestPaintingLoadSignal.dispatch( paintingModel.focusedPaintingId );
+					requestPaintingActivationSignal.dispatch( paintingModel.focusedPaintingId );
 					break;
 				}
 

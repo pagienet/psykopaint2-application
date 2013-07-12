@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var notifyNavigationToggleSignal:NotifyNavigationToggledSignal;
 
 		[Inject]
-		public var notifyCanvasBitmapSignal:NotifyCanvasSnapshotTakenSignal;
+		public var notifyCanvasSnapshotTakenSignal:NotifyCanvasSnapshotTakenSignal;
 
 		[Inject]
 		public var stage3dProxy:Stage3DProxy;
@@ -75,6 +75,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
 
 		private var _waitingForFreezeSnapshot:Boolean;
+		private var _waitingForTransitionSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
 
 		override public function initialize():void {
@@ -111,7 +112,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestWallpaperChangeSignal.add( onWallPaperChanged );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyNavigationToggleSignal.add( onNavigationToggled );
-			notifyCanvasBitmapSignal.add( onCanvasSnapShot );
+			notifyCanvasSnapshotTakenSignal.add( onCanvasSnapShot );
 			requestZoomToggleSignal.add( onZoomRequested );
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
@@ -203,11 +204,10 @@ package net.psykosoft.psykopaint2.home.views.home
 						throw new Error( "HomeViewMediator - requested to transition to paint and not at easel." );
 					}
 
-					setTimeout( function():void {
-						_onTransitionToPaint = true;
-						view.zoomIn();
-					}, 50 );
-
+					// Get a snapshot first.
+					_waitingForTransitionSnapshot = true;
+					RenderGpuCommand.snapshotScale = 1;
+					RenderGpuCommand.snapshotRequested = true;
 				}
 
 				super.onStateChange( newState );
@@ -219,9 +219,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: freeze is all black
 			if( _waitingForFreezeSnapshot ) return;
 			if( view.isEnabled ) {
-				_waitingForFreezeSnapshot = true;
-				RenderGpuCommand.snapshotScale = 1;
-				RenderGpuCommand.snapshotRequested = true;
+				if( !view.frozen ) {
+					_waitingForFreezeSnapshot = true;
+					RenderGpuCommand.snapshotScale = 1;
+					RenderGpuCommand.snapshotRequested = true;
+				}
 			}
 			else throw new Error( "HomeViewMediator - freeze requested while the view is not active." ); // TODO: ability to freeze while view is inactive might be needed
 		}
@@ -231,6 +233,14 @@ package net.psykosoft.psykopaint2.home.views.home
 				trace( this, "applying freeze snapshot..." );
 				view.freeze( bmd );
 				_waitingForFreezeSnapshot = false;
+			}
+			else if( _waitingForTransitionSnapshot ) {
+				notifyEaselRectInfoSignal.dispatch( view.easelRect );
+				setTimeout( function():void {
+					_onTransitionToPaint = true;
+					view.zoomIn();
+				}, 100 );
+				_waitingForTransitionSnapshot = false;
 			}
 		}
 

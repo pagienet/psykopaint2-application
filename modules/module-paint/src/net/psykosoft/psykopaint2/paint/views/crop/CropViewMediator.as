@@ -33,6 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
 
 		private var _sourceMap:BitmapData;
+		private var _waitingForEaselRect:Boolean;
 		
 		override public function initialize():void {
 
@@ -55,13 +56,19 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		}
 
 		private function onCropModuleActivated( bitmapData:BitmapData ):void {
+			trace( this, "onCropModuleActivated" );
 			_sourceMap = bitmapData;
+			_waitingForEaselRect = true;
 			requestEaselRectInfoSignal.dispatch();
 		}
 
 		private function onEaselRectInfoRetrieved( rect:Rectangle ):void {
-			view.easelRect = rect;
-			view.sourceMap = _sourceMap;
+			trace( this, "onEaselRectInfoRetrieved" );
+			if( _waitingForEaselRect ) {
+				view.easelRect = rect;
+				view.sourceMap = _sourceMap;
+				_waitingForEaselRect = false;
+			}
 		}
 	}
 }

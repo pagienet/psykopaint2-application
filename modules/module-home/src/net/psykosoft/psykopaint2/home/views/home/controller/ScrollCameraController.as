@@ -16,7 +16,6 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 	import net.psykosoft.psykopaint2.base.utils.ui.ScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 
 	import org.osflash.signals.Signal;
 
@@ -35,7 +34,6 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		private var _zoomedIn:Boolean;
 		private var _perspectiveTracer:Mesh;
 		private var _onMotion:Boolean;
-		private var _cachedCameraPosition:Vector3D;
 
 		private var _isEnabled:Boolean = true;
 
@@ -68,6 +66,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		public function setCamera( camera:Camera3D, cameraTarget:Object3D ):void {
 			_camera = camera;
 			_cameraTarget = cameraTarget;
+			dock( 0, -1750 );
 		}
 
 		public function set stage( value:Stage ):void {
@@ -130,9 +129,8 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_zoomedIn = false;
 			TweenLite.killTweensOf( _cameraTarget );
 			TweenLite.killTweensOf( _camera );
-			var pos:Vector3D = HomeSettings.DEFAULT_CAMERA_POSITION;
-			TweenLite.to( _cameraTarget, 1, { y: pos.y, ease:Strong.easeInOut } );
-			TweenLite.to( _camera, 1, { y: pos.y, z: pos.z, ease:Strong.easeInOut, onComplete:onZoomComplete } );
+			TweenLite.to( _cameraTarget, 1, { y: 0, ease:Strong.easeInOut } );
+			TweenLite.to( _camera, 1, { y: 0, z: -1750, ease:Strong.easeInOut, onComplete:onZoomComplete } );
 		}
 
 		private function onZoomComplete():void {
@@ -236,27 +234,12 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			return _positionManager;
 		}
 
-		public function get camera():Camera3D {
-			return _camera;
-		}
-
 		public function get isEnabled():Boolean {
 			return _isEnabled;
 		}
 
 		public function set isEnabled( value:Boolean ):void {
 			_isEnabled = value;
-			if( !_isEnabled ) {
-				_cachedCameraPosition = _camera.position.clone();
-				_camera.transform.identity();
-				_camera.position = HomeSettings.DEFAULT_CAMERA_POSITION;
-			}
-			else {
-				if( _cachedCameraPosition ) {
-					_camera.position = _cachedCameraPosition;
-					_camera.lookAt( _cameraTarget.position );
-				}
-			}
 		}
 	}
 }

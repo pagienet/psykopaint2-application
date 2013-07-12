@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.ColorTransform;
+	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
@@ -55,7 +56,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _freezeScene:ObjectContainer3D;
 		private var _freezePlane:Mesh;
 		private var _frozen:Boolean;
-		private var _easelRect:Rectangle;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
 
@@ -65,6 +65,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController = new ScrollCameraController();
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
+
+		private var _freezeCameraTransformCache:Matrix3D;
 
 		public function freeze( bmd:BitmapData ):void {
 			if( _frozen ) return;
@@ -78,8 +80,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			renderScene(); // TODO: needed?
 			_freezePlane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( bmd, _stage3dProxy );
 			_freezePlane.rotationX = -90;
-			_freezePlane.y = HomeSettings.DEFAULT_CAMERA_POSITION.y;
-			_freezePlane.z = 10000; // TODO: adjust mathematically, probably will be different on HR too
+			_freezeCameraTransformCache = _view.camera.transform.clone();
+			_view.camera.transform = new Matrix3D();
+			_freezePlane.z = 10000;
 			_freezeScene.addChild( _freezePlane );
 			HomeViewUtils.ensurePlaneFitsViewport( _freezePlane, _view );
 			_frozen = true;
@@ -103,6 +106,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				}
 				_freezePlane = null;
 			}
+			_view.camera.transform = _freezeCameraTransformCache;
 			selectScene( _mainScene );
 			enable3d();
 			_frozen = false;
@@ -199,7 +203,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			_paintingManager = new PaintingManager( _cameraController, _room, _view, _lightPicker, _stage3dProxy );
 			_paintingManager.y = 400;
 			_cameraController.interactionSurfaceZ = _room.wallZ;
-			_cameraController.dock( HomeSettings.DEFAULT_CAMERA_POSITION.y, HomeSettings.DEFAULT_CAMERA_POSITION.z );
 			_paintingManager.z = _room.wallZ - 2;
 			cameraTarget.z = _room.wallZ;
 			_mainScene.addChild( _cameraController );
@@ -407,11 +410,17 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function setEaselContent( data:PaintingInfoVO ):void {
 			_paintingManager.setEaselContent( data );
-			_easelRect = HomeViewUtils.calculatePlaneScreenRect( _paintingManager.easel.painting.getChildAt( 0 ) as Mesh, _view, 1 );
 		}
 
 		public function get easelRect():Rectangle {
-			return _easelRect;
+			if( _frozen ) _view.camera.transform = _freezeCameraTransformCache;
+			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( _paintingManager.easel.painting.getChildAt( 0 ) as Mesh, _view, 1 );
+			if( _frozen ) _view.camera.transform = new Matrix3D();
+			return rect;
+		}
+
+		public function get frozen():Boolean {
+			return _frozen;
 		}
 	}
 }

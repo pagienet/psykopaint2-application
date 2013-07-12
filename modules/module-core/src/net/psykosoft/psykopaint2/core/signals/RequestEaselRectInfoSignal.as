@@ -1,9 +1,9 @@
 package net.psykosoft.psykopaint2.core.signals
 {
 
-	import org.osflash.signals.Signal;
+	import net.psykosoft.psykopaint2.base.robotlegs.signals.TracingSignal;
 
-	public class RequestEaselRectInfoSignal extends Signal
+	public class RequestEaselRectInfoSignal extends TracingSignal
 	{
 		public function RequestEaselRectInfoSignal() {
 			super();

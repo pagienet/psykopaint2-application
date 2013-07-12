@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
+	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.events.MouseEvent;
@@ -18,6 +19,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotTakenSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
@@ -82,6 +85,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var requestUndoSignal:RequestUndoSignal;
 
 		[Inject]
+		public var notifyCanvasSnapshotTakenSignal:NotifyCanvasSnapshotTakenSignal;
+
+		[Inject]
+		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
+
+		[Inject]
 		public var stage3D:Stage3D;
 		
 		private var transformMatrix:Matrix;
@@ -111,27 +120,37 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			//notifyNavigationMovingSignal.add( onNavigationMoving );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
+			notifyCanvasSnapshotTakenSignal.add( onCanvasSnapshot );
+			notifyEaselRectInfoSignal.add( onEaselRectInfoRetrieved );
 			
 			transformMatrix = new Matrix();
 			
 			//TODO: this is for desktop testing - remove in final version
-			
 		}
 
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onEaselRectInfoRetrieved( rect:Rectangle ):void {
+			view.updateEaselRect( rect );
+		}
+
+		private function onCanvasSnapshot( bmd:BitmapData ):void {
+			view.updateSnapshot( bmd );
+		}
 		
 		//TODO: this is for desktop testing - remove in final version
 		private function onMouseWheel( event:MouseEvent ):void
 		{
 			var rect:Rectangle = renderer.renderRect;
 			
+			var sc:Number = 1 + event.delta / 50;
 			transformMatrix.identity();
 			transformMatrix.translate(-event.localX, -event.localY);
-			transformMatrix.scale(1 + event.delta / 50, 1 + event.delta / 50);
+			transformMatrix.scale( sc, sc);
 			transformMatrix.translate(event.localX, event.localY);
-			
+
 			var topLeft:Point = transformMatrix.transformPoint(rect.topLeft);
 			var bottomRight:Point = transformMatrix.transformPoint(rect.bottomRight);
 			
@@ -139,6 +158,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			rect.y = topLeft.y;
 			rect.width = bottomRight.x - topLeft.x;
 			rect.height = bottomRight.y - topLeft.y;
+
+			view.updateCanvasRect( rect );
 			
 			renderer.renderRect = rect;
 		}
@@ -159,7 +180,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					transformMatrix.translate(-tg.location.x, -tg.location.y);
 					transformMatrix.scale(tg.scale, tg.scale);
 					transformMatrix.translate(tg.location.x + tg.offsetX, tg.location.y + tg.offsetY);
-					
+
 					var topLeft:Point = transformMatrix.transformPoint(rect.topLeft);
 					var bottomRight:Point = transformMatrix.transformPoint(rect.bottomRight);
 					
