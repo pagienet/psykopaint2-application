@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 			_interactionManager.throwInputMultiplier = 2;
 			_interactionManager.useDetailedDelta = false;
-			_positionManager.frictionFactor = 0.9;
+			_positionManager.frictionFactor = 0.75;
 			_positionManager.minimumThrowingSpeed = 75;
 			_positionManager.edgeContainmentFactor = 0.01;
 			_positionManager.motionEndedSignal.add( onSnapMotionEnded );
