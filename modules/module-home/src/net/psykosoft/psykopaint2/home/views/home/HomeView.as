@@ -333,25 +333,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.render();
 		}
 
-		public function zoomIn():void {
-
-			var zoom:Vector3D;
-			var index:uint = _cameraController.positionManager.closestSnapPointIndex;
-
-			// Easel.
-			if( index == 1 ) {
-				// Assuming navigation can't be hidden in home state.
-				zoom = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( _paintingManager.easel.painting, _view, 1 );
-			}
-
-			trace( this, "zooming in to Y: " + zoom.y + ", Z: " + zoom.z );
-			_cameraController.zoomIn( zoom.y, zoom.z );
-		}
-
-		public function zoomOut():void {
-			_cameraController.zoomOut();
-		}
-
 		// ---------------------------------------------------------------------
 		// Listeners.
 		// ---------------------------------------------------------------------

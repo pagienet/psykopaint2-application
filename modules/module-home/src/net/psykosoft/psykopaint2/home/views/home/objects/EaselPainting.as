@@ -51,8 +51,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				diffuseTexture = new BitmapTexture(paintingVO.colorPreviewBitmap);
 
 			var normalSpecularTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.normalSpecularPreviewData, textureWidth, textureHeight);
-			diffuseTexture.getTextureForStage3D(view.stage3DProxy);
-			normalSpecularTexture.getTextureForStage3D(view.stage3DProxy);
+			diffuseTexture.getTextureForStage3D(stage3DProxy);
+			normalSpecularTexture.getTextureForStage3D(stage3DProxy);
 
 			// Create material.
 			var textureMaterial : TextureMaterial = new TextureMaterial( diffuseTexture, true, false, false );
