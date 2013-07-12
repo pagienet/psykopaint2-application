@@ -15,8 +15,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	public class Easel extends GalleryPainting
 	{
-		private var _painting : ObjectContainer3D;
-		private var _frame : ObjectContainer3D;
+		private var _painting : EaselPainting;
 		private var _easel : Mesh;
 		private var _view : View3D;
 		private var _lightPicker : LightPickerBase;
@@ -49,7 +48,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		override public function dispose() : void
 		{
 			disposePainting();
-			disposeFrame();
 			super.dispose();
 		}
 
@@ -77,16 +75,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			}
 		}
 
-		private function disposeFrame() : void
-		{
-			if (_frame) {
-				removeChild(_frame);
-			}
-		}
-
 		override public function get painting() : Mesh
 		{
-			return Mesh(_painting);
+			return _painting;
 		}
 	}
 }
