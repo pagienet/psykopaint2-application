@@ -87,9 +87,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var requestUndoSignal:RequestUndoSignal;
 
 		[Inject]
-		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
-
-		[Inject]
 		public var requestSetCanvasBackgroundSignal:RequestSetCanvasBackgroundSignal;
 
 		[Inject]
@@ -126,7 +123,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			//notifyNavigationMovingSignal.add( onNavigationMoving );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			requestSetCanvasBackgroundSignal.add( onSetBackgroundRequest );
-			notifyEaselRectInfoSignal.add( onEaselRectInfoRetrieved );
 
 			transformMatrix = new Matrix();
 
@@ -136,10 +132,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// -----------------------
 		// From app.
 		// -----------------------
-
-		private function onEaselRectInfoRetrieved( rect:Rectangle ):void {
-			view.updateEaselRect( rect );
-		}
 
 		private function onSetBackgroundRequest( bmd:RefCountedBitmapData ):void {
 			view.updateSnapshot( bmd );

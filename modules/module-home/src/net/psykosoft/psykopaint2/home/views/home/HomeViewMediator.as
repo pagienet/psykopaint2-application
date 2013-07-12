@@ -224,7 +224,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			else if( _waitingForTransitionSnapshot ) {
 				view.showEasel( true );
-				notifyEaselRectInfoSignal.dispatch( view.easelRect );
 				requestSetCanvasBackgroundSignal.dispatch( _snapshotPromise.bitmapData );
 				requestStateChange( StateType.PAINT );
 				_waitingForTransitionSnapshot = false;
