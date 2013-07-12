@@ -138,7 +138,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function onPaintingSaved():void {
 			if( _waitingForSaveToContinueToHomeState ) {
-			    requestStateChange( StateType.HOME_ON_EASEL );
+			    requestStateChange( StateType.TRANSITION_TO_HOME_MODE );
 				_waitingForSaveToContinueToHomeState = false;
 			}
 		}

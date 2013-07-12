@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavView;
@@ -41,7 +42,8 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.PICK_SAMPLE_IMAGE, PickASampleImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.CAPTURE_IMAGE, CaptureImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.CONFIRM_CAPTURE_IMAGE, ConfirmCaptureImageSubNavView );
-			
+			StateToSubNavLinker.linkSubNavToState( StateType.TRANSITION_TO_HOME_MODE, SubNavigationViewBase );
+
 			mouseEnabled = false;
 			name = "PaintRootView";
 		}
