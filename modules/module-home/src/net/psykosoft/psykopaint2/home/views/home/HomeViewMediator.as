@@ -3,14 +3,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.core.managers.Stage3DProxy;
 
-	import flash.display.BitmapData;
 	import flash.events.Event;
-	import flash.geom.Point;
-	import flash.system.ApplicationDomain;
 	import flash.utils.ByteArray;
-	import flash.utils.setTimeout;
 
-	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
@@ -24,11 +19,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
@@ -55,12 +48,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var stage3dProxy:Stage3DProxy;
 
 		[Inject]
-		public var notifyZoomCompleteSignal:NotifyZoomCompleteSignal;
-
-		[Inject]
-		public var requestZoomToggleSignal:RequestZoomToggleSignal;
-
-		[Inject]
 		public var notifyPaintingDataRetrievedSignal:NotifyPaintingDataRetrievedSignal;
 
 		[Inject]
@@ -84,6 +71,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _waitingForTransitionSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
+		private var _dockedAtPaintingIndex:int = -1;
 
 		override public function initialize():void {
 
@@ -119,17 +107,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestWallpaperChangeSignal.add( onWallPaperChanged );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyNavigationToggleSignal.add( onNavigationToggled );
-			requestZoomToggleSignal.add( onZoomRequested );
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
 			requestEaselRectInfoSignal.add( onEaselRectInfoRequested );
 
 			// From view.
-			view.enabledSignal.add( onViewEnabled );
 			view.setupSignal.add( onViewSetup );
 			view.assetsReadySignal.add( onViewAssetsReady );
 			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
-			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
 		}
 
 		private function registerFreezingState( stateName:String ):void {
@@ -165,19 +150,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.paintingManager.setEaselContent( latestVo );
 		}
 
-		private function onZoomRequested( zoomIn:Boolean ):void {
-			if( !view.visible ) return;
-			if( zoomIn ) view.zoomIn();
-			else view.zoomOut();
-		}
-
 		private function onNavigationToggled( shown:Boolean ):void {
 			view.cameraController.limitInteractionToUpperPartOfTheScreen( shown );
 			// TODO: will the navigation be hidable in home?
 			/*if( !view.visible ) {
-				var p:Point = shown ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
-				view.adjustCamera( p.x, p.y );
-			}*/
+			 var p:Point = shown ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
+			 view.adjustCamera( p.x, p.y );
+			 }*/
 		}
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
@@ -196,8 +175,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.room.changeWallpaper( atf );
 		}
 
-		private var _onTransitionToPaint:Boolean;
-		private var _snapshotPromise : SnapshotPromise;
+		private var _snapshotPromise:SnapshotPromise;
 
 		override protected function onStateChange( newState:String ):void {
 			if( _freezingStates.indexOf( newState ) != -1 ) freezeView();
@@ -214,11 +192,7 @@ package net.psykosoft.psykopaint2.home.views.home
 					// Get a snapshot first.
 					_waitingForTransitionSnapshot = true;
 					_snapshotPromise = applicationRenderer.requestSnapshot();
-					_snapshotPromise.addEventListener(SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot);
-
-					// snapshot no longer used
-//					_onTransitionToPaint = true;
-//					view.zoomIn();
+					_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
 				}
 
 				super.onStateChange( newState );
@@ -233,14 +207,14 @@ package net.psykosoft.psykopaint2.home.views.home
 				if( !view.frozen ) {
 					_waitingForFreezeSnapshot = true;
 					_snapshotPromise = applicationRenderer.requestSnapshot();
-					_snapshotPromise.addEventListener(SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot);
+					_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
 				}
 			}
 			else throw new Error( "HomeViewMediator - freeze requested while the view is not active." ); // TODO: ability to freeze while view is inactive might be needed
 		}
 
-		private function onCanvasSnapShot( event : Event ):void {
-			_snapshotPromise.removeEventListener(SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot);
+		private function onCanvasSnapShot( event:Event ):void {
+			_snapshotPromise.removeEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
 
 			if( _waitingForFreezeSnapshot ) {
 				trace( this, "applying freeze snapshot..." );
@@ -249,11 +223,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			else if( _waitingForTransitionSnapshot ) {
 				notifyEaselRectInfoSignal.dispatch( view.easelRect );
-				requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.bitmapData);
-				setTimeout( function():void {
-					_onTransitionToPaint = true;
-					view.zoomIn();
-				}, 100 );
+				requestSetCanvasBackgroundSignal.dispatch( _snapshotPromise.bitmapData );
+				requestStateChange( StateType.PAINT );
 				_waitingForTransitionSnapshot = false;
 			}
 
@@ -274,17 +245,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: will cause trouble if view was disposed by a memory warning and the listener is set up again...
 //			view.paintingManager.easel.clickedSignal.add( onEaselClicked );
 		}
-
-		private function onViewEnabled():void {
-			// Zoom out when coming from paint state ( view zooms out, when activated, if it was zoomed in when deactivated ).
-			if( view.cameraController.zoomedIn ) {
-				setTimeout( function ():void { // TODO: review time out - ipad seems to need it for animation to be visible when coming from the paint state
-					view.zoomOut();
-				}, 1000 );
-			}
-		}
-
-		private var _dockedAtPaintingIndex:int = -1;
 
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
 
@@ -331,17 +291,6 @@ package net.psykosoft.psykopaint2.home.views.home
 //				var temporaryPaintingName:String = temporaryPaintingNames[ paintingIndex - 3 ];
 //				notifyFocusedPaintingChangedSignal.dispatch( temporaryPaintingName );
 			}
-		}
-
-		private function onCameraZoomComplete():void {
-			trace( this, "zoom complete" );
-
-			if( _onTransitionToPaint ) {
-			    requestStateChange( StateType.PAINT );
-				_onTransitionToPaint = false;
-			}
-
-			notifyZoomCompleteSignal.dispatch();
 		}
 	}
 }

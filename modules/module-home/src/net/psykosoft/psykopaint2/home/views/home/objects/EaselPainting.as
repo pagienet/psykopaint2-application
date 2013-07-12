@@ -1,7 +1,9 @@
 package net.psykosoft.psykopaint2.home.views.home.objects
 {
 
+	import away3d.arcane;
 	import away3d.containers.ObjectContainer3D;
+	import away3d.containers.View3D;
 	import away3d.core.base.CompactSubGeometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
@@ -18,6 +20,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import net.psykosoft.psykopaint2.core.materials.PaintingNormalMethod;
 	import net.psykosoft.psykopaint2.core.materials.PaintingSpecularMethod;
 
+	use namespace arcane;
+
 	/*
 	 * Represents just the "paper" rectangle of a painting with no frame or glass.
 	 * */
@@ -28,20 +32,20 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _plane:Mesh;
 		private var _material:TextureMaterial;
 
-		public function EaselPainting( paintingVO:PaintingInfoVO, lightPicker:LightPickerBase, stage3DProxy : Stage3DProxy ) {
+		public function EaselPainting( paintingVO:PaintingInfoVO, lightPicker:LightPickerBase, view : View3D ) {
 
 			super();
 
 			_width = paintingVO.width;
 
-			_plane = createPlane( paintingVO, lightPicker, stage3DProxy );
+			_plane = createPlane( paintingVO, lightPicker, view );
 //			_plane = new Mesh( new PlaneGeometry( _width, _height ), new TextureMaterial( new BitmapTexture( diffuseBitmap ) ) ); // TODO: test non power of 2 textures with air 3.8
 			_plane.rotationX = -90;
 //			_material.lightPicker = lightPicker;
 			addChild( _plane );
 		}
 
-		private function createPlane(paintingVO : PaintingInfoVO, lightPicker : LightPickerBase, stage3DProxy : Stage3DProxy) : Mesh
+		private function createPlane(paintingVO : PaintingInfoVO, lightPicker : LightPickerBase, view : View3D) : Mesh
 		{
 			var width : int = paintingVO.width;
 			var height : int = paintingVO.height;
@@ -54,8 +58,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				diffuseTexture = new BitmapTexture(paintingVO.colorPreviewBitmap);
 
 			var normalSpecularTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.normalSpecularPreviewData, textureWidth, textureHeight);
-			diffuseTexture.getTextureForStage3D(stage3DProxy);
-			normalSpecularTexture.getTextureForStage3D(stage3DProxy);
+			diffuseTexture.getTextureForStage3D(view.stage3DProxy);
+			normalSpecularTexture.getTextureForStage3D(view.stage3DProxy);
+
 			// Create material.
 			_material = new TextureMaterial( diffuseTexture, true, false, false );
 			_material.diffuseMethod = new PaintingDiffuseMethod();

@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
@@ -30,9 +29,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestPaintingSaveSignal:RequestPaintingSaveSignal;
-
-		[Inject]
-		public var requestZoomToggleSignal:RequestZoomToggleSignal;
 
 		[Inject]
 		public var stateModel:StateModel;
@@ -143,7 +139,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onPaintingSaved():void {
 			if( _waitingForSaveToContinueToHomeState ) {
 			    requestStateChange( StateType.HOME_ON_EASEL );
-				requestZoomToggleSignal.dispatch( false );
 				_waitingForSaveToContinueToHomeState = false;
 			}
 		}

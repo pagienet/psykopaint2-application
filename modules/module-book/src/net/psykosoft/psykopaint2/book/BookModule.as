@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.book
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 
@@ -76,8 +75,9 @@ package net.psykosoft.psykopaint2.book
 			if( isStandalone ) {
 				// Remove splash screen.
 				_coreModule.coreRootView.removeSplashScreen();
-				// Wait for zoom out.
-				_coreModule.injector.getInstance( NotifyZoomCompleteSignal ).addOnce( onFirstZoomOut );
+				// Show Navigation.
+				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
+				showNavigationSignal.dispatch( 1, 0.5 );
 				// Trigger initial state...
 				_bookConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.BOOK_STANDALONE );
 				_coreModule.startEnterFrame();
@@ -85,12 +85,6 @@ package net.psykosoft.psykopaint2.book
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );
-		}
-
-		private function onFirstZoomOut():void {
-			// Show Navigation.
-			var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-			showNavigationSignal.dispatch( 1, 0.5 );
 		}
 	}
 }

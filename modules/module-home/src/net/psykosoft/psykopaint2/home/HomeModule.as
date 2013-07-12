@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.home
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.config.HomeConfig;
@@ -76,8 +75,9 @@ package net.psykosoft.psykopaint2.home
 			if( isStandalone ) {
 				// Remove splash screen.
 				_coreModule.coreRootView.removeSplashScreen();
-				// Wait for zoom out.
-				_coreModule.injector.getInstance( NotifyZoomCompleteSignal ).addOnce( onFirstZoomOut );
+				// Show Navigation.
+			var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
+			showNavigationSignal.dispatch( 1, 0.5 );
 				// Trigger initial state...
 				_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
 				_coreModule.startEnterFrame();
@@ -85,12 +85,6 @@ package net.psykosoft.psykopaint2.home
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );
-		}
-
-		private function onFirstZoomOut():void {
-			// Show Navigation.
-			var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-			showNavigationSignal.dispatch( 1, 0.5 );
 		}
 	}
 }
