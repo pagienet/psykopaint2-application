@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
+
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
@@ -16,10 +16,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedBitmapData;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotTakenSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
@@ -27,10 +27,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
-	
+
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.TransformGesture;
 
@@ -53,13 +54,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestStateUpdateFromModuleActivationSignal:RequestStateUpdateFromModuleActivationSignal;
-/*
-		[Inject]
-		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
+		/*
+		 [Inject]
+		 public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
 
-		[Inject]
-		public var notifyNavigationMovingSignal:NotifyNavigationMovingSignal;
-*/
+		 [Inject]
+		 public var notifyNavigationMovingSignal:NotifyNavigationMovingSignal;
+		 */
 		[Inject]
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
 
@@ -85,14 +86,14 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var requestUndoSignal:RequestUndoSignal;
 
 		[Inject]
-		public var notifyCanvasSnapshotTakenSignal:NotifyCanvasSnapshotTakenSignal;
-
-		[Inject]
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
 
 		[Inject]
+		public var requestSetCanvasBackgroundSignal:RequestSetCanvasBackgroundSignal;
+
+		[Inject]
 		public var stage3D:Stage3D;
-		
+
 		private var transformMatrix:Matrix;
 
 		override public function initialize():void {
@@ -103,7 +104,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
 			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
 			registerEnablingState( StateType.PAINT_TRANSFORM );
-			
+
 			// Init.
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
 			paintModule.view = view;
@@ -120,11 +121,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			//notifyNavigationMovingSignal.add( onNavigationMoving );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
-			notifyCanvasSnapshotTakenSignal.add( onCanvasSnapshot );
+			requestSetCanvasBackgroundSignal.add( onSetBackgroundRequest );
 			notifyEaselRectInfoSignal.add( onEaselRectInfoRetrieved );
-			
+
 			transformMatrix = new Matrix();
-			
+
 			//TODO: this is for desktop testing - remove in final version
 		}
 
@@ -136,15 +137,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			view.updateEaselRect( rect );
 		}
 
-		private function onCanvasSnapshot( bmd:BitmapData ):void {
+		private function onSetBackgroundRequest( bmd:RefCountedBitmapData ):void {
 			view.updateSnapshot( bmd );
 		}
-		
+
 		//TODO: this is for desktop testing - remove in final version
 		private function onMouseWheel( event:MouseEvent ):void
 		{
 			var rect:Rectangle = renderer.renderRect;
-			
+
 			var sc:Number = 1 + event.delta / 50;
 			transformMatrix.identity();
 			transformMatrix.translate(-event.localX, -event.localY);
@@ -153,28 +154,28 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			var topLeft:Point = transformMatrix.transformPoint(rect.topLeft);
 			var bottomRight:Point = transformMatrix.transformPoint(rect.bottomRight);
-			
+
 			rect.x = topLeft.x;
 			rect.y = topLeft.y;
 			rect.width = bottomRight.x - topLeft.x;
 			rect.height = bottomRight.y - topLeft.y;
 
 			view.updateCanvasRect( rect );
-			
+
 			renderer.renderRect = rect;
 		}
-		
+
 		private function onGlobalGesture( type:String, event:GestureEvent ):void {
 			trace( this, "onGlobalGesture: " + type );
 			switch( type ) {
-				case GestureType.TWO_FINGER_SWIPE_LEFT: 
+				case GestureType.TWO_FINGER_SWIPE_LEFT:
 					requestUndoSignal.dispatch();
 					break;
-					
+
 				case GestureType.TRANSFORM_GESTURE_CHANGED:
 					var tg:TransformGesture = (event.target as TransformGesture);
-					
-					
+
+
 					var rect:Rectangle = renderer.renderRect;
 					transformMatrix.identity();
 					transformMatrix.translate(-tg.location.x, -tg.location.y);
@@ -183,21 +184,21 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 					var topLeft:Point = transformMatrix.transformPoint(rect.topLeft);
 					var bottomRight:Point = transformMatrix.transformPoint(rect.bottomRight);
-					
+
 					rect.x = topLeft.x;
 					rect.y = topLeft.y;
 					rect.width = bottomRight.x - topLeft.x;
 					rect.height = bottomRight.y - topLeft.y;
-					
+
 					renderer.renderRect = rect;
-					
+
 					/*
-					var angle:Number = Math.atan2(384 -tg.location.y,512 -tg.location.x );
-					GyroscopeLightController.defaultPos.x = Math.cos(angle) ;
-					GyroscopeLightController.defaultPos.y =  Math.sin(angle) ;
-					*/
+					 var angle:Number = Math.atan2(384 -tg.location.y,512 -tg.location.x );
+					 GyroscopeLightController.defaultPos.x = Math.cos(angle) ;
+					 GyroscopeLightController.defaultPos.y =  Math.sin(angle) ;
+					 */
 					break;
-				
+
 			}
 		}
 
@@ -215,20 +216,20 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		/*
-		private function onNavigationMoving( ratio:Number ):void {
-			if( !view.visible ) return;
-			requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight * ( 1 - .24 * ( 1 - ratio ) ) ) );
-		}
+		 private function onNavigationMoving( ratio:Number ):void {
+		 if( !view.visible ) return;
+		 requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight * ( 1 - .24 * ( 1 - ratio ) ) ) );
+		 }
 
-		private function onNavigationToggled( navVisible:Boolean ):void {
-			if( navVisible ) {
-				requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight * .76 ) );
-			}
-			else {
-				requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight ) );
-			}
-		}
-		*/
+		 private function onNavigationToggled( navVisible:Boolean ):void {
+		 if( navVisible ) {
+		 requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight * .76 ) );
+		 }
+		 else {
+		 requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight ) );
+		 }
+		 }
+		 */
 
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
@@ -245,9 +246,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
 				}
 			}
-			
-			
-			
+
+
+
 		}
 
 		// -----------------------

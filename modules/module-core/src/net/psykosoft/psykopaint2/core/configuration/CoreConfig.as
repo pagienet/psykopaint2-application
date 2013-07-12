@@ -12,11 +12,11 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotTakenSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
@@ -39,6 +39,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
@@ -134,6 +135,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( Stage3D ).toValue( _stage3d );
 			_injector.map( Stage3DProxy ).toValue( _stage3dProxy );
 			_injector.map( GestureManager ).asSingleton();
+			_injector.map( ApplicationRenderer ).asSingleton();
 		}
 
 		// -----------------------
@@ -148,7 +150,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyMemoryWarningSignal ).asSingleton();
 			_injector.map( NotifyBlockingGestureSignal ).asSingleton();
 			_injector.map( RequestNavigationToggleSignal ).asSingleton();
-			_injector.map( NotifyCanvasSnapshotTakenSignal ).asSingleton();
 			_injector.map( RequestZoomToggleSignal ).asSingleton();
 			_injector.map( NotifyZoomCompleteSignal ).asSingleton();
 			_injector.map( NotifyNavigationMovingSignal ).asSingleton();
@@ -164,6 +165,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyPopUpRemovedSignal ).asSingleton();
 			_injector.map( RequestPopUpDisplaySignal ).asSingleton();
 			_injector.map( RequestPopUpRemovalSignal ).asSingleton();
+			_injector.map( RequestSetCanvasBackgroundSignal ).asSingleton();
 		}
 
 		// -----------------------

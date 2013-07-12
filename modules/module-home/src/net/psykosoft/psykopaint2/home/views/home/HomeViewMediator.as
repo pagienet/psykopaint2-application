@@ -4,19 +4,22 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.managers.Stage3DProxy;
 
 	import flash.display.BitmapData;
+	import flash.events.Event;
 	import flash.geom.Point;
+	import flash.system.ApplicationDomain;
 	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
+	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
+	import net.psykosoft.psykopaint2.core.managers.rendering.SnapshotPromise;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasSnapshotTakenSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
@@ -24,6 +27,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
@@ -48,9 +52,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var notifyNavigationToggleSignal:NotifyNavigationToggledSignal;
 
 		[Inject]
-		public var notifyCanvasSnapshotTakenSignal:NotifyCanvasSnapshotTakenSignal;
-
-		[Inject]
 		public var stage3dProxy:Stage3DProxy;
 
 		[Inject]
@@ -73,6 +74,12 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
+
+		[Inject]
+		public var applicationRenderer:ApplicationRenderer;
+
+		[Inject]
+		public var requestSetCanvasBackgroundSignal:RequestSetCanvasBackgroundSignal;
 
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _waitingForTransitionSnapshot:Boolean;
@@ -112,7 +119,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestWallpaperChangeSignal.add( onWallPaperChanged );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyNavigationToggleSignal.add( onNavigationToggled );
-			notifyCanvasSnapshotTakenSignal.add( onCanvasSnapShot );
 			requestZoomToggleSignal.add( onZoomRequested );
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
@@ -191,6 +197,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private var _onTransitionToPaint:Boolean;
+		private var _snapshotPromise : SnapshotPromise;
 
 		override protected function onStateChange( newState:String ):void {
 			if( _freezingStates.indexOf( newState ) != -1 ) freezeView();
@@ -206,8 +213,12 @@ package net.psykosoft.psykopaint2.home.views.home
 
 					// Get a snapshot first.
 					_waitingForTransitionSnapshot = true;
-					RenderGpuCommand.snapshotScale = 1;
-					RenderGpuCommand.snapshotRequested = true;
+					_snapshotPromise = applicationRenderer.requestSnapshot();
+					_snapshotPromise.addEventListener(SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot);
+
+					// snapshot no longer used
+//					_onTransitionToPaint = true;
+//					view.zoomIn();
 				}
 
 				super.onStateChange( newState );
@@ -221,20 +232,23 @@ package net.psykosoft.psykopaint2.home.views.home
 			if( view.isEnabled ) {
 				if( !view.frozen ) {
 					_waitingForFreezeSnapshot = true;
-					RenderGpuCommand.snapshotScale = 1;
-					RenderGpuCommand.snapshotRequested = true;
+					_snapshotPromise = applicationRenderer.requestSnapshot();
+					_snapshotPromise.addEventListener(SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot);
 				}
 			}
 			else throw new Error( "HomeViewMediator - freeze requested while the view is not active." ); // TODO: ability to freeze while view is inactive might be needed
 		}
 
-		private function onCanvasSnapShot( bmd:BitmapData ):void {
+		private function onCanvasSnapShot( event : Event ):void {
+			_snapshotPromise.removeEventListener(SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot);
+
 			if( _waitingForFreezeSnapshot ) {
 				trace( this, "applying freeze snapshot..." );
-				view.freeze( bmd );
+				view.freeze( _snapshotPromise.bitmapData );
 				_waitingForFreezeSnapshot = false;
 			}
 			else if( _waitingForTransitionSnapshot ) {
+				requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.bitmapData);
 				notifyEaselRectInfoSignal.dispatch( view.easelRect );
 				setTimeout( function():void {
 					_onTransitionToPaint = true;
@@ -242,6 +256,8 @@ package net.psykosoft.psykopaint2.home.views.home
 				}, 100 );
 				_waitingForTransitionSnapshot = false;
 			}
+
+			_snapshotPromise = null;
 		}
 
 		// -----------------------

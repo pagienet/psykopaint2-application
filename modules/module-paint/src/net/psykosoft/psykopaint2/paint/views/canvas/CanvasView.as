@@ -25,9 +25,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		public function updateSnapshot( bmd:BitmapData ):void {
-			trace( this, "update snapshot: " + bmd );
-			bmd.fillRect( _easelRect, 0 );
-			_backgroundSnapshot.bitmapData = bmd;
+			var tempBmd : BitmapData = bmd.clone();
+			bmd.dispose();
+			trace( this, "update snapshot: " + tempBmd );
+			tempBmd.fillRect( _easelRect, 0 );
+			// dispose the previously set bitmap data
+			_backgroundSnapshot.bitmapData.dispose();
+			_backgroundSnapshot.bitmapData = tempBmd;
 		}
 
 		public function updateEaselRect( rect:Rectangle ):void {

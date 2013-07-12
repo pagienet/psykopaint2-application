@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.core.data
 			info.lastSavedOnDateMs = dateMs;
 			info.width = paintingData.width / SURFACE_PREVIEW_SHRINK_FACTOR;
 			info.height = paintingData.height / SURFACE_PREVIEW_SHRINK_FACTOR;
-			info.colorPreviewData = reduceSurface( paintingData.colorData, paintingData.width, paintingData.height, SURFACE_PREVIEW_SHRINK_FACTOR );
+			info.colorPreviewData	 = reduceSurface( paintingData.colorData, paintingData.width, paintingData.height, SURFACE_PREVIEW_SHRINK_FACTOR );
 			info.normalSpecularPreviewData = reduceSurface( paintingData.normalSpecularData, paintingData.width, paintingData.height, SURFACE_PREVIEW_SHRINK_FACTOR );
 			info.thumbnail = thumbnail
 

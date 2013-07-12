@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpManagerView;
@@ -222,7 +223,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		private function updateStats():void {
 			if( !CoreSettings.SHOW_STATS ) return;
-			_renderTimeStackUtil.pushValue( RenderGpuCommand.renderTime );
+			_renderTimeStackUtil.pushValue( ApplicationRenderer.renderTime );
 			var renderTime:int = int( _renderTimeStackUtil.getAverageValue() );
 			_statsTextField.text = _fps + "/" + stage.frameRate + "fps \n" + "Render time: " + renderTime + "ms\n" +
 									( CoreSettings.SHOW_MEMORY_USAGE ? "Memory usage: " + uint(System.privateMemory/1024)/1024 + "MB" : "");
