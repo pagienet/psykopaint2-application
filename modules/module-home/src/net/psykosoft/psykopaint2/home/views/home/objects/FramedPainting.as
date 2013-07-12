@@ -65,6 +65,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			if ( value ) {
 				_painting = new ObjectContainer3D();
 				// TODO: not all the paintings will need transparency, frames might do tho for shadows
+				// TODO: THIS IS A MASSIVE MEMORY LEAK BECAUSE NOTHING IS DISPOSED!!!
 				_painting.addChild( TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( value, proxy, true ) );
 				_painting.rotationX = -90;
 				addChild( _painting );
@@ -88,6 +89,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private function disposePainting():void {
 			if( _painting ) {
 				removeChild( _painting );
+				_painting.dispose();
 				_painting = null;
 			}
 		}

@@ -28,6 +28,27 @@ package net.psykosoft.psykopaint2.core.data
 			super();
 		}
 
+		public function clone() : PaintingInfoVO
+		{
+			var clone : PaintingInfoVO = new PaintingInfoVO();
+			if (thumbnail) clone.thumbnail = thumbnail.clone();
+			if (colorPreviewData) {
+				clone.colorPreviewData = new ByteArray();
+				clone.colorPreviewData.writeBytes(colorPreviewData);
+			}
+			if (colorPreviewBitmap) clone.colorPreviewBitmap = colorPreviewBitmap.clone();
+
+			clone.normalSpecularPreviewData = new ByteArray();
+			clone.normalSpecularPreviewData.writeBytes(normalSpecularPreviewData);
+
+			clone.lastSavedOnDateMs = lastSavedOnDateMs;
+			clone.fileVersion = fileVersion;
+			clone.id = id;
+			clone.width = _width;
+			clone.height = _height;
+			return clone;
+		}
+
 		public function toString():String {
 			return "PaintingVO - " +
 					"fileVersion: " + fileVersion +
