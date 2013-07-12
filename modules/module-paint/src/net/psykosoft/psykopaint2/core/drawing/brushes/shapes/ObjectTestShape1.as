@@ -7,7 +7,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import net.psykosoft.psykopaint2.core.resources.TextureProxy;
 
 	public class ObjectTestShape1 extends AbstractBrushShape
@@ -40,7 +42,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		override protected function uploadBrushTexture(texture : Texture) : void
 		{
 			var size:int = _textureSize;
-			var bitmapData : BitmapData = new BitmapData(size, size, true,0x00);
+			var bitmapData : BitmapData = new TrackedBitmapData(size, size, true,0x00);
 			var source:BitmapData = (new SourceImage() as Bitmap ).bitmapData;
 			
 			var scaleTransform:Matrix = new Matrix(size / source.width,0,0,size / source.width); 

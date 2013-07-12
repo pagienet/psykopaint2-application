@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.core.utils
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class NormalSpecularMapGenerator
 	{
 		public function NormalSpecularMapGenerator()
@@ -19,7 +21,7 @@ package net.psykosoft.psykopaint2.core.utils
 			var sourceVec : Vector.<uint> = heightMap.getVector(heightMap.rect);
 			var specCompactor : Number = 0xf/0xff;
 
-			target ||= new BitmapData(width, height, false, 0x000000);
+			target ||= new TrackedBitmapData(width, height, false, 0x000000);
 
 			var len : int = width*height;
 			var targetVec : Vector.<uint> = new Vector.<uint>(len, true);

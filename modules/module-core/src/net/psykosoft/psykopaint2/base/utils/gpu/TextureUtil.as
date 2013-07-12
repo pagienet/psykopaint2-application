@@ -18,6 +18,8 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 
 	public class TextureUtil
 	{
@@ -88,7 +90,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 //			trace( "ensurePowerOf2ByScaling - altered: " + legalWidth + ", " + legalHeight );
 
 			if( legalWidth > origWidth || legalHeight > origHeight ) {
-				var modifiedBmd:BitmapData = new BitmapData( scale * legalWidth, scale * legalHeight, bitmapData.transparent, 0 );
+				var modifiedBmd:BitmapData = new TrackedBitmapData( scale * legalWidth, scale * legalHeight, bitmapData.transparent, 0 );
 				var transform:Matrix = new Matrix();
 				transform.scale( scale * legalHeight / origWidth, scale * legalHeight / origHeight );
 				modifiedBmd.draw( bitmapData, transform );
@@ -115,7 +117,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 //			trace( "ensurePowerOf2 - altered: " + legalWidth + ", " + legalHeight );
 
 			if( legalWidth > origWidth || legalHeight > origHeight ) {
-				var modifiedBmd:BitmapData = new BitmapData( legalWidth, legalHeight, bitmapData.transparent, 0 );
+				var modifiedBmd:BitmapData = new TrackedBitmapData( legalWidth, legalHeight, bitmapData.transparent, 0 );
 				var transform:Matrix = new Matrix();
 				transform.translate(
 						( legalWidth - origWidth ) / 2,

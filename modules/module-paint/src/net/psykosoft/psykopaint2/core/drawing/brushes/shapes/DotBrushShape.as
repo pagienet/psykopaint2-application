@@ -6,7 +6,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.display3D.Context3D;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class DotBrushShape extends AbstractBrushShape
 	{
 		public function DotBrushShape(context3D : Context3D)
@@ -20,7 +22,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		{
 			var size : Number = _textureSize;
 			var shp : Shape = new Shape();
-			var bitmapData : BitmapData = new BitmapData(size, size, false,0xff000000);
+			var bitmapData : BitmapData = new TrackedBitmapData(size, size, false,0xff000000);
 			shp.graphics.beginFill(0xffffff);
 			shp.graphics.drawCircle(size * 0.5,size * 0.5,size * 0.2);
 			shp.graphics.endFill();
@@ -43,7 +45,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			//TEMPORARY:
 			var size : Number = _textureSize;
 			var shp : Shape = new Shape();
-			var bitmapData : BitmapData = new BitmapData(size, size, false,0xff000000);
+			var bitmapData : BitmapData = new TrackedBitmapData(size, size, false,0xff000000);
 			shp.graphics.beginFill(0xffffff);
 			shp.graphics.drawCircle(size * 0.5,size * 0.5,size * 0.2);
 			shp.graphics.endFill();

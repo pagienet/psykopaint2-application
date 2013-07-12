@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.debug.UndisposedObjects;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
@@ -54,8 +55,12 @@ package net.psykosoft.psykopaint2.core
 		private var _requestNavigationToggleSignal:RequestNavigationToggleSignal;
 		private var _xmLoader:XMLLoader;
 
+		private var _undisposedObjects : UndisposedObjects;
+		private var _oldNumUndisposedObjects : uint;
+
 		public function CoreModule( injector:IInjector = null ) {
 			super();
+			_undisposedObjects = UndisposedObjects.getInstance();
 			_injector = injector;
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CoreModule";
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
@@ -84,6 +89,13 @@ package net.psykosoft.psykopaint2.core
 		private function update():void {
 //			trace( this, "updating----" );
 			_requestGpuRenderingSignal.dispatch();
+
+			if (CoreSettings.TRACK_NON_GCED_OBJECTS) {
+				if (_oldNumUndisposedObjects != _undisposedObjects.numObjects) {
+					trace ("Number of undefined objects changed to " + _undisposedObjects.numObjects);
+					_oldNumUndisposedObjects = _undisposedObjects.numObjects;
+				}
+			}
 		}
 
 		// ---------------------------------------------------------------------

@@ -6,7 +6,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.display3D.Context3D;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class BasicBrushShape extends AbstractBrushShape
 	{
 		[Embed(source="assets/basic_normalmap.png", mimeType="image/png")]
@@ -21,7 +23,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		{
 			var size : Number = _textureSize;
 			var shp : Shape = new Shape();
-			var bitmapData : BitmapData = new BitmapData(size, size, false,0xff000000);
+			var bitmapData : BitmapData = new TrackedBitmapData(size, size, false,0xff000000);
 			shp.graphics.beginFill(0xffffff);
 			
 			//tiny padding to allow for antialiasing:

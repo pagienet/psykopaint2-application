@@ -63,9 +63,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			var croppedTextureMap:BitmapData;
 			if ( _canvasWidth > _canvasHeight )
 			{
-				croppedTextureMap = new BitmapData( _baseTextureSize, _baseTextureSize * _canvasHeight / _canvasWidth, false,0);
+				croppedTextureMap = new TrackedBitmapData( _baseTextureSize, _baseTextureSize * _canvasHeight / _canvasWidth, false,0);
 			} else {
-				croppedTextureMap = new BitmapData( _baseTextureSize * _canvasWidth / _canvasHeight , _baseTextureSize,false,0);
+				croppedTextureMap = new TrackedBitmapData( _baseTextureSize * _canvasWidth / _canvasHeight , _baseTextureSize,false,0);
 			}
 			var holder:Sprite = new Sprite();
 			var bm:Bitmap = new Bitmap(_bitmapData,"auto",true);

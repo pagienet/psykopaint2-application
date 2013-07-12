@@ -15,6 +15,8 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.display3D.textures.Texture;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class ProgressiveEnvMap
 	{
 		private var _context : Context3D;
@@ -163,7 +165,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_inputTexture = _context.createTexture(_mapSize, _mapSize, Context3DTextureFormat.BGRA, false);
 			_envMapFront = _context.createTexture(_mapSize, _mapSize, Context3DTextureFormat.BGRA, true);
 			_envMapBack = _context.createTexture(_mapSize, _mapSize, Context3DTextureFormat.BGRA, true);
-			var tempBitmap : BitmapData = new BitmapData(_mapSize, _mapSize, false, 0x808080);
+			var tempBitmap : BitmapData = new TrackedBitmapData(_mapSize, _mapSize, false, 0x808080);
 			_envMapFront.uploadFromBitmapData(tempBitmap);
 			tempBitmap.dispose();
 		}

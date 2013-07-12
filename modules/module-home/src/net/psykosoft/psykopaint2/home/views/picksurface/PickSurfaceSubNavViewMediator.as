@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -148,7 +149,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
 			if (_loadedColorData) {
-				vo.colorPreviewBitmap = new BitmapData(vo.textureWidth, vo.textureHeight, false, 0);
+				vo.colorPreviewBitmap = new TrackedBitmapData(vo.textureWidth, vo.textureHeight, false, 0);
 				vo.colorPreviewBitmap.draw(_loadedColorData);
 			}
 			else {

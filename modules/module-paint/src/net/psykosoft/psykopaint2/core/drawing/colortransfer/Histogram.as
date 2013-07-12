@@ -3,7 +3,9 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class Histogram
 	{
 		
@@ -250,13 +252,13 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 			if ( __map != null ) __map.dispose();
 			
 			if ( width == -1 ) width = __size;
-			__map = new BitmapData( width, height, true, bg );
+			__map = new TrackedBitmapData( width, height, true, bg );
 			
 			var paintMap:BitmapData;
 			
 			if ( width != __size )
 			{
-				paintMap = new BitmapData( __size, height, true, bg );
+				paintMap = new TrackedBitmapData( __size, height, true, bg );
 			} else {
 				paintMap = __map
 			}

@@ -8,8 +8,10 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.filters.BlurFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
+
 	public class RubberMeshModel
 	{
 		[Inject]
@@ -113,12 +115,12 @@ package net.psykosoft.psykopaint2.core.model
 			_cachedComposite = createCanvasTexture(true);
 			_sourceTexture = createCanvasTexture(false);
 			
-			_sourceBitmapData = new BitmapData(textureWidth, textureHeight, false, 0xffffffff);
+			_sourceBitmapData = new TrackedBitmapData(textureWidth, textureHeight, false, 0xffffffff);
 			_sourceTexture.uploadFromBitmapData(_sourceBitmapData);
 
 			
 			_triangleTexture = createCanvasTexture(false);
-			_triangleBitmapData  = new BitmapData(textureWidth, textureHeight, true, 0); 
+			_triangleBitmapData  = new TrackedBitmapData(textureWidth, textureHeight, true, 0);
 			var shp:Shape = new Shape();
 			shp.graphics.lineStyle(64,0xffffff,0.5);
 			shp.graphics.moveTo(0,0);

@@ -8,7 +8,9 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 	import flash.geom.Orientation3D;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import ru.inspirit.linalg.JacobiSVD;
 	
 	public class ColorTransfer
@@ -91,7 +93,7 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 				lumaData = histogram.lumaMap.getVector(map.rect);
 			} else {
 				var scale:Number = maxPixelCount / (map.width * map.height);
-				var tmpMap:BitmapData = new BitmapData(map.width * scale, map.height * scale,true,0);
+				var tmpMap:BitmapData = new TrackedBitmapData(map.width * scale, map.height * scale,true,0);
 				tmpMap.draw( map, new Matrix(scale,0,0,scale),null,"normal",null,true);
 				colorData = tmpMap.getVector( tmpMap.rect );
 				histogram = histograms[index] = new HistogramLuminance(tmpMap);
@@ -291,7 +293,7 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 				var blendStartIndex:int = Math.max(0,threshold_target - transition1); 
 				var blendEndIndex:int = Math.min(threshold_target + transition2 + 1, 255 );
 				var scale:Number = 256 / (blendEndIndex - blendStartIndex);
-				var overlay:BitmapData = new BitmapData( target.width, target.height, true, 0 );
+				var overlay:BitmapData = new TrackedBitmapData( target.width, target.height, true, 0 );
 				
 				cm.reset();
 				cm.desaturate();

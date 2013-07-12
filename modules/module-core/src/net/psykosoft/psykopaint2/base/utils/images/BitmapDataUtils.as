@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2.base.utils.images
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class BitmapDataUtils
 	{
 		static public function getLegalBitmapData( map:BitmapData, forceClone:Boolean = false, maxDimension:int = 2048 ):BitmapData {
@@ -21,7 +23,7 @@ package net.psykosoft.psykopaint2.base.utils.images
 			if( map.width * scale > maxDimension || map.height * scale > maxDimension )
 				scale = Math.min( maxDimension / map.width, maxDimension / map.height );
 
-			var result:BitmapData = new BitmapData( map.width * scale, map.height * scale, true, 0 );
+			var result:BitmapData = new TrackedBitmapData( map.width * scale, map.height * scale, true, 0 );
 			result.draw( map, new Matrix( scale, 0, 0, scale ), null, "normal", null, true );
 			return result;
 		}
@@ -29,7 +31,7 @@ package net.psykosoft.psykopaint2.base.utils.images
 		static public function scaleBitmapData( source:BitmapData, scale:Number ):BitmapData {
 			var matrix:Matrix = new Matrix();
 			matrix.scale( scale, scale );
-			var scaledBmd:BitmapData = new BitmapData( source.width * scale, source.height * scale, false, 0 );
+			var scaledBmd:BitmapData = new TrackedBitmapData( source.width * scale, source.height * scale, false, 0 );
 			scaledBmd.draw( source, matrix );
 			return scaledBmd;
 		}
@@ -37,7 +39,7 @@ package net.psykosoft.psykopaint2.base.utils.images
 		static public function getBitmapDataFromBytes( bytes:ByteArray, width:Number, height:Number, fillWhite : Boolean ):BitmapData {
 			bytes.position = 0;
 
-			var bitmapData:BitmapData = new BitmapData( width, height, fillWhite, 0 );
+			var bitmapData:BitmapData = new TrackedBitmapData( width, height, fillWhite, 0 );
 			var rect : Rectangle = bitmapData.rect;
 			var point : Point = new Point();
 
@@ -45,7 +47,7 @@ package net.psykosoft.psykopaint2.base.utils.images
 
 			// undo faulty premultiplication
 			if (fillWhite) {
-				var tmp:BitmapData = new BitmapData( width, height, false, 0xffffffff );
+				var tmp:BitmapData = new TrackedBitmapData( width, height, false, 0xffffffff );
 				var matrix : Array =
 						[	1, 0, 0, -1, 0xff,
 							0, 1, 0, -1, 0xff,

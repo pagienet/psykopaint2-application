@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			/*
 			var size : Number = _textureSize;
 			var shp : Shape = new Shape();
-			var bitmapData : BitmapData = new BitmapData(size, size, false,0xff000000);
+			var bitmapData : BitmapData = new TrackedBitmapData(size, size, false,0xff000000);
 			shp.graphics.lineStyle(0,0xffffff);
 			shp.graphics.moveTo(2,int(size * 0.5));
 			shp.graphics.lineTo(int(size * 0.5),int(size * 0.5));

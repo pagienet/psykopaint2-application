@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class GeomUtil
 	{
 		/*public static function exploreMeshGeometry( mesh:Mesh ):void {
@@ -47,7 +49,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 			format.size = size;
 			tf.text = index + "";
 			tf.setTextFormat( format );
-			var bmd:BitmapData = new BitmapData( size, size, false, 0x00FF00 );
+			var bmd:BitmapData = new TrackedBitmapData( size, size, false, 0x00FF00 );
 			bmd.draw( tf );
 			var tracer:Sprite3D = new Sprite3D( new TextureMaterial( new BitmapTexture( bmd ) ), size, size );
 			tracer.position = object.transform.transformVector( new Vector3D( vx, vy, vz ) );

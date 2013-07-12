@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.base.utils.data
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class BitmapAtlas
 	{
 		private var _bmd:BitmapData;
@@ -49,7 +51,7 @@ package net.psykosoft.psykopaint2.base.utils.data
 //			trace( this, "getting sub texture for id: " + id );
 			if( _subTextures[ id ] ) return _subTextures[ id ];
 			var region:Rectangle = _regions[ id ];
-			var bmd:BitmapData = new BitmapData( region.width, region.height, false, 0 );
+			var bmd:BitmapData = new TrackedBitmapData( region.width, region.height, false, 0 );
 			var mat:Matrix = new Matrix();
 			mat.translate( -region.x, -region.y );
 			bmd.draw( _bmd, mat );

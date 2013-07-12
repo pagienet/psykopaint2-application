@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
 	import net.psykosoft.psykopaint2.base.utils.io.AtlasLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	import org.osflash.signals.Signal;
 
@@ -128,7 +129,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			}
 
 			// Use a bitmap data to create a texture..
-			var sheetBmd:BitmapData = new BitmapData( _sheetWidth, _sheetHeight, false, 0xFFFFFF );
+			var sheetBmd:BitmapData = new TrackedBitmapData( _sheetWidth, _sheetHeight, false, 0xFFFFFF );
 
 			// Draw gradient.
 			var fillType:String = GradientType.LINEAR;

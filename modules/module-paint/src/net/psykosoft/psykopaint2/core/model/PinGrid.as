@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class PinGrid
 	{
 		private var _width:Number;
@@ -45,7 +47,7 @@ package net.psykosoft.psykopaint2.core.model
 			_rows = Math.ceil( _height * _inverseCellSize ) + 1;
 			_cells = new Vector.<Vector.<Pin>>(_cols * _rows,true );
 			_pinToCellIndex = new Dictionary();
-			_lookupMap = new BitmapData( _cols, _rows, false );
+			_lookupMap = new TrackedBitmapData( _cols, _rows, false );
 			_helperShape =  new Shape();
 			
 			clearCells();

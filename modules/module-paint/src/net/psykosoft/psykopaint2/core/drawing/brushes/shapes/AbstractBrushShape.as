@@ -8,7 +8,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.geom.Matrix;
 
 	import flash.geom.Rectangle;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import net.psykosoft.psykopaint2.core.errors.AbstractMethodError;
 
 	public class AbstractBrushShape
@@ -142,7 +144,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		protected function uploadMips(size : int, source : BitmapData, texture : Texture) : void
 		{
-			var bitmapData : BitmapData = new BitmapData(size, size, false);
+			var bitmapData : BitmapData = new TrackedBitmapData(size, size, false);
 			var scaleTransform : Matrix = new Matrix(size / source.width, 0, 0, size / source.width);
 			var mipLevel : int = 0;
 			var rect : Rectangle = bitmapData.rect;

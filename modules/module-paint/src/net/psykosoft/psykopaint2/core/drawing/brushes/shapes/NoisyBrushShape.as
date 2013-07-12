@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class NoisyBrushShape extends AbstractBrushShape
 	{
 		private var _alphaContrast : ColorMatrixFilter;
@@ -38,7 +40,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			var alphaMask:Shape = new Shape();
 			var m:Matrix = new Matrix();
 			m.createGradientBox( size* _variationFactors[2], size * _variationFactors[3]);
-			_alphaMask = new BitmapData(size, size, true, 0);
+			_alphaMask = new TrackedBitmapData(size, size, true, 0);
 			alphaMask.graphics.beginGradientFill(GradientType.RADIAL,[0x7f7f00,0x7f7f00],[1,0],[0,255],m);
 			alphaMask.graphics.drawRect(0,0,size * _variationFactors[2], size* _variationFactors[3]);
 			alphaMask.graphics.endFill();
@@ -54,7 +56,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 				}
 			}
 			if (_brushMap) _brushMap.dispose();
-			_brushMap = new BitmapData(size, size, true, 0);
+			_brushMap = new TrackedBitmapData(size, size, true, 0);
 			_brushMap.perlinNoise(3, 3, 3, Math.random() * 0xffffff, false, true, 15, true);
 			
 			_brushMap.applyFilter(_brushMap, _brushMap.rect, origin, _alphaContrast);

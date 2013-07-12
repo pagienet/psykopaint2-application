@@ -313,7 +313,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 			// Tile sheet.
 			// Source bmd sheet.
-			/*var bmd:BitmapData = new BitmapData( 1024, 1024, false, 0 );
+			/*var bmd:BitmapData = new TrackedBitmapData( 1024, 1024, false, 0 );
 			 bmd.perlinNoise( 50, 50, 1, 1, false, true, 7, false );
 			 // Component.
 			 var tileSheet:TileSheet = new TileSheet();

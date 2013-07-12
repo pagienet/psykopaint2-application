@@ -9,6 +9,8 @@ package net.psykosoft.psykopaint2.book.views.book.content
 	import flash.text.TextFormat;
 	import flash.utils.setTimeout;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class TestBookDataProvider extends BookDataProviderBase
 	{
 		public function TestBookDataProvider() {
@@ -50,7 +52,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 		private function generateTextureWithNumber( value:uint ):BitmapTexture {
 			trace( this, "created texture for index: " + value );
-			var bmd:BitmapData = new BitmapData( _sheetWidth, _sheetHeight, false, 0xFF0000 );
+			var bmd:BitmapData = new TrackedBitmapData( _sheetWidth, _sheetHeight, false, 0xFF0000 );
 			printNumberOnBmd( value, bmd );
 			return new BitmapTexture( bmd );
 		}

@@ -8,7 +8,9 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.display3D.Context3DCompareMode;
 	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -143,7 +145,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function renderToBitmapData() : BitmapData
 		{
 			// I am sure there is some way to make the more elegant, but this works for now:
-			var map : BitmapData = new BitmapData(canvas.width, canvas.height, false, 0xffffffff);
+			var map : BitmapData = new TrackedBitmapData(canvas.width, canvas.height, false, 0xffffffff);
 
 			_context3D.setRenderToBackBuffer();
 			_context3D.clear(1, 1, 1, 1);

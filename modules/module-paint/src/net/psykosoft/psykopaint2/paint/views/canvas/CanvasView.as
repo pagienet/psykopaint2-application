@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class CanvasView extends ViewBase
 	{
@@ -20,7 +21,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			super();
 			_easelRect = new Rectangle();
 			_canvasRect = new Rectangle( 0, 0, 1024, 768 );
-			_backgroundSnapshot = new Bitmap( new BitmapData( 1024, 768, true, 0 ) );
+			_backgroundSnapshot = new Bitmap( new TrackedBitmapData( 1024, 768, true, 0 ) );
 //			addChild( _backgroundSnapshot );
 		}
 

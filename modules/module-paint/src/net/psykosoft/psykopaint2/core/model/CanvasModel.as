@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
@@ -133,7 +134,7 @@ package net.psykosoft.psykopaint2.core.model
 		{
 			// this is only required for the quickstart test where images are loaded in the wrong dimensions
 			if (sourceBitmapData.width != _textureWidth || sourceBitmapData.height != _textureHeight) {
-				var tmpBmd : BitmapData = new BitmapData(_textureWidth, _textureHeight, false, 0xffffffff);
+				var tmpBmd : BitmapData = new TrackedBitmapData(_textureWidth, _textureHeight, false, 0xffffffff);
 				var scl : Number = Math.min(textureWidth / sourceBitmapData.width, textureHeight / sourceBitmapData.height);
 
 				var m : Matrix = new Matrix(scl, 0, 0, scl, 0.5 * (_textureWidth - sourceBitmapData.width * scl), 0)
@@ -272,7 +273,7 @@ package net.psykosoft.psykopaint2.core.model
 
 		private function uploadColorBackgroundOriginal() : void
 		{
-			var tempBitmapData : BitmapData = new BitmapData(_textureWidth, _textureHeight, true, 0);
+			var tempBitmapData : BitmapData = new TrackedBitmapData(_textureWidth, _textureHeight, true, 0);
 			if (_colorBackgroundOriginal)
 				tempBitmapData.draw(_colorBackgroundOriginal);
 			_colorTexture.uploadFromBitmapData(tempBitmapData, 0);

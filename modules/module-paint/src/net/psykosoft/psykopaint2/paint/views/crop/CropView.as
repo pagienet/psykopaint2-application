@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.TouchSheet;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class CropView extends ViewBase
 	{
@@ -62,7 +63,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 		public function renderPreviewToBitmapData():BitmapData 
 		{
-			var croppedMap:BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, false, 0xffffffff );
+			var croppedMap:BitmapData = new TrackedBitmapData(stage.stageWidth, stage.stageHeight, false, 0xffffffff );
 			croppedMap.draw(_positioningSheet,new Matrix(stage.stageWidth/_easelRect.width,0,0,stage.stageHeight / _easelRect.height),null,"normal",null,true);
 			return croppedMap;
 			

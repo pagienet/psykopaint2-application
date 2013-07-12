@@ -7,6 +7,8 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.media.Camera;
 	import flash.media.Video;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class CameraEnvMap
 	{
 		private var _camera : Camera;
@@ -35,7 +37,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function initBitmapData(mapSize : uint) : void
 		{
-			_camImage = new BitmapData(mapSize, mapSize, false);
+			_camImage = new TrackedBitmapData(mapSize, mapSize, false);
 			// on iOS, front cam is already mirrorred. THIS IS NOT THE CASE ON ANDROID!
 			_matrix = new Matrix(_camImage.width / _video.width, 0, 0, _camImage.height / _video.height);
 		}

@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class PyramidMap
 	{
 		private var _source:BitmapData;
@@ -26,7 +28,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			this._source = map;
 
 			if (_scaled) _scaled.dispose();
-			_scaled = new BitmapData( Math.ceil(map.width * 0.75), Math.ceil(map.height * 0.5), true, 0 );
+			_scaled = new TrackedBitmapData( Math.ceil(map.width * 0.75), Math.ceil(map.height * 0.5), true, 0 );
 			var m:Matrix = new Matrix(0.5,0,0,0.5);
 			_scaled.draw( map, m, null, "normal",null,true);
 			m.tx += map.width * 0.5;

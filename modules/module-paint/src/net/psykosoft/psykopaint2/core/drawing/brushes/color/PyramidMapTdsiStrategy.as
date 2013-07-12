@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes.color
 {
 	import flash.display.BitmapData;
-	
+
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.StrokeAppendVO;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;

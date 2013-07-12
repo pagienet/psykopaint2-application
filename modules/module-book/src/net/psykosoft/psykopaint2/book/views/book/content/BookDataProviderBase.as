@@ -7,6 +7,8 @@ package net.psykosoft.psykopaint2.book.views.book.content
 	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import org.osflash.signals.Signal;
 
 	public class BookDataProviderBase
@@ -67,7 +69,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		}
 
 		public function get defaultTexture():BitmapTexture {
-			if( !_defaultTexture ) _defaultTexture = new BitmapTexture( new BitmapData( _sheetWidth, _sheetHeight, false, 0xCCCCCC ) );
+			if( !_defaultTexture ) _defaultTexture = new BitmapTexture( new TrackedBitmapData( _sheetWidth, _sheetHeight, false, 0xCCCCCC ) );
 			return _defaultTexture;
 		}
 

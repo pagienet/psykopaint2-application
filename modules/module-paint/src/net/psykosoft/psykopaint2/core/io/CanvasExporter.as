@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import net.psykosoft.psykopaint2.core.model.*;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
@@ -82,7 +84,7 @@ package net.psykosoft.psykopaint2.core.io
 
 			_paintingData = new PaintingDataVO();
 
-			_workerBitmapData = new BitmapData(_canvas.width, _canvas.height, false);
+			_workerBitmapData = new TrackedBitmapData(_canvas.width, _canvas.height, false);
 
 			_paintingData.width = _canvas.width;
 			_paintingData.height = _canvas.height;

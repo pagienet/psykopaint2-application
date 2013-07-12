@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 	import flash.media.Video;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class CaptureImageView extends ViewBase
 	{
@@ -49,7 +50,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		}
 
 		public function pause():void {
-			_bmd = new BitmapData( 1024, 768, false, 0 );
+			_bmd = new TrackedBitmapData( 1024, 768, false, 0 );
 			_currentCamera.drawToBitmapData( _bmd );
 			_video.attachCamera( null );
 		}

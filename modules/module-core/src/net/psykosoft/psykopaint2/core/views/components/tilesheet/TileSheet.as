@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.ui.components.HPageScroller;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class TileSheet extends HPageScroller
 	{
@@ -57,7 +58,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 			_cellSize = tileSize + gap;
 			_numberOfItemsPerPage = Math.floor( _visibleWidth / _cellSize ) * Math.floor( _visibleHeight / _cellSize );
 
-			var bmd:BitmapData = new BitmapData( tileSize, tileSize, false, 0xFFFFFF );
+			var bmd:BitmapData = new TrackedBitmapData( tileSize, tileSize, false, 0xFFFFFF );
 
 			for( var i:uint; i < numTiles; ++i ) {
 

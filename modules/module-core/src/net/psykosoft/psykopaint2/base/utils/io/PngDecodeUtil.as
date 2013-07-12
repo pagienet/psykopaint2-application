@@ -7,6 +7,8 @@ package net.psykosoft.psykopaint2.base.utils.io
 	import flash.events.IOErrorEvent;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class PngDecodeUtil
 	{
 		private var _pngDecodeCallback:Function;
@@ -42,7 +44,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 			trace( this, "decoded." );
 			if (_disposeWhenReady)
 				_bytes.clear();
-			var bmd:BitmapData = new BitmapData( _loader.width, _loader.height, false, 0 );
+			var bmd:BitmapData = new TrackedBitmapData( _loader.width, _loader.height, false, 0 );
 			bmd.draw( _loader );
 			_pngDecodeCallback( bmd );
 			_pngDecodeCallback = null;

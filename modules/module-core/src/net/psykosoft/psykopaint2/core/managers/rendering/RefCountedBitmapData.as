@@ -2,7 +2,9 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 {
 	import flash.display.BitmapData;
 
-	public class RefCountedBitmapData extends BitmapData
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
+	public class RefCountedBitmapData extends TrackedBitmapData
 	{
 		private var _refCount : int;
 

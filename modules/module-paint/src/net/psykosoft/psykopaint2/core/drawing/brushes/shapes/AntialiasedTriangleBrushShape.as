@@ -11,7 +11,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.display3D.Context3D;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class AntialiasedTriangleBrushShape extends AbstractBrushShape
 	{
 		public function AntialiasedTriangleBrushShape(context3D : Context3D)
@@ -24,10 +26,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		{
 			var size : Number = _textureSize;
 			var shp : Shape = new Shape();
-			var bitmapData : BitmapData = new BitmapData(size, size, true,0);
+			var bitmapData : BitmapData = new TrackedBitmapData(size, size, true,0);
 			
 			
-			//var noiseMap:BitmapData = new BitmapData(size,size,false,0);
+			//var noiseMap:BitmapData = new TrackedBitmapData(size,size,false,0);
 			//noiseMap.noise(12346,200,255,1,true);
 			
 			var scaleTransform:Matrix = new Matrix(); 
