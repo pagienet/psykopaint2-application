@@ -56,6 +56,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				if ( speed1 > 0 )
 				{
 					var ts:Number = 2 / speed1;
+					if ( ts > 0.25 ) ts = 0.25;
 					for ( var t:Number = 0; t < 0.5; t+= ts )
 					{
 						var ti: Number = 1-t;
@@ -101,7 +102,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				if ( speed1 > 0 )
 				{
 					ts = 2 / speed1;
-					
+					if ( ts > 0.25 ) ts = 0.25;
 					for ( t = 0; t < 0.5; t+=ts )
 					{
 						ti = 1-t;
