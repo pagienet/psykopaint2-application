@@ -190,6 +190,7 @@ package net.psykosoft.psykopaint2.home.views.home
 					}
 
 					// Get a snapshot first.
+					view.showEasel( false );
 					_waitingForTransitionSnapshot = true;
 					_snapshotPromise = applicationRenderer.requestSnapshot();
 					_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
@@ -222,6 +223,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				_waitingForFreezeSnapshot = false;
 			}
 			else if( _waitingForTransitionSnapshot ) {
+				view.showEasel( true );
 				notifyEaselRectInfoSignal.dispatch( view.easelRect );
 				requestSetCanvasBackgroundSignal.dispatch( _snapshotPromise.bitmapData );
 				requestStateChange( StateType.PAINT );

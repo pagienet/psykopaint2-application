@@ -17,11 +17,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.events.KeyboardEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix3D;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
@@ -30,7 +28,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
-	import net.psykosoft.psykopaint2.home.views.home.objects.EaselPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.FramedPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.GalleryPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
@@ -56,6 +53,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _freezeScene:ObjectContainer3D;
 		private var _freezePlane:Mesh;
 		private var _frozen:Boolean;
+		private var _freezeCameraTransformCache:Matrix3D;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
 
@@ -66,7 +64,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
 
-		private var _freezeCameraTransformCache:Matrix3D;
+		public function showEasel( show:Boolean ):void {
+			_paintingManager.easel.visible = show;
+		}
 
 		public function freeze( bmd:BitmapData ):void {
 			if( _frozen ) return;
