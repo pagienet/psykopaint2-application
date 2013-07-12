@@ -31,7 +31,6 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		private var _stageWidth:Number;
 		private var _stageHeight:Number;
 		private var _isScrollingLimited:Boolean = true;
-		private var _zoomedIn:Boolean;
 		private var _perspectiveTracer:Mesh;
 		private var _onMotion:Boolean;
 
@@ -39,21 +38,17 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 		private const TARGET_EASE_FACTOR:Number = 0.5;
 
-		public var zoomCompleteSignal:Signal;
-
 		public function ScrollCameraController() {
 
 			super();
-
-			zoomCompleteSignal = new Signal();
 
 			_positionManager = new SnapPositionManager();
 			_interactionManager = new ScrollInteractionManager( _positionManager );
 
 			_interactionManager.throwInputMultiplier = 2;
 			_interactionManager.useDetailedDelta = false;
-			_positionManager.frictionFactor = 0.75;
-			_positionManager.minimumThrowingSpeed = 75;
+			_positionManager.frictionFactor = 0.77;
+			_positionManager.minimumThrowingSpeed = 60;
 			_positionManager.edgeContainmentFactor = 0.01;
 			_positionManager.motionEndedSignal.add( onSnapMotionEnded );
 
@@ -115,28 +110,6 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_cameraTarget.y = _camera.y;
 			_camera.z = posZ;
 			_perspectiveFactorDirty = true;
-		}
-
-		public function zoomIn( targetY:Number, targetZ:Number ):void {
-			_zoomedIn = true;
-			TweenLite.killTweensOf( _cameraTarget );
-			TweenLite.killTweensOf( _camera );
-			TweenLite.to( _cameraTarget, 1, { y: targetY, ease:Strong.easeInOut } );
-			TweenLite.to( _camera, 1, { y: targetY, z: targetZ, ease:Strong.easeInOut, onComplete:onZoomComplete } );
-		}
-
-		public function zoomOut():void {
-			_zoomedIn = false;
-			TweenLite.killTweensOf( _cameraTarget );
-			TweenLite.killTweensOf( _camera );
-			TweenLite.to( _cameraTarget, 1, { y: 0, ease:Strong.easeInOut } );
-			TweenLite.to( _camera, 1, { y: 0, z: -1750, ease:Strong.easeInOut, onComplete:onZoomComplete } );
-		}
-
-		private function onZoomComplete():void {
-			trace( this, "zoom complete" );
-			_perspectiveFactorDirty = true;
-			zoomCompleteSignal.dispatch();
 		}
 
 		public function limitInteractionToUpperPartOfTheScreen( value:Boolean ):void {
@@ -224,10 +197,6 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 		public function get closestSnapPointChangedSignal():Signal {
 			return _positionManager.closestSnapPointChangedSignal;
-		}
-
-		public function get zoomedIn():Boolean {
-			return _zoomedIn;
 		}
 
 		public function get positionManager():SnapPositionManager {

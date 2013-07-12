@@ -41,6 +41,9 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.PICK_SAMPLE_IMAGE, PickASampleImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.CAPTURE_IMAGE, CaptureImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.CONFIRM_CAPTURE_IMAGE, ConfirmCaptureImageSubNavView );
+			
+			mouseEnabled = false;
+			name = "PaintRootView";
 		}
 	}
 }

@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.paint.commands {
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 
 	public class DeletePaintingCommand extends TracingCommand {
 
@@ -20,9 +19,6 @@ package net.psykosoft.psykopaint2.paint.commands {
 
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
-
-		[Inject]
-		public var requestZoomToggleSignal:RequestZoomToggleSignal;
 
 		public function DeletePaintingCommand() {
 			super();
@@ -54,9 +50,6 @@ package net.psykosoft.psykopaint2.paint.commands {
 
 			//change state to home
 			requestStateChangeSignal.dispatch( StateType.HOME_ON_EASEL );
-
-			//zoom out
-			requestZoomToggleSignal.dispatch( false );
 		}
 	}
 }

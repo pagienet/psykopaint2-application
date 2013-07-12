@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
+	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import flash.utils.clearTimeout;
@@ -290,7 +291,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		{
 			
 			var stage : Stage = event.target as Stage;
-			if (!stage) return;
+			if (!stage) {
+				//DisplayObject(event.target).transform.colorTransform = new ColorTransform(-1,-1,-1,1,255,255,255);
+				return;
+			}
 			
 			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
 			_strokeInProgress = true;

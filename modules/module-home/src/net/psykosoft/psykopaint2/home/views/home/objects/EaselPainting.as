@@ -1,11 +1,12 @@
 package net.psykosoft.psykopaint2.home.views.home.objects
 {
 
+	import away3d.arcane;
 	import away3d.containers.ObjectContainer3D;
+	import away3d.containers.View3D;
 	import away3d.core.base.CompactSubGeometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
-	import away3d.materials.TextureMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.primitives.PlaneGeometry;
@@ -18,6 +19,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import net.psykosoft.psykopaint2.core.materials.PaintingDiffuseMethod;
 	import net.psykosoft.psykopaint2.core.materials.PaintingNormalMethod;
 	import net.psykosoft.psykopaint2.core.materials.PaintingSpecularMethod;
+
+	use namespace arcane;
 
 	/*
 	 * Represents just the "paper" rectangle of a painting with no frame or glass.
@@ -48,8 +51,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				diffuseTexture = new BitmapTexture(paintingVO.colorPreviewBitmap);
 
 			var normalSpecularTexture : ByteArrayTexture = new ByteArrayTexture(paintingVO.normalSpecularPreviewData, textureWidth, textureHeight);
-			diffuseTexture.getTextureForStage3D(stage3DProxy);
-			normalSpecularTexture.getTextureForStage3D(stage3DProxy);
+			diffuseTexture.getTextureForStage3D(view.stage3DProxy);
+			normalSpecularTexture.getTextureForStage3D(view.stage3DProxy);
+
 			// Create material.
 			var textureMaterial : TextureMaterial = new TextureMaterial( diffuseTexture, true, false, false );
 			textureMaterial.diffuseMethod = new PaintingDiffuseMethod();

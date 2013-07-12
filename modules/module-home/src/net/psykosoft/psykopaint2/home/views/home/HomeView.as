@@ -48,7 +48,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _loader:AssetBundleLoader;
 		private var _view:View3D;
 		private var _stage3dProxy:Stage3DProxy;
-		private var _introZoomOutPending:Boolean = true;
 		private var _shiftMultiplier:Number = 1;
 		private var _light : DirectionalLight;
 		private var _lightPicker : StaticLightPicker;
@@ -113,8 +112,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			enable3d();
 			_frozen = false;
 		}
-
-		// TODO: make method to zoom camera to fit a rect
 
 		// ---------------------------------------------------------------------
 		// Creation...
@@ -245,15 +242,15 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Start docked at home painting.
 			_cameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
-			dockAtCurrentPainting();
+//			dockAtCurrentPainting(); // TODO: dock at painting and zoom out
 		}
 
 		private function dockAtCurrentPainting():void {
 			trace( this, "docking at current painting ----------" );
 			var framedPainting:GalleryPainting = _paintingManager.getPaintingAtIndex( _cameraController.positionManager.closestSnapPointIndex );
 			var plane:Mesh = framedPainting.painting;
-			var zoom:Vector3D = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( plane, _view, 768 / 1024 );
-			_cameraController.dock( zoom.y, zoom.z );
+			var pos:Vector3D = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( plane, _view, 768 / 1024 );
+			_cameraController.dock( pos.y, pos.z );
 		}
 
 		override protected function onDisposed():void {
@@ -329,13 +326,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			if( !_isEnabled ) return;
 			if( !_assetsLoaded ) return; // Bounces off 3d rendering when the scene is not ready or active.
 			if( !_view.parent ) return;
-			if( _introZoomOutPending && stage.frameRate > 30 ) {
-				_introZoomOutPending = false;
-				setTimeout( function():void {
-					trace( this, "zooming out 1st..." );
-					zoomOut();
-				}, 1500 );
-			}
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "rendering 3d" );
 			}

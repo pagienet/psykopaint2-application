@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedBitmapData;
+	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
@@ -31,7 +32,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
-
+	
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.TransformGesture;
 
@@ -93,6 +94,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var stage3D:Stage3D;
+		
+		[Inject]
+		public var canvasModel:CanvasModel;
 
 		private var transformMatrix:Matrix;
 
@@ -159,10 +163,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			rect.y = topLeft.y;
 			rect.width = bottomRight.x - topLeft.x;
 			rect.height = bottomRight.y - topLeft.y;
-
-			view.updateCanvasRect( rect );
-
+			
+			constrainZoomRect( rect );
+			
 			renderer.renderRect = rect;
+			view.updateCanvasRect( rect );
 		}
 
 		private function onGlobalGesture( type:String, event:GestureEvent ):void {
@@ -190,8 +195,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					rect.width = bottomRight.x - topLeft.x;
 					rect.height = bottomRight.y - topLeft.y;
 
+					constrainZoomRect( rect );
+					
 					renderer.renderRect = rect;
-
+					view.updateCanvasRect( rect );
+					
 					/*
 					 var angle:Number = Math.atan2(384 -tg.location.y,512 -tg.location.x );
 					 GyroscopeLightController.defaultPos.x = Math.cos(angle) ;
@@ -200,6 +208,43 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 
 			}
+		}
+		
+		private function constrainZoomRect( rect:Rectangle):void
+		{
+			var scale:Number = rect.height / canvasModel.height;
+			if (scale < 0.482)
+			{
+				rect.width *= (0.482 / scale);
+				rect.height *= (0.482 / scale);
+				scale = 0.482;
+			} else if (scale > 4)
+			{
+				rect.width *= (4 / scale);
+				rect.height*= (4 / scale);
+				scale = 4;
+			}
+			
+			
+			var offsetX : Number = rect.x / canvasModel.width;
+			if (scale < 1)
+				offsetX = (1 - scale) * .5;
+			
+			var offsetY : Number = rect.y / canvasModel.height;
+			if (scale < 1)
+				offsetY = (1 - scale) * .175;
+			
+			
+			if (scale > 0.95 && scale < 1.05) {
+				scale = 1;
+				offsetX = 0;
+				offsetY = 0;
+				
+			}
+			
+			rect.x = offsetX * canvasModel.width;
+			rect.y = offsetY * canvasModel.height;
+			
 		}
 
 		private function onExpensiveUiTask( started:Boolean, id:String ):void {
