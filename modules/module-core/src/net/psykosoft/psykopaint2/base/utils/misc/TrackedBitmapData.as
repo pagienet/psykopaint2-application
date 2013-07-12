@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.base.utils.misc
 		
 		override public function dispose():void
 		{
-			trace("disposed");
+//			trace("disposed");
 			super.dispose();
 
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
