@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.managers.gestures
 {
 
+	import flash.display.Bitmap;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	
@@ -234,7 +235,9 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		private function onTapGestureRecognized( event:GestureEvent ):void {
-			if ( Stage(TapGesture(event.target).target).getObjectsUnderPoint(TapGesture(event.target).location).length == 0 )
+			var target:Stage =  Stage(TapGesture(event.target).target);
+			var obj:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);
+			if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
 				notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
 		}
 		
