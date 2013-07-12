@@ -21,26 +21,23 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		{
 			super();
 			_view = view;
-			createEasel();
-		}
-
-		private function createEasel() : void
-		{
-			var easelMaterial : TextureMaterial = TextureUtil.getAtfMaterial(HomeView.HOME_BUNDLE_ID, "easelImage", _view);
-			easelMaterial.alphaBlending = true;
-			easelMaterial.mipmap = false;
-
-			_easel = new Mesh(new PlaneGeometry(1024, 1024), easelMaterial);
-			_easel.z = 10;
-			_easel.y = -210;
-
-			_easel.scale(1.575);
-			_easel.rotationX = -90;
-			addChild(_easel);
 		}
 
 		public function set easelVisible(visible : Boolean) : void
 		{
+			if (!_easel) {
+				var easelMaterial : TextureMaterial = TextureUtil.getAtfMaterial(HomeView.HOME_BUNDLE_ID, "easelImage", _view);
+				easelMaterial.alphaBlending = true;
+				easelMaterial.mipmap = false;
+
+				_easel = new Mesh(new PlaneGeometry(1024, 1024), easelMaterial);
+				_easel.z = 10;
+				_easel.y = -210;
+
+				_easel.scale(1.575);
+				_easel.rotationX = -90;
+				addChild(_easel);
+			}
 			_easel.visible = visible;
 		}
 

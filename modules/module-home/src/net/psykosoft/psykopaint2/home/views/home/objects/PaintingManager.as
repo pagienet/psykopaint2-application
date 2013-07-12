@@ -25,7 +25,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _snapPointForPainting:Dictionary;
 		private var _shadowForPainting:Dictionary;
 		private var _easel:Easel;
-		private var _pendingEaselContent:PaintingInfoVO;
 		private var _lightPicker : LightPickerBase;
 		private var _stage3dProxy:Stage3DProxy;
 
@@ -44,6 +43,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_shadowForPainting = new Dictionary();
 			_lightPicker = lightPicker;
 			_stage3dProxy = stage3dProxy;
+			_easel = new Easel( _view );
 		}
 
 		override public function dispose():void {
@@ -66,17 +66,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		}
 
 		public function setEaselContent( vo : PaintingInfoVO ):void {
-			_pendingEaselContent = vo? vo.clone() : null;
-			if( _easel ) setEaselPaintingNow();
-		}
-
-		private function setEaselPaintingNow():void {
-			if (_pendingEaselContent) {
-				var painting:EaselPainting = new EaselPainting( _pendingEaselContent, _lightPicker, _view.stage3DProxy );
+			if (vo) {
+				var painting:EaselPainting = new EaselPainting( vo, _lightPicker, _view.stage3DProxy );
 				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) painting.scale( 0.5 );
 				_easel.setPainting( painting );
-				_pendingEaselContent.dispose();
-				_pendingEaselContent = null;
 			}
 			else {
 				_easel.setPainting(null);
@@ -89,9 +82,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ), null, 0, 1.5 );
 
 			// Easel.
-			_easel = createEaselAtIndex( 1 );
+			addPaintingAt(1, _easel);
+
 			_easel.easelVisible = true;
-			if( _pendingEaselContent ) setEaselPaintingNow();
 			autoPositionPaintingAtIndex( _easel, 1 );
 			_easel.z -= 750;
 			_easel.y -= 150;
@@ -123,16 +116,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			addPaintingAt(index, framedPainting);
 
 			return framedPainting;
-		}
-
-		public function createEaselAtIndex( index:uint ):Easel {
-
-			trace( this, "creating easel at index: " + index );
-
-			// Painting and frame.
-			var easel:Easel = new Easel( _view );
-			addPaintingAt(index, easel);
-			return easel;
 		}
 
 		private function addPaintingAt(index : uint, painting : GalleryPainting) : void
