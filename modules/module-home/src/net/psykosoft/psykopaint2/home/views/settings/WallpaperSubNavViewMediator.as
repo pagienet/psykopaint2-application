@@ -56,7 +56,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 				}
 				default: { // Center buttons are wallpaper thumbnails.
 					getFullImageAndSetAsWallpaper( label );
-					WallpaperCache.setLastSelectedWallpaper( label );
+					WallpaperSubNavView.setLastSelectedWallpaper( label );
 				}
 			}
 		}

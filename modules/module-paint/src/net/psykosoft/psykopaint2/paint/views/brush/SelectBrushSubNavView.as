@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public static const LBL_EDIT_BRUSH:String = "Edit Brush";
 
 		private var _group:ButtonGroup;
+		private var _groupd:ButtonGroup;
 
 		public function SelectBrushSubNavView() {
 			super();
@@ -62,7 +63,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		public function setSelectedBrush( activeBrushKit:String ):void {
-			EditBrushCache.setLastSelectedBrush( activeBrushKit );
+			EditBrushSubNavView.setLastSelectedBrush( activeBrushKit );
 			_group.setSelectedButtonByLabel( activeBrushKit );
 		}
 	}

@@ -28,28 +28,28 @@ import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 			view.setSelectedBrush( paintModule.activeBrushKit );
 			view.navigation.toggleRightButtonVisibility( hasParameters() );
 			if( view.navigation.scroller.contentWidth > view.navigation.scroller.visibleWidth ) {
-				view.navigation.setScrollerPosition( EditBrushCache.lastScrollerPosition );
+				view.navigation.setScrollerPosition( EditBrushSubNavView.lastScrollerPosition );
 			}
 		}
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case SelectBrushSubNavView.LBL_BACK:
-					EditBrushCache.lastScrollerPosition = view.navigation.getScrollerPosition();
+					EditBrushSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
 					requestStateChange( StateType.PREVIOUS );
 					break;
 				
 				case SelectBrushSubNavView.LBL_EDIT_BRUSH:
-					EditBrushCache.lastScrollerPosition = view.navigation.getScrollerPosition();
+					EditBrushSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
 					requestStateChange( StateType.PAINT_ADJUST_BRUSH );
 					break;
 				
 				default: // Center buttons select a brush.
 					paintModule.activeBrushKit = label;
-					EditBrushCache.setLastSelectedBrush( label );
+					EditBrushSubNavView.setLastSelectedBrush( label );
 					view.navigation.toggleRightButtonVisibility( hasParameters() );
 					
-					EditBrushCache.lastScrollerPosition = view.navigation.getScrollerPosition();
+					EditBrushSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
 					requestStateChange( StateType.PAINT_ADJUST_BRUSH );
 					break;
 			}

@@ -64,9 +64,17 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					paintingModel.focusedPaintingId = "uniqueUserId-" + label;
 					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + label );
 					requestEaselUpdateSignal.dispatch( vo );
+					NewPaintingSubNavView.setLastSelectedPainting( paintingModel.focusedPaintingId );
 				}
 			}
 		}
+
+		// -----------------------
+		// Overrride.
+		// -----------------------
+
+
+
 
 		// -----------------------
 		// Private.

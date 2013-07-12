@@ -30,6 +30,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		public static const LBL_BACK:String = "Pick a Brush";
 
+		static private var _lastSelectedBrush:String = "";
+		static private var _lastSelectedParameter:Object = {};
+		static public var lastScrollerPosition:Number = 372; //TODO: harcode works, might want to do it cleaner.
+
+
 		private const UI_ELEMENT_Y:uint = 560;
 
 		public function EditBrushSubNavView() {
@@ -66,7 +71,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var group:ButtonGroup = new ButtonGroup();
 			for( var i:uint = 0; i < numParameters; ++i ) {
 				var parameter:PsykoParameter = list[ i ];
-				var matchesLast:Boolean = EditBrushCache.getLastSelectedParameter( _parameterSetVO.brushName ).indexOf( parameter.id ) != -1;
+				var matchesLast:Boolean = getLastSelectedParameter( _parameterSetVO.brushName ).indexOf( parameter.id ) != -1;
 				if( matchesLast || i == 0) firstParamId = parameter.id;
 //				trace( ">>> " + parameter.toXMLString() );
 				var btn:SbButton = navigation.createButton( parameter.label, "param" + parameter.type, "btnLabelCenter", null )
@@ -84,7 +89,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		public function updateParameters( parameterSetVO:ParameterSetVO ):void {
 			_parameterSetVO = parameterSetVO;
-			var currentParameterID:String = EditBrushCache.getLastSelectedParameter( _parameterSetVO.brushName );
+			var currentParameterID:String = getLastSelectedParameter( _parameterSetVO.brushName );
 			if( currentParameterID != "" ) {
 				openParameter( currentParameterID );
 			}
@@ -111,7 +116,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			if( _parameter == null ) return;
 
 			var parameterType:int = _parameter.type;
-			EditBrushCache.setLastSelectedParameter( _parameter.id, _parameterSetVO.brushName );
+			setLastSelectedParameter( _parameter.id, _parameterSetVO.brushName );
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
@@ -292,6 +297,23 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				_parameter.lowerRangeValue = slider.value1;
 				_parameter.upperRangeValue = slider.value2;
 			}
+		}
+
+		// ---------------------------------------------------------------------
+		// Setters & Getters.
+		// ---------------------------------------------------------------------
+
+		static public function setLastSelectedBrush( value:String ):void {
+			if( _lastSelectedBrush == value ) return;
+			_lastSelectedBrush = value;
+		}
+
+		static public function getLastSelectedParameter( brushID:String ):String {
+			return _lastSelectedParameter[brushID] || "";
+		}
+
+		static public function setLastSelectedParameter( value:String, brushID:String ):void {
+			_lastSelectedParameter[brushID] = value;
 		}
 	}
 }

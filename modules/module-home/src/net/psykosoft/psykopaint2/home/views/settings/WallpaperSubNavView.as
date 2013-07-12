@@ -15,6 +15,8 @@ package net.psykosoft.psykopaint2.home.views.settings
 	{
 		public static const LBL_BACK:String = "Settings";
 
+		static private var _lastSelectedWallpaper:String = "default";
+
 		private var _atlas:BitmapAtlas;
 		private var _group:ButtonGroup;
 
@@ -46,7 +48,12 @@ package net.psykosoft.psykopaint2.home.views.settings
 		}
 
 		public function setSelectedWallpaperBtn():void {
-			_group.setSelectedButtonByLabel( WallpaperCache.getLastSelectedWallpaper() );
+			_group.setSelectedButtonByLabel( _lastSelectedWallpaper );
+		}
+
+		static public function setLastSelectedWallpaper( value:String ):void {
+			if( _lastSelectedWallpaper == value ) return;
+			_lastSelectedWallpaper = value;
 		}
 	}
 }
