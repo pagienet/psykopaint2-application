@@ -6,10 +6,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.display.BlendMode;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.events.KeyboardEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.media.Sound;
+	import flash.ui.Keyboard;
 	import flash.utils.getDefinitionByName;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
@@ -17,15 +18,24 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	public class CanvasView extends ViewBase
 	{
+		// TODO: a similar asset is also packaged in the home view as atf, consider using the same asset
+		// The home view one doesn't need to be high res, but this on does
+		[Embed(source="../../../../../../../assets/embedded/images/easel.png")]
+		private var EaselImage:Class;
+
 		private var _snapshot:Bitmap;
 		private var _canvasRect:Rectangle;
 		private var _holePuncher:Sprite; // TODO: make shape?
 		private var _zeroPoint:Point;
 		private var _blur:BlurFilter;
 		private var _playedSound:Boolean;
+		private var _easel:Bitmap;
 
-		private const HITCHCOCK_SCALE_FACTOR:Number = 0.1;
+		private const HITCHCOCK_SCALE_FACTOR:Number = 0.25;
 		private const HITCHCOCK_OFFSET_FACTOR:Number = 50;
+
+		private var _easelOffset:Number = 204;
+		private var _easelFactor:Number = 1.091;
 
 		public function CanvasView() {
 
@@ -37,6 +47,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			_snapshot = new Bitmap( new TrackedBitmapData( 1024, 768, true, 0 ) );
 			addChild( _snapshot );
+
+			_easel = new EaselImage();
+			addChild( _easel );
 
 			// Hole punchin'
 			blendMode = BlendMode.LAYER;
@@ -54,10 +67,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			updateCanvasRect( new Rectangle( 0, 0, 1024, 768 ), 1024, false );
 		}
 
+		override protected function onSetup():void {
+			// TODO: remove on release
+			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
+			stage.addEventListener( KeyboardEvent.KEY_UP, onStageKeyUp );
+		}
+
 		public function updateSnapshot( bmd:BitmapData ):void {
 			_snapshot.bitmapData.copyPixels( bmd, bmd.rect, _zeroPoint );
 		}
 
+		private var _fullWidth:Number = 1024;
 		public function updateCanvasRect( rect:Rectangle, fullWidth:Number, manual:Boolean ):void {
 
 //			trace( this, "update canvas rect: " + rect );
@@ -68,6 +88,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			 this.graphics.endFill();*/
 
 			_canvasRect = rect;
+			_fullWidth = fullWidth;
+
+			var ratio:Number = _canvasRect.width / fullWidth;
 
 			// Update hole size to fit the canvas.
 			_holePuncher.x = _canvasRect.x;
@@ -76,10 +99,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			_holePuncher.height = _canvasRect.height;
 
 			// Non realistic scaling of the bg.
-			var ratio:Number = 1 - _canvasRect.width / fullWidth;
-			_snapshot.scaleX = _snapshot.scaleY = 1 + HITCHCOCK_SCALE_FACTOR * ratio;
+			var invRatio:Number = 1 - ratio;
+			_snapshot.scaleX = _snapshot.scaleY = 1 + HITCHCOCK_SCALE_FACTOR * invRatio;
 			_snapshot.x = 1024 / 2 - _snapshot.width / 2;
-			_snapshot.y = 768 / 2 - _snapshot.height / 2 - HITCHCOCK_OFFSET_FACTOR * ratio;
+			_snapshot.y = 768 / 2 - _snapshot.height / 2 - HITCHCOCK_OFFSET_FACTOR * invRatio;
+
+			// Position and scale easel.
+			_easel.scaleX = _easel.scaleY = ratio * _easelFactor;
+			_easel.x = _canvasRect.x + _canvasRect.width / 2 - _easel.width / 2;
+			_easel.y = _canvasRect.y - _easelOffset * ratio;
 
 			// Comment to mute sound!
 			if( manual && !_playedSound ) {
@@ -97,6 +125,44 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public function updateBlur( ratio:Number ):void {
 			_blur.blurX = _blur.blurY = 16 * ratio;
 			_snapshot.filters = [ _blur ];
+		}
+
+		private var _shiftMultiplier:Number = 0.001;
+
+		private function onStageKeyUp( event:KeyboardEvent ):void {
+			switch( event.keyCode ) {
+				case Keyboard.SHIFT: {
+					_shiftMultiplier = 0.001;
+					break;
+				}
+			}
+		}
+
+		private function onStageKeyDown( event:KeyboardEvent ):void {
+			switch( event.keyCode ) {
+				case Keyboard.UP: {
+					_easelFactor += _shiftMultiplier;
+					break;
+				}
+				case Keyboard.DOWN: {
+					_easelFactor -= _shiftMultiplier;
+					break;
+				}
+				case Keyboard.RIGHT: {
+					_easelOffset += 100 * _shiftMultiplier;
+					break;
+				}
+				case Keyboard.LEFT: {
+					_easelOffset -= 100 * _shiftMultiplier;
+					break;
+				}
+				case Keyboard.SHIFT: {
+					_shiftMultiplier = 0.01;
+					break;
+				}
+			}
+			updateCanvasRect( _canvasRect, _fullWidth, true );
+			trace( this, "updating easel stuff - offset: " + _easelOffset + ", scale: " + _easelFactor );
 		}
 	}
 }

@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				_easel.z = 10;
 				_easel.y = -210;
 
-				_easel.scale(1.575);
+				_easel.scale( 1.575 );
 				_easel.rotationX = -90;
 				addChild(_easel);
 			}

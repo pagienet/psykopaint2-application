@@ -257,14 +257,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _waitingForZoomOutToContinueToHome:Boolean;
 		private var _onZoomAnimation:Boolean;
 
-		public var zoomScale:Number;
-
 		private const MIN_ZOOM_SCALE:Number = 0.482;
 		private const MAX_ZOOM_SCALE:Number = 4;
 
+		public var zoomScale:Number = MIN_ZOOM_SCALE;
+
 		private function zoomIn():void {
 			_onZoomAnimation = true;
-			zoomScale = MIN_ZOOM_SCALE;
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeOut } );
 		}
@@ -330,6 +329,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				offsetX = 0;
 				offsetY = 0;
 			}
+
+			zoomScale = scale;
 
 			rect.x = offsetX * canvasModel.width;
 			rect.y = offsetY * canvasModel.height;

@@ -11,7 +11,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
