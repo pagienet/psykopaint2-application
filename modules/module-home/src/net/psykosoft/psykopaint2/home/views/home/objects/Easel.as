@@ -4,10 +4,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
+	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.primitives.PlaneGeometry;
 
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
 	public class Easel extends GalleryPainting
@@ -16,11 +19,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _frame : ObjectContainer3D;
 		private var _easel : Mesh;
 		private var _view : View3D;
+		private var _lightPicker : LightPickerBase;
 
-		public function Easel(view : View3D)
+		public function Easel(view : View3D, lightPicker : LightPickerBase)
 		{
 			super();
 			_view = view;
+			_lightPicker = lightPicker;
 		}
 
 		public function set easelVisible(visible : Boolean) : void
@@ -48,11 +53,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		public function setPainting(value : ObjectContainer3D) : void
+		public function setContent(vo : PaintingInfoVO) : void
 		{
 			disposePainting();
-			if (value) {
-				_painting = value;
+
+			if (vo) {
+				_painting = new EaselPainting( vo, _lightPicker, _view.stage3DProxy );
+				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) painting.scale( 0.5 );
 				addChild(_painting);
 			}
 		}
@@ -77,18 +84,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			}
 		}
 
-		// ---------------------------------------------------------------------
-		// Getters.
-		// ---------------------------------------------------------------------
-
 		override public function get painting() : Mesh
 		{
 			return Mesh(_painting);
-		}
-
-		public function get frame() : ObjectContainer3D
-		{
-			return _frame;
 		}
 	}
 }

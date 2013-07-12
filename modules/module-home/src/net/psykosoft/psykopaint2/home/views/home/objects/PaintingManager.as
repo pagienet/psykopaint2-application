@@ -43,7 +43,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_shadowForPainting = new Dictionary();
 			_lightPicker = lightPicker;
 			_stage3dProxy = stage3dProxy;
-			_easel = new Easel( _view );
+			_easel = new Easel( _view, _lightPicker );
 		}
 
 		override public function dispose():void {
@@ -66,14 +66,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		}
 
 		public function setEaselContent( vo : PaintingInfoVO ):void {
-			if (vo) {
-				var painting:EaselPainting = new EaselPainting( vo, _lightPicker, _view.stage3DProxy );
-				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) painting.scale( 0.5 );
-				_easel.setPainting( painting );
-			}
-			else {
-				_easel.setPainting(null);
-			}
+			_easel.setContent(vo);
 		}
 
 		public function createDefaultPaintings():void {
