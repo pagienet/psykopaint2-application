@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.HomeModule;
@@ -114,14 +113,9 @@ package net.psykosoft.psykopaint2.app
 		private function onViewsReady():void {
 			// Hide splash.
 			_coreModule.coreRootView.removeSplashScreen();
-			// Wait for zoom out.
-			_coreModule.injector.getInstance( NotifyZoomCompleteSignal ).addOnce( onFirstZoomOut );
 			// Trigger initial state...
 			_coreModule.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
 			_coreModule.startEnterFrame();
-		}
-
-		private function onFirstZoomOut():void {
 			// Show Navigation.
 			var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
 			showNavigationSignal.dispatch( 1, 0.5 );

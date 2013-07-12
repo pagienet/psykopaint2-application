@@ -4,23 +4,15 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestZoomToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class NewPaintingSubNavViewMediator extends MediatorBase
 	{
 		[Inject]
 		public var view:NewPaintingSubNavView;
-
-		[Inject]
-		public var requestZoomToggleSignal:RequestZoomToggleSignal;
-
-		[Inject]
-		public var notifyZoomCompleteSignal:NotifyZoomCompleteSignal;
 
 		[Inject]
 		public var requestPaintingActivationSignal:RequestPaintingActivationSignal;
