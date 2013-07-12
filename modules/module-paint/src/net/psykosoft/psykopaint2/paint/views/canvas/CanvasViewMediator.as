@@ -295,9 +295,14 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function updateCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
-			renderer.renderRect = rect;
 			view.updateBlur( ( rect.width / canvasModel.width - MIN_ZOOM_SCALE ) / ( 1 - MIN_ZOOM_SCALE ) );
-			view.updateCanvasRect( rect, canvasModel.width, !_onZoomAnimation );
+			view.updateCanvasRect( rect );
+			// TODO: review this hack
+			rect.x *= CoreSettings.GLOBAL_SCALING;
+			rect.y *= CoreSettings.GLOBAL_SCALING;
+			rect.width *= CoreSettings.GLOBAL_SCALING;
+			rect.height *= CoreSettings.GLOBAL_SCALING;
+			renderer.renderRect = rect;
 		}
 
 		private function constrainCanvasRect( rect:Rectangle ):void {

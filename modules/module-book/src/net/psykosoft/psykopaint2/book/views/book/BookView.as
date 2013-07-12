@@ -77,8 +77,8 @@ package net.psykosoft.psykopaint2.book.views.book
 			if( !_view.parent ) return;
 			if( !_book.dataProvider ) return;
 
-			var target:Number = -75 + 15 * mouseY / 768;
-			_book.rotationX += ( target - _book.rotationX ) * 0.25;
+//			var target:Number = -75 + 15 * mouseY / 768;
+//			_book.rotationX += ( target - _book.rotationX ) * 0.25;
 
 			_book.update();
 			_view.render();

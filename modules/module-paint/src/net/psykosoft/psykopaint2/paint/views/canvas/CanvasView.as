@@ -15,6 +15,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	public class CanvasView extends ViewBase
 	{
@@ -28,8 +30,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _holePuncher:Sprite; // TODO: make shape?
 		private var _zeroPoint:Point;
 		private var _blur:BlurFilter;
-		private var _playedSound:Boolean;
 		private var _easel:Bitmap;
+		private var _fullWidth:Number;
 
 		private const HITCHCOCK_SCALE_FACTOR:Number = 0.25;
 		private const HITCHCOCK_OFFSET_FACTOR:Number = 50;
@@ -45,7 +47,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			mouseEnabled = mouseChildren = false;
 
-			_snapshot = new Bitmap( new TrackedBitmapData( 1024, 768, true, 0 ) );
+			_snapshot = new Bitmap( new TrackedBitmapData( 1024 * CoreSettings.GLOBAL_SCALING, 768 * CoreSettings.GLOBAL_SCALING, true, 0 ) );
 			addChild( _snapshot );
 
 			_easel = new EaselImage();
@@ -63,8 +65,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			_blur = new BlurFilter( 0, 0, 1 );
 			_snapshot.filters = [ _blur ];
 
-			//TODO: 1024? really? What about retina?
-			updateCanvasRect( new Rectangle( 0, 0, 1024, 768 ), 1024, false );
+			_fullWidth = 1024;
+			updateCanvasRect( new Rectangle( 0, 0, 1024 * CoreSettings.GLOBAL_SCALING, 768 * CoreSettings.GLOBAL_SCALING ) );
 		}
 
 		override protected function onSetup():void {
@@ -74,11 +76,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		public function updateSnapshot( bmd:BitmapData ):void {
+//			trace( this, "incoming snapshot: " + bmd.width + "x" + bmd.height );
 			_snapshot.bitmapData.copyPixels( bmd, bmd.rect, _zeroPoint );
 		}
 
-		private var _fullWidth:Number = 1024;
-		public function updateCanvasRect( rect:Rectangle, fullWidth:Number, manual:Boolean ):void {
+		public function updateCanvasRect( rect:Rectangle ):void {
 
 //			trace( this, "update canvas rect: " + rect );
 			// Uncomment to debug incoming canvas rect
@@ -88,9 +90,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			 this.graphics.endFill();*/
 
 			_canvasRect = rect;
-			_fullWidth = fullWidth;
 
-			var ratio:Number = _canvasRect.width / fullWidth;
+			if( CoreSettings.GLOBAL_SCALING == 2 ) {
+				_canvasRect.x /= 2;
+				_canvasRect.y /= 2;
+				_canvasRect.width /= 2;
+				_canvasRect.height /= 2;
+			}
+
+			var ratio:Number = _canvasRect.width / _fullWidth;
 
 			// Update hole size to fit the canvas.
 			_holePuncher.x = _canvasRect.x;
@@ -100,7 +108,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			// Non realistic scaling of the bg.
 			var invRatio:Number = 1 - ratio;
-			_snapshot.scaleX = _snapshot.scaleY = 1 + HITCHCOCK_SCALE_FACTOR * invRatio;
+			_snapshot.scaleX = _snapshot.scaleY =  ( 1 + HITCHCOCK_SCALE_FACTOR * invRatio ) / CoreSettings.GLOBAL_SCALING;
 			_snapshot.x = 1024 / 2 - _snapshot.width / 2;
 			_snapshot.y = 768 / 2 - _snapshot.height / 2 - HITCHCOCK_OFFSET_FACTOR * invRatio;
 
@@ -108,24 +116,16 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			_easel.scaleX = _easel.scaleY = ratio * _easelFactor;
 			_easel.x = _canvasRect.x + _canvasRect.width / 2 - _easel.width / 2;
 			_easel.y = _canvasRect.y - _easelOffset * ratio;
-
-			// Comment to mute sound!
-			if( manual && !_playedSound ) {
-//				playPsychoSound();
-				_playedSound = true;
-			}
-		}
-
-		private function playPsychoSound():void {
-			var newClipClass:Class = Class( getDefinitionByName( "psycho" ) );
-			var hh:MovieClip = new newClipClass();
-			hh.play();
 		}
 
 		public function updateBlur( ratio:Number ):void {
 			_blur.blurX = _blur.blurY = 16 * ratio;
 			_snapshot.filters = [ _blur ];
 		}
+
+		// ---------------------------------------------------------------------
+		// Code to adjust easel transform. TODO: REMOVE
+		// ---------------------------------------------------------------------
 
 		private var _shiftMultiplier:Number = 0.001;
 
@@ -161,7 +161,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 			}
-			updateCanvasRect( _canvasRect, _fullWidth, true );
+			updateCanvasRect( _canvasRect );
 			trace( this, "updating easel stuff - offset: " + _easelOffset + ", scale: " + _easelFactor );
 		}
 	}

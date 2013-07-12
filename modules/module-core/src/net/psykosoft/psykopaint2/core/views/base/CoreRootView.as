@@ -265,6 +265,14 @@ package net.psykosoft.psykopaint2.core.views.base
 			updateStats();
 		}
 
+		private var _playedSound:Boolean;
+
+		private function playPsychoSound():void {
+			var newClipClass:Class = Class( getDefinitionByName( "psycho" ) );
+			var hh:MovieClip = new newClipClass();
+			hh.play();
+		}
+
 		private function onGlobalError( event:UncaughtErrorEvent ):void {
 			_errorCount++;
 			var error:Error = event.error as Error;
@@ -276,6 +284,12 @@ package net.psykosoft.psykopaint2.core.views.base
 				var stack:String = error.getStackTrace();
 				_errorsTextField.htmlText += "<font color='#FF0000'><b>RUNTIME ERROR - " + _errorCount + "</b></font>: " + error + " - stack: " + stack + "<br>";
 				_errorsTextField.visible = true;
+			}
+
+			// Comment to mute sound!
+			if( !_playedSound ) {
+				playPsychoSound();
+				_playedSound = true;
 			}
 		}
 

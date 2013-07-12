@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.TouchSheet;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	public class CropView extends ViewBase
 	{
@@ -70,8 +71,11 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		}
 
 		public function set easelRect( value:Rectangle ):void {
-			trace( this, "easel rect retrieved: " + value );
 			_easelRect = value;
+			_easelRect.x *= CoreSettings.GLOBAL_SCALING;
+			_easelRect.y *= CoreSettings.GLOBAL_SCALING;
+			_easelRect.width *= CoreSettings.GLOBAL_SCALING;
+			_easelRect.height *= CoreSettings.GLOBAL_SCALING;
 		}
 		
 		override public function enable():void
