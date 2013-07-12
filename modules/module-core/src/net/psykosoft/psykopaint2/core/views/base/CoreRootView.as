@@ -61,6 +61,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			// Setup root layers.
 			_applicationLayer = new Sprite();
 			_applicationLayer.name = "application layer";
+			_applicationLayer.mouseEnabled = false;
 			addChild( _applicationLayer );
 			_debugLayer = new Sprite();
 			_debugLayer.name = "debug layer";
@@ -68,8 +69,9 @@ package net.psykosoft.psykopaint2.core.views.base
 			addChild( _debugLayer );
 
 			//not sure if this is bad, but it does not seem to be harmful either
-			mouseEnabled = false;
-
+			//mouseEnabled = false;
+			//moved to RootViewBase
+			
 			initSplashScreen();
 			initVersionDisplay();
 			initStats();

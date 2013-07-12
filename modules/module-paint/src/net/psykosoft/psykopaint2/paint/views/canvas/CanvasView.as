@@ -4,8 +4,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
@@ -14,18 +15,29 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _backgroundSnapshot:Bitmap;
 		private var _easelRect:Rectangle;
 		private var _canvasRect:Rectangle;
-
+	
 		// TODO: snapshot technique is probably low performing, 1st step would be to make it visible only when it should be? is it worth it?
 
 		public function CanvasView() {
 			super();
 			_easelRect = new Rectangle();
+			
+			//TODO: 1024? really? What about retina?
 			_canvasRect = new Rectangle( 0, 0, 1024, 768 );
 			_backgroundSnapshot = new Bitmap( new TrackedBitmapData( 1024, 768, true, 0 ) );
+			
 			addChild( _backgroundSnapshot );
+			this.mouseEnabled = false;
+			this.mouseChildren = false;
+			
 		}
 
 		public function updateSnapshot( bmd:BitmapData ):void {
+			_backgroundSnapshot.bitmapData.copyPixels(bmd,bmd.rect,new Point() );
+			_backgroundSnapshot.bitmapData.fillRect( _easelRect, 0 );
+			
+			//Replace this code which seemed strange
+			/*
 			var tempBmd : BitmapData = bmd.clone();
 			bmd.dispose();
 			trace( this, "update snapshot: " + tempBmd + ", rect: " + _easelRect );
@@ -33,6 +45,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// dispose the previously set bitmap data
 			_backgroundSnapshot.bitmapData.dispose();
 			_backgroundSnapshot.bitmapData = tempBmd;
+			*/
 		}
 
 		public function updateEaselRect( rect:Rectangle ):void {
