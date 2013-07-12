@@ -92,7 +92,7 @@ package net.psykosoft.psykopaint2.core
 
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS) {
 				if (_oldNumUndisposedObjects != _undisposedObjects.numObjects) {
-					trace ("Number of undefined objects changed to " + _undisposedObjects.numObjects);
+					trace ("Number of undisposed objects changed to " + _undisposedObjects.numObjects);
 					_oldNumUndisposedObjects = _undisposedObjects.numObjects;
 				}
 			}
@@ -105,15 +105,19 @@ package net.psykosoft.psykopaint2.core
 		private function onStageKeyDown( event:KeyboardEvent ):void {
 			switch( event.keyCode ) {
 				case Keyboard.M:
-				{
 					_memoryWarningNotification.dispatch();
 					break;
-				}
+				case Keyboard.F11:
+
+					_undisposedObjects.getStackTraceReport().forEach(
+							function(item:Object, index:int, vector:Vector.<Object>) : void {
+								trace("Usage count: " + item.count + "\n\n" + item.stackTrace + "\n---------------\n\n");
+							}
+					);
+					break;
 				case Keyboard.SPACE:
-				{
 					_requestNavigationToggleSignal.dispatch( 0, 0.5 );
 					break;
-				}
 			}
 		}
 

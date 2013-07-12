@@ -41,6 +41,32 @@ package net.psykosoft.psykopaint2.core.debug
 
 			throw new Error("Object not found!");
 		}
+
+		public function getStackTraceReport() : Vector.<Object>
+		{
+			var lookUp : Array = [];
+			var report : Vector.<Object> = new Vector.<Object>();
+
+			for (var i : int = 0; i < _collection.length; ++i) {
+				var data : UndisposedData = _collection[i];
+				if (!lookUp[data.allocationStackTrace]) {
+					var item : Object = { stackTrace : data.allocationStackTrace, count: 0  };
+					lookUp[data.allocationStackTrace] = item;
+					report.push(item);
+				}
+
+				++lookUp[data.allocationStackTrace].count;
+			}
+
+			report.sort(compareReportItem);
+
+			return report;
+		}
+
+		private function compareReportItem(a : Object, b : Object) : int
+		{
+			return a.count < b.count? 1 : -1;
+		}
 	}
 }
 
@@ -50,6 +76,8 @@ class UndisposedData
 	{
 		this.object = object;
 		allocationStackTrace = new Error("new()").getStackTrace();
+		var index : int = allocationStackTrace.indexOf("\n");
+		allocationStackTrace = allocationStackTrace.substr(index+1);
 	}
 
 	public var object : Object;

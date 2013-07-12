@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			trace( this, "update snapshot: " + tempBmd );
 			tempBmd.fillRect( _easelRect, 0 );
 			// dispose the previously set bitmap data
-			_backgroundSnapshot.bitmapData.dispose();
+//			_backgroundSnapshot.bitmapData.dispose();
 			_backgroundSnapshot.bitmapData = tempBmd;
 		}
 
