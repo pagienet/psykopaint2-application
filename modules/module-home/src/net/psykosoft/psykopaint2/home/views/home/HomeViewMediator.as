@@ -248,8 +248,8 @@ package net.psykosoft.psykopaint2.home.views.home
 				_waitingForFreezeSnapshot = false;
 			}
 			else if( _waitingForTransitionSnapshot ) {
-				requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.bitmapData);
 				notifyEaselRectInfoSignal.dispatch( view.easelRect );
+				requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.bitmapData);
 				setTimeout( function():void {
 					_onTransitionToPaint = true;
 					view.zoomIn();
