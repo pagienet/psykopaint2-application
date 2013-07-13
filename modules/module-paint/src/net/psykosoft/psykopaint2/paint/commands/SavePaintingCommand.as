@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
@@ -69,6 +70,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
 
+		[Inject]
+		public var notifyMemoryWarningSignal:NotifyMemoryWarningSignal;
+
 		private var _paintId:String;
 		private var _infoBytes:ByteArray;
 		private var _dataBytes:ByteArray;
@@ -89,6 +93,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			// Display pop up and wait 1 frame before starting the save process ( so the pop up is actually displayed first ).
 			requestPopUpDisplaySignal.dispatch( PopUpType.SAVING );
 			stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			notifyMemoryWarningSignal.add( onMemoryWarning );
 			context.detain( this );
 		}
 
@@ -175,6 +180,8 @@ package net.psykosoft.psykopaint2.paint.commands
 				requestEaselUpdateSignal.dispatch( _infoVO );
 			}
 
+			notifyMemoryWarningSignal.remove( onMemoryWarning );
+
 			// Remove saving pop up.
 			requestPopUpRemovalSignal.dispatch();
 
@@ -183,6 +190,12 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Release command.
 			context.release( this );
+		}
+
+		private function onMemoryWarning():void {
+			// TODO: a memory warning seems to mean that the saving process has failed, we need to check if anything was written and
+			// delete it, to avoid saving corrupted data that could cause errors on load and incorrectly use the available storage space
+			wrapItUp();
 		}
 
 		// ---------------------------------------------------------------------
