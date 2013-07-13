@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import flash.events.Event;
 	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
@@ -225,8 +226,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			else if( _waitingForTransitionSnapshot ) {
 				view.showEasel( true );
 				requestSetCanvasBackgroundSignal.dispatch( _snapshotPromise.bitmapData );
-				requestStateChange( StateType.PAINT );
 				_waitingForTransitionSnapshot = false;
+				setTimeout( function():void {
+					requestStateChange( StateType.PAINT );
+				}, 250 );
 			}
 
 			_snapshotPromise = null;

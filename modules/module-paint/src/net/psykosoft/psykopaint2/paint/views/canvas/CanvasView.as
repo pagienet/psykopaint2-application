@@ -4,18 +4,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.BlendMode;
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.KeyboardEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
-	import flash.utils.getDefinitionByName;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	public class CanvasView extends ViewBase
@@ -29,7 +26,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _canvasRect:Rectangle;
 		private var _holePuncher:Sprite; // TODO: make shape?
 		private var _zeroPoint:Point;
-		private var _blur:BlurFilter;
+//		private var _blur:BlurFilter;
 		private var _easel:Bitmap;
 		private var _fullWidth:Number;
 
@@ -62,17 +59,19 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			_holePuncher.blendMode = BlendMode.ERASE;
 			addChild( _holePuncher );
 
-			_blur = new BlurFilter( 0, 0, 1 );
-			_snapshot.filters = [ _blur ];
+//			_blur = new BlurFilter( 0, 0, 1 );
+//			_snapshot.filters = [ _blur ];
 
 			_fullWidth = 1024;
 			updateCanvasRect( new Rectangle( 0, 0, 1024 * CoreSettings.GLOBAL_SCALING, 768 * CoreSettings.GLOBAL_SCALING ) );
+
+			scrollRect = new Rectangle( 0, 0, 1024, 768 );
 		}
 
 		override protected function onSetup():void {
 			// TODO: remove on release
-			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
-			stage.addEventListener( KeyboardEvent.KEY_UP, onStageKeyUp );
+//			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
+//			stage.addEventListener( KeyboardEvent.KEY_UP, onStageKeyUp );
 		}
 
 		public function updateSnapshot( bmd:BitmapData ):void {
@@ -119,8 +118,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		public function updateBlur( ratio:Number ):void {
-			_blur.blurX = _blur.blurY = 16 * ratio;
-			_snapshot.filters = [ _blur ];
+//			_blur.blurX = _blur.blurY = 16 * ratio;
+//			_snapshot.filters = [ _blur ];
 		}
 
 		// ---------------------------------------------------------------------

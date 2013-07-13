@@ -265,13 +265,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function zoomIn():void {
 			_onZoomAnimation = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeOut } );
+			TweenLite.to( this, 2, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}
 
 		private function zoomOut():void {
 			_onZoomAnimation = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: MIN_ZOOM_SCALE, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeOut } );
+			TweenLite.to( this, 2, { zoomScale: MIN_ZOOM_SCALE, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}
 
 		private function onZoomUpdate():void {
