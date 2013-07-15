@@ -1,11 +1,15 @@
 package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 {
 	import com.greensock.easing.Circ;
+	import com.greensock.easing.CircQuad;
+	import com.greensock.easing.Cubic;
 	import com.greensock.easing.Expo;
 	import com.greensock.easing.Linear;
 	import com.greensock.easing.Quad;
 	import com.greensock.easing.Quart;
 	import com.greensock.easing.Quint;
+	import com.greensock.easing.Sine;
+	import com.greensock.easing.Strong;
 	
 	import de.popforge.math.LCG;
 	
@@ -24,6 +28,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_N_SIZE_FACTOR:String = "Size Factor";
 		public static const PARAMETER_A_ANGLE_ADJUSTMENT:String = "Angle Adjustment";
 		
+		public static const INDEX_MODE_SPEED:int = 0;
+		public static const INDEX_MODE_SIZE:int = 1;
+		public static const INDEX_MODE_PRESSURE:int = 2;
+		public static const INDEX_MODE_FIXED:int = 3;
+		
 		
 		private var minOffset:PsykoParameter;
 		private var splatFactor:PsykoParameter;
@@ -34,8 +43,19 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var angleAdjustment:PsykoParameter;
 		
 		private var rng:LCG;
-		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([Linear.easeNone,Quad.easeIn,Quad.easeInOut,Quad.easeOut, Quart.easeIn,Quart.easeInOut,Quart.easeOut, Quint.easeIn,Quint.easeInOut,Quint.easeOut,Expo.easeIn, Expo.easeInOut, Expo.easeOut, Circ.easeIn,Circ.easeInOut, Circ.easeOut ]);
 		
+		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([
+			Linear.easeNone,
+			CircQuad.easeIn,
+			Circ.easeIn,
+			Sine.easeIn,
+			Quad.easeIn, 
+			Cubic.easeIn, 
+			Quart.easeIn, 
+			Quint.easeIn,
+			Strong.easeIn,
+			Expo.easeIn
+		]);
 		/*
 			offsets the point based on its angle and speed
 			
@@ -49,7 +69,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super();
 			mappingMode  	  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Speed","Size", "Pressure", "Fixed"]);
-			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_OFFSET_MAPPING,1,["Linear","Quadratic In","Quadratic InOut","Quadratic Out","Quartic In","Quartic InOut","Quartic Out","Quintic In","Quintic InOut","Quintic Out","Expo In","Expo InOut","Expo Out","Circular In","Circular InOut","Circular Out"]);
+			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_OFFSET_MAPPING,1,["Linear",
+				"CircQuad",
+				"Circular",
+				"Sine",
+				"Quadratic",
+				"Cubic",
+				"Quartic",
+				"Quintic",
+				"Strong",
+				"Expo"]);
 			
 			splatFactor  	  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SPLAT_FACTOR,2,0,500);
 			minOffset   	  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MINIMUM_OFFSET,2,0,64);
@@ -69,6 +98,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var mf:Function = mappingFunctions[mappingFunction.index];
 			var oar:Number = offsetAngleRange.numberValue;
 			var aaj:Number = angleAdjustment.numberValue;
+			var sf:Number = sizeFactor.numberValue;
+			var bar:Number = manager.brushAngleRange;
+			var spf:Number = splatFactor.numberValue;
+			var mo:Number =  minOffset.numberValue;
 			
 			for ( var i:int = 0; i < points.length; i++ )
 			{
@@ -76,11 +109,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				var angle:Number = point.angle + aaj + rng.getNumber(-oar,oar) + (rng.getChance() ? pi2 : pi3);
 				var offset:Number =  rng.getMappedNumber(0, 1, mf );
 				
-				var distance:Number =  minOffset.numberValue + splatFactor.numberValue * offset * [point.speed, point.size, point.pressure / 2000, 1][mapIndex]; 
+				var distance:Number =  mo + spf * offset * [point.speed / 25, point.size, point.pressure / 2000, 1][mapIndex]; 
 				point.x  +=  Math.cos(angle) * distance;
 				point.y  +=  Math.sin(angle) * distance;
-				point.size *=  1 - Math.min(1,sizeFactor.numberValue *  offset) ; 
-				point.angle += rng.getNumber(-manager.brushAngleRange,manager.brushAngleRange);
+				point.size *=  1 - Math.min(1,sf * offset) ; 
+				point.angle += rng.getNumber(-bar,bar);
 			}
 			return points;
 		}

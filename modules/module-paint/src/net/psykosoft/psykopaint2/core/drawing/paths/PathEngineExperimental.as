@@ -38,10 +38,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			
 			var speedSmoothingFactor:Number = _speedSmoothing.numberValue;
 			
-			
+			var first:Boolean = false;
 			if ( p1 == null )
 			{
 				p1 = sampledPoints[0];
+				first = p1.first;
 				c = sampledPoints[1];
 				p2 = sampledPoints[2];
 				var p1x:Number = p1.x;
@@ -159,7 +160,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				
 			}
 			
-			
+			if ( first && result.length > 0 )
+			{
+				result[0].first = true;
+			}
 		}
 		
 		/*

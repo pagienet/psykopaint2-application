@@ -3,11 +3,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import com.bit101.components.ComboBox;
 	import com.bit101.components.Knob;
-
+	
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.text.TextField;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
+	import net.psykosoft.psykopaint2.core.views.components.colormixer.SbColormixer;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
 	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
@@ -209,8 +210,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				positionUiElement( checkBox );
 				addChild( checkBox );
 				_uiElements.push( checkBox );
+			} else if( parameterType == PsykoParameter.ColorParameter ) {
+			
+				var colorMixer:SbColormixer = new SbColormixer();
+				positionUiElement( colorMixer );
+				addChild( colorMixer );
+				_uiElements.push( colorMixer );
 			}
-
 			// No Ui component for this parameter.
 			else {
 				trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
@@ -236,8 +242,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				else if( uiElement is ComboBox ) {
 					uiElement.removeEventListener( Event.SELECT, onComboBoxChanged );
 				}
-				else if( uiElement is SbCheckBox ) uiElement.addEventListener( Event.CHANGE, onCheckBoxChanged );
-				else if( uiElement is Knob ) uiElement.addEventListener( Event.CHANGE, onKnobChanged );
+				else if( uiElement is SbCheckBox ) uiElement.removeEventListener( Event.CHANGE, onCheckBoxChanged );
+				else if( uiElement is Knob ) uiElement.removeEventListener( Event.CHANGE, onKnobChanged );
 				else {
 					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
 				}

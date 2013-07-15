@@ -13,7 +13,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	final public class ColorDecorator extends AbstractPointDecorator
 	{
 		public static const PARAMETER_SL_COLOR_MODE:String = "Color Mode";
-		public static const PARAMETER_IL_COLOR:String = "Color";
+		public static const PARAMETER_IL_COLOR_SWATCH:String = "Color Swatch";
+		public static const PARAMETER_C_COLOR:String = "Color";
 		public static const PARAMETER_N_SATURATION:String = "Saturation";
 		public static const PARAMETER_A_HUE:String = "Hue";
 		public static const PARAMETER_N_BRIGHTNESS:String = "Brightness";
@@ -35,6 +36,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var brushOpacity:PsykoParameter;
 		private var pickRadius:PsykoParameter;
 		private var smoothFactor:PsykoParameter;
+		private var color:PsykoParameter;
 		
 		private var cm:ColorMatrix;
 		private const lastRGBA:Vector.<Number> = new Vector.<Number>(16,true);
@@ -44,7 +46,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super();
 			colorMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_COLOR_MODE,0,["Pick Color","Fixed Color"] );
-			presetColor = new PsykoParameter( PsykoParameter.IntListParameter,PARAMETER_IL_COLOR,0,[0x000000,0xffffff,0x808080,0xc00000]);
+			presetColor = new PsykoParameter( PsykoParameter.IntListParameter,PARAMETER_IL_COLOR_SWATCH,0,[0x000000,0xffffff,0x808080,0xc00000]);
 			saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SATURATION,1,-3, 3);
 			hueAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_HUE,0,-180, 180);
 			brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_BRIGHTNESS,0,-255, 255);
@@ -52,9 +54,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			brushOpacity  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_OPACITY,0.9,0.9,0,1);
 			pickRadius  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_PICK_RADIUS,1,1,0,1);
 			smoothFactor  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_SMOOTH_FACTOR,1,1,0,1);
+			color  = new PsykoParameter( PsykoParameter.ColorParameter,PARAMETER_C_COLOR,0x000000);
 			
 			
-			_parameters.push(colorMode, presetColor, saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,pickRadius,smoothFactor);
+			_parameters.push(colorMode, presetColor, saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,pickRadius,smoothFactor,color);
 			cm = new ColorMatrix();
 		}
 		
@@ -135,28 +138,28 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				} else {
 					var alpha:Number = brushOpacity.randomValue;
 					var blend:Number = colorBlending.randomValue;
-					lrgba[0] += (prgba[0] * alpha - lrgba[0] )  * blend ;
+					lrgba[0] += (prgba[0] * alpha - lrgba[0] ) * blend ;
 					lrgba[1] += (prgba[1] * alpha - lrgba[1] ) * blend ;
 					lrgba[2] += (prgba[2] * alpha - lrgba[2] ) * blend ;
 					lrgba[3] += (alpha - lrgba[3]) * blend ;
 					
 					alpha = brushOpacity.randomValue;
 					blend = colorBlending.randomValue;
-					lrgba[4] += (prgba[4] * alpha - lrgba[4] )  * blend ;
+					lrgba[4] += (prgba[4] * alpha - lrgba[4] ) * blend ;
 					lrgba[5] += (prgba[5] * alpha - lrgba[5] ) * blend ;
 					lrgba[6] += (prgba[6] * alpha - lrgba[6] ) * blend ;
 					lrgba[7] += (alpha - lrgba[7]) * blend ;
 					
 					alpha = brushOpacity.randomValue;
 					blend = colorBlending.randomValue;
-					lrgba[8] += (prgba[8] * alpha - lrgba[8] )  * blend ;
+					lrgba[8] += (prgba[8] * alpha - lrgba[8] ) * blend ;
 					lrgba[9] += (prgba[9] * alpha - lrgba[9] ) * blend ;
 					lrgba[10] += (prgba[10] * alpha - lrgba[10] ) * blend ;
 					lrgba[11] += (alpha - lrgba[11]) * blend ;
 					
 					alpha = brushOpacity.randomValue;
 					blend = colorBlending.randomValue;
-					lrgba[12] += (prgba[12] * alpha - lrgba[12] )  * blend ;
+					lrgba[12] += (prgba[12] * alpha - lrgba[12] ) * blend ;
 					lrgba[13] += (prgba[13] * alpha - lrgba[13] ) * blend ;
 					lrgba[14] += (prgba[14] * alpha - lrgba[14] ) * blend ;
 					lrgba[15] += (alpha - lrgba[15]) * blend ;

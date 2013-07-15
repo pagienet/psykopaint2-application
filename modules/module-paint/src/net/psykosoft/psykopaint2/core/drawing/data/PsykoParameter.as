@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		public static const AngleParameter:int = 10; // angle control TODO: minimalcomps for now, implement real knob
 		public static const AngleRangeParameter:int = 11; // double angle control TODO: using range slider for now
 		public static const IconListParameter:int = 12; // works like a stringlist, but the type allows the view to pick a separate selection component
+		public static const ColorParameter:int = 13; // experimental type for color mixer component
 		
 		
 		public static function getTypeName( type:int ):String {
@@ -35,6 +36,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case AngleParameter: return "AngleParameter";
 				case AngleRangeParameter: return "AngleRangeParameter";
 				case IconListParameter: return "IconListParameter";
+				case ColorParameter: return "ColorParameter";
 			}
 			return "unrecognized - have a look in PsykoParameter.as";
 		}

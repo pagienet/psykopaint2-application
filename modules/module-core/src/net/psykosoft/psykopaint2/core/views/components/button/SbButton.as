@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 		public function setIconType( type:String ):void {
 			//todo: add shape icon, temporary patch added to avoid error:
-			if ( type == "param12" ) type = "param7";
+			if ( type == "param12" ||  type == "param13" ) type = "param7";
 			icon.gotoAndStop( type );
 			icon.x = -icon.width / 2;
 			icon.y = -icon.height / 2;
