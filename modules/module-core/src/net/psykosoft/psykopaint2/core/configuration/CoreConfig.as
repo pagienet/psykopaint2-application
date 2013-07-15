@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestCameraAdjustToRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
@@ -162,6 +163,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestPopUpDisplaySignal ).asSingleton();
 			_injector.map( RequestPopUpRemovalSignal ).asSingleton();
 			_injector.map( RequestSetCanvasBackgroundSignal ).asSingleton();
+			_injector.map( RequestCameraAdjustToRectSignal ).asSingleton();
 		}
 
 		// -----------------------

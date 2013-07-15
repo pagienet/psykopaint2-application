@@ -18,7 +18,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedBitmapData;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -26,10 +25,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestCameraAdjustToRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
@@ -87,6 +86,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var canvasModel:CanvasModel;
 
+		[Inject]
+		public var requestCameraAdjustToRectSignal:RequestCameraAdjustToRectSignal;
+
 		private var _transformMatrix:Matrix;
 
 		override public function initialize():void {
@@ -116,7 +118,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			_transformMatrix = new Matrix();
 		}
-
 
 		// -----------------------
 		// From app.
@@ -221,7 +222,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// -----------------------
 
 		private var _waitingForZoomOutToContinueToHome:Boolean;
-		private var _onZoomAnimation:Boolean;
 
 		private const MIN_ZOOM_SCALE:Number = 0.482;
 		private const MAX_ZOOM_SCALE:Number = 4;
@@ -229,13 +229,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var zoomScale:Number = MIN_ZOOM_SCALE;
 
 		private function zoomIn():void {
-			_onZoomAnimation = true;
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 2, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}
 
 		private function zoomOut():void {
-			_onZoomAnimation = true;
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 2, { zoomScale: MIN_ZOOM_SCALE, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}
@@ -248,7 +246,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function onZoomComplete():void {
-			_onZoomAnimation = false;
 			if( _waitingForZoomOutToContinueToHome ) {
 			    requestStateChange( StateType.HOME_ON_EASEL );
 				_waitingForZoomOutToContinueToHome = false;
@@ -261,7 +258,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function updateCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
-			// TODO: ask for a camera position change on 3d view
+			requestCameraAdjustToRectSignal.dispatch( rect );
 			renderer.renderRect = rect;
 		}
 
@@ -289,11 +286,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 
 			// TODO: Doesn't feel good while animating - should we use a flag here and enable it when not animating?
-			if( !_onZoomAnimation && scale > 0.95 && scale < 1.05 ) {
+			/*if( scale > 0.95 && scale < 1.05 ) {
 				scale = 1;
 				offsetX = 0;
 				offsetY = 0;
-			}
+			}*/
 
 			zoomScale = scale;
 

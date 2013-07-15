@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 
 	import away3d.arcane;
+	import away3d.cameras.Camera3D;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
@@ -64,10 +65,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			_scrollCameraController = new HScrollCameraController();
 			_zoomCameraController = new ZoomCameraController();
 			initializeBundledAssets( HOME_BUNDLE_ID );
-		}
-
-		public function showEasel( show:Boolean ):void {
-			_paintingManager.easel.visible = show;
 		}
 
 		public function freeze( bmd:BitmapData ):void {
@@ -408,6 +405,28 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function get frozen():Boolean {
 			return _frozen;
+		}
+
+		public function get camera():Camera3D {
+			return _view.camera;
+		}
+
+		public function adjustCameraToFitEaselAtRect( value:Rectangle ):void {
+			// TODO: account for panning
+			// TODO: account for retina
+			// TODO: properly calculate z value
+			var widthRatio:Number = value.width / 1024;
+			trace( "adjust cam ---------------" );
+			trace( "zoom to fit: " + _zoomToFitEasel.z );
+			trace( "ratio: " + widthRatio );
+			var targetZ:Number = _zoomToFitEasel.z / widthRatio;
+			trace( "targetZ: " + targetZ );
+			_zoomCameraController.setYZ( _view.camera.y, targetZ );
+		}
+
+		private var _zoomToFitEasel:Vector3D;
+		public function rememberZoomToFitEasel():void {
+			_zoomToFitEasel = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( _paintingManager.easel.painting, _view, 1 );
 		}
 	}
 }

@@ -8,21 +8,24 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 		public static var _preRenderingSteps:Vector.<Function>;
 		public static var _postRenderingSteps:Vector.<Function>;
 
-		static public function addRenderingStep( step:Function, type:uint ):void {
+		static public function addRenderingStep( step:Function, type:uint, index:int = -1 ):void {
 			switch( type ) {
 				case GpuRenderingStepType.NORMAL: {
 					if( !_renderingSteps ) _renderingSteps = new Vector.<Function>();
-					_renderingSteps.push( step );
+					if( index == -1 ) _renderingSteps.push( step );
+					else _renderingSteps.splice( index, 0, step );
 					break;
 				}
 				case GpuRenderingStepType.PRE_CLEAR: {
 					if( !_preRenderingSteps ) _preRenderingSteps = new Vector.<Function>();
-					_preRenderingSteps.push( step );
+					if( index == -1 ) _preRenderingSteps.push( step );
+					else _preRenderingSteps.splice( index, 0, step );
 					break;
 				}
 				case GpuRenderingStepType.POST_PRESENT: {
 					if( !_postRenderingSteps ) _postRenderingSteps = new Vector.<Function>();
-					_postRenderingSteps.push( step );
+					if( index == -1 ) _postRenderingSteps.push( step );
+					else _postRenderingSteps.splice( index, 0, step );
 					break;
 				}
 			}
