@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
@@ -27,8 +28,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
-	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
-	import net.psykosoft.psykopaint2.home.views.home.objects.FramedPainting;
+	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
+	import net.psykosoft.psykopaint2.home.views.home.camera.ZoomCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.objects.GalleryPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
 	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
@@ -39,7 +40,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	public class HomeView extends ViewBase
 	{
-		private var _cameraController:ScrollCameraController;
+		private var _scrollCameraController:HScrollCameraController;
+		private var _zoomCameraController:ZoomCameraController;
 		private var _room:Room;
 		private var _paintingManager:PaintingManager;
 		private var _loader:AssetBundleLoader;
@@ -60,7 +62,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function HomeView() {
 			super();
 			scalesToRetina = false;
-			_cameraController = new ScrollCameraController();
+			_scrollCameraController = new HScrollCameraController();
+			_zoomCameraController = new ZoomCameraController();
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
 
@@ -131,13 +134,13 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function enable3d():void {
 			if( _isEnabled3d ) return;
-			_cameraController.isEnabled = true;
+			_scrollCameraController.isEnabled = true;
 			_isEnabled3d = true;
 		}
 
 		private function disable3d():void {
 			if( !_isEnabled3d ) return;
-			_cameraController.isEnabled = false;
+			_scrollCameraController.isEnabled = false;
 			_isEnabled3d = false;
 		}
 
@@ -196,15 +199,20 @@ package net.psykosoft.psykopaint2.home.views.home
 			_light.ambientColor = 0x808088;
 			_lightPicker = new StaticLightPicker([_light]);
 			_room = new Room( _view, _stage3dProxy );
+
 			var cameraTarget:Object3D = new Object3D();
-			_cameraController.setCamera( _view.camera, cameraTarget );
-			_cameraController.stage = stage;
-			_paintingManager = new PaintingManager( _cameraController, _room, _view, _lightPicker, _stage3dProxy );
+			_scrollCameraController.setCamera( _view.camera, cameraTarget );
+			_zoomCameraController.setCamera( _view.camera, cameraTarget );
+			_zoomCameraController.yzChangedSignal.add( onZoomControllerChange );
+			_scrollCameraController.stage = stage;
+			_view.camera.z = HomeSettings.DEFAULT_CAMERA_Z;
+
+			_paintingManager = new PaintingManager( _scrollCameraController, _room, _view, _lightPicker, _stage3dProxy );
 			_paintingManager.y = 400;
-			_cameraController.interactionSurfaceZ = _room.wallZ;
+			_scrollCameraController.interactionSurfaceZ = _room.wallZ;
 			_paintingManager.z = _room.wallZ - 2;
 			cameraTarget.z = _room.wallZ;
-			_mainScene.addChild( _cameraController );
+			_mainScene.addChild( _scrollCameraController );
 			_mainScene.addChild( _room );
 			_mainScene.addChild( _paintingManager );
 			_mainScene.addChild( _light );
@@ -217,7 +225,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
 
 			// Default paintings.
-			registerBundledAsset( "/home-packaged/away3d/paintings/HomeScreen.png", "homePainting" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/homepainting.png", "homePainting" );
+			registerBundledAsset( "/home-packaged/away3d/frames/homeScreenFrame.png", "homePaintingFrame" );
 			registerBundledAsset( "/home-packaged/away3d/paintings/settings.png", "settingsPainting" );
 			// Other room stuff.
 			registerBundledAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", true );
@@ -235,22 +244,26 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerBundledAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", true );
 		}
 
+		private function onZoomControllerChange():void {
+			_scrollCameraController.dirtyZ();
+		}
+
 		override protected function onAssetsReady():void {
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
 			_paintingManager.createDefaultPaintings();
 
-			// Start docked at home painting.
-			_cameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
-//			dockAtCurrentPainting(); // TODO: dock at painting and zoom out
+			// Start docked at home painting and zoom out.
+			_scrollCameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
+			dockAtCurrentPainting();
+			_zoomCameraController.animateToYZ( 0, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
 		}
 
 		private function dockAtCurrentPainting():void {
-			trace( this, "docking at current painting ----------" );
-			var framedPainting:GalleryPainting = _paintingManager.getPaintingAtIndex( _cameraController.positionManager.closestSnapPointIndex );
+			var framedPainting:GalleryPainting = _paintingManager.getPaintingAtIndex( _scrollCameraController.positionManager.closestSnapPointIndex );
 			var plane:Mesh = framedPainting.painting;
 			var pos:Vector3D = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( plane, _view, 768 / 1024 );
-			_cameraController.dock( pos.y, pos.z );
+			_zoomCameraController.setYZ( pos.y, pos.z );
 		}
 
 		override protected function onDisposed():void {
@@ -283,9 +296,9 @@ package net.psykosoft.psykopaint2.home.views.home
 				_paintingManager = null;
 			}
 
-			if( _cameraController ) {
-				_cameraController.dispose();
-				_cameraController = null;
+			if( _scrollCameraController ) {
+				_scrollCameraController.dispose();
+				_scrollCameraController = null;
 			}
 
 			if( _view ) {
@@ -308,8 +321,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _room;
 		}
 
-		public function get cameraController():ScrollCameraController {
-			return _cameraController;
+		public function get scrollCameraController():HScrollCameraController {
+			return _scrollCameraController;
 		}
 
 		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
@@ -318,7 +331,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		public function getCurrentPaintingIndex():uint {
-			return _cameraController.positionManager.closestSnapPointIndex;
+			return _scrollCameraController.positionManager.closestSnapPointIndex;
 		}
 
 		public function renderScene():void {
@@ -329,8 +342,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "rendering 3d" );
 			}
-			_cameraController.update();
+			_scrollCameraController.update();
 			_view.render();
+		}
+
+		public function get zoomCameraController():ZoomCameraController {
+			return _zoomCameraController;
 		}
 
 		// ---------------------------------------------------------------------

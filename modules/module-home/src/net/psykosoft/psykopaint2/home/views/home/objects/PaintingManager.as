@@ -13,12 +13,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
-	import net.psykosoft.psykopaint2.home.views.home.controller.ScrollCameraController;
+	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
 
 	public class PaintingManager extends ObjectContainer3D
 	{
 		private var _paintings:Vector.<GalleryPainting>;
-		private var _cameraController:ScrollCameraController;
+		private var _cameraController:HScrollCameraController;
 		private var _room:Room;
 		private var _view:View3D;
 		private var _snapPointForPainting:Dictionary;
@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private const FRAME_GAP:Number = 300;
 
-		public function PaintingManager( cameraController:ScrollCameraController, room:Room, view:View3D, lightPicker:LightPickerBase, stage3dProxy:Stage3DProxy ) {
+		public function PaintingManager( cameraController:HScrollCameraController, room:Room, view:View3D, lightPicker:LightPickerBase, stage3dProxy:Stage3DProxy ) {
 			super();
 			_cameraController = cameraController;
 			_room = room;
@@ -71,7 +71,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		public function createDefaultPaintings():void {
 
 			// Settings painting.
-			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ), null, 0, 1.5 );
+			createPaintingAtIndex(
+					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ),
+					null,
+					0, 1.5 );
 
 			// Easel.
 			addPaintingAt(1, _easel);
@@ -82,7 +85,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_easel.y -= 150;
 
 			// Home painting.
-			createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ), null, 2, 1.5 );
+			createPaintingAtIndex(
+					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ),
+					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePaintingFrame", true ),
+					2, 1.5 );
 			homePaintingIndex = 2;
 
 			// Sample paintings. // TODO: remove when we are ready to show published paintings

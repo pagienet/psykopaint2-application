@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.home.views.home.controller
+package net.psykosoft.psykopaint2.home.views.home.camera
 {
 
 	import away3d.arcane;
@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 	use namespace arcane;
 
-	public class ScrollCameraController extends ObjectContainer3D
+	public class HScrollCameraController extends ObjectContainer3D
 	{
 		private var _interactionManager:ScrollInteractionManager;
 		private var _positionManager:SnapPositionManager;
@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 
 		private const TARGET_EASE_FACTOR:Number = 0.5;
 
-		public function ScrollCameraController() {
+		public function HScrollCameraController() {
 
 			super();
 
@@ -61,7 +61,6 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 		public function setCamera( camera:Camera3D, cameraTarget:Object3D ):void {
 			_camera = camera;
 			_cameraTarget = cameraTarget;
-			dock( 0, -1750 );
 		}
 
 		public function set stage( value:Stage ):void {
@@ -83,32 +82,7 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			super.dispose();
 		}
 
-		public function offsetY( offY:Number ):void {
-			_camera.y += offY;
-			_cameraTarget.y = _camera.y;
-			_perspectiveFactorDirty = true;
-		}
-
-		public function offsetZ( offZ:Number ):void {
-			_camera.z += offZ;
-			_perspectiveFactorDirty = true;
-		}
-
-		public function adjustY( posY:Number ):void {
-			_camera.y = posY;
-			_cameraTarget.y = _camera.y;
-			_perspectiveFactorDirty = true;
-		}
-
-		public function adjustZ( posZ:Number ):void {
-			_camera.z = posZ;
-			_perspectiveFactorDirty = true;
-		}
-
-		public function dock( posY:Number, posZ:Number ):void {
-			_camera.y = posY;
-			_cameraTarget.y = _camera.y;
-			_camera.z = posZ;
+		public function dirtyZ():void {
 			_perspectiveFactorDirty = true;
 		}
 
@@ -120,10 +94,6 @@ package net.psykosoft.psykopaint2.home.views.home.controller
 			_cameraTarget.z = value;
 			_perspectiveFactorDirty = true;
 		}
-
-		/*public function addSnapPoint( value:Number ):void {
-			_positionManager.addSnapPoint( value );
-		}*/
 
 		public function jumpToSnapPointIndex( value:uint ):void {
 			_positionManager.snapAtIndexWithoutEasing( value );

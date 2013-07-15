@@ -115,7 +115,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// From view.
 			view.setupSignal.add( onViewSetup );
 			view.assetsReadySignal.add( onViewAssetsReady );
-			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
+			view.scrollCameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
 		}
 
 		private function registerFreezingState( stateName:String ):void {
@@ -152,7 +152,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onNavigationToggled( shown:Boolean ):void {
-			view.cameraController.limitInteractionToUpperPartOfTheScreen( shown );
+			view.scrollCameraController.limitInteractionToUpperPartOfTheScreen( shown );
 			// TODO: will the navigation be hidable in home?
 			/*if( !view.visible ) {
 			 var p:Point = shown ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
@@ -164,10 +164,10 @@ package net.psykosoft.psykopaint2.home.views.home
 //			trace( this, "onGlobalGesture: " + gestureType );
 			if( !view.visible ) return;
 			if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN || gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
-				view.cameraController.startPanInteraction();
+				view.scrollCameraController.startPanInteraction();
 			}
 			else if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_ENDED || gestureType == GestureType.VERTICAL_PAN_GESTURE_ENDED ) {
-				view.cameraController.endPanInteraction();
+				view.scrollCameraController.endPanInteraction();
 			}
 		}
 
