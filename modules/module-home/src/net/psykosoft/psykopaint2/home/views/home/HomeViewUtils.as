@@ -4,10 +4,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.bounds.AxisAlignedBoundingBox;
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
-	import away3d.materials.ColorMaterial;
-	import away3d.primitives.SphereGeometry;
 
-	import flash.display.Sprite;
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
@@ -31,15 +28,22 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public static function ensurePlaneFitsViewport( plane:Mesh, view:View3D ):void {
 
-//			trace( this, "fitting plane to viewport..." );
+//			trace( "HomeViewUtils - fitting plane to viewport..." );
 
 			// Use a ray to determine the target width of the plane.
 			var rayPosition:Vector3D = view.camera.unproject( 0, 0, 0 );
 			var rayDirection:Vector3D = view.camera.unproject( 1, 0, 1 );
 			rayDirection = rayDirection.subtract( rayPosition );
 			rayDirection.normalize();
-			var t:Number = -( -rayPosition.z + plane.z ) / -rayDirection.z; // Typical ray-plane intersection calculation ( simplified because of zero's ).
-			var targetPlaneHalfWidth:Number = rayPosition.x + t * rayDirection.x;
+			// Typical ray-plane intersection calculation.
+			var planeNormal:Vector3D = new Vector3D( 0, 0, -1 );
+			var ns:Number = planeNormal.dotProduct( rayPosition );
+			var planePosition:Vector3D = plane.position;
+			var d:Number = -planeNormal.dotProduct( planePosition );
+			var nv:Number = planeNormal.dotProduct( rayDirection );
+			var t:Number = -( ns + d ) / nv;
+			// Half width of collision is target half width of the plane.
+			var targetPlaneHalfWidth:Number = rayPosition.x + t * rayDirection.x - view.camera.x;
 //			trace( "targetPlaneHalfWidth: " + targetPlaneHalfWidth );
 
 			// Scale the plane so that it fits.

@@ -56,13 +56,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestStateUpdateFromModuleActivationSignal:RequestStateUpdateFromModuleActivationSignal;
-		/*
-		 [Inject]
-		 public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
 
-		 [Inject]
-		 public var notifyNavigationMovingSignal:NotifyNavigationMovingSignal;
-		 */
 		[Inject]
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
 
@@ -86,9 +80,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestUndoSignal:RequestUndoSignal;
-
-		[Inject]
-		public var requestSetCanvasBackgroundSignal:RequestSetCanvasBackgroundSignal;
 
 		[Inject]
 		public var stage3D:Stage3D;
@@ -120,25 +111,16 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyModuleActivatedSignal.add( onDrawingCoreModuleActivated );
 
 			// From app.
-			//notifyNavigationToggledSignal.add( onNavigationToggled );
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
-			//notifyNavigationMovingSignal.add( onNavigationMoving );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
-			requestSetCanvasBackgroundSignal.add( onSetBackgroundRequest );
 
 			_transformMatrix = new Matrix();
-
-			//TODO: this is for desktop testing - remove in final version
 		}
 
 
 		// -----------------------
 		// From app.
 		// -----------------------
-
-		private function onSetBackgroundRequest( bmd:RefCountedBitmapData ):void {
-			view.updateSnapshot( bmd );
-		}
 
 		//TODO: this is for desktop testing - remove in final version
 		private function onMouseWheel( event:MouseEvent ):void {
@@ -211,22 +193,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 		}
 
-		/*
-		 private function onNavigationMoving( ratio:Number ):void {
-		 if( !view.visible ) return;
-		 requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight * ( 1 - .24 * ( 1 - ratio ) ) ) );
-		 }
-
-		 private function onNavigationToggled( navVisible:Boolean ):void {
-		 if( navVisible ) {
-		 requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight * .76 ) );
-		 }
-		 else {
-		 requestChangeRenderRectSignal.dispatch( new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight ) );
-		 }
-		 }
-		 */
-
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
 
@@ -295,13 +261,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function updateCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
-			view.updateBlur( ( rect.width / canvasModel.width - MIN_ZOOM_SCALE ) / ( 1 - MIN_ZOOM_SCALE ) );
-			view.updateCanvasRect( rect );
-			// TODO: review this hack
-			rect.x *= CoreSettings.GLOBAL_SCALING;
-			rect.y *= CoreSettings.GLOBAL_SCALING;
-			rect.width *= CoreSettings.GLOBAL_SCALING;
-			rect.height *= CoreSettings.GLOBAL_SCALING;
+			// TODO: ask for a camera position change on 3d view
 			renderer.renderRect = rect;
 		}
 

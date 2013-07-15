@@ -55,7 +55,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _freezeScene:ObjectContainer3D;
 		private var _freezePlane:Mesh;
 		private var _frozen:Boolean;
-		private var _freezeCameraTransformCache:Matrix3D;
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
 
@@ -83,8 +82,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			renderScene(); // TODO: needed?
 			_freezePlane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( bmd, _stage3dProxy );
 			_freezePlane.rotationX = -90;
-			_freezeCameraTransformCache = _view.camera.transform.clone();
-			_view.camera.transform = new Matrix3D();
+			_freezePlane.x = _view.camera.x;
+			_freezePlane.y = _view.camera.y;
 			_freezePlane.z = 10000;
 			_freezeScene.addChild( _freezePlane );
 			HomeViewUtils.ensurePlaneFitsViewport( _freezePlane, _view );
@@ -95,6 +94,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			if( !_frozen ) return;
 			trace( this, "unFreeze()" );
 			if( _freezePlane ) {
+
 				if( _freezeScene.contains( _freezePlane ) ) {
 					_freezeScene.removeChild( _freezePlane );
 				}
@@ -110,7 +110,6 @@ package net.psykosoft.psykopaint2.home.views.home
 				_freezePlane.dispose();
 				_freezePlane = null;
 			}
-			_view.camera.transform = _freezeCameraTransformCache;
 			selectScene( _mainScene );
 			enable3d();
 			_frozen = false;
@@ -403,9 +402,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		public function get easelRect():Rectangle {
-			if( _frozen ) _view.camera.transform = _freezeCameraTransformCache;
 			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( _paintingManager.easel.painting, _view, 1 );
-			if( _frozen ) _view.camera.transform = new Matrix3D();
 			return rect;
 		}
 
