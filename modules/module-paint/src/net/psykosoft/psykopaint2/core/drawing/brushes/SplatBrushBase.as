@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
 
@@ -12,7 +13,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			super(drawNormalsOrSpecular);
 			//I think this should rather be parameters. Right now this affect all brushes when changed so tread carefully:
-			_maxBrushRenderSize = 256;
+			_maxBrushRenderSize = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 256 : 128;
 			_minBrushRenderSize = 1;
 		}
 

@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			registerDecorator( PointDecoratorType.SIZE, SizeDecorator );
 			registerDecorator( PointDecoratorType.ORDER, OrderDecorator );
 			registerDecorator( PointDecoratorType.BUMP, BumpDecorator );
+			registerDecorator( PointDecoratorType.LIMIT, LimiterDecorator );
 			
 			_initialized = true;
 			if ( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION )

@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	import de.popforge.math.LCG;
 	
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
@@ -99,7 +100,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			appendVO.uvBounds.y = int(rng.getNumber(0, shapeVariations[1])) * shapeVariations[3];
 			//appendVO.x = point.normalX;
 			//appendVO.y = point.normalY;
-			appendVO.size = rsize * _canvasScaleW;
+			appendVO.size = rsize * _canvasScaleW; 
 			//appendVO.rotation = point.angle;
 			appendVO.point = point;
 			_brushMesh.append(appendVO);

@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ConditionalDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.LimiterDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.OrderDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
@@ -37,7 +38,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							target="pathengine.pointdecorator_0.Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="1"
-							value1="0.05" value2="0.3"/>
+							value1="0.05" value2="0.8"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Brush Style" 
 							target="pathengine.pointdecorator_0.Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
@@ -73,6 +74,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_3" value="1" />
 							<parameter id={BumpDecorator.PARAMETER_NR_BUMPYNESS} path="pathengine.pointdecorator_3" value1="0" value2="1" minValue="0" maxValue="1" showInUI="1" />
 						</BumpDecorator>
+						
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.SPRAY_CAN} name="Paint Brush">
