@@ -26,6 +26,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			return rect;
 		}
 
+		public static function getWorldSpaceCenter( plane:Mesh ):Vector3D {
+			return plane.sceneTransform.transformVector( plane.position );
+		}
+
 		public static function ensurePlaneFitsViewport( plane:Mesh, view:View3D ):void {
 
 //			trace( "HomeViewUtils - fitting plane to viewport..." );

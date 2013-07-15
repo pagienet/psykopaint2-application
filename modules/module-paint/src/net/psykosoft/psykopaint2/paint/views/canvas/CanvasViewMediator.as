@@ -22,6 +22,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
@@ -89,7 +90,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestCameraAdjustToRectSignal:RequestCameraAdjustToRectSignal;
 
+		[Inject]
+		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
+
 		private var _transformMatrix:Matrix;
+		private var _incomingEaselRect:Rectangle;
 
 		override public function initialize():void {
 
@@ -113,6 +118,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyModuleActivatedSignal.add( onDrawingCoreModuleActivated );
 
 			// From app.
+			notifyEaselRectInfoSignal.add( onEaselRectInfo );
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 
@@ -122,6 +128,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onEaselRectInfo( rect:Rectangle ):void {
+			_incomingEaselRect = rect;
+		}
 
 		//TODO: this is for desktop testing - remove in final version
 		private function onMouseWheel( event:MouseEvent ):void {
@@ -229,6 +239,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var zoomScale:Number = MIN_ZOOM_SCALE;
 
 		private function zoomIn():void {
+//			updateCanvasRect( _incomingEaselRect.clone() );
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 2, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}

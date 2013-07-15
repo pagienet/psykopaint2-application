@@ -2,7 +2,9 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 
 	import away3d.arcane;
+	import away3d.bounds.AxisAlignedBoundingBox;
 	import away3d.cameras.Camera3D;
+	import away3d.cameras.lenses.PerspectiveLens;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
@@ -28,6 +30,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.camera.ZoomCameraController;
@@ -81,7 +84,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_freezePlane.rotationX = -90;
 			_freezePlane.x = _view.camera.x;
 			_freezePlane.y = _view.camera.y;
-			_freezePlane.z = 10000;
+			_freezePlane.z = HomeViewUtils.getWorldSpaceCenter( _paintingManager.easel.painting ).z;
+			_freezeScene.visible = false;
 			_freezeScene.addChild( _freezePlane );
 			HomeViewUtils.ensurePlaneFitsViewport( _freezePlane, _view );
 			_frozen = true;
@@ -398,11 +402,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			_paintingManager.setEaselContent( data );
 		}
 
-		public function get easelRect():Rectangle {
-			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( _paintingManager.easel.painting, _view, 1 );
-			return rect;
-		}
-
 		public function get frozen():Boolean {
 			return _frozen;
 		}
@@ -411,22 +410,38 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _view.camera;
 		}
 
-		public function adjustCameraToFitEaselAtRect( value:Rectangle ):void {
+		public function adjustCameraToFitEaselAtRect( rect:Rectangle ):void {
 			// TODO: account for panning
 			// TODO: account for retina
-			// TODO: properly calculate z value
-			var widthRatio:Number = value.width / 1024;
-			trace( "adjust cam ---------------" );
-			trace( "zoom to fit: " + _zoomToFitEasel.z );
-			trace( "ratio: " + widthRatio );
-			var targetZ:Number = _zoomToFitEasel.z / widthRatio;
-			trace( "targetZ: " + targetZ );
-			_zoomCameraController.setYZ( _view.camera.y, targetZ );
+			// TODO: properly calculate value
+
+			trace( "----------------------" );
+			trace( "rect: " + rect );
+
+			var rectWidthRatio:Number = rect.width / _easelRectCache.width;
+			var targetDistance:Number = _cameraDistanceToEaselCache / rectWidthRatio;
+
+			var rectY:Number = rect.y + rect.height / 2;
+			var cacheRectY:Number = _easelRectCache.y + _easelRectCache.height / 2;
+			var dy:Number = cacheRectY - rectY;
+			trace( "dy: " + dy );
+
+			_view.camera.y = _cameraCacheY - dy + rectY - 512;
+			_view.camera.z = _easelWorldZ - targetDistance;
+			trace( "_view.camera.z: " + _view.camera.z );
 		}
 
-		private var _zoomToFitEasel:Vector3D;
-		public function rememberZoomToFitEasel():void {
-			_zoomToFitEasel = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( _paintingManager.easel.painting, _view, 1 );
+		private var _easelRectCache:Rectangle;
+		private var _easelWorldZ:Number;
+		private var _cameraDistanceToEaselCache:Number;
+		private var _cameraCacheY:Number;
+
+		public function get easelRect():Rectangle {
+			var plane:Mesh = _paintingManager.easel.painting;
+			_easelWorldZ = HomeViewUtils.getWorldSpaceCenter( plane ).z;
+			_cameraDistanceToEaselCache = _easelWorldZ - _view.camera.z;
+			_cameraCacheY = HomeViewUtils.getWorldSpaceCenter( plane ).y;
+			return _easelRectCache = HomeViewUtils.calculatePlaneScreenRect( plane, _view, 1 );
 		}
 	}
 }
