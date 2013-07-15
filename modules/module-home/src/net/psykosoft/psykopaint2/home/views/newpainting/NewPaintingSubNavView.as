@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		private var _buttonGroup:ButtonGroup;
 
-		static private var _lastSelectedPainting:String = "";
+		static public var lastSelectedPaintingLabel:String = "";
 		static public var lastScrollerPosition:Number = 0;
 
 		public function NewPaintingSubNavView() {
@@ -45,8 +45,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var btn:SbButton = navigation.createButton( str, ButtonIconType.POLAROID, ButtonLabelType.NO_BACKGROUND, new Bitmap( vo.thumbnail ) );
 				_buttonGroup.addButton( btn );
 			}
-//			_buttonGroup.setSelectedButtonByLabel( _lastSelectedPainting );    //TODO: initialize _lastSelectedPainting with last file saved
-			_buttonGroup.setSelectedButtonByIndex( 0 );
+			if( lastSelectedPaintingLabel == "" ) _buttonGroup.setSelectedButtonByIndex( 0 );
+			else _buttonGroup.setSelectedButtonByLabel( lastSelectedPaintingLabel );
 			navigation.addCenterButtonGroup( _buttonGroup );
 
 			// Show right button.
@@ -61,15 +61,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		public function getIdForSelectedInProgressPainting():String {
 			return _buttonGroup.getSelectedBtnLabel();
-		}
-
-		// ---------------------------------------------------------------------
-		// Setters & Getters.
-		// ---------------------------------------------------------------------
-
-		static public function setLastSelectedPainting( value:String ):void {
-			if( _lastSelectedPainting == value ) return;
-			_lastSelectedPainting = value;
 		}
 	}
 }

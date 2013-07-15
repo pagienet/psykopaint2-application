@@ -78,7 +78,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 				evaluateDimensionsFromChild( item );
 				evaluateNewSnapPointFromPosition( item.x );
 			}
-
 			return super.addChild( item );
 		}
 	}

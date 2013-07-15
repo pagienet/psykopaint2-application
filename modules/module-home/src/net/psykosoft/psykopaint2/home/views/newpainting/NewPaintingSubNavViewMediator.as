@@ -35,6 +35,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			manageMemoryWarnings = false;
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
+			// TODO: set position does not take effect
+//			view.navigation.setScrollerPosition( NewPaintingSubNavView.lastScrollerPosition );
+//			trace("SCROLLER POSITION", NewPaintingSubNavView.lastScrollerPosition);
+
 			displaySavedPaintings();
 		}
 
@@ -64,7 +68,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					paintingModel.focusedPaintingId = "uniqueUserId-" + label;
 					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + label );
 					requestEaselUpdateSignal.dispatch( vo );
-					NewPaintingSubNavView.setLastSelectedPainting( paintingModel.focusedPaintingId );
+					NewPaintingSubNavView.lastSelectedPaintingLabel = label;
+					NewPaintingSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
 				}
 			}
 		}
@@ -73,14 +78,13 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		// Overrride.
 		// -----------------------
 
-		//TODO: finish this, so that when you create a new painting it is set as selected and put in the easel
-		/*override protected function onStateChange( newState:String ):void {
-			if( newState == StateType.TRANSITION_TO_PAINT_MODE ){
-				var data:Vector.<PaintingInfoVO> = paintingModel.getPaintingCollection();
-				NewPaintingSubNavView.setLastSelectedPainting(  )
+		override protected function onStateChange( newState:String ):void {
+			if( newState == StateType.TRANSITION_TO_HOME_MODE ){
+				NewPaintingSubNavView.lastSelectedPaintingLabel = "";
+				NewPaintingSubNavView.lastScrollerPosition = 0;
 			}
 			super.onStateChange( newState );
-		}*/
+		}
 
 
 		// -----------------------
