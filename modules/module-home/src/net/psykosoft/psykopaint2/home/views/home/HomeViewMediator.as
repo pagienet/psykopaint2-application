@@ -139,16 +139,11 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onPaintingDataRetrieved( data:Vector.<PaintingInfoVO> ):void {
 			if( data.length == 0 ) return;
 
+			data.sort( paintingModel.sortOnLastSaved );
 			var latestVo:PaintingInfoVO = data[ 0 ];
 			var len:uint = data.length;
 			var vo:PaintingInfoVO;
 
-			for( var i:uint = 1; i < len; i++ ) {
-				vo = data[ i ];
-				if( vo.lastSavedOnDateMs > latestVo.lastSavedOnDateMs ) {
-					latestVo = vo;
-				}
-			}
 			view.paintingManager.setEaselContent( latestVo );
 		}
 

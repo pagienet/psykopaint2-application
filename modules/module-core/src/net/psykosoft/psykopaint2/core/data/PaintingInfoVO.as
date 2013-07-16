@@ -40,7 +40,6 @@ package net.psykosoft.psykopaint2.core.data
 
 			clone.normalSpecularPreviewData = new ByteArray();
 			clone.normalSpecularPreviewData.writeBytes(normalSpecularPreviewData);
-
 			clone.lastSavedOnDateMs = lastSavedOnDateMs;
 			clone.fileVersion = fileVersion;
 			clone.id = id;

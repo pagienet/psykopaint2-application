@@ -76,5 +76,18 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			_focusedPaintingId = id;
 		}
+
+		// -----------------------
+		// Utils.
+		// -----------------------
+
+		public function sortOnLastSaved( paintingVOA:PaintingInfoVO, paintingVOB:PaintingInfoVO ):Number {
+			if( paintingVOA.lastSavedOnDateMs > paintingVOB.lastSavedOnDateMs ) return -1;
+			else if( paintingVOA.lastSavedOnDateMs < paintingVOB.lastSavedOnDateMs ) return 1;
+			else {
+				if( paintingVOA.id > paintingVOB.id ) return -1;
+				else return 1;
+			}
+		}
 	}
 }
