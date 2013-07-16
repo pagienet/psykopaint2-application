@@ -30,11 +30,15 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private function initPainting() : void
 		{
 			_painting = new EaselPainting(_lightPicker, _view.stage3DProxy);
+			_painting.scale( 0.75 );
 			_painting.visible = false;
+			_painting.y -= 78;
 			addChild(_painting);
 
-			if (CoreSettings.RUNNING_ON_RETINA_DISPLAY)
-				_painting.scaleX = _painting.scaleY = 0.5;
+			if (CoreSettings.RUNNING_ON_RETINA_DISPLAY) {
+				_painting.scaleX *= 0.5;
+				_painting.scaleY = _painting.scaleX;
+			}
 		}
 
 		public function set easelVisible(visible : Boolean) : void
@@ -45,11 +49,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				easelMaterial.mipmap = false;
 
 				_easel = new Mesh(new PlaneGeometry(1024, 1024), easelMaterial);
-				_easel.zOffset = 100000;
+				_easel.zOffset = 100000; // Avoids alpha blending sorting conflicts with transparent paintings.
 				_easel.z = 10;
-				_easel.y = -210;
-
-				_easel.scale( 1.575 );
+				_easel.y = -250;
+				_easel.scale( 1.05 );
 				_easel.rotationX = -90;
 				addChild(_easel);
 			}

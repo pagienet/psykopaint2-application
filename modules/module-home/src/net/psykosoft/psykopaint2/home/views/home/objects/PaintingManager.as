@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ),
 					null,
 					0, 1.5 );
-			settingsPainting.width = 1500;
+			settingsPainting.width = 1300;
 			_settingsPanel = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage(
 					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPanel", true ),
 					_stage3dProxy,
@@ -97,11 +97,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Easel.
 			addPaintingAt(1, _easel);
-			_easel.width = 2000;
+			_easel.width = 1200;
 			_easel.easelVisible = true;
 			autoPositionPaintingAtIndex( _easel, 1 );
-			_easel.z -= 750;
-			_easel.y -= 150;
+			_easel.z -= 1250;
+			_easel.y -= 200;
 
 			// Home painting.
 			var homePainting:GalleryPainting = createPaintingAtIndex(
