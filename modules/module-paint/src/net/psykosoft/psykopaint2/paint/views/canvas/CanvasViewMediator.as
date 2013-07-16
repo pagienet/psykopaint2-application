@@ -94,7 +94,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
 
 		private var _transformMatrix:Matrix;
-		private var _incomingEaselRect:Rectangle;
+		private var _easelRectFromHomeView:Rectangle;
 
 		override public function initialize():void {
 
@@ -229,27 +229,26 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private var _waitingForZoomOutToContinueToHome:Boolean;
 
-		private var _minZoomScale:Number = 0.482;
+		private var _minZoomScale:Number;
 		private const MAX_ZOOM_SCALE:Number = 4;
 
 		public var zoomScale:Number = _minZoomScale;
 
 		private function onEaselRectInfo( rect:Rectangle ):void {
-			_incomingEaselRect = rect;
-			_minZoomScale = _incomingEaselRect.width / 1024; // TODO: account for retina
+			_easelRectFromHomeView = rect;
+			_minZoomScale = _easelRectFromHomeView.width / 1024; // TODO: account for retina
 			zoomScale = _minZoomScale;
 		}
 
 		private function zoomIn():void {
-			updateCanvasRect( _incomingEaselRect.clone() );
-//			TweenLite.killTweensOf( this );
-//			TweenLite.to( this, 2, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
+			updateCanvasRect( _easelRectFromHomeView );
+			TweenLite.killTweensOf( this );
+			TweenLite.to( this, 2, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}
 
 		private function zoomOut():void {
-//			TweenLite.killTweensOf( this );
-//			TweenLite.to( this, 2, { zoomScale: MIN_ZOOM_SCALE, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
-			onZoomComplete();
+			TweenLite.killTweensOf( this );
+			TweenLite.to( this, 2, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}
 
 		private function onZoomUpdate():void {

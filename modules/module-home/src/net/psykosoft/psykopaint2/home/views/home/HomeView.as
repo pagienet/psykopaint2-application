@@ -438,15 +438,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			trace( "_view.camera.z: " + _view.camera.z );*/
 		}
 
-		private var _easelRect:Rectangle;
-		private var _cameraZOffsetToFreezePlane:Number;
-		public function cacheFrozenEaselInfo():Rectangle {
-			_easelRect = easelRect;
-			var freezePlaneWorldSpacePosition:Vector3D = HomeViewUtils.getWorldSpaceCenter( _freezePlane );
-			_cameraZOffsetToFreezePlane = freezePlaneWorldSpacePosition.z - _view.camera.z;
-			return _easelRect;
-		}
-
 		public function get easelRect():Rectangle {
 			var plane:Mesh = _paintingManager.easel.painting;
 			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( plane, _view, 1 );

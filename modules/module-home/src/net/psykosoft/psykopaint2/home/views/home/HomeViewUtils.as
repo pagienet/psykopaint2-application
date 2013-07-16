@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.bounds.AxisAlignedBoundingBox;
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
+	import away3d.materials.ColorMaterial;
+	import away3d.primitives.SphereGeometry;
 
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
