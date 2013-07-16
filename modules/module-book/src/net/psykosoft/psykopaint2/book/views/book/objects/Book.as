@@ -253,10 +253,12 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 		}
 
 		public function startInteraction():void {
+			trace( this, "starting interaction..." );
 			_interactionManager.startInteraction();
 		}
 
 		public function stopInteraction():void {
+			trace( this, "stopping interaction..." );
 			_interactionManager.stopInteraction();
 		}
 

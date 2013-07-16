@@ -45,8 +45,13 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			// Initialize book.
 			_book = new Book( stage, 1024, 1024 );
+			_book.y = 250;
 			_book.rotationX = -75;
 			_view.scene.addChild( _book );
+
+			// Interaction.
+			stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
+			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 		}
 
 		override protected function onDisabled():void {

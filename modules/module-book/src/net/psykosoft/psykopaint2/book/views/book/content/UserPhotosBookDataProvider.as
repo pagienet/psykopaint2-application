@@ -35,6 +35,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 		public var readySignal:Signal;
 		public var fullImagePickedSignal:Signal;
+		public var sheetGeneratedSignal:Signal;
 
 		private const THUMB_GAP:uint = 20;
 		private const GAP_LEFT:uint = 10;
@@ -44,6 +45,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			super();
 			readySignal = new Signal();
 			fullImagePickedSignal = new Signal();
+			sheetGeneratedSignal = new Signal();
 			_interactionRegionsForSheet = new Dictionary();
 			_thumbIndexForRegion = new Dictionary();
 			_thumbQueue = new Vector.<Object>();
@@ -112,8 +114,8 @@ package net.psykosoft.psykopaint2.book.views.book.content
 				_thumbIndexForRegion[ interactionRegion ] = i;
 
 				// Advance source positioning offsets.
-				if( sourceRegion.x + _thumbSize >= sourceSize ) {
-					sourceRegion.x = GAP_LEFT;
+				if( sourceRegion.x + _thumbSize >= sourceSize - _thumbSize ) {
+					sourceRegion.x = 0;
 					sourceRegion.y += _thumbSize;
 				}
 				else {
@@ -122,7 +124,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 				// Advance target positioning offsets.
 				if( offsetX + _cellSize >= _sheetWidth ) {
-					offsetX = 0;
+					offsetX = GAP_LEFT;
 					offsetY += _cellSize;
 				}
 				else {
@@ -152,6 +154,8 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 			// Store the sprite for interaction.
 			_interactionRegionsForSheet[ sheetIndex ] = interactionRegions;
+
+			sheetGeneratedSignal.dispatch( sourceBmd );
 		}
 
 		private function onFullImageLoaded( bmd:BitmapData ):void {
@@ -177,7 +181,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			// Evaluate thumbnail indices involved.
 			var firstThumbIndex:uint = _thumbsPerSheet * index;
 			if( firstThumbIndex >= _numThumbs - 1 ) return;
-			var lastThumbIndex:uint = Math.min( firstThumbIndex + _thumbsPerSheet, _numThumbs ) - 1;
+			var lastThumbIndex:uint = Math.min( firstThumbIndex + _thumbsPerSheet, _numThumbs - 1 );
 			trace( this, "requested sheet: " + index + ", from index: " + firstThumbIndex + " to index: " + lastThumbIndex );
 
 			// Request sheet.
