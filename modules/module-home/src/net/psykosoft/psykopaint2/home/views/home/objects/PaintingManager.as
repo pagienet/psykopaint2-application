@@ -104,7 +104,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// Painting and frame.
 			var hasFrame : Boolean = frameBmd != null;
 			// TODO: right now, transparency is based on frame presence. This is probably not a safe assumption.
-			var framedPainting:FramedPainting = new FramedPainting( _view, hasFrame, !hasFrame );
+			var framedPainting:FramedPainting = new FramedPainting( _view, hasFrame, true );
 			framedPainting.scaleX = framedPainting.scaleY = framedPainting.scaleZ = paintingScale;
 			if( paintingBmd ) {
 				framedPainting.setPaintingBitmapData( paintingBmd, _stage3dProxy );
