@@ -10,12 +10,15 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.base.Object3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.hacks.NativeTexture;
 	import away3d.lights.DirectionalLight;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
+	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 
 	import flash.display.BitmapData;
+	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.ColorTransform;
@@ -30,6 +33,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
@@ -54,13 +58,18 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _shiftMultiplier:Number = 1;
 		private var _light : DirectionalLight;
 		private var _lightPicker : StaticLightPicker;
-		private var _isEnabled3d:Boolean;
+		private var _isCameraControllerEnabled:Boolean;
 		private var _mainScene:ObjectContainer3D;
-		private var _freezeScene:ObjectContainer3D;
-		private var _freezePlane:Mesh;
-		private var _frozen:Boolean;
+
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
+
+		private var _frozen:Boolean;
+		private var _freezePlane:Mesh;
+		private var _freezeTexture : RefCountedTexture;
+		private var _freezeMaterial : TextureMaterial;
+
+		private var _currentScene : ObjectContainer3D;
 
 		public function HomeView() {
 			super();
@@ -70,53 +79,46 @@ package net.psykosoft.psykopaint2.home.views.home
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
 
-		public function freeze( /*bmd:BitmapData*/ ):void {
-
-			var bmd:BitmapData = new BitmapData( 1024, 768, false, 0xFF0000 );
-			bmd.perlinNoise( 50, 50, 8, 986, false, true );
+		public function freeze( texture : RefCountedTexture ):void {
 
 			if( _frozen ) return;
 			unFreeze();
 			trace( this, "freeze()" );
-			if( HomeSettings.TINT_FREEZES ) {
-				bmd.colorTransform( bmd.rect, new ColorTransform( 0.75, 0.75, 1, 1 ) );
-			}
-			selectScene( _freezeScene );
-			disable3d();
-			renderScene(); // TODO: needed?
-			_freezePlane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( bmd, _stage3dProxy );
-			_freezePlane.rotationX = -90;
+
+			disposeFreezeTexture();
+
+			_freezeTexture = texture;
+			_freezeMaterial.texture = new NativeTexture(_freezeTexture.texture);
+
 			_freezePlane.x = _view.camera.x;
 			_freezePlane.y = _view.camera.y;
 			_freezePlane.z = 10000;
-			_freezeScene.addChild( _freezePlane );
+
 			HomeViewUtils.ensurePlaneFitsViewport( _freezePlane, _view );
+
+			selectScene( _freezePlane );
+			disableCameraController();
+
 			_frozen = true;
 		}
 
 		public function unFreeze():void {
 			if( !_frozen ) return;
 			trace( this, "unFreeze()" );
-			if( _freezePlane ) {
 
-				if( _freezeScene.contains( _freezePlane ) ) {
-					_freezeScene.removeChild( _freezePlane );
-				}
+			disposeFreezeTexture();
 
-				var freezePlaneMaterial:TextureMaterial = _freezePlane.material as TextureMaterial;
-				if( freezePlaneMaterial ) {
-					var freezePlaneTexture:BitmapTexture = freezePlaneMaterial.texture as BitmapTexture;
-					if( freezePlaneTexture ) {
-						freezePlaneTexture.dispose(); // TODO: review if this is being disposed
-					}
-					freezePlaneMaterial.dispose(); // TODO: review if this is being disposed
-				}
-				_freezePlane.dispose();
-				_freezePlane = null;
-			}
 			selectScene( _mainScene );
-			enable3d();
+			enableCameraController();
 			_frozen = false;
+		}
+
+		private function disposeFreezeTexture() : void
+		{
+			if (_freezeTexture) {
+				_freezeTexture.dispose();
+				_freezeTexture = null;
+			}
 		}
 
 		// ---------------------------------------------------------------------
@@ -125,32 +127,31 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		override protected function onEnabled():void {
 			addChild( _view );
-			enable3d();
+			enableCameraController();
 		}
 
 		override protected function onDisabled():void {
 			// TODO: review if we need to do any clean up when view is disabled
 			removeChild( _view );
-			disable3d();
+			disableCameraController();
 			_frozen = false;
 		}
 
-		private function enable3d():void {
-			if( _isEnabled3d ) return;
+		private function enableCameraController():void {
 			_scrollCameraController.isEnabled = true;
-			_isEnabled3d = true;
+			_isCameraControllerEnabled = true;
 		}
 
-		private function disable3d():void {
-			if( !_isEnabled3d ) return;
+		private function disableCameraController():void {
 			_scrollCameraController.isEnabled = false;
-			_isEnabled3d = false;
+			_isCameraControllerEnabled = false;
 		}
 
 		private function selectScene( scene:ObjectContainer3D ):void {
-			var otherScene:ObjectContainer3D = scene == _mainScene ? _freezeScene : _mainScene;
-			if( _view.scene.contains( otherScene ) ) _view.scene.removeChild( otherScene );
+			if( _currentScene && _view.scene.contains( _currentScene ) )
+				_view.scene.removeChild( _currentScene );
 			_view.scene.addChild( scene );
+			_currentScene = scene;
 		}
 
 		override protected function onSetup():void {
@@ -184,7 +185,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_mainScene = new ObjectContainer3D();
 
-			_freezeScene = new ObjectContainer3D();
+			initFreezePlane();
 
 			selectScene( _mainScene );
 
@@ -247,6 +248,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerBundledAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", true );
 		}
 
+		private function initFreezePlane() : void
+		{
+			var plane : PlaneGeometry = new PlaneGeometry(stage.stageWidth, stage.stageHeight, 1, 1, false)
+			_freezeMaterial = new TextureMaterial();
+			_freezePlane = new Mesh(plane, _freezeMaterial);
+		}
+
 		private function onZoomControllerChange():void {
 			_scrollCameraController.dirtyZ();
 		}
@@ -281,6 +289,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_setupHasRan = true;
  			return;
 
+			disposeFreezePlane();
+
 			if( _loader ) {
 				if( _loader.hasEventListener( Event.COMPLETE ) ) {
 					_loader.removeEventListener( Event.COMPLETE, onAssetsReady );
@@ -312,6 +322,16 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: review if memory is really freed up with Scout, it appears not, specially gpu memory
 		}
 
+		private function disposeFreezePlane() : void
+		{
+			_freezeMaterial.dispose();
+			_freezePlane.geometry.dispose();
+			_freezePlane.dispose();
+			_freezePlane = null;
+			_freezeMaterial = null;
+			disposeFreezeTexture();
+		}
+
 		// ---------------------------------------------------------------------
 		// Interface.
 		// ---------------------------------------------------------------------
@@ -337,7 +357,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _scrollCameraController.positionManager.closestSnapPointIndex;
 		}
 
-		public function renderScene():void {
+		public function renderScene(target : Texture):void {
 //			trace( this, "rendering 3d?" );
 			if( !_isEnabled ) return;
 			if( !_assetsLoaded ) return; // Bounces off 3d rendering when the scene is not ready or active.
@@ -346,7 +366,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				trace( this, "rendering 3d" );
 			}
 			_scrollCameraController.update();
-			_view.render();
+			_view.render(target);
 		}
 
 		public function get zoomCameraController():ZoomCameraController {

@@ -10,11 +10,18 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 	import away3d.core.managers.Stage3DProxy;
 
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.Context3DTextureFormat;
+	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
 	import flash.utils.Dictionary;
 	import flash.utils.getTimer;
 
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
 	public class ApplicationRenderer
 	{
@@ -24,22 +31,25 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 		public var stage3DProxy : Stage3DProxy;
 
 		private var _promises : Vector.<SnapshotPromise>;
+		private var _snapshot : Texture;
 
 		public function ApplicationRenderer()
 		{
 			_promises = new <SnapshotPromise>[];
 		}
 
-		public function requestSnapshot(scale : Number = 1) : SnapshotPromise
+		public function requestSnapshot() : SnapshotPromise
 		{
-			var promise : SnapshotPromise = new SnapshotPromise(scale);
+			var promise : SnapshotPromise = new SnapshotPromise();
 			_promises.push(promise);
 			return promise;
 		}
 
 		public function render() : void
 		{
+			var needsSnapshot : Boolean = _promises.length > 0;
 			var context : Context3D = stage3DProxy.context3D;
+
 			if (!context) return;
 
 			if (CoreSettings.DEBUG_RENDER_SEQUENCE) {
@@ -48,74 +58,76 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 
 			var preTime : Number = getTimer();
 
-			var i : uint;
-			var len : uint;
-			var steps : Vector.<Function>;
-
-			// Pre-clear steps.
-			steps = GpuRenderManager.preRenderingSteps;
-			len = steps.length;
-			for (i = 0; i < len; ++i) steps[ i ]();
+			executeSteps(GpuRenderManager.preRenderingSteps);
 
 			// Clear.
 			if (CoreSettings.DEBUG_RENDER_SEQUENCE) {
 				trace(this, "clear context");
 			}
-			stage3DProxy.context3D.setRenderToBackBuffer();
+
+			if (needsSnapshot) {
+				createSnapshot();
+				context.setRenderToTexture(_snapshot);
+			}
+			else {
+				context.setRenderToBackBuffer();
+			}
+
 			stage3DProxy.clear();
 
-			// Normal steps.
-			steps = GpuRenderManager.renderingSteps;
-			len = steps.length;
-			for (i = 0; i < len; ++i) steps[ i ]();
-
-			if (_promises.length > 0) {
-				createSnapshots();
-				_promises.length = 0;
-			}
+			executeTargetedSteps(GpuRenderManager.renderingSteps);
 
 			// Present.
 			if (CoreSettings.DEBUG_RENDER_SEQUENCE) {
 				trace(this, "present proxy");
 			}
-			stage3DProxy.present();
 
-			// Post-present steps.
-			steps = GpuRenderManager.postRenderingSteps;
-			len = steps.length;
-			for (i = 0; i < len; ++i) steps[ i ]();
+			if (needsSnapshot) {
+				context.setRenderToBackBuffer();
+				context.clear();
+				context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+				context.setDepthTest(false, Context3DCompareMode.ALWAYS);
+				CopyTexture.copy(_snapshot, context);
+				fulfillPromises();
+			}
+
+			stage3DProxy.present();
+			executeSteps(GpuRenderManager.postRenderingSteps);
 
 			renderTime = getTimer() - preTime;
 		}
 
-		private function createSnapshots() : void
+		private function createSnapshot() : void
 		{
-			var scaledBitmapDatas : Dictionary = new Dictionary();
-
-			createFullsizeSnapshot(scaledBitmapDatas);
-
-			for (var i : int = 0; i < _promises.length; ++i) {
-				var promise : SnapshotPromise = _promises[i];
-				var scale : Number = promise.scale;
-
-				trace(this, "taking snapshot with scale: " + scale);
-
-				promise.bitmapData = getOrCreateScaledBitmapData(scale, scaledBitmapDatas);
-			}
-
-			// we added a refcount to the scale 1 version, so free it again
-			RefCountedBitmapData(scaledBitmapDatas[1.0]).dispose();
+			var snapshotWidth : int = TextureUtil.getNextPowerOfTwo(stage3DProxy.width);
+			var snapshotHeight : int = TextureUtil.getNextPowerOfTwo(stage3DProxy.height);
+			_snapshot = stage3DProxy.context3D.createTexture(snapshotWidth, snapshotHeight, Context3DTextureFormat.BGRA, true);
 		}
 
-		private function getOrCreateScaledBitmapData(scale : Number, scaled : Dictionary) : RefCountedBitmapData
+		private function fulfillPromises() : void
 		{
-			if (!scaled[scale]) {
-				var matrix : Matrix = new Matrix(scale, 0, 0, scale);
-				var scaledDownBmd : RefCountedBitmapData = new RefCountedBitmapData(stage3DProxy.width * scale, stage3DProxy.height * scale, false, 0);
-				scaledDownBmd.draw(scaled[1.0], matrix);
-			}
+			var refCountedTexture : RefCountedTexture = new RefCountedTexture(_snapshot);
+			var len : int = _promises.length;
 
-			return scaled[scale];
+			for (var i : int = 0; i < len; ++i)
+				_promises[i].texture = refCountedTexture;
+
+			_snapshot = null;
+			_promises.length = 0;
+		}
+
+		private function executeTargetedSteps(steps : Vector.<Function>) : void
+		{
+			var numSteps : uint = steps.length;
+			for (var i : uint = 0; i < numSteps; ++i)
+				steps[ i ](_snapshot);
+		}
+
+		private function executeSteps(steps : Vector.<Function>) : void
+		{
+			var numSteps : uint = steps.length;
+			for (var i : uint = 0; i < numSteps; ++i)
+				steps[ i ]();
 		}
 
 		private function createFullsizeSnapshot(scaledBitmapDatas : Dictionary) : void

@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.display3D.textures.Texture;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -18,6 +19,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -120,6 +122,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			_transformMatrix = new Matrix();
 		}
+
 
 		// -----------------------
 		// From app.
@@ -267,7 +270,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function updateCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
-			renderer.renderRect = rect;
+
+			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
 		private function constrainCanvasRect( rect:Rectangle ):void {
@@ -318,7 +322,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			lightingModel.update();
 		}
 
-		private function paintModuleNormalRenderingsStep():void {
+		private function paintModuleNormalRenderingsStep(target : Texture):void {
 			if( !view.visible ) return;
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "rendering canvas" );

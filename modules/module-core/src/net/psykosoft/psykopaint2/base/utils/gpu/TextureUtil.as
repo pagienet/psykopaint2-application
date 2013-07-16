@@ -143,7 +143,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 			return d >= 1 && d <= MAX_SIZE && isPowerOfTwo( d );
 		}
 
-		private static function getNextPowerOfTwo( number:int ):int {
+		public static function getNextPowerOfTwo( number:int ):int {
 			if( number > 0 && (number & (number - 1)) == 0 ) // see: http://goo.gl/D9kPj
 				return number;
 			else {

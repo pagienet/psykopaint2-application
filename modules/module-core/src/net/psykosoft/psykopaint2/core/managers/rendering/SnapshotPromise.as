@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.core.managers.rendering
 {
-	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 
@@ -8,27 +7,20 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 	{
 		public static const PROMISE_FULFILLED : String = "promiseFulfilled";
 
-		private var _scale : Number;
-		private var _bitmapData : RefCountedBitmapData;
+		private var _texture : RefCountedTexture;
 
-		public function SnapshotPromise(scale : Number = 1)
+		public function SnapshotPromise()
 		{
-			_scale = scale;
 		}
 
-		public function get scale() : Number
+		public function get texture() : RefCountedTexture
 		{
-			return _scale;
+			return _texture;
 		}
 
-		public function get bitmapData() : RefCountedBitmapData
+		public function set texture(value : RefCountedTexture) : void
 		{
-			return _bitmapData;
-		}
-
-		public function set bitmapData(value : RefCountedBitmapData) : void
-		{
-			_bitmapData = value;
+			_texture = value;
 			value.addRefCount();
 			dispatchEvent(new Event(PROMISE_FULFILLED));
 		}
