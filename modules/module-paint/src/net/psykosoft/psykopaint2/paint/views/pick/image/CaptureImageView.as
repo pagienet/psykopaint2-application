@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	public class CaptureImageView extends ViewBase
 	{
@@ -34,12 +35,14 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			_video.smoothing = true;
 			addChild( _video );
 
-			// TODO: posicionar el snapshot en la mano, y que la mano quede por encima
 			_snapshot = new Bitmap();
 			_snapshot.visible = false;
+			_snapshot.x = 250;
+			_snapshot.y = 82;
 			_snapshot.scaleX = _snapshot.scaleY = 0.5;
 			addChild( _snapshot );
 
+			swapChildren( _snapshot, handHolding );
 			handHolding.visible = false;
 			photoCamera.visible = true;
 
@@ -52,8 +55,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			}
 			_currentCamera = Camera.getCamera( String( index ) );
 			if( _currentCamera ) {
-				// TODO: review camera dimensions on retina
-				_currentCamera.setMode( 1024, 768, 15, false );
+				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) _currentCamera.setMode( 2048, 1536, 15, false );
+				else _currentCamera.setMode( 1024, 768, 15, false );
 				_video.attachCamera( _currentCamera );
 				//TODO: set camera quality?
 			}
@@ -65,14 +68,15 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			_currentCamera = null;
 			removeChild( _video );
 			_video = null;
+			_snapshot.visible = false;
 		}
 
 		public function pause():void {
 
-			_bmd = new TrackedBitmapData( 1024, 768, false, 0 );
+			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) _bmd = new TrackedBitmapData( 2048, 1536, false, 0 );
+			else _bmd = new TrackedBitmapData( 1024, 768, false, 0 );
 			_currentCamera.drawToBitmapData( _bmd );
 			_snapshot.bitmapData = _bmd;
-//			trace(_bmd, "bitmap data captured by camera");
 			_video.attachCamera( null );
 
 			_video.visible = false;
