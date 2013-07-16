@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 {
 
 	import flash.display.BitmapData;
+	import flash.display.Sprite;
 	import flash.media.Camera;
 	import flash.media.Video;
 
@@ -10,6 +11,10 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	public class CaptureImageView extends ViewBase
 	{
+		// Declared in Flash.
+		public var handHolding:Sprite;
+		public var photoCamera:Sprite;
+
 		private var _activeCameraIndex:uint;
 		private var _currentCamera:Camera = new Camera();
 		private var _video:Video;
@@ -21,9 +26,12 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		override protected function onEnabled():void {
 			_video = new Video( 512, 384 );
-			_video.x = 256;
-			_video.y = 90;
+			_video.x = 383;
+			_video.y = 105;
 			_video.smoothing = true;
+
+			handHolding.visible = false;
+			photoCamera.visible = true;
 
 			setCameraByIndex( 0 );
 		}
@@ -52,11 +60,18 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		public function pause():void {
 			_bmd = new TrackedBitmapData( 1024, 768, false, 0 );
 			_currentCamera.drawToBitmapData( _bmd );
+			trace(_bmd, "bitmap data captured by camera");
 			_video.attachCamera( null );
+
+			handHolding.visible = true;
+			photoCamera.visible = false;
 		}
 
 		public function play():void {
 			_video.attachCamera( _currentCamera );
+
+			handHolding.visible = false;
+			photoCamera.visible = true;
 		}
 
 		public function takeSnapshot():BitmapData {
