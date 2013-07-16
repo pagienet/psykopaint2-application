@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				easelMaterial.mipmap = false;
 
 				_easel = new Mesh(new PlaneGeometry(1024, 1024), easelMaterial);
+				_easel.zOffset = 100000;
 				_easel.z = 10;
 				_easel.y = -210;
 

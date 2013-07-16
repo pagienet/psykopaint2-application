@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
+	import away3d.entities.Mesh;
 	import away3d.materials.lightpickers.LightPickerBase;
 
 	import br.com.stimuli.loading.BulkLoader;
@@ -11,10 +12,15 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
+	import net.psykosoft.psykopaint2.home.views.home.objects.GalleryPainting;
+	import net.psykosoft.psykopaint2.home.views.home.objects.GalleryPainting;
+	import net.psykosoft.psykopaint2.home.views.home.objects.GalleryPainting;
 
 	public class PaintingManager extends ObjectContainer3D
 	{
@@ -27,6 +33,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _easel:Easel;
 		private var _lightPicker : LightPickerBase;
 		private var _stage3dProxy:Stage3DProxy;
+		private var _settingsPanel:Mesh;
 
 		// TODO: make private
 		public var homePaintingIndex:int = -1;
@@ -72,24 +79,36 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		public function createDefaultPaintings():void {
 
 			// Settings painting.
-			createPaintingAtIndex(
+			var settingsPainting:GalleryPainting = createPaintingAtIndex(
 					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ),
 					null,
 					0, 1.5 );
+			settingsPainting.width = 1500;
+			_settingsPanel = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage(
+					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPanel", true ),
+					_stage3dProxy,
+					true
+			);
+			_settingsPanel.x = settingsPainting.x;
+			_settingsPanel.y = 605;
+			_settingsPanel.z = -400;
+			_settingsPanel.rotationX = -90;
+			addChild( _settingsPanel );
 
 			// Easel.
 			addPaintingAt(1, _easel);
-
+			_easel.width = 2000;
 			_easel.easelVisible = true;
 			autoPositionPaintingAtIndex( _easel, 1 );
 			_easel.z -= 750;
 			_easel.y -= 150;
 
 			// Home painting.
-			createPaintingAtIndex(
+			var homePainting:GalleryPainting = createPaintingAtIndex(
 					new CoreRootView.SplashImageAsset().bitmapData,
 					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePaintingFrame", true ),
 					2, 0.75 );
+			homePainting.width = 1200;
 			homePaintingIndex = 2;
 
 			// Sample paintings. // TODO: remove when we are ready to show published paintings
