@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.core.rendering
 {
+	import away3d.errors.AbstractMethodError;
+
 	import com.adobe.utils.AGALMiniAssembler;
 
 	import flash.display3D.Context3D;
@@ -10,8 +12,6 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.display3D.VertexBuffer3D;
 	import flash.display3D.textures.TextureBase;
 	import flash.utils.ByteArray;
-
-	import net.psykosoft.psykopaint2.core.errors.AbstractMethodError;
 
 	public class FullTextureFilter
 	{
