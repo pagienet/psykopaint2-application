@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _paintingTexture:BitmapTexture;
 		private var _frameTexture:BitmapTexture;
 		private var _view:View3D;
+		private var _paintingBmdScaleFactor:Number = 1;
 
 		public function FramedPainting( view:View3D, hasFrame : Boolean, transparent : Boolean ) {
 			super();
@@ -75,13 +76,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		}
 
 		public function setPaintingBitmapData( bitmapData:BitmapData, stage3DProxy:Stage3DProxy ):void {
-			setBitmapDataForMesh(bitmapData, _paintingMesh, _paintingTexture, stage3DProxy)
+			_paintingBmdScaleFactor = bitmapData.width / 1024;
+			setBitmapDataForMesh(bitmapData, _paintingMesh, _paintingTexture, stage3DProxy);
 		}
 
-		private function setBitmapDataForMesh(bitmapData:BitmapData, mesh : Mesh, texture : BitmapTexture, stage3DProxy:Stage3DProxy ) : void
+		private function setBitmapDataForMesh(bitmapData:BitmapData, mesh : Mesh, texture : BitmapTexture, stage3DProxy:Stage3DProxy, scaleFactor:Number = 1 ) : void
 		{
-			mesh.scaleX = bitmapData.width;
-			mesh.scaleY = bitmapData.height;
+			mesh.scaleX = bitmapData.width * scaleFactor;
+			mesh.scaleY = bitmapData.height * scaleFactor;
 
 			var pow2BitmapData : BitmapData = TextureUtil.ensurePowerOf2TopLeft(bitmapData);
 			var scaleU:Number = bitmapData.width / pow2BitmapData.width;
@@ -98,7 +100,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		}
 
 		public function setFrameBitmapData( bitmapData:BitmapData, stage3DProxy:Stage3DProxy ):void {
-			setBitmapDataForMesh(bitmapData, _frameMesh, _frameTexture, stage3DProxy)
+			setBitmapDataForMesh(bitmapData, _frameMesh, _frameTexture, stage3DProxy, _paintingBmdScaleFactor);
 		}
 
 		// ---------------------------------------------------------------------

@@ -10,28 +10,26 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.events.TimerEvent;
 	import flash.events.UncaughtErrorEvent;
 	import flash.geom.ColorTransform;
-	import flash.system.Capabilities;
 	import flash.system.System;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getTimer;
-	
+
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
-	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpManagerView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
-	
-	
+
 	public class CoreRootView extends RootViewBase
 	{
+		// TODO: embed lower res on non retina?
 		[Embed(source="../../../../../../../../../modules/module-core/assets/embedded/images/launch/ipad-hr/Default-Landscape@2x.png")]
-		private var SplashImageAsset:Class;
+		public static var SplashImageAsset:Class;
 
 		[Embed(source="../../../../../../../../../modules/module-core/assets/packaged/core-packaged/swf/quotes.swf", symbol="quotes")]
 		private var QuotesAsset:Class;

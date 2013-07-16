@@ -2,9 +2,7 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 
 	import away3d.arcane;
-	import away3d.bounds.AxisAlignedBoundingBox;
 	import away3d.cameras.Camera3D;
-	import away3d.cameras.lenses.PerspectiveLens;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
@@ -19,18 +17,15 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.ColorTransform;
-	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
-	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.camera.ZoomCameraController;
@@ -228,7 +223,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
 
 			// Default paintings.
-			registerBundledAsset( "/home-packaged/away3d/paintings/homepainting.png", "homePainting" );
 			registerBundledAsset( "/home-packaged/away3d/frames/homeScreenFrame.png", "homePaintingFrame" );
 			registerBundledAsset( "/home-packaged/away3d/paintings/settings.png", "settingsPainting" );
 			// Other room stuff.

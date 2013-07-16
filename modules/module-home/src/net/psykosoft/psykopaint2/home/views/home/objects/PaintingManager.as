@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
 
@@ -86,9 +87,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Home painting.
 			createPaintingAtIndex(
-					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePainting", true ),
+					new CoreRootView.SplashImageAsset().bitmapData,
 					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePaintingFrame", true ),
-					2, 1.5 );
+					2, 0.75 );
 			homePaintingIndex = 2;
 
 			// Sample paintings. // TODO: remove when we are ready to show published paintings
