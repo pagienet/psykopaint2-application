@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.paint.commands
 //					trace( this, "prev: " + moduleActivationVO.deactivatedModuleType );
 					// TODO: assumes always coming from home
 					if( moduleActivationVO.deactivatedModuleType != ModuleType.NONE ) {
-						newState = StateType.TRANSITION_TO_PAINT_MODE;
+						newState = StateType.PREPARE_FOR_PAINT_MODE;
 					}
 					break;
 

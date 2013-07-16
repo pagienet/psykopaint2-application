@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			var canvasImporter : CanvasImporter = new CanvasImporter();
 			canvasImporter.importPainting(canvasModel, vo);
 			notifyPaintingActivatedSignal.dispatch();
-			requestStateChangeSignal.dispatch( StateType.TRANSITION_TO_PAINT_MODE );
+			requestStateChangeSignal.dispatch( StateType.PREPARE_FOR_PAINT_MODE );
 			context.release( this );
 			vo.dispose();
 		}

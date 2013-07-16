@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.home.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.SETTINGS, SettingsSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.SETTINGS_WALLPAPER, WallpaperSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.HOME_PICK_SURFACE, PickSurfaceSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.TRANSITION_TO_PAINT_MODE, SubNavigationViewBase );
+			StateToSubNavLinker.linkSubNavToState( StateType.PREPARE_FOR_PAINT_MODE, SubNavigationViewBase );
 			
 			name = "HomeRootView";
 		}

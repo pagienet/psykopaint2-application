@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerEnablingState( StateType.SETTINGS );
 			registerEnablingState( StateType.SETTINGS_WALLPAPER );
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
-			registerEnablingState( StateType.TRANSITION_TO_PAINT_MODE );
+			registerEnablingState( StateType.PREPARE_FOR_PAINT_MODE );
 			registerEnablingState( StateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
 
 			// Frozen states.
@@ -183,14 +183,15 @@ package net.psykosoft.psykopaint2.home.views.home
 			else {
 				view.unFreeze();
 
-				if( newState == StateType.TRANSITION_TO_PAINT_MODE ) {
+				if( newState == StateType.PREPARE_FOR_PAINT_MODE ) {
 
 					// Looking at easel?
 					if( _dockedAtPaintingIndex != 1 ) {
 						throw new Error( "HomeViewMediator - requested to transition to paint and not at easel." );
 					}
 
-					freezeView();
+					_snapshotPromise = applicationRenderer.requestSnapshot();
+					_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
 				}
 
 				super.onStateChange( newState );
@@ -212,8 +213,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onCanvasSnapShot( event:Event ):void {
+
 			_snapshotPromise.removeEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
-			requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.texture.newReference());
+
 			if( _waitingForFreezeSnapshot ) {
 
 				trace( this, "applying freeze snapshot..." );
@@ -221,14 +223,15 @@ package net.psykosoft.psykopaint2.home.views.home
 				_snapshotPromise.texture.dispose();
 
 				_waitingForFreezeSnapshot = false;
+			}
 
-				// Transition freeze?
-				if( stateModel.currentState == StateType.TRANSITION_TO_PAINT_MODE ) {
-					notifyEaselRectInfoSignal.dispatch( view.easelRect );
-					setTimeout( function():void {
-						requestStateChange( StateType.PAINT );
-					}, 250 );
-				}
+			// Transition freeze?
+			if( stateModel.currentState == StateType.PREPARE_FOR_PAINT_MODE ) {
+				notifyEaselRectInfoSignal.dispatch( view.easelRect );
+				requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.texture.newReference());
+				setTimeout( function():void {
+					requestStateChange( StateType.PAINT );
+				}, 50 );
 			}
 
 			_snapshotPromise = null;

@@ -83,6 +83,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			disposeFreezeTexture();
 
 			_freezeTexture = texture;
+			if( HomeSettings.TINT_FREEZES ) {
+				_freezeMaterial.colorTransform = new ColorTransform( 0.5, 0.5, 1 );
+			}
 			_freezeMaterial.texture = new NativeTexture(_freezeTexture.texture);
 
 			_freezePlane.x = _view.camera.x;
