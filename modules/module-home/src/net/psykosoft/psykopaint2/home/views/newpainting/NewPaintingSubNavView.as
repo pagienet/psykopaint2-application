@@ -2,11 +2,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 {
 
 	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
-
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
@@ -23,7 +20,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		private var _buttonGroup:ButtonGroup;
 
 		static public var lastSelectedPaintingLabel:String = "";
-		static public var lastScrollerPosition:Number = 0;
+		static public var lastScrollerPosition:Number = 372; //TODO: same as in EditBrushSubNavView, we need to do this cleaner
 
 		public function NewPaintingSubNavView() {
 			super();

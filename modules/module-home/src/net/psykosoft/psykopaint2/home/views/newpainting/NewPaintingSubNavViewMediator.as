@@ -35,11 +35,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			manageMemoryWarnings = false;
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
-			// TODO: set position does not take effect
-//			view.navigation.setScrollerPosition( NewPaintingSubNavView.lastScrollerPosition );
-//			trace("SCROLLER POSITION", NewPaintingSubNavView.lastScrollerPosition);
-
 			displaySavedPaintings();
+
+			view.navigation.setScrollerPosition( NewPaintingSubNavView.lastScrollerPosition );
 		}
 
 		// -----------------------
@@ -81,7 +79,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		override protected function onStateChange( newState:String ):void {
 			if( newState == StateType.TRANSITION_TO_HOME_MODE ){
 				NewPaintingSubNavView.lastSelectedPaintingLabel = "";
-				NewPaintingSubNavView.lastScrollerPosition = 0;
+				NewPaintingSubNavView.lastScrollerPosition = 372;  //TODO: same as in view and EditBrushSubNavView, we need to do this cleaner
 			}
 			super.onStateChange( newState );
 		}
