@@ -84,8 +84,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_freezePlane.rotationX = -90;
 			_freezePlane.x = _view.camera.x;
 			_freezePlane.y = _view.camera.y;
-			_freezePlane.z = HomeViewUtils.getWorldSpaceCenter( _paintingManager.easel.painting ).z;
-			_freezeScene.visible = false;
+			_freezePlane.z = 10000;
 			_freezeScene.addChild( _freezePlane );
 			HomeViewUtils.ensurePlaneFitsViewport( _freezePlane, _view );
 			_frozen = true;
@@ -410,15 +409,23 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _view.camera;
 		}
 
+		/*
+		* Assumes the view is in frozen mode.
+		* Modifies the camera's Z and Y values so that the freeze plane's easel painting occupies
+		* exactly the specified screen rect.
+		* */
 		public function adjustCameraToFitEaselAtRect( rect:Rectangle ):void {
+
 			// TODO: account for panning
 			// TODO: account for retina
 			// TODO: properly calculate value
 
-			trace( "----------------------" );
+			trace( "--------------------------------------------" );
 			trace( "rect: " + rect );
 
-			var rectWidthRatio:Number = rect.width / _easelRectCache.width;
+
+
+			/*var rectWidthRatio:Number = rect.width / _easelRectCache.width;
 			var targetDistance:Number = _cameraDistanceToEaselCache / rectWidthRatio;
 
 			var rectY:Number = rect.y + rect.height / 2;
@@ -428,20 +435,25 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_view.camera.y = _cameraCacheY - dy + rectY - 512;
 			_view.camera.z = _easelWorldZ - targetDistance;
-			trace( "_view.camera.z: " + _view.camera.z );
+			trace( "_view.camera.z: " + _view.camera.z );*/
 		}
 
-		private var _easelRectCache:Rectangle;
-		private var _easelWorldZ:Number;
-		private var _cameraDistanceToEaselCache:Number;
-		private var _cameraCacheY:Number;
+		private var _easelRect:Rectangle;
+		private var _cameraZOffsetToFreezePlane:Number;
+		public function cacheFrozenEaselInfo():Rectangle {
+			_easelRect = easelRect;
+			var freezePlaneWorldSpacePosition:Vector3D = HomeViewUtils.getWorldSpaceCenter( _freezePlane );
+			_cameraZOffsetToFreezePlane = freezePlaneWorldSpacePosition.z - _view.camera.z;
+			return _easelRect;
+		}
 
 		public function get easelRect():Rectangle {
 			var plane:Mesh = _paintingManager.easel.painting;
-			_easelWorldZ = HomeViewUtils.getWorldSpaceCenter( plane ).z;
-			_cameraDistanceToEaselCache = _easelWorldZ - _view.camera.z;
-			_cameraCacheY = HomeViewUtils.getWorldSpaceCenter( plane ).y;
-			return _easelRectCache = HomeViewUtils.calculatePlaneScreenRect( plane, _view, 1 );
+			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( plane, _view, 1 );
+			this.graphics.lineStyle( 1, 0xFF0000 );
+			this.graphics.drawRect( rect.x, rect.y, rect.width, rect.height );
+			this.graphics.endFill();
+			return rect;
 		}
 	}
 }

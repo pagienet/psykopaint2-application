@@ -100,10 +100,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerFreezingState( StateType.BOOK_PICK_USER_IMAGE_IOS );
 			registerFreezingState( StateType.CROP );
 			registerFreezingState( StateType.PICK_USER_IMAGE_DESKTOP );
-//			registerFreezingState( StateType.PAINT );
-//			registerFreezingState( StateType.PAINT_SELECT_BRUSH );
-//			registerFreezingState( StateType.PAINT_ADJUST_BRUSH );
-//			registerFreezingState( StateType.PAINT_TRANSFORM );
+			registerFreezingState( StateType.PAINT );
+			registerFreezingState( StateType.PAINT_SELECT_BRUSH );
+			registerFreezingState( StateType.PAINT_ADJUST_BRUSH );
+			registerFreezingState( StateType.PAINT_TRANSFORM );
 
 			// Register view gpu rendering in core.
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL, 0 );
@@ -231,7 +231,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 				// Transition freeze?
 				if( stateModel.currentState == StateType.TRANSITION_TO_PAINT_MODE ) {
-					notifyEaselRectInfoSignal.dispatch( view.easelRect );
+					notifyEaselRectInfoSignal.dispatch( view.cacheFrozenEaselInfo() );
 					setTimeout( function():void {
 						requestStateChange( StateType.PAINT );
 					}, 250 );

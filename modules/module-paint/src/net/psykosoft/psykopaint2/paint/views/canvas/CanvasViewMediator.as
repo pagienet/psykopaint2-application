@@ -129,10 +129,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// From app.
 		// -----------------------
 
-		private function onEaselRectInfo( rect:Rectangle ):void {
-			_incomingEaselRect = rect;
-		}
-
 		//TODO: this is for desktop testing - remove in final version
 		private function onMouseWheel( event:MouseEvent ):void {
 			var rect:Rectangle = renderer.renderRect;
@@ -233,20 +229,27 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private var _waitingForZoomOutToContinueToHome:Boolean;
 
-		private const MIN_ZOOM_SCALE:Number = 0.482;
+		private var _minZoomScale:Number = 0.482;
 		private const MAX_ZOOM_SCALE:Number = 4;
 
-		public var zoomScale:Number = MIN_ZOOM_SCALE;
+		public var zoomScale:Number = _minZoomScale;
+
+		private function onEaselRectInfo( rect:Rectangle ):void {
+			_incomingEaselRect = rect;
+			_minZoomScale = _incomingEaselRect.width / 1024; // TODO: account for retina
+			zoomScale = _minZoomScale;
+		}
 
 		private function zoomIn():void {
-//			updateCanvasRect( _incomingEaselRect.clone() );
-			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 2, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
+			updateCanvasRect( _incomingEaselRect.clone() );
+//			TweenLite.killTweensOf( this );
+//			TweenLite.to( this, 2, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}
 
 		private function zoomOut():void {
-			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 2, { zoomScale: MIN_ZOOM_SCALE, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
+//			TweenLite.killTweensOf( this );
+//			TweenLite.to( this, 2, { zoomScale: MIN_ZOOM_SCALE, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
+			onZoomComplete();
 		}
 
 		private function onZoomUpdate():void {
@@ -276,10 +279,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function constrainCanvasRect( rect:Rectangle ):void {
 
 			var scale:Number = rect.height / canvasModel.height;
-			if( scale < MIN_ZOOM_SCALE ) {
-				rect.width *= ( MIN_ZOOM_SCALE / scale );
-				rect.height *= ( MIN_ZOOM_SCALE / scale );
-				scale = MIN_ZOOM_SCALE;
+			if( scale < _minZoomScale ) {
+				rect.width *= ( _minZoomScale / scale );
+				rect.height *= ( _minZoomScale / scale );
+				scale = _minZoomScale;
 			} else if( scale > MAX_ZOOM_SCALE ) {
 				rect.width *= ( MAX_ZOOM_SCALE / scale );
 				rect.height *= ( MAX_ZOOM_SCALE / scale );
