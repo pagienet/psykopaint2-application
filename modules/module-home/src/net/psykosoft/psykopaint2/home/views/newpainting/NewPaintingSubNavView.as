@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		private var _buttonGroup:ButtonGroup;
 
 		static public var lastSelectedPaintingLabel:String = "";
-		static public var lastScrollerPosition:Number = 372; //TODO: same as in EditBrushSubNavView, we need to do this cleaner
+		static public var lastScrollerPosition:Number = 0;
 
 		public function NewPaintingSubNavView() {
 			super();
