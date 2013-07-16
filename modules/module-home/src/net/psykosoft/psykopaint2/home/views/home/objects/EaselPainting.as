@@ -32,46 +32,51 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _width:Number;
 		private var _diffuseTexture : Texture2DBase;
 		private var _normalSpecularTexture : ByteArrayTexture;
+		private var _textureMaterial : TextureMaterial;
 
-		public function EaselPainting( paintingVO:PaintingInfoVO, lightPicker:LightPickerBase, stage3DProxy : Stage3DProxy ) {
+		public function EaselPainting( lightPicker:LightPickerBase, stage3DProxy : Stage3DProxy ) {
 
 			super(null);
 
-			createPlane( paintingVO, lightPicker, stage3DProxy );
-			_width = paintingVO.width;
-		}
-
-		private function createPlane(paintingVO : PaintingInfoVO, lightPicker : LightPickerBase, stage3DProxy : Stage3DProxy) : void
-		{
-			initTextures(paintingVO, stage3DProxy);
+			geometry = new PlaneGeometry(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 1, 1, false);
 			initMaterial(lightPicker);
-			initGeometry(paintingVO);
-		}
-
-		private function initGeometry(paintingVO : PaintingInfoVO) : void
-		{
-			// easel always contains something scene-sized
-			var planeGeometry : PlaneGeometry = new PlaneGeometry(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 1, 1, false);
-			var subGeometry : CompactSubGeometry = CompactSubGeometry(planeGeometry.subGeometries[0]);
-			subGeometry.scaleUV(paintingVO.width / _diffuseTexture.width, paintingVO.height / _diffuseTexture.height);
-
-			geometry = planeGeometry;
 		}
 
 		private function initMaterial(lightPicker : LightPickerBase) : void
 		{
 			// Create material.
-			var textureMaterial : TextureMaterial = new TextureMaterial(_diffuseTexture, true, false, false);
-			textureMaterial.diffuseMethod = new PaintingDiffuseMethod();
-			textureMaterial.normalMethod = new PaintingNormalMethod();
-			textureMaterial.specularMethod = new PaintingSpecularMethod();
-			textureMaterial.lightPicker = lightPicker;
-			textureMaterial.ambientColor = 0xffffff;
-			textureMaterial.ambient = 1;
-			textureMaterial.specular = .5;
-			textureMaterial.gloss = 200;
-			textureMaterial.normalMap = _normalSpecularTexture;
-			material = textureMaterial;
+			_textureMaterial = new TextureMaterial(null, true, false, false);
+			_textureMaterial.animateUVs = true;
+			_textureMaterial.diffuseMethod = new PaintingDiffuseMethod();
+			_textureMaterial.normalMethod = new PaintingNormalMethod();
+			_textureMaterial.specularMethod = new PaintingSpecularMethod();
+			_textureMaterial.lightPicker = lightPicker;
+			_textureMaterial.ambientColor = 0xffffff;
+			_textureMaterial.ambient = 1;
+			_textureMaterial.specular = .5;
+			_textureMaterial.gloss = 200;
+			material = _textureMaterial;
+		}
+
+		public function setContent(paintingVO : PaintingInfoVO, stage3DProxy : Stage3DProxy) : void
+		{
+			disposeTextures();
+
+			if (paintingVO) {
+				visible = true;
+				initTextures(paintingVO, stage3DProxy);
+				_width = paintingVO.width;
+			}
+			else {
+				visible = false;
+			}
+
+		}
+
+		private function disposeTextures() : void
+		{
+			if (_diffuseTexture) _diffuseTexture.dispose();
+			if (_normalSpecularTexture) _normalSpecularTexture.dispose();
 		}
 
 		private function initTextures(paintingVO : PaintingInfoVO, stage3DProxy : Stage3DProxy) : void
@@ -87,6 +92,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_normalSpecularTexture = new ByteArrayTexture(paintingVO.normalSpecularPreviewData, textureWidth, textureHeight);
 			_diffuseTexture.getTextureForStage3D(stage3DProxy);
 			_normalSpecularTexture.getTextureForStage3D(stage3DProxy);
+
+			_textureMaterial.texture = _diffuseTexture;
+			_textureMaterial.normalMap = _normalSpecularTexture;
+
+			subMeshes[0].scaleU = paintingVO.width / _diffuseTexture.width;
+			subMeshes[0].scaleV = paintingVO.height / _diffuseTexture.height;
 		}
 
 		override public function dispose():void
@@ -96,8 +107,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 			geometry.dispose();
 			material.dispose();
-			_diffuseTexture.dispose();
-			_normalSpecularTexture.dispose();
+			disposeTextures();
 		}
 
 		public function get width():Number {

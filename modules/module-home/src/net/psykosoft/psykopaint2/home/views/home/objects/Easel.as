@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.home.views.home.objects
 {
-	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
@@ -25,6 +24,17 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super();
 			_view = view;
 			_lightPicker = lightPicker;
+			initPainting();
+		}
+
+		private function initPainting() : void
+		{
+			_painting = new EaselPainting(_lightPicker, _view.stage3DProxy);
+			_painting.visible = false;
+			addChild(_painting);
+
+			if (CoreSettings.RUNNING_ON_RETINA_DISPLAY)
+				_painting.scaleX = _painting.scaleY = 0.5;
 		}
 
 		public function set easelVisible(visible : Boolean) : void
@@ -47,33 +57,20 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		override public function dispose() : void
 		{
-			disposePainting();
+			removeChild(_painting);
+			_painting.dispose();
+			_painting = null;
 			super.dispose();
 		}
 
 		public function setContent(vo : PaintingInfoVO) : void
 		{
-			disposePainting();
-
-			if (vo) {
-				_painting = new EaselPainting( vo, _lightPicker, _view.stage3DProxy );
-				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) painting.scale( 0.5 );
-				addChild(_painting);
-			}
+			_painting.setContent(vo, _view.stage3DProxy);
 		}
 
 		// ---------------------------------------------------------------------
 		// Private.
 		// ---------------------------------------------------------------------
-
-		private function disposePainting() : void
-		{
-			if (_painting) {
-				removeChild(_painting);
-				_painting.dispose();
-				_painting = null;
-			}
-		}
 
 		override public function get painting() : Mesh
 		{
