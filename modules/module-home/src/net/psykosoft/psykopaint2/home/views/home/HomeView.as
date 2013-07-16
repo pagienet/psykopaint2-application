@@ -409,35 +409,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _view.camera;
 		}
 
-		/*
-		* Assumes the view is in frozen mode.
-		* Modifies the camera's Z and Y values so that the freeze plane's easel painting occupies
-		* exactly the specified screen rect.
-		* */
-		public function adjustCameraToFitEaselAtRect( rect:Rectangle ):void {
-
-			// TODO: account for panning
-			// TODO: account for retina
-			// TODO: properly calculate value
-
-			trace( "--------------------------------------------" );
-			trace( "rect: " + rect );
-
-
-
-			/*var rectWidthRatio:Number = rect.width / _easelRectCache.width;
-			var targetDistance:Number = _cameraDistanceToEaselCache / rectWidthRatio;
-
-			var rectY:Number = rect.y + rect.height / 2;
-			var cacheRectY:Number = _easelRectCache.y + _easelRectCache.height / 2;
-			var dy:Number = cacheRectY - rectY;
-			trace( "dy: " + dy );
-
-			_view.camera.y = _cameraCacheY - dy + rectY - 512;
-			_view.camera.z = _easelWorldZ - targetDistance;
-			trace( "_view.camera.z: " + _view.camera.z );*/
-		}
-
 		public function get easelRect():Rectangle {
 			var plane:Mesh = _paintingManager.easel.painting;
 			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( plane, _view, 1 );

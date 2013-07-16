@@ -26,7 +26,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestCameraAdjustToRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
@@ -86,9 +85,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var canvasModel:CanvasModel;
-
-		[Inject]
-		public var requestCameraAdjustToRectSignal:RequestCameraAdjustToRectSignal;
 
 		[Inject]
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
@@ -271,7 +267,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function updateCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
-			requestCameraAdjustToRectSignal.dispatch( rect );
 			renderer.renderRect = rect;
 		}
 

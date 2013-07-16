@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.managers.Stage3DProxy;
 
 	import flash.events.Event;
-	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
 
@@ -21,7 +20,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestCameraAdjustToRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -67,9 +65,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var applicationRenderer:ApplicationRenderer;
 
-		[Inject]
-		public var requestCameraAdjustToRectSignal:RequestCameraAdjustToRectSignal;
-
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
 		private var _dockedAtPaintingIndex:int = -1;
@@ -111,7 +106,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
 			requestEaselRectInfoSignal.add( onEaselRectInfoRequested );
-			requestCameraAdjustToRectSignal.add( onCameraRectRequested );
 
 			// From view.
 			view.setupSignal.add( onViewSetup );
@@ -127,10 +121,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 		// From app.
 		// -----------------------
-
-		private function onCameraRectRequested( value:Rectangle ):void {
-			view.adjustCameraToFitEaselAtRect( value );
-		}
 
 		private function onEaselRectInfoRequested():void {
 			notifyEaselRectInfoSignal.dispatch( view.easelRect );
