@@ -15,8 +15,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	{
 		public static function calculatePlaneScreenRect( plane:Mesh, view:View3D, ratio:Number ):Rectangle {
 			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
-			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsZ, 0 ), view, ratio );
-			var brCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsZ, 0 ), view, ratio );
+			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsY, 0 ), view, ratio );
+			var brCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsY, 0 ), view, ratio );
 			var rect:Rectangle = new Rectangle(
 					tlCorner.x / CoreSettings.GLOBAL_SCALING,
 					tlCorner.y / CoreSettings.GLOBAL_SCALING,
@@ -83,12 +83,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public static function objectSpaceToWorldSpace( plane:Mesh, objSpacePosition:Vector3D, view:View3D ):Vector3D {
 			var sceneTransform:Matrix3D = plane.sceneTransform.clone();
-			var comps:Vector.<Vector3D> = sceneTransform.decompose();
-			sceneTransform.recompose( Vector.<Vector3D>( [ // Remove rotation data from transform.
-				comps[ 0 ],
-				new Vector3D(),
-				comps[ 2 ]
-			] ) );
 			var worldSpacePosition:Vector3D = sceneTransform.transformVector( objSpacePosition );
 
 			// Uncomment to visualize 3d point.
