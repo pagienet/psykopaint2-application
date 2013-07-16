@@ -227,7 +227,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
 
 			// Default paintings.
-			registerBundledAsset( "/home-packaged/away3d/frames/homeScreenFrame.png", "homePaintingFrame" );
+			registerBundledAsset( "/home-packaged/away3d/frames/canvasOnly.png", "homePaintingFrame" );
 			registerBundledAsset( "/home-packaged/away3d/paintings/settings.png", "settingsPainting" );
 			// Other room stuff.
 			registerBundledAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", true );

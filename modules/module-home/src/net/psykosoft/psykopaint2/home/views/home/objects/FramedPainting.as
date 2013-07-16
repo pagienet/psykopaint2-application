@@ -99,7 +99,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			pow2BitmapData.dispose();
 		}
 
-		public function setFrameBitmapData( bitmapData:BitmapData, stage3DProxy:Stage3DProxy ):void {
+		public function setFrameBitmapData( bitmapData:BitmapData, stage3DProxy:Stage3DProxy, frameOffsetX:Number, frameOffsetY:Number ):void {
+
+			// Position frame so that top left corner of it's hole matches top left corner of the painting.
+			// Requires the xy coordinates of the hole's top left corner in image space.
+			_frameMesh.x = _paintingBmdScaleFactor * ( -1024 + bitmapData.width - 2 * frameOffsetX ) / 2;
+			_frameMesh.y = _paintingBmdScaleFactor * ( 768 - bitmapData.height + 2 * frameOffsetY ) / 2;
+
 			setBitmapDataForMesh(bitmapData, _frameMesh, _frameTexture, stage3DProxy, _paintingBmdScaleFactor);
 		}
 

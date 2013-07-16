@@ -107,7 +107,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var homePainting:GalleryPainting = createPaintingAtIndex(
 					new CoreRootView.SplashImageAsset().bitmapData,
 					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePaintingFrame", true ),
-					2, 0.75 );
+					2, 0.75, 70, 128 // TODO: we need a way to associate frame offsets to frame images
+			);
 			homePainting.width = 1200;
 			homePaintingIndex = 2;
 
@@ -117,7 +118,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 //			}
 		}
 
-		public function createPaintingAtIndex( paintingBmd:BitmapData, frameBmd:BitmapData, index:uint, paintingScale:Number = 1 ):FramedPainting {
+		public function createPaintingAtIndex( paintingBmd:BitmapData, frameBmd:BitmapData, index:uint, paintingScale:Number = 1, frameOffsetX:Number = 0, frameOffsetY:Number = 0 ):FramedPainting {
 
 			trace( this, "creating painting at index: " + index );
 
@@ -130,7 +131,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				framedPainting.setPaintingBitmapData( paintingBmd, _stage3dProxy );
 			}
 			if( hasFrame ) {
-				framedPainting.setFrameBitmapData( frameBmd, _stage3dProxy );
+				framedPainting.setFrameBitmapData( frameBmd, _stage3dProxy, frameOffsetX, frameOffsetY );
 			}
 
 			addPaintingAt(index, framedPainting);
