@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.core.signals
 {
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedBitmapData;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 
 	import org.osflash.signals.Signal;
 
@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.signals
 	{
 		public function RequestSetCanvasBackgroundSignal()
 		{
-			super(RefCountedBitmapData);
+			super(RefCountedTexture);
 		}
 	}
 }

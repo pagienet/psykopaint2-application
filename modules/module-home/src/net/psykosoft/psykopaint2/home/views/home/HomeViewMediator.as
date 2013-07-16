@@ -22,6 +22,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
@@ -63,11 +64,16 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
 
 		[Inject]
+		public var requestSetCanvasBackgroundSignal:RequestSetCanvasBackgroundSignal;
+
+		[Inject]
 		public var applicationRenderer:ApplicationRenderer;
 
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
 		private var _dockedAtPaintingIndex:int = -1;
+
+		private var _snapshotPromise:SnapshotPromise;
 
 		override public function initialize():void {
 
@@ -171,7 +177,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.room.changeWallpaper( atf );
 		}
 
-		private var _snapshotPromise:SnapshotPromise;
 
 		override protected function onStateChange( newState:String ):void {
 			if( _freezingStates.indexOf( newState ) != -1 ) freezeView();
@@ -208,11 +213,13 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onCanvasSnapShot( event:Event ):void {
 			_snapshotPromise.removeEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
-
+			requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.texture.newReference());
 			if( _waitingForFreezeSnapshot ) {
 
 				trace( this, "applying freeze snapshot..." );
-				view.freeze( /*_snapshotPromise.bitmapData*/ );
+				view.freeze( _snapshotPromise.texture.newReference() );
+				_snapshotPromise.texture.dispose();
+
 				_waitingForFreezeSnapshot = false;
 
 				// Transition freeze?

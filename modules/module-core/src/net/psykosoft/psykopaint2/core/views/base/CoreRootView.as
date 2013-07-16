@@ -285,10 +285,10 @@ package net.psykosoft.psykopaint2.core.views.base
 			}
 
 			// Comment to mute sound!
-			if( !_playedSound ) {
-				playPsychoSound();
-				_playedSound = true;
-			}
+//			if( !_playedSound ) {
+//				playPsychoSound();
+//				_playedSound = true;
+//			}
 		}
 
 		private function onErrorsMouseUp( event:MouseEvent ):void {

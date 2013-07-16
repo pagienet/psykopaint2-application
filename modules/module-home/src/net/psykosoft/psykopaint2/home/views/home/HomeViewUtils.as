@@ -57,7 +57,7 @@ package net.psykosoft.psykopaint2.home.views.home
 //			trace( "actual width: " + bounds.halfExtentsX );
 			var sc:Number = targetPlaneHalfWidth / bounds.halfExtentsX;
 //			trace( "scale: " + sc );
-			plane.scale( sc );
+			plane.scaleX = plane.scaleY = sc;
 		}
 
 		public static function calculateCameraYZToFitPlaneOnViewport( plane:Mesh, view:View3D, ratio:Number ):Vector3D {
