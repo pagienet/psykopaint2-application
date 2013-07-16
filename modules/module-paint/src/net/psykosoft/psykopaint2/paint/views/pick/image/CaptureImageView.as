@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			_snapshot.visible = false;
 			_snapshot.x = 250;
 			_snapshot.y = 82;
-			_snapshot.scaleX = _snapshot.scaleY = 0.5;
+			_snapshot.scaleX = _snapshot.scaleY = 0.5 / CoreSettings.GLOBAL_SCALING;
 			addChild( _snapshot );
 
 			swapChildren( _snapshot, handHolding );
@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			}
 			_currentCamera = Camera.getCamera( String( index ) );
 			if( _currentCamera ) {
-				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) _currentCamera.setMode( 2048, 1536, 15, false );
+				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) _currentCamera.setMode( 2048, 1536, 15, true );
 				else _currentCamera.setMode( 1024, 768, 15, false );
 				_video.attachCamera( _currentCamera );
 				//TODO: set camera quality?
