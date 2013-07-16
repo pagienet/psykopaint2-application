@@ -3,17 +3,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import away3d.containers.View3D;
 	import away3d.core.base.Geometry;
-	import away3d.core.base.SubGeometry;
-	import away3d.core.base.SubMesh;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
-	import away3d.textures.BitmapTexture;
 
 	import flash.display.BitmapData;
-	import flash.display3D.textures.Texture;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 
