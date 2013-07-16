@@ -101,6 +101,15 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 
 		}
 
+		public static function ensurePowerOf2TopLeft(bitmapData : BitmapData):BitmapData
+		{
+			var legalWidth:int = getNextPowerOfTwo( bitmapData.width );
+			var legalHeight:int = getNextPowerOfTwo( bitmapData.height );
+			var clone : BitmapData = new BitmapData(legalWidth, legalHeight, bitmapData.transparent, 0);
+			clone.copyPixels(bitmapData, bitmapData.rect, new Point());
+			return clone;
+		}
+
 		public static function ensurePowerOf2ByCentering( bitmapData:BitmapData ):BitmapData {
 
 //			trace( "TextureUtil - ensurePowerOf2ByCentering - is source transparent? " + bitmapData.transparent );

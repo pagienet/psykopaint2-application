@@ -102,12 +102,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			trace( this, "creating painting at index: " + index );
 
 			// Painting and frame.
-			var framedPainting:FramedPainting = new FramedPainting( _view );
+			var hasFrame : Boolean = frameBmd != null;
+			// TODO: right now, transparency is based on frame presence. This is probably not a safe assumption.
+			var framedPainting:FramedPainting = new FramedPainting( _view, hasFrame, !hasFrame );
 			framedPainting.scaleX = framedPainting.scaleY = framedPainting.scaleZ = paintingScale;
 			if( paintingBmd ) {
 				framedPainting.setPaintingBitmapData( paintingBmd, _stage3dProxy );
 			}
-			if( frameBmd ) {
+			if( hasFrame ) {
 				framedPainting.setFrameBitmapData( frameBmd, _stage3dProxy );
 			}
 
