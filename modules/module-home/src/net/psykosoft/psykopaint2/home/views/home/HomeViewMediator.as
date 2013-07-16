@@ -212,7 +212,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			if( _waitingForFreezeSnapshot ) {
 
 				trace( this, "applying freeze snapshot..." );
-				view.freeze( _snapshotPromise.bitmapData );
+				view.freeze( /*_snapshotPromise.bitmapData*/ );
 				_waitingForFreezeSnapshot = false;
 
 				// Transition freeze?

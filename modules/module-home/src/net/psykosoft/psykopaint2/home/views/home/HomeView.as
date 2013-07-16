@@ -70,7 +70,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
 
-		public function freeze( bmd:BitmapData ):void {
+		public function freeze( /*bmd:BitmapData*/ ):void {
+
+			var bmd:BitmapData = new BitmapData( 1024, 768, false, 0xFF0000 );
+			bmd.perlinNoise( 50, 50, 8, 986, false, true );
+
 			if( _frozen ) return;
 			unFreeze();
 			trace( this, "freeze()" );
