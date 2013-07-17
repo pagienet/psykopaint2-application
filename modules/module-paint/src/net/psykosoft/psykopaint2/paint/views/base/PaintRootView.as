@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.brush.SelectColorSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleSubNavView;
@@ -43,7 +44,9 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.CAPTURE_IMAGE, CaptureImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.CONFIRM_CAPTURE_IMAGE, ConfirmCaptureImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.TRANSITION_TO_HOME_MODE, SubNavigationViewBase );
+			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_COLOR, SelectColorSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.TRANSITION_TO_PAINT_MODE, SubNavigationViewBase );
+
 
 			mouseEnabled = false;
 			name = "PaintRootView";

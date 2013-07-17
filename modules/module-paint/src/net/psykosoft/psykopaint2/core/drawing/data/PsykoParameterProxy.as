@@ -36,6 +36,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		private var minValue:Number;
 		private var maxValue:Number;
 		private var value:Number;
+		private var compareValue:Number;
 		private var indices:Vector.<int>;
 		private var mapping:Function;
 		private var parameterXML:XML;
@@ -55,6 +56,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			result.target_path = xml.@target;
 			if ( xml.hasOwnProperty("@minValue" )) result.minValue = Number( xml.@minValue );
 			if ( xml.hasOwnProperty("@maxValue" )) result.maxValue = Number( xml.@maxValue );
+			if ( xml.hasOwnProperty("@compareValue" )) result.compareValue = Number( xml.@compareValue );
 			if ( xml.hasOwnProperty("@value" )) result.value = Number( xml.@value );
 			if ( xml.hasOwnProperty("@indices" )) result.indices = Vector.<int>(String( xml.@indices ).split(","));
 			if ( xml.hasOwnProperty("@condition" )) result.condition = String( xml.@condition );
@@ -144,7 +146,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case PsykoParameter.NumberParameter:
 				case PsykoParameter.IntParameter:
 				case PsykoParameter.AngleParameter:	
-					return parameter.numberValue == value;
+					return parameter.numberValue == compareValue;
 					break;
 			}
 			throw("PsykoParameterProxy : parameter type does not match condition");
@@ -163,7 +165,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case PsykoParameter.NumberParameter:
 				case PsykoParameter.IntParameter:
 				case PsykoParameter.AngleParameter:	
-					return parameter.numberValue != value;
+					return parameter.numberValue != compareValue;
 					break;
 			}
 			throw("PsykoParameterProxy : parameter type does not match condition");
@@ -178,12 +180,12 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case PsykoParameter.StringListParameter:
 				case PsykoParameter.NumberListParameter:
 				case PsykoParameter.IconListParameter:	
-					return parameter.index < value;
+					return parameter.index < compareValue;
 					break;
 				case PsykoParameter.NumberParameter:
 				case PsykoParameter.IntParameter:
 				case PsykoParameter.AngleParameter:	
-					return parameter.numberValue < value;
+					return parameter.numberValue < compareValue;
 					break;
 			}
 			throw("PsykoParameterProxy : parameter type does not match condition");
@@ -197,12 +199,12 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case PsykoParameter.StringListParameter:
 				case PsykoParameter.NumberListParameter:
 				case PsykoParameter.IconListParameter:	
-					return parameter.index > value;
+					return parameter.index > compareValue;
 					break;
 				case PsykoParameter.NumberParameter:
 				case PsykoParameter.IntParameter:
 				case PsykoParameter.AngleParameter:	
-					return parameter.numberValue > value;
+					return parameter.numberValue > compareValue;
 					break;
 			}
 			throw("PsykoParameterProxy : parameter type does not match condition");
@@ -216,7 +218,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case PsykoParameter.NumberRangeParameter:
 				case PsykoParameter.IntRangeParameter:
 				case PsykoParameter.AngleRangeParameter:
-					return parameter.lowerRangeValue >= value && parameter.upperRangeValue <= value;
+					return parameter.lowerRangeValue >= compareValue && parameter.upperRangeValue <= compareValue;
 					break;
 				
 			}
@@ -231,7 +233,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case PsykoParameter.NumberRangeParameter:
 				case PsykoParameter.IntRangeParameter:
 				case PsykoParameter.AngleRangeParameter:
-					return parameter.lowerRangeValue > value || parameter.upperRangeValue < value;
+					return parameter.lowerRangeValue > compareValue || parameter.upperRangeValue < compareValue;
 					break;
 				
 			}

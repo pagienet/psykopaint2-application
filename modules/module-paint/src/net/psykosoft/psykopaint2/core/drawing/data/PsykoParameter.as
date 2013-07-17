@@ -57,6 +57,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		private var _stringValues:Vector.<String>;
 		private var _showInUI:Boolean;
 		private var _label:String;
+		private var _colorValue:int;
 		
 		public static function fromXML( data:XML ):PsykoParameter
 		{
@@ -104,6 +105,10 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case BooleanParameter:
 					//value, minValue, maxValue 
 					pp = new PsykoParameter( int(data.@type), data.@id, int( data.@value ) == 1 );
+					break;
+				case ColorParameter:
+					//rgb value 
+					pp = new PsykoParameter( int(data.@type), data.@id, int( data.@value ) );
 					break;
 			}
 			
@@ -179,6 +184,12 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					_minLimit = 0;
 					_maxLimit = _numberValues.length-1;
 					break;
+				case ColorParameter:
+					//index, array
+					_colorValue = args[0];
+					_minLimit = 0;
+					_maxLimit = 0x1000000;
+					break;
 			}
 		}
 		
@@ -253,6 +264,24 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( value > _maxLimit ) value = _maxLimit;
 			_numberValue = value;
 			dispatchEvent( new Event( Event.CHANGE ) );
+		}
+		
+		public function get colorValue():int
+		{
+			if ( type == ColorParameter  )
+			{
+				return _colorValue;
+			}
+			return int(_numberValue + 0.5);
+		}
+		
+		public function set colorValue( rgb:int ):void
+		{
+			if ( type == ColorParameter  )
+			{
+			 	_colorValue = rgb;
+			}
+			intValue = rgb;
 		}
 		
 		public function get index():int
@@ -441,6 +470,9 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case BooleanParameter:
 					booleanValue = int( value ) == 1;
 					break;
+				case ColorParameter:
+					colorValue = int( value );
+					break;
 			}
 		}
 		
@@ -520,6 +552,10 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case BooleanParameter:
 					if (  message.hasOwnProperty("@value") )
 						booleanValue = int( message.@value ) == 1;
+					break;
+				case ColorParameter:
+					if (  message.hasOwnProperty("@color") )
+						colorValue = int( message.@color );
 					break;
 			}
 			

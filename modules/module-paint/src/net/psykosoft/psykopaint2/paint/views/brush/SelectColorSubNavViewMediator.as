@@ -7,17 +7,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
-	public class EditBrushSubNavViewMediator extends MediatorBase
+	public class SelectColorSubNavViewMediator extends MediatorBase
 	{
 		[Inject]
-		public var view:EditBrushSubNavView;
+		public var view:SelectColorSubNavView;
 
 		[Inject]
 		public var paintModule:PaintModule;
 		
-		[Inject]
-		public var notifyActivateBrushChangedSignal:NotifyActivateBrushChangedSignal;
-
 		override public function initialize():void {
 
 			// Init.
@@ -28,28 +25,23 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post init.
-			view.setParameters( paintModule.getCurrentBrushParameters() );
-
-			notifyActivateBrushChangedSignal.add( onBrushParameterChangedFromOutside );
+			view.connectColorParameter( paintModule.getCurrentBrushParameters() );
+			
 		}
 
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
-				case EditBrushSubNavView.LBL_BACK: 
+				case SelectColorSubNavView.LBL_BACK: 
 					requestStateChange( StateType.PREVIOUS );
 					break;
-				case EditBrushSubNavView.LBL_COLOR: 
-					requestStateChange( StateType.PAINT_COLOR);
-					break;
+				
 				// WARNING: be careful if another side button is added since default should only be for parameter buttons.
 				default: 
-					view.openParameter( label );
+					
 					break;
 			}
 		}
 		
-		private function onBrushParameterChangedFromOutside( parameterSetVO:ParameterSetVO ):void {
-			view.updateParameters( parameterSetVO );
-		}
+		
 	}
 }

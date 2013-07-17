@@ -63,7 +63,19 @@ package net.psykosoft.psykopaint2.paint.configuration
 							target="pathengine.pointdecorator_2.Splat Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="2"
-							value="10"/>			
+							value="10"/>	
+						<parameter id="Custom Color" type={PsykoParameter.BooleanParameter}  value="0" showInUI="1"/>
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
+							target="pathengine.pointdecorator_1.Color Mode" 
+							condition={PsykoParameterProxy.CONDITION_TRUE }
+							
+							index={ColorDecorator.INDEX_MODE_FIXED_COLOR}/>	
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
+							target="pathengine.pointdecorator_1.Color Mode" 
+							condition={PsykoParameterProxy.CONDITION_FALSE }
+							
+							index={ColorDecorator.INDEX_MODE_PICK_COLOR}/>	
+						
 					</parameterMapping>
 
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
@@ -75,12 +87,12 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id="Mapping" path="pathengine.pointdecorator_0" index="1"/>
 						</SizeDecorator>
 						<ColorDecorator>
-							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index="0" />
+							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
 							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_1" showInUI="1"/>
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" value1="0.5" value2="0.9" />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.25" value2="0.33" />
 							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_1" value1="0.8" value2="1" />
-							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" value="0xffffff" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" showInUI="1"/>
 						
 						</ColorDecorator>
 						<SplatterDecorator>
