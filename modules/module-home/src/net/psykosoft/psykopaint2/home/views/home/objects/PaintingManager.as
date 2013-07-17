@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import br.com.stimuli.loading.BulkLoader;
 
 	import flash.display.BitmapData;
+	import flash.geom.Point;
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
@@ -18,9 +19,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
-	import net.psykosoft.psykopaint2.home.views.home.objects.GalleryPainting;
-	import net.psykosoft.psykopaint2.home.views.home.objects.GalleryPainting;
-	import net.psykosoft.psykopaint2.home.views.home.objects.GalleryPainting;
 
 	public class PaintingManager extends ObjectContainer3D
 	{
@@ -28,17 +26,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _cameraController:HScrollCameraController;
 		private var _room:Room;
 		private var _view:View3D;
-		private var _snapPointForPainting:Dictionary;
 		private var _shadowForPainting:Dictionary;
 		private var _easel:Easel;
-		private var _lightPicker : LightPickerBase;
+		private var _lightPicker:LightPickerBase;
 		private var _stage3dProxy:Stage3DProxy;
 		private var _settingsPanel:Mesh;
 
 		// TODO: make private
 		public var homePaintingIndex:int = -1;
-
-		private const FRAME_GAP:Number = 300;
 
 		public function PaintingManager( cameraController:HScrollCameraController, room:Room, view:View3D, lightPicker:LightPickerBase, stage3dProxy:Stage3DProxy ) {
 			super();
@@ -46,7 +41,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_room = room;
 			_view = view;
 			_paintings = new Vector.<GalleryPainting>();
-			_snapPointForPainting = new Dictionary();
 			_shadowForPainting = new Dictionary();
 			_lightPicker = lightPicker;
 			_stage3dProxy = stage3dProxy;
@@ -72,18 +66,27 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		public function setEaselContent( vo : PaintingInfoVO ):void {
-			_easel.setContent(vo);
+		public function setEaselContent( vo:PaintingInfoVO ):void {
+			_easel.setContent( vo );
 		}
 
 		public function createDefaultPaintings():void {
 
+			// -----------------------
 			// Settings painting.
-			var settingsPainting:GalleryPainting = createPaintingAtIndex(
+			// -----------------------
+
+			// Painting.
+			var settingsPainting:GalleryPainting = createPainting(
 					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ),
-					null,
-					0, 1.5 );
-			settingsPainting.width = 1300;
+					null
+			);
+			settingsPainting.x = 0;
+			settingsPainting.z = -50;
+			settingsPainting.scale( 1.5 );
+			addPainting( settingsPainting );
+
+			// Sign.
 			_settingsPanel = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage(
 					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPanel", true ),
 					_stage3dProxy,
@@ -95,101 +98,55 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_settingsPanel.rotationX = -90;
 			addChild( _settingsPanel );
 
+			// -----------------------
 			// Easel.
-			addPaintingAt(1, _easel);
-			_easel.width = 1200;
+			// -----------------------
+
 			_easel.easelVisible = true;
-			autoPositionPaintingAtIndex( _easel, 1 );
-			_easel.z -= 1250;
-			_easel.y -= 200;
+			_easel.scale( 1.35 );
+			_easel.x = 1300;
+			_easel.z = -250;
+			_easel.y = 60;
+			addPainting( _easel );
 
+			// -----------------------
 			// Home painting.
-			var homePainting:GalleryPainting = createPaintingAtIndex(
-					new CoreRootView.SplashImageAsset().bitmapData,
-					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "homePaintingFrame", true ),
-					2, 0.75, 70, 128 // TODO: we need a way to associate frame offsets to frame images
-			);
-			homePainting.width = 1200;
-			homePaintingIndex = 2;
+			// -----------------------
 
-			// Sample paintings. // TODO: remove when we are ready to show published paintings
-//			for( var i:uint; i < 7; i++ ) {
-//				createPaintingAtIndex( BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "samplePainting" + i, true ), FrameType.BLUE, i + 2 );
-//			}
+			var frameOffset:Point = FrameOffsets.getOffsetForFrameType( FrameType.WHITE_FRAME );
+			var homePainting:GalleryPainting = createPainting(
+					new CoreRootView.SplashImageAsset().bitmapData,
+					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( FrameType.WHITE_FRAME, true ),
+					frameOffset.x, frameOffset.y
+			);
+			homePainting.scale( 0.55 );
+			homePainting.x = 2600;
+			homePainting.z = -50;
+			homePaintingIndex = 2;
+			addPainting( homePainting );
 		}
 
-		public function createPaintingAtIndex( paintingBmd:BitmapData, frameBmd:BitmapData, index:uint, paintingScale:Number = 1, frameOffsetX:Number = 0, frameOffsetY:Number = 0 ):FramedPainting {
-
-			trace( this, "creating painting at index: " + index );
-
-			// Painting and frame.
-			var hasFrame : Boolean = frameBmd != null;
+		public function createPainting( paintingBmd:BitmapData, frameBmd:BitmapData, frameOffsetX:Number = 0, frameOffsetY:Number = 0 ):FramedPainting {
+			var hasFrame:Boolean = frameBmd != null;
 			// TODO: right now, transparency is based on frame presence. This is probably not a safe assumption.
 			var framedPainting:FramedPainting = new FramedPainting( _view, hasFrame, true );
-			framedPainting.scaleX = framedPainting.scaleY = framedPainting.scaleZ = paintingScale;
 			if( paintingBmd ) {
 				framedPainting.setPaintingBitmapData( paintingBmd, _stage3dProxy );
 			}
 			if( hasFrame ) {
 				framedPainting.setFrameBitmapData( frameBmd, _stage3dProxy, frameOffsetX, frameOffsetY );
 			}
-
-			addPaintingAt(index, framedPainting);
-
 			return framedPainting;
 		}
 
-		private function addPaintingAt(index : uint, painting : GalleryPainting) : void
-		{
-// Add to display, store, and position.
-			var numPaintings : uint = _paintings.length;
-			if (index < numPaintings) _paintings.splice(index, 0, painting);
-			else _paintings.push(painting);
-			numPaintings++;
-			addChild(painting);
-			autoPositionPaintingAtIndex(painting, index);
-
-			// Need to update paintings to the right of this one?
-			if (index < numPaintings - 1) {
-				for (var i : uint = index + 1; i < numPaintings; i++) {
-					autoPositionPaintingAtIndex(_paintings[ i ], i);
-				}
-			}
+		private function addPainting( painting:GalleryPainting ):void {
+			_paintings.push( painting );
+			addChild( painting );
+			_cameraController.positionManager.pushSnapPoint( painting.x );
 		}
 
 		public function getPaintingAtIndex( index:uint ):GalleryPainting {
 			return _paintings[ index ];
-		}
-
-		private function autoPositionPaintingAtIndex( framedPainting:GalleryPainting, index:uint ):void {
-
-			// Position painting.
-			var px:Number = 0;
-			if( index == 0 ) {
-				px = framedPainting.width / 2;
-			}
-			else {
-				var previousPainting:GalleryPainting = _paintings[ index - 1 ];
-				px = previousPainting.x + previousPainting.width / 2 + FRAME_GAP + framedPainting.width / 2;
-			}
-			framedPainting.x = px;
-			framedPainting.z = -50;
-
-			// Create or update snap point.
-			var snapPoint:Number = _snapPointForPainting[ framedPainting ];
-			if( snapPoint ) {
-				trace( this, "reusing snap point: " + index );
-				_cameraController.positionManager.updateSnapPointAtIndex( index, px );
-			}
-			else {
-				trace( this, "pushing snap point: " + index );
-				_cameraController.positionManager.pushSnapPoint( px );
-			}
-			_snapPointForPainting[ framedPainting ] = px;
-		}
-
-		private function removePaintingAtIndex( index:uint ):void {
-			// TODO... remove painting, remove shadow, remove snap point
 		}
 
 		public function get easel():Easel {
