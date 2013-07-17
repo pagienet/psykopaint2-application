@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import flash.display3D.Context3D;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
@@ -224,9 +225,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		}
 		*/
 
-		public function set canvasRect(canvasRect : Rectangle) : void
+		public function setCanvasMatrix(matrix : Matrix) : void
 		{
-			_brushEngine.pathManager.setCanvasRect(canvasRect);
+			_brushEngine.pathManager.setCanvasMatrix(matrix);
 		}
 		
 		public function linkParameterMappings():void

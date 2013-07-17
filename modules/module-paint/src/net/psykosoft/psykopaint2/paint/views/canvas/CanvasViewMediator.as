@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.display3D.textures.Texture;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -18,6 +19,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -26,7 +28,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestCameraAdjustToRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
@@ -88,13 +89,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var canvasModel:CanvasModel;
 
 		[Inject]
-		public var requestCameraAdjustToRectSignal:RequestCameraAdjustToRectSignal;
-
-		[Inject]
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
 
 		private var _transformMatrix:Matrix;
-		private var _incomingEaselRect:Rectangle;
+		private var _easelRectFromHomeView:Rectangle;
 
 		override public function initialize():void {
 
@@ -103,9 +101,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( StateType.PAINT );
 			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
 			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
-			registerEnablingState( StateType.PAINT_TRANSFORM );
+
 			registerEnablingState( StateType.PAINT_COLOR );
+			registerEnablingState( StateType.PAINT_SHOW_SOURCE );
+
 			registerEnablingState( StateType.TRANSITION_TO_HOME_MODE );
+			registerEnablingState( StateType.TRANSITION_TO_PAINT_MODE );
 
 			// Init.
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
@@ -126,13 +127,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			_transformMatrix = new Matrix();
 		}
 
+
 		// -----------------------
 		// From app.
 		// -----------------------
-
-		private function onEaselRectInfo( rect:Rectangle ):void {
-			_incomingEaselRect = rect;
-		}
 
 		//TODO: this is for desktop testing - remove in final version
 		private function onMouseWheel( event:MouseEvent ):void {
@@ -212,13 +210,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				if( !CoreSettings.RUNNING_ON_iPAD ) {
 					view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
 				}
-				zoomIn();
 			}
 			else {
 				paintModule.stopAnimations();
 				if( !CoreSettings.RUNNING_ON_iPAD ) {
 					view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
 				}
+			}
+
+			if( newState == StateType.TRANSITION_TO_PAINT_MODE ) {
+				_waitingForZoomInToContinueToPaint = true;
+				zoomIn();
 			}
 
 			if( newState == StateType.TRANSITION_TO_HOME_MODE ) {
@@ -233,21 +235,39 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// -----------------------
 
 		private var _waitingForZoomOutToContinueToHome:Boolean;
+		private var _waitingForZoomInToContinueToPaint:Boolean;
 
-		private const MIN_ZOOM_SCALE:Number = 0.482;
-		private const MAX_ZOOM_SCALE:Number = 4;
+		private var _minZoomScale:Number;
+		private const MAX_ZOOM_SCALE:Number = 3;
 
-		public var zoomScale:Number = MIN_ZOOM_SCALE;
+		public var zoomScale:Number = _minZoomScale;
+
+		private function onEaselRectInfo( rect:Rectangle ):void {
+			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
+				rect.x *= CoreSettings.GLOBAL_SCALING;
+				rect.y *= CoreSettings.GLOBAL_SCALING;
+				rect.width *= CoreSettings.GLOBAL_SCALING;
+				rect.height *= CoreSettings.GLOBAL_SCALING;
+			}
+			trace( this, "easel screen rect info received: " + rect );
+			_easelRectFromHomeView = rect;
+			_minZoomScale = _easelRectFromHomeView.width / canvasModel.width;
+			zoomScale = _minZoomScale;
+			// Uncomment to visualize incoming rect.
+			view.graphics.lineStyle( 1, 0x00FF00 );
+			view.graphics.drawRect( rect.x, rect.y, rect.width, rect.height );
+			view.graphics.endFill();
+		}
 
 		private function zoomIn():void {
-//			updateCanvasRect( _incomingEaselRect.clone() );
+			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 2, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}
 
 		private function zoomOut():void {
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 2, { zoomScale: MIN_ZOOM_SCALE, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
+			TweenLite.to( this, 2, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}
 
 		private function onZoomUpdate():void {
@@ -262,6 +282,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			    requestStateChange( StateType.HOME_ON_EASEL );
 				_waitingForZoomOutToContinueToHome = false;
 			}
+			if( _waitingForZoomInToContinueToPaint ) {
+			    requestStateChange( StateType.PAINT );
+				_waitingForZoomInToContinueToPaint = false;
+			}
 		}
 
 		// -----------------------
@@ -270,41 +294,37 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function updateCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
-			requestCameraAdjustToRectSignal.dispatch( rect );
-			renderer.renderRect = rect;
+			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
 		private function constrainCanvasRect( rect:Rectangle ):void {
 
-			var scale:Number = rect.height / canvasModel.height;
-			if( scale < MIN_ZOOM_SCALE ) {
-				rect.width *= ( MIN_ZOOM_SCALE / scale );
-				rect.height *= ( MIN_ZOOM_SCALE / scale );
-				scale = MIN_ZOOM_SCALE;
-			} else if( scale > MAX_ZOOM_SCALE ) {
-				rect.width *= ( MAX_ZOOM_SCALE / scale );
-				rect.height *= ( MAX_ZOOM_SCALE / scale );
-				scale = MAX_ZOOM_SCALE;
+			zoomScale = rect.height / canvasModel.height;
+			if( zoomScale < _minZoomScale ) {
+				rect.width *= ( _minZoomScale / zoomScale );
+				rect.height *= ( _minZoomScale / zoomScale );
+				zoomScale = _minZoomScale;
+			} else if( zoomScale > MAX_ZOOM_SCALE ) {
+				rect.width *= ( MAX_ZOOM_SCALE / zoomScale );
+				rect.height *= ( MAX_ZOOM_SCALE / zoomScale );
+				zoomScale = MAX_ZOOM_SCALE;
 			}
 
-
 			var offsetX:Number = rect.x / canvasModel.width;
-			if( scale < 1 )
-				offsetX = (1 - scale) * .5;
+			if( zoomScale < 1 )
+				offsetX = (1 - zoomScale) * .5;
 
 			var offsetY:Number = rect.y / canvasModel.height;
-			if( scale < 1 )
-				offsetY = (1 - scale) * .175;
-
+			// TODO: this causes a jump when coming from home, it seems that the .175 value needs to be calculated dynamically
+			if( zoomScale < 1 )
+				offsetY = (1 - zoomScale) * .175;
 
 			// TODO: Doesn't feel good while animating - should we use a flag here and enable it when not animating?
-			/*if( scale > 0.95 && scale < 1.05 ) {
-				scale = 1;
+			/*if( zoomScale > 0.95 && zoomScale < 1.05 ) {
+				zoomScale = 1;
 				offsetX = 0;
 				offsetY = 0;
 			}*/
-
-			zoomScale = scale;
 
 			rect.x = offsetX * canvasModel.width;
 			rect.y = offsetY * canvasModel.height;
@@ -322,7 +342,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			lightingModel.update();
 		}
 
-		private function paintModuleNormalRenderingsStep():void {
+		private function paintModuleNormalRenderingsStep(target : Texture):void {
 			if( !view.visible ) return;
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "rendering canvas" );

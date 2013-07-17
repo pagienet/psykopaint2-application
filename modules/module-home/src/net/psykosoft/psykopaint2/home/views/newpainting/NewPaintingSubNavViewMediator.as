@@ -35,11 +35,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			manageMemoryWarnings = false;
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
-			// TODO: set position does not take effect
-//			view.navigation.setScrollerPosition( NewPaintingSubNavView.lastScrollerPosition );
-//			trace("SCROLLER POSITION", NewPaintingSubNavView.lastScrollerPosition);
-
 			displaySavedPaintings();
+
+			if( NewPaintingSubNavView.lastScrollerPosition != 0 )
+			view.navigation.setScrollerPosition( NewPaintingSubNavView.lastScrollerPosition );
 		}
 
 		// -----------------------
@@ -100,23 +99,13 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			var data:Vector.<PaintingInfoVO> = paintingModel.getPaintingCollection();
 			if( data.length > 0 ) {
 				if( data.length > 1 ) {
-					data.sort( sortOnLastSaved );
+					data.sort( paintingModel.sortOnLastSaved );
 				}
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
 				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
 				requestEaselUpdateSignal.dispatch( vo );
 			}
-		}
-
-		// -----------------------
-		// Utils.
-		// -----------------------
-
-		private function sortOnLastSaved( paintingVOA:PaintingInfoVO, paintingVOB:PaintingInfoVO ):Number {
-			if( paintingVOA.lastSavedOnDateMs > paintingVOB.lastSavedOnDateMs ) return -1;
-			else if( paintingVOA.lastSavedOnDateMs < paintingVOB.lastSavedOnDateMs ) return 1;
-			else return 0;
 		}
 	}
 }

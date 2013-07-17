@@ -36,7 +36,8 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 
 		private var _isEnabled:Boolean = true;
 
-		private const TARGET_EASE_FACTOR:Number = 0.5;
+		// TODO: remove logic if we are not using the look at feature
+		private const TARGET_EASE_FACTOR:Number = 1;
 
 		public function HScrollCameraController() {
 
@@ -47,8 +48,8 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 
 			_interactionManager.throwInputMultiplier = 2;
 			_interactionManager.useDetailedDelta = false;
-			_positionManager.frictionFactor = 0.77;
-			_positionManager.minimumThrowingSpeed = 60;
+			_positionManager.frictionFactor = 0.85; // lower -> more friction
+			_positionManager.minimumThrowingSpeed = 150;
 			_positionManager.edgeContainmentFactor = 0.01;
 			_positionManager.motionEndedSignal.add( onSnapMotionEnded );
 
@@ -116,7 +117,7 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 			_cameraTarget.x = _positionManager.position;
 			_camera.x += TARGET_EASE_FACTOR * ( _cameraTarget.x - _camera.x );
 			_camera.lookAt( _cameraTarget.position );
-//			_camera.lookAt( new Vector3D() ); // Useful for debugging perspective.
+//			_camera.lookAt( new Vector3D( 3000 ) ); // Useful for debugging perspective.
 		}
 
 		public function startPanInteraction():void {

@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		// TODO: different full image sizes depending on resolution?
 
 		private const THUMB_SIZE:uint = 150; // TODO: 150 for HR, 75 for LR
-		private const THUMB_GAP:uint = 20;
+		private const THUMB_GAP:uint = 100;
 		private const GAP_LEFT:uint = 10;
 		private const GAP_TOP:uint = 10;
 
@@ -207,7 +207,9 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 		override protected function onDispose():void {
 			_atlas.dispose();
-			_imageLoader.dispose();
+			if( _imageLoader ) {
+				_imageLoader.dispose();
+			}
 		}
 
 		override protected function onSheetAtIndexNotNeeded( index:uint ):void {

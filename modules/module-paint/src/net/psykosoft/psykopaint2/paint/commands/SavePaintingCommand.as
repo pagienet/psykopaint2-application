@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.io.CanvasExportEvent;
 	import net.psykosoft.psykopaint2.core.io.CanvasExporter;
+	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
@@ -73,6 +74,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var notifyMemoryWarningSignal:NotifyMemoryWarningSignal;
 
+		[Inject]
+		public var canvasHistoryModel:CanvasHistoryModel;
+
 		private var _paintId:String;
 		private var _infoBytes:ByteArray;
 		private var _dataBytes:ByteArray;
@@ -90,11 +94,19 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			trace( this, "incoming painting id: " + paintingId );
 
-			// Display pop up and wait 1 frame before starting the save process ( so the pop up is actually displayed first ).
-			requestPopUpDisplaySignal.dispatch( PopUpType.SAVING );
-			stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
-			notifyMemoryWarningSignal.add( onMemoryWarning );
 			context.detain( this );
+			notifyMemoryWarningSignal.add( onMemoryWarning );
+			requestPopUpDisplaySignal.dispatch( PopUpType.SAVING );
+
+			// Skip saving if the painting is not dirty.
+			var isPaintingDirty:Boolean = canvasHistoryModel.hasHistory;
+			trace( "is painting dirty: " + isPaintingDirty );
+			if( !isPaintingDirty ) {
+				wrapItUp();
+			}
+
+			// Wait a bit before starting the save process so we actually give the pop a chance to show.
+			stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
 
 		private function onEnterFrame( event:Event ):void {

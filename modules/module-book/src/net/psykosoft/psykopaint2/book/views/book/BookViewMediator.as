@@ -3,11 +3,13 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import away3d.core.managers.Stage3DProxy;
 
+	import flash.display.Bitmap;
+
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.book.views.book.content.SampleImagesBookDataProvider;
-	import net.psykosoft.psykopaint2.book.views.book.content.TestBookDataProvider;
 	import net.psykosoft.psykopaint2.book.views.book.content.UserPhotosBookDataProvider;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -55,9 +57,9 @@ package net.psykosoft.psykopaint2.book.views.book
 //					provider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 //					view.book.dataProvider = provider;
 
-					initializeSamplesDataProvider();
+//					initializeSamplesDataProvider();
 
-//					initializeUserPhotosDataProvider();
+					initializeUserPhotosDataProvider();
 
 					break;
 				}
@@ -85,6 +87,18 @@ package net.psykosoft.psykopaint2.book.views.book
 			_userPhotosDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_userPhotosDataProvider.fullImagePickedSignal.add( onFullImagePicked );
 			_userPhotosDataProvider.readySignal.add( onUserPhotosDataProviderReady );
+			// Uncomment to visualize data coming from the user photos extension.
+//			_userPhotosDataProvider.sheetGeneratedSignal.add( onUserPhotosSheetGenerated );
+		}
+
+		private var _tracedSheet:Boolean;
+		private function onUserPhotosSheetGenerated( iosBmd:BitmapData ):void {
+			if( _tracedSheet ) return;
+			var bitmap:Bitmap = new Bitmap( iosBmd );
+			bitmap.scaleX = bitmap.scaleY = 0.35;
+			bitmap.x = 1024 * CoreSettings.GLOBAL_SCALING - bitmap.width;
+			view.addChild( bitmap );
+			_tracedSheet = true;
 		}
 
 		private function onUserPhotosDataProviderReady():void {

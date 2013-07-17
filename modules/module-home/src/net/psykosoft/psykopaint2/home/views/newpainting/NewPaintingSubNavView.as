@@ -2,11 +2,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 {
 
 	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
-
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;

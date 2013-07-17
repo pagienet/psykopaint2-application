@@ -112,9 +112,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case CanvasSubNavView.LBL_SAVE:
 				{
-					if( paintingModel.focusedPaintingId != "" ) {
-						requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, false );
-					}
+					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, false );
 					break;
 				}
 

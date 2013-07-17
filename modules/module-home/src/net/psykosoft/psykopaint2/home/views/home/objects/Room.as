@@ -42,27 +42,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		public function initialize():void {
 			loadWall();
 			loadFloor();
-			loadPanels();
-		}
-
-		// -----------------------
-		// Signs.
-		// -----------------------
-
-		private var _settingsPanel:Mesh;
-
-		private function loadPanels():void {
-
-			_settingsPanel = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage(
-					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPanel", true ),
-					_proxy,
-					true
-			);
-			_settingsPanel.x = 735;
-			_settingsPanel.y = 805;
-			_settingsPanel.rotationX = -90;
-			addChild( _settingsPanel );
-
 		}
 
 		// -----------------------
@@ -163,10 +142,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		public function get wall():Mesh {
 			return _wall;
-		}
-
-		public function get settingsPanel():Mesh {
-			return _settingsPanel;
 		}
 	}
 }

@@ -6,18 +6,26 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.Context3DStencilAction;
+	import flash.display3D.Context3DTriangleFace;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 
 	public class CanvasRenderer
 	{
@@ -41,16 +49,36 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		[Inject]
 		public var requestChangeRenderRect : RequestChangeRenderRectSignal;
-		
+
+		[Inject]
+		public var requestSetCanvasBackgroundSignal:RequestSetCanvasBackgroundSignal;
+
+		[Inject]
+		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
+
+		[Inject]
+		public var requestEaselRectInfoSignal:RequestEaselRectInfoSignal;
+
+		[Inject]
+		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
+
 		private var _paintModule : PaintModule;
-
 		private var _context3D : Context3D;
-
 		private var _lightingRenderer : LightingRenderer;
+		private var _background : RefCountedTexture;
+		private var _backgroundBaseRect : Rectangle;
 
 		public function CanvasRenderer()
 		{
 
+		}
+
+		private function disposeBackground() : void
+		{
+			if (_background) {
+				_background.dispose();
+				_background = null;
+			}
 		}
 
 		[PostConstruct]
@@ -60,11 +88,37 @@ package net.psykosoft.psykopaint2.core.rendering
 			requestFreezeRendering.add(freezeRendering);
 			requestResumeRendering.add(resumeRendering);
 			requestChangeRenderRect.add(onChangeRenderRect);
+			requestSetCanvasBackgroundSignal.add(onSetBackgroundSignal);
+		}
+
+		private function onSetBackgroundSignal(texture : RefCountedTexture) : void
+		{
+			disposeBackground();
+			notifyEaselRectInfoSignal.addOnce(onEaselRectInfo);
+			requestEaselRectInfoSignal.dispatch();
+			_background = texture;
+		}
+
+		private function onEaselRectInfo(rect : Rectangle) : void
+		{
+			_backgroundBaseRect = rect.clone();
+			trace (_backgroundBaseRect);
 		}
 
 		private function onChangeRenderRect(rect : Rectangle) : void
 		{
 			_lightingRenderer.renderRect = rect;
+			updateCanvasMatrix(rect);
+		}
+
+		private function updateCanvasMatrix(rect : Rectangle) : void
+		{
+			var matrix : Matrix = new Matrix();
+			matrix.a = rect.width/canvas.width;
+			matrix.d = rect.height/canvas.height;
+			matrix.tx = rect.x/canvas.width;
+			matrix.ty = rect.y/canvas.height;
+			notifyCanvasMatrixChanged.dispatch(matrix);
 		}
 
 		private function resumeRendering() : void
@@ -81,26 +135,6 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function get renderRect():Rectangle
 		{
 			return _lightingRenderer.renderRect;
-		}
-		
-		public function set renderRect( rect : Rectangle):void
-		{
-			_lightingRenderer.renderRect  = rect;
-		}
-		
-		public function get offsetX():Number
-		{
-			return _lightingRenderer.offsetX;
-		}
-		
-		public function get offsetY():Number
-		{
-			return _lightingRenderer.offsetY;
-		}
-		
-		public function get scale():Number
-		{
-			return _lightingRenderer.scale;
 		}
 		
 		public function set sourceTextureAlpha( value:Number ):void
@@ -127,6 +161,8 @@ package net.psykosoft.psykopaint2.core.rendering
 
 			_context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
 			_context3D.setCulling(TriangleCulling.NONE);
+			_context3D.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.ALWAYS, Context3DStencilAction.SET, Context3DStencilAction.SET, Context3DStencilAction.SET);
+			_context3D.setStencilReferenceValue(1);
 
 			if (lightingModel.lightEnabled) {
 				_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
@@ -139,7 +175,44 @@ package net.psykosoft.psykopaint2.core.rendering
 				CopySubTexture.copy(canvas.fullSizeBackBuffer, sourceRect, destRect, _context3D);
 			}
 
-			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+			renderBackground();
+		}
+
+		private function renderBackground() : void
+		{
+			if (isBackgroundVisible()) {
+				var backgroundRect : Rectangle = createBackgroundRect();
+				_context3D.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);
+				_context3D.setStencilReferenceValue(0);
+				_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+				CopySubTexture.copy(_background.texture, new Rectangle(0, 0, 1, 1), backgroundRect, _context3D);
+			}
+		}
+
+		private function createBackgroundRect() : Rectangle
+		{
+			var canvasRect : Rectangle = _lightingRenderer.renderRect;
+			var rect : Rectangle = new Rectangle();
+
+			// transformation matrix originalRect -> renderRect
+			var scaleX : Number = canvasRect.width / _backgroundBaseRect.width;
+			var scaleY : Number = canvasRect.height / _backgroundBaseRect.height;
+			var tx : Number = canvasRect.x - scaleX*_backgroundBaseRect.x;
+			var ty : Number = canvasRect.y - scaleY*_backgroundBaseRect.y;
+
+			// apply matrix to background rect (= 0, 0, 1, 1)
+			rect.width = scaleX;
+			rect.height = scaleY;
+			rect.x = tx/canvas.width;
+			rect.y = ty/canvas.height;
+
+			return rect;
+		}
+
+		private function isBackgroundVisible() : Boolean
+		{
+			return _background && (	renderRect.left > 0 || renderRect.right < canvas.width ||
+									renderRect.top > 0 || renderRect.bottom < canvas.height);
 		}
 
 		public function renderToBitmapData() : BitmapData

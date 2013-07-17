@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 
+	import flash.display3D.textures.Texture;
+
 	import flash.events.MouseEvent;
 	import flash.geom.Vector3D;
 
@@ -43,8 +45,13 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			// Initialize book.
 			_book = new Book( stage, 1024, 1024 );
+			_book.y = 250;
 			_book.rotationX = -75;
 			_view.scene.addChild( _book );
+
+			// Interaction.
+			stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
+			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 		}
 
 		override protected function onDisabled():void {
@@ -70,7 +77,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_book.stopInteraction();
 		}
 
-		public function renderScene():void {
+		public function renderScene(target : Texture):void {
 
 			if( !_isEnabled ) return;
 			if( !_view ) return;
@@ -81,7 +88,7 @@ package net.psykosoft.psykopaint2.book.views.book
 //			_book.rotationX += ( target - _book.rotationX ) * 0.25;
 
 			_book.update();
-			_view.render();
+			_view.render(target);
 		}
 
 		public function get book():Book {

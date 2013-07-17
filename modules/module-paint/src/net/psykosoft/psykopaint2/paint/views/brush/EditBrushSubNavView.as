@@ -78,6 +78,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var matchesLast:Boolean = getLastSelectedParameter( _parameterSetVO.brushName ).indexOf( parameter.id ) != -1;
 				if( matchesLast || i == 0) firstParamId = parameter.id;
 //				trace( ">>> " + parameter.toXMLString() );
+
 				if ( parameter.type != PsykoParameter.ColorParameter )
 				{
 					var btn:SbButton = navigation.createButton( parameter.label, "param" + parameter.type, "btnLabelCenter", null )
@@ -85,6 +86,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				} else {
 					navigation.toggleRightButtonVisibility(true);
 				}
+
+				var btn:SbButton = navigation.createButton( parameter.label, "", "btnLabelCenter", null )
+				group.addButton( btn );
+
 			}
 			navigation.addCenterButtonGroup( group );
 			navigation.layout();

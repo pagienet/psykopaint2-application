@@ -45,7 +45,9 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.CONFIRM_CAPTURE_IMAGE, ConfirmCaptureImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.TRANSITION_TO_HOME_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_COLOR, SelectColorSubNavView );
-			
+			StateToSubNavLinker.linkSubNavToState( StateType.TRANSITION_TO_PAINT_MODE, SubNavigationViewBase );
+
+
 			mouseEnabled = false;
 			name = "PaintRootView";
 		}

@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.managers.Stage3DProxy;
 
 	import flash.events.Event;
-	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
 
@@ -21,9 +20,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestCameraAdjustToRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
@@ -65,14 +64,16 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
 
 		[Inject]
-		public var applicationRenderer:ApplicationRenderer;
+		public var requestSetCanvasBackgroundSignal:RequestSetCanvasBackgroundSignal;
 
 		[Inject]
-		public var requestCameraAdjustToRectSignal:RequestCameraAdjustToRectSignal;
+		public var applicationRenderer:ApplicationRenderer;
 
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
 		private var _dockedAtPaintingIndex:int = -1;
+
+		private var _snapshotPromise:SnapshotPromise;
 
 		override public function initialize():void {
 
@@ -89,7 +90,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerEnablingState( StateType.SETTINGS );
 			registerEnablingState( StateType.SETTINGS_WALLPAPER );
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
-			registerEnablingState( StateType.TRANSITION_TO_PAINT_MODE );
+			registerEnablingState( StateType.PREPARE_FOR_PAINT_MODE );
 			registerEnablingState( StateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
 
 			// Frozen states.
@@ -100,10 +101,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerFreezingState( StateType.BOOK_PICK_USER_IMAGE_IOS );
 			registerFreezingState( StateType.CROP );
 			registerFreezingState( StateType.PICK_USER_IMAGE_DESKTOP );
-//			registerFreezingState( StateType.PAINT );
-//			registerFreezingState( StateType.PAINT_SELECT_BRUSH );
-//			registerFreezingState( StateType.PAINT_ADJUST_BRUSH );
-//			registerFreezingState( StateType.PAINT_TRANSFORM );
 
 			// Register view gpu rendering in core.
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL, 0 );
@@ -115,7 +112,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
 			requestEaselRectInfoSignal.add( onEaselRectInfoRequested );
-			requestCameraAdjustToRectSignal.add( onCameraRectRequested );
 
 			// From view.
 			view.setupSignal.add( onViewSetup );
@@ -132,10 +128,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		// From app.
 		// -----------------------
 
-		private function onCameraRectRequested( value:Rectangle ):void {
-			view.adjustCameraToFitEaselAtRect( value );
-		}
-
 		private function onEaselRectInfoRequested():void {
 			notifyEaselRectInfoSignal.dispatch( view.easelRect );
 		}
@@ -147,16 +139,11 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onPaintingDataRetrieved( data:Vector.<PaintingInfoVO> ):void {
 			if( data.length == 0 ) return;
 
+			data.sort( paintingModel.sortOnLastSaved );
 			var latestVo:PaintingInfoVO = data[ 0 ];
 			var len:uint = data.length;
 			var vo:PaintingInfoVO;
 
-			for( var i:uint = 1; i < len; i++ ) {
-				vo = data[ i ];
-				if( vo.lastSavedOnDateMs > latestVo.lastSavedOnDateMs ) {
-					latestVo = vo;
-				}
-			}
 			view.paintingManager.setEaselContent( latestVo );
 		}
 
@@ -185,21 +172,21 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.room.changeWallpaper( atf );
 		}
 
-		private var _snapshotPromise:SnapshotPromise;
 
 		override protected function onStateChange( newState:String ):void {
 			if( _freezingStates.indexOf( newState ) != -1 ) freezeView();
 			else {
 				view.unFreeze();
 
-				if( newState == StateType.TRANSITION_TO_PAINT_MODE ) {
+				if( newState == StateType.PREPARE_FOR_PAINT_MODE ) {
 
 					// Looking at easel?
 					if( _dockedAtPaintingIndex != 1 ) {
 						throw new Error( "HomeViewMediator - requested to transition to paint and not at easel." );
 					}
 
-					freezeView();
+					_snapshotPromise = applicationRenderer.requestSnapshot();
+					_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
 				}
 
 				super.onStateChange( newState );
@@ -221,21 +208,23 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onCanvasSnapShot( event:Event ):void {
+
 			_snapshotPromise.removeEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
 
 			if( _waitingForFreezeSnapshot ) {
 
 				trace( this, "applying freeze snapshot..." );
-				view.freeze( _snapshotPromise.bitmapData );
+				view.freeze( _snapshotPromise.texture.newReference() );
+				_snapshotPromise.texture.dispose();
 				_waitingForFreezeSnapshot = false;
+			}
 
-				// Transition freeze?
-				if( stateModel.currentState == StateType.TRANSITION_TO_PAINT_MODE ) {
-					notifyEaselRectInfoSignal.dispatch( view.easelRect );
-					setTimeout( function():void {
-						requestStateChange( StateType.PAINT );
-					}, 250 );
-				}
+			// Going to paint?
+			if( stateModel.currentState == StateType.PREPARE_FOR_PAINT_MODE ) {
+				requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.texture.newReference());
+				setTimeout( function():void {
+					requestStateChange( StateType.TRANSITION_TO_PAINT_MODE );
+				}, 50 );
 			}
 
 			_snapshotPromise = null;

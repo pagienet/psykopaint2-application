@@ -58,5 +58,16 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 		{
 			CopyTexture.copy(_normalSpecularTexture, _context, _canvas.usedTextureWidthRatio, _canvas.usedTextureHeightRatio);
 		}
+
+		public function exchangeWithCanvas(canvas : CanvasModel) : void
+		{
+			canvas.swapColorLayer();	// move current state to back buffer (not allowed to directly set color layer
+			_colorTexture = canvas.swapFullSized(_colorTexture);	// swap with back buffer
+			canvas.swapColorLayer();
+
+			canvas.swapNormalSpecularLayer();	// move current state to back buffer (not allowed to directly set color layer
+			_normalSpecularTexture = canvas.swapFullSized(_normalSpecularTexture);	// swap with back buffer
+			canvas.swapNormalSpecularLayer();
+		}
 	}
 }

@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 
 	import away3d.arcane;
-	import away3d.bounds.AxisAlignedBoundingBox;
 	import away3d.cameras.Camera3D;
 	import away3d.cameras.lenses.PerspectiveLens;
 	import away3d.containers.ObjectContainer3D;
@@ -10,30 +9,32 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.base.Object3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.hacks.NativeTexture;
 	import away3d.lights.DirectionalLight;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
+	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 
 	import flash.display.BitmapData;
+	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.ColorTransform;
-	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
-	import net.psykosoft.psykopaint2.home.config.HomeSettings;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.camera.ZoomCameraController;
+	import net.psykosoft.psykopaint2.home.views.home.objects.FrameType;
 	import net.psykosoft.psykopaint2.home.views.home.objects.GalleryPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
 	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
@@ -52,15 +53,20 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _view:View3D;
 		private var _stage3dProxy:Stage3DProxy;
 		private var _shiftMultiplier:Number = 1;
-		private var _light : DirectionalLight;
-		private var _lightPicker : StaticLightPicker;
-		private var _isEnabled3d:Boolean;
+		private var _light:DirectionalLight;
+		private var _lightPicker:StaticLightPicker;
+		private var _isCameraControllerEnabled:Boolean;
 		private var _mainScene:ObjectContainer3D;
-		private var _freezeScene:ObjectContainer3D;
-		private var _freezePlane:Mesh;
-		private var _frozen:Boolean;
+
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
+
+		private var _frozen:Boolean;
+		private var _freezePlane:Mesh;
+		private var _freezeTexture:RefCountedTexture;
+		private var _freezeMaterial:TextureMaterial;
+
+		private var _currentScene:ObjectContainer3D;
 
 		public function HomeView() {
 			super();
@@ -70,50 +76,52 @@ package net.psykosoft.psykopaint2.home.views.home
 			initializeBundledAssets( HOME_BUNDLE_ID );
 		}
 
-		public function freeze( bmd:BitmapData ):void {
+		public function freeze( texture:RefCountedTexture ):void {
+
 			if( _frozen ) return;
 			unFreeze();
 			trace( this, "freeze()" );
+
+			disposeFreezeTexture();
+
+			_freezeTexture = texture;
 			if( HomeSettings.TINT_FREEZES ) {
-				bmd.colorTransform( bmd.rect, new ColorTransform( 0.75, 0.75, 1, 1 ) );
+				_freezeMaterial.colorTransform = new ColorTransform( 0.5, 0.5, 1 );
 			}
-			selectScene( _freezeScene );
-			disable3d();
-			renderScene(); // TODO: needed?
-			_freezePlane = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage( bmd, _stage3dProxy );
-			_freezePlane.rotationX = -90;
+			_freezeMaterial.texture = new NativeTexture( _freezeTexture.texture );
+
 			_freezePlane.x = _view.camera.x;
 			_freezePlane.y = _view.camera.y;
-			_freezePlane.z = HomeViewUtils.getWorldSpaceCenter( _paintingManager.easel.painting ).z;
-			_freezeScene.visible = false;
-			_freezeScene.addChild( _freezePlane );
+			_freezePlane.z = 10000;
+
 			HomeViewUtils.ensurePlaneFitsViewport( _freezePlane, _view );
+
+			selectScene( _freezePlane );
+			disableCameraController();
+
 			_frozen = true;
+		}
+
+		public function disableView():void {
+
 		}
 
 		public function unFreeze():void {
 			if( !_frozen ) return;
 			trace( this, "unFreeze()" );
-			if( _freezePlane ) {
 
-				if( _freezeScene.contains( _freezePlane ) ) {
-					_freezeScene.removeChild( _freezePlane );
-				}
+			disposeFreezeTexture();
 
-				var freezePlaneMaterial:TextureMaterial = _freezePlane.material as TextureMaterial;
-				if( freezePlaneMaterial ) {
-					var freezePlaneTexture:BitmapTexture = freezePlaneMaterial.texture as BitmapTexture;
-					if( freezePlaneTexture ) {
-						freezePlaneTexture.dispose(); // TODO: review if this is being disposed
-					}
-					freezePlaneMaterial.dispose(); // TODO: review if this is being disposed
-				}
-				_freezePlane.dispose();
-				_freezePlane = null;
-			}
 			selectScene( _mainScene );
-			enable3d();
+			enableCameraController();
 			_frozen = false;
+		}
+
+		private function disposeFreezeTexture():void {
+			if( _freezeTexture ) {
+				_freezeTexture.dispose();
+				_freezeTexture = null;
+			}
 		}
 
 		// ---------------------------------------------------------------------
@@ -122,32 +130,31 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		override protected function onEnabled():void {
 			addChild( _view );
-			enable3d();
+			enableCameraController();
 		}
 
 		override protected function onDisabled():void {
 			// TODO: review if we need to do any clean up when view is disabled
 			removeChild( _view );
-			disable3d();
+			disableCameraController();
 			_frozen = false;
 		}
 
-		private function enable3d():void {
-			if( _isEnabled3d ) return;
+		private function enableCameraController():void {
 			_scrollCameraController.isEnabled = true;
-			_isEnabled3d = true;
+			_isCameraControllerEnabled = true;
 		}
 
-		private function disable3d():void {
-			if( !_isEnabled3d ) return;
+		private function disableCameraController():void {
 			_scrollCameraController.isEnabled = false;
-			_isEnabled3d = false;
+			_isCameraControllerEnabled = false;
 		}
 
 		private function selectScene( scene:ObjectContainer3D ):void {
-			var otherScene:ObjectContainer3D = scene == _mainScene ? _freezeScene : _mainScene;
-			if( _view.scene.contains( otherScene ) ) _view.scene.removeChild( otherScene );
+			if( _currentScene && _view.scene.contains( _currentScene ) )
+				_view.scene.removeChild( _currentScene );
 			_view.scene.addChild( scene );
+			_currentScene = scene;
 		}
 
 		override protected function onSetup():void {
@@ -164,6 +171,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
 			_view.camera.lens.far = 50000;
+			PerspectiveLens( _view.camera.lens ).fieldOfView = 70;
 
 			// TODO: does the path manager update when scrolling on the 3d view? it shouldn't!
 
@@ -181,7 +189,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_mainScene = new ObjectContainer3D();
 
-			_freezeScene = new ObjectContainer3D();
+			initFreezePlane();
 
 			selectScene( _mainScene );
 
@@ -193,11 +201,11 @@ package net.psykosoft.psykopaint2.home.views.home
 //			var tri:Trident = new Trident( 500 );
 //			_view.scene.addChild( tri );
 
-			_light = new DirectionalLight(-1, -1, 2);
+			_light = new DirectionalLight( -1, -1, 2 );
 			_light.ambient = 1;
 			_light.color = 0x989589;
 			_light.ambientColor = 0x808088;
-			_lightPicker = new StaticLightPicker([_light]);
+			_lightPicker = new StaticLightPicker( [_light] );
 			_room = new Room( _view, _stage3dProxy );
 
 			var cameraTarget:Object3D = new Object3D();
@@ -225,9 +233,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
 
 			// Default paintings.
-			registerBundledAsset( "/home-packaged/away3d/paintings/homepainting.png", "homePainting" );
-			registerBundledAsset( "/home-packaged/away3d/frames/homeScreenFrame.png", "homePaintingFrame" );
-			registerBundledAsset( "/home-packaged/away3d/paintings/settings.png", "settingsPainting" );
+			registerBundledAsset( "/home-packaged/away3d/frames/whiteFrame.png", FrameType.WHITE_FRAME );
+			registerBundledAsset( "/home-packaged/away3d/paintings/settingsFrame.png", "settingsPainting" );
 			// Other room stuff.
 			registerBundledAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", true );
 			registerBundledAsset( "/home-packaged/away3d/objects/settingsPanel.png", "settingsPanel" );
@@ -244,6 +251,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerBundledAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", true );
 		}
 
+		private function initFreezePlane():void {
+			var plane:PlaneGeometry = new PlaneGeometry( stage.stageWidth, stage.stageHeight, 1, 1, false )
+			_freezeMaterial = new TextureMaterial();
+			_freezePlane = new Mesh( plane, _freezeMaterial );
+		}
+
 		private function onZoomControllerChange():void {
 			_scrollCameraController.dirtyZ();
 		}
@@ -256,7 +269,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Start docked at home painting and zoom out.
 			_scrollCameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
 			dockAtCurrentPainting();
-			_zoomCameraController.animateToYZ( 0, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
+			_zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
 		}
 
 		private function dockAtCurrentPainting():void {
@@ -270,13 +283,15 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// TODO: can't clean up everything because it causes runtime errors, use scout to see if the memory is being freed up
 			/*
-			* For the time being I'm disposing meshes only, but we have to dispose materials too...
-			* UPDATE AWAY3D FIRST
-			*
-			* Getting an error in the drawing core now. Away3D disposal fucks up something in the GPU.
-			* */
+			 * For the time being I'm disposing meshes only, but we have to dispose materials too...
+			 * UPDATE AWAY3D FIRST
+			 *
+			 * Getting an error in the drawing core now. Away3D disposal fucks up something in the GPU.
+			 * */
 			_setupHasRan = true;
- 			return;
+			return;
+
+			disposeFreezePlane();
 
 			if( _loader ) {
 				if( _loader.hasEventListener( Event.COMPLETE ) ) {
@@ -309,6 +324,15 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: review if memory is really freed up with Scout, it appears not, specially gpu memory
 		}
 
+		private function disposeFreezePlane():void {
+			_freezeMaterial.dispose();
+			_freezePlane.geometry.dispose();
+			_freezePlane.dispose();
+			_freezePlane = null;
+			_freezeMaterial = null;
+			disposeFreezeTexture();
+		}
+
 		// ---------------------------------------------------------------------
 		// Interface.
 		// ---------------------------------------------------------------------
@@ -334,7 +358,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _scrollCameraController.positionManager.closestSnapPointIndex;
 		}
 
-		public function renderScene():void {
+		public function renderScene( target:Texture ):void {
 //			trace( this, "rendering 3d?" );
 			if( !_isEnabled ) return;
 			if( !_assetsLoaded ) return; // Bounces off 3d rendering when the scene is not ready or active.
@@ -343,7 +367,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				trace( this, "rendering 3d" );
 			}
 			_scrollCameraController.update();
-			_view.render();
+			_view.render( target );
 		}
 
 		public function get zoomCameraController():ZoomCameraController {
@@ -356,7 +380,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onStageKeyUp( event:KeyboardEvent ):void {
 			switch( event.keyCode ) {
-				case Keyboard.SHIFT: {
+				case Keyboard.SHIFT:
+				{
 					_shiftMultiplier = 1;
 					break;
 				}
@@ -365,29 +390,34 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onStageKeyDown( event:KeyboardEvent ):void {
 			switch( event.keyCode ) {
-				case Keyboard.UP: {
+				case Keyboard.UP:
+				{
 //					_room.settingsPanel.y += _shiftMultiplier;
-//					_cameraController.offsetY( _shiftMultiplier );
+					_zoomCameraController.setYZ( _view.camera.y + _shiftMultiplier, _view.camera.z );
 					break;
 				}
-				case Keyboard.DOWN: {
+				case Keyboard.DOWN:
+				{
 //					_room.settingsPanel.y -= _shiftMultiplier;
-//					_cameraController.offsetY( -_shiftMultiplier );
+					_zoomCameraController.setYZ( _view.camera.y - _shiftMultiplier, _view.camera.z );
 					break;
 				}
-				case Keyboard.RIGHT: {
+				case Keyboard.RIGHT:
+				{
 //					_room.settingsPanel.x += _shiftMultiplier;
 //					_room.wall.x += _shiftMultiplier;
-//					_cameraController.offsetZ( _shiftMultiplier );
+					_zoomCameraController.setYZ( _view.camera.y, _view.camera.z + _shiftMultiplier );
 					break;
 				}
-				case Keyboard.LEFT: {
+				case Keyboard.LEFT:
+				{
 //					_room.settingsPanel.x -= _shiftMultiplier;
 //					_room.wall.x -= _shiftMultiplier;
-//					_cameraController.offsetZ( -_shiftMultiplier );
+					_zoomCameraController.setYZ( _view.camera.y, _view.camera.z - _shiftMultiplier );
 					break;
 				}
-				case Keyboard.SHIFT: {
+				case Keyboard.SHIFT:
+				{
 					_shiftMultiplier = 10;
 					break;
 				}
@@ -395,7 +425,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 //			trace( this, "positioning settings panel - x: " + _room.settingsPanel.x + ", y: " + _room.settingsPanel.y );
 //			trace( this, "positioning wall - x: " + _room.wall.x );
-//			trace( this, "positioning camera, Y: " + _cameraController.camera.y + ", Z: " + _cameraController.camera.z );
+			trace( this, "positioning camera, Y: " + _view.camera.y + ", Z: " + _view.camera.z );
 		}
 
 		public function setEaselContent( data:PaintingInfoVO ):void {
@@ -406,42 +436,15 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _frozen;
 		}
 
-		public function get camera():Camera3D {
-			return _view.camera;
-		}
-
-		public function adjustCameraToFitEaselAtRect( rect:Rectangle ):void {
-			// TODO: account for panning
-			// TODO: account for retina
-			// TODO: properly calculate value
-
-			trace( "----------------------" );
-			trace( "rect: " + rect );
-
-			var rectWidthRatio:Number = rect.width / _easelRectCache.width;
-			var targetDistance:Number = _cameraDistanceToEaselCache / rectWidthRatio;
-
-			var rectY:Number = rect.y + rect.height / 2;
-			var cacheRectY:Number = _easelRectCache.y + _easelRectCache.height / 2;
-			var dy:Number = cacheRectY - rectY;
-			trace( "dy: " + dy );
-
-			_view.camera.y = _cameraCacheY - dy + rectY - 512;
-			_view.camera.z = _easelWorldZ - targetDistance;
-			trace( "_view.camera.z: " + _view.camera.z );
-		}
-
-		private var _easelRectCache:Rectangle;
-		private var _easelWorldZ:Number;
-		private var _cameraDistanceToEaselCache:Number;
-		private var _cameraCacheY:Number;
-
 		public function get easelRect():Rectangle {
 			var plane:Mesh = _paintingManager.easel.painting;
-			_easelWorldZ = HomeViewUtils.getWorldSpaceCenter( plane ).z;
-			_cameraDistanceToEaselCache = _easelWorldZ - _view.camera.z;
-			_cameraCacheY = HomeViewUtils.getWorldSpaceCenter( plane ).y;
-			return _easelRectCache = HomeViewUtils.calculatePlaneScreenRect( plane, _view, 1 );
+			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( plane, _view, 1 );
+			// Uncomment to debug rect on screen.
+			/*this.graphics.lineStyle( 1, 0xFF0000 );
+			this.graphics.drawRect( rect.x * CoreSettings.GLOBAL_SCALING, rect.y * CoreSettings.GLOBAL_SCALING,
+					rect.width * CoreSettings.GLOBAL_SCALING, rect.height * CoreSettings.GLOBAL_SCALING );
+			this.graphics.endFill();*/
+			return rect;
 		}
 	}
 }

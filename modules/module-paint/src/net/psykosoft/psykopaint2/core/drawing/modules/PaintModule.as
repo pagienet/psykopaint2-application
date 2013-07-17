@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.display.DisplayObject;
 	import flash.display.Stage3D;
 	import flash.events.Event;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
@@ -24,6 +25,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
@@ -69,9 +71,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var memoryWarningSignal : NotifyMemoryWarningSignal;
 
 		[Inject]
-		public var requestChangeRenderRect : RequestChangeRenderRectSignal;
-		
-		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		[Inject]
@@ -83,6 +82,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
+		[Inject]
+		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
 		
 		private var _view : DisplayObject;
 		private var _active : Boolean;
@@ -91,7 +92,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
 		private var _transformModeActive:Boolean;
-		private var _canvasRect : Rectangle;
+		private var _canvasMatrix : Matrix;
 		private var _navHideTimeout:int = -1;
 		private var _navShowTimeout:int = -1;
 		
@@ -114,7 +115,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			AbstractBrush.brushShapeLibrary = brushShapeLibrary;
 			
 			memoryWarningSignal.add(onMemoryWarning);
-			requestChangeRenderRect.add(onChangeRenderRect);
+			notifyCanvasMatrixChanged.add(onCanvasMatrixChanged);
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyStateChangeSignal.add( onStateChange );
 			
@@ -123,13 +124,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private function onStateChange( stateType:String ):void
 		{
 			
-			if ( _transformModeActive && stateType != StateType.PAINT_TRANSFORM )
+			if ( _transformModeActive && stateType != StateType.PAINT_SHOW_SOURCE )
 			{
 				_transformModeActive = false;
 				renderer.sourceTextureAlpha = 0;
 				renderer.paintAlpha = 1;
 				//_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
-			} else if ( !_transformModeActive && stateType == StateType.PAINT_TRANSFORM )
+			} else if ( !_transformModeActive && stateType == StateType.PAINT_SHOW_SOURCE )
 			{
 				_transformModeActive = true;
 				renderer.sourceTextureAlpha = 1;
@@ -148,7 +149,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				{
 					requestStateChangeSignal.dispatch( StateType.PREVIOUS );
 				} else {
-					requestStateChangeSignal.dispatch( StateType.PAINT_TRANSFORM );
+					requestStateChangeSignal.dispatch( StateType.PAINT_SHOW_SOURCE );
 				}
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
@@ -159,13 +160,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			}
 		}
 		
-		private function onChangeRenderRect(rect : Rectangle) : void
+		private function onCanvasMatrixChanged(matrix : Matrix) : void
 		{
-			var scale : Number = rect.height/canvasModel.height;
-			var width : Number = canvasModel.width*scale;
-			_canvasRect = new Rectangle((canvasModel.width - width) *.5, 0, width, rect.height);
+			_canvasMatrix = matrix;
 			if (_activeBrushKit)
-				_activeBrushKit.canvasRect = _canvasRect;
+				_activeBrushKit.setCanvasMatrix(matrix);
 		}
 		
 		public function stopAnimations() : void
@@ -279,7 +278,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			if ( _activeBrushKit )
 			{
-				_activeBrushKit.canvasRect = _canvasRect;
+				_activeBrushKit.setCanvasMatrix(_canvasMatrix);
 				_activeBrushKit.activate( _view, stage3D.context3D, canvasModel, renderer);
 				_activeBrushKit.brushEngine.addEventListener( AbstractBrush.STROKE_STARTED, onStrokeStarted);
 				_activeBrushKit.brushEngine.addEventListener( AbstractBrush.STROKE_ENDED, onStrokeEnded );
