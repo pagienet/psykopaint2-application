@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.arcane;
 	import away3d.cameras.Camera3D;
+	import away3d.cameras.lenses.PerspectiveLens;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
@@ -170,6 +171,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
 			_view.camera.lens.far = 50000;
+			PerspectiveLens( _view.camera.lens ).fieldOfView = 70;
 
 			// TODO: does the path manager update when scrolling on the 3d view? it shouldn't!
 
@@ -232,7 +234,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Default paintings.
 			registerBundledAsset( "/home-packaged/away3d/frames/whiteFrame.png", FrameType.WHITE_FRAME );
-			registerBundledAsset( "/home-packaged/away3d/paintings/settings.png", "settingsPainting" );
+			registerBundledAsset( "/home-packaged/away3d/paintings/settingsFrame.png", "settingsPainting" );
 			// Other room stuff.
 			registerBundledAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", true );
 			registerBundledAsset( "/home-packaged/away3d/objects/settingsPanel.png", "settingsPanel" );

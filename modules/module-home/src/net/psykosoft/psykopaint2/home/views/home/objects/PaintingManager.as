@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			);
 			settingsPainting.x = 0;
 			settingsPainting.z = -50;
-			settingsPainting.scale( 1.2 );
+			settingsPainting.scale( 1.5 );
 			addPainting( settingsPainting );
 
 			// Sign.
@@ -93,7 +93,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 					true
 			);
 			_settingsPanel.x = settingsPainting.x;
-			_settingsPanel.y = 305;
+			_settingsPanel.y = 375;
 			_settingsPanel.z = -250;
 			_settingsPanel.rotationX = -90;
 			addChild( _settingsPanel );
@@ -103,10 +103,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// -----------------------
 
 			_easel.easelVisible = true;
-			_easel.scale( 1.35 );
-			_easel.x = 1300;
-			_easel.z = -250;
-			_easel.y = 60;
+			_easel.scale( 1.75 );
+			_easel.x = 1400;
+			_easel.z = -150;
+			_easel.y = 100;
 			addPainting( _easel );
 
 			// -----------------------
@@ -119,8 +119,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( FrameType.WHITE_FRAME, true ),
 					frameOffset.x, frameOffset.y
 			);
-			homePainting.scale( 0.55 );
-			homePainting.x = 2600;
+			homePainting.scale( 0.65 );
+			homePainting.x = 3000;
 			homePainting.z = -50;
 			homePaintingIndex = 2;
 			addPainting( homePainting );
