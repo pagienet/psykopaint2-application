@@ -219,12 +219,12 @@ package net.psykosoft.psykopaint2.home.views.home
 				_waitingForFreezeSnapshot = false;
 			}
 
-			// Transition freeze?
+			// Going to paint?
 			if( stateModel.currentState == StateType.PREPARE_FOR_PAINT_MODE ) {
 				notifyEaselRectInfoSignal.dispatch( view.easelRect );
 				requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.texture.newReference());
 				setTimeout( function():void {
-					requestStateChange( StateType.PAINT );
+					requestStateChange( StateType.TRANSITION_TO_PAINT_MODE );
 				}, 50 );
 			}
 

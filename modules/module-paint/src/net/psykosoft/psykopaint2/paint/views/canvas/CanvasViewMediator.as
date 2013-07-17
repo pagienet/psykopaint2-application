@@ -103,6 +103,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
 			registerEnablingState( StateType.PAINT_SHOW_SOURCE );
 			registerEnablingState( StateType.TRANSITION_TO_HOME_MODE );
+			registerEnablingState( StateType.TRANSITION_TO_PAINT_MODE );
 
 			// Init.
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
@@ -206,13 +207,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				if( !CoreSettings.RUNNING_ON_iPAD ) {
 					view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
 				}
-				zoomIn();
 			}
 			else {
 				paintModule.stopAnimations();
 				if( !CoreSettings.RUNNING_ON_iPAD ) {
 					view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
 				}
+			}
+
+			if( newState == StateType.TRANSITION_TO_PAINT_MODE ) {
+				_waitingForZoomInToContinueToPaint = true;
+				zoomIn();
 			}
 
 			if( newState == StateType.TRANSITION_TO_HOME_MODE ) {
@@ -227,6 +232,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// -----------------------
 
 		private var _waitingForZoomOutToContinueToHome:Boolean;
+		private var _waitingForZoomInToContinueToPaint:Boolean;
 
 		private var _minZoomScale:Number;
 		private const MAX_ZOOM_SCALE:Number = 3;
@@ -267,6 +273,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			if( _waitingForZoomOutToContinueToHome ) {
 			    requestStateChange( StateType.HOME_ON_EASEL );
 				_waitingForZoomOutToContinueToHome = false;
+			}
+			if( _waitingForZoomInToContinueToPaint ) {
+			    requestStateChange( StateType.PAINT );
+				_waitingForZoomInToContinueToPaint = false;
 			}
 		}
 

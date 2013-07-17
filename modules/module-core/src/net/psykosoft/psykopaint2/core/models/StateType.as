@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.core.models
 		public static const HOME_PICK_SURFACE:String = "state/home/pick_surface";
 		public static const PREPARE_FOR_PAINT_MODE:String = "state/home/prepare_for_paint";
 		public static const TRANSITION_TO_HOME_MODE:String = "state/paint/transition_to_home";
+		public static const TRANSITION_TO_PAINT_MODE:String = "state/paint/transition_to_paint";
 
 		public static const PAINT:String = "state/paint";
 		public static const PAINT_SELECT_BRUSH:String = "state/paint/select_brush";
