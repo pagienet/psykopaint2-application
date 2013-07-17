@@ -229,7 +229,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _waitingForZoomOutToContinueToHome:Boolean;
 
 		private var _minZoomScale:Number;
-		private const MAX_ZOOM_SCALE:Number = 4;
+		private const MAX_ZOOM_SCALE:Number = 3;
 
 		public var zoomScale:Number = _minZoomScale;
 
@@ -237,6 +237,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			_easelRectFromHomeView = rect;
 			_minZoomScale = _easelRectFromHomeView.width / 1024; // TODO: account for retina
 			zoomScale = _minZoomScale;
+			// Uncomment to visualize incoming rect.
+			view.graphics.lineStyle( 1, 0x00FF00 );
+			view.graphics.drawRect( rect.x * CoreSettings.GLOBAL_SCALING, rect.y * CoreSettings.GLOBAL_SCALING,
+					rect.width * CoreSettings.GLOBAL_SCALING, rect.height * CoreSettings.GLOBAL_SCALING );
+			view.graphics.endFill();
 		}
 
 		private function zoomIn():void {
@@ -270,7 +275,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function updateCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
-
 			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
@@ -293,8 +297,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				offsetX = (1 - scale) * .5;
 
 			var offsetY:Number = rect.y / canvasModel.height;
-			if( scale < 1 )
-				offsetY = (1 - scale) * .175;
+			// TODO: this causes a jump when coming from home... but I guess it's needed in some way.
+			/*if( scale < 1 )
+				offsetY = (1 - scale) * .175;*/
 
 
 			// TODO: Doesn't feel good while animating - should we use a flag here and enable it when not animating?

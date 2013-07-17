@@ -440,10 +440,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			var plane:Mesh = _paintingManager.easel.painting;
 			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( plane, _view, 1 );
 			// Uncomment to debug rect on screen.
-//			this.graphics.lineStyle( 1, 0xFF0000 );
-//			this.graphics.drawRect( rect.x * CoreSettings.GLOBAL_SCALING, rect.y * CoreSettings.GLOBAL_SCALING,
-//					rect.width * CoreSettings.GLOBAL_SCALING, rect.height * CoreSettings.GLOBAL_SCALING );
-//			this.graphics.endFill();
+			/*this.graphics.lineStyle( 1, 0xFF0000 );
+			this.graphics.drawRect( rect.x * CoreSettings.GLOBAL_SCALING, rect.y * CoreSettings.GLOBAL_SCALING,
+					rect.width * CoreSettings.GLOBAL_SCALING, rect.height * CoreSettings.GLOBAL_SCALING );
+			this.graphics.endFill();*/
 			return rect;
 		}
 	}
