@@ -45,6 +45,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_frameMaterial = createMaterial(_frameTexture, true);
 			_frameGeometry = new PlaneGeometry(1, 1, 1, 1, false);
 			_frameMesh = new Mesh(_frameGeometry, _frameMaterial);
+			_frameMesh.zOffset = 1000;
+			_frameMesh.z = -2;
 			addChild(_frameMesh);
 		}
 
