@@ -38,11 +38,6 @@ package net.psykosoft.psykopaint2.core.model
 			_snapShot = new CanvasSnapShot(_context, canvas);
 		}
 
-		public function swapSnapshots() : void
-		{
-			_hasHistory = true;
-		}
-
 		public function get hasHistory() : Boolean
 		{
 			return _hasHistory;
@@ -50,32 +45,20 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function undo() : void
 		{
-			restoreSnapshot();
+			if (_hasHistory)
+				restoreSnapshot();
 		}
 
 		private function restoreSnapshot() : void
 		{
-			var temp : CanvasSnapShot = new CanvasSnapShot(_context, canvas);
-			temp.updateSnapshot();
-
-			_context.setRenderToTexture(canvas.colorTexture);
-			_context.clear(0, 0, 0, 0);
-			_snapShot.drawColor();
-
-			_context.setRenderToTexture(canvas.normalSpecularMap);
-			_context.clear(0, 0, 0, 0);
-			_snapShot.drawNormalsSpecular();
-
-			_context.setRenderToBackBuffer();
-
-			_snapShot.dispose();
-			_snapShot = temp;
+			_snapShot.exchangeWithCanvas(canvas);
 		}
 
 		// returned snapshot is READ-ONLY!
 		public function takeSnapshot() : CanvasSnapShot
 		{
 			_snapShot.updateSnapshot();
+			_hasHistory = true;
 			notifyStackChange();
 			return _snapShot;
 		}
@@ -83,6 +66,12 @@ package net.psykosoft.psykopaint2.core.model
 		private function notifyStackChange() : void
 		{
 			notifyHistoryStackChanged.dispatch(_hasHistory);
+		}
+
+		public function clearHistory() : void
+		{
+			_hasHistory = false;
+			notifyStackChange();
 		}
 	}
 }

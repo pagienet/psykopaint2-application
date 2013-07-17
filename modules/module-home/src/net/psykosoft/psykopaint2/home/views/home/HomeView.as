@@ -100,6 +100,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			_frozen = true;
 		}
 
+		public function disableView() : void
+		{
+
+		}
+
 		public function unFreeze():void {
 			if( !_frozen ) return;
 			trace( this, "unFreeze()" );

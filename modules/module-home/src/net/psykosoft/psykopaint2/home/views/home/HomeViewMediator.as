@@ -216,7 +216,6 @@ package net.psykosoft.psykopaint2.home.views.home
 				trace( this, "applying freeze snapshot..." );
 				view.freeze( _snapshotPromise.texture.newReference() );
 				_snapshotPromise.texture.dispose();
-
 				_waitingForFreezeSnapshot = false;
 			}
 

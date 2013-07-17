@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.io.CanvasImporter;
+	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -38,6 +39,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
+
+		[Inject]
+		public var canvasHistoryModel : CanvasHistoryModel;
 
 		private var _file:File;
 
@@ -68,6 +72,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			var canvasImporter : CanvasImporter = new CanvasImporter();
 			canvasImporter.importPainting(canvasModel, vo);
 			notifyPaintingActivatedSignal.dispatch();
+
+			canvasHistoryModel.clearHistory();
 			requestStateChangeSignal.dispatch( StateType.PREPARE_FOR_PAINT_MODE );
 			context.release( this );
 			vo.dispose();

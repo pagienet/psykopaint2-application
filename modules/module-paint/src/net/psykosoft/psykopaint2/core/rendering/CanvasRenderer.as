@@ -18,7 +18,9 @@ package net.psykosoft.psykopaint2.core.rendering
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
@@ -48,11 +50,18 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		[Inject]
 		public var requestSetCanvasBackgroundSignal:RequestSetCanvasBackgroundSignal;
-		
+
+		[Inject]
+		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
+
+		[Inject]
+		public var requestEaselRectInfoSignal:RequestEaselRectInfoSignal;
+
 		private var _paintModule : PaintModule;
 		private var _context3D : Context3D;
 		private var _lightingRenderer : LightingRenderer;
 		private var _background : RefCountedTexture;
+		private var _backgroundBaseRect : Rectangle;
 
 		public function CanvasRenderer()
 		{
@@ -80,7 +89,15 @@ package net.psykosoft.psykopaint2.core.rendering
 		private function onSetBackgroundSignal(texture : RefCountedTexture) : void
 		{
 			disposeBackground();
+			notifyEaselRectInfoSignal.addOnce(onEaselRectInfo);
+			requestEaselRectInfoSignal.dispatch();
 			_background = texture;
+		}
+
+		private function onEaselRectInfo(rect : Rectangle) : void
+		{
+			_backgroundBaseRect = rect.clone();
+			trace (_backgroundBaseRect);
 		}
 
 		private function onChangeRenderRect(rect : Rectangle) : void
@@ -163,11 +180,29 @@ package net.psykosoft.psykopaint2.core.rendering
 		private function renderBackground() : void
 		{
 			if (isBackgroundVisible()) {
+				var backgroundRect : Rectangle = createBackgroundRect();
 				_context3D.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);
 				_context3D.setStencilReferenceValue(0);
 				_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-				CopyTexture.copy(_background.texture, _context3D);
+				CopySubTexture.copy(_background.texture, new Rectangle(0, 0, 1, 1), backgroundRect, _context3D);
 			}
+		}
+
+		private function createBackgroundRect() : Rectangle
+		{
+			var canvasRect : Rectangle = _lightingRenderer.renderRect;
+			var rect : Rectangle = new Rectangle();
+
+			var scale : Number = canvasRect.width / _backgroundBaseRect.width;
+			var offsetX : Number = canvasRect.x - _backgroundBaseRect.x;
+			var offsetY : Number = canvasRect.y - _backgroundBaseRect.y;
+
+			rect.width = scale;
+			rect.height = scale;
+			rect.x = offsetX/canvas.textureWidth*scale;
+			rect.y = offsetY/canvas.textureHeight*scale;
+
+			return rect;
 		}
 
 		private function isBackgroundVisible() : Boolean
