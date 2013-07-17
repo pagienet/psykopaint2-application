@@ -101,7 +101,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( StateType.PAINT );
 			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
 			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
-			registerEnablingState( StateType.PAINT_TRANSFORM );
+			registerEnablingState( StateType.PAINT_SHOW_SOURCE );
 			registerEnablingState( StateType.TRANSITION_TO_HOME_MODE );
 
 			// Init.
@@ -229,14 +229,20 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _waitingForZoomOutToContinueToHome:Boolean;
 
 		private var _minZoomScale:Number;
-		private const MAX_ZOOM_SCALE:Number = 4;
+		private const MAX_ZOOM_SCALE:Number = 3;
 
 		public var zoomScale:Number = _minZoomScale;
 
 		private function onEaselRectInfo( rect:Rectangle ):void {
+			trace( this, "easel screen rect info received: " + rect );
 			_easelRectFromHomeView = rect;
 			_minZoomScale = _easelRectFromHomeView.width / 1024; // TODO: account for retina
 			zoomScale = _minZoomScale;
+			// Uncomment to visualize incoming rect.
+			view.graphics.lineStyle( 1, 0x00FF00 );
+			view.graphics.drawRect( rect.x * CoreSettings.GLOBAL_SCALING, rect.y * CoreSettings.GLOBAL_SCALING,
+					rect.width * CoreSettings.GLOBAL_SCALING, rect.height * CoreSettings.GLOBAL_SCALING );
+			view.graphics.endFill();
 		}
 
 		private function zoomIn():void {
@@ -270,41 +276,37 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function updateCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
-
 			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
 		private function constrainCanvasRect( rect:Rectangle ):void {
 
-			var scale:Number = rect.height / canvasModel.height;
-			if( scale < _minZoomScale ) {
-				rect.width *= ( _minZoomScale / scale );
-				rect.height *= ( _minZoomScale / scale );
-				scale = _minZoomScale;
-			} else if( scale > MAX_ZOOM_SCALE ) {
-				rect.width *= ( MAX_ZOOM_SCALE / scale );
-				rect.height *= ( MAX_ZOOM_SCALE / scale );
-				scale = MAX_ZOOM_SCALE;
+			zoomScale = rect.height / canvasModel.height;
+			if( zoomScale < _minZoomScale ) {
+				rect.width *= ( _minZoomScale / zoomScale );
+				rect.height *= ( _minZoomScale / zoomScale );
+				zoomScale = _minZoomScale;
+			} else if( zoomScale > MAX_ZOOM_SCALE ) {
+				rect.width *= ( MAX_ZOOM_SCALE / zoomScale );
+				rect.height *= ( MAX_ZOOM_SCALE / zoomScale );
+				zoomScale = MAX_ZOOM_SCALE;
 			}
 
-
 			var offsetX:Number = rect.x / canvasModel.width;
-			if( scale < 1 )
-				offsetX = (1 - scale) * .5;
+			if( zoomScale < 1 )
+				offsetX = (1 - zoomScale) * .5;
 
 			var offsetY:Number = rect.y / canvasModel.height;
-			if( scale < 1 )
-				offsetY = (1 - scale) * .175;
-
+			// TODO: this causes a jump when coming from home, it seems that the .175 value needs to be calculated dynamically
+			if( zoomScale < 1 )
+				offsetY = (1 - zoomScale) * .175;
 
 			// TODO: Doesn't feel good while animating - should we use a flag here and enable it when not animating?
-			/*if( scale > 0.95 && scale < 1.05 ) {
-				scale = 1;
+			/*if( zoomScale > 0.95 && zoomScale < 1.05 ) {
+				zoomScale = 1;
 				offsetX = 0;
 				offsetY = 0;
 			}*/
-
-			zoomScale = scale;
 
 			rect.x = offsetX * canvasModel.width;
 			rect.y = offsetY * canvasModel.height;

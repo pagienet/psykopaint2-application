@@ -48,8 +48,8 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 
 			_interactionManager.throwInputMultiplier = 2;
 			_interactionManager.useDetailedDelta = false;
-			_positionManager.frictionFactor = 0.55;
-			_positionManager.minimumThrowingSpeed = 60;
+			_positionManager.frictionFactor = 0.85; // lower -> more friction
+			_positionManager.minimumThrowingSpeed = 150;
 			_positionManager.edgeContainmentFactor = 0.01;
 			_positionManager.motionEndedSignal.add( onSnapMotionEnded );
 

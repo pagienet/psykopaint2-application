@@ -124,13 +124,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private function onStateChange( stateType:String ):void
 		{
 			
-			if ( _transformModeActive && stateType != StateType.PAINT_TRANSFORM )
+			if ( _transformModeActive && stateType != StateType.PAINT_SHOW_SOURCE )
 			{
 				_transformModeActive = false;
 				renderer.sourceTextureAlpha = 0;
 				renderer.paintAlpha = 1;
 				//_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
-			} else if ( !_transformModeActive && stateType == StateType.PAINT_TRANSFORM )
+			} else if ( !_transformModeActive && stateType == StateType.PAINT_SHOW_SOURCE )
 			{
 				_transformModeActive = true;
 				renderer.sourceTextureAlpha = 1;
@@ -149,7 +149,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				{
 					requestStateChangeSignal.dispatch( StateType.PREVIOUS );
 				} else {
-					requestStateChangeSignal.dispatch( StateType.PAINT_TRANSFORM );
+					requestStateChangeSignal.dispatch( StateType.PAINT_SHOW_SOURCE );
 				}
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
