@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			);
 			settingsPainting.x = 0;
 			settingsPainting.z = -50;
-			settingsPainting.scale( 1.5 );
+			settingsPainting.scale( 1.2 );
 			addPainting( settingsPainting );
 
 			// Sign.
@@ -93,8 +93,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 					true
 			);
 			_settingsPanel.x = settingsPainting.x;
-			_settingsPanel.y = 605;
-			_settingsPanel.z = -400;
+			_settingsPanel.y = 305;
+			_settingsPanel.z = -250;
 			_settingsPanel.rotationX = -90;
 			addChild( _settingsPanel );
 

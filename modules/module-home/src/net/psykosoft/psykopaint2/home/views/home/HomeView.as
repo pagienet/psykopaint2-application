@@ -434,10 +434,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _frozen;
 		}
 
-		public function get camera():Camera3D {
-			return _view.camera;
-		}
-
 		public function get easelRect():Rectangle {
 			var plane:Mesh = _paintingManager.easel.painting;
 			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( plane, _view, 1 );
