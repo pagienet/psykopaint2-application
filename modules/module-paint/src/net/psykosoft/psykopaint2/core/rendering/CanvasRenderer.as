@@ -193,14 +193,17 @@ package net.psykosoft.psykopaint2.core.rendering
 			var canvasRect : Rectangle = _lightingRenderer.renderRect;
 			var rect : Rectangle = new Rectangle();
 
-			var scale : Number = canvasRect.width / _backgroundBaseRect.width;
-			var offsetX : Number = canvasRect.x - _backgroundBaseRect.x;
-			var offsetY : Number = canvasRect.y - _backgroundBaseRect.y;
+			// transformation matrix originalRect -> renderRect
+			var scaleX : Number = canvasRect.width / _backgroundBaseRect.width;
+			var scaleY : Number = canvasRect.height / _backgroundBaseRect.height;
+			var tx : Number = canvasRect.x - scaleX*_backgroundBaseRect.x;
+			var ty : Number = canvasRect.y - scaleY*_backgroundBaseRect.y;
 
-			rect.width = scale;
-			rect.height = scale;
-			rect.x = offsetX/canvas.textureWidth*scale;
-			rect.y = offsetY/canvas.textureHeight*scale;
+			// apply matrix to background rect (= 0, 0, 1, 1)
+			rect.width = scaleX;
+			rect.height = scaleY;
+			rect.x = tx/canvas.width;
+			rect.y = ty/canvas.height;
 
 			return rect;
 		}
