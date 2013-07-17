@@ -221,7 +221,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Going to paint?
 			if( stateModel.currentState == StateType.PREPARE_FOR_PAINT_MODE ) {
-				notifyEaselRectInfoSignal.dispatch( view.easelRect );
 				requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.texture.newReference());
 				setTimeout( function():void {
 					requestStateChange( StateType.TRANSITION_TO_PAINT_MODE );
