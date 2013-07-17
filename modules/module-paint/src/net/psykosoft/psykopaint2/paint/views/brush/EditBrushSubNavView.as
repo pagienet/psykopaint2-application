@@ -87,8 +87,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					navigation.toggleRightButtonVisibility(true);
 				}
 
-				var btn:SbButton = navigation.createButton( parameter.label, "", "btnLabelCenter", null )
-				group.addButton( btn );
+				//var btn:SbButton = navigation.createButton( parameter.label, "", "btnLabelCenter", null )
+				//group.addButton( btn );
 
 			}
 			navigation.addCenterButtonGroup( group );
