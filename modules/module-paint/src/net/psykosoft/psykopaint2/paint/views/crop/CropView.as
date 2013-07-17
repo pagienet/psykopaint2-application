@@ -71,11 +71,11 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		}
 
 		public function set easelRect( value:Rectangle ):void {
-			_easelRect = value;
-			_easelRect.x *= CoreSettings.GLOBAL_SCALING;
-			_easelRect.y *= CoreSettings.GLOBAL_SCALING;
-			_easelRect.width *= CoreSettings.GLOBAL_SCALING;
-			_easelRect.height *= CoreSettings.GLOBAL_SCALING;
+			_easelRect = value.clone();
+//			_easelRect.x *= CoreSettings.GLOBAL_SCALING;
+//			_easelRect.y *= CoreSettings.GLOBAL_SCALING;
+//			_easelRect.width *= CoreSettings.GLOBAL_SCALING;
+//			_easelRect.height *= CoreSettings.GLOBAL_SCALING;
 		}
 		
 		override public function enable():void

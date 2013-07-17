@@ -65,7 +65,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			var zoom:Vector3D = new Vector3D();
 
 			// Camera y must match world space y.
-			var planeWorldSpace:Vector3D = HomeViewUtils.objectSpaceToWorldSpace( plane, new Vector3D(), view );
+			var planeWorldSpace:Vector3D = HomeViewUtils.objectSpaceToWorldSpace( plane, new Vector3D() );
 			zoom.y = planeWorldSpace.y;
 
 			// Evaluate the portion of the screen the easel would take when aligned with the target in y,
@@ -83,16 +83,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			return zoom;
 		}
 
-		public static function objectSpaceToWorldSpace( plane:Mesh, objSpacePosition:Vector3D, view:View3D ):Vector3D {
-			var sceneTransform:Matrix3D = plane.sceneTransform.clone();
-			var worldSpacePosition:Vector3D = sceneTransform.transformVector( objSpacePosition );
-
-			// Uncomment to visualize 3d point.
-			/*var tracer3d:Mesh = new Mesh( new SphereGeometry(), new ColorMaterial( 0x00FF00 ) );
-			tracer3d.position = worldSpacePosition;
-			view.scene.addChild( tracer3d );*/
-
-			return worldSpacePosition;
+		public static function objectSpaceToWorldSpace( plane:Mesh, objSpacePosition:Vector3D):Vector3D {
+			return plane.sceneTransform.transformVector( objSpacePosition );
 		}
 
 		public static function objectSpaceToScreenSpace( plane:Mesh, objSpacePosition:Vector3D, view:View3D, ratio:Number ):Vector3D {
@@ -102,12 +94,12 @@ package net.psykosoft.psykopaint2.home.views.home
 //			trace( "ratio: " + _view.camera.lens.aspectRatio );
 
 			// Scene space.
-			var worldSpacePosition:Vector3D = objectSpaceToWorldSpace( plane, objSpacePosition, view );
+			var worldSpacePosition:Vector3D = objectSpaceToWorldSpace( plane, objSpacePosition );
 
 			// View space.
 			var screenPosition:Vector3D = view.camera.project( worldSpacePosition );
-			screenPosition.x = 0.5 * 1024 * ( 1 + ratio * screenPosition.x );
-			screenPosition.y = 0.5 * 768 * ( 1 + screenPosition.y );
+			screenPosition.x = 0.5 * CoreSettings.STAGE_WIDTH * ( 1 + ratio * screenPosition.x );
+			screenPosition.y = 0.5 * CoreSettings.STAGE_HEIGHT * ( 1 + screenPosition.y );
 
 			// Uncomment to visualize 2d point.
 			/*var tracer2d:Sprite = new Sprite();

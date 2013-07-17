@@ -286,13 +286,5 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_renderPigment.execute(SimulationMesh(_brushMesh), _pigmentDensityField, _pigmentColorField);
 		}
-
-		override public function freeExpendableMemory() : void
-		{
-			super.freeExpendableMemory();
-
-			if (_brushMesh == null)
-				clearMemory();
-		}
 	}
 }

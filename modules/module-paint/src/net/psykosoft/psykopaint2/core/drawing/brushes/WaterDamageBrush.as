@@ -234,13 +234,5 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			_renderPigment.execute(SimulationMesh(_brushMesh), _normalField);
 		}
-
-		override public function freeExpendableMemory() : void
-		{
-			super.freeExpendableMemory();
-
-			if (_brushMesh == null)
-				clearMemory();
-		}
 	}
 }

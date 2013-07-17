@@ -240,14 +240,14 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var zoomScale:Number = _minZoomScale;
 
 		private function onEaselRectInfo( rect:Rectangle ):void {
-			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
-				rect.x *= CoreSettings.GLOBAL_SCALING;
-				rect.y *= CoreSettings.GLOBAL_SCALING;
-				rect.width *= CoreSettings.GLOBAL_SCALING;
-				rect.height *= CoreSettings.GLOBAL_SCALING;
-			}
+			_easelRectFromHomeView = rect.clone();
+
+			_easelRectFromHomeView.x *= CoreSettings.GLOBAL_SCALING;
+			_easelRectFromHomeView.y *= CoreSettings.GLOBAL_SCALING;
+			_easelRectFromHomeView.width *= CoreSettings.GLOBAL_SCALING;
+			_easelRectFromHomeView.height *= CoreSettings.GLOBAL_SCALING;
 			trace( this, "easel screen rect info received: " + rect );
-			_easelRectFromHomeView = rect;
+
 			_minZoomScale = _easelRectFromHomeView.width / canvasModel.width;
 			zoomScale = _minZoomScale;
 			// Uncomment to visualize incoming rect.

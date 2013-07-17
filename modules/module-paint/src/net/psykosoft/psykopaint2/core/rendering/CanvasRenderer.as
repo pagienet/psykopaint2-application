@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
@@ -102,7 +103,16 @@ package net.psykosoft.psykopaint2.core.rendering
 		private function onEaselRectInfo(rect : Rectangle) : void
 		{
 			_backgroundBaseRect = rect.clone();
-			trace (_backgroundBaseRect);
+
+			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
+				// X and Y don't seem to make sense here
+				_backgroundBaseRect.x *= CoreSettings.GLOBAL_SCALING;
+				_backgroundBaseRect.y *= CoreSettings.GLOBAL_SCALING;
+				_backgroundBaseRect.width *= CoreSettings.GLOBAL_SCALING;
+				_backgroundBaseRect.height *= CoreSettings.GLOBAL_SCALING;
+			}
+
+			trace(_backgroundBaseRect);
 		}
 
 		private function onChangeRenderRect(rect : Rectangle) : void
@@ -199,6 +209,8 @@ package net.psykosoft.psykopaint2.core.rendering
 			var scaleY : Number = canvasRect.height / _backgroundBaseRect.height;
 			var tx : Number = canvasRect.x - scaleX*_backgroundBaseRect.x;
 			var ty : Number = canvasRect.y - scaleY*_backgroundBaseRect.y;
+
+			trace (canvasRect, _backgroundBaseRect);
 
 			// apply matrix to background rect (= 0, 0, 1, 1)
 			rect.width = scaleX;
