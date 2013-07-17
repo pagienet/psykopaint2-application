@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 {
 
 	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
@@ -114,6 +115,7 @@ import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 			_injector.map( NotifyCameraSnapshotRequest ).asSingleton();
 			_injector.map( NotifyCameraFlipRequest ).asSingleton();
 			_injector.map( NotifyPaintingSavedSignal ).asSingleton();
+			_injector.map( NotifyCanvasMatrixChanged ).asSingleton();
 		}
 
 		// -----------------------

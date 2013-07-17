@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DStencilAction;
 	import flash.display3D.Context3DTriangleFace;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
 
@@ -18,6 +19,7 @@ package net.psykosoft.psykopaint2.core.rendering
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
@@ -56,6 +58,9 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		[Inject]
 		public var requestEaselRectInfoSignal:RequestEaselRectInfoSignal;
+
+		[Inject]
+		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
 
 		private var _paintModule : PaintModule;
 		private var _context3D : Context3D;
@@ -103,6 +108,17 @@ package net.psykosoft.psykopaint2.core.rendering
 		private function onChangeRenderRect(rect : Rectangle) : void
 		{
 			_lightingRenderer.renderRect = rect;
+			updateCanvasMatrix(rect);
+		}
+
+		private function updateCanvasMatrix(rect : Rectangle) : void
+		{
+			var matrix : Matrix = new Matrix();
+			matrix.a = rect.width/canvas.width;
+			matrix.d = rect.height/canvas.height;
+			matrix.tx = rect.x/canvas.width;
+			matrix.ty = rect.y/canvas.height;
+			notifyCanvasMatrixChanged.dispatch(matrix);
 		}
 
 		private function resumeRendering() : void
@@ -119,21 +135,6 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function get renderRect():Rectangle
 		{
 			return _lightingRenderer.renderRect;
-		}
-
-		public function get offsetX():Number
-		{
-			return _lightingRenderer.offsetX;
-		}
-		
-		public function get offsetY():Number
-		{
-			return _lightingRenderer.offsetY;
-		}
-		
-		public function get scale():Number
-		{
-			return _lightingRenderer.scale;
 		}
 		
 		public function set sourceTextureAlpha( value:Number ):void
