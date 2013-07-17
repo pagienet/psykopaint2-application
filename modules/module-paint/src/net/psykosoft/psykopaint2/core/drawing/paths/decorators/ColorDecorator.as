@@ -78,7 +78,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			if ( mode == 1 ) 
 			{
-				var c:uint = presetColor.intValue;
+				var c:uint = color.colorValue;
 				var r:Number = (((c >>> 16) & 0xff) / 255);
 				var g:Number = (((c >>> 8) & 0xff) / 255);
 				var b:Number = ((c & 0xff) / 255);

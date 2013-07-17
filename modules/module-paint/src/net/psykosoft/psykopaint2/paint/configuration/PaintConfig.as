@@ -27,6 +27,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavViewMediator;
+	import net.psykosoft.psykopaint2.paint.views.brush.SelectColorSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.brush.SelectColorSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
@@ -48,10 +50,10 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickASampleImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickASampleImageSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageView;
-import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageViewMediator;
-import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageViewMediator;
+	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavViewMediator;
-
+	
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IInjector;
@@ -146,6 +148,7 @@ import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 		private function mapMediators():void {
 			_mediatorMap.map( EditBrushSubNavView ).toMediator( EditBrushSubNavViewMediator );
 			_mediatorMap.map( SelectBrushSubNavView ).toMediator( SelectBrushSubNavViewMediator );
+			_mediatorMap.map( SelectColorSubNavView ).toMediator( SelectColorSubNavViewMediator );
 			_mediatorMap.map( CanvasSubNavView ).toMediator( CanvasSubNavViewMediator );
 			_mediatorMap.map( CanvasView ).toMediator( CanvasViewMediator );
 			_mediatorMap.map( ColorStyleSubNavView ).toMediator( ColorStyleSubNavViewMediator );

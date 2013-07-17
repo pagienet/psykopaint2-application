@@ -30,6 +30,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private var _parameter:PsykoParameter;
 
 		public static const LBL_BACK:String = "Pick a Brush";
+		public static const LBL_COLOR:String = "Pick a Color";
 
 		static private var _lastSelectedBrush:String = "";
 		static private var _lastSelectedParameter:Object = {};
@@ -45,6 +46,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onEnabled():void {
 			navigation.setHeader( "" );
 			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
+			navigation.setRightButton( LBL_COLOR, ButtonIconType.CONTINUE );
+			navigation.toggleRightButtonVisibility(false);
 			navigation.layout();
 		}
 
@@ -66,7 +69,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
-
+			navigation.toggleRightButtonVisibility(false);
 			var firstParamId:String = "";
 //			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
 			var group:ButtonGroup = new ButtonGroup();
@@ -75,8 +78,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var matchesLast:Boolean = getLastSelectedParameter( _parameterSetVO.brushName ).indexOf( parameter.id ) != -1;
 				if( matchesLast || i == 0) firstParamId = parameter.id;
 //				trace( ">>> " + parameter.toXMLString() );
-				var btn:SbButton = navigation.createButton( parameter.label, "param" + parameter.type, "btnLabelCenter", null )
-				group.addButton( btn );
+				if ( parameter.type != PsykoParameter.ColorParameter )
+				{
+					var btn:SbButton = navigation.createButton( parameter.label, "param" + parameter.type, "btnLabelCenter", null )
+					group.addButton( btn );
+				} else {
+					navigation.toggleRightButtonVisibility(true);
+				}
 			}
 			navigation.addCenterButtonGroup( group );
 			navigation.layout();
@@ -210,13 +218,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				positionUiElement( checkBox );
 				addChild( checkBox );
 				_uiElements.push( checkBox );
-			} else if( parameterType == PsykoParameter.ColorParameter ) {
-			
-				var colorMixer:SbColormixer = new SbColormixer();
-				positionUiElement( colorMixer );
-				addChild( colorMixer );
-				_uiElements.push( colorMixer );
-			}
+			} 
 			// No Ui component for this parameter.
 			else {
 				trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
