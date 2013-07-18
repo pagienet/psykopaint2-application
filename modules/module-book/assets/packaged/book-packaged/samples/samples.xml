@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:6d158da20ffa4fbbca7e49581f0cc8b5$ -->
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:e9348ca6f11eb350a2f2b805bc1038c7$ -->
 <TextureAtlas imagePath="samples.png">
     <SubTexture name="anemone" x="458" y="692" width="150" height="113"/>
     <SubTexture name="angkor" x="458" y="577" width="150" height="113"/>
