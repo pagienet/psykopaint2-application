@@ -12,6 +12,9 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
@@ -27,10 +30,10 @@ package net.psykosoft.psykopaint2.core.model
 		[Inject]
 		public var memoryWarningSignal : NotifyMemoryWarningSignal;
 
-		private var _sourceTexture : Texture;
-		private var _fullSizeBackBuffer : Texture;
-		private var _colorTexture : Texture;
-		private var _normalSpecularMap : Texture;	// RGB = slope, A = height, half sized
+		private var _sourceTexture : TrackedTexture;
+		private var _fullSizeBackBuffer : TrackedTexture;
+		private var _colorTexture : TrackedTexture;
+		private var _normalSpecularMap : TrackedTexture;	// RGB = slope, A = height, half sized
 
 		private var _width : Number;
 		private var _height : Number;
@@ -57,12 +60,12 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function get normalSpecularMap() : Texture
 		{
-			return _normalSpecularMap;
+			return _normalSpecularMap.texture;
 		}
 
 		public function get fullSizeBackBuffer() : Texture
 		{
-			return _fullSizeBackBuffer;
+			return _fullSizeBackBuffer.texture;
 		}
 
 		[PostConstruct]
@@ -117,7 +120,7 @@ package net.psykosoft.psykopaint2.core.model
 				_pyramidMap = new PyramidMapTdsi(fixed);
 
 			if (_sourceTexture)
-				_pyramidMap.uploadMipLevel(_sourceTexture, 0);
+				_pyramidMap.uploadMipLevel(_sourceTexture.texture, 0);
 
 			fixed.dispose();
 		}
@@ -163,13 +166,13 @@ package net.psykosoft.psykopaint2.core.model
 		public function get sourceTexture() : Texture
 		{
 			if (!_sourceTexture) initSourceTexture();
-			return _sourceTexture;
+			return _sourceTexture.texture;
 		}
 
 		private function initSourceTexture() : void
 		{
 			_sourceTexture = createCanvasTexture(false);
-			_pyramidMap.uploadMipLevel(_sourceTexture, 0);
+			_pyramidMap.uploadMipLevel(_sourceTexture.texture, 0);
 		}
 
 		public function init(canvasWidth : uint, canvasHeight : uint) : void
@@ -226,9 +229,9 @@ package net.psykosoft.psykopaint2.core.model
 			_colorBackgroundOriginal = null;
 		}
 
-		public function createCanvasTexture(isRenderTarget : Boolean, scale : Number = 1) : Texture
+		public function createCanvasTexture(isRenderTarget : Boolean, scale : Number = 1) : TrackedTexture
 		{
-			return stage3D.context3D.createTexture(_textureWidth * scale, _textureHeight * scale, Context3DTextureFormat.BGRA, isRenderTarget, 0);
+			return new TrackedTexture(stage3D.context3D.createTexture(_textureWidth * scale, _textureHeight * scale, Context3DTextureFormat.BGRA, isRenderTarget, 0));
 		}
 
 		public function dispose() : void
@@ -246,9 +249,9 @@ package net.psykosoft.psykopaint2.core.model
 			_normalSpecularMap = swapFullSized(_normalSpecularMap);
 		}
 
-		public function swapFullSized(target : Texture) : Texture
+		public function swapFullSized(target : TrackedTexture) : TrackedTexture
 		{
-			var temp : Texture = target;
+			var temp : TrackedTexture = target;
 			target = _fullSizeBackBuffer;
 			_fullSizeBackBuffer = temp;
 			return target;
@@ -256,7 +259,7 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function get colorTexture() : Texture
 		{
-			return _colorTexture;
+			return _colorTexture.texture;
 		}
 
 		private function onMemoryWarning() : void
@@ -276,13 +279,13 @@ package net.psykosoft.psykopaint2.core.model
 		private function uploadColorBackgroundOriginal() : void
 		{
 			if (_colorBackgroundOriginal && _colorBackgroundOriginal.width == _textureWidth && _colorBackgroundOriginal.height == _textureHeight) {
-				_colorTexture.uploadFromBitmapData(_colorBackgroundOriginal, 0);
+				_colorTexture.texture.uploadFromBitmapData(_colorBackgroundOriginal, 0);
 			}
 			else {
 				var tempBitmapData : BitmapData = new TrackedBitmapData(_textureWidth, _textureHeight, true, 0);
 				if (_colorBackgroundOriginal)
 					tempBitmapData.draw(_colorBackgroundOriginal);
-				_colorTexture.uploadFromBitmapData(tempBitmapData, 0);
+				_colorTexture.texture.uploadFromBitmapData(tempBitmapData, 0);
 				tempBitmapData.dispose();
 			}
 		}
@@ -298,7 +301,7 @@ package net.psykosoft.psykopaint2.core.model
 			_normalSpecularOriginal.position = 0;
 			inflated.writeBytes(_normalSpecularOriginal, 0, _normalSpecularOriginal.length);
 			inflated.uncompress();
-			_normalSpecularMap.uploadFromByteArray(inflated, 0);
+			_normalSpecularMap.texture.uploadFromByteArray(inflated, 0);
 			inflated.clear();
 		}
 	}

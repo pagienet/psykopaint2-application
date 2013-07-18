@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -33,10 +34,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.paint.signals.RequestCleanUpPaintModuleMemorySignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestInitPaintModuleMemorySignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.TransformGesture;
+	import org.osflash.signals.Signal;
 
 	public class CanvasViewMediator extends MediatorBase
 	{
@@ -91,8 +95,26 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
 
+		[Inject]
+		public var requestCleanUpPaintModuleMemorySignal : RequestCleanUpPaintModuleMemorySignal;
+
+		[Inject]
+		public var requestInitPaintModuleMemorySignal : RequestInitPaintModuleMemorySignal;
+
 		private var _transformMatrix:Matrix;
+
 		private var _easelRectFromHomeView:Rectangle;
+
+		// -----------------------
+		// Zoom animation.
+		// -----------------------
+		private var _waitingForZoomOutToContinueToHome:Boolean;
+
+		private var _waitingForZoomInToContinueToPaint:Boolean;
+		private var _minZoomScale:Number;
+
+		private const MAX_ZOOM_SCALE:Number = 3;
+		public var zoomScale:Number = _minZoomScale;
 
 		override public function initialize():void {
 
@@ -219,7 +241,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 
 			if (newState == StateType.PREPARE_FOR_PAINT_MODE) {
-				canvasModel.createPaintTextures();
+				requestInitPaintModuleMemorySignal.dispatch();
 			}
 
 			if( newState == StateType.TRANSITION_TO_PAINT_MODE ) {
@@ -233,18 +255,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 
 		}
-
-		// -----------------------
-		// Zoom animation.
-		// -----------------------
-
-		private var _waitingForZoomOutToContinueToHome:Boolean;
-		private var _waitingForZoomInToContinueToPaint:Boolean;
-
-		private var _minZoomScale:Number;
-		private const MAX_ZOOM_SCALE:Number = 3;
-
-		public var zoomScale:Number = _minZoomScale;
 
 		private function onEaselRectInfo( rect:Rectangle ):void {
 			_easelRectFromHomeView = rect.clone();
@@ -284,7 +294,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onZoomComplete():void {
 			if( _waitingForZoomOutToContinueToHome ) {
 			    requestStateChange( StateType.HOME_ON_EASEL );
-				canvasModel.disposePaintTextures();
+				requestCleanUpPaintModuleMemorySignal.dispatch();
 				_waitingForZoomOutToContinueToHome = false;
 			}
 			if( _waitingForZoomInToContinueToPaint ) {

@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
+
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.FlatColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
@@ -24,11 +26,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 	public class WaterDamageBrush extends SimulationBrush
 	{
-		private var _velocityPressureField : Texture;
-		private var _halfSizedBackBuffer : Texture;
-		private var _velocityPressureFieldBackBuffer : Texture;
-		private var _pigmentColorField : Texture;
-		private var _normalField : Texture;
+		private var _velocityPressureField : TrackedTexture;
+		private var _halfSizedBackBuffer : TrackedTexture;
+		private var _velocityPressureFieldBackBuffer : TrackedTexture;
+		private var _pigmentColorField : TrackedTexture;
+		private var _normalField : TrackedTexture;
 
 		private var _addPigmentToPressure : SinglePigmentBlotTransfer;
 		private var _addWetness : SinglePigmentBlotTransfer;
@@ -144,15 +146,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (!_velocityPressureField)
 				initBuffers();
 
-			_context.setRenderToTexture(_pigmentColorField, true);
+			_context.setRenderToTexture(_pigmentColorField.texture, true);
 			_context.clear();
 			CopyTexture.copy(_canvasModel.colorTexture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 
-			_context.setRenderToTexture(_normalField, true);
+			_context.setRenderToTexture(_normalField.texture, true);
 			_context.clear();
 			CopyTexture.copy(_canvasModel.normalSpecularMap, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 
-			_context.setRenderToTexture(_velocityPressureField, true);
+			_context.setRenderToTexture(_velocityPressureField.texture, true);
 			_context.clear(.5, .5, 0, 1);
 			_context.setRenderToBackBuffer();
 
@@ -176,24 +178,24 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private function addPaintToSimulation() : void
 		{
 			if (_addWetness) {
-				_addWetness.execute(SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer, null, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+				_addWetness.execute(SimulationMesh(_brushMesh), _velocityPressureField.texture, _velocityPressureFieldBackBuffer.texture, null, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 				swapVelocityBuffer();
 			}
 
-			_addPigmentToPressure.execute(SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer, _brushShape.texture, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			_addPigmentToPressure.execute(SimulationMesh(_brushMesh), _velocityPressureField.texture, _velocityPressureFieldBackBuffer.texture, _brushShape.texture, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 			swapVelocityBuffer();
 		}
 
-		private function swapHalfSized(other : Texture) : Texture
+		private function swapHalfSized(other : TrackedTexture) : TrackedTexture
 		{
-			var temp : Texture = _halfSizedBackBuffer;
+			var temp : TrackedTexture = _halfSizedBackBuffer;
 			_halfSizedBackBuffer = other;
 			return temp;
 		}
 
 		private function swapVelocityBuffer() : void
 		{
-			var tmp : Texture = _velocityPressureField;
+			var tmp : TrackedTexture = _velocityPressureField;
 			_velocityPressureField = _velocityPressureFieldBackBuffer;
 			_velocityPressureFieldBackBuffer = tmp;
 		}
@@ -203,14 +205,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var gravity : Vector3D = AccelerometerManager.gravityVector;
 			_applySlope.surfaceRelief = _surfaceRelief.numberValue;
 			_applySlope.gravityStrength = _gravityStrength.numberValue;
-			_applySlope.execute(gravity, SimulationMesh(_brushMesh), _velocityPressureField, _normalField, _velocityPressureFieldBackBuffer);
+			_applySlope.execute(gravity, SimulationMesh(_brushMesh), _velocityPressureField.texture, _normalField.texture, _velocityPressureFieldBackBuffer.texture);
 			swapVelocityBuffer();
 		}
 
 		private function updateVelocities() : void
 		{
 			// we keep wetness in velocityPressureField (for now it's always 1)
-			_updateVelocities.execute(SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer, _dt, _waterViscosity.numberValue, _waterDrag.numberValue);
+			_updateVelocities.execute(SimulationMesh(_brushMesh), _velocityPressureField.texture, _velocityPressureFieldBackBuffer.texture, _dt, _waterViscosity.numberValue, _waterDrag.numberValue);
 			swapVelocityBuffer();
 		}
 
@@ -218,7 +220,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			_relaxDivergence.activate(_context);
 			for (var i : int = 0; i < _relaxationSteps; ++i) {
-				_relaxDivergence.execute(SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer);
+				_relaxDivergence.execute(SimulationMesh(_brushMesh), _velocityPressureField.texture, _velocityPressureFieldBackBuffer.texture);
 				swapVelocityBuffer();
 			}
 			_relaxDivergence.deactivate(_context);
@@ -226,23 +228,23 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function movePigment() : void
 		{
-			_movePigmentCMYA.execute(SimulationMesh(_brushMesh), _pigmentColorField, _velocityPressureField, _halfSizedBackBuffer, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
+			_movePigmentCMYA.execute(SimulationMesh(_brushMesh), _pigmentColorField.texture, _velocityPressureField.texture, _halfSizedBackBuffer.texture, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
 			_pigmentColorField = swapHalfSized(_pigmentColorField);
 
-			_movePigmentXYBA.execute(SimulationMesh(_brushMesh), _normalField, _velocityPressureField, _halfSizedBackBuffer, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
+			_movePigmentXYBA.execute(SimulationMesh(_brushMesh), _normalField.texture, _velocityPressureField.texture, _halfSizedBackBuffer.texture, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
 			_normalField = swapHalfSized(_normalField);
 		}
 
 		override protected function drawBrushColor() : void
 		{
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			_renderPigment.execute(SimulationMesh(_brushMesh), _pigmentColorField);
+			_renderPigment.execute(SimulationMesh(_brushMesh), _pigmentColorField.texture);
 		}
 
 		override protected function drawBrushNormalsAndSpecular() : void
 		{
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			_renderPigment.execute(SimulationMesh(_brushMesh), _normalField);
+			_renderPigment.execute(SimulationMesh(_brushMesh), _normalField.texture);
 		}
 	}
 }

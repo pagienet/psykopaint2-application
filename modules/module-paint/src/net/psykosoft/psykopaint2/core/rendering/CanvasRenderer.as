@@ -74,7 +74,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		}
 
-		private function disposeBackground() : void
+		public function disposeBackground() : void
 		{
 			if (_background) {
 				_background.dispose();

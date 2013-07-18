@@ -6,7 +6,11 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 	import flash.display3D.textures.Texture;
 	import flash.display3D.textures.TextureBase;
 	import flash.geom.Rectangle;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
+
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
@@ -16,8 +20,8 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 
 	public class CanvasSnapShot
 	{
-		private var _colorTexture : Texture;
-		private var _normalSpecularTexture : Texture;
+		private var _colorTexture : TrackedTexture;
+		private var _normalSpecularTexture : TrackedTexture;
 		private var _context : Context3D;
 		private var _canvas : CanvasModel;
 
@@ -25,8 +29,8 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 		{
 			_context = context;
 			_canvas = canvas;
-			_colorTexture = _context.createTexture(_canvas.textureWidth, _canvas.textureHeight, Context3DTextureFormat.BGRA, true, 0);
-			_normalSpecularTexture = _context.createTexture(_canvas.textureWidth, _canvas.textureHeight, Context3DTextureFormat.BGRA, true, 0);
+			_colorTexture = _canvas.createCanvasTexture(true);
+			_normalSpecularTexture = _canvas.createCanvasTexture(true);
 		}
 
 		public function updateSnapshot() : void
@@ -35,9 +39,9 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 			saveSnapShotTo(_canvas.normalSpecularMap, _normalSpecularTexture);
 		}
 
-		private function saveSnapShotTo(source : TextureBase, target : TextureBase) : void
+		private function saveSnapShotTo(source : TextureBase, target : TrackedTexture) : void
 		{
-			_context.setRenderToTexture(target);
+			_context.setRenderToTexture(target.texture);
 			_context.clear(0.0, 0.0, 0.0, 0.0);
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopyTexture.copy(source, _context, _canvas.usedTextureWidthRatio, _canvas.usedTextureHeightRatio);
@@ -51,12 +55,12 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 
 		public function drawColor() : void
 		{
-			CopyTexture.copy(_colorTexture, _context, _canvas.usedTextureWidthRatio, _canvas.usedTextureHeightRatio);
+			CopyTexture.copy(_colorTexture.texture, _context, _canvas.usedTextureWidthRatio, _canvas.usedTextureHeightRatio);
 		}
 
 		public function drawNormalsSpecular() : void
 		{
-			CopyTexture.copy(_normalSpecularTexture, _context, _canvas.usedTextureWidthRatio, _canvas.usedTextureHeightRatio);
+			CopyTexture.copy(_normalSpecularTexture.texture, _context, _canvas.usedTextureWidthRatio, _canvas.usedTextureHeightRatio);
 		}
 
 		public function exchangeWithCanvas(canvas : CanvasModel) : void

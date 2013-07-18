@@ -35,7 +35,6 @@ package net.psykosoft.psykopaint2.core.model
 		public function init() : void
 		{
 			_context = stage3d.context3D;
-			_snapShot = new CanvasSnapShot(_context, canvas);
 		}
 
 		public function get hasHistory() : Boolean
@@ -57,6 +56,8 @@ package net.psykosoft.psykopaint2.core.model
 		// returned snapshot is READ-ONLY!
 		public function takeSnapshot() : CanvasSnapShot
 		{
+			if (!_snapShot)
+				_snapShot = new CanvasSnapShot(_context, canvas);
 			_snapShot.updateSnapshot();
 			_hasHistory = true;
 			notifyStackChange();
@@ -70,6 +71,8 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function clearHistory() : void
 		{
+			if (_snapShot) _snapShot.dispose();
+			_snapShot = null;
 			_hasHistory = false;
 			notifyStackChange();
 		}

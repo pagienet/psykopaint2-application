@@ -75,8 +75,6 @@ package net.psykosoft.psykopaint2.paint.commands
 			canvasImporter.importPainting(canvasModel, vo);
 			notifyPaintingActivatedSignal.dispatch();
 
-			canvasHistoryModel.clearHistory();
-
 			context.release( this );
 			vo.dispose();
 		}
