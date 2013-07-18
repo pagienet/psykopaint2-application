@@ -3,11 +3,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import com.bit101.components.ComboBox;
 	import com.bit101.components.Knob;
-	
+
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.text.TextField;
-	
+	import flash.utils.Dictionary;
+
 	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -32,8 +33,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public static const LBL_BACK:String = "Pick a Brush";
 		public static const LBL_COLOR:String = "Pick a Color";
 
+		public static const CUSTOM_COLOR_ID:String = "Custom Color";
+
 		static private var _lastSelectedBrush:String = "";
-		static private var _lastSelectedParameter:Object = {};
+		static private var _lastSelectedParameterId:Dictionary = new Dictionary();
 		static public var lastScrollerPosition:Number = 372; //TODO: harcode works, might want to do it cleaner.
 
 
@@ -47,7 +50,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			navigation.setHeader( "" );
 			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
 			navigation.setRightButton( LBL_COLOR, ButtonIconType.CONTINUE );
-			navigation.toggleRightButtonVisibility(false);
+			navigation.toggleRightButtonVisibility( false );
 			navigation.layout();
 		}
 
@@ -69,27 +72,29 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
-			navigation.toggleRightButtonVisibility(false);
+			navigation.toggleRightButtonVisibility( false );
+			var firstParamLabel:String = "";
 			var firstParamId:String = "";
 //			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
 			var group:ButtonGroup = new ButtonGroup();
 			for( var i:uint = 0; i < numParameters; ++i ) {
+
 				var parameter:PsykoParameter = list[ i ];
-				var matchesLast:Boolean = getLastSelectedParameter( _parameterSetVO.brushName ).indexOf( parameter.id ) != -1;
-				if( matchesLast || i == 0) firstParamId = parameter.id;
 //				trace( ">>> " + parameter.toXMLString() );
 
-				if ( parameter.type != PsykoParameter.ColorParameter )
-				{
-					if ( parameter.id != "Custom Color" )
-					{
+				if( _lastSelectedParameterId[ _lastSelectedBrush ] == parameter.id || ( firstParamId == "" && parameter.id != CUSTOM_COLOR_ID ) ) {
+					firstParamLabel = parameter.label;
+					firstParamId = parameter.id;
+				}
+
+				if( parameter.type != PsykoParameter.ColorParameter ) {
+					if( parameter.id != CUSTOM_COLOR_ID ) {
 						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
-						var btn:SbButton = navigation.createButton( parameter.label,"", "btnLabelCenter", null )
+						var btn:SbButton = navigation.createButton( parameter.label, "", "btnLabelCenter", null );
 						group.addButton( btn );
 					}
-				} else 
-				{
-					navigation.toggleRightButtonVisibility(true);
+				} else {
+					navigation.toggleRightButtonVisibility( true );
 				}
 
 				//var btn:SbButton = navigation.createButton( parameter.label, "", "btnLabelCenter", null )
@@ -101,19 +106,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// Select and <<< activate >>> if a parameter was previously selected.
 			if( firstParamId != "" ) {
-				group.setSelectedButtonByLabel( firstParamId );
+				group.setSelectedButtonByLabel( firstParamLabel );
 				openParameter( firstParamId );
 			}
 		}
 
 		public function updateParameters( parameterSetVO:ParameterSetVO ):void {
 			_parameterSetVO = parameterSetVO;
-			var currentParameterID:String = getLastSelectedParameter( _parameterSetVO.brushName );
+			// TODO: reactivate appropriately
+			/*var currentParameterID:String = getLastSelectedParameterId( _parameterSetVO.brushName );
 			if( currentParameterID != "" ) {
 				openParameter( currentParameterID );
-			}
+			}*/
 		}
-		
+
 		// ---------------------------------------------------------------------
 		// Parameter components.
 		// ---------------------------------------------------------------------
@@ -127,7 +133,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			for( i = 0; i < _parameterSetVO.parameters.length; i++ ) {
 				//this is a hack to work around the weird "select by label" thing -
 				//parameters can have an id AND a diffferent label
-				if( _parameterSetVO.parameters[i].id == id ||  _parameterSetVO.parameters[i].label == id ) {
+				if( _parameterSetVO.parameters[i].id == id || _parameterSetVO.parameters[i].label == id ) {
 					_parameter = _parameterSetVO.parameters[i];
 					break;
 				}
@@ -135,7 +141,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			if( _parameter == null ) return;
 
 			var parameterType:int = _parameter.type;
-			setLastSelectedParameter( _parameter.id, _parameterSetVO.brushName );
+			if( _parameter.id != CUSTOM_COLOR_ID ) {
+				_lastSelectedParameterId[ _lastSelectedBrush ] = _parameter.id;
+			}
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
@@ -216,7 +224,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				combobox.selectedIndex = _parameter.index;
 				addChild( combobox );
 				combobox.addEventListener( Event.CHANGE, onComboBoxChanged );
-				positionUiElement( combobox as DisplayObject, 0, 10 );
+				positionUiElement( combobox as DisplayObject, 40, 10 );
 				_uiElements.push( combobox );
 			}
 
@@ -228,7 +236,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				positionUiElement( checkBox );
 				addChild( checkBox );
 				_uiElements.push( checkBox );
-			} 
+			}
 			// No Ui component for this parameter.
 			else {
 				trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
@@ -324,14 +332,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		static public function setLastSelectedBrush( value:String ):void {
 			if( _lastSelectedBrush == value ) return;
 			_lastSelectedBrush = value;
-		}
-
-		static public function getLastSelectedParameter( brushID:String ):String {
-			return _lastSelectedParameter[brushID] || "";
-		}
-
-		static public function setLastSelectedParameter( value:String, brushID:String ):void {
-			_lastSelectedParameter[brushID] = value;
 		}
 	}
 }
