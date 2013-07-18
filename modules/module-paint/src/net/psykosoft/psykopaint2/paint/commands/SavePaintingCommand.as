@@ -137,6 +137,13 @@ package net.psykosoft.psykopaint2.paint.commands
 			event.target.removeEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
 			var factory:PaintingInfoFactory = new PaintingInfoFactory();
 			var dataVO : PaintingDataVO = event.paintingDataVO;
+
+			// TODO: This should become disposed after saving
+			if (_infoVO) {
+				trace ("disposing previous thumbnail");
+				_infoVO.dispose();
+			}
+
 			_infoVO = factory.createFromData( dataVO, paintingId, userModel.uniqueUserId, generateThumbnail() );
 
 			paintingModel.updatePaintingInfo( _infoVO );

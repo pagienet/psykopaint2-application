@@ -64,6 +64,7 @@ package net.psykosoft.psykopaint2.core.models
 			if (vo.id == PaintingInfoVO.DEFAULT_VO_ID)
 				throw "PaintingInfoVO id not set";
 
+			if (_paintingData[vo.id]) _paintingData[vo.id].dispose();
 			_paintingData[vo.id] = vo;
 		}
 
