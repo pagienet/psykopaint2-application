@@ -20,13 +20,20 @@ package net.psykosoft.psykopaint2.core.commands
 		public var context:IContext;
 
 		[Inject]
-		public var model:PaintingModel;
+		public var paintingModel:PaintingModel;
 
 		private var _currentFileBeingLoaded:File;
 		private var _paintingFiles:Vector.<File>;
 		private var _numPaintingFiles:uint;
 		private var _indexOfPaintingFileBeingRead:uint;
 		private var _paintingVos:Vector.<PaintingInfoVO>;
+
+		/*
+		* NOTE: Jul 18, 2013
+		* SAVING IS DISABLED ON iPAD - PaintingModel is never populated.
+		* SavePaintingCommand.as is also disabled.
+		* Line 51, 52
+		* */
 
 		public function RetrievePaintingDataCommand() {
 			super();
@@ -35,10 +42,14 @@ package net.psykosoft.psykopaint2.core.commands
 		override public function execute():void {
 			super.execute();
 
+			_paintingVos = new Vector.<PaintingInfoVO>();
+
 			// Read files in app data folder or bundle.
 			var files:Array;
 			if( CoreSettings.RUNNING_ON_iPAD ) {
-				files = FolderReadUtil.readFilesInIosFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
+				// Disabled ( pick one option below and only one ).
+				paintingModel.setPaintingCollection( _paintingVos ); return;
+//				files = FolderReadUtil.readFilesInIosFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
 			}
 			else {
 				files = FolderReadUtil.readFilesInDesktopFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
@@ -61,7 +72,6 @@ package net.psykosoft.psykopaint2.core.commands
 			if( _numPaintingFiles > 0 ) {
 				trace( this, "starting to read painting files... ( " + _numPaintingFiles + " )" );
 				context.detain( this );
-				_paintingVos = new Vector.<PaintingInfoVO>();
 				readNextFile();
 			}
 		}
@@ -103,7 +113,7 @@ package net.psykosoft.psykopaint2.core.commands
 			}
 			else {
 				trace( this, "all painting files read. Retrieved " + _paintingVos.length + " usable painting files." );
-				if( _paintingVos.length > 0 ) model.setPaintingCollection( _paintingVos );
+				if( _paintingVos.length > 0 ) paintingModel.setPaintingCollection( _paintingVos );
 				context.release();
 			}
 		}
