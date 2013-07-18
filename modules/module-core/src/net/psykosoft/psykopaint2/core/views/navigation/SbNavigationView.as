@@ -7,8 +7,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
+	import flash.ui.Keyboard;
 
 	import flashx.textLayout.formats.TextAlign;
 
@@ -48,6 +50,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _reactiveHideMouseDownY:Number;
 		private var _reactiveHideStackY:StackUtil;
 		private var _targetReactiveY:Number;
+		private var _forceHidden:Boolean;
 
 		private var _hidden:Boolean;
 		private var _bgHeight:uint = 250;
@@ -123,6 +126,18 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			visible = false;
 		}
 
+		override protected function onAddedToStage():void {
+			// TODO: remove on release
+			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
+		}
+
+		private function onStageKeyDown( event:KeyboardEvent ):void {
+			if( event.keyCode == Keyboard.H ) {
+				_forceHidden = !_forceHidden;
+				visible = !_forceHidden;
+			}
+		}
+
 		// ---------------------------------------------------------------------
 		// Interface to be used by the view's mediator.
 		// ---------------------------------------------------------------------
@@ -160,7 +175,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_showing = true;
 			_animating = true;
 			showingSignal.dispatch();
-			this.visible = true;
+			visible = true && !_forceHidden;
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, time, { y: 0, onUpdate: onShowHideUpdate, onComplete: onShowAnimatedComplete, ease:Strong.easeOut } );
 		}
@@ -183,7 +198,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				return;
 			}
 			else {
-				visible = true;
+				visible = true && !_forceHidden;
 			}
 
 			// Keep current nav when incoming class is the abstract one.
@@ -214,7 +229,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				return;
 			}
 			else if( !_hidden ) {
-				visible = true;
+				visible = true && !_forceHidden;
 			}
 
 			// Create new view.
@@ -251,7 +266,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			//if( stage.mouseY < _targetReactiveY ) return; // reject interactions outside of the navigation area
 			_onReactiveHide = true;
 			if( _hidden ) {
-				visible = true;
+				visible = true && !_forceHidden;
 				y = _bgHeight;
 				_reactiveHideMouseDownY = stage.mouseY - _bgHeight;
 			}
