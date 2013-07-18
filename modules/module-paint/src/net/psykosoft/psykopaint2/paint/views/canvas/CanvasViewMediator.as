@@ -326,13 +326,20 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 
 			var offsetX:Number = rect.x / canvasModel.width;
-			if( zoomScale < 1 )
-				offsetX = (1 - zoomScale) * .5;
-
 			var offsetY:Number = rect.y / canvasModel.height;
-			// TODO: this causes a jump when coming from home, it seems that the .175 value needs to be calculated dynamically
 			if( zoomScale < 1 )
+			{
+				offsetX = (1 - zoomScale) * .5;
 				offsetY = (1 - zoomScale) * .175;
+			} else if ( zoomScale < 1.5 )
+			{
+				var ratio:Number = (zoomScale - 1) * 2;
+				offsetX = ratio * offsetX + ( 1-ratio) * (1 - zoomScale) * .5;
+				offsetY = ratio * offsetY + ( 1-ratio) * (1 - zoomScale) * .175;
+			}
+			// TODO: this causes a jump when coming from home, it seems that the .175 value needs to be calculated dynamically
+			
+				
 
 			// TODO: Doesn't feel good while animating - should we use a flag here and enable it when not animating?
 			/*if( zoomScale > 0.95 && zoomScale < 1.05 ) {
