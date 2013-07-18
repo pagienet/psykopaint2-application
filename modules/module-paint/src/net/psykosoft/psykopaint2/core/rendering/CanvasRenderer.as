@@ -180,7 +180,7 @@ package net.psykosoft.psykopaint2.core.rendering
 				// todo: if rendering source, add the source to be copied
 				var sourceRect : Rectangle = new Rectangle(0, 0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio);
 				var destRect : Rectangle = new Rectangle(0, 0, 1, 1);
-				CopySubTexture.copy(canvas.fullSizeBackBuffer, sourceRect, destRect, _context3D);
+				CopySubTexture.copy(canvas.colorTexture, sourceRect, destRect, _context3D);
 			}
 
 			renderBackground();
@@ -225,17 +225,19 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		public function renderToBitmapData() : BitmapData
 		{
-			// I am sure there is some way to make the more elegant, but this works for now:
-			var map : BitmapData = new TrackedBitmapData(canvas.width, canvas.height, false, 0xffffffff);
+			var map : BitmapData = new TrackedBitmapData(canvas.width, canvas.height, false, 0);
+			var renderRectMemento : Rectangle = _lightingRenderer.renderRect;
 
+			_lightingRenderer.renderRect = new Rectangle(0, 0, canvas.width, canvas.height);
+			_context3D = stage3D.context3D;
 			_context3D.setRenderToBackBuffer();
-			_context3D.clear(1, 1, 1, 1);
-			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+			_context3D.clear();
 
-			var bb : BackbufferTextureFilter = new BackbufferTextureFilter();
-			bb.draw(canvas.colorTexture, _context3D, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio);
+			render();
 			_context3D.drawToBitmapData(map);
-			_context3D.clear(1, 1, 1, 1);
+
+			_lightingRenderer.renderRect = renderRectMemento;
+
 			return map;
 		}
 	}

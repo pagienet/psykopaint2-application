@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 
 	import flash.display.BitmapData;
+	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
@@ -13,6 +14,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.io.CanvasExportEvent;
 	import net.psykosoft.psykopaint2.core.io.CanvasExporter;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
@@ -29,6 +31,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var canvasModel:CanvasModel;
 
 		[Inject]
+		public var canvasRenderer:CanvasRenderer;
+
+		[Inject]
 		public var requestPopUpDisplaySignal:RequestPopUpDisplaySignal;
 
 		[Inject]
@@ -36,6 +41,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
+
+		private var _bitmapData : BitmapData;
 
 		public function ExportCanvasCommand() {
 			super();
@@ -47,30 +54,23 @@ package net.psykosoft.psykopaint2.paint.commands
 			requestPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
 			requestUpdateMessagePopUpSignal.dispatch( "exporting..." );
 
-			// TODO: Replace this with CanvasRenderer::renderToBitmapData
-			var canvasExporter : CanvasExporter = new CanvasExporter();
-			canvasExporter.addEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
-			canvasExporter.export(canvasModel);
-		}
-
-		private function onExportComplete(event : CanvasExportEvent) : void
-		{
-			event.target.removeEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
-			var bmd:BitmapData = BitmapDataUtils.getBitmapDataFromBytes( event.paintingDataVO.colorData, canvasModel.width, canvasModel.height, true );
+			_bitmapData = canvasRenderer.renderToBitmapData();
 
 			// Write bmd
 			if( CoreSettings.RUNNING_ON_iPAD ) {
 				var iosImageSaveUtil:IosImageSaveUtil = new IosImageSaveUtil();
-				iosImageSaveUtil.saveImageToCameraRoll( bmd, onWriteComplete );
+				iosImageSaveUtil.saveImageToCameraRoll( _bitmapData, onWriteComplete );
 			}
 			else {
-				DesktopImageSaveUtil.saveImageToDesktop( bmd );
+				DesktopImageSaveUtil.saveImageToDesktop( _bitmapData );
 				onWriteComplete();
 			}
+
 		}
 
 		private function onWriteComplete():void {
 			requestPopUpRemovalSignal.dispatch();
+			_bitmapData.dispose();
 		}
 	}
 }
