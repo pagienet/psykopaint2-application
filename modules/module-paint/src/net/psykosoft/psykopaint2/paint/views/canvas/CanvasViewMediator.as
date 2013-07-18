@@ -268,9 +268,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			_minZoomScale = _easelRectFromHomeView.width / canvasModel.width;
 			zoomScale = _minZoomScale;
 			// Uncomment to visualize incoming rect.
-			view.graphics.lineStyle( 1, 0x00FF00 );
+			/*view.graphics.lineStyle( 1, 0x00FF00 );
 			view.graphics.drawRect( rect.x, rect.y, rect.width, rect.height );
-			view.graphics.endFill();
+			view.graphics.endFill();*/
 		}
 
 		private function zoomIn():void {
