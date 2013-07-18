@@ -14,11 +14,13 @@ package net.psykosoft.psykopaint2.core.models
 
 		private var _paintingData : Array;
 		private var _focusedPaintingId : String = "";
+		private var _sortingDirty : Boolean;
+		private var _sortedData:Vector.<PaintingInfoVO>;
 
 		public function PaintingModel()
 		{
 			super();
-			_paintingData = new Array();
+			_paintingData = [];
 		}
 
 		public function setPaintingCollection(data : Vector.<PaintingInfoVO>) : void
@@ -26,7 +28,8 @@ package net.psykosoft.psykopaint2.core.models
 			for (var i : uint = 0; i < data.length; ++i)
 				_paintingData[data[i].id] = data[i];
 
-			notifyPaintingDataRetrievedSignal.dispatch(data);
+			_sortingDirty = true;
+			notifyPaintingDataRetrievedSignal.dispatch( getSortedPaintingCollection() );
 		}
 
 		public function getPaintingCollection() : Vector.<PaintingInfoVO>
@@ -38,6 +41,17 @@ package net.psykosoft.psykopaint2.core.models
 				collection[i++] = vo;
 
 			return collection;
+		}
+
+		public function getSortedPaintingCollection() : Vector.<PaintingInfoVO>
+		{
+			if( _sortingDirty ) {
+				_sortedData = getPaintingCollection();
+				_sortedData.sort( sortOnLastSaved );
+				_sortingDirty = false;
+			}
+
+			return _sortedData;
 		}
 
 		public function getVoWithId(id : String) : PaintingInfoVO
@@ -53,6 +67,7 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			_paintingData[id] = null;
 			delete _paintingData[id];
+			_sortingDirty = true;
 		}
 
 		/**
@@ -66,6 +81,7 @@ package net.psykosoft.psykopaint2.core.models
 
 			if (_paintingData[vo.id]) _paintingData[vo.id].dispose();
 			_paintingData[vo.id] = vo;
+			_sortingDirty = true;
 		}
 
 		public function get focusedPaintingId() : String
@@ -82,7 +98,7 @@ package net.psykosoft.psykopaint2.core.models
 		// Utils.
 		// -----------------------
 
-		public function sortOnLastSaved( paintingVOA:PaintingInfoVO, paintingVOB:PaintingInfoVO ):Number {
+		private function sortOnLastSaved( paintingVOA:PaintingInfoVO, paintingVOB:PaintingInfoVO ):Number {
 			if( paintingVOA.lastSavedOnDateMs > paintingVOB.lastSavedOnDateMs ) return -1;
 			else if( paintingVOA.lastSavedOnDateMs < paintingVOB.lastSavedOnDateMs ) return 1;
 			else {

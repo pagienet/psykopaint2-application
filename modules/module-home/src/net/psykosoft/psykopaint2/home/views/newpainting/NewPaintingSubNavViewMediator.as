@@ -96,11 +96,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			// Ordered from newest -> oldest.
 			// Always selects the latest one, i.e. index 0.
 			// Also requests an easel update on the home view.
-			var data:Vector.<PaintingInfoVO> = paintingModel.getPaintingCollection();
+			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
 			if( data.length > 0 ) {
-				if( data.length > 1 ) {
-					data.sort( paintingModel.sortOnLastSaved );
-				}
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
 				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
