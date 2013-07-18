@@ -111,8 +111,6 @@ package net.psykosoft.psykopaint2.core.rendering
 				_backgroundBaseRect.width *= CoreSettings.GLOBAL_SCALING;
 				_backgroundBaseRect.height *= CoreSettings.GLOBAL_SCALING;
 			}
-
-			trace(_backgroundBaseRect);
 		}
 
 		private function onChangeRenderRect(rect : Rectangle) : void
@@ -209,8 +207,6 @@ package net.psykosoft.psykopaint2.core.rendering
 			var scaleY : Number = canvasRect.height / _backgroundBaseRect.height;
 			var tx : Number = canvasRect.x - scaleX*_backgroundBaseRect.x;
 			var ty : Number = canvasRect.y - scaleY*_backgroundBaseRect.y;
-
-			trace (canvasRect, _backgroundBaseRect);
 
 			// apply matrix to background rect (= 0, 0, 1, 1)
 			rect.width = scaleX;

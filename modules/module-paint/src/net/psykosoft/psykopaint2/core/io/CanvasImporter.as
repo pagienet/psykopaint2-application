@@ -18,18 +18,20 @@ package net.psykosoft.psykopaint2.core.io
 			if (canvas.width != paintingData.width || canvas.height != paintingData.height)
 				throw new Error("Different painting sizes currently not supported!");
 
-			var oldLength : int = paintingData.colorData.length;
-			var newLength : int = canvas.textureWidth * canvas.textureHeight * 4;
-			paintingData.colorData.length = newLength;
-			paintingData.normalSpecularData.length = newLength;
-			canvas.colorTexture.uploadFromByteArray(paintingData.colorData, 0, 0);
-			canvas.normalSpecularMap.uploadFromByteArray(paintingData.normalSpecularData, 0, 0);
-			paintingData.colorData.length = oldLength;
-			paintingData.normalSpecularData.length = oldLength;
-
 			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(paintingData.sourceBitmapData, canvas.width, canvas.height, false);
 			canvas.setSourceBitmapData(sourceBmd);
 			sourceBmd.dispose();
+
+			var oldLength : int = paintingData.colorData.length;
+			var newLength : int = canvas.textureWidth * canvas.textureHeight * 4;
+
+			paintingData.colorData.length = newLength;
+			canvas.colorTexture.uploadFromByteArray(paintingData.colorData, 0, 0);
+			paintingData.colorData.length = oldLength;
+
+			paintingData.normalSpecularData.length = newLength;
+			canvas.normalSpecularMap.uploadFromByteArray(paintingData.normalSpecularData, 0, 0);
+			paintingData.normalSpecularData.length = oldLength;
 		}
 	}
 }

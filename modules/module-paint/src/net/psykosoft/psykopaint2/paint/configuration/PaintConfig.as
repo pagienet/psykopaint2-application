@@ -135,8 +135,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 			// Mapped in the core as singleton for compatibility and remapped here.
 			_injector.unmap( RequestPaintingActivationSignal );
 			_commandMap.map( RequestPaintingActivationSignal ).toCommand( ActivatePaintingCommand );
-			_injector.unmap( RequestDrawingCoreResetSignal );
-			_commandMap.map( RequestDrawingCoreResetSignal ).toCommand( ClearCanvasCommand );
+//			_injector.unmap( RequestDrawingCoreResetSignal );
+//			_commandMap.map( RequestDrawingCoreResetSignal ).toCommand( ClearCanvasCommand );
 			_injector.unmap( RequestDrawingCoreSurfaceSetSignal );
 			_commandMap.map( RequestDrawingCoreSurfaceSetSignal ).toCommand( SetSurfaceImageCommand );
 			_injector.unmap( RequestDrawingCoreSourceImageSetSignal );

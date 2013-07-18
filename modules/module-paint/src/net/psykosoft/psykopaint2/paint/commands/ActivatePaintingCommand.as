@@ -69,12 +69,14 @@ package net.psykosoft.psykopaint2.paint.commands
 			_file.data.clear();
 			_file = null;
 
+			requestStateChangeSignal.dispatch( StateType.PREPARE_FOR_PAINT_MODE );
+
 			var canvasImporter : CanvasImporter = new CanvasImporter();
 			canvasImporter.importPainting(canvasModel, vo);
 			notifyPaintingActivatedSignal.dispatch();
 
 			canvasHistoryModel.clearHistory();
-			requestStateChangeSignal.dispatch( StateType.PREPARE_FOR_PAINT_MODE );
+
 			context.release( this );
 			vo.dispose();
 		}

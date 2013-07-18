@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
@@ -171,11 +172,6 @@ package net.psykosoft.psykopaint2.core.model
 			_pyramidMap.uploadMipLevel(_sourceTexture, 0);
 		}
 
-		public function createPaintBuffers() : void
-		{
-
-		}
-
 		public function init(canvasWidth : uint, canvasHeight : uint) : void
 		{
 			if (canvasWidth == _width && canvasHeight == _height)
@@ -187,13 +183,47 @@ package net.psykosoft.psykopaint2.core.model
 			_height = canvasHeight;
 			_textureWidth = TextureUtils.getBestPowerOf2(_width);
 			_textureHeight = TextureUtils.getBestPowerOf2(_height);
+		}
 
-			_colorTexture = createCanvasTexture(true);
-			_normalSpecularMap = createCanvasTexture(true);
-			_fullSizeBackBuffer = createCanvasTexture(true);
+		public function createPaintTextures() : void
+		{
+			trace ("Creating paint textures");
+			if (!_colorTexture) {
+				_colorTexture = createCanvasTexture(true);
+				uploadColorBackgroundOriginal();
+			}
 
-			if (_normalSpecularOriginal) setNormalSpecularMap(_normalSpecularOriginal);
-			uploadColorBackgroundOriginal();
+			if (!_normalSpecularMap) {
+				_normalSpecularMap = createCanvasTexture(true);
+				if (_normalSpecularOriginal)
+					uploadNormalSpecularOriginal();
+			}
+
+			if (!_fullSizeBackBuffer) _fullSizeBackBuffer = createCanvasTexture(true);
+		}
+
+		private function fillTexture(texture : Texture, r : Number, g : Number, b : Number, a : Number) : void
+		{
+			var bmd : BitmapData = new BitmapData(_textureWidth, _textureHeight, true, 0)
+			texture.uploadFromBitmapData(bmd);
+			bmd.dispose();
+		}
+
+		public function disposePaintTextures() : void
+		{
+			trace ("Disposing paint textures");
+			if (_colorTexture) _colorTexture.dispose();
+			if (_fullSizeBackBuffer) _fullSizeBackBuffer.dispose();
+			if (_normalSpecularMap) _normalSpecularMap.dispose();
+			if (_sourceTexture) _sourceTexture.dispose();
+			if (_normalSpecularOriginal) _normalSpecularOriginal.clear();
+			if (_colorBackgroundOriginal) _colorBackgroundOriginal.dispose();
+			_colorTexture = null;
+			_fullSizeBackBuffer = null;
+			_normalSpecularMap = null;
+			_sourceTexture = null;
+			_normalSpecularOriginal = null;
+			_colorBackgroundOriginal = null;
 		}
 
 		public function createCanvasTexture(isRenderTarget : Boolean, scale : Number = 1) : Texture
@@ -203,18 +233,7 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function dispose() : void
 		{
-			if (_sourceTexture) _sourceTexture.dispose();
-			if (_colorTexture) _colorTexture.dispose();
-			if (_fullSizeBackBuffer) _fullSizeBackBuffer.dispose();
-			if (_normalSpecularMap) _normalSpecularMap.dispose();    	// storing height as well, you never know what we can use it for (raymarching for offline rendering \o/)
-			if (_normalSpecularOriginal) _normalSpecularOriginal.clear();
-			if (_colorBackgroundOriginal) _colorBackgroundOriginal.dispose();
-			_sourceTexture = null;
-			_colorTexture = null;
-			_fullSizeBackBuffer = null;
-			_normalSpecularMap = null;
-			_normalSpecularOriginal = null;
-			_colorBackgroundOriginal = null;
+			disposePaintTextures();
 		}
 
 		public function swapColorLayer() : void
@@ -256,11 +275,16 @@ package net.psykosoft.psykopaint2.core.model
 
 		private function uploadColorBackgroundOriginal() : void
 		{
-			var tempBitmapData : BitmapData = new TrackedBitmapData(_textureWidth, _textureHeight, true, 0);
-			if (_colorBackgroundOriginal)
-				tempBitmapData.draw(_colorBackgroundOriginal);
-			_colorTexture.uploadFromBitmapData(tempBitmapData, 0);
-			tempBitmapData.dispose();
+			if (_colorBackgroundOriginal && _colorBackgroundOriginal.width == _textureWidth && _colorBackgroundOriginal.height == _textureHeight) {
+				_colorTexture.uploadFromBitmapData(_colorBackgroundOriginal, 0);
+			}
+			else {
+				var tempBitmapData : BitmapData = new TrackedBitmapData(_textureWidth, _textureHeight, true, 0);
+				if (_colorBackgroundOriginal)
+					tempBitmapData.draw(_colorBackgroundOriginal);
+				_colorTexture.uploadFromBitmapData(tempBitmapData, 0);
+				tempBitmapData.dispose();
+			}
 		}
 
 		public function clearNormalSpecularTexture() : void
@@ -275,6 +299,7 @@ package net.psykosoft.psykopaint2.core.model
 			inflated.writeBytes(_normalSpecularOriginal, 0, _normalSpecularOriginal.length);
 			inflated.uncompress();
 			_normalSpecularMap.uploadFromByteArray(inflated, 0);
+			inflated.clear();
 		}
 	}
 }

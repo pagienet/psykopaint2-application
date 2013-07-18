@@ -218,6 +218,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				}
 			}
 
+			if (newState == StateType.PREPARE_FOR_PAINT_MODE) {
+				canvasModel.createPaintTextures();
+			}
+
 			if( newState == StateType.TRANSITION_TO_PAINT_MODE ) {
 				_waitingForZoomInToContinueToPaint = true;
 				zoomIn();
@@ -280,6 +284,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onZoomComplete():void {
 			if( _waitingForZoomOutToContinueToHome ) {
 			    requestStateChange( StateType.HOME_ON_EASEL );
+				canvasModel.disposePaintTextures();
 				_waitingForZoomOutToContinueToHome = false;
 			}
 			if( _waitingForZoomInToContinueToPaint ) {
