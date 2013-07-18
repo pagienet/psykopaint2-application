@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			);
 			settingsPainting.x = 0;
 			settingsPainting.z = -50;
-			settingsPainting.scale( 2 );
+			settingsPainting.scale( 1.5 );
 			addPainting( settingsPainting );
 
 			// Sign.
