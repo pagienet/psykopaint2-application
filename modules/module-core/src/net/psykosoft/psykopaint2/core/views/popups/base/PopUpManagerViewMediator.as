@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.core.views.popups.SavingPopUpView;
+	import net.psykosoft.psykopaint2.core.views.popups.MessagePopUpView;
 
 	public class PopUpManagerViewMediator extends MediatorBase
 	{

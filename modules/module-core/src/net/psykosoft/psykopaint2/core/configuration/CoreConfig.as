@@ -40,11 +40,13 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
-	import net.psykosoft.psykopaint2.core.views.popups.SavingPopUpView;
+	import net.psykosoft.psykopaint2.core.views.popups.MessagePopUpView;
+	import net.psykosoft.psykopaint2.core.views.popups.MessagePopUpViewMediator;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpManagerView;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpManagerViewMediator;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
@@ -103,7 +105,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		* These need to be mentioned somewhere so that getDefinitionByName works.
 		* */
 		private function mapClasses():void {
-			SavingPopUpView;
+			MessagePopUpView;
 		}
 
 		// -----------------------
@@ -162,6 +164,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestPopUpDisplaySignal ).asSingleton();
 			_injector.map( RequestPopUpRemovalSignal ).asSingleton();
 			_injector.map( RequestSetCanvasBackgroundSignal ).asSingleton();
+			_injector.map( RequestUpdateMessagePopUpSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -183,6 +186,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_mediatorMap.map( SbNavigationView ).toMediator( NavigationViewMediator );
 			_mediatorMap.map( PsykoSocketView ).toMediator( PsykoSocketViewMediator );
 			_mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
+			_mediatorMap.map( MessagePopUpView ).toMediator( MessagePopUpViewMediator );
 		}
 	}
 }

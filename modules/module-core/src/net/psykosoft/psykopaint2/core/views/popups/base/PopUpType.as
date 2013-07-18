@@ -5,6 +5,6 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 	{
 		// Note: strings must be full class paths.
 
-		public static const SAVING:String = "net.psykosoft.psykopaint2.core.views.popups.SavingPopUpView";
+		public static const MESSAGE:String = "net.psykosoft.psykopaint2.core.views.popups.MessagePopUpView";
 	}
 }

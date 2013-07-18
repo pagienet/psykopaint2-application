@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintingSavedSignal;
 
@@ -77,6 +78,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var canvasHistoryModel:CanvasHistoryModel;
 
+		[Inject]
+		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
+
 		private var _paintId:String;
 		private var _infoBytes:ByteArray;
 		private var _dataBytes:ByteArray;
@@ -95,31 +99,38 @@ package net.psykosoft.psykopaint2.paint.commands
 			trace( this, "incoming painting id: " + paintingId );
 
 			context.detain( this );
-			notifyMemoryWarningSignal.add( onMemoryWarning );
-			requestPopUpDisplaySignal.dispatch( PopUpType.SAVING );
 
 			// Skip saving if the painting is not dirty.
 			var isPaintingDirty:Boolean = canvasHistoryModel.hasHistory;
 			trace( "is painting dirty: " + isPaintingDirty );
 			if( !isPaintingDirty ) {
-				wrapItUp();
+				exitCommand();
 			}
 
-			// Wait a bit before starting the save process so we actually give the pop a chance to show.
-			stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
-		}
+			// Listen for memory warnings and exit if one shows up during the saving process.
+			// Written data seems to be corrupted in such cases.
+			// TODO: make sure data being written is deleted completely
+			// TODO: think about what better reaction to have on such cases and what is really happening
+			notifyMemoryWarningSignal.add( onMemoryWarning );
 
-		private function onEnterFrame( event:Event ):void {
-			stage.removeEventListener( Event.ENTER_FRAME, onEnterFrame );
-			setTimeout( save, 10 );
+			// Show a pop up during the process.
+			requestPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
+			requestUpdateMessagePopUpSignal.dispatch( "saving..." );
+
+			// Wait a bit before starting the save process so we actually give the pop a chance to show.
+			setTimeout( save, 100 );
 		}
 
 		private function save():void {
-
+			requestUpdateMessagePopUpSignal.dispatch( "saving: exporting..." );
 			var canvasExporter : CanvasExporter = new CanvasExporter();
 			canvasExporter.addEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
 			canvasExporter.export(canvasModel);
 		}
+
+		// ---------------------------------------------------------------------
+		// Export and serialization.
+		// ---------------------------------------------------------------------
 
 		private function onExportComplete(event : CanvasExportEvent) : void
 		{
@@ -137,7 +148,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function serializeDataToFiles( infoVO:PaintingInfoVO, dataVO:PaintingDataVO ):void {
-			// Serialize data.
+
+			requestUpdateMessagePopUpSignal.dispatch( "saving: serializing..." );
+
 			var infoSerializer:PaintingInfoSerializer = new PaintingInfoSerializer();
 			var dataSerializer:PaintingDataSerializer = new PaintingDataSerializer();
 			_infoBytes = infoSerializer.serialize( infoVO );
@@ -150,7 +163,13 @@ package net.psykosoft.psykopaint2.paint.commands
 			writeInfoBytes();
 		}
 
+		// ---------------------------------------------------------------------
+		// Writing to disc.
+		// ---------------------------------------------------------------------
+
 		private function writeInfoBytes():void {
+
+			requestUpdateMessagePopUpSignal.dispatch( "saving: writing..." );
 
 			// TODO: using sync saving for now, async makes writing fail on ipad slow packaging, see notes here: https://github.com/psykosoft/psykopaint2-application/issues/47
 
@@ -175,39 +194,46 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Write data.
 			dataWriteUtil = new BinaryIoUtil( storageType );
-
 			if( ASYNC_MODE ) {
-				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, _dataBytes, wrapItUp );
+				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, _dataBytes, preExitCommand );
 			}
 			else {
 				dataWriteUtil.writeBytesSync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + _paintId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, _dataBytes );
-				wrapItUp();
+				preExitCommand();
 			}
 		}
 
-		private function wrapItUp():void {
+		// ---------------------------------------------------------------------
+		// Exit.
+		// ---------------------------------------------------------------------
 
-			// Update easel.
+		private function preExitCommand():void {
+
+			requestUpdateMessagePopUpSignal.dispatch( "saving: finishing..." );
+
 			if( updateEasel ) {
 				requestEaselUpdateSignal.dispatch( _infoVO );
 			}
 
 			notifyMemoryWarningSignal.remove( onMemoryWarning );
-
-			// Remove saving pop up.
 			requestPopUpRemovalSignal.dispatch();
 
-			// Notify.
-			notifyPaintingSavedSignal.dispatch();
+			exitCommand();
+		}
 
-			// Release command.
+		private function exitCommand():void {
+			notifyPaintingSavedSignal.dispatch();
 			context.release( this );
 		}
+
+		// ---------------------------------------------------------------------
+		// Event listeners.
+		// ---------------------------------------------------------------------
 
 		private function onMemoryWarning():void {
 			// TODO: a memory warning seems to mean that the saving process has failed, we need to check if anything was written and
 			// delete it, to avoid saving corrupted data that could cause errors on load and incorrectly use the available storage space
-			wrapItUp();
+			preExitCommand();
 		}
 
 		// ---------------------------------------------------------------------
