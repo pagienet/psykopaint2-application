@@ -206,7 +206,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.camera.z = HomeSettings.DEFAULT_CAMERA_Z;
 
 			_paintingManager = new PaintingManager( _scrollCameraController, _room, _view, _lightPicker, _stage3dProxy );
-			_paintingManager.y = 400;
+			_paintingManager.y = 850;
 			_scrollCameraController.interactionSurfaceZ = _room.wallZ;
 			_paintingManager.z = _room.wallZ - 2;
 			cameraTarget.z = _room.wallZ;

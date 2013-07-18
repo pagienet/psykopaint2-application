@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _proxy:Stage3DProxy;
 
 		private const WALL_WIDTH:Number = 100000;
-		private const WALL_HEIGHT:Number = 2000;
+		private const WALL_HEIGHT:Number = 3000;
 		private const WALL_BASE_Y:Number = -500;
 
 		private const WALL_Z:Number = 400;
@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Geometry.
 			var wallGeometry:PlaneGeometry = new PlaneGeometry( 1024, 1024 );
-			var uvScale:Number = 0.3; // TODO: calculate exact value
+			var uvScale:Number = 0.25; // TODO: calculate exact value
 			wallGeometry.scaleUV( uvScale * WALL_WIDTH / wallGeometry.width, 1 );
 
 			// Mesh.
