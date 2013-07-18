@@ -167,10 +167,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.room.changeWallpaper( atf );
 		}
 
-
 		override protected function onStateChange( newState:String ):void {
 			if( _freezingStates.indexOf( newState ) != -1 ) freezeView();
 			else {
+
 				view.unFreeze();
 
 				if( newState == StateType.PREPARE_FOR_PAINT_MODE ) {
@@ -190,7 +190,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function freezeView():void {
 			trace( this, "freezing..." );
-			// TODO: freeze is all black
 			if( _waitingForFreezeSnapshot ) return;
 			if( view.isEnabled ) {
 				if( !view.frozen ) {
@@ -206,8 +205,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_snapshotPromise.removeEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
 
+			// Freezing?
 			if( _waitingForFreezeSnapshot ) {
-
 				trace( this, "applying freeze snapshot..." );
 				view.freeze( _snapshotPromise.texture.newReference() );
 				_waitingForFreezeSnapshot = false;
