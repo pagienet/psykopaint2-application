@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.primitives.PlaneGeometry;
 
+	import flash.display3D.Context3DCompareMode;
+
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -29,7 +31,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private function initPainting() : void
 		{
-			_painting = new EaselPainting(_lightPicker, _view.stage3DProxy);
+			_painting = new EaselPainting(_lightPicker);
 			_painting.scale( 0.75 );
 			_painting.visible = false;
 			_painting.y -= 78;
@@ -48,12 +50,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 				easelMaterial.alphaBlending = true;
 				easelMaterial.mipmap = false;
 
-				_easel = new Mesh(new PlaneGeometry(1024, 1024), easelMaterial);
-				_easel.zOffset = 100000; // Avoids alpha blending sorting conflicts with transparent paintings.
+				_easel = new Mesh(new PlaneGeometry(1024, 1024, 1, 1, false), easelMaterial);
 				_easel.z = 10;
 				_easel.y = -250;
 				_easel.scale( 1.05 );
-				_easel.rotationX = -90;
 				addChild(_easel);
 			}
 			_easel.visible = visible;
@@ -64,6 +64,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			removeChild(_painting);
 			_painting.dispose();
 			_painting = null;
+			_easel.geometry.dispose();
+			_easel.material.dispose();
+			_easel.dispose();
 			super.dispose();
 		}
 

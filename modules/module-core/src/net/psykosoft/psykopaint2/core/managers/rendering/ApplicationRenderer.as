@@ -1,10 +1,3 @@
-/**
- * Created with IntelliJ IDEA.
- * User: David
- * Date: 12/07/13
- * Time: 12:31
- * To change this template use File | Settings | File Templates.
- */
 package net.psykosoft.psykopaint2.core.managers.rendering
 {
 	import away3d.core.managers.Stage3DProxy;

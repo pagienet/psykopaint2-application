@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _normalSpecularTexture : ByteArrayTexture;
 		private var _textureMaterial : TextureMaterial;
 
-		public function EaselPainting( lightPicker:LightPickerBase, stage3DProxy : Stage3DProxy ) {
+		public function EaselPainting( lightPicker:LightPickerBase ) {
 
 			super(null);
 
