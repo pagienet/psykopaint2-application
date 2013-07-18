@@ -245,7 +245,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			_quotes.scaleX = _quotes.scaleY = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
 			_quotes.x = 0;
 			_quotes.y = 50 * CoreSettings.GLOBAL_SCALING;
-			_quotes.gotoAndStop( Math.floor( 17 * Math.random() ) + 1 );
+			_quotes.gotoAndStop( Math.floor( 16 * Math.random() ) + 1 );
 			_splashScreen.addChild( _quotes );
 		}
 
