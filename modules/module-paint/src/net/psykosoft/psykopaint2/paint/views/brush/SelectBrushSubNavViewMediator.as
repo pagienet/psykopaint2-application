@@ -36,7 +36,7 @@ import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 			switch( label ) {
 				case SelectBrushSubNavView.LBL_BACK:
 					EditBrushSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
-					requestStateChange( StateType.PREVIOUS );
+					requestStateChange( StateType.PAINT );
 					break;
 				
 				case SelectBrushSubNavView.LBL_EDIT_BRUSH:

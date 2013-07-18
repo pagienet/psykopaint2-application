@@ -105,13 +105,13 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			trace( this, "incoming painting id: " + paintingId );
 
+			context.detain( this );
+
 			// Saving is disabled on iPad because it's too unstable.
 			if( CoreSettings.RUNNING_ON_iPAD ) {
 				exitCommand();
 				return;
 			}
-
-			context.detain( this );
 
 			// Skip saving if the painting is not dirty.
 			var isPaintingDirty:Boolean = canvasHistoryModel.hasHistory;

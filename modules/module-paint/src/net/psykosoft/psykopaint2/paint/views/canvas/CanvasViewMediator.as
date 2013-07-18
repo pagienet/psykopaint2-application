@@ -113,7 +113,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _waitingForZoomInToContinueToPaint:Boolean;
 		private var _minZoomScale:Number;
 
-		private const MAX_ZOOM_SCALE:Number = 3;
+		private const MAX_ZOOM_SCALE:Number = 1.35;
 		public var zoomScale:Number = _minZoomScale;
 
 		override public function initialize():void {
@@ -156,6 +156,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		//TODO: this is for desktop testing - remove in final version
 		private function onMouseWheel( event:MouseEvent ):void {
+
+			trace( "wheeling..." );
+
 			var rect:Rectangle = renderer.renderRect;
 
 			var sc:Number = 1 + event.delta / 50;
@@ -225,18 +228,24 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 		}
 
+		private var _addedMouseWheelListener:Boolean;
+
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
 
-			if( newState == StateType.PAINT ) {
+			if( newState && newState.indexOf( StateType.PAINT ) != -1 && !_addedMouseWheelListener ) {
 				if( !CoreSettings.RUNNING_ON_iPAD ) {
 					view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
 				}
+				_addedMouseWheelListener = true;
 			}
 			else {
 				paintModule.stopAnimations();
-				if( !CoreSettings.RUNNING_ON_iPAD ) {
-					view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+				if( _addedMouseWheelListener ) {
+					if( !CoreSettings.RUNNING_ON_iPAD ) {
+						view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+					}
+					_addedMouseWheelListener = false;
 				}
 			}
 
@@ -284,12 +293,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function zoomIn():void {
 			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 2, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
+			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}
 
 		private function zoomOut():void {
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 2, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
+			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
 		}
 
 		private function onZoomUpdate():void {
@@ -306,7 +315,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				_waitingForZoomOutToContinueToHome = false;
 			}
 			if( _waitingForZoomInToContinueToPaint ) {
-			    requestStateChange( StateType.PAINT );
+			    requestStateChange( StateType.PAINT_SELECT_BRUSH );
 				_waitingForZoomInToContinueToPaint = false;
 			}
 		}
@@ -317,7 +326,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function updateCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
-			rect.y += _rectOffsetY;
+			// TODO: remove this hack, related to line 282
+			rect.y += -( _rectOffsetY / ( 1 - _minZoomScale ) ) * ( zoomScale - _minZoomScale ) + _rectOffsetY;
 			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
