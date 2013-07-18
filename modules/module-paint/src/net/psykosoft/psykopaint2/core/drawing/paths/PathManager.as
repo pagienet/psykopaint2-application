@@ -362,6 +362,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
 			}
 			if ( gestureStopTimeout == -1 && GestureManager.gesturesEnabled ) gestureStopTimeout = setTimeout(enableGestureRecognition,GESTURE_RECOGNITION_TIME,false);
+			var stage : Stage = event.target as Stage;
 			
 			onSamplePoint(event.stageX, event.stageY);
 		}

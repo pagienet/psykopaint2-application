@@ -291,6 +291,30 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			showHideUpdateSignal.dispatch( y / _bgHeight );
 		}
 
+		public function startAutoHideMode():void
+		{
+			if ( !_hidden )
+				addEventListener(Event.ENTER_FRAME, checkAutoHide );
+		}
+		
+		public function stopAutoHideMode():void
+		{
+			removeEventListener(Event.ENTER_FRAME, checkAutoHide );
+		}
+		
+		private function checkAutoHide( event:Event ):void
+		{
+			if (_hidden || _animating ) 
+			{
+				removeEventListener(Event.ENTER_FRAME, checkAutoHide );
+			} else {
+				if ( stage.mouseY > _targetReactiveY )
+				{
+					removeEventListener(Event.ENTER_FRAME, checkAutoHide );
+					hide();
+				}
+			}
+		}
 		// ---------------------------------------------------------------------
 		// Private.
 		// ---------------------------------------------------------------------
@@ -417,5 +441,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function get scroller():HButtonScroller {
 			return _scroller;
 		}
+		
+		
 	}
 }

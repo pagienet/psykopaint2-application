@@ -120,6 +120,17 @@ package net.psykosoft.psykopaint2.paint.configuration
 							target="pathengine.pointdecorator_4" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="1"/>
+						<parameter id="Custom Color" type={PsykoParameter.BooleanParameter}  value="0" showInUI="1"/>
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
+							target="pathengine.pointdecorator_3.Color Mode" 
+							condition={PsykoParameterProxy.CONDITION_TRUE }
+							
+							index={ColorDecorator.INDEX_MODE_FIXED_COLOR}/>	
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
+							target="pathengine.pointdecorator_3.Color Mode" 
+							condition={PsykoParameterProxy.CONDITION_FALSE }
+							
+							index={ColorDecorator.INDEX_MODE_PICK_COLOR}/>	
 					</parameterMapping>
 
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
@@ -149,7 +160,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_3" value1="0.4" value2="0.4" />
 							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_3" value1="0.6" value2="0.9" showInUI="1" />
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_3" value1="0.1" value2="0.3" />
-
+							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_3" color="0xffffff" showInUI="1"/>
+						
 						</ColorDecorator>
 
 						<SplatterDecorator active="0">
@@ -162,15 +174,33 @@ package net.psykosoft.psykopaint2.paint.configuration
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.PENCIL} name="Pencil">
+					<parameterMapping>
+						<parameter id="Custom Color" type={PsykoParameter.BooleanParameter}  value="0" showInUI="1"/>
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
+							target="pathengine.pointdecorator_1.Color Mode" 
+							condition={PsykoParameterProxy.CONDITION_TRUE }
+							
+							index={ColorDecorator.INDEX_MODE_FIXED_COLOR}/>	
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
+							target="pathengine.pointdecorator_1.Color Mode" 
+							condition={PsykoParameterProxy.CONDITION_FALSE }
+							
+							index={ColorDecorator.INDEX_MODE_PICK_COLOR}/>	
+					</parameterMapping>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
-						<ColorDecorator>
-							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_0" index="0" />
-						</ColorDecorator>
 						<SizeDecorator>
-							<parameter id={SizeDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_1" index="1" />
-							<parameter id={SizeDecorator.PARAMETER_NR_FACTOR} path="pathengine.pointdecorator_1" value1=".3" value2=".3" showInUI="1" />
-							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} path="pathengine.pointdecorator_1" value="2" />
+							<parameter id={SizeDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_0" index="1" />
+							<parameter id={SizeDecorator.PARAMETER_NR_FACTOR} path="pathengine.pointdecorator_0" value1=".3" value2=".3" showInUI="1" />
+							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} path="pathengine.pointdecorator_0" value="2" />
 						</SizeDecorator>
+						<ColorDecorator>
+							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
+							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.4" value2="0.4" />
+							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_1" value1="1" value2="1" showInUI="1" />
+							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" value1="0.7" value2="0.9" />
+							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" showInUI="1"/>
+						
+						</ColorDecorator>
 					</pathengine>
 					<parameter id="Shapes" path="brush" index="0" list="pencil" showInUI="0"/>
 				</brush>
@@ -208,7 +238,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
 							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY} label="Strength" value1="0.07" value2="0.07"  path="pathengine.pointdecorator_1" showInUI="1" />
-							<parameter id={ColorDecorator.PARAMETER_IL_COLOR_SWATCH}  path="pathengine.pointdecorator_1" index="1" />
+							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffffff" />
 						</ColorDecorator>
 						<BumpDecorator active="0">
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.MODE_INDEX_FIXED} />
