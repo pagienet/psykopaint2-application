@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
+	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 
 	import robotlegs.bender.framework.api.IContext;
@@ -52,7 +53,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			super.execute();
 
 			requestPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
-			requestUpdateMessagePopUpSignal.dispatch( "exporting..." );
+			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
+			requestUpdateMessagePopUpSignal.dispatch( "Exporting...", randomJoke );
 
 			_bitmapData = canvasRenderer.renderToBitmapData();
 
