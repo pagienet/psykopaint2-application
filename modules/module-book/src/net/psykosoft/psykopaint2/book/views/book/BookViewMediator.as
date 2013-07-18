@@ -57,9 +57,9 @@ package net.psykosoft.psykopaint2.book.views.book
 //					provider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 //					view.book.dataProvider = provider;
 
-//					initializeSamplesDataProvider();
+					initializeSamplesDataProvider();
 
-					initializeUserPhotosDataProvider();
+//					initializeUserPhotosDataProvider();
 
 					break;
 				}

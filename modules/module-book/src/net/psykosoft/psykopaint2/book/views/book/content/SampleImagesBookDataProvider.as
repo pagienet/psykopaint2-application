@@ -23,9 +23,6 @@ package net.psykosoft.psykopaint2.book.views.book.content
 	{
 		private var _atlas:BitmapAtlas;
 		private var _thumbsPerSheet:uint;
-		private var _numRows:uint;
-		private var _numColumns:uint;
-		private var _cellSize:uint;
 		private var _numThumbs:uint;
 		private var _numSheets:uint;
 		private var _interactionRegionsForSheet:Dictionary;
@@ -37,10 +34,10 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 		// TODO: different full image sizes depending on resolution?
 
-		private const THUMB_SIZE:uint = 150; // TODO: 150 for HR, 75 for LR
-		private const THUMB_GAP:uint = 100;
-		private const GAP_LEFT:uint = 10;
-		private const GAP_TOP:uint = 10;
+		private const ATLAS_THUMB_SIZE:uint = 300;
+		private const THUMB_SIZE:uint = 420;
+		private const NUM_ROWS:uint = 3;
+		private const NUM_COLS:uint = 2;
 
 		public function SampleImagesBookDataProvider() {
 			super();
@@ -74,16 +71,11 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		}
 
 		private function evaluateFigures():void {
-			_cellSize = THUMB_SIZE + THUMB_GAP;
-			_numColumns = Math.floor( _sheetWidth / _cellSize );
-			_numRows = Math.floor( _sheetHeight / _cellSize );
-			_thumbsPerSheet = _numColumns * _numRows;
+			_thumbsPerSheet = NUM_ROWS * NUM_COLS;
 			_numThumbs = _atlas.getNumItems();
 			_numSheets = Math.ceil( _numThumbs / _thumbsPerSheet );
 			if( _numSheets % 2 != 0 ) _numSheets++; // Need to provide an even number of sheets for the book.
 			trace( this, "num thumbs: " + _numThumbs );
-			trace( this, "num columns: " + _numColumns );
-			trace( this, "num rows: " + _numRows );
 			trace( this, "num per sheet: " + _thumbsPerSheet );
 			trace( this, "num sheets: " + _numSheets );
 		}
@@ -94,11 +86,14 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 			// Produces a sprite containing the thumbnails as bitmaps.
 			var i:uint;
-			var offsetX:Number = GAP_LEFT;
-			var offsetY:Number = GAP_TOP;
+			var dx:Number = _sheetWidth / NUM_COLS;
+			var dy:Number = _sheetHeight / NUM_ROWS;
+			var offsetX:Number = dx / 2;
+			var offsetY:Number = dy / 2 + 50;
 			var drawSprite:Sprite = new Sprite();
 			var thumbNames:Vector.<String> = _atlas.names;
 			var regions:Vector.<Rectangle> = new Vector.<Rectangle>();
+			var sc:Number = THUMB_SIZE / ATLAS_THUMB_SIZE;
 			for( i = firstThumbIndex; i < lastThumbIndex; i++ ) {
 
 				// Id thumb name.
@@ -107,24 +102,25 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 				// Produce a bitmap that wraps the thumbnail.
 				var thumbBitmap:Bitmap = new Bitmap( _atlas.bmd );
-				thumbBitmap.x = offsetX;
-				thumbBitmap.y = offsetY;
+				thumbBitmap.scaleX = thumbBitmap.scaleY = sc;
+				thumbBitmap.x = offsetX - THUMB_SIZE / 2;
+				thumbBitmap.y = offsetY - THUMB_SIZE / 2;
 				var sourceRegion:Rectangle = _atlas.getRegionForId( thumbName );
 				thumbBitmap.scrollRect = sourceRegion;
 				drawSprite.addChild( thumbBitmap );
 
 				// Store the target region for picking.
-				var region:Rectangle = new Rectangle( offsetX, offsetY, sourceRegion.width, sourceRegion.height );
+				var region:Rectangle = new Rectangle( thumbBitmap.x, thumbBitmap.y, sourceRegion.width * sc, sourceRegion.height * sc );
 				regions.push( region );
 				_thumbNameForRegion[ region ] = thumbName;
 
 				// Advance target positioning offsets.
-				if( offsetX + _cellSize >= _sheetWidth - THUMB_SIZE ) {
-					offsetX = GAP_LEFT;
-					offsetY += _cellSize;
+				if( offsetX + dx > _sheetWidth ) {
+					offsetX = dx / 2;
+					offsetY += dy;
 				}
 				else {
-					offsetX += _cellSize;
+					offsetX += dx;
 				}
 			}
 
@@ -177,7 +173,7 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			// Evaluate thumbnail indices involved.
 			var firstThumbIndex:uint = _thumbsPerSheet * index;
 			if( firstThumbIndex >= _numThumbs - 1 ) return;
-			var lastThumbIndex:uint = Math.min( firstThumbIndex + _thumbsPerSheet, _numThumbs ) - 1;
+			var lastThumbIndex:uint = Math.min( firstThumbIndex + _thumbsPerSheet, _numThumbs );
 
 			// Generate sheet.
 			generateSheetForIndices( firstThumbIndex, lastThumbIndex, index );
