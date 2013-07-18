@@ -1,11 +1,14 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
+	import flash.events.Event;
+	
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	
@@ -31,7 +34,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
-		
+		[Inject]
+		public var requestNavigationAutohideModeSignal:RequestNavigationAutohideModeSignal;
+
 		
 		override public function initialize():void {
 
@@ -43,7 +48,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			// From app.
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			requestNavigationToggleSignal.add( onToggleRequest );
-
+			requestNavigationAutohideModeSignal.add( onStartAutoHideMode );
 			// From view.
 			view.shownSignal.add( onViewShown );
 			view.showingSignal.add( onViewShowing );
@@ -94,6 +99,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			else view.toggle(time);
 		}
 
+		
 		// -----------------------
 		// From app.
 		// -----------------------
@@ -120,6 +126,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			}
 		}
 
+		private function onStartAutoHideMode( start:Boolean ):void
+		{
+			if ( start ) 
+				view.startAutoHideMode();
+			else
+				view.stopAutoHideMode();
+		}
+		
+		
+		
 		override protected function onStateChange( newState:String ):void {
 //			trace( this, "state change: " + newState );
 

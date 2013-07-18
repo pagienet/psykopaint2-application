@@ -32,6 +32,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
@@ -81,6 +82,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
+		
+		[Inject]
+		public var requestNavigationAutohideModeSignal:RequestNavigationAutohideModeSignal;
+
 
 		[Inject]
 		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
@@ -93,7 +98,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _activeBrushKitName : String;
 		private var _transformModeActive:Boolean;
 		private var _canvasMatrix : Matrix;
-		private var _navHideTimeout:int = -1;
+		//private var _navHideTimeout:int = -1;
 		private var _navShowTimeout:int = -1;
 		
 		public function PaintModule()
@@ -249,29 +254,34 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private function onStrokeStarted(event : Event) : void
 		{
 			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
+			/*
 			if ( _navShowTimeout != -1 ) 
 			{
 				clearTimeout( _navShowTimeout );
 				_navShowTimeout = -1;
 			}
+			*/
 			
-			if ( _navHideTimeout == -1 ) _navHideTimeout = setTimeout( triggerToogleNavBar, 1000, false );
+			requestNavigationAutohideModeSignal.dispatch( true );
+			//if ( _navHideTimeout == -1 ) _navHideTimeout = setTimeout( triggerToogleNavBar, 1000, false );
 			
 		}
 		
 		private function onStrokeEnded(event : Event) : void
 		{
+			/*
 			if ( _navHideTimeout != -1 ) {
 				clearTimeout( _navHideTimeout );
 				_navHideTimeout = -1;
 			}
+			*/
 			
 			if ( _navShowTimeout != -1 ) {
 				clearTimeout( _navShowTimeout );
 				_navShowTimeout = -1;
 			}
 			_navShowTimeout = setTimeout( triggerToogleNavBar, 500, true );
-			
+			requestNavigationAutohideModeSignal.dispatch( false );
 		}
 
 		private function activateBrushKit() : void
@@ -304,9 +314,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSetAsXML() );
 		}
 		
+		
 		private function triggerToogleNavBar( show:Boolean ):void
 		{
-			_navHideTimeout = _navShowTimeout = -1;
+			//_navHideTimeout
+			_navShowTimeout = -1;
 			requestNavigationToggleSignal.dispatch(show ? 1 : -1, 0.1);
 		}
 		

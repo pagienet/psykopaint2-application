@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		private var shp:Shape;
 		private var cmf:ColorMatrixFilter;
 		
-		private var mixer:ColorMixer;
+		//private var mixer:ColorMixer;
 		
 		public function SbColormixer() {
 			super();
@@ -147,7 +147,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			//correctionTransform = new ColorTransform(1,1,1,0.05);
 			sampleColor = -1;
 			
-			//mixer = new ColorMixer( _displayMap );
+		//	mixer = new ColorMixer( _displayMap );
 			invalidateLayout();
 		}
 
@@ -188,7 +188,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			var dy:int = (mapDisplay.mouseY - _lastMouseY);
 			
 			
-			//mixer.update( mapDisplay.mouseX, mapDisplay.mouseY, dx, dy, 0xff000000 );
+			//mixer.update( mapDisplay.mouseX, mapDisplay.mouseY, dx, dy, 20, 0xff000000 );
 			
 			
 			copyRect.x = Math.random() * (_turbulenceMap.width - _displacementMap.width);
@@ -210,6 +210,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 			_lastMouseX = mapDisplay.mouseX;
 			_lastMouseY = mapDisplay.mouseY;
+			
 			_displayMap.unlock();
 		}
 		
