@@ -193,7 +193,7 @@ package net.psykosoft.psykopaint2.core.rendering
 				_context3D.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);
 				_context3D.setStencilReferenceValue(0);
 				_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-				CopySubTexture.copy(_background.texture, new Rectangle(0, 0, 1, 1), backgroundRect, _context3D);
+				CopySubTexture.copy(_background.texture, new Rectangle(0, 0, canvas.usedTextureWidthRatio, canvas.usedTextureHeightRatio), backgroundRect, _context3D);
 			}
 		}
 

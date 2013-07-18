@@ -2,6 +2,8 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 {
 	import away3d.core.managers.Stage3DProxy;
 
+	import flash.display.BitmapData;
+
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
@@ -12,6 +14,7 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
@@ -58,14 +61,7 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 				trace(this, "clear context");
 			}
 
-			if (needsSnapshot) {
-				createSnapshot();
-				context.setRenderToTexture(_snapshot);
-			}
-			else {
-				context.setRenderToBackBuffer();
-			}
-
+			context.setRenderToBackBuffer();
 			stage3DProxy.clear();
 
 			executeTargetedSteps(GpuRenderManager.renderingSteps);
@@ -76,11 +72,8 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 			}
 
 			if (needsSnapshot) {
-				context.setRenderToBackBuffer();
-				context.clear();
-				context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-				context.setDepthTest(false, Context3DCompareMode.ALWAYS);
-				CopyTexture.copy(_snapshot, context);
+				// TODO: Go back to render to texture approach
+				createSnapshot();
 				fulfillPromises();
 			}
 
@@ -95,6 +88,10 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 			var snapshotWidth : int = TextureUtil.getNextPowerOfTwo(stage3DProxy.width);
 			var snapshotHeight : int = TextureUtil.getNextPowerOfTwo(stage3DProxy.height);
 			_snapshot = stage3DProxy.context3D.createTexture(snapshotWidth, snapshotHeight, Context3DTextureFormat.BGRA, true);
+			var bitmapData : BitmapData = new TrackedBitmapData(snapshotWidth, snapshotHeight, false, 0);
+			stage3DProxy.context3D.drawToBitmapData(bitmapData);
+			_snapshot.uploadFromBitmapData(bitmapData);
+			bitmapData.dispose();
 		}
 
 		private function fulfillPromises() : void

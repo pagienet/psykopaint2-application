@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.ui.Keyboard;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
@@ -82,9 +83,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			disposeFreezeTexture();
 
 			_freezeTexture = texture;
-			var tex:Stage3dTexture = new Stage3dTexture();
-			tex.texture = _freezeTexture.texture;
+			var tex:NativeTexture = new NativeTexture(_freezeTexture.texture);
 			_view.background = tex;
+			var texHeight : Number = TextureUtil.getNextPowerOfTwo(stage.height);
+			_view.backgroundRect = new Rectangle(0, 0, 1, stage.height/texHeight);
 
 			selectScene( null );
 			disableCameraController();
