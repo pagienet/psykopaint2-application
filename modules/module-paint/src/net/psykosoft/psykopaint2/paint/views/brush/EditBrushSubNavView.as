@@ -81,9 +81,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 				if ( parameter.type != PsykoParameter.ColorParameter )
 				{
-					var btn:SbButton = navigation.createButton( parameter.label, "param" + parameter.type, "btnLabelCenter", null )
-					group.addButton( btn );
-				} else {
+					if ( parameter.id != "Custom Color" )
+					{
+						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
+						var btn:SbButton = navigation.createButton( parameter.label,"", "btnLabelCenter", null )
+						group.addButton( btn );
+					}
+				} else 
+				{
 					navigation.toggleRightButtonVisibility(true);
 				}
 
