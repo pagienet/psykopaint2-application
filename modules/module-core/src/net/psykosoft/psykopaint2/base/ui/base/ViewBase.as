@@ -30,6 +30,11 @@ package net.psykosoft.psykopaint2.base.ui.base
 		public var enabledSignal:Signal;
 		public var setupSignal:Signal;
 		public var assetsReadySignal:Signal;
+
+		/*
+		* Triggered when the view has loaded its assets ( if any )
+		* and it is added to stage.
+		* */
 		public var viewReadySignal:Signal;
 
 		public function ViewBase() {
@@ -108,6 +113,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 		protected function reportReady():void {
 			if( _viewIsReady ) return;
 			_viewIsReady = true;
+			onReady();
 			viewReadySignal.dispatch();
 		}
 
@@ -130,6 +136,10 @@ package net.psykosoft.psykopaint2.base.ui.base
 		// ---------------------------------------------------------------------
 		// To override...
 		// ---------------------------------------------------------------------
+
+		protected function onReady():void {
+			// Override.
+		}
 
 		protected function onUpdate():void {
 			// Override.

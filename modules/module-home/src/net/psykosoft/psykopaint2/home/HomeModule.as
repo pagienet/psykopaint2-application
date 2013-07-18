@@ -73,11 +73,14 @@ package net.psykosoft.psykopaint2.home
 			trace( this, "HomeModule views are ready." );
 
 			if( isStandalone ) {
+
 				// Remove splash screen.
 				_coreModule.coreRootView.removeSplashScreen();
+
 				// Show Navigation.
-			var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-			showNavigationSignal.dispatch( 1, 0.5 );
+				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
+				showNavigationSignal.dispatch( 1, 0.5 );
+
 				// Trigger initial state...
 				_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
 				_coreModule.startEnterFrame();

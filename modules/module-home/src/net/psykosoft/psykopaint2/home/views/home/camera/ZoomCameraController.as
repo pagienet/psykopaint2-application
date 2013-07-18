@@ -15,8 +15,10 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 		private var _target:Object3D;
 
 		public var yzChangedSignal:Signal;
+		public var zoomCompleteSignal:Signal;
 
 		public function ZoomCameraController() {
+			zoomCompleteSignal = new Signal();
 			yzChangedSignal = new Signal();
 		}
 
@@ -38,6 +40,7 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 
 		private function onTweenComplete():void {
 			yzChangedSignal.dispatch();
+			zoomCompleteSignal.dispatch();
 		}
 
 		private function onTweenUpdate():void {

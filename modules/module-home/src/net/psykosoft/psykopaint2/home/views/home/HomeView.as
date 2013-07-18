@@ -120,13 +120,13 @@ package net.psykosoft.psykopaint2.home.views.home
 		// ---------------------------------------------------------------------
 
 		override protected function onEnabled():void {
-			addChild( _view );
+//			addChild( _view );
 			enableCameraController();
 		}
 
 		override protected function onDisabled():void {
 			// TODO: review if we need to do any clean up when view is disabled
-			removeChild( _view );
+//			removeChild( _view );
 			disableCameraController();
 			_frozen = false;
 		}
@@ -164,6 +164,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
 			_view.camera.lens.far = 50000;
+			addChild( _view );
 			PerspectiveLens( _view.camera.lens ).fieldOfView = 70;
 
 			// TODO: does the path manager update when scrolling on the 3d view? it shouldn't!
@@ -241,11 +242,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerBundledAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", true );
 		}
 
-		private function onZoomControllerChange():void {
-			_scrollCameraController.dirtyZ();
-		}
+		override protected function onReady():void {
 
-		override protected function onAssetsReady():void {
 			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
 			_paintingManager.createDefaultPaintings();
@@ -253,7 +251,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Start docked at home painting and zoom out.
 			_scrollCameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
 			dockAtCurrentPainting();
-			_zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
+
+			_stage3dProxy.clear();
+			_view.render();
+		}
+
+		private function onZoomControllerChange():void {
+			_scrollCameraController.dirtyZ();
 		}
 
 		private function dockAtCurrentPainting():void {

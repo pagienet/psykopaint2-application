@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.app
 {
 
 	import flash.events.Event;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.views.base.AppRootView;
@@ -10,6 +11,8 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.HomeModule;
@@ -56,9 +59,7 @@ package net.psykosoft.psykopaint2.app
 		}
 		private function onCoreModuleReady():void {
 			trace( this, "core module is ready, injector: " + _coreModule.injector );
-
-			// TODO: remove time out calls, they are used because otherwise, usage of the paint and home modules simultaneously causes the core's injected stage3d.context3d to become null
-//			setTimeout( createPaintModule, 250 );
+			_coreModule.startEnterFrame();
 			createPaintModule();
 		}
 
@@ -111,12 +112,18 @@ package net.psykosoft.psykopaint2.app
 		}
 
 		private function onViewsReady():void {
+
+			trace( this, "app views ready -" );
+
 			// Hide splash.
 			_coreModule.coreRootView.removeSplashScreen();
+
 			// Trigger initial state...
 			_coreModule.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
-			_coreModule.startEnterFrame();
-			// Show Navigation.
+			_coreModule.injector.getInstance( NotifyHomeViewZoomCompleteSignal ).add( onHomeFirstZoomOutComplete );
+		}
+
+		private function onHomeFirstZoomOutComplete():void {
 			var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
 			showNavigationSignal.dispatch( 1, 0.5 );
 		}

@@ -18,12 +18,14 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	import org.gestouch.events.GestureEvent;
@@ -69,11 +71,15 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var applicationRenderer:ApplicationRenderer;
 
+		[Inject]
+		public var notifyHomeViewZoomCompleteSignal:NotifyHomeViewZoomCompleteSignal;
+
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
 		private var _dockedAtPaintingIndex:int = -1;
 
 		private var _snapshotPromise:SnapshotPromise;
+		private var _firstZoomOutRan:Boolean;
 
 		override public function initialize():void {
 
@@ -114,9 +120,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestEaselRectInfoSignal.add( onEaselRectInfoRequested );
 
 			// From view.
-			view.setupSignal.add( onViewSetup );
-			view.assetsReadySignal.add( onViewAssetsReady );
 			view.scrollCameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
+			view.zoomCameraController.zoomCompleteSignal.add( onZoomComplete );
 		}
 
 		private function registerFreezingState( stateName:String ):void {
@@ -168,8 +173,12 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		override protected function onStateChange( newState:String ):void {
-			if( _freezingStates.indexOf( newState ) != -1 ) freezeView();
-			else {
+
+			// Is it a freezing state?
+			if( _freezingStates.indexOf( newState ) != -1 ) { // YES
+				freezeView();
+			}
+			else { // NO
 
 				view.unFreeze();
 
@@ -182,6 +191,11 @@ package net.psykosoft.psykopaint2.home.views.home
 
 					_snapshotPromise = applicationRenderer.requestSnapshot();
 					_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
+				}
+
+				if( !_firstZoomOutRan && newState == StateType.HOME ) {
+				    view.zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
+					_firstZoomOutRan = true;
 				}
 
 				super.onStateChange( newState );
@@ -229,21 +243,16 @@ package net.psykosoft.psykopaint2.home.views.home
 		// From view.
 		// -----------------------
 
-		private function onViewSetup():void {
-			// TODO: will cause trouble if view was disposed by a memory warning and the listener is set up again...
-//			view.cameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
-//			view.cameraController.zoomCompleteSignal.add( onCameraZoomComplete );
-		}
-
-		private function onViewAssetsReady():void {
-			// TODO: will cause trouble if view was disposed by a memory warning and the listener is set up again...
-//			view.paintingManager.easel.clickedSignal.add( onEaselClicked );
+		private function onZoomComplete():void {
+			notifyHomeViewZoomCompleteSignal.dispatch();
 		}
 
 		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
 
 			trace( this, "closest painting changed to index: " + paintingIndex );
 			_dockedAtPaintingIndex = paintingIndex;
+
+			if( !_firstZoomOutRan ) return;
 
 			// Variable.
 			var homePaintingIndex:uint = view.paintingManager.homePaintingIndex;
