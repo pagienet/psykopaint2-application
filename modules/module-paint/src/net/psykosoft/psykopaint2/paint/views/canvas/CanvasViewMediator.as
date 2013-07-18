@@ -256,6 +256,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		}
 
+		private var _rectOffsetY:Number;
+
 		private function onEaselRectInfo( rect:Rectangle ):void {
 			_easelRectFromHomeView = rect.clone();
 
@@ -267,6 +269,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			_minZoomScale = _easelRectFromHomeView.width / canvasModel.width;
 			zoomScale = _minZoomScale;
+
+			// TODO: deprecate this hack!
+			var dummy:Rectangle = _easelRectFromHomeView.clone();
+			constrainCanvasRect( dummy );
+			_rectOffsetY = _easelRectFromHomeView.y - dummy.y;
+
 			// Uncomment to visualize incoming rect.
 			/*view.graphics.lineStyle( 1, 0x00FF00 );
 			view.graphics.drawRect( rect.x, rect.y, rect.width, rect.height );
@@ -309,6 +317,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function updateCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
+			rect.y += _rectOffsetY;
 			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
@@ -338,8 +347,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				offsetY = ratio * offsetY + ( 1-ratio) * (1 - zoomScale) * .175;
 			}
 			// TODO: this causes a jump when coming from home, it seems that the .175 value needs to be calculated dynamically
-			
-				
 
 			// TODO: Doesn't feel good while animating - should we use a flag here and enable it when not animating?
 			/*if( zoomScale > 0.95 && zoomScale < 1.05 ) {
