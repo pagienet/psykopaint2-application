@@ -215,7 +215,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 				trace( this, "applying freeze snapshot..." );
 				view.freeze( _snapshotPromise.texture.newReference() );
-				_snapshotPromise.texture.dispose();
 				_waitingForFreezeSnapshot = false;
 			}
 
@@ -226,6 +225,8 @@ package net.psykosoft.psykopaint2.home.views.home
 					requestStateChange( StateType.TRANSITION_TO_PAINT_MODE );
 				}, 50 );
 			}
+
+			_snapshotPromise.texture.dispose();
 
 			_snapshotPromise = null;
 		}
