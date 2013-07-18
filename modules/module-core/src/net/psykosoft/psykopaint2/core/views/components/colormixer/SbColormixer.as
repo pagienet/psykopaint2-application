@@ -18,8 +18,8 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import net.psykosoft.psykopaint2.tdsi.ColorMixer;
-	
+//	import net.psykosoft.psykopaint2.tdsi.ColorMixer;
+
 
 	public class SbColormixer extends Sprite
 	{
