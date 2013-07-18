@@ -61,12 +61,6 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var renderer:CanvasRenderer;
 
 		[Inject]
-		public var requestPopUpDisplaySignal:RequestPopUpDisplaySignal;
-
-		[Inject]
-		public var requestPopUpRemovalSignal:RequestPopUpRemovalSignal;
-
-		[Inject]
 		public var stage:Stage;
 
 		[Inject]
@@ -77,6 +71,12 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var canvasHistoryModel:CanvasHistoryModel;
+
+		[Inject]
+		public var requestPopUpDisplaySignal:RequestPopUpDisplaySignal;
+
+		[Inject]
+		public var requestPopUpRemovalSignal:RequestPopUpRemovalSignal;
 
 		[Inject]
 		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
