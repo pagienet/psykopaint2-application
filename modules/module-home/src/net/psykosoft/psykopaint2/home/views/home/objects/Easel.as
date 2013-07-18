@@ -6,6 +6,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.primitives.PlaneGeometry;
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
+
 	import flash.display3D.Context3DCompareMode;
 
 
@@ -70,9 +73,35 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		public function setContent(vo : PaintingInfoVO) : void
+		private var _voToBeSetAfterAnimation:PaintingInfoVO;
+		public function setContent(vo : PaintingInfoVO, animate:Boolean = false) : void
 		{
-			_painting.setContent(vo, _view.stage3DProxy);
+			TweenLite.killTweensOf( _painting );
+			_painting.x = 0;
+
+			if( !animate ) {
+				_painting.setContent(vo, _view.stage3DProxy);
+			}
+			else if( vo != null ) {
+				_voToBeSetAfterAnimation = vo;
+				if( _painting.visible ) {
+					tweenOutThenSetContent();
+				}
+				else {
+					onTweenOutComplete();
+				}
+			}
+		}
+
+		private function tweenOutThenSetContent():void {
+			TweenLite.to( _painting, 0.5, { x: 3000, ease: Strong.easeIn, onComplete: onTweenOutComplete } );
+		}
+
+		private function onTweenOutComplete():void {
+			_painting.setContent(_voToBeSetAfterAnimation, _view.stage3DProxy);
+			_voToBeSetAfterAnimation = null;
+			_painting.x = -3000;
+			TweenLite.to( _painting, 0.5, { x: 0, ease: Strong.easeOut } );
 		}
 
 		// ---------------------------------------------------------------------

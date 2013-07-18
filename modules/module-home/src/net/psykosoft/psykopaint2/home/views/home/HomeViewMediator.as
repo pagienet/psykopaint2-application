@@ -142,14 +142,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyEaselRectInfoSignal.dispatch( view.easelRect );
 		}
 
-		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO ):void {
-			view.setEaselContent( paintingVO );
+		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animate:Boolean ):void {
+			view.paintingManager.easel.setContent( paintingVO, animate );
 		}
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingInfoVO> ):void {
 			if( data.length == 0 ) return;
 			var latestVo:PaintingInfoVO = data[ 0 ];
-			view.paintingManager.setEaselContent( latestVo );
+			view.paintingManager.easel.setContent( latestVo );
 		}
 
 		private function onNavigationToggled( shown:Boolean ):void {

@@ -50,7 +50,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			_snapshot.visible = false;
 			_snapshotPos = new Point( 250, 82 );
 			snapshotInitPos();
-			_snapshot.scaleX = _snapshot.scaleY = 0.5 / CoreSettings.GLOBAL_SCALING;
+			_snapshot.scaleX = _snapshot.scaleY = 1 / CoreSettings.GLOBAL_SCALING;
 			addChild( _snapshot );
 
 			swapChildren( _snapshot, handHolding );
@@ -74,8 +74,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			}
 			_currentCamera = Camera.getCamera( String( index ) );
 			if( _currentCamera ) {
-				if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) _currentCamera.setMode( 2048, 1536, 15, true );
-				else _currentCamera.setMode( 1024, 768, 15, false );
+				_currentCamera.setMode( 1024 * CoreSettings.GLOBAL_SCALING, 768 * CoreSettings.GLOBAL_SCALING, 15, false );
+				trace( "camera set, dims: " + _currentCamera.width, _currentCamera.height );
 				_video.attachCamera( _currentCamera );
 				//TODO: set camera quality?
 			}
@@ -84,8 +84,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		public function pause():void {
 
-			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) _bmd = new TrackedBitmapData( 2048, 1536, false, 0 );
-			else _bmd = new TrackedBitmapData( 1024, 768, false, 0 );
+			_bmd = new TrackedBitmapData( _currentCamera.width, _currentCamera.height, false, 0 );
 			_currentCamera.drawToBitmapData( _bmd );
 			_snapshot.bitmapData = _bmd;
 
@@ -108,6 +107,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		}
 
 		public function flipCamera():void {
+			if( !CoreSettings.RUNNING_ON_iPAD ) return;
 			setCameraByIndex( _activeCameraIndex == 0 ? 1 : 0 );
 		}
 

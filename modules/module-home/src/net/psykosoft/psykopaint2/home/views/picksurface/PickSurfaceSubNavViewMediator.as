@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			view.navigation.buttonClickedCallback = onButtonClicked;
 //			loadSurfaceByIndex( 0 );
 			view.showRightButton( false );
-			requestEaselPaintingUpdateSignal.dispatch( null );
+			requestEaselPaintingUpdateSignal.dispatch( null, false );
 			// TODO: must display thumbnails, assets are on /core-packaged/images/surfaces/ as jpgs
 		}
 
@@ -127,8 +127,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			_byteLoader = null;
 
 			var vo : PaintingInfoVO = createPaintingVO();
-			requestEaselPaintingUpdateSignal.dispatch( vo );
-			vo.dispose();
+			requestEaselPaintingUpdateSignal.dispatch( vo, true );
+//			vo.dispose(); // TODO: kills animation, but we still need to dispose the vo, trigger a signal from home view when we can dispose or something or try
+			// to dispose there without fucking up the data model
 		}
 
 		private function disposeSurface() : void

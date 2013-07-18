@@ -407,10 +407,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			trace( this, "positioning camera, Y: " + _view.camera.y + ", Z: " + _view.camera.z );
 		}
 
-		public function setEaselContent( data:PaintingInfoVO ):void {
-			_paintingManager.setEaselContent( data );
-		}
-
 		public function get frozen():Boolean {
 			return _frozen;
 		}

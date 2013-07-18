@@ -66,10 +66,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		public function setEaselContent( vo:PaintingInfoVO ):void {
-			_easel.setContent( vo );
-		}
-
 		public function createDefaultPaintings():void {
 
 			// -----------------------
