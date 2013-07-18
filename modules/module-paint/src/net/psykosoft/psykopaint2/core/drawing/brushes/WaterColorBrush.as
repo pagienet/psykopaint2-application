@@ -32,6 +32,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	public class WaterColorBrush extends SimulationBrush
 	{
 		private var _velocityPressureField : Texture;
+		private var _halfSizedBackBuffer : Texture;
 		private var _velocityPressureFieldBackBuffer : Texture;
 		private var _pigmentDensityField : Texture;
 		private var _pigmentColorField : Texture;
@@ -105,6 +106,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private function initBuffers() : void
 		{
 			_velocityPressureField = _canvasModel.createCanvasTexture(true, .25);
+			_halfSizedBackBuffer = _canvasModel.createCanvasTexture(true, .5);
 			_velocityPressureFieldBackBuffer = _canvasModel.createCanvasTexture(true, .25);
 			_pigmentDensityField = _canvasModel.createCanvasTexture(true, .5);
 			_pigmentColorField = _canvasModel.createCanvasTexture(true, .5);
@@ -139,6 +141,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			if (_velocityPressureField) {
 				_velocityPressureField.dispose();
+				_halfSizedBackBuffer.dispose();
 				_velocityPressureFieldBackBuffer.dispose();
 				_pigmentDensityField.dispose();
 				_pigmentColorField.dispose();
@@ -215,8 +218,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function addPaintToSimulation() : void
 		{
-			_addPigmentToPigmentDensity.execute(SimulationMesh(_brushMesh), _pigmentDensityField, _canvasModel.halfSizeBackBuffer, _brushShape.texture, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-			_pigmentDensityField = _canvasModel.swapHalfSized(_pigmentDensityField);
+			_addPigmentToPigmentDensity.execute(SimulationMesh(_brushMesh), _pigmentDensityField, _halfSizedBackBuffer, _brushShape.texture, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			_pigmentDensityField = swapHalfSized(_pigmentDensityField);
 
 //			_addPigmentToPigmentColor.execute(SimulationMesh(_brushMesh), _pigmentColorField, _canvasModel.halfSizeBackBuffer, null, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 //			_pigmentColorField = _canvasModel.swapHalfSized(_pigmentColorField);
@@ -228,6 +231,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_addPigmentToPressure.execute(SimulationMesh(_brushMesh), _velocityPressureField, _velocityPressureFieldBackBuffer, _brushShape.texture, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 			swapVelocityBuffer();
+		}
+
+		private function swapHalfSized(other : Texture) : Texture
+		{
+			var temp : Texture = _halfSizedBackBuffer;
+			_halfSizedBackBuffer = other;
+			return temp;
 		}
 
 		private function swapVelocityBuffer() : void
@@ -265,17 +275,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function movePigment() : void
 		{
-			_movePigment.execute(SimulationMesh(_brushMesh), _pigmentDensityField, _velocityPressureField);
-			_pigmentDensityField = _canvasModel.swapHalfSized(_pigmentDensityField);
+			_movePigment.execute(SimulationMesh(_brushMesh), _pigmentDensityField, _halfSizedBackBuffer, _velocityPressureField);
+			_pigmentDensityField = swapHalfSized(_pigmentDensityField);
 
-			_movePigmentRGB.execute(SimulationMesh(_brushMesh), _pigmentColorField, _canvasModel.halfSizeBackBuffer, _velocityPressureField, 1, 0, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-			_pigmentColorField = _canvasModel.swapHalfSized(_pigmentColorField);
+			_movePigmentRGB.execute(SimulationMesh(_brushMesh), _pigmentColorField, _halfSizedBackBuffer, _velocityPressureField, 1, 0, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			_pigmentColorField = swapHalfSized(_pigmentColorField);
 		}
 
 		private function transferPigment() : void
 		{
-			_transferPigment.execute(SimulationMesh(_brushMesh), _pigmentDensityField, _pigmentGranulation.numberValue, _pigmentDensity.numberValue, _pigmentStaining.numberValue);
-			_pigmentDensityField = _canvasModel.swapHalfSized(_pigmentDensityField);
+			_transferPigment.execute(SimulationMesh(_brushMesh), _pigmentDensityField, _halfSizedBackBuffer, _pigmentGranulation.numberValue, _pigmentDensity.numberValue, _pigmentStaining.numberValue);
+			_pigmentDensityField = swapHalfSized(_pigmentDensityField);
 		}
 
 		override protected function drawBrushColor() : void

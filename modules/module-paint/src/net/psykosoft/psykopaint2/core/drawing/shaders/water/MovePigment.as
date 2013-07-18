@@ -43,9 +43,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			return EmbedUtils.StringFromEmbed(Shader);
 		}
 
-		public function execute(stroke : SimulationMesh, pigment : Texture, velocityDensity : Texture) : void
+		public function execute(stroke : SimulationMesh, pigment : Texture, backBuffer : Texture, velocityDensity : Texture) : void
 		{
-			_context.setRenderToTexture(_canvas.halfSizeBackBuffer, true);
+			_context.setRenderToTexture(backBuffer, true);
 			_context.setTextureAt(0, velocityDensity);
 			_context.setTextureAt(1, pigment);
 			_context.clear();

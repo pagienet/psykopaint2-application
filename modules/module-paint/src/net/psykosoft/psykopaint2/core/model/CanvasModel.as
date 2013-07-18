@@ -10,10 +10,7 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
-	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
@@ -31,7 +28,6 @@ package net.psykosoft.psykopaint2.core.model
 
 		private var _sourceTexture : Texture;
 		private var _fullSizeBackBuffer : Texture;
-		private var _halfSizeBackBuffer : Texture;
 		private var _colorTexture : Texture;
 		private var _normalSpecularMap : Texture;	// RGB = slope, A = height, half sized
 
@@ -66,11 +62,6 @@ package net.psykosoft.psykopaint2.core.model
 		public function get fullSizeBackBuffer() : Texture
 		{
 			return _fullSizeBackBuffer;
-		}
-
-		public function get halfSizeBackBuffer() : Texture
-		{
-			return _halfSizeBackBuffer;
 		}
 
 		[PostConstruct]
@@ -180,6 +171,11 @@ package net.psykosoft.psykopaint2.core.model
 			_pyramidMap.uploadMipLevel(_sourceTexture, 0);
 		}
 
+		public function createPaintBuffers() : void
+		{
+
+		}
+
 		public function init(canvasWidth : uint, canvasHeight : uint) : void
 		{
 			if (canvasWidth == _width && canvasHeight == _height)
@@ -193,10 +189,8 @@ package net.psykosoft.psykopaint2.core.model
 			_textureHeight = TextureUtils.getBestPowerOf2(_height);
 
 			_colorTexture = createCanvasTexture(true);
-			_fullSizeBackBuffer = createCanvasTexture(true);
-
-			_halfSizeBackBuffer = createCanvasTexture(true, .5);
 			_normalSpecularMap = createCanvasTexture(true);
+			_fullSizeBackBuffer = createCanvasTexture(true);
 
 			if (_normalSpecularOriginal) setNormalSpecularMap(_normalSpecularOriginal);
 			uploadColorBackgroundOriginal();
@@ -209,18 +203,15 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function dispose() : void
 		{
-			if (!_colorTexture) return;
 			if (_sourceTexture) _sourceTexture.dispose();
-			_colorTexture.dispose();
-			_fullSizeBackBuffer.dispose();
-			_halfSizeBackBuffer.dispose();
-			_normalSpecularMap.dispose();    	// storing height as well, you never know what we can use it for (raymarching for offline rendering \o/)
-			_normalSpecularOriginal.clear();
-			_colorBackgroundOriginal.dispose();
+			if (_colorTexture) _colorTexture.dispose();
+			if (_fullSizeBackBuffer) _fullSizeBackBuffer.dispose();
+			if (_normalSpecularMap) _normalSpecularMap.dispose();    	// storing height as well, you never know what we can use it for (raymarching for offline rendering \o/)
+			if (_normalSpecularOriginal) _normalSpecularOriginal.clear();
+			if (_colorBackgroundOriginal) _colorBackgroundOriginal.dispose();
 			_sourceTexture = null;
 			_colorTexture = null;
 			_fullSizeBackBuffer = null;
-			_halfSizeBackBuffer = null;
 			_normalSpecularMap = null;
 			_normalSpecularOriginal = null;
 			_colorBackgroundOriginal = null;
@@ -241,14 +232,6 @@ package net.psykosoft.psykopaint2.core.model
 			var temp : Texture = target;
 			target = _fullSizeBackBuffer;
 			_fullSizeBackBuffer = temp;
-			return target;
-		}
-
-		public function swapHalfSized(target : Texture) : Texture
-		{
-			var temp : Texture = target;
-			target = _halfSizeBackBuffer;
-			_halfSizeBackBuffer = temp;
 			return target;
 		}
 

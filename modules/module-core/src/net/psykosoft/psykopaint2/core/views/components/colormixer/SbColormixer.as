@@ -18,9 +18,6 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import net.psykosoft.psykopaint2.tdsi.ColorMixer;
-	
-
 	public class SbColormixer extends Sprite
 	{
 		private var _id : String;
@@ -55,7 +52,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		private var shp:Shape;
 		private var cmf:ColorMatrixFilter;
 		
-		private var mixer:ColorMixer;
+//		private var mixer:ColorMixer;
 		
 		public function SbColormixer() {
 			super();

@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	public class WaterDamageBrush extends SimulationBrush
 	{
 		private var _velocityPressureField : Texture;
+		private var _halfSizedBackBuffer : Texture;
 		private var _velocityPressureFieldBackBuffer : Texture;
 		private var _pigmentColorField : Texture;
 		private var _normalField : Texture;
@@ -77,6 +78,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private function initBuffers() : void
 		{
 			_velocityPressureField = _canvasModel.createCanvasTexture(true, .25);
+			_halfSizedBackBuffer = _canvasModel.createCanvasTexture(true, .5);
 			_velocityPressureFieldBackBuffer = _canvasModel.createCanvasTexture(true, .25);
 			_pigmentColorField = _canvasModel.createCanvasTexture(true, .5);
 			_normalField = _canvasModel.createCanvasTexture(true, .5);
@@ -107,6 +109,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			if (_velocityPressureField) {
 				_velocityPressureField.dispose();
+				_halfSizedBackBuffer.dispose();
 				_velocityPressureFieldBackBuffer.dispose();
 				_pigmentColorField.dispose();
 				_normalField.dispose();
@@ -181,6 +184,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			swapVelocityBuffer();
 		}
 
+		private function swapHalfSized(other : Texture) : Texture
+		{
+			var temp : Texture = _halfSizedBackBuffer;
+			_halfSizedBackBuffer = other;
+			return temp;
+		}
+
 		private function swapVelocityBuffer() : void
 		{
 			var tmp : Texture = _velocityPressureField;
@@ -216,11 +226,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function movePigment() : void
 		{
-			_movePigmentCMYA.execute(SimulationMesh(_brushMesh), _pigmentColorField, _velocityPressureField, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
-			_pigmentColorField = _canvasModel.swapHalfSized(_pigmentColorField);
+			_movePigmentCMYA.execute(SimulationMesh(_brushMesh), _pigmentColorField, _velocityPressureField, _halfSizedBackBuffer, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
+			_pigmentColorField = swapHalfSized(_pigmentColorField);
 
-			_movePigmentXYBA.execute(SimulationMesh(_brushMesh), _normalField, _velocityPressureField, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
-			_normalField = _canvasModel.swapHalfSized(_normalField);
+			_movePigmentXYBA.execute(SimulationMesh(_brushMesh), _normalField, _velocityPressureField, _halfSizedBackBuffer, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, _pigmentFlow.numberValue);
+			_normalField = swapHalfSized(_normalField);
 		}
 
 		override protected function drawBrushColor() : void
