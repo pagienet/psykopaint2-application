@@ -1,17 +1,21 @@
 package net.psykosoft.psykopaint2.core.views.popups
 {
 
+	import flash.display.Sprite;
 	import flash.text.TextField;
 
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpViewBase;
 
 	public class MessagePopUpView extends PopUpViewBase
 	{
+		// Declared in Flash.
+		public var popup:Sprite;
+		public var main:TextField;
+		public var extra:TextField;
+
 		public function MessagePopUpView() {
 			super();
 		}
-
-		private var _textField:TextField;
 
 		override protected function onEnabled():void {
 			super.onEnabled();
@@ -20,17 +24,23 @@ package net.psykosoft.psykopaint2.core.views.popups
 			_container.graphics.drawRect( 0, 0, 128, 64 );
 			_container.graphics.endFill();
 
-			_textField = new TextField();
-			_textField.selectable = _textField.mouseEnabled = false;
-			_textField.width = 128;
-			_textField.height = 64;
-			_container.addChild( _textField );
+			main.selectable = main.mouseEnabled = false;
+			main.text = "";
+			extra.selectable = extra.mouseEnabled = false;
+			extra.text = "";
+
+			_container.addChild( popup );
+			_container.addChild( main );
+			_container.addChild( extra );
 
 			layout();
 		}
 
-		public function updateMessage( newMessage:String ):void {
-			_textField.text = newMessage;
+		public function updateMessage( newTitle:String, newMessage:String ):void {
+			main.text = newTitle;
+			if( newMessage != "" ) {
+				extra.htmlText = newMessage;
+			}
 		}
 	}
 }

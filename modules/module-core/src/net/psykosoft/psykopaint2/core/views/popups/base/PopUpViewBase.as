@@ -2,11 +2,8 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 {
 
 	import flash.display.Sprite;
-	import flash.events.MouseEvent;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-
-	import org.osflash.signals.Signal;
 
 	public class PopUpViewBase extends ViewBase
 	{

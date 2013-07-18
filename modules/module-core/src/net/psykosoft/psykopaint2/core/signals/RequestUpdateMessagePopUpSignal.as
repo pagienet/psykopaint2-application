@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.signals
 	public class RequestUpdateMessagePopUpSignal extends Signal
 	{
 		public function RequestUpdateMessagePopUpSignal() {
-			super( String ); // Message to be displayed in the pop up.
+			super( String, String ); // Title and Message to be displayed in the pop up.
 		}
 	}
 }

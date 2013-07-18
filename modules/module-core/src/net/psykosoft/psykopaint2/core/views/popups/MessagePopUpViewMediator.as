@@ -23,8 +23,8 @@ package net.psykosoft.psykopaint2.core.views.popups
 			requestUpdateMessagePopUpSignal.add( onMessageUpdateRequest );
 		}
 
-		private function onMessageUpdateRequest( newMessage:String ):void {
-			view.updateMessage( newMessage );
+		private function onMessageUpdateRequest( newTitle:String, newMessage:String ):void {
+			view.updateMessage( newTitle, newMessage );
 		}
 	}
 }

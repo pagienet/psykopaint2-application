@@ -29,6 +29,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
+	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintingSavedSignal;
 
@@ -128,14 +129,15 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Show a pop up during the process.
 			requestPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
-			requestUpdateMessagePopUpSignal.dispatch( "saving..." );
+			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
+			requestUpdateMessagePopUpSignal.dispatch( "Saving...", randomJoke );
 
 			// Wait a bit before starting the save process so we actually give the pop a chance to show.
 			setTimeout( save, 100 );
 		}
 
 		private function save():void {
-			requestUpdateMessagePopUpSignal.dispatch( "saving: exporting..." );
+			requestUpdateMessagePopUpSignal.dispatch( "Saving: exporting...", "" );
 			var canvasExporter : CanvasExporter = new CanvasExporter();
 			canvasExporter.addEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
 			canvasExporter.export(canvasModel);
@@ -169,7 +171,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function serializeDataToFiles( infoVO:PaintingInfoVO, dataVO:PaintingDataVO ):void {
 
-			requestUpdateMessagePopUpSignal.dispatch( "saving: serializing..." );
+			requestUpdateMessagePopUpSignal.dispatch( "Saving: serializing...", "" );
 
 			var infoSerializer:PaintingInfoSerializer = new PaintingInfoSerializer();
 			var dataSerializer:PaintingDataSerializer = new PaintingDataSerializer();
@@ -189,7 +191,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function writeInfoBytes():void {
 
-			requestUpdateMessagePopUpSignal.dispatch( "saving: writing..." );
+			requestUpdateMessagePopUpSignal.dispatch( "Saving: writing...", "" );
 
 			// TODO: using sync saving for now, async makes writing fail on ipad slow packaging, see notes here: https://github.com/psykosoft/psykopaint2-application/issues/47
 
@@ -229,7 +231,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function preExitCommand():void {
 
-			requestUpdateMessagePopUpSignal.dispatch( "saving: finishing..." );
+			requestUpdateMessagePopUpSignal.dispatch( "Saving: finishing...", "" );
 
 			if( updateEasel ) {
 				requestEaselUpdateSignal.dispatch( _infoVO );
