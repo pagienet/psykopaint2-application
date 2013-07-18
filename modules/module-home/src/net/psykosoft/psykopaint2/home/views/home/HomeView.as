@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 
 	import away3d.arcane;
-	import away3d.cameras.Camera3D;
 	import away3d.cameras.lenses.PerspectiveLens;
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
@@ -15,8 +14,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
+	import away3d.textures.Stage3dTexture;
+	import away3d.textures.Texture2DBase;
 
-	import flash.display.BitmapData;
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -26,7 +26,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.ui.Keyboard;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
@@ -62,9 +61,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public static const HOME_BUNDLE_ID:String = "homeView";
 
 		private var _frozen:Boolean;
-		private var _freezePlane:Mesh;
 		private var _freezeTexture:RefCountedTexture;
-		private var _freezeMaterial:TextureMaterial;
 
 		private var _currentScene:ObjectContainer3D;
 
@@ -85,30 +82,22 @@ package net.psykosoft.psykopaint2.home.views.home
 			disposeFreezeTexture();
 
 			_freezeTexture = texture;
-			if( HomeSettings.TINT_FREEZES ) {
-				_freezeMaterial.colorTransform = new ColorTransform( 0.5, 0.5, 1 );
-			}
-			_freezeMaterial.texture = new NativeTexture( _freezeTexture.texture );
+			var tex:Stage3dTexture = new Stage3dTexture();
+			tex.texture = _freezeTexture.texture;
+			_view.background = tex;
 
-			_freezePlane.x = _view.camera.x;
-			_freezePlane.y = _view.camera.y;
-			_freezePlane.z = 10000;
-
-			HomeViewUtils.ensurePlaneFitsViewport( _freezePlane, _view );
-
-			selectScene( _freezePlane );
+			selectScene( null );
 			disableCameraController();
 
 			_frozen = true;
 		}
 
-		public function disableView():void {
-
-		}
-
 		public function unFreeze():void {
+
 			if( !_frozen ) return;
 			trace( this, "unFreeze()" );
+
+			_view.background = null;
 
 			disposeFreezeTexture();
 
@@ -153,8 +142,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function selectScene( scene:ObjectContainer3D ):void {
 			if( _currentScene && _view.scene.contains( _currentScene ) )
 				_view.scene.removeChild( _currentScene );
-			_view.scene.addChild( scene );
-			_currentScene = scene;
+			if( scene ) {
+				_view.scene.addChild( scene );
+				_currentScene = scene;
+			}
 		}
 
 		override protected function onSetup():void {
@@ -188,9 +179,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// -----------------------
 
 			_mainScene = new ObjectContainer3D();
-
-			initFreezePlane();
-
 			selectScene( _mainScene );
 
 			// -----------------------
@@ -251,12 +239,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerBundledAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", true );
 		}
 
-		private function initFreezePlane():void {
-			var plane:PlaneGeometry = new PlaneGeometry( stage.stageWidth, stage.stageHeight, 1, 1, false )
-			_freezeMaterial = new TextureMaterial();
-			_freezePlane = new Mesh( plane, _freezeMaterial );
-		}
-
 		private function onZoomControllerChange():void {
 			_scrollCameraController.dirtyZ();
 		}
@@ -291,7 +273,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_setupHasRan = true;
 			return;
 
-			disposeFreezePlane();
+			disposeFreezeTexture();
 
 			if( _loader ) {
 				if( _loader.hasEventListener( Event.COMPLETE ) ) {
@@ -322,15 +304,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 
 			// TODO: review if memory is really freed up with Scout, it appears not, specially gpu memory
-		}
-
-		private function disposeFreezePlane():void {
-			_freezeMaterial.dispose();
-			_freezePlane.geometry.dispose();
-			_freezePlane.dispose();
-			_freezePlane = null;
-			_freezeMaterial = null;
-			disposeFreezeTexture();
 		}
 
 		// ---------------------------------------------------------------------

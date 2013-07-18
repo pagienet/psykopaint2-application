@@ -1,9 +1,13 @@
 package net.psykosoft.psykopaint2.paint.views.pick.image
 {
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
+
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
+	import flash.geom.Point;
 	import flash.media.Camera;
 	import flash.media.Video;
 
@@ -22,6 +26,10 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		private var _video:Video;
 		private var _bmd:BitmapData;
 		private var _snapshot:Bitmap;
+		private var _videoPos:Point;
+		private var _snapshotPos:Point;
+		private var _moveToSideBy:uint;
+		private var _speed:uint;
 
 		public function CaptureImageView() {
 			super();
@@ -29,24 +37,35 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		override protected function onEnabled():void {
 
+			_moveToSideBy = 300;
+			_speed = 1;
+
 			_video = new Video( 512, 384 );
-			_video.x = 383;
-			_video.y = 105;
+			_videoPos = new Point( 383, 105 );
+			cameraInitPos();
 			_video.smoothing = true;
 			addChild( _video );
 
 			_snapshot = new Bitmap();
 			_snapshot.visible = false;
-			_snapshot.x = 250;
-			_snapshot.y = 82;
+			_snapshotPos = new Point( 250, 82 );
+			snapshotInitPos();
 			_snapshot.scaleX = _snapshot.scaleY = 0.5 / CoreSettings.GLOBAL_SCALING;
 			addChild( _snapshot );
 
 			swapChildren( _snapshot, handHolding );
-			handHolding.visible = false;
-			photoCamera.visible = true;
-
+			cameraEnter();
 			setCameraByIndex( 0 );
+		}
+
+		override protected function onDisabled():void {
+			//TODO: check if anything else needs to be disposed.
+			_currentCamera = null;
+			removeChild( _video );
+			_video.attachCamera( null );
+			_video = null;
+			_snapshot.visible = false;
+			clearAllTweens();
 		}
 
 		private function setCameraByIndex( index:uint ):void {
@@ -63,38 +82,25 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			_activeCameraIndex = index;
 		}
 
-		override protected function onDisabled():void {
-			//TODO: check if anything else needs to be disposed.
-			_currentCamera = null;
-			removeChild( _video );
-			_video = null;
-			_snapshot.visible = false;
-		}
-
 		public function pause():void {
 
 			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) _bmd = new TrackedBitmapData( 2048, 1536, false, 0 );
 			else _bmd = new TrackedBitmapData( 1024, 768, false, 0 );
 			_currentCamera.drawToBitmapData( _bmd );
 			_snapshot.bitmapData = _bmd;
-			_video.attachCamera( null );
 
-			_video.visible = false;
-			_snapshot.visible = true;
-
-			handHolding.visible = true;
-			photoCamera.visible = false;
+			clearAllTweens();
+			cameraLeave();
+			snapshotEnter( _speed );
 		}
 
 		public function play():void {
 
 			_video.attachCamera( _currentCamera );
 
-			_video.visible = true;
-			_snapshot.visible = false;
-
-			handHolding.visible = false;
-			photoCamera.visible = true;
+			clearAllTweens();
+			snapshotLeave();
+			cameraEnter( _speed );
 		}
 
 		public function takeSnapshot():BitmapData {
@@ -103,6 +109,81 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		public function flipCamera():void {
 			setCameraByIndex( _activeCameraIndex == 0 ? 1 : 0 );
+		}
+
+		// -----------------------
+		// Animation.
+		// -----------------------
+
+		private function cameraEnter( delay:Number = 0 ):void {
+
+			cameraInitPos();
+
+			TweenLite.to( _video, _speed, { delay: delay, x : _videoPos.x, y : _videoPos.y, ease : Strong.easeOut, onStart:onCameraEnterStart } );
+			TweenLite.to( photoCamera, _speed, { delay: delay, x : 0, y : 0, ease : Strong.easeOut} );
+		}
+
+		private function cameraLeave( delay:Number = 0 ):void {
+
+			TweenLite.to( _video, _speed, { delay: delay, x : _videoPos.x - _moveToSideBy, y : _videoPos.y + stage.height, ease : Strong.easeIn} );
+			TweenLite.to( photoCamera, _speed, { delay: delay, x : -_moveToSideBy, y : stage.height, ease : Strong.easeIn} );
+		}
+
+		private function snapshotEnter( delay:Number = 0 ):void {
+
+			snapshotInitPos();
+
+			TweenLite.to( _snapshot, _speed, { delay: delay, x : _snapshotPos.x, y : _snapshotPos.y, ease : Strong.easeOut, onStart:onSnapshotEnterStart } );
+			TweenLite.to( handHolding, _speed, { delay: delay, x : _snapshotPos.x + _snapshot.width, y : _snapshotPos.y + _snapshot.height, ease : Strong.easeOut} );
+		}
+
+		private function snapshotLeave( delay:Number = 0 ):void {
+
+			TweenLite.to( _snapshot, _speed, { delay: delay, x : _snapshotPos.x + _moveToSideBy, y : _snapshotPos.y + stage.height, ease : Strong.easeIn} );
+			TweenLite.to( handHolding, _speed, { delay: delay, x : _snapshotPos.x + _snapshot.width + _moveToSideBy, y : _snapshotPos.y + _snapshot.height + stage.height, ease : Strong.easeIn} );
+		}
+
+		private function cameraInitPos():void {
+
+			_video.x = _videoPos.x - _moveToSideBy;
+			_video.y = _videoPos.y + stage.height;
+			photoCamera.x = - _moveToSideBy;
+			photoCamera.y = stage.height;
+		}
+
+		private function snapshotInitPos():void {
+
+			_snapshot.x = _snapshotPos.x + _moveToSideBy;
+			_snapshot.y = _snapshotPos.y + stage.height;
+			handHolding.x = _snapshotPos.x + _snapshot.width + _moveToSideBy;
+			handHolding.y = _snapshotPos.y + _snapshot.height + stage.height;  //TODO: check why initial position is not the one we want
+		}
+
+		private function onSnapshotEnterStart():void{
+
+			_video.attachCamera( null );
+
+			_snapshot.visible = true;
+			_video.visible = false;
+
+			handHolding.visible = true;
+			photoCamera.visible = false;
+		}
+
+		private function onCameraEnterStart():void{
+
+			_video.visible = true;
+			_snapshot.visible = false;
+
+			handHolding.visible = false;
+			photoCamera.visible = true;
+		}
+
+		private function clearAllTweens():void {
+			TweenLite.killTweensOf( _video );
+			TweenLite.killTweensOf( handHolding );
+			TweenLite.killTweensOf( _snapshot );
+			TweenLite.killTweensOf( photoCamera );
 		}
 	}
 }

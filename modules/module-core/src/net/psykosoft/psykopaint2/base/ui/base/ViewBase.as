@@ -42,7 +42,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 			assetsReadySignal = new Signal();
 			viewReadySignal = new Signal();
 
-			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			addEventListener( Event.ADDED_TO_STAGE, addedToStageHandler );
 			visible = false;
 		}
 
@@ -155,12 +155,18 @@ package net.psykosoft.psykopaint2.base.ui.base
 			// Override.
 		}
 
+		protected function onAddedToStage():void {
+			// Override.
+		}
+
 		// ---------------------------------------------------------------------
 		// Listeners.
 		// ---------------------------------------------------------------------
 
-		private function onAddedToStage( event:Event ):void {
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+		private function addedToStageHandler( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, addedToStageHandler );
+
+			onAddedToStage();
 
 			// Retina scaling.
 			if( scalesToRetina && !( parent is ViewBase ) ) {
