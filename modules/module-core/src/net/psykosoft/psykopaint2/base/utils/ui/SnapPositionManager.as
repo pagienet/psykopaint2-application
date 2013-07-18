@@ -122,6 +122,16 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			_onMotion = _onSnapMotion = true;
 		}
 
+		public function animateToIndex( index:uint ):void {
+			var targetPosition:Number = _snapPoints[ index ];
+			var precision:Number = 512;
+			var integralFriction:Number = ( Math.pow( _frictionFactor, precision ) - 1 ) / ( _frictionFactor - 1 );
+			_snapMotionSpeed = ( targetPosition - _position ) / integralFriction;
+			_positionChange = _snapMotionSpeed;
+			_onMotion = _onSnapMotion = true;
+			evaluateClosestSnapPointPosition( targetPosition );
+		}
+
 		public function snapAtIndexWithoutEasing( index:uint ):void {
 			if( numSnapPoints == 0 ) return;
 			_position = _snapPoints[ index ];

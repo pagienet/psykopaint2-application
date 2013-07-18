@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.HomeModule;
@@ -120,12 +121,12 @@ package net.psykosoft.psykopaint2.app
 
 			// Trigger initial state...
 			_coreModule.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
-			_coreModule.injector.getInstance( NotifyHomeViewZoomCompleteSignal ).add( onHomeFirstZoomOutComplete );
+			_coreModule.injector.getInstance( NotifyHomeViewZoomCompleteSignal ).addOnce( onHomeFirstZoomOutComplete );
 		}
 
 		private function onHomeFirstZoomOutComplete():void {
-			var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-			showNavigationSignal.dispatch( 1, 0.5 );
+			_coreModule.injector.getInstance( RequestNavigationToggleSignal ).dispatch( 1, 0.5 );
+			_coreModule.injector.getInstance( RequestHomeViewScrollSignal ).dispatch( 1 );
 		}
 	}
 }

@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
@@ -74,6 +75,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyHomeViewZoomCompleteSignal:NotifyHomeViewZoomCompleteSignal;
 
+		[Inject]
+		public var requestHomeViewScrollSignal:RequestHomeViewScrollSignal;
+
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
 		private var _dockedAtPaintingIndex:int = -1;
@@ -118,6 +122,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
 			requestEaselRectInfoSignal.add( onEaselRectInfoRequested );
+			requestHomeViewScrollSignal.add( onScrollRequested );
 
 			// From view.
 			view.scrollCameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
@@ -237,6 +242,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			_snapshotPromise.texture.dispose();
 
 			_snapshotPromise = null;
+		}
+
+		private function onScrollRequested( index:int ):void {
+			view.scrollCameraController.positionManager.animateToIndex( index );
 		}
 
 		// -----------------------
