@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 
 			"I live in my own little world, but it's ok, they know me here." ,
 
-			"I don't do drugs anymore 'cause I find I get the same effect just by standing up really fast." ,
+			"I don't do drugs anymore 'cause I find <br> I get the same effect just by standing up really fast." ,
 
 			"- KNOCK KNOCK <br> - who's there? <br> - IMPATIENT COW <br> - impat... <br> - MOO" ,
 
@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 
 			"Two cannibals eating a clown, one says to the other 'does this taste funny?'" ,
 
-			"Two cows in a field: One says 'Are you worried about getting mad cow disease?' The other cow says 'holy crap! A talking cow!'" ,
+			"Two cows in a field: One says 'Are you worried about getting mad cow disease?' <br> The other cow says 'holy crap! A talking cow!'" ,
 
 			"Knock knock! <br> Who's there? <br> Control freak! Now you say 'Control freak who?'" ,
 
