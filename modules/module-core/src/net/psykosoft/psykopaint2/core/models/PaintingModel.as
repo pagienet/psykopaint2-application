@@ -58,8 +58,8 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			// Find vo with id.
 			var vo : PaintingInfoVO = _paintingData[id];
-			if (!vo)
-				throw new Error(this, "unable to find saved painting with id: " + id);
+//			if (!vo)
+//				throw new Error(this, "unable to find saved painting with id: " + id);
 			return vo;
 		}
 

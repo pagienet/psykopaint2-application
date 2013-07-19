@@ -111,8 +111,10 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Always write ( in current session ) the last edit date.
 			var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingId );
-			vo.lastSavedOnDateMs = new Date().getTime();
-			paintingModel.dirtyDateSorting();
+			if( vo ) {
+				vo.lastSavedOnDateMs = new Date().getTime();
+				paintingModel.dirtyDateSorting();
+			}
 
 			// Skip saving if the painting is not dirty.
 			var isPaintingDirty:Boolean = canvasHistoryModel.hasHistory;
