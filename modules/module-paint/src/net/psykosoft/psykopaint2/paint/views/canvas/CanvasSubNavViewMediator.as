@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
+	import flash.utils.setTimeout;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
@@ -139,7 +141,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function onPaintingSaved():void {
 			if( _waitingForSaveToContinueToHomeState ) {
-			    requestStateChange( StateType.TRANSITION_TO_HOME_MODE );
+				setTimeout( function():void {
+					requestStateChange( StateType.TRANSITION_TO_HOME_MODE );
+				}, 100 );
 				_waitingForSaveToContinueToHomeState = false;
 			}
 		}
