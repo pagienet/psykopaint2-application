@@ -159,7 +159,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onNavigationToggled( shown:Boolean ):void {
-			view.scrollCameraController.limitInteractionToUpperPartOfTheScreen( shown );
+			if ( view.isEnabled )
+				view.scrollCameraController.limitInteractionToUpperPartOfTheScreen( shown );
 			// TODO: will the navigation be hide-able in home?
 			/*if( !view.visible ) {
 			 var p:Point = shown ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
