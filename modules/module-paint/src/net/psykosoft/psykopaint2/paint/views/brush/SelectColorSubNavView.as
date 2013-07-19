@@ -54,32 +54,33 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			navigation.setHeader( "" );
 			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
 			
+			colorSwatches = new SbColorSwatches();
+			colorSwatches.y = UI_ELEMENT_Y - 10;
+			colorSwatches.x = 330;
+			colorSwatches.addEventListener(Event.CHANGE, onSwatchColorPicked );
 			
-			
-			colorMixer1 = new SbColormixer();
+			colorMixer1 = new SbColormixer( colorSwatches.palettes);
 			colorMixer1.y = UI_ELEMENT_Y;
-			colorMixer1.x = 130;
+			colorMixer1.x = 140;
 			//colorMixer1.blendMode = "multiply";
-			addChild( colorMixer1 );
 			colorMixer1.addEventListener(Event.CHANGE, onColorPicked );
 			
-			colorMixer2 = new SbColormixer();
+			colorMixer2 = new SbColormixer( colorSwatches.palettes );
 			colorMixer2.y = UI_ELEMENT_Y;
 			colorMixer2.x = 1024 - 200;
 			//colorMixer2.blendMode = "multiply";
-			addChild( colorMixer2 );
 			colorMixer2.addEventListener(Event.CHANGE, onColorPicked );
 			
-			colorSwatches = new SbColorSwatches();
-			colorSwatches.y = UI_ELEMENT_Y;
-			colorSwatches.x = 330;
-			addChild( colorSwatches );
-			colorSwatches.addEventListener(Event.CHANGE, onSwatchColorPicked );
+			
 			
 			checkBox = new SbCheckBox();
 			checkBox.addEventListener( Event.CHANGE, onCheckBoxChanged );
 			checkBox.y = UI_ELEMENT_Y;
 			checkBox.x = 10;
+			
+			addChild( colorMixer1 );
+			addChild( colorMixer2 );
+			addChild( colorSwatches );
 			addChild( checkBox );
 			
 			
@@ -92,6 +93,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			{
 				_colorParameter.colorValue = SbColormixer(event.target).pickedColor;
 				if ( !checkBox.selected ) _colorModeParameter.booleanValue = checkBox.selected = true;
+				colorSwatches.setSelection(-1);
 			}
 			
 		}
@@ -103,6 +105,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			{
 				_colorParameter.colorValue = SbColorSwatches(event.target).pickedColor;
 				if ( !checkBox.selected ) _colorModeParameter.booleanValue = checkBox.selected = true;
+				
 			}
 			
 		}

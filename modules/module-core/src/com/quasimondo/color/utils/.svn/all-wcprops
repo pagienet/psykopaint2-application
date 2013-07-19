@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/aviary_suite/!svn/ver/2947/3.0/aviary_core/trunk/src/com/aviary/sdk/color/utils
+END
+NumberConverter.as
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/aviary_suite/!svn/ver/2947/3.0/aviary_core/trunk/src/com/aviary/sdk/color/utils/NumberConverter.as
+END
+ColorMatrix.as
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/aviary_suite/!svn/ver/2947/3.0/aviary_core/trunk/src/com/aviary/sdk/color/utils/ColorMatrix.as
+END
+ColorConverter.as
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/aviary_suite/!svn/ver/2947/3.0/aviary_core/trunk/src/com/aviary/sdk/color/utils/ColorConverter.as
+END
+ColorDeficiencyConverter.as
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/aviary_suite/!svn/ver/2947/3.0/aviary_core/trunk/src/com/aviary/sdk/color/utils/ColorDeficiencyConverter.as
+END

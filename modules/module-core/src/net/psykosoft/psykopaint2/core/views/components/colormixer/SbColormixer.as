@@ -54,11 +54,12 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 
 		private var shp:Shape;
 		private var cmf:ColorMatrixFilter;
-		
+		private var palettes:Array;
 		//private var mixer:ColorMixer;
 		
-		public function SbColormixer() {
+		public function SbColormixer( palettes:Array ) {
 			super();
+			this.palettes = palettes;
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
@@ -87,7 +88,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			_displayMap = new BitmapData(mixerWidth,mixerHeight,true,0);
 			for ( var i:int = 0; i < 12; i++ )
 			{
-				shp.graphics.beginFill(Math.random()* 0xffffff,0.5 + Math.random()*0.5);
+				shp.graphics.beginFill(palettes[int(Math.random()*2)][int(Math.random()*6)],0.5 + Math.random()*0.5);
 				var r:Number = 8 + Math.random() * 32;
 				shp.graphics.drawCircle(16+r+Math.random()*(mixerWidth-32-r),6+r+Math.random()*(mixerHeight-32-r),r);
 			}
@@ -157,7 +158,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 			if ( !(mapDisplay.mouseX > -1 && mapDisplay.mouseX < mixerWidth && mapDisplay.mouseY > -1 && mapDisplay.mouseY < mixerHeight)) return;
 			
-			drawMatrix.a=drawMatrix.d = 0.1;
+			drawMatrix.a = drawMatrix.d = 0.1;
 			drawMatrix.tx = -mapDisplay.mouseX * 0.1;
 			drawMatrix.ty = -mapDisplay.mouseY * 0.1;
 			
