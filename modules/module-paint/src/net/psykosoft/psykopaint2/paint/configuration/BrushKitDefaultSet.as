@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,splotch,noisy"/>
 
 					<parameterMapping>
-						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush, Speed Brush, Smear Brush, Later Brush, Banana Brush, You Get The Idea Brush" showInUI="1"/>
+						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush,Speed Brush,Smear Brush" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_0.Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
@@ -64,6 +64,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="2"
 							value="10"/>	
+
 						<parameter id="Custom Color" type={PsykoParameter.BooleanParameter}  value="0" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
 							target="pathengine.pointdecorator_1.Color Mode" 
@@ -116,23 +117,23 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 				<brush engine={BrushType.SPRAY_CAN} name="Paint Brush">
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="line,splat,splotch,basic,noisy" />
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="line" />
 					<parameterMapping>
 						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Small,Medium,Large" index="1" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Brush Style" 
 							target="pathengine.pointdecorator_4" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="1"/>
+						
+
 						<parameter id="Custom Color" type={PsykoParameter.BooleanParameter}  value="0" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
 							target="pathengine.pointdecorator_3.Color Mode" 
 							condition={PsykoParameterProxy.CONDITION_TRUE }
-							
 							index={ColorDecorator.INDEX_MODE_FIXED_COLOR}/>	
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
 							target="pathengine.pointdecorator_3.Color Mode" 
 							condition={PsykoParameterProxy.CONDITION_FALSE }
-							
 							index={ColorDecorator.INDEX_MODE_PICK_COLOR}/>	
 					</parameterMapping>
 
