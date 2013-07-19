@@ -40,6 +40,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static const PARAMETER_N_GLOSSINESS : String = "Glossiness";
 		public static const PARAMETER_N_BUMPINESS : String = "Bumpiness";
 		public static const PARAMETER_N_BUMP_INFLUENCE : String = "Bump Influence";
+		public static const PARAMETER_SL_BLEND_MODE : String = "Blend Mode";
 		
 		protected var _canvasModel : CanvasModel;
 		protected var _view : DisplayObject;
@@ -65,6 +66,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected var _bumpiness:PsykoParameter;
 		protected var _bumpInfluence:PsykoParameter;
 		protected var _shapes:PsykoParameter;
+		protected var _blendMode:PsykoParameter;
 		
 		protected var appendVO : StrokeAppendVO;
 		protected var _brushMesh : IBrushMesh;
@@ -93,9 +95,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 1);
 			_bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMPINESS, 1, 0, 1 );
 			_bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, 0, 1 );
+			_blendMode 	   = new PsykoParameter( PsykoParameter.StringListParameter,  PARAMETER_SL_BLEND_MODE,0,[Context3DBlendFactor.ONE,Context3DBlendFactor.ZERO,Context3DBlendFactor] );
 			
 			
-			_parameters.push( _shapes, _sizeFactor ); 
+			_parameters.push( _shapes, _sizeFactor,_blendMode ); 
 			if (drawNormalsOrSpecular)
 				_parameters.push(_shininess,_glossiness,_bumpiness,_bumpInfluence);
 
@@ -362,7 +365,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_context.setStencilActions();
 			}
 
-			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+			_context.setBlendFactors(_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
 			drawBrushColor();
 

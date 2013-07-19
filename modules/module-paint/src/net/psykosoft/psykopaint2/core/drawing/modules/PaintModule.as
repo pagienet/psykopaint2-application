@@ -139,7 +139,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			{
 				_transformModeActive = true;
 				renderer.sourceTextureAlpha = 1;
-				renderer.paintAlpha = 0.5;
+				renderer.paintAlpha = 0.8;
 				//_activeBrushKit.deactivate();
 			} 
 			
