@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.core.commands
 				files = FolderReadUtil.readFilesInDesktopFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
 			}
 			var len:uint = files.length;
-			trace( this, "found files in paint data " + len + ": " );
+			trace( this, "found files in paint data: " + len );
 
 			// Sweep files and focus on the ones that have the .psy extension, which represents paintings.
 			_paintingFiles = new Vector.<File>();
@@ -64,6 +64,9 @@ package net.psykosoft.psykopaint2.core.commands
 				trace( this, "starting to read painting files... ( " + _numPaintingFiles + " )" );
 				context.detain( this );
 				readNextFile();
+			}
+			else {
+				paintingModel.setPaintingCollection( _paintingVos );
 			}
 		}
 
