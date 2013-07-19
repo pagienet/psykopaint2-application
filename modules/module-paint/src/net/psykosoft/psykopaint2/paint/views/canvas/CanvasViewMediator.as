@@ -231,21 +231,25 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _addedMouseWheelListener:Boolean;
 
 		override protected function onStateChange( newState:String ):void {
+
 			super.onStateChange( newState );
 
-			if( newState && newState.indexOf( StateType.PAINT ) != -1 && !_addedMouseWheelListener ) {
-				if( !CoreSettings.RUNNING_ON_iPAD ) {
-					view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+			if( newState ) {
+				trace( this, "state index: " + newState.indexOf( StateType.PAINT ) );
+				if( newState.indexOf( StateType.PAINT ) != -1 ) {
+					if( !CoreSettings.RUNNING_ON_iPAD && !_addedMouseWheelListener ) {
+						view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+						_addedMouseWheelListener = true;
+						trace( this, "listener added" );
+					}
 				}
-				_addedMouseWheelListener = true;
 			}
 			else {
 				paintModule.stopAnimations();
-				if( _addedMouseWheelListener ) {
-					if( !CoreSettings.RUNNING_ON_iPAD ) {
-						view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
-					}
+				if( !CoreSettings.RUNNING_ON_iPAD && _addedMouseWheelListener ) {
+					view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
 					_addedMouseWheelListener = false;
+					trace( this, "listener removed" );
 				}
 			}
 
