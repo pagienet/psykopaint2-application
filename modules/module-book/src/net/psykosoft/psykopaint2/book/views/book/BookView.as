@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		public function animateIn():void {
-			TweenLite.to( _book, 0.75, { y: BOOK_Y, delay: 1.5, ease: Strong.easeOut } );
+			TweenLite.to( _book, 0.75, { y: BOOK_Y, delay: 1.5, ease: Strong.easeOut, onComplete: onAnimateInComplete } );
 		}
 
 		public function animateOut():void {
