@@ -2,19 +2,15 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 
 	import flash.display.BitmapData;
-	import flash.display.BitmapData;
-	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopImageSaveUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.IosImageSaveUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
-	import net.psykosoft.psykopaint2.core.io.CanvasExportEvent;
-	import net.psykosoft.psykopaint2.core.io.CanvasExporter;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
@@ -43,6 +39,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
 
+		[Inject]
+		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
+
 		private var _bitmapData : BitmapData;
 
 		public function ExportCanvasCommand() {
@@ -53,8 +52,11 @@ package net.psykosoft.psykopaint2.paint.commands
 			super.execute();
 
 			requestPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
-			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
-			requestUpdateMessagePopUpSignal.dispatch( "Exporting...", randomJoke );
+			requestUpdateMessagePopUpSignal.dispatch( "Exporting...", "" );
+			notifyPopUpShownSignal.addOnce( exportPainting );
+		}
+
+		private function exportPainting():void {
 
 			_bitmapData = canvasRenderer.renderToBitmapData();
 
@@ -64,10 +66,9 @@ package net.psykosoft.psykopaint2.paint.commands
 				iosImageSaveUtil.saveImageToCameraRoll( _bitmapData, onWriteComplete );
 			}
 			else {
-				DesktopImageSaveUtil.saveImageToDesktop( _bitmapData );
-				onWriteComplete();
+				var desktopImageSaveUtil:DesktopImageSaveUtil = new DesktopImageSaveUtil();
+				desktopImageSaveUtil.saveImageToDesktop( _bitmapData, onWriteComplete );
 			}
-
 		}
 
 		private function onWriteComplete():void {

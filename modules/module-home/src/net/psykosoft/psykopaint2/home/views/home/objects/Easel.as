@@ -73,14 +73,18 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
+		private var _disposeVoWhenDone:Boolean;
 		private var _voToBeSetAfterAnimation:PaintingInfoVO;
-		public function setContent(vo : PaintingInfoVO, animate:Boolean = false) : void
+		public function setContent(vo : PaintingInfoVO, animate:Boolean = false, disposeWhenDone:Boolean = false) : void
 		{
 			TweenLite.killTweensOf( _painting );
 			_painting.x = 0;
 
+			_disposeVoWhenDone = disposeWhenDone;
+
 			if( !animate ) {
 				_painting.setContent(vo, _view.stage3DProxy);
+				if( disposeWhenDone ) vo.dispose();
 			}
 			else if( vo != null ) {
 				_voToBeSetAfterAnimation = vo;
@@ -99,9 +103,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private function onTweenOutComplete():void {
 			_painting.setContent(_voToBeSetAfterAnimation, _view.stage3DProxy);
+			if( _disposeVoWhenDone ) _voToBeSetAfterAnimation.dispose();
 			_voToBeSetAfterAnimation = null;
 			_painting.x = -3000;
-			TweenLite.to( _painting, 0.5, { x: 0, ease: Strong.easeOut } );
+			TweenLite.to( _painting, 0.5, { delay: 0.25, x: 0, ease: Strong.easeOut } );
 		}
 
 		// ---------------------------------------------------------------------

@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		override protected function onEnabled():void {
 
-			navigation.setHeader( "Do some painting!" );
+			navigation.setHeader( "Edit Painting" );
 
 			if( !PaintSettings.isStandalone ) {
 				navigation.setLeftButton( LBL_HOME, ButtonIconType.HOME );

@@ -307,6 +307,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( value < _minLimit ) value = _minLimit;
 			if ( value > _maxLimit ) value = _maxLimit;
 			_numberValues[0] = value;
+			if ( _numberValues[1] < _numberValues[0] ) upperRangeValue = lowerRangeValue; 
 			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
@@ -320,6 +321,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( value < _minLimit ) value = _minLimit;
 			if ( value > _maxLimit ) value = _maxLimit;
 			_numberValues[1] = value;
+			if ( _numberValues[0] > _numberValues[1] ) lowerRangeValue = upperRangeValue;
 			dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		

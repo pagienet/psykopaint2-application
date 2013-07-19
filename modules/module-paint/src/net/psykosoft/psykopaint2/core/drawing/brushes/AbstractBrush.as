@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static const PARAMETER_NR_SIZE_FACTOR : String = "Size Factor";
 		public static const PARAMETER_N_SHININESS : String = "Shininess";
 		public static const PARAMETER_N_GLOSSINESS : String = "Glossiness";
-		public static const PARAMETER_N_BUMPYNESS : String = "Bumpyness";
+		public static const PARAMETER_N_BUMPINESS : String = "Bumpiness";
 		public static const PARAMETER_N_BUMP_INFLUENCE : String = "Bump Influence";
 		
 		protected var _canvasModel : CanvasModel;
@@ -91,7 +91,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			_shininess     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_SHININESS, 0.4, 0, 1);
 			_glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 1);
-			_bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMPYNESS, 1, 0, 1 );
+			_bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMPINESS, 1, 0, 1 );
 			_bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, 0, 1 );
 			
 			

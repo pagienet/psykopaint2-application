@@ -46,6 +46,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( StateType.TRANSITION_TO_HOME_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( StateType.PAINT_COLOR, SelectColorSubNavView );
 			StateToSubNavLinker.linkSubNavToState( StateType.TRANSITION_TO_PAINT_MODE, SubNavigationViewBase );
+			StateToSubNavLinker.linkSubNavToState( StateType.PREPARE_FOR_HOME_MODE, SubNavigationViewBase );
 
 
 			mouseEnabled = false;

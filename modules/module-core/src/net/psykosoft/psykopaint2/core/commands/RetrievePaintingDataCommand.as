@@ -28,13 +28,6 @@ package net.psykosoft.psykopaint2.core.commands
 		private var _indexOfPaintingFileBeingRead:uint;
 		private var _paintingVos:Vector.<PaintingInfoVO>;
 
-		/*
-		* NOTE: Jul 18, 2013
-		* SAVING IS DISABLED ON iPAD - PaintingModel is never populated.
-		* SavePaintingCommand.as is also disabled.
-		* Line 51, 52
-		* */
-
 		public function RetrievePaintingDataCommand() {
 			super();
 		}
@@ -47,15 +40,13 @@ package net.psykosoft.psykopaint2.core.commands
 			// Read files in app data folder or bundle.
 			var files:Array;
 			if( CoreSettings.RUNNING_ON_iPAD ) {
-				// Disabled ( pick one option below and only one ).
-				paintingModel.setPaintingCollection( _paintingVos ); return;
-//				files = FolderReadUtil.readFilesInIosFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
+				files = FolderReadUtil.readFilesInIosFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
 			}
 			else {
 				files = FolderReadUtil.readFilesInDesktopFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
 			}
 			var len:uint = files.length;
-			trace( this, "found files in paint data " + len + ": " );
+			trace( this, "found files in paint data: " + len );
 
 			// Sweep files and focus on the ones that have the .psy extension, which represents paintings.
 			_paintingFiles = new Vector.<File>();
@@ -73,6 +64,9 @@ package net.psykosoft.psykopaint2.core.commands
 				trace( this, "starting to read painting files... ( " + _numPaintingFiles + " )" );
 				context.detain( this );
 				readNextFile();
+			}
+			else {
+				paintingModel.setPaintingCollection( _paintingVos );
 			}
 		}
 

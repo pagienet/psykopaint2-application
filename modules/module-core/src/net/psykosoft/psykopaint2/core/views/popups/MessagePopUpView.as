@@ -20,15 +20,12 @@ package net.psykosoft.psykopaint2.core.views.popups
 		override protected function onEnabled():void {
 			super.onEnabled();
 
-			_container.graphics.beginFill( 0xCCCCCC, 1.0 );
-			_container.graphics.drawRect( 0, 0, 128, 64 );
-			_container.graphics.endFill();
-
 			main.selectable = main.mouseEnabled = false;
 			main.text = "";
 			extra.selectable = extra.mouseEnabled = false;
 			extra.text = "";
 
+			// TODO: why the reparenting?
 			_container.addChild( popup );
 			_container.addChild( main );
 			_container.addChild( extra );

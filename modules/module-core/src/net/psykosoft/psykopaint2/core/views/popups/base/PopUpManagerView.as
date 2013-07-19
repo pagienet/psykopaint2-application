@@ -1,35 +1,75 @@
 package net.psykosoft.psykopaint2.core.views.popups.base
 {
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
+
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 
 	import org.osflash.signals.Signal;
 
 	public class PopUpManagerView extends ViewBase
 	{
-		public var popUpClosedSignal:Signal;
-
 		private var _popUp:PopUpViewBase;
+
+		public var popUpHiddenSignal:Signal;
+		public var popUpShownSignal:Signal;
 
 		public function PopUpManagerView() {
 			super();
-			popUpClosedSignal = new Signal();
+			popUpHiddenSignal = new Signal();
+			popUpShownSignal = new Signal();
 			enable();
 		}
 
+		// -----------------------
+		// Show.
+		// -----------------------
+
 		public function showPopUpOfClass( popUpClass:Class ):void {
+
 			trace( this, "showing pop up of class: " + popUpClass );
-			if( _popUp ) hideLastPopUp();
+
+			if( _popUp ) {
+				onHidePopUpComplete();
+			}
+
 			_popUp = new popUpClass();
 			addChild( _popUp );
 			_popUp.enable();
+			showPopUpAnimated( _popUp );
 		}
+
+		private function showPopUpAnimated( popUp:PopUpViewBase ):void {
+			TweenLite.killTweensOf( popUp );
+			popUp.y = 3000;
+			TweenLite.to( popUp, 0.5, { y: 0, ease: Strong.easeOut, onComplete: onShowPopUpComplete } );
+		}
+
+		private function onShowPopUpComplete():void {
+			popUpShownSignal.dispatch();
+		}
+
+		// -----------------------
+		// Hide.
+		// -----------------------
 
 		public function hideLastPopUp():void {
 			if( !_popUp ) return;
+			hidePopUpAnimated( _popUp );
+		}
+
+		private function hidePopUpAnimated( popUp:PopUpViewBase ):void {
+			TweenLite.killTweensOf( popUp );
+			popUp.y = 0;
+			TweenLite.to( popUp, 0.5, { y: 3000, ease: Strong.easeIn, onComplete: onHidePopUpComplete } );
+		}
+
+		private function onHidePopUpComplete():void {
 			_popUp.disable();
 			removeChild( _popUp );
 			_popUp = null;
+			popUpHiddenSignal.dispatch();
 		}
 	}
 }

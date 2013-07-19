@@ -29,6 +29,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
@@ -102,6 +103,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestInitPaintModuleMemorySignal : RequestInitPaintModuleMemorySignal;
 
+		[Inject]
+		public var notifyHomeModuleReadySignal:NotifyHomeViewReadySignal;
+
 		private var _transformMatrix:Matrix;
 
 		private var _easelRectFromHomeView:Rectangle;
@@ -124,12 +128,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( StateType.PAINT );
 			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
 			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
-
 			registerEnablingState( StateType.PAINT_COLOR );
 			registerEnablingState( StateType.PAINT_SHOW_SOURCE );
-
 			registerEnablingState( StateType.TRANSITION_TO_HOME_MODE );
 			registerEnablingState( StateType.TRANSITION_TO_PAINT_MODE );
+			registerEnablingState( StateType.PREPARE_FOR_HOME_MODE );
 
 			// Init.
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
@@ -146,6 +149,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyEaselRectInfoSignal.add( onEaselRectInfo );
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
+			notifyHomeModuleReadySignal.add( onHomeModuleReady );
 
 			_transformMatrix = new Matrix();
 		}
@@ -232,21 +236,25 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _addedMouseWheelListener:Boolean;
 
 		override protected function onStateChange( newState:String ):void {
+
 			super.onStateChange( newState );
 
-			if( newState && newState.indexOf( StateType.PAINT ) != -1 && !_addedMouseWheelListener ) {
-				if( !CoreSettings.RUNNING_ON_iPAD ) {
-					view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+			if( newState ) {
+				trace( this, "state index: " + newState.indexOf( StateType.PAINT ) );
+				if( newState.indexOf( StateType.PAINT ) != -1 ) {
+					if( !CoreSettings.RUNNING_ON_iPAD && !_addedMouseWheelListener ) {
+						view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+						_addedMouseWheelListener = true;
+						trace( this, "listener added" );
+					}
 				}
-				_addedMouseWheelListener = true;
 			}
 			else {
 				paintModule.stopAnimations();
-				if( _addedMouseWheelListener ) {
-					if( !CoreSettings.RUNNING_ON_iPAD ) {
-						view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
-					}
+				if( !CoreSettings.RUNNING_ON_iPAD && _addedMouseWheelListener ) {
+					view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
 					_addedMouseWheelListener = false;
+					trace( this, "listener removed" );
 				}
 			}
 
@@ -310,15 +318,25 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
+		private var _waitingForHomeModuleToBeReady:Boolean;
+
 		private function onZoomComplete():void {
 			if( _waitingForZoomOutToContinueToHome ) {
-			    requestStateChange( StateType.HOME_ON_EASEL );
-				requestCleanUpPaintModuleMemorySignal.dispatch();
+				_waitingForHomeModuleToBeReady = true;
+				requestStateChange( StateType.PREPARE_FOR_HOME_MODE );
 				_waitingForZoomOutToContinueToHome = false;
 			}
 			if( _waitingForZoomInToContinueToPaint ) {
 			    requestStateChange( StateType.PAINT_SELECT_BRUSH );
 				_waitingForZoomInToContinueToPaint = false;
+			}
+		}
+
+		private function onHomeModuleReady():void {
+			if( _waitingForHomeModuleToBeReady ) {
+				requestStateChange( StateType.HOME_ON_EASEL );
+				requestCleanUpPaintModuleMemorySignal.dispatch();
+				_waitingForHomeModuleToBeReady = false;
 			}
 		}
 

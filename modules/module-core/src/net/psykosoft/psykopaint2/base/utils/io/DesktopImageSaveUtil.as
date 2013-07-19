@@ -4,12 +4,17 @@ package net.psykosoft.psykopaint2.base.utils.io
 	import by.blooddy.crypto.image.PNG24Encoder;
 
 	import flash.display.BitmapData;
+	import flash.events.Event;
 	import flash.filesystem.File;
 	import flash.utils.ByteArray;
 
 	public class DesktopImageSaveUtil
 	{
-		public static function saveImageToDesktop( bmd:BitmapData ):void {
+		private var _onCompleteCallback:Function;
+
+		public function saveImageToDesktop( bmd:BitmapData, onComplete:Function ):void {
+
+			_onCompleteCallback = onComplete;
 
 			// Encode to jpeg or png.
 			var pngBytes:ByteArray = PNG24Encoder.encode( bmd );
@@ -21,7 +26,17 @@ package net.psykosoft.psykopaint2.base.utils.io
 			
 			// Save image to desktop.
 			var file:File = File.documentsDirectory;
+			file.addEventListener( Event.CANCEL, onUserCanceled );
+			file.addEventListener( Event.COMPLETE, onSavingComplete );
 			file.save(pngBytes,fileName);
+		}
+
+		private function onSavingComplete( event:Event ):void {
+			_onCompleteCallback();
+		}
+
+		private function onUserCanceled( event:Event ):void {
+			_onCompleteCallback();
 		}
 	}
 }

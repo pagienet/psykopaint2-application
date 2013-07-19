@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
@@ -78,6 +79,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var requestHomeViewScrollSignal:RequestHomeViewScrollSignal;
 
+		[Inject]
+		public var notifyHomeModuleReadySignal:NotifyHomeViewReadySignal;
+
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
 		private var _dockedAtPaintingIndex:int = -1;
@@ -101,6 +105,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerEnablingState( StateType.SETTINGS_WALLPAPER );
 			registerEnablingState( StateType.HOME_PICK_SURFACE );
 			registerEnablingState( StateType.PREPARE_FOR_PAINT_MODE );
+			registerEnablingState( StateType.PREPARE_FOR_HOME_MODE );
 			registerEnablingState( StateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
 
 			// Frozen states.
@@ -125,8 +130,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHomeViewScrollSignal.add( onScrollRequested );
 
 			// From view.
-			view.scrollCameraController.closestSnapPointChangedSignal.add( onViewClosestPaintingChanged );
-			view.zoomCameraController.zoomCompleteSignal.add( onZoomComplete );
+			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
+			view.zoomCompletedSignal.add( onViewZoomComplete );
+			view.assetsReadySignal.add( onViewAssetsReady );
 		}
 
 		private function registerFreezingState( stateName:String ):void {
@@ -142,8 +148,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyEaselRectInfoSignal.dispatch( view.easelRect );
 		}
 
-		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animate:Boolean ):void {
-			view.paintingManager.easel.setContent( paintingVO, animate );
+		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animate:Boolean, dispose:Boolean ):void {
+			view.paintingManager.easel.setContent( paintingVO, animate, dispose );
 		}
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingInfoVO> ):void {
@@ -199,7 +205,9 @@ package net.psykosoft.psykopaint2.home.views.home
 				}
 
 				if( !_firstZoomOutRan && newState == StateType.HOME ) {
-				    view.zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
+					view.scrollCameraController.jumpToSnapPointIndex( view.paintingManager.homePaintingIndex );
+					view.dockAtCurrentPainting();
+					view.zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
 					_firstZoomOutRan = true;
 				}
 
@@ -252,7 +260,11 @@ package net.psykosoft.psykopaint2.home.views.home
 		// From view.
 		// -----------------------
 
-		private function onZoomComplete():void {
+		private function onViewAssetsReady():void {
+			notifyHomeModuleReadySignal.dispatch();
+		}
+
+		private function onViewZoomComplete():void {
 			notifyHomeViewZoomCompleteSignal.dispatch();
 		}
 

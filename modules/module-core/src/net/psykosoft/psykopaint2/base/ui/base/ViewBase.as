@@ -80,7 +80,11 @@ package net.psykosoft.psykopaint2.base.ui.base
 		public function dispose():void {
 			_isEnabled = false;
 			_setupHasRan = false;
+			_assetsLoaded = false;
 			if( _loader ) {
+				if( _loader.hasEventListener( Event.COMPLETE ) ) {
+					_loader.removeEventListener( Event.COMPLETE, onAssetsReady );
+				}
 				_loader.dispose();
 				_loader = null;
 			}

@@ -15,10 +15,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	public class HomeViewUtils
 	{
-		public static function calculatePlaneScreenRect( plane:Mesh, view:View3D, ratio:Number ):Rectangle {
+		public static function calculatePlaneScreenRect( plane:Mesh, view:View3D ):Rectangle {
 			var bounds:AxisAlignedBoundingBox = plane.bounds as AxisAlignedBoundingBox;
-			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsY, 0 ), view, ratio );
-			var brCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsY, 0 ), view, ratio );
+			var tlCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( -bounds.halfExtentsX, bounds.halfExtentsY, 0 ), view );
+			var brCorner:Vector3D = objectSpaceToScreenSpace( plane, new Vector3D( bounds.halfExtentsX, -bounds.halfExtentsY, 0 ), view );
 			var rect:Rectangle = new Rectangle(
 					tlCorner.x / CoreSettings.GLOBAL_SCALING,
 					tlCorner.y / CoreSettings.GLOBAL_SCALING,
@@ -26,10 +26,6 @@ package net.psykosoft.psykopaint2.home.views.home
 					( brCorner.y - tlCorner.y ) / CoreSettings.GLOBAL_SCALING
 			);
 			return rect;
-		}
-
-		public static function getWorldSpaceCenter( plane:Mesh ):Vector3D {
-			return plane.sceneTransform.transformVector( plane.position );
 		}
 
 		public static function ensurePlaneFitsViewport( plane:Mesh, view:View3D ):void {
@@ -60,7 +56,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			plane.scaleX = plane.scaleY = sc;
 		}
 
-		public static function calculateCameraYZToFitPlaneOnViewport( plane:Mesh, view:View3D, ratio:Number ):Vector3D {
+		public static function calculateCameraYZToFitPlaneOnViewport( plane:Mesh, view:View3D ):Vector3D {
 
 			var zoom:Vector3D = new Vector3D();
 
@@ -73,7 +69,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			var cameraTransformCache:Matrix3D = view.camera.transform.clone();
 			view.camera.y = planeWorldSpace.y;
 			view.camera.lookAt( planeWorldSpace );
-			var screenRect:Rectangle = calculatePlaneScreenRect( plane, view, ratio );
+			var screenRect:Rectangle = calculatePlaneScreenRect( plane, view );
 			var widthRatio:Number = screenRect.width / 1024;
 			var distanceToCamera:Number = Math.abs( view.camera.z - planeWorldSpace.z );
 			var targetDistance:Number = distanceToCamera * widthRatio;
@@ -87,18 +83,16 @@ package net.psykosoft.psykopaint2.home.views.home
 			return plane.sceneTransform.transformVector( objSpacePosition );
 		}
 
-		public static function objectSpaceToScreenSpace( plane:Mesh, objSpacePosition:Vector3D, view:View3D, ratio:Number ):Vector3D {
+		public static function objectSpaceToScreenSpace( plane:Mesh, objSpacePosition:Vector3D, view:View3D ):Vector3D {
 
 //			trace( this, "objectSpaceToScreenSpace --------------------" );
-
-//			trace( "ratio: " + _view.camera.lens.aspectRatio );
 
 			// Scene space.
 			var worldSpacePosition:Vector3D = objectSpaceToWorldSpace( plane, objSpacePosition );
 
 			// View space.
 			var screenPosition:Vector3D = view.camera.project( worldSpacePosition );
-			screenPosition.x = 0.5 * CoreSettings.STAGE_WIDTH * ( 1 + ratio * screenPosition.x );
+			screenPosition.x = 0.5 * CoreSettings.STAGE_WIDTH * ( 1 + screenPosition.x );
 			screenPosition.y = 0.5 * CoreSettings.STAGE_HEIGHT * ( 1 + screenPosition.y );
 
 			// Uncomment to visualize 2d point.

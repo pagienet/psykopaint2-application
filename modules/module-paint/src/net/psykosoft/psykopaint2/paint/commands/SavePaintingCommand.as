@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
@@ -82,19 +83,15 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
 
+		[Inject]
+		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
+
 		private var _paintId:String;
 		private var _infoBytes:ByteArray;
 		private var _dataBytes:ByteArray;
 		private var _infoVO : PaintingInfoVO;
 
 		private const ASYNC_MODE:Boolean = false;
-
-		/*
-		* NOTE: Jul 18, 2013
-		* SAVING IS DISABLED ON iPAD - PaintingModel data is populated, but the actual file writing is disabled.
-		* RetrievePaintingDataCommand.as is also disabled.
-		* Line 107
-		* */
 
 		public function SavePaintingCommand() {
 			super();
@@ -106,12 +103,6 @@ package net.psykosoft.psykopaint2.paint.commands
 			trace( this, "incoming painting id: " + paintingId );
 
 			context.detain( this );
-
-			// Saving is disabled on iPad because it's too unstable.
-			if( CoreSettings.RUNNING_ON_iPAD ) {
-				exitCommand();
-				return;
-			}
 
 			// Skip saving if the painting is not dirty.
 			var isPaintingDirty:Boolean = canvasHistoryModel.hasHistory;
@@ -131,9 +122,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			requestPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
 			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
 			requestUpdateMessagePopUpSignal.dispatch( "Saving...", randomJoke );
-
-			// Wait a bit before starting the save process so we actually give the pop a chance to show.
-			setTimeout( save, 100 );
+			notifyPopUpShownSignal.addOnce( save );
 		}
 
 		private function save():void {
@@ -234,7 +223,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			requestUpdateMessagePopUpSignal.dispatch( "Saving: finishing...", "" );
 
 			if( updateEasel ) {
-				requestEaselUpdateSignal.dispatch( _infoVO, false );
+				requestEaselUpdateSignal.dispatch( _infoVO, false, false );
 			}
 
 			notifyMemoryWarningSignal.remove( onMemoryWarning );

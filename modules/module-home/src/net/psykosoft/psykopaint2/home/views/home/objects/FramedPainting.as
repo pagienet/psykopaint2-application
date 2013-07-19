@@ -69,11 +69,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		override public function dispose():void {
 			_paintingGeometry.dispose();
-			_frameGeometry.dispose();
 			_paintingMaterial.dispose();
-			_frameMaterial.dispose();
-			_frameTexture.dispose();
 			_paintingTexture.dispose();
+			if( _frameGeometry ) {
+				_frameGeometry.dispose();
+				_frameMaterial.dispose();
+				_frameTexture.dispose();
+			}
 			super.dispose();
 		}
 
