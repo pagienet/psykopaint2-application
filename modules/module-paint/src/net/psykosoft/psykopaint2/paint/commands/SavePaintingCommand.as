@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
@@ -86,10 +87,14 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
 
+		[Inject]
+		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
+
 		private var _paintId:String;
 		private var _infoBytes:ByteArray;
 		private var _dataBytes:ByteArray;
 		private var _infoVO : PaintingInfoVO;
+		private var _dataVO : PaintingDataVO;
 
 		private const ASYNC_MODE:Boolean = false;
 
@@ -103,6 +108,11 @@ package net.psykosoft.psykopaint2.paint.commands
 			trace( this, "incoming painting id: " + paintingId );
 
 			context.detain( this );
+
+			// Always write ( in current session ) the last edit date.
+			var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingId );
+			vo.lastSavedOnDateMs = new Date().getTime();
+			paintingModel.dirtyDateSorting();
 
 			// Skip saving if the painting is not dirty.
 			var isPaintingDirty:Boolean = canvasHistoryModel.hasHistory;
@@ -121,12 +131,11 @@ package net.psykosoft.psykopaint2.paint.commands
 			// Show a pop up during the process.
 			requestPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
 			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
-			requestUpdateMessagePopUpSignal.dispatch( "Saving...", randomJoke );
-			notifyPopUpShownSignal.addOnce( save );
+			requestUpdateMessagePopUpSignal.dispatch( "Preparing...", randomJoke );
+			notifyPopUpShownSignal.addOnce( exportCanvas );
 		}
 
-		private function save():void {
-			requestUpdateMessagePopUpSignal.dispatch( "Preparing...", "" );
+		private function exportCanvas():void {
 			var canvasExporter : CanvasExporter = new CanvasExporter();
 			canvasExporter.addEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
 			canvasExporter.export(canvasModel);
@@ -139,8 +148,17 @@ package net.psykosoft.psykopaint2.paint.commands
 		private function onExportComplete(event : CanvasExportEvent) : void
 		{
 			event.target.removeEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
+
+			_dataVO = event.paintingDataVO;
+
+			// Update pop up and wait a bit for display to update.
+			requestUpdateMessagePopUpSignal.dispatch( "Saving...", "" );
+			setTimeout( serialize, 100 );
+		}
+
+		private function serialize():void {
+
 			var factory:PaintingInfoFactory = new PaintingInfoFactory();
-			var dataVO : PaintingDataVO = event.paintingDataVO;
 
 			// TODO: This should become disposed after saving
 			if (_infoVO) {
@@ -148,19 +166,17 @@ package net.psykosoft.psykopaint2.paint.commands
 				_infoVO.dispose();
 			}
 
-			_infoVO = factory.createFromData( dataVO, paintingId, userModel.uniqueUserId, generateThumbnail() );
+			_infoVO = factory.createFromData( _dataVO, paintingId, userModel.uniqueUserId, generateThumbnail() );
 
 			paintingModel.updatePaintingInfo( _infoVO );
 			paintingModel.focusedPaintingId = _infoVO.id;
 
 			trace( this, "saving vo: " + _infoVO );
 
-			serializeDataToFiles( _infoVO, dataVO );
+			serializeDataToFiles( _infoVO, _dataVO );
 		}
 
 		private function serializeDataToFiles( infoVO:PaintingInfoVO, dataVO:PaintingDataVO ):void {
-
-			requestUpdateMessagePopUpSignal.dispatch( "Finishing...", "" );
 
 			var infoSerializer:PaintingInfoSerializer = new PaintingInfoSerializer();
 			var dataSerializer:PaintingDataSerializer = new PaintingDataSerializer();
@@ -171,7 +187,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			_paintId = infoVO.id;
 
-			writeInfoBytes();
+			// Update pop up and wait a bit for display to update.
+			requestUpdateMessagePopUpSignal.dispatch( "Finishing...", "" );
+			setTimeout( writeInfoBytes, 100 );
 		}
 
 		// ---------------------------------------------------------------------
@@ -179,8 +197,6 @@ package net.psykosoft.psykopaint2.paint.commands
 		// ---------------------------------------------------------------------
 
 		private function writeInfoBytes():void {
-
-			requestUpdateMessagePopUpSignal.dispatch( "Almost done...", "" );
 
 			// TODO: using sync saving for now, async makes writing fail on ipad slow packaging, see notes here: https://github.com/psykosoft/psykopaint2-application/issues/47
 
@@ -227,9 +243,12 @@ package net.psykosoft.psykopaint2.paint.commands
 //				requestEaselUpdateSignal.dispatch( _infoVO, false, false );
 //			}
 
-			notifyMemoryWarningSignal.remove( onMemoryWarning );
+			notifyPopUpRemovedSignal.addOnce( onPopUpRemoved );
 			requestPopUpRemovalSignal.dispatch();
+		}
 
+		private function onPopUpRemoved():void {
+			notifyMemoryWarningSignal.remove( onMemoryWarning );
 			exitCommand();
 		}
 
@@ -245,7 +264,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		private function onMemoryWarning():void {
 			// TODO: a memory warning seems to mean that the saving process has failed, we need to check if anything was written and
 			// delete it, to avoid saving corrupted data that could cause errors on load and incorrectly use the available storage space
-//			preExitCommand();
+			preExitCommand();
 		}
 
 		// ---------------------------------------------------------------------

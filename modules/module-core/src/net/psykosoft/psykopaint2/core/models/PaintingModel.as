@@ -84,6 +84,10 @@ package net.psykosoft.psykopaint2.core.models
 			_sortingDirty = true;
 		}
 
+		public function dirtyDateSorting():void {
+			_sortingDirty = true;
+		}
+
 		public function get focusedPaintingId() : String
 		{
 			return _focusedPaintingId;
