@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
@@ -101,6 +102,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestInitPaintModuleMemorySignal : RequestInitPaintModuleMemorySignal;
 
+		[Inject]
+		public var notifyHomeModuleReadySignal:NotifyHomeViewReadySignal;
+
 		private var _transformMatrix:Matrix;
 
 		private var _easelRectFromHomeView:Rectangle;
@@ -123,12 +127,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( StateType.PAINT );
 			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
 			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
-
 			registerEnablingState( StateType.PAINT_COLOR );
 			registerEnablingState( StateType.PAINT_SHOW_SOURCE );
-
 			registerEnablingState( StateType.TRANSITION_TO_HOME_MODE );
 			registerEnablingState( StateType.TRANSITION_TO_PAINT_MODE );
+			registerEnablingState( StateType.PREPARE_FOR_HOME_MODE );
 
 			// Init.
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
@@ -145,6 +148,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyEaselRectInfoSignal.add( onEaselRectInfo );
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
+			notifyHomeModuleReadySignal.add( onHomeModuleReady );
 
 			_transformMatrix = new Matrix();
 		}
@@ -312,15 +316,25 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			updateCanvasRect( rect );
 		}
 
+		private var _waitingForHomeModuleToBeReady:Boolean;
+
 		private function onZoomComplete():void {
 			if( _waitingForZoomOutToContinueToHome ) {
-			    requestStateChange( StateType.HOME_ON_EASEL );
-				requestCleanUpPaintModuleMemorySignal.dispatch();
+				_waitingForHomeModuleToBeReady = true;
+				requestStateChange( StateType.PREPARE_FOR_HOME_MODE );
 				_waitingForZoomOutToContinueToHome = false;
 			}
 			if( _waitingForZoomInToContinueToPaint ) {
 			    requestStateChange( StateType.PAINT_SELECT_BRUSH );
 				_waitingForZoomInToContinueToPaint = false;
+			}
+		}
+
+		private function onHomeModuleReady():void {
+			if( _waitingForHomeModuleToBeReady ) {
+				requestStateChange( StateType.HOME_ON_EASEL );
+				requestCleanUpPaintModuleMemorySignal.dispatch();
+				_waitingForHomeModuleToBeReady = false;
 			}
 		}
 

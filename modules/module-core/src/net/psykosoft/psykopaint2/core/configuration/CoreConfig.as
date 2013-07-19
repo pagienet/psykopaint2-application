@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
@@ -173,6 +174,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyHomeViewZoomCompleteSignal ).asSingleton();
 			_injector.map( RequestHomeViewScrollSignal ).asSingleton();
 			_injector.map( NotifyPopUpShownSignal ).asSingleton();
+			_injector.map( NotifyHomeViewReadySignal ).asSingleton();
 		}
 
 		// -----------------------
