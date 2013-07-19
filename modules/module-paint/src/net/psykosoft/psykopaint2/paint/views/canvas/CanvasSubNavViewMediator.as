@@ -94,12 +94,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 
-				case CanvasSubNavView.LBL_MODEL:
+				/*case CanvasSubNavView.LBL_MODEL:
 				{
 					requestNavigationToggleSignal.dispatch( -1, 0.5 );
 					requestStateChange( StateType.PICK_IMAGE );
 					break;
-				}
+				}*/
 
 				/*case CanvasSubNavView.LBL_COLOR:
 				{
@@ -113,11 +113,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 
-				case CanvasSubNavView.LBL_SAVE:
+				/*case CanvasSubNavView.LBL_SAVE:
 				{
 					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, false );
 					break;
-				}
+				}*/
 
 				/*case CanvasSubNavView.LBL_PUBLISH:
 				{
