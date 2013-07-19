@@ -91,6 +91,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			if ( _colorParameter != null )
 			{
 				_colorParameter.colorValue = SbColormixer(event.target).pickedColor;
+				if ( !checkBox.selected ) _colorModeParameter.booleanValue = checkBox.selected = true;
 			}
 			
 		}
@@ -101,6 +102,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			if ( _colorParameter != null )
 			{
 				_colorParameter.colorValue = SbColorSwatches(event.target).pickedColor;
+				if ( !checkBox.selected ) _colorModeParameter.booleanValue = checkBox.selected = true;
 			}
 			
 		}

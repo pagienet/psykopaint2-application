@@ -38,9 +38,15 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		private var value:Number;
 		private var compareValue:Number;
 		private var indices:Vector.<int>;
-		private var mapping:Function;
+		private var targetMappings:Vector.<Function>;
+		private var targetOffsets:Vector.<Number>;
+		private var targetFactors:Vector.<Number>;
+		private var targetProperties:Vector.<String>;
+		
 		private var parameterXML:XML;
 		private var condition:String;
+		private const _applyArray:Array = [0,0,1,1];
+		
 		public var type:int;
 		
 		public static function fromXML(xml:XML):PsykoParameterProxy
@@ -60,15 +66,49 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( xml.hasOwnProperty("@value" )) result.value = Number( xml.@value );
 			if ( xml.hasOwnProperty("@indices" )) result.indices = Vector.<int>(String( xml.@indices ).split(","));
 			if ( xml.hasOwnProperty("@condition" )) result.condition = String( xml.@condition );
-			if ( xml.hasOwnProperty("@mapping" )) result.mapping = mappingFunctions[int( xml.@mapping )];
-				
+			if ( xml.hasOwnProperty("@targetMappings" )) 
+			{
+				var mappingIndices:Array = String( xml.@targetMappings ).split(",");
+				for ( var i:int = 0; i < mappingIndices.length; i++ )
+				{
+					result.targetMappings[i] = mappingFunctions[int( mappingIndices[i] )];
+				}
+			}
+			if ( xml.hasOwnProperty("@targetOffsets" )) 
+			{
+				var mappingOffsets:Array = String( xml.@targetOffsets ).split(",");
+				for ( i = 0; i < mappingOffsets.length; i++ )
+				{
+					result.targetOffsets[i] = Number( mappingOffsets[i] );
+				}
+			}
+			if ( xml.hasOwnProperty("@targetFactors" )) 
+			{
+				var mappingFactors:Array = String( xml.@targetFactors ).split(",");
+				for ( i = 0; i < mappingFactors.length; i++ )
+				{
+					result.targetFactors[i] = Number( mappingFactors[i] );
+				}
+			}
+			if ( xml.hasOwnProperty("@targetProperties" )) 
+			{
+				var mappingProperties:Array = String( xml.@targetProperties ).split(",");
+				for ( i = 0; i < mappingProperties.length; i++ )
+				{
+					result.targetProperties[i] = mappingProperties[i];
+				}
+			}
+			
 			return result;
 		}
 			
 		public function PsykoParameterProxy()
 		{
-			mapping = mappingFunctions[0];
-			indices = new Vector.<int>();
+			targetMappings   = new Vector.<Function>();
+			targetOffsets    = new Vector.<Number>();
+			targetFactors    = new Vector.<Number>();
+			targetProperties = new Vector.<String>();
+			indices          = new Vector.<int>();
 		}
 		
 		public function linkTargetParameter( parameter:PsykoParameter ):void
@@ -89,6 +129,18 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			{
 				case TYPE_VALUE_MAP:
 					if ( target_parameter == null ) throw("PsykoParameterProxy - target parameter not linked yet");
+					if ( parameter.type == PsykoParameter.NumberParameter || parameter.type == PsykoParameter.IntParameter )
+					{
+						var applyArray:Array = _applyArray;
+						
+						applyArray[0] = parameter.numberValue;
+						for ( var i:int = 0; i < targetProperties.length; i++)
+						{
+							target_parameter[targetProperties[i]] = targetMappings[i].apply(null,applyArray) * targetFactors[i] + targetOffsets[i];
+						}
+					} else {
+						throw("value mapping not yet implemented for parameter type "+parameter.type );
+					}
 					break;
 				case TYPE_DECORATOR_ACTIVATION:
 					if ( target_decorator == null ) throw("PsykoParameterProxy - target decorator not linked yet");
