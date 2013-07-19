@@ -71,9 +71,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case CanvasSubNavView.LBL_HOME:
 				{
-					trace( this, "leaving paint mode. Will 1) save, 2) change state to home, 3) request a zoom out on home" );
 					_waitingForSaveToContinueToHomeState = true;
-					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, true );
+
+					// Auto-save when going to home is disabled, because of lack of saving stability.
+					// Pick one below.
+//					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, true );
+					onPaintingSaved();
+
 					break;
 				}
 

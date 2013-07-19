@@ -89,13 +89,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private const ASYNC_MODE:Boolean = false;
 
-		/*
-		* NOTE: Jul 18, 2013
-		* SAVING IS DISABLED ON iPAD - PaintingModel data is populated, but the actual file writing is disabled.
-		* RetrievePaintingDataCommand.as is also disabled.
-		* Line 107
-		* */
-
 		public function SavePaintingCommand() {
 			super();
 		}
@@ -106,12 +99,6 @@ package net.psykosoft.psykopaint2.paint.commands
 			trace( this, "incoming painting id: " + paintingId );
 
 			context.detain( this );
-
-			// Saving is disabled on iPad because it's too unstable.
-			if( CoreSettings.RUNNING_ON_iPAD ) {
-				exitCommand();
-				return;
-			}
 
 			// Skip saving if the painting is not dirty.
 			var isPaintingDirty:Boolean = canvasHistoryModel.hasHistory;
