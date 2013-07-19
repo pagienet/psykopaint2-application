@@ -2,12 +2,13 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 {
 
 	import flash.utils.getDefinitionByName;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.core.views.popups.MessagePopUpView;
 
 	public class PopUpManagerViewMediator extends MediatorBase
 	{
@@ -23,6 +24,9 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 		[Inject]
 		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
 
+		[Inject]
+		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
+
 		override public function initialize():void {
 
 			super.initialize();
@@ -35,16 +39,24 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 			requestPopUpRemovalSignal.add( onPopUpRemovalRequest );
 
 			// From view.
-			view.popUpClosedSignal.add( onPopUpClosed );
+			view.popUpShownSignal.add( onPopUpShown );
+			view.popUpHiddenSignal.add( onPopUpHidden );
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
 
-		private function onPopUpClosed():void {
-			view.hideLastPopUp();
-			notifyPopUpRemovedSignal.dispatch();
+		private function onPopUpShown():void {
+			setTimeout( function():void {
+				notifyPopUpShownSignal.dispatch();
+			}, 100 );
+		}
+
+		private function onPopUpHidden():void {
+			setTimeout( function():void {
+				notifyPopUpRemovedSignal.dispatch();
+			}, 100 );
 		}
 
 		// -----------------------
@@ -58,7 +70,6 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 
 		private function onPopUpRemovalRequest():void {
 			view.hideLastPopUp();
-			notifyPopUpRemovedSignal.dispatch();
 		}
 	}
 }

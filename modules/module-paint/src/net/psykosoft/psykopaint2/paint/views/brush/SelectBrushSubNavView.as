@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	public class SelectBrushSubNavView extends SubNavigationViewBase
 	{
-		public static const LBL_BACK:String = "Paint";
+		public static const LBL_BACK:String = "Edit Painting";
 		public static const LBL_EDIT_BRUSH:String = "Edit Brush";
 
 		private var _group:ButtonGroup;

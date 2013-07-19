@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
@@ -82,6 +83,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
 
+		[Inject]
+		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
+
 		private var _paintId:String;
 		private var _infoBytes:ByteArray;
 		private var _dataBytes:ByteArray;
@@ -118,9 +122,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			requestPopUpDisplaySignal.dispatch( PopUpType.MESSAGE );
 			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
 			requestUpdateMessagePopUpSignal.dispatch( "Saving...", randomJoke );
-
-			// Wait a bit before starting the save process so we actually give the pop a chance to show.
-			setTimeout( save, 100 );
+			notifyPopUpShownSignal.addOnce( save );
 		}
 
 		private function save():void {

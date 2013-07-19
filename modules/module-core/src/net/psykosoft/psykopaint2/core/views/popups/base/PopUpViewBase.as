@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 
 			if( _useBlocker ) {
 				_blocker = new Sprite();
-				_blocker.graphics.beginFill( 0x000000, 0.75 );
+				_blocker.graphics.beginFill( 0x000000, 0 );
 				_blocker.graphics.drawRect( 0, 0, 1024, 768 );
 				_blocker.graphics.endFill();
 				addChild( _blocker );
