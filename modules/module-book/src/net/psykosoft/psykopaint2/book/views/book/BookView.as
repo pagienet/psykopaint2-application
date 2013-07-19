@@ -27,11 +27,13 @@ package net.psykosoft.psykopaint2.book.views.book
 		private const BOOK_Y:Number = 250;
 
 		public var animateOutCompleteSignal:Signal;
+		public var animateInCompleteSignal:Signal;
 
 		public function BookView() {
 			super();
 			scalesToRetina = false;
 			animateOutCompleteSignal = new Signal();
+			animateInCompleteSignal = new Signal();
 			_origin = new Vector3D();
 		}
 
@@ -65,11 +67,15 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		public function animateIn():void {
-			TweenLite.to( _book, 0.75, { y: BOOK_Y, delay: 0.5, ease: Strong.easeOut } );
+			TweenLite.to( _book, 0.75, { y: BOOK_Y, delay: 0.5, ease: Strong.easeOut, onComplete: onAnimateInComplete } );
 		}
 
 		public function animateOut():void {
 			TweenLite.to( _book, 0.75, { y: -1024, ease: Strong.easeIn, onComplete: onAnimateOutComplete } );
+		}
+
+		private function onAnimateInComplete():void {
+			animateInCompleteSignal.dispatch();
 		}
 
 		private function onAnimateOutComplete():void {

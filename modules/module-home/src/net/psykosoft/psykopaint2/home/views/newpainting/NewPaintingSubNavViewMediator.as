@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -25,6 +26,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		[Inject]
 		public var paintingModel:PaintingModel;
+
+		[Inject]
+		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
 		override public function initialize():void {
 
@@ -59,6 +63,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				// >
 				case NewPaintingSubNavView.LBL_CONTINUE: {
 					requestPaintingActivationSignal.dispatch( paintingModel.focusedPaintingId );
+					requestInteractionBlockSignal.dispatch( true );
 					break;
 				}
 

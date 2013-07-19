@@ -335,6 +335,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 			if( _waitingForZoomInToContinueToPaint ) {
 			    requestStateChange( StateType.PAINT_SELECT_BRUSH );
+				requestInteractionBlockSignal.dispatch( false );
 				_waitingForZoomInToContinueToPaint = false;
 			}
 		}
