@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class BookViewMediator extends MediatorBase
@@ -26,6 +27,9 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		[Inject]
 		public var requestSourceImageSetSignal:RequestDrawingCoreSourceImageSetSignal;
+
+		[Inject]
+		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
 		private var _samplesDataProvider:SampleImagesBookDataProvider;
 		private var _userPhotosDataProvider:UserPhotosBookDataProvider;
@@ -45,6 +49,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			// From view.
 			view.animateOutCompleteSignal.add( onAnimateOutComplete );
+			view.animateInCompleteSignal.add( onAnimateInComplete );
 		}
 
 		override protected function onStateChange( newState:String ):void {
@@ -92,6 +97,10 @@ package net.psykosoft.psykopaint2.book.views.book
 			requestSourceImageSetSignal.dispatch( _selectedBmd );
 		}
 
+		private function onAnimateInComplete():void {
+			requestInteractionBlockSignal.dispatch( false );
+		}
+
 		private function initializeUserPhotosDataProvider():void {
 			_userPhotosDataProvider = new UserPhotosBookDataProvider();
 			_userPhotosDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
@@ -99,6 +108,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_userPhotosDataProvider.readySignal.add( onUserPhotosDataProviderReady );
 			// Uncomment to visualize data coming from the user photos extension.
 //			_userPhotosDataProvider.sheetGeneratedSignal.add( onUserPhotosSheetGenerated );
+			requestInteractionBlockSignal.dispatch( true );
 		}
 
 		private var _tracedSheet:Boolean;
@@ -121,6 +131,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_samplesDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_samplesDataProvider.fullImagePickedSignal.add( onFullImagePicked );
 			_samplesDataProvider.readySignal.add( onSamplesDataProviderReady );
+			requestInteractionBlockSignal.dispatch( true );
 		}
 
 		private function onSamplesDataProviderReady():void {

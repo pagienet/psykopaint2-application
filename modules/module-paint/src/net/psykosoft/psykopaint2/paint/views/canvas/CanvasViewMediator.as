@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _waitingForZoomInToContinueToPaint:Boolean;
 		private var _minZoomScale:Number;
 
-		private const MAX_ZOOM_SCALE:Number = 1.35;
+		private const MAX_ZOOM_SCALE:Number = 3;
 		public var zoomScale:Number = _minZoomScale;
 
 		override public function initialize():void {
@@ -173,7 +173,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			var sc:Number = 1 + event.delta / 50;
 			_transformMatrix.identity();
 			_transformMatrix.translate( -event.localX, -event.localY );
-			_transformMatrix.scale( sc, sc );
+			if (zoomScale < MAX_ZOOM_SCALE || (zoomScale == MAX_ZOOM_SCALE && sc <= 1) )
+				_transformMatrix.scale(sc,sc );
 			_transformMatrix.translate( event.localX, event.localY );
 
 			var topLeft:Point = _transformMatrix.transformPoint( rect.topLeft );
@@ -201,7 +202,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					var rect:Rectangle = renderer.renderRect;
 					_transformMatrix.identity();
 					_transformMatrix.translate( -tg.location.x, -tg.location.y );
-					_transformMatrix.scale( tg.scale, tg.scale );
+					if (zoomScale < MAX_ZOOM_SCALE || (zoomScale == MAX_ZOOM_SCALE && tg.scale  <= 1) )
+						_transformMatrix.scale( tg.scale, tg.scale );
 					_transformMatrix.translate( tg.location.x + tg.offsetX, tg.location.y + tg.offsetY );
 
 					var topLeft:Point = _transformMatrix.transformPoint( rect.topLeft );
@@ -333,6 +335,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 			if( _waitingForZoomInToContinueToPaint ) {
 			    requestStateChange( StateType.PAINT_SELECT_BRUSH );
+				requestInteractionBlockSignal.dispatch( false );
 				_waitingForZoomInToContinueToPaint = false;
 			}
 		}
