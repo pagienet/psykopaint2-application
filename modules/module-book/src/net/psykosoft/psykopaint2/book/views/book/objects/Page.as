@@ -55,6 +55,12 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 			addChild( _backMesh );
 		}
 
+		override public function dispose():void {
+			_frontMaterial.dispose();
+			_backMaterial.dispose();
+			super.dispose();
+		}
+
 		public function set frontTexture( value:BitmapTexture ):void {
 			if( !_frontMaterial ) {
 				_frontMaterial = new TextureMaterial( value, true, false, false );

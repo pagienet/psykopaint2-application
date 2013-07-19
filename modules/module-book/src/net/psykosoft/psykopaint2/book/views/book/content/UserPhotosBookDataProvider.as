@@ -232,6 +232,8 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 		override protected function onDispose():void {
 			_fetcher.dispose();
+			_interactionRegionsForSheet = null;
+			_thumbIndexForRegion = null;
 		}
 
 		override protected function onSheetAtIndexNotNeeded( index:uint ):void {

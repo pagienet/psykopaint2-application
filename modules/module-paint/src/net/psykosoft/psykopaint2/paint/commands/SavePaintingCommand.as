@@ -222,9 +222,10 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			requestUpdateMessagePopUpSignal.dispatch( "Saving: finishing...", "" );
 
-			if( updateEasel ) {
-				requestEaselUpdateSignal.dispatch( _infoVO, false, false );
-			}
+			// TODO: no longer necessary? if so remove all references of easel updating in command and signal
+//			if( updateEasel ) {
+//				requestEaselUpdateSignal.dispatch( _infoVO, false, false );
+//			}
 
 			notifyMemoryWarningSignal.remove( onMemoryWarning );
 			requestPopUpRemovalSignal.dispatch();

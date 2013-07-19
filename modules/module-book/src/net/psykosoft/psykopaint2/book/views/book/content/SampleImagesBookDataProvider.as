@@ -48,13 +48,6 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			loadThumbnailsAtlas();
 		}
 
-		override public function dispose():void {
-
-			// TODO...
-
-			super.dispose();
-		}
-
 		private function loadThumbnailsAtlas():void {
 			var loader:AtlasLoader = new AtlasLoader();
 			var date:Date = new Date();
@@ -205,11 +198,14 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			_atlas.dispose();
 			if( _imageLoader ) {
 				_imageLoader.dispose();
+				_imageLoader = null;
 			}
+			_interactionRegionsForSheet = null;
+			_thumbNameForRegion = null;
 		}
 
 		override protected function onSheetAtIndexNotNeeded( index:uint ):void {
-			// If desired, disposed data here.
+			// If desired, dispose data here.
 			// You can dispose the texture too, using:
 //			disposeSheetTextureAtIndex( index );
 		}

@@ -94,15 +94,19 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 		}
 
 		override public function dispose():void {
-
 			reset();
-
-			// TODO...
-
+			_leftPage.removeEventListener( MouseEvent3D.MOUSE_UP, onPageMouseUp );
+			_rightPage.removeEventListener( MouseEvent3D.MOUSE_UP, onPageMouseUp );
+			_middlePage.removeEventListener( MouseEvent3D.MOUSE_UP, onPageMouseUp );
+			_leftPage.dispose();
+			_rightPage.dispose();
+			_middlePage.dispose();
 			super.dispose();
 		}
 
 		public function reset():void {
+
+			trace( this, "resetting, data provider: " + _dataProvider );
 
 			if( _dataProvider ) {
 				_dataProvider.dispose();

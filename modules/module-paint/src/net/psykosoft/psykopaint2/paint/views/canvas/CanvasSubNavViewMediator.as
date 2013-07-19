@@ -73,10 +73,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				{
 					_waitingForSaveToContinueToHomeState = true;
 
-					// Auto-save when going to home is disabled, because of lack of saving stability.
-					// Pick one below.
-//					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, true );
-					onPaintingSaved();
+					// Pick one below to enable/disable auto save when leaving home mode.
+					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, true );
+//					onPaintingSaved();
 
 					break;
 				}
