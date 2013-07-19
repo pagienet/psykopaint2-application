@@ -87,6 +87,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			navigation.layout();
 		}
 		
+		override protected function onDisabled():void {
+			if ( _colorModeParameter)  _colorModeParameter.booleanValue = false;
+		}
+		
 		protected function onColorPicked(event:Event):void
 		{
 			if ( _colorParameter != null )
