@@ -33,6 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -105,6 +106,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var notifyHomeModuleReadySignal:NotifyHomeViewReadySignal;
+
+		[Inject]
+		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
 		private var _transformMatrix:Matrix;
 
@@ -269,6 +273,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			if( newState == StateType.TRANSITION_TO_HOME_MODE ) {
 				_waitingForZoomOutToContinueToHome = true;
+				requestInteractionBlockSignal.dispatch( true );
 				zoomOut();
 			}
 
@@ -334,6 +339,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function onHomeModuleReady():void {
 			if( _waitingForHomeModuleToBeReady ) {
+				requestInteractionBlockSignal.dispatch( false );
 				requestStateChange( StateType.HOME_ON_EASEL );
 				requestCleanUpPaintModuleMemorySignal.dispatch();
 				_waitingForHomeModuleToBeReady = false;

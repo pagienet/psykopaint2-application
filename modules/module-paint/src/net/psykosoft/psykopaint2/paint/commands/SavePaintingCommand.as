@@ -126,7 +126,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function save():void {
-			requestUpdateMessagePopUpSignal.dispatch( "Saving: exporting...", "" );
+			requestUpdateMessagePopUpSignal.dispatch( "Preparing...", "" );
 			var canvasExporter : CanvasExporter = new CanvasExporter();
 			canvasExporter.addEventListener(CanvasExportEvent.COMPLETE, onExportComplete);
 			canvasExporter.export(canvasModel);
@@ -160,7 +160,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function serializeDataToFiles( infoVO:PaintingInfoVO, dataVO:PaintingDataVO ):void {
 
-			requestUpdateMessagePopUpSignal.dispatch( "Saving: serializing...", "" );
+			requestUpdateMessagePopUpSignal.dispatch( "Finishing...", "" );
 
 			var infoSerializer:PaintingInfoSerializer = new PaintingInfoSerializer();
 			var dataSerializer:PaintingDataSerializer = new PaintingDataSerializer();
@@ -180,7 +180,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function writeInfoBytes():void {
 
-			requestUpdateMessagePopUpSignal.dispatch( "Saving: writing...", "" );
+			requestUpdateMessagePopUpSignal.dispatch( "Almost done...", "" );
 
 			// TODO: using sync saving for now, async makes writing fail on ipad slow packaging, see notes here: https://github.com/psykosoft/psykopaint2-application/issues/47
 
@@ -220,7 +220,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function preExitCommand():void {
 
-			requestUpdateMessagePopUpSignal.dispatch( "Saving: finishing...", "" );
+			requestUpdateMessagePopUpSignal.dispatch( "Ready!", "" );
 
 			// TODO: no longer necessary? if so remove all references of easel updating in command and signal
 //			if( updateEasel ) {

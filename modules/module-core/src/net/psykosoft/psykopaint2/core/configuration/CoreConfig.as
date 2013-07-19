@@ -37,6 +37,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
@@ -175,6 +176,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestHomeViewScrollSignal ).asSingleton();
 			_injector.map( NotifyPopUpShownSignal ).asSingleton();
 			_injector.map( NotifyHomeViewReadySignal ).asSingleton();
+			_injector.map( RequestInteractionBlockSignal ).asSingleton();
 		}
 
 		// -----------------------

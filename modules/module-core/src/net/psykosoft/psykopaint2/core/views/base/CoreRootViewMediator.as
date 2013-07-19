@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
@@ -18,6 +19,9 @@ package net.psykosoft.psykopaint2.core.views.base
 		[Inject]
 		public var notifyMemoryWarningSignal:NotifyMemoryWarningSignal;
 
+		[Inject]
+		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
+
 		override public function initialize():void {
 
 			// Initialize gestures.
@@ -25,6 +29,11 @@ package net.psykosoft.psykopaint2.core.views.base
 
 			// From app.
 			notifyMemoryWarningSignal.add( onMemoryWarning );
+			requestInteractionBlockSignal.add( onInteractionBlockRequest );
+		}
+
+		private function onInteractionBlockRequest( block:Boolean ):void {
+			view.showBlocker( block );
 		}
 
 		private function onMemoryWarning():void {
