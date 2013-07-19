@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
@@ -175,7 +176,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			rect.width = bottomRight.x - topLeft.x;
 			rect.height = bottomRight.y - topLeft.y;
 
-			updateCanvasRect( rect );
+			updateAndConstrainCanvasRect( rect );
 		}
 
 		private function onGlobalGesture( type:String, event:GestureEvent ):void {
@@ -203,7 +204,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					rect.width = bottomRight.x - topLeft.x;
 					rect.height = bottomRight.y - topLeft.y;
 
-					updateCanvasRect( rect );
+					updateAndConstrainCanvasRect( rect );
 
 					/*
 					 var angle:Number = Math.atan2(384 -tg.location.y,512 -tg.location.x );
@@ -265,7 +266,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		}
 
-		private var _rectOffsetY:Number;
+//		private var _rectOffsetY:Number;
 
 		private function onEaselRectInfo( rect:Rectangle ):void {
 			_easelRectFromHomeView = rect.clone();
@@ -280,9 +281,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			zoomScale = _minZoomScale;
 
 			// TODO: deprecate this hack!
-			var dummy:Rectangle = _easelRectFromHomeView.clone();
-			constrainCanvasRect( dummy );
-			_rectOffsetY = _easelRectFromHomeView.y - dummy.y;
+//			var dummy:Rectangle = _easelRectFromHomeView.clone();
+//			constrainCanvasRect( dummy );
+//			_rectOffsetY = _easelRectFromHomeView.y - dummy.y;
 
 			// Uncomment to visualize incoming rect.
 			/*view.graphics.lineStyle( 1, 0x00FF00 );
@@ -302,10 +303,16 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function onZoomUpdate():void {
-			var rect:Rectangle = renderer.renderRect;
+			var rect:Rectangle = new Rectangle(); //renderer.renderRect;
+			var ratio : Number = (zoomScale - _minZoomScale)/(1 - _minZoomScale);
+			// zoomScale = _minZoomScale --> ratio = 0
+			// zoomScale = 1 --> (1 - _minZoomScale)/(1 - _minZoomScale) = 1
+			rect.x = (1-ratio)*_easelRectFromHomeView.x;	// linearly interpolate to 0 from zoomed out position
+			rect.y = (1-ratio)*_easelRectFromHomeView.y;
 			rect.width = canvasModel.width * zoomScale;
 			rect.height = canvasModel.height * zoomScale;
-			updateCanvasRect( rect );
+			// do not constrain
+			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
 		private function onZoomComplete():void {
@@ -325,9 +332,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// -----------------------
 
 		private function updateCanvasRect( rect:Rectangle ):void {
+			requestChangeRenderRectSignal.dispatch(rect);
+		}
+
+		// used for manual zooming
+		private function updateAndConstrainCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
-			// TODO: remove this hack, related to line 282
-			rect.y += -( _rectOffsetY / ( 1 - _minZoomScale ) ) * ( zoomScale - _minZoomScale ) + _rectOffsetY;
 			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
