@@ -280,11 +280,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			_minZoomScale = _easelRectFromHomeView.width / canvasModel.width;
 			zoomScale = _minZoomScale;
 
-			// TODO: deprecate this hack!
-//			var dummy:Rectangle = _easelRectFromHomeView.clone();
-//			constrainCanvasRect( dummy );
-//			_rectOffsetY = _easelRectFromHomeView.y - dummy.y;
-
 			// Uncomment to visualize incoming rect.
 			/*view.graphics.lineStyle( 1, 0x00FF00 );
 			view.graphics.drawRect( rect.x, rect.y, rect.width, rect.height );

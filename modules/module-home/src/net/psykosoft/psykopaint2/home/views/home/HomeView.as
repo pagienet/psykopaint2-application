@@ -85,8 +85,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_freezeTexture = texture;
 			var tex:NativeTexture = new NativeTexture(_freezeTexture.texture);
 			_view.background = tex;
-			var texHeight : Number = TextureUtil.getNextPowerOfTwo(stage.height);
-			_view.backgroundRect = new Rectangle(0, 0, 1, stage.height/texHeight);
+			var texHeight : Number = TextureUtil.getNextPowerOfTwo(CoreSettings.STAGE_HEIGHT);
+			_view.backgroundRect = new Rectangle(0, 0, 1, CoreSettings.STAGE_HEIGHT/texHeight);
 
 			selectScene( null );
 			disableCameraController();

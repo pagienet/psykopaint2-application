@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	import flash.utils.getTimer;
 
@@ -72,7 +73,6 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 			}
 
 			if (needsSnapshot) {
-				// TODO: Go back to render to texture approach
 				createSnapshot();
 				fulfillPromises();
 			}
@@ -85,13 +85,22 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 
 		private function createSnapshot() : void
 		{
+			// TODO: Go back to render to texture approach, this is allocating a lot of memory
+
 			var snapshotWidth : int = TextureUtil.getNextPowerOfTwo(stage3DProxy.width);
 			var snapshotHeight : int = TextureUtil.getNextPowerOfTwo(stage3DProxy.height);
+			trace ("Generating snapshot with size: " + snapshotWidth + ", " + snapshotHeight);
+			var croppedBitmapData : BitmapData = new TrackedBitmapData(stage3DProxy.width, stage3DProxy.height, false, 0);
+			stage3DProxy.context3D.drawToBitmapData(croppedBitmapData);
+
+			var largeBitmapData : BitmapData = new TrackedBitmapData(snapshotWidth, snapshotHeight, false, 0);
+			largeBitmapData.copyPixels(croppedBitmapData, croppedBitmapData.rect, new Point());
+
+			croppedBitmapData.dispose();
+
 			_snapshot = stage3DProxy.context3D.createTexture(snapshotWidth, snapshotHeight, Context3DTextureFormat.BGRA, true);
-			var bitmapData : BitmapData = new TrackedBitmapData(snapshotWidth, snapshotHeight, false, 0);
-			stage3DProxy.context3D.drawToBitmapData(bitmapData);
-			_snapshot.uploadFromBitmapData(bitmapData);
-			bitmapData.dispose();
+			_snapshot.uploadFromBitmapData(largeBitmapData);
+			largeBitmapData.dispose();
 		}
 
 		private function fulfillPromises() : void
@@ -118,14 +127,6 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 			var numSteps : uint = steps.length;
 			for (var i : uint = 0; i < numSteps; ++i)
 				steps[ i ]();
-		}
-
-		private function createFullsizeSnapshot(scaledBitmapDatas : Dictionary) : void
-		{
-			var bmd : RefCountedBitmapData = new RefCountedBitmapData(stage3DProxy.width, stage3DProxy.height, true, 0);
-			bmd.addRefCount();
-			scaledBitmapDatas[1.0] = bmd;
-			stage3DProxy.context3D.drawToBitmapData(bmd);
 		}
 	}
 }
