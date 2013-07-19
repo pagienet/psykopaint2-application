@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.paint.commands {
 			paintingModel.deleteVoWithId( paintingId );
 
 			//change state to home
-			requestStateChangeSignal.dispatch( StateType.HOME_ON_EASEL );
+			requestStateChangeSignal.dispatch( StateType.TRANSITION_TO_HOME_MODE );
 		}
 	}
 }
