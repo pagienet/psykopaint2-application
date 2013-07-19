@@ -106,7 +106,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			if( _disposeVoWhenDone ) _voToBeSetAfterAnimation.dispose();
 			_voToBeSetAfterAnimation = null;
 			_painting.x = -3000;
-			TweenLite.to( _painting, 0.5, { x: 0, ease: Strong.easeOut } );
+			TweenLite.to( _painting, 0.5, { delay: 0.25, x: 0, ease: Strong.easeOut } );
 		}
 
 		// ---------------------------------------------------------------------
