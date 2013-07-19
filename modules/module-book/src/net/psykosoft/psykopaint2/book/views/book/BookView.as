@@ -4,6 +4,9 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
+
 	import flash.display3D.textures.Texture;
 
 	import flash.events.MouseEvent;
@@ -12,6 +15,8 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.book.views.book.objects.Book;
 
+	import org.osflash.signals.Signal;
+
 	public class BookView extends ViewBase
 	{
 		private var _stage3dProxy:Stage3DProxy;
@@ -19,9 +24,14 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _book:Book;
 		private var _origin:Vector3D;
 
+		private const BOOK_Y:Number = 250;
+
+		public var animateOutCompleteSignal:Signal;
+
 		public function BookView() {
 			super();
 			scalesToRetina = false;
+			animateOutCompleteSignal = new Signal();
 			_origin = new Vector3D();
 		}
 
@@ -45,13 +55,25 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			// Initialize book.
 			_book = new Book( stage, 1024, 1024 );
-			_book.y = 250;
 			_book.rotationX = -75;
+			_book.y = -1024;
 			_view.scene.addChild( _book );
 
 			// Interaction.
 			stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+		}
+
+		public function animateIn():void {
+			TweenLite.to( _book, 0.75, { y: BOOK_Y, delay: 0.5, ease: Strong.easeOut } );
+		}
+
+		public function animateOut():void {
+			TweenLite.to( _book, 0.75, { y: -1024, ease: Strong.easeIn, onComplete: onAnimateOutComplete } );
+		}
+
+		private function onAnimateOutComplete():void {
+			animateOutCompleteSignal.dispatch();
 		}
 
 		override protected function onDisabled():void {

@@ -42,6 +42,9 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			// Register view gpu rendering in core.
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
+
+			// From view.
+			view.animateOutCompleteSignal.add( onAnimateOutComplete );
 		}
 
 		override protected function onStateChange( newState:String ):void {
@@ -78,8 +81,15 @@ package net.psykosoft.psykopaint2.book.views.book
 			}
 		}
 
+		private var _selectedBmd:BitmapData;
+
 		private function onFullImagePicked( bmd:BitmapData ):void {
-			requestSourceImageSetSignal.dispatch( bmd );
+			_selectedBmd = bmd;
+			view.animateOut();
+		}
+
+		private function onAnimateOutComplete():void {
+			requestSourceImageSetSignal.dispatch( _selectedBmd );
 		}
 
 		private function initializeUserPhotosDataProvider():void {
@@ -103,6 +113,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onUserPhotosDataProviderReady():void {
 			view.book.dataProvider = _userPhotosDataProvider;
+			view.animateIn();
 		}
 
 		private function initializeSamplesDataProvider():void {
@@ -114,6 +125,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onSamplesDataProviderReady():void {
 			view.book.dataProvider = _samplesDataProvider;
+			view.animateIn();
 		}
 	}
 }
