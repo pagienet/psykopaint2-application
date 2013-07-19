@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				default: {
 					paintingModel.focusedPaintingId = "uniqueUserId-" + label;
 					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + label );
-					requestEaselUpdateSignal.dispatch( vo, true );
+					requestEaselUpdateSignal.dispatch( vo, true, false );
 					NewPaintingSubNavView.lastSelectedPaintingLabel = label;
 					NewPaintingSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
 				}
@@ -101,7 +101,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
 				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
-				requestEaselUpdateSignal.dispatch( vo, false );
+				requestEaselUpdateSignal.dispatch( vo, false, false );
 			}
 		}
 	}

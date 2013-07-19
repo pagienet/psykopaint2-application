@@ -223,7 +223,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			requestUpdateMessagePopUpSignal.dispatch( "Saving: finishing...", "" );
 
 			if( updateEasel ) {
-				requestEaselUpdateSignal.dispatch( _infoVO, false );
+				requestEaselUpdateSignal.dispatch( _infoVO, false, false );
 			}
 
 			notifyMemoryWarningSignal.remove( onMemoryWarning );

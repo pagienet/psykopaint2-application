@@ -142,8 +142,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyEaselRectInfoSignal.dispatch( view.easelRect );
 		}
 
-		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animate:Boolean ):void {
-			view.paintingManager.easel.setContent( paintingVO, animate );
+		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animate:Boolean, dispose:Boolean ):void {
+			view.paintingManager.easel.setContent( paintingVO, animate, dispose );
 		}
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingInfoVO> ):void {
