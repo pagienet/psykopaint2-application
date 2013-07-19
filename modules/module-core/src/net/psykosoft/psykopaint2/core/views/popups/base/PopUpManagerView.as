@@ -42,8 +42,8 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 
 		private function showPopUpAnimated( popUp:PopUpViewBase ):void {
 			TweenLite.killTweensOf( popUp );
-			popUp.y = 3000;
-			TweenLite.to( popUp, 0.5, { y: 0, ease: Strong.easeOut, onComplete: onShowPopUpComplete } );
+			popUp.x = 1024;
+			TweenLite.to( popUp, 0.5, { x: 0, delay: 0.5, ease: Strong.easeOut, onComplete: onShowPopUpComplete } );
 		}
 
 		private function onShowPopUpComplete():void {
@@ -61,8 +61,8 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 
 		private function hidePopUpAnimated( popUp:PopUpViewBase ):void {
 			TweenLite.killTweensOf( popUp );
-			popUp.y = 0;
-			TweenLite.to( popUp, 0.5, { y: 3000, ease: Strong.easeIn, onComplete: onHidePopUpComplete } );
+			popUp.x = 0;
+			TweenLite.to( popUp, 0.5, { x: 1024, delay: 0.5, ease: Strong.easeIn, onComplete: onHidePopUpComplete } );
 		}
 
 		private function onHidePopUpComplete():void {
