@@ -245,7 +245,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		private function onMemoryWarning():void {
 			// TODO: a memory warning seems to mean that the saving process has failed, we need to check if anything was written and
 			// delete it, to avoid saving corrupted data that could cause errors on load and incorrectly use the available storage space
-			preExitCommand();
+//			preExitCommand();
 		}
 
 		// ---------------------------------------------------------------------
