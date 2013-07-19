@@ -315,7 +315,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function get easelRect():Rectangle {
 			var plane:Mesh = _paintingManager.easel.painting;
-			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( plane, _view, 1 );
+			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( plane, _view );
 			// Uncomment to debug rect on screen.
 			/*this.graphics.lineStyle( 1, 0xFF0000 );
 			this.graphics.drawRect( rect.x * CoreSettings.GLOBAL_SCALING, rect.y * CoreSettings.GLOBAL_SCALING,
@@ -325,9 +325,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		public function dockAtCurrentPainting():void {
+			trace( this, "docking at painting: " + _scrollCameraController.positionManager.closestSnapPointIndex );
 			var framedPainting:GalleryPainting = _paintingManager.getPaintingAtIndex( _scrollCameraController.positionManager.closestSnapPointIndex );
 			var plane:Mesh = framedPainting.painting;
-			var pos:Vector3D = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( plane, _view, 768 / 1024 );
+			var pos:Vector3D = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( plane, _view );
 			_zoomCameraController.setYZ( pos.y, pos.z );
 		}
 
