@@ -75,6 +75,11 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 		public function setLabelType( labelType:String ):void {
 
+			if( labelType == ButtonLabelType.CENTER ){
+				labelBg.y = _btnLblPos.y - 133;
+				tf.y = _btnLblPos.y - 121;
+			}
+
 			var currentName:String = getQualifiedClassName( labelBg );
 			if( labelType == currentName ) return;
 

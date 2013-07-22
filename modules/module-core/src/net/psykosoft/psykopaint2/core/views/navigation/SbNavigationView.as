@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _hidden:Boolean;
 		private var _bgHeight:uint = 250;
 
-		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 90;
+		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 70;
 
 		public var buttonClickedCallback:Function;
 		public var shownSignal:Signal;
@@ -377,6 +377,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				btn.displaceLabelTf( 0, -8 );
 			}
 			btn.setLabelType( labelType );
+			trace("LABEL TYPE createButton", labelType);
 			if( icon ) btn.setIcon( icon );
 			return btn;
 		}
@@ -400,7 +401,20 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			headerBg.width = header.width + 50;
 			headerBg.x = 1024 / 2 - headerBg.width / 2 + 5;
+
+//			animateHeader();
 		}
+
+	/*	private function animateHeader():void{
+			TweenLite.killTweensOf( headerBg );
+			TweenLite.to( headerBg, 1, { y: 0, ease:Strong.easeOut, onUpdate:onHeaderAnimationUpdate() } );
+			TweenLite.to( headerBg, 1, { delay: 3, y: 800, ease:Strong.easeOut, onUpdate:onHeaderAnimationUpdate() } );
+		}
+
+		private function onHeaderAnimationUpdate():void{
+			 header.y = headerBg.y + 20;
+			 trace("ANIMATION UPDATE");
+		}*/
 
 		public function setLeftButton( label:String, iconType:String = ButtonIconType.BACK ):void {
 			_leftButton.labelText = label;

@@ -123,7 +123,7 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 		public function startPanInteraction():void {
 			if( !isEnabled ) return;
 			if( _isScrollingLimited ) {
-				var limit:Number = _stageHeight - 211 * CoreSettings.GLOBAL_SCALING;
+				var limit:Number = _stageHeight - 150 * CoreSettings.GLOBAL_SCALING;
 				if( _interactionManager.currentY > limit ) return;
 			}
 			_interactionManager.startInteraction();
