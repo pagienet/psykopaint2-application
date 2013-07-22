@@ -101,27 +101,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					{
 						applyArray[0] = point.pressure / 2000;
 						point.size = mapping.apply( null, applyArray);
-						if ( inv ) point.size = 1 - point.size;
-						point.size = minFactor + point.size * (maxFactor - minFactor );
-					} else {
-						point.size = minFactor;
-					}
-				} else if ( mode == 3 )
-				{
-					if ( point.pressure > 0 )
-					{
-						applyArray[0] = point.pressure / 2000;
-						point.size = mapping.apply( null, applyArray);
 					} else {
 						applyArray[0] = Math.min(point.speed,ms) / ms;
 						point.size = mapping.apply( null, applyArray);
 					}
 					if ( inv ) point.size = 1 - point.size;
 					point.size = minFactor + point.size * (maxFactor - minFactor );
-				}  else if ( mode == 4 )
+				}  else if ( mode == 3 )
 				{
 					point.size *= mappingFactor.randomValue;
-				} else if ( mode == 5 )
+				} else if ( mode == 4 )
 				{
 					point.size *= mappingFactor.randomValue;
 				} 

@@ -10,17 +10,33 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 
 	final public class CircularRotationDecorator extends AbstractPointDecorator
 	{
+		
+		static public const PARAMETER_SL_MODE:String = "Mode";
+		static public const PARAMETER_A_ANGLE_ADJUSTMENT:String = "Angle Adjustment";
+		static public const PARAMETER_I_RANDOM_POINT_COUNT:String = "Random Point Count";
+		
+		static public const INDEX_MODE_PRESET:int = 0;
+		static public const INDEX_MODE_RANDOM:int = 1;
+		
+		
 		private var kdTree:BalancingKDTree;
 		private var centers:XML = <centers/>;
 		private var angleAdjustment:PsykoParameter;
+		private var mode:PsykoParameter;
+		private var randomPoints:PsykoParameter;
+		
 		private var _canvasModel:CanvasModel;
 		private var tempPoint:SamplePoint;
 		
-		public function CircularRotationDecorator( angleAdjustment:Number = 0 )
+		public function CircularRotationDecorator( )
 		{
 			super();
-			this.angleAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,"Angle Adjustment",angleAdjustment,-90, 90);
-			_parameters.push(this.angleAdjustment);
+			mode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Preset","Random"]);
+			
+			angleAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_ANGLE_ADJUSTMENT,0,-90, 90);
+			randomPoints  	 = new PsykoParameter( PsykoParameter.IntParameter,PARAMETER_I_RANDOM_POINT_COUNT,0,0,200);
+			
+			_parameters.push(mode,angleAdjustment,randomPoints);
 			tempPoint = new SamplePoint();
 		}
 		
@@ -57,15 +73,23 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			//TODO: maybe add some center point generator?
 			
 			super.updateParametersFromXML(message);
-			if ( message.centers.length() > 0 &&  message.centers[0].point.length() > 0)
+			kdTree = new BalancingKDTree();
+			if ( mode.index == 0 && message.centers.length() > 0 &&  message.centers[0].point.length() > 0)
 			{
 				centers = message.centers[0];
-				kdTree = new BalancingKDTree();
 				var pdata:XMLList =  message.centers[0].point;
 				for ( var i:int = 0; i < pdata.length(); i++ )
 				{
 					kdTree.insertPoint( new SamplePoint(Number(pdata[i].@x), Number( pdata[i].@y)));
 				}
+			} 
+			if (  mode.index == 1 && randomPoints.intValue > 0 )
+			{
+				for ( i = randomPoints.intValue; --i > -1; )
+				{
+					kdTree.insertPoint( new SamplePoint( Math.random(), Math.random()));
+				}
+				
 			}
 			
 		}

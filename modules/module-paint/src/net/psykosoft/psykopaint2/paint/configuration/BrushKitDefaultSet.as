@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.drawing.paths.AbstractPathEngine;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CircularRotationDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
@@ -29,38 +30,41 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,splotch,noisy"/>
 
 					<parameterMapping>
-						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush,Speed Brush,Smear Brush" showInUI="1"/>
+						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush,Speed Brush,Van Gogh,Smear Brush" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_0.Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="1"
-							value1="0.1" value2="0.8"/>
+							indices="1,2"
+							value1="0.12" value2="0.7"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_0.Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="0,2"
-							value1="0.47" value2="0.5"/>
+							indices="0,3"
+							value1="0.47" value2="0.5"/>	
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_1.Color Blending" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="0,1"
+							indices="0,1,2"
 							value1="0.5" value2="0.9"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_1.Color Blending" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="2"
+							indices="3"
 							value1="0.0001" value2="0.001"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_2.Splat Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="0,1"
+							indices="0,1,2"
 							value="40"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_2.Splat Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="2"
+							indices="3"
 							value="10"/>	
-
+						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Style" 
+							target="pathengine.pointdecorator_4" 
+							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
+							indices="2"/>	
 						<parameter id="Custom Color" type={PsykoParameter.BooleanParameter}  value="0" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
 							target="pathengine.pointdecorator_1.Color Mode" 
@@ -105,7 +109,12 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_3" value="1" />
 							<parameter id={BumpDecorator.PARAMETER_NR_BUMPINESS} path="pathengine.pointdecorator_3" value1="0" value2="1" minValue="0" maxValue="1" showInUI="1" />
 						</BumpDecorator>
-						
+						<CircularRotationDecorator active="0">
+							<parameter id={CircularRotationDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_4" index="1" />
+							<parameter id={CircularRotationDecorator.PARAMETER_I_RANDOM_POINT_COUNT} path="pathengine.pointdecorator_4" value="40" />
+							<parameter id={CircularRotationDecorator.PARAMETER_A_ANGLE_ADJUSTMENT} path="pathengine.pointdecorator_4" value="90" />
+							
+						</CircularRotationDecorator>
 					</pathengine>
 				</brush>
 
