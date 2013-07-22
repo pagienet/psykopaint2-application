@@ -79,16 +79,10 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var requestPopUpDisplaySignal:RequestPopUpDisplaySignal;
 
 		[Inject]
-		public var requestPopUpRemovalSignal:RequestPopUpRemovalSignal;
-
-		[Inject]
 		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
 
 		[Inject]
 		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
-
-		[Inject]
-		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
 
 		private var _paintId:String;
 		private var _infoBytes:ByteArray;
@@ -237,19 +231,6 @@ package net.psykosoft.psykopaint2.paint.commands
 		// ---------------------------------------------------------------------
 
 		private function preExitCommand():void {
-
-			requestUpdateMessagePopUpSignal.dispatch( "Ready!", "" );
-
-			// TODO: no longer necessary? if so remove all references of easel updating in command and signal
-//			if( updateEasel ) {
-//				requestEaselUpdateSignal.dispatch( _infoVO, false, false );
-//			}
-
-			notifyPopUpRemovedSignal.addOnce( onPopUpRemoved );
-			requestPopUpRemovalSignal.dispatch();
-		}
-
-		private function onPopUpRemoved():void {
 			notifyMemoryWarningSignal.remove( onMemoryWarning );
 			exitCommand();
 		}

@@ -31,11 +31,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCleanUpPaintModuleMemorySignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestInitPaintModuleMemorySignal;
@@ -110,19 +114,26 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
+		[Inject]
+		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
+
+		[Inject]
+		public var requestPopUpRemovalSignal:RequestPopUpRemovalSignal;
+
+		[Inject]
+		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
+
 		private var _transformMatrix:Matrix;
-
 		private var _easelRectFromHomeView:Rectangle;
-
-		// -----------------------
-		// Zoom animation.
-		// -----------------------
 		private var _waitingForZoomOutToContinueToHome:Boolean;
-
 		private var _waitingForZoomInToContinueToPaint:Boolean;
 		private var _minZoomScale:Number;
+		private var _waitingForSavingPopUpRemoval:Boolean;
+		private var _addedMouseWheelListener:Boolean;
+		private var _waitingForHomeModuleToBeReady:Boolean;
 
 		private const MAX_ZOOM_SCALE:Number = 3;
+
 		public var zoomScale:Number = _minZoomScale;
 
 		override public function initialize():void {
@@ -154,10 +165,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyHomeModuleReadySignal.add( onHomeModuleReady );
+			notifyPopUpRemovedSignal.add( onPopUpRemoved );
 
 			_transformMatrix = new Matrix();
 		}
-
 
 		// -----------------------
 		// From app.
@@ -239,8 +250,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 		}
 
-		private var _addedMouseWheelListener:Boolean;
-
 		override protected function onStateChange( newState:String ):void {
 
 			super.onStateChange( newState );
@@ -281,8 +290,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		}
 
-//		private var _rectOffsetY:Number;
-
 		private function onEaselRectInfo( rect:Rectangle ):void {
 			_easelRectFromHomeView = rect.clone();
 
@@ -315,8 +322,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onZoomUpdate():void {
 			var rect:Rectangle = new Rectangle(); //renderer.renderRect;
 			var ratio : Number = (zoomScale - _minZoomScale)/(1 - _minZoomScale);
-			// zoomScale = _minZoomScale --> ratio = 0
-			// zoomScale = 1 --> (1 - _minZoomScale)/(1 - _minZoomScale) = 1
 			rect.x = (1-ratio)*_easelRectFromHomeView.x;	// linearly interpolate to 0 from zoomed out position
 			rect.y = (1-ratio)*_easelRectFromHomeView.y;
 			rect.width = canvasModel.width * zoomScale;
@@ -325,14 +330,18 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
-		private var _waitingForHomeModuleToBeReady:Boolean;
-
 		private function onZoomComplete():void {
+
 			if( _waitingForZoomOutToContinueToHome ) {
+
+				requestUpdateMessagePopUpSignal.dispatch( "Almost done...", "" );
+
 				_waitingForHomeModuleToBeReady = true;
 				requestStateChange( StateType.PREPARE_FOR_HOME_MODE );
+
 				_waitingForZoomOutToContinueToHome = false;
 			}
+
 			if( _waitingForZoomInToContinueToPaint ) {
 			    requestStateChange( StateType.PAINT_SELECT_BRUSH );
 				requestInteractionBlockSignal.dispatch( false );
@@ -342,11 +351,25 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function onHomeModuleReady():void {
 			if( _waitingForHomeModuleToBeReady ) {
-				requestInteractionBlockSignal.dispatch( false );
-				requestStateChange( StateType.HOME_ON_EASEL );
-				requestCleanUpPaintModuleMemorySignal.dispatch();
+
+				_waitingForSavingPopUpRemoval = true;
+				requestPopUpRemovalSignal.dispatch();
+
 				_waitingForHomeModuleToBeReady = false;
 			}
+		}
+
+		private function onPopUpRemoved():void {
+
+			if( _waitingForSavingPopUpRemoval ) {
+
+			    requestInteractionBlockSignal.dispatch( false ); // TODO: needed?
+				requestStateChange( StateType.HOME_ON_EASEL );
+				requestCleanUpPaintModuleMemorySignal.dispatch();
+
+				_waitingForSavingPopUpRemoval = false;
+			}
+
 		}
 
 		// -----------------------
