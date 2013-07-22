@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
@@ -203,6 +204,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		protected function onPathStart() : void
 		{
+			//for debugging only:
+			//(_view as Sprite).graphics.clear();
+			//(_view as Sprite).graphics.lineStyle(0);
+			
+			
 			dispatchEvent(new Event(STROKE_STARTED));
 
 			_inProgress = true;
@@ -222,6 +228,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			for (var i : int = 0; i < len; i++) {
 				var point : SamplePoint = points[i];
+				
+				//(_view as Sprite).graphics.drawCircle( point.x, point.y,point.speed);
+				
 				point.normalizeXY(_canvasScaleW,_canvasScaleH);
 				processPoint( point );
 			}
@@ -262,13 +271,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		protected function onPickColor( point : SamplePoint, pickRadius:Number, smoothFactor:Number ) : void
 		{
-			
 			appendVO.size =  _brushShape.size * pickRadius;
 			appendVO.point = point;
 			_colorStrategy.getColorsByVO( appendVO,  _brushShape.size* 0.5*smoothFactor);
-			
-			
-			//_colorStrategy.getColors(point, _brushShape.size * Math.SQRT1_2 * pickRadius, _brushShape.size * 0.5 );
 		}
 
 		protected function invalidateRender() : void
@@ -278,16 +283,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		protected function processPoint(point : SamplePoint) : void
 		{
-			//_colorStrategy.getColors(x, y, _brushShape.size, _brushShape.size, point.colorsRGBA);
 			addStrokePoint(point, _brushShape.actualSize * _canvasScaleW, _brushShape.rotationRange);
 		}
 
 		protected function addStrokePoint(point : SamplePoint, size : Number, rotationRange : Number) : void
 		{
-			//appendVO.x = point.normalX;
-			//appendVO.y = point.normalY;
 			appendVO.size = size;
-			//appendVO.rotation = point.angle;
 			appendVO.point = point;
 			_brushMesh.append(appendVO);
 		}
@@ -308,15 +309,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_type = value;
 		}
 
-		/*
-		public function setColorBlending(minColorBlendFactor : Number, maxColorBlendFactor : Number, minimumOpacity : Number, maximumOpacity : Number) : void
-		{
-			_colorBlend.lowerRangeValue = minColorBlendFactor;
-			_colorBlend.upperRangeValue = maxColorBlendFactor;
-			_opacity.lowerRangeValue = minimumOpacity;
-			_opacity.upperRangeValue = maximumOpacity;
-		}
-		*/
 		public function setBrushSizeFactors(minSizeFactor : Number, maxSizeFactor : Number) : void
 		{
 			_sizeFactor.lowerRangeValue = minSizeFactor;

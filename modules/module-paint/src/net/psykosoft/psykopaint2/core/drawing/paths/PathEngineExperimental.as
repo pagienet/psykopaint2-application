@@ -34,9 +34,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		override public function update(result:Vector.<SamplePoint>, forceUpdate : Boolean = false) : void
 		{
-			if ( pointCount < 3 ) return ;
+			if ( pointCount < 3 ) return;
 			
 			var speedSmoothingFactor:Number = _speedSmoothing.numberValue;
+			var stepFactor:Number = _outputStepSize.numberValue;
 			
 			var first:Boolean = false;
 			if ( p1 == null )
@@ -56,8 +57,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				speed2 = Math.sqrt(p2.squaredDistance(c));
 				if ( speed1 > 0 )
 				{
-					var ts:Number = 2 / speed1;
-					if ( ts > 0.25 ) ts = 0.25;
+					var ts:Number = stepFactor / speed1;
+					if ( ts > 0.5 ) ts = 0.5;
 					for ( var t:Number = 0; t < 0.5; t+= ts )
 					{
 						var ti: Number = 1-t;
@@ -71,8 +72,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						var p:SamplePoint = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
 																		ti2*p1y+tit*cy+tt*p2y,
 																		((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
+																		0,
+																		angle,
 																		ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
-																	   angle);
+																		p1.penButtonState
+																		);
 						
 						lastPointSpeed = speed;
 						result.push(p );
@@ -84,9 +88,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				} else {
 					_lastOutputIndex = 1;
 					p1 = sampledPoints[1];
-					c = sampledPoints[2];
+					c  = sampledPoints[2];
 				}
-				
 			}
 			
 			for ( var i:int = _lastOutputIndex; i < nextIndex; i++ )
@@ -102,8 +105,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				p2y = p2.y;
 				if ( speed1 > 0 )
 				{
-					ts = 2 / speed1;
-					if ( ts > 0.25 ) ts = 0.25;
+					ts = stepFactor / speed1;
+					if ( ts > 0.5 ) ts = 0.5;
 					for ( t = 0; t < 0.5; t+=ts )
 					{
 						ti = 1-t;
@@ -116,8 +119,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					 	p = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
 							ti2*p1y+tit*cy+tt*p2y,
 							((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
+							0,
+							angle,
 							ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
-							angle);
+							p1.penButtonState);
 						
 						lastPointSpeed  = speed
 						result.push( p);
@@ -138,8 +143,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			
 			_lastOutputIndex = nextIndex;
 		
-			if ( forceUpdate && !isNaN(ts))
+			if ( forceUpdate )
 			{
+				if ( isNaN(ts) ) ts = 0.25;
 				for ( t = 0.5; t < 1; t+=ts )
 				{
 					ti = 1-t;
@@ -152,8 +158,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					p = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
 						ti2*p1y+tit*cy+tt*p2y,
 						((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
+						0,
+						angle,
 						ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
-						angle);
+						0);
 					lastPointSpeed  = speed
 					result.push( p);
 				}

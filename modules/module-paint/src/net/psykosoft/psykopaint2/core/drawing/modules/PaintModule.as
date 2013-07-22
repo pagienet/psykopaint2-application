@@ -96,7 +96,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _availableBrushKitNames:Vector.<String>;
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
-		private var _transformModeActive:Boolean;
+		private var _showingSource:Boolean;
 		private var _canvasMatrix : Matrix;
 		//private var _navHideTimeout:int = -1;
 		private var _navShowTimeout:int = -1;
@@ -110,7 +110,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				registerBrushKit( BrushKit.fromXML(BrushKitDefaultSet.brushKitData.brush[i]), BrushKitDefaultSet.brushKitData.brush[i].@name);
 			}
 			
-			_transformModeActive = false;
+			_showingSource = false;
 			
 		}
 
@@ -129,18 +129,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private function onStateChange( stateType:String ):void
 		{
 			
-			if ( _transformModeActive && stateType != StateType.PAINT_SHOW_SOURCE )
+			if ( _showingSource && stateType == StateType.PAINT_HIDE_SOURCE )
 			{
-				_transformModeActive = false;
+				_showingSource = false;
 				renderer.sourceTextureAlpha = 0;
 				renderer.paintAlpha = 1;
-				//_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
-			} else if ( !_transformModeActive && stateType == StateType.PAINT_SHOW_SOURCE )
+			} else if ( !_showingSource && stateType != StateType.PAINT_HIDE_SOURCE )
 			{
-				_transformModeActive = true;
-				renderer.sourceTextureAlpha = 1;
-				renderer.paintAlpha = 0.8;
-				//_activeBrushKit.deactivate();
+				_showingSource = true;
+				renderer.sourceTextureAlpha = 0.25;
+				renderer.paintAlpha = 1;
 			} 
 			
 			
@@ -150,11 +148,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED )
 			{
-				if ( _transformModeActive )
+				if ( !_showingSource )
 				{
 					requestStateChangeSignal.dispatch( StateType.PREVIOUS );
 				} else {
-					requestStateChangeSignal.dispatch( StateType.PAINT_SHOW_SOURCE );
+					requestStateChangeSignal.dispatch( StateType.PAINT_HIDE_SOURCE );
 				}
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{

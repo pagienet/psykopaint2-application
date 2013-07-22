@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		public static const INDEX_MODE_SPEED:int = 0;
 		public static const INDEX_MODE_SIZE:int = 1;
-		public static const INDEX_MODE_PRESSURE:int = 2;
+		static public const INDEX_MODE_PRESSURE_SPEED:int = 2;
 		public static const INDEX_MODE_FIXED:int = 3;
 		
 		
@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function SplatterDecorator()
 		{
 			super();
-			mappingMode  	  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Speed","Size", "Pressure", "Fixed"]);
+			mappingMode  	  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Speed","Size", "Pressure/Speed", "Fixed"]);
 			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_OFFSET_MAPPING,1,["Linear",
 				"CircQuad",
 				"Circular",
@@ -92,16 +92,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		override public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
-			var pi2:Number = Math.PI*  0.5;
-			var pi3:Number = Math.PI * 1.5;
+			var pi2:Number   = Math.PI*  0.5;
+			var pi3:Number   = Math.PI * 1.5;
 			var mapIndex:int = mappingMode.index;
-			var mf:Function = mappingFunctions[mappingFunction.index];
-			var oar:Number = offsetAngleRange.numberValue;
-			var aaj:Number = angleAdjustment.numberValue;
-			var sf:Number = sizeFactor.numberValue;
-			var bar:Number = manager.brushAngleRange;
-			var spf:Number = splatFactor.numberValue;
-			var mo:Number =  minOffset.numberValue;
+			var mf:Function  = mappingFunctions[mappingFunction.index];
+			var oar:Number   = offsetAngleRange.numberValue;
+			var aaj:Number   = angleAdjustment.numberValue;
+			var sf:Number    = sizeFactor.numberValue;
+			var bar:Number   = manager.brushAngleRange;
+			var spf:Number   = splatFactor.numberValue;
+			var mo:Number    = minOffset.numberValue;
 			
 			for ( var i:int = 0; i < points.length; i++ )
 			{
@@ -109,7 +109,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				var angle:Number = point.angle + aaj + rng.getNumber(-oar,oar) + (rng.getChance() ? pi2 : pi3);
 				var offset:Number =  rng.getMappedNumber(0, 1, mf );
 				
-				var distance:Number =  mo + spf * offset * [point.speed / 25, point.size, point.pressure / 2000, 1][mapIndex]; 
+				var distance:Number =  mo + spf * offset * [point.speed / 25, point.size, point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, 1][mapIndex]; 
 				point.x  +=  Math.cos(angle) * distance;
 				point.y  +=  Math.sin(angle) * distance;
 				point.size *=  1 - Math.min(1,sf * offset) ; 
