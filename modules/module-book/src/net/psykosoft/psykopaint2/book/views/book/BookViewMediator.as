@@ -33,6 +33,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private var _samplesDataProvider:SampleImagesBookDataProvider;
 		private var _userPhotosDataProvider:UserPhotosBookDataProvider;
+		private var _tracedSheet:Boolean;
 
 		override public function initialize():void {
 
@@ -102,7 +103,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		private function initializeUserPhotosDataProvider():void {
-			_userPhotosDataProvider = new UserPhotosBookDataProvider();
+			_userPhotosDataProvider = new UserPhotosBookDataProvider( stage3dProxy );
 			_userPhotosDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_userPhotosDataProvider.fullImagePickedSignal.add( onFullImagePicked );
 			_userPhotosDataProvider.readySignal.add( onUserPhotosDataProviderReady );
@@ -111,7 +112,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			requestInteractionBlockSignal.dispatch( true );
 		}
 
-		private var _tracedSheet:Boolean;
 		private function onUserPhotosSheetGenerated( iosBmd:BitmapData ):void {
 			if( _tracedSheet ) return;
 			var bitmap:Bitmap = new Bitmap( iosBmd );
@@ -127,7 +127,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		private function initializeSamplesDataProvider():void {
-			_samplesDataProvider = new SampleImagesBookDataProvider();
+			_samplesDataProvider = new SampleImagesBookDataProvider( stage3dProxy );
 			_samplesDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_samplesDataProvider.fullImagePickedSignal.add( onFullImagePicked );
 			_samplesDataProvider.readySignal.add( onSamplesDataProviderReady );

@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.book.views.book.content
 {
 
+	import away3d.core.managers.Stage3DProxy;
 	import away3d.textures.BitmapTexture;
 
 	import flash.display.Bitmap;
@@ -39,8 +40,8 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		private const NUM_ROWS:uint = 3;
 		private const NUM_COLS:uint = 2;
 
-		public function SampleImagesBookDataProvider() {
-			super();
+		public function SampleImagesBookDataProvider( proxy:Stage3DProxy ) {
+			super( proxy );
 			readySignal = new Signal();
 			fullImagePickedSignal = new Signal();
 			_interactionRegionsForSheet = new Dictionary();
@@ -136,7 +137,9 @@ package net.psykosoft.psykopaint2.book.views.book.content
 			// Draw sprite.
 			sheetBmd.draw( drawSprite );
 
-			registerTextureForSheet( new BitmapTexture( sheetBmd ), sheetIndex );
+			var bitmapTexture:BitmapTexture = new BitmapTexture( sheetBmd, false );
+			bitmapTexture.getTextureForStage3D( _stage3dProxy ); // Force on request upload of the texture...
+			registerTextureForSheet( bitmapTexture, sheetIndex );
 
 			// Store the sprite for interaction.
 			_interactionRegionsForSheet[ sheetIndex ] = regions;

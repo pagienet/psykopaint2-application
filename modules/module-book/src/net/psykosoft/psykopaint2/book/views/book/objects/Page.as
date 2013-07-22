@@ -64,6 +64,7 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 		public function set frontTexture( value:BitmapTexture ):void {
 			if( !_frontMaterial ) {
 				_frontMaterial = new TextureMaterial( value, true, false, false );
+				_frontMaterial.mipmap = false;
 				_frontMesh.material = _frontMaterial;
 			}
 			else _frontMaterial.texture = value;
@@ -72,6 +73,7 @@ package net.psykosoft.psykopaint2.book.views.book.objects
 		public function set backTexture( value:BitmapTexture ):void {
 			if( !_backMaterial ) {
 				_backMaterial = new TextureMaterial( value, true, false, false );
+				_backMaterial.mipmap = false;
 				_backMesh.material = _backMaterial;
 			}
 			else _backMaterial.texture = value;

@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.book.views.book.content
 {
 
+	import away3d.core.managers.Stage3DProxy;
 	import away3d.textures.BitmapTexture;
 
 	import flash.display.BitmapData;
@@ -13,8 +14,8 @@ package net.psykosoft.psykopaint2.book.views.book.content
 
 	public class TestBookDataProvider extends BookDataProviderBase
 	{
-		public function TestBookDataProvider() {
-			super();
+		public function TestBookDataProvider( proxy:Stage3DProxy ) {
+			super( proxy );
 		}
 
 		// ---------------------------------------------------------------------

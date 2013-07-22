@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.book.views.book.content
 {
 
+	import away3d.core.managers.Stage3DProxy;
 	import away3d.errors.AbstractMethodError;
 	import away3d.textures.BitmapTexture;
 
@@ -17,16 +18,18 @@ package net.psykosoft.psykopaint2.book.views.book.content
 		private var _textureDictionary:Dictionary;
 		private var _defaultTexture:BitmapTexture;
 
+		protected var _stage3dProxy:Stage3DProxy;
 		protected var _sheetWidth:uint;
 		protected var _sheetHeight:uint;
 
 		public var textureReadySignal:Signal;
 
-		public function BookDataProviderBase() {
+		public function BookDataProviderBase( proxy:Stage3DProxy ) {
 			super();
 			textureReadySignal = new Signal();
 			_textureDictionary = new Dictionary();
 			_activeSheetIndices = new Vector.<uint>();
+			_stage3dProxy = proxy;
 		}
 
 		public function setSheetDimensions( pageWidth:Number, pageHeight:Number ):void {
