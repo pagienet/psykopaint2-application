@@ -30,41 +30,51 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,splotch,noisy"/>
 
 					<parameterMapping>
-						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush,Speed Brush,Van Gogh,Smear Brush" showInUI="1"/>
+						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush,Speed Brush,Van Gogh,Sprinkle,Smear Brush" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_0.Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="1,2"
+							indices="1,2,3"
 							value1="0.12" value2="0.7"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_0.Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="0,3"
+							indices="0,4"
 							value1="0.47" value2="0.5"/>	
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_1.Color Blending" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="0,1,2"
+							indices="0,1,2,3"
 							value1="0.5" value2="0.9"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_1.Color Blending" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="3"
+							indices="4"
 							value1="0.0001" value2="0.001"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_2.Splat Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="0,1,2"
+							indices="0,1,2,3"
 							value="40"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
 							target="pathengine.pointdecorator_2.Splat Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="3"
+							indices="4"
 							value="10"/>	
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Style" 
 							target="pathengine.pointdecorator_4" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="2"/>	
+							indices="2,3"/>	
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
+							target="pathengine.pointdecorator_4.Angle Adjustment" 
+							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
+							indices="2"
+							value="90"/>
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Style" 
+							target="pathengine.pointdecorator_4.Angle Adjustment" 
+							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
+							indices="3"
+							value="0"/>
 						<parameter id="Custom Color" type={PsykoParameter.BooleanParameter}  value="0" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
 							target="pathengine.pointdecorator_1.Color Mode" 

@@ -298,6 +298,7 @@ package net.psykosoft.psykopaint2.core.model
 		private function uploadNormalSpecularOriginal() : void
 		{
 			var inflated : ByteArray = new ByteArray();
+			//TODO - I observed a case where _normalSpecularOriginal was null here and caused an exception:
 			_normalSpecularOriginal.position = 0;
 			inflated.writeBytes(_normalSpecularOriginal, 0, _normalSpecularOriginal.length);
 			inflated.uncompress();

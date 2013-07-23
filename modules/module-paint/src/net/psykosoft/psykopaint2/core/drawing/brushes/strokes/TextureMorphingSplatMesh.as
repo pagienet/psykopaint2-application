@@ -72,9 +72,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			data[19] = data[27] = uvBounds.bottom;
 			
 			fragmentConstants[4] = Math.random(); //blending ratio
-			fragmentConstants[5] = 1 - fragmentConstants[5] ;
+			fragmentConstants[5] = 1 - fragmentConstants[4];
 			
-			fragmentConstants[0] = uvBounds.width * int( Math.random() * 10 ); //texture column offset
+			fragmentConstants[0] = uvBounds.width  * int( Math.random() * 10 ); //texture column offset
 			fragmentConstants[1] = uvBounds.height * int( Math.random() * 10 );//texture row offset
 			fragmentConstants[2] = 0.1  + Math.random() * 0.4 ; // blending treshold
 			fragmentConstants[3] = 1 / (1 - fragmentConstants[2]);// blending normalization factor
