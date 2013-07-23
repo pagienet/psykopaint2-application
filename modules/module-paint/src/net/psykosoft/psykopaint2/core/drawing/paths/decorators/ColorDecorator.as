@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	
 	import com.quasimondo.geom.ColorMatrix;
 	
-	
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManagerCallbackInfo;
@@ -20,8 +19,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_N_BRIGHTNESS:String = "Brightness";
 		public static const PARAMETER_NR_COLOR_BLENDING:String = "Color Blending";
 		public static const PARAMETER_NR_OPACITY:String = "Opacity";
+		public static const PARAMETER_SL_PICK_RADIUS_MODE:String = "Pick Radius Mode";
 		public static const PARAMETER_NR_PICK_RADIUS:String = "Color Pick Radius";
 		public static const PARAMETER_NR_SMOOTH_FACTOR:String = "Color Smooth Factor";
+		static public const PARAMETER_N_MAXIMUM_SPEED:String  = "Maximum Speed";
 		
 		public static const INDEX_MODE_PICK_COLOR:int = 0;
 		public static const INDEX_MODE_FIXED_COLOR:int = 1;
@@ -35,6 +36,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var colorBlending:PsykoParameter;
 		private var brushOpacity:PsykoParameter;
 		private var pickRadius:PsykoParameter;
+		private var pickRadiusMode:PsykoParameter;
+		private var maxSpeed:PsykoParameter;
+		
 		private var smoothFactor:PsykoParameter;
 		private var color:PsykoParameter;
 		
@@ -52,12 +56,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_BRIGHTNESS,0,-255, 255);
 			colorBlending  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_COLOR_BLENDING,0.7,0.7,0, 1);
 			brushOpacity  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_OPACITY,0.9,0.9,0,1);
+			pickRadiusMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_PICK_RADIUS_MODE,0,["Fixed","Speed"] );
 			pickRadius  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_PICK_RADIUS,1,1,0,1);
 			smoothFactor  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_SMOOTH_FACTOR,1,1,0,1);
 			color  = new PsykoParameter( PsykoParameter.ColorParameter,PARAMETER_C_COLOR,0x000000);
+			maxSpeed  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
 			
-			_parameters.push(colorMode, presetColor, saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,pickRadius,smoothFactor,color);
+			_parameters.push(colorMode, presetColor, saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,pickRadius,pickRadiusMode,smoothFactor,color,maxSpeed);
 			cm = new ColorMatrix();
 		}
 		
@@ -74,8 +80,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				cm.adjustBrightness( brightnessAdjustment.numberValue );
 			}
 			
-			var mode:int = colorMode.index;
+			var radiusMode:int = pickRadiusMode.index;
+			var minPickRadius:Number = pickRadius.lowerRangeValue;
+			var pickRadiusRange:Number = pickRadius.rangeValue;
+			var ms:Number = maxSpeed.numberValue;
 			
+			var mode:int = colorMode.index;
 			if ( mode == 1 ) 
 			{
 				var c:uint = color.colorValue;
@@ -88,13 +98,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var cb:PathManagerCallbackInfo =  manager.callbacks;
 			for ( var i:int = 0; i < points.length; i++ )
 			{
-				var prgba:Vector.<Number> = points[i].colorsRGBA;
+				var point:SamplePoint = points[i];
+				var prgba:Vector.<Number> = point.colorsRGBA;
 				
 				if ( mode == 0 )
 				{
 					if ( cb.onPickColor ) {
-						applyArray[0] = points[i];
-						applyArray[1] = pickRadius.randomValue;
+						applyArray[0] = point;
+						applyArray[1] = minPickRadius + pickRadiusRange * [Math.random(),Math.min(point.speed,ms) / ms][radiusMode];
 						applyArray[2] = smoothFactor.randomValue;
 						cb.onPickColor.apply(cb.callbackObject, applyArray );
 					}
@@ -109,7 +120,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				
 				var lrgba:Vector.<Number> = lastRGBA;
 				
-				if (points[i].first )
+				if (point.first )
 				{
 					alpha = brushOpacity.randomValue;
 					lrgba[0] = prgba[0] * alpha;
