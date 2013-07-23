@@ -23,7 +23,7 @@ package away3d.hacks
 			super( bitmapData, false );
 		}
 
-		override protected function uploadContent( texture:TextureBase ):void {
+		/*override protected function uploadContent( texture:TextureBase ):void {
 			while( _currentQuality >= QUALITIES ) {
 				increaseQuality();
 			}
@@ -53,6 +53,6 @@ package away3d.hacks
 			_currentQuality = Math.log( _width ) / Math.log( 2 );
 			_mipGenerator = new BitmapData( _width, _height );
 			_drawMatrix = new Matrix();
-		}
+		}*/
 	}
 }
