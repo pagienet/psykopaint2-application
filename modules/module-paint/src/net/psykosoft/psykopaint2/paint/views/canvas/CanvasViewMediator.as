@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.geom.Rectangle;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
@@ -20,8 +20,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
-	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
@@ -32,7 +30,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
@@ -47,7 +44,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.TransformGesture;
-	import org.osflash.signals.Signal;
 
 	public class CanvasViewMediator extends MediatorBase
 	{
@@ -344,8 +340,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onHomeModuleReady():void {
 			if( _waitingForHomeModuleToBeReady ) {
 
-				_waitingForSavingPopUpRemoval = true;
-				requestPopUpRemovalSignal.dispatch();
+				setTimeout( function():void {
+					_waitingForSavingPopUpRemoval = true;
+					requestPopUpRemovalSignal.dispatch();
+				}, 250 );
 
 				_waitingForHomeModuleToBeReady = false;
 			}
