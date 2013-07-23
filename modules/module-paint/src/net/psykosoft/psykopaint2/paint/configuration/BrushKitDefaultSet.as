@@ -226,7 +226,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.4" value2="0.4" />
-							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY} label="Intensity" path="pathengine.pointdecorator_1" value1="1" value2="1" />
+							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY} label="Intensity" path="pathengine.pointdecorator_1" value1=".4" value2=".4" />
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" value1="0.7" value2="0.9" />
 							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" showInUI="1"/>
 						

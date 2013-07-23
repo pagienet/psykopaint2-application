@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_shininess.numberValue = .4;
 			_glossiness.numberValue = .5;
 			_bumpiness.numberValue = .6;
-			setBrushSizeFactors(.3,.4);
+			setBrushSizeFactors(.2,.4);
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
