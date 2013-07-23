@@ -117,8 +117,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						tt = t*t;
 						angle = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
 						speed = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
-						trace(((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ));
-					 	p = PathManager.getSamplePoint( 
+						p = PathManager.getSamplePoint( 
 							ti2*p1x+tit*cx+tt*p2x, 
 							ti2*p1y+tit*cy+tt*p2y,
 							((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
@@ -177,78 +176,5 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				result[0].first = true;
 			}
 		}
-		
-		/*
-		private function computeBezierPoints(
-			VertexRec vertices[], int numPoints,
-			double b0x, double b0y, 
-			double b1x, double b1y, 
-			double b2x, double b2y, 
-			double b3x, double b3y
-		) 
-		{
-			double ax, ay, bx, by, cx, cy, dx, dy;
-			int numSteps, i;
-			double h;
-			double pointX, pointY;
-			double firstFDX, firstFDY;
-			double secondFDX, secondFDY;
-			double thirdFDX, thirdFDY;
-			
-			assert(vertices != NULL);
-			assert(numPoints >= 2);
-			
-			
-			ax = -b0x + b3x;
-			ay = -b0y + b3y;
-			
-			bx = 3 * b0x -3 * b1x;
-			by = 3 * b0y -3 * b1y;
-			
-			dx = b0x;
-			dy = b0y;
-			
-			
-			
-			numSteps = numPoints - 1;        //    arbitrary choice
-			h = 1.0 / (double) numSteps;    //    compute our step size
-			
-			
-			
-			pointX = dx;
-			pointY = dy;
-			
-			firstFDX = ax * (h * h * h) + bx * (h * h) - bx * h;
-			firstFDY = ay * (h * h * h) + by * (h * h) - by * h;
-			
-			secondFDX = 6 * ax * (h * h * h) + 2 * bx * (h * h);
-			secondFDY = 6 * ay * (h * h * h) + 2 * by * (h * h);
-			
-			thirdFDX = 6 * ax * (h * h * h);
-			thirdFDY = 6 * ay * (h * h * h);    
-			
-			
-			
-			vertices[0].x = (int)pointX;
-			vertices[0].y = (int)pointY;
-			
-			for (i = 0; i < numSteps; i++) {
-				
-				pointX += firstFDX;
-				pointY += firstFDY;
-				
-				firstFDX += secondFDX;
-				firstFDY += secondFDY;
-				
-				secondFDX += thirdFDX;
-				secondFDY += thirdFDY;
-				
-				vertices[i + 1].x = (int)pointX;
-				vertices[i + 1].y = (int)pointY;
-				
-			}
-		}
-		*/
-		
 	}
 }

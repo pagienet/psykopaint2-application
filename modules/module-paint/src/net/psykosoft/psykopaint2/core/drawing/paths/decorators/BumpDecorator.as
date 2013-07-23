@@ -32,12 +32,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const PARAMETER_B_INVERT_MAPPING:String = "Invert Mapping";
 		static public const PARAMETER_N_MAXIMUM_SPEED:String  = "Maximum Speed";
 		
-		static public const MODE_INDEX_FIXED:int = 0;
-		static public const MODE_INDEX_SPEED:int = 1;
-		static public const MODE_INDEX_PRESSURE:int = 2;
-		static public const MODE_INDEX_PRESSURE_SPEED:int = 3;
-		static public const MODE_INDEX_MULTIPLY:int = 4;
-		static public const MODE_INDEX_ADD:int = 5;
+		static public const INDEX_MODE_FIXED:int = 0;
+		static public const INDEX_MODE_SPEED:int = 1;
+		static public const INDEX_MODE_PRESSURE:int = 2;
+		static public const INDEX_MODE_PRESSURE_SPEED:int = 3;
+		static public const INDEX_MODE_MULTIPLY:int = 4;
+		static public const INDEX_MODE_ADD:int = 5;
 		
 		
 		private var shininess:PsykoParameter;

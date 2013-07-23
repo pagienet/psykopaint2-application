@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core.models
 		public static const PAINT_ADJUST_BRUSH:String = "state/paint/adjust_brush";
 
 		public static const PAINT_COLOR:String = "state/paint/select_color";
-		public static const PAINT_HIDE_SOURCE:String = "state/paint/transform";
+		public static const PAINT_HIDE_SOURCE:String = "state/paint/hide_source";
 		
 
 	}

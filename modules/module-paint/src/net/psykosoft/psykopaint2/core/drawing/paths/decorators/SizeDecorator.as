@@ -30,6 +30,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MODE_MULTIPLY:int = 3;
 		static public const INDEX_MODE_ADD:int = 4;
 		
+		static public const INDEX_MAPPING_LINEAR:int = 0;
+		static public const INDEX_MAPPING_CIRCQUAD:int = 1;
+		static public const INDEX_MAPPING_CIRCULAR:int = 2;
+		static public const INDEX_MAPPING_SINE:int = 3;
+		static public const INDEX_MAPPING_QUADRATIC:int =4;
+		static public const INDEX_MAPPING_CUBIC:int = 5;
+		static public const INDEX_MAPPING_QUARTIC:int = 6;
+		static public const INDEX_MAPPING_QUINTIC:int = 7;
+		static public const INDEX_MAPPING_STRONG:int = 8;
+		static public const INDEX_MAPPING_EXPONENTIAL:int = 9;
+		
 		private const _applyArray:Array = [0,0,1,1];
 		
 		private var mappingMode:PsykoParameter;
@@ -54,9 +65,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function SizeDecorator()
 		{
 			super();
-			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Fixed","Speed","Pressure/Speed","Multiply","Add"]);
+			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,INDEX_MODE_FIXED,["Fixed","Speed","Pressure/Speed","Multiply","Add"]);
 			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_FACTOR,0,1,0,1);
-			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,0,["Linear",
+			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,INDEX_MAPPING_LINEAR,["Linear",
 				"CircQuad",
 				"Circular",
 				"Sine",
