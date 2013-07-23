@@ -276,7 +276,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={SpawnDecorator.PARAMETER_NR_BRISTLE_VARIATION} path="pathengine.pointdecorator_1" value="1"/>
 						</SpawnDecorator>
 						<BumpDecorator>
-							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.MODE_INDEX_FIXED} />
+							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.INDEX_MODE_FIXED} />
 							<parameter id={BumpDecorator.PARAMETER_NR_BUMPINESS} path="pathengine.pointdecorator_2" value1="-1" value2="2" />
 							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_2" value="0.9" />
 							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_2" value="0.4" />
