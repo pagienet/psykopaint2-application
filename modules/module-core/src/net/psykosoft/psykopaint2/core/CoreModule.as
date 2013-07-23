@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.debug.UndisposedObjects;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
@@ -142,6 +143,8 @@ package net.psykosoft.psykopaint2.core
 
 			trace( this, "context3d created: " + _stage3dProxy.context3D );
 			_stage3dProxy.removeEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated );
+
+			CopyTexture.init( _stage3d.context3D );
 
 			// TODO: listen for context loss?
 			// This simulates a context loss. A bit of googling shows that context loss on iPad is rare, but could be possible.

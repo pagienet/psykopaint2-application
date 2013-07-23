@@ -1,19 +1,24 @@
 package net.psykosoft.psykopaint2.paint
 {
 
+	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
+	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 
 	public class PaintModule extends ModuleBase
@@ -76,38 +81,54 @@ package net.psykosoft.psykopaint2.paint
 		}
 
 		private function onViewsReady():void {
-			// Startup core.
+
+			// Init drawing core.
 			_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch();
-			// Load default surface.
+
+			// Notify potential super modules.
+			moduleReadySignal.dispatch( _coreModule.injector );
+
+			if( isStandalone ) {
+				loadDefaultSurface();
+			}
+		}
+
+		private function loadDefaultSurface():void {
 			_loader = new BinaryLoader();
 			var size:int = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2048 : 1024;
 			_loader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_0_" + size + ".surf", onDefaultSurfaceLoaded );
 		}
 
 		private function onDefaultSurfaceLoaded( byteArray:ByteArray ):void {
-
 			_loader.dispose();
 			_loader = null;
 
 			// Set default surface.
 			_paintConfig.injector.getInstance( RequestDrawingCoreSurfaceSetSignal ).dispatch( byteArray, null );
 
-			if( isStandalone ) {
+			loadDefaultSourceImage();
+		}
 
-				// Init drawing core.
-				_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch(); // Start drawing core, causes first "real" application states...
+		private function loadDefaultSourceImage():void {
+			// TODO: load a sample image
+			onDefaultSourceImageLoaded();
+		}
 
-				// Show navigation.
-				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-				showNavigationSignal.dispatch( 1, 0.5 );
+		private function onDefaultSourceImageLoaded():void {
 
-				// Remove splash screen.
-				_coreModule.coreRootView.removeSplashScreen();
-				_coreModule.startEnterFrame();
-			}
+			// Set source image.
+			var perlinBmd:BitmapData = new BitmapData( 1024 * CoreSettings.GLOBAL_SCALING, 768 * CoreSettings.GLOBAL_SCALING, false, 0 );
+			perlinBmd.perlinNoise( 50, 50, 8, uint( 1000 * Math.random() ), false, true, 7, true );
 
-			// Notify potential super modules.
-			moduleReadySignal.dispatch( _coreModule.injector );
+			// Causes drawing core module activation and hence an application state change via UpdateAppStateFromActivatedDrawingCoreModuleCommand.
+			_coreModule.injector.getInstance( NotifyCropCompleteSignal ).dispatch( perlinBmd ); // Launches app in paint mode.
+
+			// Show navigation.
+			_coreModule.injector.getInstance( RequestNavigationToggleSignal ).dispatch( 1, 0.5 );
+
+			// Remove splash screen.
+			_coreModule.coreRootView.removeSplashScreen();
+			_coreModule.startEnterFrame();
 		}
 	}
 }

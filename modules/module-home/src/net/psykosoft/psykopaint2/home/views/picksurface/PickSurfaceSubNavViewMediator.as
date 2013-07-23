@@ -80,7 +80,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		}
 
 		private function onSurfaceLoaded():void {
-			requestStateChange( StateType.PICK_IMAGE );
+			requestStateChange( StateType.PREPARE_FOR_PAINT_MODE );
 		}
 	}
 }

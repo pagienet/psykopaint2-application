@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
@@ -246,19 +247,20 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			if( newState ) {
 				trace( this, "state index: " + newState.indexOf( StateType.PAINT ) );
 				if( newState.indexOf( StateType.PAINT ) != -1 ) {
+
 					if( !CoreSettings.RUNNING_ON_iPAD && !_addedMouseWheelListener ) {
 						view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
 						_addedMouseWheelListener = true;
 						trace( this, "listener added" );
 					}
 				}
-			}
-			else {
-				paintModule.stopAnimations();
-				if( !CoreSettings.RUNNING_ON_iPAD && _addedMouseWheelListener ) {
-					view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
-					_addedMouseWheelListener = false;
-					trace( this, "listener removed" );
+				else {
+					paintModule.stopAnimations();
+					if( !CoreSettings.RUNNING_ON_iPAD && _addedMouseWheelListener ) {
+						view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+						_addedMouseWheelListener = false;
+						trace( this, "listener removed" );
+					}
 				}
 			}
 

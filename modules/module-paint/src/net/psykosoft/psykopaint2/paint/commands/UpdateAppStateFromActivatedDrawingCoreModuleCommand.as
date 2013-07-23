@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
+	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
@@ -15,19 +16,29 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal;
 
+		[Inject]
+		public var stateModel:StateModel;
+
 		override public function execute():void {
 			super.execute();
 
 			var newState:String;
 
+			trace( this, "prev: " + moduleActivationVO.deactivatedModuleType );
+
 			switch( moduleActivationVO.activatedModuleType ) {
 
 				case ModuleType.PAINT:
-//					trace( this, "prev: " + moduleActivationVO.deactivatedModuleType );
-					// TODO: assumes always coming from home
-					if( moduleActivationVO.deactivatedModuleType != ModuleType.NONE ) {
-						newState = StateType.PREPARE_FOR_PAINT_MODE;
+
+					if( stateModel.currentState == StateType.IDLE ) {
+						newState = StateType.PAINT;
 					}
+					else {
+						// Animate to paint.
+						var wasInAPaintState:Boolean = stateModel.currentState.indexOf( StateType.PAINT );
+						if( !wasInAPaintState ) newState = StateType.PREPARE_FOR_PAINT_MODE;
+					}
+
 					break;
 
 				case ModuleType.CROP:
