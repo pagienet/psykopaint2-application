@@ -63,5 +63,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const XO:String = "xo";
 		public static const YOU:String = "you";
 		public static const POLAROID:String = "polaroid";
+		public static const NEW_PAINTING_MANUAL:String = "newManual";
+		public static const NEW_PAINTING_AUTO:String = "newAuto";
+		public static const PAINTING:String = "painting";
 	}
 }

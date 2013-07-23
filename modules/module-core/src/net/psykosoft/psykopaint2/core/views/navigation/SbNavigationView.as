@@ -377,7 +377,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				btn.displaceLabelTf( 0, -8 );
 			}
 			btn.setLabelType( labelType );
-			trace("LABEL TYPE createButton", labelType);
 			if( icon ) btn.setIcon( icon );
 			return btn;
 		}

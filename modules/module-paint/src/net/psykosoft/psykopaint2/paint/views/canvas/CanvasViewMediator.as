@@ -277,7 +277,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			if( newState == StateType.TRANSITION_TO_HOME_MODE ) {
 				_waitingForZoomOutToContinueToHome = true;
-				requestInteractionBlockSignal.dispatch( true );
 				zoomOut();
 			}
 

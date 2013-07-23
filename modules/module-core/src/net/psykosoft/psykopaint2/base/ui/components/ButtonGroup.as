@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		private var _selected:SbButton;
 		private var _selectionEnabled:Boolean = true;
 
-		private const BUTTON_GAP_X:Number = 8;
+		private const BUTTON_GAP_X:Number = 25;
 
 		public function ButtonGroup() {
 			super();
