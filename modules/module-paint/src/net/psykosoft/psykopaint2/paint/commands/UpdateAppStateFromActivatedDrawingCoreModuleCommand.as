@@ -30,13 +30,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 				case ModuleType.PAINT:
 
-					if( stateModel.currentState == StateType.IDLE ) {
-						newState = StateType.PAINT;
-					}
-					else {
-						// Animate to paint.
-						var wasInAPaintState:Boolean = stateModel.currentState.indexOf( StateType.PAINT );
-						if( !wasInAPaintState ) newState = StateType.PREPARE_FOR_PAINT_MODE;
+					if( moduleActivationVO.deactivatedModuleType != ModuleType.NONE ) {
+						newState = StateType.PREPARE_FOR_PAINT_MODE;
 					}
 
 					break;

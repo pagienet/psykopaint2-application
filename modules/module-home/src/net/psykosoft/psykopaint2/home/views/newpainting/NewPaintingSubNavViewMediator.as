@@ -2,11 +2,15 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 {
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
+	import net.psykosoft.psykopaint2.core.models.PaintModeType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -30,6 +34,12 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		[Inject]
 		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
+		[Inject]
+		public var requestLoadSurfaceSignal:RequestLoadSurfaceSignal;
+
+		[Inject]
+		public var notifySurfaceLoadedSignal:NotifySurfaceLoadedSignal;
+
 		override public function initialize():void {
 
 			// Init.
@@ -43,6 +53,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 			if( NewPaintingSubNavView.lastScrollerPosition != 0 )
 			view.navigation.setScrollerPosition( NewPaintingSubNavView.lastScrollerPosition );
+
+			// From app.
+			notifySurfaceLoadedSignal.add( onSurfaceSet );
 		}
 
 		// -----------------------
@@ -54,6 +67,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				// New color painting.
 				case NewPaintingSubNavView.LBL_NEW: {
+					PaintModeModel.activeMode = PaintModeType.COLOR_MODE;
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.focusedPaintingId = PaintingInfoVO.DEFAULT_VO_ID;
 					requestStateChange( StateType.HOME_PICK_SURFACE );
@@ -62,10 +76,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				// New photo painting.
 				case NewPaintingSubNavView.LBL_NEW_PHOTO: {
+					PaintModeModel.activeMode = PaintModeType.PHOTO_MODE;
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.focusedPaintingId = PaintingInfoVO.DEFAULT_VO_ID;
-					// TODO: select default surface and move on to pick an image
-					requestStateChange( StateType.HOME_PICK_SURFACE );
+					pickDefaultSurfaceAndContinueToPickImage();
 					break;
 				}
 
@@ -85,6 +99,20 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					NewPaintingSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
 				}
 			}
+		}
+
+		private var _waitingForSurfaceSet:Boolean;
+
+		private function onSurfaceSet():void {
+			if( _waitingForSurfaceSet ) {
+			   	requestStateChange( StateType.PICK_IMAGE );
+				_waitingForSurfaceSet = false;
+			}
+		}
+
+		private function pickDefaultSurfaceAndContinueToPickImage():void {
+			_waitingForSurfaceSet = true;
+			requestLoadSurfaceSignal.dispatch( 0 );
 		}
 
 		// -----------------------

@@ -254,13 +254,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 						trace( this, "listener added" );
 					}
 				}
-				else {
-					paintModule.stopAnimations();
-					if( !CoreSettings.RUNNING_ON_iPAD && _addedMouseWheelListener ) {
-						view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
-						_addedMouseWheelListener = false;
-						trace( this, "listener removed" );
-					}
+			}
+			else {
+				paintModule.stopAnimations();
+				if( !CoreSettings.RUNNING_ON_iPAD && _addedMouseWheelListener ) {
+					view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+					_addedMouseWheelListener = false;
+					trace( this, "listener removed" );
 				}
 			}
 
@@ -333,7 +333,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 
 			if( _waitingForZoomInToContinueToPaint ) {
-			    requestStateChange( StateType.PAINT_SELECT_BRUSH );
+				requestStateChange( StateType.PAINT_SELECT_BRUSH );
 				requestInteractionBlockSignal.dispatch( false );
 				_waitingForZoomInToContinueToPaint = false;
 			}
@@ -421,7 +421,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// -----------------------
 
 		private function paintModulePreRenderingStep():void {
-			if( !view.visible ) return;
+			if( !view.isEnabled ) return;
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "pre rendering canvas" );
 			}
@@ -429,7 +429,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function paintModuleNormalRenderingsStep(target : Texture):void {
-			if( !view.visible ) return;
+			if( !view.isEnabled ) return;
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "rendering canvas" );
 			}

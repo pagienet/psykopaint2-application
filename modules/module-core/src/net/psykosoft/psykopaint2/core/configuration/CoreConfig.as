@@ -17,6 +17,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
@@ -32,6 +34,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestBlankSourceImageActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
@@ -153,6 +156,8 @@ package net.psykosoft.psykopaint2.core.configuration
 		// -----------------------
 
 		private function mapNotifications():void {
+			_injector.map( NotifyColorStyleCompleteSignal ).asSingleton();
+			_injector.map( NotifyCropConfirmSignal ).asSingleton();
 			_injector.map( NotifyStateChangeSignal ).asSingleton();
 			_injector.map( NotifyGlobalGestureSignal ).asSingleton();
 			_injector.map( NotifyNavigationToggledSignal ).asSingleton();
@@ -185,6 +190,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestLoadSurfacePreviewSignal ).asSingleton();
 			_injector.map( NotifySurfacePreviewLoadedSignal ).asSingleton();
 			_injector.map( NotifySurfaceLoadedSignal ).asSingleton();
+			_injector.map( RequestBlankSourceImageActivationSignal ).asSingleton();
 		}
 
 		// -----------------------

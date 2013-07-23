@@ -1,9 +1,16 @@
 package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
+	import flash.display.BitmapData;
+
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
+	import net.psykosoft.psykopaint2.core.models.PaintModeType;
+
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestBlankSourceImageActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
@@ -28,6 +35,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		[Inject]
 		public var notifySurfaceLoadedSignal:NotifySurfaceLoadedSignal;
+
+		[Inject]
+		public var requestBlankSourceImageActivationSignal:RequestBlankSourceImageActivationSignal;
 
 		private var _selectedIndex:int;
 
@@ -54,7 +64,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 					requestStateChange( StateType.HOME_ON_EASEL );
 					break;
 				case PickSurfaceSubNavView.LBL_CONTINUE:
-					if( _selectedIndex >= 0 ) requestLoadSurfaceSignal.dispatch( _selectedIndex );
+					continueToColorPaint();
 					break;
 				case PickSurfaceSubNavView.LBL_SURF1:
 					loadSurfaceByIndex( 0 );
@@ -77,6 +87,17 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		private function onSurfacePreviewLoaded():void {
 			view.showRightButton( true );
+		}
+
+		private function continueToColorPaint():void {
+
+			// Request the load of the surface.
+			if( _selectedIndex >= 0 ) requestLoadSurfaceSignal.dispatch( _selectedIndex );
+
+			// Set a blank source image.
+			// TODO: it would be nice to tell the drawing core to not use a source image altogether.
+			var dummyBmd:BitmapData = new BitmapData( 1024 * CoreSettings.GLOBAL_SCALING, 768 * CoreSettings.GLOBAL_SCALING, false, 0 );
+			requestBlankSourceImageActivationSignal.dispatch( dummyBmd );
 		}
 
 		private function onSurfaceLoaded():void {
