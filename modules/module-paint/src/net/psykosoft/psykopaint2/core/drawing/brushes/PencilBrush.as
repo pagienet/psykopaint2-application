@@ -24,11 +24,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
             super(false, false);
             type = BrushType.PENCIL;
 
-            _surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence",.2, 0, 1.0);
+            _surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence",.3, 0, 1.0);
 			_shininess.numberValue = .4;
 			_glossiness.numberValue = .5;
 			_bumpiness.numberValue = .6;
-			setBrushSizeFactors(.2,.4);
+			setBrushSizeFactors(.3,.4);
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void

@@ -64,6 +64,8 @@ import flash.display3D.Context3DVertexBufferFormat;
 			var normalX : Number, normalY : Number;
 			var point:SamplePoint = appendVO.point;
 
+			trace (appendVO.size);
+
 			if (_numVertices == 0) {
                 _dirX = 0;
                 _dirY = 0;
@@ -87,6 +89,7 @@ import flash.display3D.Context3DVertexBufferFormat;
                     _dirX *= invNorm;
                     _dirY *= invNorm;
                 }
+				else return;
 
                 normalX = point.normalY - _prevY;
 				normalY = _prevX - point.normalX;

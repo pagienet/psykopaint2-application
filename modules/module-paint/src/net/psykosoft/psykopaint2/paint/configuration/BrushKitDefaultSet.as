@@ -209,7 +209,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							targetFactors="1,1"
 							targetProperties="lowerRangeValue,upperRangeValue"/>	
 						
-						<parameter id="Intensity" type={PsykoParameter.NumberParameter} value="1" minValue="0" maxValue="1" showInUI="1"/>
+						<parameter id="Intensity" type={PsykoParameter.NumberParameter} value=".4" minValue="0" maxValue="1" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} src="Intensity" 
 							target="pathengine.pointdecorator_1.Opacity" 
 							targetMappings="0,0"
