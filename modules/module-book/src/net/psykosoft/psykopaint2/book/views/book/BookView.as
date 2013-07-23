@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _book:Book;
 		private var _origin:Vector3D;
 
-		private const BOOK_Y:Number = 250;
+		private const BOOK_Y:Number = 200;
 
 		public var animateOutCompleteSignal:Signal;
 		public var animateInCompleteSignal:Signal;

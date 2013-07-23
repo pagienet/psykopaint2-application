@@ -89,10 +89,12 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			view.showRightButton( true );
 		}
 
+		private var _waitingForSurface:Boolean;
 		private function continueToColorPaint():void {
 
 			// Request the load of the surface.
-			if( _selectedIndex >= 0 ) requestLoadSurfaceSignal.dispatch( _selectedIndex );
+			requestLoadSurfaceSignal.dispatch( _selectedIndex );
+			_waitingForSurface = true;
 
 			// Set a blank source image.
 			// TODO: it would be nice to tell the drawing core to not use a source image altogether.
@@ -101,7 +103,10 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		}
 
 		private function onSurfaceLoaded():void {
-			requestStateChange( StateType.PREPARE_FOR_PAINT_MODE );
+			if( _waitingForSurface ) {
+				requestStateChange( StateType.PREPARE_FOR_PAINT_MODE );
+				_waitingForSurface = false;
+			}
 		}
 	}
 }

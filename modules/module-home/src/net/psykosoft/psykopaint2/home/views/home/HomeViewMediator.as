@@ -218,15 +218,12 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function freezeView():void {
 			trace( this, "freezing..." );
+			if( !view.isEnabled ) return;
+			if( view.isFrozen )
 			if( _waitingForFreezeSnapshot ) return;
-			if( view.isEnabled ) {
-				if( !view.frozen ) {
-					_waitingForFreezeSnapshot = true;
-					_snapshotPromise = applicationRenderer.requestSnapshot();
-					_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
-				}
-			}
-			else throw new Error( "HomeViewMediator - freeze requested while the view is not active." ); // TODO: ability to freeze while view is inactive might be needed
+			_waitingForFreezeSnapshot = true;
+			_snapshotPromise = applicationRenderer.requestSnapshot();
+			_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
 		}
 
 		private function onCanvasSnapShot( event:Event ):void {
@@ -248,7 +245,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				}, 50 );
 			}
 
-			_snapshotPromise.texture.dispose();
+			_snapshotPromise.dispose();
 
 			_snapshotPromise = null;
 		}
