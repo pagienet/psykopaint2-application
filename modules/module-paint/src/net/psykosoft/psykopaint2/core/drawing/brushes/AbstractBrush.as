@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	{
 		public static var STROKE_STARTED : String = "strokeStarted";
 		public static var STROKE_ENDED : String = "strokeEnded";
-
+		
 		public static var brushShapeLibrary:BrushShapeLibrary;
 
 		public static const PARAMETER_IL_SHAPES : String = "Shapes";
@@ -199,7 +199,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function finalizeStroke() : void
 		{
-			dispatchEvent(new Event(STROKE_ENDED));
+			if ( !_firstPoint) dispatchEvent(new Event(STROKE_ENDED));
 		}
 
 		protected function onPathStart() : void
@@ -209,8 +209,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		//	(_view as Sprite).graphics.lineStyle(0);
 			
 			
-			dispatchEvent(new Event(STROKE_STARTED));
-
+			
 			_inProgress = true;
 			if (_brushShape) _brushShape.update();
 			_brushMesh.clear();
@@ -231,8 +230,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				point.normalizeXY(_canvasScaleW,_canvasScaleH);
 				processPoint( point );
 			}
-			_firstPoint = false;
 			
+			if ( _firstPoint )
+			{
+				_firstPoint = false;
+				dispatchEvent(new Event(STROKE_STARTED));
+			} 
 
 			invalidateRender();
 
@@ -347,6 +350,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			else {
 				_context.setStencilReferenceValue(1);
 				_context.setStencilActions("frontAndBack", "always", Context3DStencilAction.SET, Context3DStencilAction.SET, Context3DStencilAction.SET);
+				//TODO after "continue painting" snapshot seems to be null when using watercolor brush first
 				_snapshot.drawColor();
 				_context.setStencilReferenceValue(0);
 				_context.setStencilActions("frontAndBack", Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);

@@ -1,6 +1,10 @@
 package net.psykosoft.psykopaint2.core.drawing.modules
 {
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Sine;
+	import com.greensock.easing.Strong;
+	
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Stage3D;
@@ -83,7 +87,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var requestNavigationAutohideModeSignal:RequestNavigationAutohideModeSignal;
 
-
+		[Inject]
+		public var notifyStateChangeSignal:NotifyStateChangeSignal;
+		
 		[Inject]
 		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
 		
@@ -107,7 +113,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				registerBrushKit( BrushKit.fromXML(BrushKitDefaultSet.brushKitData.brush[i]), BrushKitDefaultSet.brushKitData.brush[i].@name);
 			}
 			
-			_showingSource = false;
+			
 			
 		}
 
@@ -115,7 +121,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public function postConstruct() : void
 		{
 			AbstractBrush.brushShapeLibrary = brushShapeLibrary;
-			
+			notifyStateChangeSignal.add(onStateChange);
 			memoryWarningSignal.add(onMemoryWarning);
 			notifyCanvasMatrixChanged.add(onCanvasMatrixChanged);
 			notifyGlobalGestureSignal.add( onGlobalGesture );
@@ -129,14 +135,15 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			{
 				if ( _showingSource )
 				{
+					
+					TweenLite.killTweensOf( renderer );
+					TweenLite.to( renderer, 0.6, { sourceTextureAlpha: 0, ease: Sine.easeOut } );
 					_showingSource = false;
-					renderer.sourceTextureAlpha = 0;
-					renderer.paintAlpha = 1;
 				} else if ( !_showingSource  )
 				{
+					TweenLite.killTweensOf( renderer );
+					TweenLite.to( renderer, 0.6, { sourceTextureAlpha: 0.333, ease: Sine.easeIn } );
 					_showingSource = true;
-					renderer.sourceTextureAlpha = 0.25;
-					renderer.paintAlpha = 1;
 				} 
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
@@ -145,6 +152,15 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			{
 				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
 			}
+		}
+		
+		private function onStateChange( newState:String ):void
+		{
+			if ( newState == StateType.TRANSITION_TO_PAINT_MODE )
+			{
+				TweenLite.to( renderer, 1.6, { sourceTextureAlpha: 0.333, ease: Sine.easeIn } );
+			}
+			
 		}
 		
 		private function onCanvasMatrixChanged(matrix : Matrix) : void
@@ -222,6 +238,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
 			renderer.init(this);
+			_showingSource = true;
+			renderer.sourceTextureAlpha = 1;
 			canvasModel.setSourceBitmapData(bitmapData);
 			bitmapData.dispose();
 			notifyPaintModuleActivatedSignal.dispatch();

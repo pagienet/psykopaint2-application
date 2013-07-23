@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public static const TRANSFORM_GESTURE_ENDED:String       = "transform/ended";
 		public static const TRANSFORM_GESTURE_CHANGED:String     = "transform/changed";
 		public static const TAP_GESTURE_RECOGNIZED:String        = "tap/recognized";
+		public static const TWO_FINGER_TAP_GESTURE_RECOGNIZED:String  = "two/finger/tap/recognized";
 		public static const DOUBLE_TAP_GESTURE_RECOGNIZED:String = "doubletap/recognized";
 	}
 }

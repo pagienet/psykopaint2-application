@@ -199,16 +199,16 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function onGlobalGesture( type:String, event:GestureEvent ):void {
-			trace( this, "onGlobalGesture: " + type );
+			
 			switch( type ) {
-				case GestureType.TWO_FINGER_SWIPE_LEFT:
+				case GestureType.TWO_FINGER_TAP_GESTURE_RECOGNIZED:
+					trace( this, "onGlobalGesture: " + type );
 					requestUndoSignal.dispatch();
 					break;
 
 				case GestureType.TRANSFORM_GESTURE_CHANGED:
+					trace( this, "onGlobalGesture: " + type );
 					var tg:TransformGesture = (event.target as TransformGesture);
-
-
 					var rect:Rectangle = renderer.renderRect;
 					_transformMatrix.identity();
 					_transformMatrix.translate( -tg.location.x, -tg.location.y );
@@ -225,12 +225,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					rect.height = bottomRight.y - topLeft.y;
 
 					updateAndConstrainCanvasRect( rect );
-
-					/*
-					 var angle:Number = Math.atan2(384 -tg.location.y,512 -tg.location.x );
-					 GyroscopeLightController.defaultPos.x = Math.cos(angle) ;
-					 GyroscopeLightController.defaultPos.y =  Math.sin(angle) ;
-					 */
 					break;
 
 			}

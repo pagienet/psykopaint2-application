@@ -104,11 +104,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		public function appendStationary() : void
 		{
 			const numSegments : int = 7;
-			_stationaryTriangleCount = numSegments*2;
-			appendConnection(_prevNormalX, _prevNormalY, -_prevNormalX, -_prevNormalY, _prevAppendVO, numSegments);
-			_prevNormalX = -_prevNormalX;
-			_prevNormalY = -_prevNormalY;
-
+			//TODO I ran into a case when doing a single click and no motion that sometimes _prevAppendVO is null.
+			// this check patches it:
+			if ( _prevAppendVO )
+			{
+				_stationaryTriangleCount = numSegments*2;
+				appendConnection(_prevNormalX, _prevNormalY, -_prevNormalX, -_prevNormalY, _prevAppendVO, numSegments);
+				_prevNormalX = -_prevNormalX;
+				_prevNormalY = -_prevNormalY;
+			}
 			invalidateBuffers();
 			invalidateBounds();
 		}

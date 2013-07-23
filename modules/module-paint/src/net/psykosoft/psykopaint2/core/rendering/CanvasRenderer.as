@@ -150,6 +150,11 @@ package net.psykosoft.psykopaint2.core.rendering
 			_lightingRenderer.sourceTextureAlpha  = value;
 		}
 		
+		public function get sourceTextureAlpha( ):Number
+		{
+			return _lightingRenderer.sourceTextureAlpha;
+		}
+		
 		public function set paintAlpha( value:Number ):void
 		{
 			_lightingRenderer.paintAlpha  = value;
