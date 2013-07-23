@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	public class PickSurfaceSubNavView extends SubNavigationViewBase
 	{
 		public static const LBL_BACK:String = "Back";
-		public static const LBL_CONTINUE:String = "Pick a model";
+		public static const LBL_CONTINUE:String = "Ok";
 		public static const LBL_SURF1:String = "Canvas";
 		public static const LBL_SURF2:String = "Paper";
 		public static const LBL_SURF3:String = "Wood";
