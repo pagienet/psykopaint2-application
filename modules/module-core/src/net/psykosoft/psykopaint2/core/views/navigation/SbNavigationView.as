@@ -380,6 +380,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function setHeader( value:String ):void {
 
+			TweenLite.killTweensOf( headerBg );
+			headerBg.y = _headerDefaultY + headerBg.height;
+			adjustHeaderTextPosition();
+
 			if( value == "" ) {
 				header.visible = headerBg.visible = false;
 				return;
@@ -389,7 +393,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			}
 
 			header.text = value;
-			header.visible = true;
 
 			header.height = 1.25 * header.textHeight;
 			header.width = 15 + header.textWidth;
@@ -398,20 +401,23 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			headerBg.width = header.width + 50;
 			headerBg.x = 1024 / 2 - headerBg.width / 2 + 5;
 
-			TweenLite.killTweensOf( headerBg );
 			animateHeaderIn();
 		}
 
 		private function animateHeaderIn():void {
-			TweenLite.to( headerBg, 0.5, { y: _headerDefaultY, ease: Strong.easeOut, onUpdate: onHeaderAnimationUpdate, onComplete: animateHeaderOut } );
+			TweenLite.to( headerBg, 0.5, { y: _headerDefaultY, ease: Strong.easeOut, onUpdate: adjustHeaderTextPosition, onComplete: animateHeaderOut } );
 		}
 
 		private function animateHeaderOut():void {
-			TweenLite.to( headerBg, 0.25, { delay: 2, y: _headerDefaultY + headerBg.height, ease: Strong.easeIn, onUpdate: onHeaderAnimationUpdate } );
+			TweenLite.to( headerBg, 0.25, { delay: 2, y: _headerDefaultY + headerBg.height, ease: Strong.easeIn, onUpdate: adjustHeaderTextPosition, onComplete: onHeaderOutComplete } );
 		}
 
-		private function onHeaderAnimationUpdate():void{
+		private function adjustHeaderTextPosition():void{
 			 header.y = headerBg.y - _headerTextDefaultOffset;
+		}
+
+		private function onHeaderOutComplete():void {
+			header.visible = headerBg.visible = false;
 		}
 
 		public function setLeftButton( label:String, iconType:String = ButtonIconType.BACK ):void {

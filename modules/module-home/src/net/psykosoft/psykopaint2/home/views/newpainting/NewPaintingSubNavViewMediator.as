@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 
-				// +
+				// New color painting.
 				case NewPaintingSubNavView.LBL_NEW: {
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.focusedPaintingId = PaintingInfoVO.DEFAULT_VO_ID;
@@ -60,7 +60,16 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					break;
 				}
 
-				// >
+				// New photo painting.
+				case NewPaintingSubNavView.LBL_NEW_PHOTO: {
+					requestDrawingCoreResetSignal.dispatch();
+					paintingModel.focusedPaintingId = PaintingInfoVO.DEFAULT_VO_ID;
+					// TODO: select default surface and move on to pick an image
+					requestStateChange( StateType.HOME_PICK_SURFACE );
+					break;
+				}
+
+				// Continue painting.
 				case NewPaintingSubNavView.LBL_CONTINUE: {
 					requestPaintingActivationSignal.dispatch( paintingModel.focusedPaintingId );
 					requestInteractionBlockSignal.dispatch( true );

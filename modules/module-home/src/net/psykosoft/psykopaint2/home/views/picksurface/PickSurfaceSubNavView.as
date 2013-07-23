@@ -30,16 +30,11 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			_group.addButton( navigation.createButton( LBL_SURF2 ) );
 			_group.addButton( navigation.createButton( LBL_SURF3 ) );
 			navigation.addCenterButtonGroup( _group );
-//			_group.setSelectedButtonByIndex( 0 );
 			navigation.layout();
 		}
 
 		public function showRightButton( show:Boolean ):void {
 			navigation.toggleRightButtonVisibility( show );
-		}
-
-		public function getSelectedCenterButtonIndex():int {
-			return _group.getSelectedBtnIndex();
 		}
 	}
 }

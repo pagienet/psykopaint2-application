@@ -14,7 +14,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 	public class NewPaintingSubNavView extends SubNavigationViewBase
 	{
-		public static const LBL_NEW:String = "New Painting";
+		public static const LBL_NEW:String = "Color Painting";
+		public static const LBL_NEW_PHOTO:String = "Photo Painting";
 		public static const LBL_CONTINUE:String = "Continue Painting";
 
 		private var _buttonGroup:ButtonGroup;
@@ -27,8 +28,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		}
 
 		override protected function onEnabled():void {
-			navigation.setHeader( "New Painting" );
-			navigation.addCenterButton( LBL_NEW, ButtonIconType.NEW, ButtonLabelType.NONE );
+			navigation.setHeader( "" );
+			navigation.addCenterButton( LBL_NEW, ButtonIconType.NEW, ButtonLabelType.CENTER );
+			navigation.addCenterButton( LBL_NEW_PHOTO, ButtonIconType.NEW, ButtonLabelType.CENTER );
 			navigation.layout();
 		}
 

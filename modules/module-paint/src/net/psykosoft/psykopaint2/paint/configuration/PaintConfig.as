@@ -7,11 +7,13 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.paint.commands.ActivatePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.CleanUpPaintModuleMemoryCommand;
 	import net.psykosoft.psykopaint2.paint.commands.DeletePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.InitPaintModuleMemoryCommand;
+	import net.psykosoft.psykopaint2.paint.commands.LoadSurfaceCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
@@ -147,6 +149,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_commandMap.map( RequestDrawingCoreSurfaceSetSignal ).toCommand( SetSurfaceImageCommand );
 			_injector.unmap( RequestDrawingCoreSourceImageSetSignal );
 			_commandMap.map( RequestDrawingCoreSourceImageSetSignal ).toCommand( SetSourceImageCommand );
+			_injector.unmap( RequestLoadSurfaceSignal );
+			_commandMap.map( RequestLoadSurfaceSignal ).toCommand( LoadSurfaceCommand );
 		}
 
 		// -----------------------
