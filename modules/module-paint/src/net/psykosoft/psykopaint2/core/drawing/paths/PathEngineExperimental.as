@@ -105,8 +105,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				p2y = p2.y;
 				if ( speed1 > 0 )
 				{
+					
 					ts = stepFactor / speed1;
-					if ( ts > 0.5 ) ts = 0.5;
+					if ( ts > 0.25 ) ts = 0.25;
+					
 					for ( t = 0; t < 0.5; t+=ts )
 					{
 						ti = 1-t;
@@ -115,8 +117,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						tt = t*t;
 						angle = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
 						speed = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
-						
-					 	p = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
+						trace(((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ));
+					 	p = PathManager.getSamplePoint( 
+							ti2*p1x+tit*cx+tt*p2x, 
 							ti2*p1y+tit*cy+tt*p2y,
 							((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
 							0,
@@ -127,6 +130,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						lastPointSpeed  = speed
 						result.push( p);
 					}
+					
 					PathManager.recycleSamplePoint(p1);
 					p1 =  result[result.length-1];
 					PathManager.recycleSamplePoint(c);
@@ -137,7 +141,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					c = p2;
 				}
 			}
-			//TODO - potentially not recycling these
+			
 			p1 = p1.getClone();
 			c = c.getClone();
 			

@@ -205,8 +205,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected function onPathStart() : void
 		{
 			//for debugging only:
-			//(_view as Sprite).graphics.clear();
-			//(_view as Sprite).graphics.lineStyle(0);
+		//	(_view as Sprite).graphics.clear();
+		//	(_view as Sprite).graphics.lineStyle(0);
 			
 			
 			dispatchEvent(new Event(STROKE_STARTED));
@@ -228,9 +228,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			for (var i : int = 0; i < len; i++) {
 				var point : SamplePoint = points[i];
-				
-				//(_view as Sprite).graphics.drawCircle( point.x, point.y,point.speed);
-				
 				point.normalizeXY(_canvasScaleW,_canvasScaleH);
 				processPoint( point );
 			}

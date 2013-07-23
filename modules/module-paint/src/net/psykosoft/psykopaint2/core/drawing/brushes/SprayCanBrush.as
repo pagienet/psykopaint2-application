@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.display3D.Context3D;
 	
 	import de.popforge.math.LCG;
@@ -78,8 +79,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			appendVO.size = rsize * pickRadius;
 			appendVO.point = point;
-			//_colorStrategy.setBlendFactors(_firstPoint ? 1 : rng.getNumber(_colorBlend.lowerRangeValue, _colorBlend.lowerRangeValue + (_colorBlend.upperRangeValue - _colorBlend.lowerRangeValue) * (1 - Math.min(1, point.size))), rng.getNumber(_opacity.lowerRangeValue, _opacity.upperRangeValue));
-			//_colorStrategy.getColors(point, rsize * Math.SQRT1_2 * pickRadius, rsize* 0.5);
 			_colorStrategy.getColorsByVO( appendVO, rsize* 0.5 * smoothFactor);
 		}
 
@@ -88,20 +87,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			var minSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.lowerRangeValue);
 			var maxSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.upperRangeValue);
-			var rsize : Number = minSize + (maxSize - minSize) * point.size;
+			var rsize:Number = minSize + (maxSize - minSize) * point.size;
 			
 			if (rsize > maxSize) rsize = maxSize;
 			else if (rsize < minSize) rsize = minSize;
 
-			//_colorStrategy.setBlendFactors(_firstPoint ? 1 : rng.getNumber(_colorBlend.lowerRangeValue, _colorBlend.lowerRangeValue + (_colorBlend.upperRangeValue - _colorBlend.lowerRangeValue) * (1 - Math.min(1, point.speed))), rng.getNumber(_opacity.lowerRangeValue, _opacity.upperRangeValue));
-			//_colorStrategy.getColors(x, y, rsize * rng.getNumber(0.1, 1), rsize, point.colorsRGBA);
-
+			//(_view as Sprite).graphics.drawCircle( point.x, point.y,rsize);
+			
 			appendVO.uvBounds.x = int(rng.getNumber(0, shapeVariations[0])) * shapeVariations[2];
 			appendVO.uvBounds.y = int(rng.getNumber(0, shapeVariations[1])) * shapeVariations[3];
-			//appendVO.x = point.normalX;
-			//appendVO.y = point.normalY;
 			appendVO.size = rsize * _canvasScaleW; 
-			//appendVO.rotation = point.angle;
 			appendVO.point = point;
 			_brushMesh.append(appendVO);
 		}
