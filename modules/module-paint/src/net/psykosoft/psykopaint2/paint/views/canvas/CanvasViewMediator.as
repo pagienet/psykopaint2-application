@@ -144,7 +144,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
 			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
 			registerEnablingState( StateType.PAINT_COLOR );
-			registerEnablingState( StateType.PAINT_HIDE_SOURCE );
 			registerEnablingState( StateType.TRANSITION_TO_HOME_MODE );
 			registerEnablingState( StateType.TRANSITION_TO_PAINT_MODE );
 			registerEnablingState( StateType.PREPARE_FOR_HOME_MODE );

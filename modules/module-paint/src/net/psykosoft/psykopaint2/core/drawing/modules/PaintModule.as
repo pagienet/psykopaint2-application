@@ -75,9 +75,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		[Inject]
-		public var notifyStateChangeSignal:NotifyStateChangeSignal;
-		
-		[Inject]
 		public var notifyGlobalGestureSignal : NotifyGlobalGestureSignal;
 		
 		[Inject]
@@ -122,38 +119,25 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			memoryWarningSignal.add(onMemoryWarning);
 			notifyCanvasMatrixChanged.add(onCanvasMatrixChanged);
 			notifyGlobalGestureSignal.add( onGlobalGesture );
-			notifyStateChangeSignal.add( onStateChange );
-			
 		}
 		
-		private function onStateChange( stateType:String ):void
-		{
-			
-			if ( _showingSource && stateType == StateType.PAINT_HIDE_SOURCE )
-			{
-				_showingSource = false;
-				renderer.sourceTextureAlpha = 0;
-				renderer.paintAlpha = 1;
-			} else if ( !_showingSource && stateType != StateType.PAINT_HIDE_SOURCE )
-			{
-				_showingSource = true;
-				renderer.sourceTextureAlpha = 0.25;
-				renderer.paintAlpha = 1;
-			} 
-			
-			
-		}
+		
 		
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
 			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED )
 			{
-				if ( !_showingSource )
+				if ( _showingSource )
 				{
-					requestStateChangeSignal.dispatch( StateType.PREVIOUS );
-				} else {
-					requestStateChangeSignal.dispatch( StateType.PAINT_HIDE_SOURCE );
-				}
+					_showingSource = false;
+					renderer.sourceTextureAlpha = 0;
+					renderer.paintAlpha = 1;
+				} else if ( !_showingSource  )
+				{
+					_showingSource = true;
+					renderer.sourceTextureAlpha = 0.25;
+					renderer.paintAlpha = 1;
+				} 
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
 				_activeBrushKit.deactivate();
