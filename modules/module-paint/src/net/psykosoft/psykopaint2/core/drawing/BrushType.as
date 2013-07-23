@@ -3,8 +3,6 @@ package net.psykosoft.psykopaint2.core.drawing
 
 	public class BrushType
 	{
-		public static const PERLIN_NOISE:String = "perlin_noise";
-		public static const SAMPLE_RIBBON:String = "sample_ribbon";
 		public static const RIBBON:String = "ribbon";
 		public static const WATER_COLOR:String = "water_color";
 		public static const WATER_DAMAGE:String = "water_damage";
@@ -13,5 +11,6 @@ package net.psykosoft.psykopaint2.core.drawing
 		public static const DELAUNAY:String = "delaunay";
 		public static const SHATTER:String = "shatter";
 		public static const PENCIL:String = "pencil";
+		public static const SKETCH : String = "sketch";
 	}
 }

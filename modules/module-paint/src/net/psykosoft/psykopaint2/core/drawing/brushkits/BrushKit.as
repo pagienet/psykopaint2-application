@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.brushes.PencilBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.RibbonBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.ShatterBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.UncoloredSprayCanBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
@@ -78,6 +79,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			registerBrush( BrushType.SHATTER, ShatterBrush );
 			registerBrush( BrushType.PENCIL, PencilBrush );
 			registerBrush( BrushType.RIBBON, RibbonBrush );
+			registerBrush( BrushType.SKETCH, SketchBrush );
 			_initialized = true;
 		}
 		

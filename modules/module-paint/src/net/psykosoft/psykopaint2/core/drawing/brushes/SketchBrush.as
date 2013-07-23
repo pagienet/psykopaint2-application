@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 	import flash.display3D.Context3D;
 	
 	import de.popforge.math.LCG;
@@ -11,26 +10,30 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureMorphingSplatMesh;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SketchMesh;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	
-	public class SprayCanBrush extends SplatBrushBase
+	public class SketchBrush extends SplatBrushBase
 	{
 
 		private var rng:LCG;
+		private var _surfaceRelief : PsykoParameter;
 		
 
-		public function SprayCanBrush()
+		public function SketchBrush()
 		{
-			super(true);
+			super(false);
 			rng = new LCG(Math.random() * 0xffffff);
-			type = BrushType.SPRAY_CAN;
-			
+			type = BrushType.SKETCH;
+
+			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", .6, 0, 1.0);
 			_shininess.numberValue = .3;
 			_glossiness.numberValue = .25;
 			_bumpiness.numberValue = .6;
+			_parameters.push(_surfaceRelief);
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
@@ -42,7 +45,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createBrushMesh() : IBrushMesh
 		{
-			return new TextureMorphingSplatMesh();
+			return new SketchMesh();
 		}
 
 		override protected function set brushShape(brushShape : AbstractBrushShape) : void
@@ -55,9 +58,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function assignBrushShape() : void
 		{
-			TextureMorphingSplatMesh(_brushMesh).brushTexture = _brushShape.texture;
-			TextureMorphingSplatMesh(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
-			TextureMorphingSplatMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
+			SketchMesh(_brushMesh).brushTexture = _brushShape.texture;
+			SketchMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
 			_pathManager.brushAngleRange = brushShape.rotationRange;
 		}
 
@@ -97,6 +99,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			appendVO.size = rsize * _canvasScaleW; 
 			appendVO.point = point;
 			_brushMesh.append(appendVO);
+		}
+
+
+		override protected function drawBrushColor() : void
+		{
+			SketchMesh(_brushMesh).setSurfaceRelief(_surfaceRelief.numberValue);
+			super.drawBrushColor();
 		}
 	}
 }

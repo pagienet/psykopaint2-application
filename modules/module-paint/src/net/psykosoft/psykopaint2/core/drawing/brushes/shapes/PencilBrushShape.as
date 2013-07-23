@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	{
 		private var _hardness : Number = .01;
 		private var _grain : Number = 0.9;
-		private var _coarseness : Number = .5;
+		private var _coarseness : Number = .4;
 
 		[Embed(source="assets/pencilAlpha.png")]
 		private var AlphaMaskAsset : Class;
@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			_variationFactors[2] = 1 / _variationFactors[0];
 			_variationFactors[3] = 1 / _variationFactors[1];
 			_variationFactors[4] = Math.atan2(_variationFactors[3],_variationFactors[2]);
-			
+
 			_rotationRange = 0;
 
 			size = 16;
@@ -38,10 +38,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			var alpha : BitmapData = new AlphaMaskAsset().bitmapData;
 			var size : Number = _textureSize;
 
-			var upperLimit : uint = 255*(0.9-_hardness*0.8);
-			var bottomLimit : uint = upperLimit-_grain*upperLimit;
+			var upperLimit : uint = 255*(0.9-_hardness*0.8),
+				bottomLimit : uint = upperLimit-_grain*upperLimit;
 			var brushMap : TrackedBitmapData = new TrackedBitmapData(size, size, true, 0xff00000000);
-			var blur : BlurFilter = new BlurFilter((1-_coarseness)*5, (1-_coarseness)*5, BitmapFilterQuality.HIGH);
+			var blur : BlurFilter = new BlurFilter((1-_coarseness)*2, (1-_coarseness)*2, BitmapFilterQuality.HIGH);
 			brushMap.noise(1000, bottomLimit, upperLimit, 7, true);
 			brushMap.applyFilter(brushMap, brushMap.rect, new Point(), blur);
 

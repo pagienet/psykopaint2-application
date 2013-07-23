@@ -64,8 +64,6 @@ import flash.display3D.Context3DVertexBufferFormat;
 			var normalX : Number, normalY : Number;
 			var point:SamplePoint = appendVO.point;
 
-			trace (appendVO.size);
-
 			if (_numVertices == 0) {
                 _dirX = 0;
                 _dirY = 0;
@@ -76,7 +74,6 @@ import flash.display3D.Context3DVertexBufferFormat;
 				normalY = 1;
 				_prevNormalX = 0;
 				_prevNormalY = -1;
-				// first should include "beginning" of stroke
 			}
 			else {
                 var invNorm : Number;
