@@ -29,8 +29,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		override protected function onEnabled():void {
 			navigation.setHeader( "" );
-			navigation.addCenterButton( LBL_NEW, ButtonIconType.NEW, ButtonLabelType.CENTER );
-			navigation.addCenterButton( LBL_NEW_PHOTO, ButtonIconType.NEW, ButtonLabelType.CENTER );
+			navigation.addCenterButton( LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, ButtonLabelType.CENTER );
+			navigation.addCenterButton( LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, ButtonLabelType.CENTER );
 			navigation.layout();
 		}
 
