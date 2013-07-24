@@ -28,6 +28,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	public class SbNavigationView extends ViewBase
 	{
 		// Declared in Flash.
+		public var woodBg:Sprite;
+		public var wire:Sprite;
 		public var header:TextField;
 		public var headerBg:Sprite;
 		public var leftBtnSide:Sprite;
@@ -83,6 +85,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			visible = false;
 			_hidden = true;
 			y = _bgHeight;
+
+			woodBg.visible = false;
 		}
 
 		override protected function onSetup():void {
@@ -112,7 +116,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_scroller.interactionManager.throwInputMultiplier = 2;
 			_scroller.motionStartedSignal.add( onCenterScrollerMotionStart );
 			_scroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
-			addChildAt( _scroller, 1 );
+			addChildAt( _scroller, 2 );
 
 			_leftButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			_rightButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
