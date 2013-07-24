@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
 
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
@@ -27,9 +28,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 		public function setAvailableColorStyles( availableColorStylePresets:Array ):void {
 			var len:uint = availableColorStylePresets.length;
+			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
 			for( var i:uint; i < len; ++i ) {
-				navigation.addCenterButton( availableColorStylePresets[ i ] );
+				navigation.createCenterButtonData( centerButtonDataProvider, availableColorStylePresets[ i ] );
 			}
+			navigation.scroller.setDataProvider( centerButtonDataProvider );
 			navigation.layout();
 		}
 	}

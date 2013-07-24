@@ -38,10 +38,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
 
 			// New color painting button.
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW, ButtonIconType.NEW, ButtonLabelType.CENTER );
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, ButtonLabelType.CENTER );
 
 			// New photo painting button.
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW_PHOTO, ButtonIconType.NEW, ButtonLabelType.CENTER );
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, ButtonLabelType.CENTER );
 
 			// Old painting buttons.
 			len = data.length;
