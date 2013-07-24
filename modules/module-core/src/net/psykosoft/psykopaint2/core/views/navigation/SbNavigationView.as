@@ -15,10 +15,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flashx.textLayout.formats.TextAlign;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
-	import net.psykosoft.psykopaint2.base.ui.components.HButtonScroller;
+	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
@@ -47,7 +48,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _leftButton:SbButton;
 		private var _rightButton:SbButton;
 		private var _currentSubNavView:SubNavigationViewBase;
-		private var _scroller:HButtonScroller;
+		private var _scroller:HSnapList;
 		private var _animating:Boolean;
 		private var _showing:Boolean;
 		private var _onReactiveHide:Boolean;
@@ -91,8 +92,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		override protected function onSetup():void {
 
-			_leftButton.setLabelType( ButtonLabelType.LEFT );
-			_rightButton.setLabelType( ButtonLabelType.RIGHT );
+			_leftButton.labelType = ButtonLabelType.LEFT;
+			_rightButton.labelType = ButtonLabelType.RIGHT;
 
 			_leftButton.setTextAlign( TextAlign.LEFT );
 //			_leftButton.useLabelBg( true );
@@ -107,7 +108,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_rightButton.displaceLabelTf( 10, -15 );
 			_rightButton.displaceLabelBg( 128, -5 );
 
-			_scroller = new HButtonScroller();
+			_scroller = new HSnapList();
 			_scroller.setVisibleDimensions( 1024 - 280, 130 );
 			_scroller.x = 140;
 			_scroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _scroller.visibleHeight / 2;
@@ -213,7 +214,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			header.visible = false;
 			leftBtnSide.visible = false;
 			rightBtnSide.visible = false;
-			_buttonGroups = new Vector.<ButtonGroup>(); // TODO: sweep and remove listeners first
+//			_buttonGroups = new Vector.<ButtonGroup>(); // TODO: sweep and remove listeners first
 			_scroller.reset();
 
 			// Disable old view.
@@ -351,36 +352,59 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Methods called by SubNavigationViewBase.
 		// ---------------------------------------------------------------------
 
-		private var _buttonGroups:Vector.<ButtonGroup>;
+		// TODO: complete navigation refactor
+//		private var _buttonGroups:Vector.<ButtonGroup>;
 
-		public function addCenterButtonGroup( group:ButtonGroup ):void {
-			// Make sure all of the group's buttons have listeners.
-			var len:uint = group.numButtons;
-			for( var i:uint; i < len; i++ ) {
-				var btn:SbButton = group.buttons[ i ];
-				btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
-			}
-			_buttonGroups.push( group );
-			_scroller.addItem( group, false );
+		public function createCenterButtonData( dataSet:Vector.<ISnapListData>, label:String, iconType:String = ButtonIconType.DEFAULT, labelType:String = ButtonLabelType.CENTER, icon:Bitmap = null ):void {
+			var btnData:ButtonData = new ButtonData();
+			btnData.labelText = label;
+			btnData.iconType = iconType;
+			btnData.labelType = labelType;
+			btnData.iconBitmap = icon;
+			btnData.itemRendererWidth = 100;
+			btnData.itemRendererType = SbButton;
+			dataSet.push( btnData );
 		}
 
-		public function addCenterButton( label:String, iconType:String = ButtonIconType.DEFAULT, labelType:String = ButtonLabelType.CENTER, icon:Bitmap = null ):void {
-			var btn:SbButton = createButton( label, iconType, labelType, icon );
-			btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
-			_scroller.addItem( btn );
-		}
+		// TODO: complete navigation refactor
+//		public function addCenterButtonGroup( group:ButtonGroup ):void {
+//
+//			Make sure all of the group's buttons have listeners.
+//			var len:uint = group.numButtons;
+//			for( var i:uint; i < len; i++ ) {
+//				var btn:SbButton = group.buttons[ i ];
+//				btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
+//			}
+//
+//			_buttonGroups.push( group );
+//			_scroller.addItem( group, false );
+//		}
 
-		public function createButton( label:String, iconType:String = ButtonIconType.DEFAULT, labelType:String = ButtonLabelType.CENTER, icon:Bitmap = null ):SbButton {
-			var btn:SbButton = new SbButton();
+		// TODO: complete navigation refactor
+//		public function addCenterButton( label:String, iconType:String = ButtonIconType.DEFAULT, labelType:String = ButtonLabelType.CENTER, icon:Bitmap = null ):void {
+//			var btn:SbButton = createButton( label, iconType, labelType, icon );
+//			btn.addEventListener( MouseEvent.CLICK, onButtonClicked );
+//			_scroller.addItem( btn );
+//		}
+
+		// TODO: complete navigation refactor
+//		public function createButton( label:String, iconType:String = ButtonIconType.DEFAULT, labelType:String = ButtonLabelType.CENTER, icon:Bitmap = null ):SbButton {
+//
+			// TODO: set these when populating an item renderer with its data provider.
+			/*var btn:SbButton = new SbButton();
 			btn.labelText = label;
+
 			if( iconType != "" ) btn.setIconType( iconType );
 			if( iconType == ButtonIconType.POLAROID ) {
 				btn.displaceLabelTf( 0, -8 );
 			}
+
 			btn.setLabelType( labelType );
-			if( icon ) btn.setIcon( icon );
-			return btn;
-		}
+
+			if( icon ) btn.setIcon( icon );*/
+
+//			return btn;
+//		}
 
 		public function setHeader( value:String ):void {
 
@@ -426,14 +450,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function setLeftButton( label:String, iconType:String = ButtonIconType.BACK ):void {
 			_leftButton.labelText = label;
-			_leftButton.setIconType( iconType );
+			_leftButton.iconType = iconType;
 			_leftButton.visible = true;
 			leftBtnSide.visible = true;
 		}
 
 		public function setRightButton( label:String, iconType:String = ButtonIconType.CONTINUE ):void {
 			_rightButton.labelText = label;
-			_rightButton.setIconType( iconType );
+			_rightButton.iconType = iconType;
 			_rightButton.visible = true;
 			rightBtnSide.visible = true;
 		}
@@ -459,23 +483,23 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onCenterScrollerMotionEnd():void {
 			scrollingEndedSignal.dispatch();
-			toggleButtonGroupInteractivity( true );
+//			toggleButtonGroupInteractivity( true );
 		}
 
 		private function onCenterScrollerMotionStart():void {
 			scrollingStartedSignal.dispatch();
-			toggleButtonGroupInteractivity( false );
+//			toggleButtonGroupInteractivity( false );
 		}
 
-		private function toggleButtonGroupInteractivity( enabled:Boolean ):void {
-			var len:uint = _buttonGroups.length;
-			for( var i:uint; i < len; i++ ) {
-				var group:ButtonGroup = _buttonGroups[ i ];
-				group.selectionEnabled = enabled;
-			}
-		}
+//		private function toggleButtonGroupInteractivity( enabled:Boolean ):void {
+//			var len:uint = _buttonGroups.length;
+//			for( var i:uint; i < len; i++ ) {
+//				var group:ButtonGroup = _buttonGroups[ i ];
+//				group.selectionEnabled = enabled;
+//			}
+//		}
 
-		public function get scroller():HButtonScroller {
+		public function get scroller():HSnapList {
 			return _scroller;
 		}
 		

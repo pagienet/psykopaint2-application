@@ -309,11 +309,14 @@ package net.psykosoft.psykopaint2.core
 			_stateSignal.dispatch( StateType.IDLE );
 
 			if( isStandalone ) {
+
 				// Remove splash screen.
 				_coreRootView.removeSplashScreen();
+
 				// Show Navigation.
-				var showNavigationSignal:RequestNavigationToggleSignal = _injector.getInstance( RequestNavigationToggleSignal );
-				showNavigationSignal.dispatch( 1 );
+//				var showNavigationSignal:RequestNavigationToggleSignal = _injector.getInstance( RequestNavigationToggleSignal );
+//				showNavigationSignal.dispatch( 1, 1 );
+
 				startEnterFrame();
 			}
 
@@ -322,12 +325,6 @@ package net.psykosoft.psykopaint2.core
 //			_injector.getInstance( NotifyPaintingDataRetrievedSignal ).addOnce( testLoadingAPainting ); // Just for testing.
 
 			moduleReadySignal.dispatch();
-		}
-
-		private function testLoadingAPainting( data:Vector.<PaintingInfoVO> ):void {
-			var aVo:PaintingInfoVO = data[ 0 ];
-			trace( this, "painting data loaded, testing painting load: " + aVo.id );
-			_injector.getInstance( RequestPaintingActivationSignal ).dispatch( aVo.id );
 		}
 	}
 }
