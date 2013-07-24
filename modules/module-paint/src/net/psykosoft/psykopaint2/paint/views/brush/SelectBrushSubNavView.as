@@ -60,10 +60,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			navigation.layout();
 		}
 
-		// TODO: complete navigation refactor
-		/*public function setSelectedBrush( activeBrushKit:String ):void {
-			EditBrushSubNavView.setLastSelectedBrush( activeBrushKit );
-			_group.setSelectedButtonByLabel( activeBrushKit );
-		}*/
+		public function setSelectedBrush( activeBrushKit:String ):void {
+			// TODO: complete navigation refactor
+//			EditBrushSubNavView.setLastSelectedBrush( activeBrushKit );
+//			_group.setSelectedButtonByLabel( activeBrushKit );
+		}
 	}
 }

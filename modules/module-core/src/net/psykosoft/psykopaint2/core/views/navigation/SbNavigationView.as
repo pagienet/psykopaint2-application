@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import com.greensock.easing.Strong;
 
 	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -117,6 +118,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_scroller.interactionManager.throwInputMultiplier = 2;
 			_scroller.motionStartedSignal.add( onCenterScrollerMotionStart );
 			_scroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
+			_scroller.rendererAddedSignal.add( onCenterScrollerItemRendererAdded );
+			_scroller.rendererRemovedSignal.add( onCenterScrollerItemRendererRemoved );
 			addChildAt( _scroller, 2 );
 
 			_leftButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
@@ -364,6 +367,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			btnData.itemRendererWidth = 100;
 			btnData.itemRendererType = SbButton;
 			dataSet.push( btnData );
+		}
+
+		private function onCenterScrollerItemRendererAdded( renderer:DisplayObject ):void {
+			renderer.addEventListener( MouseEvent.CLICK, onButtonClicked );
+		}
+
+		private function onCenterScrollerItemRendererRemoved( renderer:DisplayObject ):void {
+			renderer.removeEventListener( MouseEvent.CLICK, onButtonClicked );
 		}
 
 		// TODO: complete navigation refactor

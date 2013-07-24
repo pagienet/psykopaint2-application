@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 	import net.psykosoft.psykopaint2.base.ui.components.*;
 
+	import org.osflash.signals.Signal;
+
 	/*
 	* An data driven HSnapScroller that adds snap points at the position of each child.
 	* */
@@ -16,8 +18,13 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 		public var itemGap:Number = 15;
 
+		public var rendererAddedSignal:Signal;
+		public var rendererRemovedSignal:Signal;
+
 		public function HSnapList() {
 			super();
+			rendererAddedSignal = new Signal();
+			rendererRemovedSignal = new Signal();
 			_itemRendererFactory = new HSnapListItemRendererFactory();
 		}
 
@@ -34,6 +41,8 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		}
 
 		override public function invalidateContent():void {
+
+			if( !_dataProvider ) return;
 
 			// Create snap points for each data item.
 			// Items will remember their associated position.
@@ -52,7 +61,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			containEdgeSnapPoints();
 			dock();
 
-			visualizeVisibleDimensions();
+//			visualizeVisibleDimensions();
 //			visualizeContentDimensions();
 //			visualizeSnapPoints();
 //			visualizeDataPositionsAndDimensions();
@@ -112,7 +121,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 				// Dissociate item renderer from data and mark it as available.
 				itemRenderer = itemData.itemRenderer;
-				_itemRendererFactory.markItemRendererAsAvailable( itemRenderer );
+				releaseItemRenderer( itemRenderer );
 				itemData.itemRenderer = null;
 
 				// Remove from display list.
@@ -126,7 +135,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				itemData = _dataProvider[ indicesOfItemsThatBecomeVisible[ i ] ];
 
 				// Retrieve an item renderer.
-				itemRenderer = _itemRendererFactory.getItemRendererOfType( itemData.itemRendererType );
+				itemRenderer = getNewItemRendererForData( itemData );
 				itemData.itemRenderer = itemRenderer;
 
 				// Configure renderer from data properties.
@@ -137,6 +146,17 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				itemRenderer.y = itemData.itemRendererWidth / 2;
 				_container.addChild( itemRenderer );
 			}
+		}
+
+		private function getNewItemRendererForData( data:ISnapListData ):DisplayObject {
+			var renderer:DisplayObject = _itemRendererFactory.getItemRendererOfType( data.itemRendererType );
+			rendererAddedSignal.dispatch( renderer );
+			return renderer;
+		}
+
+		private function releaseItemRenderer( renderer:DisplayObject ):void {
+			rendererRemovedSignal.dispatch( renderer );
+			_itemRendererFactory.markItemRendererAsAvailable( renderer );
 		}
 
 		private function configureItemRendererFromData( itemRenderer:DisplayObject, itemData:ISnapListData ):void {
@@ -152,7 +172,10 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			for( i = 0; i < numProperties; i++ ) {
 				var propertyName:String = propertyList[ i ].@name;
 				if( itemRenderer.hasOwnProperty( propertyName ) ) {
-					itemRenderer[ propertyName ] = itemData[ propertyName ];
+					var propertyValue:* = itemData[ propertyName ];
+					if( propertyValue ) {
+						itemRenderer[ propertyName ] = propertyValue;
+					}
 				}
 			}
 		}

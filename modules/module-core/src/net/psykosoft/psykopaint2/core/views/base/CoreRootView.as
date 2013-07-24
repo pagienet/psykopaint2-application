@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.base.ui.components.list.DummyItemRenderer;
 	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
 	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapListDataItemBase;
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -490,7 +491,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			list.x = 150;
 			list.y = 768 - 150;
 			addChild( list );
-			var dataProvider:Vector.<HSnapListDataItemBase> = new Vector.<HSnapListDataItemBase>();
+			var dataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
 			for( i = 0; i < 7750; i++ ) {
 				var itemData:DummyItemData = new DummyItemData();
 				itemData.itemRendererType = DummyItemRenderer;

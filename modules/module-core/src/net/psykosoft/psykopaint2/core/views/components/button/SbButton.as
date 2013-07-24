@@ -104,7 +104,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public function set labelType( labelType:String ):void {
 
 			if( labelType == ButtonLabelType.CENTER ){
-				labelBg.y = _btnLblPos.y - 133;
+				if( labelBg ) {
+					labelBg.y = _btnLblPos.y - 133;
+				}
 				tf.y = _btnLblPos.y - 121;
 				adjustLabelColor( labelBg );
 			}
@@ -112,7 +114,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			var currentName:String = getQualifiedClassName( labelBg );
 			if( labelType == currentName ) return;
 
-			removeChild( labelBg );
+			if( labelBg ) {
+				removeChild( labelBg );
+			}
 			labelBg = null;
 
 			tf.visible = true;
@@ -128,7 +132,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			}
 		}
 
-		function adjustLabelColor( labelBg:Sprite ):void{
+		private function adjustLabelColor( labelBg:Sprite ):void{
+			if( !labelBg ) return;
 			var randomHue:int =  Math.random() * 360;
 			var randomSat:Number =  Math.random() + 1;
 			TweenLite.to( labelBg, 0, { colorMatrixFilter:{ hue:randomHue, saturation:randomSat }});
