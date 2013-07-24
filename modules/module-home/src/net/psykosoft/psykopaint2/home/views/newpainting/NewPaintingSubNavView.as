@@ -3,12 +3,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 	import flash.display.Bitmap;
 
-	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
-
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
-	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 
@@ -17,8 +15,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public static const LBL_NEW:String = "Color Painting";
 		public static const LBL_NEW_PHOTO:String = "Photo Painting";
 		public static const LBL_CONTINUE:String = "Continue Painting";
-
-		private var _buttonGroup:ButtonGroup;
 
 		static public var lastSelectedPaintingLabel:String = "";
 		static public var lastScrollerPosition:Number = 0;
@@ -29,24 +25,40 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		override protected function onEnabled():void {
 			navigation.setHeader( "" );
-			navigation.addCenterButton( LBL_NEW, ButtonIconType.NEW, ButtonLabelType.CENTER );
-			navigation.addCenterButton( LBL_NEW_PHOTO, ButtonIconType.NEW, ButtonLabelType.CENTER );
-			navigation.layout();
+			// TODO: complete navigation refactor
+//			navigation.layout();
 		}
 
-		public function setInProgressPaintings( data:Vector.<PaintingInfoVO> ):String {
-			var len:uint = data.length;
-			_buttonGroup = new ButtonGroup();
-			for( var i:uint; i < len; i++ ) {
+		public function setInProgressPaintings( data:Vector.<PaintingInfoVO> ):void {
+
+			var i:uint;
+			var len:uint;
+
+			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
+
+			// New color painting button.
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW, ButtonIconType.NEW, ButtonLabelType.CENTER );
+
+			// New photo painting button.
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW_PHOTO, ButtonIconType.NEW, ButtonLabelType.CENTER );
+
+			// Old painting buttons.
+			len = data.length;
+			for( i = 0; i < len; i++ ) {
+
 				var vo:PaintingInfoVO = data[ i ];
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
-				var btn:SbButton = navigation.createButton( str, ButtonIconType.PAINTING, ButtonLabelType.NONE, new Bitmap( vo.thumbnail ) );
-				_buttonGroup.addButton( btn );
+
+				navigation.createCenterButtonData( centerButtonDataProvider, str, ButtonIconType.PAINTING, ButtonLabelType.NONE, new Bitmap( vo.thumbnail ) );
 			}
-			if( lastSelectedPaintingLabel == "" ) _buttonGroup.setSelectedButtonByIndex( 0 );
-			else _buttonGroup.setSelectedButtonByLabel( lastSelectedPaintingLabel );
-			navigation.addCenterButtonGroup( _buttonGroup );
+
+			navigation.scroller.setDataProvider( centerButtonDataProvider );
+
+			// TODO: complete navigation refactor
+//			if( lastSelectedPaintingLabel == "" ) _buttonGroup.setSelectedButtonByIndex( 0 );
+//			else _buttonGroup.setSelectedButtonByLabel( lastSelectedPaintingLabel );
+//			navigation.addCenterButtonGroup( _buttonGroup );
 
 			// Show right button.
 			if( !HomeSettings.isStandalone ) {
@@ -54,12 +66,11 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			}
 
 			navigation.layout();
-
-			return btn.labelText;
 		}
 
 		public function getIdForSelectedInProgressPainting():String {
-			return _buttonGroup.getSelectedBtnLabel();
+			// TODO: complete navigation refactor
+			return /*_buttonGroup.getSelectedBtnLabel()*/ "";
 		}
 	}
 }

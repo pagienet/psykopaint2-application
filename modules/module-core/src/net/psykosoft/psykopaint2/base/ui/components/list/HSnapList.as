@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 	* */
 	public class HSnapList extends HSnapScroller
 	{
-		private var _dataProvider:Vector.<HSnapListDataItemBase>;
+		private var _dataProvider:Vector.<ISnapListData>;
 		private var _itemRendererFactory:HSnapListItemRendererFactory;
 
 		public var itemGap:Number = 15;
@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			_itemRendererFactory = new HSnapListItemRendererFactory();
 		}
 
-		public function setDataProvider( data:Vector.<HSnapListDataItemBase> ):void {
+		public function setDataProvider( data:Vector.<ISnapListData> ):void {
 
 			// Clean up and set.
 			if( _dataProvider ) {
@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			// Items will remember their associated position.
 			var i:uint;
 			var numItems:uint = _dataProvider.length;
-			var itemData:HSnapListDataItemBase;
+			var itemData:ISnapListData;
 			var itemPositioningMarker:Number = 0;
 			for( i = 0; i < numItems; i++ ) {
 				itemData = _dataProvider[ i ];
@@ -63,7 +63,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		private function visualizeDataPositionsAndDimensions():void {
 			var i:uint;
 			var len:uint = _dataProvider.length;
-			var itemData:HSnapListDataItemBase;
+			var itemData:ISnapListData;
 			_container.graphics.lineStyle( 1, 0xFF0000, 1 );
 			for( i = 0; i < len; ++i ) {
 				itemData = _dataProvider[ i ];
@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			var i:uint;
 			var numItems:uint;
 			var itemRenderer:DisplayObject;
-			var itemData:HSnapListDataItemBase;
+			var itemData:ISnapListData;
 
 			// Which items should *become* visible?
 			numItems = _dataProvider.length;
@@ -139,7 +139,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			}
 		}
 
-		private function configureItemRendererFromData( itemRenderer:DisplayObject, itemData:HSnapListDataItemBase ):void {
+		private function configureItemRendererFromData( itemRenderer:DisplayObject, itemData:ISnapListData ):void {
 
 			// Obtain object public interface description in xml.
 			var objectDescriptor:XML = describeType( itemData );
@@ -157,7 +157,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			}
 		}
 
-		private function shouldItemBeVisibleAtCurrentScrollPosition( itemData:HSnapListDataItemBase ):Boolean {
+		private function shouldItemBeVisibleAtCurrentScrollPosition( itemData:ISnapListData ):Boolean {
 			var px:Number = _container.x + itemData.itemRendererPosition;
 			var hw:Number = itemData.itemRendererWidth * 0.5;
 			return px + hw >= 0 && px - hw <= _visibleWidth;

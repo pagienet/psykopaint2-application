@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.base.ui.components.list
 {
 
-	public class DummyItemData extends HSnapListDataItemBase
+	public class DummyItemData extends HSnapListDataItemBase implements ISnapListData
 	{
 		public var label:String;
 

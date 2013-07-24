@@ -60,7 +60,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			_id = value;
 		}
 
-		public function setIcon( image:Bitmap ):void {
+		public function set iconBitmap( image:Bitmap ):void {
 			// TODO: account for possibility of previously set icon
 			if( icon.currentFrameLabel == ButtonIconType.POLAROID ){
 				image.width = image.height = 105;
@@ -88,7 +88,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			icon.addChild( image );
 		}
 
-		public function setIconType( type:String ):void {
+		public function set iconType( type:String ):void {
 			//todo: add shape icon, temporary patch added to avoid error:
 			if ( type == "param12" ||  type == "param13" ) type = "param7";
 			icon.gotoAndStop( type );
@@ -96,7 +96,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			icon.y = -icon.height / 2;
 		}
 
-		public function setLabelType( labelType:String ):void {
+		public function set labelType( labelType:String ):void {
 
 			if( labelType == ButtonLabelType.CENTER ){
 				labelBg.y = _btnLblPos.y - 133;
