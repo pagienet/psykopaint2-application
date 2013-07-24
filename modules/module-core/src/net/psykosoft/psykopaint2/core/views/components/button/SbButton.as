@@ -1,6 +1,10 @@
 package net.psykosoft.psykopaint2.core.views.components.button
 {
 
+	import com.greensock.TweenLite;
+	import com.greensock.plugins.ColorMatrixFilterPlugin;
+	import com.greensock.plugins.TweenPlugin;
+
 	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -32,6 +36,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public function SbButton() {
 			super();
 
+			TweenPlugin.activate([ ColorMatrixFilterPlugin ]);//TODO: activate this just once?
             btnSelected.visible = false;
 
 			tf.mouseEnabled = false;
@@ -101,6 +106,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			if( labelType == ButtonLabelType.CENTER ){
 				labelBg.y = _btnLblPos.y - 133;
 				tf.y = _btnLblPos.y - 121;
+				adjustLabelColor( labelBg );
 			}
 
 			var currentName:String = getQualifiedClassName( labelBg );
@@ -120,6 +126,12 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			else {
 				tf.visible = labelType == ButtonLabelType.NO_BACKGROUND;
 			}
+		}
+
+		function adjustLabelColor( labelBg:Sprite ):void{
+			var randomHue:int =  Math.random() * 360;
+			var randomSat:Number =  Math.random() + 1;
+			TweenLite.to( labelBg, 0, { colorMatrixFilter:{ hue:randomHue, saturation:randomSat }});
 		}
 
 		private function onAddedToStage( event:Event ):void {
