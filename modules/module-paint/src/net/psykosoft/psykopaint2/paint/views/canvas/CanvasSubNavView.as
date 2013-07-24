@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
@@ -31,13 +32,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				navigation.setLeftButton( LBL_HOME, ButtonIconType.HOME );
 			}
 
-			navigation.addCenterButton( LBL_DESTROY, ButtonIconType.DESTROY );
-			navigation.addCenterButton( LBL_CLEAR, ButtonIconType.BLANK_CANVAS );
-//			navigation.addCenterButton( LBL_MODEL, ButtonIconType.MODEL );
-//			navigation.addCenterButton( LBL_COLOR );
-			navigation.addCenterButton( LBL_EXPORT );
-//			navigation.addCenterButton( LBL_SAVE );
-//			navigation.addCenterButton( LBL_PUBLISH, ButtonIconType.PUBLISH );
+			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
+
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_DESTROY, ButtonIconType.DESTROY );
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_CLEAR, ButtonIconType.BLANK_CANVAS );
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_EXPORT );
+
+			navigation.scroller.setDataProvider( centerButtonDataProvider );
 
 			navigation.setRightButton( LBL_PICK_A_BRUSH, ButtonIconType.BRUSH );
 

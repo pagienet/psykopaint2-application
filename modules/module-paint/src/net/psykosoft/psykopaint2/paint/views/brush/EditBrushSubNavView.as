@@ -9,14 +9,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.text.TextField;
 	import flash.utils.Dictionary;
 
-	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
-	import net.psykosoft.psykopaint2.core.views.components.colormixer.SbColormixer;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
 	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
@@ -70,13 +68,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
 
+			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
+
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
 			navigation.toggleRightButtonVisibility( false );
 			var firstParamLabel:String = "";
 			var firstParamId:String = "";
 //			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
-			var group:ButtonGroup = new ButtonGroup();
 			for( var i:uint = 0; i < numParameters; ++i ) {
 
 				var parameter:PsykoParameter = list[ i ];
@@ -90,8 +89,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				if( parameter.type != PsykoParameter.ColorParameter ) {
 					if( parameter.id != CUSTOM_COLOR_ID ) {
 						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
-						var btn:SbButton = navigation.createButton( parameter.label, "", "btnLabelCenter", null );
-						group.addButton( btn );
+						navigation.createCenterButtonData( centerButtonDataProvider, parameter.label, "", "btnLabelCenter", null );
 					}
 				} else {
 					navigation.toggleRightButtonVisibility( true );
@@ -101,12 +99,16 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				//group.addButton( btn );
 
 			}
-			navigation.addCenterButtonGroup( group );
 			navigation.layout();
+
+			navigation.scroller.setDataProvider( centerButtonDataProvider );
 
 			// Select and <<< activate >>> if a parameter was previously selected.
 			if( firstParamId != "" ) {
-				group.setSelectedButtonByLabel( firstParamLabel );
+
+				// TODO: complete navigation refactor
+//				group.setSelectedButtonByLabel( firstParamLabel );
+
 				openParameter( firstParamId );
 			}
 		}
