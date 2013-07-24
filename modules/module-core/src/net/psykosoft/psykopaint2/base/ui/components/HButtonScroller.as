@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 	{
 		private var _itemPositionOffsetX:Number;
 
-		private const ITEM_GAP_X:Number = 8;
+		private const ITEM_GAP_X:Number = 15;
 
 		public function HButtonScroller() {
 			super();

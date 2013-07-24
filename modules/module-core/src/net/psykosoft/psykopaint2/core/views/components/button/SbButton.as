@@ -220,8 +220,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public function toggleSelect( selected:Boolean ):void {
 			btnSelected.visible = selected;
 			if( visible ) {
-				btnSelected.scaleX = Math.random() > 0.5 ? 1 : -1;
-				btnSelected.scaleY = Math.random() > 0.5 ? 1 : -1;
+				var random = -1 + Math.random()*2;
+				btnSelected.x = - random * ( icon.width/3 );
 			}
 			mouseEnabled = mouseChildren = !selected;
 			_isSelected = selected;
