@@ -1,9 +1,6 @@
 package net.psykosoft.psykopaint2.core.models
 {
 
-	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
-
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
 

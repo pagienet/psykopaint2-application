@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.core.managers.Stage3DProxy;
 
 	import flash.display.Bitmap;
-
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.book.views.book.content.SampleImagesBookDataProvider;
@@ -13,6 +12,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -30,6 +30,9 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		[Inject]
 		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
+
+		[Inject]
+		public var notifyColorStyleCompleteSignal:NotifyColorStyleCompleteSignal;
 
 		private var _samplesDataProvider:SampleImagesBookDataProvider;
 		private var _userPhotosDataProvider:UserPhotosBookDataProvider;
@@ -95,7 +98,9 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		private function onAnimateOutComplete():void {
-			requestSourceImageSetSignal.dispatch( _selectedBmd );
+			// TODO: this is a hack, the state should be enough
+			notifyColorStyleCompleteSignal.dispatch( _selectedBmd );
+//			requestStateChange( StateType.PREPARE_FOR_PAINT_MODE );
 		}
 
 		private function onAnimateInComplete():void {

@@ -2,13 +2,19 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 {
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
+	import net.psykosoft.psykopaint2.core.models.PaintModeType;
 	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class PickAnImageSubNavViewMediator extends MediatorBase
 	{
 		[Inject]
 		public var view:PickAnImageSubNavView;
+
+		[Inject]
+		public var requestEaselUpdateSignal:RequestEaselUpdateSignal;
 
 		override public function initialize():void {
 
@@ -18,6 +24,11 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
 			view.navigation.buttonClickedCallback = onButtonClicked;
+
+			// Clear easel if entering photo paint.
+			if( PaintModeModel.activeMode == PaintModeType.PHOTO_MODE ) {
+				requestEaselUpdateSignal.dispatch( null, false, false );
+			}
 		}
 
 		private function onButtonClicked( label:String ):void {
@@ -25,7 +36,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 				case PickAnImageSubNavView.LBL_BACK:
 				{
-					requestStateChange( StateType.HOME_PICK_SURFACE );
+					requestStateChange( StateType.PREVIOUS );
 					break;
 				}
 

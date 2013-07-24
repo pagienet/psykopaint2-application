@@ -24,5 +24,9 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 			value.addRefCount();
 			dispatchEvent(new Event(PROMISE_FULFILLED));
 		}
+
+		public function dispose():void {
+			_texture.dispose();
+		}
 	}
 }

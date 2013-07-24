@@ -18,6 +18,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public var labelBg:Sprite;
 		public var btnSelected:Sprite;
 		public var icon:MovieClip;
+		public var pin1:Sprite;
+		public var pin2:Sprite;
 
 		//private var _mouseIsDown:Boolean;
 		private var _btnLblPos:Point;
@@ -40,6 +42,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 
 			icon.stop();
+			pin1.visible = pin2.visible = false;
 
 			_btnLblPos = new Point( labelBg.x, labelBg.y );
 		}
@@ -59,9 +62,29 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 		public function setIcon( image:Bitmap ):void {
 			// TODO: account for possibility of previously set icon
-			image.width = image.height = 105;
-			image.x = 15;
-			image.y = 31;
+			if( icon.currentFrameLabel == ButtonIconType.POLAROID ){
+				image.width = image.height = 105;
+				image.x = 15;
+				image.y = 31;
+			}
+			else{
+				image.width = 128;
+				image.height = 96;
+				image.x = 5;
+				image.y = 32;
+
+				// Rotates image and places pin //TODO: move somewhere else so that other button types have pins and rotation
+				var random:Number = -2 + Math.random() * 4;
+				image.rotation = random;
+				if ( Math.round( random ) == 0 ){
+					pin2.visible = pin1.visible = true;
+				}
+				else{
+					pin1.visible = true;
+					pin1.x = - random * ( image.width/5 );
+				}
+			}
+
 			icon.addChild( image );
 		}
 

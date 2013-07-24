@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	public class PickSurfaceSubNavView extends SubNavigationViewBase
 	{
 		public static const LBL_BACK:String = "Back";
-		public static const LBL_CONTINUE:String = "Pick a model";
+		public static const LBL_CONTINUE:String = "Ok";
 		public static const LBL_SURF1:String = "Canvas";
 		public static const LBL_SURF2:String = "Paper";
 		public static const LBL_SURF3:String = "Wood";
@@ -30,16 +30,11 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			_group.addButton( navigation.createButton( LBL_SURF2 ) );
 			_group.addButton( navigation.createButton( LBL_SURF3 ) );
 			navigation.addCenterButtonGroup( _group );
-//			_group.setSelectedButtonByIndex( 0 );
 			navigation.layout();
 		}
 
 		public function showRightButton( show:Boolean ):void {
 			navigation.toggleRightButtonVisibility( show );
-		}
-
-		public function getSelectedCenterButtonIndex():int {
-			return _group.getSelectedBtnIndex();
 		}
 	}
 }

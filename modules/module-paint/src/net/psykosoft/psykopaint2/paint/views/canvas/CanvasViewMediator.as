@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.geom.Rectangle;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
@@ -20,19 +20,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
-	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
@@ -47,7 +45,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.TransformGesture;
-	import org.osflash.signals.Signal;
 
 	public class CanvasViewMediator extends MediatorBase
 	{
@@ -199,16 +196,16 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function onGlobalGesture( type:String, event:GestureEvent ):void {
-			trace( this, "onGlobalGesture: " + type );
+			
 			switch( type ) {
-				case GestureType.TWO_FINGER_SWIPE_LEFT:
+				case GestureType.TWO_FINGER_TAP_GESTURE_RECOGNIZED:
+					trace( this, "onGlobalGesture: " + type );
 					requestUndoSignal.dispatch();
 					break;
 
 				case GestureType.TRANSFORM_GESTURE_CHANGED:
+					trace( this, "onGlobalGesture: " + type );
 					var tg:TransformGesture = (event.target as TransformGesture);
-
-
 					var rect:Rectangle = renderer.renderRect;
 					_transformMatrix.identity();
 					_transformMatrix.translate( -tg.location.x, -tg.location.y );
@@ -225,12 +222,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					rect.height = bottomRight.y - topLeft.y;
 
 					updateAndConstrainCanvasRect( rect );
-
-					/*
-					 var angle:Number = Math.atan2(384 -tg.location.y,512 -tg.location.x );
-					 GyroscopeLightController.defaultPos.x = Math.cos(angle) ;
-					 GyroscopeLightController.defaultPos.y =  Math.sin(angle) ;
-					 */
 					break;
 
 			}
@@ -256,6 +247,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			if( newState ) {
 				trace( this, "state index: " + newState.indexOf( StateType.PAINT ) );
 				if( newState.indexOf( StateType.PAINT ) != -1 ) {
+
 					if( !CoreSettings.RUNNING_ON_iPAD && !_addedMouseWheelListener ) {
 						view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
 						_addedMouseWheelListener = true;
@@ -283,7 +275,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			if( newState == StateType.TRANSITION_TO_HOME_MODE ) {
 				_waitingForZoomOutToContinueToHome = true;
-				requestInteractionBlockSignal.dispatch( true );
 				zoomOut();
 			}
 
@@ -342,7 +333,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 
 			if( _waitingForZoomInToContinueToPaint ) {
-			    requestStateChange( StateType.PAINT_SELECT_BRUSH );
+				requestStateChange( StateType.PAINT_SELECT_BRUSH );
 				requestInteractionBlockSignal.dispatch( false );
 				_waitingForZoomInToContinueToPaint = false;
 			}
@@ -351,8 +342,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onHomeModuleReady():void {
 			if( _waitingForHomeModuleToBeReady ) {
 
-				_waitingForSavingPopUpRemoval = true;
-				requestPopUpRemovalSignal.dispatch();
+				setTimeout( function():void {
+					_waitingForSavingPopUpRemoval = true;
+					requestPopUpRemovalSignal.dispatch();
+				}, 250 );
 
 				_waitingForHomeModuleToBeReady = false;
 			}
@@ -428,7 +421,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// -----------------------
 
 		private function paintModulePreRenderingStep():void {
-			if( !view.visible ) return;
+			if( !view.isEnabled ) return;
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "pre rendering canvas" );
 			}
@@ -436,7 +429,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function paintModuleNormalRenderingsStep(target : Texture):void {
-			if( !view.visible ) return;
+			if( !view.isEnabled ) return;
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "rendering canvas" );
 			}

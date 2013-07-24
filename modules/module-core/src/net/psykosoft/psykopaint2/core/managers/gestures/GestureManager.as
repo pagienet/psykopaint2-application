@@ -231,6 +231,10 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			*/
 			_tapGesture = new TapGesture( _stage );
 			_tapGesture.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTapGestureRecognized );
+			
+			_twoFingerTapGesture = new TapGesture( _stage );
+			_twoFingerTapGesture.numTouchesRequired = 2;
+			_twoFingerTapGesture.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTwoFingerTapGestureRecognized );
 			//_tapGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onTapGestureRecognized );
 		}
 		
@@ -238,7 +242,18 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			var target:Stage =  Stage(TapGesture(event.target).target);
 			var obj:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);
 			if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
+			{
 				notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
+			}
+		}
+		
+		private function onTwoFingerTapGestureRecognized( event:GestureEvent ):void {
+			var target:Stage =  Stage(TapGesture(event.target).target);
+			var obj:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);
+			if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
+			{
+				notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_TAP_GESTURE_RECOGNIZED, event );
+			}
 		}
 		
 		protected function onStateChange( newState:String ):void {
@@ -252,6 +267,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		// ---------------------------------------------------------------------
 		
 		private var _doubleTapGesture:TapGesture;
+		private var _twoFingerTapGesture:TapGesture;
 		
 		private function initDoubleTapGesture():void {
 			_doubleTapGesture = new TapGesture( _stage );

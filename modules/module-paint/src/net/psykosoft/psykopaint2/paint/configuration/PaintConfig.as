@@ -3,15 +3,19 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
+	import net.psykosoft.psykopaint2.core.signals.RequestBlankSourceImageActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
+	import net.psykosoft.psykopaint2.paint.commands.ActivateBlankSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.ActivatePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.CleanUpPaintModuleMemoryCommand;
 	import net.psykosoft.psykopaint2.paint.commands.DeletePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.InitPaintModuleMemoryCommand;
+	import net.psykosoft.psykopaint2.paint.commands.LoadSurfaceCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
@@ -52,8 +56,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.ConfirmCaptureImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.ConfirmCaptureImageSubNavViewMediator;
-	import net.psykosoft.psykopaint2.paint.views.pick.image.PickASampleImageSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.pick.image.PickASampleImageSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
@@ -129,6 +131,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 		// -----------------------
 
 		private function mapCommands():void {
+
 			_commandMap.map( RequestStateUpdateFromModuleActivationSignal ).toCommand( UpdateAppStateFromActivatedDrawingCoreModuleCommand );
 			_commandMap.map( RequestSourceImageSetSignal ).toCommand( SetSourceImageCommand );
 			_commandMap.map( RequestDrawingCoreStartupSignal ).toCommand( StartUpDrawingCoreCommand );
@@ -147,6 +150,10 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_commandMap.map( RequestDrawingCoreSurfaceSetSignal ).toCommand( SetSurfaceImageCommand );
 			_injector.unmap( RequestDrawingCoreSourceImageSetSignal );
 			_commandMap.map( RequestDrawingCoreSourceImageSetSignal ).toCommand( SetSourceImageCommand );
+			_injector.unmap( RequestLoadSurfaceSignal );
+			_commandMap.map( RequestLoadSurfaceSignal ).toCommand( LoadSurfaceCommand );
+			_injector.unmap( RequestBlankSourceImageActivationSignal );
+			_commandMap.map( RequestBlankSourceImageActivationSignal ).toCommand( ActivateBlankSourceImageCommand );
 		}
 
 		// -----------------------
@@ -165,7 +172,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_mediatorMap.map( CropView ).toMediator( CropViewMediator );
 			_mediatorMap.map( PickAnImageSubNavView ).toMediator( PickAnImageSubNavViewMediator );
 			_mediatorMap.map( PickAUserImageView ).toMediator( PickAUserImageViewMediator );
-			_mediatorMap.map( PickASampleImageSubNavView ).toMediator( PickASampleImageSubNavViewMediator );
 			_mediatorMap.map( CaptureImageSubNavView ).toMediator( CaptureImageSubNavViewMediator );
 			_mediatorMap.map( ConfirmCaptureImageSubNavView ).toMediator( ConfirmCaptureImageSubNavViewMediator );
 			_mediatorMap.map( CaptureImageView ).toMediator( CaptureImageViewMediator );

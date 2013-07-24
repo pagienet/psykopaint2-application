@@ -61,7 +61,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public static const HOME_BUNDLE_ID:String = "homeView";
 
-		private var _frozen:Boolean;
+		private var _isFrozen:Boolean;
 		private var _freezeTexture:RefCountedTexture;
 
 		private var _currentScene:ObjectContainer3D;
@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function freeze( texture:RefCountedTexture ):void {
 
-			if( _frozen ) return;
+			if( _isFrozen ) return;
 			unFreeze();
 			trace( this, "freeze()" );
 
@@ -97,12 +97,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			selectScene( null );
 			_scrollCameraController.isEnabled = false;
 
-			_frozen = true;
+			_isFrozen = true;
 		}
 
 		public function unFreeze():void {
 
-			if( !_frozen ) return;
+			if( !_isFrozen ) return;
 			trace( this, "unFreeze()" );
 
 			_view.background = null;
@@ -111,7 +111,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			selectScene( _mainScene );
 			_scrollCameraController.isEnabled = true;
-			_frozen = false;
+			_isFrozen = false;
 		}
 
 		private function disposeFreezeTexture():void {
@@ -310,8 +310,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _zoomCameraController;
 		}
 
-		public function get frozen():Boolean {
-			return _frozen;
+		public function get isFrozen():Boolean {
+			return _isFrozen;
 		}
 
 		public function get easelRect():Rectangle {

@@ -80,9 +80,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 
 			_injector.map( NotifyCropCompleteSignal ).asSingleton();
 			_injector.map( NotifyCropModuleActivatedSignal ).asSingleton();
-			_injector.map( NotifyCropConfirmSignal ).asSingleton();
 
-			_injector.map( NotifyColorStyleCompleteSignal ).asSingleton();
 			_injector.map( NotifyColorStyleModuleActivatedSignal ).asSingleton();
 			_injector.map( NotifySetColorStyleSignal ).asSingleton();
 			_injector.map( NotifyColorStylePresetsAvailableSignal ).asSingleton();

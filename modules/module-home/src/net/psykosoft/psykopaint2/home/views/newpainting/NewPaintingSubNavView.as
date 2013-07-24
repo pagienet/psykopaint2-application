@@ -14,7 +14,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 	public class NewPaintingSubNavView extends SubNavigationViewBase
 	{
-		public static const LBL_NEW:String = "New Painting";
+		public static const LBL_NEW:String = "Color Painting";
+		public static const LBL_NEW_PHOTO:String = "Photo Painting";
 		public static const LBL_CONTINUE:String = "Continue Painting";
 
 		private var _buttonGroup:ButtonGroup;
@@ -27,8 +28,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		}
 
 		override protected function onEnabled():void {
-			navigation.setHeader( "New Painting" );
-			navigation.addCenterButton( LBL_NEW, ButtonIconType.NEW, ButtonLabelType.NONE );
+			navigation.setHeader( "" );
+			navigation.addCenterButton( LBL_NEW, ButtonIconType.NEW, ButtonLabelType.CENTER );
+			navigation.addCenterButton( LBL_NEW_PHOTO, ButtonIconType.NEW, ButtonLabelType.CENTER );
 			navigation.layout();
 		}
 
@@ -39,7 +41,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var vo:PaintingInfoVO = data[ i ];
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
-				var btn:SbButton = navigation.createButton( str, ButtonIconType.POLAROID, ButtonLabelType.NO_BACKGROUND, new Bitmap( vo.thumbnail ) );
+				var btn:SbButton = navigation.createButton( str, ButtonIconType.PAINTING, ButtonLabelType.NONE, new Bitmap( vo.thumbnail ) );
 				_buttonGroup.addButton( btn );
 			}
 			if( lastSelectedPaintingLabel == "" ) _buttonGroup.setSelectedButtonByIndex( 0 );

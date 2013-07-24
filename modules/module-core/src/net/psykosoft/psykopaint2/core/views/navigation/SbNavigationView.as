@@ -27,35 +27,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	public class SbNavigationView extends ViewBase
 	{
-//		[Embed(source="/../.png"]
-//		private var _btnIconsPng : Class;
-
-//		[Embed(source="/../.xml", mimeType="application/octet-stream")]
-//		private var _btnIconsXml : Class;
-
 		// Declared in Flash.
 		public var header:TextField;
 		public var headerBg:Sprite;
 		public var leftBtnSide:Sprite;
 		public var rightBtnSide:Sprite;
-
-		private var _leftButton:SbButton;
-		private var _rightButton:SbButton;
-		private var _currentSubNavView:SubNavigationViewBase;
-		private var _scroller:HButtonScroller;
-		private var _animating:Boolean;
-		private var _showing:Boolean;
-
-		private var _onReactiveHide:Boolean;
-		private var _reactiveHideMouseDownY:Number;
-		private var _reactiveHideStackY:StackUtil;
-		private var _targetReactiveY:Number;
-		private var _forceHidden:Boolean;
-
-		private var _hidden:Boolean;
-		private var _bgHeight:uint = 250;
-
-		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 70;
 
 		public var buttonClickedCallback:Function;
 		public var shownSignal:Signal;
@@ -65,6 +41,24 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var scrollingStartedSignal:Signal;
 		public var scrollingEndedSignal:Signal;
 		public var showHideUpdateSignal:Signal;
+
+		private var _leftButton:SbButton;
+		private var _rightButton:SbButton;
+		private var _currentSubNavView:SubNavigationViewBase;
+		private var _scroller:HButtonScroller;
+		private var _animating:Boolean;
+		private var _showing:Boolean;
+		private var _onReactiveHide:Boolean;
+		private var _reactiveHideMouseDownY:Number;
+		private var _reactiveHideStackY:StackUtil;
+		private var _targetReactiveY:Number;
+		private var _forceHidden:Boolean;
+		private var _hidden:Boolean;
+		private var _bgHeight:uint = 250;
+		private var _headerDefaultY:Number;
+		private var _headerTextDefaultOffset:Number;
+
+		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 70;
 
 		public function SbNavigationView() {
 			super();
@@ -122,6 +116,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			_leftButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			_rightButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
+
+			_headerDefaultY = headerBg.y;
+			_headerTextDefaultOffset = headerBg.y - header.y;
 
 			visible = false;
 		}
@@ -377,12 +374,15 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				btn.displaceLabelTf( 0, -8 );
 			}
 			btn.setLabelType( labelType );
-			trace("LABEL TYPE createButton", labelType);
 			if( icon ) btn.setIcon( icon );
 			return btn;
 		}
 
 		public function setHeader( value:String ):void {
+
+			TweenLite.killTweensOf( headerBg );
+			headerBg.y = _headerDefaultY + headerBg.height;
+			adjustHeaderTextPosition();
 
 			if( value == "" ) {
 				header.visible = headerBg.visible = false;
@@ -393,7 +393,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			}
 
 			header.text = value;
-			header.visible = true;
 
 			header.height = 1.25 * header.textHeight;
 			header.width = 15 + header.textWidth;
@@ -402,19 +401,24 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			headerBg.width = header.width + 50;
 			headerBg.x = 1024 / 2 - headerBg.width / 2 + 5;
 
-//			animateHeader();
+			animateHeaderIn();
 		}
 
-	/*	private function animateHeader():void{
-			TweenLite.killTweensOf( headerBg );
-			TweenLite.to( headerBg, 1, { y: 0, ease:Strong.easeOut, onUpdate:onHeaderAnimationUpdate() } );
-			TweenLite.to( headerBg, 1, { delay: 3, y: 800, ease:Strong.easeOut, onUpdate:onHeaderAnimationUpdate() } );
+		private function animateHeaderIn():void {
+			TweenLite.to( headerBg, 0.5, { y: _headerDefaultY, ease: Strong.easeOut, onUpdate: adjustHeaderTextPosition, onComplete: animateHeaderOut } );
 		}
 
-		private function onHeaderAnimationUpdate():void{
-			 header.y = headerBg.y + 20;
-			 trace("ANIMATION UPDATE");
-		}*/
+		private function animateHeaderOut():void {
+			TweenLite.to( headerBg, 0.25, { delay: 2, y: _headerDefaultY + headerBg.height, ease: Strong.easeIn, onUpdate: adjustHeaderTextPosition, onComplete: onHeaderOutComplete } );
+		}
+
+		private function adjustHeaderTextPosition():void{
+			 header.y = headerBg.y - _headerTextDefaultOffset;
+		}
+
+		private function onHeaderOutComplete():void {
+			header.visible = headerBg.visible = false;
+		}
 
 		public function setLeftButton( label:String, iconType:String = ButtonIconType.BACK ):void {
 			_leftButton.labelText = label;

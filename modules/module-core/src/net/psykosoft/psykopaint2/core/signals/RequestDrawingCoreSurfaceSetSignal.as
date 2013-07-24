@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.core.signals
 	public class RequestDrawingCoreSurfaceSetSignal extends Signal
 	{
 		public function RequestDrawingCoreSurfaceSetSignal() {
-			super( ByteArray, BitmapData );
+			super( ByteArray, BitmapData ); // normal data, color data
 		}
 	}
 }

@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.home.config
 {
 
+	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
+	import net.psykosoft.psykopaint2.home.commands.LoadSurfacePreviewCommand;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
@@ -83,6 +85,9 @@ package net.psykosoft.psykopaint2.home.config
 
 		private function mapCommands():void {
 
+			// Mapped in the core as singleton for compatibility and remapped here.
+			_injector.unmap( RequestLoadSurfacePreviewSignal );
+			_commandMap.map( RequestLoadSurfacePreviewSignal ).toCommand( LoadSurfacePreviewCommand );
 		}
 
 		// -----------------------
