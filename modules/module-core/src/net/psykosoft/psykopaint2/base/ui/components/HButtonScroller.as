@@ -4,7 +4,11 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 
-
+	/*
+	* An HSnapScroller that expects SbButtons and ButtonGroups.
+	* Positions each item next to each other.
+	* Adds snap points at the position of each individual button.
+	* */
 	public class HButtonScroller extends HSnapScroller
 	{
 		private var _itemPositionOffsetX:Number;
@@ -13,15 +17,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function HButtonScroller() {
 			super();
-			reset();
-		}
-
-		override protected function evaluateNewSnapPointFromPosition( px:Number ):void {
-			_positionManager.pushSnapPoint( px );
-			// Trace snap point - uncomment only for visual debugging.
-//			_container.graphics.beginFill( 0x00FF00 );
-//			_container.graphics.drawCircle( px, 0, 10 );
-//			_container.graphics.endFill();
 		}
 
 		override public function reset():void {
@@ -31,28 +26,33 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		override public function invalidateContent():void {
 
-			// Contain edges - modifies near edge snap points so that the content never scrolls too far from the edges.
+			var i:uint = 0;
+			var j:uint = 0;
+
+			// Evaluate content dimensions and snap points from each child and sub-child.
+			var numChildren:uint = _container.numChildren;
+			for( i = 0; i < numChildren; i++ ) {
+				var item:DisplayObject = _container.getChildAt( i );
+				if( item is ButtonGroup ) {
+					var childAsButtonGroup:ButtonGroup = item as ButtonGroup;
+					var groupLen:uint = childAsButtonGroup.numButtons;
+					for( j = 0; j < groupLen; j++ ) {
+						var subButton:SbButton = childAsButtonGroup.buttons[ j ];
+						evaluateDimensionsFromItemPositionAndWidth( subButton.x, subButton.width, childAsButtonGroup.x );
+						evaluateNewSnapPointFromPosition( childAsButtonGroup.x + subButton.x );
+					}
+				}
+				else {
+					evaluateDimensionsFromItemPositionAndWidth( item.x, item.width );
+					evaluateNewSnapPointFromPosition( item.x );
+				}
+			}
+
 			containEdgeSnapPoints();
-
-			// Dock at first snap point.
 			dock();
-
-			// Trace content width - uncomment only for visual debugging.
-			/*_container.graphics.clear();
-			_container.graphics.beginFill( 0x0000FF, 1.0 );
-			_container.graphics.drawRect( 0, 0, contentWidth, 100 );
-			_container.graphics.endFill();
-			var i:uint;
-			var len:uint = _positionManager.numSnapPoints;
-			for( i = 0; i < len; ++i ) {
-				var px:Number = _positionManager.getSnapPointAtIndex( i );
-				_container.graphics.beginFill( 0x00FF00 );
-				_container.graphics.drawCircle( px, 0, 10 );
-				_container.graphics.endFill();
-			}*/
 		}
 
-		public function addItem( item:DisplayObject, centerObject:Boolean = true ):DisplayObject {
+		public function addItem( item:DisplayObject, centerObject:Boolean = true ):void {
 
 			// Position item.
 			item.x = _itemPositionOffsetX;
@@ -63,22 +63,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 			}
 			_itemPositionOffsetX += item.width + ITEM_GAP_X;
 
-			// Evaluate content dimensions and snap points.
-			if( item is ButtonGroup ) {
-				var childAsButtonGroup:ButtonGroup = item as ButtonGroup;
-				var i:uint;
-				var groupLen:uint = childAsButtonGroup.numButtons;
-				for( i = 0; i < groupLen; i++ ) {
-					var aButton:SbButton = childAsButtonGroup.buttons[ i ];
-					evaluateDimensionsFromChild( aButton, childAsButtonGroup.x );
-					evaluateNewSnapPointFromPosition( childAsButtonGroup.x + aButton.x );
-				}
-			}
-			else {
-				evaluateDimensionsFromChild( item );
-				evaluateNewSnapPointFromPosition( item.x );
-			}
-			return super.addChild( item );
+			// Add to container.
+			super.addChild( item );
 		}
 	}
 }

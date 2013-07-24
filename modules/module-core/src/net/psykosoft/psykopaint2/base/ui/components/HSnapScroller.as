@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 	/*
 	* Adds elements to a container which can be scrolled horizontally.
+	* The scrolling is based on snap points. This class doesn't actually add the snap and is expected to be overriden in that sense.
 	* */
 	public class HSnapScroller extends Sprite
 	{
@@ -44,11 +45,11 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_container.cacheAsBitmap = true; // TODO: wouldn't it make more sense to only set cache as bitmap to true after all the children have been added to the container?
 			super.addChild( _container );
 
-			reset();
-
 			setVisibleDimensions( 800, 100 );
 
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+
+			reset();
 		}
 
 		private function initialize():void {
@@ -56,16 +57,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_interactionManager.stage = stage;
 			_positionManager.motionEndedSignal.add( onPositionManagerMotionEnded );
 			_interactionManager.scrollInputMultiplier = 1 / CoreSettings.GLOBAL_SCALING;
-		}
-
-		public function setVisibleDimensions( width:Number, height:Number ):void {
-			_visibleWidth = width;
-			_visibleHeight = height;
-			// Background - uncomment only for visual debugging, hinders performance.
-			/*graphics.clear();
-			graphics.beginFill( 0xFF0000, 1.0 );
-			graphics.drawRect( 0, 0, _visibleWidth, _visibleHeight );
-			graphics.endFill();*/
 		}
 
 		// ---------------------------------------------------------------------
@@ -95,32 +86,132 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function invalidateContent():void {
-			// Add snap points.
+
+			// Add snap points for each child at its position.
 			var len:uint = _container.numChildren;
 			for( var i:uint; i < len; i++ ) {
 				var child:DisplayObject = _container.getChildAt( i ) as DisplayObject;
-				evaluateDimensionsFromChild( child );
+				evaluateDimensionsFromItemPositionAndWidth( child.x, child.width );
 				evaluateNewSnapPointFromPosition( child.x );
 			}
-			// Contain edges.
+
 			containEdgeSnapPoints();
-			// Dock at first snap point.
-			if( _positionManager.numSnapPoints > 0 ) {
-				_positionManager.snapAtIndexWithoutEasing( 0 );
+			dock();
+		}
+
+		public function evaluateInteractionStart():void {
+			if( !scrollable ) return; // No need for scrolling if all content is visible in 1 page.
+//			if( maxWidth <= visibleWidth ) return; // No need for scrolling if all content is visible in 1 page.
+			if( !mouseHitsInteractiveArea() ) return; // Hit test.
+			_interactionManager.startInteraction();
+			startEnterframe();
+		}
+
+		public function evaluateInteractionEnd():void {
+			if( !_active ) return;
+			_interactionManager.stopInteraction();
+		}
+
+		public function setVisibleDimensions( width:Number, height:Number ):void {
+			_visibleWidth = width;
+			_visibleHeight = height;
+		}
+
+		// -----------------------
+		// Getters.
+		// -----------------------
+
+		override public function get height():Number {
+			return _visibleHeight;
+		}
+
+		override public function get width():Number {
+			return _visibleWidth;
+		}
+
+		public function get contentWidth():Number {
+			return _maxContentX - _minContentX;
+		}
+
+		public function get minWidth():Number {
+			return Math.min( _visibleWidth, width );
+		}
+
+		public function get maxWidth():Number {
+			return Math.max( _visibleWidth, width );
+		}
+
+		public function get container():Sprite {
+			return _container;
+		}
+
+		public function get isActive():Boolean {
+			return _active;
+		}
+
+		public function get positionManager():SnapPositionManager {
+			return _positionManager;
+		}
+
+		public function get interactionManager():ScrollInteractionManager {
+			return _interactionManager;
+		}
+
+		public function get visibleHeight():Number {
+			return _visibleHeight;
+		}
+
+		public function get visibleWidth():Number {
+			return _visibleWidth;
+		}
+
+		// ---------------------------------------------------------------------
+		// Protected.
+		// ---------------------------------------------------------------------
+
+		protected function onUpdate():void {
+			// Override.
+		}
+
+		protected function visualizeVisibleDimensions():void {
+			graphics.clear();
+			graphics.beginFill( 0xFF0000, 1.0 );
+			graphics.drawRect( 0, 0, _visibleWidth, _visibleHeight );
+			graphics.endFill();
+		}
+
+		protected function visualizeContentDimensions():void {
+			_container.graphics.clear();
+			_container.graphics.beginFill( 0x0000FF, 1.0 );
+			_container.graphics.drawRect( 0, 0, contentWidth, 100 );
+			_container.graphics.endFill();
+		}
+
+		protected function visualizeSnapPoints():void {
+			var i:uint;
+			var len:uint = _positionManager.numSnapPoints;
+			for( i = 0; i < len; ++i ) {
+				var px:Number = _positionManager.getSnapPointAtIndex( i );
+				_container.graphics.beginFill( 0x00FF00 );
+				_container.graphics.drawCircle( px, 0, 10 );
+				_container.graphics.endFill();
 			}
 		}
 
-		// ---------------------------------------------------------------------
-		// Utils.
-		// ---------------------------------------------------------------------
-
 		protected function evaluateNewSnapPointFromPosition( px:Number ):void {
-			// Override...
+
+			// Add a snap point at the required position.
+			_positionManager.pushSnapPoint( px );
+
+			// Trace snap point - uncomment only for visual debugging.
+//			_container.graphics.beginFill( 0x00FF00 );
+//			_container.graphics.drawCircle( px, 0, 10 );
+//			_container.graphics.endFill();
 		}
 
-		protected function evaluateDimensionsFromChild( lastElement:DisplayObject, offset:Number = 0 ):void {
-			var minX:Number = offset + lastElement.x - lastElement.width / 2; // Note: assumes elements will be registered at their center
-			var maxX:Number = offset + lastElement.x + lastElement.width / 2;
+		protected function evaluateDimensionsFromItemPositionAndWidth( itemPosition:Number, itemWidth:Number, offset:Number = 0 ):void {
+			var minX:Number = offset + itemPosition - itemWidth / 2; // Note: assumes elements will be registered at their center
+			var maxX:Number = offset + itemPosition + itemWidth / 2;
 			if( minX < _minContentX ) _minContentX = minX;
 			if( maxX > _maxContentX ) _maxContentX = maxX;
 		}
@@ -172,6 +263,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 			}
 		}
 
+		// ---------------------------------------------------------------------
+		// Private.
+		// ---------------------------------------------------------------------
+
 		private function mouseHitsInteractiveArea():Boolean {
 
 			var topLeft:Point = new Point( 0, 0 );
@@ -187,19 +282,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 			if( stage.mouseY > bottomRight.y ) return false;
 
 			return true;
-		}
-
-		public function evaluateInteractionStart():void {
-			if( !scrollable ) return; // No need for scrolling if all content is visible in 1 page.
-//			if( maxWidth <= visibleWidth ) return; // No need for scrolling if all content is visible in 1 page.
-			if( !mouseHitsInteractiveArea() ) return; // Hit test.
-			_interactionManager.startInteraction();
-			startEnterframe();
-		}
-
-		public function evaluateInteractionEnd():void {
-			if( !_active ) return;
-			_interactionManager.stopInteraction();
 		}
 
 		// ---------------------------------------------------------------------
@@ -228,6 +310,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_interactionManager.update();
 			_positionManager.update();
 			refreshToPosition();
+			onUpdate();
 		}
 
 		// ---------------------------------------------------------------------
@@ -241,54 +324,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		private function onPositionManagerMotionEnded():void {
 			stopEnterframe();
-		}
-
-		// ---------------------------------------------------------------------
-		// Getters.
-		// ---------------------------------------------------------------------
-
-		override public function get height():Number {
-			return _visibleHeight;
-		}
-
-		override public function get width():Number {
-			return _visibleWidth;
-		}
-
-		public function get contentWidth():Number {
-			return _maxContentX - _minContentX;
-		}
-
-		public function get minWidth():Number {
-			return Math.min( _visibleWidth, width );
-		}
-
-		public function get maxWidth():Number {
-			return Math.max( _visibleWidth, width );
-		}
-
-		public function get container():Sprite {
-			return _container;
-		}
-
-		public function get isActive():Boolean {
-			return _active;
-		}
-
-		public function get positionManager():SnapPositionManager {
-			return _positionManager;
-		}
-
-		public function get interactionManager():ScrollInteractionManager {
-			return _interactionManager;
-		}
-
-		public function get visibleHeight():Number {
-			return _visibleHeight;
-		}
-
-		public function get visibleWidth():Number {
-			return _visibleWidth;
 		}
 	}
 }
