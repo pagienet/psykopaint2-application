@@ -23,9 +23,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		override protected function onEnabled():void {
 			navigation.setHeader( "" );
-
-			// TODO: complete navigation refactor
-//			navigation.layout();
 		}
 
 		public function setInProgressPaintings( data:Vector.<PaintingInfoVO> ):void {

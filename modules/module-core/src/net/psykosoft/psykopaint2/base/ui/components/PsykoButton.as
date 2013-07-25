@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.base.ui.components
 {
 
+	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -13,8 +14,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 	public class PsykoButton extends Sprite
 	{
-		private var _label:PsykoLabel;
-		private var _icon:MovieClip;
+		protected var _label:PsykoLabel;
+		protected var _icon:MovieClip;
+		protected var _iconBitmap:Bitmap;
 
 		public function PsykoButton() {
 			super();
@@ -50,14 +52,32 @@ package net.psykosoft.psykopaint2.base.ui.components
 			return _label.text;
 		}
 
+		// Can be used dynamically by virtual lists.
+		public function set iconBitmap( bitmap:Bitmap ):void {
+			if( _iconBitmap ) {
+				_icon.removeChild( _iconBitmap );
+				// TODO: dispose bitmap and bitmap data?
+			}
+			_iconBitmap = bitmap;
+			adjustBitmap();
+			_icon.addChild( _iconBitmap );
+		}
+
+		// ---------------------------------------------------------------------
+		// Protected.
+		// ---------------------------------------------------------------------
+
+		protected function adjustBitmap():void {
+			_iconBitmap.x = -_iconBitmap.width / 2;
+			_iconBitmap.y = -_iconBitmap.height / 2;
+		}
+
 		// ---------------------------------------------------------------------
 		// Private.
 		// ---------------------------------------------------------------------
 
 		private function scaleIcon( value:Number ):void {
 			_icon.scaleX = _icon.scaleY = value;
-//			_icon.x = -_icon.width / 2;
-//			_icon.y = -_icon.height / 2;
 		}
 
 		// ---------------------------------------------------------------------
