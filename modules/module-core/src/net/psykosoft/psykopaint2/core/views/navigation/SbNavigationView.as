@@ -286,10 +286,15 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			var clickedButton:NavigationButton = event.target as NavigationButton;
 			if( !clickedButton ) clickedButton = event.target.parent as NavigationButton;
-			var label:String = clickedButton.labelText;
-			trace( this, "button clicked: " + clickedButton.labelText );
-
-			buttonClickedCallback( label );
+			if ( clickedButton )
+			{
+				var label:String = clickedButton.labelText;
+				trace( this, "button clicked: " + clickedButton.labelText );
+	
+				buttonClickedCallback( label );
+			} else {
+				trace("##### Error - no button found");
+			}
 		}
 
 		public function setHeader( value:String ):void {
