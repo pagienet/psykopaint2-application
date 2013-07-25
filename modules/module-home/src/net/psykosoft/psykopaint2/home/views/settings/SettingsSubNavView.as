@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.settings
 {
 
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class SettingsSubNavView extends SubNavigationViewBase
@@ -14,13 +15,9 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override protected function onEnabled():void {
 
 			navigation.setHeader( "Settings" );
-//
 
-			navigation.addCenterButton( LBL_WALLPAPER );
-			/*navigation.addCenterButton( "[setting1]" );
-			navigation.addCenterButton( "[setting2]" );
-			navigation.addCenterButton( "[setting3]" );
-			navigation.addCenterButton( "[setting4]" );*/
+			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_WALLPAPER );
 
 			navigation.layout();
 		}

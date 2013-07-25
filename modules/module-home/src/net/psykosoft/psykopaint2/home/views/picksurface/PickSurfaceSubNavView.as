@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
-	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
@@ -13,8 +13,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		public static const LBL_SURF2:String = "Paper";
 		public static const LBL_SURF3:String = "Wood";
 
-		private var _group:ButtonGroup;
-
 		public function PickSurfaceSubNavView() {
 			super();
 		}
@@ -25,11 +23,14 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
 			navigation.setRightButton( LBL_CONTINUE, ButtonIconType.MODEL );
 
-			_group = new ButtonGroup();
-			_group.addButton( navigation.createButton( LBL_SURF1 ) );
-			_group.addButton( navigation.createButton( LBL_SURF2 ) );
-			_group.addButton( navigation.createButton( LBL_SURF3 ) );
-			navigation.addCenterButtonGroup( _group );
+			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
+
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_SURF1 );
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_SURF2 );
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_SURF3 );
+
+			navigation.scroller.setDataProvider( centerButtonDataProvider );
+
 			navigation.layout();
 		}
 

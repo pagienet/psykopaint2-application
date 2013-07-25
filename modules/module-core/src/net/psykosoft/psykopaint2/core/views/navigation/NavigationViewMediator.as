@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.events.Event;
 	
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
+	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
@@ -139,6 +140,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		override protected function onStateChange( newState:String ):void {
 //			trace( this, "state change: " + newState );
 
+			if( newState == StateType.PAINT_COLOR ) {
+				view.wire.visible = false;
+				view.woodBg.visible = true;
+			}
+			else {
+				view.wire.visible = true;
+				view.woodBg.visible = false;
+			}
 			// Evaluate a sub-nav change.
 			var cl:Class = StateToSubNavLinker.getSubNavClassForState( newState );
 			view.updateSubNavigation( cl );

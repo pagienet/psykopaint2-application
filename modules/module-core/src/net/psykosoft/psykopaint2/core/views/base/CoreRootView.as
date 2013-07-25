@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.core.views.base
 {
 
+	import com.greensock.plugins.ColorMatrixFilterPlugin;
+	import com.greensock.plugins.TweenPlugin;
+
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
@@ -17,6 +20,11 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
+	import net.psykosoft.psykopaint2.base.ui.components.list.DummyItemData;
+	import net.psykosoft.psykopaint2.base.ui.components.list.DummyItemRenderer;
+	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
+	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapListDataItemBase;
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -57,6 +65,9 @@ package net.psykosoft.psykopaint2.core.views.base
 			super();
 
 			trace( this, "constructor" );
+
+			// Used to color button labels.
+			TweenPlugin.activate( [ ColorMatrixFilterPlugin ] );
 
 			// Setup root layers.
 			_applicationLayer = new Sprite();
@@ -477,6 +488,29 @@ package net.psykosoft.psykopaint2.core.views.base
 			} );
 			stage.addEventListener( MouseEvent.MOUSE_UP, function ( event:Event ):void {
 				scroller.evaluateInteractionEnd();
+			} );*/
+
+			// HSnapList test.
+			/*var i:uint;
+			var list:HSnapList = new HSnapList();
+			list.setVisibleDimensions( 724, 150 );
+			list.x = 150;
+			list.y = 768 - 150;
+			addChild( list );
+			var dataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
+			for( i = 0; i < 7750; i++ ) {
+				var itemData:DummyItemData = new DummyItemData();
+				itemData.itemRendererType = DummyItemRenderer;
+				itemData.itemRendererWidth = 100;
+				itemData.label = "item " + i;
+				dataProvider.push( itemData );
+			}
+			list.setDataProvider( dataProvider );
+			stage.addEventListener( MouseEvent.MOUSE_DOWN, function ( event:Event ):void {
+				list.evaluateInteractionStart();
+			} );
+			stage.addEventListener( MouseEvent.MOUSE_UP, function ( event:Event ):void {
+				list.evaluateInteractionEnd();
 			} );*/
 		}
 

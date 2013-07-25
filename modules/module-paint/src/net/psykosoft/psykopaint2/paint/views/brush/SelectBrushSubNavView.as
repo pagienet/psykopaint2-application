@@ -1,18 +1,14 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
-	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class SelectBrushSubNavView extends SubNavigationViewBase
 	{
 		public static const LBL_BACK:String = "Edit Painting";
 		public static const LBL_EDIT_BRUSH:String = "Edit Brush";
-
-		private var _group:ButtonGroup;
-		private var _groupd:ButtonGroup;
 
 		public function SelectBrushSubNavView() {
 			super();
@@ -27,7 +23,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		public function setAvailableBrushes( availableBrushTypes:Vector.<String> ):void {
 			var len:uint = availableBrushTypes.length;
-			_group = new ButtonGroup();
+
+			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
+
 			for( var i:uint; i < len; ++i ) {
 				var iconType:String;
 				switch( i ) {
@@ -55,16 +53,17 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						iconType = ButtonIconType.DEFAULT;
 					}
 				}
-				var btn:SbButton = navigation.createButton( availableBrushTypes[ i ], iconType );
-				_group.addButton( btn );
+
+				navigation.createCenterButtonData( centerButtonDataProvider, availableBrushTypes[ i ], iconType );
 			}
-			navigation.addCenterButtonGroup( _group );
+			navigation.scroller.setDataProvider( centerButtonDataProvider );
 			navigation.layout();
 		}
 
 		public function setSelectedBrush( activeBrushKit:String ):void {
-			EditBrushSubNavView.setLastSelectedBrush( activeBrushKit );
-			_group.setSelectedButtonByLabel( activeBrushKit );
+			// TODO: complete navigation refactor
+//			EditBrushSubNavView.setLastSelectedBrush( activeBrushKit );
+//			_group.setSelectedButtonByLabel( activeBrushKit );
 		}
 	}
 }

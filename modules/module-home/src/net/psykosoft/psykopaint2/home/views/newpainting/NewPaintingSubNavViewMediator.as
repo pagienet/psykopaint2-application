@@ -85,8 +85,11 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				// Continue painting.
 				case NewPaintingSubNavView.LBL_CONTINUE: {
-					requestPaintingActivationSignal.dispatch( paintingModel.focusedPaintingId );
-					requestInteractionBlockSignal.dispatch( true );
+					trace( "focused: " + paintingModel.focusedPaintingId );
+					if( paintingModel.focusedPaintingId != "uniqueUserId-" ) {
+						requestPaintingActivationSignal.dispatch( paintingModel.focusedPaintingId );
+						requestInteractionBlockSignal.dispatch( true );
+					}
 					break;
 				}
 

@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.core
 
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
-	import net.psykosoft.psykopaint2.base.utils.io.ShakeAndBakeConnector;
+	import net.psykosoft.psykopaint2.base.utils.shakenbake.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
@@ -309,11 +309,14 @@ package net.psykosoft.psykopaint2.core
 			_stateSignal.dispatch( StateType.IDLE );
 
 			if( isStandalone ) {
+
 				// Remove splash screen.
 				_coreRootView.removeSplashScreen();
+
 				// Show Navigation.
-				var showNavigationSignal:RequestNavigationToggleSignal = _injector.getInstance( RequestNavigationToggleSignal );
-				showNavigationSignal.dispatch( 1 );
+//				var showNavigationSignal:RequestNavigationToggleSignal = _injector.getInstance( RequestNavigationToggleSignal );
+//				showNavigationSignal.dispatch( 1, 1 );
+
 				startEnterFrame();
 			}
 
@@ -322,12 +325,6 @@ package net.psykosoft.psykopaint2.core
 //			_injector.getInstance( NotifyPaintingDataRetrievedSignal ).addOnce( testLoadingAPainting ); // Just for testing.
 
 			moduleReadySignal.dispatch();
-		}
-
-		private function testLoadingAPainting( data:Vector.<PaintingInfoVO> ):void {
-			var aVo:PaintingInfoVO = data[ 0 ];
-			trace( this, "painting data loaded, testing painting load: " + aVo.id );
-			_injector.getInstance( RequestPaintingActivationSignal ).dispatch( aVo.id );
 		}
 	}
 }

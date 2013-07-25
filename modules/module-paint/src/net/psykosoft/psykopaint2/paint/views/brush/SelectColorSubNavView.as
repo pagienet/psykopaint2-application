@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.button.SbButton;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbButtonDELETE;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.SbColorSwatches;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.SbColormixer;
