@@ -70,7 +70,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 		// Can be used dynamically by virtual lists.
 		public function set iconBitmap( bitmap:Bitmap ):void {
 			if( _iconBitmap ) {
-				_icon.removeChild( _iconBitmap );
+				if( _iconBitmap.parent == _icon ) {
+					_icon.removeChild( _iconBitmap );
+				}
 				_iconBitmap = null;
 				// TODO: dispose bitmap and bitmap data?
 			}
