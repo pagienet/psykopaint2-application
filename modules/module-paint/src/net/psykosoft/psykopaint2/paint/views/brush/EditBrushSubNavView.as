@@ -33,11 +33,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		public static const CUSTOM_COLOR_ID:String = "Custom Color";
 
-		static private var _lastSelectedBrush:String = "";
-		static private var _lastSelectedParameterId:Dictionary = new Dictionary();
-		static public var lastScrollerPosition:Number = 372; //TODO: harcode works, might want to do it cleaner.
-
-
 		private const UI_ELEMENT_Y:uint = 560;
 
 		public function EditBrushSubNavView() {
@@ -49,7 +44,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
 			navigation.setRightButton( LBL_COLOR, ButtonIconType.CONTINUE );
 			navigation.toggleRightButtonVisibility( false );
-			navigation.layout();
 		}
 
 		override protected function onDisposed():void {
@@ -81,15 +75,15 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var parameter:PsykoParameter = list[ i ];
 //				trace( ">>> " + parameter.toXMLString() );
 
-				if( _lastSelectedParameterId[ _lastSelectedBrush ] == parameter.id || ( firstParamId == "" && parameter.id != CUSTOM_COLOR_ID ) ) {
+				/*if( _lastSelectedParameterId[ _lastSelectedBrush ] == parameter.id || ( firstParamId == "" && parameter.id != CUSTOM_COLOR_ID ) ) {
 					firstParamLabel = parameter.label;
 					firstParamId = parameter.id;
-				}
+				}*/
 
 				if( parameter.type != PsykoParameter.ColorParameter ) {
 					if( parameter.id != CUSTOM_COLOR_ID ) {
 						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
-						navigation.createCenterButtonData( centerButtonDataProvider, parameter.label );
+						createCenterButtonData( centerButtonDataProvider, parameter.label );
 					}
 				} else {
 					navigation.toggleRightButtonVisibility( true );
@@ -99,9 +93,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				//group.addButton( btn );
 
 			}
-			navigation.layout();
 
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
+			_scroller.setDataProvider( centerButtonDataProvider );
 
 			// Select and <<< activate >>> if a parameter was previously selected.
 			if( firstParamId != "" ) {
@@ -143,9 +136,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			if( _parameter == null ) return;
 
 			var parameterType:int = _parameter.type;
-			if( _parameter.id != CUSTOM_COLOR_ID ) {
+			/*if( _parameter.id != CUSTOM_COLOR_ID ) {
 				_lastSelectedParameterId[ _lastSelectedBrush ] = _parameter.id;
-			}
+			}*/
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
@@ -331,9 +324,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// Setters & Getters.
 		// ---------------------------------------------------------------------
 
-		static public function setLastSelectedBrush( value:String ):void {
+		/*static public function setLastSelectedBrush( value:String ):void {
 			if( _lastSelectedBrush == value ) return;
 			_lastSelectedBrush = value;
-		}
+		}*/
 	}
 }

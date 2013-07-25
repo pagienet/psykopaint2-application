@@ -4,9 +4,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
-	import net.psykosoft.psykopaint2.core.models.PaintModeType;
-
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
@@ -14,9 +11,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
-	public class PickSurfaceSubNavViewMediator extends MediatorBase
+	public class PickSurfaceSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:PickSurfaceSubNavView;
@@ -44,9 +41,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
-			manageMemoryWarnings = false;
+			super.initialize();
 			view.navigation.buttonClickedCallback = onButtonClicked;
 			view.showRightButton( false );
 			requestEaselPaintingUpdateSignal.dispatch( null, false, false );

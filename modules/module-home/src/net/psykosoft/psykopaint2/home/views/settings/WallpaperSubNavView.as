@@ -24,7 +24,6 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override protected function onEnabled():void {
 			navigation.setHeader( "Settings" );
 			navigation.setLeftButton( LBL_BACK, ButtonIconType.SETTINGS );
-			navigation.layout();
 		}
 
 		override protected function onDisabled():void {
@@ -39,12 +38,10 @@ package net.psykosoft.psykopaint2.home.views.settings
 			var names:Vector.<String> = atlas.names;
 			for( var i:uint; i < names.length; i++ ) {
 				var name:String = names[ i ];
-				navigation.createCenterButtonData( centerButtonDataProvider, name, null, SbPolaroidButton, new Bitmap( atlas.getSubTextureForId( name ) ) );
+				createCenterButtonData( centerButtonDataProvider, name, null, SbPolaroidButton, new Bitmap( atlas.getSubTextureForId( name ) ) );
 			}
 
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
-
-			navigation.layout();
+			_scroller.setDataProvider( centerButtonDataProvider );
 		}
 
 		public function setSelectedWallpaperBtn():void {

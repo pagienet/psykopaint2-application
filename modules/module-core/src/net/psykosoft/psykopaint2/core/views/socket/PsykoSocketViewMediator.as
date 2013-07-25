@@ -10,8 +10,8 @@ package net.psykosoft.psykopaint2.core.views.socket
 
 		override public function initialize():void {
 			// Init.
-			super.initialize();
 			registerView( view );
+			super.initialize();
 			manageStateChanges = false;
 			manageMemoryWarnings = false;
 			view.enable();

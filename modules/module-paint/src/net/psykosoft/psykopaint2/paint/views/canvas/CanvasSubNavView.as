@@ -34,15 +34,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
 
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_DESTROY, ButtonIconType.DESTROY );
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_CLEAR, ButtonIconType.BLANK_CANVAS );
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_EXPORT );
+			createCenterButtonData( centerButtonDataProvider, LBL_DESTROY, ButtonIconType.DESTROY );
+			createCenterButtonData( centerButtonDataProvider, LBL_CLEAR, ButtonIconType.BLANK_CANVAS );
+			createCenterButtonData( centerButtonDataProvider, LBL_EXPORT );
 
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
+			_scroller.setDataProvider( centerButtonDataProvider );
 
 			navigation.setRightButton( LBL_PICK_A_BRUSH, ButtonIconType.BRUSH );
-
-			navigation.layout();
 		}
 	}
 }

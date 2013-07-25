@@ -41,8 +41,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
+			super.initialize();
 			registerEnablingState( StateType.BOOK_STANDALONE );
 			registerEnablingState( StateType.BOOK_PICK_SAMPLE_IMAGE );
 			registerEnablingState( StateType.BOOK_PICK_USER_IMAGE_IOS );

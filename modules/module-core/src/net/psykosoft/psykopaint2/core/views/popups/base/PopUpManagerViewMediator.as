@@ -29,8 +29,8 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 
 		override public function initialize():void {
 
-			super.initialize();
 			registerView( view );
+			super.initialize();
 			manageMemoryWarnings = false;
 			manageStateChanges = false;
 

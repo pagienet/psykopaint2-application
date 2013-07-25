@@ -11,7 +11,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		override protected function onEnabled():void {
 			navigation.setHeader( "Home" );
-			navigation.layout();
 		}
 	}
 }

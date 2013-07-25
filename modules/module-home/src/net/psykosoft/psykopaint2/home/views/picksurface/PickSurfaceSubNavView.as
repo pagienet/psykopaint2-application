@@ -25,13 +25,11 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
 
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_SURF1 );
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_SURF2 );
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_SURF3 );
+			createCenterButtonData( centerButtonDataProvider, LBL_SURF1 );
+			createCenterButtonData( centerButtonDataProvider, LBL_SURF2 );
+			createCenterButtonData( centerButtonDataProvider, LBL_SURF3 );
 
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
-
-			navigation.layout();
+			_scroller.setDataProvider( centerButtonDataProvider );
 		}
 
 		public function showRightButton( show:Boolean ):void {

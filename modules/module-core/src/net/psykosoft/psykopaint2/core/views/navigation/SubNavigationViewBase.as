@@ -1,28 +1,109 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
-	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
+	import flash.events.MouseEvent;
 
-	/*
-	 * Note: Sub-navigation views, i.e. views that extend SubNavigationViewBase,
-	 * are views only in the sense that they have a mediator, but they don't actually contain
-	 * ui elements. They just tell it's display list parent, NavigationView, what controls
-	 * to use by forwarding construction methods to it.
-	 */
+	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
+	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbIconButton;
+
+	import org.osflash.signals.Signal;
+
 	public class SubNavigationViewBase extends ViewBase
 	{
-		private var _navigation:SbNavigationView;
+		protected var _scroller:HSnapList;
+
+		public var navigation:SbNavigationView;
+
+		public var scrollingStartedSignal:Signal;
+		public var scrollingEndedSignal:Signal;
+
+		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 70;
 
 		public function SubNavigationViewBase() {
 			super();
+			scrollingStartedSignal = new Signal();
+			scrollingEndedSignal = new Signal();
 		}
 
-		public function set navigation( navigation:SbNavigationView ):void {
-			_navigation = navigation;
+		// ---------------------------------------------------------------------
+		// ViewBase overrides.
+		// ---------------------------------------------------------------------
+
+		override protected function onSetup():void {
+
+			_scroller = new HSnapList();
+			_scroller.setVisibleDimensions( 1024 - 280, 130 );
+			_scroller.x = 140;
+			_scroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _scroller.visibleHeight / 2;
+			_scroller.positionManager.minimumThrowingSpeed = 15;
+			_scroller.positionManager.frictionFactor = 0.70;
+			_scroller.interactionManager.throwInputMultiplier = 2;
+			_scroller.motionStartedSignal.add( onCenterScrollerMotionStart );
+			_scroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
+			_scroller.rendererAddedSignal.add( onCenterScrollerItemRendererAdded );
+			_scroller.rendererRemovedSignal.add( onCenterScrollerItemRendererRemoved );
+			addChild( _scroller );
 		}
 
-		public function get navigation():SbNavigationView {
-			return _navigation;
+		// ---------------------------------------------------------------------
+		// Public.
+		// ---------------------------------------------------------------------
+
+		public function evaluateScrollingInteractionStart():void {
+			_scroller.evaluateInteractionStart();
+		}
+
+		public function evaluateScrollingInteractionEnd():void {
+			_scroller.evaluateInteractionEnd();
+		}
+
+		// ---------------------------------------------------------------------
+		// Protected.
+		// ---------------------------------------------------------------------
+
+		protected function createCenterButtonData( dataSet:Vector.<ISnapListData>, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null ):void {
+			var btnData:ButtonData = new ButtonData();
+			btnData.labelText = label;
+			btnData.iconType = iconType;
+			btnData.iconBitmap = icon;
+			btnData.itemRendererWidth = 100;
+			btnData.itemRendererType = rendererClass || SbIconButton;
+			dataSet.push( btnData );
+		}
+
+		// ---------------------------------------------------------------------
+		// Private.
+		// ---------------------------------------------------------------------
+
+		private function onButtonClicked( event:MouseEvent ):void {
+			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
+			navigation.onButtonClicked( event );
+		}
+
+		// ---------------------------------------------------------------------
+		// Handlers.
+		// ---------------------------------------------------------------------
+
+		private function onCenterScrollerMotionEnd():void {
+			scrollingEndedSignal.dispatch();
+		}
+
+		private function onCenterScrollerMotionStart():void {
+			scrollingStartedSignal.dispatch();
+		}
+
+		private function onCenterScrollerItemRendererAdded( renderer:DisplayObject ):void {
+			renderer.addEventListener( MouseEvent.CLICK, onButtonClicked );
+		}
+
+		private function onCenterScrollerItemRendererRemoved( renderer:DisplayObject ):void {
+//			renderer.removeEventListener( MouseEvent.CLICK, onButtonClicked );
 		}
 	}
 }

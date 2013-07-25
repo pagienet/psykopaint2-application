@@ -18,22 +18,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 			navigation.setHeader( "Pick a Color Style" );
 
-
-
 			navigation.setLeftButton( LBL_PICK_AN_IMAGE, ButtonIconType.BACK );
 			navigation.setRightButton( LBL_CONFIRM, ButtonIconType.OK );
-
-			navigation.layout();
 		}
 
 		public function setAvailableColorStyles( availableColorStylePresets:Array ):void {
 			var len:uint = availableColorStylePresets.length;
 			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
 			for( var i:uint; i < len; ++i ) {
-				navigation.createCenterButtonData( centerButtonDataProvider, availableColorStylePresets[ i ] );
+				createCenterButtonData( centerButtonDataProvider, availableColorStylePresets[ i ] );
 			}
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
-			navigation.layout();
+			_scroller.setDataProvider( centerButtonDataProvider );
 		}
 	}
 }

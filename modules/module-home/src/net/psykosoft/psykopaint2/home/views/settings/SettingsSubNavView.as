@@ -17,9 +17,9 @@ package net.psykosoft.psykopaint2.home.views.settings
 			navigation.setHeader( "Settings" );
 
 			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_WALLPAPER );
+			createCenterButtonData( centerButtonDataProvider, LBL_WALLPAPER );
 
-			navigation.layout();
+			_scroller.setDataProvider( centerButtonDataProvider );
 		}
 	}
 }

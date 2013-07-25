@@ -5,17 +5,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import com.greensock.easing.Strong;
 
 	import flash.display.Bitmap;
-	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
+	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.PsykoButton;
-	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -42,14 +41,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var showingSignal:Signal;
 		public var hidingSignal:Signal;
 		public var hiddenSignal:Signal;
-		public var scrollingStartedSignal:Signal;
-		public var scrollingEndedSignal:Signal;
 		public var showHideUpdateSignal:Signal;
 
 		private var _leftButton:SbLeftButton;
 		private var _rightButton:SbRightButton;
 		private var _currentSubNavView:SubNavigationViewBase;
-		private var _scroller:HSnapList;
+
 		private var _animating:Boolean;
 		private var _showing:Boolean;
 		private var _onReactiveHide:Boolean;
@@ -61,8 +58,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _bgHeight:uint = 250;
 		private var _headerDefaultY:Number;
 		private var _headerTextDefaultOffset:Number;
-
-		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 70;
+		private var _subNavDictionary:Dictionary;
 
 		public function SbNavigationView() {
 			super();
@@ -71,8 +67,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			hidingSignal = new Signal();
 			showingSignal = new Signal();
 			hiddenSignal = new Signal();
-			scrollingStartedSignal = new Signal();
-			scrollingEndedSignal = new Signal();
 			showHideUpdateSignal = new Signal();
 
 			_reactiveHideStackY = new StackUtil();
@@ -89,22 +83,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			y = _bgHeight;
 
 			woodBg.visible = false;
+
+			_subNavDictionary = new Dictionary();
 		}
 
 		override protected function onSetup():void {
-
-			_scroller = new HSnapList();
-			_scroller.setVisibleDimensions( 1024 - 280, 130 );
-			_scroller.x = 140;
-			_scroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _scroller.visibleHeight / 2;
-			_scroller.positionManager.minimumThrowingSpeed = 15;
-			_scroller.positionManager.frictionFactor = 0.70;
-			_scroller.interactionManager.throwInputMultiplier = 2;
-			_scroller.motionStartedSignal.add( onCenterScrollerMotionStart );
-			_scroller.motionEndedSignal.add( onCenterScrollerMotionEnd );
-			_scroller.rendererAddedSignal.add( onCenterScrollerItemRendererAdded );
-			_scroller.rendererRemovedSignal.add( onCenterScrollerItemRendererRemoved );
-			addChildAt( _scroller, 2 );
 
 			_leftButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			_rightButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
@@ -113,6 +96,54 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_headerTextDefaultOffset = headerBg.y - header.y;
 
 			visible = false;
+		}
+
+		public function updateSubNavigation( subNavType:Class ):void {
+
+			if( subNavType == null ) {
+				visible = false;
+				return;
+			}
+			else {
+				visible = true && !_forceHidden;
+			}
+
+			// Keep current nav when incoming class is the abstract one.
+			if( subNavType == SubNavigationViewBase ) {
+				return;
+			}
+
+			trace( this, "updating sub-nav: " + subNavType );
+
+			// Reset.
+			header.visible = false;
+			leftBtnSide.visible = false;
+			rightBtnSide.visible = false;
+
+			// Disable old view.
+			if( _currentSubNavView ) {
+				_currentSubNavView.disable();
+				removeChild( _currentSubNavView );
+			}
+
+			// Hide?
+			if( !subNavType ) {
+				visible = false;
+				return;
+			}
+			else if( !_hidden ) {
+				visible = true && !_forceHidden;
+			}
+
+			// Create new view.
+			if( _subNavDictionary[ subNavType ] ) _currentSubNavView = _subNavDictionary[ subNavType ];
+			else {
+				_currentSubNavView = new subNavType();
+				_currentSubNavView.navigation = this;
+				_subNavDictionary[ subNavType ] = _currentSubNavView;
+			}
+			_currentSubNavView.enable();
+			addChildAt( _currentSubNavView, 2 );
 		}
 
 		override protected function onAddedToStage():void {
@@ -126,10 +157,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				visible = !_forceHidden;
 			}
 		}
-
-		// ---------------------------------------------------------------------
-		// Interface to be used by the view's mediator.
-		// ---------------------------------------------------------------------
 
 		public function toggle( time:Number = 0.5):void {
 			if( _showing ) hide( time );
@@ -168,6 +195,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, time, { y: 0, onUpdate: onShowHideUpdate, onComplete: onShowAnimatedComplete, ease:Strong.easeOut } );
 		}
+
 		private function onShowAnimatedComplete():void {
 			_animating = false;
 			shownSignal.dispatch();
@@ -178,75 +206,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onShowHideUpdate():void {
 			showHideUpdateSignal.dispatch( y / _bgHeight );
-		}
-
-		public function updateSubNavigation( subNavType:Class ):void {
-
-			if( subNavType == null ) {
-				visible = false;
-				return;
-			}
-			else {
-				visible = true && !_forceHidden;
-			}
-
-			// Keep current nav when incoming class is the abstract one.
-			if( subNavType == SubNavigationViewBase ) {
-				return;
-			}
-
-			trace( this, "updating sub-nav: " + subNavType );
-
-			// Reset.
-			header.visible = false;
-			leftBtnSide.visible = false;
-			rightBtnSide.visible = false;
-//			_buttonGroups = new Vector.<ButtonGroup>(); // TODO: sweep and remove listeners first
-			_scroller.reset();
-
-			// Disable old view.
-			if( _currentSubNavView ) {
-				_currentSubNavView.disable();
-				_currentSubNavView.dispose();
-				removeChild( _currentSubNavView );
-				_currentSubNavView = null;
-			}
-
-			// Hide?
-			if( !subNavType ) {
-				visible = false;
-				return;
-			}
-			else if( !_hidden ) {
-				visible = true && !_forceHidden;
-			}
-
-			// Create new view.
-			_currentSubNavView = new subNavType();
-			_currentSubNavView.navigation = this;
-			_currentSubNavView.enable();
-			addChild( _currentSubNavView );
-		}
-
-		public function evaluateScrollingInteractionStart():void {
-			if (!_hidden ) _scroller.evaluateInteractionStart();
-		}
-
-		public function evaluateScrollingInteractionEnd():void {
-			_scroller.evaluateInteractionEnd();
-		}
-
-		public function jumpScrollerToSnapPointIndex( value:uint ):void {
-			_scroller.positionManager.snapAtIndexWithoutEasing( value );
-		}
-
-		public function getScrollerPosition():Number {
-			return _scroller.positionManager.position;
-		}
-
-		public function setScrollerPosition( value:Number ):void {
-			_scroller.positionManager.position = value;
-			_scroller.refreshToPosition();
 		}
 
 		public function evaluateReactiveHideStart():void {
@@ -323,9 +282,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Private.
 		// ---------------------------------------------------------------------
 
-		private function onButtonClicked( event:MouseEvent ):void {
-
-			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
+		public function onButtonClicked( event:MouseEvent ):void {
 
 			var clickedButton:PsykoButton = event.target as PsykoButton;
 			if( !clickedButton ) clickedButton = event.target.parent as PsykoButton;
@@ -333,24 +290,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			trace( this, "button clicked: " + clickedButton.labelText );
 
 			buttonClickedCallback( label );
-		}
-
-		public function createCenterButtonData( dataSet:Vector.<ISnapListData>, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null ):void {
-			var btnData:ButtonData = new ButtonData();
-			btnData.labelText = label;
-			btnData.iconType = iconType;
-			btnData.iconBitmap = icon;
-			btnData.itemRendererWidth = 100;
-			btnData.itemRendererType = rendererClass || SbIconButton;
-			dataSet.push( btnData );
-		}
-
-		private function onCenterScrollerItemRendererAdded( renderer:DisplayObject ):void {
-			renderer.addEventListener( MouseEvent.CLICK, onButtonClicked );
-		}
-
-		private function onCenterScrollerItemRendererRemoved( renderer:DisplayObject ):void {
-//			renderer.removeEventListener( MouseEvent.CLICK, onButtonClicked );
 		}
 
 		public function setHeader( value:String ):void {
@@ -418,38 +357,5 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_rightButton.visible = value;
 			rightBtnSide.visible = value;
 		}
-
-		public function layout():void {
-			_scroller.invalidateContent();
-			_scroller.dock();
-		}
-
-		// ---------------------------------------------------------------------
-		// Handlers.
-		// ---------------------------------------------------------------------
-
-		private function onCenterScrollerMotionEnd():void {
-			scrollingEndedSignal.dispatch();
-//			toggleButtonGroupInteractivity( true );
-		}
-
-		private function onCenterScrollerMotionStart():void {
-			scrollingStartedSignal.dispatch();
-//			toggleButtonGroupInteractivity( false );
-		}
-
-//		private function toggleButtonGroupInteractivity( enabled:Boolean ):void {
-//			var len:uint = _buttonGroups.length;
-//			for( var i:uint; i < len; i++ ) {
-//				var group:ButtonGroup = _buttonGroups[ i ];
-//				group.selectionEnabled = enabled;
-//			}
-//		}
-
-		public function get scroller():HSnapList {
-			return _scroller;
-		}
-		
-		
 	}
 }

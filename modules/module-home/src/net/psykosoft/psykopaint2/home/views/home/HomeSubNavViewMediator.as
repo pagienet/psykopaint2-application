@@ -1,9 +1,9 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
-	public class HomeSubNavViewMediator extends MediatorBase
+	public class HomeSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:HomeSubNavView;
@@ -11,10 +11,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
-			manageStateChanges = false;
-			manageMemoryWarnings = false;
+			super.initialize();
 			view.navigation.buttonClickedCallback = onButtonClicked;
 		}
 

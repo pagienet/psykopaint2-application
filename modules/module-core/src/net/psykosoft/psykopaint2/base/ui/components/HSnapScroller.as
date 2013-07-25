@@ -269,6 +269,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		private function mouseHitsInteractiveArea():Boolean {
 
+			if( !stage ) return false;
+
 			var topLeft:Point = new Point( 0, 0 );
 			var bottomRight:Point = new Point( _visibleWidth, _visibleHeight );
 

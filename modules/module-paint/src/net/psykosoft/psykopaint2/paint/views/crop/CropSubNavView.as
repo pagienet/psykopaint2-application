@@ -17,8 +17,6 @@ package net.psykosoft.psykopaint2.paint.views.crop
 			navigation.setHeader( "Crop!" );
 			navigation.setLeftButton( LBL_PICK_AN_IMAGE, ButtonIconType.BACK );
 			navigation.setRightButton( LBL_CONFIRM_CROP, ButtonIconType.OK );
-
-			navigation.layout();
 		}
 	}
 }

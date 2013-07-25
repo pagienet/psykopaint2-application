@@ -1,18 +1,17 @@
 package net.psykosoft.psykopaint2.home.views.settings
 {
 
-	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
 	import net.psykosoft.psykopaint2.base.utils.io.AtlasLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
-	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
-	public class WallpaperSubNavViewMediator extends MediatorBase
+	public class WallpaperSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:WallpaperSubNavView;
@@ -26,10 +25,8 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
-			manageStateChanges = false;
-			manageMemoryWarnings = false;
+			super.initialize();
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Trigger thumbnail load.

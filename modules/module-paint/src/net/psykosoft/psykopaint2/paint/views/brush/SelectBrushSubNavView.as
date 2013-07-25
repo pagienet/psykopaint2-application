@@ -18,7 +18,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			navigation.setHeader( "Pick a Brush" );
 			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
 			navigation.setRightButton( LBL_EDIT_BRUSH, ButtonIconType.TWEAK_BRUSH );
-			navigation.layout();
 		}
 
 		public function setAvailableBrushes( availableBrushTypes:Vector.<String> ):void {
@@ -54,10 +53,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					}
 				}
 
-				navigation.createCenterButtonData( centerButtonDataProvider, availableBrushTypes[ i ], iconType );
+				createCenterButtonData( centerButtonDataProvider, availableBrushTypes[ i ], iconType );
 			}
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
-			navigation.layout();
+			_scroller.setDataProvider( centerButtonDataProvider );
 		}
 
 		public function setSelectedBrush( activeBrushKit:String ):void {

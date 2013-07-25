@@ -12,9 +12,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
-	public class NewPaintingSubNavViewMediator extends MediatorBase
+	public class NewPaintingSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:NewPaintingSubNavView;
@@ -43,16 +43,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
-			manageStateChanges = false;
-			manageMemoryWarnings = false;
+			super.initialize();
 			view.navigation.buttonClickedCallback = onButtonClicked;
-
 			displaySavedPaintings();
-
-			if( NewPaintingSubNavView.lastScrollerPosition != 0 )
-			view.navigation.setScrollerPosition( NewPaintingSubNavView.lastScrollerPosition );
 
 			// From app.
 			notifySurfaceLoadedSignal.add( onSurfaceSet );
@@ -98,8 +92,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					paintingModel.focusedPaintingId = "uniqueUserId-" + label;
 					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + label );
 					requestEaselUpdateSignal.dispatch( vo, true, false );
-					NewPaintingSubNavView.lastSelectedPaintingLabel = label;
-					NewPaintingSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
 				}
 			}
 		}
@@ -117,19 +109,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			_waitingForSurfaceSet = true;
 			requestLoadSurfaceSignal.dispatch( 0 );
 		}
-
-		// -----------------------
-		// Overrride.
-		// -----------------------
-
-		override protected function onStateChange( newState:String ):void {
-			if( newState == StateType.TRANSITION_TO_HOME_MODE ){
-				NewPaintingSubNavView.lastSelectedPaintingLabel = "";
-				NewPaintingSubNavView.lastScrollerPosition = 0;
-			}
-			super.onStateChange( newState );
-		}
-
 
 		// -----------------------
 		// Private.

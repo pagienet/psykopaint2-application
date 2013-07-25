@@ -1,26 +1,15 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
-	import com.bit101.components.ComboBox;
-	import com.bit101.components.Knob;
-	
 	import flash.display.DisplayObject;
 	import flash.events.Event;
-	import flash.text.TextField;
-	
-	import net.psykosoft.psykopaint2.base.ui.components.ButtonGroup;
+
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
-	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.button.SbButtonDELETE;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.SbColorSwatches;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.SbColormixer;
-	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
-	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
-	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	// TODO: remove minimalcomps dependency when done
@@ -71,8 +60,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			//colorMixer2.blendMode = "multiply";
 			colorMixer2.addEventListener(Event.CHANGE, onColorPicked );
 			
-			
-			
 			checkBox = new SbCheckBox();
 			checkBox.addEventListener( Event.CHANGE, onCheckBoxChanged );
 			checkBox.y = UI_ELEMENT_Y;
@@ -82,9 +69,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			addChild( colorMixer2 );
 			addChild( colorSwatches );
 			addChild( checkBox );
-			
-			
-			navigation.layout();
 		}
 		
 		override protected function onDisabled():void {

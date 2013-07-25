@@ -17,9 +17,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public static const LBL_NEW_PHOTO:String = "Photo Painting";
 		public static const LBL_CONTINUE:String = "Continue Painting";
 
-		static public var lastSelectedPaintingLabel:String = "";
-		static public var lastScrollerPosition:Number = 0;
-
 		public function NewPaintingSubNavView() {
 			super();
 		}
@@ -39,10 +36,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
 
 			// New color painting button.
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, SbIconButton );
+			createCenterButtonData( centerButtonDataProvider, LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, SbIconButton );
 
 			// New photo painting button.
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, SbIconButton );
+			createCenterButtonData( centerButtonDataProvider, LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, SbIconButton );
 
 			// Old painting buttons.
 			len = data.length;
@@ -52,10 +49,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
 
-				navigation.createCenterButtonData( centerButtonDataProvider, str, null, SbBitmapButton, new Bitmap( vo.thumbnail ) );
+				createCenterButtonData( centerButtonDataProvider, str, null, SbBitmapButton, new Bitmap( vo.thumbnail ) );
 			}
 
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
+			_scroller.setDataProvider( centerButtonDataProvider );
 
 			// TODO: complete navigation refactor
 //			if( lastSelectedPaintingLabel == "" ) _buttonGroup.setSelectedButtonByIndex( 0 );
@@ -66,8 +63,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			if( !HomeSettings.isStandalone ) {
 				navigation.setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
 			}
-
-			navigation.layout();
 		}
 
 		public function getIdForSelectedInProgressPainting():String {

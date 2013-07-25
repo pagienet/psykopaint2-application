@@ -5,9 +5,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
-	public class EditBrushSubNavViewMediator extends MediatorBase
+	public class EditBrushSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:EditBrushSubNavView;
@@ -21,10 +21,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
-			manageStateChanges = false;
-			manageMemoryWarnings = false;
+			super.initialize();
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post init.

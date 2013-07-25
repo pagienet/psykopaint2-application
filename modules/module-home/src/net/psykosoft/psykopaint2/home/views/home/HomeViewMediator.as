@@ -92,8 +92,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
+			super.initialize();
 			_freezingStates = new Vector.<String>();
 			view.stage3dProxy = stage3dProxy;
 

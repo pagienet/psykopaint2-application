@@ -25,13 +25,11 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
 
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_USER, ButtonIconType.PICTURE );
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_SAMPLES, ButtonIconType.SAMPLES );
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_CAMERA, ButtonIconType.CAMERA );
+			createCenterButtonData( centerButtonDataProvider, LBL_USER, ButtonIconType.PICTURE );
+			createCenterButtonData( centerButtonDataProvider, LBL_SAMPLES, ButtonIconType.SAMPLES );
+			createCenterButtonData( centerButtonDataProvider, LBL_CAMERA, ButtonIconType.CAMERA );
 
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
-
-			navigation.layout();
+			_scroller.setDataProvider( centerButtonDataProvider );
 		}
 	}
 }

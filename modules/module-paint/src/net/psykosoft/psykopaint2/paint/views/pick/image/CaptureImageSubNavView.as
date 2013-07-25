@@ -23,11 +23,9 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
 
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_FLIP, ButtonIconType.FLIP );
+			createCenterButtonData( centerButtonDataProvider, LBL_FLIP, ButtonIconType.FLIP );
 
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
-
-			navigation.layout();
+			_scroller.setDataProvider( centerButtonDataProvider );
 		}
 	}
 }

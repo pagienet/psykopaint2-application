@@ -37,8 +37,8 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		
 		override public function initialize():void {
 
-			super.initialize();
 			registerView( view );
+			super.initialize();
 			registerEnablingState( StateType.CROP );
 
 			// From app.
