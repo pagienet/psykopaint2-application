@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.utils.getQualifiedClassName;
 
 	import net.psykosoft.psykopaint2.core.drawing.config.FastBufferManager;
-	import net.psykosoft.psykopaint2.core.errors.AbstractMethodError;
+	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.resources.TextureProxy;
 	import net.psykosoft.psykopaint2.tdsi.FastBuffer;

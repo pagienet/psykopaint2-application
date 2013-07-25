@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.errors
+package net.psykosoft.psykopaint2.base.errors
 {
 	public class AbstractMethodError extends Error
 	{

@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
-	import net.psykosoft.psykopaint2.core.errors.AbstractMethodError;
+	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
 
 	public class AbstractBrushShape
 	{

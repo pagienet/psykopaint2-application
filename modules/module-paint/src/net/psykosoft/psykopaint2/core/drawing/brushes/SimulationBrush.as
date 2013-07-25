@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
-	import net.psykosoft.psykopaint2.core.errors.AbstractMethodError;
+	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
 
 	public class SimulationBrush extends AbstractBrush
 	{

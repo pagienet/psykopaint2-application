@@ -5,7 +5,13 @@ package net.psykosoft.psykopaint2.app
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
+	import net.psykosoft.psykopaint2.app.states.BookState;
+	import net.psykosoft.psykopaint2.app.states.CropState;
+	import net.psykosoft.psykopaint2.app.states.HomeState;
+	import net.psykosoft.psykopaint2.app.states.IntroToHomeState;
+	import net.psykosoft.psykopaint2.app.states.PaintState;
 	import net.psykosoft.psykopaint2.app.views.base.AppRootView;
+	import net.psykosoft.psykopaint2.base.states.StateMachine;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.book.BookModule;
 	import net.psykosoft.psykopaint2.core.CoreModule;
@@ -21,11 +27,12 @@ package net.psykosoft.psykopaint2.app
 
 	import org.swiftsuspenders.Injector;
 
-	// TODO: fix rendering conflict between the paint and the home module...
+	import robotlegs.bender.framework.api.IInjector;
 
 	public class AppModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;
+		private var _applicationStateMachine : StateMachine;
 
 		public function AppModule() {
 			super();
@@ -50,6 +57,18 @@ package net.psykosoft.psykopaint2.app
 			createCoreModule();
 		}
 
+		private function initStateMachine() : void
+		{
+			_applicationStateMachine = new StateMachine();
+
+			var injector : IInjector = _coreModule.injector;
+			injector.map(IntroToHomeState).asSingleton();
+			injector.map(HomeState).asSingleton();
+			injector.map(CropState).asSingleton();
+			injector.map(PaintState).asSingleton();
+			injector.map(BookState).asSingleton();
+		}
+
 		// Core module.
 		private function createCoreModule():void {
 			trace( this, "creating core module..." );
@@ -61,6 +80,7 @@ package net.psykosoft.psykopaint2.app
 		private function onCoreModuleReady():void {
 			trace( this, "core module is ready, injector: " + _coreModule.injector );
 			_coreModule.startEnterFrame();
+			initStateMachine();
 			createPaintModule();
 		}
 
@@ -117,16 +137,16 @@ package net.psykosoft.psykopaint2.app
 			trace( this, "app views ready -" );
 
 			// Hide splash.
+			// TODO: Splash screen should be a state to, that's set immediately
 			_coreModule.coreRootView.removeSplashScreen();
 
-			// Trigger initial state...
-			_coreModule.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
-			_coreModule.injector.getInstance( NotifyHomeViewZoomCompleteSignal ).addOnce( onHomeFirstZoomOutComplete );
+			transitionToHomeState();
 		}
 
-		private function onHomeFirstZoomOutComplete():void {
-			_coreModule.injector.getInstance( RequestNavigationToggleSignal ).dispatch( 1, 0.5 );
-			_coreModule.injector.getInstance( RequestHomeViewScrollSignal ).dispatch( 1 );
+		private function transitionToHomeState() : void
+		{
+			var homeState : IntroToHomeState = _coreModule.injector.getInstance(IntroToHomeState);
+			_applicationStateMachine.setActiveState(homeState);
 		}
 	}
 }

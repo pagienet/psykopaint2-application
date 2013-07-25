@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.core.rendering
 {
 	import flash.display3D.Context3D;
 
-	import net.psykosoft.psykopaint2.core.errors.AbstractMethodError;
+	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
 
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 
