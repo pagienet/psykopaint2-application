@@ -89,7 +89,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				if( parameter.type != PsykoParameter.ColorParameter ) {
 					if( parameter.id != CUSTOM_COLOR_ID ) {
 						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
-						navigation.createCenterButtonData( centerButtonDataProvider, parameter.label, "", "btnLabelCenter", null );
+						navigation.createCenterButtonData( centerButtonDataProvider, parameter.label );
 					}
 				} else {
 					navigation.toggleRightButtonVisibility( true );

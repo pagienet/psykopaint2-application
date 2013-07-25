@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbPolaroidButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class WallpaperSubNavView extends SubNavigationViewBase
@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 			var names:Vector.<String> = atlas.names;
 			for( var i:uint; i < names.length; i++ ) {
 				var name:String = names[ i ];
-				navigation.createCenterButtonData( centerButtonDataProvider, name, ButtonIconType.POLAROID, ButtonLabelType.NO_BACKGROUND, new Bitmap( atlas.getSubTextureForId( name ) ) );
+				navigation.createCenterButtonData( centerButtonDataProvider, name, null, SbPolaroidButton, new Bitmap( atlas.getSubTextureForId( name ) ) );
 			}
 
 			navigation.scroller.setDataProvider( centerButtonDataProvider );

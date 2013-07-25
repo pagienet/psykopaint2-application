@@ -28,12 +28,29 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			_itemRendererFactory = new HSnapListItemRendererFactory();
 		}
 
+		override public function reset():void {
+
+			// Release all current item renderers.
+			if( _dataProvider ) {
+				var i:uint;
+				var len:uint = _dataProvider.length;
+				var itemData:ISnapListData;
+				for( i = 0; i < len; ++i ) {
+					itemData = _dataProvider[ i ];
+					if( itemData.itemRenderer ) {
+						releaseItemRenderer( itemData.itemRenderer );
+					}
+				}
+			}
+			_dataProvider = null;
+
+			super.reset();
+		}
+
 		public function setDataProvider( data:Vector.<ISnapListData> ):void {
 
-			// Clean up and set.
-			if( _dataProvider ) {
-				// TODO: clean up old provider
-			}
+			reset();
+
 			_dataProvider = data;
 
 			// Create snap points.
@@ -123,9 +140,6 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				itemRenderer = itemData.itemRenderer;
 				releaseItemRenderer( itemRenderer );
 				itemData.itemRenderer = null;
-
-				// Remove from display list.
-				_container.removeChild( itemRenderer ); // TODO: do not remove child, just set invisible?
 			}
 
 			// Assign renderers to items that are becoming visible.
@@ -144,6 +158,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				// Add it to display.
 				itemRenderer.x = itemData.itemRendererPosition;
 				itemRenderer.y = itemData.itemRendererWidth / 2;
+				itemRenderer.visible = true;
 				_container.addChild( itemRenderer );
 			}
 		}
@@ -157,6 +172,8 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		private function releaseItemRenderer( renderer:DisplayObject ):void {
 			rendererRemovedSignal.dispatch( renderer );
 			_itemRendererFactory.markItemRendererAsAvailable( renderer );
+			renderer.visible = false;
+//				_container.removeChild( itemRenderer ); // TODO: do not remove child, just set invisible?
 		}
 
 		private function configureItemRendererFromData( itemRenderer:DisplayObject, itemData:ISnapListData ):void {
@@ -169,6 +186,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			// If so, set.
 			var i:uint;
 			var numProperties:uint = propertyList.length();
+			if( itemRenderer.hasOwnProperty( "reset" ) ) itemRenderer[ "reset" ]();
 			for( i = 0; i < numProperties; i++ ) {
 				var propertyName:String = propertyList[ i ].@name;
 				if( itemRenderer.hasOwnProperty( propertyName ) ) {

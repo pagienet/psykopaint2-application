@@ -6,7 +6,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonLabelType;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbBitmapButton;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbIconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 
@@ -38,10 +39,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
 
 			// New color painting button.
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, ButtonLabelType.CENTER );
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, SbIconButton );
 
 			// New photo painting button.
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, ButtonLabelType.CENTER );
+			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, SbIconButton );
 
 			// Old painting buttons.
 			len = data.length;
@@ -51,7 +52,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
 
-				navigation.createCenterButtonData( centerButtonDataProvider, str, ButtonIconType.PAINTING, ButtonLabelType.NONE, new Bitmap( vo.thumbnail ) );
+				navigation.createCenterButtonData( centerButtonDataProvider, str, null, SbBitmapButton, new Bitmap( vo.thumbnail ) );
 			}
 
 			navigation.scroller.setDataProvider( centerButtonDataProvider );

@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.core.views.base
 {
 
+	import com.greensock.plugins.ColorMatrixFilterPlugin;
+	import com.greensock.plugins.TweenPlugin;
+
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
@@ -62,6 +65,9 @@ package net.psykosoft.psykopaint2.core.views.base
 			super();
 
 			trace( this, "constructor" );
+
+			// Used to color button labels.
+			TweenPlugin.activate( [ ColorMatrixFilterPlugin ] );
 
 			// Setup root layers.
 			_applicationLayer = new Sprite();

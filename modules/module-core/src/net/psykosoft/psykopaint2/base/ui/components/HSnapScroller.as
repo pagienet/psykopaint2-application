@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_minContentX = 0;
 			_maxContentX = 0;
 			_container.x = 0;
-			_container.removeChildren();
+//			_container.removeChildren();
 		}
 
 		public function dock():void {
