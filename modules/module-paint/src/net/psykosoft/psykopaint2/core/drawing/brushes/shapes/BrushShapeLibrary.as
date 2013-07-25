@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			registerShape(new AntialiasedTriangleBrushShape(context3D));
 			registerShape(new PrecisionTestShape(context3D));
 			registerShape(new SphereBrushShape(context3D));
+			registerShape(new PaintBrushShape1(context3D));
 			
 			if ( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION )
 			{

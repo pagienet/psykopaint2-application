@@ -329,10 +329,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			var clickedButton:PsykoButton = event.target as PsykoButton;
 			if( !clickedButton ) clickedButton = event.target.parent as PsykoButton;
-			var label:String = clickedButton.labelText;
-			trace( this, "button clicked: " + clickedButton.labelText );
-
-			buttonClickedCallback( label );
+			if ( clickedButton )
+			{
+				var label:String = clickedButton.labelText;
+				trace( this, "button clicked: " + clickedButton.labelText );
+	
+				buttonClickedCallback( label );
+			} else {
+				trace("##### Error - no button found");
+				
+			}
 		}
 
 		public function createCenterButtonData( dataSet:Vector.<ISnapListData>, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null ):void {

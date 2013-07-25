@@ -477,7 +477,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		public function getParameterByPath(path:Array):PsykoParameter
 		{
-			if ( path.length == 1 && path[0] == "brush" )
+			if ( path.length == 2 && path[0] == "brush" )
 			{
 				var parameterID:String = path[1];
 				for ( var i:int = 0; i < _parameters.length; i++ )
