@@ -240,9 +240,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Going to paint?
 			if( stateModel.currentState == StateType.PREPARE_FOR_PAINT_MODE ) {
 				requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.texture.newReference());
-				setTimeout( function():void {
-					requestStateChange( StateType.TRANSITION_TO_PAINT_MODE );
-				}, 50 );
 			}
 
 			_snapshotPromise.dispose();
@@ -278,19 +275,19 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Trigger SETTINGS state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState != StateType.SETTINGS && paintingIndex == 0 ) {
-				requestStateChange( StateType.SETTINGS );
+				requestStateChange__OLD_TO_REMOVE( StateType.SETTINGS );
 				return;
 			}
 
 			// Trigger NEW PAINTING state if closest to easel ( index 1 ).
 			if( stateModel.currentState != StateType.HOME_ON_EASEL && paintingIndex == 1 ) {
-				requestStateChange( StateType.HOME_ON_EASEL );
+				requestStateChange__OLD_TO_REMOVE( StateType.HOME_ON_EASEL );
 				return;
 			}
 
 			// Restore HOME state if closest to home painting ( index 2 ).
 			if( stateModel.currentState != StateType.HOME && paintingIndex == homePaintingIndex ) {
-				requestStateChange( StateType.HOME );
+				requestStateChange__OLD_TO_REMOVE( StateType.HOME );
 				return;
 			}
 
@@ -302,7 +299,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 				// TODO: delete this bit
 				if( stateModel.currentState != StateType.HOME ) {
-					requestStateChange( StateType.HOME );
+					requestStateChange__OLD_TO_REMOVE( StateType.HOME );
 					return;
 				}
 

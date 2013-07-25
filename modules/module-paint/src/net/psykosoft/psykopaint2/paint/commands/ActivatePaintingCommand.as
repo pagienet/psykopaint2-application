@@ -16,7 +16,8 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
 
 	import robotlegs.bender.framework.api.IContext;
 
@@ -38,10 +39,13 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var context:IContext;
 
 		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
+		public var requestStateChangeSignal:RequestStateChangeSignal_OLD_TO_REMOVE;
 
 		[Inject]
 		public var canvasHistoryModel : CanvasHistoryModel;
+
+		[Inject]
+		public var requestPaintStateSignal : RequestPaintStateSignal;
 
 		private var _file:File;
 
@@ -69,7 +73,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			_file.data.clear();
 			_file = null;
 
-			requestStateChangeSignal.dispatch( StateType.PREPARE_FOR_PAINT_MODE );
+			requestPaintStateSignal.dispatch();
 
 			var canvasImporter : CanvasImporter = new CanvasImporter();
 			canvasImporter.importPainting(canvasModel, vo);

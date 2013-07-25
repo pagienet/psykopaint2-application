@@ -1,17 +1,18 @@
 package net.psykosoft.psykopaint2.app.states
 {
-	import mx.modules.IModule;
-
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-
 	import net.psykosoft.psykopaint2.base.states.State;
+	import net.psykosoft.psykopaint2.core.CoreModule;
 
 	use namespace ns_state_machine;
 
-	public class PaintState extends State
+	public class SplashScreenState extends State
 	{
-		public function PaintState()
+		private var _coreModule : CoreModule;
+
+		public function SplashScreenState(coreModule : CoreModule)
 		{
+			_coreModule = coreModule;
 		}
 
 		override ns_state_machine function activate() : void
@@ -20,6 +21,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function deactivate() : void
 		{
+			_coreModule.coreRootView.removeSplashScreen();
 		}
 	}
 }

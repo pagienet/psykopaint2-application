@@ -27,12 +27,12 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			switch( label ) {
 				case CaptureImageSubNavView.LBL_BACK:
 				{
-					requestStateChange( StateType.PICK_IMAGE );
+					requestStateChange__OLD_TO_REMOVE( StateType.PICK_IMAGE );
 					break;
 				}
 				case CaptureImageSubNavView.LBL_CAPTURE:
 				{
-					requestStateChange( StateType.CONFIRM_CAPTURE_IMAGE );
+					requestStateChange__OLD_TO_REMOVE( StateType.CONFIRM_CAPTURE_IMAGE );
 					break;
 				}
 				case CaptureImageSubNavView.LBL_FLIP:

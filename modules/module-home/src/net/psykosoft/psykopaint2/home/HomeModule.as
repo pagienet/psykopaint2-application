@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.home
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.home.config.HomeConfig;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.home
 				showNavigationSignal.dispatch( 1, 0.5 );
 
 				// Trigger initial state...
-				_homeConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.HOME );
+				_homeConfig.injector.getInstance( RequestStateChangeSignal_OLD_TO_REMOVE ).dispatch( StateType.HOME );
 				_coreModule.startEnterFrame();
 			}
 

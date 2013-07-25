@@ -675,8 +675,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				_canvasScaleY = matrix.d;
 				_canvasOffsetX = matrix.tx * CoreSettings.STAGE_WIDTH;
 				_canvasOffsetY = matrix.ty * CoreSettings.STAGE_HEIGHT;
-				trace ("scale:", _canvasScaleX, _canvasScaleY);
-				trace ("offset:", _canvasOffsetX, _canvasOffsetY);
 			}
 		}
 		

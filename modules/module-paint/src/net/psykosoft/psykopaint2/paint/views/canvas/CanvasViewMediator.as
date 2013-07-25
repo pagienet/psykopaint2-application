@@ -327,13 +327,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				requestUpdateMessagePopUpSignal.dispatch( "Almost done...", "" );
 
 				_waitingForHomeModuleToBeReady = true;
-				requestStateChange( StateType.PREPARE_FOR_HOME_MODE );
+				requestStateChange__OLD_TO_REMOVE( StateType.PREPARE_FOR_HOME_MODE );
 
 				_waitingForZoomOutToContinueToHome = false;
 			}
 
 			if( _waitingForZoomInToContinueToPaint ) {
-				requestStateChange( StateType.PAINT_SELECT_BRUSH );
+				requestStateChange__OLD_TO_REMOVE( StateType.PAINT_SELECT_BRUSH );
 				requestInteractionBlockSignal.dispatch( false );
 				_waitingForZoomInToContinueToPaint = false;
 			}
@@ -356,7 +356,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			if( _waitingForSavingPopUpRemoval ) {
 
 			    requestInteractionBlockSignal.dispatch( false ); // TODO: needed?
-				requestStateChange( StateType.HOME_ON_EASEL );
+				requestStateChange__OLD_TO_REMOVE( StateType.HOME_ON_EASEL );
 				requestCleanUpPaintModuleMemorySignal.dispatch();
 
 				_waitingForSavingPopUpRemoval = false;

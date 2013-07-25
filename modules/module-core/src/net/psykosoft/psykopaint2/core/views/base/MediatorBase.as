@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
@@ -17,7 +17,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		public var notifyStateChangeSignal:NotifyStateChangeSignal;
 
 		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
+		public var requestStateChangeSignal:RequestStateChangeSignal_OLD_TO_REMOVE;
 
 		private var _enablingStates:Vector.<String>;
 		private var _view:ViewBase;
@@ -43,7 +43,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			_enablingStates.push( state );
 		}
 
-		protected function requestStateChange( state:String ):void {
+		protected function requestStateChange__OLD_TO_REMOVE( state:String ):void {
 			requestStateChangeSignal.dispatch( state );
 		}
 

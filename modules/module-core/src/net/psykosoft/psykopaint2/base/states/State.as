@@ -1,5 +1,9 @@
-package net.psykosoft.psykopaint2.base.states
+ package net.psykosoft.psykopaint2.base.states
 {
+	 import net.psykosoft.psykopaint2.base.states.ns_state_machine;
+
+	 use namespace ns_state_machine;
+
 	public class State
 	{
 		private var _stateMachine : StateMachine;
@@ -19,11 +23,11 @@ package net.psykosoft.psykopaint2.base.states
 			_stateMachine = value;
 		}
 
-		public function activate() : void
+		ns_state_machine function activate() : void
 		{
 		}
 
-		public function deactivate() : void
+		ns_state_machine function deactivate() : void
 		{
 		}
 	}

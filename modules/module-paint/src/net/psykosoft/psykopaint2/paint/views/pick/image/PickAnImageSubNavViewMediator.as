@@ -36,19 +36,19 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 				case PickAnImageSubNavView.LBL_BACK:
 				{
-					requestStateChange( StateType.PREVIOUS );
+					requestStateChange__OLD_TO_REMOVE( StateType.PREVIOUS );
 					break;
 				}
 
 				case PickAnImageSubNavView.LBL_USER:
 				{
-					requestStateChange( CoreSettings.RUNNING_ON_iPAD ? StateType.BOOK_PICK_USER_IMAGE_IOS : StateType.PICK_USER_IMAGE_DESKTOP );
+					requestStateChange__OLD_TO_REMOVE( CoreSettings.RUNNING_ON_iPAD ? StateType.BOOK_PICK_USER_IMAGE_IOS : StateType.PICK_USER_IMAGE_DESKTOP );
 					break;
 				}
 
 				case PickAnImageSubNavView.LBL_SAMPLES:
 				{
-					requestStateChange( StateType.BOOK_PICK_SAMPLE_IMAGE );
+					requestStateChange__OLD_TO_REMOVE( StateType.BOOK_PICK_SAMPLE_IMAGE );
 					break;
 				}
 
@@ -60,7 +60,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 				case PickAnImageSubNavView.LBL_CAMERA:
 				{
-					requestStateChange( StateType.CAPTURE_IMAGE );
+					requestStateChange__OLD_TO_REMOVE( StateType.CAPTURE_IMAGE );
 					break;
 				}
 			}

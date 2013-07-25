@@ -46,13 +46,14 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
@@ -191,6 +192,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifySurfacePreviewLoadedSignal ).asSingleton();
 			_injector.map( NotifySurfaceLoadedSignal ).asSingleton();
 			_injector.map( RequestBlankSourceImageActivationSignal ).asSingleton();
+			_injector.map( RequestPaintStateSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -198,7 +200,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		// -----------------------
 
 		private function mapCommands():void {
-			_commandMap.map( RequestStateChangeSignal ).toCommand( ChangeStateCommand );
+			_commandMap.map( RequestStateChangeSignal_OLD_TO_REMOVE ).toCommand( ChangeStateCommand );
 			_commandMap.map( RequestGpuRenderingSignal ).toCommand( RenderGpuCommand );
 			_commandMap.map( RequestPaintingDataRetrievalSignal ).toCommand( RetrievePaintingDataCommand );
 		}

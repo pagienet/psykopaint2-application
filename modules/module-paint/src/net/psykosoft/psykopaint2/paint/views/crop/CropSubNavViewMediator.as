@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case CropSubNavView.LBL_PICK_AN_IMAGE: {
-					requestStateChange( StateType.PICK_IMAGE );
+					requestStateChange__OLD_TO_REMOVE( StateType.PICK_IMAGE );
 					break;
 				}
 				case CropSubNavView.LBL_CONFIRM_CROP: {

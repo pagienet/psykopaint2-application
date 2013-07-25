@@ -5,7 +5,8 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 
 	public class UpdateAppStateFromActivatedDrawingCoreModuleCommand extends TracingCommand
@@ -14,10 +15,13 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var moduleActivationVO:ModuleActivationVO;
 
 		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
+		public var requestStateChangeSignal:RequestStateChangeSignal_OLD_TO_REMOVE;
 
 		[Inject]
 		public var stateModel:StateModel;
+
+		[Inject]
+		public var requestPaintStateSignal : RequestPaintStateSignal;
 
 		override public function execute():void {
 			super.execute();
@@ -31,7 +35,7 @@ package net.psykosoft.psykopaint2.paint.commands
 				case ModuleType.PAINT:
 
 					if( moduleActivationVO.deactivatedModuleType != ModuleType.NONE ) {
-						newState = StateType.PREPARE_FOR_PAINT_MODE;
+						requestPaintStateSignal.dispatch();
 					}
 
 					break;
@@ -51,6 +55,10 @@ package net.psykosoft.psykopaint2.paint.commands
 				// TODO: there are still application states not associated here.
 
 			}
+
+			// this null-guard is to check during the refactor which states have already been refactored
+			if (!newState) return;
+
 
 			trace( this, "drawing core module activated: " + moduleActivationVO.activatedModuleType + " ------------------------------------------" );
 			trace( this, "-> triggers application state: " + newState );

@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.paint.commands {
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
 
 	public class DeletePaintingCommand extends TracingCommand {
 
@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.paint.commands {
 		public var paintingModel:PaintingModel;
 
 		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal;
+		public var requestStateChangeSignal:RequestStateChangeSignal_OLD_TO_REMOVE;
 
 		public function DeletePaintingCommand() {
 			super();

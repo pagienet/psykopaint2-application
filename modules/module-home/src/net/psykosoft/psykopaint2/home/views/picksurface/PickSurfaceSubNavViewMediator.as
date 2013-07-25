@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class PickSurfaceSubNavViewMediator extends MediatorBase
@@ -39,6 +40,11 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		[Inject]
 		public var requestBlankSourceImageActivationSignal:RequestBlankSourceImageActivationSignal;
 
+		[Inject]
+		public var requestPaintStateSignal : RequestPaintStateSignal;
+
+		private var _waitingForSurface:Boolean;
+
 		private var _selectedIndex:int;
 
 		override public function initialize():void {
@@ -61,7 +67,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 			switch( label ) {
 				case PickSurfaceSubNavView.LBL_BACK:
-					requestStateChange( StateType.HOME_ON_EASEL );
+					requestStateChange__OLD_TO_REMOVE( StateType.HOME_ON_EASEL );
 					break;
 				case PickSurfaceSubNavView.LBL_CONTINUE:
 					continueToColorPaint();
@@ -89,7 +95,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			view.showRightButton( true );
 		}
 
-		private var _waitingForSurface:Boolean;
+
 		private function continueToColorPaint():void {
 
 			// Request the load of the surface.
@@ -104,7 +110,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		private function onSurfaceLoaded():void {
 			if( _waitingForSurface ) {
-				requestStateChange( StateType.PREPARE_FOR_PAINT_MODE );
+				requestPaintStateSignal.dispatch();
 				_waitingForSurface = false;
 			}
 		}

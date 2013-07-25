@@ -70,7 +70,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					PaintModeModel.activeMode = PaintModeType.COLOR_MODE;
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.focusedPaintingId = PaintingInfoVO.DEFAULT_VO_ID;
-					requestStateChange( StateType.HOME_PICK_SURFACE );
+					requestStateChange__OLD_TO_REMOVE( StateType.HOME_PICK_SURFACE );
 					break;
 				}
 
@@ -108,7 +108,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		private function onSurfaceSet():void {
 			if( _waitingForSurfaceSet ) {
-			   	requestStateChange( StateType.PICK_IMAGE );
+			   	requestStateChange__OLD_TO_REMOVE( StateType.PICK_IMAGE );
 				_waitingForSurfaceSet = false;
 			}
 		}

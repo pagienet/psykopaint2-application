@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 
 	import robotlegs.bender.framework.api.IInjector;
@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.core
 		private var _stage3dInitialized:Boolean;
 		private var _shakeAndBakeInitialized:Boolean;
 		private var _shakeAndBakeConnector:ShakeAndBakeConnector;
-		private var _stateSignal:RequestStateChangeSignal;
+		private var _stateSignal:RequestStateChangeSignal_OLD_TO_REMOVE;
 		private var _requestGpuRenderingSignal:RequestGpuRenderingSignal;
 		private var _stage3d:Stage3D;
 		private var _stage3dProxy:Stage3DProxy;
@@ -267,7 +267,7 @@ package net.psykosoft.psykopaint2.core
 			_coreConfig = new CoreConfig( this, stage, _stage3d, _stage3dProxy );
 			_requestNavigationToggleSignal = _coreConfig.injector.getInstance( RequestNavigationToggleSignal );
 			_requestGpuRenderingSignal = _coreConfig.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
-			_stateSignal = _coreConfig.injector.getInstance( RequestStateChangeSignal ); // Necessary for rendering the core on enter frame.
+			_stateSignal = _coreConfig.injector.getInstance( RequestStateChangeSignal_OLD_TO_REMOVE ); // Necessary for rendering the core on enter frame.
 			_injector = _coreConfig.injector;
 			trace( this, "initializing robotlegs context" );
 		}

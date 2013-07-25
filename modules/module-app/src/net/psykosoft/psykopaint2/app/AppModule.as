@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.app.states.HomeState;
 	import net.psykosoft.psykopaint2.app.states.IntroToHomeState;
 	import net.psykosoft.psykopaint2.app.states.PaintState;
+	import net.psykosoft.psykopaint2.app.states.SplashScreenState;
+	import net.psykosoft.psykopaint2.app.states.TransitionHomeToPaintState;
 	import net.psykosoft.psykopaint2.app.views.base.AppRootView;
 	import net.psykosoft.psykopaint2.base.states.StateMachine;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
@@ -21,7 +23,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.home.HomeModule;
 	import net.psykosoft.psykopaint2.paint.PaintModule;
 
@@ -36,6 +38,7 @@ package net.psykosoft.psykopaint2.app
 
 		public function AppModule() {
 			super();
+			_applicationStateMachine = new StateMachine();
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "AppModule";
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
@@ -57,22 +60,22 @@ package net.psykosoft.psykopaint2.app
 			createCoreModule();
 		}
 
-		private function initStateMachine() : void
+		private function createStates() : void
 		{
-			_applicationStateMachine = new StateMachine();
-
 			var injector : IInjector = _coreModule.injector;
 			injector.map(IntroToHomeState).asSingleton();
 			injector.map(HomeState).asSingleton();
 			injector.map(CropState).asSingleton();
 			injector.map(PaintState).asSingleton();
 			injector.map(BookState).asSingleton();
+			injector.map(TransitionHomeToPaintState).asSingleton();
 		}
 
 		// Core module.
 		private function createCoreModule():void {
 			trace( this, "creating core module..." );
 			_coreModule = new CoreModule();
+			_applicationStateMachine.setActiveState(new SplashScreenState(_coreModule));
 			_coreModule.isStandalone = false;
 			_coreModule.moduleReadySignal.addOnce( onCoreModuleReady );
 			addChild( _coreModule );
@@ -80,7 +83,7 @@ package net.psykosoft.psykopaint2.app
 		private function onCoreModuleReady():void {
 			trace( this, "core module is ready, injector: " + _coreModule.injector );
 			_coreModule.startEnterFrame();
-			initStateMachine();
+			createStates();
 			createPaintModule();
 		}
 
@@ -135,10 +138,6 @@ package net.psykosoft.psykopaint2.app
 		private function onViewsReady():void {
 
 			trace( this, "app views ready -" );
-
-			// Hide splash.
-			// TODO: Splash screen should be a state to, that's set immediately
-			_coreModule.coreRootView.removeSplashScreen();
 
 			transitionToHomeState();
 		}

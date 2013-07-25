@@ -1,14 +1,17 @@
 package net.psykosoft.psykopaint2.app.states
 {
 	import net.psykosoft.psykopaint2.base.states.State;
+	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
+
+	use namespace ns_state_machine;
 
 	public class IntroToHomeState extends State
 	{
 		[Inject]
-		public var requestStateChangeSignal : RequestStateChangeSignal;
+		public var requestStateChangeSignal : RequestStateChangeSignal_OLD_TO_REMOVE;
 
 		[Inject]
 		public var notifyHomeViewZoomCompleteSignal : NotifyHomeViewZoomCompleteSignal;
@@ -21,7 +24,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		}
 
-		override public function activate() : void
+		override ns_state_machine function activate() : void
 		{
 			// Trigger initial state...
 			notifyHomeViewZoomCompleteSignal.addOnce(onTransitionComplete);
@@ -33,7 +36,7 @@ package net.psykosoft.psykopaint2.app.states
 			stateMachine.setActiveState(homeState);
 		}
 
-		override public function deactivate() : void
+		override ns_state_machine function deactivate() : void
 		{
 		}
 	}

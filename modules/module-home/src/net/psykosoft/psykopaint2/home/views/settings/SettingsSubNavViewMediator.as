@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		private function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case SettingsSubNavView.LBL_WALLPAPER: {
-					requestStateChange( StateType.SETTINGS_WALLPAPER );
+					requestStateChange__OLD_TO_REMOVE( StateType.SETTINGS_WALLPAPER );
 					break;
 				}
 			}

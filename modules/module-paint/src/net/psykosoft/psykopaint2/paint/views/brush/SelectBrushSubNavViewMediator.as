@@ -36,12 +36,12 @@ import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 			switch( label ) {
 				case SelectBrushSubNavView.LBL_BACK:
 					EditBrushSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
-					requestStateChange( StateType.PAINT );
+					requestStateChange__OLD_TO_REMOVE( StateType.PAINT );
 					break;
 				
 				case SelectBrushSubNavView.LBL_EDIT_BRUSH:
 					EditBrushSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
-					requestStateChange( StateType.PAINT_ADJUST_BRUSH );
+					requestStateChange__OLD_TO_REMOVE( StateType.PAINT_ADJUST_BRUSH );
 					break;
 				
 				default: // Center buttons select a brush.
@@ -50,7 +50,7 @@ import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 					view.navigation.toggleRightButtonVisibility( hasParameters() );
 					
 					EditBrushSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
-					requestStateChange( StateType.PAINT_ADJUST_BRUSH );
+					requestStateChange__OLD_TO_REMOVE( StateType.PAINT_ADJUST_BRUSH );
 					break;
 			}
 		}

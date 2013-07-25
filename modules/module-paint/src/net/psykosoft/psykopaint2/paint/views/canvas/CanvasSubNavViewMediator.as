@@ -129,7 +129,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case CanvasSubNavView.LBL_PICK_A_BRUSH:
 				{
-					requestStateChange( StateType.PAINT_SELECT_BRUSH );
+					requestStateChange__OLD_TO_REMOVE( StateType.PAINT_SELECT_BRUSH );
 					break;
 				}
 			}
@@ -142,7 +142,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onPaintingSaved():void {
 			if( _waitingForSaveToContinueToHomeState ) {
 				setTimeout( function():void {
-					requestStateChange( StateType.TRANSITION_TO_HOME_MODE );
+					requestStateChange__OLD_TO_REMOVE( StateType.TRANSITION_TO_HOME_MODE );
 				}, 100 );
 				_waitingForSaveToContinueToHomeState = false;
 			}
