@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.base.ui.components.PsykoButton;
+	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -284,8 +284,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function onButtonClicked( event:MouseEvent ):void {
 
-			var clickedButton:PsykoButton = event.target as PsykoButton;
-			if( !clickedButton ) clickedButton = event.target.parent as PsykoButton;
+			var clickedButton:NavigationButton = event.target as NavigationButton;
+			if( !clickedButton ) clickedButton = event.target.parent as NavigationButton;
 			var label:String = clickedButton.labelText;
 			trace( this, "button clicked: " + clickedButton.labelText );
 

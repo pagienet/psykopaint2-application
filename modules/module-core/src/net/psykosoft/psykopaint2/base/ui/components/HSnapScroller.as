@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _maxContentX:Number = 0;
 		protected var _visibleWidth:Number;
 		protected var _visibleHeight:Number;
+		protected var _interactionWidth:Number;
 
 		public var scrollable:Boolean = true;
 		public var motionStartedSignal:Signal;
@@ -113,8 +114,12 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function setVisibleDimensions( width:Number, height:Number ):void {
-			_visibleWidth = width;
+			_visibleWidth = _interactionWidth = width;
 			_visibleHeight = height;
+		}
+
+		public function setInteractionWidth( value:Number ):void {
+			_interactionWidth = value;
 		}
 
 		// -----------------------
@@ -229,8 +234,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 			var len:uint = _positionManager.numSnapPoints;
 			var leftEdgeSnapPointMatched:Boolean = false;
 			var rightEdgeSnapPointMatched:Boolean = false;
-			var minAllowed:Number = _visibleWidth / 2;
-			var maxAllowed:Number = contentWidth - _visibleWidth / 2;
+			var minAllowed:Number = _interactionWidth / 2;
+			var maxAllowed:Number = contentWidth - _interactionWidth / 2;
 			for( var i:uint; i < len; i++ ) {
 
 				var snapPoint:Number = _positionManager.getSnapPointAtIndex( i );

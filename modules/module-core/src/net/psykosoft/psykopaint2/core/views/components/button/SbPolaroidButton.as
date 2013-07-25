@@ -4,9 +4,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 
-	import net.psykosoft.psykopaint2.base.ui.components.SelectableButton;
+	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 
-	public class SbPolaroidButton extends SelectableButton
+	public class SbPolaroidButton extends NavigationButton
 	{
 		// Declared in Flash.
 		public var label:Sprite;

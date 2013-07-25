@@ -12,13 +12,19 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import net.psykosoft.psykopaint2.core.views.components.label.SbLeftLabel;
 	import net.psykosoft.psykopaint2.core.views.components.label.SbRightLabel;
 
-	public class PsykoButton extends Sprite
+	public class NavigationButton extends Sprite
 	{
 		protected var _label:PsykoLabel;
 		protected var _icon:MovieClip;
 		protected var _iconBitmap:Bitmap;
+		protected var _pins:Sprite;
+		protected var _pin1:Sprite;
+		protected var _pin2:Sprite;
 
-		public function PsykoButton() {
+		private var _initialPinX1:Number;
+		private var _initialPinX2:Number;
+
+		public function NavigationButton() {
 			super();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
@@ -36,6 +42,14 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_icon.stop();
 		}
 
+		protected function setPins( pins:Sprite ):void {
+			_pins = pins;
+			_pin1 = _pins.getChildByName( "pin1" ) as Sprite;
+			_pin2 = _pins.getChildByName( "pin2" ) as Sprite;
+			_initialPinX1 = _pin1.x;
+			_initialPinX2 = _pin2.x;
+		}
+
 		// ---------------------------------------------------------------------
 		// Public.
 		// ---------------------------------------------------------------------
@@ -46,6 +60,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function set labelText( value:String ):void {
 			_label.text = value;
+			randomizePinsAndRotation();
 		}
 
 		public function get labelText():String {
@@ -56,6 +71,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public function set iconBitmap( bitmap:Bitmap ):void {
 			if( _iconBitmap ) {
 				_icon.removeChild( _iconBitmap );
+				_iconBitmap = null;
 				// TODO: dispose bitmap and bitmap data?
 			}
 			_iconBitmap = bitmap;
@@ -78,6 +94,27 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		private function scaleIcon( value:Number ):void {
 			_icon.scaleX = _icon.scaleY = value;
+		}
+
+		private function randomizePinsAndRotation():void {
+
+			if( !_pins.visible ) return;
+			_pin1.visible = _pin2.visible = false;
+
+			// Random rotation.
+			_icon.rotation = rand( 1, 2 ) * ( Math.random() > 0.5 ? 1 : -1 );
+
+			// Decide pin visibility depending on angle.
+			if( _icon.rotation < 0 ) _pin2.visible = true;
+			else _pin1.visible = true;
+
+			// Random displacement of pins.
+			_pin1.x = _initialPinX1 + rand( -5, 5 );
+			_pin2.x = _initialPinX2 + rand( -5, 5 );
+		}
+
+		private function rand( min:Number, max:Number ):Number {
+			return (max - min) * Math.random() + min;
 		}
 
 		// ---------------------------------------------------------------------

@@ -38,8 +38,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		override protected function onSetup():void {
 
 			_scroller = new HSnapList();
-			_scroller.setVisibleDimensions( 1024 - 280, 130 );
-			_scroller.x = 140;
+			_scroller.setVisibleDimensions( 1024, 130 );
+			_scroller.setInteractionWidth( 1024 - 280 );
+//			_scroller.x = 140;
 			_scroller.y = 768 - SCROLLER_DISTANCE_FROM_BOTTOM - _scroller.visibleHeight / 2;
 			_scroller.itemGap = 35;
 			_scroller.positionManager.minimumThrowingSpeed = 15;
