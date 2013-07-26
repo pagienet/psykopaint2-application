@@ -43,12 +43,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			rng = new LCG( Math.random() * 0xffffff );
 			type = BrushType.DELAUNAY;
 			delaunay = new Delaunay();
-			appendVO.verticesAndUV = new Vector.<Number>(24,true);
+			_appendVO.verticesAndUV = new Vector.<Number>(24,true);
 			
 			//x,y,u,v,d1,d2,d3,unused
 			for ( var i:int = 0; i < 24; i++ )
 			{
-				appendVO.verticesAndUV[i] = 0;
+				_appendVO.verticesAndUV[i] = 0;
 			}
 
 			
@@ -124,7 +124,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var rendered:Dictionary = new Dictionary();
 			var overlap:Number = 1;
 			var colors:Vector.<Number> = point.colorsRGBA;
-			var vertexUVData:Vector.<Number> = appendVO.verticesAndUV;
+			var vertexUVData:Vector.<Number> = _appendVO.verticesAndUV;
 			
 			while ( edge != null )
 			{
@@ -222,9 +222,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 						colors[8] = r + dl;
 						colors[9] = g + dl;
 						colors[10] = b + dl;
-						appendVO.point = point;
+						_appendVO.point = point;
 						
-						_brushMesh.append( appendVO );
+						_brushMesh.append( _appendVO );
 						rendered[triangle] = true;
 					}
 				}

@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		public var verticesAndUV:Vector.<Number>;
 		public var point:SamplePoint;
 		public var diagonalAngle:Number;
+		public var diagonalLength:Number;
 		
 		public function StrokeAppendVO()
 		{

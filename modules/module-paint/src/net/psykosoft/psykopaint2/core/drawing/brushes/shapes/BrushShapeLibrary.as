@@ -33,13 +33,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			registerShape(new WetBrushShape(context3D));
 			registerShape(new BasicBrushShape(context3D));
 			registerShape(new SplotchBrushShape(context3D));
-			
+			registerShape(new NoisyBrushShape(context3D));
 			/*
 			//disabled unused shapes
 			registerShape(new BasicSmoothBrushShape(context3D));
 			registerShape(new SquareBrushShape(context3D));
 			registerShape(new SquareSmoothBrushShape(context3D));
-			registerShape(new NoisyBrushShape(context3D));
+			
 			registerShape(new PencilBrushShape(context3D));
 			registerShape(new SplatBrushShape2(context3D));
 			registerShape(new DotBrushShape(context3D));
