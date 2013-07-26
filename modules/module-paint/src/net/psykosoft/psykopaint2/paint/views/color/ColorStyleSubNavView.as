@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
 
-	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
@@ -15,20 +14,13 @@ package net.psykosoft.psykopaint2.paint.views.color
 		}
 
 		override protected function onEnabled():void {
-
-			navigation.setHeader( "Pick a Color Style" );
-
-			navigation.setLeftButton( LBL_PICK_AN_IMAGE, ButtonIconType.BACK );
-			navigation.setRightButton( LBL_CONFIRM, ButtonIconType.OK );
+			setHeader( "Pick a Color Style" );
+			setLeftButton( LBL_PICK_AN_IMAGE, ButtonIconType.BACK );
+			setRightButton( LBL_CONFIRM, ButtonIconType.OK );
 		}
 
 		public function setAvailableColorStyles( availableColorStylePresets:Array ):void {
-			var len:uint = availableColorStylePresets.length;
-			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
-			for( var i:uint; i < len; ++i ) {
-				createCenterButtonData( centerButtonDataProvider, availableColorStylePresets[ i ] );
-			}
-			_scroller.setDataProvider( centerButtonDataProvider );
+			// TODO...
 		}
 	}
 }

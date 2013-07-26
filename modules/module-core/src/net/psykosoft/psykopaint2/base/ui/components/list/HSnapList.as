@@ -165,7 +165,9 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				itemRenderer.x = itemData.itemRendererPosition;
 				itemRenderer.y = itemData.itemRendererWidth / 2;
 				itemRenderer.visible = true;
-				_container.addChild( itemRenderer );
+				if( itemRenderer.parent != _container ) {
+					_container.addChild( itemRenderer );
+				}
 			}
 		}
 
@@ -179,7 +181,6 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			rendererRemovedSignal.dispatch( renderer );
 			_itemRendererFactory.markItemRendererAsAvailable( renderer );
 			renderer.visible = false;
-//				_container.removeChild( itemRenderer ); // TODO: do not remove child, just set invisible?
 		}
 
 		private function configureItemRendererFromData( itemRenderer:DisplayObject, itemData:ISnapListData ):void {

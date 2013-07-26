@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 		private var _perspectiveFactorDirty:Boolean;
 		private var _stageWidth:Number;
 		private var _stageHeight:Number;
-		private var _isScrollingLimited:Boolean = true;
+		private var _isScrollingLimited:Boolean = false;
 		private var _perspectiveTracer:Mesh;
 		private var _onMotion:Boolean;
 
@@ -88,7 +88,7 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 		}
 
 		public function limitInteractionToUpperPartOfTheScreen( value:Boolean ):void {
-			_isScrollingLimited = value;
+//			_isScrollingLimited = value;
 		}
 
 		public function set interactionSurfaceZ( value:Number ):void {

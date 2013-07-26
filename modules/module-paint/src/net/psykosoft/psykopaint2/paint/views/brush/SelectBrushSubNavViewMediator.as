@@ -19,15 +19,21 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Init.
 			registerView( view );
 			super.initialize();
+		}
 
-			// Post init.
+		override protected function onViewEnabled():void {
+			activateBrush( paintModule.activeBrushKit );
+			super.onViewEnabled();
+		}
+
+		override protected function onViewSetup():void {
 			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
-			view.setSelectedBrush( paintModule.activeBrushKit );
-			view.navigation.toggleRightButtonVisibility( hasParameters() );
+			super.onViewSetup();
 		}
 
 		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
+
 				case SelectBrushSubNavView.LBL_BACK:
 					requestStateChange( StateType.PAINT );
 					break;
@@ -35,21 +41,21 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				case SelectBrushSubNavView.LBL_EDIT_BRUSH:
 					requestStateChange( StateType.PAINT_ADJUST_BRUSH );
 					break;
-				
-				default: // Center buttons select a brush.
-					paintModule.activeBrushKit = label;
-					if( hasParameters() ) {
-						view.navigation.toggleRightButtonVisibility( true );
-						requestStateChange( StateType.PAINT_ADJUST_BRUSH );
-					}
-					else {
-						view.navigation.toggleRightButtonVisibility( false );
-					}
+
+				// Center buttons select a brush.
+				default:
+					activateBrush( label );
+					if( hasParameters() ) requestStateChange( StateType.PAINT_ADJUST_BRUSH );
 					break;
 			}
 		}
 
-		public function hasParameters():Boolean{
+		private function activateBrush( name:String ):void {
+			paintModule.activeBrushKit = name;
+			view.showRightButton( hasParameters() );
+		}
+
+		private function hasParameters():Boolean{
 			var parameterSet:ParameterSetVO = paintModule.getCurrentBrushParameters();
 			return parameterSet.parameters.length > 0;
 		}

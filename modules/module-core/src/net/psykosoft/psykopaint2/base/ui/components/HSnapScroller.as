@@ -28,9 +28,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _visibleHeight:Number;
 		protected var _interactionWidth:Number;
 
-		public var scrollable:Boolean = true;
+		public var scrollingAllowed:Boolean = true;
 		public var motionStartedSignal:Signal;
 		public var motionEndedSignal:Signal;
+		public var motionUpdatedSignal:Signal;
 
 		// Used for debugging, can be removed...
 		public var id:String;
@@ -44,6 +45,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 			motionStartedSignal = new Signal();
 			motionEndedSignal = new Signal();
+			motionUpdatedSignal = new Signal();
 
 			_container = new Sprite();
 			_container.cacheAsBitmap = true; // TODO: wouldn't it make more sense to only set cache as bitmap to true after all the children have been added to the container?
@@ -104,9 +106,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function evaluateInteractionStart():void {
-			if( !scrollable ) return; // No need for scrolling if all content is visible in 1 page.
-//			if( maxWidth <= visibleWidth ) return; // No need for scrolling if all content is visible in 1 page.
-			if( !mouseHitsInteractiveArea() ) return; // Hit test.
+			if( !scrollingAllowed ) return;
+			if( _container.numChildren == 0 ) return;
+			if( !mouseHitsInteractiveArea() ) return;
 			_interactionManager.startInteraction();
 			startEnterframe();
 		}
@@ -320,6 +322,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_interactionManager.update();
 			_positionManager.update();
 			refreshToPosition();
+			motionUpdatedSignal.dispatch();
 			onUpdate();
 		}
 

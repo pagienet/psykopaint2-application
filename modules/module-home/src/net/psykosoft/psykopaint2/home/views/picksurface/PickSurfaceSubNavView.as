@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
-	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
@@ -18,22 +17,17 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		}
 
 		override protected function onEnabled():void {
-
-			navigation.setHeader( "Pick a Surface" );
-			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
-			navigation.setRightButton( LBL_CONTINUE, ButtonIconType.MODEL );
-
-			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
-
-			createCenterButtonData( centerButtonDataProvider, LBL_SURF1 );
-			createCenterButtonData( centerButtonDataProvider, LBL_SURF2 );
-			createCenterButtonData( centerButtonDataProvider, LBL_SURF3 );
-
-			_scroller.setDataProvider( centerButtonDataProvider );
+			setHeader( "Pick a Surface" );
+			setLeftButton( LBL_BACK, ButtonIconType.BACK );
+			setRightButton( LBL_CONTINUE, ButtonIconType.MODEL );
 		}
 
-		public function showRightButton( show:Boolean ):void {
-			navigation.toggleRightButtonVisibility( show );
+		override protected function onSetup():void {
+			createCenterButton( LBL_SURF1 );
+			createCenterButton( LBL_SURF2 );
+			createCenterButton( LBL_SURF3 );
+			validateCenterButtons();
+			super.onSetup();
 		}
 	}
 }

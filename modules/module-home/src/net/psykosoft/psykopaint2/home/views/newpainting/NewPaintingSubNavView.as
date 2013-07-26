@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 	import flash.display.Bitmap;
 
-	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbBitmapButton;
@@ -22,8 +21,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		}
 
 		override protected function onEnabled():void {
-			navigation.setHeader( "" );
-			navigation.setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
+			setHeader( "" );
+			setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
 		}
 
 		public function setInProgressPaintings( data:Vector.<PaintingInfoVO> ):void {
@@ -31,13 +30,11 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			var i:uint;
 			var len:uint;
 
-			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
-
 			// New color painting button.
-			createCenterButtonData( centerButtonDataProvider, LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, SbIconButton );
+			createCenterButton( LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, SbIconButton );
 
 			// New photo painting button.
-			createCenterButtonData( centerButtonDataProvider, LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, SbIconButton );
+			createCenterButton( LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, SbIconButton );
 
 			// Old painting buttons.
 			len = data.length;
@@ -47,10 +44,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
 
-				createCenterButtonData( centerButtonDataProvider, str, null, SbBitmapButton, new Bitmap( vo.thumbnail ) );
+				createCenterButton( str, null, SbBitmapButton, new Bitmap( vo.thumbnail ) );
 			}
 
-			_scroller.setDataProvider( centerButtonDataProvider );
+			validateCenterButtons();
 
 			// TODO: complete navigation refactor
 //			if( lastSelectedPaintingLabel == "" ) _buttonGroup.setSelectedButtonByIndex( 0 );

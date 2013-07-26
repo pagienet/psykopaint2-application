@@ -14,9 +14,9 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		}
 
 		override protected function onEnabled():void {
-			navigation.setHeader( "Take a picture" );
-			navigation.setLeftButton( LBL_BACK, ButtonIconType.DISCARD );
-			navigation.setRightButton( LBL_CONFIRM, ButtonIconType.OK );
+			setHeader( "Take a picture" );
+			setLeftButton( LBL_BACK, ButtonIconType.DISCARD );
+			setRightButton( LBL_CONFIRM, ButtonIconType.OK );
 		}
 	}
 }

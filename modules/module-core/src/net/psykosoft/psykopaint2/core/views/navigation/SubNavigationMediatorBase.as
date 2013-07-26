@@ -17,6 +17,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		[Inject]
 		public var notifyExpensiveUiActionToggledSignal:NotifyExpensiveUiActionToggledSignal;
 
+		private var _subNavigationView:SubNavigationViewBase;
+
 		public function SubNavigationMediatorBase() {
 			super();
 		}
@@ -32,10 +34,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 
 			// From view.
-			SubNavigationViewBase( _view ).enabledSignal.add( onViewEnabled );
-			SubNavigationViewBase( _view ).disabledSignal.add( onViewDisabled );
-			SubNavigationViewBase( _view ).scrollingStartedSignal.add( onViewScrollingStarted );
-			SubNavigationViewBase( _view ).scrollingEndedSignal.add( onViewScrollingEnded );
+			_subNavigationView = SubNavigationViewBase( _view );
+			_subNavigationView.enabledSignal.add( onViewEnabled );
+			_subNavigationView.disabledSignal.add( onViewDisabled );
+			_subNavigationView.setupSignal.add( onViewSetup );
+			_subNavigationView.scrollingStartedSignal.add( onViewScrollingStarted );
+			_subNavigationView.scrollingEndedSignal.add( onViewScrollingEnded );
 		}
 
 		// -----------------------
@@ -43,11 +47,15 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// -----------------------
 
 		protected function onViewEnabled():void {
-			SubNavigationViewBase( _view ).navigation.buttonClickedSignal.add( onButtonClicked );
+			_subNavigationView.navigationButtonClickedSignal.add( onButtonClicked );
 		}
 
 		protected function onViewDisabled():void {
-			SubNavigationViewBase( _view ).navigation.buttonClickedSignal.remove( onButtonClicked );
+			_subNavigationView.navigationButtonClickedSignal.remove( onButtonClicked );
+		}
+
+		protected function onViewSetup():void {
+			// Override.
 		}
 
 		private function onViewScrollingEnded():void {
@@ -66,11 +74,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 //			trace( this, "onGlobalGesture: " + gestureType );
 			switch( gestureType ) {
 				case GestureType.HORIZONTAL_PAN_GESTURE_BEGAN: {
-					SubNavigationViewBase( _view ).evaluateScrollingInteractionStart();
+					_subNavigationView.evaluateScrollingInteractionStart();
 					break;
 				}
 				case GestureType.HORIZONTAL_PAN_GESTURE_ENDED: {
-					SubNavigationViewBase( _view ).evaluateScrollingInteractionEnd();
+					_subNavigationView.evaluateScrollingInteractionEnd();
 					break;
 				}
 			}

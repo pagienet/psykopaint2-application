@@ -47,13 +47,17 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			// Init.
 			registerView( view );
 			super.initialize();
-			displaySavedPaintings();
 
 			// From app.
 			notifySurfaceLoadedSignal.add( onSurfaceSet );
 		}
 
-		// -----------------------
+		override protected function onViewSetup():void {
+			displaySavedPaintings();
+			super.onViewSetup();
+		}
+
+// -----------------------
 		// From view.
 		// -----------------------
 

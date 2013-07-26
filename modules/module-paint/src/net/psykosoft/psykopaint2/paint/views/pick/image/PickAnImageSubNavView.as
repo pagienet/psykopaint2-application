@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.paint.views.pick.image
 {
 
-	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
@@ -18,18 +17,16 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		}
 
 		override protected function onEnabled():void {
+			setHeader( "Pick an Image" );
+			setLeftButton( LBL_BACK );
+		}
 
-			navigation.setHeader( "Pick an Image" );
-
-			navigation.setLeftButton( LBL_BACK );
-
-			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
-
-			createCenterButtonData( centerButtonDataProvider, LBL_USER, ButtonIconType.PICTURE );
-			createCenterButtonData( centerButtonDataProvider, LBL_SAMPLES, ButtonIconType.SAMPLES );
-			createCenterButtonData( centerButtonDataProvider, LBL_CAMERA, ButtonIconType.CAMERA );
-
-			_scroller.setDataProvider( centerButtonDataProvider );
+		override protected function onSetup():void {
+			super.onSetup();
+			createCenterButton( LBL_USER, ButtonIconType.PICTURE );
+			createCenterButton( LBL_SAMPLES, ButtonIconType.SAMPLES );
+			createCenterButton( LBL_CAMERA, ButtonIconType.CAMERA );
+			validateCenterButtons();
 		}
 	}
 }

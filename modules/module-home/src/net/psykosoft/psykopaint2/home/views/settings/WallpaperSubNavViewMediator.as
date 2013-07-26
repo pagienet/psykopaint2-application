@@ -23,12 +23,12 @@ package net.psykosoft.psykopaint2.home.views.settings
 		private var _imageLoader:BinaryLoader; // Will load full size atf files.
 
 		override public function initialize():void {
-
-			// Init.
 			registerView( view );
 			super.initialize();
+		}
 
-			// Trigger thumbnail load.
+		override protected function onViewSetup():void {
+			super.onViewSetup();
 			setAvailableWallpapers();
 		}
 

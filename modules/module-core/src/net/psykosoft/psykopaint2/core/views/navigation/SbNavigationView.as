@@ -86,13 +86,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		override protected function onSetup():void {
-
 			_leftButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			_rightButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
-
 			_headerDefaultY = headerBg.y;
 			_headerTextDefaultOffset = headerBg.y - header.y;
-
 			visible = false;
 		}
 
@@ -153,7 +150,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				trace( this, "creating new sub navigation view" );
 
 				_currentSubNavView = new subNavType();
-				_currentSubNavView.navigation = this;
+				_currentSubNavView.setNavigation( this );
 				_subNavDictionary[ subNavType ] = _currentSubNavView;
 				addChildAt( _currentSubNavView, 2 );
 				_currentSubNavView.enable();
@@ -179,12 +176,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			rightBtnSide.visible = true;
 		}
 
-		public function toggleLeftButtonVisibility( value:Boolean ):void {
+		public function showLeftButton( value:Boolean ):void {
 			_leftButton.visible = value;
 			leftBtnSide.visible = value;
 		}
 
-		public function toggleRightButtonVisibility( value:Boolean ):void {
+		public function showRightButton( value:Boolean ):void {
 			_rightButton.visible = value;
 			rightBtnSide.visible = value;
 		}

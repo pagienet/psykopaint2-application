@@ -7,9 +7,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.text.TextField;
-	import flash.utils.Dictionary;
 
-	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
@@ -40,10 +38,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onEnabled():void {
-			navigation.setHeader( "" );
-			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
-			navigation.setRightButton( LBL_COLOR, ButtonIconType.CONTINUE );
-			navigation.toggleRightButtonVisibility( false );
+			setHeader( "" );
+			setLeftButton( LBL_BACK, ButtonIconType.BACK );
+			setRightButton( LBL_COLOR, ButtonIconType.CONTINUE );
+			showRightButton( false );
 		}
 
 		override protected function onDisposed():void {
@@ -62,11 +60,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
 
-			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
-
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
-			navigation.toggleRightButtonVisibility( false );
+			showRightButton( false );
 			for( var i:uint = 0; i < numParameters; ++i ) {
 
 				var parameter:PsykoParameter = list[ i ];
@@ -75,14 +71,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				if( parameter.type != PsykoParameter.ColorParameter ) {
 					if( parameter.id != CUSTOM_COLOR_ID ) {
 						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
-						createCenterButtonData( centerButtonDataProvider, parameter.label );
+						createCenterButton( parameter.label );
 					}
 				} else {
-					navigation.toggleRightButtonVisibility( true );
+					showRightButton( true );
 				}
 			}
 
-			_scroller.setDataProvider( centerButtonDataProvider );
+			validateCenterButtons();
 		}
 
 		public function updateParameters( parameterSetVO:ParameterSetVO ):void {

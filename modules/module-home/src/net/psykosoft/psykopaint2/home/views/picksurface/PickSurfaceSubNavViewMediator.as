@@ -37,19 +37,24 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		public var requestBlankSourceImageActivationSignal:RequestBlankSourceImageActivationSignal;
 
 		private var _selectedIndex:int;
+		private var _waitingForSurface:Boolean;
 
 		override public function initialize():void {
 
 			// Init.
 			registerView( view );
 			super.initialize();
-			view.showRightButton( false );
-			requestEaselPaintingUpdateSignal.dispatch( null, false, false );
 			_selectedIndex = -1;
 
 			// From app.
 			notifySurfacePreviewLoadedSignal.add( onSurfacePreviewLoaded );
 			notifySurfaceLoadedSignal.add( onSurfaceLoaded );
+		}
+
+		override protected function onViewEnabled():void {
+			super.onViewEnabled();
+			view.showRightButton( false );
+			requestEaselPaintingUpdateSignal.dispatch( null, false, false );
 		}
 
 		override protected function onButtonClicked( label:String ):void {
@@ -84,7 +89,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			view.showRightButton( true );
 		}
 
-		private var _waitingForSurface:Boolean;
 		private function continueToColorPaint():void {
 
 			// Request the load of the surface.

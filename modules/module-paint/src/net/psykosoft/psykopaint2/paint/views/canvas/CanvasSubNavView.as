@@ -1,10 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
-	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
 
 	public class CanvasSubNavView extends SubNavigationViewBase
 	{
@@ -25,22 +23,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		override protected function onEnabled():void {
+			setHeader( "Edit Painting" );
+			setLeftButton( LBL_HOME, ButtonIconType.HOME );
+			setRightButton( LBL_PICK_A_BRUSH, ButtonIconType.BRUSH );
+		}
 
-			navigation.setHeader( "Edit Painting" );
-
-			if( !PaintSettings.isStandalone ) {
-				navigation.setLeftButton( LBL_HOME, ButtonIconType.HOME );
-			}
-
-			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
-
-			createCenterButtonData( centerButtonDataProvider, LBL_DESTROY, ButtonIconType.DESTROY );
-			createCenterButtonData( centerButtonDataProvider, LBL_CLEAR, ButtonIconType.BLANK_CANVAS );
-			createCenterButtonData( centerButtonDataProvider, LBL_EXPORT );
-
-			_scroller.setDataProvider( centerButtonDataProvider );
-
-			navigation.setRightButton( LBL_PICK_A_BRUSH, ButtonIconType.BRUSH );
+		override protected function onSetup():void {
+			super.onSetup();
+			createCenterButton( LBL_DESTROY, ButtonIconType.DESTROY );
+			createCenterButton( LBL_CLEAR, ButtonIconType.BLANK_CANVAS );
+			createCenterButton( LBL_EXPORT );
+			validateCenterButtons();
 		}
 	}
 }
