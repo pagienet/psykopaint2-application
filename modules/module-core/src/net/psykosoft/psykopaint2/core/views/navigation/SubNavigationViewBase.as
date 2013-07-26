@@ -22,22 +22,22 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public var scrollingStartedSignal:Signal;
 		public var scrollingEndedSignal:Signal;
+		public var scrollerButtonClickedSignal:Signal;
 
 		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 70;
 
+		// Used for debugging, can be removed...
+		public var id:String = "notSet";
+
 		public function SubNavigationViewBase() {
 			super();
+
 			scrollingStartedSignal = new Signal();
 			scrollingEndedSignal = new Signal();
-		}
-
-		// ---------------------------------------------------------------------
-		// ViewBase overrides.
-		// ---------------------------------------------------------------------
-
-		override protected function onSetup():void {
+			scrollerButtonClickedSignal = new Signal();
 
 			_scroller = new HSnapList();
+			_scroller.id = id;
 			_scroller.setVisibleDimensions( 1024, 130 );
 			_scroller.setInteractionWidth( 1024 - 280 );
 //			_scroller.x = 140;
@@ -52,6 +52,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_scroller.rendererRemovedSignal.add( onCenterScrollerItemRendererRemoved );
 			addChild( _scroller );
 		}
+
+		// ---------------------------------------------------------------------
+		// ViewBase overrides.
+		// ---------------------------------------------------------------------
+
+		/*override protected function onDisabled():void {
+			_scroller.releaseRenderers();
+		}*/
 
 		// ---------------------------------------------------------------------
 		// Public.
@@ -85,7 +93,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onButtonClicked( event:MouseEvent ):void {
 			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
-			navigation.onButtonClicked( event );
+			scrollerButtonClickedSignal.dispatch( event );
 		}
 
 		// ---------------------------------------------------------------------
@@ -105,7 +113,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		private function onCenterScrollerItemRendererRemoved( renderer:DisplayObject ):void {
-//			renderer.removeEventListener( MouseEvent.CLICK, onButtonClicked );
+			renderer.removeEventListener( MouseEvent.CLICK, onButtonClicked );
 		}
 	}
 }

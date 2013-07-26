@@ -18,10 +18,9 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			// Init.
 			registerView( view );
 			super.initialize();
-			view.navigation.buttonClickedCallback = onButtonClicked;
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case ConfirmCaptureImageSubNavView.LBL_BACK:
 				{

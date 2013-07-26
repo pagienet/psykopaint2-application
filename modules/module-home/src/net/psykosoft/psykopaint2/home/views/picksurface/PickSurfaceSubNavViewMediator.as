@@ -43,7 +43,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			// Init.
 			registerView( view );
 			super.initialize();
-			view.navigation.buttonClickedCallback = onButtonClicked;
 			view.showRightButton( false );
 			requestEaselPaintingUpdateSignal.dispatch( null, false, false );
 			_selectedIndex = -1;
@@ -53,7 +52,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			notifySurfaceLoadedSignal.add( onSurfaceLoaded );
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 
 			switch( label ) {
 				case PickSurfaceSubNavView.LBL_BACK:

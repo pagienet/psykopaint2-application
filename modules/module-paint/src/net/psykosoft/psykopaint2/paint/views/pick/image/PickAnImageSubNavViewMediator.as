@@ -21,7 +21,6 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			// Init.
 			registerView( view );
 			super.initialize();
-			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Clear easel if entering photo paint.
 			if( PaintModeModel.activeMode == PaintModeType.PHOTO_MODE ) {
@@ -29,7 +28,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			}
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 
 				case PickAnImageSubNavView.LBL_BACK:

@@ -32,6 +32,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public var motionStartedSignal:Signal;
 		public var motionEndedSignal:Signal;
 
+		// Used for debugging, can be removed...
+		public var id:String;
+
 		public function HSnapScroller() {
 			super();
 

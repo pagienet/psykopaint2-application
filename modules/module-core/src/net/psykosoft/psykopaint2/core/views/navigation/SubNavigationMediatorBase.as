@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
+	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
@@ -31,6 +32,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 
 			// From view.
+			SubNavigationViewBase( _view ).enabledSignal.add( onViewEnabled );
+			SubNavigationViewBase( _view ).disabledSignal.add( onViewDisabled );
 			SubNavigationViewBase( _view ).scrollingStartedSignal.add( onViewScrollingStarted );
 			SubNavigationViewBase( _view ).scrollingEndedSignal.add( onViewScrollingEnded );
 		}
@@ -38,6 +41,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onViewEnabled():void {
+			trace( this, "ENABLED" );
+			SubNavigationViewBase( _view ).navigation.buttonClickedSignal.add( onButtonClicked );
+		}
+
+		private function onViewDisabled():void {
+			trace( this, "DISABLED" );
+			SubNavigationViewBase( _view ).navigation.buttonClickedSignal.remove( onButtonClicked );
+		}
 
 		private function onViewScrollingEnded():void {
 			notifyExpensiveUiActionToggledSignal.dispatch( false, "nav-scrolling" );
@@ -63,6 +76,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 					break;
 				}
 			}
+		}
+
+		// -----------------------
+		// Private
+		// -----------------------
+
+		protected function onButtonClicked( label:String ):void {
+			// Override to react to clicks on scroller and side buttons...
 		}
 	}
 }

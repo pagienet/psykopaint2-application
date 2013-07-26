@@ -20,10 +20,9 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		override public function initialize():void {
 			registerView( view );
 			super.initialize();
-			view.navigation.buttonClickedCallback = onButtonClicked;
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case CropSubNavView.LBL_PICK_AN_IMAGE: {
 					requestStateChange( StateType.PICK_IMAGE );

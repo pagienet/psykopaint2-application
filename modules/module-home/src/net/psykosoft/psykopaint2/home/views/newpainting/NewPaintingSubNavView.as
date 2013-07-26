@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.views.components.button.SbBitmapButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbIconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 
 	public class NewPaintingSubNavView extends SubNavigationViewBase
 	{
@@ -19,10 +18,12 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		public function NewPaintingSubNavView() {
 			super();
+			id = "NewPaintingSubNavView";
 		}
 
 		override protected function onEnabled():void {
 			navigation.setHeader( "" );
+			navigation.setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
 		}
 
 		public function setInProgressPaintings( data:Vector.<PaintingInfoVO> ):void {
@@ -55,11 +56,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 //			if( lastSelectedPaintingLabel == "" ) _buttonGroup.setSelectedButtonByIndex( 0 );
 //			else _buttonGroup.setSelectedButtonByLabel( lastSelectedPaintingLabel );
 //			navigation.addCenterButtonGroup( _buttonGroup );
-
-			// Show right button.
-			if( !HomeSettings.isStandalone ) {
-				navigation.setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
-			}
 		}
 
 		public function getIdForSelectedInProgressPainting():String {

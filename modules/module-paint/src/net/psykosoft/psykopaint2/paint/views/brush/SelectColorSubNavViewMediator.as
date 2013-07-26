@@ -18,14 +18,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Init.
 			registerView( view );
 			super.initialize();
-			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post init.
 			view.connectColorParameter( paintModule.getCurrentBrushParameters() );
-			
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case SelectColorSubNavView.LBL_BACK: 
 					requestStateChange( StateType.PREVIOUS );
@@ -37,7 +35,5 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					break;
 			}
 		}
-		
-		
 	}
 }

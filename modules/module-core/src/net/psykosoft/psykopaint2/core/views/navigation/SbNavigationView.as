@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
 
-	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -12,15 +11,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
-	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.button.SbIconButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbLeftButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbRightButton;
 
@@ -36,12 +33,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var leftBtnSide:Sprite;
 		public var rightBtnSide:Sprite;
 
-		public var buttonClickedCallback:Function;
 		public var shownSignal:Signal;
 		public var showingSignal:Signal;
 		public var hidingSignal:Signal;
 		public var hiddenSignal:Signal;
 		public var showHideUpdateSignal:Signal;
+		public var buttonClickedSignal:Signal;
 
 		private var _leftButton:SbLeftButton;
 		private var _rightButton:SbRightButton;
@@ -68,6 +65,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			showingSignal = new Signal();
 			hiddenSignal = new Signal();
 			showHideUpdateSignal = new Signal();
+			buttonClickedSignal = new Signal();
 
 			_reactiveHideStackY = new StackUtil();
 			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbLeftButton;
@@ -98,8 +96,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			visible = false;
 		}
 
+		// ---------------------------------------------------------------------
+		// Sub-navigation.
+		// ---------------------------------------------------------------------
+
 		public function updateSubNavigation( subNavType:Class ):void {
 
+			// TODO: review...
 			if( subNavType == null ) {
 				visible = false;
 				return;
@@ -109,24 +112,26 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			}
 
 			// Keep current nav when incoming class is the abstract one.
+			// TODO: review...
 			if( subNavType == SubNavigationViewBase ) {
 				return;
 			}
 
 			trace( this, "updating sub-nav: " + subNavType );
 
+			// Disable old view.
+			if( _currentSubNavView ) {
+				_currentSubNavView.disable();
+				_currentSubNavView.scrollerButtonClickedSignal.remove( onSubNavigationScrollerButtonClicked );
+			}
+
 			// Reset.
 			header.visible = false;
 			leftBtnSide.visible = false;
 			rightBtnSide.visible = false;
 
-			// Disable old view.
-			if( _currentSubNavView ) {
-				_currentSubNavView.disable();
-				removeChild( _currentSubNavView );
-			}
-
 			// Hide?
+			// TODO: review...
 			if( !subNavType ) {
 				visible = false;
 				return;
@@ -135,30 +140,136 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				visible = true && !_forceHidden;
 			}
 
-			// Create new view.
-			if( _subNavDictionary[ subNavType ] ) _currentSubNavView = _subNavDictionary[ subNavType ];
+			// Try to restore cached view, or create a new one.
+			if( _subNavDictionary[ subNavType ] ) {
+
+				trace( this, "reusing cached sub navigation view" );
+
+				_currentSubNavView = _subNavDictionary[ subNavType ];
+				_currentSubNavView.enable();
+			}
 			else {
+
+				trace( this, "creating new sub navigation view" );
+
 				_currentSubNavView = new subNavType();
+				_currentSubNavView.addEventListener( Event.ADDED_TO_STAGE, onNewSubNavigationAddedToStage );
 				_currentSubNavView.navigation = this;
 				_subNavDictionary[ subNavType ] = _currentSubNavView;
+				addChildAt( _currentSubNavView, 2 );
+				_currentSubNavView.enable();
 			}
-			_currentSubNavView.enable();
-			addChildAt( _currentSubNavView, 2 );
+			_currentSubNavView.scrollerButtonClickedSignal.add( onSubNavigationScrollerButtonClicked );
 		}
 
-		override protected function onAddedToStage():void {
-			// TODO: remove on release
-			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
+		private function onNewSubNavigationAddedToStage( event:Event ):void {
+			trace( "@@@@@@@@@@@" + _currentSubNavView );
+			_currentSubNavView.removeEventListener( Event.ADDED_TO_STAGE, onNewSubNavigationAddedToStage );
+//			setTimeout( function():void {
+//				_currentSubNavView.enable();
+//			}, 1000 );
 		}
 
-		private function onStageKeyDown( event:KeyboardEvent ):void {
-			if( event.keyCode == Keyboard.H ) {
-				_forceHidden = !_forceHidden;
-				visible = !_forceHidden;
+		// ---------------------------------------------------------------------
+		// Side buttons.
+		// ---------------------------------------------------------------------
+
+		public function setLeftButton( label:String, iconType:String = ButtonIconType.BACK ):void {
+			_leftButton.labelText = label;
+			_leftButton.iconType = iconType;
+			_leftButton.visible = true;
+			leftBtnSide.visible = true;
+		}
+
+		public function setRightButton( label:String, iconType:String = ButtonIconType.CONTINUE ):void {
+			_rightButton.labelText = label;
+			_rightButton.iconType = iconType;
+			_rightButton.visible = true;
+			rightBtnSide.visible = true;
+		}
+
+		public function toggleLeftButtonVisibility( value:Boolean ):void {
+			_leftButton.visible = value;
+			leftBtnSide.visible = value;
+		}
+
+		public function toggleRightButtonVisibility( value:Boolean ):void {
+			_rightButton.visible = value;
+			rightBtnSide.visible = value;
+		}
+
+		// ---------------------------------------------------------------------
+		// Button clicks.
+		// ---------------------------------------------------------------------
+
+		// Sub-navigation scroller clicks are routed here.
+		private function onSubNavigationScrollerButtonClicked( event:MouseEvent ):void {
+			onButtonClicked( event );
+		}
+
+		private function onButtonClicked( event:MouseEvent ):void {
+			var clickedButton:NavigationButton = event.target as NavigationButton;
+			if( !clickedButton ) clickedButton = event.target.parent as NavigationButton;
+			if( clickedButton ) {
+				var label:String = clickedButton.labelText;
+				trace( this, "button clicked: " + clickedButton.labelText );
+				buttonClickedSignal.dispatch( label );
+			} else {
+				trace( "##### Error - no button found" );
 			}
 		}
 
-		public function toggle( time:Number = 0.5):void {
+		// ---------------------------------------------------------------------
+		// Header.
+		// ---------------------------------------------------------------------
+
+		public function setHeader( value:String ):void {
+
+			TweenLite.killTweensOf( headerBg );
+			headerBg.y = _headerDefaultY + headerBg.height;
+			adjustHeaderTextPosition();
+
+			if( value == "" ) {
+				header.visible = headerBg.visible = false;
+				return;
+			}
+			else {
+				header.visible = headerBg.visible = true;
+			}
+
+			header.text = value;
+
+			header.height = 1.25 * header.textHeight;
+			header.width = 15 + header.textWidth;
+			header.x = 1024 / 2 - header.width / 2;
+
+			headerBg.width = header.width + 50;
+			headerBg.x = 1024 / 2 - headerBg.width / 2 + 5;
+
+			animateHeaderIn();
+		}
+
+		private function animateHeaderIn():void {
+			TweenLite.to( headerBg, 0.5, { y: _headerDefaultY, ease: Strong.easeOut, onUpdate: adjustHeaderTextPosition, onComplete: animateHeaderOut } );
+		}
+
+		private function animateHeaderOut():void {
+			TweenLite.to( headerBg, 0.25, { delay: 2, y: _headerDefaultY + headerBg.height, ease: Strong.easeIn, onUpdate: adjustHeaderTextPosition, onComplete: onHeaderOutComplete } );
+		}
+
+		private function adjustHeaderTextPosition():void {
+			header.y = headerBg.y - _headerTextDefaultOffset;
+		}
+
+		private function onHeaderOutComplete():void {
+			header.visible = headerBg.visible = false;
+		}
+
+		// ---------------------------------------------------------------------
+		// Show/hide.
+		// ---------------------------------------------------------------------
+
+		public function toggle( time:Number = 0.5 ):void {
 			if( _showing ) hide( time );
 			else show( time );
 		}
@@ -171,9 +282,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_showing = false;
 			_animating = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, time, { y: _bgHeight, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease:Strong.easeOut } );
-			TweenLite.to( this, time, { y: _bgHeight, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease:Strong.easeOut } );
+			TweenLite.to( this, time, { y: _bgHeight, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease: Strong.easeOut } );
+			TweenLite.to( this, time, { y: _bgHeight, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease: Strong.easeOut } );
 		}
+
 		private function onHideAnimatedComplete():void {
 			hiddenSignal.dispatch();
 			visible = false;
@@ -183,7 +295,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			NavigationCache.isHidden = true;
 		}
 
-		public function show( time: Number = 0.5 ):void {
+		public function show( time:Number = 0.5 ):void {
 			trace( this, "trying to show: animating: " + _animating + ", on reactive hide: " + _onReactiveHide + ", showing: " + _showing );
 			if( _animating ) return;
 			if( !_onReactiveHide && _showing ) return;
@@ -193,7 +305,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			showingSignal.dispatch();
 			visible = true && !_forceHidden;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, time, { y: 0, onUpdate: onShowHideUpdate, onComplete: onShowAnimatedComplete, ease:Strong.easeOut } );
+			TweenLite.to( this, time, { y: 0, onUpdate: onShowHideUpdate, onComplete: onShowAnimatedComplete, ease: Strong.easeOut } );
 		}
 
 		private function onShowAnimatedComplete():void {
@@ -209,7 +321,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function evaluateReactiveHideStart():void {
-			if( _animating || _onReactiveHide || stage.mouseY < _targetReactiveY) return;
+			if( _animating || _onReactiveHide || stage.mouseY < _targetReactiveY ) return;
 			//if( _onReactiveHide ) return;
 			//if( stage.mouseY < _targetReactiveY ) return; // reject interactions outside of the navigation area
 			_onReactiveHide = true;
@@ -254,113 +366,40 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			showHideUpdateSignal.dispatch( y / _bgHeight );
 		}
 
-		public function startAutoHideMode():void
-		{
-			if ( !_hidden )
-				addEventListener(Event.ENTER_FRAME, checkAutoHide );
+		public function startAutoHideMode():void {
+			if( !_hidden )
+				addEventListener( Event.ENTER_FRAME, checkAutoHide );
 		}
-		
-		public function stopAutoHideMode():void
-		{
-			removeEventListener(Event.ENTER_FRAME, checkAutoHide );
+
+		public function stopAutoHideMode():void {
+			removeEventListener( Event.ENTER_FRAME, checkAutoHide );
 		}
-		
-		private function checkAutoHide( event:Event ):void
-		{
-			if (_hidden || _animating ) 
-			{
-				removeEventListener(Event.ENTER_FRAME, checkAutoHide );
+
+		private function checkAutoHide( event:Event ):void {
+			if( _hidden || _animating ) {
+				removeEventListener( Event.ENTER_FRAME, checkAutoHide );
 			} else {
-				if ( stage.mouseY > _targetReactiveY )
-				{
-					removeEventListener(Event.ENTER_FRAME, checkAutoHide );
+				if( stage.mouseY > _targetReactiveY ) {
+					removeEventListener( Event.ENTER_FRAME, checkAutoHide );
 					hide();
 				}
 			}
 		}
+
 		// ---------------------------------------------------------------------
-		// Private.
+		// Event handlers.
 		// ---------------------------------------------------------------------
 
-		public function onButtonClicked( event:MouseEvent ):void {
+		override protected function onAddedToStage():void {
+			// TODO: remove on release
+			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
+		}
 
-			var clickedButton:NavigationButton = event.target as NavigationButton;
-			if( !clickedButton ) clickedButton = event.target.parent as NavigationButton;
-			if ( clickedButton )
-			{
-				var label:String = clickedButton.labelText;
-				trace( this, "button clicked: " + clickedButton.labelText );
-	
-				buttonClickedCallback( label );
-			} else {
-				trace("##### Error - no button found");
+		private function onStageKeyDown( event:KeyboardEvent ):void {
+			if( event.keyCode == Keyboard.H ) {
+				_forceHidden = !_forceHidden;
+				visible = !_forceHidden;
 			}
-		}
-
-		public function setHeader( value:String ):void {
-
-			TweenLite.killTweensOf( headerBg );
-			headerBg.y = _headerDefaultY + headerBg.height;
-			adjustHeaderTextPosition();
-
-			if( value == "" ) {
-				header.visible = headerBg.visible = false;
-				return;
-			}
-			else {
-				header.visible = headerBg.visible = true;
-			}
-
-			header.text = value;
-
-			header.height = 1.25 * header.textHeight;
-			header.width = 15 + header.textWidth;
-			header.x = 1024 / 2 - header.width / 2;
-
-			headerBg.width = header.width + 50;
-			headerBg.x = 1024 / 2 - headerBg.width / 2 + 5;
-
-			animateHeaderIn();
-		}
-
-		private function animateHeaderIn():void {
-			TweenLite.to( headerBg, 0.5, { y: _headerDefaultY, ease: Strong.easeOut, onUpdate: adjustHeaderTextPosition, onComplete: animateHeaderOut } );
-		}
-
-		private function animateHeaderOut():void {
-			TweenLite.to( headerBg, 0.25, { delay: 2, y: _headerDefaultY + headerBg.height, ease: Strong.easeIn, onUpdate: adjustHeaderTextPosition, onComplete: onHeaderOutComplete } );
-		}
-
-		private function adjustHeaderTextPosition():void{
-			 header.y = headerBg.y - _headerTextDefaultOffset;
-		}
-
-		private function onHeaderOutComplete():void {
-			header.visible = headerBg.visible = false;
-		}
-
-		public function setLeftButton( label:String, iconType:String = ButtonIconType.BACK ):void {
-			_leftButton.labelText = label;
-			_leftButton.iconType = iconType;
-			_leftButton.visible = true;
-			leftBtnSide.visible = true;
-		}
-
-		public function setRightButton( label:String, iconType:String = ButtonIconType.CONTINUE ):void {
-			_rightButton.labelText = label;
-			_rightButton.iconType = iconType;
-			_rightButton.visible = true;
-			rightBtnSide.visible = true;
-		}
-
-		public function toggleLeftButtonVisibility( value:Boolean ):void {
-			_leftButton.visible = value;
-			leftBtnSide.visible = value;
-		}
-
-		public function toggleRightButtonVisibility( value:Boolean ):void {
-			_rightButton.visible = value;
-			rightBtnSide.visible = value;
 		}
 	}
 }

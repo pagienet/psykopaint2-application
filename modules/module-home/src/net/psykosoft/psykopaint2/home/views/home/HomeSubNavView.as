@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	{
 		public function HomeSubNavView() {
 			super();
+			id = "HomeSubNavView";
 		}
 
 		override protected function onEnabled():void {

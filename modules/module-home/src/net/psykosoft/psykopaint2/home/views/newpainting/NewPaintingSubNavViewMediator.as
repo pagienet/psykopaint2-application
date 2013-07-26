@@ -40,12 +40,13 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		[Inject]
 		public var notifySurfaceLoadedSignal:NotifySurfaceLoadedSignal;
 
+		private var _waitingForSurfaceSet:Boolean;
+
 		override public function initialize():void {
 
 			// Init.
 			registerView( view );
 			super.initialize();
-			view.navigation.buttonClickedCallback = onButtonClicked;
 			displaySavedPaintings();
 
 			// From app.
@@ -56,7 +57,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		// From view.
 		// -----------------------
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 
 				// New color painting.
@@ -95,8 +96,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				}
 			}
 		}
-
-		private var _waitingForSurfaceSet:Boolean;
 
 		private function onSurfaceSet():void {
 			if( _waitingForSurfaceSet ) {

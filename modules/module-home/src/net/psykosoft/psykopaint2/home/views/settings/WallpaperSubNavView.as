@@ -26,8 +26,9 @@ package net.psykosoft.psykopaint2.home.views.settings
 			navigation.setLeftButton( LBL_BACK, ButtonIconType.SETTINGS );
 		}
 
-		override protected function onDisabled():void {
+		override protected function onDisposed():void {
 			if( _atlas ) _atlas.dispose();
+			_atlas = null;
 		}
 
 		public function setImages( atlas:BitmapAtlas ):void {

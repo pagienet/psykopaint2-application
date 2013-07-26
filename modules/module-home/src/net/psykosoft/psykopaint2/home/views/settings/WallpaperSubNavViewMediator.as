@@ -27,10 +27,22 @@ package net.psykosoft.psykopaint2.home.views.settings
 			// Init.
 			registerView( view );
 			super.initialize();
-			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Trigger thumbnail load.
 			setAvailableWallpapers();
+		}
+
+		override protected function onButtonClicked( label:String ):void {
+			switch( label ) {
+				case WallpaperSubNavView.LBL_BACK: {
+					requestStateChange( StateType.SETTINGS );
+					break;
+				}
+				default: { // Center buttons are wallpaper thumbnails.
+					getFullImageAndSetAsWallpaper( label );
+					WallpaperSubNavView.setLastSelectedWallpaper( label );
+				}
+			}
 		}
 
 		private function setAvailableWallpapers():void {
@@ -43,19 +55,6 @@ package net.psykosoft.psykopaint2.home.views.settings
 			_atlasLoader.dispose();
 			_atlasLoader = null;
 			view.setSelectedWallpaperBtn();
-		}
-
-		private function onButtonClicked( label:String ):void {
-			switch( label ) {
-				case WallpaperSubNavView.LBL_BACK: {
-					requestStateChange( StateType.SETTINGS );
-					break;
-				}
-				default: { // Center buttons are wallpaper thumbnails.
-					getFullImageAndSetAsWallpaper( label );
-					WallpaperSubNavView.setLastSelectedWallpaper( label );
-				}
-			}
 		}
 
 		private function getFullImageAndSetAsWallpaper( id:String ):void {

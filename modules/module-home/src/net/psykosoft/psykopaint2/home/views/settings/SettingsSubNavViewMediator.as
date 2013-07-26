@@ -10,14 +10,12 @@ package net.psykosoft.psykopaint2.home.views.settings
 		public var view:SettingsSubNavView;
 
 		override public function initialize():void {
-
 			// Init.
 			registerView( view );
-			registerView( view );
-			view.navigation.buttonClickedCallback = onButtonClicked;
+			super.initialize();
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case SettingsSubNavView.LBL_WALLPAPER: {
 					requestStateChange( StateType.SETTINGS_WALLPAPER );

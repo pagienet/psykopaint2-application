@@ -19,7 +19,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Init.
 			registerView( view );
 			super.initialize();
-			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post init.
 			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
@@ -27,7 +26,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			view.navigation.toggleRightButtonVisibility( hasParameters() );
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case SelectBrushSubNavView.LBL_BACK:
 //					EditBrushSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();

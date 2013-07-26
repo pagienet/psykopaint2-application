@@ -52,7 +52,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// Init.
 			registerView( view );
 			super.initialize();
-			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// From app.
 			notifyPaintingSavedSignal.add( onPaintingSaved );
@@ -66,7 +65,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// From view.
 		// ---------------------------------------------------------------------
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 
 				case CanvasSubNavView.LBL_HOME:

@@ -31,6 +31,13 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		override public function reset():void {
 
 			// Release all current item renderers.
+			releaseRenderers();
+			_dataProvider = null;
+
+			super.reset();
+		}
+
+		public function releaseRenderers():void {
 			if( _dataProvider ) {
 				var i:uint;
 				var len:uint = _dataProvider.length;
@@ -42,9 +49,6 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 					}
 				}
 			}
-			_dataProvider = null;
-
-			super.reset();
 		}
 
 		public function setDataProvider( data:Vector.<ISnapListData> ):void {
@@ -100,7 +104,9 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		}
 
 		override protected function onUpdate():void {
-			refreshItemRenderers();
+			if( _dataProvider ) {
+				refreshItemRenderers();
+			}
 		}
 
 		private function refreshItemRenderers():void {

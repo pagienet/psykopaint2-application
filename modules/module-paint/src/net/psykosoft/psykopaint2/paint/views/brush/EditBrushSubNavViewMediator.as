@@ -23,7 +23,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Init.
 			registerView( view );
 			super.initialize();
-			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			// Post init.
 			view.setParameters( paintModule.getCurrentBrushParameters() );
@@ -31,7 +30,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			notifyActivateBrushChangedSignal.add( onBrushParameterChangedFromOutside );
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case EditBrushSubNavView.LBL_BACK: 
 					requestStateChange( StateType.PREVIOUS );
