@@ -67,18 +67,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
 			navigation.toggleRightButtonVisibility( false );
-			var firstParamLabel:String = "";
-			var firstParamId:String = "";
-//			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
 			for( var i:uint = 0; i < numParameters; ++i ) {
 
 				var parameter:PsykoParameter = list[ i ];
 //				trace( ">>> " + parameter.toXMLString() );
-
-				/*if( _lastSelectedParameterId[ _lastSelectedBrush ] == parameter.id || ( firstParamId == "" && parameter.id != CUSTOM_COLOR_ID ) ) {
-					firstParamLabel = parameter.label;
-					firstParamId = parameter.id;
-				}*/
 
 				if( parameter.type != PsykoParameter.ColorParameter ) {
 					if( parameter.id != CUSTOM_COLOR_ID ) {
@@ -88,31 +80,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				} else {
 					navigation.toggleRightButtonVisibility( true );
 				}
-
-				//var btn:SbButton = navigation.createButton( parameter.label, "", "btnLabelCenter", null )
-				//group.addButton( btn );
-
 			}
 
 			_scroller.setDataProvider( centerButtonDataProvider );
-
-			// Select and <<< activate >>> if a parameter was previously selected.
-			if( firstParamId != "" ) {
-
-				// TODO: complete navigation refactor
-//				group.setSelectedButtonByLabel( firstParamLabel );
-
-				openParameter( firstParamId );
-			}
 		}
 
 		public function updateParameters( parameterSetVO:ParameterSetVO ):void {
 			_parameterSetVO = parameterSetVO;
-			// TODO: reactivate appropriately
-			/*var currentParameterID:String = getLastSelectedParameterId( _parameterSetVO.brushName );
-			if( currentParameterID != "" ) {
-				openParameter( currentParameterID );
-			}*/
 		}
 
 		// ---------------------------------------------------------------------
@@ -136,9 +110,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			if( _parameter == null ) return;
 
 			var parameterType:int = _parameter.type;
-			/*if( _parameter.id != CUSTOM_COLOR_ID ) {
-				_lastSelectedParameterId[ _lastSelectedBrush ] = _parameter.id;
-			}*/
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
@@ -319,14 +290,5 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				_parameter.upperRangeValue = slider.value2;
 			}
 		}
-
-		// ---------------------------------------------------------------------
-		// Setters & Getters.
-		// ---------------------------------------------------------------------
-
-		/*static public function setLastSelectedBrush( value:String ):void {
-			if( _lastSelectedBrush == value ) return;
-			_lastSelectedBrush = value;
-		}*/
 	}
 }

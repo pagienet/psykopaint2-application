@@ -42,13 +42,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// From view.
 		// -----------------------
 
-		private function onViewEnabled():void {
-			trace( this, "ENABLED" );
+		protected function onViewEnabled():void {
 			SubNavigationViewBase( _view ).navigation.buttonClickedSignal.add( onButtonClicked );
 		}
 
-		private function onViewDisabled():void {
-			trace( this, "DISABLED" );
+		protected function onViewDisabled():void {
 			SubNavigationViewBase( _view ).navigation.buttonClickedSignal.remove( onButtonClicked );
 		}
 

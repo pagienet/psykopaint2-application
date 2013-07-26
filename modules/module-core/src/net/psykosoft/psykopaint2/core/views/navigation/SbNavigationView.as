@@ -153,21 +153,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				trace( this, "creating new sub navigation view" );
 
 				_currentSubNavView = new subNavType();
-				_currentSubNavView.addEventListener( Event.ADDED_TO_STAGE, onNewSubNavigationAddedToStage );
 				_currentSubNavView.navigation = this;
 				_subNavDictionary[ subNavType ] = _currentSubNavView;
 				addChildAt( _currentSubNavView, 2 );
 				_currentSubNavView.enable();
 			}
 			_currentSubNavView.scrollerButtonClickedSignal.add( onSubNavigationScrollerButtonClicked );
-		}
-
-		private function onNewSubNavigationAddedToStage( event:Event ):void {
-			trace( "@@@@@@@@@@@" + _currentSubNavView );
-			_currentSubNavView.removeEventListener( Event.ADDED_TO_STAGE, onNewSubNavigationAddedToStage );
-//			setTimeout( function():void {
-//				_currentSubNavView.enable();
-//			}, 1000 );
 		}
 
 		// ---------------------------------------------------------------------

@@ -24,10 +24,16 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			registerView( view );
 			super.initialize();
 
-			// Post init.
-			view.setParameters( paintModule.getCurrentBrushParameters() );
+			// From view.
+			view.enabledSignal.add( onViewEnabled );
 
+			// From app.
 			notifyActivateBrushChangedSignal.add( onBrushParameterChangedFromOutside );
+		}
+
+		override protected function onViewEnabled():void {
+			super.onViewEnabled();
+			view.setParameters( paintModule.getCurrentBrushParameters() );
 		}
 
 		override protected function onButtonClicked( label:String ):void {

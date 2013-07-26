@@ -29,22 +29,22 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case SelectBrushSubNavView.LBL_BACK:
-//					EditBrushSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
 					requestStateChange( StateType.PAINT );
 					break;
 				
 				case SelectBrushSubNavView.LBL_EDIT_BRUSH:
-//					EditBrushSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
 					requestStateChange( StateType.PAINT_ADJUST_BRUSH );
 					break;
 				
 				default: // Center buttons select a brush.
 					paintModule.activeBrushKit = label;
-//					EditBrushSubNavView.setLastSelectedBrush( label );
-					view.navigation.toggleRightButtonVisibility( hasParameters() );
-					
-//					EditBrushSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
-					requestStateChange( StateType.PAINT_ADJUST_BRUSH );
+					if( hasParameters() ) {
+						view.navigation.toggleRightButtonVisibility( true );
+						requestStateChange( StateType.PAINT_ADJUST_BRUSH );
+					}
+					else {
+						view.navigation.toggleRightButtonVisibility( false );
+					}
 					break;
 			}
 		}
