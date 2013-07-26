@@ -34,13 +34,16 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
+
+				// Left.
 				case WallpaperSubNavView.LBL_BACK: {
 					requestStateChange( StateType.SETTINGS );
 					break;
 				}
-				default: { // Center buttons are wallpaper thumbnails.
+
+				// Center buttons are wallpaper thumbnails.
+				default: {
 					getFullImageAndSetAsWallpaper( label );
-					WallpaperSubNavView.setLastSelectedWallpaper( label );
 				}
 			}
 		}
@@ -54,7 +57,6 @@ package net.psykosoft.psykopaint2.home.views.settings
 			view.setImages( new BitmapAtlas( loader.bmd, loader.xml ) );
 			_atlasLoader.dispose();
 			_atlasLoader = null;
-			view.setSelectedWallpaperBtn();
 		}
 
 		private function getFullImageAndSetAsWallpaper( id:String ):void {

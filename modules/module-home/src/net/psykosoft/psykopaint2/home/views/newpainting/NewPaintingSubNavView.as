@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
 
-				createCenterButton( str, null, SbBitmapButton, new Bitmap( vo.thumbnail ) );
+				createCenterButton( str, null, SbBitmapButton, new Bitmap( vo.thumbnail ), true );
 			}
 
 			validateCenterButtons();

@@ -11,11 +11,13 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 	* */
 	public class HSnapListItemRendererFactory
 	{
+		private var _itemRenderers:Vector.<DisplayObject>;
 		private var _idleItemRenderersForClass:Dictionary; // Contains arrays per item class.
 
 		public function HSnapListItemRendererFactory() {
 			super();
 			_idleItemRenderersForClass = new Dictionary();
+			_itemRenderers = new Vector.<DisplayObject>();
 		}
 
 		public function dispose():void {
@@ -37,8 +39,11 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 			trace( this, "-> creating new item renderer" );
 
-			// No? Then create a new one.
-			return new typeClass();
+			// Create a new item renderer.
+			var renderer:DisplayObject = new typeClass();
+			_itemRenderers.push( renderer );
+
+			return renderer;
 		}
 
 		public function markItemRendererAsAvailable( itemRendererInstance:DisplayObject ):void {
@@ -58,6 +63,10 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 			// Push object into array for this type.
 			availableItemRenderersForThisClass.push( itemRendererInstance );
+		}
+
+		public function get itemRenderers():Vector.<DisplayObject> {
+			return _itemRenderers;
 		}
 	}
 }

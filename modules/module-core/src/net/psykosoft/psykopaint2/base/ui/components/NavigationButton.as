@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
 
 	import net.psykosoft.psykopaint2.core.views.components.label.SbCenterLabel;
 	import net.psykosoft.psykopaint2.core.views.components.label.SbLabel;
@@ -20,6 +21,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _pins:Sprite;
 		protected var _pin1:Sprite;
 		protected var _pin2:Sprite;
+		protected var _selectable:Boolean;
+		protected var _selected:Boolean;
 
 		private var _initialPinX1:Number;
 		private var _initialPinX2:Number;
@@ -50,12 +53,41 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_initialPinX2 = _pin2.x;
 		}
 
+		protected function updateSelected():void {
+			transform.colorTransform = _selected ? new ColorTransform( 1, 0.5, 0.5 ) : new ColorTransform();
+		}
+
 		// ---------------------------------------------------------------------
 		// Public.
 		// ---------------------------------------------------------------------
 
+		public function set selectable( value:Boolean ):void {
+			if( !value ) selected = false;
+			_selectable = value;
+		}
+
+		public function get selectable():Boolean {
+			return _selectable;
+		}
+
+		public function set selected( value:Boolean ):void {
+			if( !_selectable ) return;
+			_selected = value;
+			mouseEnabled = mouseChildren = !_selected;
+			updateSelected();
+		}
+
+		public function get selected():Boolean {
+			return _selected;
+		}
+
 		public function set iconType( frameName:String ):void {
+			if( !frameName ) return;
 			_icon.gotoAndStop( frameName );
+		}
+
+		public function get iconType():String {
+			return _icon.currentFrameLabel;
 		}
 
 		public function set labelText( value:String ):void {
@@ -69,6 +101,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		// Can be used dynamically by virtual lists.
 		public function set iconBitmap( bitmap:Bitmap ):void {
+			if( !bitmap ) return;
 			if( _iconBitmap ) {
 				if( _iconBitmap.parent == _icon ) {
 					_icon.removeChild( _iconBitmap );
@@ -81,11 +114,16 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_icon.addChild( _iconBitmap );
 		}
 
+		public function get iconBitmap():Bitmap {
+			return _iconBitmap;
+		}
+
 		// ---------------------------------------------------------------------
 		// Protected.
 		// ---------------------------------------------------------------------
 
 		protected function adjustBitmap():void {
+			if( !_iconBitmap ) return;
 			_iconBitmap.x = -_iconBitmap.width / 2;
 			_iconBitmap.y = -_iconBitmap.height / 2;
 		}

@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.events.MouseEvent;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
+	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
@@ -112,16 +114,38 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_scroller.evaluateInteractionEnd();
 		}
 
+		public function selectButtonWithLabel( value:String ):void {
+
+			var i:uint;
+			var buttons:Vector.<DisplayObject> = _scroller.itemRenderers;
+			var numButtons:uint = buttons.length;
+			var button:NavigationButton;
+			for( i = 0; i < numButtons; i++ ) {
+				button = buttons[ i ] as NavigationButton;
+				if( button.labelText == value ) break;
+				button = null;
+			}
+
+			if( !button ) return;
+
+			unSelectAllButtons();
+			button.selected = true;
+			_scroller.updateRendererAssociatedData( button, "selected" );
+
+			_scroller.refreshItemRenderers();
+		}
+
 		// ---------------------------------------------------------------------
 		// Protected.
 		// ---------------------------------------------------------------------
 
-		protected function createCenterButton( label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null ):void {
+		protected function createCenterButton( label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false ):void {
 			if( !_centerButtonData ) _centerButtonData = new Vector.<ISnapListData>();
 			var btnData:ButtonData = new ButtonData();
 			btnData.labelText = label;
 			btnData.iconType = iconType;
 			btnData.iconBitmap = icon;
+			btnData.selectable = selectable;
 			btnData.itemRendererWidth = 100;
 			btnData.itemRendererType = rendererClass || SbIconButton;
 			_centerButtonData.push( btnData );
@@ -138,8 +162,30 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// ---------------------------------------------------------------------
 
 		private function onButtonClicked( event:MouseEvent ):void {
+
 			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
+
+			var clickedButton:NavigationButton = event.target as NavigationButton;
+			if( !clickedButton ) clickedButton = event.target.parent as NavigationButton;
+			if( !clickedButton ) {
+				throw new Error( "unidentified button clicked." );
+			}
+
+			// Deselect all buttons except the clicked one.
+			selectButtonWithLabel( clickedButton.labelText );
+
 			scrollerButtonClickedSignal.dispatch( event );
+		}
+
+		private function unSelectAllButtons():void {
+			var i:uint;
+			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
+			var numData:uint = dataProvider.length;
+			for( i = 0; i < numData; i++ ) {
+				var data:ButtonData = dataProvider[ i ] as ButtonData;
+				data.selected = false;
+			}
+			// Note, to changes to take effect visually, you need to call _scroller.refreshItemRenderers();
 		}
 
 		// ---------------------------------------------------------------------

@@ -12,8 +12,6 @@ package net.psykosoft.psykopaint2.home.views.settings
 	{
 		public static const LBL_BACK:String = "Settings";
 
-		static private var _lastSelectedWallpaper:String = "default";
-
 		private var _atlas:BitmapAtlas;
 
 		public function WallpaperSubNavView() {
@@ -31,23 +29,19 @@ package net.psykosoft.psykopaint2.home.views.settings
 		}
 
 		public function setImages( atlas:BitmapAtlas ):void {
+
 			_atlas = atlas;
 			var names:Vector.<String> = atlas.names;
 			for( var i:uint; i < names.length; i++ ) {
 				var name:String = names[ i ];
-				createCenterButton( name, null, SbPolaroidButton, new Bitmap( atlas.getSubTextureForId( name ) ) );
+				createCenterButton( name, null, SbPolaroidButton, new Bitmap( atlas.getSubTextureForId( name ) ), true );
 			}
+
 			validateCenterButtons();
-		}
 
-		public function setSelectedWallpaperBtn():void {
-			// TODO: complete navigation refactor
-//			_group.setSelectedButtonByLabel( _lastSelectedWallpaper );
-		}
-
-		static public function setLastSelectedWallpaper( value:String ):void {
-			if( _lastSelectedWallpaper == value ) return;
-			_lastSelectedWallpaper = value;
+			// TODO: this is a hard code, because the home view selects a wallpaper by default, and this assumes one as well.
+			// The selection of the default wallpaper needs to be centralized.
+			selectButtonWithLabel( "white" );
 		}
 	}
 }
