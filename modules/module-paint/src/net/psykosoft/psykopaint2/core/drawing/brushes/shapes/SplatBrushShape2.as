@@ -12,13 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function SplatBrushShape2(context3D : Context3D)
 		{
-			super(context3D, "splat2", SourceImage, SourceNormalSpecularMap);
-			_variationFactors[0] = 3;
-			_variationFactors[1] = 3;
-			_variationFactors[2] = 1 / _variationFactors[0];
-			_variationFactors[3] = 1 / _variationFactors[1];
-			_variationFactors[4] = Math.atan2(_variationFactors[3],_variationFactors[2]);
-			
+			super(context3D, "splat2", SourceImage, SourceNormalSpecularMap,512,3,3);
 			_rotationRange = 0.5;
 		}
 	}

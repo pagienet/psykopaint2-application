@@ -18,8 +18,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	{
 		public function AntialiasedTriangleBrushShape(context3D : Context3D)
 		{
-			super(context3D, "triangle", 1);
-			this.size = 512;
+			super(context3D, "triangle", 1, 512);
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void

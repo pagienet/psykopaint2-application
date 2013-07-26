@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function SphereBrushShape(context3D : Context3D)
 		{
-			super(context3D, "sphere", SourceImage, SourceNormalSpecularMap);
+			super(context3D, "sphere", SourceImage, SourceNormalSpecularMap,1,1);
 			
 		}
 	}

@@ -6,11 +6,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
-
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-
 	import net.psykosoft.psykopaint2.core.errors.AbstractMethodError;
 
 	public class AbstractBrushShape
@@ -30,17 +28,32 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		 * Creates a new brush texture
 		 * @param scaleFactor If a size is set, scaleFactor enlargers the brush texture. This allows a bigger brush area coverage for simulations to operate on
 		 */
-		public function AbstractBrushShape(context3D : Context3D, id : String, scaleFactor : Number = 1)
+		public function AbstractBrushShape(context3D : Context3D, id : String, scaleFactor : Number = 1, size:int = 64, cols:int = 1, rows:int = 1)
 		{
 			_id = id;
 			_scaleFactor = scaleFactor;
 			_context = context3D;
-			size = 64;
-			_variationFactors = Vector.<Number>([1,1,1,1,Math.atan2(1,1)]); //cols,rows,u_step,v_step,rectangle diagonal angle
+			this.size = size;
+			//_variationFactors = Vector.<Number>([1,1,1,1,Math.atan2(1,1),Math.sqrt(2*64*64)]); //cols,rows,u_step,v_step,rectangle diagonal angle, diagonal length
 			_rotationRange = Math.PI;
 			_YUVWeights = Vector.<Number>([1,1,1]);
+			setVariationFactors(cols,rows);
 		}
 
+		protected function setVariationFactors( cols:int, rows:int ):void
+		{
+			//cols,rows,u_step,v_step,rectangle diagonal angle, diagonal length
+			_variationFactors = Vector.<Number>([
+				cols,
+				rows,
+				1 / cols,
+				1 / rows,
+				Math.atan2(1/rows,1/cols),
+				Math.sqrt(Math.pow(size / rows, 2) + Math.pow( size / rows, 2))]); 
+			
+			_scaleFactor = Math.sqrt(Math.pow( _variationFactors[2],2) +  Math.pow( _variationFactors[3],2));
+		}
+		
 		final public function update() : void
 		{
 			updateTexture(_texture);

@@ -21,16 +21,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		
 		public function NoisyBrushShape(context3D : Context3D)
 		{
-			super(context3D, "noisy", 1);
+			super(context3D, "noisy", 1,256,2,2);
 			_alphaContrast = new ColorMatrixFilter([255, 0, 0, 0, 0, 0, 255, 0, 0, 0, 0, 0, 255, 0, 0, 0, 0, 0, 2, -255]);
-			
-			_variationFactors[0] = 2;
-			_variationFactors[1] = 2;
-			_variationFactors[2] = 1 / _variationFactors[0];
-			_variationFactors[3] = 1 / _variationFactors[1];
-			_variationFactors[4] = Math.atan2(_variationFactors[3],_variationFactors[2]);
-			
-			size = 256;
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void
@@ -97,14 +89,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 				}
 			}
 			
-			
-			
-			
 			//_brushMap.draw(alphaMask);
 			uploadMips(_textureSize, _brushMap, texture);
-			
-			_scaleFactor = Math.sqrt(Math.pow( _variationFactors[2],2) +  Math.pow( _variationFactors[3],2));
-			
 		}
 	}
 }

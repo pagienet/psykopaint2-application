@@ -114,7 +114,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 
 		}
-
+		
 		protected function createBrushMesh() : IBrushMesh
 		{
 			throw new AbstractMethodError();
