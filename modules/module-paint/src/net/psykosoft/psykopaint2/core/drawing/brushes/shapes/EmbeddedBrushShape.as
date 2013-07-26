@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function EmbeddedBrushShape(context3D : Context3D, id : String, colorAsset : Class, normalSpecularAsset : Class, size:int, cols:int = 1, rows:int = 1 )
 		{
-			super(context3D, id, 1,size,1,1);
+			super(context3D, id, 1,size,cols,rows);
 			_colorAsset = colorAsset;
 			_normalSpecularAsset = normalSpecularAsset;
 		}

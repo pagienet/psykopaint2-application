@@ -26,27 +26,31 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		private function registerDefaultShapes(context3D : Context3D) : void
 		{
+			registerShape(new SplatBrushShape(context3D));
+			registerShape(new PaintBrushShape1(context3D));
+			registerShape(new LineBrushShape(context3D));
+			registerShape(new PencilSketchBrushShape(context3D));
+			registerShape(new WetBrushShape(context3D));
 			registerShape(new BasicBrushShape(context3D));
+			registerShape(new SplotchBrushShape(context3D));
+			
+			/*
+			//disabled unused shapes
 			registerShape(new BasicSmoothBrushShape(context3D));
 			registerShape(new SquareBrushShape(context3D));
 			registerShape(new SquareSmoothBrushShape(context3D));
 			registerShape(new NoisyBrushShape(context3D));
 			registerShape(new PencilBrushShape(context3D));
-			registerShape(new PencilSketchBrushShape(context3D));
-			registerShape(new WetBrushShape(context3D));
-			registerShape(new SplatBrushShape(context3D));
 			registerShape(new SplatBrushShape2(context3D));
-			registerShape(new SplatBrushShape3(context3D));
 			registerShape(new DotBrushShape(context3D));
-			registerShape(new LineBrushShape(context3D));
 			registerShape(new InkDotShape1(context3D));
 			registerShape(new ObjectTestShape1(context3D));
 			registerShape(new ScalesBrushShape(context3D));
 			registerShape(new AntialiasedTriangleBrushShape(context3D));
 			registerShape(new PrecisionTestShape(context3D));
 			registerShape(new SphereBrushShape(context3D));
-			registerShape(new PaintBrushShape1(context3D));
 			
+			*/
 			if ( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION )
 			{
 				sendAvailableShapes();
