@@ -51,6 +51,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_pin2 = _pins.getChildByName( "pin2" ) as Sprite;
 			_initialPinX1 = _pin1.x;
 			_initialPinX2 = _pin2.x;
+			randomizePinsAndRotation();
 		}
 
 		protected function updateSelected():void {
@@ -71,6 +72,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function set selected( value:Boolean ):void {
+//			trace( this, "selected: " + value + ", " + _label.text );
 			if( !_selectable ) return;
 			_selected = value;
 			mouseEnabled = mouseChildren = !_selected;
@@ -92,7 +94,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function set labelText( value:String ):void {
 			_label.text = value;
-			randomizePinsAndRotation();
 		}
 
 		public function get labelText():String {

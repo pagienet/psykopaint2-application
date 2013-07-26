@@ -60,6 +60,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
 
+			invalidateCenterButtons();
+
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
 			showRightButton( false );
@@ -71,7 +73,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				if( parameter.type != PsykoParameter.ColorParameter ) {
 					if( parameter.id != CUSTOM_COLOR_ID ) {
 						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
-						createCenterButton( parameter.label );
+						createCenterButton( parameter.label, ButtonIconType.DEFAULT, null, null, true );
 					}
 				} else {
 					showRightButton( true );

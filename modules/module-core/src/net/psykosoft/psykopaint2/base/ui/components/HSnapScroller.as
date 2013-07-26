@@ -70,10 +70,15 @@ package net.psykosoft.psykopaint2.base.ui.components
 		// ---------------------------------------------------------------------
 
 		public function reset():void {
+
+			trace( this, "RESET" );
+
 			_positionManager.reset();
 			_minContentX = 0;
 			_maxContentX = 0;
 			_container.x = 0;
+
+			// TODO: virtual lists shouldn't have this line, but non virtual extensors of this class might.
 //			_container.removeChildren();
 		}
 
@@ -106,6 +111,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function evaluateInteractionStart():void {
+			trace( this, "evaluateInteractionStart()" );
 			if( !scrollingAllowed ) return;
 			if( _container.numChildren == 0 ) return;
 			if( !mouseHitsInteractiveArea() ) return;
@@ -114,6 +120,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function evaluateInteractionEnd():void {
+			trace( this, "evaluateInteractionEnd()" );
 			if( !_active ) return;
 			_interactionManager.stopInteraction();
 		}
@@ -183,40 +190,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 			// Override.
 		}
 
-		protected function visualizeVisibleDimensions():void {
-			graphics.clear();
-			graphics.beginFill( 0xFF0000, 1.0 );
-			graphics.drawRect( 0, 0, _visibleWidth, _visibleHeight );
-			graphics.endFill();
-		}
-
-		protected function visualizeContentDimensions():void {
-			_container.graphics.clear();
-			_container.graphics.beginFill( 0x0000FF, 1.0 );
-			_container.graphics.drawRect( 0, 0, contentWidth, 100 );
-			_container.graphics.endFill();
-		}
-
-		protected function visualizeSnapPoints():void {
-			var i:uint;
-			var len:uint = _positionManager.numSnapPoints;
-			for( i = 0; i < len; ++i ) {
-				var px:Number = _positionManager.getSnapPointAtIndex( i );
-				_container.graphics.beginFill( 0x00FF00 );
-				_container.graphics.drawCircle( px, 0, 10 );
-				_container.graphics.endFill();
-			}
-		}
-
 		protected function evaluateNewSnapPointFromPosition( px:Number ):void {
-
-			// Add a snap point at the required position.
 			_positionManager.pushSnapPoint( px );
-
-			// Trace snap point - uncomment only for visual debugging.
-//			_container.graphics.beginFill( 0x00FF00 );
-//			_container.graphics.drawCircle( px, 0, 10 );
-//			_container.graphics.endFill();
 		}
 
 		protected function evaluateDimensionsFromItemPositionAndWidth( itemPosition:Number, itemWidth:Number, offset:Number = 0 ):void {
@@ -337,6 +312,33 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		private function onPositionManagerMotionEnded():void {
 			stopEnterframe();
+		}
+
+		// ---------------------------------------------------------------------
+		// Visualization utils.
+		// ---------------------------------------------------------------------
+
+		protected function visualizeVisibleDimensions():void {
+			graphics.beginFill( 0xFF0000, 1.0 );
+			graphics.drawRect( 0, 0, _visibleWidth, _visibleHeight );
+			graphics.endFill();
+		}
+
+		protected function visualizeContentDimensions():void {
+			_container.graphics.beginFill( 0x0000FF, 1.0 );
+			_container.graphics.drawRect( 0, 0, contentWidth, 100 );
+			_container.graphics.endFill();
+		}
+
+		protected function visualizeSnapPoints():void {
+			var i:uint;
+			var len:uint = _positionManager.numSnapPoints;
+			for( i = 0; i < len; ++i ) {
+				var px:Number = _positionManager.getSnapPointAtIndex( i );
+				_container.graphics.beginFill( 0x00FF00 );
+				_container.graphics.drawCircle( px, 0, 10 );
+				_container.graphics.endFill();
+			}
 		}
 	}
 }

@@ -34,6 +34,13 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			_dataForRenderer = new Dictionary();
 		}
 
+		public function setDataProvider( data:Vector.<ISnapListData> ):void {
+			reset();
+			_dataProvider = data;
+			// Create snap points.
+			invalidateContent();
+		}
+
 		override public function reset():void {
 
 			// Release all current item renderers.
@@ -43,24 +50,17 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			super.reset();
 		}
 
-		public function setDataProvider( data:Vector.<ISnapListData> ):void {
-
-			reset();
-
-			_dataProvider = data;
-
-			// Create snap points.
-			invalidateContent();
-		}
-
 		override public function invalidateContent():void {
 
 			if( !_dataProvider ) return;
+
+			trace( this, "invalidateContent() -----------------" );
 
 			// Create snap points for each data item.
 			// Items will remember their associated position.
 			var i:uint;
 			var numItems:uint = _dataProvider.length;
+			trace( this, "numItems: " + numItems );
 			var itemData:ISnapListData;
 			var itemPositioningMarker:Number = 0;
 			for( i = 0; i < numItems; i++ ) {
@@ -74,6 +74,9 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			containEdgeSnapPoints();
 			dock();
 
+			// Should be commented, just for visualization/debugging.
+//			graphics.clear();
+//			_container.graphics.clear();
 //			visualizeVisibleDimensions();
 //			visualizeContentDimensions();
 //			visualizeSnapPoints();
@@ -163,6 +166,18 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				itemRenderer.visible = true;
 				if( itemRenderer.parent != _container ) {
 					_container.addChild( itemRenderer );
+				}
+			}
+		}
+
+		public function refreshItemRendererProperties():void {
+			var i:uint;
+			var numItems:uint;
+			numItems = _dataProvider.length;
+			for( i = 0; i < numItems; i++ ) {
+				var data:ISnapListData = _dataProvider[ i ];
+				if( data.itemRenderer ) {
+					copyAllPropertiesFromObjectAToObjectB( data, data.itemRenderer );
 				}
 			}
 		}

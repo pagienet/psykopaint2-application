@@ -1,8 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
-	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbIconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class SelectBrushSubNavView extends SubNavigationViewBase
@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					}
 				}
 
-				createCenterButton( availableBrushTypes[ i ], iconType );
+				createCenterButton( availableBrushTypes[ i ], iconType, SbIconButton, null, true );
 			}
 
 			validateCenterButtons();

@@ -14,6 +14,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbIconButton;
 
+	import org.gestouch.events.GestureEvent;
+
+	import org.gestouch.gestures.PanGesture;
+	import org.gestouch.gestures.PanGestureDirection;
+
 	import org.osflash.signals.Signal;
 
 	public class SubNavigationViewBase extends ViewBase
@@ -54,6 +59,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_scroller.rendererRemovedSignal.add( onScrollerItemRendererRemoved );
 //			_scroller.motionUpdatedSignal.add( onScrollerMotionUpdated );
 			addChild( _scroller );
+		}
+
+		public function evaluateScrollingInteractionStart():void {
+			_scroller.evaluateInteractionStart();
+		}
+
+		public function evaluateScrollingInteractionEnd():void {
+			_scroller.evaluateInteractionEnd();
 		}
 
 		// Just for debugging, can be removed...
@@ -105,15 +118,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Public.
 		// ---------------------------------------------------------------------
 
-		public function evaluateScrollingInteractionStart():void {
-			if( !_isEnabled ) return;
-			_scroller.evaluateInteractionStart();
-		}
-
-		public function evaluateScrollingInteractionEnd():void {
-			_scroller.evaluateInteractionEnd();
-		}
-
 		public function selectButtonWithLabel( value:String ):void {
 
 			var i:uint;
@@ -132,7 +136,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			button.selected = true;
 			_scroller.updateRendererAssociatedData( button, "selected" );
 
-			_scroller.refreshItemRenderers();
+			_scroller.refreshItemRendererProperties();
 		}
 
 		// ---------------------------------------------------------------------
@@ -149,6 +153,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			btnData.itemRendererWidth = 100;
 			btnData.itemRendererType = rendererClass || SbIconButton;
 			_centerButtonData.push( btnData );
+		}
+
+		protected function invalidateCenterButtons():void {
+			_scroller.reset();
+			_centerButtonData = null;
 		}
 
 		protected function validateCenterButtons():void {
@@ -172,12 +181,15 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			}
 
 			// Deselect all buttons except the clicked one.
-			selectButtonWithLabel( clickedButton.labelText );
+			if( clickedButton.selectable ) {
+				selectButtonWithLabel( clickedButton.labelText );
+			}
 
 			scrollerButtonClickedSignal.dispatch( event );
 		}
 
 		private function unSelectAllButtons():void {
+
 			var i:uint;
 			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
 			var numData:uint = dataProvider.length;
