@@ -2,7 +2,13 @@ package net.psykosoft.psykopaint2.home.config
 {
 
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
+	import net.psykosoft.psykopaint2.home.commands.DestroyHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.commands.LoadSurfacePreviewCommand;
+	import net.psykosoft.psykopaint2.home.commands.SetUpHomeModuleCommand;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
@@ -77,6 +83,8 @@ package net.psykosoft.psykopaint2.home.config
 
 		private function mapNotifications():void {
 	   		_injector.map( RequestWallpaperChangeSignal ).asSingleton();
+	   		_injector.map( NotifyHomeModuleSetUpSignal ).asSingleton();
+	   		_injector.map( NotifyHomeModuleDestroyedSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -88,6 +96,8 @@ package net.psykosoft.psykopaint2.home.config
 			// Mapped in the core as singleton for compatibility and remapped here.
 			_injector.unmap( RequestLoadSurfacePreviewSignal );
 			_commandMap.map( RequestLoadSurfacePreviewSignal ).toCommand( LoadSurfacePreviewCommand );
+			_commandMap.map( RequestSetupHomeModuleSignal ).toCommand( SetUpHomeModuleCommand );
+			_commandMap.map( RequestDestroyHomeModuleSignal ).toCommand( DestroyHomeModuleCommand );
 		}
 
 		// -----------------------

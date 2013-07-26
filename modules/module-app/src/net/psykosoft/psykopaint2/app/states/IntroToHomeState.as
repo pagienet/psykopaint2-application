@@ -5,6 +5,9 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.home.HomeModule;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 
 	use namespace ns_state_machine;
 
@@ -17,6 +20,12 @@ package net.psykosoft.psykopaint2.app.states
 		public var notifyHomeViewZoomCompleteSignal : NotifyHomeViewZoomCompleteSignal;
 
 		[Inject]
+		public var requestSetupHomeModuleSignal : RequestSetupHomeModuleSignal;
+
+		[Inject]
+		public var notifyHomeModuleSetUpSignal : NotifyHomeModuleSetUpSignal;
+
+		[Inject]
 		public var homeState : HomeState;
 
 		public function IntroToHomeState()
@@ -26,8 +35,16 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function activate() : void
 		{
+			notifyHomeModuleSetUpSignal.addOnce(onHomeModuleSetUp);
+			requestSetupHomeModuleSignal.dispatch();
+		}
+
+		private function onHomeModuleSetUp() : void
+		{
 			// Trigger initial state...
 			notifyHomeViewZoomCompleteSignal.addOnce(onTransitionComplete);
+
+			// todo: remove this signal and replace it with a "transitionToDefaultView" signal
 			requestStateChangeSignal.dispatch(StateType.HOME);
 		}
 

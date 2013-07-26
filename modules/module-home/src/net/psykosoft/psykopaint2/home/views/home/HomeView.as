@@ -51,7 +51,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _zoomCameraController:ZoomCameraController;
 		private var _room:Room;
 		private var _paintingManager:PaintingManager;
-		private var _loader:AssetBundleLoader;
 		private var _view:View3D;
 		private var _stage3dProxy:Stage3DProxy;
 		private var _shiftMultiplier:Number = 1;

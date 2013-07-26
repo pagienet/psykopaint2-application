@@ -60,17 +60,6 @@ package net.psykosoft.psykopaint2.app
 			createCoreModule();
 		}
 
-		private function createStates() : void
-		{
-			var injector : IInjector = _coreModule.injector;
-			injector.map(IntroToHomeState).asSingleton();
-			injector.map(HomeState).asSingleton();
-			injector.map(CropState).asSingleton();
-			injector.map(PaintState).asSingleton();
-			injector.map(BookState).asSingleton();
-			injector.map(TransitionHomeToPaintState).asSingleton();
-		}
-
 		// Core module.
 		private function createCoreModule():void {
 			trace( this, "creating core module..." );
@@ -83,7 +72,6 @@ package net.psykosoft.psykopaint2.app
 		private function onCoreModuleReady():void {
 			trace( this, "core module is ready, injector: " + _coreModule.injector );
 			_coreModule.startEnterFrame();
-			createStates();
 			createPaintModule();
 		}
 
@@ -98,7 +86,7 @@ package net.psykosoft.psykopaint2.app
 			paintModule.initialize();
 		}
 		private function onPaintModuleReady( coreInjector:Injector ):void {
-		    trace( this, "paint module is ready" );
+			trace( this, "paint module is ready" );
 			createHomeModule();
 		}
 
