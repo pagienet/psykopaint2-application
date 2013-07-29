@@ -160,7 +160,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_centerButtonData = null;
 		}
 
-		protected function validateCenterButtons():void {
+		public function validateCenterButtons():void {
 			if( _centerButtonData ) {
 				_scroller.setDataProvider( _centerButtonData );
 			}

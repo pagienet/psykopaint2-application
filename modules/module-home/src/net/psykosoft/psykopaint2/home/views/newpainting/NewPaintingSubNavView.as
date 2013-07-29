@@ -25,16 +25,19 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
 		}
 
-		public function setInProgressPaintings( data:Vector.<PaintingInfoVO> ):void {
-
-			var i:uint;
-			var len:uint;
+		public function createNewPaintingButtons():void {
 
 			// New color painting button.
 			createCenterButton( LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, SbIconButton );
 
 			// New photo painting button.
 			createCenterButton( LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, SbIconButton );
+		}
+
+		public function createInProgressPaintings( data:Vector.<PaintingInfoVO> ):void {
+
+			var i:uint;
+			var len:uint;
 
 			// Old painting buttons.
 			len = data.length;
@@ -46,8 +49,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				createCenterButton( str, null, SbBitmapButton, new Bitmap( vo.thumbnail ), true );
 			}
-
-			validateCenterButtons();
 
 			// TODO: complete navigation refactor
 //			if( lastSelectedPaintingLabel == "" ) _buttonGroup.setSelectedButtonByIndex( 0 );
