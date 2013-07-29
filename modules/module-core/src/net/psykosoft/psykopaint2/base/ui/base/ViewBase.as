@@ -1,26 +1,19 @@
 package net.psykosoft.psykopaint2.base.ui.base
 {
 
-	import br.com.stimuli.loading.BulkLoader;
-
 	import flash.display.Sprite;
 	import flash.events.Event;
 
-	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import org.osflash.signals.Signal;
 
 	public class ViewBase extends Sprite
 	{
-		private var _loader:AssetBundleLoader;
-		private var _bundleId:String;
 		private var _added:Boolean;
-		private var _requiresLoading:Boolean;
 
 		protected var _setupHasRan:Boolean;
 		protected var _viewIsReady:Boolean;
-		protected var _assetsLoaded:Boolean;
 		protected var _isEnabled:Boolean;
 
 		public var autoUpdates:Boolean = false;
@@ -80,31 +73,14 @@ package net.psykosoft.psykopaint2.base.ui.base
 		public function dispose():void {
 			_isEnabled = false;
 			_setupHasRan = false;
-			_assetsLoaded = false;
-			if( _loader ) {
-				if( _loader.hasEventListener( Event.COMPLETE ) ) {
-					_loader.removeEventListener( Event.COMPLETE, onAssetsReady );
-				}
-				_loader.dispose();
-				_loader = null;
-			}
-			onDisposed();
 		}
 
 		public function setup():void {
 			trace( this, "setup" );
 			onSetup();
-			if( _requiresLoading ) {
-				if( !_assetsLoaded ) {
-					trace( this, "load started..." );
-					_loader.startLoad();
-				}
-			}
-			else {
-				if( _added ) {
-					trace( this, "-view ready with no assets-" );
-					reportReady();
-				}
+			if( _added ) {
+				trace( this, "-view ready with no assets-" );
+				reportReady();
 			}
 			setupSignal.dispatch();
 			_setupHasRan = true;
@@ -119,22 +95,6 @@ package net.psykosoft.psykopaint2.base.ui.base
 			_viewIsReady = true;
 			onReady();
 			viewReadySignal.dispatch();
-		}
-
-		// ---------------------------------------------------------------------
-		// To be used by extensors...
-		// ---------------------------------------------------------------------
-
-		protected function initializeBundledAssets( bundleId:String ):void {
-			_bundleId = bundleId;
-			_requiresLoading = true;
-			_loader = new AssetBundleLoader( bundleId );
-			_loader.addEventListener( Event.COMPLETE, onBundledAssetsReady );
-		}
-
-		protected function registerBundledAsset( url:String, assetId:String, isBinary:Boolean = false ):void {
-			if( isBinary ) _loader.registerAsset( url, assetId, BulkLoader.TYPE_BINARY );
-			else _loader.registerAsset( url, assetId );
 		}
 
 		// ---------------------------------------------------------------------
@@ -192,41 +152,13 @@ package net.psykosoft.psykopaint2.base.ui.base
 			_added = true;
 
 			if( !_viewIsReady ) {
-				if( _requiresLoading ) {
-					if( _assetsLoaded ) {
-						trace( this, "-view ready from added and assets already loaded-" );
-						reportReady();
-					}
-					else {
-						trace( this, "added but assets not loaded yet" );
-					}
-				}
-				else {
-					trace( this, "-view ready from added and no need to load assets-" );
-					reportReady();
-				}
+				trace( this, "-view ready from added and no need to load assets-" );
+				reportReady();
 			}
 		}
 
 		private function onEnterFrame( event:Event ):void {
 			onUpdate();
-		}
-
-		private function onBundledAssetsReady( event:Event ):void {
-			trace( this, "assets ready" );
-			onAssetsReady();
-			assetsReadySignal.dispatch();
-
-			if( _added ) {
-				trace( this, "-view ready with assets-" );
-				reportReady();
-			}
-			else {
-				trace( this, "assets loaded but not yet added" );
-			}
-
-			_assetsLoaded = true;
-			_loader.removeEventListener( Event.COMPLETE, onBundledAssetsReady );
 		}
 
 		// ---------------------------------------------------------------------

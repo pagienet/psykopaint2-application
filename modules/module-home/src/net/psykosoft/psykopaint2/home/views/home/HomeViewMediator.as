@@ -186,6 +186,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		override protected function onStateChange( newState:String ):void {
 
+			super.onStateChange( newState );
+
 			// Is it a freezing state?
 			if( _freezingStates.indexOf( newState ) != -1 ) { // YES
 				freezeView();
@@ -211,8 +213,6 @@ package net.psykosoft.psykopaint2.home.views.home
 					view.zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
 					_firstZoomOutRan = true;
 				}
-
-				super.onStateChange( newState );
 			}
 		}
 

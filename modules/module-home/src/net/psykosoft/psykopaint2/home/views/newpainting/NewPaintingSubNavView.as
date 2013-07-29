@@ -17,8 +17,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public static const LBL_NEW_PHOTO:String = "Photo Painting";
 		public static const LBL_CONTINUE:String = "Continue Painting";
 
-		static public var lastSelectedPaintingLabel:String = "";
-		static public var lastScrollerPosition:Number = 0;
+		private var _dataProvider:Vector.<ISnapListData>;
 
 		public function NewPaintingSubNavView() {
 			super();
@@ -27,22 +26,24 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		override protected function onEnabled():void {
 			navigation.setHeader( "" );
 
-			// TODO: complete navigation refactor
-//			navigation.layout();
+			_dataProvider = new Vector.<ISnapListData>();
+
+			// New color painting button.
+			navigation.createCenterButtonData( _dataProvider, LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, SbIconButton );
+
+			// New photo painting button.
+			navigation.createCenterButtonData( _dataProvider, LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, SbIconButton );
+
+			// Show right button.
+			if( !HomeSettings.isStandalone ) {
+				navigation.setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
+			}
 		}
 
 		public function setInProgressPaintings( data:Vector.<PaintingInfoVO> ):void {
 
 			var i:uint;
 			var len:uint;
-
-			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
-
-			// New color painting button.
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, SbIconButton );
-
-			// New photo painting button.
-			navigation.createCenterButtonData( centerButtonDataProvider, LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, SbIconButton );
 
 			// Old painting buttons.
 			len = data.length;
@@ -52,22 +53,12 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
 
-				navigation.createCenterButtonData( centerButtonDataProvider, str, null, SbBitmapButton, new Bitmap( vo.thumbnail ) );
+				navigation.createCenterButtonData( _dataProvider, str, null, SbBitmapButton, new Bitmap( vo.thumbnail ) );
 			}
+		}
 
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
-
-			// TODO: complete navigation refactor
-//			if( lastSelectedPaintingLabel == "" ) _buttonGroup.setSelectedButtonByIndex( 0 );
-//			else _buttonGroup.setSelectedButtonByLabel( lastSelectedPaintingLabel );
-//			navigation.addCenterButtonGroup( _buttonGroup );
-
-			// Show right button.
-			if( !HomeSettings.isStandalone ) {
-				navigation.setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
-			}
-
-			navigation.layout();
+		public function validateCenterButtons():void {
+			navigation.scroller.setDataProvider( _dataProvider );
 		}
 
 		public function getIdForSelectedInProgressPainting():String {

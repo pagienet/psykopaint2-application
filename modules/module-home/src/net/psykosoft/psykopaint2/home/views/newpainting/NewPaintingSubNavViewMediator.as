@@ -50,9 +50,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			view.navigation.buttonClickedCallback = onButtonClicked;
 
 			displaySavedPaintings();
-
-			if( NewPaintingSubNavView.lastScrollerPosition != 0 )
-			view.navigation.setScrollerPosition( NewPaintingSubNavView.lastScrollerPosition );
+			view.validateCenterButtons();
 
 			// From app.
 			notifySurfaceLoadedSignal.add( onSurfaceSet );
@@ -98,8 +96,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					paintingModel.focusedPaintingId = "uniqueUserId-" + label;
 					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + label );
 					requestEaselUpdateSignal.dispatch( vo, true, false );
-					NewPaintingSubNavView.lastSelectedPaintingLabel = label;
-					NewPaintingSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
 				}
 			}
 		}
@@ -117,19 +113,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			_waitingForSurfaceSet = true;
 			requestLoadSurfaceSignal.dispatch( 0 );
 		}
-
-		// -----------------------
-		// Overrride.
-		// -----------------------
-
-		override protected function onStateChange( newState:String ):void {
-			if( newState == StateType.TRANSITION_TO_HOME_MODE ){
-				NewPaintingSubNavView.lastSelectedPaintingLabel = "";
-				NewPaintingSubNavView.lastScrollerPosition = 0;
-			}
-			super.onStateChange( newState );
-		}
-
 
 		// -----------------------
 		// Private.

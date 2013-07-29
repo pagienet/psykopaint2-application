@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _lightPicker:StaticLightPicker;
 		private var _mainScene:ObjectContainer3D;
 
-		public static const HOME_BUNDLE_ID:String = "homeView";
+		public static const HOME_BUNDLE_ID:String = "HomeBundle";
 
 		private var _isFrozen:Boolean;
 		private var _freezeTexture:RefCountedTexture;
@@ -76,59 +76,15 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		// ---------------------------------------------------------------------
-		// Freezing.
-		// ---------------------------------------------------------------------
-
-		public function freeze( texture:RefCountedTexture ):void {
-
-			if( _isFrozen ) return;
-			unFreeze();
-			trace( this, "freeze()" );
-
-			disposeFreezeTexture();
-
-			_freezeTexture = texture;
-			var tex:NativeTexture = new NativeTexture(_freezeTexture.texture);
-			_view.background = tex;
-			var texHeight : Number = TextureUtil.getNextPowerOfTwo(CoreSettings.STAGE_HEIGHT);
-			_view.backgroundRect = new Rectangle(0, 0, 1, CoreSettings.STAGE_HEIGHT/texHeight);
-
-			selectScene( null );
-			_scrollCameraController.isEnabled = false;
-
-			_isFrozen = true;
-		}
-
-		public function unFreeze():void {
-
-			if( !_isFrozen ) return;
-			trace( this, "unFreeze()" );
-
-			_view.background = null;
-
-			disposeFreezeTexture();
-
-			selectScene( _mainScene );
-			_scrollCameraController.isEnabled = true;
-			_isFrozen = false;
-		}
-
-		private function disposeFreezeTexture():void {
-			if( _freezeTexture ) {
-				_freezeTexture.dispose();
-				_freezeTexture = null;
-			}
-		}
-
-		// ---------------------------------------------------------------------
 		// Creation.
 		// ---------------------------------------------------------------------
 
-		override protected function onDisabled():void {
-			dispose();
+		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
+			_stage3dProxy = stage3dProxy;
+			setup();
 		}
 
-		override protected function onSetup():void {
+		override protected function onEnabled():void {
 
 			// -----------------------
 			// Initialize view.
@@ -197,37 +153,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			_mainScene.addChild( _paintingManager );
 			_mainScene.addChild( _light );
 
-			// -------------------------
-			// Prepare external assets.
-			// -------------------------
-
-			initializeBundledAssets( HOME_BUNDLE_ID );
-
-			var rootUrl:String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
-			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
-
-			// Default paintings.
-			registerBundledAsset( "/home-packaged/away3d/frames/whiteFrame.png", FrameType.WHITE_FRAME );
-			registerBundledAsset( "/home-packaged/away3d/paintings/settingsFrame.png", "settingsPainting" );
-			// Other room stuff.
-			registerBundledAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", true );
-			registerBundledAsset( "/home-packaged/away3d/objects/settingsPanel.png", "settingsPanel" );
-			// Sample paintings. TODO: should be removed once we have save capabilities
-//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting0.jpg", "samplePainting0" );
-//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting1.jpg", "samplePainting1" );
-//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting2.jpg", "samplePainting2" );
-//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting3.jpg", "samplePainting3" );
-//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting4.jpg", "samplePainting4" );
-//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting5.jpg", "samplePainting5" );
-//			registerBundledAsset( "/home-packaged/away3d/paintings/sample_painting6.jpg", "samplePainting6" );
-			// Room assets.
-			registerBundledAsset( rootUrl + "away3d/wallpapers/fullsize/white" + extra + ".atf", "defaultWallpaper", true );
-			registerBundledAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", true );
-		}
-
-		override protected function onAssetsReady():void {
-
-			// Stuff that needs to be done after external assets are ready.
 			_room.initialize();
 			_paintingManager.createDefaultPaintings();
 
@@ -239,7 +164,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.render();
 		}
 
-		override protected function onDisposed():void {
+		override protected function onDisabled():void {
 
 			disposeFreezeTexture();
 
@@ -268,10 +193,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 		}
 
-		// ---------------------------------------------------------------------
-		// Interface.
-		// ---------------------------------------------------------------------
-
 		public function get paintingManager():PaintingManager {
 			return _paintingManager;
 		}
@@ -280,21 +201,64 @@ package net.psykosoft.psykopaint2.home.views.home
 			return _room;
 		}
 
-		public function get scrollCameraController():HScrollCameraController {
-			return _scrollCameraController;
+		// ---------------------------------------------------------------------
+		// Freezing.
+		// ---------------------------------------------------------------------
+
+		public function freeze( texture:RefCountedTexture ):void {
+
+			if( _isFrozen ) return;
+			unFreeze();
+			trace( this, "freeze()" );
+
+			disposeFreezeTexture();
+
+			_freezeTexture = texture;
+			var tex:NativeTexture = new NativeTexture(_freezeTexture.texture);
+			_view.background = tex;
+			var texHeight : Number = TextureUtil.getNextPowerOfTwo(CoreSettings.STAGE_HEIGHT);
+			_view.backgroundRect = new Rectangle(0, 0, 1, CoreSettings.STAGE_HEIGHT/texHeight);
+
+			selectScene( null );
+			_scrollCameraController.isEnabled = false;
+
+			_isFrozen = true;
 		}
 
-		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
-			_stage3dProxy = stage3dProxy;
-			setup();
+		public function unFreeze():void {
+
+			if( !_isFrozen ) return;
+			trace( this, "unFreeze()" );
+
+			_view.background = null;
+
+			disposeFreezeTexture();
+
+			selectScene( _mainScene );
+			_scrollCameraController.isEnabled = true;
+			_isFrozen = false;
 		}
+
+		private function disposeFreezeTexture():void {
+			if( _freezeTexture ) {
+				_freezeTexture.dispose();
+				_freezeTexture = null;
+			}
+		}
+
+		public function get isFrozen():Boolean {
+			return _isFrozen;
+		}
+
+		// ---------------------------------------------------------------------
+		// Interface.
+		// ---------------------------------------------------------------------
 
 		public function renderScene( target:Texture ):void {
 
 //			trace( this, "rendering 3d? enabled: " + _isEnabled + ", assets loaded: " + _assetsLoaded + ", view: " + _view );
 
 			if( !_isEnabled ) return;
-			if( !_assetsLoaded ) return; // Bounces off 3d rendering when the scene is not ready or active.
 			if( !_view.parent ) return;
 
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
@@ -303,14 +267,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_scrollCameraController.update();
 			_view.render( target );
-		}
-
-		public function get zoomCameraController():ZoomCameraController {
-			return _zoomCameraController;
-		}
-
-		public function get isFrozen():Boolean {
-			return _isFrozen;
 		}
 
 		public function get easelRect():Rectangle {
@@ -324,12 +280,24 @@ package net.psykosoft.psykopaint2.home.views.home
 			return rect;
 		}
 
+		// ---------------------------------------------------------------------
+		// Camera control.
+		// ---------------------------------------------------------------------
+
 		public function dockAtCurrentPainting():void {
 			trace( this, "docking at painting: " + _scrollCameraController.positionManager.closestSnapPointIndex );
 			var framedPainting:GalleryPainting = _paintingManager.getPaintingAtIndex( _scrollCameraController.positionManager.closestSnapPointIndex );
 			var plane:Mesh = framedPainting.painting;
 			var pos:Vector3D = HomeViewUtils.calculateCameraYZToFitPlaneOnViewport( plane, _view );
 			_zoomCameraController.setYZ( pos.y, pos.z );
+		}
+
+		public function get zoomCameraController():ZoomCameraController {
+			return _zoomCameraController;
+		}
+
+		public function get scrollCameraController():HScrollCameraController {
+			return _scrollCameraController;
 		}
 
 		// ---------------------------------------------------------------------
