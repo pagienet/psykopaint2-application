@@ -8,6 +8,8 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneConstructionSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
@@ -85,6 +87,8 @@ package net.psykosoft.psykopaint2.home.config
 	   		_injector.map( RequestWallpaperChangeSignal ).asSingleton();
 	   		_injector.map( NotifyHomeModuleSetUpSignal ).asSingleton();
 	   		_injector.map( NotifyHomeModuleDestroyedSignal ).asSingleton();
+	   		_injector.map( RequestHomeSceneConstructionSignal ).asSingleton();
+	   		_injector.map( RequestHomeIntroSignal ).asSingleton();
 		}
 
 		// -----------------------

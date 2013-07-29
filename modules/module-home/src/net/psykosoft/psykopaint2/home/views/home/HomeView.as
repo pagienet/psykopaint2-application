@@ -75,16 +75,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			zoomCompletedSignal = new Signal();
 		}
 
-		// ---------------------------------------------------------------------
-		// Creation.
-		// ---------------------------------------------------------------------
+		public function buildScene( stage3dProxy:Stage3DProxy ):void {
 
-		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
 			_stage3dProxy = stage3dProxy;
-			setup();
-		}
-
-		override protected function onEnabled():void {
 
 			// -----------------------
 			// Initialize view.
@@ -120,10 +113,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Initialize objects.
 			// -----------------------
 
-			// Visualize scene origin.
-//			var tri:Trident = new Trident( 500 );
-//			_view.scene.addChild( tri );
-
 			_light = new DirectionalLight( -1, -1, 2 );
 			_light.ambient = 1;
 			_light.color = 0x989589;
@@ -157,14 +146,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			_paintingManager.createDefaultPaintings();
 
 			// Always start at easel.
-			_scrollCameraController.jumpToSnapPointIndex( 1 ); // Jump to easel.
+			_scrollCameraController.jumpToSnapPointIndex( 1 );
 
 			// TODO: needed?
 			_stage3dProxy.clear();
 			_view.render();
 		}
 
-		override protected function onDisabled():void {
+		public function destroyScene():void {
 
 			disposeFreezeTexture();
 

@@ -28,6 +28,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneConstructionSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	import org.gestouch.events.GestureEvent;
@@ -82,12 +84,17 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyHomeModuleReadySignal:NotifyHomeViewReadySignal;
 
+		[Inject]
+		public var requestHomeSceneConstructionSignal:RequestHomeSceneConstructionSignal;
+
+		[Inject]
+		public var requestHomeIntroSignal:RequestHomeIntroSignal;
+
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
 		private var _dockedAtPaintingIndex:int = -1;
 
 		private var _snapshotPromise:SnapshotPromise;
-		private var _firstZoomOutRan:Boolean;
 
 		override public function initialize():void {
 
@@ -95,7 +102,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			super.initialize();
 			registerView( view );
 			_freezingStates = new Vector.<String>();
-			view.stage3dProxy = stage3dProxy;
 
 			// Fully active states.
 			registerEnablingState( StateType.HOME );
@@ -128,6 +134,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
 			requestEaselRectInfoSignal.add( onEaselRectInfoRequested );
 			requestHomeViewScrollSignal.add( onScrollRequested );
+			requestHomeSceneConstructionSignal.add( onBuildSceneRequest );
+			requestHomeIntroSignal.add( onIntroRequested );
 
 			// From view.
 			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
@@ -143,6 +151,16 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onBuildSceneRequest():void {
+			view.buildScene( stage3dProxy );
+		}
+
+		private function onIntroRequested():void {
+			view.scrollCameraController.jumpToSnapPointIndex( view.paintingManager.homePaintingIndex );
+			view.dockAtCurrentPainting();
+			view.zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
+		}
 
 		private function onEaselRectInfoRequested():void {
 			notifyEaselRectInfoSignal.dispatch( view.easelRect );
@@ -194,8 +212,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			else { // NO
 
-				view.unFreeze();
-
 				if( newState == StateType.PREPARE_FOR_PAINT_MODE ) {
 
 					// Looking at easel?
@@ -205,13 +221,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 					_snapshotPromise = applicationRenderer.requestSnapshot();
 					_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
-				}
-
-				if( !_firstZoomOutRan && newState == StateType.HOME ) {
-					view.scrollCameraController.jumpToSnapPointIndex( view.paintingManager.homePaintingIndex );
-					view.dockAtCurrentPainting();
-					view.zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
-					_firstZoomOutRan = true;
 				}
 			}
 		}
@@ -267,8 +276,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			trace( this, "closest painting changed to index: " + paintingIndex );
 			_dockedAtPaintingIndex = paintingIndex;
-
-			if( !_firstZoomOutRan ) return;
 
 			// Variable.
 			var homePaintingIndex:uint = view.paintingManager.homePaintingIndex;

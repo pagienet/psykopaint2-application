@@ -10,8 +10,16 @@ package net.psykosoft.psykopaint2.home.commands
 		[Inject]
 		public var notifyHomeModuleSetUpSignal:NotifyHomeModuleSetUpSignal;
 
+		private static var _timesRan:uint = 0;
+
 		override public function prepare():void {
-		    add( LoadHomeBundledAssetsCommand );
+
+			add( LoadHomeBundledAssetsCommand );
+			add( BuildHomeSceneCommand );
+			if( _timesRan == 0 ) add( HomeIntroAnimationCommand );
+
+			_timesRan++;
+
 			registerCompleteCallback( onMacroComplete );
 		}
 

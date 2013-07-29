@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		[Inject]
 		public var requestStateChangeSignal:RequestStateChangeSignal_OLD_TO_REMOVE;
 
-		private var _enablingStates:Vector.<String>;
+		protected var _enablingStates:Vector.<String>;
 		private var _view:ViewBase;
 
 		public var manageStateChanges:Boolean = true;
