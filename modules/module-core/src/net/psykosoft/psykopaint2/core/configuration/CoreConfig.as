@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
@@ -169,7 +169,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestNavigationToggleSignal ).asSingleton();
 			_injector.map( RequestNavigationAutohideModeSignal ).asSingleton();
 			_injector.map( NotifyNavigationMovingSignal ).asSingleton();
-			_injector.map( NotifyPaintingDataRetrievedSignal ).asSingleton();
+			_injector.map( NotifyPaintingDataSetSignal ).asSingleton();
 			_injector.map( RequestPaintingActivationSignal ).asSingleton();
 			_injector.map( NotifyPaintingActivatedSignal ).asSingleton();
 			_injector.map( RequestDrawingCoreResetSignal ).asSingleton();

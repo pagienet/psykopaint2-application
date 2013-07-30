@@ -1,10 +1,11 @@
 package net.psykosoft.psykopaint2.core.commands
 {
 
+	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
+
 	import flash.events.Event;
 	import flash.filesystem.File;
 
-	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.io.FolderReadUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
@@ -12,13 +13,8 @@ package net.psykosoft.psykopaint2.core.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 
-	import robotlegs.bender.framework.api.IContext;
-
-	public class RetrievePaintingDataCommand extends TracingCommand
+	public class RetrievePaintingDataCommand extends AsyncCommand
 	{
-		[Inject]
-		public var context:IContext;
-
 		[Inject]
 		public var paintingModel:PaintingModel;
 
@@ -62,11 +58,11 @@ package net.psykosoft.psykopaint2.core.commands
 			// Detain command and start reading the painting files.
 			if( _numPaintingFiles > 0 ) {
 				trace( this, "starting to read painting files... ( " + _numPaintingFiles + " )" );
-				context.detain( this );
 				readNextFile();
 			}
 			else {
 				paintingModel.setPaintingCollection( _paintingVos );
+				dispatchComplete( true );
 			}
 		}
 
@@ -108,7 +104,7 @@ package net.psykosoft.psykopaint2.core.commands
 			else {
 				trace( this, "all painting files read. Retrieved " + _paintingVos.length + " usable painting files." );
 				if( _paintingVos.length > 0 ) paintingModel.setPaintingCollection( _paintingVos );
-				context.release();
+				dispatchComplete( true );
 			}
 		}
 	}

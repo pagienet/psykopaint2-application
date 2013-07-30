@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
@@ -30,6 +30,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneConstructionSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneDestructionSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	import org.gestouch.events.GestureEvent;
@@ -55,7 +56,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var stage3dProxy:Stage3DProxy;
 
 		[Inject]
-		public var notifyPaintingDataRetrievedSignal:NotifyPaintingDataRetrievedSignal;
+		public var notifyPaintingDataRetrievedSignal:NotifyPaintingDataSetSignal;
 
 		[Inject]
 		public var paintingModel:PaintingModel;
@@ -89,6 +90,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var requestHomeIntroSignal:RequestHomeIntroSignal;
+
+		[Inject]
+		public var requestHomeSceneDestructionSignal:RequestHomeSceneDestructionSignal;
 
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
@@ -136,6 +140,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHomeViewScrollSignal.add( onScrollRequested );
 			requestHomeSceneConstructionSignal.add( onBuildSceneRequest );
 			requestHomeIntroSignal.add( onIntroRequested );
+			requestHomeSceneDestructionSignal.add( onDestroySceneRequest );
 
 			// From view.
 			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
@@ -156,10 +161,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.buildScene( stage3dProxy );
 		}
 
+		private function onDestroySceneRequest():void {
+			view.destroyScene();
+		}
+
 		private function onIntroRequested():void {
-			view.scrollCameraController.jumpToSnapPointIndex( view.paintingManager.homePaintingIndex );
-			view.dockAtCurrentPainting();
-			view.zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
+			view.introAnimation();
 		}
 
 		private function onEaselRectInfoRequested():void {

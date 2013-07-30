@@ -19,21 +19,18 @@ package net.psykosoft.psykopaint2.core
 
 	import net.psykosoft.notifications.NotificationsExtension;
 	import net.psykosoft.notifications.events.NotificationExtensionEvent;
-	import net.psykosoft.psykopaint2.base.utils.shakenbake.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
+	import net.psykosoft.psykopaint2.base.utils.shakenbake.ShakeAndBakeConnector;
 	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.debug.UndisposedObjects;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 
@@ -319,10 +316,6 @@ package net.psykosoft.psykopaint2.core
 
 				startEnterFrame();
 			}
-
-			// Start loading painting data.
-			_injector.getInstance( RequestPaintingDataRetrievalSignal ).dispatch();
-//			_injector.getInstance( NotifyPaintingDataRetrievedSignal ).addOnce( testLoadingAPainting ); // Just for testing.
 
 			moduleReadySignal.dispatch();
 		}

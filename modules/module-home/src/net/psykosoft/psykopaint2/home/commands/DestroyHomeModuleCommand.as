@@ -1,17 +1,29 @@
 package net.psykosoft.psykopaint2.home.commands
 {
-	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
-	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
-	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 
-	public class DestroyHomeModuleCommand extends TracingCommand
+	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
+
+	import net.psykosoft.psykopaint2.core.commands.DisposePaintingDataCommand;
+
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
+
+	public class DestroyHomeModuleCommand extends SequenceMacro
 	{
 		[Inject]
 		public var notifyHomeModuleDestroyedSignal : NotifyHomeModuleDestroyedSignal;
 
-		override public function execute():void
-		{
-			notifyHomeModuleDestroyedSignal.dispatch();
+		override public function prepare():void {
+			// TODO: use a command to clean up all bulkloader resources?
+			add( DestroyHomeSceneCommand );
+			add( DisposePaintingDataCommand );
+			registerCompleteCallback( onMacroComplete );
+		}
+
+		private function onMacroComplete( success:Boolean ):void {
+			if( success ) notifyHomeModuleDestroyedSignal.dispatch();
+			else {
+				throw new Error( "Error destroying the home module." );
+			}
 		}
 	}
 }
