@@ -11,13 +11,11 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		// Declared in Flash.
 		public var label:Sprite;
 		public var icon:MovieClip;
-		public var pins:Sprite;
 
 		public function SbPolaroidButton() {
 			super();
 			super.setLabel( label );
 			super.setIcon( icon );
-			super.setPins( pins );
 			label.visible = false;
 		}
 
@@ -30,9 +28,6 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		}
 
 		override protected function updateSelected():void {
-			var frame:uint = _selected + 1;
-			_pin1.gotoAndStop( frame );
-			_pin2.gotoAndStop( frame );
 		}
 	}
 }

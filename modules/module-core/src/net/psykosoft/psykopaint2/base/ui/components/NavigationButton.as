@@ -18,14 +18,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _label:PsykoLabel;
 		protected var _icon:MovieClip;
 		protected var _iconBitmap:Bitmap;
-		protected var _pins:Sprite;
-		protected var _pin1:MovieClip;
-		protected var _pin2:MovieClip;
 		protected var _selectable:Boolean;
 		protected var _selected:Boolean;
-
-		private var _initialPinX1:Number;
-		private var _initialPinX2:Number;
 
 		public function NavigationButton() {
 			super();
@@ -43,17 +37,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected function setIcon( icon:MovieClip ):void {
 			_icon = icon;
 			_icon.stop();
-		}
-
-		protected function setPins( pins:Sprite ):void {
-			_pins = pins;
-			_pin1 = _pins.getChildByName( "pin1" ) as MovieClip;
-			_pin2 = _pins.getChildByName( "pin2" ) as MovieClip;
-			_pin1.stop();
-			_pin2.stop();
-			_initialPinX1 = _pin1.x;
-			_initialPinX2 = _pin2.x;
-			randomizePinsAndRotation();
 		}
 
 		protected function updateSelected():void {
@@ -137,23 +120,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		private function scaleIcon( value:Number ):void {
 			_icon.scaleX = _icon.scaleY = value;
-		}
-
-		private function randomizePinsAndRotation():void {
-
-			if( !_pins.visible ) return;
-			_pin1.visible = _pin2.visible = false;
-
-			// Random rotation.
-			_icon.rotation = rand( 1, 2 ) * ( Math.random() > 0.5 ? 1 : -1 );
-
-			// Decide pin visibility depending on angle.
-			if( _icon.rotation < 0 ) _pin2.visible = true;
-			else _pin1.visible = true;
-
-			// Random displacement of pins.
-			_pin1.x = _initialPinX1 + rand( -5, 5 );
-			_pin2.x = _initialPinX2 + rand( -5, 5 );
 		}
 
 		private function rand( min:Number, max:Number ):Number {
