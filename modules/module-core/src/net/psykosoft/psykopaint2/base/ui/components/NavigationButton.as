@@ -19,8 +19,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _icon:MovieClip;
 		protected var _iconBitmap:Bitmap;
 		protected var _pins:Sprite;
-		protected var _pin1:Sprite;
-		protected var _pin2:Sprite;
+		protected var _pin1:MovieClip;
+		protected var _pin2:MovieClip;
 		protected var _selectable:Boolean;
 		protected var _selected:Boolean;
 
@@ -47,8 +47,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		protected function setPins( pins:Sprite ):void {
 			_pins = pins;
-			_pin1 = _pins.getChildByName( "pin1" ) as Sprite;
-			_pin2 = _pins.getChildByName( "pin2" ) as Sprite;
+			_pin1 = _pins.getChildByName( "pin1" ) as MovieClip;
+			_pin2 = _pins.getChildByName( "pin2" ) as MovieClip;
+			_pin1.stop();
+			_pin2.stop();
 			_initialPinX1 = _pin1.x;
 			_initialPinX2 = _pin2.x;
 			randomizePinsAndRotation();
