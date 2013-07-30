@@ -82,7 +82,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var easelRectModel : EaselRectModel;
 
-		private var _waitingForFreezeSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
 		private var _dockedAtPaintingIndex:int = -1;
 
@@ -206,10 +205,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function freezeView():void {
 			trace( this, "freezing..." );
-			if( !view.isEnabled ) return;
-			if( view.isFrozen )
-			if( _waitingForFreezeSnapshot ) return;
-			_waitingForFreezeSnapshot = true;
+			if( !view.isEnabled || view.isFrozen ) return;
 			_snapshotPromise = applicationRenderer.requestSnapshot();
 			_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
 		}
@@ -218,12 +214,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_snapshotPromise.removeEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
 
-			// Freezing?
-			if( _waitingForFreezeSnapshot ) {
-				trace( this, "applying freeze snapshot..." );
-				view.freeze( _snapshotPromise.texture.newReference() );
-				_waitingForFreezeSnapshot = false;
-			}
+			trace( this, "applying freeze snapshot..." );
+			view.freeze( _snapshotPromise.texture.newReference() );
 
 			_snapshotPromise.dispose();
 			_snapshotPromise = null;
