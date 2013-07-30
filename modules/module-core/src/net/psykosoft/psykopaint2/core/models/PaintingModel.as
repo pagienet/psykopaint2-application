@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.models
 		private var _paintingData:Array;
 		private var _sortingDirty:Boolean;
 		private var _sortedData:Vector.<PaintingInfoVO>;
+		private var _activePaintingId:String;
 
 		public function PaintingModel() {
 			super();
@@ -105,6 +106,14 @@ package net.psykosoft.psykopaint2.core.models
 				if( paintingVOA.id > paintingVOB.id ) return -1;
 				else return 1;
 			}
+		}
+
+		public function get activePaintingId():String {
+			return _activePaintingId;
+		}
+
+		public function set activePaintingId( value:String ):void {
+			_activePaintingId = value;
 		}
 	}
 }

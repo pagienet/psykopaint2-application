@@ -40,7 +40,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		[Inject]
 		public var notifySurfaceLoadedSignal:NotifySurfaceLoadedSignal;
 
-		private var _focusedPaintingId:String;
 		private var _waitingForSurfaceSet:Boolean;
 
 		override public function initialize():void {
@@ -72,8 +71,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
 			if( data && data.length > 0 ) {
 				view.createInProgressPaintings( data );
-				_focusedPaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
-				var vo:PaintingInfoVO = paintingModel.getVoWithId( _focusedPaintingId );
+				paintingModel.activePaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
+				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
 				requestEaselUpdateSignal.dispatch( vo, false, false );
 			}
 
@@ -93,7 +92,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				case NewPaintingSubNavView.LBL_NEW: {
 					PaintModeModel.activeMode = PaintModeType.COLOR_MODE;
 					requestDrawingCoreResetSignal.dispatch();
-					_focusedPaintingId = PaintingInfoVO.DEFAULT_VO_ID;
+					paintingModel.activePaintingId = PaintingInfoVO.DEFAULT_VO_ID;
 					requestStateChange__OLD_TO_REMOVE( StateType.HOME_PICK_SURFACE );
 					break;
 				}
@@ -102,16 +101,16 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				case NewPaintingSubNavView.LBL_NEW_PHOTO: {
 					PaintModeModel.activeMode = PaintModeType.PHOTO_MODE;
 					requestDrawingCoreResetSignal.dispatch();
-					_focusedPaintingId = PaintingInfoVO.DEFAULT_VO_ID;
+					paintingModel.activePaintingId = PaintingInfoVO.DEFAULT_VO_ID;
 					pickDefaultSurfaceAndContinueToPickImage();
 					break;
 				}
 
 				// Continue painting.
 				case NewPaintingSubNavView.LBL_CONTINUE: {
-					trace( "focused: " + _focusedPaintingId );
-					if( _focusedPaintingId != "uniqueUserId-" ) {
-						requestPaintingActivationSignal.dispatch( _focusedPaintingId );
+					trace( "focused: " + paintingModel.activePaintingId );
+					if( paintingModel.activePaintingId != "uniqueUserId-" ) {
+						requestPaintingActivationSignal.dispatch( paintingModel.activePaintingId );
 						requestInteractionBlockSignal.dispatch( true );
 					}
 					break;
@@ -119,7 +118,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				//  Paintings.
 				default: {
-					_focusedPaintingId = "uniqueUserId-" + label;
+					paintingModel.activePaintingId = "uniqueUserId-" + label;
 					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + label );
 					requestEaselUpdateSignal.dispatch( vo, true, false );
 				}
@@ -151,8 +150,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
 			if( data && data.length > 0 ) {
 				view.createInProgressPaintings( data );
-				_focusedPaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
-				var vo:PaintingInfoVO = paintingModel.getVoWithId( _focusedPaintingId );
+				paintingModel.activePaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
+				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
 				requestEaselUpdateSignal.dispatch( vo, false, false );
 			}
 		}

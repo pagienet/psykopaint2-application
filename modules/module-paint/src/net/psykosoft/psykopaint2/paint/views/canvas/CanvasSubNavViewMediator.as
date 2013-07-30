@@ -45,12 +45,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
 
-		[Inject]
-		public var notifyPaintingActivatedSignal:NotifyPaintingActivatedSignal;
-
 		private var _incomingState:String;
 		private var _waitingForSaveToContinueToHomeState:Boolean;
-		private var _focusedPaintingId:String;
 
 		override public function initialize():void {
 
@@ -60,7 +56,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			// From app.
 			notifyPaintingSavedSignal.add( onPaintingSaved );
-			notifyPaintingActivatedSignal.add( onPaintingActivated );
 
 			// Remember incoming state for when exiting the paint module.
 			_incomingState = stateModel.getLastStateOfCategory( "home" );
@@ -79,7 +74,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					_waitingForSaveToContinueToHomeState = true;
 
 					// Pick one below to enable/disable auto save when leaving home mode.
-					requestPaintingSaveSignal.dispatch( _focusedPaintingId, true );
+					requestPaintingSaveSignal.dispatch( paintingModel.activePaintingId, true );
 //					onPaintingSaved();
 
 					break;
@@ -87,8 +82,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case CanvasSubNavView.LBL_DESTROY:
 				{
-					if( _focusedPaintingId != PaintingInfoVO.DEFAULT_VO_ID && _focusedPaintingId != "" ) {
-						requestPaintingDeletionSignal.dispatch( _focusedPaintingId );
+					if( paintingModel.activePaintingId != PaintingInfoVO.DEFAULT_VO_ID && paintingModel.activePaintingId != "" ) {
+						requestPaintingDeletionSignal.dispatch( paintingModel.activePaintingId );
 					}
 					break;
 				}
@@ -141,10 +136,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// ---------------------------------------------------------------------
 		// From app.
 		// ---------------------------------------------------------------------
-
-		private function onPaintingActivated( id:String ):void {
-			_focusedPaintingId = id;
-		}
 
 		private function onPaintingSaved():void {
 			if( _waitingForSaveToContinueToHomeState ) {
