@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.app.config
 	import net.psykosoft.psykopaint2.app.states.BookState;
 	import net.psykosoft.psykopaint2.app.states.CropState;
 	import net.psykosoft.psykopaint2.app.states.HomeState;
-	import net.psykosoft.psykopaint2.app.states.IntroToHomeState;
+	import net.psykosoft.psykopaint2.app.states.TransitionSplashToHomeState;
 	import net.psykosoft.psykopaint2.app.states.PaintState;
 	import net.psykosoft.psykopaint2.app.states.TransitionHomeToPaintState;
 	import net.psykosoft.psykopaint2.home.HomeModule;
@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.app.config
 		// -----------------------
 
 		private function mapSingletons():void {
-			injector.map(IntroToHomeState).asSingleton();
+			injector.map(TransitionSplashToHomeState).asSingleton();
 			injector.map(HomeState).asSingleton();
 			injector.map(CropState).asSingleton();
 			injector.map(PaintState).asSingleton();

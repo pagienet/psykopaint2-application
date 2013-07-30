@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.base.Object3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.events.Object3DEvent;
 	import away3d.hacks.NativeTexture;
 	import away3d.lights.DirectionalLight;
 	import away3d.materials.TextureMaterial;
@@ -67,12 +68,14 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public var closestPaintingChangedSignal:Signal;
 		public var zoomCompletedSignal:Signal;
+		public var easelRectChanged:Signal;
 
 		public function HomeView() {
 			super();
 			scalesToRetina = false;
 			closestPaintingChangedSignal = new Signal();
 			zoomCompletedSignal = new Signal();
+			easelRectChanged = new Signal();
 		}
 
 		public function buildScene( stage3dProxy:Stage3DProxy ):void {
@@ -129,6 +132,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_zoomCameraController.setCamera( _view.camera, cameraTarget );
 			_zoomCameraController.setYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z );
 			_zoomCameraController.yzChangedSignal.add( onZoomControllerChange );
+			_view.camera.addEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraSceneTransformChanged);
 			_scrollCameraController.stage = stage;
 			_view.camera.z = HomeSettings.DEFAULT_CAMERA_Z;
 
@@ -151,6 +155,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: needed?
 			_stage3dProxy.clear();
 			_view.render();
+		}
+
+		private function onCameraSceneTransformChanged(event : Object3DEvent) : void
+		{
+			easelRectChanged.dispatch();
 		}
 
 		public function destroyScene():void {

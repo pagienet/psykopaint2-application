@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.app.states
 
 	use namespace ns_state_machine;
 
-	public class IntroToHomeState extends State
+	public class TransitionSplashToHomeState extends State
 	{
 		[Inject]
 		public var requestStateChangeSignal : RequestStateChangeSignal_OLD_TO_REMOVE;
@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var homeState : HomeState;
 
-		public function IntroToHomeState()
+		public function TransitionSplashToHomeState()
 		{
 
 		}

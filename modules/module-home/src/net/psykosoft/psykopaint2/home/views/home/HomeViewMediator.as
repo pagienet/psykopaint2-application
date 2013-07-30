@@ -13,16 +13,15 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.SnapshotPromise;
+	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataRetrievedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -63,12 +62,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
 
 		[Inject]
-		public var requestEaselRectInfoSignal:RequestEaselRectInfoSignal;
-
-		[Inject]
-		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
-
-		[Inject]
 		public var applicationRenderer:ApplicationRenderer;
 
 		[Inject]
@@ -85,6 +78,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var requestHomeIntroSignal:RequestHomeIntroSignal;
+
+		[Inject]
+		public var easelRectModel : EaselRectModel;
 
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
@@ -128,7 +124,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyNavigationToggleSignal.add( onNavigationToggled );
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
-			requestEaselRectInfoSignal.add( onEaselRectInfoRequested );
 			requestHomeViewScrollSignal.add( onScrollRequested );
 			requestHomeSceneConstructionSignal.add( onBuildSceneRequest );
 			requestHomeIntroSignal.add( onIntroRequested );
@@ -137,6 +132,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
 			view.zoomCompletedSignal.add( onViewZoomComplete );
 			view.assetsReadySignal.add( onViewAssetsReady );
+			view.easelRectChanged.add( onEaselRectChanged );
 		}
 
 		private function registerFreezingState( stateName:String ):void {
@@ -158,8 +154,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
 		}
 
-		private function onEaselRectInfoRequested():void {
-			notifyEaselRectInfoSignal.dispatch( view.easelRect );
+		private function onEaselRectChanged():void {
+			easelRectModel.rect = view.easelRect;
 		}
 
 		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animate:Boolean, dispose:Boolean ):void {

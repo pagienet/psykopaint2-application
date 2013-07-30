@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var canvasModel:CanvasModel;
 
 		[Inject]
-		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
+		public var notifyEaselRectUpdateSignal:NotifyEaselRectUpdateSignal;
 
 		[Inject]
 		public var requestCleanUpPaintModuleMemorySignal : RequestDestroyPaintModuleSignal;
@@ -154,7 +154,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyModuleActivatedSignal.add( onDrawingCoreModuleActivated );
 
 			// From app.
-			notifyEaselRectInfoSignal.add( onEaselRectInfo );
+			notifyEaselRectUpdateSignal.add( onEaselRectInfo );
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyHomeModuleReadySignal.add( onHomeModuleReady );

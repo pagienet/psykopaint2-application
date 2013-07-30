@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleCommand;
 
 	use namespace ns_state_machine;
@@ -24,6 +25,8 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestSetupPaintModuleSignal : RequestSetupPaintModuleCommand;
 
+		[Inject]
+		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
 
 		public function TransitionHomeToPaintState()
 		{
@@ -49,6 +52,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function deactivate() : void
 		{
+			requestDestroyHomeModuleSignal.dispatch();
 		}
 	}
 }
