@@ -17,5 +17,10 @@ package net.psykosoft.psykopaint2.core.views.components.label
 			super.setBackground( background );
 			super.setTextfield( textfield );
 		}
+
+		override protected function validateDimensions():void {
+			enforceTextWidth();
+			matchBackgroundWidthToText();
+		}
 	}
 }

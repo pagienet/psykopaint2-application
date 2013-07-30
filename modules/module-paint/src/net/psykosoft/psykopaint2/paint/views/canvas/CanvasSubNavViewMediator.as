@@ -10,13 +10,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 
-	public class CanvasSubNavViewMediator extends MediatorBase
+	public class CanvasSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:CanvasSubNavView;
@@ -55,11 +55,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
-			manageStateChanges = false;
-			manageMemoryWarnings = false;
-			view.navigation.buttonClickedCallback = onButtonClicked;
+			super.initialize();
 
 			// From app.
 			notifyPaintingSavedSignal.add( onPaintingSaved );
@@ -74,7 +71,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// From view.
 		// ---------------------------------------------------------------------
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 
 				case CanvasSubNavView.LBL_HOME:

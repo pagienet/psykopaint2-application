@@ -3,9 +3,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 	import flash.display.Bitmap;
 	import flash.display.Stage;
-	import flash.events.MouseEvent;
-	
-	import net.psykosoft.psykopaint2.core.models.StateType;
+
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
@@ -13,7 +11,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 	
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.events.GestureEvent;
-	import org.gestouch.gestures.LongPressGesture;
 	import org.gestouch.gestures.PanGesture;
 	import org.gestouch.gestures.PanGestureDirection;
 	import org.gestouch.gestures.SwipeGesture;
@@ -38,10 +35,9 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		
 		private var _stage:Stage;
 		
-		public static var gesturesEnabled:Boolean = true;
+		private static var _gesturesEnabled:Boolean = true;
 		
 		public function GestureManager() {
-			
 		}
 		
 		[PostConstruct]
@@ -85,13 +81,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onTwoFingerSwipeRight( event:GestureEvent ):void {
-			if( !gesturesEnabled ) return;
+			if( !_gesturesEnabled ) return;
 			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_RIGHT, event );
 			notifyBlockingGestureSignal.dispatch( false );
 		}
 
 		private function onTwoFingerSwipeLeft( event:GestureEvent ):void {
-			if( !gesturesEnabled ) return;
+			if( !_gesturesEnabled ) return;
 			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_LEFT, event );
 			notifyBlockingGestureSignal.dispatch( false );
 		}
@@ -109,7 +105,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onHorizontalPanGestureBegan( event:GestureEvent ):void {
-			if ( gesturesEnabled )
+			if ( _gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN, event );
 		}
 
@@ -131,7 +127,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onVerticalPanGestureBegan( event:GestureEvent ):void {
-			if ( gesturesEnabled )
+			if ( _gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_BEGAN, event );
 		}
 
@@ -193,7 +189,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		private function onTransformGestureStarted( event:GestureEvent ):void {
-			if ( gesturesEnabled )
+			if ( _gesturesEnabled )
 			{
 				if (TransformGesture( event.target).touchesCount > 1 )
 				{
@@ -276,12 +272,20 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		private function onDoubleTapGestureRecognized( event:GestureEvent ):void {
-			if ( gesturesEnabled )
+			if ( _gesturesEnabled )
 			{
 				notifyGlobalGestureSignal.dispatch( GestureType.DOUBLE_TAP_GESTURE_RECOGNIZED, event );
 			}
 		}
-		
-		
+
+
+		public static function get gesturesEnabled():Boolean {
+			return _gesturesEnabled;
+		}
+
+		public static function set gesturesEnabled( value:Boolean ):void {
+			trace( "GestureManager - gesturesEnabled: " + value );
+			_gesturesEnabled = value;
+		}
 	}
 }

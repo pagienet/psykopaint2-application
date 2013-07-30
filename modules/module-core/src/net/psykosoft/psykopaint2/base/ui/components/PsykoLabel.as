@@ -20,14 +20,19 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function set text( value:String ):void {
 			_textfield.text = value;
-			invalidateDimensions();
+			validateDimensions();
 		}
 
 		public function get text():String {
 			return _textfield.text;
 		}
 
-		protected function invalidateDimensions():void {
+		protected function validateDimensions():void {
+			enforceTextWidth();
+			_textfield.x = -_textfield.width / 2;
+		}
+
+		protected function enforceTextWidth():void {
 			_textfield.width = _textfield.textWidth + 10;
 			_textfield.height = 1.25 * _textfield.textHeight;
 		}

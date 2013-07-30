@@ -4,12 +4,12 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import flash.display.Bitmap;
 
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbBitmapButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbIconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 
 	public class NewPaintingSubNavView extends SubNavigationViewBase
 	{
@@ -21,27 +21,27 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		public function NewPaintingSubNavView() {
 			super();
+			id = "NewPaintingSubNavView";
 		}
 
 		override protected function onEnabled():void {
-			navigation.setHeader( "" );
+			setHeader( "" );
 
 			_dataProvider = new Vector.<ISnapListData>();
 
-			// New color painting button.
-			navigation.createCenterButtonData( _dataProvider, LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, SbIconButton );
-
-			// New photo painting button.
-			navigation.createCenterButtonData( _dataProvider, LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, SbIconButton );
-
-			// Show right button.
-			if( !HomeSettings.isStandalone ) {
-				navigation.setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
-			}
+			setRightButton( LBL_CONTINUE, ButtonIconType.CONTINUE );
 		}
 
-		public function setInProgressPaintings( data:Vector.<PaintingInfoVO> ):void {
+		public function createNewPaintingButtons():void {
 
+			// New color painting button.
+			createCenterButton( LBL_NEW, ButtonIconType.NEW_PAINTING_MANUAL, SbIconButton );
+
+			// New photo painting button.
+			createCenterButton( LBL_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, SbIconButton );
+		}
+
+		public function createInProgressPaintings( data:Vector.<PaintingInfoVO> ):void {
 			var i:uint;
 			var len:uint;
 
@@ -53,13 +53,19 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
 
-				navigation.createCenterButtonData( _dataProvider, str, null, SbBitmapButton, new Bitmap( vo.thumbnail ) );
+				createCenterButton( str, null, SbBitmapButton, new Bitmap( vo.thumbnail ), true );
+
+
 			}
+			// TODO: complete navigation refactor
+			//			if( lastSelectedPaintingLabel == "" ) _buttonGroup.setSelectedButtonByIndex( 0 );
+			//			else _buttonGroup.setSelectedButtonByLabel( lastSelectedPaintingLabel );
+			//			navigation.addCenterButtonGroup( _buttonGroup );
 		}
 
-		public function validateCenterButtons():void {
+		/*public function validateCenterButtons():void {
 			navigation.scroller.setDataProvider( _dataProvider );
-		}
+		} */
 
 		public function getIdForSelectedInProgressPainting():String {
 			// TODO: complete navigation refactor

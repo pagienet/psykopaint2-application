@@ -132,8 +132,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		override public function initialize():void {
 
-			super.initialize();
 			registerView( view );
+			super.initialize();
 			registerEnablingState( StateType.PAINT );
 			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
 			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );

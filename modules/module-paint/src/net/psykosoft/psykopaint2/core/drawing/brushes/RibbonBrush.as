@@ -32,12 +32,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			rng = new LCG( Math.random() * 0xffffff );
 			type = BrushType.RIBBON;
 			
-			appendVO.verticesAndUV = new Vector.<Number>(24,true);
+			_appendVO.verticesAndUV = new Vector.<Number>(24,true);
 			
 			//x,y,u,v,d1,d2,d3,unused
 			for ( var i:int = 0; i < 24; i++ )
 			{
-				appendVO.verticesAndUV[i] = 0;
+				_appendVO.verticesAndUV[i] = 0;
 			}
 
 			
@@ -78,7 +78,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			var overdrive:Number = 1.2;
 			var overlap:Number = 1;
-			var vertexUVData:Vector.<Number> = appendVO.verticesAndUV;
+			var vertexUVData:Vector.<Number> = _appendVO.verticesAndUV;
 			
 			
 			
@@ -138,9 +138,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			
 			
-			appendVO.point = point;
+			_appendVO.point = point;
 			
-			_brushMesh.append( appendVO );
+			_brushMesh.append( _appendVO );
 			
 				
 		}

@@ -429,7 +429,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		public function get paintAlpha() : Number
 		{
-			return _sourceTextureAlpha;
+			return _paintAlpha;
 		}
 
 		public function set paintAlpha(value : Number) : void

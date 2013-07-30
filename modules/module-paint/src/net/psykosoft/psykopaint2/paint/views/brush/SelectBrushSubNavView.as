@@ -1,8 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
-	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+	import net.psykosoft.psykopaint2.core.views.components.button.SbIconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class SelectBrushSubNavView extends SubNavigationViewBase
@@ -15,16 +15,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onEnabled():void {
-			navigation.setHeader( "Pick a Brush" );
-			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
-			navigation.setRightButton( LBL_EDIT_BRUSH, ButtonIconType.TWEAK_BRUSH );
-			navigation.layout();
+			setHeader( "Pick a Brush" );
+			setLeftButton( LBL_BACK, ButtonIconType.BACK );
+			setRightButton( LBL_EDIT_BRUSH, ButtonIconType.TWEAK_BRUSH );
 		}
 
 		public function setAvailableBrushes( availableBrushTypes:Vector.<String> ):void {
-			var len:uint = availableBrushTypes.length;
 
-			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
+			var len:uint = availableBrushTypes.length;
 
 			for( var i:uint; i < len; ++i ) {
 				var iconType:String;
@@ -54,10 +52,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					}
 				}
 
-				navigation.createCenterButtonData( centerButtonDataProvider, availableBrushTypes[ i ], iconType );
+				createCenterButton( availableBrushTypes[ i ], iconType, SbIconButton, null, true );
 			}
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
-			navigation.layout();
+
+			validateCenterButtons();
 		}
 
 		public function setSelectedBrush( activeBrushKit:String ):void {

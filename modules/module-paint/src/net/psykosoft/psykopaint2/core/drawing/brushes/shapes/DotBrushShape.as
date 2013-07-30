@@ -13,8 +13,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	{
 		public function DotBrushShape(context3D : Context3D)
 		{
-			super(context3D, "dot", 1);
-			this.size = 8;
+			super(context3D, "dot", 1,8);
 			_rotationRange = 0;
 		}
 

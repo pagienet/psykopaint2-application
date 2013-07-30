@@ -37,7 +37,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			
 			var uvBounds:Rectangle = appendVO.uvBounds;
 			var baseAngle:Number = appendVO.diagonalAngle; //Math.atan2(uvBounds.height,uvBounds.width);
-			var halfSize : Number = appendVO.size * Math.SQRT1_2;
+			var halfSize : Number = appendVO.size * appendVO.diagonalLength * 0.5;//appendVO.size * Math.SQRT1_2;
+			
+			//var halfSize : Number = appendVO.size * Math.SQRT1_2;
 			var angle : Number = appendVO.point.angle;
 			var cos1 : Number =   halfSize * Math.cos(  baseAngle + angle);
 			var sin1 : Number =  -halfSize * Math.sin(  baseAngle + angle);

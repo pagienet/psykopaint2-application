@@ -1,18 +1,17 @@
 package net.psykosoft.psykopaint2.home.views.settings
 {
 
-	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
 	import net.psykosoft.psykopaint2.base.utils.io.AtlasLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
-	import net.psykosoft.psykopaint2.base.utils.data.BitmapAtlas;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
-	public class WallpaperSubNavViewMediator extends MediatorBase
+	public class WallpaperSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:WallpaperSubNavView;
@@ -24,16 +23,29 @@ package net.psykosoft.psykopaint2.home.views.settings
 		private var _imageLoader:BinaryLoader; // Will load full size atf files.
 
 		override public function initialize():void {
-
-			// Init.
-			super.initialize();
 			registerView( view );
-			manageStateChanges = false;
-			manageMemoryWarnings = false;
-			view.navigation.buttonClickedCallback = onButtonClicked;
+			super.initialize();
+		}
 
-			// Trigger thumbnail load.
+		override protected function onViewSetup():void {
+			super.onViewSetup();
 			setAvailableWallpapers();
+		}
+
+		override protected function onButtonClicked( label:String ):void {
+			switch( label ) {
+
+				// Left.
+				case WallpaperSubNavView.LBL_BACK: {
+					requestStateChange__OLD_TO_REMOVE( StateType.SETTINGS );
+					break;
+				}
+
+				// Center buttons are wallpaper thumbnails.
+				default: {
+					getFullImageAndSetAsWallpaper( label );
+				}
+			}
 		}
 
 		private function setAvailableWallpapers():void {
@@ -45,20 +57,6 @@ package net.psykosoft.psykopaint2.home.views.settings
 			view.setImages( new BitmapAtlas( loader.bmd, loader.xml ) );
 			_atlasLoader.dispose();
 			_atlasLoader = null;
-			view.setSelectedWallpaperBtn();
-		}
-
-		private function onButtonClicked( label:String ):void {
-			switch( label ) {
-				case WallpaperSubNavView.LBL_BACK: {
-					requestStateChange__OLD_TO_REMOVE( StateType.SETTINGS );
-					break;
-				}
-				default: { // Center buttons are wallpaper thumbnails.
-					getFullImageAndSetAsWallpaper( label );
-					WallpaperSubNavView.setLastSelectedWallpaper( label );
-				}
-			}
 		}
 
 		private function getFullImageAndSetAsWallpaper( id:String ):void {

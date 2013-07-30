@@ -4,9 +4,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
-	import net.psykosoft.psykopaint2.core.models.PaintModeType;
-
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
@@ -15,9 +12,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
-	public class PickSurfaceSubNavViewMediator extends MediatorBase
+	public class PickSurfaceSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:PickSurfaceSubNavView;
@@ -43,19 +40,14 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		[Inject]
 		public var requestPaintStateSignal : RequestPaintStateSignal;
 
-		private var _waitingForSurface:Boolean;
-
 		private var _selectedIndex:int;
+		private var _waitingForSurface:Boolean;
 
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
-			manageMemoryWarnings = false;
-			view.navigation.buttonClickedCallback = onButtonClicked;
-			view.showRightButton( false );
-			requestEaselPaintingUpdateSignal.dispatch( null, false, false );
+			super.initialize();
 			_selectedIndex = -1;
 
 			// From app.
@@ -63,7 +55,13 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			notifySurfaceLoadedSignal.add( onSurfaceLoaded );
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onViewEnabled():void {
+			super.onViewEnabled();
+			view.showRightButton( false );
+			requestEaselPaintingUpdateSignal.dispatch( null, false, false );
+		}
+
+		override protected function onButtonClicked( label:String ):void {
 
 			switch( label ) {
 				case PickSurfaceSubNavView.LBL_BACK:
@@ -94,7 +92,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		private function onSurfacePreviewLoaded():void {
 			view.showRightButton( true );
 		}
-
 
 		private function continueToColorPaint():void {
 

@@ -94,8 +94,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
+			super.initialize();
 			_freezingStates = new Vector.<String>();
 
 			// Fully active states.

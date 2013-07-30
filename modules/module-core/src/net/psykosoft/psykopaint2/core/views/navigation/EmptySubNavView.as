@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		override protected function onEnabled():void {
-			navigation.setHeader( "" );
+			setHeader( "" );
 		}
 	}
 }

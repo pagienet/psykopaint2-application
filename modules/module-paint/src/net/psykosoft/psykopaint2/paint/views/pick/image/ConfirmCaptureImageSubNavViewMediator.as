@@ -2,10 +2,10 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 {
 
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraSnapshotRequest;
 
-	public class ConfirmCaptureImageSubNavViewMediator extends MediatorBase
+	public class ConfirmCaptureImageSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:ConfirmCaptureImageSubNavView;
@@ -16,14 +16,11 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
-			manageStateChanges = false;
-			manageMemoryWarnings = false;
-			view.navigation.buttonClickedCallback = onButtonClicked;
+			super.initialize();
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case ConfirmCaptureImageSubNavView.LBL_BACK:
 				{
