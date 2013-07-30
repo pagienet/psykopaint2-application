@@ -36,12 +36,11 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			requestCreateCanvasBackgroundSignal.dispatch();
 
+			requestSetupPaintModuleSignal.dispatch();
+
 			// todo: remove state change signals, replace by proper signals
 			// this is only to switch views
 			requestStateChangeSignal.dispatch(StateType.PREPARE_FOR_PAINT_MODE);
-
-			// TODO: move this to paint activation state
-			requestSetupPaintModuleSignal.dispatch();
 
 			// oh this timeout is evil :s
 			setTimeout(function () : void

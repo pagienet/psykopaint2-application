@@ -280,7 +280,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			_easelRectFromHomeView.y *= CoreSettings.GLOBAL_SCALING;
 			_easelRectFromHomeView.width *= CoreSettings.GLOBAL_SCALING;
 			_easelRectFromHomeView.height *= CoreSettings.GLOBAL_SCALING;
-			trace( this, "easel screen rect info received: " + rect );
 
 			_minZoomScale = _easelRectFromHomeView.width / canvasModel.width;
 			zoomScale = _minZoomScale;
