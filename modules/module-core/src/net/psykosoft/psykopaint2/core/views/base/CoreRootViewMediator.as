@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
@@ -22,6 +23,9 @@ package net.psykosoft.psykopaint2.core.views.base
 		[Inject]
 		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
+		[Inject]
+		public var requestHideSplashScreenSignal : RequestHideSplashScreenSignal;
+
 		override public function initialize():void {
 
 			// Initialize gestures.
@@ -30,6 +34,12 @@ package net.psykosoft.psykopaint2.core.views.base
 			// From app.
 			notifyMemoryWarningSignal.add( onMemoryWarning );
 			requestInteractionBlockSignal.add( onInteractionBlockRequest );
+			requestHideSplashScreenSignal.addOnce( onRequestHideSplashScreen );
+		}
+
+		private function onRequestHideSplashScreen() : void
+		{
+			view.removeSplashScreen();
 		}
 
 		private function onInteractionBlockRequest( block:Boolean ):void {

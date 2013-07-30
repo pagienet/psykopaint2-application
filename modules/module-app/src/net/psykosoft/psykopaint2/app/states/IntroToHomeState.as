@@ -4,8 +4,8 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
-	import net.psykosoft.psykopaint2.home.HomeModule;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 
@@ -26,6 +26,9 @@ package net.psykosoft.psykopaint2.app.states
 		public var notifyHomeModuleSetUpSignal : NotifyHomeModuleSetUpSignal;
 
 		[Inject]
+		public var requestHideSplashScreenSignal : RequestHideSplashScreenSignal;
+
+		[Inject]
 		public var homeState : HomeState;
 
 		public function IntroToHomeState()
@@ -43,6 +46,8 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			// Trigger initial state...
 			notifyHomeViewZoomCompleteSignal.addOnce(onTransitionComplete);
+
+			requestHideSplashScreenSignal.dispatch();
 
 			// todo: remove this signal and replace it with a "transitionToDefaultView" signal
 			requestStateChangeSignal.dispatch(StateType.HOME);

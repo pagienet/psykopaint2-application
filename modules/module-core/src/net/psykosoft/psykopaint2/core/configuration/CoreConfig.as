@@ -41,6 +41,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
@@ -193,6 +194,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifySurfaceLoadedSignal ).asSingleton();
 			_injector.map( RequestBlankSourceImageActivationSignal ).asSingleton();
 			_injector.map( RequestPaintStateSignal ).asSingleton();
+			_injector.map( RequestHideSplashScreenSignal ).asSingleton();
 		}
 
 		// -----------------------
