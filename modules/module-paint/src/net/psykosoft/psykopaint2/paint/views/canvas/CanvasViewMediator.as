@@ -39,8 +39,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.paint.signals.RequestCleanUpPaintModuleMemorySignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestInitPaintModuleMemorySignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 
 	import org.gestouch.events.GestureEvent;
@@ -100,10 +100,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
 
 		[Inject]
-		public var requestCleanUpPaintModuleMemorySignal : RequestCleanUpPaintModuleMemorySignal;
-
-		[Inject]
-		public var requestInitPaintModuleMemorySignal : RequestInitPaintModuleMemorySignal;
+		public var requestCleanUpPaintModuleMemorySignal : RequestDestroyPaintModuleSignal;
 
 		[Inject]
 		public var notifyHomeModuleReadySignal:NotifyHomeViewReadySignal;
@@ -262,10 +259,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					_addedMouseWheelListener = false;
 					trace( this, "listener removed" );
 				}
-			}
-
-			if (newState == StateType.PREPARE_FOR_PAINT_MODE) {
-				requestInitPaintModuleMemorySignal.dispatch();
 			}
 
 			if( newState == StateType.TRANSITION_TO_PAINT_MODE ) {
