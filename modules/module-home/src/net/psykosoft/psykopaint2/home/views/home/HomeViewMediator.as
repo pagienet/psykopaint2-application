@@ -25,7 +25,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
@@ -68,9 +67,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
-
-		[Inject]
-		public var requestSetCanvasBackgroundSignal:RequestSetCanvasBackgroundSignal;
 
 		[Inject]
 		public var applicationRenderer:ApplicationRenderer;
@@ -210,19 +206,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			if( _freezingStates.indexOf( newState ) != -1 ) { // YES
 				freezeView();
 			}
-			else { // NO
-
-				if( newState == StateType.PREPARE_FOR_PAINT_MODE ) {
-
-					// Looking at easel?
-					if( _dockedAtPaintingIndex != 1 ) {
-						throw new Error( "HomeViewMediator - requested to transition to paint and not at easel." );
-					}
-
-					_snapshotPromise = applicationRenderer.requestSnapshot();
-					_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
-				}
-			}
 		}
 
 		private function freezeView():void {
@@ -246,13 +229,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				_waitingForFreezeSnapshot = false;
 			}
 
-			// Going to paint?
-			if( stateModel.currentState == StateType.PREPARE_FOR_PAINT_MODE ) {
-				requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.texture.newReference());
-			}
-
 			_snapshotPromise.dispose();
-
 			_snapshotPromise = null;
 		}
 

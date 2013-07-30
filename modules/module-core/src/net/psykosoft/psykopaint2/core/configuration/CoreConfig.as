@@ -53,7 +53,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
@@ -181,7 +180,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyPopUpRemovedSignal ).asSingleton();
 			_injector.map( RequestPopUpDisplaySignal ).asSingleton();
 			_injector.map( RequestPopUpRemovalSignal ).asSingleton();
-			_injector.map( RequestSetCanvasBackgroundSignal ).asSingleton();
 			_injector.map( RequestUpdateMessagePopUpSignal ).asSingleton();
 			_injector.map( NotifyHomeViewZoomCompleteSignal ).asSingleton();
 			_injector.map( RequestHomeViewScrollSignal ).asSingleton();

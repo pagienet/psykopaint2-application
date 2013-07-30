@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.app.config
 {
+	import net.psykosoft.psykopaint2.app.commands.CreateCanvasBackgroundCommand;
+	import net.psykosoft.psykopaint2.app.signals.RequestCreateCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.app.states.BookState;
 	import net.psykosoft.psykopaint2.app.states.CropState;
 	import net.psykosoft.psykopaint2.app.states.HomeState;
@@ -86,7 +88,7 @@ package net.psykosoft.psykopaint2.app.config
 		// -----------------------
 
 		private function mapCommands():void {
-
+			_commandMap.map(RequestCreateCanvasBackgroundSignal).toCommand(CreateCanvasBackgroundCommand);
 		}
 
 		// -----------------------

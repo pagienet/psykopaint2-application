@@ -2,6 +2,8 @@ package net.psykosoft.psykopaint2.app.states
 {
 	import flash.utils.setTimeout;
 
+	import net.psykosoft.psykopaint2.app.signals.RequestCreateCanvasBackgroundSignal;
+
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 
 	import net.psykosoft.psykopaint2.base.states.State;
@@ -15,12 +17,16 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestStateChangeSignal : RequestStateChangeSignal_OLD_TO_REMOVE;
 
+		[Inject]
+		public var requestCreateCanvasBackgroundSignal : RequestCreateCanvasBackgroundSignal;
+
 		public function TransitionHomeToPaintState()
 		{
 		}
 
 		override ns_state_machine function activate() : void
 		{
+			requestCreateCanvasBackgroundSignal.dispatch();
 			// todo: remove state change signals, replace by proper signals
 			requestStateChangeSignal.dispatch(StateType.PREPARE_FOR_PAINT_MODE);
 
