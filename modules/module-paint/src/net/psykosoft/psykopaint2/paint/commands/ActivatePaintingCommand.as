@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import flash.events.Event;
 	import flash.filesystem.File;
-	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -14,7 +13,6 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
@@ -77,7 +75,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			var canvasImporter : CanvasImporter = new CanvasImporter();
 			canvasImporter.importPainting(canvasModel, vo);
-			notifyPaintingActivatedSignal.dispatch();
+			notifyPaintingActivatedSignal.dispatch( paintingId );
 
 			context.release( this );
 			vo.dispose();

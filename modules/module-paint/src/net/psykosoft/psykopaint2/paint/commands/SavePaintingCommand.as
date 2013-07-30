@@ -100,13 +100,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			context.detain( this );
 
-			// Always write ( in current session ) the last edit date.
-			var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingId );
-			if( vo ) {
-				vo.lastSavedOnDateMs = new Date().getTime();
-				paintingModel.dirtyDateSorting();
-			}
-
 			// Skip saving if the painting is not dirty.
 			var isPaintingDirty:Boolean = canvasHistoryModel.hasHistory;
 			trace( "is painting dirty: " + isPaintingDirty );
@@ -160,9 +153,6 @@ package net.psykosoft.psykopaint2.paint.commands
 			}
 
 			_infoVO = factory.createFromData( _dataVO, paintingId, userModel.uniqueUserId, generateThumbnail() );
-
-			paintingModel.updatePaintingInfo( _infoVO );
-			paintingModel.focusedPaintingId = _infoVO.id;
 
 			trace( this, "saving vo: " + _infoVO );
 

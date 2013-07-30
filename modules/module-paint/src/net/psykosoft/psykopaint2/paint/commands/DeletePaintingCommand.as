@@ -45,9 +45,6 @@ package net.psykosoft.psykopaint2.paint.commands {
 			dataFile.deleteFile();
 			infoFile.deleteFile();
 
-			//delete painting vo
-			paintingModel.deleteVoWithId( paintingId );
-
 			//change state to home
 			requestStateChangeSignal.dispatch( StateType.TRANSITION_TO_HOME_MODE );
 		}

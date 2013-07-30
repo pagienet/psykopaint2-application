@@ -282,6 +282,12 @@ package net.psykosoft.psykopaint2.home.views.home
 		// Camera control.
 		// ---------------------------------------------------------------------
 
+		public function introAnimation():void {
+			_scrollCameraController.jumpToSnapPointIndex( _paintingManager.homePaintingIndex );
+			dockAtCurrentPainting();
+			_zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
+		}
+
 		public function dockAtCurrentPainting():void {
 			trace( this, "docking at painting: " + _scrollCameraController.positionManager.closestSnapPointIndex );
 			var framedPainting:GalleryPainting = _paintingManager.getPaintingAtIndex( _scrollCameraController.positionManager.closestSnapPointIndex );

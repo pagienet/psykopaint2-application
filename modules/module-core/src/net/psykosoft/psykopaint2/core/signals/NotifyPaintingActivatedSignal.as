@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.signals
 	public class NotifyPaintingActivatedSignal extends TracingSignal
 	{
 		public function NotifyPaintingActivatedSignal() {
-			super();
+			super( String ); // Painting id.
 		}
 	}
 }
