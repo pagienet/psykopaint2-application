@@ -4,12 +4,12 @@ package net.psykosoft.psykopaint2.paint.views.crop
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
 
+	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
+
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropModuleActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class CropViewMediator extends MediatorBase
@@ -27,14 +27,8 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		public var notifyCropConfirmSignal:NotifyCropConfirmSignal;
 
 		[Inject]
-		public var requestEaselRectInfoSignal:RequestEaselRectInfoSignal;
+		public var easelRectModel : EaselRectModel;
 
-		[Inject]
-		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
-
-		private var _sourceMap:BitmapData;
-		private var _waitingForEaselRect:Boolean;
-		
 		override public function initialize():void {
 
 			super.initialize();
@@ -44,7 +38,6 @@ package net.psykosoft.psykopaint2.paint.views.crop
 			// From app.
 			notifyCropModuleActivatedSignal.add( onCropModuleActivated );
 			notifyCropConfirmSignal.add( onCropConfirmed );
-			notifyEaselRectInfoSignal.add( onEaselRectInfoRetrieved );
 		}
 
 		// -----------------------
@@ -57,18 +50,8 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 		private function onCropModuleActivated( bitmapData:BitmapData ):void {
 			trace( this, "onCropModuleActivated" );
-			_sourceMap = bitmapData;
-			_waitingForEaselRect = true;
-			requestEaselRectInfoSignal.dispatch();
-		}
-
-		private function onEaselRectInfoRetrieved( rect:Rectangle ):void {
-			trace( this, "onEaselRectInfoRetrieved" );
-			if( _waitingForEaselRect ) {
-				view.easelRect = rect;
-				view.sourceMap = _sourceMap;
-				_waitingForEaselRect = false;
-			}
+			view.easelRect = easelRectModel.rect;
+			view.sourceMap = bitmapData;
 		}
 	}
 }

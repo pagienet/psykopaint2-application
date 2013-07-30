@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.app.states.BookState;
 	import net.psykosoft.psykopaint2.app.states.CropState;
 	import net.psykosoft.psykopaint2.app.states.HomeState;
-	import net.psykosoft.psykopaint2.app.states.IntroToHomeState;
+	import net.psykosoft.psykopaint2.app.states.TransitionSplashToHomeState;
 	import net.psykosoft.psykopaint2.app.states.PaintState;
 	import net.psykosoft.psykopaint2.app.states.TransitionHomeToPaintState;
 	import net.psykosoft.psykopaint2.app.views.base.AppRootView;
@@ -146,7 +146,7 @@ package net.psykosoft.psykopaint2.app
 
 		private function transitionToHomeState() : void
 		{
-			var homeState : IntroToHomeState = _coreModule.injector.getInstance(IntroToHomeState);
+			var homeState : TransitionSplashToHomeState = _coreModule.injector.getInstance(TransitionSplashToHomeState);
 			_applicationStateMachine.setActiveState(homeState);
 		}
 	}

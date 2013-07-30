@@ -21,12 +21,9 @@ package net.psykosoft.psykopaint2.core.rendering
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 
 	public class CanvasRenderer
 	{
@@ -50,15 +47,6 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		[Inject]
 		public var requestChangeRenderRect : RequestChangeRenderRectSignal;
-
-		[Inject]
-		public var requestSetCanvasBackgroundSignal:RequestSetCanvasBackgroundSignal;
-
-		[Inject]
-		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
-
-		[Inject]
-		public var requestEaselRectInfoSignal:RequestEaselRectInfoSignal;
 
 		[Inject]
 		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
@@ -89,18 +77,16 @@ package net.psykosoft.psykopaint2.core.rendering
 			requestFreezeRendering.add(freezeRendering);
 			requestResumeRendering.add(resumeRendering);
 			requestChangeRenderRect.add(onChangeRenderRect);
-			requestSetCanvasBackgroundSignal.add(onSetBackgroundSignal);
 		}
 
-		private function onSetBackgroundSignal(texture : RefCountedTexture) : void
+		public function setBackground(texture : RefCountedTexture, rect : Rectangle) : void
 		{
 			disposeBackground();
-			notifyEaselRectInfoSignal.addOnce(onEaselRectInfo);
-			requestEaselRectInfoSignal.dispatch();
 			_background = texture;
+			setBackgroundBaseRect(rect);
 		}
 
-		private function onEaselRectInfo(rect : Rectangle) : void
+		private function setBackgroundBaseRect(rect : Rectangle) : void
 		{
 			_backgroundBaseRect = rect.clone();
 

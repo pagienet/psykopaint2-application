@@ -13,19 +13,17 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.SnapshotPromise;
+	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
@@ -65,15 +63,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
 
 		[Inject]
-		public var requestEaselRectInfoSignal:RequestEaselRectInfoSignal;
-
-		[Inject]
-		public var notifyEaselRectInfoSignal:NotifyEaselRectInfoSignal;
-
-		[Inject]
-		public var requestSetCanvasBackgroundSignal:RequestSetCanvasBackgroundSignal;
-
-		[Inject]
 		public var applicationRenderer:ApplicationRenderer;
 
 		[Inject]
@@ -93,6 +82,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var requestHomeSceneDestructionSignal:RequestHomeSceneDestructionSignal;
+
+		[Inject]
+		public var easelRectModel : EaselRectModel;
 
 		private var _waitingForFreezeSnapshot:Boolean;
 		private var _freezingStates:Vector.<String>;
@@ -136,7 +128,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyNavigationToggleSignal.add( onNavigationToggled );
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
-			requestEaselRectInfoSignal.add( onEaselRectInfoRequested );
 			requestHomeViewScrollSignal.add( onScrollRequested );
 			requestHomeSceneConstructionSignal.add( onBuildSceneRequest );
 			requestHomeIntroSignal.add( onIntroRequested );
@@ -146,6 +137,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
 			view.zoomCompletedSignal.add( onViewZoomComplete );
 			view.assetsReadySignal.add( onViewAssetsReady );
+			view.easelRectChanged.add( onEaselRectChanged );
 		}
 
 		private function registerFreezingState( stateName:String ):void {
@@ -169,8 +161,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.introAnimation();
 		}
 
-		private function onEaselRectInfoRequested():void {
-			notifyEaselRectInfoSignal.dispatch( view.easelRect );
+		private function onEaselRectChanged():void {
+			easelRectModel.rect = view.easelRect;
 		}
 
 		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animate:Boolean, dispose:Boolean ):void {
@@ -217,19 +209,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			if( _freezingStates.indexOf( newState ) != -1 ) { // YES
 				freezeView();
 			}
-			else { // NO
-
-				if( newState == StateType.PREPARE_FOR_PAINT_MODE ) {
-
-					// Looking at easel?
-					if( _dockedAtPaintingIndex != 1 ) {
-						throw new Error( "HomeViewMediator - requested to transition to paint and not at easel." );
-					}
-
-					_snapshotPromise = applicationRenderer.requestSnapshot();
-					_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
-				}
-			}
 		}
 
 		private function freezeView():void {
@@ -253,13 +232,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				_waitingForFreezeSnapshot = false;
 			}
 
-			// Going to paint?
-			if( stateModel.currentState == StateType.PREPARE_FOR_PAINT_MODE ) {
-				requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.texture.newReference());
-			}
-
 			_snapshotPromise.dispose();
-
 			_snapshotPromise = null;
 		}
 

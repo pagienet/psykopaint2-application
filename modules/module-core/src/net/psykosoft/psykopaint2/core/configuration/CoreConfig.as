@@ -13,13 +13,14 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
+	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectInfoSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
@@ -38,7 +39,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestEaselRectInfoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
@@ -53,7 +53,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
@@ -131,6 +130,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( StateModel ).asSingleton();
 			_injector.map( PaintingModel ).asSingleton();
 			_injector.map( UserModel ).asSingleton();
+			_injector.map( EaselRectModel ).asSingleton();
 		}
 
 		// -----------------------
@@ -176,12 +176,10 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestDrawingCoreSurfaceSetSignal ).asSingleton();
 			_injector.map( RequestDrawingCoreSourceImageSetSignal ).asSingleton();
 			_injector.map( RequestEaselUpdateSignal ).asSingleton();
-			_injector.map( RequestEaselRectInfoSignal ).asSingleton();
-			_injector.map( NotifyEaselRectInfoSignal ).asSingleton();
 			_injector.map( NotifyPopUpRemovedSignal ).asSingleton();
+			_injector.map( NotifyEaselRectUpdateSignal ).asSingleton();
 			_injector.map( RequestPopUpDisplaySignal ).asSingleton();
 			_injector.map( RequestPopUpRemovalSignal ).asSingleton();
-			_injector.map( RequestSetCanvasBackgroundSignal ).asSingleton();
 			_injector.map( RequestUpdateMessagePopUpSignal ).asSingleton();
 			_injector.map( NotifyHomeViewZoomCompleteSignal ).asSingleton();
 			_injector.map( RequestHomeViewScrollSignal ).asSingleton();
