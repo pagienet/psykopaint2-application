@@ -24,6 +24,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 					</pathengine>
 				</brush>
 			-->
+
+			
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0"/>
@@ -391,7 +393,12 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</BumpDecorator>
 					</pathengine>
 				</brush>
-				
+				<brush engine={BrushType.BLOB} name="Test">
+						<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="scales"/>
+
+						<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
+						</pathengine>
+				</brush>
 		</brushkits>	
 	/*
 		public static const brushKitData:XML = 

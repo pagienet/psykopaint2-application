@@ -31,6 +31,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_fastBuffer.addInterleavedFloatsToVertices(verticesAndUV,_vIndex,4,4);
 			_fastBuffer.addInterleavedFloatsToVertices(appendVO.point.colorsRGBA,_vIndex+16,4,4);
 			
+			//32 bytes = 8 floats per vertex
 			_vIndex += 96;
 			
 			_numVertices += 3;
