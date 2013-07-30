@@ -150,7 +150,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_paintingManager.createDefaultPaintings();
 
 			// Always start at easel.
-			_scrollCameraController.jumpToSnapPointIndex( 1 );
+//			_scrollCameraController.jumpToSnapPointIndex( 1 );
 
 			// TODO: needed?
 			_stage3dProxy.clear();

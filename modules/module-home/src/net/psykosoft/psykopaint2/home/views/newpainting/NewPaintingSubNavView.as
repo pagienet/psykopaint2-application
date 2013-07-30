@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		}
 
 		public function createInProgressPaintings( data:Vector.<PaintingInfoVO> ):void {
+
 			var i:uint;
 			var len:uint;
 

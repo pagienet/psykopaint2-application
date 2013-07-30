@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import flash.events.Event;
 	import flash.utils.ByteArray;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
@@ -25,7 +24,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneConstructionSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneDestructionSignal;

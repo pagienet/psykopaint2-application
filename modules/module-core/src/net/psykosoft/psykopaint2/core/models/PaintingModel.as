@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.core.models
 		public var notifyPaintingDataSetSignal:NotifyPaintingDataSetSignal;
 
 		private var _paintingData:Array;
-//		private var _focusedPaintingId : String = "";
 		private var _sortingDirty:Boolean;
 		private var _sortedData:Vector.<PaintingInfoVO>;
 
@@ -27,6 +26,7 @@ package net.psykosoft.psykopaint2.core.models
 		}
 
 		public function setPaintingCollection( data:Vector.<PaintingInfoVO> ):void {
+			trace( this, "setPaintingCollection()" );
 			for( var i:uint = 0; i < data.length; ++i )
 				_paintingData[data[i].id] = data[i];
 
@@ -45,12 +45,12 @@ package net.psykosoft.psykopaint2.core.models
 		}
 
 		public function getSortedPaintingCollection():Vector.<PaintingInfoVO> {
+			trace( this, "getSortedPaintingCollection()" );
 			if( _sortingDirty ) {
 				_sortedData = getPaintingCollection();
 				_sortedData.sort( sortOnLastSaved );
 				_sortingDirty = false;
 			}
-
 			return _sortedData;
 		}
 

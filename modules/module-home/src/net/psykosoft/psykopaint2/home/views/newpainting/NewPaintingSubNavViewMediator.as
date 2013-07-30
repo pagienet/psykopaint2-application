@@ -47,6 +47,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 			// Init.
 			registerView( view );
+			super.initialize();
 
 			// TODO: Re-implement: merge failure
 			/*manageStateChanges = false;
@@ -55,8 +56,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 			displaySavedPaintings();
 			view.validateCenterButtons();*/
-
-			super.initialize();
 
 			// From app.
 			notifySurfaceLoadedSignal.add( onSurfaceSet );
