@@ -125,7 +125,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			// Always selects the latest one, i.e. index 0.
 			// Also requests an easel update on the home view.
 			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
-			if( data.length > 0 ) {
+			if( data && data.length > 0 ) {
 				view.setInProgressPaintings( data );
 				paintingModel.focusedPaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
 				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
