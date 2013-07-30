@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import com.greensock.TweenLite;
 
 	import flash.display.Sprite;
+	import flash.geom.ColorTransform;
 
 	public class BackgroundLabel extends PsykoLabel
 	{
@@ -22,15 +23,38 @@ package net.psykosoft.psykopaint2.base.ui.components
 			randomizeLabelColor();
 		}
 
-		override protected function invalidateDimensions():void {
-			super.invalidateDimensions();
+		override protected function validateDimensions():void {
+			super.validateDimensions();
+			matchBackgroundWidthToText();
+			_background.x = -_background.width / 2;
+		}
+
+		protected function matchBackgroundWidthToText():void {
 			_background.width = Math.max( _textfield.width + 30, 100 );
 		}
 
 		private function randomizeLabelColor():void {
+			return; // TODO: Feature disabled by M's request - remove method if not used
 			var randomHue:int = Math.random() * 360;
 			var randomSat:Number = Math.random() + 1;
-			TweenLite.to( _background, 0, { colorMatrixFilter: { hue: randomHue, saturation: randomSat }} );
+			TweenLite.to( _background, 0, { colorMatrixFilter: { hue: randomHue, saturation: randomSat } } );
+		}
+
+		public function colorizeBackground( color:uint ):void {
+
+			// Hex -> RGB
+			var r:uint = ((color & 0xFF0000) >> 16) / 255;
+			var g:uint = ((color & 0x00FF00) >> 8) / 255;
+			var b:uint = ((color & 0x0000FF)) / 255;
+
+			// RGB -> HSV
+			var luminance:Number =  r * 0.299 + g * 0.587 + b * 0.114;
+			var u:Number = - r * 0.1471376975169300226 - g * 0.2888623024830699774 + b * 0.436;
+			var v:Number =   r * 0.615 - g * 0.514985734664764622 - b * 0.100014265335235378;
+			var hue:Number = Math.atan2( v, u );
+			var saturation:Number = Math.sqrt( u*u + v*v );
+
+			TweenLite.to( _background, 0, { colorMatrixFilter: { hue: hue, saturation: saturation, luminance: luminance } } );
 		}
 	}
 }

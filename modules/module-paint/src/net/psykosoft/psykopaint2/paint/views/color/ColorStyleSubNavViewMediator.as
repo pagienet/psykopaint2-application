@@ -5,9 +5,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleConfirmSignal;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
-	public class ColorStyleSubNavViewMediator extends MediatorBase
+	public class ColorStyleSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:ColorStyleSubNavView;
@@ -24,17 +24,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
-			manageStateChanges = false;
-			manageMemoryWarnings = false;
-			view.navigation.buttonClickedCallback = onButtonClicked;
+			super.initialize();
 
 			// Post init.
 			view.setAvailableColorStyles( colorStyleModule.getAvailableColorStylePresets() );
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case ColorStyleSubNavView.LBL_PICK_AN_IMAGE: {
 					requestStateChange( StateType.PICK_IMAGE );

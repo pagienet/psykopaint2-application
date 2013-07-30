@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
 	
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
@@ -43,22 +44,24 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static const PARAMETER_N_BUMP_INFLUENCE : String = "Bump Influence";
 		public static const PARAMETER_SL_BLEND_MODE : String = "Blend Mode";
 		
+		protected const _brushScalingFactor:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
+		protected var _maxBrushRenderSize: Number;
+		
 		protected var _canvasModel : CanvasModel;
 		protected var _view : DisplayObject;
-
 		protected var _pathManager : PathManager;
-
 		protected var _colorStrategy : IColorStrategy;
-
 		protected var _brushShape : AbstractBrushShape;
-
-		protected var shapeVariations : Vector.<Number>;
-		protected var rotationRange : Number;
-
-		private var _type : String;
+		protected var _brushMesh : IBrushMesh;
+		protected var _appendVO : StrokeAppendVO;
+		protected var _bounds : Rectangle;
+		protected var _renderInvalid : Boolean;
+		protected var _firstPoint : Boolean;
+		
+		protected var _shapeVariations : Vector.<Number>;
+		protected var _rotationRange : Number;
 		protected var _canvasScaleW : Number;
 		protected var _canvasScaleH : Number;
-		protected var _firstPoint : Boolean;
 		
 		protected var _parameters:Vector.<PsykoParameter>;
 		protected var _sizeFactor:PsykoParameter;
@@ -69,11 +72,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected var _shapes:PsykoParameter;
 		protected var _blendMode:PsykoParameter;
 		
-		protected var appendVO : StrokeAppendVO;
-		protected var _brushMesh : IBrushMesh;
-		protected var _bounds : Rectangle;
-		protected var _renderInvalid : Boolean;
-
 		protected var _context : Context3D;
 		private var _inProgress : Boolean;
 		private var _incremental : Boolean;
@@ -81,7 +79,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private var _drawNormalsOrSpecular : Boolean;
 		private var _snapshot : CanvasSnapShot;
-
+		private var _type : String;
+		
 		public function AbstractBrush(drawNormalsOrSpecular : Boolean, incremental : Boolean = true, useDepthStencil : Boolean = false)
 		{
 			_drawNormalsOrSpecular = drawNormalsOrSpecular;
@@ -105,7 +104,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_bounds = new Rectangle();
 
-			appendVO = new StrokeAppendVO();
+			_appendVO = new StrokeAppendVO();
 		}
 
 		// only to be implemented by brushes animating/simulating after finalizing the stroke to knock it off
@@ -114,25 +113,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 
 		}
-
+		
 		protected function createBrushMesh() : IBrushMesh
 		{
 			throw new AbstractMethodError();
 		}
 
-		/*
-		public function getAvailableBrushShapes() : XML
-		{
-			return _availableBrushShapes;
-		}
-		
-		
-		public function setAvailableBrushShapes( data:XML ) : void
-		{
-			_availableBrushShapes = data;
-		}
-		*/
-		
 		public function setPathEngine( data:XML ) : void
 		{
 			_pathManager = new PathManager(int(data.@type));
@@ -164,11 +150,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (_brushShape == brushShape) return;
 			if (_brushShape) _brushShape.freeMemory();
 			_brushShape = brushShape;
-			shapeVariations = _brushShape.variationFactors;
-			appendVO.uvBounds.width = shapeVariations[2];
-			appendVO.uvBounds.height = shapeVariations[3];
-			appendVO.diagonalAngle = shapeVariations[4];
-			rotationRange = _brushShape.rotationRange;
+			_shapeVariations = _brushShape.variationFactors;
+			_appendVO.uvBounds.width = _shapeVariations[2];
+			_appendVO.uvBounds.height = _shapeVariations[3];
+			_appendVO.diagonalAngle = _shapeVariations[4];
+			_appendVO.diagonalLength = _shapeVariations[5];
+			_rotationRange = _brushShape.rotationRange;
+			//TODO: this must take into account the actual brush size based on col/rows
+			_maxBrushRenderSize = _brushScalingFactor * (256 / _shapeVariations[5]);
 		}
 		
 		protected function onShapeChanged(event:Event):void
@@ -271,9 +260,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		protected function onPickColor( point : SamplePoint, pickRadius:Number, smoothFactor:Number ) : void
 		{
-			appendVO.size =  _brushShape.size * pickRadius;
-			appendVO.point = point;
-			_colorStrategy.getColorsByVO( appendVO,  _brushShape.size* 0.5*smoothFactor);
+			_appendVO.size =  _brushShape.size * pickRadius;
+			_appendVO.point = point;
+			_colorStrategy.getColorsByVO( _appendVO,  _brushShape.size* 0.5*smoothFactor);
 		}
 
 		protected function invalidateRender() : void
@@ -288,9 +277,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		protected function addStrokePoint(point : SamplePoint, size : Number, rotationRange : Number) : void
 		{
-			appendVO.size = size;
-			appendVO.point = point;
-			_brushMesh.append(appendVO);
+			_appendVO.size = size;
+			_appendVO.point = point;
+			_brushMesh.append(_appendVO);
 		}
 
 		protected function createColorStrategy() : IColorStrategy
@@ -307,12 +296,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function set type(value : String) : void
 		{
 			_type = value;
-		}
-
-		public function setBrushSizeFactors(minSizeFactor : Number, maxSizeFactor : Number) : void
-		{
-			_sizeFactor.lowerRangeValue = minSizeFactor;
-			_sizeFactor.upperRangeValue = maxSizeFactor;
 		}
 
 		public function freeExpendableMemory() : void
@@ -477,7 +460,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		public function getParameterByPath(path:Array):PsykoParameter
 		{
-			if ( path.length == 1 && path[0] == "brush" )
+			if ( path.length == 2 && path[0] == "brush" )
 			{
 				var parameterID:String = path[1];
 				for ( var i:int = 0; i < _parameters.length; i++ )

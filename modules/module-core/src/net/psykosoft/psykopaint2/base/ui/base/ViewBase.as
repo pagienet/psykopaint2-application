@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 		public var addedToStageSignal:Signal;
 		public var enabledSignal:Signal;
+		public var disabledSignal:Signal;
 		public var setupSignal:Signal;
 		public var assetsReadySignal:Signal;
 
@@ -35,7 +36,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 		* Triggered when the view has loaded its assets ( if any )
 		* and it is added to stage.
 		* */
-		public var viewReadySignal:Signal;
+		public var readySignal:Signal;
 
 		public function ViewBase() {
 			super();
@@ -43,9 +44,10 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 			addedToStageSignal = new Signal();
 			enabledSignal = new Signal();
+			disabledSignal = new Signal();
 			setupSignal = new Signal();
 			assetsReadySignal = new Signal();
-			viewReadySignal = new Signal();
+			readySignal = new Signal();
 
 			addEventListener( Event.ADDED_TO_STAGE, addedToStageHandler );
 			visible = false;
@@ -72,6 +74,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 			trace( this, "disabled" );
 			onDisabled();
 			_isEnabled = visible = false;
+			disabledSignal.dispatch();
 			if( hasEventListener( Event.ENTER_FRAME ) ) {
 				removeEventListener( Event.ENTER_FRAME, onEnterFrame );
 			}
@@ -118,7 +121,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 			if( _viewIsReady ) return;
 			_viewIsReady = true;
 			onReady();
-			viewReadySignal.dispatch();
+			readySignal.dispatch();
 		}
 
 		// ---------------------------------------------------------------------

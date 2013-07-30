@@ -20,7 +20,8 @@ package net.psykosoft.psykopaint2.core.views.base
 		public var requestStateChangeSignal:RequestStateChangeSignal;
 
 		private var _enablingStates:Vector.<String>;
-		private var _view:ViewBase;
+
+		protected var _view:ViewBase;
 
 		public var manageStateChanges:Boolean = true;
 		public var manageMemoryWarnings:Boolean = true;

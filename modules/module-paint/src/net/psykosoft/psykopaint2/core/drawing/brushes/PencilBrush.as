@@ -28,7 +28,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_shininess.numberValue = .4;
 			_glossiness.numberValue = .5;
 			_bumpiness.numberValue = .6;
-			setBrushSizeFactors(.2,.4);
+			_sizeFactor.lowerRangeValue = 0.2;
+			_sizeFactor.upperRangeValue = 0.4;
+		
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
@@ -73,7 +75,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 
         override protected function processPoint(point:SamplePoint):void {
-            var scale : Number = point.size*10 * _sizeFactor.upperRangeValue - Math.random()*(_sizeFactor.upperRangeValue - _sizeFactor.lowerRangeValue);
+			//TODO - this is unfortunately broken after normalizing the brush sizes - needs fix:
+            var scale : Number = point.size*10 * _sizeFactor.upperRangeValue - Math.random()*_sizeFactor.rangeValue;
             addStrokePoint(point, _brushShape.actualSize * _canvasScaleW * scale, _brushShape.rotationRange);
         }
     }

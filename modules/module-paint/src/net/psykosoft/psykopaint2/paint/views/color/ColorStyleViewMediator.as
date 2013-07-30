@@ -36,8 +36,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
+			super.initialize();
 			registerEnablingState( StateType.COLOR_STYLE );
 
 			// From app.

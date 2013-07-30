@@ -12,9 +12,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
-	public class NewPaintingSubNavViewMediator extends MediatorBase
+	public class NewPaintingSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:NewPaintingSubNavView;
@@ -40,29 +40,44 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		[Inject]
 		public var notifySurfaceLoadedSignal:NotifySurfaceLoadedSignal;
 
+		private var _waitingForSurfaceSet:Boolean;
+
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
-			manageStateChanges = false;
-			manageMemoryWarnings = false;
-			view.navigation.buttonClickedCallback = onButtonClicked;
-
-			displaySavedPaintings();
-
-			if( NewPaintingSubNavView.lastScrollerPosition != 0 )
-			view.navigation.setScrollerPosition( NewPaintingSubNavView.lastScrollerPosition );
+			super.initialize();
 
 			// From app.
 			notifySurfaceLoadedSignal.add( onSurfaceSet );
+		}
+
+		override protected function onViewSetup():void {
+
+			view.createNewPaintingButtons();
+
+			// Retrieve saved paintings and populate nav.
+			// Ordered from newest -> oldest.
+			// Always selects the latest one, i.e. index 0.
+			// Also requests an easel update on the home view.
+			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
+			if( data.length > 0 ) {
+				view.createInProgressPaintings( data );
+				paintingModel.focusedPaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
+				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
+				requestEaselUpdateSignal.dispatch( vo, false, false );
+			}
+
+			view.validateCenterButtons();
+
+			super.onViewSetup();
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 
 				// New color painting.
@@ -98,13 +113,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					paintingModel.focusedPaintingId = "uniqueUserId-" + label;
 					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + label );
 					requestEaselUpdateSignal.dispatch( vo, true, false );
-					NewPaintingSubNavView.lastSelectedPaintingLabel = label;
-					NewPaintingSubNavView.lastScrollerPosition = view.navigation.getScrollerPosition();
 				}
 			}
 		}
-
-		private var _waitingForSurfaceSet:Boolean;
 
 		private function onSurfaceSet():void {
 			if( _waitingForSurfaceSet ) {
@@ -116,38 +127,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		private function pickDefaultSurfaceAndContinueToPickImage():void {
 			_waitingForSurfaceSet = true;
 			requestLoadSurfaceSignal.dispatch( 0 );
-		}
-
-		// -----------------------
-		// Overrride.
-		// -----------------------
-
-		override protected function onStateChange( newState:String ):void {
-			if( newState == StateType.TRANSITION_TO_HOME_MODE ){
-				NewPaintingSubNavView.lastSelectedPaintingLabel = "";
-				NewPaintingSubNavView.lastScrollerPosition = 0;
-			}
-			super.onStateChange( newState );
-		}
-
-
-		// -----------------------
-		// Private.
-		// -----------------------
-
-		private function displaySavedPaintings():void {
-
-			// Retrieve saved paintings and populate nav.
-			// Ordered from newest -> oldest.
-			// Always selects the latest one, i.e. index 0.
-			// Also requests an easel update on the home view.
-			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
-			if( data.length > 0 ) {
-				view.setInProgressPaintings( data );
-				paintingModel.focusedPaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
-				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.focusedPaintingId );
-				requestEaselUpdateSignal.dispatch( vo, false, false );
-			}
 		}
 	}
 }

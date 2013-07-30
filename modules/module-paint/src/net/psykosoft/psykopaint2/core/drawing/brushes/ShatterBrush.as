@@ -17,7 +17,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
 	
 	public class ShatterBrush extends SplatBrushBase
 	{
@@ -28,10 +27,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			super(false);
 			rng = new LCG( Math.random() * 0xffffff );
 			type = BrushType.SHATTER;
-			appendVO.verticesAndUV = new Vector.<Number>(24,true);
+			_appendVO.verticesAndUV = new Vector.<Number>(24,true);
 			for ( var i:int = 0; i < 24; i++ )
 			{
-				appendVO.verticesAndUV[i] = 0;
+				_appendVO.verticesAndUV[i] = 0;
 			}
 		}
 
@@ -63,8 +62,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var uvScale:Number = 1 / _canvasModel.textureWidth;
 			
 			
-			var minSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.lowerRangeValue);
-			var maxSize:Number = (_minBrushRenderSize + ( _maxBrushRenderSize - _minBrushRenderSize ) * _sizeFactor.upperRangeValue);
+			var minSize:Number = _maxBrushRenderSize * _sizeFactor.lowerRangeValue;
+			var maxSize:Number = _maxBrushRenderSize * _sizeFactor.upperRangeValue;
 			
 			var rsize : Number = minSize + (maxSize - minSize) * point.size;
 			if (rsize > maxSize) rsize = maxSize;
@@ -75,11 +74,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			//if (rsize > _maxBrushRenderSize) rsize = _maxBrushRenderSize;
 			//else if (rsize < _minBrushRenderSize) rsize = _minBrushRenderSize;
 			
-			var uvBounds:Rectangle = appendVO.uvBounds;
-			uvBounds.x = int(rng.getNumber(0,shapeVariations[0])) * shapeVariations[2];
-			uvBounds.y = int(rng.getNumber(0,shapeVariations[1])) * shapeVariations[3];
+			var uvBounds:Rectangle = _appendVO.uvBounds;
+			uvBounds.x = int(rng.getNumber(0,_shapeVariations[0])) * _shapeVariations[2];
+			uvBounds.y = int(rng.getNumber(0,_shapeVariations[1])) * _shapeVariations[3];
 			
-			var baseAngle:Number = appendVO.diagonalAngle; //Math.atan2(uvBounds.height,uvBounds.width);
+			var baseAngle:Number = _appendVO.diagonalAngle; //Math.atan2(uvBounds.height,uvBounds.width);
 			var halfSize : Number = rsize * _canvasScaleW * Math.SQRT2 * 0.5;
 			
 			//var halfSize : Number = rsize * _canvasScaleW*.5;
@@ -102,7 +101,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var xSource:Number = 0.5 * (point.normalX + 1) + Math.cos(brushAngle) * point.size * uvScale;
 			var ySource:Number = 0.5 * (-point.normalY + 1) + Math.sin(brushAngle) * point.size * uvScale;
 			
-			var data:Vector.<Number> = appendVO.verticesAndUV;
+			var data:Vector.<Number> = _appendVO.verticesAndUV;
 			data[0] = xBrush - cos1;
 			data[1] = yBrush - sin1;
 			data[2] = uvBounds.left;
@@ -141,14 +140,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			data[23] = (ySource - sin1s);
 			
 			
-			appendVO.point = point;
+			_appendVO.point = point;
 			/*
 			point.colorsRGBA[3] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
 			point.colorsRGBA[7] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
 			point.colorsRGBA[11] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
 			point.colorsRGBA[15] = rng.getNumber( _opacity.lowerRangeValue, _opacity.upperRangeValue);
 			*/
-			_brushMesh.append( appendVO );
+			_brushMesh.append( _appendVO );
 			
 			
 		}

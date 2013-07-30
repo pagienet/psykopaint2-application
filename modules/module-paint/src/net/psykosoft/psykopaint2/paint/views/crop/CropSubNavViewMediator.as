@@ -4,9 +4,9 @@ package net.psykosoft.psykopaint2.paint.views.crop
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
-	public class CropSubNavViewMediator extends MediatorBase
+	public class CropSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:CropSubNavView;
@@ -18,14 +18,11 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
 		override public function initialize():void {
-			super.initialize();
 			registerView( view );
-			manageStateChanges = false;
-			manageMemoryWarnings = false;
-			view.navigation.buttonClickedCallback = onButtonClicked;
+			super.initialize();
 		}
 
-		private function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case CropSubNavView.LBL_PICK_AN_IMAGE: {
 					requestStateChange( StateType.PICK_IMAGE );

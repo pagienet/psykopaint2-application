@@ -26,10 +26,15 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _maxContentX:Number = 0;
 		protected var _visibleWidth:Number;
 		protected var _visibleHeight:Number;
+		protected var _interactionWidth:Number;
 
-		public var scrollable:Boolean = true;
+		public var scrollingAllowed:Boolean = true;
 		public var motionStartedSignal:Signal;
 		public var motionEndedSignal:Signal;
+		public var motionUpdatedSignal:Signal;
+
+		// Used for debugging, can be removed...
+		public var id:String;
 
 		public function HSnapScroller() {
 			super();
@@ -40,6 +45,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 			motionStartedSignal = new Signal();
 			motionEndedSignal = new Signal();
+			motionUpdatedSignal = new Signal();
 
 			_container = new Sprite();
 			_container.cacheAsBitmap = true; // TODO: wouldn't it make more sense to only set cache as bitmap to true after all the children have been added to the container?
@@ -64,10 +70,15 @@ package net.psykosoft.psykopaint2.base.ui.components
 		// ---------------------------------------------------------------------
 
 		public function reset():void {
+
+			trace( this, "RESET" );
+
 			_positionManager.reset();
 			_minContentX = 0;
 			_maxContentX = 0;
 			_container.x = 0;
+
+			// TODO: virtual lists shouldn't have this line, but non virtual extensors of this class might.
 //			_container.removeChildren();
 		}
 
@@ -100,21 +111,27 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function evaluateInteractionStart():void {
-			if( !scrollable ) return; // No need for scrolling if all content is visible in 1 page.
-//			if( maxWidth <= visibleWidth ) return; // No need for scrolling if all content is visible in 1 page.
-			if( !mouseHitsInteractiveArea() ) return; // Hit test.
+			trace( this, "evaluateInteractionStart()" );
+			if( !scrollingAllowed ) return;
+			if( _container.numChildren == 0 ) return;
+			if( !mouseHitsInteractiveArea() ) return;
 			_interactionManager.startInteraction();
 			startEnterframe();
 		}
 
 		public function evaluateInteractionEnd():void {
+			trace( this, "evaluateInteractionEnd()" );
 			if( !_active ) return;
 			_interactionManager.stopInteraction();
 		}
 
 		public function setVisibleDimensions( width:Number, height:Number ):void {
-			_visibleWidth = width;
+			_visibleWidth = _interactionWidth = width;
 			_visibleHeight = height;
+		}
+
+		public function setInteractionWidth( value:Number ):void {
+			_interactionWidth = value;
 		}
 
 		// -----------------------
@@ -173,40 +190,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 			// Override.
 		}
 
-		protected function visualizeVisibleDimensions():void {
-			graphics.clear();
-			graphics.beginFill( 0xFF0000, 1.0 );
-			graphics.drawRect( 0, 0, _visibleWidth, _visibleHeight );
-			graphics.endFill();
-		}
-
-		protected function visualizeContentDimensions():void {
-			_container.graphics.clear();
-			_container.graphics.beginFill( 0x0000FF, 1.0 );
-			_container.graphics.drawRect( 0, 0, contentWidth, 100 );
-			_container.graphics.endFill();
-		}
-
-		protected function visualizeSnapPoints():void {
-			var i:uint;
-			var len:uint = _positionManager.numSnapPoints;
-			for( i = 0; i < len; ++i ) {
-				var px:Number = _positionManager.getSnapPointAtIndex( i );
-				_container.graphics.beginFill( 0x00FF00 );
-				_container.graphics.drawCircle( px, 0, 10 );
-				_container.graphics.endFill();
-			}
-		}
-
 		protected function evaluateNewSnapPointFromPosition( px:Number ):void {
-
-			// Add a snap point at the required position.
 			_positionManager.pushSnapPoint( px );
-
-			// Trace snap point - uncomment only for visual debugging.
-//			_container.graphics.beginFill( 0x00FF00 );
-//			_container.graphics.drawCircle( px, 0, 10 );
-//			_container.graphics.endFill();
 		}
 
 		protected function evaluateDimensionsFromItemPositionAndWidth( itemPosition:Number, itemWidth:Number, offset:Number = 0 ):void {
@@ -229,8 +214,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 			var len:uint = _positionManager.numSnapPoints;
 			var leftEdgeSnapPointMatched:Boolean = false;
 			var rightEdgeSnapPointMatched:Boolean = false;
-			var minAllowed:Number = _visibleWidth / 2;
-			var maxAllowed:Number = contentWidth - _visibleWidth / 2;
+			var minAllowed:Number = _interactionWidth / 2;
+			var maxAllowed:Number = contentWidth - _interactionWidth / 2;
 			for( var i:uint; i < len; i++ ) {
 
 				var snapPoint:Number = _positionManager.getSnapPointAtIndex( i );
@@ -268,6 +253,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 		// ---------------------------------------------------------------------
 
 		private function mouseHitsInteractiveArea():Boolean {
+
+			if( !stage ) return false;
 
 			var topLeft:Point = new Point( 0, 0 );
 			var bottomRight:Point = new Point( _visibleWidth, _visibleHeight );
@@ -310,6 +297,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_interactionManager.update();
 			_positionManager.update();
 			refreshToPosition();
+			motionUpdatedSignal.dispatch();
 			onUpdate();
 		}
 
@@ -324,6 +312,33 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		private function onPositionManagerMotionEnded():void {
 			stopEnterframe();
+		}
+
+		// ---------------------------------------------------------------------
+		// Visualization utils.
+		// ---------------------------------------------------------------------
+
+		protected function visualizeVisibleDimensions():void {
+			graphics.beginFill( 0xFF0000, 1.0 );
+			graphics.drawRect( 0, 0, _visibleWidth, _visibleHeight );
+			graphics.endFill();
+		}
+
+		protected function visualizeContentDimensions():void {
+			_container.graphics.beginFill( 0x0000FF, 1.0 );
+			_container.graphics.drawRect( 0, 0, contentWidth, 100 );
+			_container.graphics.endFill();
+		}
+
+		protected function visualizeSnapPoints():void {
+			var i:uint;
+			var len:uint = _positionManager.numSnapPoints;
+			for( i = 0; i < len; ++i ) {
+				var px:Number = _positionManager.getSnapPointAtIndex( i );
+				_container.graphics.beginFill( 0x00FF00 );
+				_container.graphics.drawCircle( px, 0, 10 );
+				_container.graphics.endFill();
+			}
 		}
 	}
 }

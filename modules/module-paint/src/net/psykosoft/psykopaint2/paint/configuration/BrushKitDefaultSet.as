@@ -27,16 +27,17 @@ package net.psykosoft.psykopaint2.paint.configuration
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0"/>
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,splotch,noisy"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,paint1,splotch,noisy"/>
 
 					<parameterMapping>
-						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush,Speed Brush,Van Gogh,Sprinkle,Smear Brush" showInUI="1"/>
+						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush,Speed Brush,Van Gogh,Sprinkle,Smear Brush,Air Brush" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
 							src="Style" 
 							target="pathengine.pointdecorator_0.Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="1,2,3"
 							value1="0.12" value2="0.7"/>
+						
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
 							src="Style" 
 							target="pathengine.pointdecorator_0.Factor" 
@@ -45,28 +46,70 @@ package net.psykosoft.psykopaint2.paint.configuration
 							value1="0.47" value2="0.5"/>	
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
 							src="Style" 
-							target="pathengine.pointdecorator_1.Color Blending" 
+							target="pathengine.pointdecorator_0.Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="0,1,2,3"
+							indices="5"
+							value1="0.4" value2="1"/>
+
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
+							src="Style" 
+							target="pathengine.pointdecorator_2.Color Blending" 
+							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
+							indices="0,1,2,3,5"
 							value1="0.5" value2="0.9"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
 							src="Style" 
-							target="pathengine.pointdecorator_1.Color Blending" 
+							target="pathengine.pointdecorator_2.Color Blending" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="4"
 							value1="0.0001" value2="0.001"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
 							src="Style" 
-							target="pathengine.pointdecorator_2.Splat Factor" 
+							target="pathengine.pointdecorator_1.Splat Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="0,1,2,3"
 							value="40"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
 							src="Style" 
-							target="pathengine.pointdecorator_2.Splat Factor" 
+							target="pathengine.pointdecorator_1.Splat Factor" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="4"
 							value="10"/>	
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
+							src="Style" 
+							target="brush.Shapes" 
+							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
+							indices="0,3"
+							index="0"/>
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
+							src="Style" 
+							target="brush.Shapes" 
+							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
+							indices="1,2,4"
+							index="1"/>
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
+							src="Style" 
+							target="brush.Shapes" 
+							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
+							indices="5"
+							index="3"/>
+
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
+							src="Style" 
+							target="pathengine.pointdecorator_2.Opacity" 
+							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
+							indices="5"
+							value1="0.1"
+							value2="0.25"/>			
+
+						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
+							src="Style" 
+							target="pathengine.pointdecorator_2.Opacity" 
+							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
+							indices="0,1,2,3,4"
+							value1="0.9" 
+							value2="0.9" />	
+
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} 
 							src="Style" 
 							target="pathengine.pointdecorator_4" 
@@ -87,12 +130,12 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 						<parameter id="Custom Color" type={PsykoParameter.BooleanParameter}  value="0" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
-							target="pathengine.pointdecorator_1.Color Mode" 
+							target="pathengine.pointdecorator_2.Color Mode" 
 							condition={PsykoParameterProxy.CONDITION_TRUE }
 							
 							index={ColorDecorator.INDEX_MODE_FIXED_COLOR}/>	
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color" 
-							target="pathengine.pointdecorator_1.Color Mode" 
+							target="pathengine.pointdecorator_2.Color Mode" 
 							condition={PsykoParameterProxy.CONDITION_FALSE }
 							
 							index={ColorDecorator.INDEX_MODE_PICK_COLOR}/>	
@@ -107,22 +150,22 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={SizeDecorator.PARAMETER_NR_FACTOR} path="pathengine.pointdecorator_0" label="Size" value1="0.47" value2="0.5" minValue="0" maxValue="1" showInUI="1"/>
 							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} path="pathengine.pointdecorator_0" index={SizeDecorator.INDEX_MAPPING_CIRCQUAD}/>
 						</SizeDecorator>
-						<ColorDecorator>
-							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
-							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY} label="Intensity" path="pathengine.pointdecorator_1" showInUI="1"/>
-							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" value1="0.5" value2="0.9" />
-							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.25" value2="0.33" />
-							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_1" value1="0.8" value2="1" />
-							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" showInUI="1"/>
-						</ColorDecorator>
 						<SplatterDecorator>
-							<parameter id={SplatterDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={SplatterDecorator.INDEX_MODE_PRESSURE_SPEED} />
-							<parameter id={SplatterDecorator.PARAMETER_SL_OFFSET_MAPPING} path="pathengine.pointdecorator_2" index="1"  />
-							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR}  path="pathengine.pointdecorator_2" value="40" />
-							<parameter id={SplatterDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_2" value="0" />
-							<parameter id={SplatterDecorator.PARAMETER_A_OFFSET_ANGLE_RANGE} path="pathengine.pointdecorator_2" value="15" />
-							<parameter id={SplatterDecorator.PARAMETER_N_SIZE_FACTOR} path="pathengine.pointdecorator_2" value="0.2" />
+							<parameter id={SplatterDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_1" index={SplatterDecorator.INDEX_MODE_PRESSURE_SPEED} />
+							<parameter id={SplatterDecorator.PARAMETER_SL_OFFSET_MAPPING} path="pathengine.pointdecorator_1" index="1"  />
+							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR}  path="pathengine.pointdecorator_1" value="40" />
+							<parameter id={SplatterDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_1" value="0" />
+							<parameter id={SplatterDecorator.PARAMETER_A_OFFSET_ANGLE_RANGE} path="pathengine.pointdecorator_1" value="15" />
+							<parameter id={SplatterDecorator.PARAMETER_N_SIZE_FACTOR} path="pathengine.pointdecorator_1" value="0.2" />
 						</SplatterDecorator>
+						<ColorDecorator>
+							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_2" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
+							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY} label="Intensity" path="pathengine.pointdecorator_2" value1="0.9" value2="0.9" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_2" value1="0.5" value2="0.9" />
+							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_2" value1="0.25" value2="0.33" />
+							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_2" value1="0.8" value2="1" />
+							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_2" color="0xffffff" showInUI="1"/>
+						</ColorDecorator>
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_3" index={BumpDecorator.INDEX_MODE_SPEED} />
 							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_3" value="1" />
@@ -166,7 +209,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					
 						<SizeDecorator>
 							<parameter id={SizeDecorator.PARAMETER_SL_MODE} index={SizeDecorator.INDEX_MODE_SPEED} path="pathengine.pointdecorator_1" />
-							<parameter id={SizeDecorator.PARAMETER_NR_FACTOR} label="Size" value1="0.3" value2="0.8" minValue="0" maxValue="2" showInUI="1" path="pathengine.pointdecorator_1" />
+							<parameter id={SizeDecorator.PARAMETER_NR_FACTOR} label="Size" value1="0.2" value2="0.6" minValue="0" maxValue="2" showInUI="1" path="pathengine.pointdecorator_1" />
 							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} index="2" path="pathengine.pointdecorator_1"/>
 						</SizeDecorator>
 						<SpawnDecorator>

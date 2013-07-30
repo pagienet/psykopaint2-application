@@ -21,16 +21,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function PencilBrushShape(context3D : Context3D)
 		{
-			super(context3D, "pencil", 1);
-			_variationFactors[0] = 1;
-			_variationFactors[1] = 1;
-			_variationFactors[2] = 1 / _variationFactors[0];
-			_variationFactors[3] = 1 / _variationFactors[1];
-			_variationFactors[4] = Math.atan2(_variationFactors[3],_variationFactors[2]);
-
+			super(context3D, "pencil", 1, 16, 1, 1);
 			_rotationRange = 0;
-
-			size = 16;
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void

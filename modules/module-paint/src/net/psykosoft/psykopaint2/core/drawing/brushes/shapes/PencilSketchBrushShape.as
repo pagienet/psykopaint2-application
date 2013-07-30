@@ -9,13 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function PencilSketchBrushShape(context3D : Context3D)
 		{
-			super(context3D, "pencilSketch", SourceImage, null, 512 );
-			_variationFactors[0] = 2;
-			_variationFactors[1] = 2;
-			_variationFactors[2] = 1 / _variationFactors[0];
-			_variationFactors[3] = 1 / _variationFactors[1];
-			_variationFactors[4] = Math.atan2(_variationFactors[3],_variationFactors[2]);
-
+			super(context3D, "pencilSketch", SourceImage, null, 512, 2, 2 );
 			_rotationRange = 0.15;
 		}
 

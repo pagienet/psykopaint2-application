@@ -4,9 +4,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.display.Shape;
 	import flash.display3D.Context3D;
 	import flash.display3D.textures.Texture;
-	import flash.filters.BlurFilter;
-	import flash.geom.Point;
-
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class WetBrushShape extends AbstractBrushShape

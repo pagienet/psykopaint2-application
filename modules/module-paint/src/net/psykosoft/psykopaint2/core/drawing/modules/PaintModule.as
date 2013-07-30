@@ -99,10 +99,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _availableBrushKitNames:Vector.<String>;
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
-		private var _showingSource:Boolean;
 		private var _canvasMatrix : Matrix;
 		//private var _navHideTimeout:int = -1;
 		private var _navShowTimeout:int = -1;
+		private var sourceCanvasViewModes:Array = [[1,0.25],[1,0],[0.5,0.5],[0.01,1]];
+		private var sourceCanvasViewModeIndex:int = 0;
 		
 		public function PaintModule()
 		{
@@ -133,18 +134,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED )
 			{
-				if ( _showingSource )
-				{
+				sourceCanvasViewModeIndex = ( sourceCanvasViewModeIndex+1) % sourceCanvasViewModes.length;
 					
-					TweenLite.killTweensOf( renderer );
-					TweenLite.to( renderer, 0.6, { sourceTextureAlpha: 0, ease: Sine.easeOut } );
-					_showingSource = false;
-				} else if ( !_showingSource  )
-				{
-					TweenLite.killTweensOf( renderer );
-					TweenLite.to( renderer, 0.6, { sourceTextureAlpha: 0.333, ease: Sine.easeIn } );
-					_showingSource = true;
-				} 
+				TweenLite.killTweensOf( renderer );
+				TweenLite.to( renderer, 0.6, { paintAlpha:sourceCanvasViewModes[sourceCanvasViewModeIndex][0],sourceTextureAlpha: sourceCanvasViewModes[sourceCanvasViewModeIndex][1], ease: Sine.easeInOut } );
+				
+				
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
 				_activeBrushKit.deactivate();
@@ -238,8 +233,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
 			renderer.init(this);
-			_showingSource = true;
 			renderer.sourceTextureAlpha = 1;
+			renderer.paintAlpha = 1;
 			canvasModel.setSourceBitmapData(bitmapData);
 			bitmapData.dispose();
 			notifyPaintModuleActivatedSignal.dispatch();

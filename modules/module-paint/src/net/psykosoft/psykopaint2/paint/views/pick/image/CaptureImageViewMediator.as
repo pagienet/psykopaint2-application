@@ -25,8 +25,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		override public function initialize():void {
 
 			// Init.
-			super.initialize();
 			registerView( view );
+			super.initialize();
 			registerEnablingState( StateType.CAPTURE_IMAGE );
 			registerEnablingState( StateType.CONFIRM_CAPTURE_IMAGE );
 

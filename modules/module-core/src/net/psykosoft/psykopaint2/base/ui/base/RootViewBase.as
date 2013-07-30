@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 		protected function addRegisteredView( view:ViewBase, toContainer:Sprite ):void {
 			trace( this, "registering view: " + view );
 			_registeredViewCount++;
-			view.viewReadySignal.addOnce( onViewReady );
+			view.readySignal.addOnce( onViewReady );
 			toContainer.addChild( view );
 		}
 

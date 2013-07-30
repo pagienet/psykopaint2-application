@@ -7,9 +7,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.text.TextField;
-	import flash.utils.Dictionary;
 
-	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
@@ -33,11 +31,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		public static const CUSTOM_COLOR_ID:String = "Custom Color";
 
-		static private var _lastSelectedBrush:String = "";
-		static private var _lastSelectedParameterId:Dictionary = new Dictionary();
-		static public var lastScrollerPosition:Number = 372; //TODO: harcode works, might want to do it cleaner.
-
-
 		private const UI_ELEMENT_Y:uint = 560;
 
 		public function EditBrushSubNavView() {
@@ -45,11 +38,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onEnabled():void {
-			navigation.setHeader( "" );
-			navigation.setLeftButton( LBL_BACK, ButtonIconType.BACK );
-			navigation.setRightButton( LBL_COLOR, ButtonIconType.CONTINUE );
-			navigation.toggleRightButtonVisibility( false );
-			navigation.layout();
+			setHeader( "" );
+			setLeftButton( LBL_BACK, ButtonIconType.BACK );
+			setRightButton( LBL_COLOR, ButtonIconType.CONTINUE );
+			showRightButton( false );
 		}
 
 		override protected function onDisposed():void {
@@ -68,58 +60,31 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
 
-			var centerButtonDataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
+			invalidateCenterButtons();
 
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
-			navigation.toggleRightButtonVisibility( false );
-			var firstParamLabel:String = "";
-			var firstParamId:String = "";
-//			trace( this, "last selected: " + EditBrushCache.getLastSelectedParameter() );
+			showRightButton( false );
 			for( var i:uint = 0; i < numParameters; ++i ) {
 
 				var parameter:PsykoParameter = list[ i ];
 //				trace( ">>> " + parameter.toXMLString() );
 
-				if( _lastSelectedParameterId[ _lastSelectedBrush ] == parameter.id || ( firstParamId == "" && parameter.id != CUSTOM_COLOR_ID ) ) {
-					firstParamLabel = parameter.label;
-					firstParamId = parameter.id;
-				}
-
 				if( parameter.type != PsykoParameter.ColorParameter ) {
 					if( parameter.id != CUSTOM_COLOR_ID ) {
 						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
-						navigation.createCenterButtonData( centerButtonDataProvider, parameter.label );
+						createCenterButton( parameter.label, ButtonIconType.DEFAULT, null, null, true );
 					}
 				} else {
-					navigation.toggleRightButtonVisibility( true );
+					showRightButton( true );
 				}
-
-				//var btn:SbButton = navigation.createButton( parameter.label, "", "btnLabelCenter", null )
-				//group.addButton( btn );
-
 			}
-			navigation.layout();
 
-			navigation.scroller.setDataProvider( centerButtonDataProvider );
-
-			// Select and <<< activate >>> if a parameter was previously selected.
-			if( firstParamId != "" ) {
-
-				// TODO: complete navigation refactor
-//				group.setSelectedButtonByLabel( firstParamLabel );
-
-				openParameter( firstParamId );
-			}
+			validateCenterButtons();
 		}
 
 		public function updateParameters( parameterSetVO:ParameterSetVO ):void {
 			_parameterSetVO = parameterSetVO;
-			// TODO: reactivate appropriately
-			/*var currentParameterID:String = getLastSelectedParameterId( _parameterSetVO.brushName );
-			if( currentParameterID != "" ) {
-				openParameter( currentParameterID );
-			}*/
 		}
 
 		// ---------------------------------------------------------------------
@@ -143,9 +108,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			if( _parameter == null ) return;
 
 			var parameterType:int = _parameter.type;
-			if( _parameter.id != CUSTOM_COLOR_ID ) {
-				_lastSelectedParameterId[ _lastSelectedBrush ] = _parameter.id;
-			}
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
@@ -325,15 +287,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				_parameter.lowerRangeValue = slider.value1;
 				_parameter.upperRangeValue = slider.value2;
 			}
-		}
-
-		// ---------------------------------------------------------------------
-		// Setters & Getters.
-		// ---------------------------------------------------------------------
-
-		static public function setLastSelectedBrush( value:String ):void {
-			if( _lastSelectedBrush == value ) return;
-			_lastSelectedBrush = value;
 		}
 	}
 }
