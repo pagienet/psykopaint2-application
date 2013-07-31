@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.commands
 {
 
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 
@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.core.commands
 		public var history : CanvasHistoryModel;
 
 		[Inject]
-		public var paintModule : PaintModule;
+		public var paintModule : BrushKitManager;
 
 		[Inject]
 		public var canvas : CanvasModel;

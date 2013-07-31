@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 {
 
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public var view:EditBrushSubNavView;
 
 		[Inject]
-		public var paintModule:PaintModule;
+		public var paintModule:BrushKitManager;
 		
 		[Inject]
 		public var notifyActivateBrushChangedSignal:NotifyActivateBrushChangedSignal;

@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var renderer:CanvasRenderer;
 
 		[Inject]
-		public var paintModule:PaintModule;
+		public var paintModule:BrushKitManager;
 
 		[Inject]
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
@@ -388,7 +388,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "rendering canvas" );
 			}
-			moduleManager.render();
+			renderer.render();
 		}
 	}
 }

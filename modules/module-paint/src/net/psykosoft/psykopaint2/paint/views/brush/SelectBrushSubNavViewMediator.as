@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public var view:SelectBrushSubNavView;
 
 		[Inject]
-		public var paintModule:PaintModule;
+		public var paintModule:BrushKitManager;
 
 		override public function initialize():void {
 

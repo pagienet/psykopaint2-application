@@ -3,14 +3,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Sine;
-	import com.greensock.easing.Strong;
-	
+
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Stage3D;
 	import flash.events.Event;
 	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
@@ -32,10 +30,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
@@ -43,7 +37,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	
 	import org.gestouch.events.GestureEvent;
 
-	public class PaintModule implements IModule
+	// TODO: Clean up by moving into custom stuff where not affecting brush kits
+	public class BrushKitManager
 	{
 		[Inject]
 		public var renderer : CanvasRenderer;
@@ -60,9 +55,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var penManager : WacomPenManager;
 		
-		[Inject]
-		public var notifyPaintModuleActivatedSignal : NotifyPaintModuleActivatedSignal;
-
 		[Inject]
 		public var brushShapeLibrary : BrushShapeLibrary;
 
@@ -102,7 +94,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var sourceCanvasViewModes:Array = [[1,0.25],[1,0],[0.5,0.5],[0.01,1]];
 		private var sourceCanvasViewModeIndex:int = 0;
 		
-		public function PaintModule()
+		public function BrushKitManager()
 		{
 			super();
 			
@@ -110,9 +102,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			{
 				registerBrushKit( BrushKit.fromXML(BrushKitDefaultSet.brushKitData.brush[i]), BrushKitDefaultSet.brushKitData.brush[i].@name);
 			}
-			
-			
-			
 		}
 
 		[PostConstruct]
@@ -123,9 +112,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyCanvasMatrixChanged.add(onCanvasMatrixChanged);
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 		}
-		
-		
-		
+
+		// TODO: Handle gestures somewhere else
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
 			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED )
@@ -210,15 +198,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				activateBrushKit();
 		}
 
-		public function activate(bitmapData : BitmapData) : void
+		public function activate() : void
 		{
 			initializeDefaultBrushes();
 
 			_active = true;
 			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
-
-			notifyPaintModuleActivatedSignal.dispatch();
 		}
 
 		public function deactivate() : void
@@ -231,7 +217,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
 			/*
-			if ( _navShowTimeout != -1 ) 
+			if ( _navShowTimeout != -1 )
 			{
 				clearTimeout( _navShowTimeout );
 				_navShowTimeout = -1;
@@ -309,10 +295,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			return _activeBrushKit.getParameterSet(!CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS );
 		}
 		
-		public function render() : void
+		public function update() : void
 		{
 			if ( _activeBrushKit ) _activeBrushKit.brushEngine.draw();
-			renderer.render();
 		}
 
 		private function onMemoryWarning() : void

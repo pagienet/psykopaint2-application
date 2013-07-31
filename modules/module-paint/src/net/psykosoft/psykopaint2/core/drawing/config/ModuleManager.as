@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.drawing.modules.CropModule;
 	import net.psykosoft.psykopaint2.core.drawing.modules.IModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	public class ModuleManager
 	{
 		[Inject]
-		public var paintModule:PaintModule;
+		public var paintModule:BrushKitManager;
 
 		[Inject]
 		public var cropModule:CropModule;
@@ -49,35 +49,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_concatenatingTypes = new Dictionary();
 		}
 
-		[PostConstruct]
-		public function postConstruct():void {
-
-			// Define module linking here...
-
-			// Pick one.
-//			concatenateModule( notifyCropCompleteSignal, cropModule, colorStyleModule );
-			concatenateModule( notifyCropCompleteSignal, cropModule, paintModule);
-
-			concatenateModule( notifyColorStyleCompleteSignal, colorStyleModule, paintModule );
-		}
-
-
-		private function concatenateModule( fromModuleCompleteSignal:Signal, fromModule:IModule, toModule:IModule, hideNavigation:Boolean = false ):void {
-
-			_concatenatingTypes[ fromModule.type() ] = toModule.type();
-
-			// Trigger.
-			fromModuleCompleteSignal.add( function( bmd:BitmapData ):void {
-
-				setActiveModule( toModule, bmd );
-
-				// Options...
-				if( hideNavigation ) {
-					notifyNavigationHideSignal.dispatch();
-				}
-			} );
-		}
-
 		public function setSourceImage( bitmapData:BitmapData ):void {
 			bitmapData = BitmapDataUtils.getLegalBitmapData(bitmapData);
 			setActiveModule( cropModule, bitmapData );
@@ -98,16 +69,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 
 			// TEMPORARY!
 			requestStateChangeSignal.dispatch( _activeModule.stateType );
-		}
-
-		public function render() : void
-		{
-			if (_activeModule)
-				_activeModule.render();
-		}
-
-		public function get activeModule():IModule {
-			return _activeModule;
 		}
 	}
 }

@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.drawing.modules.CropModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
@@ -33,7 +33,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySetColorStyleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
@@ -88,7 +87,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 
 			_injector.map( NotifyNavigationHideSignal ).asSingleton();
 
-			_injector.map( NotifyPaintModuleActivatedSignal ).asSingleton();
 			_injector.map( NotifyHistoryStackChangedSignal ).asSingleton();
 
 			_injector.map( NotifyGyroscopeUpdateSignal ).asSingleton();
@@ -104,7 +102,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_injector.map(WacomPenManager).asSingleton();
 			_injector.map(GyroscopeLightController).asSingleton();
 			_injector.map(BrushShapeLibrary).asSingleton();
-			_injector.map(PaintModule).asSingleton();
+			_injector.map(BrushKitManager).asSingleton();
 			_injector.map(CropModule).asSingleton();
 			_injector.map(ColorStyleModule).asSingleton();
 			_injector.map(ModuleManager).asSingleton();
