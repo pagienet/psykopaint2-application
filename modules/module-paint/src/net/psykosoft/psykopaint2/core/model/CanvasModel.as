@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
-	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
@@ -13,8 +12,8 @@ package net.psykosoft.psykopaint2.core.model
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
+	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;

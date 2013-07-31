@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		}
 
 		public function writeBytesSync( fileName:String, bytes:ByteArray ):void {
-			trace( this, "sync writing bytes - filename: " + _fileName + ", numBytes: " + bytes.length );
+			trace( this, "sync writing bytes - filename: " + fileName + ", numBytes: " + bytes.length );
 			var file:File = _rootFile.resolvePath( fileName );
 			var fileStream:FileStream = new FileStream();
 			fileStream.open( file, FileMode.WRITE );

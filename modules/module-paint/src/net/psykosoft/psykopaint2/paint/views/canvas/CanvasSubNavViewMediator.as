@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
