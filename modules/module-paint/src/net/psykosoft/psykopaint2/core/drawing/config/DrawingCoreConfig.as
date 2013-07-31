@@ -39,8 +39,8 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestColorStyleMatrixChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 
 	import org.swiftsuspenders.Injector;
@@ -96,8 +96,8 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_injector.map( NotifyGyroscopeUpdateSignal ).asSingleton();
 			_injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 
-			_injector.map( RequestFreezeRenderingSignal ).asSingleton();
-			_injector.map( RequestResumeRenderingSignal ).asSingleton();
+			_injector.map( RequestSaveCPUForUISignal ).asSingleton();
+			_injector.map( RequestResumeCPUUsageForUISignal ).asSingleton();
 			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
 
 			// Map singletons

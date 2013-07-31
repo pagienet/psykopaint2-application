@@ -7,17 +7,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
-	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbIconButton;
-
-	import org.gestouch.events.GestureEvent;
-
-	import org.gestouch.gestures.PanGesture;
-	import org.gestouch.gestures.PanGestureDirection;
 
 	import org.osflash.signals.Signal;
 
@@ -139,6 +133,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_scroller.refreshItemRendererProperties();
 		}
 
+		public function validateCenterButtons():void {
+			if( _centerButtonData ) {
+				_scroller.setDataProvider( _centerButtonData );
+			}
+		}
+
 		// ---------------------------------------------------------------------
 		// Protected.
 		// ---------------------------------------------------------------------
@@ -158,12 +158,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		protected function invalidateCenterButtons():void {
 			_scroller.reset();
 			_centerButtonData = null;
-		}
-
-		public function validateCenterButtons():void {
-			if( _centerButtonData ) {
-				_scroller.setDataProvider( _centerButtonData );
-			}
 		}
 
 		// ---------------------------------------------------------------------
@@ -190,12 +184,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function unSelectAllButtons():void {
 
-			var i:uint;
 			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
-			var numData:uint = dataProvider.length;
-			for( i = 0; i < numData; i++ ) {
-				var data:ButtonData = dataProvider[ i ] as ButtonData;
-				data.selected = false;
+			if( dataProvider ) {
+				var numData:uint = dataProvider.length;
+				for( var i:uint = 0; i < numData; i++ ) {
+					var data:ButtonData = dataProvider[ i ] as ButtonData;
+					data.selected = false;
+				}
 			}
 			// Note, to changes to take effect visually, you need to call _scroller.refreshItemRenderers();
 		}

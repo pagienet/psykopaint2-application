@@ -2,8 +2,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	import org.gestouch.events.GestureEvent;
@@ -14,7 +15,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
 
 		[Inject]
-		public var notifyExpensiveUiActionToggledSignal:NotifyExpensiveUiActionToggledSignal;
+		public var requestSaveCPUForUISignal:RequestSaveCPUForUISignal;
+
+		[Inject]
+		public var requestResumeCPUUsageForUISignal:RequestResumeCPUUsageForUISignal;
 
 		private var _subNavigationView:SubNavigationViewBase;
 
@@ -58,11 +62,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		private function onViewScrollingEnded():void {
-			notifyExpensiveUiActionToggledSignal.dispatch( false, "nav-scrolling" );
+			requestResumeCPUUsageForUISignal.dispatch();
 		}
 
 		private function onViewScrollingStarted():void {
-			notifyExpensiveUiActionToggledSignal.dispatch( true, "nav-scrolling" );
+			requestSaveCPUForUISignal.dispatch();
 		}
 
 		// -----------------------

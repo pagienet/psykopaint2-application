@@ -109,6 +109,8 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 		public function refreshItemRenderers():void {
 
+			if( !_dataProvider ) return;
+
 			var i:uint;
 			var numItems:uint;
 			var itemRenderer:DisplayObject;

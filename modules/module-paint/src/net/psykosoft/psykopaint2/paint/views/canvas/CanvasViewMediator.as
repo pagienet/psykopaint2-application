@@ -24,17 +24,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
 
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.TransformGesture;
@@ -63,15 +63,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
 
 		[Inject]
-		public var notifyExpensiveUiActionToggledSignal:NotifyExpensiveUiActionToggledSignal;
-
-		[Inject]
-		public var requestFreezeRenderingSignal:RequestFreezeRenderingSignal;
-
-		[Inject]
-		public var requestResumeRenderingSignal:RequestResumeRenderingSignal;
-
-		[Inject]
 		public var moduleManager:ModuleManager;
 
 		[Inject]
@@ -98,13 +89,16 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
+		[Inject]
+		public var requestZoomCanvasToDefaultViewSignal:RequestZoomCanvasToDefaultViewSignal;
+
+		[Inject]
+		public var requestZoomCanvasToEaselViewSignal:RequestZoomCanvasToEaselViewSignal;
+
 		private var _transformMatrix:Matrix;
 		private var _easelRectFromHomeView:Rectangle;
-		private var _waitingForZoomOutToContinueToHome:Boolean;
-		private var _waitingForZoomInToContinueToPaint:Boolean;
 		private var _minZoomScale:Number;
 		private var _addedMouseWheelListener:Boolean;
-		private var _waitingForHomeModuleToBeReady:Boolean;
 
 		private const MAX_ZOOM_SCALE:Number = 3;
 
@@ -135,8 +129,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			// From app.
 			notifyEaselRectUpdateSignal.add( onEaselRectInfo );
-			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
+
+			requestZoomCanvasToDefaultViewSignal.add( zoomToFullView );
+			requestZoomCanvasToEaselViewSignal.add( zoomToEaselView );
 
 			_transformMatrix = new Matrix();
 		}
@@ -202,19 +198,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 		}
 
-		private function onExpensiveUiTask( started:Boolean, id:String ):void {
-			// TODO: analyze id properly to manage activity queues...
-//			trace( this, "onExpensiveUiTask - task started: " + started + ", task id: " + id );
-			if( started ) {
-//				trace( this, "requesting rendering freeze" );
-				requestFreezeRenderingSignal.dispatch();
-			}
-			else {
-//				trace( this, "requesting rendering resume" );
-				requestResumeRenderingSignal.dispatch();
-			}
-		}
-
 		override protected function onStateChange( newState:String ):void {
 
 			super.onStateChange( newState );
@@ -239,15 +222,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				}
 			}
 
-			if( newState == StateType.TRANSITION_TO_PAINT_MODE ) {
-				_waitingForZoomInToContinueToPaint = true;
-				zoomIn();
-			}
-
-			if( newState == StateType.TRANSITION_TO_HOME_MODE ) {
-				_waitingForZoomOutToContinueToHome = true;
-				zoomOut();
-			}
+			// todo: remove this during state introduction
+			if( newState == StateType.TRANSITION_TO_HOME_MODE )
+				zoomToEaselView();
 
 		}
 
@@ -268,15 +245,16 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			view.graphics.endFill();*/
 		}
 
-		private function zoomIn():void {
+		private function zoomToFullView():void
+		{
 			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
+			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomToFullViewComplete, ease: Strong.easeInOut } );
 		}
 
-		private function zoomOut():void {
+		public function zoomToEaselView():void {
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomComplete, ease: Strong.easeInOut } );
+			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomToEaselComplete, ease: Strong.easeInOut } );
 		}
 
 		private function onZoomUpdate():void {
@@ -290,25 +268,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
-		private function onZoomComplete():void {
+		private function onZoomToFullViewComplete():void {
+			requestStateChange__OLD_TO_REMOVE( StateType.PAINT_SELECT_BRUSH );
+			requestInteractionBlockSignal.dispatch( false );
+		}
 
-			if( _waitingForZoomOutToContinueToHome ) {
-
-				_waitingForHomeModuleToBeReady = true;
-
-				requestStateChange__OLD_TO_REMOVE( StateType.PREPARE_FOR_HOME_MODE );
-				requestInteractionBlockSignal.dispatch( false ); // TODO: needed?
-				requestStateChange__OLD_TO_REMOVE( StateType.HOME_ON_EASEL );
-				requestCleanUpPaintModuleMemorySignal.dispatch();
-
-				_waitingForZoomOutToContinueToHome = false;
-			}
-
-			if( _waitingForZoomInToContinueToPaint ) {
-				requestStateChange__OLD_TO_REMOVE( StateType.PAINT_SELECT_BRUSH );
-				requestInteractionBlockSignal.dispatch( false );
-				_waitingForZoomInToContinueToPaint = false;
-			}
+		private function onZoomToEaselComplete():void {
+			// TODO: this solution is temporary while transitions states are eliminated
+			requestStateChange__OLD_TO_REMOVE( StateType.PREPARE_FOR_HOME_MODE );
+			requestInteractionBlockSignal.dispatch( false ); // TODO: needed?
+			requestStateChange__OLD_TO_REMOVE( StateType.HOME_ON_EASEL );
+			requestCleanUpPaintModuleMemorySignal.dispatch();
 		}
 
 		// -----------------------
