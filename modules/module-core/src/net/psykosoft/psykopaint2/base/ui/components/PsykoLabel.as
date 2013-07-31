@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_textfield.x = -_textfield.width / 2;
 		}
 
-		protected function enforceTextWidth():void {
+		protected function  enforceTextWidth():void {
 			_textfield.width = _textfield.textWidth + 10;
 			_textfield.height = 1.25 * _textfield.textHeight;
 		}

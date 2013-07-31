@@ -29,8 +29,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_background.x = -_background.width / 2;
 		}
 
-		protected function matchBackgroundWidthToText():void {
-			_background.width = Math.max( _textfield.width + 30, 100 );
+		protected function matchBackgroundWidthToText( plus:Number = 30 ):void {
+			_background.width = Math.max( _textfield.width + plus, 100 );
 		}
 
 		private function randomizeLabelColor():void {

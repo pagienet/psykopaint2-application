@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.core.views.components.label
 		override protected function validateDimensions():void {
 			enforceTextWidth();
 			_textfield.x = _textfieldSnapX - _textfield.width;
-			matchBackgroundWidthToText();
+			matchBackgroundWidthToText( 40 );
 		}
 	}
 }

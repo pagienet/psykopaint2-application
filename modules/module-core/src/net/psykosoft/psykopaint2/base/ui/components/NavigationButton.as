@@ -132,6 +132,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			updateSelected();
 			addEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
 		}
 
