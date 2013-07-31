@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.home.commands
 
 		override public function execute():void {
 
-			context.detain( this );
+			trace( this, "execute()" );
 
 			_loader = new AssetBundleLoader( HomeView.HOME_BUNDLE_ID );
 			_loader.addEventListener( Event.COMPLETE, onBundledAssetsReady );

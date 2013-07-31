@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.home.commands
 		public var requestHomeSceneConstructionSignal:RequestHomeSceneConstructionSignal;
 
 		override public function execute():void {
+			trace( this, "execute()" );
 			requestHomeSceneConstructionSignal.dispatch();
 		}
 	}

@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.home.commands
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
-
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 
 	public class SetUpHomeModuleCommand extends SequenceMacro
@@ -16,9 +15,12 @@ package net.psykosoft.psykopaint2.home.commands
 
 		override public function prepare():void {
 
+			trace( this, "prepare()" );
+
 			add( LoadHomeBundledAssetsCommand );
 			add( BuildHomeSceneCommand );
 			add( RetrievePaintingDataCommand );
+			add( UpdateEaselWithLatestPaintingCommand );
 			if( _timesRan == 0 ) add( HomeIntroAnimationCommand );
 
 			_timesRan++;
@@ -28,9 +30,7 @@ package net.psykosoft.psykopaint2.home.commands
 
 		private function onMacroComplete( success:Boolean ):void {
 			if( success ) notifyHomeModuleSetUpSignal.dispatch();
-			else {
-				throw new Error( "Error setting up the home module." );
-			}
+			else throw new Error( "Error setting up the home module." );
 		}
 	}
 }

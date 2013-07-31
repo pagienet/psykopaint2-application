@@ -29,7 +29,8 @@ package net.psykosoft.psykopaint2.core.commands
 		}
 
 		override public function execute():void {
-			super.execute();
+
+			trace( this, "execute()" );
 
 			_paintingVos = new Vector.<PaintingInfoVO>();
 

@@ -71,12 +71,18 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
 			if( data && data.length > 0 ) {
 				view.createInProgressPaintings( data );
-				paintingModel.activePaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
-				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
-				requestEaselUpdateSignal.dispatch( vo, false, false );
 			}
 
 			view.validateCenterButtons();
+
+			// Auto select first painting.
+			if( data ) {
+				var vo:PaintingInfoVO = data[ 0 ];
+				var dump:Array = vo.id.split( "-" );
+				var str:String = dump[ dump.length - 1 ];
+				view.selectButtonWithLabel( str );
+				paintingModel.activePaintingId = vo.id;
+			}
 
 			super.onViewSetup();
 		}
@@ -135,25 +141,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		private function pickDefaultSurfaceAndContinueToPickImage():void {
 			_waitingForSurfaceSet = true;
 			requestLoadSurfaceSignal.dispatch( 0 );
-		}
-
-		// -----------------------
-		// Private.
-		// -----------------------
-
-		private function displaySavedPaintings():void {
-
-			// Retrieve saved paintings and populate nav.
-			// Ordered from newest -> oldest.
-			// Always selects the latest one, i.e. index 0.
-			// Also requests an easel update on the home view.
-			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
-			if( data && data.length > 0 ) {
-				view.createInProgressPaintings( data );
-				paintingModel.activePaintingId = "uniqueUserId-" + view.getIdForSelectedInProgressPainting();
-				var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
-				requestEaselUpdateSignal.dispatch( vo, false, false );
-			}
 		}
 	}
 }

@@ -157,8 +157,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			easelRectModel.rect = view.easelRect;
 		}
 
-		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animate:Boolean, dispose:Boolean ):void {
-			view.paintingManager.easel.setContent( paintingVO, animate, dispose );
+		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animateIn:Boolean, disposeWhenDone:Boolean ):void {
+			view.paintingManager.easel.setContent( paintingVO, animateIn, disposeWhenDone );
 		}
 
 		private function onPaintingDataRetrieved( data:Vector.<PaintingInfoVO> ):void {

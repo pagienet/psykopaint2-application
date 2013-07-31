@@ -42,26 +42,13 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		}
 
 		public function createInProgressPaintings( data:Vector.<PaintingInfoVO> ):void {
-
-			var i:uint;
-			var len:uint;
-
-			// Old painting buttons.
-			len = data.length;
-			for( i = 0; i < len; i++ ) {
-
+			var numPaintings:uint = data.length;
+			for( var i:uint = 0; i < numPaintings; i++ ) {
 				var vo:PaintingInfoVO = data[ i ];
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
-
 				createCenterButton( str, null, SbBitmapButton, new Bitmap( vo.thumbnail ), true );
-
-
 			}
-			// TODO: complete navigation refactor
-			//			if( lastSelectedPaintingLabel == "" ) _buttonGroup.setSelectedButtonByIndex( 0 );
-			//			else _buttonGroup.setSelectedButtonByLabel( lastSelectedPaintingLabel );
-			//			navigation.addCenterButtonGroup( _buttonGroup );
 		}
 
 		/*public function validateCenterButtons():void {
