@@ -9,5 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		function type():String;
 
 		function render() : void;
+
+		function get stateType() : String;
 	}
 }

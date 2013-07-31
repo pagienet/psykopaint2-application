@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.views.crop
+package net.psykosoft.psykopaint2.crop.views
 {
 
 	import flash.display.BitmapData;
@@ -6,10 +6,10 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCropModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class CropViewMediator extends MediatorBase
@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 		public var view:CropView;
 
 		[Inject]
-		public var notifyCropModuleActivatedSignal:NotifyCropModuleActivatedSignal;
+		public var requestUpdateCropImageSignal:RequestUpdateCropImageSignal;
 
 		[Inject]
 		public var notifyCropCompleteSignal:NotifyCropCompleteSignal;
@@ -33,10 +33,10 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 			registerView( view );
 			super.initialize();
-			registerEnablingState( StateType.CROP );
+			registerEnablingState( NavigationStateType.CROP );
 
 			// From app.
-			notifyCropModuleActivatedSignal.add( onCropModuleActivated );
+			requestUpdateCropImageSignal.add( updateCropSourceImage );
 			notifyCropConfirmSignal.add( onCropConfirmed );
 		}
 
@@ -48,8 +48,8 @@ package net.psykosoft.psykopaint2.paint.views.crop
 			notifyCropCompleteSignal.dispatch( view.renderPreviewToBitmapData() );
 		}
 
-		private function onCropModuleActivated( bitmapData:BitmapData ):void {
-			trace( this, "onCropModuleActivated" );
+		private function updateCropSourceImage( bitmapData:BitmapData ):void {
+			trace( this, "updateCropSourceImage" );
 			view.easelRect = easelRectModel.rect;
 			view.sourceMap = bitmapData;
 		}

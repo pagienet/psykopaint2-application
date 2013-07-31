@@ -13,26 +13,21 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
-	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
 
@@ -51,19 +46,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var renderer:CanvasRenderer;
 
 		[Inject]
-		public var paintModule:PaintModule;
-
-		[Inject]
-		public var notifyModuleActivatedSignal:NotifyModuleActivatedSignal;
-
-		[Inject]
-		public var requestStateUpdateFromModuleActivationSignal:RequestStateUpdateFromModuleActivationSignal;
+		public var paintModule:BrushKitManager;
 
 		[Inject]
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
-
-		[Inject]
-		public var moduleManager:ModuleManager;
 
 		[Inject]
 		public var lightingModel:LightingModel;
@@ -108,13 +94,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			registerView( view );
 			super.initialize();
-			registerEnablingState( StateType.PAINT );
-			registerEnablingState( StateType.PAINT_SELECT_BRUSH );
-			registerEnablingState( StateType.PAINT_ADJUST_BRUSH );
-			registerEnablingState( StateType.PAINT_COLOR );
-			registerEnablingState( StateType.TRANSITION_TO_HOME_MODE );
-			registerEnablingState( StateType.TRANSITION_TO_PAINT_MODE );
-			registerEnablingState( StateType.PREPARE_FOR_HOME_MODE );
+			registerEnablingState( NavigationStateType.PAINT );
+			registerEnablingState( NavigationStateType.PAINT_SELECT_BRUSH );
+			registerEnablingState( NavigationStateType.PAINT_ADJUST_BRUSH );
+			registerEnablingState( NavigationStateType.PAINT_COLOR );
+			registerEnablingState( NavigationStateType.TRANSITION_TO_HOME_MODE );
+			registerEnablingState( NavigationStateType.TRANSITION_TO_PAINT_MODE );
+			registerEnablingState( NavigationStateType.PREPARE_FOR_HOME_MODE );
 
 			// Init.
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
@@ -123,9 +109,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// Register canvas gpu rendering in core.
 			GpuRenderManager.addRenderingStep( paintModulePreRenderingStep, GpuRenderingStepType.PRE_CLEAR );
 			GpuRenderManager.addRenderingStep( paintModuleNormalRenderingsStep, GpuRenderingStepType.NORMAL );
-
-			// Drawing core to app proxying.
-			notifyModuleActivatedSignal.add( onDrawingCoreModuleActivated );
 
 			// From app.
 			notifyEaselRectUpdateSignal.add( onEaselRectInfo );
@@ -203,8 +186,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			super.onStateChange( newState );
 
 			if( newState ) {
-				trace( this, "state index: " + newState.indexOf( StateType.PAINT ) );
-				if( newState.indexOf( StateType.PAINT ) != -1 ) {
+				trace( this, "state index: " + newState.indexOf( NavigationStateType.PAINT ) );
+				if( newState.indexOf( NavigationStateType.PAINT ) != -1 ) {
 
 					if( !CoreSettings.RUNNING_ON_iPAD && !_addedMouseWheelListener ) {
 						view.stage.addEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
@@ -223,8 +206,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 
 			// todo: remove this during state introduction
-			if( newState == StateType.TRANSITION_TO_HOME_MODE )
-				zoomToEaselView();
+			if( newState == NavigationStateType.TRANSITION_TO_HOME_MODE )
+				zoomToEaselView(null);
 
 		}
 
@@ -245,16 +228,23 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			view.graphics.endFill();*/
 		}
 
-		private function zoomToFullView():void
+		private function zoomToFullView(callback : Function):void
 		{
 			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomToFullViewComplete, ease: Strong.easeInOut } );
+			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: function() {
+				onZoomToFullViewComplete();
+				if (callback) callback();
+			}, ease: Strong.easeInOut } );
 		}
 
-		public function zoomToEaselView():void {
+		public function zoomToEaselView(callback : Function):void {
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomToEaselComplete, ease: Strong.easeInOut } );
+			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete:
+					function() {
+						onZoomToEaselComplete();
+						if (callback) callback();
+					}, ease: Strong.easeInOut } );
 		}
 
 		private function onZoomUpdate():void {
@@ -269,15 +259,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function onZoomToFullViewComplete():void {
-			requestStateChange__OLD_TO_REMOVE( StateType.PAINT_SELECT_BRUSH );
+			requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_SELECT_BRUSH );
 			requestInteractionBlockSignal.dispatch( false );
 		}
 
 		private function onZoomToEaselComplete():void {
 			// TODO: this solution is temporary while transitions states are eliminated
-			requestStateChange__OLD_TO_REMOVE( StateType.PREPARE_FOR_HOME_MODE );
+			requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREPARE_FOR_HOME_MODE );
 			requestInteractionBlockSignal.dispatch( false ); // TODO: needed?
-			requestStateChange__OLD_TO_REMOVE( StateType.HOME_ON_EASEL );
+			requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
 			requestCleanUpPaintModuleMemorySignal.dispatch();
 		}
 
@@ -350,15 +340,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {
 				trace( this, "rendering canvas" );
 			}
-			moduleManager.render();
-		}
-
-		// -----------------------
-		// Proxying.
-		// -----------------------
-
-		private function onDrawingCoreModuleActivated( vo:ModuleActivationVO ):void {
-			requestStateUpdateFromModuleActivationSignal.dispatch( vo );
+			renderer.render();
 		}
 	}
 }

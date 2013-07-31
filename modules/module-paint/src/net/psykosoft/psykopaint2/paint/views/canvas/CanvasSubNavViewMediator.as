@@ -4,13 +4,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
@@ -126,7 +126,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case CanvasSubNavView.LBL_PICK_A_BRUSH:
 				{
-					requestStateChange__OLD_TO_REMOVE( StateType.PAINT_SELECT_BRUSH );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_SELECT_BRUSH );
 					break;
 				}
 			}
@@ -139,7 +139,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function onPaintingSaved( success:Boolean ):void {
 			if( _waitingForSaveToContinueToHomeState ) {
 				setTimeout( function():void {
-					requestStateChange__OLD_TO_REMOVE( StateType.TRANSITION_TO_HOME_MODE );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.TRANSITION_TO_HOME_MODE );
 				}, 100 );
 				_waitingForSaveToContinueToHomeState = false;
 			}

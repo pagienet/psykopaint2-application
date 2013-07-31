@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.settings
 {
 
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
 	public class SettingsSubNavViewMediator extends SubNavigationMediatorBase
@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override protected function onButtonClicked( label:String ):void {
 			switch( label ) {
 				case SettingsSubNavView.LBL_WALLPAPER: {
-					requestStateChange__OLD_TO_REMOVE( StateType.SETTINGS_WALLPAPER );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.SETTINGS_WALLPAPER );
 					break;
 				}
 			}

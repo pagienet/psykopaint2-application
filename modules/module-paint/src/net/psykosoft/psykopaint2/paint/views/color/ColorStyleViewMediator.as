@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleModuleActivatedSignal;
@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			// Init.
 			registerView( view );
 			super.initialize();
-			registerEnablingState( StateType.COLOR_STYLE );
+			registerEnablingState( NavigationStateType.COLOR_STYLE );
 
 			// From app.
 			notifyColorStyleModuleActivatedSignal.add( onModuleActivated );

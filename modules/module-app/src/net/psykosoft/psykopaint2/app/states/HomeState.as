@@ -1,7 +1,10 @@
 package net.psykosoft.psykopaint2.app.states
 {
+	import flash.display.BitmapData;
+
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.states.State;
+	import net.psykosoft.psykopaint2.core.signals.RequestCropStateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
@@ -16,12 +19,17 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestHomeViewScrollSignal : RequestHomeViewScrollSignal;
 
-		// TODO: REMOVE THIS SIGNAL AND COMMUNICATE DIFFERENTLY?
+		[Inject]
+		public var transitionToPaintState : TransitionHomeToPaintState;
+
+		[Inject]
+		public var cropState : CropState;
+
 		[Inject]
 		public var requestPaintStateSignal : RequestPaintStateSignal;
 
 		[Inject]
-		public var transitionToPaintState : TransitionHomeToPaintState;
+		public var requestCropStateSignal : RequestCropStateSignal;
 
 		public function HomeState()
 		{
@@ -32,17 +40,26 @@ package net.psykosoft.psykopaint2.app.states
 			// TODO: this probably needs to be moved to some activation command
 			requestNavigationToggleSignal.dispatch(1, 0.5);
 			requestHomeViewScrollSignal.dispatch(1);
-			requestPaintStateSignal.add(onRequestPaintStateSignal);
+
+			requestPaintStateSignal.add(onRequestPaintState);
+			requestCropStateSignal.add(onRequestCropState);
 		}
 
 		override ns_state_machine function deactivate() : void
 		{
-			requestPaintStateSignal.remove(onRequestPaintStateSignal);
+			requestPaintStateSignal.remove(onRequestPaintState);
+			requestCropStateSignal.remove(onRequestCropState);
 		}
 
-		private function onRequestPaintStateSignal() : void
+		private function onRequestPaintState() : void
 		{
 			stateMachine.setActiveState(transitionToPaintState);
+		}
+
+		private function onRequestCropState(bitmapData : BitmapData) : void
+		{
+			cropState.setSourceBitmapData(bitmapData);
+			stateMachine.setActiveState(cropState);
 		}
 	}
 }

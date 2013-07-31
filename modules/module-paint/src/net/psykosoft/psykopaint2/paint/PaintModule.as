@@ -11,14 +11,11 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
-	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 
 	public class PaintModule extends ModuleBase
@@ -81,10 +78,6 @@ package net.psykosoft.psykopaint2.paint
 		}
 
 		private function onViewsReady():void {
-
-			// Init drawing core.
-			_paintConfig.injector.getInstance( RequestDrawingCoreStartupSignal ).dispatch();
-
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );
 
@@ -104,7 +97,7 @@ package net.psykosoft.psykopaint2.paint
 			_loader = null;
 
 			// Set default surface.
-			_paintConfig.injector.getInstance( RequestDrawingCoreSurfaceSetSignal ).dispatch( byteArray, null );
+			_paintConfig.injector.getInstance( RequestSetCanvasSurfaceSignal ).dispatch( byteArray, null );
 
 			loadDefaultSourceImage();
 		}

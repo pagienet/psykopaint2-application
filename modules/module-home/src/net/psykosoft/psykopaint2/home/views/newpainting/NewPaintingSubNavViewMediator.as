@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintModeType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
@@ -99,7 +99,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					PaintModeModel.activeMode = PaintModeType.COLOR_MODE;
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = PaintingInfoVO.DEFAULT_VO_ID;
-					requestStateChange__OLD_TO_REMOVE( StateType.HOME_PICK_SURFACE );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_PICK_SURFACE );
 					break;
 				}
 
@@ -133,7 +133,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		private function onSurfaceSet():void {
 			if( _waitingForSurfaceSet ) {
-			   	requestStateChange__OLD_TO_REMOVE( StateType.PICK_IMAGE );
+			   	requestStateChange__OLD_TO_REMOVE( NavigationStateType.PICK_IMAGE );
 				_waitingForSurfaceSet = false;
 			}
 		}

@@ -8,8 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.CropModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
+	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
@@ -28,13 +27,11 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCropModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySetColorStyleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
@@ -74,12 +71,11 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_commandMap = _injector.getInstance(ISignalCommandMap);
 
 			// Map notification signals.
-			_injector.map( NotifyModuleActivatedSignal ).asSingleton();
 			_injector.map( NotifyAvailableBrushTypesSignal ).asSingleton();
 			_injector.map( NotifyActivateBrushChangedSignal ).asSingleton();
 
 			_injector.map( NotifyCropCompleteSignal ).asSingleton();
-			_injector.map( NotifyCropModuleActivatedSignal ).asSingleton();
+			_injector.map( RequestUpdateCropImageSignal ).asSingleton();
 
 			_injector.map( NotifyColorStyleModuleActivatedSignal ).asSingleton();
 			_injector.map( NotifySetColorStyleSignal ).asSingleton();
@@ -90,7 +86,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 
 			_injector.map( NotifyNavigationHideSignal ).asSingleton();
 
-			_injector.map( NotifyPaintModuleActivatedSignal ).asSingleton();
 			_injector.map( NotifyHistoryStackChangedSignal ).asSingleton();
 
 			_injector.map( NotifyGyroscopeUpdateSignal ).asSingleton();
@@ -106,10 +101,8 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_injector.map(WacomPenManager).asSingleton();
 			_injector.map(GyroscopeLightController).asSingleton();
 			_injector.map(BrushShapeLibrary).asSingleton();
-			_injector.map(PaintModule).asSingleton();
-			_injector.map(CropModule).asSingleton();
+			_injector.map(BrushKitManager).asSingleton();
 			_injector.map(ColorStyleModule).asSingleton();
-			_injector.map(ModuleManager).asSingleton();
 
 			_injector.map(CanvasRenderer).asSingleton();
 			_injector.map(LightingModel).asSingleton();

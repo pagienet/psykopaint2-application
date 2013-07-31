@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.pick.image
 {
 
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraSnapshotRequest;
 
@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			switch( label ) {
 				case ConfirmCaptureImageSubNavView.LBL_BACK:
 				{
-					requestStateChange__OLD_TO_REMOVE( StateType.CAPTURE_IMAGE );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.CAPTURE_IMAGE );
 					break;
 				}
 				case ConfirmCaptureImageSubNavView.LBL_CONFIRM:

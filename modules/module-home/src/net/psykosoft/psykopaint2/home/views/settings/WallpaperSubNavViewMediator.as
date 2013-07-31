@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 	import net.psykosoft.psykopaint2.base.utils.io.AtlasLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 				// Left.
 				case WallpaperSubNavView.LBL_BACK: {
-					requestStateChange__OLD_TO_REMOVE( StateType.SETTINGS );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.SETTINGS );
 					break;
 				}
 

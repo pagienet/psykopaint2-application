@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.paint.commands {
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 
 	public class DeletePaintingCommand extends TracingCommand {
 
@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.paint.commands {
 		public var paintingModel:PaintingModel;
 
 		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal_OLD_TO_REMOVE;
+		public var requestStateChangeSignal:RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 
 		public function DeletePaintingCommand() {
 			super();
@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.paint.commands {
 			infoFile.deleteFile();
 
 			//change state to home
-			requestStateChangeSignal.dispatch( StateType.TRANSITION_TO_HOME_MODE );
+			requestStateChangeSignal.dispatch( NavigationStateType.TRANSITION_TO_HOME_MODE );
 		}
 	}
 }

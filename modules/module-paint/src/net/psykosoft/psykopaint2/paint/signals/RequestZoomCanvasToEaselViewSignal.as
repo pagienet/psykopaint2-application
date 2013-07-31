@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.paint.signals
 	{
 		public function RequestZoomCanvasToEaselViewSignal()
 		{
+			super(Function);
 		}
 	}
 }
