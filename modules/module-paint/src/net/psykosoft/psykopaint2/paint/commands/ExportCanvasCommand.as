@@ -1,23 +1,20 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
 
+	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
+
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopImageSaveUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.IosImageSaveUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 
-	import robotlegs.bender.framework.api.IContext;
-
-	public class ExportCanvasCommand extends TracingCommand
+	public class ExportCanvasCommand extends AsyncCommand
 	{
-		[Inject]
-		public var context:IContext;
-
 		[Inject]
 		public var canvasModel:CanvasModel;
 
@@ -25,22 +22,18 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var canvasRenderer:CanvasRenderer;
 
 		[Inject]
-		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
+		public var notifyCanvasExportStartedSignal:NotifyCanvasExportStartedSignal;
+
+		[Inject]
+		public var notifyCanvasExportEndedSignal:NotifyCanvasExportEndedSignal;
 
 		private var _bitmapData : BitmapData;
 
-		public function ExportCanvasCommand() {
-			super();
-		}
-
 		override public function execute():void {
-			super.execute();
-			exportPainting();
-		}
-
-		private function exportPainting():void {
 
 			_bitmapData = canvasRenderer.renderToBitmapData();
+
+			notifyCanvasExportStartedSignal.dispatch();
 
 			// Write bmd
 			if( CoreSettings.RUNNING_ON_iPAD ) {
@@ -51,10 +44,14 @@ package net.psykosoft.psykopaint2.paint.commands
 				var desktopImageSaveUtil:DesktopImageSaveUtil = new DesktopImageSaveUtil();
 				desktopImageSaveUtil.saveImageToDesktop( _bitmapData, onWriteComplete );
 			}
+
+			// TODO: listen for fail.
 		}
 
 		private function onWriteComplete():void {
 			_bitmapData.dispose();
+			notifyCanvasExportEndedSignal.dispatch();
+			dispatchComplete( true );
 		}
 	}
 }

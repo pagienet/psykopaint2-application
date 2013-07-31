@@ -4,6 +4,10 @@ package net.psykosoft.psykopaint2.core.views.popups
 	import flash.utils.getDefinitionByName;
 	import flash.utils.setTimeout;
 
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
+
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
+
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
@@ -27,13 +31,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
 
 		[Inject]
-		public var notifyPaintingSavingStartedSignal:NotifyPaintingSavingStartedSignal;
-
-		[Inject]
 		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
-
-		[Inject]
-		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
 
 		override public function initialize():void {
 
@@ -45,6 +43,8 @@ package net.psykosoft.psykopaint2.core.views.popups
 			// From app.
 			notifyPaintingSavingStartedSignal.add( onPaintingSavingStarted );
 			notifyPaintingSavedSignal.add( onPaintingSavingEnded );
+			notifyCanvasExportStartedSignal.add( onExportCanvasStarted );
+			notifyCanvasExportEndedSignal.add( onExportCanvasEnded );
 
 			// From view.
 			view.popUpShownSignal.add( onPopUpShown );
@@ -59,6 +59,12 @@ package net.psykosoft.psykopaint2.core.views.popups
 		// Saving.
 		// -----------------------
 
+		[Inject]
+		public var notifyPaintingSavingStartedSignal:NotifyPaintingSavingStartedSignal;
+
+		[Inject]
+		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
+
 		private function onPaintingSavingStarted():void {
 			showPopUp( PopUpType.MESSAGE );
 			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
@@ -66,6 +72,25 @@ package net.psykosoft.psykopaint2.core.views.popups
 		}
 
 		private function onPaintingSavingEnded( success:Boolean ):void {
+			hidePopUp();
+		}
+
+		// -----------------------
+		// Exporting.
+		// -----------------------
+
+		[Inject]
+		public var notifyCanvasExportStartedSignal:NotifyCanvasExportStartedSignal;
+
+		[Inject]
+		public var notifyCanvasExportEndedSignal:NotifyCanvasExportEndedSignal;
+
+		private function onExportCanvasStarted():void {
+			showPopUp( PopUpType.MESSAGE );
+			requestUpdateMessagePopUpSignal.dispatch( "Saving...", "" );
+		}
+
+		private function onExportCanvasEnded():void {
 			hidePopUp();
 		}
 

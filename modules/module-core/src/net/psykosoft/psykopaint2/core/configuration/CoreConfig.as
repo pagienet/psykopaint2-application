@@ -18,6 +18,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
@@ -189,6 +191,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestHideSplashScreenSignal ).asSingleton();
 			_injector.map( NotifyPaintingSavedSignal ).asSingleton();
 			_injector.map( NotifyPaintingSavingStartedSignal ).asSingleton();
+			_injector.map( NotifyCanvasExportStartedSignal ).asSingleton();
+			_injector.map( NotifyCanvasExportEndedSignal ).asSingleton();
 		}
 
 		// -----------------------
