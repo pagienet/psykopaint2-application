@@ -37,6 +37,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var notifyCanvasBackgroundSetSignal : NotifyCanvasBackgroundSetSignal;
 
+		[Inject]
+		public var paintState : PaintState;
+
 		public function TransitionHomeToPaintState()
 		{
 		}
@@ -54,8 +57,13 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onCanvasBackgroundSet() : void
 		{
-			requestZoomCanvasToDefaultViewSignal.dispatch();
+			requestZoomCanvasToDefaultViewSignal.dispatch(onZoomOutComplete);
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
+		}
+
+		private function onZoomOutComplete() : void
+		{
+			stateMachine.setActiveState(paintState);
 		}
 
 		override ns_state_machine function deactivate() : void

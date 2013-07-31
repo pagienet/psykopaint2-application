@@ -231,7 +231,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			// todo: remove this during state introduction
 			if( newState == NavigationStateType.TRANSITION_TO_HOME_MODE )
-				zoomToEaselView();
+				zoomToEaselView(null);
 
 		}
 
@@ -252,16 +252,23 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			view.graphics.endFill();*/
 		}
 
-		private function zoomToFullView():void
+		private function zoomToFullView(callback : Function):void
 		{
 			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomToFullViewComplete, ease: Strong.easeInOut } );
+			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: function() {
+				onZoomToFullViewComplete();
+				if (callback) callback();
+			}, ease: Strong.easeInOut } );
 		}
 
-		public function zoomToEaselView():void {
+		public function zoomToEaselView(callback : Function):void {
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomToEaselComplete, ease: Strong.easeInOut } );
+			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete:
+					function() {
+						onZoomToEaselComplete();
+						if (callback) callback();
+					}, ease: Strong.easeInOut } );
 		}
 
 		private function onZoomUpdate():void {

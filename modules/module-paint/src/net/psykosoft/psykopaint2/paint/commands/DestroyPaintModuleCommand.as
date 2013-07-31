@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
+	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
@@ -20,12 +21,17 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var notifyPaintModuleDestroyedSignal : NotifyPaintModuleDestroyedSignal;
 
+		[Inject]
+		public var lightController:GyroscopeLightController;
+
 		override public function execute() : void
 		{
 			super.execute();
+			lightController.enabled = false;
 			canvasModel.disposePaintTextures();
 			canvasHistoryModel.clearHistory();	// cleans up snapshot memory too
 			canvasRenderer.disposeBackground();
+
 
 			notifyPaintModuleDestroyedSignal.dispatch();
 		}

@@ -15,7 +15,6 @@ package net.psykosoft.psykopaint2.core.rendering
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
-	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -51,7 +50,6 @@ package net.psykosoft.psykopaint2.core.rendering
 		[Inject]
 		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
 
-		private var _paintModule : PaintModule;
 		private var _context3D : Context3D;
 		private var _lightingRenderer : LightingRenderer;
 		private var _background : RefCountedTexture;
@@ -151,18 +149,15 @@ package net.psykosoft.psykopaint2.core.rendering
 			return _lightingRenderer.paintAlpha;
 		}
 
-		public function init(module : PaintModule = null) : void
+		public function init() : void
 		{
-			_paintModule = module;
-			if (!_paintModule) throw "CanvasRenderer needs to be initialized with a PaintModule first";
-
 			_context3D = stage3D.context3D;
+			sourceTextureAlpha = 1;
+			paintAlpha = 1;
 		}
 
 		public function render() : void
 		{
-			_context3D = stage3D.context3D;
-
 			_context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
 			_context3D.setCulling(TriangleCulling.NONE);
 			_context3D.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.ALWAYS, Context3DStencilAction.SET, Context3DStencilAction.SET, Context3DStencilAction.SET);

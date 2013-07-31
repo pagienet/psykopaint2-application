@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.app.states
 {
-	import mx.modules.IModule;
-
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 
 	import net.psykosoft.psykopaint2.base.states.State;

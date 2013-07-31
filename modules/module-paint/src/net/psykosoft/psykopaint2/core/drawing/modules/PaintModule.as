@@ -163,9 +163,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		}
 
 		private function initializeDefaultBrushes():void {
-			
 			notifyAvailableBrushTypesSignal.dispatch( _availableBrushKitNames );
-		
 		}
 
 		private function registerBrushKit( brushKit:BrushKit, kitName:String ):void {
@@ -219,11 +217,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_active = true;
 			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
-			renderer.init(this);
-			renderer.sourceTextureAlpha = 1;
-			renderer.paintAlpha = 1;
-			canvasModel.setSourceBitmapData(bitmapData);
-			bitmapData.dispose();
+
 			notifyPaintModuleActivatedSignal.dispatch();
 		}
 
