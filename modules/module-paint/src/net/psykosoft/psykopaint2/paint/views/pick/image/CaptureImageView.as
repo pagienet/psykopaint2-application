@@ -87,6 +87,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			_bmd = new TrackedBitmapData( _currentCamera.width, _currentCamera.height, false, 0 );
 			_currentCamera.drawToBitmapData( _bmd );
 			_snapshot.bitmapData = _bmd;
+			_snapshot.height = 384;
+			_snapshot.width = 512;
 
 			clearAllTweens();
 			cameraLeave();
