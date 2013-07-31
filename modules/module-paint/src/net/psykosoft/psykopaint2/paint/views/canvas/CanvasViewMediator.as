@@ -11,7 +11,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
@@ -24,23 +23,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 
 	import org.gestouch.events.GestureEvent;
@@ -103,26 +96,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var requestCleanUpPaintModuleMemorySignal : RequestDestroyPaintModuleSignal;
 
 		[Inject]
-		public var notifyHomeModuleReadySignal:NotifyHomeViewReadySignal;
-
-		[Inject]
 		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
-
-		[Inject]
-		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
-
-		[Inject]
-		public var requestPopUpRemovalSignal:RequestPopUpRemovalSignal;
-
-		[Inject]
-		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
 
 		private var _transformMatrix:Matrix;
 		private var _easelRectFromHomeView:Rectangle;
 		private var _waitingForZoomOutToContinueToHome:Boolean;
 		private var _waitingForZoomInToContinueToPaint:Boolean;
 		private var _minZoomScale:Number;
-		private var _waitingForSavingPopUpRemoval:Boolean;
 		private var _addedMouseWheelListener:Boolean;
 		private var _waitingForHomeModuleToBeReady:Boolean;
 
@@ -157,8 +137,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyEaselRectUpdateSignal.add( onEaselRectInfo );
 			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
-			notifyHomeModuleReadySignal.add( onHomeModuleReady );
-			notifyPopUpRemovedSignal.add( onPopUpRemoved );
 
 			_transformMatrix = new Matrix();
 		}
@@ -316,10 +294,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			if( _waitingForZoomOutToContinueToHome ) {
 
-				requestUpdateMessagePopUpSignal.dispatch( "Almost done...", "" );
-
 				_waitingForHomeModuleToBeReady = true;
+
 				requestStateChange__OLD_TO_REMOVE( StateType.PREPARE_FOR_HOME_MODE );
+				requestInteractionBlockSignal.dispatch( false ); // TODO: needed?
+				requestStateChange__OLD_TO_REMOVE( StateType.HOME_ON_EASEL );
+				requestCleanUpPaintModuleMemorySignal.dispatch();
 
 				_waitingForZoomOutToContinueToHome = false;
 			}
@@ -329,31 +309,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				requestInteractionBlockSignal.dispatch( false );
 				_waitingForZoomInToContinueToPaint = false;
 			}
-		}
-
-		private function onHomeModuleReady():void {
-			if( _waitingForHomeModuleToBeReady ) {
-
-				setTimeout( function():void {
-					_waitingForSavingPopUpRemoval = true;
-					requestPopUpRemovalSignal.dispatch();
-				}, 250 );
-
-				_waitingForHomeModuleToBeReady = false;
-			}
-		}
-
-		private function onPopUpRemoved():void {
-
-			if( _waitingForSavingPopUpRemoval ) {
-
-			    requestInteractionBlockSignal.dispatch( false ); // TODO: needed?
-				requestStateChange__OLD_TO_REMOVE( StateType.HOME_ON_EASEL );
-				requestCleanUpPaintModuleMemorySignal.dispatch();
-
-				_waitingForSavingPopUpRemoval = false;
-			}
-
 		}
 
 		// -----------------------

@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.paint.signals
 	public class NotifyPaintingSavedSignal extends TracingSignal
 	{
 		public function NotifyPaintingSavedSignal() {
-			super();
+			super( Boolean ); // Success
 		}
 	}
 }

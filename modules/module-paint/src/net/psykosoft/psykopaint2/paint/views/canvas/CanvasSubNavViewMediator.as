@@ -136,7 +136,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// From app.
 		// ---------------------------------------------------------------------
 
-		private function onPaintingSaved():void {
+		private function onPaintingSaved( success:Boolean ):void {
 			if( _waitingForSaveToContinueToHomeState ) {
 				setTimeout( function():void {
 					requestStateChange__OLD_TO_REMOVE( StateType.TRANSITION_TO_HOME_MODE );

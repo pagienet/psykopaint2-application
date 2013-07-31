@@ -1,5 +1,7 @@
-package net.psykosoft.psykopaint2.core.views.popups.base
+package net.psykosoft.psykopaint2.core.views.popups
 {
+
+	import net.psykosoft.psykopaint2.core.views.popups.base.*;
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;

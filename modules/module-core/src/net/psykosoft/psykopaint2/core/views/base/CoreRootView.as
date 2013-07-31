@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
-	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpManagerView;
+	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 
 	public class CoreRootView extends RootViewBase

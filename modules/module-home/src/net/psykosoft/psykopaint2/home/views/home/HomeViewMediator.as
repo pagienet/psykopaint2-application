@@ -17,7 +17,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
@@ -68,9 +67,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var requestHomeViewScrollSignal:RequestHomeViewScrollSignal;
-
-		[Inject]
-		public var notifyHomeModuleReadySignal:NotifyHomeViewReadySignal;
 
 		[Inject]
 		public var requestHomeSceneConstructionSignal:RequestHomeSceneConstructionSignal;
@@ -133,7 +129,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// From view.
 			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
 			view.zoomCompletedSignal.add( onViewZoomComplete );
-			view.assetsReadySignal.add( onViewAssetsReady );
 			view.easelRectChanged.add( onEaselRectChanged );
 		}
 
@@ -233,10 +228,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 		// From view.
 		// -----------------------
-
-		private function onViewAssetsReady():void {
-			notifyHomeModuleReadySignal.dispatch();
-		}
 
 		private function onViewZoomComplete():void {
 			notifyHomeViewZoomCompleteSignal.dispatch();
