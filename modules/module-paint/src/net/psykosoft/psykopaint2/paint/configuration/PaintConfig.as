@@ -32,6 +32,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
@@ -124,6 +126,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyCameraFlipRequest ).asSingleton();
 			_injector.map( NotifyPaintingSavedSignal ).asSingleton();
 			_injector.map( NotifyCanvasMatrixChanged ).asSingleton();
+			_injector.map( RequestZoomCanvasToDefaultViewSignal ).asSingleton();
+			_injector.map( RequestZoomCanvasToEaselViewSignal ).asSingleton();
 		}
 
 		// -----------------------

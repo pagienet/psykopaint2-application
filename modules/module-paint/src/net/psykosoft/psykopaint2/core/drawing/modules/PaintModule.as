@@ -88,9 +88,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var requestNavigationAutohideModeSignal:RequestNavigationAutohideModeSignal;
 
 		[Inject]
-		public var notifyStateChangeSignal:NotifyStateChangeSignal;
-		
-		[Inject]
 		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
 		
 		private var _view : DisplayObject;
@@ -122,7 +119,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public function postConstruct() : void
 		{
 			AbstractBrush.brushShapeLibrary = brushShapeLibrary;
-			notifyStateChangeSignal.add(onStateChange);
 			memoryWarningSignal.add(onMemoryWarning);
 			notifyCanvasMatrixChanged.add(onCanvasMatrixChanged);
 			notifyGlobalGestureSignal.add( onGlobalGesture );
@@ -148,16 +144,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
 			}
 		}
-		
-		private function onStateChange( newState:String ):void
-		{
-			if ( newState == StateType.TRANSITION_TO_PAINT_MODE )
-			{
-				TweenLite.to( renderer, 1.6, { sourceTextureAlpha: 0.333, ease: Sine.easeIn } );
-			}
-			
-		}
-		
+
 		private function onCanvasMatrixChanged(matrix : Matrix) : void
 		{
 			_canvasMatrix = matrix;

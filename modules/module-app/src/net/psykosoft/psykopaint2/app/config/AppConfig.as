@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.app.config
 {
 	import net.psykosoft.psykopaint2.app.commands.CreateCanvasBackgroundCommand;
+	import net.psykosoft.psykopaint2.app.signals.NotifyCanvasBackgroundSetSignal;
 	import net.psykosoft.psykopaint2.app.signals.RequestCreateCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.app.states.BookState;
 	import net.psykosoft.psykopaint2.app.states.CropState;
@@ -80,7 +81,7 @@ package net.psykosoft.psykopaint2.app.config
 		// -----------------------
 
 		private function mapNotifications():void {
-
+			injector.map(NotifyCanvasBackgroundSetSignal).asSingleton();
 		}
 
 		// -----------------------

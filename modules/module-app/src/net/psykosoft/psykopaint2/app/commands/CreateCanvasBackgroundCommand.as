@@ -2,10 +2,14 @@ package net.psykosoft.psykopaint2.app.commands
 {
 	import flash.events.Event;
 
+	import net.psykosoft.psykopaint2.app.signals.NotifyCanvasBackgroundSetSignal;
+
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.SnapshotPromise;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+
+	import org.osflash.signals.Signal;
 
 	public class CreateCanvasBackgroundCommand
 	{
@@ -14,6 +18,9 @@ package net.psykosoft.psykopaint2.app.commands
 
 		[Inject]
 		public var canvasRenderer:CanvasRenderer;
+
+		[Inject]
+		public var notifyCanvasBackgroundSetSignal : NotifyCanvasBackgroundSetSignal;
 
 		[Inject]
 		public var easelRectModel : EaselRectModel;
@@ -32,6 +39,7 @@ package net.psykosoft.psykopaint2.app.commands
 			canvasRenderer.setBackground(_snapshotPromise.texture.newReference(), easelRectModel.rect);
 			_snapshotPromise.dispose();
 			_snapshotPromise = null;
+			notifyCanvasBackgroundSetSignal.dispatch();
 		}
 	}
 }
