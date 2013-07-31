@@ -26,21 +26,19 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyExpensiveUiActionToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
@@ -70,15 +68,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
-
-		[Inject]
-		public var notifyExpensiveUiActionToggledSignal:NotifyExpensiveUiActionToggledSignal;
-
-		[Inject]
-		public var requestFreezeRenderingSignal:RequestFreezeRenderingSignal;
-
-		[Inject]
-		public var requestResumeRenderingSignal:RequestResumeRenderingSignal;
 
 		[Inject]
 		public var moduleManager:ModuleManager;
@@ -161,7 +150,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			// From app.
 			notifyEaselRectUpdateSignal.add( onEaselRectInfo );
-			notifyExpensiveUiActionToggledSignal.add( onExpensiveUiTask );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyHomeModuleReadySignal.add( onHomeModuleReady );
 			notifyPopUpRemovedSignal.add( onPopUpRemoved );
@@ -229,19 +217,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					updateAndConstrainCanvasRect( rect );
 					break;
 
-			}
-		}
-
-		private function onExpensiveUiTask( started:Boolean, id:String ):void {
-			// TODO: analyze id properly to manage activity queues...
-//			trace( this, "onExpensiveUiTask - task started: " + started + ", task id: " + id );
-			if( started ) {
-//				trace( this, "requesting rendering freeze" );
-				requestFreezeRenderingSignal.dispatch();
-			}
-			else {
-//				trace( this, "requesting rendering resume" );
-				requestResumeRenderingSignal.dispatch();
 			}
 		}
 

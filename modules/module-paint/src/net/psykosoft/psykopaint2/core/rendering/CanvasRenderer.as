@@ -22,8 +22,8 @@ package net.psykosoft.psykopaint2.core.rendering
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestFreezeRenderingSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestResumeRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 
 	public class CanvasRenderer
 	{
@@ -40,10 +40,10 @@ package net.psykosoft.psykopaint2.core.rendering
 		public var lightingModel : LightingModel;
 
 		[Inject]
-		public var requestFreezeRendering : RequestFreezeRenderingSignal;
+		public var requestSaveCPUForUISignal : RequestSaveCPUForUISignal;
 
 		[Inject]
-		public var requestResumeRendering : RequestResumeRenderingSignal;
+		public var requestResumeCPUUsageForUISignal : RequestResumeCPUUsageForUISignal;
 
 		[Inject]
 		public var requestChangeRenderRect : RequestChangeRenderRectSignal;
@@ -74,8 +74,8 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function postConstruct() : void
 		{
 			_lightingRenderer = new LightingRenderer(lightingModel, stage3D.context3D);
-			requestFreezeRendering.add(freezeRendering);
-			requestResumeRendering.add(resumeRendering);
+			requestSaveCPUForUISignal.add(freezeRendering);
+			requestResumeCPUUsageForUISignal.add(resumeRendering);
 			requestChangeRenderRect.add(onChangeRenderRect);
 		}
 
