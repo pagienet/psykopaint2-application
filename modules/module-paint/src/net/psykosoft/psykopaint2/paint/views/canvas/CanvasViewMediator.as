@@ -14,7 +14,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
@@ -56,9 +55,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
-
-		[Inject]
-		public var moduleManager:ModuleManager;
 
 		[Inject]
 		public var lightingModel:LightingModel;

@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
-	import net.psykosoft.psykopaint2.core.drawing.modules.CropModule;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
@@ -103,9 +102,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_injector.map(GyroscopeLightController).asSingleton();
 			_injector.map(BrushShapeLibrary).asSingleton();
 			_injector.map(BrushKitManager).asSingleton();
-			_injector.map(CropModule).asSingleton();
 			_injector.map(ColorStyleModule).asSingleton();
-			_injector.map(ModuleManager).asSingleton();
 
 			_injector.map(CanvasRenderer).asSingleton();
 			_injector.map(LightingModel).asSingleton();

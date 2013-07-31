@@ -2,11 +2,17 @@ package net.psykosoft.psykopaint2.paint.configuration
 {
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCropModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBlankSourceImageActivationSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSourceImageSetSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
+	import net.psykosoft.psykopaint2.crop.signals.DestroyCropModuleCommand;
+	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleDestroyedSignal;
+	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
+	import net.psykosoft.psykopaint2.crop.signals.SetupCropModuleCommand;
 	import net.psykosoft.psykopaint2.paint.commands.ActivateBlankSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.ActivatePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.DestroyPaintModuleCommand;
@@ -15,7 +21,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.commands.SetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.commands.LoadSurfaceCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
-	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraFlipRequest;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraSnapshotRequest;
@@ -24,7 +29,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleCommand;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
@@ -43,10 +48,10 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleViewMediator;
-	import net.psykosoft.psykopaint2.paint.views.crop.CropSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.crop.CropSubNavViewMediator;
-	import net.psykosoft.psykopaint2.paint.views.crop.CropView;
-	import net.psykosoft.psykopaint2.paint.views.crop.CropViewMediator;
+	import net.psykosoft.psykopaint2.crop.views.CropSubNavView;
+	import net.psykosoft.psykopaint2.crop.views.CropSubNavViewMediator;
+	import net.psykosoft.psykopaint2.crop.views.CropView;
+	import net.psykosoft.psykopaint2.crop.views.CropViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageView;
@@ -125,6 +130,10 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( RequestZoomCanvasToEaselViewSignal ).asSingleton();
 			_injector.map( NotifyPaintModuleSetUpSignal ).asSingleton();
 			_injector.map( NotifyPaintModuleDestroyedSignal ).asSingleton();
+
+			// TODO: Move to CropConfig
+			_injector.map( NotifyCropModuleSetUpSignal ).asSingleton();
+			_injector.map( NotifyCropModuleDestroyedSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -136,7 +145,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
 			_commandMap.map( RequestPaintingDeletionSignal ).toCommand( DeletePaintingCommand );
-			_commandMap.map( RequestSetupPaintModuleCommand ).toCommand( SetupPaintModuleCommand );
+			_commandMap.map( RequestSetupPaintModuleSignal ).toCommand( SetupPaintModuleCommand );
 			_commandMap.map( RequestDestroyPaintModuleSignal ).toCommand( DestroyPaintModuleCommand );
 
 			// Mapped in the core as singleton for compatibility and remapped here.
@@ -144,14 +153,17 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_commandMap.map( RequestPaintingActivationSignal ).toCommand( ActivatePaintingCommand );
 //			_injector.unmap( RequestDrawingCoreResetSignal );
 //			_commandMap.map( RequestDrawingCoreResetSignal ).toCommand( ClearCanvasCommand );
-			_injector.unmap( RequestDrawingCoreSurfaceSetSignal );
-			_commandMap.map( RequestDrawingCoreSurfaceSetSignal ).toCommand( SetSurfaceImageCommand );
-			_injector.unmap( RequestSourceImageSetSignal );
-			_commandMap.map( RequestSourceImageSetSignal ).toCommand( SetSourceImageCommand );
+			_injector.unmap( RequestSetCanvasSurfaceSignal );
+			_commandMap.map( RequestSetCanvasSurfaceSignal ).toCommand( SetSurfaceImageCommand );
 			_injector.unmap( RequestLoadSurfaceSignal );
 			_commandMap.map( RequestLoadSurfaceSignal ).toCommand( LoadSurfaceCommand );
 			_injector.unmap( RequestBlankSourceImageActivationSignal );
 			_commandMap.map( RequestBlankSourceImageActivationSignal ).toCommand( ActivateBlankSourceImageCommand );
+
+
+			// TODO: Move to CropConfig
+			_commandMap.map( RequestSetupCropModuleSignal ).toCommand( SetupCropModuleCommand );
+			_commandMap.map( RequestDestroyCropModuleSignal ).toCommand( DestroyCropModuleCommand );
 		}
 
 		// -----------------------

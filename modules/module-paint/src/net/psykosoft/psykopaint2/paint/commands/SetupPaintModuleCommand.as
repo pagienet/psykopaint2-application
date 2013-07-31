@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
-	import net.psykosoft.psykopaint2.core.drawing.config.ModuleManager;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -30,9 +29,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var lightController:GyroscopeLightController;
-
-		[Inject]
-		public var moduleManager : ModuleManager
 
 		[Inject]
 		public var brushKitManager : BrushKitManager;

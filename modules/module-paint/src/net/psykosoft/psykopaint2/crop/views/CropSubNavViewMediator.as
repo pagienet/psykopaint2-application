@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.views.crop
+package net.psykosoft.psykopaint2.crop.views
 {
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;

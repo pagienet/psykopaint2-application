@@ -13,7 +13,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -24,9 +23,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		[Inject]
 		public var stage3dProxy:Stage3DProxy;
-
-		[Inject]
-		public var requestSourceImageSetSignal:RequestSourceImageSetSignal;
 
 		[Inject]
 		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;

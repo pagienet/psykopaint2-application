@@ -6,9 +6,9 @@ package net.psykosoft.psykopaint2.core.signals
 
 	import org.osflash.signals.Signal;
 
-	public class RequestDrawingCoreSurfaceSetSignal extends Signal
+	public class RequestSetCanvasSurfaceSignal extends Signal
 	{
-		public function RequestDrawingCoreSurfaceSetSignal() {
+		public function RequestSetCanvasSurfaceSignal() {
 			super( ByteArray, BitmapData ); // normal data, color data
 		}
 	}

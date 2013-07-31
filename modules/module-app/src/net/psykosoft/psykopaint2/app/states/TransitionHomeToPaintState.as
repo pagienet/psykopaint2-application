@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleCommand;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 
 	use namespace ns_state_machine;
@@ -26,10 +26,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestCreateCanvasBackgroundSignal : RequestCreateCanvasBackgroundSignal;
 
 		[Inject]
-		public var requestSetupPaintModuleSignal : RequestSetupPaintModuleCommand;
-
-		[Inject]
-		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
+		public var requestSetupPaintModuleSignal : RequestSetupPaintModuleSignal;
 
 		[Inject]
 		public var requestZoomCanvasToDefaultViewSignal:RequestZoomCanvasToDefaultViewSignal;
@@ -68,7 +65,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function deactivate() : void
 		{
-			requestDestroyHomeModuleSignal.dispatch();
 		}
 	}
 }

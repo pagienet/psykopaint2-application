@@ -309,10 +309,5 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if (_activeBrushKit)
 				_activeBrushKit.brushEngine.freeExpendableMemory();
 		}
-
-		public function get stateType() : String
-		{
-			return NavigationStateType.PAINT;
-		}
 	}
 }

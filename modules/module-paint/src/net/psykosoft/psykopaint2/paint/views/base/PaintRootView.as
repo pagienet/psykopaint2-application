@@ -12,8 +12,8 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleView;
-	import net.psykosoft.psykopaint2.paint.views.crop.CropSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.crop.CropView;
+	import net.psykosoft.psykopaint2.crop.views.CropSubNavView;
+	import net.psykosoft.psykopaint2.crop.views.CropView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.ConfirmCaptureImageSubNavView;

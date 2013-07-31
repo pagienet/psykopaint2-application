@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasSurfaceSignal;
 
 	import robotlegs.bender.framework.api.IContext;
 
@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var index:uint; // From signal.
 
 		[Inject]
-		public var requestDrawingCoreSurfaceSetSignal:RequestDrawingCoreSurfaceSetSignal;
+		public var requestDrawingCoreSurfaceSetSignal:RequestSetCanvasSurfaceSignal;
 
 		[Inject]
 		public var context:IContext;
