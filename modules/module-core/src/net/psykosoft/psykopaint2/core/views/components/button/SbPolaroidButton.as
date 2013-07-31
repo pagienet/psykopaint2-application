@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 		override protected function adjustBitmap():void {
 			// TODO: might want to maintain aspect ratio and mask
-			_iconBitmap.width = 103;
+			_iconBitmap.width = 104;
 			_iconBitmap.height = 104;
 			_iconBitmap.x = -52;
 			_iconBitmap.y = -67;
