@@ -3,10 +3,10 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 
 	public class PickAUserImageViewMediator extends MediatorBase
 	{
@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			// Init.
 			registerView( view );
 			super.initialize();
-			registerEnablingState( StateType.PICK_USER_IMAGE_DESKTOP );
+			registerEnablingState( NavigationStateType.PICK_USER_IMAGE_DESKTOP );
 
 			// From view.
 			view.imagePickedSignal.add( onImagePicked );
@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		private function onImagePicked( bmd:BitmapData ):void {
 			if( bmd ) requestSourceImageSetSignal.dispatch( bmd );
-			else requestStateChange__OLD_TO_REMOVE( StateType.PREVIOUS );
+			else requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREVIOUS );
 		}
 	}
 }

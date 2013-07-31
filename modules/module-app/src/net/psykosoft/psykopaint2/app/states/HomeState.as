@@ -32,6 +32,7 @@ package net.psykosoft.psykopaint2.app.states
 			// TODO: this probably needs to be moved to some activation command
 			requestNavigationToggleSignal.dispatch(1, 0.5);
 			requestHomeViewScrollSignal.dispatch(1);
+
 			requestPaintStateSignal.add(onRequestPaintStateSignal);
 		}
 

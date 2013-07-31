@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 
 	public class SetupPaintModuleCommand extends TracingCommand
 	{
@@ -19,6 +20,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var renderer : CanvasRenderer;
 
+		[Inject]
+		public var notifyPaintModuleSetUpSignal : NotifyPaintModuleSetUpSignal;
+
 		override public function execute() : void
 		{
 			super.execute();
@@ -27,6 +31,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			canvasHistoryModel.clearHistory();
 
 			fadeInBackground();
+
+			notifyPaintModuleSetUpSignal.dispatch();
 		}
 
 		private function fadeInBackground() : void

@@ -113,5 +113,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			renderer.render();
 		}
+
+		public function get stateType() : String
+		{
+			return "";
+		}
 	}
 }

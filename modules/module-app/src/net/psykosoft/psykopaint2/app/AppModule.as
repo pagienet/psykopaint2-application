@@ -17,12 +17,12 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.book.BookModule;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.home.HomeModule;
 	import net.psykosoft.psykopaint2.paint.PaintModule;
 

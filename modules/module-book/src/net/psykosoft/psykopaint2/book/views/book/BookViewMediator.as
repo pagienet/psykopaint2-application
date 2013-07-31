@@ -11,9 +11,9 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var stage3dProxy:Stage3DProxy;
 
 		[Inject]
-		public var requestSourceImageSetSignal:RequestDrawingCoreSourceImageSetSignal;
+		public var requestSourceImageSetSignal:RequestSourceImageSetSignal;
 
 		[Inject]
 		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
@@ -43,9 +43,9 @@ package net.psykosoft.psykopaint2.book.views.book
 			// Init.
 			registerView( view );
 			super.initialize();
-			registerEnablingState( StateType.BOOK_STANDALONE );
-			registerEnablingState( StateType.BOOK_PICK_SAMPLE_IMAGE );
-			registerEnablingState( StateType.BOOK_PICK_USER_IMAGE_IOS );
+			registerEnablingState( NavigationStateType.BOOK_STANDALONE );
+			registerEnablingState( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE );
+			registerEnablingState( NavigationStateType.BOOK_PICK_USER_IMAGE_IOS );
 			view.stage3dProxy = stage3dProxy;
 
 			// Register view gpu rendering in core.
@@ -63,7 +63,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			switch( newState ) {
 
 				// Tests.
-				case StateType.BOOK_STANDALONE: {
+				case NavigationStateType.BOOK_STANDALONE: {
 
 //					var provider:TestBookDataProvider = new TestBookDataProvider();
 //					provider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
@@ -77,13 +77,13 @@ package net.psykosoft.psykopaint2.book.views.book
 				}
 
 				// Sample images.
-				case StateType.BOOK_PICK_SAMPLE_IMAGE: {
+				case NavigationStateType.BOOK_PICK_SAMPLE_IMAGE: {
 					initializeSamplesDataProvider();
 					break;
 				}
 
 				// User photos iOS.
-				case StateType.BOOK_PICK_USER_IMAGE_IOS: {
+				case NavigationStateType.BOOK_PICK_USER_IMAGE_IOS: {
 					initializeUserPhotosDataProvider();
 					break;
 				}

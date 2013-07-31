@@ -9,9 +9,9 @@ package net.psykosoft.psykopaint2.book
 	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 
 	public class BookModule extends ModuleBase
 	{
@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.book
 				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
 				showNavigationSignal.dispatch( 1, 0.5 );
 				// Trigger initial state...
-				_bookConfig.injector.getInstance( RequestStateChangeSignal_OLD_TO_REMOVE ).dispatch( StateType.BOOK_STANDALONE );
+				_bookConfig.injector.getInstance( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).dispatch( NavigationStateType.BOOK_STANDALONE );
 				_coreModule.startEnterFrame();
 			}
 

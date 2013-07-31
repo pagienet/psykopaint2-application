@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	
 	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
@@ -241,6 +242,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		public function getAvailableColorStylePresets():Array {
 			return _presetLabels;
+		}
+
+		public function get stateType() : String
+		{
+			return NavigationStateType.COLOR_STYLE;
 		}
 	}
 }

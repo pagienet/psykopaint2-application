@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.geom.Matrix;
 	
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
@@ -81,6 +82,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		public function render() : void
 		{
+		}
+
+		public function get stateType() : String
+		{
+			return NavigationStateType.CROP;
 		}
 	}
 }

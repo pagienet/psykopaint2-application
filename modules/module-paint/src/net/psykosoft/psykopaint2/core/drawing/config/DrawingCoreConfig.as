@@ -32,7 +32,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySetColorStyleSignal;
@@ -74,7 +73,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_commandMap = _injector.getInstance(ISignalCommandMap);
 
 			// Map notification signals.
-			_injector.map( NotifyModuleActivatedSignal ).asSingleton();
 			_injector.map( NotifyAvailableBrushTypesSignal ).asSingleton();
 			_injector.map( NotifyActivateBrushChangedSignal ).asSingleton();
 

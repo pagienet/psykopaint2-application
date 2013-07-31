@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.home.views.base
 {
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
@@ -21,13 +21,13 @@ package net.psykosoft.psykopaint2.home.views.base
 			addRegisteredView( new HomeView(), this );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
-			StateToSubNavLinker.linkSubNavToState( StateType.HOME, HomeSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.HOME_ON_EASEL, NewPaintingSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.SETTINGS, SettingsSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.SETTINGS_WALLPAPER, WallpaperSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.HOME_PICK_SURFACE, PickSurfaceSubNavView );
-			StateToSubNavLinker.linkSubNavToState( StateType.PREPARE_FOR_PAINT_MODE, SubNavigationViewBase );
-			
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.HOME, HomeSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.HOME_ON_EASEL, NewPaintingSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.SETTINGS, SettingsSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.SETTINGS_WALLPAPER, WallpaperSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.HOME_PICK_SURFACE, PickSurfaceSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PREPARE_FOR_PAINT_MODE, SubNavigationViewBase );
+
 			name = "HomeRootView";
 		}
 	}

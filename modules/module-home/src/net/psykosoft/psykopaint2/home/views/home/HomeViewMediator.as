@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.StateModel;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewReadySignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
@@ -97,24 +97,24 @@ package net.psykosoft.psykopaint2.home.views.home
 			_freezingStates = new Vector.<String>();
 
 			// Fully active states.
-			registerEnablingState( StateType.HOME );
-			registerEnablingState( StateType.HOME_ON_EASEL );
-			registerEnablingState( StateType.HOME_ON_FINISHED_PAINTING );
-			registerEnablingState( StateType.SETTINGS );
-			registerEnablingState( StateType.SETTINGS_WALLPAPER );
-			registerEnablingState( StateType.HOME_PICK_SURFACE );
-			registerEnablingState( StateType.PREPARE_FOR_PAINT_MODE );
-			registerEnablingState( StateType.PREPARE_FOR_HOME_MODE );
-			registerEnablingState( StateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
+			registerEnablingState( NavigationStateType.HOME );
+			registerEnablingState( NavigationStateType.HOME_ON_EASEL );
+			registerEnablingState( NavigationStateType.HOME_ON_FINISHED_PAINTING );
+			registerEnablingState( NavigationStateType.SETTINGS );
+			registerEnablingState( NavigationStateType.SETTINGS_WALLPAPER );
+			registerEnablingState( NavigationStateType.HOME_PICK_SURFACE );
+			registerEnablingState( NavigationStateType.PREPARE_FOR_PAINT_MODE );
+			registerEnablingState( NavigationStateType.PREPARE_FOR_HOME_MODE );
+			registerEnablingState( NavigationStateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
 
 			// Frozen states.
-			registerFreezingState( StateType.PICK_IMAGE );
-			registerFreezingState( StateType.CAPTURE_IMAGE );
-			registerFreezingState( StateType.CONFIRM_CAPTURE_IMAGE );
-			registerFreezingState( StateType.BOOK_PICK_SAMPLE_IMAGE );
-			registerFreezingState( StateType.BOOK_PICK_USER_IMAGE_IOS );
-			registerFreezingState( StateType.CROP );
-			registerFreezingState( StateType.PICK_USER_IMAGE_DESKTOP );
+			registerFreezingState( NavigationStateType.PICK_IMAGE );
+			registerFreezingState( NavigationStateType.CAPTURE_IMAGE );
+			registerFreezingState( NavigationStateType.CONFIRM_CAPTURE_IMAGE );
+			registerFreezingState( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE );
+			registerFreezingState( NavigationStateType.BOOK_PICK_USER_IMAGE_IOS );
+			registerFreezingState( NavigationStateType.CROP );
+			registerFreezingState( NavigationStateType.PICK_USER_IMAGE_DESKTOP );
 
 			// Register view gpu rendering in core.
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL, 0 );
@@ -251,20 +251,20 @@ package net.psykosoft.psykopaint2.home.views.home
 			var homePaintingIndex:uint = view.paintingManager.homePaintingIndex;
 
 			// Trigger SETTINGS state if closest to settings painting ( index 0 ).
-			if( stateModel.currentState != StateType.SETTINGS && paintingIndex == 0 ) {
-				requestStateChange__OLD_TO_REMOVE( StateType.SETTINGS );
+			if( stateModel.currentState != NavigationStateType.SETTINGS && paintingIndex == 0 ) {
+				requestStateChange__OLD_TO_REMOVE( NavigationStateType.SETTINGS );
 				return;
 			}
 
 			// Trigger NEW PAINTING state if closest to easel ( index 1 ).
-			if( stateModel.currentState != StateType.HOME_ON_EASEL && paintingIndex == 1 ) {
-				requestStateChange__OLD_TO_REMOVE( StateType.HOME_ON_EASEL );
+			if( stateModel.currentState != NavigationStateType.HOME_ON_EASEL && paintingIndex == 1 ) {
+				requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
 				return;
 			}
 
 			// Restore HOME state if closest to home painting ( index 2 ).
-			if( stateModel.currentState != StateType.HOME && paintingIndex == homePaintingIndex ) {
-				requestStateChange__OLD_TO_REMOVE( StateType.HOME );
+			if( stateModel.currentState != NavigationStateType.HOME && paintingIndex == homePaintingIndex ) {
+				requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME );
 				return;
 			}
 
@@ -275,8 +275,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			if( paintingIndex > homePaintingIndex ) {
 
 				// TODO: delete this bit
-				if( stateModel.currentState != StateType.HOME ) {
-					requestStateChange__OLD_TO_REMOVE( StateType.HOME );
+				if( stateModel.currentState != NavigationStateType.HOME ) {
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME );
 					return;
 				}
 

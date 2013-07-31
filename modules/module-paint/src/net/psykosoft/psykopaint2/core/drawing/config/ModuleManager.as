@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import flash.utils.Dictionary;
 	
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
-	import net.psykosoft.psykopaint2.core.drawing.data.ModuleActivationVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.drawing.modules.CropModule;
@@ -13,9 +12,9 @@ package net.psykosoft.psykopaint2.core.drawing.config
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
-	
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+
 	import org.osflash.signals.Signal;
 
 	public class ModuleManager
@@ -39,7 +38,7 @@ package net.psykosoft.psykopaint2.core.drawing.config
 		public var notifyNavigationHideSignal:NotifyNavigationHideSignal;
 
 		[Inject]
-		public var notifyModuleActivatedSignal:NotifyModuleActivatedSignal;
+		public var requestStateChangeSignal : RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 
 		private var _activeModule:IModule;
 		private var _lastActiveModuleType:String = ModuleType.NONE;
@@ -97,12 +96,8 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_activeModule = module;
 			_activeModule.activate( bitmapData );
 
-			var vo:ModuleActivationVO = new ModuleActivationVO(
-				_activeModule.type(),
-				_lastActiveModuleType,
-				_concatenatingTypes[ _activeModule.type() ]
-			);
-			notifyModuleActivatedSignal.dispatch( vo );
+			// TEMPORARY!
+			requestStateChangeSignal.dispatch( _activeModule.stateType );
 		}
 
 		public function render() : void

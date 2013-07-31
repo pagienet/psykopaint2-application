@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropModuleActivatedSignal;
@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.crop
 
 			registerView( view );
 			super.initialize();
-			registerEnablingState( StateType.CROP );
+			registerEnablingState( NavigationStateType.CROP );
 
 			// From app.
 			notifyCropModuleActivatedSignal.add( onCropModuleActivated );

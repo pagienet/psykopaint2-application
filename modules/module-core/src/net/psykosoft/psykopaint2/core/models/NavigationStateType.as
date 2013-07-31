@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.core.models
 {
-	public class StateType
+	public class NavigationStateType
 	{
 		public static const IDLE:String = "state/idle";
 		public static const PREVIOUS:String = "state/previous";

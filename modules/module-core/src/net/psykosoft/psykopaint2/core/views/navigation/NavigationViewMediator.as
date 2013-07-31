@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
@@ -92,7 +92,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		override protected function onStateChange( newState:String ):void {
 //			trace( this, "state change: " + newState );
 
-			if( newState == StateType.PAINT_COLOR ) {
+			if( newState == NavigationStateType.PAINT_COLOR ) {
 				view.wire.visible = false;
 				view.woodBg.visible = true;
 			}

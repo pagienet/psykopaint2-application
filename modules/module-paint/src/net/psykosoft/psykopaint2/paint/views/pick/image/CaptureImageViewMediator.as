@@ -2,11 +2,11 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 {
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraFlipRequest;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraSnapshotRequest;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 
 	public class CaptureImageViewMediator extends MediatorBase
 	{
@@ -27,8 +27,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			// Init.
 			registerView( view );
 			super.initialize();
-			registerEnablingState( StateType.CAPTURE_IMAGE );
-			registerEnablingState( StateType.CONFIRM_CAPTURE_IMAGE );
+			registerEnablingState( NavigationStateType.CAPTURE_IMAGE );
+			registerEnablingState( NavigationStateType.CONFIRM_CAPTURE_IMAGE );
 
 			notifyCameraSnapshotRequest.add( onCameraSnapshotRequest );
 			notifyCameraFlipRequest.add( onCameraFlipRequest );
@@ -37,10 +37,10 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
 
-			if( newState == StateType.CAPTURE_IMAGE ) {
+			if( newState == NavigationStateType.CAPTURE_IMAGE ) {
 				view.play();
 			}
-			else if( newState == StateType.CONFIRM_CAPTURE_IMAGE ){
+			else if( newState == NavigationStateType.CONFIRM_CAPTURE_IMAGE ){
 				view.pause();
 			}
 		}

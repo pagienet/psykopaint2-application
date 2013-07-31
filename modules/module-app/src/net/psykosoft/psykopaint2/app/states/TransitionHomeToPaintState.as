@@ -9,8 +9,8 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 
 	import net.psykosoft.psykopaint2.base.states.State;
-	import net.psykosoft.psykopaint2.core.models.StateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.app.states
 	public class TransitionHomeToPaintState extends State
 	{
 		[Inject]
-		public var requestStateChangeSignal : RequestStateChangeSignal_OLD_TO_REMOVE;
+		public var requestStateChangeSignal : RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 
 		[Inject]
 		public var requestCreateCanvasBackgroundSignal : RequestCreateCanvasBackgroundSignal;
@@ -49,13 +49,13 @@ package net.psykosoft.psykopaint2.app.states
 
 			// todo: remove state change signals, replace by proper signals
 			// this is only to switch views
-			requestStateChangeSignal.dispatch(StateType.PREPARE_FOR_PAINT_MODE);
+			requestStateChangeSignal.dispatch(NavigationStateType.PREPARE_FOR_PAINT_MODE);
 		}
 
 		private function onCanvasBackgroundSet() : void
 		{
 			requestZoomCanvasToDefaultViewSignal.dispatch();
-			requestStateChangeSignal.dispatch(StateType.TRANSITION_TO_PAINT_MODE);
+			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 		}
 
 		override ns_state_machine function deactivate() : void

@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.PaintModule;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
 	public class SelectBrushSubNavViewMediator extends SubNavigationMediatorBase
@@ -37,17 +37,17 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			switch( label ) {
 
 				case SelectBrushSubNavView.LBL_BACK:
-					requestStateChange__OLD_TO_REMOVE( StateType.PAINT );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT );
 					break;
 				
 				case SelectBrushSubNavView.LBL_EDIT_BRUSH:
-					requestStateChange__OLD_TO_REMOVE( StateType.PAINT_ADJUST_BRUSH );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_ADJUST_BRUSH );
 					break;
 
 				// Center buttons select a brush.
 				default:
 					activateBrush( label );
-					if( hasParameters() ) requestStateChange__OLD_TO_REMOVE( StateType.PAINT_ADJUST_BRUSH );
+					if( hasParameters() ) requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_ADJUST_BRUSH );
 					break;
 			}
 		}

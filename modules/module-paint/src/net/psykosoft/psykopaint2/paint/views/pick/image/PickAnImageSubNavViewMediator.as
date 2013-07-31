@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintModeType;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
@@ -33,19 +33,19 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 				case PickAnImageSubNavView.LBL_BACK:
 				{
-					requestStateChange__OLD_TO_REMOVE( StateType.PREVIOUS );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREVIOUS );
 					break;
 				}
 
 				case PickAnImageSubNavView.LBL_USER:
 				{
-					requestStateChange__OLD_TO_REMOVE( CoreSettings.RUNNING_ON_iPAD ? StateType.BOOK_PICK_USER_IMAGE_IOS : StateType.PICK_USER_IMAGE_DESKTOP );
+					requestStateChange__OLD_TO_REMOVE( CoreSettings.RUNNING_ON_iPAD ? NavigationStateType.BOOK_PICK_USER_IMAGE_IOS : NavigationStateType.PICK_USER_IMAGE_DESKTOP );
 					break;
 				}
 
 				case PickAnImageSubNavView.LBL_SAMPLES:
 				{
-					requestStateChange__OLD_TO_REMOVE( StateType.BOOK_PICK_SAMPLE_IMAGE );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE );
 					break;
 				}
 
@@ -57,7 +57,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 				case PickAnImageSubNavView.LBL_CAMERA:
 				{
-					requestStateChange__OLD_TO_REMOVE( StateType.CAPTURE_IMAGE );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.CAPTURE_IMAGE );
 					break;
 				}
 			}

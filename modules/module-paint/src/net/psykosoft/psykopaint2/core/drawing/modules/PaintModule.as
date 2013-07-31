@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	
 	import org.gestouch.events.GestureEvent;
@@ -76,7 +76,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var memoryWarningSignal : NotifyMemoryWarningSignal;
 
 		[Inject]
-		public var requestStateChangeSignal:RequestStateChangeSignal_OLD_TO_REMOVE;
+		public var requestStateChangeSignal:RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 
 		[Inject]
 		public var notifyGlobalGestureSignal : NotifyGlobalGestureSignal;
@@ -329,6 +329,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			}
 			if (_activeBrushKit)
 				_activeBrushKit.brushEngine.freeExpendableMemory();
+		}
+
+		public function get stateType() : String
+		{
+			return NavigationStateType.PAINT;
 		}
 	}
 }

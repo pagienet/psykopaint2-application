@@ -1,11 +1,9 @@
 package net.psykosoft.psykopaint2.paint.configuration
 {
 
-	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.RequestBlankSourceImageActivationSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
@@ -20,9 +18,10 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
-	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraFlipRequest;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraSnapshotRequest;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
@@ -30,8 +29,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
@@ -128,6 +125,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyCanvasMatrixChanged ).asSingleton();
 			_injector.map( RequestZoomCanvasToDefaultViewSignal ).asSingleton();
 			_injector.map( RequestZoomCanvasToEaselViewSignal ).asSingleton();
+			_injector.map( NotifyPaintModuleSetUpSignal ).asSingleton();
+			_injector.map( NotifyPaintModuleDestroyedSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -136,8 +135,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 		private function mapCommands():void {
 
-			_commandMap.map( RequestStateUpdateFromModuleActivationSignal ).toCommand( UpdateAppStateFromActivatedDrawingCoreModuleCommand );
-			_commandMap.map( RequestSourceImageSetSignal ).toCommand( SetSourceImageCommand );
 			_commandMap.map( RequestDrawingCoreStartupSignal ).toCommand( StartUpDrawingCoreCommand );
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
@@ -152,8 +149,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 //			_commandMap.map( RequestDrawingCoreResetSignal ).toCommand( ClearCanvasCommand );
 			_injector.unmap( RequestDrawingCoreSurfaceSetSignal );
 			_commandMap.map( RequestDrawingCoreSurfaceSetSignal ).toCommand( SetSurfaceImageCommand );
-			_injector.unmap( RequestDrawingCoreSourceImageSetSignal );
-			_commandMap.map( RequestDrawingCoreSourceImageSetSignal ).toCommand( SetSourceImageCommand );
+			_injector.unmap( RequestSourceImageSetSignal );
+			_commandMap.map( RequestSourceImageSetSignal ).toCommand( SetSourceImageCommand );
 			_injector.unmap( RequestLoadSurfaceSignal );
 			_commandMap.map( RequestLoadSurfaceSignal ).toCommand( LoadSurfaceCommand );
 			_injector.unmap( RequestBlankSourceImageActivationSignal );

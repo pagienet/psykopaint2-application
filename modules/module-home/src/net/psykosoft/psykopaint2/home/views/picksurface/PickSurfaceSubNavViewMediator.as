@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.models.StateType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBlankSourceImageActivationSignal;
@@ -65,7 +65,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 			switch( label ) {
 				case PickSurfaceSubNavView.LBL_BACK:
-					requestStateChange__OLD_TO_REMOVE( StateType.HOME_ON_EASEL );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
 					break;
 				case PickSurfaceSubNavView.LBL_CONTINUE:
 					continueToColorPaint();

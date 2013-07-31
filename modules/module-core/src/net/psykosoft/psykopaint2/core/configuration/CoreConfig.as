@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBlankSourceImageActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpDisplaySignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPopUpRemovalSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
@@ -172,7 +172,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyPaintingActivatedSignal ).asSingleton();
 			_injector.map( RequestDrawingCoreResetSignal ).asSingleton();
 			_injector.map( RequestDrawingCoreSurfaceSetSignal ).asSingleton();
-			_injector.map( RequestDrawingCoreSourceImageSetSignal ).asSingleton();
+			_injector.map( RequestSourceImageSetSignal ).asSingleton();
 			_injector.map( RequestEaselUpdateSignal ).asSingleton();
 			_injector.map( NotifyPopUpRemovedSignal ).asSingleton();
 			_injector.map( NotifyEaselRectUpdateSignal ).asSingleton();
@@ -198,7 +198,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		// -----------------------
 
 		private function mapCommands():void {
-			_commandMap.map( RequestStateChangeSignal_OLD_TO_REMOVE ).toCommand( ChangeStateCommand );
+			_commandMap.map( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).toCommand( ChangeStateCommand );
 			_commandMap.map( RequestGpuRenderingSignal ).toCommand( RenderGpuCommand );
 			_commandMap.map( RequestPaintingDataRetrievalSignal ).toCommand( RetrievePaintingDataCommand );
 		}
