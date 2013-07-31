@@ -28,6 +28,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
@@ -50,6 +52,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
@@ -175,6 +178,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyHomeViewZoomCompleteSignal ).asSingleton();
 			_injector.map( RequestHomeViewScrollSignal ).asSingleton();
 			_injector.map( NotifyPopUpShownSignal ).asSingleton();
+			_injector.map( RequestUpdateMessagePopUpSignal ).asSingleton();
 			_injector.map( RequestInteractionBlockSignal ).asSingleton();
 			_injector.map( RequestLoadSurfaceSignal ).asSingleton();
 			_injector.map( RequestLoadSurfacePreviewSignal ).asSingleton();
@@ -183,6 +187,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestBlankSourceImageActivationSignal ).asSingleton();
 			_injector.map( RequestPaintStateSignal ).asSingleton();
 			_injector.map( RequestHideSplashScreenSignal ).asSingleton();
+			_injector.map( NotifyPaintingSavedSignal ).asSingleton();
+			_injector.map( NotifyPaintingSavingStartedSignal ).asSingleton();
 		}
 
 		// -----------------------

@@ -1,35 +1,32 @@
 package net.psykosoft.psykopaint2.paint.configuration
 {
 
-	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.RequestBlankSourceImageActivationSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSurfaceSetSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
 	import net.psykosoft.psykopaint2.paint.commands.ActivateBlankSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.ActivatePaintingCommand;
-	import net.psykosoft.psykopaint2.paint.commands.DestroyPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.commands.DeletePaintingCommand;
+	import net.psykosoft.psykopaint2.paint.commands.DestroyPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
-	import net.psykosoft.psykopaint2.paint.commands.SetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.commands.LoadSurfaceCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSourceImageCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetSurfaceImageCommand;
+	import net.psykosoft.psykopaint2.paint.commands.SetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.commands.StartUpDrawingCoreCommand;
 	import net.psykosoft.psykopaint2.paint.commands.UpdateAppStateFromActivatedDrawingCoreModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraFlipRequest;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraSnapshotRequest;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDrawingCoreStartupSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSourceImageSetSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestStateUpdateFromModuleActivationSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
@@ -62,7 +59,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavViewMediator;
-	
+
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IInjector;
@@ -124,7 +121,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 		private function mapNotifications():void {
 			_injector.map( NotifyCameraSnapshotRequest ).asSingleton();
 			_injector.map( NotifyCameraFlipRequest ).asSingleton();
-			_injector.map( NotifyPaintingSavedSignal ).asSingleton();
 			_injector.map( NotifyCanvasMatrixChanged ).asSingleton();
 			_injector.map( RequestZoomCanvasToDefaultViewSignal ).asSingleton();
 			_injector.map( RequestZoomCanvasToEaselViewSignal ).asSingleton();

@@ -1,13 +1,13 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
-
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintingSavedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 
 	public class SavePaintingCommand extends SequenceMacro
 	{
@@ -21,6 +21,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var canvasHistoryModel:CanvasHistoryModel;
 
 		[Inject]
+		public var notifyPaintingSavingStartedSignal:NotifyPaintingSavingStartedSignal;
+
+		[Inject]
 		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
 
 		override public function prepare():void {
@@ -31,6 +34,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			}
 
 			mapMacroConsistentData();
+
+			notifyPaintingSavingStartedSignal.dispatch();
 
 			add( ExportCanvasSurfacesCommand );
 			add( SerializePaintingCommand );
