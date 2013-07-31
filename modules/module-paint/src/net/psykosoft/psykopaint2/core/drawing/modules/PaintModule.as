@@ -25,6 +25,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
+	import net.psykosoft.psykopaint2.core.models.PaintModeType;
 	import net.psykosoft.psykopaint2.core.models.StateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
@@ -95,8 +97,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private var _view : DisplayObject;
 		private var _active : Boolean;
-		private var _availableBrushKits:Vector.<BrushKit>;
-		private var _availableBrushKitNames:Vector.<String>;
+		private var _availableBrushKits:Vector.<Vector.<BrushKit>>;
+		private var _availableBrushKitNames:Vector.<Vector.<String>>;
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
 		private var _canvasMatrix : Matrix;
@@ -108,14 +110,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public function PaintModule()
 		{
 			super();
-			
-			for ( var i:int = 0; i < BrushKitDefaultSet.brushKitData.brush.length(); i++ )
-			{
-				registerBrushKit( BrushKit.fromXML(BrushKitDefaultSet.brushKitData.brush[i]), BrushKitDefaultSet.brushKitData.brush[i].@name);
-			}
-			
-			
-			
 		}
 
 		[PostConstruct]
@@ -177,15 +171,27 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		private function initializeDefaultBrushes():void {
 			
-			notifyAvailableBrushTypesSignal.dispatch( _availableBrushKitNames );
+			notifyAvailableBrushTypesSignal.dispatch( _availableBrushKitNames[(PaintModeModel.activeMode == PaintModeType.PHOTO_MODE ? 0 : 1)] );
 		
 		}
 
-		private function registerBrushKit( brushKit:BrushKit, kitName:String ):void {
-			if( !_availableBrushKits ) _availableBrushKits = new Vector.<BrushKit>();
-			_availableBrushKits.push(brushKit);
-			if( !_availableBrushKitNames ) _availableBrushKitNames = new Vector.<String>();
-			_availableBrushKitNames.push(kitName);
+		private function registerBrushKit( brushKit:BrushKit, kitName:String, mode:int ):void {
+			if( !_availableBrushKits ) 
+			{
+				_availableBrushKits = new Vector.<Vector.<BrushKit>>();
+				_availableBrushKits[0] = new Vector.<BrushKit>();
+				_availableBrushKits[1] = new Vector.<BrushKit>();
+			}
+			
+			if( !_availableBrushKitNames ) 
+			{
+				_availableBrushKitNames = new Vector.<Vector.<String>>();
+				_availableBrushKitNames[0] = new Vector.<String>();
+				_availableBrushKitNames[1] = new Vector.<String>();
+			}
+			
+			_availableBrushKits[mode].push(brushKit);
+			_availableBrushKitNames[mode].push(kitName);
 		}
 		
 		public function get activeBrushKit() : String
@@ -195,12 +201,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		public function set activeBrushKit( brushKitName:String ) : void
 		{
-			
+			var mode:int = (PaintModeModel.activeMode == PaintModeType.PHOTO_MODE ? 0 : 1);
 			if (_activeBrushKitName == brushKitName) return;
 			if ( _activeBrushKit ) deactivateBrushKit();
 			
 			_activeBrushKitName = brushKitName;
-			_activeBrushKit = _availableBrushKits[ _availableBrushKitNames.indexOf(brushKitName)];
+			_activeBrushKit = _availableBrushKits[mode][ _availableBrushKitNames[mode].indexOf(brushKitName)];
 			if (_active) activateBrushKit();
 			
 			//trace( this, "activating brush kit: " + _activeBrushKitName + ", engine: " + _activeBrushKit.brushEngine + " --------------------" );
@@ -227,10 +233,19 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		public function activate(bitmapData : BitmapData) : void
 		{
+			for ( var i:int = 0; i < BrushKitDefaultSet.brushKitDataPhotoPaintMode.brush.length(); i++ )
+			{
+				registerBrushKit( BrushKit.fromXML(BrushKitDefaultSet.brushKitDataPhotoPaintMode.brush[i]), BrushKitDefaultSet.brushKitDataPhotoPaintMode.brush[i].@name,0);
+			}
+			for ( var i:int = 0; i < BrushKitDefaultSet.brushKitDataColorMode.brush.length(); i++ )
+			{
+				registerBrushKit( BrushKit.fromXML(BrushKitDefaultSet.brushKitDataColorMode.brush[i]), BrushKitDefaultSet.brushKitDataColorMode.brush[i].@name,1);
+			}
+			
 			initializeDefaultBrushes();
 
 			_active = true;
-			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
+			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[(PaintModeModel.activeMode == PaintModeType.PHOTO_MODE ? 0 : 1)][0];
 			activateBrushKit();
 			renderer.init(this);
 			renderer.sourceTextureAlpha = 1;
@@ -320,12 +335,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		
 		public function getAvailableBrushTypes() : Vector.<String> {
-			return _availableBrushKitNames;
+			return _availableBrushKitNames[(PaintModeModel.activeMode == PaintModeType.PHOTO_MODE ? 0 : 1)];
 		}
 
 		
-		public function getCurrentBrushParameters():ParameterSetVO {
-			return _activeBrushKit.getParameterSet(!CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS );
+		public function getCurrentBrushParameters( uiOnlyParameters:Boolean = true):ParameterSetVO {
+			return _activeBrushKit.getParameterSet( uiOnlyParameters );
 		}
 		
 		public function render() : void

@@ -3,9 +3,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import flash.display.DisplayObject;
 	import flash.events.Event;
-
+	
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.SbColorSwatches;
@@ -71,7 +72,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			checkBox.addEventListener( Event.CHANGE, onCheckBoxChanged );
 			checkBox.y = UI_ELEMENT_Y;
 			checkBox.x = 10;
-
+			if ( _colorModeParameter ) checkBox.selected = (_colorModeParameter.index == ColorDecorator.INDEX_MODE_FIXED_COLOR);
+			
 			addChild( colorMixer1 );
 			addChild( colorMixer2 );
 			addChild( colorSwatches );
@@ -98,9 +100,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var parameter:PsykoParameter = list[ i ];
 				if( parameter.type == PsykoParameter.ColorParameter ) {
 					_colorParameter = parameter;
-				} else if( parameter.id == "Custom Color" ) {
+				} else if( parameter.id == ColorDecorator.PARAMETER_SL_COLOR_MODE ) {
 					_colorModeParameter = parameter;
-					checkBox.selected = _colorModeParameter.booleanValue;
+					if ( checkBox) checkBox.selected = (_colorModeParameter.index == ColorDecorator.INDEX_MODE_FIXED_COLOR);
 				}
 			}
 		}
@@ -111,13 +113,16 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onCheckBoxChanged( event:Event ):void {
 			var checkBox:SbCheckBox = event.target as SbCheckBox;
-			_colorModeParameter.booleanValue = checkBox.selected;
+			_colorModeParameter.index = ( checkBox.selected ?  ColorDecorator.INDEX_MODE_FIXED_COLOR :  ColorDecorator.INDEX_MODE_PICK_COLOR );
 		}
 
 		protected function onColorPicked( event:Event ):void {
 			if( _colorParameter != null ) {
 				_colorParameter.colorValue = SbColormixer( event.target ).pickedColor;
-				if( !checkBox.selected ) _colorModeParameter.booleanValue = checkBox.selected = true;
+				if( !checkBox.selected ) {
+					_colorModeParameter.index = ColorDecorator.INDEX_MODE_FIXED_COLOR;
+					checkBox.selected = true;
+				}
 				colorSwatches.setSelection( -1 );
 			}
 
@@ -126,7 +131,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		protected function onSwatchColorPicked( event:Event ):void {
 			if( _colorParameter != null ) {
 				_colorParameter.colorValue = SbColorSwatches( event.target ).pickedColor;
-				if( !checkBox.selected ) _colorModeParameter.booleanValue = checkBox.selected = true;
+				if( !checkBox.selected ){
+					_colorModeParameter.index = ColorDecorator.INDEX_MODE_FIXED_COLOR;
+					 checkBox.selected = true;
+				}
 			}
 		}
 	}
