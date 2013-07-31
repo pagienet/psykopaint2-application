@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.crop.signals
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCropModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 
 	public class SetupCropModuleCommand extends TracingCommand
 	{
@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.crop.signals
 
 		// TODO: Replace this?
 		[Inject]
-		public var notifyCropModuleActivatedSignal : NotifyCropModuleActivatedSignal;
+		public var notifyCropModuleActivatedSignal : RequestUpdateCropImageSignal;
 
 		override public function execute() : void
 		{

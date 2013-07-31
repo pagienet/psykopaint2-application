@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 {
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCropModuleActivatedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBlankSourceImageActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingActivationSignal;
