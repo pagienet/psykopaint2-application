@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestCropStateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraFlipRequest;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraSnapshotRequest;
@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		public var notifyCameraFlipRequest:NotifyCameraFlipRequest;
 
 		[Inject]
-		public var requestCropStateSignal:RequestCropStateSignal;
+		public var requestCropSourceImageSignal:RequestCropSourceImageSignal;
 
 		override public function initialize():void {
 
@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		private function onCameraSnapshotRequest():void {
 			var bmd:BitmapData = view.takeSnapshot();
-			requestCropStateSignal.dispatch( bmd );
+			requestCropSourceImageSignal.dispatch( bmd );
 		}
 
 		private function onCameraFlipRequest():void {
