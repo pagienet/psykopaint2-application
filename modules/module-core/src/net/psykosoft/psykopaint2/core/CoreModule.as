@@ -224,6 +224,8 @@ package net.psykosoft.psykopaint2.core
 		private function initPlatform():void {
 			CoreSettings.RUNNING_ON_iPAD = PlatformUtil.isRunningOnIPad();
 			CoreSettings.RUNNING_ON_RETINA_DISPLAY = PlatformUtil.isRunningOnDisplayWithDpi( CoreSettings.RESOLUTION_DPI_RETINA );
+
+			// TODO: set stage width from stage.stageWidth and stage.stageHeight, but they're not correct at this point
 			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
 				CoreSettings.GLOBAL_SCALING = 2;
 				CoreSettings.STAGE_WIDTH = 2048;

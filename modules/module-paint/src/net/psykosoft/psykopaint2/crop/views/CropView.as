@@ -25,8 +25,8 @@ package net.psykosoft.psykopaint2.crop.views
 		}
 
 		override protected function onSetup():void {
-			_baseTextureSize = _canvasWidth = stage.stageWidth;
-			_canvasHeight = stage.stageHeight;
+			_baseTextureSize = _canvasWidth = CoreSettings.STAGE_WIDTH;
+			_canvasHeight = CoreSettings.STAGE_HEIGHT;
 		}
 
 		public function set sourceMap( map:BitmapData ):void {

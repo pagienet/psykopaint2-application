@@ -2,6 +2,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
 	import flash.utils.ByteArray;
+	import flash.utils.ByteArray;
+
+	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
@@ -92,7 +95,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		private function continueToColorPaint():void {
 
 			notifySurfaceLoadedSignal.addOnce( onSurfaceLoaded );
-			// Request the load of the surface.
 			requestLoadSurfaceSignal.dispatch( _selectedIndex );
 		}
 
@@ -100,21 +102,10 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			var vo : PaintingDataVO = new PaintingDataVO();
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
-			vo.colorData = createBlankData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
-			vo.sourceBitmapData = createBlankData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
-			data.uncompress();
+			vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
+			vo.sourceBitmapData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
 			vo.normalSpecularData = data;
 			requestOpenPaintingDataVOSignal.dispatch(vo);
-		}
-
-		private function createBlankData(width : int, height : int, value : uint) : ByteArray
-		{
-			var len : int = width*height;
-			var ba : ByteArray = new ByteArray();
-			for (var i : int = 0; i < len; ++i)
-				ba.writeUnsignedInt(value);
-			ba.position = 0;
-			return ba;
 		}
 	}
 }
