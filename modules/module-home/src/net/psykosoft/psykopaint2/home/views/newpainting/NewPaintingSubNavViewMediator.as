@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.home.views.newpainting
 {
 
+	import flash.utils.ByteArray;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintModeType;
@@ -33,12 +35,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		[Inject]
 		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
-
-		[Inject]
-		public var requestLoadSurfaceSignal:RequestLoadSurfaceSignal;
-
-		[Inject]
-		public var notifySurfaceLoadedSignal:NotifySurfaceLoadedSignal;
 
 		override public function initialize():void {
 
@@ -119,14 +115,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			}
 		}
 
-		private function onSurfaceSet():void {
-			// TODO: Proceed to CROP MODULE
-			requestStateChange__OLD_TO_REMOVE( NavigationStateType.PICK_IMAGE );
-		}
-
 		private function pickDefaultSurfaceAndContinueToPickImage():void {
-			notifySurfaceLoadedSignal.addOnce( onSurfaceSet );
-			requestLoadSurfaceSignal.dispatch( 0 );
+			requestStateChange__OLD_TO_REMOVE( NavigationStateType.PICK_IMAGE );
 		}
 	}
 }
