@@ -181,6 +181,8 @@ package net.psykosoft.psykopaint2.core
 
 		private function initialize():void {
 
+			initRobotlegs();
+
 			getXmlData();
 			initDebugging();
 
@@ -190,7 +192,6 @@ package net.psykosoft.psykopaint2.core
 			initStage();
 			initDisplay();
 			initStage3dASync();
-			initRobotlegs();
 			initMemoryWarnings();
 			initShakeAndBakeAsync();
 		}
@@ -256,12 +257,15 @@ package net.psykosoft.psykopaint2.core
 			_stage3dProxy.width = 1024 * CoreSettings.GLOBAL_SCALING;
 			_stage3dProxy.height = 768 * CoreSettings.GLOBAL_SCALING;
 			_stage3d = _stage3dProxy.stage3D;
+			_coreConfig.stage = stage;
+			_coreConfig.stage3d = _stage3d;
+			_coreConfig.stage3dProxy = _stage3dProxy;
 			_stage3dProxy.addEventListener( Stage3DEvent.CONTEXT3D_CREATED, onContext3dCreated );
 		}
 
 		private function initRobotlegs():void {
 //			trace( this, "initRobotlegs with stage: " + stage + ", and stage3d: " + _stage3d );
-			_coreConfig = new CoreConfig( this, stage, _stage3d, _stage3dProxy );
+			_coreConfig = new CoreConfig( this );
 			_requestNavigationToggleSignal = _coreConfig.injector.getInstance( RequestNavigationToggleSignal );
 			_requestGpuRenderingSignal = _coreConfig.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
 			_stateSignal = _coreConfig.injector.getInstance( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ); // Necessary for rendering the core on enter frame.

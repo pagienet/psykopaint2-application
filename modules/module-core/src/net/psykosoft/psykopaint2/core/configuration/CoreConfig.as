@@ -76,14 +76,11 @@ package net.psykosoft.psykopaint2.core.configuration
 
 	public class CoreConfig
 	{
-		private var _stage:Stage;
-		private var _stage3d:Stage3D;
-		private var _stage3dProxy:Stage3DProxy;
 		private var _injector:IInjector;
 		private var _mediatorMap:IMediatorMap;
 		private var _commandMap:ISignalCommandMap;
 
-		public function CoreConfig( display:DisplayObjectContainer, stage:Stage, stage3d:Stage3D, stage3dProxy:Stage3DProxy ) {
+		public function CoreConfig( display:DisplayObjectContainer ) {
 			super();
 
 			var context:IContext = new Context();
@@ -93,10 +90,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector = context.injector;
 			_mediatorMap = _injector.getInstance( IMediatorMap );
 			_commandMap = _injector.getInstance( ISignalCommandMap );
-
-			_stage = stage;
-			_stage3d = stage3d;
-			_stage3dProxy = stage3dProxy;
 
 			mapClasses();
 			mapMediators();
@@ -109,6 +102,18 @@ package net.psykosoft.psykopaint2.core.configuration
 
 		public function get injector():IInjector {
 			return _injector;
+		}
+
+		public function set stage( value:Stage ):void {
+			_injector.map( Stage ).toValue( value );
+		}
+
+		public function set stage3d( value:Stage3D ):void {
+			_injector.map( Stage3D ).toValue( value );
+		}
+
+		public function set stage3dProxy( value:Stage3DProxy ):void {
+			_injector.map( Stage3DProxy ).toValue( value );
 		}
 
 		// -----------------------
@@ -146,9 +151,6 @@ package net.psykosoft.psykopaint2.core.configuration
 		// -----------------------
 
 		private function mapSingletons():void {
-			_injector.map( Stage ).toValue( _stage );
-			_injector.map( Stage3D ).toValue( _stage3d );
-			_injector.map( Stage3DProxy ).toValue( _stage3dProxy );
 			_injector.map( GestureManager ).asSingleton();
 			_injector.map( ApplicationRenderer ).asSingleton();
 		}
