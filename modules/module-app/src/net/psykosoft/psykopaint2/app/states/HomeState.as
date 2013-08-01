@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var cropState : CropState;
 
+		// TODO: Replace this with signals exclusive home module
 		[Inject]
 		public var requestPaintStateSignal : RequestPaintStateSignal;
 

@@ -28,7 +28,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
@@ -170,7 +169,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyNavigationMovingSignal ).asSingleton();
 			_injector.map( NotifyPaintingDataSetSignal ).asSingleton();
 			_injector.map( RequestPaintingActivationSignal ).asSingleton();
-			_injector.map( NotifyPaintingActivatedSignal ).asSingleton();
 			_injector.map( RequestDrawingCoreResetSignal ).asSingleton();
 			_injector.map( RequestSetCanvasSurfaceSignal ).asSingleton();
 			_injector.map( RequestEaselUpdateSignal ).asSingleton();

@@ -34,6 +34,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestPaintStateSignal : RequestPaintStateSignal;
 
+		[Inject]
+		public var transitionCropToPaintState : TransitionCropToPaintState;
+
 		// TODO: add requestHomeStateSignal
 
 		private var _bitmapData : BitmapData;
@@ -44,13 +47,13 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function activate() : void
 		{
-			requestPaintStateSignal.add(onRequestPaintState);
 			notifyCropModuleSetUpSignal.addOnce(onCropModuleSetUp);
 			requestSetupCropModuleSignal.dispatch(_bitmapData);
 		}
 
 		private function onCropModuleSetUp() : void
 		{
+			requestPaintStateSignal.add(onRequestPaintState);
 			requestPaintStateSignal.remove(onRequestPaintState);
 			requestStateChangeSignal.dispatch(NavigationStateType.CROP);
 		}

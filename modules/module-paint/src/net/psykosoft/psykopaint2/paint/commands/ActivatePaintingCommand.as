@@ -13,7 +13,6 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 
@@ -29,9 +28,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var canvasModel:CanvasModel;
-
-		[Inject]
-		public var notifyPaintingActivatedSignal:NotifyPaintingActivatedSignal;
 
 		[Inject]
 		public var context:IContext;
@@ -75,10 +71,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			var canvasImporter : CanvasImporter = new CanvasImporter();
 			canvasImporter.importPainting(canvasModel, vo);
-			notifyPaintingActivatedSignal.dispatch( paintingId );
 
-			context.release( this );
 			vo.dispose();
+			context.release( this );
 		}
 	}
 }
