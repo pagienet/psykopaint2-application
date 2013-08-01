@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			lightController.enabled = true;
 
 			canvasModel.createPaintTextures();
+			brushKitManager.activate();
 
 			if (initPaintingVO)
 				importPaintingData();
@@ -54,7 +55,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			initRenderer();
 
 			GpuRenderManager.addRenderingStep(brushKitManager.update, GpuRenderingStepType.PRE_CLEAR);
-			brushKitManager.activate();
+
 			notifyPaintModuleSetUpSignal.dispatch();
 		}
 

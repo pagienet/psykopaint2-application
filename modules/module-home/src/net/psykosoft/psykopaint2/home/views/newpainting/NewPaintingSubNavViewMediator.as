@@ -40,24 +40,12 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		[Inject]
 		public var notifySurfaceLoadedSignal:NotifySurfaceLoadedSignal;
 
-		private var _waitingForSurfaceSet:Boolean;
-
 		override public function initialize():void {
 
 			// Init.
 			registerView( view );
 			super.initialize();
 
-			// TODO: Re-implement: merge failure
-			/*manageStateChanges = false;
-			manageMemoryWarnings = false;
-			view.navigation.buttonClickedCallback = onButtonClicked;
-
-			displaySavedPaintings();
-			view.validateCenterButtons();*/
-
-			// From app.
-			notifySurfaceLoadedSignal.add( onSurfaceSet );
 		}
 
 		override protected function onViewSetup():void {
@@ -132,14 +120,12 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		}
 
 		private function onSurfaceSet():void {
-			if( _waitingForSurfaceSet ) {
-			   	requestStateChange__OLD_TO_REMOVE( NavigationStateType.PICK_IMAGE );
-				_waitingForSurfaceSet = false;
-			}
+			// TODO: Proceed to CROP MODULE
+			requestStateChange__OLD_TO_REMOVE( NavigationStateType.PICK_IMAGE );
 		}
 
 		private function pickDefaultSurfaceAndContinueToPickImage():void {
-			_waitingForSurfaceSet = true;
+			notifySurfaceLoadedSignal.addOnce( onSurfaceSet );
 			requestLoadSurfaceSignal.dispatch( 0 );
 		}
 	}

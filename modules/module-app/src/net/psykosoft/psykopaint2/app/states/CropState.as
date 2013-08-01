@@ -9,11 +9,9 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
-	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 
 	use namespace ns_state_machine;
 
@@ -30,9 +28,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var notifyCropModuleSetUpSignal : NotifyCropModuleSetUpSignal;
-
-		[Inject]
-		public var requestPaintStateSignal : RequestPaintStateSignal;
 
 		[Inject]
 		public var transitionCropToPaintState : TransitionCropToPaintState;
@@ -53,8 +48,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onCropModuleSetUp() : void
 		{
-			requestPaintStateSignal.add(onRequestPaintState);
-			requestPaintStateSignal.remove(onRequestPaintState);
 			requestStateChangeSignal.dispatch(NavigationStateType.CROP);
 		}
 

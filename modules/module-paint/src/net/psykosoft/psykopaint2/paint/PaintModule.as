@@ -12,7 +12,6 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
@@ -96,8 +95,7 @@ package net.psykosoft.psykopaint2.paint
 			_loader.dispose();
 			_loader = null;
 
-			// Set default surface.
-			_paintConfig.injector.getInstance( RequestSetCanvasSurfaceSignal ).dispatch( byteArray, null );
+			// todo: import vo properly
 
 			loadDefaultSourceImage();
 		}

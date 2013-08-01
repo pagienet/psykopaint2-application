@@ -1,18 +1,19 @@
 package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
-	import flash.display.BitmapData;
+	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestBlankSourceImageActivationSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 
 	public class PickSurfaceSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -35,13 +36,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		public var notifySurfaceLoadedSignal:NotifySurfaceLoadedSignal;
 
 		[Inject]
-		public var requestBlankSourceImageActivationSignal:RequestBlankSourceImageActivationSignal;
-
-		[Inject]
-		public var requestPaintStateSignal : RequestPaintStateSignal;
+		public var requestOpenPaintingDataVOSignal : RequestOpenPaintingDataVOSignal;
 
 		private var _selectedIndex:int;
-		private var _waitingForSurface:Boolean;
 
 		override public function initialize():void {
 
@@ -52,7 +49,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 			// From app.
 			notifySurfacePreviewLoadedSignal.add( onSurfacePreviewLoaded );
-			notifySurfaceLoadedSignal.add( onSurfaceLoaded );
 		}
 
 		override protected function onViewEnabled():void {
@@ -95,21 +91,30 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		private function continueToColorPaint():void {
 
+			notifySurfaceLoadedSignal.addOnce( onSurfaceLoaded );
 			// Request the load of the surface.
 			requestLoadSurfaceSignal.dispatch( _selectedIndex );
-			_waitingForSurface = true;
-
-			// Set a blank source image.
-			// TODO: it would be nice to tell the drawing core to not use a source image altogether.
-			var dummyBmd:BitmapData = new BitmapData( 1024 * CoreSettings.GLOBAL_SCALING, 768 * CoreSettings.GLOBAL_SCALING, false, 0 );
-			requestBlankSourceImageActivationSignal.dispatch( dummyBmd );
 		}
 
-		private function onSurfaceLoaded():void {
-			if( _waitingForSurface ) {
-				requestPaintStateSignal.dispatch();
-				_waitingForSurface = false;
-			}
+		private function onSurfaceLoaded(data : ByteArray):void {
+			var vo : PaintingDataVO = new PaintingDataVO();
+			vo.width = CoreSettings.STAGE_WIDTH;
+			vo.height = CoreSettings.STAGE_HEIGHT;
+			vo.colorData = createBlankData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
+			vo.sourceBitmapData = createBlankData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
+			data.uncompress();
+			vo.normalSpecularData = data;
+			requestOpenPaintingDataVOSignal.dispatch(vo);
+		}
+
+		private function createBlankData(width : int, height : int, value : uint) : ByteArray
+		{
+			var len : int = width*height;
+			var ba : ByteArray = new ByteArray();
+			for (var i : int = 0; i < len; ++i)
+				ba.writeUnsignedInt(value);
+			ba.position = 0;
+			return ba;
 		}
 	}
 }

@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.home.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
-	import net.psykosoft.psykopaint2.home.signals.NotifyPaintingDataLoadedSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 
 	import robotlegs.bender.framework.api.IContext;
 
@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.home.commands
 		public var requestStateChangeSignal:RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 
 		[Inject]
-		public var notifyPaintingDataLoadedSignal : NotifyPaintingDataLoadedSignal;
+		public var notifyPaintingDataLoadedSignal : RequestOpenPaintingDataVOSignal;
 
 		private var _file:File;
 

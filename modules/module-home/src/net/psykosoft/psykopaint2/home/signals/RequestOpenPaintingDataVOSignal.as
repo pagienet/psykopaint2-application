@@ -4,9 +4,9 @@ package net.psykosoft.psykopaint2.home.signals
 
 	import org.osflash.signals.Signal;
 
-	public class NotifyPaintingDataLoadedSignal extends Signal
+	public class RequestOpenPaintingDataVOSignal extends Signal
 	{
-		public function NotifyPaintingDataLoadedSignal()
+		public function RequestOpenPaintingDataVOSignal()
 		{
 			super(PaintingDataVO);
 		}

@@ -35,9 +35,6 @@ package net.psykosoft.psykopaint2.core.drawing
 
 		private static var _instance:DrawingCore;
 
-		public static var stageWidth : Number;
-		public static var stageHeight : Number;
-
 		public function DrawingCore( injector:IInjector ) {
 
 			trace( this );
@@ -58,8 +55,6 @@ package net.psykosoft.psykopaint2.core.drawing
 		}
 
 		private function onAddedToStage( event:Event ):void {
-			stageWidth = stage.stageWidth;
-			stageHeight = stage.stageHeight;
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 	}
