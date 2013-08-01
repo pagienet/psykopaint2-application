@@ -104,7 +104,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _canvasMatrix : Matrix;
 		//private var _navHideTimeout:int = -1;
 		private var _navShowTimeout:int = -1;
-		private var sourceCanvasViewModes:Array = [[1,0.25],[1,0],[0.5,0.5],[0.01,1]];
+		private var sourceCanvasViewModes:Array = [[1,0.25],[1,0],[1,1],[0.01,1]];
 		private var sourceCanvasViewModeIndex:int = 0;
 		
 		public function PaintModule()
@@ -126,10 +126,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
-			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED )
+			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED && PaintModeModel.activeMode == PaintModeType.PHOTO_MODE )
 			{
 				sourceCanvasViewModeIndex = ( sourceCanvasViewModeIndex+1) % sourceCanvasViewModes.length;
-					
 				TweenLite.killTweensOf( renderer );
 				TweenLite.to( renderer, 0.6, { paintAlpha:sourceCanvasViewModes[sourceCanvasViewModeIndex][0],sourceTextureAlpha: sourceCanvasViewModes[sourceCanvasViewModeIndex][1], ease: Sine.easeInOut } );
 				
@@ -233,6 +232,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		public function activate(bitmapData : BitmapData) : void
 		{
+			//TODO: once new state model is implemented
+			// activate brush kits only for selected mode
+			// make sure background blending is correct upon activation depending on mode
+		
 			for ( var i:int = 0; i < BrushKitDefaultSet.brushKitDataPhotoPaintMode.brush.length(); i++ )
 			{
 				registerBrushKit( BrushKit.fromXML(BrushKitDefaultSet.brushKitDataPhotoPaintMode.brush[i]), BrushKitDefaultSet.brushKitDataPhotoPaintMode.brush[i].@name,0);
