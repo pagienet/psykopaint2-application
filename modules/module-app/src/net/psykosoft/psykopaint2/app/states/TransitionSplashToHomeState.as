@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		}
 
-		override ns_state_machine function activate() : void
+		override ns_state_machine function activate(data : Object = null) : void
 		{
 			notifyHomeModuleSetUpSignal.addOnce(onHomeModuleSetUp);
 			requestSetupHomeModuleSignal.dispatch();

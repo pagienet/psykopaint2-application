@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
@@ -30,20 +31,25 @@ package net.psykosoft.psykopaint2.app.states
 		public var notifyCropModuleSetUpSignal : NotifyCropModuleSetUpSignal;
 
 		[Inject]
-		public var transitionCropToPaintState : TransitionCropToPaintState;
+		public var transitionToPaintState : TransitionCropToPaintState;
 
+		[Inject]
+		public var requestOpenCroppedBitmapDataSignal : RequestOpenCroppedBitmapDataSignal;
 		// TODO: add requestHomeStateSignal
-
-		private var _bitmapData : BitmapData;
 
 		public function CropState()
 		{
 		}
 
-		override ns_state_machine function activate() : void
+		/**
+		 * @param data A BitmapData object containing the source image to be cropped
+		 */
+		override ns_state_machine function activate(data : Object = null) : void
 		{
+			var bitmapData : BitmapData = BitmapData(data);
+			requestOpenCroppedBitmapDataSignal.add(onRequestOpenCroppedBitmapData);
 			notifyCropModuleSetUpSignal.addOnce(onCropModuleSetUp);
-			requestSetupCropModuleSignal.dispatch(_bitmapData);
+			requestSetupCropModuleSignal.dispatch(bitmapData);
 		}
 
 		private function onCropModuleSetUp() : void
@@ -53,19 +59,14 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function deactivate() : void
 		{
+			requestOpenCroppedBitmapDataSignal.remove(onRequestOpenCroppedBitmapData);
 			requestDestroyCropModuleSignal.dispatch();
 			requestStateChangeSignal.dispatch(NavigationStateType.CROP);
 		}
 
-		private function onRequestPaintState() : void
+		private function onRequestOpenCroppedBitmapData(bitmapData : BitmapData) : void
 		{
-			// TODO: Provide transitionCropToPaintState
-		}
-
-		// provided by home state, not sure if I'm a fan of passing stuff like this :s
-		public function setSourceBitmapData(bitmapData : BitmapData) : void
-		{
-			_bitmapData = bitmapData;
+			stateMachine.setActiveState(transitionToPaintState, bitmapData);
 		}
 	}
 }

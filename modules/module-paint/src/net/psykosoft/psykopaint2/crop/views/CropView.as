@@ -62,7 +62,13 @@ package net.psykosoft.psykopaint2.crop.views
 			
 		}
 
-		public function renderPreviewToBitmapData():BitmapData 
+		public function disposeCropData() : void
+		{
+			_positioningSheet.dispose();
+			_positioningSheet = null;
+		}
+
+		public function getCroppedImage():BitmapData
 		{
 			var croppedMap:BitmapData = new TrackedBitmapData(stage.stageWidth, stage.stageHeight, false, 0xffffffff );
 			croppedMap.draw(_positioningSheet,new Matrix(stage.stageWidth/_easelRect.width,0,0,stage.stageHeight / _easelRect.height),null,"normal",null,true);

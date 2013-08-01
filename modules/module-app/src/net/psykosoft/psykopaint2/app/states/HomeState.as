@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.app.states
 		{
 		}
 
-		override ns_state_machine function activate() : void
+		override ns_state_machine function activate(data : Object = null) : void
 		{
 			// TODO: this probably needs to be moved to some activation command
 			requestNavigationToggleSignal.dispatch(1, 0.5);
@@ -54,19 +54,12 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onRequestOpenPaintingDataVO(paintingData : PaintingDataVO) : void
 		{
-			transitionToPaintState.loadedPaintingData = paintingData;
-			stateMachine.setActiveState(transitionToPaintState);
-		}
-
-		private function onRequestPaintState() : void
-		{
-			stateMachine.setActiveState(transitionToPaintState);
+			stateMachine.setActiveState(transitionToPaintState, paintingData);
 		}
 
 		private function onRequestCropState(bitmapData : BitmapData) : void
 		{
-			cropState.setSourceBitmapData(bitmapData);
-			stateMachine.setActiveState(cropState);
+			stateMachine.setActiveState(cropState, bitmapData);
 		}
 	}
 }
