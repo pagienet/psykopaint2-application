@@ -23,7 +23,11 @@
 			_stateMachine = value;
 		}
 
-		ns_state_machine function activate() : void
+		/**
+		 * @param data Optional data structure needed to be passed in through StateMachine:setActiveState
+		 * PLEASE, if needed, document the type in subclasses
+		 */
+		ns_state_machine function activate(data : Object = null) : void
 		{
 		}
 

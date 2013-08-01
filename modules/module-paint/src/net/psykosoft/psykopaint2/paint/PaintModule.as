@@ -11,8 +11,7 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasSurfaceSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
@@ -96,8 +95,7 @@ package net.psykosoft.psykopaint2.paint
 			_loader.dispose();
 			_loader = null;
 
-			// Set default surface.
-			_paintConfig.injector.getInstance( RequestSetCanvasSurfaceSignal ).dispatch( byteArray, null );
+			// todo: import vo properly
 
 			loadDefaultSourceImage();
 		}
@@ -114,7 +112,7 @@ package net.psykosoft.psykopaint2.paint
 			perlinBmd.perlinNoise( 50, 50, 8, uint( 1000 * Math.random() ), false, true, 7, true );
 
 			// Causes drawing core module activation and hence an application state change via UpdateAppStateFromActivatedDrawingCoreModuleCommand.
-			_coreModule.injector.getInstance( NotifyCropCompleteSignal ).dispatch( perlinBmd ); // Launches app in paint mode.
+			_coreModule.injector.getInstance( RequestOpenCroppedBitmapDataSignal ).dispatch( perlinBmd ); // Launches app in paint mode.
 
 			// Show navigation.
 			_coreModule.injector.getInstance( RequestNavigationToggleSignal ).dispatch( 1, 0.5 );

@@ -4,9 +4,9 @@ package net.psykosoft.psykopaint2.core.signals
 
 	import net.psykosoft.psykopaint2.base.robotlegs.signals.TracingSignal;
 
-	public class RequestCropStateSignal extends TracingSignal
+	public class RequestCropSourceImageSignal extends TracingSignal
 	{
-		public function RequestCropStateSignal()
+		public function RequestCropSourceImageSignal()
 		{
 			super(BitmapData);
 		}

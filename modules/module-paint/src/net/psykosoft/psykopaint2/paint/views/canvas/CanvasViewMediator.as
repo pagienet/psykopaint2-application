@@ -232,7 +232,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		{
 			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: function() {
+			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: function() : void {
 				onZoomToFullViewComplete();
 				if (callback) callback();
 			}, ease: Strong.easeInOut } );
@@ -241,7 +241,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public function zoomToEaselView(callback : Function):void {
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete:
-					function() {
+					function() : void {
 						onZoomToEaselComplete();
 						if (callback) callback();
 					}, ease: Strong.easeInOut } );

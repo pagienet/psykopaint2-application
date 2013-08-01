@@ -1,12 +1,14 @@
 package net.psykosoft.psykopaint2.core.signals
 {
 
-	import net.psykosoft.psykopaint2.base.robotlegs.signals.TracingSignal;
+	import flash.utils.ByteArray;
 
-	public class NotifySurfaceLoadedSignal extends TracingSignal
+	import org.osflash.signals.Signal;
+
+	public class NotifySurfaceLoadedSignal extends Signal
 	{
 		public function NotifySurfaceLoadedSignal() {
-			super();
+			super(ByteArray);
 		}
 	}
 }

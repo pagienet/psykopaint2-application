@@ -9,17 +9,14 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSetCanvasSurfaceSignal;
 
 	import robotlegs.bender.framework.api.IContext;
 
+	// TODO: Identifying surfaces using indices is error prone, should be actual ids into a (xml) database rather than some hardcoded array
 	public class LoadSurfaceCommand extends TracingCommand
 	{
 		[Inject]
 		public var index:uint; // From signal.
-
-		[Inject]
-		public var requestDrawingCoreSurfaceSetSignal:RequestSetCanvasSurfaceSignal;
 
 		[Inject]
 		public var context:IContext;
@@ -76,9 +73,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			_loadedNormalSpecularData = bytes;
 			_byteLoader.dispose();
 			_byteLoader = null;
-
-			requestDrawingCoreSurfaceSetSignal.dispatch( _loadedNormalSpecularData, _loadedColorData );
-			notifySurfaceLoadedSignal.dispatch();
+			bytes.uncompress();
+			notifySurfaceLoadedSignal.dispatch(bytes);
 			context.release( this );
 		}
 	}

@@ -2,7 +2,9 @@ package net.psykosoft.psykopaint2.core.rendering
 {
 	import flash.display3D.Context3D;
 	import flash.display3D.textures.TextureBase;
-	
+
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	public class BackbufferTextureFilter extends FullTextureFilter
 	{
 		public function BackbufferTextureFilter()
@@ -17,12 +19,11 @@ package net.psykosoft.psykopaint2.core.rendering
 			
 			// is there a different way to get the scale factor that does not involve Starling?
 //			var scale:Number = 1 / Starling.current.contentScaleFactor;
-			var scale:Number = 1;
-			// viewport size is 1024 * 748 -> ratio 0.73046875
-			_quadVertices.uploadFromVector(new <Number>[	
-				-1.0, -1.0, 0.0, 0.73046875 * scale,
-				1.0, -1.0, 1.0* scale, 0.73046875 * scale,
-				1.0, 1.0, 1.0* scale, 0.0,
+			var aspectRatio:Number = CoreSettings.STAGE_WIDTH/CoreSettings.STAGE_HEIGHT;
+			_quadVertices.uploadFromVector(new <Number>[
+				-1.0, -1.0, 0.0, aspectRatio,
+				1.0, -1.0, 1.0, aspectRatio,
+				1.0, 1.0, 1.0, 0.0,
 				-1.0,1.0, 0.0, 0.0], 0, 4);
 			_quadIndices.uploadFromVector(new <uint>[0, 1, 2, 0, 2, 3], 0, 6);
 		}

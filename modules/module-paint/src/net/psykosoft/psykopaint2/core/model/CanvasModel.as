@@ -12,8 +12,7 @@ package net.psykosoft.psykopaint2.core.model
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
-	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
-	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
@@ -70,7 +69,7 @@ package net.psykosoft.psykopaint2.core.model
 		[PostConstruct]
 		public function postConstruct() : void
 		{
-			init(stage.stageWidth, stage.stageHeight);
+			init(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT);
 			memoryWarningSignal.add(onMemoryWarning);
 		}
 

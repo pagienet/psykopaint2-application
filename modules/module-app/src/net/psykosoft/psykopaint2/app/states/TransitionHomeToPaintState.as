@@ -9,9 +9,11 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 
 	import net.psykosoft.psykopaint2.base.states.State;
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 
@@ -29,6 +31,9 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestSetupPaintModuleSignal : RequestSetupPaintModuleSignal;
 
 		[Inject]
+		public var notifyPaintModuleSetUp : NotifyPaintModuleSetUpSignal;
+
+		[Inject]
 		public var requestZoomCanvasToDefaultViewSignal:RequestZoomCanvasToDefaultViewSignal;
 
 		[Inject]
@@ -41,9 +46,17 @@ package net.psykosoft.psykopaint2.app.states
 		{
 		}
 
-		override ns_state_machine function activate() : void
+		/**
+		 * @param data A PaintingDataVO object containing the data to import to the canvas
+		 */
+		override ns_state_machine function activate(data : Object = null) : void
 		{
-			requestSetupPaintModuleSignal.dispatch();
+			notifyPaintModuleSetUp.addOnce(onPaintingModuleSetUp);
+			requestSetupPaintModuleSignal.dispatch(PaintingDataVO(data));
+		}
+
+		private function onPaintingModuleSetUp() : void
+		{
 			notifyCanvasBackgroundSetSignal.addOnce(onCanvasBackgroundSet);
 			requestCreateCanvasBackgroundSignal.dispatch();
 

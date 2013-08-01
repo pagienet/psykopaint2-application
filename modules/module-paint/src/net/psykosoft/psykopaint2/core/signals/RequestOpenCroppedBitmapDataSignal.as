@@ -4,9 +4,9 @@ package net.psykosoft.psykopaint2.core.signals
 
 	import org.osflash.signals.Signal;
 
-	public class NotifyCropCompleteSignal extends Signal
+	public class RequestOpenCroppedBitmapDataSignal extends Signal
 	{
-		public function NotifyCropCompleteSignal()
+		public function RequestOpenCroppedBitmapDataSignal()
 		{
 			// we will pass along BitmapData for the next stage
 			super(BitmapData);

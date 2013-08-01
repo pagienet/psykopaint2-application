@@ -3,14 +3,17 @@ package net.psykosoft.psykopaint2.home.config
 
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.home.commands.DestroyHomeModuleCommand;
+	import net.psykosoft.psykopaint2.home.commands.LoadPaintingDataCommand;
 	import net.psykosoft.psykopaint2.home.commands.LoadSurfacePreviewCommand;
 	import net.psykosoft.psykopaint2.home.commands.SetUpHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneConstructionSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneDestructionSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
@@ -91,6 +94,7 @@ package net.psykosoft.psykopaint2.home.config
 	   		_injector.map( RequestHomeSceneConstructionSignal ).asSingleton();
 	   		_injector.map( RequestHomeIntroSignal ).asSingleton();
 	   		_injector.map( RequestHomeSceneDestructionSignal ).asSingleton();
+	   		_injector.map( RequestOpenPaintingDataVOSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -104,6 +108,7 @@ package net.psykosoft.psykopaint2.home.config
 			_commandMap.map( RequestLoadSurfacePreviewSignal ).toCommand( LoadSurfacePreviewCommand );
 			_commandMap.map( RequestSetupHomeModuleSignal ).toCommand( SetUpHomeModuleCommand );
 			_commandMap.map( RequestDestroyHomeModuleSignal ).toCommand( DestroyHomeModuleCommand );
+			_commandMap.map( RequestLoadPaintingDataSignal ).toCommand( LoadPaintingDataCommand );
 		}
 
 		// -----------------------

@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.core
 
 	import flash.display.DisplayObject;
 	import flash.events.Event;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
