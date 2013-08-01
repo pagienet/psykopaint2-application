@@ -8,10 +8,13 @@ package net.psykosoft.psykopaint2.core.configuration
 	import flash.display.Stage3D;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
+	import net.psykosoft.psykopaint2.core.commands.BootstrapCoreModuleCommand;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
+	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -21,6 +24,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
@@ -38,6 +42,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBlankSourceImageActivationSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropStateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
@@ -104,18 +109,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			return _injector;
 		}
 
-		public function set stage( value:Stage ):void {
-			_injector.map( Stage ).toValue( value );
-		}
-
-		public function set stage3d( value:Stage3D ):void {
-			_injector.map( Stage3D ).toValue( value );
-		}
-
-		public function set stage3dProxy( value:Stage3DProxy ):void {
-			_injector.map( Stage3DProxy ).toValue( value );
-		}
-
 		// -----------------------
 		// Classes.
 		// -----------------------
@@ -153,6 +146,8 @@ package net.psykosoft.psykopaint2.core.configuration
 		private function mapSingletons():void {
 			_injector.map( GestureManager ).asSingleton();
 			_injector.map( ApplicationRenderer ).asSingleton();
+			_injector.map( MemoryWarningManager ).asSingleton();
+			_injector.map( KeyDebuggingManager ).asSingleton();
 		}
 
 		// -----------------------
@@ -195,6 +190,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyPaintingSavingStartedSignal ).asSingleton();
 			_injector.map( NotifyCanvasExportStartedSignal ).asSingleton();
 			_injector.map( NotifyCanvasExportEndedSignal ).asSingleton();
+			_injector.map( NotifyCoreModuleBootstrapCompleteSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -205,6 +201,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_commandMap.map( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).toCommand( ChangeStateCommand );
 			_commandMap.map( RequestGpuRenderingSignal ).toCommand( RenderGpuCommand );
 			_commandMap.map( RequestPaintingDataRetrievalSignal ).toCommand( RetrievePaintingDataCommand );
+			_commandMap.map( RequestCoreModuleBootstrapSignal ).toCommand( BootstrapCoreModuleCommand );
 		}
 
 		// -----------------------
