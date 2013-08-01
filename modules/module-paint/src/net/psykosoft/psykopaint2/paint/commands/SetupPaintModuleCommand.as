@@ -5,7 +5,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
+	import net.psykosoft.psykopaint2.core.io.CanvasImporter;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
@@ -15,6 +17,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	public class SetupPaintModuleCommand extends TracingCommand
 	{
+		[Inject]
+		public var initPaintingVO : PaintingDataVO;
+
 		[Inject]
 		public var canvasModel:CanvasModel;
 
@@ -38,7 +43,12 @@ package net.psykosoft.psykopaint2.paint.commands
 			super.execute();
 
 			lightController.enabled = true;
+
 			canvasModel.createPaintTextures();
+
+			if (initPaintingVO)
+				importPaintingData();
+
 			canvasHistoryModel.clearHistory();
 
 			initRenderer();
@@ -46,6 +56,13 @@ package net.psykosoft.psykopaint2.paint.commands
 			GpuRenderManager.addRenderingStep(brushKitManager.update, GpuRenderingStepType.PRE_CLEAR);
 			brushKitManager.activate();
 			notifyPaintModuleSetUpSignal.dispatch();
+		}
+
+		private function importPaintingData() : void
+		{
+			var canvasImporter : CanvasImporter = new CanvasImporter();
+			canvasImporter.importPainting(canvasModel, initPaintingVO);
+			initPaintingVO.dispose();
 		}
 
 		private function initRenderer() : void

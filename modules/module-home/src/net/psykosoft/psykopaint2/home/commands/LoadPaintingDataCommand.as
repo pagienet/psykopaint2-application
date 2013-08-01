@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.commands
+package net.psykosoft.psykopaint2.home.commands
 {
 
 	import flash.events.Event;
@@ -9,16 +9,13 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingDataDeserializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
-	import net.psykosoft.psykopaint2.core.io.CanvasImporter;
-	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
-	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.home.signals.NotifyPaintingDataLoadedSignal;
 
 	import robotlegs.bender.framework.api.IContext;
 
-	public class ActivatePaintingCommand extends TracingCommand
+	public class LoadPaintingDataCommand extends TracingCommand
 	{
 		[Inject]
 		public var paintingId:String; // From signal.
@@ -27,23 +24,17 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var paintingDataModel:PaintingModel;
 
 		[Inject]
-		public var canvasModel:CanvasModel;
-
-		[Inject]
 		public var context:IContext;
 
 		[Inject]
 		public var requestStateChangeSignal:RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 
 		[Inject]
-		public var canvasHistoryModel : CanvasHistoryModel;
-
-		[Inject]
-		public var requestPaintStateSignal : RequestPaintStateSignal;
+		public var notifyPaintingDataLoadedSignal : NotifyPaintingDataLoadedSignal;
 
 		private var _file:File;
 
-		public function ActivatePaintingCommand() {
+		public function LoadPaintingDataCommand() {
 			super();
 		}
 
@@ -67,12 +58,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			_file.data.clear();
 			_file = null;
 
-			requestPaintStateSignal.dispatch();
+			notifyPaintingDataLoadedSignal.dispatch(vo);
 
-			var canvasImporter : CanvasImporter = new CanvasImporter();
-			canvasImporter.importPainting(canvasModel, vo);
-
-			vo.dispose();
 			context.release( this );
 		}
 	}

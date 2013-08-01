@@ -4,10 +4,12 @@ package net.psykosoft.psykopaint2.app.states
 
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.states.State;
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropStateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintStateSignal;
+	import net.psykosoft.psykopaint2.home.signals.NotifyPaintingDataLoadedSignal;
 
 	use namespace ns_state_machine;
 
@@ -32,6 +34,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestCropStateSignal : RequestCropStateSignal;
 
+		[Inject]
+		public var notifyPaintingDataLoadedSignal : NotifyPaintingDataLoadedSignal;
+
 		public function HomeState()
 		{
 		}
@@ -42,14 +47,22 @@ package net.psykosoft.psykopaint2.app.states
 			requestNavigationToggleSignal.dispatch(1, 0.5);
 			requestHomeViewScrollSignal.dispatch(1);
 
+			notifyPaintingDataLoadedSignal.add(onPaintingDataLoaded);
 			requestPaintStateSignal.add(onRequestPaintState);
 			requestCropStateSignal.add(onRequestCropState);
 		}
 
 		override ns_state_machine function deactivate() : void
 		{
+			notifyPaintingDataLoadedSignal.remove(onPaintingDataLoaded);
 			requestPaintStateSignal.remove(onRequestPaintState);
 			requestCropStateSignal.remove(onRequestCropState);
+		}
+
+		private function onPaintingDataLoaded(paintingData : PaintingDataVO) : void
+		{
+			transitionToPaintState.loadedPaintingData = paintingData
+			stateMachine.setActiveState(transitionToPaintState);
 		}
 
 		private function onRequestPaintState() : void
