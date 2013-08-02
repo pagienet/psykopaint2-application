@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.commands
 {
 
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
 
 	import robotlegs.bender.bundles.mvcs.Command;
@@ -13,6 +14,8 @@ package net.psykosoft.psykopaint2.core.commands
 		override public function execute():void {
 
 			trace( this, "execute()" );
+
+			if( !CoreSettings.USE_DEBUG_KEYS ) return;
 
 			// Just trigger the singleton.
 			manager.initialize(  );
