@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.core.commands
 
 			trace( this, "prepare()" );
 
+			add( InitExternalDataCommand );
 			add( InitShakeAndBakeCommand );
 			add( InitDisplayCommand );
 			add( InitMemoryWarningsCommand );

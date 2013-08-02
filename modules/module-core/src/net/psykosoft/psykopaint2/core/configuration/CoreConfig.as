@@ -55,6 +55,10 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
+	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
+	import net.psykosoft.psykopaint2.core.views.debug.DebugViewMediator;
+	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
+	import net.psykosoft.psykopaint2.core.views.debug.ErrorsViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.popups.MessagePopUpView;
@@ -204,6 +208,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_mediatorMap.map( PsykoSocketView ).toMediator( PsykoSocketViewMediator );
 			_mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
 			_mediatorMap.map( MessagePopUpView ).toMediator( MessagePopUpViewMediator );
+			_mediatorMap.map( DebugView ).toMediator( DebugViewMediator );
+			_mediatorMap.map( ErrorsView ).toMediator( ErrorsViewMediator );
 		}
 	}
 }

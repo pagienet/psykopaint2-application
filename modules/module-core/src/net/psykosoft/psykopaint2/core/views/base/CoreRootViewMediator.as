@@ -3,9 +3,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import flash.display.DisplayObjectContainer;
 
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
-	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
@@ -20,9 +18,6 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		[Inject]
 		public var gestureManager:GestureManager;
-
-		[Inject]
-		public var notifyMemoryWarningSignal:NotifyMemoryWarningSignal;
 
 		[Inject]
 		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
@@ -42,7 +37,6 @@ package net.psykosoft.psykopaint2.core.views.base
 			gestureManager.stage = view.stage;
 
 			// From app.
-			notifyMemoryWarningSignal.add( onMemoryWarning );
 			requestInteractionBlockSignal.add( onInteractionBlockRequest );
 			requestHideSplashScreenSignal.addOnce( onRequestHideSplashScreen );
 			requestAddViewToMainLayerSignal.add( onRequestToAddViewToMainLayer );
@@ -64,12 +58,6 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		private function onInteractionBlockRequest( block:Boolean ):void {
 			view.showBlocker( block );
-		}
-
-		private function onMemoryWarning():void {
-			if( CoreSettings.SHOW_MEMORY_WARNINGS ) {
-				view.flashMemoryIcon();
-			}
 		}
 	}
 }

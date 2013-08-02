@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.core
 
 	import flash.events.Event;
 
-	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -22,7 +21,6 @@ package net.psykosoft.psykopaint2.core
 		private var _coreConfig:CoreConfig;
 		private var _injector:IInjector;
 		private var _requestGpuRenderingSignal:RequestGpuRenderingSignal;
-		private var _xmLoader:XMLLoader;
 		private var _undisposedObjects : UndisposedObjects;
 		private var _oldNumUndisposedObjects : uint;
 
@@ -53,14 +51,7 @@ package net.psykosoft.psykopaint2.core
 			CoreSettings.STAGE = stage;
 			CoreSettings.DISPLAY_ROOT = this;
 
-			getXmlData();
 			initRobotlegs();
-		}
-
-		private function getXmlData():void {
-			_xmLoader = new XMLLoader();
-			var date:Date = new Date();
-			_xmLoader.loadAsset( "common-packaged/app-data.xml?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() ), onVersionRetrieved );
 		}
 
 		private function initRobotlegs():void {
@@ -105,17 +96,6 @@ package net.psykosoft.psykopaint2.core
 					_oldNumUndisposedObjects = _undisposedObjects.numObjects;
 				}
 			}
-		}
-
-		private function onVersionRetrieved( data:XML ):void {
-
-			CoreSettings.VERSION = data.version;
-			trace( this, "VERSION: " + CoreSettings.VERSION );
-
-			_xmLoader.dispose();
-			_xmLoader = null;
-
-			// TODO: feed this to CoreRootView refresh version
 		}
 
 		private function onEnterFrame( event:Event ):void {
