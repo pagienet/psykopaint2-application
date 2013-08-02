@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class NoisyBrushShape extends AbstractBrushShape
@@ -57,7 +57,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			uploadMips(_textureSize, _brushMap, texture);
 		}
 
-		override protected function updateTexture(texture : Texture) : void
+		override protected function updateTexture(texture : Texture, automatic:Boolean = true) : void
 		{
 			_brushMap.perlinNoise(3, 3, 3, Math.random() * 0xffffff, false, true, 15, true);
 			_brushMap.applyFilter(_brushMap, _brushMap.rect,origin, _alphaContrast);

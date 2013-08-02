@@ -364,7 +364,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.BLOB} name="Test">
-						<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="scales"/>
+						<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="render"/>
 
 						<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 						</pathengine>
