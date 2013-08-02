@@ -24,7 +24,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
@@ -71,9 +70,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestCleanUpPaintModuleMemorySignal : RequestDestroyPaintModuleSignal;
-
-		[Inject]
-		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
 		[Inject]
 		public var requestZoomCanvasToDefaultViewSignal:RequestZoomCanvasToDefaultViewSignal;
@@ -260,13 +256,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function onZoomToFullViewComplete():void {
 			requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_SELECT_BRUSH );
-			requestInteractionBlockSignal.dispatch( false );
+			//TODO: blocker deactivation
 		}
 
 		private function onZoomToEaselComplete():void {
 			// TODO: this solution is temporary while transitions states are eliminated
 			requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREPARE_FOR_HOME_MODE );
-			requestInteractionBlockSignal.dispatch( false ); // TODO: needed?
+			//TODO: blocker deactivation // TODO: needed?
 			requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
 			requestCleanUpPaintModuleMemorySignal.dispatch();
 		}

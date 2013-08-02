@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
@@ -30,9 +29,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		[Inject]
 		public var paintingModel:PaintingModel;
-
-		[Inject]
-		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
 		[Inject]
 		public var requestLoadSurfaceSignal:RequestLoadSurfaceSignal;
@@ -105,7 +101,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					trace( "focused: " + paintingModel.activePaintingId );
 					if( paintingModel.activePaintingId != "uniqueUserId-" ) {
 						requestPaintingActivationSignal.dispatch( paintingModel.activePaintingId );
-						requestInteractionBlockSignal.dispatch( true );
+						//TODO: blocker activation
 					}
 					break;
 				}

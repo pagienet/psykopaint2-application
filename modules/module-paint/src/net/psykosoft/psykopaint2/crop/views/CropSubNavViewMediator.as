@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.crop.views
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
 	public class CropSubNavViewMediator extends SubNavigationMediatorBase
@@ -13,9 +12,6 @@ package net.psykosoft.psykopaint2.crop.views
 
 		[Inject]
 		public var notifyCropConfirmSignal:NotifyCropConfirmSignal;
-
-		[Inject]
-		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
 		override public function initialize():void {
 			registerView( view );
@@ -30,7 +26,7 @@ package net.psykosoft.psykopaint2.crop.views
 				}
 				case CropSubNavView.LBL_CONFIRM_CROP: {
 					notifyCropConfirmSignal.dispatch();
-					requestInteractionBlockSignal.dispatch( true );
+					//TODO: blocker activation
 					break;
 				}
 			}

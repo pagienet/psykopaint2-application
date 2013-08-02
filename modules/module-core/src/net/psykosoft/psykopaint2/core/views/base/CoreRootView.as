@@ -29,6 +29,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
+	import net.psykosoft.psykopaint2.core.views.blocker.BlockerView;
 	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
@@ -59,7 +60,6 @@ package net.psykosoft.psykopaint2.core.views.base
 		private var _memoryWarningCount:uint;
 		private var _applicationLayer:Sprite;
 		private var _debugLayer:Sprite;
-		private var _blocker:Sprite;
 
 		public function CoreRootView() {
 			super();
@@ -74,13 +74,6 @@ package net.psykosoft.psykopaint2.core.views.base
 			_applicationLayer.name = "application layer";
 			_applicationLayer.mouseEnabled = false;
 			addChild( _applicationLayer );
-
-			_blocker = new Sprite();
-			_blocker.graphics.beginFill( 0x000000, CoreSettings.SHOW_BLOCKER ? 0.75 : 0 );
-			_blocker.graphics.drawRect( 0, 0, 1024 * CoreSettings.GLOBAL_SCALING, 768 * CoreSettings.GLOBAL_SCALING );
-			_blocker.graphics.endFill();
-			_blocker.visible = false;
-			addChild( _blocker );
 
 			_debugLayer = new Sprite();
 			_debugLayer.name = "debug layer";
@@ -140,6 +133,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			// Core module's main views.
 			addRegisteredView( new SbNavigationView(), _applicationLayer );
 			addRegisteredView( new PopUpManagerView(), _applicationLayer );
+			addRegisteredView( new BlockerView(), _applicationLayer );
 			if( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION ) {
 				addRegisteredView( new PsykoSocketView(), _applicationLayer );
 			}
@@ -512,10 +506,6 @@ package net.psykosoft.psykopaint2.core.views.base
 			stage.addEventListener( MouseEvent.MOUSE_UP, function ( event:Event ):void {
 				list.evaluateInteractionEnd();
 			} );*/
-		}
-
-		public function showBlocker( block:Boolean ):void {
-			_blocker.visible = block;
 		}
 	}
 }

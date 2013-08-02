@@ -13,7 +13,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class BookViewMediator extends MediatorBase
@@ -23,9 +22,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		[Inject]
 		public var stage3dProxy:Stage3DProxy;
-
-		[Inject]
-		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
 		[Inject]
 		public var notifyColorStyleCompleteSignal:NotifyColorStyleCompleteSignal;
@@ -100,7 +96,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		private function onAnimateInComplete():void {
-			requestInteractionBlockSignal.dispatch( false );
+			//TODO: blocker deactivation
 		}
 
 		private function initializeUserPhotosDataProvider():void {
@@ -110,7 +106,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_userPhotosDataProvider.readySignal.add( onUserPhotosDataProviderReady );
 			// Uncomment to visualize data coming from the user photos extension.
 //			_userPhotosDataProvider.sheetGeneratedSignal.add( onUserPhotosSheetGenerated );
-			requestInteractionBlockSignal.dispatch( true );
+			//TODO: blocker activation
 		}
 
 		private function onUserPhotosSheetGenerated( iosBmd:BitmapData ):void {
@@ -132,7 +128,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_samplesDataProvider.setSheetDimensions( view.book.pageWidth, view.book.pageHeight );
 			_samplesDataProvider.fullImagePickedSignal.add( onFullImagePicked );
 			_samplesDataProvider.readySignal.add( onSamplesDataProviderReady );
-			requestInteractionBlockSignal.dispatch( true );
+			//TODO: blocker activation
 		}
 
 		private function onSamplesDataProviderReady():void {
