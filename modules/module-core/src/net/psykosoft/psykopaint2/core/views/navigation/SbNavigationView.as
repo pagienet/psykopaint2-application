@@ -72,8 +72,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_bgHeight *= CoreSettings.GLOBAL_SCALING;
 			_targetReactiveY = 768 * scaleX - _bgHeight;
 
-			enable();
-
 			// Starts hidden.
 			visible = false;
 			_hidden = true;

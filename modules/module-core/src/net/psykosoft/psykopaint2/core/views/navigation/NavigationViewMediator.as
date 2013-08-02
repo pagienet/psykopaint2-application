@@ -30,7 +30,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			registerView( view );
 			super.initialize();
 			manageMemoryWarnings = false;
+
 			manageStateChanges = false;
+			view.enable();
 
 			// From app.
 			requestNavigationToggleSignal.add( onToggleRequest );

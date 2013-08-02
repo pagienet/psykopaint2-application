@@ -44,7 +44,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
@@ -54,6 +53,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
+	import net.psykosoft.psykopaint2.core.views.blocker.BlockerView;
+	import net.psykosoft.psykopaint2.core.views.blocker.BlockerViewMediator;
 	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
 	import net.psykosoft.psykopaint2.core.views.debug.DebugViewMediator;
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
@@ -174,7 +175,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestHomeViewScrollSignal ).asSingleton();
 			_injector.map( NotifyPopUpShownSignal ).asSingleton();
 			_injector.map( RequestUpdateMessagePopUpSignal ).asSingleton();
-			_injector.map( RequestInteractionBlockSignal ).asSingleton();
 			_injector.map( RequestLoadSurfaceSignal ).asSingleton();
 			_injector.map( RequestLoadSurfacePreviewSignal ).asSingleton();
 			_injector.map( NotifySurfacePreviewLoadedSignal ).asSingleton();
@@ -214,6 +214,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_mediatorMap.map( ErrorsView ).toMediator( ErrorsViewMediator );
 			_mediatorMap.map( VideoView ).toMediator( VideoViewMediator );
 			_mediatorMap.map( SplashView ).toMediator( SplashViewMediator );
+			_mediatorMap.map( BlockerView ).toMediator( BlockerViewMediator );
 		}
 	}
 }

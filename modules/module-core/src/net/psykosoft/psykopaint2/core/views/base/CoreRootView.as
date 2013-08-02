@@ -15,19 +15,10 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	public class CoreRootView extends Sprite
 	{
-		private var _blocker:Sprite;
-
 		public function CoreRootView() {
 			super();
 
 			trace( this, "constructor" );
-
-			_blocker = new Sprite();
-			_blocker.graphics.beginFill( 0x000000, CoreSettings.SHOW_BLOCKER ? 0.75 : 0 );
-			_blocker.graphics.drawRect( 0, 0, 1024 * CoreSettings.GLOBAL_SCALING, 768 * CoreSettings.GLOBAL_SCALING );
-			_blocker.graphics.endFill();
-			_blocker.visible = false;
-			addChild( _blocker );
 
 			// Core module's main views.
 			addChild( new SbNavigationView() );
@@ -43,10 +34,6 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		public function addToMainLayer( child:DisplayObject ):void {
 			addChildAt( child, 0 );
-		}
-
-		public function showBlocker( block:Boolean ):void {
-			_blocker.visible = block;
 		}
 	}
 }
