@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.commands
+package net.psykosoft.psykopaint2.core.commands.bootstrap
 {
 
 	import away3d.core.managers.Stage3DManager;

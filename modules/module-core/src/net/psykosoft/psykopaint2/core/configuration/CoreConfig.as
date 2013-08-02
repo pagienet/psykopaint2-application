@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import flash.display.DisplayObjectContainer;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
-	import net.psykosoft.psykopaint2.core.commands.BootstrapCoreModuleCommand;
+	import net.psykosoft.psykopaint2.core.commands.bootstrap.BootstrapCoreModuleCommand;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;

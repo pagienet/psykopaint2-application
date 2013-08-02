@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.commands
+package net.psykosoft.psykopaint2.core.commands.bootstrap
 {
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
