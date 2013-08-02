@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		
 		public function RenderTextureBrushShape(context3D : Context3D)
 		{
-			super(context3D, "render", 1,512,1,1);
+			super(context3D, "render", 1,1024,1,1);
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void

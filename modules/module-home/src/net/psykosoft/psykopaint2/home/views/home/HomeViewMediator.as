@@ -206,8 +206,13 @@ package net.psykosoft.psykopaint2.home.views.home
 				}
 
 				if( !_firstZoomOutRan && newState == StateType.HOME ) {
-					view.scrollCameraController.jumpToSnapPointIndex( view.paintingManager.homePaintingIndex );
-					view.dockAtCurrentPainting();
+					//TODO - patched in order to avoid race condition and to continue working:
+					if ( view.scrollCameraController )
+					{
+						view.scrollCameraController.jumpToSnapPointIndex( view.paintingManager.homePaintingIndex );
+						view.dockAtCurrentPainting();
+					}
+					
 					view.zoomCameraController.animateToYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z, 1, 3 );
 					_firstZoomOutRan = true;
 				}

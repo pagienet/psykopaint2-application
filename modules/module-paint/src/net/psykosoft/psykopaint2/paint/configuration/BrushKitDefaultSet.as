@@ -367,6 +367,12 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="render"/>
 
 						<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
+							<ColorDecorator>
+								<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_0" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
+								<parameter id={ColorDecorator.PARAMETER_NR_OPACITY} label="Intensity" path="pathengine.pointdecorator_0" value1="0.9" value2="0.9" showInUI="1"/>
+								<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING} path="pathengine.pointdecorator_0" value1="1" value2="1" />
+							
+							</ColorDecorator>
 						</pathengine>
 				</brush>
 		</brushkits>;
