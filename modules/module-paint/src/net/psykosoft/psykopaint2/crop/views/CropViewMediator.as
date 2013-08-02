@@ -7,8 +7,8 @@ package net.psykosoft.psykopaint2.crop.views
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCropCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -21,10 +21,10 @@ package net.psykosoft.psykopaint2.crop.views
 		public var requestUpdateCropImageSignal:RequestUpdateCropImageSignal;
 
 		[Inject]
-		public var notifyCropCompleteSignal:NotifyCropCompleteSignal;
+		public var requestOpenCroppedBitmapDataSignal:RequestOpenCroppedBitmapDataSignal;
 
 		[Inject]
-		public var notifyCropConfirmSignal:NotifyCropConfirmSignal;
+		public var notifyCropConfirmSignal:RequestFinalizeCropSignal;
 
 		[Inject]
 		public var easelRectModel : EaselRectModel;
@@ -37,15 +37,16 @@ package net.psykosoft.psykopaint2.crop.views
 
 			// From app.
 			requestUpdateCropImageSignal.add( updateCropSourceImage );
-			notifyCropConfirmSignal.add( onCropConfirmed );
+			notifyCropConfirmSignal.add( onRequestFinalizeCropMediator );
 		}
 
 		// -----------------------
 		// From app.
 		// -----------------------
 
-		public function onCropConfirmed():void {
-			notifyCropCompleteSignal.dispatch( view.renderPreviewToBitmapData() );
+		public function onRequestFinalizeCropMediator():void {
+			requestOpenCroppedBitmapDataSignal.dispatch( view.getCroppedImage() );
+			view.disposeCropData();
 		}
 
 		private function updateCropSourceImage( bitmapData:BitmapData ):void {

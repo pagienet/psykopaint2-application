@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestCropStateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class PickAUserImageViewMediator extends MediatorBase
@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		public var view:PickAUserImageView;
 
 		[Inject]
-		public var requestCropStateSignal:RequestCropStateSignal;
+		public var requestCropSourceImageSignal:RequestCropSourceImageSignal;
 
 		[Inject]
 		public var notifyColorStyleCompleteSignal:NotifyColorStyleCompleteSignal;
@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		// -----------------------
 
 		private function onImagePicked( bmd:BitmapData ):void {
-			if( bmd ) requestCropStateSignal.dispatch( bmd );
+			if( bmd ) requestCropSourceImageSignal.dispatch( bmd );
 			else requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREVIOUS );
 		}
 	}

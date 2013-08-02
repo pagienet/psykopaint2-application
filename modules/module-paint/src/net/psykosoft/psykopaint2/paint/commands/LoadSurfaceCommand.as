@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import robotlegs.bender.framework.api.IContext;
 
+	// TODO: Identifying surfaces using indices is error prone, should be actual ids into a (xml) database rather than some hardcoded array
 	public class LoadSurfaceCommand extends TracingCommand
 	{
 		[Inject]
@@ -72,7 +73,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			_loadedNormalSpecularData = bytes;
 			_byteLoader.dispose();
 			_byteLoader = null;
-
+			bytes.uncompress();
 			notifySurfaceLoadedSignal.dispatch(bytes);
 			context.release( this );
 		}

@@ -42,27 +42,17 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var paintState : PaintState;
 
-		private var _loadedPaintingData : PaintingDataVO;
-
 		public function TransitionHomeToPaintState()
 		{
 		}
 
-		public function get loadedPaintingData() : PaintingDataVO
-		{
-			return _loadedPaintingData;
-		}
-
-		public function set loadedPaintingData(value : PaintingDataVO) : void
-		{
-			_loadedPaintingData = value;
-		}
-
-		override ns_state_machine function activate() : void
+		/**
+		 * @param data A PaintingDataVO object containing the data to import to the canvas
+		 */
+		override ns_state_machine function activate(data : Object = null) : void
 		{
 			notifyPaintModuleSetUp.addOnce(onPaintingModuleSetUp);
-			requestSetupPaintModuleSignal.dispatch(_loadedPaintingData);
-			_loadedPaintingData = null;
+			requestSetupPaintModuleSignal.dispatch(PaintingDataVO(data));
 		}
 
 		private function onPaintingModuleSetUp() : void

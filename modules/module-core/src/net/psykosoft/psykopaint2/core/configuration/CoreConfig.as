@@ -1,17 +1,16 @@
 package net.psykosoft.psykopaint2.core.configuration
 {
 
-	import away3d.core.managers.Stage3DProxy;
-
 	import flash.display.DisplayObjectContainer;
-	import flash.display.Stage;
-	import flash.display.Stage3D;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
+	import net.psykosoft.psykopaint2.core.commands.BootstrapCoreModuleCommand;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
+	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -21,7 +20,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyCropConfirmSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
@@ -36,16 +35,18 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestCropStateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
@@ -72,14 +73,11 @@ package net.psykosoft.psykopaint2.core.configuration
 
 	public class CoreConfig
 	{
-		private var _stage:Stage;
-		private var _stage3d:Stage3D;
-		private var _stage3dProxy:Stage3DProxy;
 		private var _injector:IInjector;
 		private var _mediatorMap:IMediatorMap;
 		private var _commandMap:ISignalCommandMap;
 
-		public function CoreConfig( display:DisplayObjectContainer, stage:Stage, stage3d:Stage3D, stage3dProxy:Stage3DProxy ) {
+		public function CoreConfig( display:DisplayObjectContainer ) {
 			super();
 
 			var context:IContext = new Context();
@@ -89,10 +87,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector = context.injector;
 			_mediatorMap = _injector.getInstance( IMediatorMap );
 			_commandMap = _injector.getInstance( ISignalCommandMap );
-
-			_stage = stage;
-			_stage3d = stage3d;
-			_stage3dProxy = stage3dProxy;
 
 			mapClasses();
 			mapMediators();
@@ -142,11 +136,10 @@ package net.psykosoft.psykopaint2.core.configuration
 		// -----------------------
 
 		private function mapSingletons():void {
-			_injector.map( Stage ).toValue( _stage );
-			_injector.map( Stage3D ).toValue( _stage3d );
-			_injector.map( Stage3DProxy ).toValue( _stage3dProxy );
 			_injector.map( GestureManager ).asSingleton();
 			_injector.map( ApplicationRenderer ).asSingleton();
+			_injector.map( MemoryWarningManager ).asSingleton();
+			_injector.map( KeyDebuggingManager ).asSingleton();
 		}
 
 		// -----------------------
@@ -155,7 +148,7 @@ package net.psykosoft.psykopaint2.core.configuration
 
 		private function mapNotifications():void {
 			_injector.map( NotifyColorStyleCompleteSignal ).asSingleton();
-			_injector.map( NotifyCropConfirmSignal ).asSingleton();
+			_injector.map( RequestFinalizeCropSignal ).asSingleton();
 			_injector.map( NotifyStateChangeSignal ).asSingleton();
 			_injector.map( NotifyGlobalGestureSignal ).asSingleton();
 			_injector.map( NotifyNavigationToggledSignal ).asSingleton();
@@ -177,12 +170,13 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestLoadSurfacePreviewSignal ).asSingleton();
 			_injector.map( NotifySurfacePreviewLoadedSignal ).asSingleton();
 			_injector.map( NotifySurfaceLoadedSignal ).asSingleton();
-			_injector.map( RequestCropStateSignal ).asSingleton();
+			_injector.map( RequestCropSourceImageSignal ).asSingleton();
 			_injector.map( RequestHideSplashScreenSignal ).asSingleton();
 			_injector.map( NotifyPaintingSavedSignal ).asSingleton();
 			_injector.map( NotifyPaintingSavingStartedSignal ).asSingleton();
 			_injector.map( NotifyCanvasExportStartedSignal ).asSingleton();
 			_injector.map( NotifyCanvasExportEndedSignal ).asSingleton();
+			_injector.map( NotifyCoreModuleBootstrapCompleteSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -193,6 +187,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_commandMap.map( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).toCommand( ChangeStateCommand );
 			_commandMap.map( RequestGpuRenderingSignal ).toCommand( RenderGpuCommand );
 			_commandMap.map( RequestPaintingDataRetrievalSignal ).toCommand( RetrievePaintingDataCommand );
+			_commandMap.map( RequestCoreModuleBootstrapSignal ).toCommand( BootstrapCoreModuleCommand );
 		}
 
 		// -----------------------

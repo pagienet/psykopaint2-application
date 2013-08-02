@@ -289,6 +289,9 @@ package net.psykosoft.psykopaint2.base.ui.components
 		
         public function dispose():void
         {
+			if (content && content.bitmapData)
+				content.bitmapData.dispose();
+
 			if (_transformGesture)
 			{
 				_transformGesture.dispose();
