@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.core.commands.bootstrap
 {
 
-	import net.psykosoft.psykopaint2.core.commands.*;
-
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
@@ -16,15 +14,15 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 
 			trace( this, "prepare()" );
 
-			add( InitStageCommand );
-			add( InitExternalDataCommand );
-			add( InitShakeAndBakeCommand );
-			add( InitGreensocksCommand );
-			add( InitDisplayCommand );
+			add( InitStageCommand          );
+			add( InitExternalDataCommand   );
+			add( InitShakeAndBakeCommand   );
+			add( InitGreensocksCommand     );
+			add( InitDisplayCommand        );
 			add( InitMemoryWarningsCommand );
-			add( InitPlatformCommand );
-			add( InitKeyDebuggingCommand );
-			add( InitStage3dCommand );
+			add( InitPlatformCommand       );
+			add( InitKeyDebuggingCommand   );
+			add( InitStage3dCommand        );
 			add( InitGestureManagerCommand );
 
 			registerCompleteCallback( onMacroComplete );

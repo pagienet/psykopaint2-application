@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import flash.display.DisplayObjectContainer;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
+	import net.psykosoft.psykopaint2.core.commands.UpdateFrameCommand;
 	import net.psykosoft.psykopaint2.core.commands.bootstrap.BootstrapCoreModuleCommand;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
@@ -11,6 +12,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
+	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -41,6 +43,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestFrameUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
@@ -149,6 +152,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( ApplicationRenderer ).asSingleton();
 			_injector.map( MemoryWarningManager ).asSingleton();
 			_injector.map( KeyDebuggingManager ).asSingleton();
+			_injector.map( UnDisposedObjectsManager ).asSingleton();
 		}
 
 		// -----------------------
@@ -198,6 +202,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_commandMap.map( RequestGpuRenderingSignal ).toCommand( RenderGpuCommand );
 			_commandMap.map( RequestPaintingDataRetrievalSignal ).toCommand( RetrievePaintingDataCommand );
 			_commandMap.map( RequestCoreModuleBootstrapSignal ).toCommand( BootstrapCoreModuleCommand );
+			_commandMap.map( RequestFrameUpdateSignal ).toCommand( UpdateFrameCommand );
 		}
 
 		// -----------------------

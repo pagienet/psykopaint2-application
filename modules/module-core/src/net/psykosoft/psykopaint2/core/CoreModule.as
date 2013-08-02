@@ -6,10 +6,10 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.debug.UndisposedObjects;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestFrameUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
@@ -20,15 +20,12 @@ package net.psykosoft.psykopaint2.core
 	{
 		private var _coreConfig:CoreConfig;
 		private var _injector:IInjector;
-		private var _requestGpuRenderingSignal:RequestGpuRenderingSignal;
-		private var _undisposedObjects : UndisposedObjects;
-		private var _oldNumUndisposedObjects : uint;
+		private var _requestFrameUpdateSignal:RequestFrameUpdateSignal;
 
 		public function CoreModule( injector:IInjector = null ) {
 
 			super();
 
-			_undisposedObjects = UndisposedObjects.getInstance();
 			_injector = injector;
 
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CoreModule";
@@ -55,13 +52,10 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function initRobotlegs():void {
-
 			trace( this, "initializing robotlegs" );
-
 			_coreConfig = new CoreConfig( this );
 			_injector = _coreConfig.injector;
-			_requestGpuRenderingSignal = _coreConfig.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
-
+			_requestFrameUpdateSignal = _coreConfig.injector.getInstance( RequestFrameUpdateSignal );
 			_coreConfig.injector.getInstance( NotifyCoreModuleBootstrapCompleteSignal ).add( onBootstrapComplete );
 			_coreConfig.injector.getInstance( RequestCoreModuleBootstrapSignal ).dispatch();
 		}
@@ -78,24 +72,12 @@ package net.psykosoft.psykopaint2.core
 			moduleReadySignal.dispatch();
 		}
 
-		// ---------------------------------------------------------------------
-		//
-		// ---------------------------------------------------------------------
-
 		public function startEnterFrame():void {
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
 
 		private function update():void {
-//			trace( this, "updating----" );
-			_requestGpuRenderingSignal.dispatch();
-
-			if (CoreSettings.TRACK_NON_GCED_OBJECTS) {
-				if (_oldNumUndisposedObjects != _undisposedObjects.numObjects) {
-					trace ("Number of undisposed objects changed to " + _undisposedObjects.numObjects);
-					_oldNumUndisposedObjects = _undisposedObjects.numObjects;
-				}
-			}
+			_requestFrameUpdateSignal.dispatch();
 		}
 
 		private function onEnterFrame( event:Event ):void {
