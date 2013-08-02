@@ -34,14 +34,8 @@ package net.psykosoft.psykopaint2.core.views.debug
 			initMemoryWarningDisplay();
 
 			// Start enterframe.
-			if( CoreSettings.SHOW_STATS || CoreSettings.SHOW_MEMORY_USAGE )
+			if( CoreSettings.SHOW_STATS || CoreSettings.SHOW_MEMORY_USAGE ) {
 				addEventListener( Event.ENTER_FRAME, onEnterFrame );
-		}
-
-		public function refreshVersion():void {
-			if( _versionTextField ) {
-				var resMsg:String = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? "2048x1536" : "1024x768";
-				_versionTextField.text = CoreSettings.NAME + ", " + resMsg + ", version: " + CoreSettings.VERSION;
 			}
 		}
 
@@ -88,6 +82,8 @@ package net.psykosoft.psykopaint2.core.views.debug
 			if( CoreSettings.SHOW_VERSION ) {
 				_versionTextField = new TextField();
 				_versionTextField.name = "version text field";
+				var resMsg:String = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? "2048x1536" : "1024x768";
+				_versionTextField.text = CoreSettings.NAME + ", " + resMsg + ", version: " + CoreSettings.VERSION;
 				_versionTextField.scaleX = _versionTextField.scaleY = CoreSettings.GLOBAL_SCALING;
 				_versionTextField.width = 250;
 				_versionTextField.mouseEnabled = _versionTextField.selectable = false;
@@ -110,7 +106,7 @@ package net.psykosoft.psykopaint2.core.views.debug
 			_renderTimeStackUtil.pushValue( ApplicationRenderer.renderTime );
 			var renderTime:int = int( _renderTimeStackUtil.getAverageValue() );
 			_statsTextField.text = _fps + "/" + stage.frameRate + "fps \n" + "Render time: " + renderTime + "ms\n" +
-									( CoreSettings.SHOW_MEMORY_USAGE ? "Memory usage: " + uint(System.privateMemory/1024)/1024 + "MB" : "");
+					( CoreSettings.SHOW_MEMORY_USAGE ? "Memory usage: " + uint( System.privateMemory / 1024 ) / 1024 + "MB" : "");
 		}
 
 		private function onMemoryIconTimerTick( event:TimerEvent ):void {

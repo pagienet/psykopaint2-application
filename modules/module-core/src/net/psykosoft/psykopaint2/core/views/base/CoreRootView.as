@@ -11,9 +11,10 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.geom.ColorTransform;
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
-	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
+	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
+	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
@@ -64,7 +65,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			//not sure if this is bad, but it does not seem to be harmful either
 			//mouseEnabled = false;
 			//moved to RootViewBase
-			
+
 			initSplashScreen();
 		}
 
@@ -75,8 +76,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		public function initialize():void {
 
 			//this is only here for testing purposes:
-			if ( CoreSettings.SHOW_INTRO_VIDEO )
-			{
+			if( CoreSettings.SHOW_INTRO_VIDEO ) {
 				var videoPlayer:SimpleVideoPlayer = new SimpleVideoPlayer();
 				videoPlayer.source = "core-packaged/video/TransparentVideo.flv";
 				videoPlayer.loop = false;
@@ -86,9 +86,13 @@ package net.psykosoft.psykopaint2.core.views.base
 				videoPlayer.height = stage.stageHeight;
 				_applicationLayer.addChild( videoPlayer.container );
 			}
+
 			// Core module's main views.
 			addRegisteredView( new SbNavigationView(), _applicationLayer );
 			addRegisteredView( new PopUpManagerView(), _applicationLayer );
+			_applicationLayer.addChild( new DebugView() );
+			_applicationLayer.addChild( new ErrorsView() );
+
 			if( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION ) {
 				addRegisteredView( new PsykoSocketView(), _applicationLayer );
 			}
@@ -268,65 +272,65 @@ package net.psykosoft.psykopaint2.core.views.base
 			// Test HItemScroller.
 
 			/*var scroller:HItemScroller = new HItemScroller();
-			scroller.x = 200;
-			scroller.y = 200;
-			addChild( scroller );
+			 scroller.x = 200;
+			 scroller.y = 200;
+			 addChild( scroller );
 
-			var b1:SbButton = new SbButton();
-			var b2:SbButton = new SbButton();
-			var b3:SbButton = new SbButton();
-			var b4:SbButton = new SbButton();
-			var b5:SbButton = new SbButton();
-			var b6:SbButton = new SbButton();
-			var b7:SbButton = new SbButton();
-			var b8:SbButton = new SbButton();
+			 var b1:SbButton = new SbButton();
+			 var b2:SbButton = new SbButton();
+			 var b3:SbButton = new SbButton();
+			 var b4:SbButton = new SbButton();
+			 var b5:SbButton = new SbButton();
+			 var b6:SbButton = new SbButton();
+			 var b7:SbButton = new SbButton();
+			 var b8:SbButton = new SbButton();
 
-			var group:ButtonGroup = new ButtonGroup();
-			group.addButton( b2 );
-			group.addButton( b3 );
-			group.addButton( b4 );
-			group.addButton( b5 );
-			group.addButton( b6 );
-			group.addButton( b7 );
-			group.addButton( b8 );
+			 var group:ButtonGroup = new ButtonGroup();
+			 group.addButton( b2 );
+			 group.addButton( b3 );
+			 group.addButton( b4 );
+			 group.addButton( b5 );
+			 group.addButton( b6 );
+			 group.addButton( b7 );
+			 group.addButton( b8 );
 
-			scroller.addItem( b1 );
-			scroller.addItem( group, false );
-			scroller.invalidateContent();
+			 scroller.addItem( b1 );
+			 scroller.addItem( group, false );
+			 scroller.invalidateContent();
 
-			this.graphics.lineStyle( 1, 0xFF0000, 1 );
-			this.graphics.drawRect( 200, 200, scroller.width, scroller.height );
-			this.graphics.endFill();
+			 this.graphics.lineStyle( 1, 0xFF0000, 1 );
+			 this.graphics.drawRect( 200, 200, scroller.width, scroller.height );
+			 this.graphics.endFill();
 
-			stage.addEventListener( MouseEvent.MOUSE_DOWN, function ( event:Event ):void {
-				scroller.evaluateInteractionStart();
-			} );
-			stage.addEventListener( MouseEvent.MOUSE_UP, function ( event:Event ):void {
-				scroller.evaluateInteractionEnd();
-			} );*/
+			 stage.addEventListener( MouseEvent.MOUSE_DOWN, function ( event:Event ):void {
+			 scroller.evaluateInteractionStart();
+			 } );
+			 stage.addEventListener( MouseEvent.MOUSE_UP, function ( event:Event ):void {
+			 scroller.evaluateInteractionEnd();
+			 } );*/
 
 			// HSnapList test.
 			/*var i:uint;
-			var list:HSnapList = new HSnapList();
-			list.setVisibleDimensions( 724, 150 );
-			list.x = 150;
-			list.y = 768 - 150;
-			addChild( list );
-			var dataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
-			for( i = 0; i < 7750; i++ ) {
-				var itemData:DummyItemData = new DummyItemData();
-				itemData.itemRendererType = DummyItemRenderer;
-				itemData.itemRendererWidth = 100;
-				itemData.label = "item " + i;
-				dataProvider.push( itemData );
-			}
-			list.setDataProvider( dataProvider );
-			stage.addEventListener( MouseEvent.MOUSE_DOWN, function ( event:Event ):void {
-				list.evaluateInteractionStart();
-			} );
-			stage.addEventListener( MouseEvent.MOUSE_UP, function ( event:Event ):void {
-				list.evaluateInteractionEnd();
-			} );*/
+			 var list:HSnapList = new HSnapList();
+			 list.setVisibleDimensions( 724, 150 );
+			 list.x = 150;
+			 list.y = 768 - 150;
+			 addChild( list );
+			 var dataProvider:Vector.<ISnapListData> = new Vector.<ISnapListData>();
+			 for( i = 0; i < 7750; i++ ) {
+			 var itemData:DummyItemData = new DummyItemData();
+			 itemData.itemRendererType = DummyItemRenderer;
+			 itemData.itemRendererWidth = 100;
+			 itemData.label = "item " + i;
+			 dataProvider.push( itemData );
+			 }
+			 list.setDataProvider( dataProvider );
+			 stage.addEventListener( MouseEvent.MOUSE_DOWN, function ( event:Event ):void {
+			 list.evaluateInteractionStart();
+			 } );
+			 stage.addEventListener( MouseEvent.MOUSE_UP, function ( event:Event ):void {
+			 list.evaluateInteractionEnd();
+			 } );*/
 		}
 
 		public function showBlocker( block:Boolean ):void {
