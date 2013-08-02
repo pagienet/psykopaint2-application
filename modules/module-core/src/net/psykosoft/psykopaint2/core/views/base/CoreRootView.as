@@ -1,9 +1,6 @@
 package net.psykosoft.psykopaint2.core.views.base
 {
 
-	import com.greensock.plugins.ColorMatrixFilterPlugin;
-	import com.greensock.plugins.TweenPlugin;
-
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 
@@ -24,9 +21,6 @@ package net.psykosoft.psykopaint2.core.views.base
 			super();
 
 			trace( this, "constructor" );
-
-			// Used to color button labels.
-			TweenPlugin.activate( [ ColorMatrixFilterPlugin ] );
 
 			_blocker = new Sprite();
 			_blocker.graphics.beginFill( 0x000000, CoreSettings.SHOW_BLOCKER ? 0.75 : 0 );
