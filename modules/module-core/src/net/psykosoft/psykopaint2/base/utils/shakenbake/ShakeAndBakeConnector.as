@@ -25,6 +25,9 @@ package net.psykosoft.psykopaint2.base.utils.shakenbake
 		}
 
 		public function connectAssetsAsync( swfUrl:String ):void {
+
+			trace( this, "connecting shake and bake assets - 1/2 loading swf..." );
+
 			_urlLoader = new URLLoader();
 			_urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
 			_urlLoader.addEventListener( Event.COMPLETE, onAssetsLoaded );
@@ -32,6 +35,8 @@ package net.psykosoft.psykopaint2.base.utils.shakenbake
 		}
 
 		private function onAssetsLoaded( event:Event ):void {
+
+			trace( this, "connecting shake and bake assets - 2/2 mounting bytes... " );
 
 			_urlLoader.removeEventListener( Event.COMPLETE, onAssetsLoaded );
 
@@ -45,6 +50,8 @@ package net.psykosoft.psykopaint2.base.utils.shakenbake
 		}
 
 		private function firstFrameHandler( event:Event ):void {
+
+			trace( this, "connecting shake and bake assets - done " );
 
 			removeEventListener( Event.ENTER_FRAME, firstFrameHandler );
 			_urlLoader = null;
