@@ -36,9 +36,33 @@ package net.psykosoft.psykopaint2.core
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
-		// ---------------------------------------------------------------------
-		// Interface.
-		// ---------------------------------------------------------------------
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			initialize();
+		}
+
+		private function initialize():void {
+
+			trace( this, "Initializing... [" + name + "]" );
+
+			CoreSettings.STAGE = stage;
+
+			initRobotlegs();
+			getXmlData();
+			initDisplay();
+		}
+
+		private function initRobotlegs():void {
+
+//			trace( this, "initRobotlegs with stage: " + stage + ", and stage3d: " + _stage3d );
+			_coreConfig = new CoreConfig( this );
+			_requestGpuRenderingSignal = _coreConfig.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
+			_injector = _coreConfig.injector;
+			trace( this, "initializing robotlegs context" );
+
+			_coreConfig.injector.getInstance( NotifyCoreModuleBootstrapCompleteSignal ).add( initializeCoreRootView );
+			_coreConfig.injector.getInstance( RequestCoreModuleBootstrapSignal ).dispatch();
+		}
 
 		public function addModuleDisplay( child:DisplayObject ):void {
 			trace( this, "adding module display: " + child );
@@ -48,11 +72,6 @@ package net.psykosoft.psykopaint2.core
 		public function startEnterFrame():void {
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
-
-		// ---------------------------------------------------------------------
-		// Loop.
-		// ---------------------------------------------------------------------
-
 		private function update():void {
 //			trace( this, "updating----" );
 			_requestGpuRenderingSignal.dispatch();
@@ -63,17 +82,6 @@ package net.psykosoft.psykopaint2.core
 					_oldNumUndisposedObjects = _undisposedObjects.numObjects;
 				}
 			}
-		}
-
-		// ---------------------------------------------------------------------
-		// Initialization.
-		// ---------------------------------------------------------------------
-
-		private function initialize():void {
-			trace( this, "Initializing... [" + name + "]" );
-			initRobotlegs();
-			getXmlData();
-			initDisplay();
 		}
 
 		private function getXmlData():void {
@@ -95,18 +103,6 @@ package net.psykosoft.psykopaint2.core
 		private function initDisplay():void {
 			_coreRootView = new CoreRootView();
 			addChild( _coreRootView );
-		}
-
-		private function initRobotlegs():void {
-
-//			trace( this, "initRobotlegs with stage: " + stage + ", and stage3d: " + _stage3d );
-			_coreConfig = new CoreConfig( this );
-			_requestGpuRenderingSignal = _coreConfig.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
-			_injector = _coreConfig.injector;
-			trace( this, "initializing robotlegs context" );
-
-			_coreConfig.injector.getInstance( NotifyCoreModuleBootstrapCompleteSignal ).add( initializeCoreRootView );
-			_coreConfig.injector.getInstance( RequestCoreModuleBootstrapSignal ).dispatch( stage );
 		}
 
 		private function initializeCoreRootView():void {
@@ -134,22 +130,9 @@ package net.psykosoft.psykopaint2.core
 			moduleReadySignal.dispatch();
 		}
 
-		// ---------------------------------------------------------------------
-		// Listeners.
-		// ---------------------------------------------------------------------
-
-		private function onAddedToStage( event:Event ):void {
-			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
-			initialize();
-		}
-
 		private function onEnterFrame( event:Event ):void {
 			update();
 		}
-
-		// ---------------------------------------------------------------------
-		// Getters.
-		// ---------------------------------------------------------------------
 
 		public function get injector():IInjector {
 			return _injector;

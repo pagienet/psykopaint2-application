@@ -13,15 +13,14 @@ package net.psykosoft.psykopaint2.core.commands
 
 	public class InitStageCommand extends Command
 	{
-		[Inject (name="stage")]
-		public var stage:Stage;
-
 		[Inject]
 		public var injector:IInjector;
 
 		override public function execute():void {
 
 			trace( this, "execute()" );
+
+			var stage:Stage = CoreSettings.STAGE;
 
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;

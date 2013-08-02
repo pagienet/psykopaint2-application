@@ -1,5 +1,8 @@
 package net.psykosoft.psykopaint2.core.configuration
 {
+
+	import flash.display.Stage;
+
 	public class CoreSettings
 	{
 		// ---------------------------------------------------------------------
@@ -41,6 +44,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static var GLOBAL_SCALING:Number = 1;
 		public static var STAGE_WIDTH:Number = 1024; // Doubled dynamically if on retina iPad.
 		public static var STAGE_HEIGHT:Number = 768;
+		public static var STAGE:Stage;
 		
 	}
 }
