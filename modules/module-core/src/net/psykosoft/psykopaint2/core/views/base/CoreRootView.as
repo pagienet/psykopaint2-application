@@ -12,12 +12,12 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.views.components.SimpleVideoPlayer;
 	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
 	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
+	import net.psykosoft.psykopaint2.core.views.video.VideoView;
 
 	public class CoreRootView extends RootViewBase
 	{
@@ -75,20 +75,9 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		public function initialize():void {
 
-			//this is only here for testing purposes:
-			if( CoreSettings.SHOW_INTRO_VIDEO ) {
-				var videoPlayer:SimpleVideoPlayer = new SimpleVideoPlayer();
-				videoPlayer.source = "core-packaged/video/TransparentVideo.flv";
-				videoPlayer.loop = false;
-				videoPlayer.removeOnComplete = true;
-				videoPlayer.play();
-				videoPlayer.width = stage.stageWidth;
-				videoPlayer.height = stage.stageHeight;
-				_applicationLayer.addChild( videoPlayer.container );
-			}
-
 			// Core module's main views.
 			addRegisteredView( new SbNavigationView(), _applicationLayer );
+			_applicationLayer.addChild( new VideoView() );
 			addRegisteredView( new PopUpManagerView(), _applicationLayer );
 			_applicationLayer.addChild( new DebugView() );
 			_applicationLayer.addChild( new ErrorsView() );

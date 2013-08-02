@@ -49,7 +49,6 @@ package net.psykosoft.psykopaint2.core.views.debug
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			loaderInfo.uncaughtErrorEvents.addEventListener( UncaughtErrorEvent.UNCAUGHT_ERROR, onGlobalError );
-			stage.scaleX = 2;
 		}
 
 		private function onGlobalError( event:UncaughtErrorEvent ):void {

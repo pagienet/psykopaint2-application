@@ -67,6 +67,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerViewMediator;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketViewMediator;
+	import net.psykosoft.psykopaint2.core.views.video.VideoView;
+	import net.psykosoft.psykopaint2.core.views.video.VideoViewMediator;
 
 	import robotlegs.bender.bundles.mvcs.MVCSBundle;
 	import robotlegs.bender.extensions.contextView.ContextView;
@@ -210,6 +212,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_mediatorMap.map( MessagePopUpView ).toMediator( MessagePopUpViewMediator );
 			_mediatorMap.map( DebugView ).toMediator( DebugViewMediator );
 			_mediatorMap.map( ErrorsView ).toMediator( ErrorsViewMediator );
+			_mediatorMap.map( VideoView ).toMediator( VideoViewMediator );
 		}
 	}
 }
