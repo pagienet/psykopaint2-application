@@ -133,7 +133,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			// Core module's main views.
 			addRegisteredView( new SbNavigationView(), _applicationLayer );
 			addRegisteredView( new PopUpManagerView(), _applicationLayer );
-			addRegisteredView( new BlockerView(), _applicationLayer );
+			_applicationLayer.addChild( new BlockerView() );
 			if( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION ) {
 				addRegisteredView( new PsykoSocketView(), _applicationLayer );
 			}
