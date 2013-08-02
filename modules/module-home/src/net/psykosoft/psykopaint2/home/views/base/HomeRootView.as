@@ -1,7 +1,8 @@
 package net.psykosoft.psykopaint2.home.views.base
 {
 
-	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
+	import flash.display.Sprite;
+
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
@@ -12,13 +13,13 @@ package net.psykosoft.psykopaint2.home.views.base
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavView;
 
-	public class HomeRootView extends RootViewBase
+	public class HomeRootView extends Sprite
 	{
 		public function HomeRootView() {
 			super();
 
 			// Add main views.
-			addRegisteredView( new HomeView(), this );
+			addChild( new HomeView() );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.HOME, HomeSubNavView );

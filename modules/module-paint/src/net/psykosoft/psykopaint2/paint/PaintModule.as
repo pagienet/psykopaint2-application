@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.paint
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.utils.ByteArray;
-	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
@@ -12,9 +11,9 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSplashScreenRemovalSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
@@ -74,11 +73,8 @@ package net.psykosoft.psykopaint2.paint
 
 			// Init display tree for this module.
 			var paintRootView:PaintRootView = new PaintRootView();
-			paintRootView.allViewsReadySignal.addOnce( onViewsReady );
 			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( paintRootView );
-		}
 
-		private function onViewsReady():void {
 			// Notify potential super modules.
 			moduleReadySignal.dispatch( _coreModule.injector );
 
@@ -120,7 +116,7 @@ package net.psykosoft.psykopaint2.paint
 			_coreModule.injector.getInstance( RequestNavigationToggleSignal ).dispatch( 1, 0.5 );
 
 			// Remove splash screen.
-			_coreModule.injector.getInstance( RequestSplashScreenRemovalSignal ).dispatch();
+			_coreModule.injector.getInstance( RequestHideSplashScreenSignal ).dispatch();
 			_coreModule.startEnterFrame();
 		}
 	}

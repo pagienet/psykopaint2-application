@@ -11,8 +11,8 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
-	import net.psykosoft.psykopaint2.core.signals.RequestSplashScreenRemovalSignal;
 
 	import robotlegs.bender.framework.api.IInjector;
 
@@ -71,7 +71,7 @@ package net.psykosoft.psykopaint2.core
 			_coreConfig.injector.getInstance( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).dispatch( NavigationStateType.IDLE );
 
 			if( isStandalone ) {
-				_coreConfig.injector.getInstance( RequestSplashScreenRemovalSignal ).dispatch();
+				_coreConfig.injector.getInstance( RequestHideSplashScreenSignal ).dispatch();
 				startEnterFrame();
 			}
 

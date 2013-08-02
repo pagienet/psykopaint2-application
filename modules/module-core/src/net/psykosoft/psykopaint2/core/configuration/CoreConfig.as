@@ -51,7 +51,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSplashScreenRemovalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
@@ -67,6 +66,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerViewMediator;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketViewMediator;
+	import net.psykosoft.psykopaint2.core.views.splash.SplashView;
+	import net.psykosoft.psykopaint2.core.views.splash.SplashViewMediator;
 	import net.psykosoft.psykopaint2.core.views.video.VideoView;
 	import net.psykosoft.psykopaint2.core.views.video.VideoViewMediator;
 
@@ -186,7 +187,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyCanvasExportEndedSignal ).asSingleton();
 			_injector.map( NotifyCoreModuleBootstrapCompleteSignal ).asSingleton();
 			_injector.map( RequestAddViewToMainLayerSignal ).asSingleton();
-			_injector.map( RequestSplashScreenRemovalSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -213,6 +213,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_mediatorMap.map( DebugView ).toMediator( DebugViewMediator );
 			_mediatorMap.map( ErrorsView ).toMediator( ErrorsViewMediator );
 			_mediatorMap.map( VideoView ).toMediator( VideoViewMediator );
+			_mediatorMap.map( SplashView ).toMediator( SplashViewMediator );
 		}
 	}
 }

@@ -1,20 +1,20 @@
 package net.psykosoft.psykopaint2.book.views.base
 {
 
-	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
+	import flash.display.Sprite;
+
 	import net.psykosoft.psykopaint2.book.views.book.BookView;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.views.navigation.EmptySubNavView;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
-	public class BookRootView extends RootViewBase
+	public class BookRootView extends Sprite
 	{
 		public function BookRootView() {
 			super();
 
 			// Add main views.
-			addRegisteredView( new BookView(), this );
+			addChild( new BookView() );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE, SubNavigationViewBase );

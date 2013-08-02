@@ -1,10 +1,13 @@
 package net.psykosoft.psykopaint2.paint.views.base
 {
 
-	import net.psykosoft.psykopaint2.base.ui.base.RootViewBase;
+	import flash.display.Sprite;
+
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
+	import net.psykosoft.psykopaint2.crop.views.CropSubNavView;
+	import net.psykosoft.psykopaint2.crop.views.CropView;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectColorSubNavView;
@@ -12,25 +15,23 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleView;
-	import net.psykosoft.psykopaint2.crop.views.CropSubNavView;
-	import net.psykosoft.psykopaint2.crop.views.CropView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.CaptureImageView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.ConfirmCaptureImageSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAUserImageView;
 	import net.psykosoft.psykopaint2.paint.views.pick.image.PickAnImageSubNavView;
 
-	public class PaintRootView extends RootViewBase
+	public class PaintRootView extends Sprite
 	{
 		public function PaintRootView() {
 			super();
 
 			// Add main views.
-			addRegisteredView( new ColorStyleView(), this );
-			addRegisteredView( new CanvasView(), this );
-			addRegisteredView( new CropView(), this );
-			addRegisteredView( new PickAUserImageView(), this );
-			addRegisteredView( new CaptureImageView(), this );
+			addChild( new ColorStyleView() );
+			addChild( new CanvasView() );
+			addChild( new CropView() );
+			addChild( new PickAUserImageView() );
+			addChild( new CaptureImageView() );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.COLOR_STYLE, ColorStyleSubNavView );

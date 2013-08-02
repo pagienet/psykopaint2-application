@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
+	import net.psykosoft.psykopaint2.core.views.splash.SplashView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
 
@@ -111,7 +112,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			var frameOffset:Point = FrameOffsets.getOffsetForFrameType( FrameType.WHITE_FRAME );
 			var homePainting:GalleryPainting = createPainting(
-					new CoreRootView.SplashImageAsset().bitmapData,
+					new SplashView.SplashImageAsset().bitmapData,
 					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( FrameType.WHITE_FRAME, true ),
 					frameOffset.x, frameOffset.y
 			);
