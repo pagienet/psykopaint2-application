@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
@@ -133,7 +134,7 @@ package net.psykosoft.psykopaint2.app
 			// Init display tree for this module.
 			var appRootView : AppRootView = new AppRootView();
 			appRootView.allViewsReadySignal.addOnce(onViewsReady);
-			_coreModule.addModuleDisplay(appRootView);
+			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( appRootView );
 		}
 
 		private function onViewsReady() : void

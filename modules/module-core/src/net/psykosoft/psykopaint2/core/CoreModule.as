@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.core
 {
 
-	import flash.display.DisplayObject;
 	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
@@ -14,7 +13,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
-	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
+	import net.psykosoft.psykopaint2.core.signals.RequestSplashScreenRemovalSignal;
 
 	import robotlegs.bender.framework.api.IInjector;
 
@@ -23,55 +22,79 @@ package net.psykosoft.psykopaint2.core
 		private var _coreConfig:CoreConfig;
 		private var _injector:IInjector;
 		private var _requestGpuRenderingSignal:RequestGpuRenderingSignal;
-		private var _coreRootView:CoreRootView;
 		private var _xmLoader:XMLLoader;
 		private var _undisposedObjects : UndisposedObjects;
 		private var _oldNumUndisposedObjects : uint;
 
 		public function CoreModule( injector:IInjector = null ) {
+
 			super();
+
 			_undisposedObjects = UndisposedObjects.getInstance();
 			_injector = injector;
+
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CoreModule";
+
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
 		private function onAddedToStage( event:Event ):void {
+
+			trace( this, "added to stage" );
+
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			initialize();
 		}
 
 		private function initialize():void {
 
-			trace( this, "Initializing... [" + name + "]" );
+			trace( this, "initializing..." );
 
 			CoreSettings.STAGE = stage;
+			CoreSettings.DISPLAY_ROOT = this;
 
-			initRobotlegs();
 			getXmlData();
-			initDisplay();
+			initRobotlegs();
+		}
+
+		private function getXmlData():void {
+			_xmLoader = new XMLLoader();
+			var date:Date = new Date();
+			_xmLoader.loadAsset( "common-packaged/app-data.xml?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() ), onVersionRetrieved );
 		}
 
 		private function initRobotlegs():void {
 
-//			trace( this, "initRobotlegs with stage: " + stage + ", and stage3d: " + _stage3d );
-			_coreConfig = new CoreConfig( this );
-			_requestGpuRenderingSignal = _coreConfig.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
-			_injector = _coreConfig.injector;
-			trace( this, "initializing robotlegs context" );
+			trace( this, "initializing robotlegs" );
 
-			_coreConfig.injector.getInstance( NotifyCoreModuleBootstrapCompleteSignal ).add( initializeCoreRootView );
+			_coreConfig = new CoreConfig( this );
+			_injector = _coreConfig.injector;
+			_requestGpuRenderingSignal = _coreConfig.injector.getInstance( RequestGpuRenderingSignal ); // Necessary for rendering the core on enter frame.
+
+			_coreConfig.injector.getInstance( NotifyCoreModuleBootstrapCompleteSignal ).add( onBootstrapComplete );
 			_coreConfig.injector.getInstance( RequestCoreModuleBootstrapSignal ).dispatch();
 		}
 
-		public function addModuleDisplay( child:DisplayObject ):void {
-			trace( this, "adding module display: " + child );
-			_coreRootView.addToMainLayer( child );
+		private function onBootstrapComplete():void {
+
+			_coreConfig.injector.getInstance( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).dispatch( NavigationStateType.IDLE );
+
+			if( isStandalone ) {
+				_coreConfig.injector.getInstance( RequestSplashScreenRemovalSignal ).dispatch();
+				startEnterFrame();
+			}
+
+			moduleReadySignal.dispatch();
 		}
+
+		// ---------------------------------------------------------------------
+		//
+		// ---------------------------------------------------------------------
 
 		public function startEnterFrame():void {
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
+
 		private function update():void {
 //			trace( this, "updating----" );
 			_requestGpuRenderingSignal.dispatch();
@@ -84,12 +107,6 @@ package net.psykosoft.psykopaint2.core
 			}
 		}
 
-		private function getXmlData():void {
-			_xmLoader = new XMLLoader();
-			var date:Date = new Date();
-			_xmLoader.loadAsset( "common-packaged/app-data.xml?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() ), onVersionRetrieved );
-		}
-
 		private function onVersionRetrieved( data:XML ):void {
 
 			CoreSettings.VERSION = data.version;
@@ -97,37 +114,8 @@ package net.psykosoft.psykopaint2.core
 
 			_xmLoader.dispose();
 			_xmLoader = null;
-			_coreRootView.refreshVersion();
-		}
 
-		private function initDisplay():void {
-			_coreRootView = new CoreRootView();
-			addChild( _coreRootView );
-		}
-
-		private function initializeCoreRootView():void {
-
-			trace( this, "initialized" );
-
-			// Init display tree.
-			_coreRootView.runUiTests();
-			_coreRootView.allViewsReadySignal.addOnce( onViewsReady );
-			_coreRootView.initialize();
-		}
-
-		private function onViewsReady():void {
-
-			_coreConfig.injector.getInstance( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).dispatch( NavigationStateType.IDLE );
-
-			if( isStandalone ) {
-
-				// Remove splash screen.
-				_coreRootView.removeSplashScreen();
-
-				startEnterFrame();
-			}
-
-			moduleReadySignal.dispatch();
+			// TODO: feed this to CoreRootView refresh version
 		}
 
 		private function onEnterFrame( event:Event ):void {
@@ -136,10 +124,6 @@ package net.psykosoft.psykopaint2.core
 
 		public function get injector():IInjector {
 			return _injector;
-		}
-
-		public function get coreRootView():CoreRootView {
-			return _coreRootView;
 		}
 	}
 }

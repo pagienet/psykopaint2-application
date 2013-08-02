@@ -7,8 +7,10 @@ package net.psykosoft.psykopaint2.home
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestSplashScreenRemovalSignal;
 	import net.psykosoft.psykopaint2.home.config.HomeConfig;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
@@ -65,7 +67,7 @@ package net.psykosoft.psykopaint2.home
 			// Init display tree for this module.
 			var homeRootView:HomeRootView = new HomeRootView();
 			homeRootView.allViewsReadySignal.addOnce( onViewsReady );
-			_coreModule.addModuleDisplay( homeRootView );
+			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( homeRootView );
 		}
 
 		private function onViewsReady():void {
@@ -75,7 +77,7 @@ package net.psykosoft.psykopaint2.home
 			if( isStandalone ) {
 
 				// Remove splash screen.
-				_coreModule.coreRootView.removeSplashScreen();
+				_coreModule.injector.getInstance( RequestSplashScreenRemovalSignal ).dispatch();
 
 				// Show Navigation.
 				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );

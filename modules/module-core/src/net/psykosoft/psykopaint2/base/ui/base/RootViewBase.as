@@ -13,7 +13,9 @@ package net.psykosoft.psykopaint2.base.ui.base
 		public var allViewsReadySignal:Signal;
 
 		public function RootViewBase() {
+
 			super();
+
 			allViewsReadySignal = new Signal();
 			
 			//not sure if this is bad, but it does not seem to be harmful either

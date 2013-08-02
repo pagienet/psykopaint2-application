@@ -11,8 +11,10 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.DrawingCore;
+	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSplashScreenRemovalSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
@@ -71,9 +73,9 @@ package net.psykosoft.psykopaint2.paint
 			_paintConfig = new PaintConfig( _coreModule.injector );
 
 			// Init display tree for this module.
-			var rootView:PaintRootView = new PaintRootView();
-			rootView.allViewsReadySignal.addOnce( onViewsReady );
-			_coreModule.addModuleDisplay( rootView );
+			var paintRootView:PaintRootView = new PaintRootView();
+			paintRootView.allViewsReadySignal.addOnce( onViewsReady );
+			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( paintRootView );
 		}
 
 		private function onViewsReady():void {
@@ -118,7 +120,7 @@ package net.psykosoft.psykopaint2.paint
 			_coreModule.injector.getInstance( RequestNavigationToggleSignal ).dispatch( 1, 0.5 );
 
 			// Remove splash screen.
-			_coreModule.coreRootView.removeSplashScreen();
+			_coreModule.injector.getInstance( RequestSplashScreenRemovalSignal ).dispatch();
 			_coreModule.startEnterFrame();
 		}
 	}

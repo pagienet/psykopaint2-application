@@ -10,8 +10,10 @@ package net.psykosoft.psykopaint2.book
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestSplashScreenRemovalSignal;
 
 	public class BookModule extends ModuleBase
 	{
@@ -65,7 +67,7 @@ package net.psykosoft.psykopaint2.book
 			// Init display tree for this module.
 			var bookRootView:BookRootView = new BookRootView();
 			bookRootView.allViewsReadySignal.addOnce( onViewsReady );
-			_coreModule.addModuleDisplay( bookRootView );
+			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( bookRootView );
 		}
 
 		private function onViewsReady():void {
@@ -73,11 +75,14 @@ package net.psykosoft.psykopaint2.book
 			trace( this, "BookModule views are ready." );
 
 			if( isStandalone ) {
+
 				// Remove splash screen.
-				_coreModule.coreRootView.removeSplashScreen();
+				_coreModule.injector.getInstance( RequestSplashScreenRemovalSignal ).dispatch();
+
 				// Show Navigation.
 				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
 				showNavigationSignal.dispatch( 1, 0.5 );
+
 				// Trigger initial state...
 				_bookConfig.injector.getInstance( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).dispatch( NavigationStateType.BOOK_STANDALONE );
 				_coreModule.startEnterFrame();
