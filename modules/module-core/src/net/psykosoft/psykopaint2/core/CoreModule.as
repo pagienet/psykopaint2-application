@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFrameUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 
@@ -52,15 +51,24 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function initRobotlegs():void {
+
 			trace( this, "initializing robotlegs" );
+
+			// Initialize robotlegs mappings.
 			_coreConfig = new CoreConfig( this );
 			_injector = _coreConfig.injector;
+
+			// For enterframe updates...
 			_requestFrameUpdateSignal = _coreConfig.injector.getInstance( RequestFrameUpdateSignal );
+
+			// Request bootstrap.
 			_coreConfig.injector.getInstance( NotifyCoreModuleBootstrapCompleteSignal ).add( onBootstrapComplete );
 			_coreConfig.injector.getInstance( RequestCoreModuleBootstrapSignal ).dispatch();
 		}
 
 		private function onBootstrapComplete():void {
+
+			trace( this, "onBootstrapComplete()" );
 
 			_coreConfig.injector.getInstance( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).dispatch( NavigationStateType.IDLE );
 
@@ -76,12 +84,8 @@ package net.psykosoft.psykopaint2.core
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
 
-		private function update():void {
-			_requestFrameUpdateSignal.dispatch();
-		}
-
 		private function onEnterFrame( event:Event ):void {
-			update();
+			_requestFrameUpdateSignal.dispatch();
 		}
 
 		public function get injector():IInjector {
