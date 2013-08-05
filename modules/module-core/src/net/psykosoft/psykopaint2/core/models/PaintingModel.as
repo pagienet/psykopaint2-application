@@ -14,22 +14,21 @@ package net.psykosoft.psykopaint2.core.models
 		private var _sortedData:Vector.<PaintingInfoVO>;
 		private var _activePaintingId:String;
 
-		public function PaintingModel() {
-			super();
-			_paintingData = [];
-		}
-
 		public function disposePaintingCollection():void {
 			_paintingData = null;
-//			_focusedPaintingId = "";
 			_sortingDirty = true;
 			_sortedData = null;
 		}
 
 		public function setPaintingCollection( data:Vector.<PaintingInfoVO> ):void {
+
 			trace( this, "setPaintingCollection()" );
-			for( var i:uint = 0; i < data.length; ++i )
+
+			if( !_paintingData ) _paintingData = [];
+
+			for( var i:uint = 0; i < data.length; ++i ) {
 				_paintingData[data[i].id] = data[i];
+			}
 
 			_sortingDirty = true;
 			notifyPaintingDataSetSignal.dispatch( getSortedPaintingCollection() );
