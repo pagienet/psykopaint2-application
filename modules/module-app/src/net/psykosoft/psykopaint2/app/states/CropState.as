@@ -47,9 +47,8 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var easelRectModel : EaselRectModel;
 
-		// Effing Robotlegs can't inject circular dependencies -_-
-		// HomeState will set this explicitly
-		public var homeState : HomeState;
+		[Inject]
+		public var transitionCropToHomeState : TransitionCropToHomeState;
 
 		private var _background : RefCountedTexture;
 
@@ -91,7 +90,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onRequestCancelCropSignal() : void
 		{
-			stateMachine.setActiveState(homeState);
+			stateMachine.setActiveState(transitionCropToHomeState);
 			requestStateChangeSignal.dispatch(NavigationStateType.PICK_IMAGE);
 		}
 	}

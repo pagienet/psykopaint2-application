@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestOpenPaintingDataVOSignal : RequestOpenPaintingDataVOSignal;
 
 		[Inject]
-		public var cropState : CropState;
+		public var transitionCropToHomeState : TransitionCropToHomeState;
 
 		public function HomeState()
 		{
@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.app.states
 		public function init() : void
 		{
 			// manual injection because robotlegs crashes injecting circular dependencies
-			cropState.homeState = this;
+			transitionCropToHomeState.homeState = this;
 		}
 
 		override ns_state_machine function activate(data : Object = null) : void
