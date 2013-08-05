@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.book
 			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( bookRootView );
 
 			// Notify potential super modules.
-			moduleReadySignal.dispatch( _coreModule.injector );
+			moduleReadySignal.dispatch();
 		}
 	}
 }

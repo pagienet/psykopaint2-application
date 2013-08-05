@@ -56,7 +56,7 @@ package net.psykosoft.psykopaint2.home
 			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( homeRootView );
 
 			// Notify potential super modules.
-			moduleReadySignal.dispatch( _coreModule.injector );
+			moduleReadySignal.dispatch();
 		}
 	}
 }

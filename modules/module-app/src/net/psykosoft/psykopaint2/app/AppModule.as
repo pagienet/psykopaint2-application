@@ -15,8 +15,6 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.home.HomeModule;
 	import net.psykosoft.psykopaint2.paint.PaintModule;
 
-	import org.swiftsuspenders.Injector;
-
 	public class AppModule extends ModuleBase
 	{
 		private var _coreModule : CoreModule;
@@ -30,19 +28,11 @@ package net.psykosoft.psykopaint2.app
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 
-		// ---------------------------------------------------------------------
-		// Listeners.
-		// ---------------------------------------------------------------------
-
 		private function onAddedToStage(event : Event) : void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			initialize();
 		}
-
-		// ---------------------------------------------------------------------
-		// Initialization.
-		// ---------------------------------------------------------------------
 
 		private function initialize() : void
 		{
@@ -61,7 +51,7 @@ package net.psykosoft.psykopaint2.app
 
 		private function onCoreModuleReady() : void
 		{
-			trace(this, "core module is ready, injector: " + _coreModule.injector);
+			trace(this, "core module is ready");
 			_coreModule.startEnterFrame();
 			createPaintModule();
 		}
@@ -69,8 +59,6 @@ package net.psykosoft.psykopaint2.app
 		// Paint module.
 		private function createPaintModule() : void
 		{
-//			var rlStage:Stage = _coreModule.injector.getInstance( Stage );
-//			var rlStage3d:Stage3D = _coreModule.injector.getInstance( Stage3D );
 			trace(this, "creating paint module...");
 			var paintModule : PaintModule = new PaintModule(_coreModule);
 			paintModule.isStandalone = false;
@@ -78,7 +66,7 @@ package net.psykosoft.psykopaint2.app
 			paintModule.initialize();
 		}
 
-		private function onPaintModuleReady(coreInjector : Injector) : void
+		private function onPaintModuleReady() : void
 		{
 			trace(this, "paint module is ready");
 			createHomeModule();
@@ -94,7 +82,7 @@ package net.psykosoft.psykopaint2.app
 			homeModule.initialize();
 		}
 
-		private function onHomeModuleReady(coreInjector : Injector) : void
+		private function onHomeModuleReady() : void
 		{
 			trace(this, "home module is ready");
 			createBookModule();
@@ -110,7 +98,7 @@ package net.psykosoft.psykopaint2.app
 			bookModule.initialize();
 		}
 
-		private function onBookModuleReady(coreInjector : Injector) : void
+		private function onBookModuleReady() : void
 		{
 			trace(this, "book module is ready");
 
