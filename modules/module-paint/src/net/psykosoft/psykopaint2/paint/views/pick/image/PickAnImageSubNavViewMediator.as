@@ -28,34 +28,34 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			}
 		}
 
-		override protected function onButtonClicked( label:String ):void {
-			switch( label ) {
+		override protected function onButtonClicked( id:String ):void {
+			switch( id ) {
 
-				case PickAnImageSubNavView.LBL_BACK:
+				case PickAnImageSubNavView.ID_BACK:
 				{
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREVIOUS );
 					break;
 				}
 
-				case PickAnImageSubNavView.LBL_USER:
+				case PickAnImageSubNavView.ID_USER:
 				{
 					requestStateChange__OLD_TO_REMOVE( CoreSettings.RUNNING_ON_iPAD ? NavigationStateType.BOOK_PICK_USER_IMAGE_IOS : NavigationStateType.PICK_USER_IMAGE_DESKTOP );
 					break;
 				}
 
-				case PickAnImageSubNavView.LBL_SAMPLES:
+				case PickAnImageSubNavView.ID_SAMPLES:
 				{
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE );
 					break;
 				}
 
-/*				case PickAnImageSubNavView.LBL_FACEBOOK:
+/*				case PickAnImageSubNavView.ID_FACEBOOK:
 				{
 					//TODO.
 					break;
 				}*/
 
-				case PickAnImageSubNavView.LBL_CAMERA:
+				case PickAnImageSubNavView.ID_CAMERA:
 				{
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.CAPTURE_IMAGE );
 					break;

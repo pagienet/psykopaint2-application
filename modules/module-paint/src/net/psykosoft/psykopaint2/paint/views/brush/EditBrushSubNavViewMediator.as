@@ -36,17 +36,17 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			view.setParameters( paintModule.getCurrentBrushParameters() );
 		}
 
-		override protected function onButtonClicked( label:String ):void {
-			switch( label ) {
-				case EditBrushSubNavView.LBL_BACK: 
+		override protected function onButtonClicked( id:String ):void {
+			switch( id ) {
+				case EditBrushSubNavView.ID_BACK:
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREVIOUS );
 					break;
-				case EditBrushSubNavView.LBL_COLOR: 
+				case EditBrushSubNavView.ID_COLOR:
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_COLOR);
 					break;
 				// WARNING: be careful if another side button is added since default should only be for parameter buttons.
 				default: 
-					view.openParameter( label );
+					view.openParameter( id );
 					break;
 			}
 		}

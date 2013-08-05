@@ -207,6 +207,7 @@ package net.psykosoft.psykopaint2.home.views.home
 //			trace( this, "rendering 3d? enabled: " + _isEnabled + ", assets loaded: " + _assetsLoaded + ", view: " + _view );
 
 			if( !_isEnabled ) return;
+			if( !_view ) return;
 			if( !_view.parent ) return;
 
 			if( CoreSettings.DEBUG_RENDER_SEQUENCE ) {

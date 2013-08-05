@@ -6,11 +6,11 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	public class PickAnImageSubNavView extends SubNavigationViewBase
 	{
-		public static const LBL_BACK:String = "Back";
-		public static const LBL_USER:String = "Your files";
-		public static const LBL_SAMPLES:String = "Our samples";
-		public static const LBL_CAMERA:String = "Your camera";
-//		public static const LBL_FACEBOOK:String = "[Facebook]";
+		public static const ID_BACK:String = "Back";
+		public static const ID_USER:String = "Your files";
+		public static const ID_SAMPLES:String = "Our samples";
+		public static const ID_CAMERA:String = "Your camera";
+//		public static const ID_FACEBOOK:String = "[Facebook]";
 
 		public function PickAnImageSubNavView() {
 			super();
@@ -18,14 +18,14 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		override protected function onEnabled():void {
 			setHeader( "Pick an Image" );
-			setLeftButton( LBL_BACK );
+			setLeftButton( ID_BACK, ID_BACK );
 		}
 
 		override protected function onSetup():void {
 			super.onSetup();
-			createCenterButton( LBL_USER, ButtonIconType.PICTURE );
-			createCenterButton( LBL_SAMPLES, ButtonIconType.SAMPLES );
-			createCenterButton( LBL_CAMERA, ButtonIconType.CAMERA );
+			createCenterButton( ID_USER, ID_USER, ButtonIconType.PICTURE );
+			createCenterButton( ID_SAMPLES, ID_SAMPLES, ButtonIconType.SAMPLES );
+			createCenterButton( ID_CAMERA, ID_CAMERA, ButtonIconType.CAMERA );
 			validateCenterButtons();
 		}
 	}

@@ -1,19 +1,15 @@
 package net.psykosoft.psykopaint2.home.views.newpainting
 {
 
-	import flash.utils.ByteArray;
-
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintModeType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataSignal;
 
 	public class NewPaintingSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -71,11 +67,11 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		// From view.
 		// -----------------------
 
-		override protected function onButtonClicked( label:String ):void {
-			switch( label ) {
+		override protected function onButtonClicked( id:String ):void {
+			switch( id ) {
 
 				// New color painting.
-				case NewPaintingSubNavView.LBL_NEW: {
+				case NewPaintingSubNavView.ID_NEW: {
 					PaintModeModel.activeMode = PaintModeType.COLOR_MODE;
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = PaintingInfoVO.DEFAULT_VO_ID;
@@ -84,7 +80,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				}
 
 				// New photo painting.
-				case NewPaintingSubNavView.LBL_NEW_PHOTO: {
+				case NewPaintingSubNavView.ID_NEW_PHOTO: {
 					PaintModeModel.activeMode = PaintModeType.PHOTO_MODE;
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = PaintingInfoVO.DEFAULT_VO_ID;
@@ -93,7 +89,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				}
 
 				// Continue painting.
-				case NewPaintingSubNavView.LBL_CONTINUE: {
+				case NewPaintingSubNavView.ID_CONTINUE: {
 					trace( "focused: " + paintingModel.activePaintingId );
 					if( paintingModel.activePaintingId != "uniqueUserId-" ) {
 						requestPaintingActivationSignal.dispatch( paintingModel.activePaintingId );
@@ -104,8 +100,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				//  Paintings.
 				default: {
-					paintingModel.activePaintingId = "uniqueUserId-" + label;
-					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + label );
+					paintingModel.activePaintingId = "uniqueUserId-" + id;
+					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + id );
 					requestEaselUpdateSignal.dispatch( vo, true, false );
 				}
 			}

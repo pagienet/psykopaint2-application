@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 	public class ColorStyleSubNavView extends SubNavigationViewBase
 	{
-		public static const LBL_PICK_AN_IMAGE:String = "Pick an Image";
-		public static const LBL_CONFIRM:String = "Confirm";
+		public static const ID_PICK_AN_IMAGE:String = "Pick an Image";
+		public static const ID_CONFIRM:String = "Confirm";
 
 		public function ColorStyleSubNavView() {
 			super();
@@ -15,8 +15,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 		override protected function onEnabled():void {
 			setHeader( "Pick a Color Style" );
-			setLeftButton( LBL_PICK_AN_IMAGE, ButtonIconType.BACK );
-			setRightButton( LBL_CONFIRM, ButtonIconType.OK );
+			setLeftButton( ID_PICK_AN_IMAGE, ID_PICK_AN_IMAGE, ButtonIconType.BACK );
+			setRightButton( ID_CONFIRM, ID_CONFIRM, ButtonIconType.OK );
 		}
 
 		public function setAvailableColorStyles( availableColorStylePresets:Array ):void {

@@ -60,22 +60,22 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			requestEaselPaintingUpdateSignal.dispatch( null, false, false );
 		}
 
-		override protected function onButtonClicked( label:String ):void {
+		override protected function onButtonClicked( id:String ):void {
 
-			switch( label ) {
-				case PickSurfaceSubNavView.LBL_BACK:
+			switch( id ) {
+				case PickSurfaceSubNavView.ID_BACK:
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
 					break;
-				case PickSurfaceSubNavView.LBL_CONTINUE:
+				case PickSurfaceSubNavView.ID_CONTINUE:
 					continueToColorPaint();
 					break;
-				case PickSurfaceSubNavView.LBL_SURF1:
+				case PickSurfaceSubNavView.ID_SURF1:
 					loadSurfaceByIndex( 0 );
 					break;
-				case PickSurfaceSubNavView.LBL_SURF2:
+				case PickSurfaceSubNavView.ID_SURF2:
 					loadSurfaceByIndex( 1 );
 					break;
-				case PickSurfaceSubNavView.LBL_SURF3:
+				case PickSurfaceSubNavView.ID_SURF3:
 					loadSurfaceByIndex( 2 );
 					break;
 			}

@@ -31,20 +31,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			super.onViewSetup();
 		}
 
-		override protected function onButtonClicked( label:String ):void {
-			switch( label ) {
+		override protected function onButtonClicked( id:String ):void {
+			switch( id ) {
 
-				case SelectBrushSubNavView.LBL_BACK:
+				case SelectBrushSubNavView.ID_BACK:
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT );
 					break;
 				
-				case SelectBrushSubNavView.LBL_EDIT_BRUSH:
+				case SelectBrushSubNavView.ID_EDIT_BRUSH:
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_ADJUST_BRUSH );
 					break;
 
 				// Center buttons select a brush.
 				default:
-					activateBrush( label );
+					activateBrush( id );
 					if( hasParameters() ) requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_ADJUST_BRUSH );
 					break;
 			}

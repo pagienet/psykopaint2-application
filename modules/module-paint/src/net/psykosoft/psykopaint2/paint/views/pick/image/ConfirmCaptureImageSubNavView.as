@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	public class ConfirmCaptureImageSubNavView extends SubNavigationViewBase
 	{
-		public static const LBL_BACK:String = "Discard";
-		public static const LBL_CONFIRM:String = "Keep";
+		public static const ID_BACK:String = "Discard";
+		public static const ID_CONFIRM:String = "Keep";
 
 		public function ConfirmCaptureImageSubNavView() {
 			super();
@@ -15,8 +15,8 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		override protected function onEnabled():void {
 			setHeader( "Take a picture" );
-			setLeftButton( LBL_BACK, ButtonIconType.DISCARD );
-			setRightButton( LBL_CONFIRM, ButtonIconType.OK );
+			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.DISCARD );
+			setRightButton( ID_CONFIRM, ID_CONFIRM, ButtonIconType.OK );
 		}
 	}
 }

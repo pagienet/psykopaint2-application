@@ -23,9 +23,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			view.connectColorParameter( paintModule.getCurrentBrushParameters() );
 		}
 
-		override protected function onButtonClicked( label:String ):void {
-			switch( label ) {
-				case SelectColorSubNavView.LBL_BACK: 
+		override protected function onButtonClicked( id:String ):void {
+			switch( id ) {
+				case SelectColorSubNavView.ID_BACK:
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREVIOUS );
 					break;
 				

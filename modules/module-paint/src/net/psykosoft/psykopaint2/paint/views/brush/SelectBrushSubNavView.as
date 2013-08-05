@@ -7,8 +7,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	public class SelectBrushSubNavView extends SubNavigationViewBase
 	{
-		public static const LBL_BACK:String = "Edit Painting";
-		public static const LBL_EDIT_BRUSH:String = "Edit Brush";
+		public static const ID_BACK:String = "Edit Painting";
+		public static const ID_EDIT_BRUSH:String = "Edit Brush";
 
 		public function SelectBrushSubNavView() {
 			super();
@@ -16,8 +16,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override protected function onEnabled():void {
 			setHeader( "Pick a Brush" );
-			setLeftButton( LBL_BACK, ButtonIconType.BACK );
-			setRightButton( LBL_EDIT_BRUSH, ButtonIconType.TWEAK_BRUSH );
+			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
+			setRightButton( ID_EDIT_BRUSH, ID_EDIT_BRUSH, ButtonIconType.TWEAK_BRUSH );
 		}
 
 		public function setAvailableBrushes( availableBrushTypes:Vector.<String> ):void {
@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					}
 				}
 
-				createCenterButton( availableBrushTypes[ i ], iconType, SbIconButton, null, true );
+				createCenterButton( availableBrushTypes[ i ], availableBrushTypes[ i ], iconType, SbIconButton, null, true );
 			}
 
 			validateCenterButtons();

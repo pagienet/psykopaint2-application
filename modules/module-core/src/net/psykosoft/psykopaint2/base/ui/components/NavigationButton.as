@@ -21,6 +21,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _selectable:Boolean;
 		protected var _selected:Boolean;
 
+		public var id:String;
+
 		public function NavigationButton() {
 			super();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );

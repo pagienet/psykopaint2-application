@@ -31,18 +31,18 @@ package net.psykosoft.psykopaint2.paint.views.color
 			view.setAvailableColorStyles( colorStyleModule.getAvailableColorStylePresets() );
 		}
 
-		override protected function onButtonClicked( label:String ):void {
-			switch( label ) {
-				case ColorStyleSubNavView.LBL_PICK_AN_IMAGE: {
+		override protected function onButtonClicked( id:String ):void {
+			switch( id ) {
+				case ColorStyleSubNavView.ID_PICK_AN_IMAGE: {
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PICK_IMAGE );
 					break;
 				}
-				case ColorStyleSubNavView.LBL_CONFIRM: {
+				case ColorStyleSubNavView.ID_CONFIRM: {
 					notifyColorStyleConfirmSignal.dispatch();
 					break;
 				}
 				default: { // Center buttons trigger color style changes.
-					notifyColorStyleChangedSignal.dispatch( label );
+					notifyColorStyleChangedSignal.dispatch( id );
 					break;
 				}
 			}

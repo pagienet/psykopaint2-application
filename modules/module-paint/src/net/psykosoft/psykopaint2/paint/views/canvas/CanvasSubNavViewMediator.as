@@ -65,10 +65,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// From view.
 		// ---------------------------------------------------------------------
 
-		override protected function onButtonClicked( label:String ):void {
-			switch( label ) {
+		override protected function onButtonClicked( id:String ):void {
+			switch( id ) {
 
-				case CanvasSubNavView.LBL_HOME:
+				case CanvasSubNavView.ID_HOME:
 				{
 					_waitingForSaveToContinueToHomeState = true;
 
@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 
-				case CanvasSubNavView.LBL_DESTROY:
+				case CanvasSubNavView.ID_DESTROY:
 				{
 					if( paintingModel.activePaintingId != PaintingInfoVO.DEFAULT_VO_ID && paintingModel.activePaintingId != "" ) {
 						requestPaintingDeletionSignal.dispatch( paintingModel.activePaintingId );
@@ -87,44 +87,44 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 
-				case CanvasSubNavView.LBL_CLEAR:
+				case CanvasSubNavView.ID_CLEAR:
 				{
 					requestClearCanvasSignal.dispatch();
 					break;
 				}
 
-				/*case CanvasSubNavView.LBL_MODEL:
+				/*case CanvasSubNavView.ID_MODEL:
 				{
 					requestNavigationToggleSignal.dispatch( -1, 0.5 );
 					requestStateChange( StateType.PICK_IMAGE );
 					break;
 				}*/
 
-				/*case CanvasSubNavView.LBL_COLOR:
+				/*case CanvasSubNavView.ID_COLOR:
 				{
 //					requestStateChange( StateType.COLOR_STYLE );
 					break;
 				}*/
 
-				case CanvasSubNavView.LBL_EXPORT:
+				case CanvasSubNavView.ID_EXPORT:
 				{
 					requestCanvasExportSignal.dispatch();
 					break;
 				}
 
-				/*case CanvasSubNavView.LBL_SAVE:
+				/*case CanvasSubNavView.ID_SAVE:
 				{
 					requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, false );
 					break;
 				}*/
 
-				/*case CanvasSubNavView.LBL_PUBLISH:
+				/*case CanvasSubNavView.ID_PUBLISH:
 				{
 					// TODO: trigger publish process
 					break;
 				}*/
 
-				case CanvasSubNavView.LBL_PICK_A_BRUSH:
+				case CanvasSubNavView.ID_PICK_A_BRUSH:
 				{
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_SELECT_BRUSH );
 					break;

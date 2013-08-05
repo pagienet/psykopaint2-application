@@ -28,9 +28,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 70;
 
-		// Used for debugging, can be removed...
-		public var id:String = "notSet";
-
 		public function SubNavigationViewBase() {
 			super();
 
@@ -39,7 +36,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			scrollerButtonClickedSignal = new Signal();
 
 			_scroller = new HSnapList();
-			_scroller.id = id;
 			_scroller.setVisibleDimensions( 1024, 130 );
 			_scroller.setInteractionWidth( 1024 - 280 );
 //			_scroller.x = 140;
@@ -77,11 +73,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_navigation.setHeader( value );
 		}
 
-		public function setLeftButton( label:String, iconType:String = ButtonIconType.BACK ):void {
+		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK ):void {
 			_navigation.setLeftButton( label, iconType );
 		}
 
-		public function setRightButton( label:String, iconType:String = ButtonIconType.CONTINUE ):void {
+		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE ):void {
 			_navigation.setRightButton( label, iconType );
 		}
 
@@ -144,13 +140,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Protected.
 		// ---------------------------------------------------------------------
 
-		protected function createCenterButton( label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false ):void {
+		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false ):void {
 			if( !_centerButtonData ) _centerButtonData = new Vector.<ISnapListData>();
 			var btnData:ButtonData = new ButtonData();
 			btnData.labelText = label;
 			btnData.iconType = iconType;
 			btnData.iconBitmap = icon;
 			btnData.selectable = selectable;
+			btnData.id = id;
 			btnData.itemRendererWidth = 100;
 			btnData.itemRendererType = rendererClass || SbIconButton;
 			_centerButtonData.push( btnData );

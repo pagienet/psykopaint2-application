@@ -32,18 +32,18 @@ package net.psykosoft.psykopaint2.home.views.settings
 			setAvailableWallpapers();
 		}
 
-		override protected function onButtonClicked( label:String ):void {
-			switch( label ) {
+		override protected function onButtonClicked( id:String ):void {
+			switch( id ) {
 
 				// Left.
-				case WallpaperSubNavView.LBL_BACK: {
+				case WallpaperSubNavView.ID_BACK: {
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.SETTINGS );
 					break;
 				}
 
 				// Center buttons are wallpaper thumbnails.
 				default: {
-					getFullImageAndSetAsWallpaper( label );
+					getFullImageAndSetAsWallpaper( id );
 				}
 			}
 		}

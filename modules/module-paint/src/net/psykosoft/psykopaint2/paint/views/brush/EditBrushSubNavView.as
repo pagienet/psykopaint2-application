@@ -26,8 +26,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private var _parameterSetVO:ParameterSetVO;
 		private var _parameter:PsykoParameter;
 
-		public static const LBL_BACK:String = "Pick a Brush";
-		public static const LBL_COLOR:String = "Pick a Color";
+		public static const ID_BACK:String = "Pick a Brush";
+		public static const ID_COLOR:String = "Pick a Color";
 
 		public static const CUSTOM_COLOR_ID:String = "Custom Color";
 
@@ -39,8 +39,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override protected function onEnabled():void {
 			setHeader( "" );
-			setLeftButton( LBL_BACK, ButtonIconType.BACK );
-			setRightButton( LBL_COLOR, ButtonIconType.CONTINUE );
+			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
+			setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.CONTINUE );
 			showRightButton( false );
 		}
 
@@ -73,7 +73,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				if( parameter.type != PsykoParameter.ColorParameter ) {
 					if( parameter.id != CUSTOM_COLOR_ID ) {
 						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
-						createCenterButton( parameter.label, ButtonIconType.DEFAULT, null, null, true );
+						createCenterButton( parameter.label, parameter.label, ButtonIconType.DEFAULT, null, null, true );
 					}
 				} else {
 					showRightButton( true );

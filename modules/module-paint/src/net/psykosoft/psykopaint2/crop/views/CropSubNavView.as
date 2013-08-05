@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.crop.views
 
 	public class CropSubNavView extends SubNavigationViewBase
 	{
-		public static var LBL_PICK_AN_IMAGE:String = "Pick an Image";
-		public static var LBL_CONFIRM_CROP:String = "Confirm";
+		public static var ID_PICK_AN_IMAGE:String = "Pick an Image";
+		public static var ID_CONFIRM_CROP:String = "Confirm";
 
 		public function CropSubNavView() {
 			super();
@@ -15,8 +15,8 @@ package net.psykosoft.psykopaint2.crop.views
 
 		override protected function onEnabled():void {
 			setHeader( "Crop!" );
-			setLeftButton( LBL_PICK_AN_IMAGE, ButtonIconType.BACK );
-			setRightButton( LBL_CONFIRM_CROP, ButtonIconType.OK );
+			setLeftButton( ID_PICK_AN_IMAGE, ID_PICK_AN_IMAGE, ButtonIconType.BACK );
+			setRightButton( ID_CONFIRM_CROP, ID_CONFIRM_CROP, ButtonIconType.OK );
 		}
 	}
 }

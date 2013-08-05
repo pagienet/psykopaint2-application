@@ -22,12 +22,12 @@ package net.psykosoft.psykopaint2.crop.views
 			super.initialize();
 		}
 
-		override protected function onButtonClicked( label:String ):void {
-			switch( label ) {
-				case CropSubNavView.LBL_PICK_AN_IMAGE:
+		override protected function onButtonClicked( id:String ):void {
+			switch( id ) {
+				case CropSubNavView.ID_PICK_AN_IMAGE:
 					requestCancelCropSignal.dispatch();
 					break;
-				case CropSubNavView.LBL_CONFIRM_CROP:
+				case CropSubNavView.ID_CONFIRM_CROP:
 					//TODO: blocker activation
 					requestFinalizeCropSignal.dispatch();
 				    break;

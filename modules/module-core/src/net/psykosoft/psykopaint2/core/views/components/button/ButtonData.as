@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public var iconBitmap:Bitmap;
 		public var selectable:Boolean;
 		public var selected:Boolean;
+		public var id:String;
 
 		public function ButtonData() {
 			super();

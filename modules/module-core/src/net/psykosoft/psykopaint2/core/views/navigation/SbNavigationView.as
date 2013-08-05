@@ -162,14 +162,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Side buttons.
 		// ---------------------------------------------------------------------
 
-		public function setLeftButton( label:String, iconType:String = ButtonIconType.BACK ):void {
+		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK ):void {
+			_leftButton.id = id;
 			_leftButton.labelText = label;
 			_leftButton.iconType = iconType;
 			_leftButton.visible = true;
 			leftBtnSide.visible = true;
 		}
 
-		public function setRightButton( label:String, iconType:String = ButtonIconType.CONTINUE ):void {
+		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE ):void {
+			_rightButton.id = id;
 			_rightButton.labelText = label;
 			_rightButton.iconType = iconType;
 			_rightButton.visible = true;
@@ -200,9 +202,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			var clickedButton:NavigationButton = ClickUtil.getObjectOfClassInHierarchy( event.target as DisplayObject, NavigationButton ) as NavigationButton;
 			if( !clickedButton ) throw new Error( "unidentified button clicked." );
 
-			var label:String = clickedButton.labelText;
+			var id:String = clickedButton.id;
 			trace( this, "button clicked: " + clickedButton.labelText );
-			buttonClickedSignal.dispatch( label );
+			buttonClickedSignal.dispatch( id );
 		}
 
 		// ---------------------------------------------------------------------

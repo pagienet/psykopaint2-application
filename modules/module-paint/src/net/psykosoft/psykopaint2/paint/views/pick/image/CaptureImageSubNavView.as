@@ -6,9 +6,9 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 	public class CaptureImageSubNavView extends SubNavigationViewBase
 	{
-		public static const LBL_BACK:String = "Pick an image";
-		public static const LBL_CAPTURE:String = "Shoot!!";
-		public static const LBL_FLIP:String = "Flip";
+		public static const ID_BACK:String = "Pick an image";
+		public static const ID_CAPTURE:String = "Shoot!!";
+		public static const ID_FLIP:String = "Flip";
 
 		public function CaptureImageSubNavView() {
 			super();
@@ -16,13 +16,13 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 
 		override protected function onEnabled():void {
 			setHeader( "Take a picture" );
-			setLeftButton( LBL_BACK, ButtonIconType.PICTURE );
-			setRightButton( LBL_CAPTURE, ButtonIconType.CAMERA );
+			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.PICTURE );
+			setRightButton( ID_CAPTURE, ID_CAPTURE, ButtonIconType.CAMERA );
 		}
 
 
 		override protected function onSetup():void {
-			createCenterButton( LBL_FLIP, ButtonIconType.FLIP );
+			createCenterButton( ID_FLIP, ID_FLIP, ButtonIconType.FLIP );
 			validateCenterButtons();
 		}
 	}

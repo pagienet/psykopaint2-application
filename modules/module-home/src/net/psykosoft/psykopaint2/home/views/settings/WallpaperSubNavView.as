@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 	public class WallpaperSubNavView extends SubNavigationViewBase
 	{
-		public static const LBL_BACK:String = "Settings";
+		public static const ID_BACK:String = "Settings";
 
 		private var _atlas:BitmapAtlas;
 
@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		override protected function onEnabled():void {
 			setHeader( "Settings" );
-			setLeftButton( LBL_BACK, ButtonIconType.SETTINGS );
+			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.SETTINGS );
 		}
 
 		override protected function onDisposed():void {
@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 			var names:Vector.<String> = atlas.names;
 			for( var i:uint; i < names.length; i++ ) {
 				var name:String = names[ i ];
-				createCenterButton( name, null, SbPolaroidButton, new Bitmap( atlas.getSubTextureForId( name ) ), true );
+				createCenterButton( name, name, null, SbPolaroidButton, new Bitmap( atlas.getSubTextureForId( name ) ), true );
 			}
 
 			validateCenterButtons();

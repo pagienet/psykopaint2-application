@@ -20,14 +20,14 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 			super.initialize();
 		}
 
-		override protected function onButtonClicked( label:String ):void {
-			switch( label ) {
-				case ConfirmCaptureImageSubNavView.LBL_BACK:
+		override protected function onButtonClicked( id:String ):void {
+			switch( id ) {
+				case ConfirmCaptureImageSubNavView.ID_BACK:
 				{
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.CAPTURE_IMAGE );
 					break;
 				}
-				case ConfirmCaptureImageSubNavView.LBL_CONFIRM:
+				case ConfirmCaptureImageSubNavView.ID_CONFIRM:
 				{
 					notifyCameraSnapshotRequest.dispatch();
 					break;
