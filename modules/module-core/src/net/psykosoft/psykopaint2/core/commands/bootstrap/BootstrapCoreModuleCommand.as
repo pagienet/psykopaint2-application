@@ -17,13 +17,10 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 			add( InitStageCommand          );
 			add( InitExternalDataCommand   );
 			add( InitShakeAndBakeCommand   );
-			add( InitGreensocksCommand     );
+			add( InitManagersCommand       );
 			add( InitDisplayCommand        );
-			add( InitMemoryWarningsCommand );
 			add( InitPlatformCommand       );
-			add( InitKeyDebuggingCommand   );
 			add( InitStage3dCommand        );
-			add( InitGestureManagerCommand );
 
 			registerCompleteCallback( onMacroComplete );
 		}
