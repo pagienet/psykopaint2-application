@@ -1,9 +1,14 @@
-package net.psykosoft.psykopaint2.home.commands
+package net.psykosoft.psykopaint2.home.commands.load
 {
+
+	import net.psykosoft.psykopaint2.home.commands.*;
 
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
+	import net.psykosoft.psykopaint2.home.commands.load.BuildHomeSceneCommand;
+	import net.psykosoft.psykopaint2.home.commands.load.HomeIntroAnimationCommand;
+	import net.psykosoft.psykopaint2.home.commands.load.LoadHomeBundledAssetsCommand;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 
 	public class SetUpHomeModuleCommand extends SequenceMacro

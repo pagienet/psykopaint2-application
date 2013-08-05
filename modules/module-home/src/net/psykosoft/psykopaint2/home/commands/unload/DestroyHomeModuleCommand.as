@@ -1,5 +1,7 @@
-package net.psykosoft.psykopaint2.home.commands
+package net.psykosoft.psykopaint2.home.commands.unload
 {
+
+	import net.psykosoft.psykopaint2.home.commands.*;
 
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
@@ -14,8 +16,11 @@ package net.psykosoft.psykopaint2.home.commands
 
 		override public function prepare():void {
 			// TODO: use a command to clean up all bulkloader resources?
+
 			add( DestroyHomeSceneCommand );
 			add( DisposePaintingDataCommand );
+			add( DumpHomeBundledAssetsCommand );
+
 			registerCompleteCallback( onMacroComplete );
 		}
 
