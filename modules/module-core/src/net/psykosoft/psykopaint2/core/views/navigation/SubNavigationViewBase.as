@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
+	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.SbIconButton;
@@ -168,11 +169,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
 
-			var clickedButton:NavigationButton = event.target as NavigationButton;
-			if( !clickedButton ) clickedButton = event.target.parent as NavigationButton;
-			if( !clickedButton ) {
-				throw new Error( "unidentified button clicked." );
-			}
+			var clickedButton:NavigationButton = ClickUtil.getObjectOfClassInHierarchy( event.target as DisplayObject, NavigationButton ) as NavigationButton;
+			if( !clickedButton ) throw new Error( "unidentified button clicked." );
 
 			// Deselect all buttons except the clicked one.
 			if( clickedButton.selectable ) {
