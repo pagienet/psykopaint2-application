@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.app.config
 	import net.psykosoft.psykopaint2.app.states.TransitionCropToHomeState;
 	import net.psykosoft.psykopaint2.app.states.TransitionCropToPaintState;
 	import net.psykosoft.psykopaint2.app.states.TransitionHomeToCropState;
+	import net.psykosoft.psykopaint2.app.states.TransitionPaintToHomeState;
 	import net.psykosoft.psykopaint2.app.states.TransitionSplashToHomeState;
 	import net.psykosoft.psykopaint2.app.states.PaintState;
 	import net.psykosoft.psykopaint2.app.states.TransitionHomeToPaintState;
@@ -82,6 +83,7 @@ package net.psykosoft.psykopaint2.app.config
 			injector.map(TransitionHomeToCropState).asSingleton();
 			injector.map(TransitionCropToPaintState).asSingleton();
 			injector.map(TransitionCropToHomeState).asSingleton();
+			injector.map(TransitionPaintToHomeState).asSingleton();
 		}
 
 		// -----------------------

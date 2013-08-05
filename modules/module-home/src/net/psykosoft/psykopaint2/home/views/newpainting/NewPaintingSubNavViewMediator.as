@@ -17,7 +17,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var view:NewPaintingSubNavView;
 
 		[Inject]
-		public var requestPaintingActivationSignal:RequestLoadPaintingDataSignal;
+		public var requestLoadPaintingDataSignal:RequestLoadPaintingDataSignal;
 
 		[Inject]
 		public var requestEaselUpdateSignal:RequestEaselUpdateSignal;
@@ -92,7 +92,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				case NewPaintingSubNavView.ID_CONTINUE: {
 					trace( "focused: " + paintingModel.activePaintingId );
 					if( paintingModel.activePaintingId != "uniqueUserId-" ) {
-						requestPaintingActivationSignal.dispatch( paintingModel.activePaintingId );
+						requestLoadPaintingDataSignal.dispatch( paintingModel.activePaintingId );
 						//TODO: blocker activation
 					}
 					break;

@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
@@ -131,6 +132,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyCropModuleDestroyedSignal ).asSingleton();
 			_injector.map( RequestCancelCropSignal ).asSingleton();
 			_injector.map( RequestSetCropBackgroundSignal ).asSingleton();
+			_injector.map( RequestClosePaintViewSignal ).asSingleton();
 		}
 
 		// -----------------------

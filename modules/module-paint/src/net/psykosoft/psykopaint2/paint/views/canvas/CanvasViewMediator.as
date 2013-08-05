@@ -69,9 +69,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var notifyEaselRectUpdateSignal:NotifyEaselRectUpdateSignal;
 
 		[Inject]
-		public var requestCleanUpPaintModuleMemorySignal : RequestDestroyPaintModuleSignal;
-
-		[Inject]
 		public var requestZoomCanvasToDefaultViewSignal:RequestZoomCanvasToDefaultViewSignal;
 
 		[Inject]
@@ -102,9 +99,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
 			paintModule.view = view;
 
-			// Register canvas gpu rendering in core.
-			GpuRenderManager.addRenderingStep( paintModulePreRenderingStep, GpuRenderingStepType.PRE_CLEAR );
-			GpuRenderManager.addRenderingStep( paintModuleNormalRenderingsStep, GpuRenderingStepType.NORMAL );
 
 			// From app.
 			notifyEaselRectUpdateSignal.add( onEaselRectInfo );
@@ -121,14 +115,16 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function onEnabled() : void
 		{
-
+			// Register canvas gpu rendering in core.
+			GpuRenderManager.addRenderingStep( paintModulePreRenderingStep, GpuRenderingStepType.PRE_CLEAR );
+			GpuRenderManager.addRenderingStep( paintModuleNormalRenderingsStep, GpuRenderingStepType.NORMAL );
 		}
 
 		private function onDisabled() : void
 		{
 			// Register canvas gpu rendering in core.
-//			GpuRenderManager.removeRenderingStep( paintModulePreRenderingStep, GpuRenderingStepType.PRE_CLEAR );
-//			GpuRenderManager.removeRenderingStep( paintModuleNormalRenderingsStep, GpuRenderingStepType.NORMAL );
+			GpuRenderManager.removeRenderingStep( paintModulePreRenderingStep, GpuRenderingStepType.PRE_CLEAR );
+			GpuRenderManager.removeRenderingStep( paintModuleNormalRenderingsStep, GpuRenderingStepType.NORMAL );
 		}
 
 		// -----------------------
@@ -244,7 +240,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: function() : void {
-				onZoomToFullViewComplete();
 				if (callback) callback();
 			}, ease: Strong.easeInOut } );
 		}
@@ -253,7 +248,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete:
 					function() : void {
-						onZoomToEaselComplete();
 						if (callback) callback();
 					}, ease: Strong.easeInOut } );
 		}
@@ -269,18 +263,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
-		private function onZoomToFullViewComplete():void {
-			requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_SELECT_BRUSH );
-			//TODO: blocker deactivation
-		}
-
-		private function onZoomToEaselComplete():void {
-			// TODO: this solution is temporary while transitions states are eliminated
-			requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREPARE_FOR_HOME_MODE );
-			//TODO: blocker deactivation // TODO: needed?
-			requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
-			requestCleanUpPaintModuleMemorySignal.dispatch();
-		}
 
 		// -----------------------
 		// Utils.
