@@ -32,11 +32,6 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 				stage.stageWidth = CoreSettings.GLOBAL_SCALING * 1024;
 				stage.stageHeight = CoreSettings.GLOBAL_SCALING * 768;
 			}
-			else {
-				// TODO: Currently setting this hardcodedly, because stage dimensions are wrong for some reason.
-				stage.stageWidth = 1024;
-				stage.stageHeight = 748;
-			}
 			trace( this, "resulting stage dimensions: " + stage.stageWidth + "x" + stage.stageHeight );
 
 			CoreSettings.STAGE_WIDTH = stage.stageWidth;
