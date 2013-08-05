@@ -14,7 +14,8 @@ package net.psykosoft.psykopaint2.core.rendering
 		// use a static method because this is so universally used. (still bleh, tho)
 		public static function copy(source : TextureBase, context3D : Context3D, width : Number = 1, height : Number = 1) : void
 		{
-			_instance ||= new CopyTexture();
+			if (!_instance)
+				throw new Error("CopyTexture::init must be called first!");
 			_instance.draw(source, context3D, width, height);
 		}
 

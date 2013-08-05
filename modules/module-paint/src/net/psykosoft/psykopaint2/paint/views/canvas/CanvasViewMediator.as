@@ -102,9 +102,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
 			paintModule.view = view;
 
-			// Register canvas gpu rendering in core.
-			GpuRenderManager.addRenderingStep( paintModulePreRenderingStep, GpuRenderingStepType.PRE_CLEAR );
-			GpuRenderManager.addRenderingStep( paintModuleNormalRenderingsStep, GpuRenderingStepType.NORMAL );
 
 			// From app.
 			notifyEaselRectUpdateSignal.add( onEaselRectInfo );
@@ -114,6 +111,23 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			requestZoomCanvasToEaselViewSignal.add( zoomToEaselView );
 
 			_transformMatrix = new Matrix();
+
+			view.enabledSignal.add(onEnabled);
+			view.disabledSignal.add(onDisabled);
+		}
+
+		private function onEnabled() : void
+		{
+			// Register canvas gpu rendering in core.
+			GpuRenderManager.addRenderingStep( paintModulePreRenderingStep, GpuRenderingStepType.PRE_CLEAR );
+			GpuRenderManager.addRenderingStep( paintModuleNormalRenderingsStep, GpuRenderingStepType.NORMAL );
+		}
+
+		private function onDisabled() : void
+		{
+			// Register canvas gpu rendering in core.
+			GpuRenderManager.removeRenderingStep( paintModulePreRenderingStep, GpuRenderingStepType.PRE_CLEAR );
+			GpuRenderManager.removeRenderingStep( paintModuleNormalRenderingsStep, GpuRenderingStepType.NORMAL );
 		}
 
 		// -----------------------

@@ -15,12 +15,12 @@ package net.psykosoft.psykopaint2.crop.signals
 
 		// TODO: Replace this?
 		[Inject]
-		public var notifyCropModuleActivatedSignal : RequestUpdateCropImageSignal;
+		public var requestUpdateCropImageSignal : RequestUpdateCropImageSignal;
 
 		override public function execute() : void
 		{
 			super.execute();
-			notifyCropModuleActivatedSignal.dispatch(bitmapData);
+			requestUpdateCropImageSignal.dispatch(bitmapData);
 			notifyCropModuleSetUpSignal.dispatch();
 		}
 	}

@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.core.rendering
 				1.0, -1.0, 1.0, 1.0,
 				1.0, 0.0, 1.0, 0.0,
 				0.0, 0.0, 0.0, 0.0], 0, 4);
-			_quadIndices.uploadFromVector(new <uint>[0, 1, 2, 0, 2, 3], 0, 6);
+			_quadIndices.uploadFromVector(new <uint>[2, 1, 0, 3, 2, 0], 0, 6);
 		}
 
 		public function init(context3D : Context3D) : void

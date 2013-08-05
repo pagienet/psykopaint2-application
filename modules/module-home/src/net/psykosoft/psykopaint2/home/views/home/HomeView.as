@@ -61,9 +61,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public static const HOME_BUNDLE_ID:String = "HomeBundle";
 
-		private var _isFrozen:Boolean;
-		private var _freezeTexture:RefCountedTexture;
-
 		private var _currentScene:ObjectContainer3D;
 
 		public var closestPaintingChangedSignal:Signal;
@@ -164,8 +161,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function destroyScene():void {
 
-			disposeFreezeTexture();
-
 			stage.removeEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
 			stage.removeEventListener( KeyboardEvent.KEY_UP, onStageKeyUp );
 
@@ -202,51 +197,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		// ---------------------------------------------------------------------
 		// Freezing.
 		// ---------------------------------------------------------------------
-
-		public function freeze( texture:RefCountedTexture ):void {
-
-			if( _isFrozen ) return;
-			unFreeze();
-			trace( this, "freeze()" );
-
-			disposeFreezeTexture();
-
-			_freezeTexture = texture;
-			var tex:NativeTexture = new NativeTexture(_freezeTexture.texture);
-			_view.background = tex;
-			var texHeight : Number = TextureUtil.getNextPowerOfTwo(CoreSettings.STAGE_HEIGHT);
-			_view.backgroundRect = new Rectangle(0, 0, 1, CoreSettings.STAGE_HEIGHT/texHeight);
-
-			selectScene( null );
-			_scrollCameraController.isEnabled = false;
-
-			_isFrozen = true;
-		}
-
-		public function unFreeze():void {
-
-			if( !_isFrozen ) return;
-			trace( this, "unFreeze()" );
-
-			_view.background = null;
-
-			disposeFreezeTexture();
-
-			selectScene( _mainScene );
-			_scrollCameraController.isEnabled = true;
-			_isFrozen = false;
-		}
-
-		private function disposeFreezeTexture():void {
-			if( _freezeTexture ) {
-				_freezeTexture.dispose();
-				_freezeTexture = null;
-			}
-		}
-
-		public function get isFrozen():Boolean {
-			return _isFrozen;
-		}
 
 		// ---------------------------------------------------------------------
 		// Interface.

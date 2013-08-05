@@ -3,6 +3,10 @@ package net.psykosoft.psykopaint2.crop.views
 
 	import flash.display.BitmapData;
 	import flash.display.StageQuality;
+	import flash.display.TriangleCulling;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.Context3DCompareMode;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 
@@ -10,6 +14,10 @@ package net.psykosoft.psykopaint2.crop.views
 	import net.psykosoft.psykopaint2.base.ui.components.TouchSheet;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
+	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
+	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 
 	public class CropView extends ViewBase
 	{
@@ -19,6 +27,7 @@ package net.psykosoft.psykopaint2.crop.views
 		private var _canvasWidth:int;
 		private var _canvasHeight:int;
 		private var _easelRect:Rectangle;
+		private var _background : RefCountedTexture;
 
 		public function CropView() {
 			super();
@@ -94,6 +103,31 @@ package net.psykosoft.psykopaint2.crop.views
 		{
 			super.disable();
 			stage.quality = StageQuality.LOW;
+		}
+
+		public function render(context3D : Context3D):void
+		{
+			if (_background) {
+				context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+				context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
+
+				var widthRatio : Number = CoreSettings.STAGE_WIDTH/TextureUtils.getBestPowerOf2(CoreSettings.STAGE_WIDTH);
+				var heightRatio : Number = CoreSettings.STAGE_HEIGHT/TextureUtils.getBestPowerOf2(CoreSettings.STAGE_HEIGHT);
+				CopySubTexture.copy(_background.texture, new Rectangle(0, 0, widthRatio, heightRatio), new Rectangle(0, 0, 1, 1), context3D);
+//				CopyTexture.copy(_background.texture, context3D, widthRatio, heightRatio);
+				context3D.setDepthTest(true, Context3DCompareMode.LESS);
+			}
+		}
+
+		public function get background() : RefCountedTexture
+		{
+			return _background;
+		}
+
+		public function set background(background : RefCountedTexture) : void
+		{
+			if (_background) _background.dispose();
+			_background = background;
 		}
 	}
 }

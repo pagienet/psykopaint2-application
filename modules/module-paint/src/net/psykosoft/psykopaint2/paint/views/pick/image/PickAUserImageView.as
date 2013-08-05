@@ -20,9 +20,6 @@ package net.psykosoft.psykopaint2.paint.views.pick.image
 		}
 
 		override protected function onSetup():void {
-			graphics.beginFill( 0x666666, 1.0 );
-			graphics.drawRect( 0, 0, 1024, 768 );
-			graphics.endFill();
 		}
 
 		override protected function onEnabled():void {

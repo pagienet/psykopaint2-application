@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.base.states
 		public function setActiveState(state : State, data : Object = null) : void
 		{
 			if (_activeState) {
+				trace ("Deactivating state: " + _activeState);
 				_activeState.deactivate();
 				_activeState.stateMachine = null;
 			}
@@ -22,6 +23,7 @@ package net.psykosoft.psykopaint2.base.states
 			_activeState = state;
 
 			if (_activeState) {
+				trace ("Activating state: " + _activeState);
 				_activeState.stateMachine = this;
 				_activeState.activate(data);
 			}

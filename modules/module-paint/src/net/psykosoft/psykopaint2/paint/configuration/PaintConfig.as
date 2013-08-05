@@ -6,7 +6,9 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.crop.signals.DestroyCropModuleCommand;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestCancelCropSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.SetupCropModuleCommand;
 	import net.psykosoft.psykopaint2.crop.views.CropSubNavView;
@@ -27,6 +29,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
@@ -121,10 +124,13 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( RequestZoomCanvasToEaselViewSignal ).asSingleton();
 			_injector.map( NotifyPaintModuleSetUpSignal ).asSingleton();
 			_injector.map( NotifyPaintModuleDestroyedSignal ).asSingleton();
+			_injector.map( RequestSetCanvasBackgroundSignal ).asSingleton();
 
 			// TODO: Move to CropConfig
 			_injector.map( NotifyCropModuleSetUpSignal ).asSingleton();
 			_injector.map( NotifyCropModuleDestroyedSignal ).asSingleton();
+			_injector.map( RequestCancelCropSignal ).asSingleton();
+			_injector.map( RequestSetCropBackgroundSignal ).asSingleton();
 		}
 
 		// -----------------------

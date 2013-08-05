@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.core.rendering
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
 
 	public class CanvasRenderer
 	{
@@ -50,6 +51,9 @@ package net.psykosoft.psykopaint2.core.rendering
 		[Inject]
 		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
 
+		[Inject]
+		public var requestSetCanvasBackgroundSignal : RequestSetCanvasBackgroundSignal;
+
 		private var _context3D : Context3D;
 		private var _lightingRenderer : LightingRenderer;
 		private var _background : RefCountedTexture;
@@ -75,9 +79,10 @@ package net.psykosoft.psykopaint2.core.rendering
 			requestSaveCPUForUISignal.add(freezeRendering);
 			requestResumeCPUUsageForUISignal.add(resumeRendering);
 			requestChangeRenderRect.add(onChangeRenderRect);
+			requestSetCanvasBackgroundSignal.add(onSetCanvasBackground);
 		}
 
-		public function setBackground(texture : RefCountedTexture, rect : Rectangle) : void
+		private function onSetCanvasBackground(texture : RefCountedTexture, rect : Rectangle) : void
 		{
 			disposeBackground();
 			_background = texture;

@@ -1,12 +1,15 @@
 package net.psykosoft.psykopaint2.app.config
 {
 	import net.psykosoft.psykopaint2.app.commands.CreateCanvasBackgroundCommand;
-	import net.psykosoft.psykopaint2.app.signals.NotifyCanvasBackgroundSetSignal;
+	import net.psykosoft.psykopaint2.app.commands.CreateCropBackgroundCommand;
+	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
 	import net.psykosoft.psykopaint2.app.signals.RequestCreateCanvasBackgroundSignal;
+	import net.psykosoft.psykopaint2.app.signals.RequestCreateCropBackgroundSignal;
 	import net.psykosoft.psykopaint2.app.states.BookState;
 	import net.psykosoft.psykopaint2.app.states.CropState;
 	import net.psykosoft.psykopaint2.app.states.HomeState;
 	import net.psykosoft.psykopaint2.app.states.TransitionCropToPaintState;
+	import net.psykosoft.psykopaint2.app.states.TransitionHomeToCropState;
 	import net.psykosoft.psykopaint2.app.states.TransitionSplashToHomeState;
 	import net.psykosoft.psykopaint2.app.states.PaintState;
 	import net.psykosoft.psykopaint2.app.states.TransitionHomeToPaintState;
@@ -75,6 +78,7 @@ package net.psykosoft.psykopaint2.app.config
 			injector.map(PaintState).asSingleton();
 			injector.map(BookState).asSingleton();
 			injector.map(TransitionHomeToPaintState).asSingleton();
+			injector.map(TransitionHomeToCropState).asSingleton();
 			injector.map(TransitionCropToPaintState).asSingleton();
 		}
 
@@ -83,7 +87,7 @@ package net.psykosoft.psykopaint2.app.config
 		// -----------------------
 
 		private function mapNotifications():void {
-			injector.map(NotifyCanvasBackgroundSetSignal).asSingleton();
+			injector.map(NotifyFrozenBackgroundCreatedSignal).asSingleton();
 		}
 
 		// -----------------------
@@ -92,6 +96,7 @@ package net.psykosoft.psykopaint2.app.config
 
 		private function mapCommands():void {
 			_commandMap.map(RequestCreateCanvasBackgroundSignal).toCommand(CreateCanvasBackgroundCommand);
+			_commandMap.map(RequestCreateCropBackgroundSignal).toCommand(CreateCropBackgroundCommand);
 		}
 
 		// -----------------------

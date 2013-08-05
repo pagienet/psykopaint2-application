@@ -5,7 +5,9 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 
@@ -27,6 +29,12 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var requestHideSplashScreenSignal : RequestHideSplashScreenSignal;
+
+		[Inject]
+		public var requestNavigationToggleSignal : RequestNavigationToggleSignal;
+
+		[Inject]
+		public var requestHomeViewScrollSignal : RequestHomeViewScrollSignal;
 
 		[Inject]
 		public var homeState : HomeState;
@@ -55,6 +63,10 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onTransitionComplete() : void
 		{
+			// TODO: this probably needs to be moved to some activation command
+			requestNavigationToggleSignal.dispatch(1, 0.5);
+			requestHomeViewScrollSignal.dispatch(1);
+
 			stateMachine.setActiveState(homeState);
 		}
 

@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.app.states
 {
 	import flash.utils.setTimeout;
 
-	import net.psykosoft.psykopaint2.app.signals.NotifyCanvasBackgroundSetSignal;
+	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
 
 	import net.psykosoft.psykopaint2.app.signals.RequestCreateCanvasBackgroundSignal;
 
@@ -37,10 +37,13 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestZoomCanvasToDefaultViewSignal:RequestZoomCanvasToDefaultViewSignal;
 
 		[Inject]
-		public var notifyCanvasBackgroundSetSignal : NotifyCanvasBackgroundSetSignal;
+		public var notifyCanvasBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
 
 		[Inject]
 		public var paintState : PaintState;
+
+		[Inject]
+		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
 
 		public function TransitionHomeToPaintState()
 		{
@@ -74,6 +77,8 @@ package net.psykosoft.psykopaint2.app.states
 		private function onZoomOutComplete() : void
 		{
 			stateMachine.setActiveState(paintState);
+
+			requestDestroyHomeModuleSignal.dispatch();
 		}
 
 		override ns_state_machine function deactivate() : void

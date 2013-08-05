@@ -3,22 +3,16 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 	import away3d.core.managers.Stage3DProxy;
 
 	import flash.display.BitmapData;
-
+	import flash.display.Stage;
 	import flash.display3D.Context3D;
-	import flash.display3D.Context3DBlendFactor;
-	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
-	import flash.geom.Matrix;
 	import flash.geom.Point;
-	import flash.utils.Dictionary;
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
 	public class ApplicationRenderer
 	{
@@ -27,8 +21,10 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 		[Inject]
 		public var stage3DProxy : Stage3DProxy;
 
+		[Inject]
+		public var stage : Stage;
+
 		private var _promises : Vector.<SnapshotPromise>;
-		private var _snapshot : Texture;
 
 		public function ApplicationRenderer()
 		{
@@ -72,12 +68,11 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 				trace(this, "present proxy");
 			}
 
-			if (needsSnapshot) {
+			if (needsSnapshot)
 				createSnapshot();
-				fulfillPromises();
-			}
 
 			stage3DProxy.present();
+
 			executeSteps(GpuRenderManager.postRenderingSteps);
 
 			renderTime = getTimer() - preTime;
@@ -87,31 +82,33 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 		{
 			// TODO: Go back to render to texture approach, this is allocating a lot of memory
 
-			var snapshotWidth : int = TextureUtil.getNextPowerOfTwo(stage3DProxy.width);
-			var snapshotHeight : int = TextureUtil.getNextPowerOfTwo(stage3DProxy.height);
+			var snapshotWidth : int = TextureUtil.getNextPowerOfTwo(CoreSettings.STAGE_WIDTH);
+			var snapshotHeight : int = TextureUtil.getNextPowerOfTwo(CoreSettings.STAGE_HEIGHT);
 			trace ("Generating snapshot with size: " + snapshotWidth + ", " + snapshotHeight);
-			var croppedBitmapData : BitmapData = new TrackedBitmapData(stage3DProxy.width, stage3DProxy.height, false, 0);
+			var croppedBitmapData : BitmapData = new TrackedBitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false, 0);
 			stage3DProxy.context3D.drawToBitmapData(croppedBitmapData);
+
 
 			var largeBitmapData : BitmapData = new TrackedBitmapData(snapshotWidth, snapshotHeight, false, 0);
 			largeBitmapData.copyPixels(croppedBitmapData, croppedBitmapData.rect, new Point());
 
 			croppedBitmapData.dispose();
 
-			_snapshot = stage3DProxy.context3D.createTexture(snapshotWidth, snapshotHeight, Context3DTextureFormat.BGRA, true);
-			_snapshot.uploadFromBitmapData(largeBitmapData);
+			var texture : Texture = stage3DProxy.context3D.createTexture(snapshotWidth, snapshotHeight, Context3DTextureFormat.BGRA, false);
+			var snapshot : RefCountedTexture = new RefCountedTexture(texture);
+			snapshot.texture.uploadFromBitmapData(largeBitmapData);
 			largeBitmapData.dispose();
+			fulfillPromises(snapshot);
 		}
 
-		private function fulfillPromises() : void
+		private function fulfillPromises(snapshot : RefCountedTexture) : void
 		{
-			var refCountedTexture : RefCountedTexture = new RefCountedTexture(_snapshot);
 			var len : int = _promises.length;
 
 			for (var i : int = 0; i < len; ++i)
-				_promises[i].texture = refCountedTexture;
+				_promises[i].texture = snapshot;
 
-			_snapshot = null;
+			snapshot = null;
 			_promises.length = 0;
 		}
 
@@ -119,7 +116,7 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 		{
 			var numSteps : uint = steps.length;
 			for (var i : uint = 0; i < numSteps; ++i)
-				steps[ i ](_snapshot);
+				steps[ i ](null);
 		}
 
 		private function executeSteps(steps : Vector.<Function>) : void

@@ -8,11 +8,12 @@ package net.psykosoft.psykopaint2.app.commands
 	import net.psykosoft.psykopaint2.core.managers.rendering.SnapshotPromise;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
 
 	import org.osflash.signals.Signal;
 
-	public class CreateCanvasBackgroundCommand
+	public class CreateCropBackgroundCommand
 	{
 		[Inject]
 		public var applicationRenderer : ApplicationRenderer;
@@ -21,10 +22,7 @@ package net.psykosoft.psykopaint2.app.commands
 		public var notifyFrozenBackgroundCreatedSignal : NotifyFrozenBackgroundCreatedSignal;
 
 		[Inject]
-		public var requestSetCanvasBackgroundSignal : RequestSetCanvasBackgroundSignal;
-
-		[Inject]
-		public var easelRectModel : EaselRectModel;
+		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
 
 		private var _snapshotPromise : SnapshotPromise;
 
@@ -37,7 +35,7 @@ package net.psykosoft.psykopaint2.app.commands
 		private function onCanvasSnapShot(event : Event) : void
 		{
 			_snapshotPromise.removeEventListener(SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot);
-			requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.texture.newReference(), easelRectModel.rect);
+			requestSetCropBackgroundSignal.dispatch(_snapshotPromise.texture.newReference());
 			_snapshotPromise.dispose();
 			_snapshotPromise = null;
 			notifyFrozenBackgroundCreatedSignal.dispatch();

@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestCancelCropSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
 
@@ -22,51 +23,49 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 
 		[Inject]
-		public var requestSetupCropModuleSignal : RequestSetupCropModuleSignal;
-
-		[Inject]
 		public var requestDestroyCropModuleSignal : RequestDestroyCropModuleSignal;
 
 		[Inject]
-		public var notifyCropModuleSetUpSignal : NotifyCropModuleSetUpSignal;
+		public var requestOpenCroppedBitmapDataSignal : RequestOpenCroppedBitmapDataSignal;
+
+		[Inject]
+		public var requestCancelCropSignal : RequestCancelCropSignal;
 
 		[Inject]
 		public var transitionToPaintState : TransitionCropToPaintState;
 
-		[Inject]
-		public var requestOpenCroppedBitmapDataSignal : RequestOpenCroppedBitmapDataSignal;
-		// TODO: add requestHomeStateSignal
+		// Effing Robotlegs can't inject circular dependencies -_-
+		// HomeState will set this explicitly
+		public var homeState : HomeState;
 
 		public function CropState()
 		{
 		}
 
-		/**
-		 * @param data A BitmapData object containing the source image to be cropped
-		 */
+
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			var bitmapData : BitmapData = BitmapData(data);
-			requestOpenCroppedBitmapDataSignal.add(onRequestOpenCroppedBitmapData);
-			notifyCropModuleSetUpSignal.addOnce(onCropModuleSetUp);
-			requestSetupCropModuleSignal.dispatch(bitmapData);
-		}
-
-		private function onCropModuleSetUp() : void
-		{
 			requestStateChangeSignal.dispatch(NavigationStateType.CROP);
+			requestCancelCropSignal.add(onRequestCancelCropSignal);
+			requestOpenCroppedBitmapDataSignal.add(onRequestOpenCroppedBitmapData);
 		}
 
 		override ns_state_machine function deactivate() : void
 		{
+			requestCancelCropSignal.remove(onRequestCancelCropSignal);
 			requestOpenCroppedBitmapDataSignal.remove(onRequestOpenCroppedBitmapData);
 			requestDestroyCropModuleSignal.dispatch();
-			requestStateChangeSignal.dispatch(NavigationStateType.CROP);
 		}
 
 		private function onRequestOpenCroppedBitmapData(bitmapData : BitmapData) : void
 		{
 			stateMachine.setActiveState(transitionToPaintState, bitmapData);
+		}
+
+		private function onRequestCancelCropSignal() : void
+		{
+			stateMachine.setActiveState(homeState);
+			requestStateChangeSignal.dispatch(NavigationStateType.PICK_IMAGE);
 		}
 	}
 }

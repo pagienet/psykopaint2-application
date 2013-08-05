@@ -9,16 +9,13 @@ package net.psykosoft.psykopaint2.app.states
 
 	public class PaintState extends State
 	{
-		[Inject]
-		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
-
 		public function PaintState()
 		{
 		}
 
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			requestDestroyHomeModuleSignal.dispatch();
+
 		}
 
 		override ns_state_machine function deactivate() : void

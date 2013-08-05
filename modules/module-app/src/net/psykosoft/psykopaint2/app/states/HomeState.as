@@ -6,8 +6,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 
 	use namespace ns_state_machine;
@@ -15,16 +13,10 @@ package net.psykosoft.psykopaint2.app.states
 	public class HomeState extends State
 	{
 		[Inject]
-		public var requestNavigationToggleSignal : RequestNavigationToggleSignal;
-
-		[Inject]
-		public var requestHomeViewScrollSignal : RequestHomeViewScrollSignal;
-
-		[Inject]
 		public var transitionToPaintState : TransitionHomeToPaintState;
 
 		[Inject]
-		public var cropState : CropState;
+		public var transitionToCropState : TransitionHomeToCropState;
 
 		[Inject]
 		public var requestCropSourceImageSignal : RequestCropSourceImageSignal;
@@ -32,16 +24,22 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestOpenPaintingDataVOSignal : RequestOpenPaintingDataVOSignal;
 
+		[Inject]
+		public var cropState : CropState;
+
 		public function HomeState()
 		{
 		}
 
+		[PostConstruct]
+		public function init() : void
+		{
+			// manual injection because robotlegs crashes injecting circular dependencies
+			cropState.homeState = this;
+		}
+
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			// TODO: this probably needs to be moved to some activation command
-			requestNavigationToggleSignal.dispatch(1, 0.5);
-			requestHomeViewScrollSignal.dispatch(1);
-
 			requestOpenPaintingDataVOSignal.add(onRequestOpenPaintingDataVO);
 			requestCropSourceImageSignal.add(onRequestCropState);
 		}
@@ -59,7 +57,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onRequestCropState(bitmapData : BitmapData) : void
 		{
-			stateMachine.setActiveState(cropState, bitmapData);
+			stateMachine.setActiveState(transitionToCropState, bitmapData);
 		}
 	}
 }

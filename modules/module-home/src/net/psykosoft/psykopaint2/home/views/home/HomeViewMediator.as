@@ -80,17 +80,13 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var easelRectModel : EaselRectModel;
 
-		private var _freezingStates:Vector.<String>;
 		private var _dockedAtPaintingIndex:int = -1;
-
-		private var _snapshotPromise:SnapshotPromise;
 
 		override public function initialize():void {
 
 			// Init.
 			registerView( view );
 			super.initialize();
-			_freezingStates = new Vector.<String>();
 
 			// Fully active states.
 			registerEnablingState( NavigationStateType.HOME );
@@ -104,16 +100,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerEnablingState( NavigationStateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
 
 			// Frozen states.
-			registerFreezingState( NavigationStateType.PICK_IMAGE );
-			registerFreezingState( NavigationStateType.CAPTURE_IMAGE );
-			registerFreezingState( NavigationStateType.CONFIRM_CAPTURE_IMAGE );
-			registerFreezingState( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE );
-			registerFreezingState( NavigationStateType.BOOK_PICK_USER_IMAGE_IOS );
-			registerFreezingState( NavigationStateType.CROP );
-			registerFreezingState( NavigationStateType.PICK_USER_IMAGE_DESKTOP );
-
-			// Register view gpu rendering in core.
-			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL, 0 );
+			registerEnablingState( NavigationStateType.PICK_IMAGE );
+			registerEnablingState( NavigationStateType.CAPTURE_IMAGE );
+			registerEnablingState( NavigationStateType.CONFIRM_CAPTURE_IMAGE );
+			registerEnablingState( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE );
+			//registerEnablingState( NavigationStateType.CROP );	// todo: fix so this works?
+			registerEnablingState( NavigationStateType.PICK_USER_IMAGE_DESKTOP );
+			registerEnablingState( NavigationStateType.BOOK_PICK_USER_IMAGE_IOS );
 
 			// From app.
 			requestWallpaperChangeSignal.add( onWallPaperChanged );
@@ -130,11 +123,18 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
 			view.zoomCompletedSignal.add( onViewZoomComplete );
 			view.easelRectChanged.add( onEaselRectChanged );
+			view.enabledSignal.add( onEnabled );
+			view.disabledSignal.add( onDisabled );
 		}
 
-		private function registerFreezingState( stateName:String ):void {
-			_freezingStates.push( stateName );
-			registerEnablingState( stateName );
+		private function onEnabled() : void
+		{
+			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL, 0 );
+		}
+
+		private function onDisabled() : void
+		{
+			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
 
 		// -----------------------
@@ -196,29 +196,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		override protected function onStateChange( newState:String ):void {
 
 			super.onStateChange( newState );
-
-			// Is it a freezing state?
-			if( _freezingStates.indexOf( newState ) != -1 ) { // YES
-				freezeView();
-			}
-		}
-
-		private function freezeView():void {
-			trace( this, "freezing..." );
-			if( !view.isEnabled || view.isFrozen ) return;
-			_snapshotPromise = applicationRenderer.requestSnapshot();
-			_snapshotPromise.addEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
-		}
-
-		private function onCanvasSnapShot( event:Event ):void {
-
-			_snapshotPromise.removeEventListener( SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot );
-
-			trace( this, "applying freeze snapshot..." );
-			view.freeze( _snapshotPromise.texture.newReference() );
-
-			_snapshotPromise.dispose();
-			_snapshotPromise = null;
 		}
 
 		private function onScrollRequested( index:int ):void {
