@@ -26,11 +26,8 @@ package net.psykosoft.psykopaint2.core
 		public function CoreModule( injector:IInjector = null ) {
 
 			super();
-
 			_injector = injector;
-
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CoreModule";
-
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
@@ -51,12 +48,9 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function initialize():void {
-
 			trace( this, "initializing..." );
-
 			CoreSettings.STAGE = stage;
 			CoreSettings.DISPLAY_ROOT = this;
-
 			initRobotlegs();
 		}
 
@@ -77,16 +71,8 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function onBootstrapComplete():void {
-
 			trace( this, "onBootstrapComplete()" );
-
 			_coreConfig.injector.getInstance( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).dispatch( NavigationStateType.IDLE );
-
-			if( isStandalone ) {
-				_coreConfig.injector.getInstance( RequestHideSplashScreenSignal ).dispatch();
-				startEnterFrame();
-			}
-
 			moduleReadySignal.dispatch();
 		}
 
