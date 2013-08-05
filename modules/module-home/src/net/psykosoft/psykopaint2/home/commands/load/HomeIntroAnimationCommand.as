@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.home.commands
+package net.psykosoft.psykopaint2.home.commands.load
 {
 
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;

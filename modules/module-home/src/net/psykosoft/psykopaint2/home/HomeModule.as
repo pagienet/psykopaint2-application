@@ -6,11 +6,7 @@ package net.psykosoft.psykopaint2.home
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.home.config.HomeConfig;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
@@ -18,7 +14,6 @@ package net.psykosoft.psykopaint2.home
 	public class HomeModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;
-		private var _homeConfig:HomeConfig;
 
 		public function HomeModule( core:CoreModule = null ) {
 			super();
@@ -29,21 +24,14 @@ package net.psykosoft.psykopaint2.home
 			}
 		}
 
-		// ---------------------------------------------------------------------
-		// Listeners.
-		// ---------------------------------------------------------------------
-
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			initialize();
 		}
 
-		// ---------------------------------------------------------------------
-		// Initialization.
-		// ---------------------------------------------------------------------
-
 		public function initialize():void {
 			trace( this, "initializing..." );
+
 			// Init core module.
 			if( !_coreModule ) {
 				HomeSettings.isStandalone = true;
@@ -59,33 +47,16 @@ package net.psykosoft.psykopaint2.home
 		}
 
 		private function onCoreModuleReady():void {
-			trace( this, "core module is ready, injector: " + _coreModule.injector );
 
-			// Initialize the home module.
-			_homeConfig = new HomeConfig( _coreModule.injector );
+			// Initialize robotlegs for this module.
+			new HomeConfig( _coreModule.injector );
 
 			// Init display tree for this module.
 			var homeRootView:HomeRootView = new HomeRootView();
 			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( homeRootView );
 
-			trace( this, "HomeModule views are ready." );
-
-			if( isStandalone ) {
-
-				// Remove splash screen.
-				_coreModule.injector.getInstance( RequestHideSplashScreenSignal ).dispatch();
-
-				// Show Navigation.
-				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-				showNavigationSignal.dispatch( 1, 0.5 );
-
-				// Trigger initial state...
-				_homeConfig.injector.getInstance( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).dispatch( NavigationStateType.HOME );
-				_coreModule.startEnterFrame();
-			}
-
 			// Notify potential super modules.
-			moduleReadySignal.dispatch( _coreModule.injector );
+			moduleReadySignal.dispatch();
 		}
 	}
 }

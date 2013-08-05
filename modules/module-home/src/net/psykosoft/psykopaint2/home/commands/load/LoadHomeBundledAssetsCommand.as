@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.home.commands
+package net.psykosoft.psykopaint2.home.commands.load
 {
 
 	import br.com.stimuli.loading.BulkLoader;
@@ -22,6 +22,9 @@ package net.psykosoft.psykopaint2.home.commands
 
 			_loader = new AssetBundleLoader( HomeView.HOME_BUNDLE_ID );
 			_loader.addEventListener( Event.COMPLETE, onBundledAssetsReady );
+
+			// Remember for clean up.
+			BulkLoader.bundles[ HomeView.HOME_BUNDLE_ID ] = _loader;
 
 			var rootUrl:String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
 			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
@@ -47,7 +50,6 @@ package net.psykosoft.psykopaint2.home.commands
 
 		private function onBundledAssetsReady( event:Event ):void {
 			_loader.removeEventListener( Event.COMPLETE, onBundledAssetsReady );
-//			_loader.dispose();
 			dispatchComplete( true );
 		}
 	}

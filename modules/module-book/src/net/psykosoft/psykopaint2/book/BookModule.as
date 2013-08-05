@@ -18,7 +18,6 @@ package net.psykosoft.psykopaint2.book
 	public class BookModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;
-		private var _bookConfig:BookConfig;
 
 		public function BookModule( core:CoreModule = null ) {
 			super();
@@ -29,18 +28,10 @@ package net.psykosoft.psykopaint2.book
 			}
 		}
 
-		// ---------------------------------------------------------------------
-		// Listeners.
-		// ---------------------------------------------------------------------
-
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			initialize();
 		}
-
-		// ---------------------------------------------------------------------
-		// Initialization.
-		// ---------------------------------------------------------------------
 
 		public function initialize():void {
 			trace( this, "initializing..." );
@@ -59,31 +50,16 @@ package net.psykosoft.psykopaint2.book
 		}
 
 		private function onCoreModuleReady():void {
-			trace( this, "core module is ready, injector: " + _coreModule.injector );
 
 			// Initialize the home module.
-			_bookConfig = new BookConfig( _coreModule.injector );
+			new BookConfig( _coreModule.injector );
 
 			// Init display tree for this module.
 			var bookRootView:BookRootView = new BookRootView();
 			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( bookRootView );
 
-			if( isStandalone ) {
-
-				// Remove splash screen.
-				_coreModule.injector.getInstance( RequestHideSplashScreenSignal ).dispatch();
-
-				// Show Navigation.
-				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
-				showNavigationSignal.dispatch( 1, 0.5 );
-
-				// Trigger initial state...
-				_bookConfig.injector.getInstance( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).dispatch( NavigationStateType.BOOK_STANDALONE );
-				_coreModule.startEnterFrame();
-			}
-
 			// Notify potential super modules.
-			moduleReadySignal.dispatch( _coreModule.injector );
+			moduleReadySignal.dispatch();
 		}
 	}
 }

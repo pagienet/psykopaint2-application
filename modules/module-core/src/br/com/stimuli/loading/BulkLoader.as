@@ -114,7 +114,13 @@ import flash.utils.*;
     
     
     public class BulkLoader extends EventDispatcher {
-        
+
+		private static var _bundles:Dictionary;
+		public static function get bundles():Dictionary {
+			if( !_bundles ) _bundles = new Dictionary();
+			return _bundles;
+		}
+
         /** Version. Useful for debugging. */
         public static const VERSION : String = "$Id$";
         
