@@ -2,11 +2,16 @@ package net.psykosoft.psykopaint2.app.states
 {
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.states.State;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 
 	public class TransitionCropToHomeState extends State
 	{
+		[Inject]
+		public var requestStateChangeSignal : RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+
 		[Inject]
 		public var requestSetupHomeModuleSignal : RequestSetupHomeModuleSignal;
 
@@ -27,6 +32,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onHomeModuleSetUp() : void
 		{
+			requestStateChangeSignal.dispatch(NavigationStateType.PICK_IMAGE);
 			stateMachine.setActiveState(homeState);
 		}
 

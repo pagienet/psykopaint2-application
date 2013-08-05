@@ -91,7 +91,6 @@ package net.psykosoft.psykopaint2.app.states
 		private function onRequestCancelCropSignal() : void
 		{
 			stateMachine.setActiveState(transitionCropToHomeState);
-			requestStateChangeSignal.dispatch(NavigationStateType.PICK_IMAGE);
 		}
 	}
 }
