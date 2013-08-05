@@ -43,7 +43,6 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 			CoreSettings.STAGE_HEIGHT = stage.stageHeight;
 
 			injector.map( Stage ).toValue( stage );
-
 		}
 	}
 }
