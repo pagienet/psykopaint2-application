@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		override protected function onEnabled():void {
 			setHeader( "" );
-			setRightButton( ID_CONTINUE, ButtonIconType.CONTINUE );
+			setRightButton( ID_CONTINUE, ID_CONTINUE, ButtonIconType.CONTINUE );
 		}
 
 		public function createNewPaintingButtons():void {
