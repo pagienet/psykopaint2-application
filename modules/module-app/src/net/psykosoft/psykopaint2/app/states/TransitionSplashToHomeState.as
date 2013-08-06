@@ -57,7 +57,6 @@ package net.psykosoft.psykopaint2.app.states
 
 			requestHideSplashScreenSignal.dispatch();
 
-			// todo: remove this signal and replace it with a "transitionToDefaultView" signal
 			requestStateChangeSignal.dispatch(NavigationStateType.HOME);
 		}
 
