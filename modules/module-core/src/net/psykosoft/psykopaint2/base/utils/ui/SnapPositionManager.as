@@ -132,10 +132,10 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			evaluateClosestSnapPointPosition( targetPosition );
 		}
 
-		public function snapAtIndexWithoutEasing( index:uint ):void {
+		public function snapAtIndexWithoutEasing( index:uint, notify:Boolean = true ):void {
 			if( numSnapPoints == 0 ) return;
 			_position = _snapPoints[ index ];
-			evaluateClosestSnapPointPosition( _position );
+			evaluateClosestSnapPointPosition( _position, notify );
 		}
 
 		public function update():void {
@@ -159,7 +159,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 		// Utils.
 		// ---------------------------------------------------------------------
 
-		private function evaluateClosestSnapPointPosition( position:Number ):void {
+		private function evaluateClosestSnapPointPosition( position:Number, notify:Boolean = true ):void {
 
 			// Find closest snap point.
 			var len:uint = _snapPoints.length;
@@ -179,7 +179,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			// Notify closest snap point change?
 			if( targetSnapPointIndex != _closestSnapPointIndex ) {
 				_closestSnapPointIndex = targetSnapPointIndex;
-				closestSnapPointChangedSignal.dispatch( _closestSnapPointIndex );
+				if( notify ) closestSnapPointChangedSignal.dispatch( _closestSnapPointIndex );
 			}
 		}
 
