@@ -19,5 +19,11 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 		function get isDataItemVisible():Boolean;
 		function set isDataItemVisible( value:Boolean ):void;
+
+		function get onItemRendererAssigned():Function;
+		function set onItemRendererAssigned( value:Function ):void;
+
+		function get onItemRendererReleased():Function;
+		function set onItemRendererReleased( value:Function ):void;
 	}
 }

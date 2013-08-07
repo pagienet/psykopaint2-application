@@ -202,9 +202,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			var clickedButton:NavigationButton = ClickUtil.getObjectOfClassInHierarchy( event.target as DisplayObject, NavigationButton ) as NavigationButton;
 			if( !clickedButton ) throw new Error( "unidentified button clicked." );
 
-			var id:String = clickedButton.id;
-			trace( this, "button clicked: " + clickedButton.labelText );
-			buttonClickedSignal.dispatch( id );
+			trace( this, "button clicked - id: " + clickedButton.id + ", label: " + clickedButton.labelText );
+			buttonClickedSignal.dispatch( clickedButton.id );
 		}
 
 		// ---------------------------------------------------------------------

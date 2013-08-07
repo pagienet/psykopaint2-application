@@ -169,6 +169,10 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				if( itemRenderer.parent != _container ) {
 					_container.addChild( itemRenderer );
 				}
+
+				if( itemData.onItemRendererAssigned ) {
+					itemData.onItemRendererAssigned( itemRenderer );
+				}
 			}
 		}
 
@@ -201,6 +205,13 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		}
 
 		private function releaseItemRenderer( renderer:DisplayObject ):void {
+
+			var data:ISnapListData = _dataForRenderer[ renderer ];
+
+			if( data.onItemRendererReleased ) {
+				data.onItemRendererReleased( renderer );
+			}
+
 			_dataForRenderer[ renderer ] = null;
 			rendererRemovedSignal.dispatch( renderer );
 			_itemRendererFactory.markItemRendererAsAvailable( renderer );

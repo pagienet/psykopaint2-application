@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		private var _itemRendererWidth:Number;
 		private var _itemRendererPosition:Number;
 		private var _isDataItemVisible:Boolean; // TODO: remove
+		private var _onItemRendererAssigned:Function;
+		private var _onItemRendererReleased:Function;
 
 		public function HSnapListDataItemBase() {
 			super();
@@ -53,6 +55,22 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 		public function set itemRendererType( value:Class ):void {
 			_itemRendererType = value;
+		}
+
+		public function get onItemRendererReleased():Function {
+			return _onItemRendererReleased;
+		}
+
+		public function set onItemRendererReleased( value:Function ):void {
+			_onItemRendererReleased = value;
+		}
+
+		public function get onItemRendererAssigned():Function {
+			return _onItemRendererAssigned;
+		}
+
+		public function set onItemRendererAssigned( value:Function ):void {
+			_onItemRendererAssigned = value;
 		}
 	}
 }
