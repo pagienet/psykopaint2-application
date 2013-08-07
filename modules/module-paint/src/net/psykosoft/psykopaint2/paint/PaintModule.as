@@ -84,6 +84,8 @@ package net.psykosoft.psykopaint2.paint
 
 		private function setupStandaloneModule() : void
 		{
+			graphics.clear();
+
 			var paintingDataVO : PaintingDataVO = new PaintingDataVO();
 			paintingDataVO.width = CoreSettings.STAGE_WIDTH;
 			paintingDataVO.height = CoreSettings.STAGE_HEIGHT;
@@ -101,6 +103,9 @@ package net.psykosoft.psykopaint2.paint
 
 		private function destroyStandaloneModule() : void
 		{
+			graphics.beginFill(0xffffff);
+			graphics.drawRect(0, 0, 500, 500);
+			graphics.endFill();
 			_coreModule.injector.getInstance(RequestDestroyPaintModuleSignal).dispatch();
 			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME_ON_EASEL);
 		}

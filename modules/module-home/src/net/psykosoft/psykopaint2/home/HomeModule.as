@@ -21,7 +21,6 @@ package net.psykosoft.psykopaint2.home
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
 
-	[SWF(backgroundColor="0xffffff")]
 	public class HomeModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;
@@ -95,6 +94,7 @@ package net.psykosoft.psykopaint2.home
 
 		private function setupStandaloneModule() : void
 		{
+			graphics.clear();
 			_coreModule.injector.getInstance(NotifyHomeModuleSetUpSignal).addOnce(onHomeModuleSetUp);
 			_coreModule.injector.getInstance(RequestSetupHomeModuleSignal).dispatch();
 		}
