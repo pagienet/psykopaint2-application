@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.home.commands.load
 			trace( this, "execute()" );
 
 			_loader = new AssetBundleLoader( HomeView.HOME_BUNDLE_ID );
-			_loader.addEventListener( Event.COMPLETE, onBundledAssetsReady );
+			_loader.addEventListener( Event.COMPLETE, onBundledAssetsReady ); // Requires strong reference.
 
 			// Remember for clean up.
 			BulkLoader.bundles[ HomeView.HOME_BUNDLE_ID ] = _loader;

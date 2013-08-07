@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			trace( this, "constructor" );
 
 			// Core module's main views.
-			addChild( new SbNavigationView() );
+//			addChild( new SbNavigationView() );
 			addChild( new VideoView() );
 			addChild( new PopUpManagerView() );
 			addChild( new DebugView() );

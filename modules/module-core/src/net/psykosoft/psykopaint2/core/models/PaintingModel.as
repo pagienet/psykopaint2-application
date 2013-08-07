@@ -16,8 +16,8 @@ package net.psykosoft.psykopaint2.core.models
 
 		public function disposePaintingCollection():void {
 			_paintingData = null;
-			_sortingDirty = true;
 			_sortedData = null;
+			_sortingDirty = true;
 		}
 
 		public function setPaintingCollection( data:Vector.<PaintingInfoVO> ):void {
@@ -59,40 +59,9 @@ package net.psykosoft.psykopaint2.core.models
 			return vo;
 		}
 
-		/*public function deleteVoWithId(id : String) : void
-		 {
-		 _paintingData[id] = null;
-		 delete _paintingData[id];
-		 _sortingDirty = true;
-		 }*/
-
-		/**
-		 * Adds or updates a painting vo.
-		 * @param vo
-		 */
-		/*public function updatePaintingInfo(vo : PaintingInfoVO) : void
-		 {
-		 if (vo.id == PaintingInfoVO.DEFAULT_VO_ID)
-		 throw "PaintingInfoVO id not set";
-
-		 if (_paintingData[vo.id]) _paintingData[vo.id].dispose();
-		 _paintingData[vo.id] = vo;
-		 _sortingDirty = true;
-		 }*/
-
 		public function dirtyDateSorting():void {
 			_sortingDirty = true;
 		}
-
-		/*public function get focusedPaintingId() : String
-		 {
-		 return _focusedPaintingId;
-		 }*/
-
-		/*public function set focusedPaintingId(id : String) : void
-		 {
-		 _focusedPaintingId = id;
-		 }*/
 
 		// -----------------------
 		// Utils.

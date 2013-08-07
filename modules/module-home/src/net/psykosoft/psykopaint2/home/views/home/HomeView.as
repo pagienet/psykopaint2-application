@@ -102,8 +102,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			// -----------------------
 
 			// TODO: remove on release
-			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
-			stage.addEventListener( KeyboardEvent.KEY_UP, onStageKeyUp );
+			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown, false, 0, true );
+			stage.addEventListener( KeyboardEvent.KEY_UP, onStageKeyUp, false, 0, true );
 
 			// -----------------------
 			// Scenes.
@@ -132,7 +132,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_zoomCameraController.setCamera( _view.camera, cameraTarget );
 			_zoomCameraController.setYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z );
 			_zoomCameraController.yzChangedSignal.add( onZoomControllerChange );
-			_view.camera.addEventListener( Object3DEvent.SCENETRANSFORM_CHANGED, onCameraSceneTransformChanged );
+			_view.camera.addEventListener( Object3DEvent.SCENETRANSFORM_CHANGED, onCameraSceneTransformChanged, false, 0, true );
 			_scrollCameraController.stage = stage;
 			_view.camera.z = HomeSettings.DEFAULT_CAMERA_Z;
 

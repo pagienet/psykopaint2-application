@@ -30,8 +30,9 @@ package net.psykosoft.psykopaint2.home
 			super();
 			_coreModule = core;
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "HomeModule";
-			if( !_coreModule )
-				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			if( !_coreModule ) {
+				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage, false, 0, true );
+			}
 		}
 
 		private function onAddedToStage( event:Event ):void {
@@ -79,7 +80,7 @@ package net.psykosoft.psykopaint2.home
 			_coreModule.startEnterFrame();
 			_coreModule.injector.getInstance(RequestHideSplashScreenSignal).dispatch();
 			setupStandaloneModule();
-			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp, false, 0, true);
 		}
 
 		private function onKeyUp(event : KeyboardEvent) : void
