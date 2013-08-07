@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Rectangle;
 
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 
@@ -43,6 +45,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		public function LightingRenderer(lightingModel : LightingModel, context3d : Context3D)
 		{
+			_renderRect = new Rectangle(0, 0, CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT);
 			_lightingModel = lightingModel;
 			_lightingModel.onChange.add(onLightingModelChanged);
 			_globalVertexData = new Vector.<Number>();

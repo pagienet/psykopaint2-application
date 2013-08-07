@@ -44,11 +44,6 @@ package net.psykosoft.psykopaint2.core.drawing
 			// Init RL.
 			_config = new DrawingCoreConfig( this, injector );
 
-			// TODO: remove
-			// Init Display tree.
-//			addChild( new DummyView() );
-//			addChild( new DummyView1() );
-
 			_instance = this; // TODO: remove
 
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );

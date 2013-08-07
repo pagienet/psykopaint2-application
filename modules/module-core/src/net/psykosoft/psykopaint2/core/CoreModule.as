@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFrameUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 
 	import robotlegs.bender.framework.api.IInjector;
 
@@ -73,7 +73,7 @@ package net.psykosoft.psykopaint2.core
 
 		private function onBootstrapComplete():void {
 			trace( this, "onBootstrapComplete()" );
-			_coreConfig.injector.getInstance( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).dispatch( NavigationStateType.IDLE );
+			_coreConfig.injector.getInstance( RequestNavigationStateChangeSignal ).dispatch( NavigationStateType.IDLE );
 			moduleReadySignal.dispatch();
 		}
 

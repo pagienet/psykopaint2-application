@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.events.GestureEvent;
@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public var notifyStateChangeSignal:NotifyStateChangeSignal;
 		
 		[Inject]
-		public var requestStateChangeSignal:RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+		public var requestStateChangeSignal:RequestNavigationStateChangeSignal;
 		
 		private var _stage:Stage;
 		
