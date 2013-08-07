@@ -37,6 +37,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onButtonClicked( id:String ):void {
+			trace( this, "button clicked - id: " + id );
 			switch( id ) {
 				case EditBrushSubNavView.ID_BACK:
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREVIOUS );
@@ -46,7 +47,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					break;
 				// WARNING: be careful if another side button is added since default should only be for parameter buttons.
 				default: 
-					view.openParameter( id );
+					view.openParameterWithId( id );
 					break;
 			}
 		}

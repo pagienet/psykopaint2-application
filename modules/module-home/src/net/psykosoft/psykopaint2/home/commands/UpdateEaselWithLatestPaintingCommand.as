@@ -19,9 +19,12 @@ package net.psykosoft.psykopaint2.home.commands
 
 			trace( this, "execute()" );
 
-			var infoVO:PaintingInfoVO = paintingModel.getSortedPaintingCollection()[ 0 ];
-			if( infoVO ) {
-				requestEaselPaintingUpdateSignal.dispatch( infoVO, false, false );
+			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
+			if( data && data.length > 0 ) {
+				var infoVO:PaintingInfoVO = data[ 0 ];
+				if( infoVO ) {
+					requestEaselPaintingUpdateSignal.dispatch( infoVO, false, false );
+				}
 			}
 		}
 	}

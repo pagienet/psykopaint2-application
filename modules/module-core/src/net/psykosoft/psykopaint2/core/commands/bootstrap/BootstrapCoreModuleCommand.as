@@ -14,12 +14,12 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 
 			trace( this, "prepare()" );
 
+			add( InitPlatformCommand       );
 			add( InitStageCommand          );
 			add( InitExternalDataCommand   );
 			add( InitShakeAndBakeCommand   );
 			add( InitManagersCommand       );
 			add( InitDisplayCommand        );
-			add( InitPlatformCommand       );
 			add( InitStage3dCommand        );
 
 			registerCompleteCallback( onMacroComplete );

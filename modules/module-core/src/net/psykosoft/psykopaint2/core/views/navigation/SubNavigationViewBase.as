@@ -140,7 +140,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Protected.
 		// ---------------------------------------------------------------------
 
-		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false ):void {
+		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false ):ButtonData {
 			if( !_centerButtonData ) _centerButtonData = new Vector.<ISnapListData>();
 			var btnData:ButtonData = new ButtonData();
 			btnData.labelText = label;
@@ -151,6 +151,20 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			btnData.itemRendererWidth = 100;
 			btnData.itemRendererType = rendererClass || SbIconButton;
 			_centerButtonData.push( btnData );
+			return btnData;
+		}
+
+		protected function getItemRendererForElementWithId( id:String ):DisplayObject {
+			var numData:uint = _centerButtonData.length;
+			var matchingData:ButtonData;
+			for( var i:uint; i < numData; i++ ) {
+				var data:ButtonData = _centerButtonData[ i ] as ButtonData;
+				if( data.id == id ) {
+					matchingData = data;
+					break;
+				}
+			}
+			return matchingData.itemRenderer;
 		}
 
 		protected function invalidateCenterButtons():void {

@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			view.validateCenterButtons();
 
 			// Auto select first painting.
-			if( data ) {
+			if( data && data.length > 0 ) {
 				var vo:PaintingInfoVO = data[ 0 ];
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];

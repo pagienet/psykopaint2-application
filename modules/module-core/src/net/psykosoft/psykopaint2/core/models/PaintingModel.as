@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.core.models
 			trace( this, "getSortedPaintingCollection()" );
 			if( _sortingDirty ) {
 				_sortedData = getPaintingCollection();
-				_sortedData.sort( sortOnLastSaved );
+				if( _sortedData ) _sortedData.sort( sortOnLastSaved );
 				_sortingDirty = false;
 			}
 			return _sortedData;

@@ -14,6 +14,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public var selectable:Boolean;
 		public var selected:Boolean;
 		public var id:String;
+		public var value:Number;
+		public var minValue:Number;
+		public var maxValue:Number;
 
 		public function ButtonData() {
 			super();

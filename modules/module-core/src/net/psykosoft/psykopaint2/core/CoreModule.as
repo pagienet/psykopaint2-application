@@ -12,7 +12,6 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFrameUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 
 	import robotlegs.bender.framework.api.IInjector;
@@ -34,8 +33,8 @@ package net.psykosoft.psykopaint2.core
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 
-			// AIR apps launch at a default size of 500x375.
-			// Wait for 1st resize to window size before initializing anything.
+			// AIR apps launch at a default size of 500x375 or 1000x750 on retina.
+			// Wait for a resize to window size before initializing anything.
 			stage.addEventListener( Event.RESIZE, onStageResize );
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
@@ -43,8 +42,10 @@ package net.psykosoft.psykopaint2.core
 
 		private function onStageResize( event:Event ):void {
 			trace( this, "stage resize: " + stage.stageWidth + "x" + stage.stageHeight );
-			stage.removeEventListener( Event.RESIZE, onStageResize );
-			initialize();
+			if( stage.stageWidth == 1024 || stage.stageWidth == 2048 ) {
+				stage.removeEventListener( Event.RESIZE, onStageResize );
+				initialize();
+			}
 		}
 
 		private function initialize():void {

@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.display.Sprite;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.components.slider.SbSliderButton;
 	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
@@ -30,6 +31,17 @@ package net.psykosoft.psykopaint2.core.views.base
 				addChild( new PsykoSocketView() );
 			}
 			addChild( new SplashView() );
+
+			// TODO: UI tests, remove.
+			/*var btn:SbSliderButton = new SbSliderButton();
+			btn.labelText = "myParam";
+			btn.x = 512;
+			btn.y = 512;
+			btn.minValue = 50;
+			btn.maxValue = 100;
+			btn.value = 60;
+			btn.labelMode = SbSliderButton.LABEL_VALUE;
+			addChild( btn );*/
 		}
 
 		public function addToMainLayer( child:DisplayObject ):void {
