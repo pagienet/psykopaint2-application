@@ -23,7 +23,6 @@ package net.psykosoft.psykopaint2.crop.views
 	{
 		private var _positioningSheet:TouchSheet;
 		private var _baseTextureSize:int;
-		private var _sourceMap:BitmapData;
 		private var _canvasWidth:int;
 		private var _canvasHeight:int;
 		private var _easelRect:Rectangle;
@@ -39,27 +38,11 @@ package net.psykosoft.psykopaint2.crop.views
 		}
 
 		public function set sourceMap( map:BitmapData ):void {
-
-//			trace( this, "setting source map, rect: " + _easelRect );
-
-			/*this.graphics.beginFill( 0xffffff, 0 );
-			this.graphics.drawRect( _easelRect.x, _easelRect.y, _easelRect.width, _easelRect.height );
-			this.graphics.endFill();*/
-
-			/*
-			graphics.beginFill( 0xFFFFFF, 1.0 );
-			graphics.drawRect( 0, 0, stage.stageWidth, stage.stageHeight );
-			graphics.endFill();
-			*/
 			if( _positioningSheet ) {
 				_positioningSheet.dispose();
 				removeChild( _positioningSheet );
 			}
-			if( _sourceMap ) _sourceMap.dispose();
-			_sourceMap = map;
-
-
-			_positioningSheet = new TouchSheet( _sourceMap, Math.max( _easelRect.width/ _sourceMap.width, _easelRect.height / _sourceMap.height ) );
+			_positioningSheet = new TouchSheet( map, Math.max( _easelRect.width/ map.width, _easelRect.height / map.height ) );
 			//_positioningSheet.minimumScale = Math.max( stage.stageWidth / _sourceMap.width, stage.stageHeight / _sourceMap.height );
 			//_positioningSheet.limitsRect = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
 			_positioningSheet.scrollRect = new Rectangle(0,0,_easelRect.width,_easelRect.height);
@@ -73,8 +56,10 @@ package net.psykosoft.psykopaint2.crop.views
 
 		public function disposeCropData() : void
 		{
-			_positioningSheet.dispose();
-			_positioningSheet = null;
+			if (_positioningSheet) {
+				_positioningSheet.dispose();
+				_positioningSheet = null;
+			}
 		}
 
 		public function getCroppedImage():BitmapData

@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.crop.views
 	import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 
 	public class CropViewMediator extends MediatorBase
@@ -42,6 +43,9 @@ package net.psykosoft.psykopaint2.crop.views
 		[Inject]
 		public var easelRectModel : EaselRectModel;
 
+		[Inject]
+		public var requestDestroyCropModuleSignal : RequestDestroyCropModuleSignal;
+
 		override public function initialize():void {
 
 			registerView( view );
@@ -50,8 +54,9 @@ package net.psykosoft.psykopaint2.crop.views
 
 			// From app.
 			requestUpdateCropImageSignal.add( updateCropSourceImage );
-			notifyCropConfirmSignal.add( onRequestFinalizeCropMediator );
+			notifyCropConfirmSignal.add( onRequestFinalizeCrop );
 			requestSetCropBackgroundSignal.add( onSetCropBackgroundSignal );
+			requestDestroyCropModuleSignal.add( onRequestDestroyCropModule );
 
 			view.enabledSignal.add( onEnabled );
 			view.disabledSignal.add( onDisabled );
@@ -73,6 +78,11 @@ package net.psykosoft.psykopaint2.crop.views
 			view.render(stage3D.context3D);
 		}
 
+		private function onRequestDestroyCropModule() : void
+		{
+			view.disposeCropData();
+		}
+
 		private function onSetCropBackgroundSignal(texture : RefCountedTexture) : void
 		{
 			view.background = texture;
@@ -82,7 +92,7 @@ package net.psykosoft.psykopaint2.crop.views
 		// From app.
 		// -----------------------
 
-		public function onRequestFinalizeCropMediator():void {
+		public function onRequestFinalizeCrop():void {
 			requestOpenCroppedBitmapDataSignal.dispatch( view.getCroppedImage() );
 			view.disposeCropData();
 		}

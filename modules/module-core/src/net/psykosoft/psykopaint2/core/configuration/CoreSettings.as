@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static const ENABLE_PSYKOSOCKET_CONNECTION:Boolean = false; /*false on release*/
 		public static const SHOW_HIDDEN_BRUSH_PARAMETERS:Boolean = false; /*false on release*/
 		public static const SHOW_INTRO_VIDEO:Boolean = false; /*false on release*/
-		public static const TRACK_NON_GCED_OBJECTS:Boolean = false; /*false on release*/
+		public static const TRACK_NON_GCED_OBJECTS:Boolean = true; /*false on release*/
 
 		// -----------------------
 		// Fixed constants.

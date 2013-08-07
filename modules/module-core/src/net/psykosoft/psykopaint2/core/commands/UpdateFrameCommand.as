@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.core.commands
 			requestGpuRenderingSignal.dispatch();
 
 			if( CoreSettings.TRACK_NON_GCED_OBJECTS ) {
-				unDisposedObjectsManager..update()
+				unDisposedObjectsManager.update()
 			}
 		}
 	}

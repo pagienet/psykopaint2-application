@@ -4,13 +4,16 @@ package net.psykosoft.psykopaint2.crop
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.configuration.CropConfig;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedBitmapData;
+	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
@@ -82,8 +85,10 @@ package net.psykosoft.psykopaint2.crop
 		{
 			graphics.clear();
 
-			var tempData : BitmapData = new RefCountedBitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false);
+			var tempData : BitmapData = new TrackedBitmapData(2048, 2048, false);
+			tempData.perlinNoise(64, 64, 8, 50, true, true);
 
+			_coreModule.injector.getInstance(EaselRectModel).rect = new Rectangle(200, 200, 500, 500);
 			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME_ON_EASEL);
 			_coreModule.injector.getInstance(NotifyCropModuleSetUpSignal).addOnce(onCropModuleSetUp);
 			_coreModule.injector.getInstance(RequestSetupCropModuleSignal).dispatch(tempData);
