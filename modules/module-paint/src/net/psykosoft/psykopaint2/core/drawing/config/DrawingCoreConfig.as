@@ -91,8 +91,6 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			_injector.map( NotifyGyroscopeUpdateSignal ).asSingleton();
 			_injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 
-			_injector.map( RequestSaveCPUForUISignal ).asSingleton();
-			_injector.map( RequestResumeCPUUsageForUISignal ).asSingleton();
 			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
 
 			// Map singletons

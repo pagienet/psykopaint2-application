@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.app.states
 	public class TransitionHomeToPaintState extends State
 	{
 		[Inject]
-		public var requestStateChangeSignal : RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
 
 		[Inject]
 		public var requestCreateCanvasBackgroundSignal : RequestCreateCanvasBackgroundSignal;

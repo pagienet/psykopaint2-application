@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintConfig;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
@@ -76,12 +76,10 @@ package net.psykosoft.psykopaint2.paint
 		{
 			if (event.keyCode != Keyboard.F4) return;
 			_moduleSetUp = !_moduleSetUp;
-			if (_moduleSetUp) {
+			if (_moduleSetUp)
 				setupStandaloneModule();
-			}
-			else {
+			else
 				destroyStandaloneModule();
-			}
 		}
 
 		private function setupStandaloneModule() : void
@@ -96,7 +94,7 @@ package net.psykosoft.psykopaint2.paint
 			paintingDataVO.normalSpecularData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x80808080);
 			tempData.dispose();
 
-			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal_OLD_TO_REMOVE).dispatch(NavigationStateType.PREPARE_FOR_PAINT_MODE);
+			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.PREPARE_FOR_PAINT_MODE);
 			_coreModule.injector.getInstance(NotifyPaintModuleSetUpSignal).addOnce(onPaintingModuleSetUp);
 			_coreModule.injector.getInstance(RequestSetupPaintModuleSignal).dispatch((paintingDataVO));
 		}
@@ -104,12 +102,12 @@ package net.psykosoft.psykopaint2.paint
 		private function destroyStandaloneModule() : void
 		{
 			_coreModule.injector.getInstance(RequestDestroyPaintModuleSignal).dispatch();
-			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal_OLD_TO_REMOVE).dispatch(NavigationStateType.HOME_ON_EASEL);
+			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME_ON_EASEL);
 		}
 
 		private function onPaintingModuleSetUp() : void
 		{
-			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal_OLD_TO_REMOVE).dispatch(NavigationStateType.PAINT_SELECT_BRUSH);
+			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.PAINT_SELECT_BRUSH);
 		}
 
 		private function initStandalone() : void

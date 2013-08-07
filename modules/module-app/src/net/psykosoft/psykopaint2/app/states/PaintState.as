@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 
@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.app.states
 	public class PaintState extends State
 	{
 		[Inject]
-		public var requestStateChangeSignal : RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
 
 		[Inject]
 		public var transitionToHomeState : TransitionPaintToHomeState;

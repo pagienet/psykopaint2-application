@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.app.states
 
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestCreateCropBackgroundSignal : RequestCreateCropBackgroundSignal;
 
 		[Inject]
-		public var requestStateChangeSignal : RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
 		private var _bitmapData : BitmapData;
 
 		public function TransitionHomeToCropState()

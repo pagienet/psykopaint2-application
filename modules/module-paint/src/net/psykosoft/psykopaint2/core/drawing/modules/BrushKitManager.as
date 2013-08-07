@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	
 	import org.gestouch.events.GestureEvent;
@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var memoryWarningSignal : NotifyMemoryWarningSignal;
 
 		[Inject]
-		public var requestStateChangeSignal:RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+		public var requestStateChangeSignal:RequestNavigationStateChangeSignal;
 
 		[Inject]
 		public var notifyGlobalGestureSignal : NotifyGlobalGestureSignal;

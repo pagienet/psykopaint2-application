@@ -50,9 +50,11 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal_OLD_TO_REMOVE;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
@@ -191,6 +193,9 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyCanvasExportEndedSignal ).asSingleton();
 			_injector.map( NotifyCoreModuleBootstrapCompleteSignal ).asSingleton();
 			_injector.map( RequestAddViewToMainLayerSignal ).asSingleton();
+			_injector.map( RequestSaveCPUForUISignal ).asSingleton();
+			_injector.map( RequestResumeCPUUsageForUISignal ).asSingleton();
+
 		}
 
 		// -----------------------
@@ -198,7 +203,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		// -----------------------
 
 		private function mapCommands():void {
-			_commandMap.map( RequestNavigationStateChangeSignal_OLD_TO_REMOVE ).toCommand( ChangeStateCommand );
+			_commandMap.map( RequestNavigationStateChangeSignal ).toCommand( ChangeStateCommand );
 			_commandMap.map( RequestGpuRenderingSignal ).toCommand( RenderGpuCommand );
 			_commandMap.map( RequestPaintingDataRetrievalSignal ).toCommand( RetrievePaintingDataCommand );
 			_commandMap.map( RequestCoreModuleBootstrapSignal ).toCommand( BootstrapCoreModuleCommand );
