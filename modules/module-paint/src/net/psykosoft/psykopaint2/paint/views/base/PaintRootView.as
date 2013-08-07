@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-	import net.psykosoft.psykopaint2.crop.views.CropSubNavView;
-	import net.psykosoft.psykopaint2.crop.views.CropView;
+	import net.psykosoft.psykopaint2.crop.views.crop.CropSubNavView;
+	import net.psykosoft.psykopaint2.crop.views.crop.CropView;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectColorSubNavView;
@@ -15,11 +15,11 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleView;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.CaptureImageSubNavView;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.CaptureImageView;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.ConfirmCaptureImageSubNavView;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.PickAUserImageView;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.PickAnImageSubNavView;
+	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageSubNavView;
+	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageView;
+	import net.psykosoft.psykopaint2.home.views.pickimage.ConfirmCaptureImageSubNavView;
+	import net.psykosoft.psykopaint2.home.views.pickimage.PickAUserImageView;
+	import net.psykosoft.psykopaint2.home.views.pickimage.PickAnImageSubNavView;
 
 	public class PaintRootView extends Sprite
 	{

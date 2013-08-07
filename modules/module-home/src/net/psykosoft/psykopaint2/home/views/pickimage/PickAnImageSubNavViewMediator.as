@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.crop.views.pick.image
+package net.psykosoft.psykopaint2.home.views.pickimage
 {
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.crop.views.pick.image
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.home.views.pickimage.PickAnImageSubNavView;
 
 	public class PickAnImageSubNavViewMediator extends SubNavigationMediatorBase
 	{

@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.crop.views.pick.image
+package net.psykosoft.psykopaint2.home.views.pickimage
 {
 
 	import flash.display.BitmapData;
@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.crop.views.pick.image
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.home.views.pickimage.PickAUserImageView;
 
 	public class PickAUserImageViewMediator extends MediatorBase
 	{

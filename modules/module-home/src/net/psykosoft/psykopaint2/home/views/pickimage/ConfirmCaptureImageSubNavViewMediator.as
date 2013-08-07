@@ -1,9 +1,9 @@
-package net.psykosoft.psykopaint2.crop.views.pick.image
+package net.psykosoft.psykopaint2.home.views.pickimage
 {
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.crop.signals.NotifyCameraSnapshotRequest;
+	import net.psykosoft.psykopaint2.home.signals.NotifyCameraSnapshotRequest;
 
 	public class ConfirmCaptureImageSubNavViewMediator extends SubNavigationMediatorBase
 	{

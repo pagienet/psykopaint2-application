@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.commands.LoadPaintingDataCommand;
 	import net.psykosoft.psykopaint2.home.commands.LoadSurfacePreviewCommand;
 	import net.psykosoft.psykopaint2.home.commands.load.SetUpHomeModuleCommand;
+	import net.psykosoft.psykopaint2.home.signals.NotifyCameraFlipRequest;
+	import net.psykosoft.psykopaint2.home.signals.NotifyCameraSnapshotRequest;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
@@ -22,6 +24,16 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.home.HomeViewMediator;
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavView;
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageSubNavView;
+	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageView;
+	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageViewMediator;
+	import net.psykosoft.psykopaint2.home.views.pickimage.ConfirmCaptureImageSubNavView;
+	import net.psykosoft.psykopaint2.home.views.pickimage.ConfirmCaptureImageSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.pickimage.PickAUserImageView;
+	import net.psykosoft.psykopaint2.home.views.pickimage.PickAUserImageViewMediator;
+	import net.psykosoft.psykopaint2.home.views.pickimage.PickAnImageSubNavView;
+	import net.psykosoft.psykopaint2.home.views.pickimage.PickAnImageSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.picksurface.PickSurfaceSubNavView;
 	import net.psykosoft.psykopaint2.home.views.picksurface.PickSurfaceSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavView;
@@ -88,6 +100,8 @@ package net.psykosoft.psykopaint2.home.config
 		// -----------------------
 
 		private function mapNotifications():void {
+			_injector.map( NotifyCameraSnapshotRequest ).asSingleton();
+			_injector.map( NotifyCameraFlipRequest ).asSingleton();
 	   		_injector.map( RequestWallpaperChangeSignal ).asSingleton();
 	   		_injector.map( NotifyHomeModuleSetUpSignal ).asSingleton();
 	   		_injector.map( NotifyHomeModuleDestroyedSignal ).asSingleton();
@@ -122,6 +136,11 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( WallpaperSubNavView ).toMediator( WallpaperSubNavViewMediator );
 			_mediatorMap.map( HomeSubNavView ).toMediator( HomeSubNavViewMediator );
 			_mediatorMap.map( PickSurfaceSubNavView ).toMediator( PickSurfaceSubNavViewMediator );
+			_mediatorMap.map( PickAnImageSubNavView ).toMediator( PickAnImageSubNavViewMediator );
+			_mediatorMap.map( PickAUserImageView ).toMediator( PickAUserImageViewMediator );
+			_mediatorMap.map( CaptureImageSubNavView ).toMediator( CaptureImageSubNavViewMediator );
+			_mediatorMap.map( ConfirmCaptureImageSubNavView ).toMediator( ConfirmCaptureImageSubNavViewMediator );
+			_mediatorMap.map( CaptureImageView ).toMediator( CaptureImageViewMediator );
 		}
 	}
 }

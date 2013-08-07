@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.crop
 
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.configuration.CropConfig;
+	import net.psykosoft.psykopaint2.crop.configuration.CropConfig;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedBitmapData;

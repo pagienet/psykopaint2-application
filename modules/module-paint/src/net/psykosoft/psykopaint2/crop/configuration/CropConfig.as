@@ -1,11 +1,9 @@
-package net.psykosoft.psykopaint2.configuration
+package net.psykosoft.psykopaint2.crop.configuration
 {
 
 	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.crop.signals.DestroyCropModuleCommand;
-	import net.psykosoft.psykopaint2.crop.signals.NotifyCameraFlipRequest;
-	import net.psykosoft.psykopaint2.crop.signals.NotifyCameraSnapshotRequest;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestCancelCropSignal;
@@ -13,21 +11,11 @@ package net.psykosoft.psykopaint2.configuration
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.SetupCropModuleCommand;
-	import net.psykosoft.psykopaint2.crop.views.CropSubNavView;
-	import net.psykosoft.psykopaint2.crop.views.CropSubNavViewMediator;
-	import net.psykosoft.psykopaint2.crop.views.CropView;
-	import net.psykosoft.psykopaint2.crop.views.CropViewMediator;
+	import net.psykosoft.psykopaint2.crop.views.crop.CropSubNavView;
+	import net.psykosoft.psykopaint2.crop.views.crop.CropSubNavViewMediator;
+	import net.psykosoft.psykopaint2.crop.views.crop.CropView;
+	import net.psykosoft.psykopaint2.crop.views.crop.CropViewMediator;
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.CaptureImageSubNavView;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.CaptureImageSubNavViewMediator;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.CaptureImageView;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.CaptureImageViewMediator;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.ConfirmCaptureImageSubNavView;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.ConfirmCaptureImageSubNavViewMediator;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.PickAUserImageView;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.PickAUserImageViewMediator;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.PickAnImageSubNavView;
-	import net.psykosoft.psykopaint2.crop.views.pick.image.PickAnImageSubNavViewMediator;
 
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
@@ -88,8 +76,6 @@ package net.psykosoft.psykopaint2.configuration
 		// -----------------------
 
 		private function mapNotifications():void {
-			_injector.map( NotifyCameraSnapshotRequest ).asSingleton();
-			_injector.map( NotifyCameraFlipRequest ).asSingleton();
 			_injector.map( RequestOpenCroppedBitmapDataSignal ).asSingleton();
 			_injector.map( RequestUpdateCropImageSignal ).asSingleton();
 			_injector.map( NotifyCropModuleSetUpSignal ).asSingleton();
@@ -116,11 +102,6 @@ package net.psykosoft.psykopaint2.configuration
 		private function mapMediators():void {
 			_mediatorMap.map( CropSubNavView ).toMediator( CropSubNavViewMediator );
 			_mediatorMap.map( CropView ).toMediator( CropViewMediator );
-			_mediatorMap.map( PickAnImageSubNavView ).toMediator( PickAnImageSubNavViewMediator );
-			_mediatorMap.map( PickAUserImageView ).toMediator( PickAUserImageViewMediator );
-			_mediatorMap.map( CaptureImageSubNavView ).toMediator( CaptureImageSubNavViewMediator );
-			_mediatorMap.map( ConfirmCaptureImageSubNavView ).toMediator( ConfirmCaptureImageSubNavViewMediator );
-			_mediatorMap.map( CaptureImageView ).toMediator( CaptureImageViewMediator );
 		}
 	}
 }

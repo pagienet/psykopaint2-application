@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.crop.views.pick.image
+package net.psykosoft.psykopaint2.home.views.pickimage
 {
 
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;

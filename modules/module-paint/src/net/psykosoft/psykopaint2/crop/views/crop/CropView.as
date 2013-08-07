@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.crop.views
+package net.psykosoft.psykopaint2.crop.views.crop
 {
 
 	import flash.display.BitmapData;
