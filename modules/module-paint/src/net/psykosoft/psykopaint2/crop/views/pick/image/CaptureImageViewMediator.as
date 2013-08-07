@@ -1,12 +1,12 @@
-package net.psykosoft.psykopaint2.paint.views.pick.image
+package net.psykosoft.psykopaint2.crop.views.pick.image
 {
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraFlipRequest;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyCameraSnapshotRequest;
+	import net.psykosoft.psykopaint2.crop.signals.NotifyCameraFlipRequest;
+	import net.psykosoft.psykopaint2.crop.signals.NotifyCameraSnapshotRequest;
 
 	public class CaptureImageViewMediator extends MediatorBase
 	{

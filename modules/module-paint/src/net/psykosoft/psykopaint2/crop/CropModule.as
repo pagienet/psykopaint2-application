@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint
+package net.psykosoft.psykopaint2.crop
 {
 
 	import flash.display.BitmapData;
@@ -6,31 +6,30 @@ package net.psykosoft.psykopaint2.paint
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 
-	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
+	import net.psykosoft.psykopaint2.configuration.CropConfig;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedBitmapData;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.paint.configuration.PaintConfig;
+	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
+	import net.psykosoft.psykopaint2.crop.views.base.CropRootView;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
-	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 
-	public class PaintModule extends ModuleBase
+	public class CropModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;
 		private var _moduleSetUp : Boolean = true;
 
-		public function PaintModule( core:CoreModule = null ) {
+		public function CropModule( core:CoreModule = null ) {
 			super();
 			_coreModule = core;
-			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "PaintModule";
+			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "CropModule";
 			if( !_coreModule ) {
 				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			}
@@ -83,19 +82,11 @@ package net.psykosoft.psykopaint2.paint
 		{
 			graphics.clear();
 
-			var paintingDataVO : PaintingDataVO = new PaintingDataVO();
-			paintingDataVO.width = CoreSettings.STAGE_WIDTH;
-			paintingDataVO.height = CoreSettings.STAGE_HEIGHT;
-			paintingDataVO.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
-			var tempData : BitmapData = new BitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false);
-			tempData.perlinNoise(64, 64, 8, 50, true, true);
-			paintingDataVO.sourceBitmapData = tempData.getPixels(tempData.rect); //ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
-			paintingDataVO.normalSpecularData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x80808080);
-			tempData.dispose();
+			var tempData : BitmapData = new RefCountedBitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false);
 
-			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.PREPARE_FOR_PAINT_MODE);
-			_coreModule.injector.getInstance(NotifyPaintModuleSetUpSignal).addOnce(onPaintingModuleSetUp);
-			_coreModule.injector.getInstance(RequestSetupPaintModuleSignal).dispatch((paintingDataVO));
+			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME_ON_EASEL);
+			_coreModule.injector.getInstance(NotifyCropModuleSetUpSignal).addOnce(onCropModuleSetUp);
+			_coreModule.injector.getInstance(RequestSetupCropModuleSignal).dispatch(tempData);
 		}
 
 		private function destroyStandaloneModule() : void
@@ -103,13 +94,13 @@ package net.psykosoft.psykopaint2.paint
 			graphics.beginFill(0xffffff);
 			graphics.drawRect(0, 0, 500, 500);
 			graphics.endFill();
-			_coreModule.injector.getInstance(RequestDestroyPaintModuleSignal).dispatch();
+			_coreModule.injector.getInstance(RequestDestroyCropModuleSignal).dispatch();
 			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME_ON_EASEL);
 		}
 
-		private function onPaintingModuleSetUp() : void
+		private function onCropModuleSetUp() : void
 		{
-			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.PAINT_SELECT_BRUSH);
+			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.CROP);
 		}
 
 		private function initStandalone() : void
@@ -124,11 +115,11 @@ package net.psykosoft.psykopaint2.paint
 		private function init() : void
 		{
 			// Initialize robotlegs for this module.
-			new PaintConfig(_coreModule.injector);
+			new CropConfig(_coreModule.injector);
 
 			// Init display tree for this module.
-			var paintRootView : PaintRootView = new PaintRootView();
-			_coreModule.injector.getInstance(RequestAddViewToMainLayerSignal).dispatch(paintRootView);
+			var cropRootView : CropRootView = new CropRootView();
+			_coreModule.injector.getInstance(RequestAddViewToMainLayerSignal).dispatch(cropRootView);
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch();

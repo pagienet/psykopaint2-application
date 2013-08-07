@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.signals
+package net.psykosoft.psykopaint2.crop.signals
 {
 
 	import net.psykosoft.psykopaint2.base.robotlegs.signals.TracingSignal;

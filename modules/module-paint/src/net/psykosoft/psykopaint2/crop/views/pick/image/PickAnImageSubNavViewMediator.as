@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.views.pick.image
+package net.psykosoft.psykopaint2.crop.views.pick.image
 {
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;

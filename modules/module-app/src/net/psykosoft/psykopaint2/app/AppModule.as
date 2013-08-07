@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
+	import net.psykosoft.psykopaint2.crop.CropModule;
 	import net.psykosoft.psykopaint2.home.HomeModule;
 	import net.psykosoft.psykopaint2.paint.PaintModule;
 
@@ -53,6 +54,21 @@ package net.psykosoft.psykopaint2.app
 		{
 			trace(this, "core module is ready");
 			_coreModule.startEnterFrame();
+			createCropModule();
+		}
+
+		private function createCropModule() : void
+		{
+			trace(this, "creating crop module...");
+			var cropModule : CropModule = new CropModule(_coreModule);
+			cropModule.isStandalone = false;
+			cropModule.moduleReadySignal.addOnce(onCropModuleReady);
+			cropModule.initialize();
+		}
+
+		private function onCropModuleReady() : void
+		{
+			trace(this, "crop module is ready");
 			createPaintModule();
 		}
 
