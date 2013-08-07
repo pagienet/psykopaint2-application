@@ -30,22 +30,29 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	public class EaselPainting extends Mesh
 	{
 		private var _width:Number;
-		private var _diffuseTexture : Texture2DBase;
-		private var _normalSpecularTexture : ByteArrayTexture;
-		private var _textureMaterial : TextureMaterial;
+		private var _diffuseTexture:Texture2DBase;
+		private var _normalSpecularTexture:ByteArrayTexture;
+		private var _textureMaterial:TextureMaterial;
+
+		override public function dispose():void {
+			var geometry:Geometry = this.geometry;
+			super.dispose();
+			geometry.dispose();
+			_textureMaterial.dispose();
+			disposeTextures();
+		}
 
 		public function EaselPainting( lightPicker:LightPickerBase ) {
 
-			super(null);
+			super( null );
 
-			geometry = new PlaneGeometry(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 1, 1, false);
-			initMaterial(lightPicker);
+			geometry = new PlaneGeometry( CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 1, 1, false );
+			initMaterial( lightPicker );
 		}
 
-		private function initMaterial(lightPicker : LightPickerBase) : void
-		{
+		private function initMaterial( lightPicker:LightPickerBase ):void {
 			// Create material.
-			_textureMaterial = new TextureMaterial(null, true, false, false);
+			_textureMaterial = new TextureMaterial( null, true, false, false );
 			_textureMaterial.animateUVs = true;
 			_textureMaterial.diffuseMethod = new PaintingDiffuseMethod();
 			_textureMaterial.normalMethod = new PaintingNormalMethod();
@@ -58,13 +65,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			material = _textureMaterial;
 		}
 
-		public function setContent(paintingVO : PaintingInfoVO, stage3DProxy : Stage3DProxy) : void
-		{
+		public function setContent( paintingVO:PaintingInfoVO, stage3DProxy:Stage3DProxy ):void {
 			disposeTextures();
 
-			if (paintingVO) {
+			if( paintingVO ) {
 				visible = true;
-				initTextures(paintingVO, stage3DProxy);
+				initTextures( paintingVO, stage3DProxy );
 				_width = paintingVO.width;
 			}
 			else {
@@ -73,41 +79,29 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		}
 
-		private function disposeTextures() : void
-		{
-			if (_diffuseTexture) _diffuseTexture.dispose();
-			if (_normalSpecularTexture) _normalSpecularTexture.dispose();
+		private function disposeTextures():void {
+			if( _diffuseTexture ) _diffuseTexture.dispose();
+			if( _normalSpecularTexture ) _normalSpecularTexture.dispose();
 		}
 
-		private function initTextures(paintingVO : PaintingInfoVO, stage3DProxy : Stage3DProxy) : void
-		{
-			var textureWidth : int = paintingVO.textureWidth;
-			var textureHeight : int = paintingVO.textureHeight;
+		private function initTextures( paintingVO:PaintingInfoVO, stage3DProxy:Stage3DProxy ):void {
+			var textureWidth:int = paintingVO.textureWidth;
+			var textureHeight:int = paintingVO.textureHeight;
 
-			if (paintingVO.colorPreviewData)
-				_diffuseTexture = new ByteArrayTexture(paintingVO.colorPreviewData, textureWidth, textureHeight);
+			if( paintingVO.colorPreviewData )
+				_diffuseTexture = new ByteArrayTexture( paintingVO.colorPreviewData, textureWidth, textureHeight );
 			else
-				_diffuseTexture = new BitmapTexture(paintingVO.colorPreviewBitmap);
+				_diffuseTexture = new BitmapTexture( paintingVO.colorPreviewBitmap );
 
-			_normalSpecularTexture = new ByteArrayTexture(paintingVO.normalSpecularPreviewData, textureWidth, textureHeight);
-			_diffuseTexture.getTextureForStage3D(stage3DProxy);
-			_normalSpecularTexture.getTextureForStage3D(stage3DProxy);
+			_normalSpecularTexture = new ByteArrayTexture( paintingVO.normalSpecularPreviewData, textureWidth, textureHeight );
+			_diffuseTexture.getTextureForStage3D( stage3DProxy );
+			_normalSpecularTexture.getTextureForStage3D( stage3DProxy );
 
 			_textureMaterial.texture = _diffuseTexture;
 			_textureMaterial.normalMap = _normalSpecularTexture;
 
 			subMeshes[0].scaleU = paintingVO.width / _diffuseTexture.width;
 			subMeshes[0].scaleV = paintingVO.height / _diffuseTexture.height;
-		}
-
-		override public function dispose():void
-		{
-			var geometry : Geometry = this.geometry;
-			var material : MaterialBase = this.material;
-			super.dispose();
-			geometry.dispose();
-			material.dispose();
-			disposeTextures();
 		}
 
 		public function get width():Number {

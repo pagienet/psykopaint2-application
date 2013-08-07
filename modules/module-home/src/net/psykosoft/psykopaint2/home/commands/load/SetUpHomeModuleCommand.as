@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.home.commands.load
 		[Inject]
 		public var notifyHomeModuleSetUpSignal:NotifyHomeModuleSetUpSignal;
 
-		private static var _timesRan:uint = 0;
+		private static var _introHasRun:Boolean;
 
 		override public function prepare():void {
 
@@ -22,9 +22,12 @@ package net.psykosoft.psykopaint2.home.commands.load
 			add( BuildHomeSceneCommand );
 			add( RetrievePaintingDataCommand );
 			add( UpdateEaselWithLatestPaintingCommand );
-			if( _timesRan == 0 ) add( HomeIntroAnimationCommand );
 
-			_timesRan++;
+			// Play intro?
+			if( !_introHasRun ) {
+				_introHasRun = true;
+				add( HomeIntroAnimationCommand );
+			}
 
 			registerCompleteCallback( onMacroComplete );
 		}

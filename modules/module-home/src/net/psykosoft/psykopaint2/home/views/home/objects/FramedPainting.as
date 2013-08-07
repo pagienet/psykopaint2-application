@@ -29,6 +29,25 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _view:View3D;
 		private var _paintingBmdScaleFactor:Number = 1;
 
+		override public function dispose():void {
+
+			super.dispose();
+
+			removeChild( _paintingMesh );
+			_paintingMesh.dispose();
+			_paintingGeometry.dispose();
+			_paintingMaterial.dispose();
+			_paintingTexture.dispose();
+
+			if( _frameMesh ) {
+				removeChild( _frameMesh );
+				_frameMesh.dispose();
+				_frameGeometry.dispose();
+				_frameMaterial.dispose();
+				_frameTexture.dispose();
+			}
+		}
+
 		public function FramedPainting( view:View3D, hasFrame : Boolean, transparent : Boolean ) {
 			super();
 			_view = view;
@@ -65,18 +84,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			material.alphaBlending = transparent;
 			material.animateUVs = true;
 			return material;
-		}
-
-		override public function dispose():void {
-			_paintingGeometry.dispose();
-			_paintingMaterial.dispose();
-			_paintingTexture.dispose();
-			if( _frameGeometry ) {
-				_frameGeometry.dispose();
-				_frameMaterial.dispose();
-				_frameTexture.dispose();
-			}
-			super.dispose();
 		}
 
 		public function setPaintingBitmapData( bitmapData:BitmapData, stage3DProxy:Stage3DProxy ):void {

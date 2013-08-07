@@ -58,10 +58,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _light:DirectionalLight;
 		private var _lightPicker:StaticLightPicker;
 		private var _mainScene:ObjectContainer3D;
+		private var _currentScene:ObjectContainer3D;
 
 		public static const HOME_BUNDLE_ID:String = "HomeBundle";
-
-		private var _currentScene:ObjectContainer3D;
 
 		public var closestPaintingChangedSignal:Signal;
 		public var zoomCompletedSignal:Signal;
@@ -74,6 +73,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			zoomCompletedSignal = new Signal();
 			easelRectChanged = new Signal();
 		}
+
+		// ---------------------------------------------------------------------
+		// Build/destroy.
+		// ---------------------------------------------------------------------
 
 		public function buildScene( stage3dProxy:Stage3DProxy ):void {
 
@@ -129,7 +132,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_zoomCameraController.setCamera( _view.camera, cameraTarget );
 			_zoomCameraController.setYZ( HomeSettings.DEFAULT_CAMERA_Y, HomeSettings.DEFAULT_CAMERA_Z );
 			_zoomCameraController.yzChangedSignal.add( onZoomControllerChange );
-			_view.camera.addEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraSceneTransformChanged);
+			_view.camera.addEventListener( Object3DEvent.SCENETRANSFORM_CHANGED, onCameraSceneTransformChanged );
 			_scrollCameraController.stage = stage;
 			_view.camera.z = HomeSettings.DEFAULT_CAMERA_Z;
 
@@ -154,52 +157,66 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.render();
 		}
 
-		private function onCameraSceneTransformChanged(event : Object3DEvent) : void
-		{
-			easelRectChanged.dispatch();
-		}
-
 		public function destroyScene():void {
 
 			stage.removeEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
 			stage.removeEventListener( KeyboardEvent.KEY_UP, onStageKeyUp );
 
 			if( _room ) {
+				_mainScene.removeChild( _room );
 				_room.dispose();
 				_room = null;
 			}
 
 			if( _paintingManager ) {
+				_mainScene.removeChild( _paintingManager );
 				_paintingManager.dispose();
 				_paintingManager = null;
 			}
 
 			if( _scrollCameraController ) {
+				_scrollCameraController.closestSnapPointChangedSignal.remove( onClosestPaintingChanged );
 				_scrollCameraController.dispose();
 				_scrollCameraController = null;
 			}
 
+			if( _zoomCameraController ) {
+				_zoomCameraController.yzChangedSignal.remove( onZoomControllerChange );
+				_zoomCameraController.zoomCompleteSignal.remove( onZoomComplete );
+				_zoomCameraController.dispose();
+				_zoomCameraController = null;
+			}
+
+			if( _light ) {
+				_mainScene.removeChild( _light );
+				_light.dispose();
+				_light = null;
+			}
+
+			if( _lightPicker ) {
+				_lightPicker.dispose();
+			}
+
+			if( _mainScene ) {
+				_view.scene.removeChild( _mainScene );
+				_mainScene.dispose();
+				_mainScene = null;
+			}
+
 			if( _view ) {
+				_view.camera.removeEventListener( Object3DEvent.SCENETRANSFORM_CHANGED, onCameraSceneTransformChanged );
 				removeChild( _view );
 				_view.dispose();
 				_view = null;
 			}
-		}
 
-		public function get paintingManager():PaintingManager {
-			return _paintingManager;
-		}
-
-		public function get room():Room {
-			return _room;
+			if( _stage3dProxy ) {
+				_stage3dProxy = null;
+			}
 		}
 
 		// ---------------------------------------------------------------------
-		// Freezing.
-		// ---------------------------------------------------------------------
-
-		// ---------------------------------------------------------------------
-		// Interface.
+		// Updates.
 		// ---------------------------------------------------------------------
 
 		public function renderScene( target:Texture ):void {
@@ -216,17 +233,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_scrollCameraController.update();
 			_view.render( target );
-		}
-
-		public function get easelRect():Rectangle {
-			var plane:Mesh = _paintingManager.easel.painting;
-			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( plane, _view );
-			// Uncomment to debug rect on screen.
-			/*this.graphics.lineStyle( 1, 0xFF0000 );
-			this.graphics.drawRect( rect.x * CoreSettings.GLOBAL_SCALING, rect.y * CoreSettings.GLOBAL_SCALING,
-					rect.width * CoreSettings.GLOBAL_SCALING, rect.height * CoreSettings.GLOBAL_SCALING );
-			this.graphics.endFill();*/
-			return rect;
 		}
 
 		// ---------------------------------------------------------------------
@@ -332,6 +338,33 @@ package net.psykosoft.psykopaint2.home.views.home
 //			trace( this, "positioning settings panel - x: " + _room.settingsPanel.x + ", y: " + _room.settingsPanel.y );
 //			trace( this, "positioning wall - x: " + _room.wall.x );
 			trace( this, "positioning camera, Y: " + _view.camera.y + ", Z: " + _view.camera.z );
+		}
+
+		private function onCameraSceneTransformChanged( event:Object3DEvent ):void {
+			easelRectChanged.dispatch();
+		}
+
+		// ---------------------------------------------------------------------
+		// Getters.
+		// ---------------------------------------------------------------------
+
+		public function get paintingManager():PaintingManager {
+			return _paintingManager;
+		}
+
+		public function get room():Room {
+			return _room;
+		}
+
+		public function get easelRect():Rectangle {
+			var plane:Mesh = _paintingManager.easel.painting;
+			var rect:Rectangle = HomeViewUtils.calculatePlaneScreenRect( plane, _view );
+			// Uncomment to debug rect on screen.
+			/*this.graphics.lineStyle( 1, 0xFF0000 );
+			 this.graphics.drawRect( rect.x * CoreSettings.GLOBAL_SCALING, rect.y * CoreSettings.GLOBAL_SCALING,
+			 rect.width * CoreSettings.GLOBAL_SCALING, rect.height * CoreSettings.GLOBAL_SCALING );
+			 this.graphics.endFill();*/
+			return rect;
 		}
 	}
 }

@@ -5,7 +5,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.LightPickerBase;
+	import away3d.textures.BitmapTexture;
 
 	import br.com.stimuli.loading.BulkLoader;
 
@@ -14,9 +16,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-
-	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
-	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.splash.SplashView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
@@ -36,6 +35,40 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		// TODO: make private
 		public var homePaintingIndex:int = -1;
 
+		override public function dispose():void {
+
+			trace( "dispose()" );
+
+			// Remove all paintings ( includes easel ).
+			for( var i:uint; i < _paintings.length; i++ ) {
+				var painting:GalleryPainting = _paintings[ i ];
+				removeChild( painting );
+				painting.dispose();
+				painting = null;
+			}
+			_paintings = null;
+
+			// Remove settings panel.
+			removeChild( _settingsPanel );
+			var tex:BitmapTexture = BitmapTexture( TextureMaterial( _settingsPanel.material ).texture );
+			_settingsPanel.material.dispose();
+			tex.dispose();
+			_settingsPanel.geometry.dispose();
+			_settingsPanel.dispose();
+			_settingsPanel = null;
+
+			// Clear other variables.
+			_shadowForPainting = null;
+
+			// Forget references.
+			_view = null;
+			_cameraController = null;
+			_room = null;
+			_lightPicker = null;
+
+			super.dispose();
+		}
+
 		public function PaintingManager( cameraController:HScrollCameraController, room:Room, view:View3D, lightPicker:LightPickerBase, stage3dProxy:Stage3DProxy ) {
 			super();
 			_cameraController = cameraController;
@@ -46,25 +79,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_lightPicker = lightPicker;
 			_stage3dProxy = stage3dProxy;
 			_easel = new Easel( _view, _lightPicker );
-		}
-
-		override public function dispose():void {
-
-			trace( "dispose()" );
-
-			for( var i:uint; i < _paintings.length; i++ ) {
-				var frame:GalleryPainting = _paintings[ i ];
-				frame.dispose();
-				frame = null;
-			}
-			_paintings = null;
-
-//			_framesTexture.dispose();
-//			_framesTexture = null;
-//			_frameMaterial.dispose();
-//			_frameMaterial = null;
-
-			super.dispose();
 		}
 
 		public function createDefaultPaintings():void {

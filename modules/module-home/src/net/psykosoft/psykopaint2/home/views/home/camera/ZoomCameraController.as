@@ -22,6 +22,10 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 			yzChangedSignal = new Signal();
 		}
 
+		public function dispose():void {
+			TweenLite.killTweensOf( _camera );
+		}
+
 		public function setCamera( camera:Camera3D, cameraTarget:Object3D ):void {
 			_camera = camera;
 			_target = cameraTarget;

@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.display.Sprite;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.views.components.slider.SbSliderButton;
 	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
