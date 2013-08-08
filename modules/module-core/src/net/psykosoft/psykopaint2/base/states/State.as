@@ -1,8 +1,6 @@
  package net.psykosoft.psykopaint2.base.states
 {
-	 import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-
-	 use namespace ns_state_machine;
+	use namespace ns_state_machine;
 
 	public class State
 	{

@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.app.states
 {
-	import flash.utils.setTimeout;
-
 	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
 
 	import net.psykosoft.psykopaint2.app.signals.RequestCreateCanvasBackgroundSignal;
@@ -70,11 +68,11 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onCanvasBackgroundSet() : void
 		{
-			requestZoomCanvasToDefaultViewSignal.dispatch(onZoomOutComplete);
+			requestZoomCanvasToDefaultViewSignal.dispatch(onZoomComplete);
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 		}
 
-		private function onZoomOutComplete() : void
+		private function onZoomComplete() : void
 		{
 			stateMachine.setActiveState(paintState);
 
