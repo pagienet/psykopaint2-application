@@ -51,7 +51,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						iconType = ButtonIconType.DEFAULT;
 					}
 				}
-
 				createCenterButton( availableBrushTypes[ i ], availableBrushTypes[ i ], iconType, SbIconButton, null, true );
 			}
 

@@ -117,10 +117,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			trace( this, "updating sub-nav: " + subNavType );
 
 			// Disable old view.
-			if( _currentSubNavView ) {
-				_currentSubNavView.disable();
-				_currentSubNavView.scrollerButtonClickedSignal.remove( onSubNavigationScrollerButtonClicked );
-			}
+			disableCurrentSubNavigation();
 
 			// Reset.
 			header.visible = false;
@@ -159,13 +156,26 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function disposeSubNavigation():void {
+
 			trace( this, "disposing sub-navigation views...." );
+
+			disableCurrentSubNavigation();
+
 			for each( var subNavigation:SubNavigationViewBase in _subNavDictionary ) {
 				trace( "disposing sub nav: " + subNavigation );
 				removeChild( subNavigation );
 				// Note: removing from display causes the disposal of the mediator, which is in charge of disposing the view itself
 			}
+
 			_subNavDictionary = new Dictionary();
+		}
+
+		private function disableCurrentSubNavigation():void {
+			if( _currentSubNavView ) {
+				_currentSubNavView.scrollerButtonClickedSignal.remove( onSubNavigationScrollerButtonClicked );
+				_currentSubNavView.disable();
+				_currentSubNavView = null;
+			}
 		}
 
 		// ---------------------------------------------------------------------
