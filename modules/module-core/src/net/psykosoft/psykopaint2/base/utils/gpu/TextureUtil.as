@@ -105,7 +105,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 		{
 			var legalWidth:int = getNextPowerOfTwo( bitmapData.width );
 			var legalHeight:int = getNextPowerOfTwo( bitmapData.height );
-			var clone : BitmapData = new BitmapData(legalWidth, legalHeight, bitmapData.transparent, 0);
+			var clone : BitmapData = new TrackedBitmapData(legalWidth, legalHeight, bitmapData.transparent, 0);
 			clone.copyPixels(bitmapData, bitmapData.rect, new Point());
 			return clone;
 		}

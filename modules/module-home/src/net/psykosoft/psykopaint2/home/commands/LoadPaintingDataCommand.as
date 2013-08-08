@@ -44,7 +44,9 @@ package net.psykosoft.psykopaint2.home.commands
 			// Read surface data.
 			context.detain( this );
 			var file:File = CoreSettings.RUNNING_ON_iPAD ? File.applicationStorageDirectory : File.desktopDirectory;
-			_file = file.resolvePath( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION );
+			var path:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION;
+			trace ("resolving path: " + path);
+			_file = file.resolvePath( path );
 			_file.addEventListener( Event.COMPLETE, onFileRead, false, 0, true );
 			_file.load();
 		}

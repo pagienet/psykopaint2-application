@@ -55,6 +55,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function unMapMacroConsistentData():void {
+			injector.getInstance(SavePaintingVO).dispose();
 			injector.unmap( SavePaintingVO );
 		}
 	}

@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint
 
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
@@ -87,7 +88,7 @@ package net.psykosoft.psykopaint2.paint
 			paintingDataVO.width = CoreSettings.STAGE_WIDTH;
 			paintingDataVO.height = CoreSettings.STAGE_HEIGHT;
 			paintingDataVO.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
-			var tempData : BitmapData = new BitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false);
+			var tempData : BitmapData = new TrackedBitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false);
 			tempData.perlinNoise(64, 64, 8, 50, true, true);
 			paintingDataVO.sourceBitmapData = tempData.getPixels(tempData.rect); //ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
 			paintingDataVO.normalSpecularData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x80808080);

@@ -205,7 +205,7 @@ package net.psykosoft.psykopaint2.core.model
 
 		private function fillTexture(texture : Texture, r : Number, g : Number, b : Number, a : Number) : void
 		{
-			var bmd : BitmapData = new BitmapData(_textureWidth, _textureHeight, true, 0)
+			var bmd : BitmapData = new TrackedBitmapData(_textureWidth, _textureHeight, true, 0)
 			texture.uploadFromBitmapData(bmd);
 			bmd.dispose();
 		}

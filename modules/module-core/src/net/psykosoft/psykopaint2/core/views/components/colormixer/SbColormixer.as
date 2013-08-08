@@ -17,7 +17,9 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 //	import net.psykosoft.psykopaint2.tdsi.ColorMixer;
 
 
@@ -85,7 +87,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			mixerHeight = 200;
 			shp = new Shape();
 			
-			_displayMap = new BitmapData(mixerWidth,mixerHeight,true,0);
+			_displayMap = new TrackedBitmapData(mixerWidth,mixerHeight,true,0);
 			for ( var i:int = 0; i < 12; i++ )
 			{
 				shp.graphics.beginFill(palettes[int(Math.random()*2)][int(Math.random()*6)],0.5 + Math.random()*0.5);
@@ -101,7 +103,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			copyRect = mixerRect.clone();
 			drawMatrix = new Matrix();
 			
-			_displacementMap = new BitmapData(mixerWidth,mixerHeight,false,0);
+			_displacementMap = new TrackedBitmapData(mixerWidth,mixerHeight,false,0);
 			
 			_displacementFilter = new DisplacementMapFilter(_displacementMap,origin,1,2,128,128, DisplacementMapFilterMode.COLOR,0,0 );
 			
@@ -111,7 +113,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			shp.graphics.drawCircle(16+mixerWidth,16+mixerHeight,24);
 			
 			
-			_maskMap = new BitmapData(32+mixerWidth*2,32+mixerHeight*2,true,0);
+			_maskMap = new TrackedBitmapData(32+mixerWidth*2,32+mixerHeight*2,true,0);
 			_maskMap.draw(shp);
 			_maskMap.applyFilter( _maskMap, _maskMap.rect, origin, new BlurFilter(12,12,2));
 			
@@ -144,7 +146,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 				_displayMap.applyFilter(_displayMap, mixerRect, origin,_displacementFilter );
 			}
 			
-			_samplePixel = new BitmapData(1,1,false,0);
+			_samplePixel = new TrackedBitmapData(1,1,false,0);
 			//correctionTransform = new ColorTransform(1,1,1,0.05);
 			sampleColor = -1;
 			
