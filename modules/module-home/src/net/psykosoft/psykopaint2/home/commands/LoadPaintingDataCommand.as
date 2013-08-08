@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.home.commands
 		public var requestStateChangeSignal:RequestNavigationStateChangeSignal;
 
 		[Inject]
-		public var notifyPaintingDataLoadedSignal : RequestOpenPaintingDataVOSignal;
+		public var requestOpenPaintingDataVOSignal : RequestOpenPaintingDataVOSignal;
 
 		private var _file:File;
 
@@ -60,7 +60,7 @@ package net.psykosoft.psykopaint2.home.commands
 			_file.data.clear();
 			_file = null;
 
-			notifyPaintingDataLoadedSignal.dispatch(vo);
+			requestOpenPaintingDataVOSignal.dispatch(vo);
 
 			context.release( this );
 		}

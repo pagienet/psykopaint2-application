@@ -26,7 +26,8 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestZoomCanvasToEaselViewSignal : RequestZoomCanvasToEaselViewSignal;
 
-		public var homeState : State;
+		// needs to be set from HomeState -_-
+		public var homeState : HomeState;
 
 		public function TransitionPaintToHomeState()
 		{

@@ -27,6 +27,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var transitionCropToHomeState : TransitionCropToHomeState;
 
+		[Inject]
+		public var transitionPaintToHomState : TransitionPaintToHomeState;
+
 		public function HomeState()
 		{
 		}
@@ -36,6 +39,7 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			// manual injection because robotlegs crashes injecting circular dependencies
 			transitionCropToHomeState.homeState = this;
+			transitionPaintToHomState.homeState = this;
 		}
 
 		override ns_state_machine function activate(data : Object = null) : void
