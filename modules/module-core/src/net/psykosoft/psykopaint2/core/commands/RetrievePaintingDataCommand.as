@@ -97,6 +97,8 @@ package net.psykosoft.psykopaint2.core.commands
 			trace( this, "produced vo: " + paintingInfoVO );
 			_paintingVos.push( paintingInfoVO );
 
+			_currentFileBeingLoaded.data.clear();
+
 			// Continue reading next file.
 			_indexOfPaintingFileBeingRead++;
 			if( _indexOfPaintingFileBeingRead < _numPaintingFiles ) {

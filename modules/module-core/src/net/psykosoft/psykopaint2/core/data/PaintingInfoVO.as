@@ -6,6 +6,10 @@ package net.psykosoft.psykopaint2.core.data
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.core.debug.UndisposedObjects;
+
+	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
+
 	public class PaintingInfoVO
 	{
 		public static const DEFAULT_VO_ID:String = "new";
@@ -26,6 +30,7 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function PaintingInfoVO() {
 			super();
+			UndisposedObjects.getInstance().add(this);
 		}
 
 		public function clone() : PaintingInfoVO
@@ -87,6 +92,8 @@ package net.psykosoft.psykopaint2.core.data
 
 		public function dispose() : void
 		{
+			UndisposedObjects.getInstance().remove(this);
+
 			if (colorPreviewData)
 				colorPreviewData.clear();
 

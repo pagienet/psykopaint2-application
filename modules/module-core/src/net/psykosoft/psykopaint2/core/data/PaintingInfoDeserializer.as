@@ -56,6 +56,8 @@ package net.psykosoft.psykopaint2.core.data
 			_vo.colorPreviewData = PaintingFileUtils.decodeImage(_bytes, _vo.width, _vo.height);
 			_vo.normalSpecularPreviewData = PaintingFileUtils.decodeImage(_bytes, _vo.width, _vo.height);
 
+			_bytes.clear();
+
 			dispatchEvent(new Event(Event.COMPLETE));
 		}
 	}

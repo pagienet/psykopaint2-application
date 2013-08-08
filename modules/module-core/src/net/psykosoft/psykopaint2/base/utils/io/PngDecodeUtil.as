@@ -18,22 +18,12 @@ package net.psykosoft.psykopaint2.base.utils.io
 
 		public function PngDecodeUtil() {
 			super();
-			_loader = new Loader();
-			_loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onError );
-			_loader.contentLoaderInfo.addEventListener( Event.INIT, onDecodingInit );
-			_loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onDecodingComplete );
-		}
-
-		private function onDecodingInit( event:Event ):void {
-			trace( this, "decoding init." );
-		}
-
-		private function onError( event:Event ):void {
-			trace( this, "decoding error: " + event );
 		}
 
 		public function decode( bytes:ByteArray, onComplete:Function, disposeWhenReady : Boolean = false ):void {
 			trace( this, "decoding: " + bytes.length + " bytes." );
+			_loader = new Loader();
+			_loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onDecodingComplete );
 			_pngDecodeCallback = onComplete;
 			_disposeWhenReady = disposeWhenReady;
 			_bytes = bytes;
@@ -41,6 +31,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		}
 
 		private function onDecodingComplete( event:Event ):void {
+			removeListeners();
 			trace( this, "decoded." );
 			if (_disposeWhenReady)
 				_bytes.clear();
@@ -48,6 +39,11 @@ package net.psykosoft.psykopaint2.base.utils.io
 			bmd.draw( _loader );
 			_pngDecodeCallback( bmd );
 			_pngDecodeCallback = null;
+		}
+
+		private function removeListeners() : void
+		{
+			_loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, onDecodingComplete );
 		}
 	}
 }

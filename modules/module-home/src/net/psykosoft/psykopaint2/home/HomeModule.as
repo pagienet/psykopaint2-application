@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.home
 
 		public function HomeModule( core:CoreModule = null ) {
 			super();
+
 			_coreModule = core;
 			if( CoreSettings.NAME == "" ) CoreSettings.NAME = "HomeModule";
 			if( !_coreModule ) {
@@ -59,6 +60,9 @@ package net.psykosoft.psykopaint2.home
 			_coreModule.isStandalone = false;
 			_coreModule.moduleReadySignal.addOnce(onCoreModuleReady);
 			addChild(_coreModule);
+			// If I don't do this, I'm getting the wrong window size in AIR and the module won't start - Dave
+			stage.stageWidth = 1024;
+			stage.stageHeight = 768;
 		}
 
 		private function init() : void
@@ -77,8 +81,8 @@ package net.psykosoft.psykopaint2.home
 		private function onCoreModuleReady():void {
 
 			init();
-			_coreModule.startEnterFrame();
 			_coreModule.injector.getInstance(RequestHideSplashScreenSignal).dispatch();
+			_coreModule.startEnterFrame();
 			setupStandaloneModule();
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp, false, 0, true);
 		}

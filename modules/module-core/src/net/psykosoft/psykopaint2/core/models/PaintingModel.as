@@ -10,14 +10,13 @@ package net.psykosoft.psykopaint2.core.models
 		public var notifyPaintingDataSetSignal:NotifyPaintingDataSetSignal;
 
 		private var _paintingData:Array;
-		private var _sortingDirty:Boolean;
-		private var _sortedData:Vector.<PaintingInfoVO>;
 		private var _activePaintingId:String;
 
 		public function disposePaintingCollection():void {
+			for each( var vo:PaintingInfoVO in _paintingData )
+				vo.dispose();
+
 			_paintingData = null;
-			_sortedData = null;
-			_sortingDirty = true;
 		}
 
 		public function setPaintingCollection( data:Vector.<PaintingInfoVO> ):void {
@@ -30,11 +29,17 @@ package net.psykosoft.psykopaint2.core.models
 				_paintingData[data[i].id] = data[i];
 			}
 
-			_sortingDirty = true;
 			notifyPaintingDataSetSignal.dispatch( getSortedPaintingCollection() );
 		}
 
-		public function getPaintingCollection():Vector.<PaintingInfoVO> {
+		public function getSortedPaintingCollection():Vector.<PaintingInfoVO> {
+			trace( this, "getSortedPaintingCollection()" );
+			var sortedData : Vector.<PaintingInfoVO> = getPaintingCollection();
+			sortedData.sort( sortOnLastSaved );
+			return sortedData;
+		}
+
+		private function getPaintingCollection():Vector.<PaintingInfoVO> {
 			var collection:Vector.<PaintingInfoVO> = new Vector.<PaintingInfoVO>();
 			var i:uint = 0;
 
@@ -44,23 +49,9 @@ package net.psykosoft.psykopaint2.core.models
 			return collection;
 		}
 
-		public function getSortedPaintingCollection():Vector.<PaintingInfoVO> {
-			trace( this, "getSortedPaintingCollection()" );
-			if( _sortingDirty ) {
-				_sortedData = getPaintingCollection();
-				if( _sortedData ) _sortedData.sort( sortOnLastSaved );
-				_sortingDirty = false;
-			}
-			return _sortedData;
-		}
-
 		public function getVoWithId( id:String ):PaintingInfoVO {
 			var vo:PaintingInfoVO = _paintingData[id];
 			return vo;
-		}
-
-		public function dirtyDateSorting():void {
-			_sortingDirty = true;
 		}
 
 		// -----------------------
