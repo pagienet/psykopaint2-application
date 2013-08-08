@@ -35,6 +35,18 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			super();
 		}
 
+		override protected function onDisposed():void {
+
+			clearAllTweens();
+
+			if( _snapshot && _snapshot.bitmapData ) {
+				_snapshot.bitmapData.dispose();
+			}
+
+			_video.attachCamera( null );
+
+		}
+
 		override protected function onEnabled():void {
 
 			_moveToSideBy = 300;

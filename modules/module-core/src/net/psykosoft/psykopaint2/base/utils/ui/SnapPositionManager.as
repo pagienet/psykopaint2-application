@@ -32,6 +32,10 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			reset();
 		}
 
+		public function dispose():void {
+			_snapPoints = null;
+		}
+
 		public function reset():void {
 			_position = 0;
 			_snapPoints = new Vector.<Number>();

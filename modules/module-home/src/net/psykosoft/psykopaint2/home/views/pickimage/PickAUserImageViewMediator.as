@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.home.views.pickimage.PickAUserImageView;
 
 	public class PickAUserImageViewMediator extends MediatorBase
 	{
@@ -29,6 +28,13 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 			// From view.
 			view.imagePickedSignal.add( onImagePicked );
+		}
+
+		override public function destroy():void {
+			view.imagePickedSignal.remove( onImagePicked );
+			view.disable();
+			view.dispose();
+			super.destroy();
 		}
 
 		// -----------------------

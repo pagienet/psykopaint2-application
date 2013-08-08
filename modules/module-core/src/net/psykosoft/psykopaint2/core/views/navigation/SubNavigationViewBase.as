@@ -52,6 +52,21 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			addChild( _scroller );
 		}
 
+		override public function dispose():void {
+
+			_scroller.motionStartedSignal.remove( onScrollerMotionStart );
+			_scroller.motionEndedSignal.remove( onScrollerMotionEnd );
+			_scroller.rendererAddedSignal.remove( onScrollerItemRendererAdded );
+			_scroller.rendererRemovedSignal.remove( onScrollerItemRendererRemoved );
+			_scroller.dispose();
+			_scroller = null;
+
+			_centerButtonData = null;
+			_navigation = null;
+
+			super.dispose();
+		}
+
 		public function evaluateScrollingInteractionStart():void {
 			_scroller.evaluateInteractionStart();
 		}

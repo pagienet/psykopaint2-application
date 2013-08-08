@@ -54,6 +54,11 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			notifySurfacePreviewLoadedSignal.add( onSurfacePreviewLoaded );
 		}
 
+		override public function destroy():void {
+			notifySurfacePreviewLoadedSignal.remove( onSurfacePreviewLoaded );
+			super.destroy();
+		}
+
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
 			view.showRightButton( false );

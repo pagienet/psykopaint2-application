@@ -38,6 +38,30 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			invalidateContent();
 		}
 
+		override public function dispose():void {
+
+			// Clean up renderers.
+			freeAllItemRenderers();
+			if( _dataProvider ) {
+				var i:uint;
+				var len:uint = _dataProvider.length;
+				var itemData:ISnapListData;
+				for( i = 0; i < len; ++i ) {
+					itemData = _dataProvider[ i ];
+					if( itemData.itemRenderer ) {
+						_container.removeChild( itemData.itemRenderer );
+						itemData.itemRenderer = null;
+					}
+				}
+			}
+			_dataProvider = null;
+
+			_itemRendererFactory.dispose();
+			_itemRendererFactory = null;
+
+			super.dispose();
+		}
+
 		override public function reset():void {
 
 			// Release all current item renderers.

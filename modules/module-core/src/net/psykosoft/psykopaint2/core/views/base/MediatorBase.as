@@ -35,6 +35,19 @@ package net.psykosoft.psykopaint2.core.views.base
 			notifyStateChangeSignal.add( onStateChange );
 		}
 
+		override public function destroy():void {
+
+			trace( this, "*** mediator destroyed ***" );
+
+			notifyMemoryWarningSignal.remove( onMemoryWarning );
+			notifyStateChangeSignal.remove( onStateChange );
+
+			_enablingStates = null;
+
+			_view.dispose();
+			_view = null;
+		}
+
 		protected function registerView( value:ViewBase ):void {
 			_view = value;
 		}

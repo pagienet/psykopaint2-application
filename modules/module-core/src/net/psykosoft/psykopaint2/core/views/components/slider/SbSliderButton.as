@@ -50,6 +50,16 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
+		public function dispose():void {
+
+			stopSliding();
+
+			button.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			button.dispose();
+
+			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+		}
+
 		// ----------------------------
 		// Construction/destruction.
 		// ----------------------------
@@ -78,12 +88,6 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function postSetupAfterStageIsAvailable():void {
 			button.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-		}
-
-		public function dispose():void {
-			stopSliding();
-			button.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
-			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 		}
 
 		// -----------------------

@@ -58,6 +58,19 @@ package net.psykosoft.psykopaint2.base.ui.components
 			reset();
 		}
 
+		public function dispose():void {
+
+			stopEnterframe();
+
+			_positionManager.motionEndedSignal.remove( onPositionManagerMotionEnded );
+			_positionManager.dispose();
+			_positionManager = null;
+
+			_interactionManager.dispose();
+			_interactionManager = null;
+
+		}
+
 		private function initialize():void {
 //			scrollRect = new Rectangle( visibleWidth, visibleHeight );
 			_interactionManager.stage = stage;

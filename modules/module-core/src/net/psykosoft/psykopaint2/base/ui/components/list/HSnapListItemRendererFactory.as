@@ -21,7 +21,17 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		}
 
 		public function dispose():void {
-			// TODO...
+
+			// Dispose all item renderers.
+			var renderer:DisplayObject;
+			var numItemRenderers:uint = _itemRenderers.length;
+			for( var i:uint; i < numItemRenderers; i++ ) {
+				renderer = _itemRenderers[ i ];
+				renderer[ "dispose" ]();
+			}
+			_itemRenderers = null;
+
+			_idleItemRenderersForClass = null;
 		}
 
 		public function getItemRendererOfType( typeClass:Class ):DisplayObject {

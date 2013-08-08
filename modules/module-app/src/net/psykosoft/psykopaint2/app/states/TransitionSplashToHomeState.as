@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 
 	use namespace ns_state_machine;
@@ -37,6 +38,9 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestHomeViewScrollSignal : RequestHomeViewScrollSignal;
 
 		[Inject]
+		public var requestHomeIntroSignal:RequestHomeIntroSignal;
+
+		[Inject]
 		public var homeState : HomeState;
 
 		public function TransitionSplashToHomeState()
@@ -52,11 +56,9 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onHomeModuleSetUp() : void
 		{
-			// Trigger initial state...
 			notifyHomeViewZoomCompleteSignal.addOnce(onTransitionComplete);
-
+			requestHomeIntroSignal.dispatch();
 			requestHideSplashScreenSignal.dispatch();
-
 			requestStateChangeSignal.dispatch(NavigationStateType.HOME);
 		}
 

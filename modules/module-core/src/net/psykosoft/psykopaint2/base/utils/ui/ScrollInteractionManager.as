@@ -27,6 +27,16 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			_pStack.count = 6;
 		}
 
+		public function dispose():void {
+
+			_positionManager = null;
+			_stage = null;
+
+			_pStack.dispose();
+			_pStack = null;
+
+		}
+
 		public function set stage( value:Stage ):void {
 			_stage = value;
 		}

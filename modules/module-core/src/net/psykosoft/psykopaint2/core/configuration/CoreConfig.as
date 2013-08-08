@@ -50,6 +50,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationDisposalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
@@ -195,6 +196,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestAddViewToMainLayerSignal ).asSingleton();
 			_injector.map( RequestSaveCPUForUISignal ).asSingleton();
 			_injector.map( RequestResumeCPUUsageForUISignal ).asSingleton();
+			_injector.map( RequestNavigationDisposalSignal ).asSingleton();
 
 		}
 

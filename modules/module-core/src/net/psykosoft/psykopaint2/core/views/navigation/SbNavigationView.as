@@ -158,6 +158,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_currentSubNavView.scrollerButtonClickedSignal.add( onSubNavigationScrollerButtonClicked );
 		}
 
+		public function disposeSubNavigation():void {
+			trace( this, "disposing sub-navigation views...." );
+			for each( var subNavigation:SubNavigationViewBase in _subNavDictionary ) {
+				trace( "disposing sub nav: " + subNavigation );
+				removeChild( subNavigation );
+				// Note: removing from display causes the disposal of the mediator, which is in charge of disposing the view itself
+			}
+			_subNavDictionary = new Dictionary();
+		}
+
 		// ---------------------------------------------------------------------
 		// Side buttons.
 		// ---------------------------------------------------------------------

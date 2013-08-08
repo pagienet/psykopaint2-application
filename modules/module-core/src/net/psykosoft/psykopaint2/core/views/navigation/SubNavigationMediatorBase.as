@@ -45,6 +45,19 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_subNavigationView.scrollingEndedSignal.add( onViewScrollingEnded );
 		}
 
+		override public function destroy():void {
+
+			notifyGlobalGestureSignal.remove( onGlobalGesture );
+			_subNavigationView.enabledSignal.remove( onViewEnabled );
+			_subNavigationView.disabledSignal.remove( onViewDisabled );
+			_subNavigationView.setupSignal.remove( onViewSetup );
+			_subNavigationView.scrollingStartedSignal.remove( onViewScrollingStarted );
+			_subNavigationView.scrollingEndedSignal.remove( onViewScrollingEnded );
+			_subNavigationView.navigationButtonClickedSignal.remove( onButtonClicked );
+
+			super.destroy();
+		}
+
 		// -----------------------
 		// From view.
 		// -----------------------

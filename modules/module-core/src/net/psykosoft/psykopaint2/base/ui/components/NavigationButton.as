@@ -28,6 +28,22 @@ package net.psykosoft.psykopaint2.base.ui.components
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
+		public function dispose():void {
+
+			trace( this, "dispose()" );
+
+			if( hasEventListener( MouseEvent.MOUSE_UP ) ) {
+				stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			}
+
+			if( _iconBitmap && _iconBitmap.bitmapData ) {
+				_iconBitmap.bitmapData.dispose();
+			}
+
+			removeEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
+
+		}
+
 		protected function setLabel( label:Sprite ):void {
 			if( label is SbCenterLabel ) _label = SbCenterLabel( label );
 			else if( label is SbRightLabel ) _label = SbRightLabel( label );
@@ -122,10 +138,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		private function scaleIcon( value:Number ):void {
 			_icon.scaleX = _icon.scaleY = value;
-		}
-
-		private function rand( min:Number, max:Number ):Number {
-			return (max - min) * Math.random() + min;
 		}
 
 		// ---------------------------------------------------------------------

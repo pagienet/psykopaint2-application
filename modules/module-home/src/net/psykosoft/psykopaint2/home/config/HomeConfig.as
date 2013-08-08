@@ -2,22 +2,23 @@ package net.psykosoft.psykopaint2.home.config
 {
 
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
-	import net.psykosoft.psykopaint2.home.commands.unload.DestroyHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.commands.LoadPaintingDataCommand;
 	import net.psykosoft.psykopaint2.home.commands.LoadSurfacePreviewCommand;
 	import net.psykosoft.psykopaint2.home.commands.load.SetUpHomeModuleCommand;
+	import net.psykosoft.psykopaint2.home.commands.unload.DestroyHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraFlipRequest;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraSnapshotRequest;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneConstructionSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneDestructionSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomeRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
+	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
+	import net.psykosoft.psykopaint2.home.views.base.HomeRootViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
@@ -105,10 +106,9 @@ package net.psykosoft.psykopaint2.home.config
 	   		_injector.map( RequestWallpaperChangeSignal ).asSingleton();
 	   		_injector.map( NotifyHomeModuleSetUpSignal ).asSingleton();
 	   		_injector.map( NotifyHomeModuleDestroyedSignal ).asSingleton();
-	   		_injector.map( RequestHomeSceneConstructionSignal ).asSingleton();
 	   		_injector.map( RequestHomeIntroSignal ).asSingleton();
-	   		_injector.map( RequestHomeSceneDestructionSignal ).asSingleton();
 	   		_injector.map( RequestOpenPaintingDataVOSignal ).asSingleton();
+	   		_injector.map( RequestHomeRootViewRemovalSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -130,6 +130,7 @@ package net.psykosoft.psykopaint2.home.config
 		// -----------------------
 
 		private function mapMediators():void {
+			_mediatorMap.map( HomeRootView ).toMediator( HomeRootViewMediator );
 			_mediatorMap.map( HomeView ).toMediator( HomeViewMediator );
 			_mediatorMap.map( NewPaintingSubNavView ).toMediator( NewPaintingSubNavViewMediator );
 			_mediatorMap.map( SettingsSubNavView ).toMediator( SettingsSubNavViewMediator );

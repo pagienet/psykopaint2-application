@@ -68,10 +68,6 @@ package net.psykosoft.psykopaint2.home
 			// Initialize robotlegs for this module.
 			new HomeConfig( _coreModule.injector );
 
-			// Init display tree for this module.
-			var homeRootView:HomeRootView = new HomeRootView();
-			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( homeRootView );
-
 			// Notify potential super modules.
 			moduleReadySignal.dispatch();
 		}
