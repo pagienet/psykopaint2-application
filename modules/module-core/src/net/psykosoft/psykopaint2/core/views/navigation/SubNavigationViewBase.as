@@ -98,14 +98,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		// ---------------------------------------------------------------------
-		// ViewBase overrides.
-		// ---------------------------------------------------------------------
-
-		/*override protected function onDisabled():void {
-			_scroller.releaseRenderers();
-		}*/
-
-		// ---------------------------------------------------------------------
 		// Public.
 		// ---------------------------------------------------------------------
 
@@ -125,9 +117,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			unSelectAllButtons();
 			button.selected = true;
-			_scroller.updateRendererAssociatedData( button, "selected" );
+			_scroller.updateItemRendererAssociatedData( button, "selected" );
 
-			_scroller.refreshItemRendererProperties();
+			_scroller.updateAllItemRenderersFromData();
 		}
 
 		public function validateCenterButtons():void {

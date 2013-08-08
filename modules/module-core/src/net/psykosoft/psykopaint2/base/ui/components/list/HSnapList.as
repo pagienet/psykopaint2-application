@@ -25,12 +25,9 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 		public function HSnapList() {
 			super();
-
 			rendererAddedSignal = new Signal();
 			rendererRemovedSignal = new Signal();
-
 			_itemRendererFactory = new HSnapListItemRendererFactory();
-
 			_dataForRenderer = new Dictionary();
 		}
 
@@ -44,7 +41,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		override public function reset():void {
 
 			// Release all current item renderers.
-			releaseRenderers();
+			freeAllItemRenderers();
 			_dataProvider = null;
 
 			super.reset();
@@ -99,10 +96,6 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			return _dataProvider;
 		}
 
-		public function getAssociatedDataForRenderer( itemRenderer:DisplayObject ):ISnapListData {
-			return _dataForRenderer[ itemRenderer ];
-		}
-
 		// ---------------------------------------------------------------------
 		// Item renderer updates.
 		// ---------------------------------------------------------------------
@@ -136,7 +129,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				}
 			}
 
-			// Decommission item renderers from items that are becoming not visible.
+			// Decommission item renderers from items that are becoming invisible.
 			numItems = indicesOfItemsThatBecomeInvisible.length;
 			for( i = 0; i < numItems; i++ ) {
 
@@ -144,7 +137,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 				// Dissociate item renderer from data and mark it as available.
 				itemRenderer = itemData.itemRenderer;
-				releaseItemRenderer( itemRenderer );
+				freeItemRenderer( itemRenderer );
 				itemData.itemRenderer = null;
 			}
 
@@ -176,18 +169,6 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			}
 		}
 
-		public function refreshItemRendererProperties():void {
-			var i:uint;
-			var numItems:uint;
-			numItems = _dataProvider.length;
-			for( i = 0; i < numItems; i++ ) {
-				var data:ISnapListData = _dataProvider[ i ];
-				if( data.itemRenderer ) {
-					copyAllPropertiesFromObjectAToObjectB( data, data.itemRenderer );
-				}
-			}
-		}
-
 		private function shouldItemBeVisibleAtCurrentScrollPosition( itemData:ISnapListData ):Boolean {
 			var px:Number = _container.x + itemData.itemRendererPosition;
 			var hw:Number = itemData.itemRendererWidth * 0.5;
@@ -204,7 +185,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			return renderer;
 		}
 
-		private function releaseItemRenderer( renderer:DisplayObject ):void {
+		private function freeItemRenderer( renderer:DisplayObject ):void {
 
 			var data:ISnapListData = _dataForRenderer[ renderer ];
 
@@ -218,11 +199,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			renderer.visible = false;
 		}
 
-		public function get itemRenderers():Vector.<DisplayObject> {
-			return _itemRendererFactory.itemRenderers;
-		}
-
-		public function releaseRenderers():void {
+		private function freeAllItemRenderers():void {
 			if( _dataProvider ) {
 				var i:uint;
 				var len:uint = _dataProvider.length;
@@ -230,21 +207,37 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				for( i = 0; i < len; ++i ) {
 					itemData = _dataProvider[ i ];
 					if( itemData.itemRenderer ) {
-						releaseItemRenderer( itemData.itemRenderer );
+						freeItemRenderer( itemData.itemRenderer );
 					}
 				}
 			}
+		}
+
+		public function get itemRenderers():Vector.<DisplayObject> {
+			return _itemRendererFactory.itemRenderers;
 		}
 
 		// ---------------------------------------------------------------------
 		// Moving data between item renderers and data items.
 		// ---------------------------------------------------------------------
 
-		public function updateRendererAssociatedData( itemRenderer:DisplayObject, propertyName:String = "" ):void {
+		public function updateItemRendererAssociatedData( itemRenderer:DisplayObject, propertyName:String = "" ):void {
 			var data:ISnapListData = _dataForRenderer[ itemRenderer ];
 			if( data ) {
 				if( propertyName == "" ) copyAllPropertiesFromObjectAToObjectB( itemRenderer, data );
 				else copyPropertyFromObjectAToObjectB( propertyName, itemRenderer, data );
+			}
+		}
+
+		public function updateAllItemRenderersFromData():void {
+			var i:uint;
+			var numItems:uint;
+			numItems = _dataProvider.length;
+			for( i = 0; i < numItems; i++ ) {
+				var data:ISnapListData = _dataProvider[ i ];
+				if( data.itemRenderer ) {
+					copyAllPropertiesFromObjectAToObjectB( data, data.itemRenderer );
+				}
 			}
 		}
 

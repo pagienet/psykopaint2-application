@@ -33,7 +33,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			// Init.
 			registerView( view );
 			super.initialize();
-
 		}
 
 		override protected function onViewSetup():void {
