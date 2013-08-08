@@ -31,6 +31,9 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function onAddedToStage( event:Event ):void {
+
+			trace( this, "added to stage, stage size: " + stage.stageWidth + "x" + stage.stageHeight );
+
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 
 			// AIR apps launch at a default size of 500x375 or 1000x750 on retina.

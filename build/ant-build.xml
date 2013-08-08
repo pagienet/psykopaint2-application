@@ -12,6 +12,7 @@
 	<property name="module-paint-out" value="${PaintOutputPath}"/>
 	<property name="module-core-out" value="${CoreOutputPath}"/>
 	<property name="module-book-out" value="${BookOutputPath}"/>
+	<property name="desktop-window-width" value="${DesktopWindowWidth}"/>
 	<property name="desktop-window-height" value="${DesktopWindowHeight}"/>
 	<xmlproperty file="../modules/common/assets/packaged/common-packaged/app-data.xml" collapseAttributes="true"/>
 
@@ -50,7 +51,9 @@
 	<target name="set-desktop-dimensions">
 		<xmltask source="config-desktop.xml" dest="config-desktop.xml" report="true">
 			<replace path="/:application/:initialWindow/:height/text()" withText="${desktop-window-height}"/>
-
+		</xmltask>
+		<xmltask source="config-desktop.xml" dest="config-desktop.xml" report="true">
+			<replace path="/:application/:initialWindow/:width/text()" withText="${desktop-window-width}"/>
 		</xmltask>
 	</target>
 

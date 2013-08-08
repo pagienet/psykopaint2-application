@@ -37,6 +37,7 @@ package net.psykosoft.psykopaint2.home
 		}
 
 		private function onAddedToStage( event:Event ):void {
+			trace( this, "added to stage, stage size: " + stage.stageWidth + "x" + stage.stageHeight );
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			initialize();
 		}
@@ -60,9 +61,6 @@ package net.psykosoft.psykopaint2.home
 			_coreModule.isStandalone = false;
 			_coreModule.moduleReadySignal.addOnce(onCoreModuleReady);
 			addChild(_coreModule);
-			// If I don't do this, I'm getting the wrong window size in AIR and the module won't start - Dave
-			stage.stageWidth = 1024;
-			stage.stageHeight = 768;
 		}
 
 		private function init() : void
