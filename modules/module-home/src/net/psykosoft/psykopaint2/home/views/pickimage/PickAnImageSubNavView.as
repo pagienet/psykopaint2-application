@@ -23,8 +23,8 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		override protected function onSetup():void {
 			super.onSetup();
-			createCenterButton( ID_USER, ID_USER, ButtonIconType.PICTURE );
-			createCenterButton( ID_SAMPLES, ID_SAMPLES, ButtonIconType.SAMPLES );
+//			createCenterButton( ID_USER, ID_USER, ButtonIconType.PICTURE );
+//			createCenterButton( ID_SAMPLES, ID_SAMPLES, ButtonIconType.SAMPLES );
 			createCenterButton( ID_CAMERA, ID_CAMERA, ButtonIconType.CAMERA );
 			validateCenterButtons();
 		}
