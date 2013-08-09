@@ -23,8 +23,6 @@ package net.psykosoft.psykopaint2.home.commands.unload
 
 			// Dispose home root view.
 			requestHomeRootViewRemovalSignal.dispatch();
-
-			// TODO: ask CoreRootView to remove HomeRootView from main layer.
 		}
 	}
 }

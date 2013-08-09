@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	
 	import org.gestouch.core.Gestouch;
@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public var notifyBlockingGestureSignal:NotifyBlockingGestureSignal;
 
 		[Inject]
-		public var notifyStateChangeSignal:NotifyStateChangeSignal;
+		public var notifyStateChangeSignal:NotifyNavigationStateChangeSignal;
 		
 		[Inject]
 		public var requestStateChangeSignal:RequestNavigationStateChangeSignal;

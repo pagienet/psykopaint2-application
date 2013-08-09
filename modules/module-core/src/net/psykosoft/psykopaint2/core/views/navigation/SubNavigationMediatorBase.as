@@ -55,6 +55,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_subNavigationView.scrollingEndedSignal.remove( onViewScrollingEnded );
 			_subNavigationView.navigationButtonClickedSignal.remove( onButtonClicked );
 
+			// Note: Mediator base disposes the view.
+
 			super.destroy();
 		}
 
@@ -104,7 +106,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Private
 		// -----------------------
 
-		protected function onButtonClicked( label:String ):void {
+		protected function onButtonClicked( id:String ):void {
 			// Override to react to clicks on scroller and side buttons...
 		}
 	}

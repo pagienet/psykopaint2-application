@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.models.StateModel;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var view:HomeView;
 
 		[Inject]
-		public var stateModel:StateModel;
+		public var stateModel:NavigationStateModel;
 
 		[Inject]
 		public var requestWallpaperChangeSignal:RequestWallpaperChangeSignal;

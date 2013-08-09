@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		public var notifyMemoryWarningSignal:NotifyMemoryWarningSignal;
 
 		[Inject]
-		public var notifyStateChangeSignal:NotifyStateChangeSignal;
+		public var notifyStateChangeSignal:NotifyNavigationStateChangeSignal;
 
 		[Inject]
 		public var requestStateChangeSignal:RequestNavigationStateChangeSignal;
