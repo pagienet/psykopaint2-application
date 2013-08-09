@@ -5,11 +5,10 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import com.greensock.easing.Strong;
 
 	import flash.display.Bitmap;
-
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 
@@ -36,6 +35,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _mouseDownX:Number;
 		private var _changeEvt:Event;
 		private var _earContainerXOnMouseDown:Number = 0;
+		private var _stage:Stage;
 
 		private const EAR_MOTION_RANGE:Number = 50;
 		private const EAR_ANIMATION_TIME:Number = 0.2;
@@ -57,7 +57,11 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			button.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			button.dispose();
 
-			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			if( _stage ) {
+				_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			}
+
+			_stage = null;
 		}
 
 		// ----------------------------
@@ -83,6 +87,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			addChildAt( _earContainer, 0 );
 
 			button.labelText = "";
+
+			_stage = stage;
 		}
 
 		private function postSetupAfterStageIsAvailable():void {

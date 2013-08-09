@@ -102,7 +102,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				//  Paintings.
 				default: {
 					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + id;
-					var vo:PaintingInfoVO = paintingModel.getVoWithId( id );
+					var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
+					trace( this, "clicked on painting: " + vo.id );
 					requestEaselUpdateSignal.dispatch( vo, true, false );
 				}
 			}

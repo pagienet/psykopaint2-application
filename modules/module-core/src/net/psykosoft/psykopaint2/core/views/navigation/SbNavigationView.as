@@ -150,7 +150,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				_currentSubNavView = new subNavType();
 				_currentSubNavView.setNavigation( this );
 				_subNavDictionary[ subNavType ] = _currentSubNavView;
-				addChild( _currentSubNavView );
+				addChildAt( _currentSubNavView, 2 );
 				_currentSubNavView.enable();
 			}
 			_currentSubNavView.scrollerButtonClickedSignal.add( onSubNavigationScrollerButtonClicked );
