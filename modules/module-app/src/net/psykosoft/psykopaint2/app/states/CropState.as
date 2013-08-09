@@ -14,7 +14,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestCancelCropSignal;
-	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
 
@@ -24,9 +23,6 @@ package net.psykosoft.psykopaint2.app.states
 	{
 		[Inject]
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
-
-		[Inject]
-		public var requestDestroyCropModuleSignal : RequestDestroyCropModuleSignal;
 
 		[Inject]
 		public var requestOpenCroppedBitmapDataSignal : RequestOpenCroppedBitmapDataSignal;
@@ -78,7 +74,6 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			requestCancelCropSignal.remove(onRequestCancelCropSignal);
 			requestOpenCroppedBitmapDataSignal.remove(onRequestOpenCroppedBitmapData);
-			requestDestroyCropModuleSignal.dispatch();
 			_background = null;
 		}
 

@@ -11,12 +11,17 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 
 	public class TransitionCropToPaintState extends State
 	{
+		[Inject]
+		public var requestDestroyCropModuleSignal : RequestDestroyCropModuleSignal;
+
 		[Inject]
 		public var requestLoadSurfaceSignal : RequestLoadSurfaceSignal;
 
@@ -34,6 +39,9 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var paintState : PaintState;
+
+		[Inject]
+		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
 
 		private var _croppedBitmapData : BitmapData;
 
@@ -59,16 +67,15 @@ package net.psykosoft.psykopaint2.app.states
 			_croppedBitmapData.dispose();
 			_croppedBitmapData = null;
 
-			// TODO: Go to paint view
 			notifyPaintModuleSetUp.addOnce(onPaintingModuleSetUp);
 			requestSetupPaintModuleSignal.dispatch(vo);
 		}
 
 		private function onPaintingModuleSetUp() : void
 		{
-			// TODO: Pass on background image from crop to paint module renderer
+			requestDestroyCropModuleSignal.dispatch();
+			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 			requestZoomCanvasToDefaultViewSignal.dispatch(onZoomOutComplete);
-//			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 		}
 
 		private function onZoomOutComplete() : void

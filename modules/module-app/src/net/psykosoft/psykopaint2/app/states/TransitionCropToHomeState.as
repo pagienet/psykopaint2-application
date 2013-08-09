@@ -4,11 +4,15 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 
 	public class TransitionCropToHomeState extends State
 	{
+		[Inject]
+		public var requestDestroyCropModuleSignal : RequestDestroyCropModuleSignal;
+
 		[Inject]
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
 
@@ -32,6 +36,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onHomeModuleSetUp() : void
 		{
+			requestDestroyCropModuleSignal.dispatch();
 			requestStateChangeSignal.dispatch(NavigationStateType.PICK_IMAGE);
 			stateMachine.setActiveState(homeState);
 		}

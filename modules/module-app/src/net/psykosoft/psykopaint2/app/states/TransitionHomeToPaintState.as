@@ -64,16 +64,12 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			notifyCanvasBackgroundSetSignal.addOnce(onCanvasBackgroundSet);
 			requestCreateCanvasBackgroundSignal.dispatch();
-
-			// todo: remove state change signals, replace by proper signals
-			// this is only to switch views
-//			requestNavigationStateChangeSignal.dispatch(NavigationStateType.PREPARE_FOR_PAINT_MODE);
 		}
 
 		private function onCanvasBackgroundSet() : void
 		{
 			requestZoomCanvasToDefaultViewSignal.dispatch(onZoomComplete);
-//			requestNavigationStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
+			requestNavigationStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 		}
 
 		private function onZoomComplete() : void
