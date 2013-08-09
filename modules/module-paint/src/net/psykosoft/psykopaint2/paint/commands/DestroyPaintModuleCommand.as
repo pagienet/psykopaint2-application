@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			lightController.enabled = false;
 			canvasModel.disposePaintTextures();
 			canvasHistoryModel.clearHistory();	// cleans up snapshot memory too
-			canvasRenderer.disposeBackground();
+			canvasRenderer.dispose();
 			brushKitManager.deactivate();
 			GpuRenderManager.removeRenderingStep(brushKitManager.update, GpuRenderingStepType.PRE_CLEAR);
 

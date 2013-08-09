@@ -64,7 +64,21 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		}
 
-		public function disposeBackground() : void
+		public function init() : void
+		{
+			_lightingRenderer.init();
+			_context3D = stage3D.context3D;
+			sourceTextureAlpha = 1;
+			paintAlpha = 1;
+		}
+
+		public function dispose() : void
+		{
+			disposeBackground();
+			_lightingRenderer.dispose();
+		}
+
+		private function disposeBackground() : void
 		{
 			if (_background) {
 				_background.dispose();
@@ -127,38 +141,31 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			_lightingRenderer.freezeRender = true;
 		}
-		
+
 		//Mario - I will probably land in hell for this:
 		public function get renderRect():Rectangle
 		{
 			return _lightingRenderer.renderRect;
 		}
-		
+
 		public function set sourceTextureAlpha( value:Number ):void
 		{
 			_lightingRenderer.sourceTextureAlpha  = value;
 		}
-		
+
 		public function get sourceTextureAlpha( ):Number
 		{
 			return _lightingRenderer.sourceTextureAlpha;
 		}
-		
+
 		public function set paintAlpha( value:Number ):void
 		{
 			_lightingRenderer.paintAlpha  = value;
 		}
-		
+
 		public function get paintAlpha():Number
 		{
 			return _lightingRenderer.paintAlpha;
-		}
-
-		public function init() : void
-		{
-			_context3D = stage3D.context3D;
-			sourceTextureAlpha = 1;
-			paintAlpha = 1;
 		}
 
 		public function render() : void

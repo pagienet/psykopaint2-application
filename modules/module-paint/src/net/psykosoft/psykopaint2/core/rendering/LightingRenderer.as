@@ -54,10 +54,15 @@ package net.psykosoft.psykopaint2.core.rendering
 			_globalFragmentData = new <Number>[.5, 0, 1, 0, 0, -1, 0, 0];
 			_scale = 1;
 			_offsetX = _offsetY = 0;
-			initBuffers();
 			onLightingModelChanged();
 			paintAlpha = 1;
 			sourceTextureAlpha = 0;
+		}
+
+		public function init() : void
+		{
+			initProgram();
+			initBuffers();
 		}
 
 		public function get renderRect() : Rectangle

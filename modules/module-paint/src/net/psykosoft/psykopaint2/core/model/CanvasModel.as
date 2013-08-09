@@ -147,20 +147,6 @@ package net.psykosoft.psykopaint2.core.model
 				uploadColorBackgroundOriginal();
 		}
 
-		/**
-		 * A texture containing height and specular data. normals on red/blue channel, specular strength on z, glossiness on w
-		 */
-		public function setNormalSpecularMap(value : ByteArray) : void
-		{
-			if (_normalSpecularOriginal) _normalSpecularOriginal.clear();
-
-			_normalSpecularOriginal = value;
-
-			// not sure if this will be called before or after post construct
-			if (_normalSpecularMap)
-				uploadNormalSpecularOriginal();
-		}
-
 		public function get sourceTexture() : Texture
 		{
 			if (!_sourceTexture) initSourceTexture();
@@ -201,13 +187,6 @@ package net.psykosoft.psykopaint2.core.model
 			}
 
 			if (!_fullSizeBackBuffer) _fullSizeBackBuffer = createCanvasTexture(true);
-		}
-
-		private function fillTexture(texture : Texture, r : Number, g : Number, b : Number, a : Number) : void
-		{
-			var bmd : BitmapData = new TrackedBitmapData(_textureWidth, _textureHeight, true, 0)
-			texture.uploadFromBitmapData(bmd);
-			bmd.dispose();
 		}
 
 		public function disposePaintTextures() : void

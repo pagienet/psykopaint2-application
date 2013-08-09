@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.base.utils.misc
 {
-	import flash.display.BitmapData;
 	import flash.display3D.textures.Texture;
-	import flash.geom.Point;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.debug.UndisposedObjects;

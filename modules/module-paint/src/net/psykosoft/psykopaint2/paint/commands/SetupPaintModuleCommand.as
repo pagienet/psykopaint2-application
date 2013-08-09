@@ -3,6 +3,9 @@ package net.psykosoft.psykopaint2.paint.commands
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Sine;
 
+	import flash.display.Sprite;
+	import flash.events.Event;
+
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
@@ -56,6 +59,19 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			GpuRenderManager.addRenderingStep(brushKitManager.update, GpuRenderingStepType.PRE_CLEAR);
 
+			// ugly ugly ugly, but we need a frame to process the texture uploads before triggering any more stuff
+			waitForNextFrame();
+		}
+
+		private function waitForNextFrame() : void
+		{
+			var sprite : Sprite = new Sprite();
+			sprite.addEventListener(Event.ENTER_FRAME, onNextFrame);
+		}
+
+		private function onNextFrame(event : Event) : void
+		{
+			event.target.removeEventListener(Event.ENTER_FRAME, onNextFrame);
 			notifyPaintModuleSetUpSignal.dispatch();
 		}
 
