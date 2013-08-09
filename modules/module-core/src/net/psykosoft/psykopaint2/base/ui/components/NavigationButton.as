@@ -36,10 +36,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 				stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			}
 
-			if( _iconBitmap && _iconBitmap.bitmapData ) {
-				_iconBitmap.bitmapData.dispose();
-			}
-
 			removeEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
 
 		}
