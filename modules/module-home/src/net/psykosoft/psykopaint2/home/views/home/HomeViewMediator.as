@@ -79,24 +79,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			super.initialize();
 
 			// Fully active states.
-			registerEnablingState( NavigationStateType.HOME );
-			registerEnablingState( NavigationStateType.HOME_ON_EASEL );
-			registerEnablingState( NavigationStateType.HOME_ON_FINISHED_PAINTING );
-			registerEnablingState( NavigationStateType.SETTINGS );
-			registerEnablingState( NavigationStateType.SETTINGS_WALLPAPER );
-			registerEnablingState( NavigationStateType.HOME_PICK_SURFACE );
-			registerEnablingState( NavigationStateType.PREPARE_FOR_PAINT_MODE );
-			registerEnablingState( NavigationStateType.PREPARE_FOR_HOME_MODE );
-			registerEnablingState( NavigationStateType.PICK_SAMPLE_IMAGE ); // TODO: delete this state
-
-			// Frozen states.
-			registerEnablingState( NavigationStateType.PICK_IMAGE );
-			registerEnablingState( NavigationStateType.CAPTURE_IMAGE );
-			registerEnablingState( NavigationStateType.CONFIRM_CAPTURE_IMAGE );
-			registerEnablingState( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE );
-			//registerEnablingState( NavigationStateType.CROP );	// todo: fix so this works?
-			registerEnablingState( NavigationStateType.PICK_USER_IMAGE_DESKTOP );
-			registerEnablingState( NavigationStateType.BOOK_PICK_USER_IMAGE_IOS );
+			manageStateChanges = false;
+			// NOTE: home view is no longer associated to states
 
 			// From app.
 			requestWallpaperChangeSignal.add( onWallPaperChanged );

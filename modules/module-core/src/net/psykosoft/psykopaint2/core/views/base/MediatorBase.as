@@ -62,9 +62,17 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		protected function onStateChange( newState:String ):void {
 			if( !manageStateChanges ) return;
-			var isViewEnabled:Boolean = _enablingStates.indexOf( newState ) != -1;
-			if( isViewEnabled ) _view.enable();
-			else _view.disable();
+			var viewShouldBeEnabled:Boolean = _enablingStates.indexOf( newState ) != -1;
+			if( viewShouldBeEnabled ) {
+				if( !_view.isEnabled ) {
+					_view.enable();
+				}
+			}
+			else {
+				if( _view.isEnabled ) {
+					_view.disable();
+				}
+			}
 		}
 
 		protected function onMemoryWarning():void {
