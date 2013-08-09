@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		override public function execute():void {
 
-			trace( this + ", execute()" );
+			trace( this, "execute()" );
 
 			var canvasExporter:CanvasExporter = new CanvasExporter();
 			canvasExporter.addEventListener( CanvasExportEvent.COMPLETE, onExportComplete );

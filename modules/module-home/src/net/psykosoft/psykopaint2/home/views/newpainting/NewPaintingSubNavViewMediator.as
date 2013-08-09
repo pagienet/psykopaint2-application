@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintModeType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
@@ -27,6 +28,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		[Inject]
 		public var paintingModel:PaintingModel;
+
+		[Inject]
+		public var userModel:UserModel;
 
 		override public function initialize():void {
 
@@ -73,7 +77,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				case NewPaintingSubNavView.ID_NEW: {
 					PaintModeModel.activeMode = PaintModeType.COLOR_MODE;
 					requestDrawingCoreResetSignal.dispatch();
-					paintingModel.activePaintingId = PaintingInfoVO.DEFAULT_VO_ID;
+					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + PaintingInfoVO.DEFAULT_VO_ID;
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_PICK_SURFACE );
 					break;
 				}
@@ -82,7 +86,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				case NewPaintingSubNavView.ID_NEW_PHOTO: {
 					PaintModeModel.activeMode = PaintModeType.PHOTO_MODE;
 					requestDrawingCoreResetSignal.dispatch();
-					paintingModel.activePaintingId = PaintingInfoVO.DEFAULT_VO_ID;
+					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + PaintingInfoVO.DEFAULT_VO_ID;
 					pickDefaultSurfaceAndContinueToPickImage();
 					break;
 				}
@@ -90,17 +94,15 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				// Continue painting.
 				case NewPaintingSubNavView.ID_CONTINUE: {
 					trace( "focused: " + paintingModel.activePaintingId );
-					if( paintingModel.activePaintingId != "uniqueUserId-" ) {
-						requestLoadPaintingDataSignal.dispatch( paintingModel.activePaintingId );
-						//TODO: blocker activation
-					}
+					requestLoadPaintingDataSignal.dispatch( paintingModel.activePaintingId );
+					//TODO: blocker activation
 					break;
 				}
 
 				//  Paintings.
 				default: {
-					paintingModel.activePaintingId = "uniqueUserId-" + id;
-					var vo:PaintingInfoVO = paintingModel.getVoWithId( "uniqueUserId-" + id );
+					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + id;
+					var vo:PaintingInfoVO = paintingModel.getVoWithId( id );
 					requestEaselUpdateSignal.dispatch( vo, true, false );
 				}
 			}

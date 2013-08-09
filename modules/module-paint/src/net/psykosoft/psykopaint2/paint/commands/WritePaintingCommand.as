@@ -16,11 +16,13 @@ package net.psykosoft.psykopaint2.paint.commands
 		private const ASYNC_MODE:Boolean = false;
 
 		override public function execute():void {
-			trace( this + ", execute()" );
+			trace( this, "execute()" );
 			writeInfoBytes();
 		}
 
 		private function writeInfoBytes():void {
+
+			trace( this, "vo: " + saveVO );
 
 			// TODO: using sync saving for now, async makes writing fail on ipad slow packaging, see notes here: https://github.com/psykosoft/psykopaint2-application/issues/47
 

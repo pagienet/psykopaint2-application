@@ -22,7 +22,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		override public function execute():void {
 
-			trace( this + ", execute()" );
+			trace( this, "execute()" );
+
+			trace( this, "vo: " + saveVO );
 
 			var factory:PaintingInfoFactory = new PaintingInfoFactory();
 
@@ -33,6 +35,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			}
 
 			saveVO.info = factory.createFromData( saveVO.data, saveVO.paintingId, saveVO.userId, generateThumbnail() );
+			saveVO.paintingId = saveVO.info.id;
 
 			var infoSerializer:PaintingInfoSerializer = new PaintingInfoSerializer();
 			var dataSerializer:PaintingDataSerializer = new PaintingDataSerializer();

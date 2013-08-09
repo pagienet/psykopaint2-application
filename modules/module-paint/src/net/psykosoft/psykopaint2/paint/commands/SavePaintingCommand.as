@@ -1,13 +1,14 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
+
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 
 	public class SavePaintingCommand extends SequenceMacro
 	{
@@ -28,6 +29,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		override public function prepare():void {
 
+			trace( this, "prepare()" );
+
+			// Do not save if there is nothing to save.
 			if( !canvasHistoryModel.hasHistory ) {
 				notifyPaintingSavedSignal.dispatch( true );
 				return;
@@ -35,16 +39,17 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			mapMacroConsistentData();
 
-			notifyPaintingSavingStartedSignal.dispatch();
-
 			add( ExportCanvasSurfacesCommand );
 			add( SerializePaintingCommand );
 			add( WritePaintingCommand );
 
 			registerCompleteCallback( onMacroComplete );
+
+			notifyPaintingSavingStartedSignal.dispatch();
 		}
 
 		private function onMacroComplete( success:Boolean ):void {
+			trace( this, "macro complete - success: " + success );
 			unMapMacroConsistentData();
 			if( success ) notifyPaintingSavedSignal.dispatch( true );
 			else throw new Error( "Error saving the painting." ); // TODO: should we verify saved data and remove it from disk if invalid?

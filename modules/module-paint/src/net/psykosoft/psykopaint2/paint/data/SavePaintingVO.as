@@ -20,12 +20,15 @@ package net.psykosoft.psykopaint2.paint.data
 			this.userId = userId;
 		}
 
-		public function dispose() : void
-		{
-			if (info) info.dispose();
-			if (data) data.dispose();
-			if (infoBytes) infoBytes.clear();
-			if (dataBytes) dataBytes.clear();
+		public function toString():String {
+			return "SavePaintingVO - [ paintingId: " + paintingId + " ]";
+		}
+
+		public function dispose():void {
+			if( info ) info.dispose();
+			if( data ) data.dispose();
+			if( infoBytes ) infoBytes.clear();
+			if( dataBytes ) dataBytes.clear();
 			info = null;
 			data = null;
 			infoBytes = null;
