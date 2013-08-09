@@ -12,22 +12,14 @@ package net.psykosoft.psykopaint2.home.commands.load
 		[Inject]
 		public var notifyHomeModuleSetUpSignal:NotifyHomeModuleSetUpSignal;
 
-		private static var _introHasRun:Boolean;
-
 		override public function prepare():void {
 
 			trace( this, "prepare()" );
 
 			add( LoadHomeBundledAssetsCommand );
-			add( BuildHomeSceneCommand );
+			add( AddHomeModuleDisplayCommand );
 			add( RetrievePaintingDataCommand );
 			add( UpdateEaselWithLatestPaintingCommand );
-
-			// Play intro?
-			if( !_introHasRun ) {
-				_introHasRun = true;
-				add( HomeIntroAnimationCommand );
-			}
 
 			registerCompleteCallback( onMacroComplete );
 		}

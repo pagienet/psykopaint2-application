@@ -1,12 +1,9 @@
 package net.psykosoft.psykopaint2.home.commands.unload
 {
 
-	import net.psykosoft.psykopaint2.home.commands.*;
-
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
 	import net.psykosoft.psykopaint2.core.commands.DisposePaintingDataCommand;
-
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 
 	public class DestroyHomeModuleCommand extends SequenceMacro
@@ -15,11 +12,10 @@ package net.psykosoft.psykopaint2.home.commands.unload
 		public var notifyHomeModuleDestroyedSignal : NotifyHomeModuleDestroyedSignal;
 
 		override public function prepare():void {
-			// TODO: use a command to clean up all bulkloader resources?
 
-			add( DestroyHomeSceneCommand );
-			add( DisposePaintingDataCommand );
-			add( DumpHomeBundledAssetsCommand );
+			add( DisposePaintingDataCommand 	);
+			add( DumpHomeBundledAssetsCommand   );
+			add( RemoveHomeModuleDisplayCommand );
 
 			registerCompleteCallback( onMacroComplete );
 		}

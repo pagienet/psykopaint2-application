@@ -35,6 +35,14 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			notifyCameraFlipRequest.add( onCameraFlipRequest );
 		}
 
+		override public function destroy():void {
+			view.disable();
+			notifyCameraSnapshotRequest.remove( onCameraSnapshotRequest );
+			notifyCameraFlipRequest.remove( onCameraFlipRequest );
+			view.dispose();
+			super.destroy();
+		}
+
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
 

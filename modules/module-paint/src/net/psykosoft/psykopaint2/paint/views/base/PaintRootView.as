@@ -6,20 +6,12 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-	import net.psykosoft.psykopaint2.crop.views.crop.CropSubNavView;
-	import net.psykosoft.psykopaint2.crop.views.crop.CropView;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectColorSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
-	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleView;
-	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageSubNavView;
-	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageView;
-	import net.psykosoft.psykopaint2.home.views.pickimage.ConfirmCaptureImageSubNavView;
-	import net.psykosoft.psykopaint2.home.views.pickimage.PickAUserImageView;
-	import net.psykosoft.psykopaint2.home.views.pickimage.PickAnImageSubNavView;
 
 	public class PaintRootView extends Sprite
 	{
@@ -35,7 +27,6 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_SELECT_BRUSH, SelectBrushSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_ADJUST_BRUSH, EditBrushSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_COLOR, SelectColorSubNavView );
-
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.TRANSITION_TO_HOME_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.TRANSITION_TO_PAINT_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PREPARE_FOR_HOME_MODE, SubNavigationViewBase );

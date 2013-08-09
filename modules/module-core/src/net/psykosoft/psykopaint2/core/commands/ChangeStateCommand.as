@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.commands
 {
 
-	import net.psykosoft.psykopaint2.core.models.StateModel;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 
@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.core.commands
 		public var newState:String;
 
 		[Inject]
-		public var stateModel:StateModel;
+		public var stateModel:NavigationStateModel;
 
 		override public function execute():void {
 			super.execute();

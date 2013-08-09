@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			requestStateChangeSignal.dispatch(NavigationStateType.PAINT_SELECT_BRUSH);
+//			requestStateChangeSignal.dispatch(NavigationStateType.PAINT_SELECT_BRUSH);
 			requestClosePaintView.add(onClosePaintView);
 		}
 

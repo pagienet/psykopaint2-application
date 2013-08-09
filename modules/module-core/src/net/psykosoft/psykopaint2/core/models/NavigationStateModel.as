@@ -1,16 +1,16 @@
 package net.psykosoft.psykopaint2.core.models
 {
 	import net.psykosoft.psykopaint2.base.utils.misc.StateStack;
-	import net.psykosoft.psykopaint2.core.signals.NotifyStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 
-	public class StateModel
+	public class NavigationStateModel
 	{
 		[Inject]
-		public var notifyStateChangeSignal:NotifyStateChangeSignal;
+		public var notifyStateChangeSignal:NotifyNavigationStateChangeSignal;
 
 		private var _stateStackUtil:StateStack;
 
-		public function StateModel() {
+		public function NavigationStateModel() {
 			super();
 			_stateStackUtil = new StateStack();
 		}

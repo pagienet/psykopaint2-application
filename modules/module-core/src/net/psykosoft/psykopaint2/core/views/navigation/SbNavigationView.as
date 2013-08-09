@@ -58,6 +58,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _headerDefaultY:Number;
 		private var _headerTextDefaultOffset:Number;
 		private var _subNavDictionary:Dictionary;
+		private var _numSubNavsBeingDisposed:int;
 
 		public function SbNavigationView() {
 			super();
@@ -117,10 +118,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			trace( this, "updating sub-nav: " + subNavType );
 
 			// Disable old view.
-			if( _currentSubNavView ) {
-				_currentSubNavView.disable();
-				_currentSubNavView.scrollerButtonClickedSignal.remove( onSubNavigationScrollerButtonClicked );
-			}
+			disableCurrentSubNavigation();
 
 			// Reset.
 			header.visible = false;
@@ -152,10 +150,45 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				_currentSubNavView = new subNavType();
 				_currentSubNavView.setNavigation( this );
 				_subNavDictionary[ subNavType ] = _currentSubNavView;
-				addChildAt( _currentSubNavView, 2 );
+				addChild( _currentSubNavView );
 				_currentSubNavView.enable();
 			}
 			_currentSubNavView.scrollerButtonClickedSignal.add( onSubNavigationScrollerButtonClicked );
+		}
+
+		public function disposeSubNavigation():void {
+
+			trace( this, "disposing sub-navigation views...." );
+
+			disableCurrentSubNavigation();
+
+			var subNavigation:SubNavigationViewBase;
+
+			// Sweep the current state of the dictionary and identify views that are to be removed.
+			// It's better than sweeping the dictionary itself for item removal because it may change while stuff is being removed.
+			var viewsToRemove:Vector.<DisplayObject> = new Vector.<DisplayObject>();
+			for each( subNavigation in _subNavDictionary ) {
+				viewsToRemove.push( subNavigation );
+			}
+			_subNavDictionary = new Dictionary();
+
+			_numSubNavsBeingDisposed = viewsToRemove.length;
+			trace( this, "waiting for removal of " + _numSubNavsBeingDisposed + " sub navigations." );
+
+			for( var i:uint; i < _numSubNavsBeingDisposed; i++ ) {
+				subNavigation = viewsToRemove[ i ] as SubNavigationViewBase;
+				trace( "disposing sub nav: " + subNavigation );
+				removeChild( subNavigation );
+				// Note: removing each from display causes the disposal of the mediators, which is in charge of disposing the view itself
+			}
+		}
+
+		private function disableCurrentSubNavigation():void {
+			if( _currentSubNavView ) {
+				_currentSubNavView.scrollerButtonClickedSignal.remove( onSubNavigationScrollerButtonClicked );
+				_currentSubNavView.disable();
+				_currentSubNavView = null;
+			}
 		}
 
 		// ---------------------------------------------------------------------

@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
@@ -20,7 +21,7 @@ package net.psykosoft.psykopaint2.app.states
 	public class TransitionHomeToPaintState extends State
 	{
 		[Inject]
-		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
+		public var requestNavigationStateChangeSignal : RequestNavigationStateChangeSignal;
 
 		[Inject]
 		public var requestCreateCanvasBackgroundSignal : RequestCreateCanvasBackgroundSignal;
@@ -43,6 +44,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
 
+		[Inject]
+		public var notifyHomeModuleDestroyedSignal:NotifyHomeModuleDestroyedSignal;
+
 		public function TransitionHomeToPaintState()
 		{
 		}
@@ -63,20 +67,24 @@ package net.psykosoft.psykopaint2.app.states
 
 			// todo: remove state change signals, replace by proper signals
 			// this is only to switch views
-			requestStateChangeSignal.dispatch(NavigationStateType.PREPARE_FOR_PAINT_MODE);
+//			requestNavigationStateChangeSignal.dispatch(NavigationStateType.PREPARE_FOR_PAINT_MODE);
 		}
 
 		private function onCanvasBackgroundSet() : void
 		{
 			requestZoomCanvasToDefaultViewSignal.dispatch(onZoomComplete);
-			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
+//			requestNavigationStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 		}
 
 		private function onZoomComplete() : void
 		{
 			stateMachine.setActiveState(paintState);
-
+			notifyHomeModuleDestroyedSignal.addOnce( onHomeModuleDestroyed );
 			requestDestroyHomeModuleSignal.dispatch();
+		}
+
+		private function onHomeModuleDestroyed():void {
+			requestNavigationStateChangeSignal.dispatch(NavigationStateType.PAINT_SELECT_BRUSH);
 		}
 
 		override ns_state_machine function deactivate() : void

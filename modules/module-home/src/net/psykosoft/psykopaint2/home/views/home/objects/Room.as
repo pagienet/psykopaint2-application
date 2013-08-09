@@ -81,9 +81,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Mesh.
 			_wall = new Mesh( _wallGeometry, null );
-			changeWallpaper(
-					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBinary( "defaultWallpaper", true )
-			);
+			changeWallpaper(  BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBinary( "defaultWallpaper", true ) );
 			_wall.scaleX = WALL_WIDTH / _wallGeometry.width;
 			_wall.scaleZ = WALL_HEIGHT / _wallGeometry.height;
 			_wall.rotationX = -90;

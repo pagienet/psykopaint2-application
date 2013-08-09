@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.core.managers.Stage3DProxy;
 
-	import flash.events.Event;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
@@ -11,11 +10,10 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
-	import net.psykosoft.psykopaint2.core.managers.rendering.SnapshotPromise;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
-	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.models.StateModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
@@ -24,8 +22,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneConstructionSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestHomeSceneDestructionSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	import org.gestouch.events.GestureEvent;
@@ -36,7 +32,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var view:HomeView;
 
 		[Inject]
-		public var stateModel:StateModel;
+		public var stateModel:NavigationStateModel;
 
 		[Inject]
 		public var requestWallpaperChangeSignal:RequestWallpaperChangeSignal;
@@ -69,13 +65,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var requestHomeViewScrollSignal:RequestHomeViewScrollSignal;
 
 		[Inject]
-		public var requestHomeSceneConstructionSignal:RequestHomeSceneConstructionSignal;
-
-		[Inject]
 		public var requestHomeIntroSignal:RequestHomeIntroSignal;
-
-		[Inject]
-		public var requestHomeSceneDestructionSignal:RequestHomeSceneDestructionSignal;
 
 		[Inject]
 		public var easelRectModel : EaselRectModel;
@@ -115,9 +105,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
 			requestHomeViewScrollSignal.add( onScrollRequested );
-			requestHomeSceneConstructionSignal.add( onBuildSceneRequest );
 			requestHomeIntroSignal.add( onIntroRequested );
-			requestHomeSceneDestructionSignal.add( onDestroySceneRequest );
 
 			// From view.
 			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
@@ -125,6 +113,32 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.easelRectChanged.add( onEaselRectChanged );
 			view.enabledSignal.add( onEnabled );
 			view.disabledSignal.add( onDisabled );
+
+			view.stage3dProxy = stage3dProxy;
+
+			view.enable();
+		}
+
+		override public function destroy():void {
+
+			view.disable();
+
+			requestWallpaperChangeSignal.remove( onWallPaperChanged );
+			notifyGlobalGestureSignal.remove( onGlobalGesture );
+			notifyNavigationToggleSignal.remove( onNavigationToggled );
+			notifyPaintingDataRetrievedSignal.remove( onPaintingDataRetrieved );
+			requestEaselPaintingUpdateSignal.remove( onEaselUpdateRequest );
+			requestHomeViewScrollSignal.remove( onScrollRequested );
+			requestHomeIntroSignal.remove( onIntroRequested );
+			view.closestPaintingChangedSignal.remove( onViewClosestPaintingChanged );
+			view.zoomCompletedSignal.remove( onViewZoomComplete );
+			view.easelRectChanged.remove( onEaselRectChanged );
+			view.enabledSignal.remove( onEnabled );
+			view.disabledSignal.remove( onDisabled );
+
+			view.dispose();
+
+			super.destroy();
 		}
 
 		private function onEnabled() : void
@@ -140,14 +154,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 		// From app.
 		// -----------------------
-
-		private function onBuildSceneRequest():void {
-			view.buildScene( stage3dProxy );
-		}
-
-		private function onDestroySceneRequest():void {
-			view.destroyScene();
-		}
 
 		private function onIntroRequested():void {
 			view.introAnimation();

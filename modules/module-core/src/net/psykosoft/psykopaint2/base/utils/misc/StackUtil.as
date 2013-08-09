@@ -17,6 +17,10 @@ package net.psykosoft.psykopaint2.base.utils.misc
 			_stack = new Vector.<Number>();
 		}
 
+		public function dispose():void {
+			_stack = null;
+		}
+
 		public function pushValue( value:Number ):void {
 			if(++_newestIndex == count)
 				_newestIndex = 0;

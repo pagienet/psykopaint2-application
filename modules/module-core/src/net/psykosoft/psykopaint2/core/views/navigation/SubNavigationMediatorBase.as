@@ -45,6 +45,21 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_subNavigationView.scrollingEndedSignal.add( onViewScrollingEnded );
 		}
 
+		override public function destroy():void {
+
+			notifyGlobalGestureSignal.remove( onGlobalGesture );
+			_subNavigationView.enabledSignal.remove( onViewEnabled );
+			_subNavigationView.disabledSignal.remove( onViewDisabled );
+			_subNavigationView.setupSignal.remove( onViewSetup );
+			_subNavigationView.scrollingStartedSignal.remove( onViewScrollingStarted );
+			_subNavigationView.scrollingEndedSignal.remove( onViewScrollingEnded );
+			_subNavigationView.navigationButtonClickedSignal.remove( onButtonClicked );
+
+			// Note: Mediator base disposes the view.
+
+			super.destroy();
+		}
+
 		// -----------------------
 		// From view.
 		// -----------------------
@@ -91,7 +106,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Private
 		// -----------------------
 
-		protected function onButtonClicked( label:String ):void {
+		protected function onButtonClicked( id:String ):void {
 			// Override to react to clicks on scroller and side buttons...
 		}
 	}

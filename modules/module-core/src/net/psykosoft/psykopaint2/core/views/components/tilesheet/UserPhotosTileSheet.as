@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.core.views.components.tilesheet
 			fullImageFetchedSignal = new Signal();
 		}
 
-		public function dispose():void {
+		override public function dispose():void {
 			_fetcher.dispose();
 		}
 

@@ -9,33 +9,20 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
-	import away3d.hacks.NativeTexture;
 	import away3d.lights.DirectionalLight;
-	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
-	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.BitmapTexture;
-	import away3d.textures.Stage3dTexture;
-	import away3d.textures.Texture2DBase;
 
 	import flash.display3D.textures.Texture;
-	import flash.events.Event;
 	import flash.events.KeyboardEvent;
-	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-	import net.psykosoft.psykopaint2.base.utils.io.AssetBundleLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.home.config.HomeSettings;
 	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
 	import net.psykosoft.psykopaint2.home.views.home.camera.ZoomCameraController;
-	import net.psykosoft.psykopaint2.home.views.home.objects.FrameType;
 	import net.psykosoft.psykopaint2.home.views.home.objects.GalleryPainting;
 	import net.psykosoft.psykopaint2.home.views.home.objects.PaintingManager;
 	import net.psykosoft.psykopaint2.home.views.home.objects.Room;
@@ -78,9 +65,15 @@ package net.psykosoft.psykopaint2.home.views.home
 		// Build/destroy.
 		// ---------------------------------------------------------------------
 
-		public function buildScene( stage3dProxy:Stage3DProxy ):void {
+		override protected function onEnabled():void {
+			buildScene();
+		}
 
-			_stage3dProxy = stage3dProxy;
+		override protected function onDisabled():void {
+			destroyScene();
+		}
+
+		private function buildScene():void {
 
 			// -----------------------
 			// Initialize view.
@@ -157,7 +150,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.render();
 		}
 
-		public function destroyScene():void {
+		private function destroyScene():void {
 
 			stage.removeEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
 			stage.removeEventListener( KeyboardEvent.KEY_UP, onStageKeyUp );
@@ -345,7 +338,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		// ---------------------------------------------------------------------
-		// Getters.
+		// Getters & setters.
 		// ---------------------------------------------------------------------
 
 		public function get paintingManager():PaintingManager {
@@ -365,6 +358,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			 rect.width * CoreSettings.GLOBAL_SCALING, rect.height * CoreSettings.GLOBAL_SCALING );
 			 this.graphics.endFill();*/
 			return rect;
+		}
+
+		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
+			_stage3dProxy = stage3dProxy;
 		}
 	}
 }
