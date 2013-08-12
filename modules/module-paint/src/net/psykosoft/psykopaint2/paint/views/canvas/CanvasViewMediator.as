@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
+	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
@@ -66,13 +67,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var canvasModel:CanvasModel;
 
 		[Inject]
-		public var notifyEaselRectUpdateSignal:NotifyEaselRectUpdateSignal;
-
-		[Inject]
 		public var requestZoomCanvasToDefaultViewSignal:RequestZoomCanvasToDefaultViewSignal;
 
 		[Inject]
 		public var requestZoomCanvasToEaselViewSignal:RequestZoomCanvasToEaselViewSignal;
+
+		[Inject]
+		public var easelRectModel : EaselRectModel;
 
 		private var _transformMatrix:Matrix;
 		private var _easelRectFromHomeView:Rectangle;
@@ -101,7 +102,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 
 			// From app.
-			notifyEaselRectUpdateSignal.add( onEaselRectInfo );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 
 			requestZoomCanvasToDefaultViewSignal.add( zoomToFullView );
@@ -218,8 +218,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		}
 
-		private function onEaselRectInfo( rect:Rectangle ):void {
-			_easelRectFromHomeView = rect.clone();
+		private function updateEaselRect():void {
+			_easelRectFromHomeView = easelRectModel.rect;
 
 			_easelRectFromHomeView.x *= CoreSettings.GLOBAL_SCALING;
 			_easelRectFromHomeView.y *= CoreSettings.GLOBAL_SCALING;
@@ -237,6 +237,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function zoomToFullView(callback : Function):void
 		{
+			updateEaselRect();
 			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: function() : void {

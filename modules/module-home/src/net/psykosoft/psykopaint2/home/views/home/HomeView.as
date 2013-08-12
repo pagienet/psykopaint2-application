@@ -334,6 +334,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onCameraSceneTransformChanged( event:Object3DEvent ):void {
+//			trace( this, "onCameraSceneTransformChanged()" );
 			easelRectChanged.dispatch();
 		}
 
