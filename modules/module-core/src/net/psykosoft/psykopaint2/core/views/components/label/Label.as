@@ -5,12 +5,12 @@ package net.psykosoft.psykopaint2.core.views.components.label
 
 	import net.psykosoft.psykopaint2.base.ui.components.PsykoLabel;
 
-	public class SbLabel extends PsykoLabel
+	public class Label extends PsykoLabel
 	{
 		// Declared in Flash.
 		public var textfield:TextField;
 
-		public function SbLabel() {
+		public function Label() {
 			super();
 			super.setTextfield( textfield );
 		}

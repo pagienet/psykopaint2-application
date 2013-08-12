@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 
-	public class SbRangedSlider extends Sprite
+	public class RangedSlider extends Sprite
 	{
 		public static var LABEL_VALUE:int = 0;
 		public static var LABEL_PERCENT:int = 1;
@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.core.views.components.rangeslider
 		private var _activeHandle:Sprite;
 		private var _labelMode:int = 1;
 		
-		public function SbRangedSlider() {
+		public function RangedSlider() {
 			super();
 			_minX = leftHandleView.x;
 			_maxX = rightHandleView.x;

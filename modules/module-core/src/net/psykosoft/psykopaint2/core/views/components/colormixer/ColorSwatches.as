@@ -2,30 +2,17 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 {
 
 	import com.quasimondo.color.colorspace.ARGB;
-	import com.quasimondo.color.colorspace.HEX;
 	import com.quasimondo.color.colorspace.HSL;
-	import com.quasimondo.color.colorspace.RGB;
 	import com.quasimondo.color.utils.ColorHarmony;
-	
+
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
-	import flash.display.MovieClip;
-	import flash.display.Shape;
 	import flash.display.Sprite;
-	import flash.display.StageQuality;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filters.BlurFilter;
-	import flash.filters.DisplacementMapFilter;
-	import flash.filters.DisplacementMapFilterMode;
-	import flash.geom.ColorTransform;
-	import flash.geom.Matrix;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	
 
-	public class SbColorSwatches extends Sprite
+	public class ColorSwatches extends Sprite
 	{
 		
 		[Embed(source="../../../../../../../../assets/src/images/navigation/colorswatches/colorPalette.png")]
@@ -46,7 +33,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		public const palettes:Array = [[0x0b1111,0x05264e,0x00346a,0x01325d,0x01363c,0x016d00],
 										[0x452204,0x770c20,0xa81002,0xd84000,0xbe9d02,0xffffff]];
 		
-		public function SbColorSwatches() {
+		public function ColorSwatches() {
 			super();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}

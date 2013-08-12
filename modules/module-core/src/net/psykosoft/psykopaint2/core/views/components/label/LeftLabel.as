@@ -6,16 +6,21 @@ package net.psykosoft.psykopaint2.core.views.components.label
 
 	import net.psykosoft.psykopaint2.base.ui.components.BackgroundLabel;
 
-	public class SbCenterLabel extends BackgroundLabel
+	public class LeftLabel extends BackgroundLabel
 	{
 		// Declared in Flash.
 		public var textfield:TextField;
 		public var background:Sprite;
 
-		public function SbCenterLabel() {
+		public function LeftLabel() {
 			super();
 			super.setBackground( background );
 			super.setTextfield( textfield );
+		}
+
+		override protected function validateDimensions():void {
+			enforceTextWidth();
+			matchBackgroundWidthToText( 40 );
 		}
 	}
 }

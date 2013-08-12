@@ -4,11 +4,11 @@ package net.psykosoft.psykopaint2.core.views.components.checkbox
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
-	public class SbCheckBox extends MovieClip
+	public class CheckBox extends MovieClip
 	{
 		private var _selected:Boolean = false;
 
-		public function SbCheckBox() {
+		public function CheckBox() {
 			super();
 			stop();
 			addEventListener( MouseEvent.MOUSE_DOWN, onMouseDownEvent );

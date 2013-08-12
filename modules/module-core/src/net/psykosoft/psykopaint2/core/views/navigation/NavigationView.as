@@ -20,12 +20,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.button.SbLeftButton;
-	import net.psykosoft.psykopaint2.core.views.components.button.SbRightButton;
+	import net.psykosoft.psykopaint2.core.views.components.button.LeftButton;
+	import net.psykosoft.psykopaint2.core.views.components.button.RightButton;
 
 	import org.osflash.signals.Signal;
 
-	public class SbNavigationView extends ViewBase
+	public class NavigationView extends ViewBase
 	{
 		// Declared in Flash.
 		public var woodBg:Sprite;
@@ -42,8 +42,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var showHideUpdateSignal:Signal;
 		public var buttonClickedSignal:Signal;
 
-		private var _leftButton:SbLeftButton;
-		private var _rightButton:SbRightButton;
+		private var _leftButton:LeftButton;
+		private var _rightButton:RightButton;
 		private var _currentSubNavView:SubNavigationViewBase;
 
 		private var _animating:Boolean;
@@ -60,7 +60,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _subNavDictionary:Dictionary;
 		private var _numSubNavsBeingDisposed:int;
 
-		public function SbNavigationView() {
+		public function NavigationView() {
 			super();
 
 			shownSignal = new Signal();
@@ -71,8 +71,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			buttonClickedSignal = new Signal();
 
 			_reactiveHideStackY = new StackUtil();
-			_leftButton = leftBtnSide.getChildByName( "btn" ) as SbLeftButton;
-			_rightButton = rightBtnSide.getChildByName( "btn" ) as SbRightButton;
+			_leftButton = leftBtnSide.getChildByName( "btn" ) as LeftButton;
+			_rightButton = rightBtnSide.getChildByName( "btn" ) as RightButton;
 			_bgHeight *= CoreSettings.GLOBAL_SCALING;
 			_targetReactiveY = 768 * scaleX - _bgHeight;
 

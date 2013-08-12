@@ -4,20 +4,20 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
     import flash.display.MovieClip;
     import flash.text.TextField;
 
-    public class SbListItemView extends MovieClip {
+    public class ListItemView extends MovieClip {
 
 		// Declared in Fla.
         public var tf:TextField;
 		public var bg:MovieClip;
 
-        private var _data:SbListItemVO;
+        private var _data:ListItemVO;
 
-        public function SbListItemView() {
+        public function ListItemView() {
             super();
 			bg.stop();
         }
 
-        public function setData(value:SbListItemVO):void {
+        public function setData(value:ListItemVO):void {
 
             bg.gotoAndStop( value.odd ? 1 : 2 );
 
@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
             this._data = value;
         }
 
-        public function getData():SbListItemVO {
+        public function getData():ListItemVO {
             return _data;
         }
 

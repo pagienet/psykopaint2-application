@@ -6,22 +6,22 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 
 	import org.osflash.signals.Signal;
 
-public class SbComboboxView extends Sprite
+public class ComboboxView extends Sprite
 	{
 		private var _clickOffsetY:Number = 0;
-		private var _listView:SbListView;
+		private var _listView:ListView;
 		private var _mouseIsDown:Boolean;
 
 		public var interactionStartedSignal:Signal;
 		public var interactionEndedSignal:Signal;
 
-		public function SbComboboxView() {
+		public function ComboboxView() {
 			super();
 
 			interactionStartedSignal = new Signal();
 			interactionEndedSignal = new Signal();
 
-			_listView = new SbListView();
+			_listView = new ListView();
 			addChildAt( _listView, 0 );
 
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
@@ -55,7 +55,7 @@ public class SbComboboxView extends Sprite
 			_listView.selectedIndex = value;
 		}
 
-		public function get selectedItem():SbListItemVO {
+		public function get selectedItem():ListItemVO {
 			return _listView.selectedItem;
 		}
 
@@ -110,7 +110,7 @@ public class SbComboboxView extends Sprite
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			_listView.addEventListener( MouseEvent.MOUSE_DOWN, onListMouseDown );
-			_listView.addEventListener( SbListView.CHANGE, onListChange );
+			_listView.addEventListener( ListView.CHANGE, onListChange );
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp )
 		}
 	}

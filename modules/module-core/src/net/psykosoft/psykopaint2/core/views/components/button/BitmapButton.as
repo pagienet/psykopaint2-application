@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 
-	public class SbBitmapButton extends NavigationButton
+	public class BitmapButton extends NavigationButton
 	{
 		// Declared in Flash.
 		public var label:Sprite;
@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		private var _pin1:MovieClip;
 		private var _pin2:MovieClip;
 
-		public function SbBitmapButton() {
+		public function BitmapButton() {
 			super();
 			super.setLabel( label );
 			super.setIcon( icon );

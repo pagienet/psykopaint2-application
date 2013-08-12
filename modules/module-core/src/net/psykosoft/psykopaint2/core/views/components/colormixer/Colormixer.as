@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 //	import net.psykosoft.psykopaint2.tdsi.ColorMixer;
 
 
-	public class SbColormixer extends Sprite
+	public class Colormixer extends Sprite
 	{
 		private var _id : String;
 		
@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		private var palettes:Array;
 		//private var mixer:ColorMixer;
 		
-		public function SbColormixer( palettes:Array ) {
+		public function Colormixer( palettes:Array ) {
 			super();
 			this.palettes = palettes;
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );

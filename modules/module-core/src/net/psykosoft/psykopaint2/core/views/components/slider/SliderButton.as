@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 
-	public class SbSliderButton extends Sprite
+	public class SliderButton extends Sprite
 	{
 		// Declared in Flash.
 		public var button:NavigationButton;
@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		public static var LABEL_PERCENT:int = 1;
 		public static var LABEL_DEGREES:int = 2;
 
-		public function SbSliderButton() {
+		public function SliderButton() {
 			super();
 			setup();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );

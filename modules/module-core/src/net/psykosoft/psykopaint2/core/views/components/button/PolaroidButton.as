@@ -6,13 +6,13 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 
-	public class SbPolaroidButton extends NavigationButton
+	public class PolaroidButton extends NavigationButton
 	{
 		// Declared in Flash.
 		public var label:Sprite;
 		public var icon:MovieClip;
 
-		public function SbPolaroidButton() {
+		public function PolaroidButton() {
 			super();
 			super.setLabel( label );
 			super.setIcon( icon );

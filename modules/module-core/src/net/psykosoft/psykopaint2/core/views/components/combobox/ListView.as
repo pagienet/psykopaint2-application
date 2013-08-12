@@ -7,11 +7,11 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 	import flash.display.Sprite;
 	import flash.events.Event;
 
-	public class SbListView extends Sprite
+	public class ListView extends Sprite
 	{
 		public static const CHANGE:String = "onChange";
 
-		private var _itemViews:Vector.<SbListItemView>
+		private var _itemViews:Vector.<ListItemView>
 		private var _itemViewContainer:Sprite;
 		private var _selectedIndex:int = 0;
 		private var _open:Boolean = false;
@@ -27,10 +27,10 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 		public var bottomImage:Sprite;
 		public var bottomImageUpward:Sprite;
 
-		public function SbListView() {
+		public function ListView() {
 			super();
 
-			_itemViews = new Vector.<SbListItemView>();
+			_itemViews = new Vector.<ListItemView>();
 			_itemViewContainer = new Sprite();
 
 			topImage.y = 0;
@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 				_itemViews[i].parent.removeChild( _itemViews[i] );
 
 			}
-			_itemViews = new Vector.<SbListItemView>();
+			_itemViews = new Vector.<ListItemView>();
 		}
 
 		public function removeItemAt( index:int ):void {
@@ -61,18 +61,18 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 		}
 
 		public function addItemAt( dataObject:Object, index:int ):void {
-			var listItemVO:SbListItemVO = new SbListItemVO( dataObject );
+			var listItemVO:ListItemVO = new ListItemVO( dataObject );
 			listItemVO.odd = (index % 2 == 1) ? true : false;
-			var newListItemView:SbListItemView = new SbListItemView();
+			var newListItemView:ListItemView = new ListItemView();
 			newListItemView.setData( listItemVO );
 			_itemViews.splice( index, 0, newListItemView );
 			_itemViewContainer.addChildAt( newListItemView, 0 );
 		}
 
 		public function addItem( dataObject:Object ):void {
-			var listItemVO:SbListItemVO = new SbListItemVO( dataObject );
+			var listItemVO:ListItemVO = new ListItemVO( dataObject );
 			listItemVO.odd = (_itemViews.length % 2 == 1) ? true : false;
-			var newListItemView:SbListItemView = new SbListItemView();
+			var newListItemView:ListItemView = new ListItemView();
 			newListItemView.setData( listItemVO );
 			_itemViews.push( newListItemView );
 			_itemViewContainer.addChildAt( newListItemView, 0 );
@@ -86,7 +86,7 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 
 		public function collapse():void {
 			_animating = true;
-			dispatchEvent( new Event( SbListView.CHANGE ) );
+			dispatchEvent( new Event( ListView.CHANGE ) );
 			TweenLite.killTweensOf( _animationObject );
 			TweenLite.to( _animationObject, TWEEN_TIME, { t: 0, ease: TWEEN_FUNCTION, onUpdate: animationUpdate, onComplete: onCollapseComplete } );
 		}
@@ -116,7 +116,7 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 			var start:uint;
 			var end:uint;
 			var marker:Number;
-			var currentItemView:SbListItemView = _itemViews[ 0 ];
+			var currentItemView:ListItemView = _itemViews[ 0 ];
 
 			var t:Number = _animationObject.t;
 			var squeeze:Number = t;
@@ -162,14 +162,14 @@ package net.psykosoft.psykopaint2.core.views.components.combobox
 
 		public function set selectedIndex( value:int ):void {
 			_selectedIndex = value;
-			var currentItemView:SbListItemView = _itemViews[ _selectedIndex ];
+			var currentItemView:ListItemView = _itemViews[ _selectedIndex ];
 			currentItemView.visible = true;
 			currentItemView.y = 0;
 			currentItemView.scaleY = 1;
 			animationUpdate();
 		}
 
-		public function get selectedItem():SbListItemVO {
+		public function get selectedItem():ListItemVO {
 			return _itemViews[_selectedIndex].getData();
 		}
 

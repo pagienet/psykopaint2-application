@@ -12,14 +12,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.button.SbIconButton;
+	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 
 	import org.osflash.signals.Signal;
 
 	public class SubNavigationViewBase extends ViewBase
 	{
 		private var _scroller:HSnapList;
-		private var _navigation:SbNavigationView;
+		private var _navigation:NavigationView;
 		private var _centerButtonData:Vector.<ISnapListData>;
 
 		public var scrollingStartedSignal:Signal;
@@ -104,7 +104,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_navigation.showRightButton( value );
 		}
 
-		public function setNavigation( value:SbNavigationView ):void {
+		public function setNavigation( value:NavigationView ):void {
 			_navigation = value;
 		}
 
@@ -156,7 +156,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			btnData.selectable = selectable;
 			btnData.id = id;
 			btnData.itemRendererWidth = 100;
-			btnData.itemRendererType = rendererClass || SbIconButton;
+			btnData.itemRendererType = rendererClass || IconButton;
 			_centerButtonData.push( btnData );
 			return btnData;
 		}

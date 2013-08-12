@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 
-	public class SbSlider extends Sprite
+	public class Slider extends Sprite
 	{
 		public static var LABEL_VALUE:int = 0;
 		public static var LABEL_PERCENT:int = 1;
@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _labelMode:int = 1;
 		private var _digits:int = 2;
 		
-		public function SbSlider() {
+		public function Slider() {
 			super();
 			_xRange = _maxX - _minX;
 			valueLabel.selectable = valueLabel.mouseEnabled = false;
