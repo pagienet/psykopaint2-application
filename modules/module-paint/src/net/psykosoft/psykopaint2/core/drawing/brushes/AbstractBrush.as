@@ -231,7 +231,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			growBounds(_brushMesh.getBounds());
 		}
 
-		private function growBounds(increase : Rectangle) : void
+		protected function growBounds(increase : Rectangle) : void
 		{
 			if (_bounds.isEmpty()) {
 				_bounds.copyFrom(increase);

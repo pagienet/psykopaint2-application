@@ -10,10 +10,8 @@ package net.psykosoft.psykopaint2.core.configuration
 		// Constants.
 		// ---------------------------------------------------------------------
 
-		// --------------------------------------
-		// Optional.
-		// Make sure to set properly on release.
-		// --------------------------------------
+		// Make sure to tweak these on release
+		// TODO: add a "force release" master switch boolean that automatically changes all these
 
 		// On screen debugging.
 		public static const SHOW_STATS:Boolean = true; /*false on release*/
@@ -29,6 +27,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		// Console gpu debugging.
 		public static const STAGE_3D_ERROR_CHECKING:Boolean = true; /*false on release*/
 		public static const DEBUG_RENDER_SEQUENCE:Boolean = false; /*false on release*/
+
 		public static const DEBUG_AGAL:Boolean = false; /*false on release*/
 
 		// Other options.

@@ -3,9 +3,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import flash.display.DisplayObject;
 	import flash.events.Event;
-
+	
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.SbColorSwatches;
@@ -32,9 +33,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private var colorMixer2:SbColormixer;
 		private var colorSwatches:SbColorSwatches;
 
-		private var checkBox:SbCheckBox;
-		private var _colorModeParameter:PsykoParameter;
-
 		public function SelectColorSubNavView() {
 			super();
 		}
@@ -42,10 +40,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onEnabled():void {
 			setHeader( "" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
-		}
-
-		override protected function onDisabled():void {
-			if( _colorModeParameter ) _colorModeParameter.booleanValue = false;
 		}
 
 		override protected function onSetup():void {
@@ -67,15 +61,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			//colorMixer2.blendMode = "multiply";
 			colorMixer2.addEventListener( Event.CHANGE, onColorPicked );
 
-			checkBox = new SbCheckBox();
-			checkBox.addEventListener( Event.CHANGE, onCheckBoxChanged );
-			checkBox.y = UI_ELEMENT_Y;
-			checkBox.x = 10;
-
+			
 			addChild( colorMixer1 );
 			addChild( colorMixer2 );
 			addChild( colorSwatches );
-			addChild( checkBox );
+			
 		}
 
 		override protected function onDisposed():void {
@@ -98,10 +88,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				var parameter:PsykoParameter = list[ i ];
 				if( parameter.type == PsykoParameter.ColorParameter ) {
 					_colorParameter = parameter;
-				} else if( parameter.id == "Custom Color" ) {
-					_colorModeParameter = parameter;
-					checkBox.selected = _colorModeParameter.booleanValue;
-				}
+				} 
 			}
 		}
 
@@ -109,24 +96,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// Listeners.
 		// ---------------------------------------------------------------------
 
-		private function onCheckBoxChanged( event:Event ):void {
-			var checkBox:SbCheckBox = event.target as SbCheckBox;
-			_colorModeParameter.booleanValue = checkBox.selected;
-		}
+		
 
 		protected function onColorPicked( event:Event ):void {
 			if( _colorParameter != null ) {
 				_colorParameter.colorValue = SbColormixer( event.target ).pickedColor;
-				if( !checkBox.selected ) _colorModeParameter.booleanValue = checkBox.selected = true;
 				colorSwatches.setSelection( -1 );
 			}
 
 		}
 
 		protected function onSwatchColorPicked( event:Event ):void {
-			if( _colorParameter != null ) {
+			if( _colorParameter != null ) 
+			{
 				_colorParameter.colorValue = SbColorSwatches( event.target ).pickedColor;
-				if( !checkBox.selected ) _colorModeParameter.booleanValue = checkBox.selected = true;
 			}
 		}
 	}

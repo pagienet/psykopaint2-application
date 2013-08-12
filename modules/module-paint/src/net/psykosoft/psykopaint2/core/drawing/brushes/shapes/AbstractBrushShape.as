@@ -54,14 +54,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			_scaleFactor = Math.sqrt(Math.pow( _variationFactors[2],2) +  Math.pow( _variationFactors[3],2));
 		}
 		
-		final public function update() : void
+		final public function update( automatic:Boolean = true ) : void
 		{
-			updateTexture(_texture);
+			updateTexture(_texture, automatic);
 		}
 
-		protected function updateTexture(texture : Texture) : void
+		protected function updateTexture(texture : Texture, automatic:Boolean = true ) : void
 		{
 			// does nothing by default
+			// set the automatic argument to false to be able to trigger update manually
 		}
 
 		public function get id() : String

@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import com.bit101.components.ComboBox;
 	import com.bit101.components.Knob;
-
+	
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -15,6 +15,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
+	
+	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
+	import net.psykosoft.psykopaint2.core.models.PaintModeType;
+	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
@@ -69,10 +74,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
-			showRightButton( false );
+			showRightButton( PaintModeModel.activeMode == PaintModeType.COLOR_MODE );
 			for( var i:uint = 0; i < numParameters; ++i ) {
 
 				var parameter:PsykoParameter = list[ i ];
+
 				trace( this, "adding parameter with id: " + parameter.id + ", and label: " + parameter.label );
 
 				if( parameter.type != PsykoParameter.ColorParameter ) {
@@ -98,6 +104,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				else {
 					showRightButton( true );
 				}
+
 			}
 
 			validateCenterButtons();

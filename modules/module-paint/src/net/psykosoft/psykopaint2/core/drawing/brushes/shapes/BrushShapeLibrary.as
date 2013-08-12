@@ -34,6 +34,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			registerShape(new BasicBrushShape(context3D));
 			registerShape(new SplotchBrushShape(context3D));
 			registerShape(new NoisyBrushShape(context3D));
+			registerShape(new ScalesBrushShape(context3D));
+			registerShape(new RenderTextureBrushShape(context3D));
 			/*
 			//disabled unused shapes
 			registerShape(new BasicSmoothBrushShape(context3D));
@@ -45,7 +47,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			registerShape(new DotBrushShape(context3D));
 			registerShape(new InkDotShape1(context3D));
 			registerShape(new ObjectTestShape1(context3D));
-			registerShape(new ScalesBrushShape(context3D));
 			registerShape(new AntialiasedTriangleBrushShape(context3D));
 			registerShape(new PrecisionTestShape(context3D));
 			registerShape(new SphereBrushShape(context3D));
