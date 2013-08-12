@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<Thumbnails>
+
+    <path>
+        <lowRes>/book-packaged/samples/thumbs_lowres/</lowRes>
+        <highRes>/book-packaged/samples/thumbs/</highRes>
+        <originals>/book-packaged/samples/originals/</originals>
+    </path>
+    
+    <images>
+    
+    <image name="anemone.jpg"/>
+    <image name="angkor.jpg"/>
+    <image name="architecture.jpg"/>
+    <image name="artTools.jpg"/>
+    <image name="athens.jpg"/>
+    <image name="autumnroad.jpg"/>
+    <image name="autumntree.jpg"/>
+    <image name="breakfast.jpg"/>
+    <image name="cat.jpg"/>
+    <image name="child.jpg"/>
+    <image name="daisy.jpg"/>
+    <image name="desertTree.jpg"/>
+    <image name="dog.jpg"/>
+    <image name="eagle.jpg"/>
+    <image name="eye.jpg"/>
+    <image name="field.jpg"/>
+    <image name="fishingBoat.jpg"/>
+    <image name="flowers.jpg"/>
+    <image name="goat.jpg"/>
+    <image name="gradient.jpg"/>
+    <image name="horse.jpg"/>
+    <image name="locomotive.jpg"/>
+    <image name="mask.jpg"/>
+    <image name="paintTools.jpg"/>
+    <image name="park.jpg"/>
+    <image name="parktrees.jpg"/>
+    <image name="parrot.jpg"/>
+    <image name="peacock.jpg"/>
+    <image name="rockIsland.jpg"/>
+    <image name="roses.jpg"/>
+    <image name="scoobidoos.jpg"/>
+    <image name="seaside.jpg"/>
+    <image name="snake.jpg"/>
+    <image name="squirrel.jpg"/>
+    <image name="stairs.jpg"/>
+    <image name="summer.jpg"/>
+    <image name="sunset.jpg"/>
+    <image name="temple.jpg"/>
+    <image name="theatre.jpg"/>
+    <image name="vegetables.jpg"/>
+    <image name="zebra.jpg"/>
+         
+    </images>
+    
+</Thumbnails>
