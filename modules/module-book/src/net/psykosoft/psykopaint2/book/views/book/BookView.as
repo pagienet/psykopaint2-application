@@ -103,8 +103,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			//visual 3d debug
 			//_view3d.scene.addChild(new Trident(1500, true));
-
-			//populate();
 		}
 
 		// Interaction declared on book ready
@@ -129,16 +127,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			addChild( _view3d );
 		}
 
-		//private function populate():void
-		//{
-		//	_book = new Book(_view3d, stage);
-
-		//	_book.bookReadySignal.add(onBookReady);
-		//	_book.imagePickedSignal.add(dispatchSelectedImage);
-		//	_book.bookClearedSignal.add(dispatchInteraction);
-		//	_book.layoutType =_layoutType;
-		//}
-		
 		public function set layoutType(type:String):void
 		{
 			_layoutType = type;
