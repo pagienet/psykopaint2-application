@@ -5,7 +5,7 @@
     <path>
         <lowRes>/book-packaged/samples/thumbs_lowres/</lowRes>
         <highRes>/book-packaged/samples/thumbs/</highRes>
-        <originals>/book-packaged/samples/originals/</originals>
+        <originals>/book-packaged/samples/fullsize/</originals>
     </path>
     
     <images>
