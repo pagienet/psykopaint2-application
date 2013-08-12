@@ -16,7 +16,9 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 
 	public class SetupPaintModuleCommand extends TracingCommand
 	{
@@ -41,9 +43,14 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var brushKitManager : BrushKitManager;
 
+		[Inject]
+		public var requestAddViewToMainLayerSignal:RequestAddViewToMainLayerSignal;
+
 		override public function execute() : void
 		{
 			super.execute();
+
+			addPaintModuleDisplay();
 
 			lightController.enabled = true;
 
@@ -61,6 +68,11 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// ugly ugly ugly, but we need a frame to process the texture uploads before triggering any more stuff
 			waitForNextFrame();
+		}
+
+		private function addPaintModuleDisplay():void {
+			var paintRootView : PaintRootView = new PaintRootView();
+			requestAddViewToMainLayerSignal.dispatch( paintRootView );
 		}
 
 		private function waitForNextFrame() : void

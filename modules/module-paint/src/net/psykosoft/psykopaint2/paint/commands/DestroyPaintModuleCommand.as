@@ -8,7 +8,9 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationDisposalSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintRootViewRemovalSignal;
 
 	public class DestroyPaintModuleCommand extends TracingCommand
 	{
@@ -30,6 +32,12 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var brushKitManager : BrushKitManager;
 
+		[Inject]
+		public var requestNavigationDisposalSignal:RequestNavigationDisposalSignal;
+
+		[Inject]
+		public var requestPaintRootViewRemovalSignal:RequestPaintRootViewRemovalSignal;
+
 		override public function execute() : void
 		{
 			super.execute();
@@ -40,7 +48,18 @@ package net.psykosoft.psykopaint2.paint.commands
 			brushKitManager.deactivate();
 			GpuRenderManager.removeRenderingStep(brushKitManager.update, GpuRenderingStepType.PRE_CLEAR);
 
+			removePaintModuleDisplay();
+
 			notifyPaintModuleDestroyedSignal.dispatch();
+		}
+
+		private function removePaintModuleDisplay():void {
+
+			// Dispose all sub-navigation instances currently cached in SbNavigationView.
+			requestNavigationDisposalSignal.dispatch();
+
+			// Dispose home root view.
+			requestPaintRootViewRemovalSignal.dispatch();
 		}
 	}
 }

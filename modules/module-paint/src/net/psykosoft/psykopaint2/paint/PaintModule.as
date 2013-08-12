@@ -127,10 +127,6 @@ package net.psykosoft.psykopaint2.paint
 			// Initialize robotlegs for this module.
 			new PaintConfig(_coreModule.injector);
 
-			// Init display tree for this module.
-			var paintRootView : PaintRootView = new PaintRootView();
-			_coreModule.injector.getInstance(RequestAddViewToMainLayerSignal).dispatch(paintRootView);
-
 			// Notify potential super modules.
 			moduleReadySignal.dispatch();
 		}
