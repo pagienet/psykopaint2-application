@@ -173,7 +173,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_subNavDictionary = new Dictionary();
 
 			_numSubNavsBeingDisposed = viewsToRemove.length;
-			trace( this, "waiting for removal of " + _numSubNavsBeingDisposed + " sub navigations." );
 
 			for( var i:uint; i < _numSubNavsBeingDisposed; i++ ) {
 				subNavigation = viewsToRemove[ i ] as SubNavigationViewBase;
