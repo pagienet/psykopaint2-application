@@ -14,6 +14,8 @@ package net.psykosoft.psykopaint2.core.rendering
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
+	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitMode;
 
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
@@ -64,11 +66,11 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		}
 
-		public function init() : void
+		public function init(mode : int) : void
 		{
 			_lightingRenderer.init();
 			_context3D = stage3D.context3D;
-			sourceTextureAlpha = 1;
+			sourceTextureAlpha = mode == BrushKitMode.PHOTO? 1 : 0;
 			paintAlpha = 1;
 		}
 

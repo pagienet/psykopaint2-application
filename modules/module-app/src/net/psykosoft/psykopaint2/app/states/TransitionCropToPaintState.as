@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
+	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
@@ -78,10 +79,11 @@ package net.psykosoft.psykopaint2.app.states
 			requestLoadSurfaceSignal.dispatch(0);
 		}
 
-		private function onSurfaceLoaded(data : RefCountedByteArray) : void
+		private function onSurfaceLoaded(data : SurfaceDataVO) : void
 		{
 			var vo : PaintingDataVO = createPaintingVO(data);
 			data.dispose();
+
 			_croppedBitmapData.dispose();
 			_croppedBitmapData = null;
 
@@ -102,16 +104,20 @@ package net.psykosoft.psykopaint2.app.states
 			stateMachine.setActiveState(paintState);
 		}
 
-		private function createPaintingVO(surface : RefCountedByteArray) : PaintingDataVO
+		private function createPaintingVO(surface : SurfaceDataVO) : PaintingDataVO
 		{
 			var vo : PaintingDataVO = new PaintingDataVO();
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
 			vo.sourceBitmapData = ByteArrayUtil.fromBitmapData(_croppedBitmapData);
-			vo.colorBackgroundOriginal = null;
-			vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
-			vo.normalSpecularData = surface.newReference();
-			vo.normalSpecularOriginal = surface.newReference();
+			if (surface.color) {
+				vo.colorBackgroundOriginal = surface.color.newReference();
+				vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
+			}
+			else
+				vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
+			vo.normalSpecularData = surface.normalSpecular.newReference();
+			vo.normalSpecularOriginal = surface.normalSpecular.newReference();
 			return vo;
 		}
 

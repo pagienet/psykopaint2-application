@@ -21,9 +21,15 @@ package net.psykosoft.psykopaint2.core.io
 			if (canvas.width != paintingData.width || canvas.height != paintingData.height)
 				throw new Error("Different painting sizes currently not supported!");
 
-			var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(paintingData.sourceBitmapData, canvas.width, canvas.height, false);
-			canvas.setSourceBitmapData(sourceBmd);
-			sourceBmd.dispose();
+			if (paintingData.sourceBitmapData) {
+				var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(paintingData.sourceBitmapData, canvas.width, canvas.height, false);
+				canvas.setSourceBitmapData(sourceBmd);
+				sourceBmd.dispose();
+			}
+			else
+			// doing this to force creation of PyramidMap
+			// TODO: Simply do not do this by allowing pyramid map not to exist
+				canvas.setSourceBitmapData(null);
 
 			var oldLength : int = paintingData.colorData.length;
 			var newLength : int = canvas.textureWidth * canvas.textureHeight * 4;

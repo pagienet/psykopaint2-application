@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.data
 				UndisposedObjects.getInstance().remove(this);
 			colorData.dispose();
 			normalSpecularData.dispose();
-			sourceBitmapData.dispose();
+			if (sourceBitmapData) sourceBitmapData.dispose();
 			if (normalSpecularOriginal) normalSpecularOriginal.dispose();
 			if (colorBackgroundOriginal) colorBackgroundOriginal.dispose();
 			colorData = null;

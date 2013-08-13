@@ -6,9 +6,11 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 
@@ -29,8 +31,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private var _byteLoader:BinaryLoader;
 		private var _bitmapLoader:BitmapLoader;
-		private var _loadedNormalSpecularData:RefCountedByteArray;
-		private var _loadedColorData:BitmapData;
+		private var _loadedSurfaceData:SurfaceDataVO;
 		private var _assetSize:String;
 
 		public function LoadSurfaceCommand() {
@@ -43,6 +44,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			context.detain( this );
 
 			_assetSize = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? "2048" : "1024";
+			_loadedSurfaceData = new SurfaceDataVO();
 			loadColorData();
 		}
 
@@ -61,7 +63,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function onColorDataLoaded( bitmap:BitmapData ):void {
-			_loadedColorData = bitmap;
+			_loadedSurfaceData.color = ByteArrayUtil.clone(bitmap.getPixels(bitmap.rect));
 			_bitmapLoader.dispose();
 			_bitmapLoader = null;
 			loadNormalSpecularData();
@@ -73,12 +75,12 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function onSurfaceLoaded( bytes:ByteArray ):void {
-			_loadedNormalSpecularData = ByteArrayUtil.clone(bytes);
+			_loadedSurfaceData.normalSpecular = ByteArrayUtil.clone(bytes);
 			bytes.clear();
 			_byteLoader.dispose();
 			_byteLoader = null;
-			_loadedNormalSpecularData.uncompress();
-			notifySurfaceLoadedSignal.dispatch(_loadedNormalSpecularData);
+			_loadedSurfaceData.normalSpecular.uncompress();
+			notifySurfaceLoadedSignal.dispatch(_loadedSurfaceData);
 			context.release( this );
 		}
 	}

@@ -15,6 +15,8 @@ package net.psykosoft.psykopaint2.core.model
 
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 
+	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
@@ -117,6 +119,15 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function setSourceBitmapData(sourceBitmapData : BitmapData) : void
 		{
+			// TODO: Do not provide pyramidmap if sourceBitmapData is null!!!
+			// Currently crashes app
+
+			if (!sourceBitmapData) {
+				if (!_pyramidMap)
+					_pyramidMap = new PyramidMapTdsi(new BitmapData(_textureWidth, _textureHeight));
+				return;
+			}
+
 			var fixed : BitmapData = fixSourceDimensions(sourceBitmapData);
 
 			if (_pyramidMap)
@@ -148,11 +159,13 @@ package net.psykosoft.psykopaint2.core.model
 		public function setColorBackgroundOriginal(value : RefCountedByteArray) : void
 		{
 			if (_colorBackgroundOriginal) _colorBackgroundOriginal.dispose();
-			_colorBackgroundOriginal = value;
+			_colorBackgroundOriginal = ByteArrayUtil.clone(value);
+			_colorBackgroundOriginal.compress();
 		}
 
 		public function get sourceTexture() : Texture
 		{
+			if (!_pyramidMap) return null;
 			if (!_sourceTexture) initSourceTexture();
 			return _sourceTexture.texture;
 		}
@@ -273,6 +286,7 @@ package net.psykosoft.psykopaint2.core.model
 		{
 			var inflated : RefCountedByteArray = ByteArrayUtil.clone(_colorBackgroundOriginal);
 			inflated.uncompress();
+			inflated.length = _textureWidth * _textureHeight * 4;
 			_colorTexture.texture.uploadFromByteArray(inflated, 0);
 			inflated.dispose();
 		}

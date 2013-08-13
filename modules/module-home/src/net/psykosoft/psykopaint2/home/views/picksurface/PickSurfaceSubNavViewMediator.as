@@ -1,11 +1,15 @@
 package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
+	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
@@ -101,15 +105,22 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			requestLoadSurfaceSignal.dispatch( _selectedIndex );
 		}
 
-		private function onSurfaceLoaded(surface : RefCountedByteArray):void {
+		private function onSurfaceLoaded(surface : SurfaceDataVO):void {
 			var vo : PaintingDataVO = new PaintingDataVO();
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
-			vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
-			vo.sourceBitmapData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
-			vo.normalSpecularData = surface.newReference();
-			vo.normalSpecularOriginal = surface.newReference();
+
+			if (surface.color) {
+				vo.colorData = surface.color.newReference();
+				vo.colorBackgroundOriginal = surface.color.newReference();
+			}
+			else
+				vo.colorData = ByteArrayUtil.createBlankColorData(vo.width, vo.height, 0xffffffff);
+
+			vo.normalSpecularData = surface.normalSpecular.newReference();
+			vo.normalSpecularOriginal = surface.normalSpecular.newReference();
 			surface.dispose();
+
 			requestOpenPaintingDataVOSignal.dispatch(vo);
 		}
 	}

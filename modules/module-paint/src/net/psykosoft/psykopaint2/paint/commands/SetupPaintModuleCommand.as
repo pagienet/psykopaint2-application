@@ -51,18 +51,24 @@ package net.psykosoft.psykopaint2.paint.commands
 		{
 			super.execute();
 
+			var mode : int = initPaintingVO.sourceBitmapData? BrushKitMode.PHOTO : BrushKitMode.COLOR;
+
 			addPaintModuleDisplay();
 
 			lightController.enabled = true;
 
 			canvasModel.createPaintTextures();
-			brushKitManager.activate(initPaintingVO.sourceBitmapData? BrushKitMode.PHOTO : BrushKitMode.COLOR);
+			brushKitManager.activate(mode);
 
 			importPaintingData();
 
 			canvasHistoryModel.clearHistory();
 
-			initRenderer();
+			renderer.init(mode);
+
+			// not sure if this should be here at all
+			if (mode == BrushKitMode.PHOTO)
+				TweenLite.to(renderer, 1.6, { sourceTextureAlpha: 0.333, ease: Sine.easeIn });
 
 			GpuRenderManager.addRenderingStep(brushKitManager.update, GpuRenderingStepType.PRE_CLEAR);
 
@@ -92,14 +98,6 @@ package net.psykosoft.psykopaint2.paint.commands
 			var canvasImporter : CanvasImporter = new CanvasImporter();
 			canvasImporter.importPainting(canvasModel, initPaintingVO);
 			initPaintingVO.dispose();
-		}
-
-		private function initRenderer() : void
-		{
-			renderer.init();
-
-			// not sure if this should be here at all
-			TweenLite.to(renderer, 1.6, { sourceTextureAlpha: 0.333, ease: Sine.easeIn });
 		}
 	}
 }

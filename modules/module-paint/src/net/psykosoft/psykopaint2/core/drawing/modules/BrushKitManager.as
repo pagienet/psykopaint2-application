@@ -150,16 +150,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		}
 
 		private function registerBrushKit( brushKit:BrushKit, kitName:String ):void {
-			if( !_availableBrushKits ) 
-			{
-				_availableBrushKits = new Vector.<BrushKit>();
-			}
-			
-			if( !_availableBrushKitNames ) 
-			{
-				_availableBrushKitNames = new Vector.<String>();
-			}
-			
 			_availableBrushKits.push(brushKit);
 			_availableBrushKitNames.push(kitName);
 		}
@@ -204,6 +194,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			var brushKitDef : XML = mode == BrushKitMode.PHOTO? BrushKitDefaultSet.brushKitDataPhotoPaintMode : BrushKitDefaultSet.brushKitDataColorMode;
 
+			_availableBrushKits = new Vector.<BrushKit>();
+			_availableBrushKitNames = new Vector.<String>();
+
 			for ( var i:int = 0; i < brushKitDef.brush.length(); i++ )
 				registerBrushKit( BrushKit.fromXML(brushKitDef.brush[i]), brushKitDef.brush[i].@name);
 
@@ -218,6 +211,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public function deactivate() : void
 		{
 			_active = false;
+			_availableBrushKits = null;
+			_availableBrushKitNames = null;
 			deactivateBrushKit();
 		}
 
