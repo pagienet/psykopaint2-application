@@ -108,7 +108,7 @@ package net.psykosoft.psykopaint2.app.states
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
 			vo.sourceBitmapData = ByteArrayUtil.fromBitmapData(_croppedBitmapData);
-			vo.colorBackgroundOriginal = vo.sourceBitmapData.newReference();
+			vo.colorBackgroundOriginal = null;
 			vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
 			vo.normalSpecularData = surface.newReference();
 			vo.normalSpecularOriginal = surface.newReference();

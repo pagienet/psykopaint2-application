@@ -290,6 +290,7 @@ package net.psykosoft.psykopaint2.core.model
 		{
 			var inflated : RefCountedByteArray = ByteArrayUtil.clone(_normalSpecularOriginal);
 			inflated.uncompress();
+			inflated.length = _textureWidth * _textureHeight * 4;
 			_normalSpecularMap.texture.uploadFromByteArray(inflated, 0);
 			inflated.dispose();
 		}
