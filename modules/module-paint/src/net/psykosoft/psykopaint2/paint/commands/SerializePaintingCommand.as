@@ -28,7 +28,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			var factory:PaintingInfoFactory = new PaintingInfoFactory();
 
-			// TODO: This should become disposed after saving
 			if( saveVO.info ) {
 				trace( "disposing previous thumbnail" );
 				saveVO.info.dispose();

@@ -84,15 +84,18 @@ package net.psykosoft.psykopaint2.core.io
 			_sourceRect = new Rectangle(0, 0, _canvas.usedTextureWidthRatio, _canvas.usedTextureHeightRatio);
 			_destRect = new Rectangle(0, 0, 1, 1);
 
-			_ticker = new Sprite();
-			_ticker.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-
 			_paintingData = new PaintingDataVO();
 
 			_workerBitmapData = new TrackedBitmapData(_canvas.width, _canvas.height, false);
 
 			_paintingData.width = _canvas.width;
 			_paintingData.height = _canvas.height;
+
+			_paintingData.normalSpecularOriginal = _canvas.getNormalSpecularOriginal();
+			_paintingData.colorBackgroundOriginal = _canvas.getColorBackgroundOriginal();
+
+			_ticker = new Sprite();
+			_ticker.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 
 		private function onEnterFrame(event : Event) : void

@@ -179,18 +179,14 @@ package net.psykosoft.psykopaint2.core.model
 		public function createPaintTextures() : void
 		{
 			trace ("Creating paint textures");
-			if (!_colorTexture) {
+			if (!_colorTexture)
 				_colorTexture = createCanvasTexture(true);
-				clearColorTexture();
-			}
 
-			if (!_normalSpecularMap) {
+			if (!_normalSpecularMap)
 				_normalSpecularMap = createCanvasTexture(true);
-				if (_normalSpecularOriginal)
-					uploadNormalSpecularOriginal();
-			}
 
-			if (!_fullSizeBackBuffer) _fullSizeBackBuffer = createCanvasTexture(true);
+			if (!_fullSizeBackBuffer)
+				_fullSizeBackBuffer = createCanvasTexture(true);
 		}
 
 		public function setNormalSpecularOriginal(value : RefCountedByteArray) : void
@@ -293,6 +289,21 @@ package net.psykosoft.psykopaint2.core.model
 			inflated.length = _textureWidth * _textureHeight * 4;
 			_normalSpecularMap.texture.uploadFromByteArray(inflated, 0);
 			inflated.dispose();
+		}
+
+		public function getColorBackgroundOriginal() : RefCountedByteArray
+		{
+			if (!_colorBackgroundOriginal) return null;
+			var inflated : RefCountedByteArray = ByteArrayUtil.clone(_colorBackgroundOriginal);
+			inflated.uncompress();
+			return inflated;
+		}
+
+		public function getNormalSpecularOriginal() : RefCountedByteArray
+		{
+			var inflated : RefCountedByteArray = ByteArrayUtil.clone(_normalSpecularOriginal);
+			inflated.uncompress();
+			return inflated;
 		}
 	}
 }
