@@ -83,7 +83,6 @@ package net.psykosoft.psykopaint2.app.states
 		private function onZoomOutComplete() : void
 		{
 			stateMachine.setActiveState(paintState);
-			requestStateChangeSignal.dispatch(NavigationStateType.PAINT_SELECT_BRUSH);
 		}
 
 		private function createPaintingVO(surface : RefCountedByteArray) : PaintingDataVO

@@ -74,13 +74,8 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onZoomComplete() : void
 		{
-			stateMachine.setActiveState(paintState);
-			notifyHomeModuleDestroyedSignal.addOnce( onHomeModuleDestroyed );
 			requestDestroyHomeModuleSignal.dispatch();
-		}
-
-		private function onHomeModuleDestroyed():void {
-			requestNavigationStateChangeSignal.dispatch(NavigationStateType.PAINT_SELECT_BRUSH);
+			stateMachine.setActiveState(paintState);
 		}
 
 		override ns_state_machine function deactivate() : void

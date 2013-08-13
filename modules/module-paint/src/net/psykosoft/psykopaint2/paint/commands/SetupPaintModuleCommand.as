@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
+	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitMode;
 	import net.psykosoft.psykopaint2.core.io.CanvasImporter;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -55,10 +56,9 @@ package net.psykosoft.psykopaint2.paint.commands
 			lightController.enabled = true;
 
 			canvasModel.createPaintTextures();
-			brushKitManager.activate();
+			brushKitManager.activate(initPaintingVO.sourceBitmapData? BrushKitMode.PHOTO : BrushKitMode.COLOR);
 
-			if (initPaintingVO)
-				importPaintingData();
+			importPaintingData();
 
 			canvasHistoryModel.clearHistory();
 

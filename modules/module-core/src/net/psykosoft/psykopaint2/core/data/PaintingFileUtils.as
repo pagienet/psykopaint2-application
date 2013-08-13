@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.core.data
 
 		static public function decodePNG( bytes:ByteArray, numBytes:int, onComplete:Function ):void {
 			// Extract png bytes.
-			var pngBytesOnly:ByteArray = new ByteArray();
+			var pngBytesOnly:RefCountedByteArray = new RefCountedByteArray();
 			bytes.readBytes( pngBytesOnly, 0, numBytes );
 			// Decode.
 			var decoder:PngDecodeUtil = new PngDecodeUtil();

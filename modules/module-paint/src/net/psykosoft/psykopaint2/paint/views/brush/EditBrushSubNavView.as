@@ -74,7 +74,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
-			showRightButton( PaintModeModel.activeMode == PaintModeType.COLOR_MODE );
+
 			for( var i:uint = 0; i < numParameters; ++i ) {
 
 				var parameter:PsykoParameter = list[ i ];

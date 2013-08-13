@@ -4,14 +4,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Sine;
 
-	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Stage3D;
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
-	
+
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
@@ -23,7 +22,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintModeType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
@@ -33,10 +31,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
-	
+
 	import org.gestouch.events.GestureEvent;
 
 	// TODO: Clean up by moving into custom stuff where not affecting brush kits
@@ -86,8 +84,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private var _view : DisplayObject;
 		private var _active : Boolean;
-		private var _availableBrushKits:Vector.<Vector.<BrushKit>>;
-		private var _availableBrushKitNames:Vector.<Vector.<String>>;
+		private var _availableBrushKits:Vector.<BrushKit>;
+		private var _availableBrushKitNames:Vector.<String>;
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
 		private var _canvasMatrix : Matrix;
@@ -95,6 +93,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _navShowTimeout:int = -1;
 		private var sourceCanvasViewModes:Array = [[1,0.25],[1,0],[1,1],[0.01,1]];
 		private var sourceCanvasViewModeIndex:int = 0;
+		private var _activeMode : int;
 		
 		public function BrushKitManager()
 		{
@@ -113,7 +112,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		// TODO: Handle gestures somewhere else
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
-			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED && PaintModeModel.activeMode == PaintModeType.PHOTO_MODE )
+			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED && _activeMode == BrushKitMode.PHOTO )
 			{
 				sourceCanvasViewModeIndex = ( sourceCanvasViewModeIndex+1) % sourceCanvasViewModes.length;
 				TweenLite.killTweensOf( renderer );
@@ -147,26 +146,22 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		}
 
 		private function initializeDefaultBrushes():void {
-			notifyAvailableBrushTypesSignal.dispatch( _availableBrushKitNames[(PaintModeModel.activeMode == PaintModeType.PHOTO_MODE ? 0 : 1)] );
+			notifyAvailableBrushTypesSignal.dispatch( _availableBrushKitNames );
 		}
 
-		private function registerBrushKit( brushKit:BrushKit, kitName:String, mode:int ):void {
+		private function registerBrushKit( brushKit:BrushKit, kitName:String ):void {
 			if( !_availableBrushKits ) 
 			{
-				_availableBrushKits = new Vector.<Vector.<BrushKit>>();
-				_availableBrushKits[0] = new Vector.<BrushKit>();
-				_availableBrushKits[1] = new Vector.<BrushKit>();
+				_availableBrushKits = new Vector.<BrushKit>();
 			}
 			
 			if( !_availableBrushKitNames ) 
 			{
-				_availableBrushKitNames = new Vector.<Vector.<String>>();
-				_availableBrushKitNames[0] = new Vector.<String>();
-				_availableBrushKitNames[1] = new Vector.<String>();
+				_availableBrushKitNames = new Vector.<String>();
 			}
 			
-			_availableBrushKits[mode].push(brushKit);
-			_availableBrushKitNames[mode].push(kitName);
+			_availableBrushKits.push(brushKit);
+			_availableBrushKitNames.push(kitName);
 		}
 		
 		public function get activeBrushKit() : String
@@ -176,12 +171,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		public function set activeBrushKit( brushKitName:String ) : void
 		{
-			var mode:int = (PaintModeModel.activeMode == PaintModeType.PHOTO_MODE ? 0 : 1);
 			if (_activeBrushKitName == brushKitName) return;
 			if ( _activeBrushKit ) deactivateBrushKit();
 			
 			_activeBrushKitName = brushKitName;
-			_activeBrushKit = _availableBrushKits[mode][ _availableBrushKitNames[mode].indexOf(brushKitName)];
+			_activeBrushKit = _availableBrushKits[ _availableBrushKitNames.indexOf(brushKitName)];
 			if (_active) activateBrushKit();
 			
 			//trace( this, "activating brush kit: " + _activeBrushKitName + ", engine: " + _activeBrushKit.brushEngine + " --------------------" );
@@ -206,25 +200,18 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				activateBrushKit();
 		}
 
-		public function activate() : void
+		public function activate(mode : int) : void
 		{
-			//TODO: once new state model is implemented
-			// activate brush kits only for selected mode
-			// make sure background blending is correct upon activation depending on mode
-		
-			for ( var i:int = 0; i < BrushKitDefaultSet.brushKitDataPhotoPaintMode.brush.length(); i++ )
-			{
-				registerBrushKit( BrushKit.fromXML(BrushKitDefaultSet.brushKitDataPhotoPaintMode.brush[i]), BrushKitDefaultSet.brushKitDataPhotoPaintMode.brush[i].@name,0);
-			}
-			for ( var i:int = 0; i < BrushKitDefaultSet.brushKitDataColorMode.brush.length(); i++ )
-			{
-				registerBrushKit( BrushKit.fromXML(BrushKitDefaultSet.brushKitDataColorMode.brush[i]), BrushKitDefaultSet.brushKitDataColorMode.brush[i].@name,1);
-			}
-			
+			var brushKitDef : XML = mode == BrushKitMode.PHOTO? BrushKitDefaultSet.brushKitDataPhotoPaintMode : BrushKitDefaultSet.brushKitDataColorMode;
+
+			for ( var i:int = 0; i < brushKitDef.brush.length(); i++ )
+				registerBrushKit( BrushKit.fromXML(brushKitDef.brush[i]), brushKitDef.brush[i].@name);
+
 			initializeDefaultBrushes();
 
+			_activeMode = mode;
 			_active = true;
-			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[(PaintModeModel.activeMode == PaintModeType.PHOTO_MODE ? 0 : 1)][0];
+			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
 		}
 
@@ -308,7 +295,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		
 		public function getAvailableBrushTypes() : Vector.<String> {
-			return _availableBrushKitNames[(PaintModeModel.activeMode == PaintModeType.PHOTO_MODE ? 0 : 1)];
+			return _availableBrushKitNames;
 		}
 
 		
@@ -329,6 +316,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			}
 			if (_activeBrushKit)
 				_activeBrushKit.brushEngine.freeExpendableMemory();
+		}
+
+		public function get activeMode() : int
+		{
+			return _activeMode;
 		}
 	}
 }
