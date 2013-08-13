@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	public class NavigationViewMediator extends MediatorBase
 	{
 		[Inject]
-		public var view:SbNavigationView;
+		public var view:NavigationView;
 
 		[Inject]
 		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;

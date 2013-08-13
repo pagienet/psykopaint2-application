@@ -84,7 +84,7 @@ package net.psykosoft.psykopaint2.home.views.base
 			removeChild( _captureImageView );
 
 			// Note: removing the views from display will cause the destruction of the mediators which will
-			// in turn destroy the views themselves
+			// in turn destroy the views themselves.
 
 		}
 	}

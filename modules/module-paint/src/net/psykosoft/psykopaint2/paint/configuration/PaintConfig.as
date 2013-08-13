@@ -45,12 +45,15 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
+	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
+	import net.psykosoft.psykopaint2.paint.views.base.PaintRootViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
@@ -141,6 +144,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyPaintModuleSetUpSignal ).asSingleton();
 			_injector.map( NotifyPaintModuleDestroyedSignal ).asSingleton();
 			_injector.map( RequestSetCanvasBackgroundSignal ).asSingleton();
+			_injector.map( RequestPaintRootViewRemovalSignal ).asSingleton();
 
 			// Map notification signals.
 			_injector.map( NotifyAvailableBrushTypesSignal ).asSingleton();
@@ -193,6 +197,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_mediatorMap.map( SelectColorSubNavView ).toMediator( SelectColorSubNavViewMediator );
 			_mediatorMap.map( CanvasSubNavView ).toMediator( CanvasSubNavViewMediator );
 			_mediatorMap.map( CanvasView ).toMediator( CanvasViewMediator );
+			_mediatorMap.map( PaintRootView ).toMediator( PaintRootViewMediator );
 		}
 	}
 }

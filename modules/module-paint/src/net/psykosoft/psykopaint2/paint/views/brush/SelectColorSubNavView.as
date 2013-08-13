@@ -8,9 +8,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
-	import net.psykosoft.psykopaint2.core.views.components.colormixer.SbColorSwatches;
-	import net.psykosoft.psykopaint2.core.views.components.colormixer.SbColormixer;
+	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
+	import net.psykosoft.psykopaint2.core.views.components.colormixer.ColorSwatches;
+	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	// TODO: remove minimalcomps dependency when done
@@ -28,10 +28,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private const UI_ELEMENT_Y:uint = 560;
 
-		private var colorMixer1:SbColormixer;
+		private var colorMixer1:Colormixer;
 
-		private var colorMixer2:SbColormixer;
-		private var colorSwatches:SbColorSwatches;
+		private var colorMixer2:Colormixer;
+		private var colorSwatches:ColorSwatches;
 
 		public function SelectColorSubNavView() {
 			super();
@@ -44,18 +44,18 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override protected function onSetup():void {
 
-			colorSwatches = new SbColorSwatches();
+			colorSwatches = new ColorSwatches();
 			colorSwatches.y = UI_ELEMENT_Y - 10;
 			colorSwatches.x = 330;
 			colorSwatches.addEventListener( Event.CHANGE, onSwatchColorPicked );
 
-			colorMixer1 = new SbColormixer( colorSwatches.palettes );
+			colorMixer1 = new Colormixer( colorSwatches.palettes );
 			colorMixer1.y = UI_ELEMENT_Y;
 			colorMixer1.x = 140;
 			//colorMixer1.blendMode = "multiply";
 			colorMixer1.addEventListener( Event.CHANGE, onColorPicked );
 
-			colorMixer2 = new SbColormixer( colorSwatches.palettes );
+			colorMixer2 = new Colormixer( colorSwatches.palettes );
 			colorMixer2.y = UI_ELEMENT_Y;
 			colorMixer2.x = 1024 - 200;
 			//colorMixer2.blendMode = "multiply";
@@ -100,7 +100,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		protected function onColorPicked( event:Event ):void {
 			if( _colorParameter != null ) {
-				_colorParameter.colorValue = SbColormixer( event.target ).pickedColor;
+				_colorParameter.colorValue = Colormixer( event.target ).pickedColor;
 				colorSwatches.setSelection( -1 );
 			}
 
@@ -109,7 +109,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		protected function onSwatchColorPicked( event:Event ):void {
 			if( _colorParameter != null ) 
 			{
-				_colorParameter.colorValue = SbColorSwatches( event.target ).pickedColor;
+				_colorParameter.colorValue = ColorSwatches( event.target ).pickedColor;
 			}
 		}
 	}

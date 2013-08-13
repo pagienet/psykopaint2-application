@@ -21,11 +21,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.checkbox.SbCheckBox;
-	import net.psykosoft.psykopaint2.core.views.components.combobox.SbComboboxView;
-	import net.psykosoft.psykopaint2.core.views.components.rangeslider.SbRangedSlider;
-	import net.psykosoft.psykopaint2.core.views.components.slider.SbSlider;
-	import net.psykosoft.psykopaint2.core.views.components.slider.SbSliderButton;
+	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
+	import net.psykosoft.psykopaint2.core.views.components.combobox.ComboboxView;
+	import net.psykosoft.psykopaint2.core.views.components.rangeslider.RangedSlider;
+	import net.psykosoft.psykopaint2.core.views.components.slider.Slider;
+	import net.psykosoft.psykopaint2.core.views.components.slider.SliderButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	// TODO: remove minimalcomps dependency when done
@@ -92,7 +92,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						if( parameter.type == PsykoParameter.IntParameter
 						 || parameter.type == PsykoParameter.NumberParameter
 						 || parameter.type == PsykoParameter.AngleParameter ) {
-							data.itemRendererType = SbSliderButton;
+							data.itemRendererType = SliderButton;
 							data.minValue = parameter.minLimit;
 							data.maxValue = parameter.maxLimit;
 							data.value = parameter.type == PsykoParameter.AngleParameter ? parameter.degrees : parameter.numberValue;
@@ -110,13 +110,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			validateCenterButtons();
 		}
 
-		private function onSliderButtonRendererAssigned( renderer:SbSliderButton ):void {
+		private function onSliderButtonRendererAssigned( renderer:SliderButton ):void {
 			trace( this, "onSliderButtonRendererAssigned - id: " + renderer.id );
 			renderer.addEventListener( Event.CHANGE, onSliderButtonChanged );
 			renderer.addEventListener( MouseEvent.MOUSE_DOWN, onSliderButtonMouseDown );
 		}
 
-		private function onSliderButtonRendererReleased( renderer:SbSliderButton ):void {
+		private function onSliderButtonRendererReleased( renderer:SliderButton ):void {
 			trace( this, "onSliderButtonRendererReleased - id: " + renderer.id );
 			renderer.removeEventListener( Event.CHANGE, onSliderButtonChanged );
 			renderer.removeEventListener( MouseEvent.MOUSE_DOWN, onSliderButtonMouseDown );
@@ -124,7 +124,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onSliderButtonMouseDown( event:MouseEvent ):void {
 			// Always on top.
-			var slider:SbSliderButton = ClickUtil.getObjectOfClassInHierarchy( event.target as DisplayObject, SbSliderButton ) as SbSliderButton;
+			var slider:SliderButton = ClickUtil.getObjectOfClassInHierarchy( event.target as DisplayObject, SliderButton ) as SliderButton;
 			slider.parent.swapChildren( slider, slider.parent.getChildAt( slider.parent.numChildren - 1 ) );
 		}
 
@@ -163,7 +163,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var parameterType:int = _parameter.type;
 
 			var i:uint;
-			var slider:SbSlider;
+			var slider:Slider;
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
@@ -181,7 +181,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// Range slider.
 			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter ) {
-				var rangeSlider:SbRangedSlider = new SbRangedSlider();
+				var rangeSlider:RangedSlider = new RangedSlider();
 				rangeSlider.minValue = _parameter.minLimit;
 				rangeSlider.maxValue = _parameter.maxLimit;
 				rangeSlider.value1 = _parameter.lowerRangeValue;
@@ -194,8 +194,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 
 			else if( parameterType == PsykoParameter.AngleRangeParameter ) {
-				rangeSlider = new SbRangedSlider();
-				rangeSlider.labelMode = SbRangedSlider.LABEL_DEGREES;
+				rangeSlider = new RangedSlider();
+				rangeSlider.labelMode = RangedSlider.LABEL_DEGREES;
 				rangeSlider.minValue = _parameter.minLimit;
 				rangeSlider.maxValue = _parameter.maxLimit;
 				rangeSlider.value1 = _parameter.lowerDegreesValue;
@@ -239,7 +239,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			else if( parameterType == PsykoParameter.StringListParameter || parameterType == PsykoParameter.IconListParameter ) {
 				var list:Vector.<String> = _parameter.stringList;
 				var len:uint = list.length;
-				var combobox:SbComboboxView = new SbComboboxView();
+				var combobox:ComboboxView = new ComboboxView();
 				combobox.interactionStartedSignal.add( onComboboxInteractionStarted );
 				combobox.interactionEndedSignal.add( onComboboxInteractionEnded );
 				for( i = 0; i < len; ++i ) {
@@ -254,7 +254,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// Check box
 			else if( parameterType == PsykoParameter.BooleanParameter ) {
-				var checkBox:SbCheckBox = new SbCheckBox();
+				var checkBox:CheckBox = new CheckBox();
 				checkBox.selected = _parameter.booleanValue;
 				checkBox.addEventListener( Event.CHANGE, onCheckBoxChanged );
 				positionUiElement( checkBox );
@@ -283,12 +283,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var len:uint = _uiElements.length;
 			for( var i:uint; i < len; ++i ) {
 				var uiElement:DisplayObject = _uiElements[ i ];
-				if( uiElement is SbSlider ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
-				else if( uiElement is SbRangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
+				if( uiElement is Slider ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
+				else if( uiElement is RangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
 				else if( uiElement is ComboBox ) {
 					uiElement.removeEventListener( Event.SELECT, onComboBoxChanged );
 				}
-				else if( uiElement is SbCheckBox ) uiElement.removeEventListener( Event.CHANGE, onCheckBoxChanged );
+				else if( uiElement is CheckBox ) uiElement.removeEventListener( Event.CHANGE, onCheckBoxChanged );
 				else if( uiElement is Knob ) uiElement.removeEventListener( Event.CHANGE, onKnobChanged );
 				else {
 					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
@@ -318,12 +318,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		private function onCheckBoxChanged( event:Event ):void {
-			var checkBox:SbCheckBox = event.target as SbCheckBox;
+			var checkBox:CheckBox = event.target as CheckBox;
 			_parameter.booleanValue = checkBox.selected;
 		}
 
 		private function onComboBoxChanged( event:Event ):void {
-			var comboBox:SbComboboxView = event.target as SbComboboxView;
+			var comboBox:ComboboxView = event.target as ComboboxView;
 			_parameter.index = comboBox.selectedIndex;
 		}
 
@@ -336,18 +336,18 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		private function onSliderChanged( event:Event ):void {
-			var slider:SbSlider = event.target as SbSlider;
+			var slider:Slider = event.target as Slider;
 			_parameter.value = slider.value;
 		}
 
 		private function onSliderButtonChanged( event:Event ):void {
-			var slider:SbSliderButton = event.target as SbSliderButton;
+			var slider:SliderButton = event.target as SliderButton;
 			focusOnParameterWithId( slider.id );
 			_parameter.value = slider.value;
 		}
 
 		private function onRangeSliderChanged( event:Event ):void {
-			var slider:SbRangedSlider = event.target as SbRangedSlider;
+			var slider:RangedSlider = event.target as RangedSlider;
 			if( _parameter.type == PsykoParameter.AngleRangeParameter ) {
 				_parameter.lowerDegreesValue = slider.value1;
 				_parameter.upperDegreesValue = slider.value2;

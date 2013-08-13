@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
 
@@ -25,6 +26,9 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var requestZoomCanvasToEaselViewSignal : RequestZoomCanvasToEaselViewSignal;
+
+		[Inject]
+		public var notifyPaintModuleDestroyedSignal:NotifyPaintModuleDestroyedSignal;
 
 		// needs to be set from HomeState -_-
 		public var homeState : HomeState;
@@ -49,13 +53,17 @@ package net.psykosoft.psykopaint2.app.states
 			// remove all these transition and prepare crazies:
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_HOME_MODE);
 			requestStateChangeSignal.dispatch(NavigationStateType.PREPARE_FOR_HOME_MODE);
-			requestStateChangeSignal.dispatch(NavigationStateType.HOME_ON_EASEL);
 			stateMachine.setActiveState(homeState);
 		}
 
 		override ns_state_machine function deactivate() : void
 		{
+			notifyPaintModuleDestroyedSignal.addOnce( onPaintModuleDestroyed );
 			requestDestroyPaintModuleSignal.dispatch();
+		}
+
+		private function onPaintModuleDestroyed():void {
+			requestStateChangeSignal.dispatch(NavigationStateType.HOME_ON_EASEL);
 		}
 	}
 }

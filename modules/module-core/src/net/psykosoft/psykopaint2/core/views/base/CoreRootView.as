@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
-	import net.psykosoft.psykopaint2.core.views.navigation.SbNavigationView;
+	import net.psykosoft.psykopaint2.core.views.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 	import net.psykosoft.psykopaint2.core.views.splash.SplashView;
@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			trace( this, "constructor" );
 
 			// Core module's main views.
-			addChild( new SbNavigationView() );
+			addChild( new NavigationView() );
 			addChild( new VideoView() );
 			addChild( new PopUpManagerView() );
 			addChild( new DebugView() );

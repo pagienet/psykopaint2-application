@@ -8,10 +8,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 
-	import net.psykosoft.psykopaint2.core.views.components.label.SbCenterLabel;
-	import net.psykosoft.psykopaint2.core.views.components.label.SbLabel;
-	import net.psykosoft.psykopaint2.core.views.components.label.SbLeftLabel;
-	import net.psykosoft.psykopaint2.core.views.components.label.SbRightLabel;
+	import net.psykosoft.psykopaint2.core.views.components.label.CenterLabel;
+	import net.psykosoft.psykopaint2.core.views.components.label.Label;
+	import net.psykosoft.psykopaint2.core.views.components.label.LeftLabel;
+	import net.psykosoft.psykopaint2.core.views.components.label.RightLabel;
 
 	public class NavigationButton extends Sprite
 	{
@@ -41,10 +41,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		protected function setLabel( label:Sprite ):void {
-			if( label is SbCenterLabel ) _label = SbCenterLabel( label );
-			else if( label is SbRightLabel ) _label = SbRightLabel( label );
-			else if( label is SbLeftLabel ) _label = SbLeftLabel( label );
-			else if( label is SbLabel ) _label = SbLabel( label );
+			if( label is CenterLabel ) _label = CenterLabel( label );
+			else if( label is RightLabel ) _label = RightLabel( label );
+			else if( label is LeftLabel ) _label = LeftLabel( label );
+			else if( label is Label ) _label = Label( label );
 			else throw new Error( "Problem casting shake-n-bake element." );
 		}
 

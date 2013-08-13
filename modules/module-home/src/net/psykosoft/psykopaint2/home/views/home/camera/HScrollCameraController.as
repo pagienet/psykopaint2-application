@@ -115,8 +115,12 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 
 			// Update camera and camera target positions.
 			_cameraTarget.x = _positionManager.position;
-			_camera.x += TARGET_EASE_FACTOR * ( _cameraTarget.x - _camera.x );
-			_camera.lookAt( _cameraTarget.position );
+			var offset:Number = TARGET_EASE_FACTOR * ( _cameraTarget.x - _camera.x );
+//			trace( this, "offset: " + offset );
+			if( Math.abs( offset ) > 1 ) {
+				_camera.x += offset;
+				_camera.lookAt( _cameraTarget.position );
+			}
 //			_camera.lookAt( new Vector3D( 3000 ) ); // Useful for debugging perspective.
 		}
 

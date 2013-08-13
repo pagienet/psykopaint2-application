@@ -15,12 +15,15 @@ package net.psykosoft.psykopaint2.paint.views.base
 
 	public class PaintRootView extends Sprite
 	{
+		private var _colorStyleView:ColorStyleView;
+		private var _canvasView:CanvasView;
+
 		public function PaintRootView() {
 			super();
 
 			// Add main views.
-			addChild( new ColorStyleView() );
-			addChild( new CanvasView() );
+			addChild( _colorStyleView = new ColorStyleView() );
+			addChild( _canvasView = new CanvasView() );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT, CanvasSubNavView );
@@ -33,6 +36,15 @@ package net.psykosoft.psykopaint2.paint.views.base
 
 			mouseEnabled = false;
 			name = "PaintRootView";
+		}
+
+		public function dispose():void {
+
+			removeChild( _colorStyleView );
+			removeChild( _canvasView );
+
+			// Note: removing the views from display will cause the destruction of the mediators which will
+			// in turn destroy the views themselves.
 		}
 	}
 }
