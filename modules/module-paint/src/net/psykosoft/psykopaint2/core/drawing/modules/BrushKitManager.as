@@ -150,6 +150,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		}
 
 		private function registerBrushKit( brushKit:BrushKit, kitName:String ):void {
+
+			trace( this, "registerBrushKit: " + kitName );
+
 			if( !_availableBrushKits ) 
 			{
 				_availableBrushKits = new Vector.<BrushKit>();
