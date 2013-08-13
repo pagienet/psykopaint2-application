@@ -21,6 +21,9 @@ package net.psykosoft.psykopaint2.core.data
 			bytes.writeBytes(vo.colorData, 0, len);
 			bytes.writeBytes(vo.normalSpecularData, 0, len);
 			bytes.writeBytes(vo.sourceBitmapData, 0, len);
+			bytes.writeBytes(vo.normalSpecularOriginal, 0, len);
+			if (vo.colorBackgroundOriginal)
+				bytes.writeBytes(vo.colorBackgroundOriginal, 0, len);
 
 			PaintingFileUtils.compressData(bytes);
 
