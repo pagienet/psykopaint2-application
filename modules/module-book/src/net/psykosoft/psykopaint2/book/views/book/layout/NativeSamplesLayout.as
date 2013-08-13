@@ -36,14 +36,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			super(LayoutType.NATIVE_SAMPLES, stage);
 		}
 
-		override protected function initDefaultAssets():void
-		{
+		//override protected function initDefaultAssets():void
+		//{
 			//needs to occur before parsexml to retrieve
 
 			//var url:String = path to dedicated resources map + id;
 			//_fileLoader.loadImage(url, onImageLoadedComplete, onImageLoadError, {url:url, name:id, index:index, type:ImageRes.LOWRES});
 			//add resource count _loadedResources += 2
-		}
+		//}
 
 		// we first collect the content before loading it to be able to define the pages first in Book Class.
 		// load content is then called after default pages data is generated
@@ -66,12 +66,13 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			for(var i:uint = 0; i < loop;++i){
 				node = images.child("image")[i];
 				name = node.attribute("name")
-				url = _thumbsLowResPath+name;
-
+				//url = _thumbsLowResPath+name;
+				url = _thumbsHighResPath+name;
+				 
 				data = {	url:url, 
 						name:name, 
 						index:i, 
-						type:ImageRes.LOWRES};
+						type:ImageRes.HIGHRES};
 
 				_content.push(data);
 			}
@@ -116,7 +117,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private function onImageLoadError(e:AssetLoadedEvent):void
 		{
 			clearFileloader();
-			//--> insert dead image in some layout cases?? --> ask mathieu
 		}
 
 		private function clearFileloader():void

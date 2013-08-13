@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _currentPage:uint;
 		private var _regionManager:RegionManager;
  		private var _imageLoader:BitmapLoader;
+ 		private var _isLoadingImage:Boolean;
 
      		public function Book(view:View3D, stage:Stage)
  		{
@@ -143,6 +144,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			if(_percent == 0){
 				animateOut();
 			} else {
+				TweenLite.killTweensOf(this);
 				TweenLite.to( this, 0.5, { _percent: 0, ease: Strong.easeIn, onUpdate: updateCurrentTime, onComplete: animateOut } );
 			}
 		}
@@ -177,7 +179,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			//debug anims
 			//animateIn();
- 
+
+ 			_isLoadingImage = false;
 			bookClearedSignal.dispatch(true);
 
 			dispose();
@@ -296,19 +299,26 @@ package net.psykosoft.psykopaint2.book.views.book
  		//mouse is loose, goes back to the full openned page and returns the destination time
  		public function snapToNearestTime():Number
  		{
- 			if(_percent == _nearestTime) return _nearestTime;
+ 			if(_percent == _nearestTime || _isLoadingImage) return _nearestTime;
 
  			TweenLite.to( this, .25, { 	_percent:_nearestTime, ease: Strong.easeOut,
 							onUpdate:updateToNearestTime,
 							onComplete:updateToNearestTime } );
  			return _nearestTime;
  		}
+
  		public function killSnapTween():void
  		{
- 			TweenLite.killTweensOf(this);	
+ 			if(!_isLoadingImage) TweenLite.killTweensOf(this);	
  		}
+
  		public function updateToNearestTime():void
  		{
+ 			if(_isLoadingImage) {
+ 				killSnapTween();
+ 				return;
+ 			}
+ 			
  			updatePages(_percent);
  		}
 
@@ -328,6 +338,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
  		private function loadFullImage( url:String ):void
  		{
+ 			_isLoadingImage = true;
 			_imageLoader = new BitmapLoader();
 			_imageLoader.loadAsset( url, onFullSizeImageLoaded );
 		}
