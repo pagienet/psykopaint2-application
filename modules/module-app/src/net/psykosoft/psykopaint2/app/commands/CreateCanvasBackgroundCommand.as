@@ -1,16 +1,13 @@
 package net.psykosoft.psykopaint2.app.commands
 {
+
 	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
-
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.SnapshotPromise;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
-	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
-
-	import org.osflash.signals.Signal;
 
 	public class CreateCanvasBackgroundCommand
 	{
@@ -30,6 +27,8 @@ package net.psykosoft.psykopaint2.app.commands
 
 		public function execute() : void
 		{
+			trace( this, "execute" );
+
 			_snapshotPromise = applicationRenderer.requestSnapshot();
 			_snapshotPromise.addEventListener(SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot);
 		}

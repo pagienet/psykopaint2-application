@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function dispose():void {
 
-			trace( this, "dispose()" );
+//			trace( this, "dispose()" );
 
 			if( hasEventListener( MouseEvent.MOUSE_UP ) ) {
 				stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );

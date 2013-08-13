@@ -3,9 +3,9 @@ package net.psykosoft.psykopaint2.core.signals
 
 	import flash.geom.Rectangle;
 
-	import net.psykosoft.psykopaint2.base.robotlegs.signals.TracingSignal;
+	import org.osflash.signals.Signal;
 
-	public class RequestChangeRenderRectSignal extends TracingSignal
+	public class RequestChangeRenderRectSignal extends Signal
 	{
 		public function RequestChangeRenderRectSignal()
 		{

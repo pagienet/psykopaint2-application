@@ -47,6 +47,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 			requestColorStyleMatrixChangedSignal.add( onColorStyleMatrixChanged );
 		}
 
+		override public function destroy():void {
+			notifyColorStyleModuleActivatedSignal.remove( onModuleActivated );
+			notifyColorStyleChangedSignal.remove( onColorStyleChanged );
+			notifyColorStyleConfirmSignal.remove( confirmColorStyle );
+			requestColorStyleMatrixChangedSignal.remove( onColorStyleMatrixChanged );
+			super.destroy();
+		}
+
 		// -----------------------
 		// From app.
 		// -----------------------

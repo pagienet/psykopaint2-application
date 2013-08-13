@@ -75,13 +75,13 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 			if( !_dataProvider ) return;
 
-			trace( this, "invalidateContent() -----------------" );
+//			trace( this, "invalidateContent() -----------------" );
 
 			// Create snap points for each data item.
 			// Items will remember their associated position.
 			var i:uint;
 			var numItems:uint = _dataProvider.length;
-			trace( this, "numItems: " + numItems );
+//			trace( this, "numItems: " + numItems );
 			var itemData:ISnapListData;
 			var itemPositioningMarker:Number = 0;
 			for( i = 0; i < numItems; i++ ) {
@@ -267,7 +267,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 		private function copyAllPropertiesFromObjectAToObjectB( objectA:*, objectB:* ):void {
 
-			trace( this, "copying properties from " + objectA + " to " + objectB );
+//			trace( this, "copying properties from " + objectA + " to " + objectB );
 
 			// Obtain object a's public interface description in xml.
 			var objectDescriptor:XML = describeType( objectA );
@@ -285,7 +285,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 		private function copyPropertyFromObjectAToObjectB( propertyName:String, objectA:*, objectB:* ):void {
 			if( objectB.hasOwnProperty( propertyName ) ) {
-				trace( this, "copying property [" + propertyName + "]" );
+//				trace( this, "copying property [" + propertyName + "]" );
 				objectB[ propertyName ] = objectA[ propertyName ];
 			}
 		}

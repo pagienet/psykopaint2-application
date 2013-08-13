@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public function setAvailableBrushes( availableBrushTypes:Vector.<String> ):void {
 
 			var len:uint = availableBrushTypes.length;
+			trace( this, "setAvailableBrushes - len: " + len );
 
 			for( var i:uint; i < len; ++i ) {
 				var iconType:String;

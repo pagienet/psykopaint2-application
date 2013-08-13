@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
@@ -47,6 +48,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var notifyHomeModuleDestroyedSignal:NotifyHomeModuleDestroyedSignal;
 
+		[Inject]
+		public var notifyCanvasZoomedToDefaultViewSignal:NotifyCanvasZoomedToDefaultViewSignal;
+
 		public function TransitionHomeToPaintState()
 		{
 		}
@@ -68,7 +72,11 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onCanvasBackgroundSet() : void
 		{
-			requestZoomCanvasToDefaultViewSignal.dispatch(onZoomComplete);
+//			trace( this, "onCanvasBackgroundSet" );
+
+			notifyCanvasZoomedToDefaultViewSignal.addOnce( onZoomComplete );
+			requestZoomCanvasToDefaultViewSignal.dispatch();
+
 			requestNavigationStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 		}
 
