@@ -89,11 +89,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK ):void {
-			_navigation.setLeftButton( label, iconType );
+			_navigation.setLeftButton( id, label, iconType );
 		}
 
 		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE ):void {
-			_navigation.setRightButton( label, iconType );
+			_navigation.setRightButton( id, label, iconType );
 		}
 
 		public function showLeftButton( value:Boolean ):void {
