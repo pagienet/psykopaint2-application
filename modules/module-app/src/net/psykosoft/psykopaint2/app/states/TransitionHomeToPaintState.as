@@ -72,6 +72,8 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onCanvasBackgroundSet() : void
 		{
+//			trace( this, "onCanvasBackgroundSet" );
+
 			notifyCanvasZoomedToDefaultViewSignal.addOnce( onZoomComplete );
 			requestZoomCanvasToDefaultViewSignal.dispatch();
 

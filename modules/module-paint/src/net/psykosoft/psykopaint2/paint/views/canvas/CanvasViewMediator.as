@@ -106,7 +106,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them
 			paintModule.view = view;
 
-
 			// From app.
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 
@@ -117,6 +116,25 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			view.enabledSignal.add(onEnabled);
 			view.disabledSignal.add(onDisabled);
+		}
+
+		override public function destroy():void {
+
+			TweenLite.killTweensOf( this );
+
+			if( !CoreSettings.RUNNING_ON_iPAD && _addedMouseWheelListener ) {
+				view.stage.removeEventListener( MouseEvent.MOUSE_WHEEL, onMouseWheel );
+				_addedMouseWheelListener = false;
+				trace( this, "listener removed" );
+			}
+
+			notifyGlobalGestureSignal.remove( onGlobalGesture );
+			requestZoomCanvasToDefaultViewSignal.remove( zoomToFullView );
+			requestZoomCanvasToEaselViewSignal.remove( zoomToEaselView );
+			view.enabledSignal.remove(onEnabled);
+			view.disabledSignal.remove(onDisabled);
+
+			super.destroy();
 		}
 
 		private function onEnabled() : void
@@ -243,20 +261,24 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		private function zoomToFullView():void
 		{
+//			trace( this, "zoomToFullView" );
 			updateEaselRect();
 			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomToFullViewComplete, ease: Strong.easeInOut } );
 		}
 		private function onZoomToFullViewComplete():void {
+//			trace( this, "onZoomToFullViewComplete" );
 			notifyCanvasZoomedToDefaultViewSignal.dispatch();
 		}
 
 		public function zoomToEaselView():void {
+//			trace( this, "zoomToEaselView" );
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomToEaselViewComplete, ease: Strong.easeInOut } );
 		}
 		private function onZoomToEaselViewComplete():void {
+//			trace( this, "onZoomToEaselViewComplete" );
 			notifyCanvasZoomedToEaselViewSignal.dispatch();
 		}
 

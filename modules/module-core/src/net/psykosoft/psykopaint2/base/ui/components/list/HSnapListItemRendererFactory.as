@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				return availableItem;
 			}
 
-			trace( this, "-> creating new item renderer" );
+//			trace( this, "-> creating new item renderer" );
 
 			// Create a new item renderer.
 			var renderer:DisplayObject = new typeClass();
