@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraFlipRequest;
+	import net.psykosoft.psykopaint2.home.signals.NotifyCameraSnapshotRequest;
 
 	public class CaptureImageSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -12,6 +13,9 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		[Inject]
 		public var notifyCameraFlipRequest:NotifyCameraFlipRequest;
+
+		[Inject]
+		public var notifyCameraSnapshotRequest:NotifyCameraSnapshotRequest;
 
 		override public function initialize():void {
 
@@ -29,7 +33,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 				}
 				case CaptureImageSubNavView.ID_CAPTURE:
 				{
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.CONFIRM_CAPTURE_IMAGE );
+					notifyCameraSnapshotRequest.dispatch();
 					break;
 				}
 				case CaptureImageSubNavView.ID_FLIP:

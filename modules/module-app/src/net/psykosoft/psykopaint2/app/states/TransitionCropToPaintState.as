@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
@@ -52,6 +53,9 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
+
+		[Inject]
+		public var notifyCanvasZoomedToDefaultViewSignal:NotifyCanvasZoomedToDefaultViewSignal;
 
 		private var _croppedBitmapData : BitmapData;
 		private var _background : RefCountedTexture;
@@ -94,7 +98,9 @@ package net.psykosoft.psykopaint2.app.states
 			requestDestroyCropModuleSignal.dispatch();
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.rect);
-			requestZoomCanvasToDefaultViewSignal.dispatch(onZoomOutComplete);
+
+			notifyCanvasZoomedToDefaultViewSignal.addOnce( onZoomOutComplete );
+			requestZoomCanvasToDefaultViewSignal.dispatch();
 		}
 
 		private function onZoomOutComplete() : void

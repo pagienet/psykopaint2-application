@@ -12,7 +12,6 @@ package net.psykosoft.psykopaint2.home.views.base
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavView;
 	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageSubNavView;
 	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageView;
-	import net.psykosoft.psykopaint2.home.views.pickimage.ConfirmCaptureImageSubNavView;
 	import net.psykosoft.psykopaint2.home.views.pickimage.PickAUserImageView;
 	import net.psykosoft.psykopaint2.home.views.pickimage.PickAnImageSubNavView;
 	import net.psykosoft.psykopaint2.home.views.picksurface.PickSurfaceSubNavView;
@@ -50,7 +49,6 @@ package net.psykosoft.psykopaint2.home.views.base
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PREPARE_FOR_PAINT_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_IMAGE, PickAnImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.CAPTURE_IMAGE, CaptureImageSubNavView );
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.CONFIRM_CAPTURE_IMAGE, ConfirmCaptureImageSubNavView );
 
 			name = "HomeRootView";
 
