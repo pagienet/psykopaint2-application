@@ -93,7 +93,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onStageMouseUp( event:MouseEvent ):void
 		{
 			_mouseIsDown = false;
-			if(_book.ready) _time = _book.snapToNearestTime();
+			if(_book.ready && !_book.isLoadingImage) _time = _book.snapToNearestTime();
 		}
  
 		override protected function onEnabled():void

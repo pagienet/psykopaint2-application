@@ -307,6 +307,11 @@ package net.psykosoft.psykopaint2.book.views.book
  			return _nearestTime;
  		}
 
+ 		public function get isLoadingImage():Boolean
+ 		{
+ 			return _isLoadingImage;
+ 		}
+
  		public function killSnapTween():void
  		{
  			if(!_isLoadingImage) TweenLite.killTweensOf(this);	
@@ -318,7 +323,7 @@ package net.psykosoft.psykopaint2.book.views.book
  				killSnapTween();
  				return;
  			}
- 			
+
  			updatePages(_percent);
  		}
 
