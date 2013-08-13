@@ -18,7 +18,6 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	public class CaptureImageView extends ViewBase
 	{
 		// Declared in Flash.
-		public var handHolding:Sprite;
 		public var photoCamera:Sprite;
 
 		private var _activeCameraIndex:uint;
@@ -65,7 +64,6 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			_snapshot.scaleX = _snapshot.scaleY = 1 / CoreSettings.GLOBAL_SCALING;
 			addChild( _snapshot );
 
-			swapChildren( _snapshot, handHolding );
 			cameraEnter();
 			setCameraByIndex( 0 );
 		}
@@ -102,17 +100,15 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			_snapshot.height = 384;
 			_snapshot.width = 512;
 
+			_video.attachCamera( null );
+
 			clearAllTweens();
 			cameraLeave();
-			snapshotEnter( _speed );
 		}
 
 		public function play():void {
-
 			_video.attachCamera( _currentCamera );
-
 			clearAllTweens();
-			snapshotLeave();
 			cameraEnter( _speed );
 		}
 
@@ -143,20 +139,6 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			TweenLite.to( photoCamera, _speed, { delay: delay, x : -_moveToSideBy, y : stage.height, ease : Strong.easeIn} );
 		}
 
-		private function snapshotEnter( delay:Number = 0 ):void {
-
-			snapshotInitPos();
-
-			TweenLite.to( _snapshot, _speed, { delay: delay, x : _snapshotPos.x, y : _snapshotPos.y, ease : Strong.easeOut, onStart:onSnapshotEnterStart } );
-			TweenLite.to( handHolding, _speed, { delay: delay, x : _snapshotPos.x + _snapshot.width, y : _snapshotPos.y + _snapshot.height, ease : Strong.easeOut} );
-		}
-
-		private function snapshotLeave( delay:Number = 0 ):void {
-
-			TweenLite.to( _snapshot, _speed, { delay: delay, x : _snapshotPos.x + _moveToSideBy, y : _snapshotPos.y + stage.height, ease : Strong.easeIn} );
-			TweenLite.to( handHolding, _speed, { delay: delay, x : _snapshotPos.x + _snapshot.width + _moveToSideBy, y : _snapshotPos.y + _snapshot.height + stage.height, ease : Strong.easeIn} );
-		}
-
 		private function cameraInitPos():void {
 
 			_video.x = _videoPos.x - _moveToSideBy;
@@ -166,36 +148,18 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		}
 
 		private function snapshotInitPos():void {
-
 			_snapshot.x = _snapshotPos.x + _moveToSideBy;
 			_snapshot.y = _snapshotPos.y + stage.height;
-			handHolding.x = _snapshotPos.x + _snapshot.width + _moveToSideBy;
-			handHolding.y = _snapshotPos.y + _snapshot.height + stage.height;  //TODO: check why initial position is not the one we want
-		}
-
-		private function onSnapshotEnterStart():void{
-
-			_video.attachCamera( null );
-
-			_snapshot.visible = true;
-			_video.visible = false;
-
-			handHolding.visible = true;
-			photoCamera.visible = false;
 		}
 
 		private function onCameraEnterStart():void{
-
 			_video.visible = true;
 			_snapshot.visible = false;
-
-			handHolding.visible = false;
 			photoCamera.visible = true;
 		}
 
 		private function clearAllTweens():void {
 			TweenLite.killTweensOf( _video );
-			TweenLite.killTweensOf( handHolding );
 			TweenLite.killTweensOf( _snapshot );
 			TweenLite.killTweensOf( photoCamera );
 		}
