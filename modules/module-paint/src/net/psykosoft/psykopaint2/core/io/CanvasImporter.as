@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.core.io
 {
 	import flash.display.BitmapData;
+	import flash.utils.ByteArray;
+
+	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 
@@ -32,6 +35,9 @@ package net.psykosoft.psykopaint2.core.io
 			paintingData.normalSpecularData.length = newLength;
 			canvas.normalSpecularMap.uploadFromByteArray(paintingData.normalSpecularData, 0, 0);
 			paintingData.normalSpecularData.length = oldLength;
+
+			canvas.setNormalSpecularOriginal(paintingData.normalSpecularOriginal);
+			canvas.setColorBackgroundOriginal(paintingData.colorBackgroundOriginal);
 		}
 	}
 }

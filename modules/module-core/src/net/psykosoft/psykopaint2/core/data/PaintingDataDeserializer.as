@@ -2,6 +2,8 @@ package net.psykosoft.psykopaint2.core.data
 {
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+
 	public class PaintingDataDeserializer
 	{
 		public function PaintingDataDeserializer()
@@ -20,6 +22,8 @@ package net.psykosoft.psykopaint2.core.data
 			// Read painting surfaces.
 			vo.colorData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
 			vo.normalSpecularData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
+			// TODO: Load from and save to file
+			vo.normalSpecularOriginal = ByteArrayUtil.clone(vo.normalSpecularData);
 			vo.sourceBitmapData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
 
 			return vo;

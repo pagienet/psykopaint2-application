@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.data
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
+
 	public class PaintingInfoFactory
 	{
 		// todo: parameterize?
@@ -39,10 +41,10 @@ package net.psykosoft.psykopaint2.core.data
 		}
 
 		// TODO: extremely slow, use native approach?
-		private function reduceSurface( bytes:ByteArray, sourceWidth:uint, sourceHeight:uint, factor:uint ):ByteArray {
+		private function reduceSurface( bytes:ByteArray, sourceWidth:uint, sourceHeight:uint, factor:uint ):RefCountedByteArray {
 			var outputWidth : uint = sourceWidth / factor;
 			var outputHeight : uint = sourceHeight / factor;
-			var reducedBytes:ByteArray = new ByteArray();
+			var reducedBytes:RefCountedByteArray = new RefCountedByteArray();
 			var sampleX : uint, sampleY : uint = 0;
 
 			for( var y : uint = 0; y < outputHeight; ++y ) {

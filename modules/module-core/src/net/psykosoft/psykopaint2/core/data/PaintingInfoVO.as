@@ -11,15 +11,16 @@ package net.psykosoft.psykopaint2.core.data
 	import net.psykosoft.psykopaint2.core.debug.UndisposedObjects;
 
 	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 
 	public class PaintingInfoVO
 	{
 		public static const DEFAULT_VO_ID:String = "new";
 
 		public var thumbnail:BitmapData;
-		public var colorPreviewData:ByteArray;
+		public var colorPreviewData:RefCountedByteArray;
 		public var colorPreviewBitmap:BitmapData;
-		public var normalSpecularPreviewData:ByteArray;
+		public var normalSpecularPreviewData:RefCountedByteArray;
 		public var lastSavedOnDateMs:Number;
 
 		public var fileVersion:String = PaintingFileUtils.PAINTING_FILE_VERSION;
@@ -41,12 +42,12 @@ package net.psykosoft.psykopaint2.core.data
 			var clone : PaintingInfoVO = new PaintingInfoVO();
 			if (thumbnail) clone.thumbnail = thumbnail.clone();
 			if (colorPreviewData) {
-				clone.colorPreviewData = new ByteArray();
+				clone.colorPreviewData = new RefCountedByteArray();
 				clone.colorPreviewData.writeBytes(colorPreviewData);
 			}
 			if (colorPreviewBitmap) clone.colorPreviewBitmap = colorPreviewBitmap.clone();
 
-			clone.normalSpecularPreviewData = new ByteArray();
+			clone.normalSpecularPreviewData = new RefCountedByteArray();
 			clone.normalSpecularPreviewData.writeBytes(normalSpecularPreviewData);
 			clone.lastSavedOnDateMs = lastSavedOnDateMs;
 			clone.fileVersion = fileVersion;
@@ -99,12 +100,12 @@ package net.psykosoft.psykopaint2.core.data
 				UndisposedObjects.getInstance().remove(this);
 
 			if (colorPreviewData)
-				colorPreviewData.clear();
+				colorPreviewData.dispose();
 
 			if (colorPreviewBitmap)
 				colorPreviewBitmap.dispose();
 
-			normalSpecularPreviewData.clear();
+			normalSpecularPreviewData.dispose();
 			if (thumbnail) thumbnail.dispose();
 			colorPreviewData = null;
 			colorPreviewBitmap = null;

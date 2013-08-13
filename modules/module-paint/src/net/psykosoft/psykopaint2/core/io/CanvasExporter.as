@@ -10,7 +10,12 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+
+	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 
 	import net.psykosoft.psykopaint2.core.model.*;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
@@ -33,8 +38,8 @@ package net.psykosoft.psykopaint2.core.io
 		private var _stage : int;
 		private var _ticker : Sprite;
 		private var _workerBitmapData : BitmapData;
-		private var _rgbData : ByteArray;
-		private var _alphaData : ByteArray;
+		private var _rgbData : RefCountedByteArray;
+		private var _alphaData : RefCountedByteArray;
 		private var _context3D : Context3D;
 		private var _sourceRect : Rectangle;
 		private var _destRect : Rectangle;
@@ -150,12 +155,11 @@ package net.psykosoft.psykopaint2.core.io
 			_destRect = null;
 			_workerBitmapData.dispose();
 			_workerBitmapData = null;
-			_rgbData = null;
-			_alphaData = null;
+
 			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.COMPLETE, _paintingData));
 		}
 
-		private function saveLayerNoAlpha(layer : Texture) : ByteArray
+		private function saveLayerNoAlpha(layer : Texture) : RefCountedByteArray
 		{
 			var context3D : Context3D = _canvas.stage3D.context3D;
 
@@ -164,14 +168,14 @@ package net.psykosoft.psykopaint2.core.io
 			context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopySubTexture.copy(layer, _sourceRect, _destRect, context3D);
 			context3D.drawToBitmapData(_workerBitmapData);
-			return _workerBitmapData.getPixels(_workerBitmapData.rect);
+			return ByteArrayUtil.fromBitmapData(_workerBitmapData);
 		}
 
-		private function mergeRGBAData() : ByteArray
+		private function mergeRGBAData() : RefCountedByteArray
 		{
 			_rgbData.position = 0;
 			_alphaData.position = 0;
-			var outputData : ByteArray = new ByteArray();
+			var outputData : RefCountedByteArray = new RefCountedByteArray();
 
 			var len : int = _canvas.width * _canvas.height;
 			for (var i : int = 0; i < len; ++i) {
@@ -184,12 +188,14 @@ package net.psykosoft.psykopaint2.core.io
 				outputData.writeUnsignedInt((r >> 8) | (g << 8) | (b << 24) | a);
 			}
 
-			_rgbData.clear();
-			_alphaData.clear();
+			_rgbData.dispose();
+			_alphaData.dispose();
+			_rgbData = null;
+			_alphaData = null;
 			return outputData;
 		}
 
-		private function extractChannels(layer : Texture, copier : CopySubTextureChannels) : ByteArray
+		private function extractChannels(layer : Texture, copier : CopySubTextureChannels) : RefCountedByteArray
 		{
 			_context3D.setRenderToBackBuffer();
 			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
@@ -198,7 +204,7 @@ package net.psykosoft.psykopaint2.core.io
 			copier.copy(layer, _sourceRect, _destRect, _context3D);
 			_context3D.drawToBitmapData(_workerBitmapData);
 
-			return _workerBitmapData.getPixels(_workerBitmapData.rect);
+			return ByteArrayUtil.fromBitmapData(_workerBitmapData);
 		}
 	}
 }

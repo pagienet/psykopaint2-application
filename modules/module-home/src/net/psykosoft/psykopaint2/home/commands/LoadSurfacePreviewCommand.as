@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.commands
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 
@@ -124,10 +125,10 @@ package net.psykosoft.psykopaint2.home.commands
 				vo.colorPreviewBitmap.draw( _loadedColorData );
 			}
 			else {
-				vo.colorPreviewData = new ByteArray();
+				vo.colorPreviewData = new RefCountedByteArray();
 				vo.colorPreviewData.length = vo.width * vo.height * 4;	// will fill with zeroes
 			}
-			vo.normalSpecularPreviewData = new ByteArray();
+			vo.normalSpecularPreviewData = new RefCountedByteArray();
 			vo.normalSpecularPreviewData.writeBytes( _loadedNormalSpecularData, 0, 0 );
 			vo.normalSpecularPreviewData.uncompress();
 			// nothing else necessary

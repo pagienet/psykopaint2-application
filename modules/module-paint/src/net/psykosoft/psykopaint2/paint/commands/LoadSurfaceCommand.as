@@ -5,14 +5,17 @@ package net.psykosoft.psykopaint2.paint.commands
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
+	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 
 	import robotlegs.bender.framework.api.IContext;
 
 	// TODO: Identifying surfaces using indices is error prone, should be actual ids into a (xml) database rather than some hardcoded array
+	// TODO: Move this out of paint module
 	public class LoadSurfaceCommand extends TracingCommand
 	{
 		[Inject]
@@ -26,7 +29,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private var _byteLoader:BinaryLoader;
 		private var _bitmapLoader:BitmapLoader;
-		private var _loadedNormalSpecularData:ByteArray;
+		private var _loadedNormalSpecularData:RefCountedByteArray;
 		private var _loadedColorData:BitmapData;
 		private var _assetSize:String;
 
@@ -70,11 +73,12 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function onSurfaceLoaded( bytes:ByteArray ):void {
-			_loadedNormalSpecularData = bytes;
+			_loadedNormalSpecularData = ByteArrayUtil.clone(bytes);
+			bytes.clear();
 			_byteLoader.dispose();
 			_byteLoader = null;
-			bytes.uncompress();
-			notifySurfaceLoadedSignal.dispatch(bytes);
+			_loadedNormalSpecularData.uncompress();
+			notifySurfaceLoadedSignal.dispatch(_loadedNormalSpecularData);
 			context.release( this );
 		}
 	}

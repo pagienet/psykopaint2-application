@@ -4,15 +4,22 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
+	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+
+	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
@@ -42,9 +49,9 @@ package net.psykosoft.psykopaint2.core.model
 
 		private var _viewport : Rectangle;
 
-		// TODO: should originals be a string path to packaged asset
-		private var _normalSpecularOriginal : ByteArray;
-		private var _colorBackgroundOriginal : BitmapData;
+		// TODO: should originals be a string path to packaged asset?
+		private var _normalSpecularOriginal : RefCountedByteArray;
+		private var _colorBackgroundOriginal : RefCountedByteArray;
 
 		public function CanvasModel()
 		{
@@ -138,13 +145,10 @@ package net.psykosoft.psykopaint2.core.model
 			}
 		}
 
-		public function setColorBackgroundOriginal(value : BitmapData) : void
+		public function setColorBackgroundOriginal(value : RefCountedByteArray) : void
 		{
 			if (_colorBackgroundOriginal) _colorBackgroundOriginal.dispose();
 			_colorBackgroundOriginal = value;
-
-			if (_colorTexture)
-				uploadColorBackgroundOriginal();
 		}
 
 		public function get sourceTexture() : Texture
@@ -177,7 +181,7 @@ package net.psykosoft.psykopaint2.core.model
 			trace ("Creating paint textures");
 			if (!_colorTexture) {
 				_colorTexture = createCanvasTexture(true);
-				uploadColorBackgroundOriginal();
+				clearColorTexture();
 			}
 
 			if (!_normalSpecularMap) {
@@ -189,6 +193,15 @@ package net.psykosoft.psykopaint2.core.model
 			if (!_fullSizeBackBuffer) _fullSizeBackBuffer = createCanvasTexture(true);
 		}
 
+		public function setNormalSpecularOriginal(value : RefCountedByteArray) : void
+		{
+			if (_normalSpecularOriginal)
+				_normalSpecularOriginal.dispose();
+
+			_normalSpecularOriginal = ByteArrayUtil.clone(value);
+			_normalSpecularOriginal.compress();
+		}
+
 		public function disposePaintTextures() : void
 		{
 			trace ("Disposing paint textures");
@@ -196,7 +209,7 @@ package net.psykosoft.psykopaint2.core.model
 			if (_fullSizeBackBuffer) _fullSizeBackBuffer.dispose();
 			if (_normalSpecularMap) _normalSpecularMap.dispose();
 			if (_sourceTexture) _sourceTexture.dispose();
-			if (_normalSpecularOriginal) _normalSpecularOriginal.clear();
+			if (_normalSpecularOriginal) _normalSpecularOriginal.dispose();
 			if (_colorBackgroundOriginal) _colorBackgroundOriginal.dispose();
 			_colorTexture = null;
 			_fullSizeBackBuffer = null;
@@ -250,21 +263,22 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function clearColorTexture() : void
 		{
-			uploadColorBackgroundOriginal();
+			if (_colorBackgroundOriginal)
+				uploadColorBackgroundOriginal();
+			else {
+				var context : Context3D = stage3D.context3D;
+				context.setRenderToTexture(_colorTexture.texture);
+				context.clear(0, 0, 0, 0);
+				context.setRenderToBackBuffer();
+			}
 		}
 
 		private function uploadColorBackgroundOriginal() : void
 		{
-			if (_colorBackgroundOriginal && _colorBackgroundOriginal.width == _textureWidth && _colorBackgroundOriginal.height == _textureHeight) {
-				_colorTexture.texture.uploadFromBitmapData(_colorBackgroundOriginal, 0);
-			}
-			else {
-				var tempBitmapData : BitmapData = new TrackedBitmapData(_textureWidth, _textureHeight, true, 0);
-				if (_colorBackgroundOriginal)
-					tempBitmapData.draw(_colorBackgroundOriginal);
-				_colorTexture.texture.uploadFromBitmapData(tempBitmapData, 0);
-				tempBitmapData.dispose();
-			}
+			var inflated : RefCountedByteArray = ByteArrayUtil.clone(_colorBackgroundOriginal);
+			inflated.uncompress();
+			_colorTexture.texture.uploadFromByteArray(inflated, 0);
+			inflated.dispose();
 		}
 
 		public function clearNormalSpecularTexture() : void
@@ -274,13 +288,10 @@ package net.psykosoft.psykopaint2.core.model
 
 		private function uploadNormalSpecularOriginal() : void
 		{
-			var inflated : ByteArray = new ByteArray();
-			//TODO - I observed a case where _normalSpecularOriginal was null here and caused an exception:
-			_normalSpecularOriginal.position = 0;
-			inflated.writeBytes(_normalSpecularOriginal, 0, _normalSpecularOriginal.length);
+			var inflated : RefCountedByteArray = ByteArrayUtil.clone(_normalSpecularOriginal);
 			inflated.uncompress();
 			_normalSpecularMap.texture.uploadFromByteArray(inflated, 0);
-			inflated.clear();
+			inflated.dispose();
 		}
 	}
 }

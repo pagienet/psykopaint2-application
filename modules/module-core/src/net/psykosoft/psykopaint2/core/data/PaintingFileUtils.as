@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.data
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.io.PngDecodeUtil;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 
 	public class PaintingFileUtils
 	{
@@ -10,10 +11,10 @@ package net.psykosoft.psykopaint2.core.data
 		public static const PAINTING_INFO_FILE_EXTENSION:String = ".ipp2";
 		public static const PAINTING_DATA_FILE_EXTENSION:String = ".dpp2";
 
-		static public function decodeImage(bytes : ByteArray, width : uint, height : Number) : ByteArray
+		static public function decodeImage(bytes : ByteArray, width : uint, height : Number) : RefCountedByteArray
 		{
 			var numBytes : int = width * height * 4;
-			var imageBytes : ByteArray = new ByteArray();
+			var imageBytes : RefCountedByteArray = new RefCountedByteArray();
 			bytes.readBytes(imageBytes, 0, numBytes);
 			return imageBytes;
 		}

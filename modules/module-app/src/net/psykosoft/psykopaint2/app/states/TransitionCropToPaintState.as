@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
@@ -61,9 +62,10 @@ package net.psykosoft.psykopaint2.app.states
 			requestLoadSurfaceSignal.dispatch(0);
 		}
 
-		private function onSurfaceLoaded(data : ByteArray) : void
+		private function onSurfaceLoaded(data : RefCountedByteArray) : void
 		{
 			var vo : PaintingDataVO = createPaintingVO(data);
+			data.dispose();
 			_croppedBitmapData.dispose();
 			_croppedBitmapData = null;
 
@@ -83,14 +85,16 @@ package net.psykosoft.psykopaint2.app.states
 			stateMachine.setActiveState(paintState);
 		}
 
-		private function createPaintingVO(data : ByteArray) : PaintingDataVO
+		private function createPaintingVO(surface : RefCountedByteArray) : PaintingDataVO
 		{
 			var vo : PaintingDataVO = new PaintingDataVO();
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
-			vo.sourceBitmapData = _croppedBitmapData.getPixels(_croppedBitmapData.rect);
+			vo.sourceBitmapData = ByteArrayUtil.fromBitmapData(_croppedBitmapData);
+			vo.colorBackgroundOriginal = vo.sourceBitmapData.newReference();
 			vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
-			vo.normalSpecularData = data;
+			vo.normalSpecularData = surface.newReference();
+			vo.normalSpecularOriginal = surface.newReference();
 			return vo;
 		}
 
