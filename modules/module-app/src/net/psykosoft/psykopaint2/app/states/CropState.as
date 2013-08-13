@@ -1,9 +1,6 @@
 package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
-	import flash.geom.Rectangle;
-
-	import mx.modules.IModule;
 
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 
@@ -33,15 +30,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var transitionToPaintState : TransitionCropToPaintState;
 
-		[Inject]
-		public var requestSetCanvasBackgroundSignal : RequestSetCanvasBackgroundSignal;
-
 		// to be able to forward
 		[Inject]
 		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
-
-		[Inject]
-		public var easelRectModel : EaselRectModel;
 
 		[Inject]
 		public var transitionCropToHomeState : TransitionCropToHomeState;
@@ -67,20 +58,26 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onRequestSetCropBackgroundSignal(background : RefCountedTexture) : void
 		{
-			_background = background;
+			if (_background)
+				_background.dispose();
+
+			if (background)
+				_background = background.newReference();
+			else
+				_background = null;
 		}
 
 		override ns_state_machine function deactivate() : void
 		{
 			requestCancelCropSignal.remove(onRequestCancelCropSignal);
 			requestOpenCroppedBitmapDataSignal.remove(onRequestOpenCroppedBitmapData);
+			_background.dispose();
 			_background = null;
 		}
 
 		private function onRequestOpenCroppedBitmapData(bitmapData : BitmapData) : void
 		{
-			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.rect);
-			stateMachine.setActiveState(transitionToPaintState, bitmapData);
+			stateMachine.setActiveState(transitionToPaintState, {bitmapData: bitmapData, background: _background.newReference()});
 		}
 
 		private function onRequestCancelCropSignal() : void

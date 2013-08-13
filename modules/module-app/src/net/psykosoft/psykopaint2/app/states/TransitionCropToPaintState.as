@@ -9,12 +9,15 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 
@@ -42,9 +45,16 @@ package net.psykosoft.psykopaint2.app.states
 		public var paintState : PaintState;
 
 		[Inject]
+		public var easelRectModel : EaselRectModel;
+
+		[Inject]
+		public var requestSetCanvasBackgroundSignal : RequestSetCanvasBackgroundSignal;
+
+		[Inject]
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
 
 		private var _croppedBitmapData : BitmapData;
+		private var _background : RefCountedTexture;
 
 		public function TransitionCropToPaintState()
 		{
@@ -52,11 +62,17 @@ package net.psykosoft.psykopaint2.app.states
 
 		/**
 		 *
-		 * @param data A BitmapData containing the cropped bitmap
+		 * @param data An Object with the following layout:
+		 * {
+		 * 	bitmapData : BitmapData; // containing BitmapData containing the cropped bitmap
+		 * 	background : RefCountedTexture; // containing the background for the renderer
+		 * }
 		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			_croppedBitmapData = BitmapData(data);
+			_croppedBitmapData = BitmapData(data.bitmapData);
+			_background = RefCountedTexture(data.background);
+
 
 			notifySurfaceLoadedSignal.addOnce(onSurfaceLoaded);
 			requestLoadSurfaceSignal.dispatch(0);
@@ -77,6 +93,7 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			requestDestroyCropModuleSignal.dispatch();
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
+			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.rect);
 			requestZoomCanvasToDefaultViewSignal.dispatch(onZoomOutComplete);
 		}
 
@@ -100,6 +117,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function deactivate() : void
 		{
+			_background.dispose();
 		}
 	}
 }
