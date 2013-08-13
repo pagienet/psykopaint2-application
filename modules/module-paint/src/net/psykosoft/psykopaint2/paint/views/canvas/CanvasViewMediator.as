@@ -22,12 +22,12 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
 
@@ -70,7 +70,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public var requestZoomCanvasToDefaultViewSignal:RequestZoomCanvasToDefaultViewSignal;
 
 		[Inject]
+		public var notifyCanvasZoomedToDefaultViewSignal:NotifyCanvasZoomedToDefaultViewSignal;
+
+		[Inject]
 		public var requestZoomCanvasToEaselViewSignal:RequestZoomCanvasToEaselViewSignal;
+
+		[Inject]
+		public var notifyCanvasZoomedToEaselViewSignal:NotifyCanvasZoomedToEaselViewSignal;
 
 		[Inject]
 		public var easelRectModel : EaselRectModel;
@@ -214,7 +220,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			// todo: remove this during state introduction
 			if( newState == NavigationStateType.TRANSITION_TO_HOME_MODE )
-				zoomToEaselView(null);
+				zoomToEaselView();
 
 		}
 
@@ -235,22 +241,23 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			view.graphics.endFill();*/
 		}
 
-		private function zoomToFullView(callback : Function):void
+		private function zoomToFullView():void
 		{
 			updateEaselRect();
 			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: function() : void {
-				if (callback) callback();
-			}, ease: Strong.easeInOut } );
+			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomToFullViewComplete, ease: Strong.easeInOut } );
+		}
+		private function onZoomToFullViewComplete():void {
+			notifyCanvasZoomedToDefaultViewSignal.dispatch();
 		}
 
-		public function zoomToEaselView(callback : Function):void {
+		public function zoomToEaselView():void {
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete:
-					function() : void {
-						if (callback) callback();
-					}, ease: Strong.easeInOut } );
+			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomToEaselViewComplete, ease: Strong.easeInOut } );
+		}
+		private function onZoomToEaselViewComplete():void {
+			notifyCanvasZoomedToEaselViewSignal.dispatch();
 		}
 
 		private function onZoomUpdate():void {

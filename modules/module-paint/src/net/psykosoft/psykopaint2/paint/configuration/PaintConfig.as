@@ -41,6 +41,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.commands.LoadSurfaceCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetupPaintModuleCommand;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
@@ -140,6 +142,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 		private function mapNotifications():void {
 			_injector.map( NotifyCanvasMatrixChanged ).asSingleton();
 			_injector.map( RequestZoomCanvasToDefaultViewSignal ).asSingleton();
+			_injector.map( NotifyCanvasZoomedToDefaultViewSignal ).asSingleton();
+			_injector.map( NotifyCanvasZoomedToEaselViewSignal ).asSingleton();
 			_injector.map( RequestZoomCanvasToEaselViewSignal ).asSingleton();
 			_injector.map( NotifyPaintModuleSetUpSignal ).asSingleton();
 			_injector.map( NotifyPaintModuleDestroyedSignal ).asSingleton();

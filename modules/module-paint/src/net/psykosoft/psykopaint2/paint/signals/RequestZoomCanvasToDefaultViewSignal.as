@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.paint.signals
 	{
 		public function RequestZoomCanvasToDefaultViewSignal()
 		{
-			super(Function);
+			super();
 		}
 	}
 }

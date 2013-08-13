@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
@@ -30,6 +31,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var notifyPaintModuleDestroyedSignal:NotifyPaintModuleDestroyedSignal;
 
+		[Inject]
+		public var notifyCanvasZoomedToEaselViewSignal:NotifyCanvasZoomedToEaselViewSignal;
+
 		// needs to be set from HomeState -_-
 		public var homeState : HomeState;
 
@@ -45,7 +49,8 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onHomeModuleSetUp() : void
 		{
-			requestZoomCanvasToEaselViewSignal.dispatch(onZoomOutComplete);
+			notifyCanvasZoomedToEaselViewSignal.addOnce( onZoomOutComplete );
+			requestZoomCanvasToEaselViewSignal.dispatch();
 		}
 
 		private function onZoomOutComplete() : void
