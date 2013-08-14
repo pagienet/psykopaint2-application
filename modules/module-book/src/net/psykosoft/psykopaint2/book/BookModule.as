@@ -57,6 +57,27 @@ package net.psykosoft.psykopaint2.book
 			// Init display tree for this module.
 			var bookRootView:BookRootView = new BookRootView();
 			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( bookRootView );
+			bookRootView.allViewsReadySignal.addOnce( onViewsReady );
+			_coreModule.addModuleDisplay( bookRootView );
+		}
+
+		private function onViewsReady():void {
+
+			trace( this, "BookModule views are ready." );
+
+			if( isStandalone ) {
+
+				// Remove splash screen.
+				_coreModule.coreRootView.removeSplashScreen();
+
+				// Show Navigation.
+				var showNavigationSignal:RequestNavigationToggleSignal = _coreModule.injector.getInstance( RequestNavigationToggleSignal );
+				showNavigationSignal.dispatch( 1, 0.5 );
+
+				// Trigger initial state...
+				_bookConfig.injector.getInstance( RequestStateChangeSignal ).dispatch( StateType.BOOK_STANDALONE );
+				_coreModule.startEnterFrame();
+			}
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch();

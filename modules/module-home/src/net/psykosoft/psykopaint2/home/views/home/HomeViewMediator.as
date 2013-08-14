@@ -186,7 +186,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		override protected function onStateChange( newState:String ):void {
 
 			super.onStateChange( newState );
-
 		}
 
 		private function onScrollRequested( index:int ):void {

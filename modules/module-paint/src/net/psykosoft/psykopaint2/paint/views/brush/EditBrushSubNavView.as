@@ -105,6 +105,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					showRightButton( true );
 				}
 
+
 			}
 
 			validateCenterButtons();

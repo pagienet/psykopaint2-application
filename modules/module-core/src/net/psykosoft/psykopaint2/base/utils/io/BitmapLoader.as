@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		}
 
 		private function onLoaderError( event:IOErrorEvent ):void {
-			if (_errorCallback)
+			if (_errorCallback != null)
 				_errorCallback();
 			else
 				throw new Error( this + event +" cannot find "+_url);

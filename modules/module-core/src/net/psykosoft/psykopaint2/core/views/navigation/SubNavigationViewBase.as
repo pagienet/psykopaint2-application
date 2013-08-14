@@ -187,8 +187,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			if( _scroller.isActive ) return; // Reject clicks while the scroller is moving.
 
-			var clickedButton:NavigationButton = ClickUtil.getObjectOfClassInHierarchy( event.target as DisplayObject, NavigationButton ) as NavigationButton;
-			if( !clickedButton ) throw new Error( "unidentified button clicked." );
+			var clickedButton:NavigationButton = event.target as NavigationButton;
+			if( !clickedButton ) clickedButton = event.target.parent as NavigationButton;
+			if( !clickedButton ) {
+				//throw new Error( "unidentified button clicked." );
+				//sorry - this was too annoying for debugging:
+				return;
+			}
 
 			// Deselect all buttons except the clicked one.
 			if( clickedButton.selectable ) {
