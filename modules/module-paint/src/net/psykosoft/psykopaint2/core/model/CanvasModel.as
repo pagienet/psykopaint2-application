@@ -119,7 +119,7 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function setSourceBitmapData(sourceBitmapData : BitmapData) : void
 		{
-			// TODO: Do not provide pyramidmap if sourceBitmapData is null!!!
+			// TODO: Do not create pyramidmap if sourceBitmapData is null!!!
 			// Currently crashes app
 
 			if (!sourceBitmapData) {
@@ -159,8 +159,12 @@ package net.psykosoft.psykopaint2.core.model
 		public function setColorBackgroundOriginal(value : RefCountedByteArray) : void
 		{
 			if (_colorBackgroundOriginal) _colorBackgroundOriginal.dispose();
-			_colorBackgroundOriginal = ByteArrayUtil.clone(value);
-			_colorBackgroundOriginal.compress();
+			if (value) {
+				_colorBackgroundOriginal = ByteArrayUtil.clone(value);
+				_colorBackgroundOriginal.compress();
+			}
+			else
+				_colorBackgroundOriginal = null;
 		}
 
 		public function get sourceTexture() : Texture

@@ -38,6 +38,7 @@ package net.psykosoft.psykopaint2.core.io
 			canvas.colorTexture.uploadFromByteArray(paintingData.colorData, 0, 0);
 			paintingData.colorData.length = oldLength;
 
+			oldLength = paintingData.normalSpecularData.length;
 			paintingData.normalSpecularData.length = newLength;
 			canvas.normalSpecularMap.uploadFromByteArray(paintingData.normalSpecularData, 0, 0);
 			paintingData.normalSpecularData.length = oldLength;

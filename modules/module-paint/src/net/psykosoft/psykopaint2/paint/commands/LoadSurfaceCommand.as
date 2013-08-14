@@ -63,7 +63,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function onColorDataLoaded( bitmap:BitmapData ):void {
-			_loadedSurfaceData.color = ByteArrayUtil.clone(bitmap.getPixels(bitmap.rect));
+			var rgba : ByteArray = bitmap.getPixels(bitmap.rect);
+			_loadedSurfaceData.color = ByteArrayUtil.swapIntByteOrder(rgba);
+			rgba.clear();
 			_bitmapLoader.dispose();
 			_bitmapLoader = null;
 			loadNormalSpecularData();
