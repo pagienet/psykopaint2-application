@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.book.views.book.layout
 {
+	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
-	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutType;
 	import net.psykosoft.psykopaint2.book.views.book.layout.InsertRef;
 
 	import net.psykosoft.psykopaint2.book.views.book.data.FileLoader;
@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			_fileLoader = new FileLoader();
 
-			super(LayoutType.NATIVE_SAMPLES, stage);
+			super(BookImageSource.SAMPLE_IMAGES, stage);
 		}
 
 		//override protected function initDefaultAssets():void

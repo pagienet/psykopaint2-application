@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.book.commands
 
 		public function execute() : void
 		{
-			_bookRootView = new BookRootView();
+			_bookRootView = new BookRootView(imageSource);
 			_bookRootView.onSubViewsReady.add(onSubViewReady);
 			requestAddViewToMainLayerSignal.dispatch( _bookRootView );
 		}

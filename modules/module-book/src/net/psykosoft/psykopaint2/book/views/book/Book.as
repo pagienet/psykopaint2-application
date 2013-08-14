@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.core.base.Object3D;
 	import away3d.materials.TextureMaterial;
 
+	import net.psykosoft.psykopaint2.book.BookImageSource;
+
 	import net.psykosoft.psykopaint2.book.views.models.BookCraft;
 	import net.psykosoft.psykopaint2.book.views.book.layout.*;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
@@ -62,17 +64,17 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			switch(type){
 
- 				case LayoutType.NATIVE_SAMPLES:
+ 				case BookImageSource.SAMPLE_IMAGES:
  					_layout = new NativeSamplesLayout(_stage);
  					break;
 
- 				case LayoutType.USER_SAMPLES:
+ 				case BookImageSource.USER_IMAGES:
  					break;
 
- 				case LayoutType.FRIENDS_SAMPLES:
+ 				case BookImageSource.FRIENDS_IMAGES:
  					break;
 
- 				case LayoutType.COMMUNAUTY_SAMPLES:
+ 				case BookImageSource.COMMUNITY_IMAGES:
  					break;
 
  			}

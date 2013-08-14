@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.book.views.base
 		private var _bookView : BookView;
 		private var _subViewsReady : Boolean;
 
-		public function BookRootView() {
+		public function BookRootView(imageSource : String) {
 			super();
 
 			onSubViewsReady = new Signal();
@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.book.views.base
 			// Add main views.
 			addChild( _bookView = new BookView() );
 
+			_bookView
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK_PICK_USER_IMAGE_IOS, SubNavigationViewBase );

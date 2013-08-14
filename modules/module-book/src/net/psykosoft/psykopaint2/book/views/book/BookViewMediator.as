@@ -4,13 +4,14 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import flash.display.BitmapData;
 
+	import net.psykosoft.psykopaint2.book.BookImageSource;
+
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
-	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutType;
 
 
 	public class BookViewMediator extends MediatorBase
@@ -49,12 +50,12 @@ package net.psykosoft.psykopaint2.book.views.book
 				// Sample images. as default
 				case NavigationStateType.BOOK_STANDALONE:
 				case NavigationStateType.BOOK_PICK_SAMPLE_IMAGE:
-					view.layoutType = LayoutType.NATIVE_SAMPLES;
+					view.layoutType = BookImageSource.SAMPLE_IMAGES;
 					break;
 				 
 				// User photos iOS.//defaulted to samples for now
 				case NavigationStateType.BOOK_PICK_USER_IMAGE_IOS:
-					view.layoutType = LayoutType.NATIVE_SAMPLES;
+					view.layoutType = BookImageSource.SAMPLE_IMAGES;
 					break;
 			}
 		}
