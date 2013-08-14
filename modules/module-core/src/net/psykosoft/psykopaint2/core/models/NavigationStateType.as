@@ -22,7 +22,6 @@ package net.psykosoft.psykopaint2.core.models
 		public static const BOOK_PICK_USER_IMAGE_IOS:String = "state/book/pick_user_image_ios";
 		public static const PICK_SAMPLE_IMAGE:String = "state/pick_sample_image"; // TODO: delete
 		public static const CAPTURE_IMAGE:String = "state/capture_image";
-		public static const CONFIRM_CAPTURE_IMAGE:String = "state/confirm_capture_image";
 		public static const HOME_PICK_SURFACE:String = "state/home/pick_surface";
 		public static const PREPARE_FOR_PAINT_MODE:String = "state/home/prepare_for_paint";
 		public static const PREPARE_FOR_HOME_MODE:String = "state/paint/prepare_for_home";

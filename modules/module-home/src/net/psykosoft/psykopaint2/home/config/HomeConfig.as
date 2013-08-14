@@ -29,8 +29,6 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageView;
 	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageViewMediator;
-	import net.psykosoft.psykopaint2.home.views.pickimage.ConfirmCaptureImageSubNavView;
-	import net.psykosoft.psykopaint2.home.views.pickimage.ConfirmCaptureImageSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.pickimage.PickAUserImageView;
 	import net.psykosoft.psykopaint2.home.views.pickimage.PickAUserImageViewMediator;
 	import net.psykosoft.psykopaint2.home.views.pickimage.PickAnImageSubNavView;
@@ -140,7 +138,6 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( PickAnImageSubNavView ).toMediator( PickAnImageSubNavViewMediator );
 			_mediatorMap.map( PickAUserImageView ).toMediator( PickAUserImageViewMediator );
 			_mediatorMap.map( CaptureImageSubNavView ).toMediator( CaptureImageSubNavViewMediator );
-			_mediatorMap.map( ConfirmCaptureImageSubNavView ).toMediator( ConfirmCaptureImageSubNavViewMediator );
 			_mediatorMap.map( CaptureImageView ).toMediator( CaptureImageViewMediator );
 		}
 	}

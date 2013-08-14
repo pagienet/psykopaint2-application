@@ -41,7 +41,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 				case PickAnImageSubNavView.ID_BACK:
 				{
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREVIOUS );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
 					break;
 				}
 

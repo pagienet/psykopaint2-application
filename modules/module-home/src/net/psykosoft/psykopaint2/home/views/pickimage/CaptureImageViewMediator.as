@@ -29,7 +29,6 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			registerView( view );
 			super.initialize();
 			registerEnablingState( NavigationStateType.CAPTURE_IMAGE );
-			registerEnablingState( NavigationStateType.CONFIRM_CAPTURE_IMAGE );
 
 			notifyCameraSnapshotRequest.add( onCameraSnapshotRequest );
 			notifyCameraFlipRequest.add( onCameraFlipRequest );
@@ -49,12 +48,10 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			if( newState == NavigationStateType.CAPTURE_IMAGE ) {
 				view.play();
 			}
-			else if( newState == NavigationStateType.CONFIRM_CAPTURE_IMAGE ){
-				view.pause();
-			}
 		}
 
 		private function onCameraSnapshotRequest():void {
+			view.pause();
 			var bmd:BitmapData = view.takeSnapshot();
 			requestCropSourceImageSignal.dispatch( bmd );
 		}
