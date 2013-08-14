@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.views.base
 		[Inject]
 		public var view:CoreRootView;
 
+		// TODO: Should probably do this through set-up command
 		[Inject]
 		public var requestAddViewToMainLayerSignal:RequestAddViewToMainLayerSignal;
 

@@ -115,7 +115,6 @@ package net.psykosoft.psykopaint2.home.config
 
 		private function mapCommands():void {
 
-			// Mapped in the core as singleton for compatibility and remapped here.
 			_injector.unmap( RequestLoadSurfacePreviewSignal );
 			_commandMap.map( RequestLoadSurfacePreviewSignal ).toCommand( LoadSurfacePreviewCommand );
 			_commandMap.map( RequestSetupHomeModuleSignal ).toCommand( SetUpHomeModuleCommand );

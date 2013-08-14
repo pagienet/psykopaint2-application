@@ -18,12 +18,11 @@ package net.psykosoft.psykopaint2.home.commands.load
 			trace( this, "execute()" );
 
 			_homeRootView = new HomeRootView();
-			_homeRootView.onSubViewsReady.add( onSubViewRead );
+			_homeRootView.onSubViewsReady.addOnce( onSubViewReady );
 			requestAddViewToMainLayerSignal.dispatch( _homeRootView );
 		}
 
-		private function onSubViewRead():void {
-			_homeRootView.onSubViewsReady.remove( onSubViewRead );
+		private function onSubViewReady():void {
 			dispatchComplete( true );
 		}
 	}

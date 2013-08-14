@@ -10,8 +10,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreSourceImageSetSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestInteractionBlockSignal;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutType;
 
 
@@ -22,12 +20,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		[Inject]
 		public var stage3dProxy:Stage3DProxy;
-
-		[Inject]
-		public var requestSourceImageSetSignal:RequestDrawingCoreSourceImageSetSignal;
-
-		[Inject]
-		public var requestInteractionBlockSignal:RequestInteractionBlockSignal;
 
 		[Inject]
 		public var notifyColorStyleCompleteSignal:NotifyColorStyleCompleteSignal;
@@ -47,7 +39,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			// Register view gpu rendering in core.
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 
-			view.requiresInteractionSignal.add(onInteractionRequested);
 			view.imageSelectedSignal.add(onImageSelected);
 		}
 
@@ -56,13 +47,13 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			switch( newState ) {
 				// Sample images. as default
-				case StateType.BOOK_STANDALONE:
-				case StateType.BOOK_PICK_SAMPLE_IMAGE: 
+				case NavigationStateType.BOOK_STANDALONE:
+				case NavigationStateType.BOOK_PICK_SAMPLE_IMAGE:
 					view.layoutType = LayoutType.NATIVE_SAMPLES;
 					break;
 				 
 				// User photos iOS.//defaulted to samples for now
-				case StateType.BOOK_PICK_USER_IMAGE_IOS: 
+				case NavigationStateType.BOOK_PICK_USER_IMAGE_IOS:
 					view.layoutType = LayoutType.NATIVE_SAMPLES;
 					break;
 			}
@@ -71,11 +62,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onImageSelected(selectedBmd:BitmapData):void
 		{
 			notifyColorStyleCompleteSignal.dispatch( selectedBmd );
-		}
-
-		private function onInteractionRequested(doRequest:Boolean):void
-		{
-			requestInteractionBlockSignal.dispatch(doRequest);
 		}
 	}
 }

@@ -26,7 +26,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _time:Number;
 		private var _previousTime:Number;
 
-		public var requiresInteractionSignal:Signal;
 		public var imageSelectedSignal:Signal;
 
 		private var _layoutType:String;
@@ -58,7 +57,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function initVars( ):void
 		{
 			scalesToRetina = false;
-			requiresInteractionSignal = new Signal();
 			imageSelectedSignal = new Signal();
 			_origin = new Vector3D();
 			_startMouseX = 0;
@@ -108,8 +106,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-
-			dispatchInteraction(false);
 		}
 
 		private function initView3D():void
@@ -133,7 +129,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			_book.bookReadySignal.add(onBookReady);
 			_book.imagePickedSignal.add(dispatchSelectedImage);
-			_book.bookClearedSignal.add(dispatchInteraction);
 			_book.layoutType =_layoutType;
 		}
  
@@ -171,10 +166,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		}
 
-		public function dispatchInteraction(doRequest:Boolean):void
-		{
-			requiresInteractionSignal.dispatch(doRequest);
-		}
 		public function dispatchSelectedImage(selectedImage:BitmapData):void
 		{
 			imageSelectedSignal.dispatch(selectedImage);

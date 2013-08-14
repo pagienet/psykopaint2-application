@@ -40,29 +40,16 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			switch( id ) {
 
 				case PickAnImageSubNavView.ID_BACK:
-				{
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
 					break;
-				}
 
 				case PickAnImageSubNavView.ID_USER:
-				{
 					requestBrowseUserImagesSignal.dispatch();
-					if( CoreSettings.RUNNING_ON_iPAD ) {
-						requestStateChange__OLD_TO_REMOVE( NavigationStateType.BOOK_PICK_USER_IMAGE_IOS );
-					}
-					else {
-						requestStateChange__OLD_TO_REMOVE( NavigationStateType.PICK_USER_IMAGE_DESKTOP );
-					}
 					break;
-				}
 
 				case PickAnImageSubNavView.ID_SAMPLES:
-				{
 					requestBrowseSampleImagesSignal.dispatch();
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE );
 					break;
-				}
 
 /*				case PickAnImageSubNavView.ID_FACEBOOK:
 				{

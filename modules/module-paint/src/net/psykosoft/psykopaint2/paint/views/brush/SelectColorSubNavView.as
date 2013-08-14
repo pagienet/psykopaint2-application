@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	{
 		private var _colorParameter:PsykoParameter;
 
-		public static const LBL_BACK:String = "Edit Brush";
+		public static const ID_BACK:String = "Edit Brush";
 
 		// TODO: complete navigation refactor
 		static private var _lastSelectedBrush:String = "";
@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override protected function onEnabled():void {
 			setHeader( "" );
-			setLeftButton( LBL_BACK, ButtonIconType.BACK );
+			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 		}
 
 		override protected function onSetup():void {

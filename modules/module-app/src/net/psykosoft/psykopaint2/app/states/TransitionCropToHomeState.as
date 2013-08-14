@@ -36,13 +36,13 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onHomeModuleSetUp() : void
 		{
-			requestDestroyCropModuleSignal.dispatch();
 			requestStateChangeSignal.dispatch(NavigationStateType.PICK_IMAGE);
 			stateMachine.setActiveState(homeState);
 		}
 
 		override ns_state_machine function deactivate() : void
 		{
+			requestDestroyCropModuleSignal.dispatch();
 		}
 	}
 }
