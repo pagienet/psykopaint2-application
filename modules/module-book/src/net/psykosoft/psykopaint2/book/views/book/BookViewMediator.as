@@ -43,10 +43,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			registerView( view );
 			super.initialize();
 
-			registerEnablingState( NavigationStateType.BOOK_STANDALONE );
-			// TODO: Probably a "book" state is plenty; get image source from set up command
-			registerEnablingState( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE );
-			registerEnablingState( NavigationStateType.BOOK_PICK_USER_IMAGE_IOS );
+			registerEnablingState( NavigationStateType.BOOK );
 
 			view.stage3dProxy = stage3dProxy;
 
@@ -91,14 +88,9 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			switch( newState ) {
 				// Sample images. as default
-				case NavigationStateType.BOOK_STANDALONE:
-				case NavigationStateType.BOOK_PICK_SAMPLE_IMAGE:
+				case NavigationStateType.BOOK:
 					view.layoutType = BookImageSource.SAMPLE_IMAGES;
-					break;
-
-				// User photos iOS.//defaulted to samples for now
-				case NavigationStateType.BOOK_PICK_USER_IMAGE_IOS:
-					view.layoutType = BookImageSource.SAMPLE_IMAGES;
+					// User photos iOS.//defaulted to samples for now
 					break;
 			}
 		}

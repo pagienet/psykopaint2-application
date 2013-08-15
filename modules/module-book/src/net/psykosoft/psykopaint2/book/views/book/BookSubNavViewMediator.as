@@ -17,12 +17,10 @@ package net.psykosoft.psykopaint2.book.views.book
 			// Init.
 			registerView( view );
 			super.initialize();
-
 		}
 
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
-
 				case BookSubNavView.ID_BACK:
 					requestExitBookSignal.dispatch();
 					break;

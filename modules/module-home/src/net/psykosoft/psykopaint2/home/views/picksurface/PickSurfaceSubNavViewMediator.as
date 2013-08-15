@@ -1,16 +1,10 @@
 package net.psykosoft.psykopaint2.home.views.picksurface
 {
 
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
-
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;

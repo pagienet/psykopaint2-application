@@ -2,15 +2,12 @@ package net.psykosoft.psykopaint2.book.views.base
 {
 
 	import flash.display.Sprite;
-	import flash.display.Stage;
 	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.book.views.book.BookSubNavView;
-
 	import net.psykosoft.psykopaint2.book.views.book.BookView;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
-	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	import org.osflash.signals.Signal;
 
@@ -29,8 +26,7 @@ package net.psykosoft.psykopaint2.book.views.base
 			addChild( _bookView = new BookView() );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE, BookSubNavView );
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK_PICK_USER_IMAGE_IOS, BookSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK, BookSubNavView );
 
 			// TODO: move this block to where all views are really ready; assets loaded etc etc
 			{

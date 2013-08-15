@@ -46,9 +46,6 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
 
 		[Inject]
-		public var notifyHomeModuleDestroyedSignal:NotifyHomeModuleDestroyedSignal;
-
-		[Inject]
 		public var notifyCanvasZoomedToDefaultViewSignal:NotifyCanvasZoomedToDefaultViewSignal;
 
 		public function TransitionHomeToPaintState()
