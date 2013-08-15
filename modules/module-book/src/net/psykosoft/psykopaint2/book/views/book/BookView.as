@@ -84,6 +84,8 @@ package net.psykosoft.psykopaint2.book.views.book
 			_origin = new Vector3D();
 			_startMouseX = 0;
 			_time = 0;
+			imageSelectedSignal = new Signal();
+			bookHasClosedSignal = new Signal();
 		}
 
 		private function onStageMouseDown( event:MouseEvent ):void

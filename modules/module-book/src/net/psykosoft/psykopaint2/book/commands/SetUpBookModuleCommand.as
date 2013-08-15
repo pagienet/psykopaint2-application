@@ -7,9 +7,6 @@ package net.psykosoft.psykopaint2.book.commands
 	public class SetUpBookModuleCommand
 	{
 		[Inject]
-		public var imageSource : String;
-
-		[Inject]
 		public var notifyBookModuleSetUpSignal : NotifyBookModuleSetUpSignal;
 
 		[Inject]
@@ -17,10 +14,9 @@ package net.psykosoft.psykopaint2.book.commands
 
 		private var _bookRootView : BookRootView;
 
-
 		public function execute() : void
 		{
-			_bookRootView = new BookRootView(imageSource);
+			_bookRootView = new BookRootView();
 			_bookRootView.onSubViewsReady.add(onSubViewReady);
 			requestAddViewToMainLayerSignal.dispatch( _bookRootView );
 		}

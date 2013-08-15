@@ -97,7 +97,6 @@ package net.psykosoft.psykopaint2.book
 			_coreModule.injector.getInstance(RequestSetUpBookModuleSignal).dispatch();
 		}
 
-		private function onHomeModuleSetUp() : void
 		{
 			// TODO: this probably needs to be moved to some activation command
 			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1, 0.5);

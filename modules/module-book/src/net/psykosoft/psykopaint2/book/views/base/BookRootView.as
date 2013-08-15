@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.book.views.base
 		private var _bookView : BookView;
 		private var _subViewsReady : Boolean;
 
-		public function BookRootView(imageSource : String) {
+		public function BookRootView() {
 			super();
 
 			onSubViewsReady = new Signal();
