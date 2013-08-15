@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestColorStyleMatrixChangedSignal;
@@ -18,14 +17,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var notifyColorStyleModuleActivatedSignal : NotifyColorStyleModuleActivatedSignal;
 
 		[Inject]
-		public var notifyColorStyleCompleteSignal : NotifyColorStyleCompleteSignal;
-		
-		[Inject]
 		public var notifyColorStylePresetsAvailableSignal : NotifyColorStylePresetsAvailableSignal;
 		
 		[Inject]
 		public var requestColorStyleMatrixChangedSignal : RequestColorStyleMatrixChangedSignal;
-		
+
 		private var _active : Boolean;
 		private var _sourceMap : BitmapData;
 		//private var _resultMap : BitmapData;
@@ -217,11 +213,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			*/
 		}
 
-		public function confirmColorStyle() : void
-		{
-			notifyColorStyleCompleteSignal.dispatch(_sourceMap);
-		}
-		
+
 		public function setColorStyle( styleName:String ):void
 		{
 			if ( _presetData[styleName] )

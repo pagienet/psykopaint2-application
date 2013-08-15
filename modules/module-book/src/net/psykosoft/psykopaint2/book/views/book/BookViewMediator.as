@@ -3,8 +3,12 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.core.managers.Stage3DProxy;
 
 	import flash.display.BitmapData;
+	import flash.html.script.Package;
 
 	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
+	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 
@@ -12,9 +16,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
-
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
-
 
 	public class BookViewMediator extends MediatorBase
 	{
@@ -28,7 +29,13 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var requestSetBookBackgroundSignal : RequestSetBookBackgroundSignal;
 
 		[Inject]
-		public var notifyColorStyleCompleteSignal:NotifyColorStyleCompleteSignal;
+		public var notifyImageSelectedFromBookSignal:NotifyImageSelectedFromBookSignal;
+
+		[Inject]
+		public var requestAnimateBookOutSignal : RequestAnimateBookOutSignal;
+
+		[Inject]
+		public var notifyAnimateBookOutCompleteSignal : NotifyAnimateBookOutCompleteSignal;
 
 		override public function initialize():void {
 
@@ -51,6 +58,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onEnabled() : void
 		{
 			view.imageSelectedSignal.add(onImageSelected);
+			requestAnimateBookOutSignal.add(onRequestAnimateBookOutSignal);
 			requestSetBookBackgroundSignal.add(onRequestSetBookBackgroundSignal);
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
@@ -58,6 +66,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onDisabled() : void
 		{
 			view.imageSelectedSignal.remove(onImageSelected);
+			requestAnimateBookOutSignal.remove(onRequestAnimateBookOutSignal);
 			requestSetBookBackgroundSignal.remove(onRequestSetBookBackgroundSignal);
 			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
@@ -76,7 +85,7 @@ package net.psykosoft.psykopaint2.book.views.book
 				case NavigationStateType.BOOK_PICK_SAMPLE_IMAGE:
 					view.layoutType = BookImageSource.SAMPLE_IMAGES;
 					break;
-				 
+
 				// User photos iOS.//defaulted to samples for now
 				case NavigationStateType.BOOK_PICK_USER_IMAGE_IOS:
 					view.layoutType = BookImageSource.SAMPLE_IMAGES;
@@ -86,7 +95,17 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onImageSelected(selectedBmd:BitmapData):void
 		{
-			notifyColorStyleCompleteSignal.dispatch( selectedBmd );
+			notifyImageSelectedFromBookSignal.dispatch( selectedBmd );
+		}
+
+		private function onRequestAnimateBookOutSignal() : void
+		{
+			// TODO: Tell view to animate out, when complete, call onAnimateOutComplete
+		}
+
+		private function onAnimateOutComplete() : void
+		{
+			notifyAnimateBookOutCompleteSignal.dispatch();
 		}
 	}
 }

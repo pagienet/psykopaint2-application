@@ -69,7 +69,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 		private function confirmColorStyle():void {
 			view.renderPreviewToBitmapData();
-			colorStyleModule.confirmColorStyle();
+			// TODO: Dispatch signal
 		}
 
 		private function onColorStyleMatrixChanged( matrix1:ColorMatrix, matrix2:ColorMatrix, threshold:Number, range:Number ):void {

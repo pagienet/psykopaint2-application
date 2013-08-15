@@ -30,11 +30,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifySetColorStyleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestColorStyleMatrixChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.paint.commands.DeletePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.DestroyPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
@@ -159,7 +156,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyColorStylePresetsAvailableSignal ).asSingleton();
 			_injector.map( NotifyColorStyleChangedSignal ).asSingleton();
 			_injector.map( NotifyColorStyleConfirmSignal ).asSingleton();
-			_injector.map( RequestColorStyleMatrixChangedSignal ).asSingleton();
 
 			_injector.map( NotifyNavigationHideSignal ).asSingleton();
 

@@ -165,7 +165,6 @@ package net.psykosoft.psykopaint2.core.configuration
 		// -----------------------
 
 		private function mapNotifications():void {
-			_injector.map( NotifyColorStyleCompleteSignal ).asSingleton();
 			_injector.map( RequestFinalizeCropSignal ).asSingleton();
 			_injector.map( NotifyNavigationStateChangeSignal ).asSingleton();
 			_injector.map( NotifyGlobalGestureSignal ).asSingleton();
