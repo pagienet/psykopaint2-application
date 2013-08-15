@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import com.greensock.TweenLite;
 
 	import flash.display.Sprite;
-	import flash.geom.ColorTransform;
 
 	public class BackgroundLabel extends PsykoLabel
 	{

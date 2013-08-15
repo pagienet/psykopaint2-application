@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function set text( value:String ):void {
-			_textfield.text = value;
+			_textfield.text = value.toUpperCase();
 			validateDimensions();
 		}
 

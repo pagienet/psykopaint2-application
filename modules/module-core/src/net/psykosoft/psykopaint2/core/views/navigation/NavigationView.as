@@ -256,7 +256,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				header.visible = headerBg.visible = true;
 			}
 
-			header.text = value;
+			header.text = value.toUpperCase();
 
 			header.height = 1.25 * header.textHeight;
 			header.width = 15 + header.textWidth;
