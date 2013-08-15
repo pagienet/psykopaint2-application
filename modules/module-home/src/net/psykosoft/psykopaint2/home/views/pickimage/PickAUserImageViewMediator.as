@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -15,9 +14,6 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		[Inject]
 		public var requestCropSourceImageSignal:RequestCropSourceImageSignal;
-
-		[Inject]
-		public var notifyColorStyleCompleteSignal:NotifyColorStyleCompleteSignal;
 
 		override public function initialize():void {
 

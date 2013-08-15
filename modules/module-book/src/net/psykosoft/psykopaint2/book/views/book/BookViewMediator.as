@@ -32,15 +32,26 @@ package net.psykosoft.psykopaint2.book.views.book
 			super.initialize();
 
 			registerEnablingState( NavigationStateType.BOOK_STANDALONE );
+			// TODO: Probably a "book" state is plenty; get image source from set up command
 			registerEnablingState( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE );
 			registerEnablingState( NavigationStateType.BOOK_PICK_USER_IMAGE_IOS );
 
 			view.stage3dProxy = stage3dProxy;
 
-			// Register view gpu rendering in core.
-			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
+			view.enabledSignal.add(onEnabled);
+			view.disabledSignal.add(onDisabled);
+		}
 
+		private function onEnabled() : void
+		{
 			view.imageSelectedSignal.add(onImageSelected);
+			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
+		}
+
+		private function onDisabled() : void
+		{
+			view.imageSelectedSignal.remove(onImageSelected);
+			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
 
 		override protected function onStateChange( newState:String ):void {

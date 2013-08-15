@@ -51,8 +51,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 		// ---------------------------------------------------------------------
 
 		public function enable():void {
-			if( visible ) return;
-			if( _isEnabled ) return;
+			if( visible || _isEnabled ) return;
 			if( !_setupHasRan ) setup();
 			trace( this, "enabled" );
 			onEnabled();

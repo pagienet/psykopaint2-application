@@ -26,7 +26,6 @@ package net.psykosoft.psykopaint2.book.views.base
 			// Add main views.
 			addChild( _bookView = new BookView() );
 
-			_bookView
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK_PICK_SAMPLE_IMAGE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK_PICK_USER_IMAGE_IOS, SubNavigationViewBase );
@@ -37,7 +36,7 @@ package net.psykosoft.psykopaint2.book.views.base
 				notifyIfReady();
 			}
 
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage, -5000);
 		}
 
 		private function onAddedToStage(event : Event) : void
