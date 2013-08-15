@@ -43,7 +43,7 @@ package net.psykosoft.psykopaint2.app.states
 		{
 		}
 
-		[Inject]
+		[PostConstruct]
 		public function init() : void
 		{
 			requestSetCropBackgroundSignal.add(onRequestSetCropBackgroundSignal);

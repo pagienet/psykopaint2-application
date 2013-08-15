@@ -52,8 +52,13 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			view.enabledSignal.add(onEnabled);
 			view.disabledSignal.add(onDisabled);
-			view.bookHasClosedSignal.add(onAnimateOutComplete);
+		}
 
+		override public function destroy() : void
+		{
+			super.destroy();
+			view.enabledSignal.remove(onEnabled);
+			view.disabledSignal.remove(onDisabled);
 		}
 
 		private function onEnabled() : void
@@ -101,6 +106,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onRequestAnimateBookOutSignal() : void
 		{
+			view.bookHasClosedSignal.addOnce(onAnimateOutComplete);
 			view.book.closePages();
 		}
 

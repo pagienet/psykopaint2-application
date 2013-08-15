@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.app.config
 	import net.psykosoft.psykopaint2.app.states.BookState;
 	import net.psykosoft.psykopaint2.app.states.CropState;
 	import net.psykosoft.psykopaint2.app.states.HomeState;
+	import net.psykosoft.psykopaint2.app.states.TransitionBookToCropState;
 	import net.psykosoft.psykopaint2.app.states.TransitionBookToHomeState;
 	import net.psykosoft.psykopaint2.app.states.TransitionCropToHomeState;
 	import net.psykosoft.psykopaint2.app.states.TransitionCropToPaintState;
@@ -19,13 +20,6 @@ package net.psykosoft.psykopaint2.app.config
 	import net.psykosoft.psykopaint2.app.states.TransitionSplashToHomeState;
 	import net.psykosoft.psykopaint2.app.states.PaintState;
 	import net.psykosoft.psykopaint2.app.states.TransitionHomeToPaintState;
-	import net.psykosoft.psykopaint2.home.HomeModule;
-	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
-	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
-	import net.psykosoft.psykopaint2.home.views.home.HomeView;
-	import net.psykosoft.psykopaint2.home.views.home.HomeViewMediator;
-
-	import org.swiftsuspenders.Injector;
 
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
@@ -90,6 +84,7 @@ package net.psykosoft.psykopaint2.app.config
 			injector.map(TransitionCropToHomeState).asSingleton();
 			injector.map(TransitionPaintToHomeState).asSingleton();
 			injector.map(TransitionBookToHomeState).asSingleton();
+			injector.map(TransitionBookToCropState).asSingleton();
 		}
 
 		// -----------------------
