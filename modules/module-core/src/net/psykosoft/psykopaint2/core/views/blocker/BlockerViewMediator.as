@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.core.views.blocker
 
 		override public function initialize():void {
 
-			//TODO: blocker listen to new signals
 		}
 	}
 }

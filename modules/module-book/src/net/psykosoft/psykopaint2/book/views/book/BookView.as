@@ -72,6 +72,8 @@ package net.psykosoft.psykopaint2.book.views.book
 			// Dispose _view3d.
 			_view3d.dispose();
 			removeChild( _view3d );
+
+			_stage3dProxy = null;
 		 
 			stage.removeEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
 			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
