@@ -9,11 +9,10 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.ATFTexture;
 
-	import br.com.stimuli.loading.BulkLoader;
-
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
 	public class Room extends ObjectContainer3D
@@ -30,6 +29,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _wallGeometry:PlaneGeometry;
 		private var _wallMaterial:TextureMaterial;
 		private var _wallTexture:ATFTexture;
+		private var _imageLoader:BinaryLoader; // Will load full size atf files.
 
 		private const WALL_WIDTH:Number = 100000;
 		private const WALL_HEIGHT:Number = 3000;
@@ -40,6 +40,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		override public function dispose():void {
 
 			trace( this, "dispose()" );
+
+			if( _imageLoader ) {
+				_imageLoader.dispose();
+				_imageLoader = null;
+			}
 
 			_floor.dispose();
 			_floorGeometry.dispose();
@@ -81,7 +86,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Mesh.
 			_wall = new Mesh( _wallGeometry, null );
-			changeWallpaper(  BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBinary( "defaultWallpaper", true ) );
 			_wall.scaleX = WALL_WIDTH / _wallGeometry.width;
 			_wall.scaleZ = WALL_HEIGHT / _wallGeometry.height;
 			_wall.rotationX = -90;
@@ -123,7 +127,16 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		// Public.
 		// -----------------------
 
-		public function changeWallpaper( atf:ByteArray ):void {
+		public function changeWallpaper( url:String ):void {
+			if( _imageLoader ) {
+				_imageLoader.dispose();
+				_imageLoader = null;
+			}
+			_imageLoader = new BinaryLoader();
+			_imageLoader.loadAsset( url, onWallpaperImageLoaded );
+		}
+
+		private function onWallpaperImageLoaded( atf:ByteArray ):void {
 
 			// Dispose previous?
 			if( _wallMaterial ) {
@@ -140,6 +153,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_wallMaterial.smooth = true;
 			_wallMaterial.repeat = true;
 			_wall.material = _wallMaterial;
+
+			_imageLoader.dispose();
+			_imageLoader = null;
 		}
 
 		// -----------------------

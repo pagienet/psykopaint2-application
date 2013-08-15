@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import flash.utils.ByteArray;
 
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
@@ -21,6 +23,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
@@ -69,6 +72,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var easelRectModel : EaselRectModel;
+
+		[Inject]
+		public var wallpaperModel:WallpaperModel;
 
 		private var _dockedAtPaintingIndex:int = -1;
 
@@ -128,6 +134,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onEnabled() : void
 		{
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL, 0 );
+			changeWallpaperFromId( wallpaperModel.wallpaperId );
 		}
 
 		private function onDisabled() : void
@@ -178,9 +185,16 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 		}
 
-		private function onWallPaperChanged( atf:ByteArray ):void {
+		private function onWallPaperChanged( id:String ):void {
 			if( !view.visible ) return;
-			view.room.changeWallpaper( atf );
+			changeWallpaperFromId( id );
+		}
+
+		private function changeWallpaperFromId( id:String ):void {
+			var rootUrl:String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
+			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
+			var url:String = rootUrl + "away3d/wallpapers/fullsize/" + id + extra + ".atf";
+			view.room.changeWallpaper( url );
 		}
 
 		override protected function onStateChange( newState:String ):void {

@@ -29,20 +29,10 @@ package net.psykosoft.psykopaint2.home.commands.load
 			var rootUrl:String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
 			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
 
-			// -----------------------
-			// Default paintings.
-			// -----------------------
-
 			_loader.registerAsset( "/home-packaged/away3d/frames/whiteFrame.png", FrameType.WHITE_FRAME );
 			_loader.registerAsset( "/home-packaged/away3d/paintings/settingsFrame.png", "settingsPainting" );
-
-			// -----------------------
-			// Room stuff.
-			// -----------------------
-
 			_loader.registerAsset( "/home-packaged/away3d/easel/easel-uncompressed.atf", "easelImage", BulkLoader.TYPE_BINARY );
 			_loader.registerAsset( "/home-packaged/away3d/objects/settingsPanel.png", "settingsPanel" );
-			_loader.registerAsset( rootUrl + "away3d/wallpapers/fullsize/white" + extra + ".atf", "defaultWallpaper", BulkLoader.TYPE_BINARY );
 			_loader.registerAsset( rootUrl + "away3d/floorpapers/wood" + extra + "-mips.atf", "floorWood", BulkLoader.TYPE_BINARY );
 
 			_loader.startLoad();
