@@ -73,6 +73,8 @@ package net.psykosoft.psykopaint2.book.views.book
 			// Dispose _view3d.
 			_view3d.dispose();
 			removeChild( _view3d );
+
+			_stage3dProxy = null;
 		 
 			stage.removeEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
 			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
@@ -85,6 +87,8 @@ package net.psykosoft.psykopaint2.book.views.book
 			_origin = new Vector3D();
 			_startMouseX = 0;
 			_time = 0;
+			imageSelectedSignal = new Signal();
+			bookHasClosedSignal = new Signal();
 		}
 
 		private function onStageMouseDown( event:MouseEvent ):void

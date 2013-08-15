@@ -10,10 +10,13 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestBookRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestExitBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootViewMediator;
+	import net.psykosoft.psykopaint2.book.views.book.BookSubNavView;
+	import net.psykosoft.psykopaint2.book.views.book.BookSubNavViewMediator;
 	import net.psykosoft.psykopaint2.book.views.book.BookView;
 	import net.psykosoft.psykopaint2.book.views.book.BookViewMediator;
 
@@ -88,6 +91,7 @@ package net.psykosoft.psykopaint2.book.config
 			_injector.map(NotifyImageSelectedFromBookSignal).asSingleton();
 			_injector.map(RequestAnimateBookOutSignal).asSingleton();
 			_injector.map(NotifyAnimateBookOutCompleteSignal).asSingleton();
+			_injector.map(RequestExitBookSignal).asSingleton();
 
 		}
 
@@ -109,6 +113,7 @@ package net.psykosoft.psykopaint2.book.config
 		{
 			_mediatorMap.map(BookRootView).toMediator(BookRootViewMediator);
 			_mediatorMap.map(BookView).toMediator(BookViewMediator);
+			_mediatorMap.map(BookSubNavView).toMediator(BookSubNavViewMediator);
 		}
 	}
 }

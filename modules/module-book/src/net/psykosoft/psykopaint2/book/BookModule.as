@@ -93,16 +93,15 @@ package net.psykosoft.psykopaint2.book
 		private function setupStandaloneModule() : void
 		{
 			graphics.clear();
-			_coreModule.injector.getInstance(NotifyBookModuleSetUpSignal).addOnce(onHomeModuleSetUp);
+			_coreModule.injector.getInstance(NotifyBookModuleSetUpSignal).addOnce(onBookModuleSetUp);
 			_coreModule.injector.getInstance(RequestSetUpBookModuleSignal).dispatch();
 		}
 
-		private function onHomeModuleSetUp() : void
+		private function onBookModuleSetUp() : void
 		{
 			// TODO: this probably needs to be moved to some activation command
 			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1, 0.5);
-			_coreModule.injector.getInstance(RequestHomeViewScrollSignal).dispatch(1);
-			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME);
+			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.BOOK_STANDALONE);
 		}
 
 		private function destroyStandaloneModule() : void

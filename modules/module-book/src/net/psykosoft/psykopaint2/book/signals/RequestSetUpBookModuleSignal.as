@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.book.signals
 	{
 		public function RequestSetUpBookModuleSignal()
 		{
-			super(String);
+			super();
 		}
 	}
 }
