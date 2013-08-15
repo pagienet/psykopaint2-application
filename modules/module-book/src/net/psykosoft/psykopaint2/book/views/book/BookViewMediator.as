@@ -52,6 +52,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			view.enabledSignal.add(onEnabled);
 			view.disabledSignal.add(onDisabled);
+			view.bookHasClosedSignal.add(onAnimateOutComplete);
 
 		}
 
@@ -100,7 +101,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onRequestAnimateBookOutSignal() : void
 		{
-			// TODO: Tell view to animate out, when complete, call onAnimateOutComplete
+			view.book.closePages();
 		}
 
 		private function onAnimateOutComplete() : void

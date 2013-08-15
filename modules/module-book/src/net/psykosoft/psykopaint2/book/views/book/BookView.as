@@ -40,6 +40,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _previousTime:Number;
 
 		public var imageSelectedSignal:Signal;
+		public var bookHasClosedSignal:Signal;
 
 		private var _layoutType:String;
 		private var _backgroundTexture : RefCountedTexture;
@@ -53,6 +54,11 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			_stage3dProxy = stage3dProxy;
 			setup();
+		}
+
+		public function get book():Book
+		{
+			return _book;
 		}
 
 		override protected function onDisabled():void 
@@ -146,6 +152,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			_book.bookReadySignal.add(onBookReady);
 			_book.imagePickedSignal.add(dispatchSelectedImage);
+			_book.bookClearedSignal.add(dispatchBookHasClosed);
 			_book.layoutType =_layoutType;
 		}
  
@@ -200,6 +207,11 @@ package net.psykosoft.psykopaint2.book.views.book
 		public function dispatchSelectedImage(selectedImage:BitmapData):void
 		{
 			imageSelectedSignal.dispatch(selectedImage);
+		}
+
+		public function dispatchBookHasClosed():void
+		{
+			bookHasClosedSignal.dispatch();
 		}
 
 

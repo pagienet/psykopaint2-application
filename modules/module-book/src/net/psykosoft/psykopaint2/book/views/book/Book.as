@@ -133,15 +133,12 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		public function onAnimateOpenComplete():void
 		{
-			//DEBUG ANIMS IN loop open/close open close...
-			//closePages();
-
 			_bookReady = true;
 			bookReadySignal.dispatch();
 		}
 		  
 		//Animation closing book
-		private function closePages():void
+		public function closePages():void
 		{
 			if(_percent == 0){
 				animateOut();
@@ -179,11 +176,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		
 		public function onAnimateOutComplete():void
 		{
-			//debug anims
-			//animateIn();
-
  			_isLoadingImage = false;
-			bookClearedSignal.dispatch(true);
+			bookClearedSignal.dispatch();
 
 			dispose();
 		}
@@ -354,8 +348,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			imagePickedSignal.dispatch( bmd );
 			clearLoader();
-
-			closePages();
 		}
 
 		private function clearLoader():void
