@@ -21,7 +21,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
