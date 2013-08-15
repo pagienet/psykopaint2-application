@@ -40,20 +40,21 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			notifyHomeModuleSetUpSignal.addOnce(onHomeModuleSetUp);
-			requestSetupHomeModuleSignal.dispatch();
+			notifyAnimateBookOutCompleteSignal.addOnce(onAnimateBookOutComplete);
+			requestAnimateBookOutSignal.dispatch();
+
 		}
 
 		private function onHomeModuleSetUp() : void
 		{
-			notifyAnimateBookOutCompleteSignal.addOnce(onAnimateBookOutComplete);
-			requestAnimateBookOutSignal.dispatch();
+			stateMachine.setActiveState(homeState);
+			requestStateChangeSignal.dispatch(NavigationStateType.PICK_IMAGE);
 		}
 
 		private function onAnimateBookOutComplete() : void
 		{
-			requestStateChangeSignal.dispatch(NavigationStateType.PICK_IMAGE);
-			stateMachine.setActiveState(homeState);
+			notifyHomeModuleSetUpSignal.addOnce(onHomeModuleSetUp);
+			requestSetupHomeModuleSignal.dispatch();
 		}
 
 		override ns_state_machine function deactivate() : void

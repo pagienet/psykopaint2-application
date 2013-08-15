@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestExitBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
@@ -23,7 +24,13 @@ package net.psykosoft.psykopaint2.app.states
 		public var transitionToCropState : TransitionBookToCropState;
 
 		[Inject]
+		public var transitionToHomeState : TransitionBookToHomeState;
+
+		[Inject]
 		public var requestSetBookBackgroundSignal : RequestSetBookBackgroundSignal;
+
+		[Inject]
+		public var requestExitBookSignal : RequestExitBookSignal;
 
 		private var _background : RefCountedTexture;
 
@@ -52,6 +59,7 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			requestStateChange.dispatch(NavigationStateType.BOOK);
 			notifyImageSelectedFromBookSignal.add(onImageSelectedFromBookSignal);
+			requestExitBookSignal.add(onRequestExitBookSignal);
 		}
 
 		override ns_state_machine function deactivate() : void
@@ -60,6 +68,12 @@ package net.psykosoft.psykopaint2.app.states
 				_background.dispose();
 			_background = null;
 			notifyImageSelectedFromBookSignal.remove(onImageSelectedFromBookSignal);
+			requestExitBookSignal.remove(onRequestExitBookSignal);
+		}
+
+		private function onRequestExitBookSignal() : void
+		{
+			stateMachine.setActiveState(transitionToHomeState);
 		}
 
 		private function onImageSelectedFromBookSignal(bitmapData : BitmapData) : void
