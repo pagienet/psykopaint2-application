@@ -36,10 +36,10 @@ package net.psykosoft.psykopaint2.app.commands
 		private function onCanvasSnapShot(event : Event) : void
 		{
 			_snapshotPromise.removeEventListener(SnapshotPromise.PROMISE_FULFILLED, onCanvasSnapShot);
+			notifyFrozenBackgroundCreatedSignal.dispatch(_snapshotPromise.texture);
 			requestSetCanvasBackgroundSignal.dispatch(_snapshotPromise.texture.newReference(), easelRectModel.rect);
 			_snapshotPromise.dispose();
 			_snapshotPromise = null;
-			notifyFrozenBackgroundCreatedSignal.dispatch();
 		}
 	}
 }

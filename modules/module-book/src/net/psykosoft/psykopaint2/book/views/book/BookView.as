@@ -47,6 +47,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		public function BookView() {
 			super();
+			bookHasClosedSignal = new Signal();
 			initVars();
 		}
 

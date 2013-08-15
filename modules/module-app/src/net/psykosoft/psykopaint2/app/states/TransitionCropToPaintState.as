@@ -97,7 +97,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onPaintingModuleSetUp() : void
 		{
-			requestDestroyCropModuleSignal.dispatch();
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.rect);
 
@@ -129,7 +128,9 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function deactivate() : void
 		{
+			requestDestroyCropModuleSignal.dispatch();
 			_background.dispose();
+			_background = null;
 		}
 	}
 }

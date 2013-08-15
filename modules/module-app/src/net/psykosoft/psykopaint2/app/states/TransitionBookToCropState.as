@@ -7,16 +7,20 @@ package net.psykosoft.psykopaint2.app.states
 
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
+	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 
 	use namespace ns_state_machine;
 
-	public class TransitionHomeToCropState extends State
+	public class TransitionBookToCropState extends State
 	{
 		[Inject]
 		public var cropState : CropState;
@@ -28,52 +32,60 @@ package net.psykosoft.psykopaint2.app.states
 		public var notifyCropModuleSetUpSignal : NotifyCropModuleSetUpSignal;
 
 		[Inject]
-		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
+		public var requestDestroyBookModuleSignal : RequestDestroyBookModuleSignal;
 
 		[Inject]
 		public var notifyBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
 
 		[Inject]
-		public var requestCreateCropBackgroundSignal : RequestCreateCropBackgroundSignal;
+		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
 
 		[Inject]
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
-		private var _bitmapData : BitmapData;
+
+		[Inject]
+		public var requestAnimateOutSignal : RequestAnimateBookOutSignal;
+
+		[Inject]
+		public var notifyAnimateBookOutCompleteSignal : NotifyAnimateBookOutCompleteSignal;
+
 		private var _background : RefCountedTexture;
 
-		public function TransitionHomeToCropState()
+		public function TransitionBookToCropState()
 		{
 		}
 
 		/**
-		 * @param data A BitmapData object containing the source image to be cropped
+		 * @param data An object with the following layout:
+		 * - bitmapData : BitmapData // object containing the source image to be cropped
+		 * - background : RefCountedTexture // object containing the background for the crop module
 		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			_bitmapData = BitmapData(data);
-			notifyBackgroundSetSignal.addOnce(onBackgroundSet);
-			requestCreateCropBackgroundSignal.dispatch();
-		}
+			var bitmapData : BitmapData = BitmapData(data.bitmapData);
+			_background = RefCountedTexture(data.background);
 
-		private function onBackgroundSet(background : RefCountedTexture) : void
-		{
-			if (_background) _background.dispose();
-			_background = background.newReference();
 			notifyCropModuleSetUpSignal.addOnce(onCropModuleSetUp);
-			requestSetupCropModuleSignal.dispatch(_bitmapData);
-			_bitmapData = null;
+			requestSetupCropModuleSignal.dispatch(bitmapData);
 		}
 
 		private function onCropModuleSetUp() : void
+		{
+			requestSetCropBackgroundSignal.dispatch(_background.newReference());
+			notifyAnimateBookOutCompleteSignal.addOnce(onAnimateOutComplete);
+			requestAnimateOutSignal.dispatch();
+		}
+
+		private function onAnimateOutComplete() : void
 		{
 			stateMachine.setActiveState(cropState);
 		}
 
 		override ns_state_machine function deactivate() : void
 		{
-			if (_background) _background.dispose();
+			requestDestroyBookModuleSignal.dispatch();
+			_background.dispose();
 			_background = null;
-			requestDestroyHomeModuleSignal.dispatch();
 		}
 	}
 }

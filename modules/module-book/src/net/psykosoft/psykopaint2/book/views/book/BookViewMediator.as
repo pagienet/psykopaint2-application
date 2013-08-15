@@ -49,19 +49,18 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			view.enabledSignal.add(onEnabled);
 			view.disabledSignal.add(onDisabled);
-			view.bookHasClosedSignal.add(onAnimateOutComplete);
 		}
 
-		override public function destroy():void {
+		override public function destroy() : void
+		{
 			super.destroy();
+			view.enabledSignal.remove(onEnabled);
+			view.disabledSignal.remove(onDisabled);
 		}
 
 		private function onEnabled() : void
 		{
 			view.imageSelectedSignal.add(onImageSelected);
-			view.enabledSignal.add(onEnabled);
-			view.disabledSignal.add(onDisabled);
-			view.bookHasClosedSignal.add(onAnimateOutComplete);
 			requestAnimateBookOutSignal.add(onRequestAnimateBookOutSignal);
 			requestSetBookBackgroundSignal.add(onRequestSetBookBackgroundSignal);
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
@@ -70,9 +69,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onDisabled() : void
 		{
 			view.imageSelectedSignal.remove(onImageSelected);
-			view.enabledSignal.remove(onEnabled);
-			view.disabledSignal.remove(onDisabled);
-			view.bookHasClosedSignal.remove(onAnimateOutComplete);
 			requestAnimateBookOutSignal.remove(onRequestAnimateBookOutSignal);
 			requestSetBookBackgroundSignal.remove(onRequestSetBookBackgroundSignal);
 			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
@@ -102,6 +98,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onRequestAnimateBookOutSignal() : void
 		{
+			view.bookHasClosedSignal.addOnce(onAnimateOutComplete);
 			view.book.closePages();
 		}
 
