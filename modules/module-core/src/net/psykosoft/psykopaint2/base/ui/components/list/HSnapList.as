@@ -10,15 +10,16 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 	import org.osflash.signals.Signal;
 
 	/*
-	* An data driven HSnapScroller that adds snap points at the position of each child.
-	* */
+	 * An data driven HSnapScroller that adds snap points at the position of each child.
+	 * */
 	public class HSnapList extends HSnapScroller
 	{
 		private var _dataProvider:Vector.<ISnapListData>;
 		private var _itemRendererFactory:HSnapListItemRendererFactory;
 		private var _dataForRenderer:Dictionary;
 
-		public var itemGap:Number = 15;
+		public var itemGap:Number = 0;
+		public var randomPositioningRange:Number = 0;
 
 		public var rendererAddedSignal:Signal;
 		public var rendererRemovedSignal:Signal;
@@ -87,7 +88,8 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			for( i = 0; i < numItems; i++ ) {
 				itemData = _dataProvider[ i ];
 				itemData.itemRendererPosition = itemPositioningMarker + itemData.itemRendererWidth / 2;
-				itemPositioningMarker += itemData.itemRendererWidth + itemGap;
+				itemPositioningMarker += itemData.itemRendererWidth + itemGap + rand( -randomPositioningRange, randomPositioningRange );
+				trace( this, "placing item: " + itemPositioningMarker );
 				evaluateDimensionsFromItemPositionAndWidth( itemData.itemRendererPosition, itemData.itemRendererWidth );
 				evaluateNewSnapPointFromPosition( itemData.itemRendererPosition );
 			}
@@ -104,6 +106,10 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 //			visualizeDataPositionsAndDimensions();
 
 			refreshItemRenderers();
+		}
+
+		private function rand( min:Number, max:Number ):Number {
+			return (max - min) * Math.random() + min;
 		}
 
 		override protected function onUpdate():void {
