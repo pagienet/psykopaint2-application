@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestBookRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootViewMediator;
@@ -80,6 +81,7 @@ package net.psykosoft.psykopaint2.book.config
 			_injector.map(NotifyBookModuleSetUpSignal).asSingleton();
 			_injector.map(NotifyBookModuleDestroyedSignal).asSingleton();
 			_injector.map(RequestBookRootViewRemovalSignal).asSingleton();
+			_injector.map(RequestSetBookBackgroundSignal).asSingleton();
 
 		}
 

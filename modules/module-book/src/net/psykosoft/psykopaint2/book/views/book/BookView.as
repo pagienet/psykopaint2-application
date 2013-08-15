@@ -1,5 +1,13 @@
 package net.psykosoft.psykopaint2.book.views.book
 {
+	import away3d.tools.utils.TextureUtils;
+
+	import flash.display3D.Context3D;
+
+	import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.Context3DCompareMode;
+	import flash.geom.Rectangle;
+
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 
 	import away3d.containers.View3D;
@@ -10,6 +18,11 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.events.MouseEvent;
 	import flash.display.BitmapData;
 	import flash.utils.setTimeout;
+
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 
 	import org.osflash.signals.Signal;
  
@@ -29,6 +42,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var imageSelectedSignal:Signal;
 
 		private var _layoutType:String;
+		private var _backgroundTexture : RefCountedTexture;
 
 		public function BookView() {
 			super();
@@ -45,6 +59,9 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			_book.dispose();
 			_book = null;
+
+			if (_backgroundTexture) _backgroundTexture.dispose();
+			_backgroundTexture = null;
 
 			// Dispose _view3d.
 			_view3d.dispose();
@@ -134,9 +151,7 @@ package net.psykosoft.psykopaint2.book.views.book
  
 		public function renderScene(target : Texture):void
 		{
-			if( !_isEnabled ) return;
-			if( !_view3d ) return;
-			if( !_view3d.parent ) return;
+			if( !(_isEnabled && _view3d && _view3d.parent) ) return;
 
 			if(_book.ready && _mouseIsDown){
 				var doUpdate:Boolean = true;
@@ -161,9 +176,25 @@ package net.psykosoft.psykopaint2.book.views.book
 				}
 
 			}
- 
+
+			if (_backgroundTexture)
+				renderBackground();
+
 			_view3d.render(target);
 
+		}
+
+		private function renderBackground() : void
+		{
+			var context3D : Context3D = _stage3dProxy.context3D;
+			context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+			context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
+
+			var widthRatio : Number = CoreSettings.STAGE_WIDTH / TextureUtils.getBestPowerOf2(CoreSettings.STAGE_WIDTH);
+			var heightRatio : Number = CoreSettings.STAGE_HEIGHT / TextureUtils.getBestPowerOf2(CoreSettings.STAGE_HEIGHT);
+			CopySubTexture.copy(_backgroundTexture.texture, new Rectangle(0, 0, widthRatio, heightRatio), new Rectangle(0, 0, 1, 1), context3D);
+//				CopyTexture.copy(_background.texture, context3D, widthRatio, heightRatio);
+			context3D.setDepthTest(true, Context3DCompareMode.LESS);
 		}
 
 		public function dispatchSelectedImage(selectedImage:BitmapData):void
@@ -172,5 +203,14 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 
+		public function set backgroundTexture(backgroundTexture : RefCountedTexture) : void
+		{
+			_backgroundTexture = backgroundTexture;
+		}
+
+		public function get backgroundTexture() : RefCountedTexture
+		{
+			return _backgroundTexture;
+		}
 	}
 }

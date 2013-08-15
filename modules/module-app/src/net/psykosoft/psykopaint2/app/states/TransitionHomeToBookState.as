@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.app.states
 {
+	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
+	import net.psykosoft.psykopaint2.app.signals.RequestCreateBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.book.BookImageSource;
@@ -24,6 +26,12 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
 
 		[Inject]
+		public var notifyBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
+
+		[Inject]
+		public var requestCreateBookBackgroundSignal : RequestCreateBookBackgroundSignal;
+
+		[Inject]
 		public var bookState : BookState;
 
 		private var _source : String;
@@ -45,6 +53,9 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onBookModuleSetUp() : void
 		{
+			notifyBackgroundSetSignal.addOnce(onBackgroundSet);
+			requestCreateBookBackgroundSignal.dispatch();
+
 			switch (_source) {
 				case BookImageSource.SAMPLE_IMAGES:
 					requestStateChange.dispatch(NavigationStateType.BOOK_PICK_SAMPLE_IMAGE);
@@ -53,7 +64,10 @@ package net.psykosoft.psykopaint2.app.states
 					requestStateChange.dispatch(NavigationStateType.BOOK_PICK_USER_IMAGE_IOS);
 					break;
 			}
+		}
 
+		private function onBackgroundSet() : void
+		{
 			stateMachine.setActiveState(bookState);
 		}
 

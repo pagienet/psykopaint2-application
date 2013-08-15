@@ -1,8 +1,10 @@
 package net.psykosoft.psykopaint2.app.config
 {
+	import net.psykosoft.psykopaint2.app.commands.CreateBookBackgroundCommand;
 	import net.psykosoft.psykopaint2.app.commands.CreateCanvasBackgroundCommand;
 	import net.psykosoft.psykopaint2.app.commands.CreateCropBackgroundCommand;
 	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
+	import net.psykosoft.psykopaint2.app.signals.RequestCreateBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.app.signals.RequestCreateCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.app.signals.RequestCreateCropBackgroundSignal;
 	import net.psykosoft.psykopaint2.app.states.BookState;
@@ -105,6 +107,7 @@ package net.psykosoft.psykopaint2.app.config
 		private function mapCommands():void {
 			_commandMap.map(RequestCreateCanvasBackgroundSignal).toCommand(CreateCanvasBackgroundCommand);
 			_commandMap.map(RequestCreateCropBackgroundSignal).toCommand(CreateCropBackgroundCommand);
+			_commandMap.map(RequestCreateBookBackgroundSignal).toCommand(CreateBookBackgroundCommand);
 		}
 
 		// -----------------------

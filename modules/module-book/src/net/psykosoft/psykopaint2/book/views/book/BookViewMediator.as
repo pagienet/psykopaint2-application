@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -21,6 +23,9 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		[Inject]
 		public var stage3dProxy:Stage3DProxy;
+
+		[Inject]
+		public var requestSetBookBackgroundSignal : RequestSetBookBackgroundSignal;
 
 		[Inject]
 		public var notifyColorStyleCompleteSignal:NotifyColorStyleCompleteSignal;
@@ -40,18 +45,26 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			view.enabledSignal.add(onEnabled);
 			view.disabledSignal.add(onDisabled);
+
 		}
 
 		private function onEnabled() : void
 		{
 			view.imageSelectedSignal.add(onImageSelected);
+			requestSetBookBackgroundSignal.add(onRequestSetBookBackgroundSignal);
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
 
 		private function onDisabled() : void
 		{
 			view.imageSelectedSignal.remove(onImageSelected);
+			requestSetBookBackgroundSignal.remove(onRequestSetBookBackgroundSignal);
 			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
+		}
+
+		private function onRequestSetBookBackgroundSignal(texture : RefCountedTexture) : void
+		{
+			view.backgroundTexture = texture;
 		}
 
 		override protected function onStateChange( newState:String ):void {
