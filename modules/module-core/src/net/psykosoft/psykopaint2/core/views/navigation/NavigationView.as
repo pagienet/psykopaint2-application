@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.display.Sprite;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
@@ -47,7 +48,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _showing:Boolean;
 		private var _forceHidden:Boolean;
 		private var _hidden:Boolean;
-		private var _bgHeight:uint = 250;
+		private var _bgHeight:uint = 140;
 		private var _headerDefaultY:Number;
 		private var _headerTextDefaultOffset:Number;
 		private var _subNavDictionary:Dictionary;
@@ -279,16 +280,15 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Adapt to canvas rect.
 		// ---------------------------------------------------------------------
 
-		public function adaptToCanvas( canvasHeight:Number ):void {
+		public function adaptToCanvas( canvas:Rectangle ):void {
 
 			var screenHeight:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1536 : 768;
-			var availableSpace:Number = screenHeight - canvasHeight;
-			trace( this, "adapt to canvas, available space: " + availableSpace );
+			var availableSpace:Number = screenHeight - canvas.height - canvas.y;
 			if( availableSpace > _bgHeight ) {
 				this.y = 0;
 			}
 			else {
-				this.y = 0.6 * ( _bgHeight - availableSpace );
+				this.y = _bgHeight - availableSpace;
 			}
 		}
 

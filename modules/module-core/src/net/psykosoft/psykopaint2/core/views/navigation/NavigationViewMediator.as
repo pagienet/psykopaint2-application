@@ -91,8 +91,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// -----------------------
 
 		private function onRenderRectChanged( rect:Rectangle ):void {
-			trace( this, "render rect change: " + rect );
-			view.adaptToCanvas( rect.height );
+			view.adaptToCanvas( rect );
 		}
 
 		private function onNavigationDisposalRequest():void {

@@ -49,8 +49,6 @@ package net.psykosoft.psykopaint2.core.views.popups
 			manageStateChanges = false;
 
 			// From app.
-//			notifyPaintingSavingStartedSignal.add( onPaintingSavingStarted );
-//			notifyPaintingSavedSignal.add( onPaintingSavingEnded );
 			notifyCanvasExportStartedSignal.add( onExportCanvasStarted );
 			notifyCanvasExportEndedSignal.add( onExportCanvasEnded );
 			requestShowPopUpSignal.add( onShowPopUpRequest );
@@ -70,26 +68,6 @@ package net.psykosoft.psykopaint2.core.views.popups
 		}
 
 		private function onHidePopUpRequest():void {
-			hidePopUp();
-		}
-
-		// -----------------------
-		// Saving.
-		// -----------------------
-
-		[Inject]
-		public var notifyPaintingSavingStartedSignal:NotifyPaintingSavingStartedSignal;
-
-		[Inject]
-		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
-
-		private function onPaintingSavingStarted():void {
-			showPopUp( PopUpType.MESSAGE );
-			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
-			requestUpdateMessagePopUpSignal.dispatch( "Saving...", randomJoke );
-		}
-
-		private function onPaintingSavingEnded( success:Boolean ):void {
 			hidePopUp();
 		}
 
