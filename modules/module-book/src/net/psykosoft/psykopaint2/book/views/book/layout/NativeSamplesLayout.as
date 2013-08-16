@@ -122,6 +122,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private function clearFileloader():void
 		{
 			_loadedResources++;
+			
 			if(_resourcesCount == _loadedResources){
 				_fileLoader = null;
 			}
@@ -133,7 +134,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		override protected function composite(insertSource:BitmapData, object:Object):void
 		{
  			switchToHighDrawQuality();
-
+ 
  			var insertRef:InsertRef;
  			var insertRect:Rectangle;
  			var pageIndex:uint;
@@ -210,8 +211,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  				_inserts[itemIndex] = insertRef;
  				rotation = insertRef.rotation = -2+(Math.random()*4);
  			}
- 			
-
+ 			 
 			//row layout recto: 50+200+31+200+31
   
 			//the page material
@@ -258,6 +258,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			diffuseSourceBitmapdata.unlock();
 
  			//update after inserts
+ 			diffuseTextureSource.invalidateContent();
  			diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;
  			
  			restoreQuality();

@@ -27,22 +27,27 @@ package net.psykosoft.psykopaint2.book.views.base
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK, BookSubNavView );
+		}
 
+		public function init() : void
+		{
 			// TODO: move this block to where all views are really ready; assets loaded etc etc
 			{
 				_subViewsReady = true;
 				notifyIfReady();
 			}
 
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage, -5000);
+			if (!stage)
+				addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 
 		private function onAddedToStage(event : Event) : void
 		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			notifyIfReady();
 		}
 
-		private function notifyIfReady() : void
+		public function notifyIfReady() : void
 		{
 			if (stage != null && _subViewsReady)
 				onSubViewsReady.dispatch();

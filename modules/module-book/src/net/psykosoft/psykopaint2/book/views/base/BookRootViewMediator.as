@@ -20,6 +20,8 @@ package net.psykosoft.psykopaint2.book.views.base
 
 			// From app.
 			requestBookRootViewRemovalSignal.add( onRemovalRequest );
+
+			view.init();
 		}
 
 		override public function destroy():void {

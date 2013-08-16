@@ -193,7 +193,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 					_container.addChild( itemRenderer );
 				}
 
-				if( itemData.onItemRendererAssigned ) {
+				if( itemData.onItemRendererAssigned != null) {
 					itemData.onItemRendererAssigned( itemRenderer );
 				}
 			}
@@ -219,7 +219,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 			var data:ISnapListData = _dataForRenderer[ renderer ];
 
-			if( data.onItemRendererReleased ) {
+			if( data.onItemRendererReleased != null ) {
 				data.onItemRendererReleased( renderer );
 			}
 
