@@ -1,9 +1,12 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
+	import flash.geom.Rectangle;
+
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationDisposalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -25,6 +28,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		[Inject]
 		public var requestNavigationDisposalSignal:RequestNavigationDisposalSignal;
 
+		[Inject]
+		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
+
 		override public function initialize():void {
 
 			registerView( view );
@@ -37,6 +43,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			// From app.
 			requestNavigationToggleSignal.add( onToggleRequest );
 			requestNavigationDisposalSignal.add( onNavigationDisposalRequest );
+			requestChangeRenderRectSignal.add( onRenderRectChanged );
 
 			// From view.
 			view.shownSignal.add( onViewShown );
@@ -82,6 +89,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onRenderRectChanged( rect:Rectangle ):void {
+			trace( this, "render rect change: " + rect );
+			view.adaptToCanvas( rect.height );
+		}
 
 		private function onNavigationDisposalRequest():void {
 			view.disposeSubNavigation();

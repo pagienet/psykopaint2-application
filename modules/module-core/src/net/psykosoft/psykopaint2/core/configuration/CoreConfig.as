@@ -39,6 +39,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBrowseUserImagesSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
@@ -197,6 +198,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestNavigationDisposalSignal ).asSingleton();
 			_injector.map( RequestBrowseSampleImagesSignal ).asSingleton();
 			_injector.map( RequestBrowseUserImagesSignal ).asSingleton();
+			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
 
 		}
 

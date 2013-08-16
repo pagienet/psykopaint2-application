@@ -5,9 +5,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import com.greensock.easing.Strong;
 
 	import flash.display.DisplayObject;
-
 	import flash.display.Sprite;
-	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
@@ -17,7 +15,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
-	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.LeftButton;
@@ -276,6 +273,23 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onHeaderOutComplete():void {
 			header.visible = headerBg.visible = false;
+		}
+
+		// ---------------------------------------------------------------------
+		// Adapt to canvas rect.
+		// ---------------------------------------------------------------------
+
+		public function adaptToCanvas( canvasHeight:Number ):void {
+
+			var screenHeight:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1536 : 768;
+			var availableSpace:Number = screenHeight - canvasHeight;
+			trace( this, "adapt to canvas, available space: " + availableSpace );
+			if( availableSpace > _bgHeight ) {
+				this.y = 0;
+			}
+			else {
+				this.y = 0.6 * ( _bgHeight - availableSpace );
+			}
 		}
 
 		// ---------------------------------------------------------------------
