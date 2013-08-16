@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var scrollingEndedSignal:Signal;
 		public var scrollerButtonClickedSignal:Signal;
 
-		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 70;
+		private const SCROLLER_DISTANCE_FROM_BOTTOM:uint = 45;
 
 		public function SubNavigationViewBase() {
 			super();
