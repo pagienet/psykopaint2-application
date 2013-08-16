@@ -182,12 +182,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			
 			switch( type ) {
 				case GestureType.TWO_FINGER_TAP_GESTURE_RECOGNIZED:
-					trace( this, "onGlobalGesture: " + type );
 					requestUndoSignal.dispatch();
 					break;
 
 				case GestureType.TRANSFORM_GESTURE_CHANGED:
-					trace( this, "onGlobalGesture: " + type );
 					var tg:TransformGesture = (event.target as TransformGesture);
 					var rect:Rectangle = renderer.renderRect;
 					_transformMatrix.identity();

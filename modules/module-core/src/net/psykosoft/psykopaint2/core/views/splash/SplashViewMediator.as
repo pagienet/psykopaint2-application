@@ -23,11 +23,11 @@ package net.psykosoft.psykopaint2.core.views.splash
 			requestHideSplashScreenSignal.add( onSplashScreenRemovalRequest );
 
 			// From view.
-			view.fadeOutCompleteSignal.add( onFadeOutComplete );
+			view.removedSignal.add( onFadeOutComplete );
 		}
 
 		override public function destroy():void {
-			view.fadeOutCompleteSignal.remove( onFadeOutComplete );
+			view.removedSignal.remove( onFadeOutComplete );
 			requestHideSplashScreenSignal.remove( onSplashScreenRemovalRequest );
 			super.destroy();
 		}
