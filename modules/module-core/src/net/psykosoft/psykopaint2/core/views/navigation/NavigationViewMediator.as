@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationDisposalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -24,9 +23,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
 		[Inject]
-		public var requestNavigationAutoHideModeSignal:RequestNavigationAutohideModeSignal;
-
-		[Inject]
 		public var requestNavigationDisposalSignal:RequestNavigationDisposalSignal;
 
 		override public function initialize():void {
@@ -40,7 +36,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			// From app.
 			requestNavigationToggleSignal.add( onToggleRequest );
-			requestNavigationAutoHideModeSignal.add( onStartAutoHideMode );
 			requestNavigationDisposalSignal.add( onNavigationDisposalRequest );
 
 			// From view.
@@ -92,14 +87,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			view.disposeSubNavigation();
 		}
 
-		private function onStartAutoHideMode( start:Boolean ):void
-		{
-			if ( start ) 
-				view.startAutoHideMode();
-			else
-				view.stopAutoHideMode();
-		}
-		
 		override protected function onStateChange( newState:String ):void {
 //			trace( this, "state change: " + newState );
 

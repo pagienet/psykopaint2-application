@@ -50,7 +50,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationDisposalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
@@ -66,8 +65,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.views.debug.DebugViewMediator;
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsViewMediator;
-	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationView;
+	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
 	import net.psykosoft.psykopaint2.core.views.popups.MessagePopUpView;
 	import net.psykosoft.psykopaint2.core.views.popups.MessagePopUpViewMediator;
 	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
@@ -171,7 +170,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyMemoryWarningSignal ).asSingleton();
 			_injector.map( NotifyBlockingGestureSignal ).asSingleton();
 			_injector.map( RequestNavigationToggleSignal ).asSingleton();
-			_injector.map( RequestNavigationAutohideModeSignal ).asSingleton();
 			_injector.map( NotifyNavigationMovingSignal ).asSingleton();
 			_injector.map( NotifyPaintingDataSetSignal ).asSingleton();
 			_injector.map( RequestDrawingCoreResetSignal ).asSingleton();
