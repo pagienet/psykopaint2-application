@@ -33,16 +33,9 @@ package net.psykosoft.psykopaint2.book.views.base
 				_subViewsReady = true;
 				notifyIfReady();
 			}
-
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage, true, -5000);
 		}
 
-		private function onAddedToStage(event : Event) : void
-		{
-			notifyIfReady();
-		}
-
-		private function notifyIfReady() : void
+		public function notifyIfReady() : void
 		{
 			if (stage != null && _subViewsReady)
 				onSubViewsReady.dispatch();

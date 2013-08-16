@@ -20,6 +20,10 @@ package net.psykosoft.psykopaint2.book.views.base
 
 			// From app.
 			requestBookRootViewRemovalSignal.add( onRemovalRequest );
+
+			// not very clean, but otherwise it results in a race condition with creation of mediator
+			// this forces order
+			view.notifyIfReady();
 		}
 
 		override public function destroy():void {
