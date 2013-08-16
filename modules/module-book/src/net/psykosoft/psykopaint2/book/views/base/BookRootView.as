@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.book.views.base
 				notifyIfReady();
 			}
 
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage, -5000);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage, true, -5000);
 		}
 
 		private function onAddedToStage(event : Event) : void
