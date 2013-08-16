@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifySplashScreenRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
@@ -41,6 +42,9 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestHomeIntroSignal:RequestHomeIntroSignal;
 
 		[Inject]
+		public var notifySplashScreenRemovedSignal:NotifySplashScreenRemovedSignal;
+
+		[Inject]
 		public var homeState : HomeState;
 
 		public function TransitionSplashToHomeState()
@@ -56,9 +60,13 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onHomeModuleSetUp() : void
 		{
+			notifySplashScreenRemovedSignal.addOnce( onSplashScreenRemoved );
+			requestHideSplashScreenSignal.dispatch();
+		}
+
+		private function onSplashScreenRemoved():void {
 			notifyHomeViewZoomCompleteSignal.addOnce(onTransitionComplete);
 			requestHomeIntroSignal.dispatch();
-			requestHideSplashScreenSignal.dispatch();
 			requestStateChangeSignal.dispatch(NavigationStateType.HOME);
 		}
 

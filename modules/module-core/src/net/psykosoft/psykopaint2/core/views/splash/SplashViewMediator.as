@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.views.splash
 {
 
+	import net.psykosoft.psykopaint2.core.signals.NotifySplashScreenRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
@@ -12,6 +13,9 @@ package net.psykosoft.psykopaint2.core.views.splash
 
 		[Inject]
 		public var requestHideSplashScreenSignal:RequestHideSplashScreenSignal;
+
+		[Inject]
+		public var notifySplashScreenRemovedSignal:NotifySplashScreenRemovedSignal;
 
 		override public function initialize():void {
 
@@ -29,6 +33,7 @@ package net.psykosoft.psykopaint2.core.views.splash
 		}
 
 		private function onFadeOutComplete():void {
+			notifySplashScreenRemovedSignal.dispatch();
 			view.parent.removeChild( view );
 		}
 

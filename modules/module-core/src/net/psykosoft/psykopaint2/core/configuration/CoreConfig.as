@@ -34,6 +34,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifySplashScreenRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
@@ -203,6 +204,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
 			_injector.map( RequestShowPopUpSignal ).asSingleton();
 			_injector.map( RequestHidePopUpSignal ).asSingleton();
+			_injector.map( NotifySplashScreenRemovedSignal ).asSingleton();
 
 		}
 
