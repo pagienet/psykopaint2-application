@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
+	import net.psykosoft.psykopaint2.core.commands.HidePopUpCommand;
+
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
@@ -39,9 +41,11 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			mapMacroConsistentData();
 
+			add( DisplaySavingPopUpCommand );
 			add( ExportCanvasSurfacesCommand );
 			add( SerializePaintingCommand );
 			add( WritePaintingCommand );
+			add( HidePopUpCommand );
 
 			registerCompleteCallback( onMacroComplete );
 

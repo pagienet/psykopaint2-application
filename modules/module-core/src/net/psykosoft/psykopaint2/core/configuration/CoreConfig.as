@@ -47,6 +47,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFrameUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
@@ -57,6 +58,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
@@ -199,6 +201,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestBrowseSampleImagesSignal ).asSingleton();
 			_injector.map( RequestBrowseUserImagesSignal ).asSingleton();
 			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
+			_injector.map( RequestShowPopUpSignal ).asSingleton();
+			_injector.map( RequestHidePopUpSignal ).asSingleton();
 
 		}
 

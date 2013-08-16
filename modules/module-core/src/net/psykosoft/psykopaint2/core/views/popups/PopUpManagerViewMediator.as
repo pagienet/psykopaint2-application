@@ -14,6 +14,8 @@ package net.psykosoft.psykopaint2.core.views.popups
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
@@ -33,6 +35,12 @@ package net.psykosoft.psykopaint2.core.views.popups
 		[Inject]
 		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
 
+		[Inject]
+		public var requestShowPopUpSignal:RequestShowPopUpSignal;
+
+		[Inject]
+		public var requestHidePopUpSignal:RequestHidePopUpSignal;
+
 		override public function initialize():void {
 
 			registerView( view );
@@ -41,10 +49,12 @@ package net.psykosoft.psykopaint2.core.views.popups
 			manageStateChanges = false;
 
 			// From app.
-			notifyPaintingSavingStartedSignal.add( onPaintingSavingStarted );
-			notifyPaintingSavedSignal.add( onPaintingSavingEnded );
+//			notifyPaintingSavingStartedSignal.add( onPaintingSavingStarted );
+//			notifyPaintingSavedSignal.add( onPaintingSavingEnded );
 			notifyCanvasExportStartedSignal.add( onExportCanvasStarted );
 			notifyCanvasExportEndedSignal.add( onExportCanvasEnded );
+			requestShowPopUpSignal.add( onShowPopUpRequest );
+			requestHidePopUpSignal.add( onHidePopUpRequest );
 
 			// From view.
 			view.popUpShownSignal.add( onPopUpShown );
@@ -54,6 +64,14 @@ package net.psykosoft.psykopaint2.core.views.popups
 		// ---------------------------------------------------------------------
 		// From app.
 		// ---------------------------------------------------------------------
+
+		private function onShowPopUpRequest( popUpType:String ):void {
+			showPopUp( popUpType );
+		}
+
+		private function onHidePopUpRequest():void {
+			hidePopUp();
+		}
 
 		// -----------------------
 		// Saving.
