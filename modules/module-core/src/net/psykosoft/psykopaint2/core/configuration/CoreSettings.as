@@ -14,28 +14,28 @@ package net.psykosoft.psykopaint2.core.configuration
 		// TODO: add a "force release" master switch boolean that automatically changes all these
 
 		// On screen debugging.
-		public static const SHOW_STATS:Boolean = true; /*false on release*/
-		public static const SHOW_VERSION:Boolean = true; /*false on release*/
-		public static const SHOW_ERRORS:Boolean = true; /*false on release*/
-		public static const SHOW_MEMORY_WARNINGS:Boolean = true; /*false on release*/
-		public static const SHOW_MEMORY_USAGE:Boolean = true; /*false on release - this feature costs about 20 fps */
+		public static const SHOW_STATS:Boolean = false; /*false on release*/
+		public static const SHOW_VERSION:Boolean = false; /*false on release*/
+		public static const SHOW_ERRORS:Boolean = false; /*false on release*/
+		public static const SHOW_MEMORY_WARNINGS:Boolean = false; /*false on release*/
+		public static const SHOW_MEMORY_USAGE:Boolean = false; /*false on release - this feature costs about 20 fps */
 
 		// Other visual debugging utils.
 		public static const TINT_SPLASH_SCREEN:Boolean = false; /*false on release*/
 		public static const SHOW_BLOCKER:Boolean = false; /*false on release*/
 
 		// Console gpu debugging.
-		public static const STAGE_3D_ERROR_CHECKING:Boolean = true; /*false on release*/
+		public static const STAGE_3D_ERROR_CHECKING:Boolean = false; /*false on release*/
 		public static const DEBUG_RENDER_SEQUENCE:Boolean = false; /*false on release*/
 
 		public static const DEBUG_AGAL:Boolean = false; /*false on release*/
 
 		// Other options.
-		public static const USE_DEBUG_KEYS:Boolean = true; /*false on release*/
+		public static const USE_DEBUG_KEYS:Boolean = false; /*false on release*/
 		public static const ENABLE_PSYKOSOCKET_CONNECTION:Boolean = false; /*false on release*/
 		public static const SHOW_HIDDEN_BRUSH_PARAMETERS:Boolean = false; /*false on release*/
 		public static const SHOW_INTRO_VIDEO:Boolean = false; /*false on release*/
-		public static const TRACK_NON_GCED_OBJECTS:Boolean = true; /*false on release*/
+		public static const TRACK_NON_GCED_OBJECTS:Boolean = false; /*false on release*/
 
 		// -----------------------
 		// Fixed constants.
