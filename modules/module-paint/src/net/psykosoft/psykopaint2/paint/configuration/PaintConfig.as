@@ -28,7 +28,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySetColorStyleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
@@ -163,8 +162,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 			_injector.map( NotifyGyroscopeUpdateSignal ).asSingleton();
 			_injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
-
-			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
 		}
 
 		// -----------------------

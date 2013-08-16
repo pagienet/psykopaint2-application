@@ -158,8 +158,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		//TODO: this is for desktop testing - remove in final version
 		private function onMouseWheel( event:MouseEvent ):void {
 
-			trace( "wheeling..." );
-
 			var rect:Rectangle = renderer.renderRect;
 
 			var sc:Number = 1 + event.delta / 50;

@@ -126,7 +126,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			var frameOffset:Point = FrameOffsets.getOffsetForFrameType( FrameType.WHITE_FRAME );
 			var homePainting:GalleryPainting = createPainting(
-					new SplashView.SplashImageAsset().bitmapData,
+					new SplashView.PaintingImageAsset().bitmapData,
 					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( FrameType.WHITE_FRAME, true ),
 					frameOffset.x, frameOffset.y
 			);

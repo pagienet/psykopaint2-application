@@ -22,15 +22,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
-	import net.psykosoft.psykopaint2.core.models.PaintModeType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationAutohideModeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
@@ -77,9 +74,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 		
 		[Inject]
-		public var requestNavigationAutohideModeSignal:RequestNavigationAutohideModeSignal;
-
-		[Inject]
 		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
 		
 		private var _view : DisplayObject;
@@ -89,8 +83,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
 		private var _canvasMatrix : Matrix;
-		//private var _navHideTimeout:int = -1;
-		private var _navShowTimeout:int = -1;
 		private var sourceCanvasViewModes:Array = [[1,0.25],[1,0],[1,1],[0.01,1]];
 		private var sourceCanvasViewModeIndex:int = 0;
 		private var _activeMode : int;
@@ -219,34 +211,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private function onStrokeStarted(event : Event) : void
 		{
 			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
-			/*
-			if ( _navShowTimeout != -1 )
-			{
-				clearTimeout( _navShowTimeout );
-				_navShowTimeout = -1;
-			}
-			*/
-			
-			requestNavigationAutohideModeSignal.dispatch( true );
-			//if ( _navHideTimeout == -1 ) _navHideTimeout = setTimeout( triggerToogleNavBar, 1000, false );
-			
 		}
 		
 		private function onStrokeEnded(event : Event) : void
 		{
-			/*
-			if ( _navHideTimeout != -1 ) {
-				clearTimeout( _navHideTimeout );
-				_navHideTimeout = -1;
-			}
-			*/
-			
-			if ( _navShowTimeout != -1 ) {
-				clearTimeout( _navShowTimeout );
-				_navShowTimeout = -1;
-			}
-			_navShowTimeout = setTimeout( triggerToogleNavBar, 500, true );
-			requestNavigationAutohideModeSignal.dispatch( false );
+
 		}
 
 		private function activateBrushKit() : void
@@ -278,15 +247,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSetAsXML() );
 		}
-		
-		
-		private function triggerToogleNavBar( show:Boolean ):void
-		{
-			//_navHideTimeout
-			_navShowTimeout = -1;
-			requestNavigationToggleSignal.dispatch(show ? 1 : -1, 0.1);
-		}
-		
 		
 		
 		public function getAvailableBrushTypes() : Vector.<String> {

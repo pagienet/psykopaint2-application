@@ -5,11 +5,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import com.greensock.easing.Strong;
 
 	import flash.display.DisplayObject;
-
 	import flash.display.Sprite;
-	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
@@ -17,7 +16,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
-	import net.psykosoft.psykopaint2.base.utils.misc.StackUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.LeftButton;
@@ -48,13 +46,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private var _animating:Boolean;
 		private var _showing:Boolean;
-		private var _onReactiveHide:Boolean;
-		private var _reactiveHideMouseDownY:Number;
-		private var _reactiveHideStackY:StackUtil;
-		private var _targetReactiveY:Number;
 		private var _forceHidden:Boolean;
 		private var _hidden:Boolean;
-		private var _bgHeight:uint = 250;
+		private var _bgHeight:uint = 140;
 		private var _headerDefaultY:Number;
 		private var _headerTextDefaultOffset:Number;
 		private var _subNavDictionary:Dictionary;
@@ -70,11 +64,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			showHideUpdateSignal = new Signal();
 			buttonClickedSignal = new Signal();
 
-			_reactiveHideStackY = new StackUtil();
 			_leftButton = leftBtnSide.getChildByName( "btn" ) as LeftButton;
 			_rightButton = rightBtnSide.getChildByName( "btn" ) as RightButton;
 			_bgHeight *= CoreSettings.GLOBAL_SCALING;
-			_targetReactiveY = 768 * scaleX - _bgHeight;
 
 			// Starts hidden.
 			visible = false;
@@ -285,6 +277,22 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		// ---------------------------------------------------------------------
+		// Adapt to canvas rect.
+		// ---------------------------------------------------------------------
+
+		public function adaptToCanvas( canvas:Rectangle ):void {
+
+			var screenHeight:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1536 : 768;
+			var availableSpace:Number = screenHeight - canvas.height - canvas.y;
+			if( availableSpace > _bgHeight ) {
+				this.y = 0;
+			}
+			else {
+				this.y = _bgHeight - availableSpace;
+			}
+		}
+
+		// ---------------------------------------------------------------------
 		// Show/hide.
 		// ---------------------------------------------------------------------
 
@@ -295,7 +303,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function hide( time:Number = 0.5 ):void {
 			if( _animating ) return;
-			if( !_onReactiveHide && !_showing ) return;
 			trace( this, "hide" );
 			hidingSignal.dispatch();
 			_showing = false;
@@ -310,14 +317,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			visible = false;
 			_animating = false;
 			_hidden = true;
-			_targetReactiveY = 768 * scaleX - _bgHeight * 0.2;
 			NavigationCache.isHidden = true;
 		}
 
 		public function show( time:Number = 0.5 ):void {
-			trace( this, "trying to show: animating: " + _animating + ", on reactive hide: " + _onReactiveHide + ", showing: " + _showing );
+			trace( this, "trying to show: animating: " + _animating + ", showing: " + _showing );
 			if( _animating ) return;
-			if( !_onReactiveHide && _showing ) return;
 			trace( this, "show" );
 			_showing = true;
 			_animating = true;
@@ -331,78 +336,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_animating = false;
 			shownSignal.dispatch();
 			_hidden = false;
-			_targetReactiveY = 768 * scaleX - _bgHeight;
 			NavigationCache.isHidden = false;
 		}
 
 		private function onShowHideUpdate():void {
 			showHideUpdateSignal.dispatch( y / _bgHeight );
-		}
-
-		public function evaluateReactiveHideStart():void {
-			if( _animating || _onReactiveHide || stage.mouseY < _targetReactiveY ) return;
-			//if( _onReactiveHide ) return;
-			//if( stage.mouseY < _targetReactiveY ) return; // reject interactions outside of the navigation area
-			_onReactiveHide = true;
-			if( _hidden ) {
-				visible = true && !_forceHidden;
-				y = _bgHeight;
-				_reactiveHideMouseDownY = stage.mouseY - _bgHeight;
-			}
-			else {
-				_reactiveHideMouseDownY = stage.mouseY;
-			}
-			_reactiveHideStackY.clear();
-//			trace( this, "reactive hide start - values: " + _reactiveHideStackY.values() );
-			TweenLite.killTweensOf( this );
-			if( !hasEventListener( Event.ENTER_FRAME ) ) addEventListener( Event.ENTER_FRAME, onReactiveHideEnterFrame );
-		}
-
-		public function evaluateReactiveHideEnd():void {
-			if( !_onReactiveHide ) return;
-			if( hasEventListener( Event.ENTER_FRAME ) ) removeEventListener( Event.ENTER_FRAME, onReactiveHideEnterFrame );
-			var speedY:Number = _reactiveHideStackY.getAverageDeltaDetailed();
-//			trace( this, "reactive hide end, speed: " + speedY + ", values: " + _reactiveHideStackY.values() );
-			if( speedY == 0 ) {
-				if( y > _bgHeight / 2 ) hide();
-				else show();
-			}
-			else {
-				if( speedY > 0 ) hide();
-				else show();
-			}
-
-			_onReactiveHide = false;
-		}
-
-		private function onReactiveHideEnterFrame( event:Event ):void {
-//			trace( this, "reactive hide enterframe" );
-			y = stage.mouseY - _reactiveHideMouseDownY;
-			if( y > _bgHeight ) y = _bgHeight;
-			if( y < 0 ) y = 0;
-//			trace( this, "pushing value: " + y + ", index: " + _reactiveHideStackY.newestIndex );
-			_reactiveHideStackY.pushValue( y );
-			showHideUpdateSignal.dispatch( y / _bgHeight );
-		}
-
-		public function startAutoHideMode():void {
-			if( !_hidden )
-				addEventListener( Event.ENTER_FRAME, checkAutoHide );
-		}
-
-		public function stopAutoHideMode():void {
-			removeEventListener( Event.ENTER_FRAME, checkAutoHide );
-		}
-
-		private function checkAutoHide( event:Event ):void {
-			if( _hidden || _animating ) {
-				removeEventListener( Event.ENTER_FRAME, checkAutoHide );
-			} else {
-				if( stage.mouseY > _targetReactiveY ) {
-					removeEventListener( Event.ENTER_FRAME, checkAutoHide );
-					hide();
-				}
-			}
 		}
 
 		// ---------------------------------------------------------------------
