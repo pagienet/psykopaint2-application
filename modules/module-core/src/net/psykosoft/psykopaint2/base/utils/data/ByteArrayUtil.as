@@ -1,44 +1,23 @@
 package net.psykosoft.psykopaint2.base.utils.data
 {
-	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
 
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
-
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
-
 	public class ByteArrayUtil
 	{
-		public static function createBlankColorData(width : uint, height : uint, color : uint) : RefCountedByteArray
+		public static function createBlankColorData(width : uint, height : uint, color : uint) : ByteArray
 		{
 			var len : int = width*height;
-			var ba : RefCountedByteArray = new RefCountedByteArray();
+			var ba : ByteArray = new ByteArray();
 			for (var i : int = 0; i < len; ++i)
 				ba.writeUnsignedInt(color);
 			ba.position = 0;
 			return ba;
 		}
 
-		public static function fromBitmapData(bitmapData : BitmapData) : RefCountedByteArray
+		public static function swapIntByteOrder(source : ByteArray) : ByteArray
 		{
-			var source : ByteArray = bitmapData.getPixels(bitmapData.rect);
-			var byteArray : RefCountedByteArray = clone(source);
-			source.clear();
-			return byteArray;
-		}
-
-		public static function clone(source : ByteArray) : RefCountedByteArray
-		{
-			var byteArray : RefCountedByteArray = new RefCountedByteArray();
-			source.position = 0;
-			byteArray.writeBytes(source, 0, source.length);
-			return byteArray;
-		}
-
-		public static function swapIntByteOrder(source : ByteArray) : RefCountedByteArray
-		{
-			var byteArray : RefCountedByteArray = new RefCountedByteArray();
+			var byteArray : ByteArray = new ByteArray();
 			byteArray.endian = source.endian;
 			swapEndianNess(source);
 			source.position = 0;

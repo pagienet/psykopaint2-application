@@ -1,27 +1,24 @@
 package net.psykosoft.psykopaint2.base.utils.io
 {
 
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.events.Event;
-	import flash.events.IOErrorEvent;
 	import flash.utils.ByteArray;
-
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 
 	public class PngDecodeUtil
 	{
 		private var _pngDecodeCallback:Function;
 		private var _loader:Loader;
-		private var _bytes : RefCountedByteArray;
+		private var _bytes : ByteArray;
 		private var _disposeWhenReady : Boolean;
 
 		public function PngDecodeUtil() {
 			super();
 		}
 
-		public function decode( bytes:RefCountedByteArray, onComplete:Function, disposeWhenReady : Boolean = false ):void {
+		public function decode( bytes:ByteArray, onComplete:Function, disposeWhenReady : Boolean = false ):void {
 			trace( this, "decoding: " + bytes.length + " bytes." );
 			_loader = new Loader();
 			_loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onDecodingComplete );
@@ -35,9 +32,10 @@ package net.psykosoft.psykopaint2.base.utils.io
 			removeListeners();
 			trace( this, "decoded." );
 			if (_disposeWhenReady)
-				_bytes.dispose();
-			var bmd:BitmapData = new TrackedBitmapData( _loader.width, _loader.height, false, 0 );
-			bmd.draw( _loader );
+				_bytes.clear();
+
+			_bytes = null;
+			var bmd:BitmapData = Bitmap(_loader.content).bitmapData;
 			_pngDecodeCallback( bmd );
 			_pngDecodeCallback = null;
 		}

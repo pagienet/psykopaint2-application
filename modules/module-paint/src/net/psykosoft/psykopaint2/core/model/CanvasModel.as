@@ -10,18 +10,9 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
-
-	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
-
-	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
-
-	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
-
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
@@ -52,8 +43,8 @@ package net.psykosoft.psykopaint2.core.model
 		private var _viewport : Rectangle;
 
 		// TODO: should originals be a string path to packaged asset?
-		private var _normalSpecularOriginal : RefCountedByteArray;
-		private var _colorBackgroundOriginal : RefCountedByteArray;
+		private var _normalSpecularOriginal : ByteArray;
+		private var _colorBackgroundOriginal : ByteArray;
 
 		public function CanvasModel()
 		{
@@ -156,13 +147,12 @@ package net.psykosoft.psykopaint2.core.model
 			}
 		}
 
-		public function setColorBackgroundOriginal(value : RefCountedByteArray) : void
+		public function setColorBackgroundOriginal(value : ByteArray) : void
 		{
-			if (_colorBackgroundOriginal) _colorBackgroundOriginal.dispose();
-			if (value) {
-				_colorBackgroundOriginal = ByteArrayUtil.clone(value);
-				_colorBackgroundOriginal.compress();
-			}
+			if (_colorBackgroundOriginal) _colorBackgroundOriginal.clear();
+
+			if (value)
+				_colorBackgroundOriginal = value;
 			else
 				_colorBackgroundOriginal = null;
 		}
@@ -206,13 +196,12 @@ package net.psykosoft.psykopaint2.core.model
 				_fullSizeBackBuffer = createCanvasTexture(true);
 		}
 
-		public function setNormalSpecularOriginal(value : RefCountedByteArray) : void
+		public function setNormalSpecularOriginal(value : ByteArray) : void
 		{
 			if (_normalSpecularOriginal)
-				_normalSpecularOriginal.dispose();
+				_normalSpecularOriginal.clear();
 
-			_normalSpecularOriginal = ByteArrayUtil.clone(value);
-			_normalSpecularOriginal.compress();
+			_normalSpecularOriginal = value;
 		}
 
 		public function disposePaintTextures() : void
@@ -222,8 +211,8 @@ package net.psykosoft.psykopaint2.core.model
 			if (_fullSizeBackBuffer) _fullSizeBackBuffer.dispose();
 			if (_normalSpecularMap) _normalSpecularMap.dispose();
 			if (_sourceTexture) _sourceTexture.dispose();
-			if (_normalSpecularOriginal) _normalSpecularOriginal.dispose();
-			if (_colorBackgroundOriginal) _colorBackgroundOriginal.dispose();
+			if (_normalSpecularOriginal) _normalSpecularOriginal.clear();
+			if (_colorBackgroundOriginal) _colorBackgroundOriginal.clear();
 			_colorTexture = null;
 			_fullSizeBackBuffer = null;
 			_normalSpecularMap = null;
@@ -288,11 +277,10 @@ package net.psykosoft.psykopaint2.core.model
 
 		private function uploadColorBackgroundOriginal() : void
 		{
-			var inflated : RefCountedByteArray = ByteArrayUtil.clone(_colorBackgroundOriginal);
-			inflated.uncompress();
-			inflated.length = _textureWidth * _textureHeight * 4;
-			_colorTexture.texture.uploadFromByteArray(inflated, 0);
-			inflated.dispose();
+			var oldLen : int = _colorBackgroundOriginal.length;
+			_colorBackgroundOriginal.length = _textureWidth * _textureHeight * 4;
+			_colorTexture.texture.uploadFromByteArray(_colorBackgroundOriginal, 0);
+			_colorBackgroundOriginal.length = oldLen;
 		}
 
 		public function clearNormalSpecularTexture() : void
@@ -302,26 +290,20 @@ package net.psykosoft.psykopaint2.core.model
 
 		private function uploadNormalSpecularOriginal() : void
 		{
-			var inflated : RefCountedByteArray = ByteArrayUtil.clone(_normalSpecularOriginal);
-			inflated.uncompress();
-			inflated.length = _textureWidth * _textureHeight * 4;
-			_normalSpecularMap.texture.uploadFromByteArray(inflated, 0);
-			inflated.dispose();
+			var oldLen : int = _normalSpecularOriginal.length;
+			_normalSpecularOriginal.length = _textureWidth * _textureHeight * 4;
+			_normalSpecularMap.texture.uploadFromByteArray(_normalSpecularOriginal, 0);
+			_normalSpecularOriginal.length = oldLen;
 		}
 
-		public function getColorBackgroundOriginal() : RefCountedByteArray
+		public function getColorBackgroundOriginal() : ByteArray
 		{
-			if (!_colorBackgroundOriginal) return null;
-			var inflated : RefCountedByteArray = ByteArrayUtil.clone(_colorBackgroundOriginal);
-			inflated.uncompress();
-			return inflated;
+			return _colorBackgroundOriginal;
 		}
 
-		public function getNormalSpecularOriginal() : RefCountedByteArray
+		public function getNormalSpecularOriginal() : ByteArray
 		{
-			var inflated : RefCountedByteArray = ByteArrayUtil.clone(_normalSpecularOriginal);
-			inflated.uncompress();
-			return inflated;
+			return _normalSpecularOriginal;
 		}
 	}
 }

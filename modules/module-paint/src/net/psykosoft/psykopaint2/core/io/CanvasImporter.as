@@ -45,6 +45,10 @@ package net.psykosoft.psykopaint2.core.io
 
 			canvas.setNormalSpecularOriginal(paintingData.normalSpecularOriginal);
 			canvas.setColorBackgroundOriginal(paintingData.colorBackgroundOriginal);
+
+			// transfer of ownership so this does not get disposed
+			paintingData.normalSpecularOriginal = null;
+			paintingData.colorBackgroundOriginal = null;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.data
 {
 	import flash.utils.ByteArray;
+	import flash.utils.ByteArray;
 
 	public class PaintingDataSerializer
 	{
@@ -17,18 +18,33 @@ package net.psykosoft.psykopaint2.core.data
 			bytes.writeInt(vo.height);
 
 			// Write surfaces.
-			var len : uint = vo.width * vo.height * 4;
-			bytes.writeBytes(vo.colorData, 0, len);
-			bytes.writeBytes(vo.normalSpecularData, 0, len);
-			bytes.writeBytes(vo.sourceBitmapData, 0, len);
-			bytes.writeBytes(vo.normalSpecularOriginal, 0, len);
+			append(vo, vo.colorData, bytes);
+			append(vo, vo.normalSpecularData, bytes);
+			append(vo, vo.sourceBitmapData, bytes);
+			append(vo, vo.normalSpecularOriginal, bytes);
 			if (vo.colorBackgroundOriginal)
-				bytes.writeBytes(vo.colorBackgroundOriginal, 0, len);
+				append(vo, vo.colorBackgroundOriginal, bytes);
 
 			PaintingFileUtils.compressData(bytes);
 
 			bytes.position = 0;
 			return bytes;
+		}
+
+		private function append(vo : PaintingDataVO, source : ByteArray, target : ByteArray) : void
+		{
+			var len : int = vo.width * vo.height * 4;
+			var oldLen : int = source.length;
+
+			source.position = 0;
+
+			if (oldLen != len)
+				source.length = len;
+
+			target.writeBytes(source, 0, len);
+
+			if (oldLen != len)
+				source.length = oldLen;
 		}
 	}
 }

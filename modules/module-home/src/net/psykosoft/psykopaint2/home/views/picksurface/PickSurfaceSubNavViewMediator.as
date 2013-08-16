@@ -105,15 +105,14 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			vo.height = CoreSettings.STAGE_HEIGHT;
 
 			if (surface.color) {
-				vo.colorData = surface.color.newReference();
-				vo.colorBackgroundOriginal = surface.color.newReference();
+				vo.colorData = surface.color;
+				vo.colorBackgroundOriginal = surface.color;
 			}
 			else
 				vo.colorData = ByteArrayUtil.createBlankColorData(vo.width, vo.height, 0xffffffff);
 
-			vo.normalSpecularData = surface.normalSpecular.newReference();
-			vo.normalSpecularOriginal = surface.normalSpecular.newReference();
-			surface.dispose();
+			vo.normalSpecularData = surface.normalSpecular;
+			vo.normalSpecularOriginal = surface.normalSpecular;
 
 			requestOpenPaintingDataVOSignal.dispatch(vo);
 		}

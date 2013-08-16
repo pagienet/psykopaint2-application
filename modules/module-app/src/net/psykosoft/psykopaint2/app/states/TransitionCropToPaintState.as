@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
-	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.states.State;
@@ -9,7 +8,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
@@ -86,7 +84,6 @@ package net.psykosoft.psykopaint2.app.states
 		private function onSurfaceLoaded(data : SurfaceDataVO) : void
 		{
 			var vo : PaintingDataVO = createPaintingVO(data);
-			data.dispose();
 
 			_croppedBitmapData.dispose();
 			_croppedBitmapData = null;
@@ -114,15 +111,15 @@ package net.psykosoft.psykopaint2.app.states
 			var vo : PaintingDataVO = new PaintingDataVO();
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
-			vo.sourceBitmapData = ByteArrayUtil.fromBitmapData(_croppedBitmapData);
+			vo.sourceBitmapData = _croppedBitmapData.getPixels(_croppedBitmapData.rect);
 			if (surface.color) {
-				vo.colorBackgroundOriginal = surface.color.newReference();
+				vo.colorBackgroundOriginal = surface.color;
 				vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
 			}
 			else
 				vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
-			vo.normalSpecularData = surface.normalSpecular.newReference();
-			vo.normalSpecularOriginal = surface.normalSpecular.newReference();
+			vo.normalSpecularData = surface.normalSpecular;
+			vo.normalSpecularOriginal = surface.normalSpecular;
 			return vo;
 		}
 

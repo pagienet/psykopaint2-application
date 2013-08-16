@@ -6,12 +6,10 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
-	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedByteArray;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 
 	import robotlegs.bender.framework.api.IContext;
@@ -77,11 +75,10 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function onSurfaceLoaded( bytes:ByteArray ):void {
-			_loadedSurfaceData.normalSpecular = ByteArrayUtil.clone(bytes);
-			bytes.clear();
+			bytes.uncompress();
+			_loadedSurfaceData.normalSpecular = bytes;
 			_byteLoader.dispose();
 			_byteLoader = null;
-			_loadedSurfaceData.normalSpecular.uncompress();
 			notifySurfaceLoadedSignal.dispatch(_loadedSurfaceData);
 			context.release( this );
 		}
