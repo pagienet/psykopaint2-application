@@ -239,7 +239,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function updateEaselRect():void {
-			_easelRectFromHomeView = easelRectModel.rect;
+			_easelRectFromHomeView = easelRectModel.rect.clone();
 
 			_easelRectFromHomeView.x *= CoreSettings.GLOBAL_SCALING;
 			_easelRectFromHomeView.y *= CoreSettings.GLOBAL_SCALING;

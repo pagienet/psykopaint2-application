@@ -110,7 +110,6 @@ package net.psykosoft.psykopaint2.core.rendering
 			_backgroundBaseRect = rect.clone();
 
 			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
-				// X and Y don't seem to make sense here
 				_backgroundBaseRect.x *= CoreSettings.GLOBAL_SCALING;
 				_backgroundBaseRect.y *= CoreSettings.GLOBAL_SCALING;
 				_backgroundBaseRect.width *= CoreSettings.GLOBAL_SCALING;
