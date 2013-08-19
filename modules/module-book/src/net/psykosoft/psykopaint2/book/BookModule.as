@@ -11,9 +11,11 @@ package net.psykosoft.psykopaint2.book
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
+	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
@@ -52,15 +54,6 @@ package net.psykosoft.psykopaint2.book
 			}
 		}
 
-		private function init() : void
-		{
-			// Initialize robotlegs for this module.
-			new BookConfig(_coreModule.injector);
-
-			// Notify potential super modules.
-			moduleReadySignal.dispatch();
-		}
-
 		private function initStandalone() : void
 		{
 			BookSettings.isStandalone = true;
@@ -70,9 +63,20 @@ package net.psykosoft.psykopaint2.book
 			addChild(_coreModule);
 		}
 
+		private function init() : void
+		{
+			// Initialize robotlegs for this module.
+			new BookConfig(_coreModule.injector);
+
+			var rootView : BookRootView = new BookRootView();
+			_coreModule.injector.getInstance(RequestAddViewToMainLayerSignal).dispatch(rootView);
+
+			// Notify potential super modules.
+			moduleReadySignal.dispatch();
+		}
+
 		private function onCoreModuleReady() : void
 		{
-
 			init();
 			_coreModule.injector.getInstance(RequestHideSplashScreenSignal).dispatch();
 			_coreModule.startEnterFrame();
@@ -99,7 +103,6 @@ package net.psykosoft.psykopaint2.book
 
 		private function onBookModuleSetUp() : void
 		{
-			// TODO: this probably needs to be moved to some activation command
 			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1, 0.5);
 			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.BOOK);
 		}
