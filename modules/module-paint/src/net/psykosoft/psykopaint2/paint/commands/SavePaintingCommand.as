@@ -29,6 +29,8 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
 
+		private var _savingVoInstance:SavePaintingVO;
+
 		override public function prepare():void {
 
 			trace( this, "prepare()" );
@@ -60,11 +62,14 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function mapMacroConsistentData():void {
-			injector.map( SavePaintingVO ).toValue( new SavePaintingVO( paintingModel.activePaintingId, userModel.uniqueUserId ) );
+			trace( this, "mapping..." );
+			_savingVoInstance = new SavePaintingVO( paintingModel.activePaintingId, userModel.uniqueUserId );
+			injector.map( SavePaintingVO ).toValue( _savingVoInstance );
 		}
 
 		private function unMapMacroConsistentData():void {
-			injector.getInstance(SavePaintingVO).dispose();
+			trace( this, "un-mapping..." );
+			if( _savingVoInstance ) _savingVoInstance.dispose();
 			injector.unmap( SavePaintingVO );
 		}
 	}
