@@ -8,6 +8,7 @@
 	<property name="debug" value="true"/>
 	<property name="inline" value=""/> <!-- '-inline' or '' (empty) -->
 	<property name="telemetry" value="-advanced-telemetry=false"/> <!-- '-advanced-telemetry=true' or '' (empty) -->
+	<property name="swfVersion" value="21"/> <!-- just a number -->
 
 	<property name="rootDir" value="../../../workspaces/psykopaint2-official"/>
 
@@ -54,83 +55,83 @@
 		<!-- launchers -->
 		<xmltask source="${launcherBookIpadPath}" dest="${launcherBookIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${launcherBookDesktopPath}" dest="${launcherBookDesktopPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${launcherCoreIpadPath}" dest="${launcherCoreIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${launcherHomeIpadPath}" dest="${launcherHomeIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${launcherPaintIpadPath}" dest="${launcherPaintIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${launcherPaintDesktopPath}" dest="${launcherPaintDesktopPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${launcherHomeDesktopPath}" dest="${launcherHomeDesktopPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${launcherCoreDesktopPath}" dest="${launcherCoreDesktopPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${launcherAppIpadPath}" dest="${launcherAppIpadPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${launcherAppDesktopPath}" dest="${launcherAppDesktopPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 
 		<!-- libs -->
 		<xmltask source="${away3dPath}" dest="${away3dPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${gestouchPath}" dest="${gestouchPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${robotlegs2Path}" dest="${robotlegs2Path}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${robotlegs2SignalsPath}" dest="${robotlegs2SignalsPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 
 		<!-- modules -->
 		<xmltask source="${bookPath}" dest="${bookPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${appPath}" dest="${appPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${corePath}" dest="${corePath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${paintPath}" dest="${paintPath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 		<xmltask source="${homePath}" dest="${homePath}" report="true">
 			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/map/entry[1]/@value" withText="${debug}"/>
-			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry}"/>
+			<replace path="/module/component[1]/configurations/configuration[1]/compiler-options/option[1]/@value" withText="-debug=${debug} ${inline} ${telemetry} -swf-version=${swfVersion}"/>
 		</xmltask>
 	</target>
 
