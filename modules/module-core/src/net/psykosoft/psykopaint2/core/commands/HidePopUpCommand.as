@@ -21,7 +21,6 @@ package net.psykosoft.psykopaint2.core.commands
 
 			notifyPopUpRemovedSignal.addOnce( onPopUpRemoved );
 			requestHidePopUpSignal.dispatch();
-
 		}
 
 		private function onPopUpRemoved():void {
