@@ -151,7 +151,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onEaselRectChanged():void {
-			easelRectModel.rect = view.easelRect;
+			easelRectModel.localScreenRect = view.easelRect;
 		}
 
 		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animateIn:Boolean, disposeWhenDone:Boolean ):void {

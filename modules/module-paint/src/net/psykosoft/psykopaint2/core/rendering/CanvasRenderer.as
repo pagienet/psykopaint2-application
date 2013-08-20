@@ -102,19 +102,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		{
 			disposeBackground();
 			_background = texture;
-			setBackgroundBaseRect(rect);
-		}
-
-		private function setBackgroundBaseRect(rect : Rectangle) : void
-		{
-			_backgroundBaseRect = rect.clone();
-
-			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
-				_backgroundBaseRect.x *= CoreSettings.GLOBAL_SCALING;
-				_backgroundBaseRect.y *= CoreSettings.GLOBAL_SCALING;
-				_backgroundBaseRect.width *= CoreSettings.GLOBAL_SCALING;
-				_backgroundBaseRect.height *= CoreSettings.GLOBAL_SCALING;
-			}
+			_backgroundBaseRect = rect;
 		}
 
 		private function onChangeRenderRect(rect : Rectangle) : void

@@ -239,12 +239,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function updateEaselRect():void {
-			_easelRectFromHomeView = easelRectModel.rect.clone();
-
-			_easelRectFromHomeView.x *= CoreSettings.GLOBAL_SCALING;
-			_easelRectFromHomeView.y *= CoreSettings.GLOBAL_SCALING;
-			_easelRectFromHomeView.width *= CoreSettings.GLOBAL_SCALING;
-			_easelRectFromHomeView.height *= CoreSettings.GLOBAL_SCALING;
+			_easelRectFromHomeView = easelRectModel.absoluteScreenRect;
 
 			_minZoomScale = _easelRectFromHomeView.width / canvasModel.width;
 			zoomScale = _minZoomScale;

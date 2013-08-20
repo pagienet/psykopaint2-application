@@ -95,7 +95,7 @@ package net.psykosoft.psykopaint2.app.states
 		private function onPaintingModuleSetUp() : void
 		{
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
-			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.rect);
+			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.absoluteScreenRect);
 
 			notifyCanvasZoomedToDefaultViewSignal.addOnce( onZoomOutComplete );
 			requestZoomCanvasToDefaultViewSignal.dispatch();

@@ -99,7 +99,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 
 		private function updateCropSourceImage( bitmapData:BitmapData ):void {
 			trace( this, "updateCropSourceImage" );
-			view.easelRect = easelRectModel.rect;
+			view.easelRect = easelRectModel.localScreenRect;
 			view.sourceMap = bitmapData;
 		}
 	}
