@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			_pagesManager = pagesManager;
  			_view = view;
  			_middle = _view.stage.stageWidth * .5;
- 			_regions = new Vector.<Region>();
+ 			//_regions = new Vector.<Region>();
  		}
 
  		public function addRegion(rect:Rectangle, object:Object):void
@@ -41,6 +41,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			region.object = object;
  			region.UVRect = new Rectangle(rect.x/BookPageSize.WIDTH, rect.y/BookPageSize.HEIGHT, rect.width/BookPageSize.WIDTH, rect.height/BookPageSize.WIDTH);
  			region.pageIndex = object.pageIndex;
+ 			if(!_regions) _regions = new Vector.<Region>();
  			_regions.push(region);
  		}
  
