@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.core.commands
 
 			trace( this, "execute" );
 
-			notifyPopUpRemovedSignal.add( onPopUpRemoved );
+			notifyPopUpRemovedSignal.addOnce( onPopUpRemoved );
 			requestHidePopUpSignal.dispatch();
 
 		}

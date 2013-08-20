@@ -89,7 +89,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				itemData = _dataProvider[ i ];
 				itemData.itemRendererPosition = itemPositioningMarker + itemData.itemRendererWidth / 2;
 				itemPositioningMarker += itemData.itemRendererWidth + itemGap + rand( -randomPositioningRange, randomPositioningRange );
-				trace( this, "placing item: " + itemPositioningMarker );
+//				trace( this, "placing item: " + itemPositioningMarker );
 				evaluateDimensionsFromItemPositionAndWidth( itemData.itemRendererPosition, itemData.itemRendererWidth );
 				evaluateNewSnapPointFromPosition( itemData.itemRendererPosition );
 			}
