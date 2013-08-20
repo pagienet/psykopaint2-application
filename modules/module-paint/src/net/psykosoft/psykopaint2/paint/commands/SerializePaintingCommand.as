@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 
 	import flash.display.BitmapData;
+	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataSerializer;
@@ -20,9 +21,12 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var renderer:CanvasRenderer;
 
+		private var _time:uint;
+
 		override public function execute():void {
 
 			trace( this, "execute()" );
+			_time = getTimer();
 
 			trace( this, "vo: " + saveVO );
 
@@ -42,6 +46,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			saveVO.dataBytes = dataSerializer.serialize( saveVO.data );
 			trace( this, "info num bytes: " + saveVO.infoBytes.length );
 			trace( this, "data num bytes: " + saveVO.dataBytes.length );
+
+			trace( this, "done - " + String( getTimer() - _time ) );
 		}
 
 		private function generateThumbnail():BitmapData {

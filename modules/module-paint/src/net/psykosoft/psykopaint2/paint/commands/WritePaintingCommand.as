@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
+	import flash.utils.getTimer;
+
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryIoUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
@@ -13,10 +15,13 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var saveVO:SavePaintingVO;
 
+		private var _time:uint;
+
 		private const ASYNC_MODE:Boolean = false;
 
 		override public function execute():void {
 			trace( this, "execute()" );
+			_time = getTimer();
 			writeInfoBytes();
 		}
 
@@ -58,6 +63,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function onWriteComplete():void {
 			dispatchComplete( true );
+			trace( this, "done - " + String( getTimer() - _time ) );
 		}
 	}
 }

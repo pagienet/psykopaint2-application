@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
+	import flash.utils.getTimer;
+
 	import net.psykosoft.psykopaint2.core.commands.HidePopUpCommand;
 
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
@@ -30,10 +32,13 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
 
 		private var _savingVoInstance:SavePaintingVO;
+		private var _time:uint;
 
 		override public function prepare():void {
 
 			trace( this, "prepare()" );
+			_time = getTimer();
+
 
 			// Do not save if there is nothing to save.
 			if( !canvasHistoryModel.hasHistory ) {
@@ -59,6 +64,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			unMapMacroConsistentData();
 			if( success ) notifyPaintingSavedSignal.dispatch( true );
 			else throw new Error( "Error saving the painting." ); // TODO: should we verify saved data and remove it from disk if invalid?
+			trace( this, "done - " + String( getTimer() - _time ) );
 		}
 
 		private function mapMacroConsistentData():void {

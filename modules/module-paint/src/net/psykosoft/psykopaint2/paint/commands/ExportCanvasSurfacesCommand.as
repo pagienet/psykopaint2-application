@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
+	import flash.utils.getTimer;
+
 	import net.psykosoft.psykopaint2.core.io.CanvasExportEvent;
 	import net.psykosoft.psykopaint2.core.io.CanvasExporter;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -16,9 +18,12 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var saveVO:SavePaintingVO;
 
+		private var _time:uint;
+
 		override public function execute():void {
 
 			trace( this, "execute()" );
+			_time = getTimer();
 
 			var canvasExporter:CanvasExporter = new CanvasExporter();
 			canvasExporter.addEventListener( CanvasExportEvent.COMPLETE, onExportComplete );
@@ -29,6 +34,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			event.target.removeEventListener( CanvasExportEvent.COMPLETE, onExportComplete );
 			saveVO.data = event.paintingDataVO;
 			dispatchComplete( true );
+			trace( this, "done - " + String( getTimer() - _time ) );
 		}
 	}
 }
