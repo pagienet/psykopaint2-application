@@ -3,13 +3,13 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
-
+	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 
 	public class SliderButton extends Sprite
@@ -37,6 +37,9 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _earContainerXOnMouseDown:Number = 0;
 		private var _stage:Stage;
 
+		private var _valueHasChanged:Boolean;
+		private var _checkClosingTap:Boolean;
+		
 		private const EAR_MOTION_RANGE:Number = 50;
 		private const EAR_ANIMATION_TIME:Number = 0.2;
 
@@ -53,7 +56,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		public function dispose():void {
 
 			stopSliding();
-
+			_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			button.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			button.dispose();
 
@@ -89,10 +92,14 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			button.labelText = "";
 
 			_stage = stage;
+			
+			_valueHasChanged = false;
+			_checkClosingTap = false;
 		}
 
 		private function postSetupAfterStageIsAvailable():void {
 			button.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 		}
 
@@ -155,6 +162,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private function updateEarsFromMouse():void {
 			var dx:Number = mouseX - _mouseDownX;
+			_valueHasChanged ||= (dx != 0);
 			_earContainerX = _earContainerXOnMouseDown + dx;
 			if( _earContainerX < -EAR_MOTION_RANGE ) _earContainerX = -EAR_MOTION_RANGE;
 			if( _earContainerX >  EAR_MOTION_RANGE ) _earContainerX =  EAR_MOTION_RANGE;
@@ -315,12 +323,22 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			_mouseDownX = mouseX;
 			_earContainerXOnMouseDown = _earContainerX;
 			startSliding();
-			showEars();
+			if ( !_valueHasChanged)
+			{
+				showEars();
+			}
 		}
 
 		private function onStageMouseUp( event:MouseEvent ):void {
 			stopSliding();
-			hideEars();
+			if ( _valueHasChanged || _checkClosingTap)
+			{
+				hideEars();
+				_valueHasChanged = false;
+				_checkClosingTap = false;
+			} else {
+				_checkClosingTap = true;
+			}
 		}
 	}
 }
