@@ -5,9 +5,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
-	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
-	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
@@ -28,7 +26,6 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var notifySurfaceLoadedSignal:NotifySurfaceLoadedSignal;
 
 		private var _byteLoader:BinaryLoader;
-		private var _bitmapLoader:BitmapLoader;
 		private var _loadedSurfaceData:SurfaceDataVO;
 		private var _assetSize:String;
 
@@ -47,25 +44,25 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function loadColorData():void {
-			_bitmapLoader = new BitmapLoader();
-			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_color_" + index + "_" + _assetSize + ".jpg",
+			_byteLoader = new BinaryLoader();
+			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_color_" + index + "_" + _assetSize + ".surf",
 					onColorDataLoaded,
 					onColorDataError );
 		}
 
 		private function onColorDataError():void {
-			_bitmapLoader.dispose();
-			_bitmapLoader = null;
+			_byteLoader.dispose();
+			_byteLoader = null;
 			trace( "Error loading '/core-packaged/images/surfaces/canvas_color_" + index + "_" + _assetSize + ".surf'" );
 			loadNormalSpecularData();
 		}
 
-		private function onColorDataLoaded( bitmap:BitmapData ):void {
-			var rgba : ByteArray = bitmap.getPixels(bitmap.rect);
-			_loadedSurfaceData.color = ByteArrayUtil.swapIntByteOrder(rgba);
-			rgba.clear();
-			_bitmapLoader.dispose();
-			_bitmapLoader = null;
+		private function onColorDataLoaded( bytes:ByteArray ):void {
+			bytes.uncompress();
+			_loadedSurfaceData.color = bytes;
+
+			_byteLoader.dispose();
+			_byteLoader = null;
 			loadNormalSpecularData();
 		}
 

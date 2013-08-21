@@ -1,13 +1,10 @@
 package net.psykosoft.psykopaint2.home.commands
 {
 
-	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
-	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
@@ -32,9 +29,8 @@ package net.psykosoft.psykopaint2.home.commands
 		private static var _busy:Boolean;
 
 		private var _byteLoader:BinaryLoader;
-		private var _bitmapLoader:BitmapLoader;
 		private var _loadedNormalSpecularData:ByteArray;
-		private var _loadedColorData:BitmapData;
+		private var _loadedColorData:ByteArray;
 
 		public function LoadSurfacePreviewCommand() {
 			super();
@@ -49,10 +45,6 @@ package net.psykosoft.psykopaint2.home.commands
 					_byteLoader.dispose();
 					_byteLoader = null;
 				}
-				if( _bitmapLoader ) {
-					_bitmapLoader.dispose();
-					_bitmapLoader = null;
-				}
 				_busy = false;
 			}
 			else {
@@ -65,23 +57,23 @@ package net.psykosoft.psykopaint2.home.commands
 		}
 
 		private function loadColorData():void {
-			_bitmapLoader = new BitmapLoader();
-			_bitmapLoader.loadAsset( "/core-packaged/images/surfaces/canvas_color_" + index + "_preview.jpg",
-					onColorDataLoaded,
-					onColorDataError );
+			_byteLoader = new BinaryLoader();
+			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_color_" + index + "_preview.surf",
+					onColorDataLoaded, onColorDataError);
 		}
 
-		private function onColorDataError():void {
-			_bitmapLoader.dispose();
-			_bitmapLoader = null;
-			trace( "Error loading '/core-packaged/images/surfaces/canvas_color_" + index + "_preview.surf'" );
+		private function onColorDataError() : void
+		{
+			_byteLoader.dispose();
+			_byteLoader = null;
+			_loadedColorData = null;
 			loadNormalSpecularData();
 		}
 
-		private function onColorDataLoaded( bitmap:BitmapData ):void {
-			_loadedColorData = bitmap;
-			_bitmapLoader.dispose();
-			_bitmapLoader = null;
+		private function onColorDataLoaded( bytes:ByteArray ):void {
+			_loadedColorData = bytes;
+			_byteLoader.dispose();
+			_byteLoader= null;
 			loadNormalSpecularData();
 		}
 
@@ -106,7 +98,7 @@ package net.psykosoft.psykopaint2.home.commands
 
 		private function disposeSurface():void {
 			if( _loadedColorData ) {
-				_loadedColorData.dispose();
+				_loadedColorData.clear();
 				_loadedColorData = null;
 			}
 			if( _loadedNormalSpecularData ) {
@@ -120,16 +112,18 @@ package net.psykosoft.psykopaint2.home.commands
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
 			if( _loadedColorData ) {
-				vo.colorPreviewBitmap = new TrackedBitmapData( vo.textureWidth, vo.textureHeight, false, 0 );
-				vo.colorPreviewBitmap.draw( _loadedColorData );
+				vo.colorPreviewData = _loadedColorData;
+				vo.colorPreviewData.uncompress();
+				_loadedColorData = null;
 			}
 			else {
 				vo.colorPreviewData = new ByteArray();
 				vo.colorPreviewData.length = vo.width * vo.height * 4;	// will fill with zeroes
 			}
 			vo.normalSpecularPreviewData = new ByteArray();
-			vo.normalSpecularPreviewData.writeBytes( _loadedNormalSpecularData, 0, 0 );
+			vo.normalSpecularPreviewData = _loadedNormalSpecularData;
 			vo.normalSpecularPreviewData.uncompress();
+			_loadedNormalSpecularData = null;
 			// nothing else necessary
 			return vo;
 		}

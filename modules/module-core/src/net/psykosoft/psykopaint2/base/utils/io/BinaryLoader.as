@@ -10,7 +10,8 @@ package net.psykosoft.psykopaint2.base.utils.io
 	public class BinaryLoader
 	{
 		private var _loader:URLLoader;
-		private var _callback:Function;
+		private var _successCallback:Function;
+		private var _errorCallback : Function;
 		private var _url:String;
 
 		public function BinaryLoader() {
@@ -21,17 +22,19 @@ package net.psykosoft.psykopaint2.base.utils.io
 			_loader.addEventListener( IOErrorEvent.IO_ERROR, onLoaderError );
 		}
 
-		public function loadAsset( url:String, callback:Function ):void {
+		public function loadAsset( url:String, successCallback:Function, errorCallback:Function = null ):void {
 			trace( this, "loading asset: " + url );
 			_url = url;
-			_callback = callback;
+			_successCallback = successCallback;
+			_errorCallback = errorCallback;
 			_loader.load( new URLRequest( url ) );
 			_url = url;
 		}
 
 		public function dispose():void {
 			if (_loader) _loader.close();
-			_callback = null;
+			_successCallback = null;
+			_errorCallback = null;
 			_loader.removeEventListener( Event.COMPLETE, onLoaderComplete );
 			_loader.removeEventListener( IOErrorEvent.IO_ERROR, onLoaderError );
 			_loader = null;
@@ -40,11 +43,14 @@ package net.psykosoft.psykopaint2.base.utils.io
 
 		private function onLoaderComplete( event:Event ):void {
 			trace( this, "loaded: " + _url );
-			_callback( _loader.data );
+			_successCallback( _loader.data );
 		}
 
 		private function onLoaderError( event:IOErrorEvent ):void {
-			throw new Error( this + event +" cannot find " + _url);
+			if (_errorCallback)
+				_errorCallback();
+			else
+				throw new Error( this + event +" cannot find " + _url);
 //			trace( this + event +" cannot find " + _url);
 		}
 	}
