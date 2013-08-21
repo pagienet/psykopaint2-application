@@ -89,11 +89,13 @@ package net.psykosoft.psykopaint2.book.views.models
 			_recto.material = null;
 			_verso.material = null;
 
+			_bend.clear();
+			_bend = null;
 			_rectoAnimator.dispose();
 			_versoAnimator.dispose();
 			_recto.animator = null;
 			_verso.animator = null;
-			_bend = null;
+
 					
 			if(!_sharedGeom){
 				_recto.geometry.dispose();
@@ -115,12 +117,12 @@ package net.psykosoft.psykopaint2.book.views.models
 
 		private function generate(materialRecto:TextureMaterial, materialVerso:TextureMaterial):void
 		{
-			var rectoGeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 20, 1, true);
+			var rectoGeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 15, 1, true);
 			_recto = new Mesh(rectoGeom, materialRecto);
 			offsetGeometry(_recto);
 			addChild(_recto);
 
-			var versoGeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 20, 1, true);
+			var versoGeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 15, 1, true);
 			_verso = new Mesh(versoGeom, materialVerso);
 			offsetGeometry(_verso);
 

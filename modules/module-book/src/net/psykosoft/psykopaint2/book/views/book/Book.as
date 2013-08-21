@@ -93,12 +93,14 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			buildBookCraft();
  			_view.scene.addChild(_bookCraft);
- 			animateIn();
+
+ 			setTimeout(animateIn, 1000);
  		}
 
  		//Animation opening book closed
  		private function animateIn():void
- 		{
+ 		{	
+ 			_bookCraft.visible = true;
  			_dummyCam = new Object3D();
  			_dummyCam.z = 2000;
 
@@ -226,6 +228,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		public function buildBookCraft():void
  		{
  			_bookCraft = new BookCraft(_layout.pageMaterialsManager.craftMaterial);
+ 			_bookCraft.visible = false;
  			_bookCraft.setClosedState();
 
  			_pagesManager = new PagesManager(_bookCraft);

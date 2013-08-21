@@ -29,6 +29,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
 
+		private var _pagesFilled:Dictionary;
+
 		public function NativeSamplesLayout(stage:Stage)
 		{
 			_fileLoader = new FileLoader();
@@ -63,6 +65,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var data:Object;
 			var url:String;
 
+			_pagesFilled = new Dictionary();
+			var destPageIndex:uint;
+
 			for(var i:uint = 0; i < loop;++i){
 				node = images.child("image")[i];
 				name = node.attribute("name")
@@ -75,6 +80,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 						type:ImageRes.HIGHRES};
 
 				_content.push(data);
+
+				destPageIndex = uint(i/6);
+				if(!_pagesFilled["pageIndex"+destPageIndex]){
+					_pagesFilled["pageIndex"+destPageIndex] = {max:0, inserted:0};
+				}
+
+				_pagesFilled["pageIndex"+destPageIndex].max++;
+				 
 			}
 
 			_resourcesCount = loop;
@@ -83,6 +96,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 			if(sides%2 != 0) sides+=1;
 			pageCount = sides*.5;
+ 
 		}
 
 		override public function loadContent():void
@@ -133,7 +147,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		// sample case: we insert 6 images per page
 		override protected function composite(insertSource:BitmapData, object:Object):void
 		{
- 			switchToHighDrawQuality();
+ 			//switchToHighDrawQuality();
  
  			var insertRef:InsertRef;
  			var insertRect:Rectangle;
@@ -212,9 +226,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			}
  			 
 			//row layout recto: 50+200+31+200+31
-
-
-  
 			//the page material
 			pageIndex = Math.floor(pageIndex);
 			var pageMaterial:TextureMaterial = getPageMaterial(pageIndex);
@@ -225,22 +236,28 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			diffuseSourceBitmapdata.lock();
 			//insert the image loaded into diffuse map
 			insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, true);
-
+ 
+			_pagesFilled["pageIndex"+pageIndex].inserted +=1;
+			var invalidateContent:Boolean = (_pagesFilled["pageIndex"+pageIndex].inserted >= _pagesFilled["pageIndex"+pageIndex].max)? true : false;
+			 
 			//because shadow and normalmap are high res, we do not need do this twice
 			// and we catch the unlikely event where a lowres would be loaded after the highres.
 			if(isNewInsert){
 
-				//var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
-				//var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
+				var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
+				var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
  
-				//if(!_insertNormalmap) _insertNormalmap = getInsertNormalMap();
-
-				////insert the normalmap map of the image into the textureNormalmap
-				//insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false);
-				//normalTextureSource.bitmapData = normalSourceBitmapdata;
+				if(!_insertNormalmap) _insertNormalmap = getInsertNormalMap();
+ 
+				//insert the normalmap map of the image into the textureNormalmap
+				normalSourceBitmapdata.lock();
+				insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false);
+				normalTextureSource.bitmapData = normalSourceBitmapdata;
+				normalSourceBitmapdata.unlock();
+				if(invalidateContent) normalTextureSource.invalidateContent();
 
 				//dispatch the rect + object for region. the rect is updated for the shadow, the region will declare its own rect.
-				//object.inPageIndex = inPageIndex;
+				object.inPageIndex = inPageIndex;
 				object.pageIndex = pageIndex;
 	 			dispatchRegion(insertRect, object);
 
@@ -259,11 +276,11 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			diffuseSourceBitmapdata.unlock();
 
  			//update after inserts
- 			diffuseTextureSource.invalidateContent();
- 			diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;
- 			
- 			restoreQuality();
- 			
+ 			if(invalidateContent){
+ 				diffuseTextureSource.invalidateContent();
+ 				diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;
+ 			}
+ 			//restoreQuality();
 		}
 
 	}

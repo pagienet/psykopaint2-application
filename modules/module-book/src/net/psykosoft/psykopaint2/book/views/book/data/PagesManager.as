@@ -88,7 +88,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 				force = half;
 				force *= 2.5;
 
-				//origin = easeOutQuad (zeroOne, 0, 1, 1);
+				//origin = easeOutQuad (Math.abs(half), 0, 1, 1);
 				//origin *= half;
 				origin = Math.abs(half);
 				

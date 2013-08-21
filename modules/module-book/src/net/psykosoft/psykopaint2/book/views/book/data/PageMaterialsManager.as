@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 										bitmapDatas[4],
 										bitmapDatas[5]);
 
-			_enviroMethod = new EnvMapMethod(_pageBitmapCubeTexture, 0.25);
+			_enviroMethod = new EnvMapMethod(_pageBitmapCubeTexture, 0.16);
 
 			if(_craftMaterial) applyEnviroMethod(_craftMaterial);
 
@@ -84,9 +84,9 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		{
  			var textureMaterial:TextureMaterial = generateMaterialFromBitmapData(bitmapData);
 
- 			//if(_enviroMethod) applyEnviroMethod(textureMaterial);
+ 			if(_enviroMethod) applyEnviroMethod(textureMaterial);
 
- 			//textureMaterial.normalMap = generatePageNormalMap();
+ 			textureMaterial.normalMap = generatePageNormalMap();
 
  			_materials["mat"+index] = textureMaterial;
 
