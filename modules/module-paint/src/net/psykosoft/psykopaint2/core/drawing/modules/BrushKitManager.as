@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
 		private var _canvasMatrix : Matrix;
-		private var sourceCanvasViewModes:Array = [[1,0.25],[1,0],[1,1],[0.01,1]];
+		private var sourceCanvasViewModes:Array = [[1,0.25],[0.25,0.75],[1,0]];
 		private var sourceCanvasViewModeIndex:int = 0;
 		private var _activeMode : int;
 		
@@ -108,7 +108,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			{
 				sourceCanvasViewModeIndex = ( sourceCanvasViewModeIndex+1) % sourceCanvasViewModes.length;
 				TweenLite.killTweensOf( renderer );
-				TweenLite.to( renderer, 0.6, { paintAlpha:sourceCanvasViewModes[sourceCanvasViewModeIndex][0],sourceTextureAlpha: sourceCanvasViewModes[sourceCanvasViewModeIndex][1], ease: Sine.easeInOut } );
+				TweenLite.to( renderer, 0.3, { paintAlpha:sourceCanvasViewModes[sourceCanvasViewModeIndex][0],sourceTextureAlpha: sourceCanvasViewModes[sourceCanvasViewModeIndex][1], ease: Sine.easeInOut } );
 				
 				
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
