@@ -168,7 +168,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				if(object.type == ImageRes.HIGHRES) insertRef.hasHighres = true;
 
  				var isRecto:Boolean = (pageIndex %2 == 0)? true : false;
-				trace("NativeSamplesLayout "+pageIndex,inPageIndex,isRecto);
 					
 				if(isRecto){
 
