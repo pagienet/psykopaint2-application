@@ -163,13 +163,13 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  				insertRef= new InsertRef();
  				insertRect = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
 
- 				pageIndex = insertRef.pageIndex = object.index/6;
+ 				pageIndex = insertRef.pageIndex = uint(object.index/6);
 				inPageIndex =  insertRef.inPageIndex = object.index - (pageIndex*6);
-
 				if(object.type == ImageRes.HIGHRES) insertRef.hasHighres = true;
 
  				var isRecto:Boolean = (pageIndex %2 == 0)? true : false;
-
+				trace("NativeSamplesLayout "+pageIndex,inPageIndex,isRecto);
+					
 				if(isRecto){
 
 					if(inPageIndex %2 == 0){
