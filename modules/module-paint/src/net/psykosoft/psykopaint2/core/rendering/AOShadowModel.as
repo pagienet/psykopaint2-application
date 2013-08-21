@@ -46,9 +46,11 @@ package net.psykosoft.psykopaint2.core.rendering
 			for (var i : int = 1; i < numSamples; ++i) {
 				code += "add ft5.xy, v0.xy, " + registers[i] + "\n" +
 						"tex ft5, ft5.xyxy, fs2 <2d, clamp, linear, mipnone>\n" +
-						"sub ft4.y, ft5.x, ft7.x\n" +
-						"max ft4.y, ft4.y, fc0.y\n" +
-						"add ft4.x, ft4.x, ft4.y\n";
+						"mul ft4.y, ft5.x, ft0.x\n" +
+						"mul ft4.z, ft5.y, ft0.y\n" +
+						"add ft4.y, ft4.y, ft4.z\n" +
+						"min ft4.y, ft4.y, fc0.y\n" +
+						"sub ft4.x, ft4.x, ft4.y\n";
 			}
 
 			code += "mul ft4.x, ft4.x, fc20.w\n" +

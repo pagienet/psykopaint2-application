@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.model
 	import net.psykosoft.psykopaint2.core.rendering.AOShadowModel;
 
 	import net.psykosoft.psykopaint2.core.rendering.AmbientConstantModel;
+	import net.psykosoft.psykopaint2.core.rendering.AmbientEnvMapModel;
 	import net.psykosoft.psykopaint2.core.rendering.AmbientOccludedModel;
 	import net.psykosoft.psykopaint2.core.rendering.CameraEnvMap;
 

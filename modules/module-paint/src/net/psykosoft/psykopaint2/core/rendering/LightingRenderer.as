@@ -215,7 +215,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			var vertexCode : String = getVertexShader();
 			var fragmentCode : String = getFragmentShader();
 			_program = _context3d.createProgram();
-			_program.upload(new AGALMiniAssembler().assemble(Context3DProgramType.VERTEX, vertexCode),
+ 			_program.upload(new AGALMiniAssembler().assemble(Context3DProgramType.VERTEX, vertexCode),
 					new AGALMiniAssembler().assemble(Context3DProgramType.FRAGMENT, fragmentCode));
 		}
 
@@ -308,7 +308,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function getInitFragmentCode() : String
 		{
-			return    "tex ft7, v0, fs2 <2d, clamp, linear, mipnone>\n" +
+			return  "tex ft7, v0, fs2 <2d, clamp, linear, mipnone>\n" +
 					"sub ft0.xy, ft7.xy, fc0.x\n" +
 					"mul ft0.xy, ft0.xy, fc0.w\n" +	// multiply by bumpiness
 

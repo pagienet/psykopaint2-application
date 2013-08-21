@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		private var _fragmentData : Vector.<Number>;
 
 		private var _samplePoints : Vector.<Number> = new Vector.<Number>();
-		private var _sampleRange : Number = .3;
+		private var _sampleRange : Number = 1;
 		private var _mapSize : uint;
 		private var _vertexData : Vector.<Number>;
 		private var _brightnessScale : Number = 1;
@@ -252,7 +252,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function updateDivider() : void
 		{
-			_fragmentData[1] = _brightnessScale * 2 * Math.PI / _numSamplesPerFrame;
+			_fragmentData[1] = _brightnessScale * 4 * Math.PI / _numSamplesPerFrame;
 		}
 	}
 }

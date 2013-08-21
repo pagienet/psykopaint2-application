@@ -4,18 +4,20 @@ package net.psykosoft.psykopaint2.core.rendering
 
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
+	import flash.display3D.textures.Texture;
 
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 
-	public class AmbientOccludedModel extends BDRFModel
+	public class AmbientOccludedEnvMapModel extends BDRFModel
 	{
 		protected var _fragmentShaderData : Vector.<Number>;
 		protected var _poissonData : Vector.<Number>;
 
 		private var numSamples : int = 14;
 		private var range : Number = 30	/2048;
+		private var _envMap : Texture;
 
-		public function AmbientOccludedModel()
+		public function AmbientOccludedEnvMapModel()
 		{
 			super();
 			_fragmentShaderData = new <Number>[0, 0, 0, 0];
@@ -59,7 +61,11 @@ package net.psykosoft.psykopaint2.core.rendering
 
 			code += "mul ft4.x, ft4.x, fc10.w\n" +
 					"sub ft4.x, fc0.z, ft4.x\n" +
-					"mul ft4.xyz, fc10.xyz, ft4.x\n";
+					"mul ft5.xyz, ft0.xyz, fc0.x\n" +
+					"add ft5.xy, ft5.xy, fc0.x\n" +
+					"tex ft5, ft5.xyxy, fs4 <2d, clamp, linear, mipnone>\n" +
+					"mul ft5, ft5, fc10\n" +
+					"mul ft4.xyz, ft5.xyz, ft4.x\n";
 
 			return code;
 		}
@@ -71,12 +77,19 @@ package net.psykosoft.psykopaint2.core.rendering
 			_fragmentShaderData[1] = lightingModel.ambientColorG;
 			_fragmentShaderData[2] = lightingModel.ambientColorB;
 			_fragmentShaderData[3] = 10/numSamples;
+			_envMap = lightingModel.environmentMap;
 		}
 
 		override public function setRenderState(context : Context3D) : void
 		{
 			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 10, _fragmentShaderData, 1);
 			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 20, _poissonData, Math.ceil(numSamples/2));
+			context.setTextureAt(4, _envMap);
+		}
+
+		override public function clearRenderState(context : Context3D) : void
+		{
+			context.setTextureAt(4, null);
 		}
 	}
 }
