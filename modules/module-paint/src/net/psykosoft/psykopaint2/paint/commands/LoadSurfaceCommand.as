@@ -3,12 +3,14 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
+	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 
 	import robotlegs.bender.framework.api.IContext;
 
@@ -28,6 +30,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		private var _byteLoader:BinaryLoader;
 		private var _loadedSurfaceData:SurfaceDataVO;
 		private var _assetSize:String;
+		private var _time:uint;
 
 		public function LoadSurfaceCommand() {
 			super();
@@ -35,6 +38,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		override public function execute():void {
 			super.execute();
+
+			ConsoleView.instance.log( this, "execute()" );
+			_time = getTimer();
 
 			context.detain( this );
 
@@ -72,12 +78,16 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function onSurfaceLoaded( bytes:ByteArray ):void {
+			var unCompressTime:uint = getTimer();
 			bytes.uncompress();
+			ConsoleView.instance.log( this, "onSurfaceLoaded - un-compress time - " + String( getTimer() - unCompressTime ) );
 			_loadedSurfaceData.normalSpecular = bytes;
 			_byteLoader.dispose();
 			_byteLoader = null;
 			notifySurfaceLoadedSignal.dispatch(_loadedSurfaceData);
 			context.release( this );
+
+			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
 		}
 	}
 }
