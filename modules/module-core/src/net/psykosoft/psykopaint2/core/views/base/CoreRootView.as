@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.display.Sprite;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationView;
@@ -26,9 +27,8 @@ package net.psykosoft.psykopaint2.core.views.base
 			addChild( new PopUpManagerView() );
 			addChild( new DebugView() );
 			addChild( new ErrorsView() );
-			if( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION ) {
-				addChild( new PsykoSocketView() );
-			}
+			if( CoreSettings.ENABLE_CONSOLE ) addChild( new ConsoleView() );
+			if( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION ) addChild( new PsykoSocketView() );
 			addChild( new SplashView() );
 
 			// TODO: UI tests, remove.

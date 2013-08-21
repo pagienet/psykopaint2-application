@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoFactory;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoSerializer;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
 
 	import robotlegs.bender.bundles.mvcs.Command;
@@ -25,7 +26,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		override public function execute():void {
 
-			trace( this, "execute()" );
+			ConsoleView.instance.log( this, "execute()" );
 			_time = getTimer();
 
 			trace( this, "vo: " + saveVO );
@@ -47,7 +48,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			trace( this, "info num bytes: " + saveVO.infoBytes.length );
 			trace( this, "data num bytes: " + saveVO.dataBytes.length );
 
-			trace( this, "done - " + String( getTimer() - _time ) );
+			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
 		}
 
 		private function generateThumbnail():BitmapData {

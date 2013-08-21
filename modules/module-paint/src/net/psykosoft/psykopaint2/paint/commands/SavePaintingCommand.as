@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
 
 	public class SavePaintingCommand extends SequenceMacro
@@ -36,7 +37,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		override public function prepare():void {
 
-			trace( this, "prepare()" );
+			ConsoleView.instance.log( this, "prepare()" );
 			_time = getTimer();
 
 
@@ -64,7 +65,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			unMapMacroConsistentData();
 			if( success ) notifyPaintingSavedSignal.dispatch( true );
 			else throw new Error( "Error saving the painting." ); // TODO: should we verify saved data and remove it from disk if invalid?
-			trace( this, "done - " + String( getTimer() - _time ) );
+			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
 		}
 
 		private function mapMacroConsistentData():void {

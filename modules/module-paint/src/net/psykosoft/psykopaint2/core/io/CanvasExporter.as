@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
+	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
@@ -16,6 +17,7 @@ package net.psykosoft.psykopaint2.core.io
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 
 	/**
 	 * Returns a list of 3 ByteArrays containing data:
@@ -40,6 +42,7 @@ package net.psykosoft.psykopaint2.core.io
 		private var _destRect : Rectangle;
 
 		private var _stages : Array;
+		private var _time:uint;
 
 		public function CanvasExporter()
 		{
@@ -165,7 +168,9 @@ package net.psykosoft.psykopaint2.core.io
 			context3D.clear(0, 0, 0, 0);
 			context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopySubTexture.copy(layer, _sourceRect, _destRect, context3D);
+			_time = getTimer();
 			context3D.drawToBitmapData(_workerBitmapData);
+			ConsoleView.instance.log( this, "saveLayerNoAlpha - gpu read back - " + String( getTimer() - _time ) );
 			return _workerBitmapData.getPixels(_workerBitmapData.rect);
 		}
 
@@ -200,7 +205,9 @@ package net.psykosoft.psykopaint2.core.io
 
 			_context3D.clear(0, 0, 0, 1);
 			copier.copy(layer, _sourceRect, _destRect, _context3D);
+			_time = getTimer();
 			_context3D.drawToBitmapData(_workerBitmapData);
+			ConsoleView.instance.log( this, "extractChannels - gpu read back - " + String( getTimer() - _time ) );
 
 			return _workerBitmapData.getPixels(_workerBitmapData.rect);
 		}

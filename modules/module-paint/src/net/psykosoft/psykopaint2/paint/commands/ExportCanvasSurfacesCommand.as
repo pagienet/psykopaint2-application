@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.io.CanvasExportEvent;
 	import net.psykosoft.psykopaint2.core.io.CanvasExporter;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
 
 	public class ExportCanvasSurfacesCommand extends AsyncCommand
@@ -22,7 +23,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		override public function execute():void {
 
-			trace( this, "execute()" );
+			ConsoleView.instance.log( this, "execute()" );
 			_time = getTimer();
 
 			var canvasExporter:CanvasExporter = new CanvasExporter();
@@ -34,7 +35,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			event.target.removeEventListener( CanvasExportEvent.COMPLETE, onExportComplete );
 			saveVO.data = event.paintingDataVO;
 			dispatchComplete( true );
-			trace( this, "done - " + String( getTimer() - _time ) );
+			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
 		}
 	}
 }
