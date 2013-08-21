@@ -5,9 +5,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
 	import away3d.materials.TextureMaterial;
-
-	import net.psykosoft.psykopaint2.book.BookImageSource;
-
+  
 	import net.psykosoft.psykopaint2.book.views.models.BookCraft;
 	import net.psykosoft.psykopaint2.book.views.book.layout.*;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
@@ -64,18 +62,24 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			switch(type){
 
- 				case BookImageSource.SAMPLE_IMAGES:
+ 				case LayoutType.SAMPLE_IMAGES:
  					_layout = new NativeSamplesLayout(_stage);
  					break;
 
- 				case BookImageSource.USER_IMAGES:
- 					break;
+ 				case LayoutType.CAMERA_IMAGES:
+ 					//break;
 
- 				case BookImageSource.FRIENDS_IMAGES:
- 					break;
+ 				case LayoutType.USER_IMAGES:
+ 					//break;
 
- 				case BookImageSource.COMMUNITY_IMAGES:
- 					break;
+ 				case LayoutType.FRIENDS_IMAGES:
+ 					//break;
+
+ 				case LayoutType.COMMUNITY_IMAGES:
+ 					//break;
+
+ 				default:
+ 					_layout = new NativeSamplesLayout(_stage);
 
  			}
 
@@ -96,14 +100,14 @@ package net.psykosoft.psykopaint2.book.views.book
  		private function animateIn():void
  		{
  			_dummyCam = new Object3D();
- 			_dummyCam.z = -2000;
+ 			_dummyCam.z = 2000;
 
-			TweenLite.to( _view.camera, 6, { 	y: 1390, z:400,
+			TweenLite.to( _view.camera, 2, { 	y: 1300, z:-50,
 								ease: Strong.easeOut,
 								onUpdate:lookAtDummy,
 								onComplete: onAnimateInComplete } );
 
-			TweenLite.to( _dummyCam, 5, { 	z:150, 
+			TweenLite.to( _dummyCam, 2, { 	z:1, 
 								ease: Strong.easeOut} );
 		}
 		public function lookAtDummy():void
@@ -120,14 +124,14 @@ package net.psykosoft.psykopaint2.book.views.book
 			TweenLite.to( _bookCraft, 1, { 	x: 0, 
 							ease: Strong.easeOut,
 							onComplete: onAnimateOpenComplete} );
-
-			TweenLite.to( _bookCraft.coverRight, 1, { y: -20, x:0, rotationZ:-2,
+			var desty:Number = -25;
+			TweenLite.to( _bookCraft.coverRight, 1, { y: desty, x:0, rotationZ:2,
 								ease: Strong.easeOut} );
 
-			TweenLite.to( _bookCraft.coverLeft, 1, { y: -20, x:0, rotationZ:2,
+			TweenLite.to( _bookCraft.coverLeft, 1, { y: desty, x:0, rotationZ:-2,
 								ease: Strong.easeOut} );
 
-			TweenLite.to( _bookCraft.coverCenter, 1, { y: -20, rotationZ:0,
+			TweenLite.to( _bookCraft.coverCenter, 1, { y: desty, rotationZ:0,
 								ease: Strong.easeOut} );
 		}
 
@@ -156,7 +160,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		public function animateOut():void
 		{
 		
-			TweenLite.to( _bookCraft.coverRight, 1, { y: 23, x:-13, rotationZ:180,
+			TweenLite.to( _bookCraft.coverRight, 1, { y: -23, x:-13, rotationZ:-180,
 								ease: Strong.easeOut} );
 
 			TweenLite.to( _bookCraft.coverLeft, 1, { y: 0, x:0, rotationZ:0,
@@ -226,6 +230,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
  			_pagesManager = new PagesManager(_bookCraft);
  			_regionManager = new RegionManager(_view, _pagesManager);
+
+ 			_regionManager.regionZoffset = _bookCraft.z;
  			_layout.regionSignal.add(_regionManager.addRegion);
  		}
 
@@ -257,8 +263,10 @@ package net.psykosoft.psykopaint2.book.views.book
 
  			_bookReady = false;
 
- 			_regionManager.dispose();
- 			_regionManager = null;
+ 			if(_regionManager){
+ 				_regionManager.dispose();
+ 				_regionManager = null;
+ 			}
  		}
  
 		public function initPagesInteraction():void
@@ -276,7 +284,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			for(var i:uint = 0;i<_pagesCount;++i){
 				pageid = i;
 				if(pageid<_currentPage){
-					pagesManager.rotatePage(i, -180 );
+					pagesManager.rotatePage(i, 180 );
 
 				} else if(pageid>_currentPage){
 					pagesManager.rotatePage(i, 0);
@@ -284,7 +292,7 @@ package net.psykosoft.psykopaint2.book.views.book
 				} else {
 					var inPercent:Number = 1- Math.abs( ( ((_currentPage+1)*_step) - _percent) /_step);
 					_nearestTime = (inPercent <.5)? _currentPage*_step : (_currentPage+1)*_step;
-					var rotZ:Number = -( inPercent*180);
+					var rotZ:Number = inPercent*180;
 					pagesManager.rotatePage(_currentPage, rotZ );
 				}
 			}
@@ -328,12 +336,10 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			var fileName:String = _regionManager.hitTestRegions(mouseX, mouseY, _currentPage);
  			if(fileName != ""){
- 				//todo: may be better have this all process on specific layout... 
  				loadFullImage(_layout.originalsPath+fileName);
-
  				return true;
  			}
-
+ 
  			return false;
  		}
 

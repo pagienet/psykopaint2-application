@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 {
 	import flash.geom.Rectangle;
 
+	// Class keeps track of loaded data to composite images possibly loaded in two tastes: low and high res
  	public class InsertRef
  	{
  		public var name:String;

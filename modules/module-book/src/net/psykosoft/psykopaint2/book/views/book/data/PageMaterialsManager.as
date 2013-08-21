@@ -84,9 +84,9 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		{
  			var textureMaterial:TextureMaterial = generateMaterialFromBitmapData(bitmapData);
 
- 			if(_enviroMethod) applyEnviroMethod(textureMaterial);
+ 			//if(_enviroMethod) applyEnviroMethod(textureMaterial);
 
- 			textureMaterial.normalMap = generatePageNormalMap();
+ 			//textureMaterial.normalMap = generatePageNormalMap();
 
  			_materials["mat"+index] = textureMaterial;
 

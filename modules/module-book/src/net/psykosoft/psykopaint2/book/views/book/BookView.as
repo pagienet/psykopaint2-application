@@ -13,14 +13,16 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.tools.utils.TextureUtils;
- 
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 
+	import net.psykosoft.psykopaint2.book.views.book.Book;
+
 	import org.osflash.signals.Signal;
- 
+ 	 
 	public class BookView extends ViewBase
 	{
 		private var _stage3dProxy:Stage3DProxy;
@@ -117,9 +119,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			// Initialize view.
 			initView3D();
-
-			//visual 3d debug
-			//_view3d.scene.addChild(new Trident(1500, true));
 		}
 
 		// Interaction declared on book ready
@@ -137,7 +136,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_view3d.width = stage.stageWidth;
 			_view3d.height = stage.stageHeight;
 			_view3d.camera.lens.far = 5000;
-			_view3d.camera.position = new Vector3D( 0, 50, -1250 );
+			_view3d.camera.position = new Vector3D( 0, 50, 1250 );
 			_view3d.camera.lookAt( _origin );
 			addChild( _view3d );
 		}

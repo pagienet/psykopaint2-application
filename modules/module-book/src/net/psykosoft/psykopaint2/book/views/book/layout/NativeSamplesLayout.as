@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 	import away3d.textures.BitmapTexture;
 	import away3d.materials.TextureMaterial;
-
+ 
 	public class NativeSamplesLayout extends LayoutBase
 	{
 		private const INSERT_WIDTH:uint = 200;
@@ -213,6 +213,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			}
  			 
 			//row layout recto: 50+200+31+200+31
+
+
   
 			//the page material
 			pageIndex = Math.floor(pageIndex);
@@ -229,14 +231,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			// and we catch the unlikely event where a lowres would be loaded after the highres.
 			if(isNewInsert){
 
-				var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
-				var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
+				//var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
+				//var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
  
-				if(!_insertNormalmap) _insertNormalmap = getInsertNormalMap();
+				//if(!_insertNormalmap) _insertNormalmap = getInsertNormalMap();
 
-				//insert the normalmap map of the image into the textureNormalmap
-				insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false);
-				normalTextureSource.bitmapData = normalSourceBitmapdata;
+				////insert the normalmap map of the image into the textureNormalmap
+				//insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false);
+				//normalTextureSource.bitmapData = normalSourceBitmapdata;
 
 				//dispatch the rect + object for region. the rect is updated for the shadow, the region will declare its own rect.
 				//object.inPageIndex = inPageIndex;

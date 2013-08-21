@@ -141,9 +141,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			_stage.quality = _currentQuality;
 		}
-
- 		//startup resources events
-
+ 
  		//when all basic elements for a the book are ready
  		public function dispatchMinimumRequiredReady():void
  		{

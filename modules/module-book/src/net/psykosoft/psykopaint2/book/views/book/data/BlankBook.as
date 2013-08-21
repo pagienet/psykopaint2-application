@@ -51,7 +51,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
 			_enviroSources = new Vector.<BitmapData>(6, true);
 
-			//urls are hardcoded as it will never change. Could come from some app config file tho.
+			//urls are hardcoded as they will never change. Could come from some app config file tho.
 
 			//craft
 			var url:String = "book-packaged/images/book/cover.jpg";

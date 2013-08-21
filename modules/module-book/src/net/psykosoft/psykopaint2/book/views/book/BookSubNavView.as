@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.book.views.book
 {
-
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class BookSubNavView extends SubNavigationViewBase

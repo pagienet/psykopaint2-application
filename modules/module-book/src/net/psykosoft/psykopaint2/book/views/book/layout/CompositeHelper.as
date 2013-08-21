@@ -9,9 +9,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
  	public class CompositeHelper
  	{
- 		private var _destPt:Point;
-
  		private const DEGREES_TO_RADIANS:Number = Math.PI/180;
+
+ 		private var _destPt:Point;
 
  		function CompositeHelper(){}
 
