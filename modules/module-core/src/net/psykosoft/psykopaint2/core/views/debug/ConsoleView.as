@@ -50,6 +50,8 @@ package net.psykosoft.psykopaint2.core.views.debug
 			}
 			msg += "\n";
 			_tf.appendText( msg );
+			_tf.scrollV = _tf.maxScrollV;
+			trace( this, msg );
 		}
 	}
 }

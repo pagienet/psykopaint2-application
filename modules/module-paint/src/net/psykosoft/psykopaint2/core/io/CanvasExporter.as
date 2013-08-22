@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.io
 {
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.textures.Texture;
@@ -32,21 +33,23 @@ package net.psykosoft.psykopaint2.core.io
 
 		private var _canvas : CanvasModel;
 		private var _paintingData : PaintingDataVO;
-		private var _stage : int;
-		private var _ticker : Sprite;
+		private var _exportingStage : int;
 		private var _workerBitmapData : BitmapData;
 		private var _rgbData : ByteArray;
 		private var _alphaData : ByteArray;
 		private var _context3D : Context3D;
 		private var _sourceRect : Rectangle;
 		private var _destRect : Rectangle;
+		private var _stage:Stage;
 
-		private var _stages : Array;
+		private var _exportingStages : Array;
 		private var _time:uint;
 
-		public function CanvasExporter()
+		public function CanvasExporter( stage:Stage )
 		{
-			_stages = [
+			_stage = stage;
+
+			_exportingStages = [
 				saveColorRGB,
 				saveColorAlpha,
 				mergeColorData,
@@ -71,7 +74,7 @@ package net.psykosoft.psykopaint2.core.io
 
 			init();
 
-			_stage = 0;
+			_exportingStage = 0;
 			executeStage();
 		}
 
@@ -92,13 +95,14 @@ package net.psykosoft.psykopaint2.core.io
 			_paintingData.normalSpecularOriginal = _canvas.getNormalSpecularOriginal();
 			_paintingData.colorBackgroundOriginal = _canvas.getColorBackgroundOriginal();
 
-			_ticker = new Sprite();
-			_ticker.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 
 		private function onEnterFrame(event : Event) : void
 		{
-			if (++_stage < _stages.length)
+			_exportingStage++;
+			ConsoleView.instance.log( this, "onEnterFrame - stage: " + _exportingStage + "/" + _exportingStages.length );
+			if ( _exportingStage < _exportingStages.length )
 				executeStage();
 			else
 				onComplete();
@@ -106,50 +110,59 @@ package net.psykosoft.psykopaint2.core.io
 
 		private function executeStage() : void
 		{
-			_stages[_stage]();
-			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.PROGRESS, _paintingData, _stage, _stages.length));
+			ConsoleView.instance.log( this, "-executeStage-" );
+			_exportingStages[_exportingStage]();
+			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.PROGRESS, _paintingData, _exportingStage, _exportingStages.length));
 		}
 
 	// the stages:
 		private function saveColorRGB() : void
 		{
+			ConsoleView.instance.log( this, "saveColorRGB stage..." );
 			_rgbData = extractChannels(_canvas.colorTexture, _copySubTextureChannelsRGB);
 		}
 
 		private function saveColorAlpha() : void
 		{
+			ConsoleView.instance.log( this, "saveColorAlpha stage..." );
 			_alphaData = extractChannels(_canvas.colorTexture, _copySubTextureChannelsA);
 		}
 
 		private function mergeColorData() : void
 		{
+			ConsoleView.instance.log( this, "mergeColorData stage..." );
 			_paintingData.colorData = mergeRGBAData();
 		}
 
 		private function extractNormalsColor() : void
 		{
+			ConsoleView.instance.log( this, "extractNormalsColor stage..." );
 			_rgbData = extractChannels(_canvas.normalSpecularMap, _copySubTextureChannelsRGB);
 		}
 
 		private function extractNormalsAlpha() : void
 		{
+			ConsoleView.instance.log( this, "extractNormalsAlpha stage..." );
 			_alphaData = extractChannels(_canvas.normalSpecularMap, _copySubTextureChannelsA);
 		}
 
 		private function mergeNormalData() : void
 		{
+			ConsoleView.instance.log( this, "mergeNormalData stage..." );
 			_paintingData.normalSpecularData = mergeRGBAData();
 		}
 
 		private function saveSourceData() : void
 		{
+			ConsoleView.instance.log( this, "saveSourceData stage..." );
 			_paintingData.sourceBitmapData = saveLayerNoAlpha(_canvas.sourceTexture);
+			ConsoleView.instance.log( this, "saveSourceData stage - source bmd bytes: " + _paintingData.sourceBitmapData.length );
 		}
 
 		private function onComplete() : void
 		{
-			_ticker.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			_ticker = null;
+			_stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			_stage = null;
 			_canvas = null;
 			_context3D = null;
 			_sourceRect = null;
@@ -171,16 +184,23 @@ package net.psykosoft.psykopaint2.core.io
 			_time = getTimer();
 			context3D.drawToBitmapData(_workerBitmapData);
 			ConsoleView.instance.log( this, "saveLayerNoAlpha - gpu read back - " + String( getTimer() - _time ) );
-			return _workerBitmapData.getPixels(_workerBitmapData.rect);
+			var bytes:ByteArray = _workerBitmapData.getPixels(_workerBitmapData.rect);
+			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd: " + _workerBitmapData.width + "x" + _workerBitmapData.rect.height );
+			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd rect: " + _workerBitmapData.rect );
+			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd bytes: " + bytes.length );
+			return bytes;
 		}
 
 		private function mergeRGBAData() : ByteArray
 		{
+			ConsoleView.instance.log( this, "mergeRGBAData..." );
+
 			_rgbData.position = 0;
 			_alphaData.position = 0;
 			var outputData : ByteArray = new ByteArray();
 
 			var len : int = _canvas.width * _canvas.height;
+//			ConsoleView.instance.log( this, "mergeRGBAData - len: " + len );
 			for (var i : int = 0; i < len; ++i) {
 				var rgb : uint = _rgbData.readUnsignedInt();
 				var r : uint = rgb & 0x00ff0000;
@@ -193,6 +213,7 @@ package net.psykosoft.psykopaint2.core.io
 
 			_rgbData.clear();
 			_alphaData.clear();
+//			ConsoleView.instance.log( this, "mergeRGBAData - cleared" );
 			_rgbData = null;
 			_alphaData = null;
 			return outputData;

@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.commands
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
 	import flash.filesystem.File;
 
 	import net.psykosoft.psykopaint2.base.utils.io.FolderReadUtil;
@@ -70,12 +72,31 @@ package net.psykosoft.psykopaint2.core.commands
 		private function readNextFile():void {
 			_currentFileBeingLoaded = _paintingFiles[ _indexOfPaintingFileBeingRead ];
 			trace( this, "reading file: " + _currentFileBeingLoaded.name + "..." );
-			_currentFileBeingLoaded.addEventListener( Event.COMPLETE, onFileRead );
+			addListeners();
 			_currentFileBeingLoaded.load();
 		}
 
-		private function onFileRead( event:Event ):void {
+		private function addListeners():void {
+			_currentFileBeingLoaded.addEventListener( Event.COMPLETE, onFileRead );
+			_currentFileBeingLoaded.addEventListener( Event.CANCEL, onFileReadError );
+			_currentFileBeingLoaded.addEventListener( IOErrorEvent.IO_ERROR, onFileReadError );
+			_currentFileBeingLoaded.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onFileReadError );
+		}
+
+		private function removeListeners():void {
 			_currentFileBeingLoaded.removeEventListener( Event.COMPLETE, onFileRead );
+			_currentFileBeingLoaded.removeEventListener( Event.CANCEL, onFileReadError );
+			_currentFileBeingLoaded.removeEventListener( IOErrorEvent.IO_ERROR, onFileReadError );
+			_currentFileBeingLoaded.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, onFileReadError );
+		}
+
+		private function onFileReadError( event:Event ):void {
+			removeListeners();
+			throw new Error( "RetrievePaintingDataCommand - file read error: " + event );
+		}
+
+		private function onFileRead( event:Event ):void {
+			removeListeners();
 
 			// Read the contents of the file to a value object.
 			trace( this, "file read: " + _currentFileBeingLoaded.data.length + " bytes" );
