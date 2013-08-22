@@ -5,10 +5,17 @@ package net.psykosoft.psykopaint2.core.commands
 
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
+	import flash.utils.ByteArray;
+
+	import net.psykosoft.psykopaint2.base.utils.io.BinaryIoUtil;
 
 	import net.psykosoft.psykopaint2.base.utils.io.FolderReadUtil;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoDeserializer;
@@ -20,11 +27,11 @@ package net.psykosoft.psykopaint2.core.commands
 		[Inject]
 		public var paintingModel:PaintingModel;
 
-		private var _currentFileBeingLoaded:File;
-		private var _paintingFiles:Vector.<File>;
+		private var _paintingFileNames:Vector.<String>;
 		private var _numPaintingFiles:uint;
 		private var _indexOfPaintingFileBeingRead:uint;
 		private var _paintingVos:Vector.<PaintingInfoVO>;
+		private var _readUtil:BinaryIoUtil;
 
 		public function RetrievePaintingDataCommand() {
 			super();
@@ -38,27 +45,23 @@ package net.psykosoft.psykopaint2.core.commands
 
 			// Read files in app data folder or bundle.
 			var files:Array;
-			if( CoreSettings.RUNNING_ON_iPAD ) {
-				files = FolderReadUtil.readFilesInIosFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
-			}
-			else {
-				files = FolderReadUtil.readFilesInDesktopFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
-			}
+			if( CoreSettings.RUNNING_ON_iPAD ) files = FolderReadUtil.readFilesInIosFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
+			else files = FolderReadUtil.readFilesInDesktopFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
 			var len:uint = files.length;
 			trace( this, "found files in paint data: " + len );
 
 			// Sweep files and focus on the ones that have the .psy extension, which represents paintings.
-			_paintingFiles = new Vector.<File>();
+			_paintingFileNames = new Vector.<String>();
 			for( var i:uint; i < len; i++ ) {
 				var file:File = files[ i ];
 				trace( "  file: " + file.name );
 				if( file.name.indexOf( PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION ) != -1 ) {
-					_paintingFiles.push( file );
+					_paintingFileNames.push( file.name );
 				}
 			}
-			_numPaintingFiles = _paintingFiles.length;
+			_numPaintingFiles = _paintingFileNames.length;
 
-			// Detain command and start reading the painting files.
+			// Start reading the painting files...
 			if( _numPaintingFiles > 0 ) {
 				trace( this, "starting to read painting files... ( " + _numPaintingFiles + " )" );
 				readNextFile();
@@ -70,44 +73,26 @@ package net.psykosoft.psykopaint2.core.commands
 		}
 
 		private function readNextFile():void {
-			_currentFileBeingLoaded = _paintingFiles[ _indexOfPaintingFileBeingRead ];
-			trace( this, "reading file: " + _currentFileBeingLoaded.name + "..." );
-			addListeners();
-			_currentFileBeingLoaded.load();
+			if( !_readUtil ) {
+				_readUtil = new BinaryIoUtil( CoreSettings.RUNNING_ON_iPAD ? BinaryIoUtil.STORAGE_TYPE_IOS : BinaryIoUtil.STORAGE_TYPE_DESKTOP );
+			}
+			var fileName:String = _paintingFileNames[ _indexOfPaintingFileBeingRead ];
+			trace( this, "reading file: " + fileName + "..." );
+			_readUtil.readBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + fileName, onFileRead );
 		}
 
-		private function addListeners():void {
-			_currentFileBeingLoaded.addEventListener( Event.COMPLETE, onFileRead );
-			_currentFileBeingLoaded.addEventListener( Event.CANCEL, onFileReadError );
-			_currentFileBeingLoaded.addEventListener( IOErrorEvent.IO_ERROR, onFileReadError );
-			_currentFileBeingLoaded.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onFileReadError );
-		}
-
-		private function removeListeners():void {
-			_currentFileBeingLoaded.removeEventListener( Event.COMPLETE, onFileRead );
-			_currentFileBeingLoaded.removeEventListener( Event.CANCEL, onFileReadError );
-			_currentFileBeingLoaded.removeEventListener( IOErrorEvent.IO_ERROR, onFileReadError );
-			_currentFileBeingLoaded.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, onFileReadError );
-		}
-
-		private function onFileReadError( event:Event ):void {
-			removeListeners();
-			throw new Error( "RetrievePaintingDataCommand - file read error: " + event );
-		}
-
-		private function onFileRead( event:Event ):void {
-			removeListeners();
+		private function onFileRead( readBytes:ByteArray ):void {
 
 			// Read the contents of the file to a value object.
-			trace( this, "file read: " + _currentFileBeingLoaded.data.length + " bytes" );
+			trace( this, "file read: " + readBytes.length + " bytes" );
 
 			trace( this, "de-serializing vo..." );
 			try {
 				var deserializer:PaintingInfoDeserializer = new PaintingInfoDeserializer();
 				deserializer.addEventListener(Event.COMPLETE, onVODeserialized);
-				deserializer.deserialize( _currentFileBeingLoaded.data );
+				deserializer.deserialize( readBytes );
 			} catch( error:Error ) {
-				trace( this, "***WARNING*** Error de-serializing file: " + _currentFileBeingLoaded.nativePath );
+				trace( this, "***WARNING*** Error de-serializing file." );
 			}
 		}
 
@@ -118,8 +103,6 @@ package net.psykosoft.psykopaint2.core.commands
 			trace( this, "produced vo: " + paintingInfoVO );
 			_paintingVos.push( paintingInfoVO );
 
-			_currentFileBeingLoaded.data.clear();
-
 			// Continue reading next file.
 			_indexOfPaintingFileBeingRead++;
 			if( _indexOfPaintingFileBeingRead < _numPaintingFiles ) {
@@ -128,6 +111,7 @@ package net.psykosoft.psykopaint2.core.commands
 			else {
 				trace( this, "all painting files read. Retrieved " + _paintingVos.length + " usable painting files." );
 				if( _paintingVos.length > 0 ) paintingModel.setPaintingCollection( _paintingVos );
+				_readUtil = null;
 				dispatchComplete( true );
 			}
 		}

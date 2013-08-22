@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			addChild( new PopUpManagerView() );
 			addChild( new DebugView() );
 			addChild( new ErrorsView() );
-			if( CoreSettings.ENABLE_CONSOLE ) addChild( new ConsoleView() );
+			if( CoreSettings.ENABLE_CONSOLE ) addChild( ConsoleView.instance );
 			if( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION ) addChild( new PsykoSocketView() );
 			addChild( new SplashView() );
 

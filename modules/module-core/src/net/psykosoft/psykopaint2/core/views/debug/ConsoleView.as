@@ -32,12 +32,11 @@ package net.psykosoft.psykopaint2.core.views.debug
 			_tf.alpha = 0.5;
 			addChild( _tf );
 
-			_instance = this;
-
 			log( this, CoreSettings.NAME + " - " + CoreSettings.VERSION );
 		}
 
 		public static function get instance():ConsoleView {
+			if( !_instance ) _instance = new ConsoleView();
 			return _instance;
 		}
 
