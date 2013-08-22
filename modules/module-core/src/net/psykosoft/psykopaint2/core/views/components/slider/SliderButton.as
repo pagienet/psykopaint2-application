@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 
@@ -18,9 +19,13 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		public var button:NavigationButton;
 		public var leftEar:Sprite;
 		public var rightEar:Sprite;
+		public var previewHolder:Sprite;
+		
 
 		private var _rightEarOpenX:Number;
 		private var _leftEarOpenX:Number;
+		private var _previewHolderOpenY:Number;
+		
 		private var _labelText:String;
 		private var _value:Number;
 		private var _sliding:Boolean;
@@ -42,6 +47,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		
 		private const EAR_MOTION_RANGE:Number = 50;
 		private const EAR_ANIMATION_TIME:Number = 0.2;
+		private const PREVIEW_ANIMATION_TIME:Number = 0.2;
 
 		public static var LABEL_VALUE:int = 0;
 		public static var LABEL_PERCENT:int = 1;
@@ -82,11 +88,13 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 			leftEar.x = 0;
 			rightEar.x = 0;
+			
+			_previewHolderOpenY = previewHolder.y;
 
 			_earContainer = new Sprite();
 			_earContainer.visible = false;
-			_earContainer.addChild( leftEar );
 			_earContainer.addChild( rightEar );
+			_earContainer.addChild( leftEar );
 			addChildAt( _earContainer, 0 );
 
 			button.labelText = "";
@@ -192,7 +200,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function showEars():void {
 			killEarTweens();
 			_earContainer.visible = true;
-			TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: _leftEarOpenX, ease: Strong.easeOut } );
+			TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: _leftEarOpenX, ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
 			TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: _rightEarOpenX, ease: Strong.easeOut } );
 			TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: _earContainerX, ease: Strong.easeOut } );
 		}
@@ -203,15 +211,41 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
 			TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
 		}
-
+		
 		private function onEarsHideComplete():void {
 			_earContainer.visible = false;
 		}
-
+		
+		private function onEarsShowComplete():void {
+			button.showIcon( false );
+			showPreviewHolder();
+		}
+		
 		private function killEarTweens():void {
 			TweenLite.killTweensOf( leftEar );
 			TweenLite.killTweensOf( rightEar );
 			TweenLite.killTweensOf( _earContainer );
+		}
+		
+		private function showPreviewHolder():void {
+			killPreviewTweens();
+			previewHolder.visible = true;
+			TweenLite.to( previewHolder, PREVIEW_ANIMATION_TIME, { y: _previewHolderOpenY - 120, ease: Strong.easeOut } );
+		}
+		
+		private function hidePreviewHolder():void {
+			killPreviewTweens();
+			TweenLite.to( previewHolder, PREVIEW_ANIMATION_TIME, { y: _previewHolderOpenY, ease: Strong.easeIn, onComplete: onPreviewHideComplete } );
+		}
+
+		private function onPreviewHideComplete():void {
+			previewHolder.visible = false;
+			button.showIcon( true );
+			hideEars();
+		}
+		
+		private function killPreviewTweens():void {
+			TweenLite.killTweensOf( previewHolder );
 		}
 
 		// ---------------------------------------------------------------------
@@ -323,17 +357,20 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			_mouseDownX = mouseX;
 			_earContainerXOnMouseDown = _earContainerX;
 			startSliding();
-			if ( !_valueHasChanged)
+			if ( !_valueHasChanged && !_checkClosingTap)
 			{
 				showEars();
+				//showPreviewHolder();
 			}
 		}
 
 		private function onStageMouseUp( event:MouseEvent ):void {
+			var isOver:Boolean = this.hitTestPoint(stage.mouseX, stage.mouseY,true);
 			stopSliding();
-			if ( _valueHasChanged || _checkClosingTap)
+			if ( _valueHasChanged || _checkClosingTap || !isOver)
 			{
-				hideEars();
+				//hideEars();
+				hidePreviewHolder();
 				_valueHasChanged = false;
 				_checkClosingTap = false;
 			} else {
