@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
 	import flash.geom.Rectangle;
-	//import flash.geom.Vector3D;
 	import flash.display3D.textures.Texture;
 	import flash.events.MouseEvent;
 	import flash.display.BitmapData;

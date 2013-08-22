@@ -3,10 +3,13 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.psykopaint2.book.views.book.layout.InsertRef;
+	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
+	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
 
 	import net.psykosoft.psykopaint2.book.views.book.data.FileLoader;
 	import net.psykosoft.psykopaint2.book.views.book.data.events.AssetLoadedEvent;
 	import net.psykosoft.psykopaint2.book.views.book.data.ImageRes;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import flash.utils.Dictionary;
 	import flash.display.BitmapData;
@@ -25,11 +28,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _resourcesCount:uint;
 		private var _fileLoader:FileLoader;
 		private var _content:Vector.<Object>;
-
+		private var _shadowRect:Rectangle;
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
-
+		private var _imageLoader:BitmapLoader;
 		private var _pagesFilled:Dictionary;
+		private var _cbxml:Function;
+		private var _cb:Function;
+		private var _xmlLoader:XMLLoader;
 
 		public function NativeSamplesLayout(stage:Stage)
 		{
@@ -37,7 +43,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 			super(BookImageSource.SAMPLE_IMAGES, stage);
 		}
-
+ 
 		//override protected function initDefaultAssets():void
 		//{
 			//needs to occur before parsexml to retrieve
@@ -46,6 +52,16 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			//_fileLoader.loadImage(url, onImageLoadedComplete, onImageLoadError, {url:url, name:id, index:index, type:ImageRes.LOWRES});
 			//add resource count _loadedResources += 2
 		//}
+
+		override public function loadBookContent(cbxml:Function):void
+ 		{	
+ 			_cbxml = cbxml;
+ 			_xmlLoader = new XMLLoader();
+ 			var date:Date = new Date();
+			var cacheAnnihilator:String = "?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() );
+ 
+			_xmlLoader.loadAsset( "/book-packaged/samples/samples_thumbs.xml" + cacheAnnihilator, parseXml );
+ 		}
 
 		// we first collect the content before loading it to be able to define the pages first in Book Class.
 		// load content is then called after default pages data is generated
@@ -97,10 +113,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			if(sides%2 != 0) sides+=1;
 			pageCount = sides*.5;
  
+			_cbxml();
+ 
 		}
 
 		override public function loadContent():void
 		{
+			switchToHighDrawQuality();
+
 			for(var i:uint = 0; i < _content.length;++i){
 				loadImage(_content[i]);
 			}
@@ -139,6 +159,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			
 			if(_resourcesCount == _loadedResources){
 				_fileLoader = null;
+
+				restoreQuality();
 			}
 		}
 
@@ -147,8 +169,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		// sample case: we insert 6 images per page
 		override protected function composite(insertSource:BitmapData, object:Object):void
 		{
- 			//switchToHighDrawQuality();
- 
  			var insertRef:InsertRef;
  			var insertRect:Rectangle;
  			var pageIndex:uint;
@@ -244,17 +264,20 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			// and we catch the unlikely event where a lowres would be loaded after the highres.
 			if(isNewInsert){
 
-				var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
-				var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
- 
-				if(!_insertNormalmap) _insertNormalmap = getInsertNormalMap();
- 
-				//insert the normalmap map of the image into the textureNormalmap
-				normalSourceBitmapdata.lock();
-				insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false);
-				normalTextureSource.bitmapData = normalSourceBitmapdata;
-				normalSourceBitmapdata.unlock();
-				if(invalidateContent) normalTextureSource.invalidateContent();
+				// no need to update the nroalmap if no shader uses it
+				if(CoreSettings.RUNNING_ON_RETINA_DISPLAY) {
+					var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
+					var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
+	 
+					if(!_insertNormalmap) _insertNormalmap = getInsertNormalMap();
+	 
+					//insert the normalmap map of the image into the textureNormalmap
+					normalSourceBitmapdata.lock();
+					insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false);
+					normalTextureSource.bitmapData = normalSourceBitmapdata;
+					normalSourceBitmapdata.unlock();
+					if(invalidateContent) normalTextureSource.invalidateContent();
+				}
 
 				//dispatch the rect + object for region. the rect is updated for the shadow, the region will declare its own rect.
 				object.inPageIndex = inPageIndex;
@@ -262,15 +285,17 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	 			dispatchRegion(insertRect, object);
 
 				//insert the shadow map
-				if(!_shadow) _shadow = getShadow();
-				// because shadow is partly covering the image, update the insertRect
-				// we need keep the insertRect intact for regions
-				var shadowRect:Rectangle = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
-				shadowRect.x = insertRect.x - 10;
-	 			shadowRect.y = insertRect.y + 40;
-	 			shadowRect.width = INSERT_WIDTH+15;
-	 			shadowRect.height = 105;
-				insert(_shadow, diffuseSourceBitmapdata, shadowRect, rotation, false, insertRect.x-shadowRect.x, insertRect.y-shadowRect.y);
+				if(!_shadow)  _shadow = getShadow();
+
+					// because shadow is partly covering the image, update the insertRect
+					// we need keep the insertRect intact for regions
+				if(!_shadowRect)  _shadowRect = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
+				 
+				_shadowRect.x = insertRect.x - 10;
+	 			_shadowRect.y = insertRect.y + 40;
+	 			_shadowRect.width = INSERT_WIDTH+15;
+	 			_shadowRect.height = 105;
+				insert(_shadow, diffuseSourceBitmapdata, _shadowRect, rotation, false, insertRect.x-_shadowRect.x, insertRect.y-_shadowRect.y);
 			}	 			
 
  			diffuseSourceBitmapdata.unlock();
@@ -280,7 +305,21 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  				diffuseTextureSource.invalidateContent();
  				diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;
  			}
- 			//restoreQuality();
+ 			
+		}
+
+		override public function loadFullImage( fileName:String, cb:Function ):void
+ 		{
+			_imageLoader = new BitmapLoader();
+			_cb = cb;
+			_imageLoader.loadAsset( originalsPath+fileName, onFullSizeImageLoaded );
+		}
+
+		private function onFullSizeImageLoaded( bmd:BitmapData ):void
+		{
+			_cb( bmd );
+			_imageLoader.dispose();
+			_imageLoader = null;
 		}
 
 	}

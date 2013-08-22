@@ -10,10 +10,9 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.book.views.book.layout.*;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
-	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
-
+	
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
@@ -23,7 +22,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
-
+ 
  	public class Book
  	{
  		public var _percent:Number;
@@ -36,7 +35,6 @@ package net.psykosoft.psykopaint2.book.views.book
  		private var _layout:LayoutBase;
  		private var _dummyCam:Object3D;
  		private var _pagesManager:PagesManager;
- 		private var _xmlLoader:XMLLoader;
  		private var _bookReady:Boolean;
  		private var _pagesCount:uint;
  		private var _stage:Stage;
@@ -44,7 +42,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _step:Number;
 		private var _currentPage:uint;
 		private var _regionManager:RegionManager;
- 		private var _imageLoader:BitmapLoader;
+ 		
  		private var _isLoadingImage:Boolean;
  		private var _currentDegrees:Number = 0;
 
@@ -68,7 +66,8 @@ package net.psykosoft.psykopaint2.book.views.book
  					break;
 
  				case LayoutType.CAMERA_IMAGES:
- 					//break;
+ 					_layout = new CameraSamplesLayout(_stage);
+ 					break;
 
  				case LayoutType.USER_IMAGES:
  					//break;
@@ -133,6 +132,15 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			var duration:Number = 1;
 
+			//tmp ugly fix
+			_view.camera.y = 1300;
+			_view.camera.z=-50;
+
+			_dummyCam.z=1; 
+			_bookCraft.rotationY=0;
+			//end ugly tmp fix
+
+
 			TweenLite.to( _bookCraft, duration, { 	x: 0, 
 							ease: Strong.easeOut,
 							onComplete: onAnimateOpenComplete} );
@@ -145,6 +153,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			TweenLite.to( _bookCraft.coverCenter, duration, { y: desty, rotationZ:0,
 								ease: Strong.easeOut} );
+
+
 		}
 
 		public function onAnimateOpenComplete():void
@@ -202,18 +212,11 @@ package net.psykosoft.psykopaint2.book.views.book
 		/* XXXXXXXXXX pages management XXXXXXXXX*/
 		public function loadBookContent():void
  		{
- 			_xmlLoader = new XMLLoader();
- 			var date:Date = new Date();
-			var cacheAnnihilator:String = "?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() );
- 
-			_xmlLoader.loadAsset( "/book-packaged/samples/samples_thumbs.xml" + cacheAnnihilator, buildBookDefaultContent );
+ 			_layout.loadBookContent(buildBookDefaultContent);
  		}
 
- 		public function buildBookDefaultContent(xml:XML):void
+ 		public function buildBookDefaultContent():void
  		{
- 			//collecting/parsing the data
- 			_layout.parseXml(xml);
-
  			// data is parsed, we build the default required content
  			_pagesCount = _layout.getPageCount();
  			var rectoMaterial:TextureMaterial;
@@ -229,11 +232,6 @@ package net.psykosoft.psykopaint2.book.views.book
  			}
 
  			initPagesInteraction();
-
- 			_xmlLoader = null;
-
- 			// receiver pages data is ready, we can load the data
- 			//_layout.loadContent();
  		}
  
  		public function buildBookCraft():void
@@ -324,7 +322,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		//mouse is loose, goes back to the full openned page and returns the destination time
  		public function snapToNearestTime():Number
  		{
- 			if(_percent == _nearestTime || _isLoadingImage) return _nearestTime;
+ 			if(_percent == _nearestTime || _isLoadingImage || !_bookReady) return _nearestTime;
 
  			TweenLite.to( this, .25, { 	_percent:_nearestTime, ease: Strong.easeOut,
 							onUpdate:updateToNearestTime,
@@ -339,7 +337,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
  		public function killSnapTween():void
  		{
- 			if(!_isLoadingImage) TweenLite.killTweensOf(this);	
+ 			if(!_isLoadingImage) TweenLite.killTweensOf(this);
  		}
 
  		public function updateToNearestTime():void
@@ -356,32 +354,21 @@ package net.psykosoft.psykopaint2.book.views.book
  		public function hitTestRegions(mouseX:Number, mouseY:Number):Boolean
  		{
  			var fileName:String = _regionManager.hitTestRegions(mouseX, mouseY, _currentPage);
+
  			if(fileName != ""){
- 				loadFullImage(_layout.originalsPath+fileName);
+ 				_isLoadingImage = true;
+				_layout.loadFullImage(fileName, onFullSizeImageLoaded);
+ 				
  				return true;
  			}
  
  			return false;
  		}
-
- 		private function loadFullImage( url:String ):void
- 		{
- 			_isLoadingImage = true;
-			_imageLoader = new BitmapLoader();
-			_imageLoader.loadAsset( url, onFullSizeImageLoaded );
-		}
-
+ 
 		private function onFullSizeImageLoaded( bmd:BitmapData ):void
 		{
 			imagePickedSignal.dispatch( bmd );
-			clearLoader();
 		}
 
-		private function clearLoader():void
-		{
-			_imageLoader.dispose();
-			_imageLoader = null;
-		}
-		
  	}
  } 

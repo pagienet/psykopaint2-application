@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import flash.display.Stage;
 	import flash.display.StageQuality;
 	import flash.utils.Dictionary;
-
+ 
 	import org.osflash.signals.Signal;
 
 	import away3d.materials.TextureMaterial;
@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		private var _pageCount:uint = 0;
  		private var _currentQuality:String;
  		private var _stage:Stage;
-
+ 		 
  		public var requiredAssetsReadySignal:Signal;
  		public var requiredCraftSignal:Signal;
  		public var regionSignal:Signal;
@@ -68,7 +68,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			return _pageMaterialsManager.getPageMaterial(index);
 		}
 
-		//path per layouts
 		public function get thumbsLowResPath():String
 		{
 			return _thumbsLowResPath;
@@ -167,10 +166,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		}
 
  		//to be overrided per type layout if any dedicated content is required
- 		protected function initDefaultAssets():void{};
+ 		protected function initDefaultAssets():void{}
  
  		/* data parsing/collecting*/
- 		public function parseXml( xml:XML ):void{throw new Error(this+":parseXML function: must be overrided");}
+ 		public function parseXml( xml:XML ):void{}
 
  		/* loading the collected content once default receivers pages are generated*/
  		public function loadContent():void{throw new Error(this+":loadContent function: must be overrided");}
@@ -178,5 +177,11 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		/* loaded image insert/compositing in page*/
  		protected function composite(image:BitmapData, object:Object):void{throw new Error(this+":composite function: must be overrided");}
 
+ 		/* loads high res version of an image*/
+ 		public function loadFullImage( fileName:String, cb:Function ):void {}
+
+ 		/* triggers the specific data parsing per layout to be able to generate the receiving pages*/
+ 		public function loadBookContent(cb:Function):void {}
+ 
  	}
  } 

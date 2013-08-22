@@ -11,11 +11,11 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  	{
  		private const DEGREES_TO_RADIANS:Number = Math.PI/180;
 
- 		private var _destPt:Point;
+ 		private var _size:Point;
 
  		function CompositeHelper(){}
 
- 		public function insert(insertSource:BitmapData, destSource:BitmapData, insertRect:Rectangle, rotation:Number = 0, disposeInsert:Boolean = false, offsetRotationX:Number = 0, offsetRotationY:Number = 0):BitmapData
+ 		public function insert(insertSource:BitmapData, destSource:BitmapData, insertRect:Rectangle, rotation:Number = 0, disposeInsert:Boolean = false, offsetRotationX:Number = 0, offsetRotationY:Number = 0, keepSize:Boolean = false):BitmapData
 		{
 			var w:Number = insertRect.width/insertSource.width;
 			var h:Number = insertRect.height/insertSource.height;
@@ -30,10 +30,22 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			t.translate(insertRect.x+arbX, insertRect.y+arbY );
 
 			destSource.draw(insertSource, t, null, "normal", null, true);
+
+			if(keepSize){
+				if(!_size) _size = new Point();
+
+				_size.x  = insertSource.width;
+				_size.y  = insertSource.height;
+			}
 			
 			if(disposeInsert) insertSource.dispose();
 			
 			return destSource;
+		}
+
+		public function get lastSize():Point
+		{
+			return _size;
 		}
 
  	}
