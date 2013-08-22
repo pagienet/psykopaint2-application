@@ -32,7 +32,8 @@ package net.psykosoft.psykopaint2.core.io
 	 * 1: normal/specular layer, in BGRA
 	 * 2: the source texture, in RGBA!!! (because it's always used primarily as BitmapData)
 	 */
-	public class CanvasExporter extends EventDispatcher
+	public class
+	CanvasExporter extends EventDispatcher
 	{
 		private static var _copySubTextureChannelsRGB : CopySubTextureChannels;
 		private static var _copySubTextureChannelsA : CopySubTextureChannels;
