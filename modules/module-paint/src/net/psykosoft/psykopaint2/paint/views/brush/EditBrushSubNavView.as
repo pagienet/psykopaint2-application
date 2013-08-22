@@ -343,7 +343,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onSliderButtonChanged( event:Event ):void {
 			var slider:SliderButton = event.target as SliderButton;
-			focusOnParameterWithId( slider.id );
+			//focusOnParameterWithId( slider.id );
 			_parameter.value = slider.value;
 		}
 

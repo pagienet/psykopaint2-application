@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
-
+	
 	import net.psykosoft.psykopaint2.core.views.components.label.CenterLabel;
 	import net.psykosoft.psykopaint2.core.views.components.label.Label;
 	import net.psykosoft.psykopaint2.core.views.components.label.LeftLabel;
@@ -117,6 +117,11 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public function get iconBitmap():Bitmap {
 			return _iconBitmap;
 		}
+		
+		public function showIcon( show:Boolean ):void {
+			_icon.visible = show;
+		}
+		
 
 		// ---------------------------------------------------------------------
 		// Protected.
