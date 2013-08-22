@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.base.utils.shakenbake
 	public class ShakeAndBakeConnector extends Sprite
 	{
 		private var _urlLoader:URLLoader;
-
+		private var _frameDelayCount:int;
 		public var connectedSignal:Signal;
 
 		public function ShakeAndBakeConnector() {
@@ -51,22 +51,30 @@ package net.psykosoft.psykopaint2.base.utils.shakenbake
 		private function onBytesLoaded( event:Event ):void {
 
 			trace( this, "connecting shake and bake assets - 3/3 waiting 1 frame... " );
-
+			_frameDelayCount = 0;
 			addEventListener( Event.ENTER_FRAME, firstFrameHandler );
 
 		}
 
 		private function firstFrameHandler( event:Event ):void {
-
-			trace( this, "connecting shake and bake assets - done " );
-
-			removeEventListener( Event.ENTER_FRAME, firstFrameHandler );
-			_urlLoader = null;
-
+			_frameDelayCount++;
+			if ( _frameDelayCount == 1 )
+			{
+				_urlLoader = null;
+			} else if ( _frameDelayCount == 3 ) 
+			{
+				trace( this, "connecting shake and bake assets - done " );
+				
+				removeEventListener( Event.ENTER_FRAME, firstFrameHandler );
+				connectedSignal.dispatch();
+			}
 			// TODO: waiting for 1 frame doesn't seem to do the trick on all cases, using a time out for now
+			/*
 			setTimeout( function():void {
 				connectedSignal.dispatch();
 			}, 1000 );
+			*/
+			
 		}
 	}
 }
