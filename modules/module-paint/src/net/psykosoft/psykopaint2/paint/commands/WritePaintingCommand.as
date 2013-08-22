@@ -35,6 +35,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			var infoWriteUtil:BinaryIoUtil;
 			var storageType:String = CoreSettings.RUNNING_ON_iPAD ? BinaryIoUtil.STORAGE_TYPE_IOS : BinaryIoUtil.STORAGE_TYPE_DESKTOP;
 
+//			saveVO.infoBytes.compress(); // TODO: as3 compression is disabled for being ridiculously slow on iOS
+
 			// Write info.
 			infoWriteUtil = new BinaryIoUtil( storageType );
 			if( ASYNC_MODE ) {
@@ -50,6 +52,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			var dataWriteUtil:BinaryIoUtil;
 			var storageType:String = CoreSettings.RUNNING_ON_iPAD ? BinaryIoUtil.STORAGE_TYPE_IOS : BinaryIoUtil.STORAGE_TYPE_DESKTOP;
+
+//			saveVO.dataBytes.compress(); // TODO: as3 compression is disabled for being ridiculously slow on iOS
 
 			// Write data.
 			dataWriteUtil = new BinaryIoUtil( storageType );
