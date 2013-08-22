@@ -49,6 +49,11 @@ package net.psykosoft.psykopaint2.book.views.models
 		{
 			return _coverCenter;
 		}
+
+		public function show():void
+		{
+			_coverRight.visible = _coverLeft.visible = _coverCenter.visible = true;
+		}
  
 		public function setClosedState():void
 		{
@@ -58,6 +63,9 @@ package net.psykosoft.psykopaint2.book.views.models
 
 			_coverCenter.rotationZ = -90;
 			_coverCenter.y = 15;
+
+
+			this.rotationY = 10;
  
 			this.z = 70;
 			this.x = -500;
@@ -118,6 +126,8 @@ package net.psykosoft.psykopaint2.book.views.models
 			var t:Matrix3D = new Matrix3D(rawData);
 			mesh.transform = t;
 			mesh.name = name;
+
+			mesh.visible = false;
 			 
 			addChild(mesh);
 

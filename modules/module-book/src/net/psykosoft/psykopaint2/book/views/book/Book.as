@@ -94,52 +94,62 @@ package net.psykosoft.psykopaint2.book.views.book
  			buildBookCraft();
  			_view.scene.addChild(_bookCraft);
 
- 			setTimeout(animateIn, 1000);
+ 			setTimeout(animateIn, 250);
  		}
 
  		//Animation opening book closed
  		private function animateIn():void
  		{	
- 			_bookCraft.visible = true;
  			_dummyCam = new Object3D();
  			_dummyCam.z = 2000;
+ 			_bookCraft.show();
 
-			TweenLite.to( _view.camera, 2, { 	y: 1300, z:-50,
-								ease: Strong.easeOut,
+ 			lookAtDummy();
+
+ 			var duration:Number = 1.5;
+
+			TweenLite.to( _view.camera, duration, { 	y: 1300, z:-50,
+								ease: Strong.easeIn,
 								onUpdate:lookAtDummy,
 								onComplete: onAnimateInComplete } );
 
-			TweenLite.to( _dummyCam, 2, { 	z:1, 
+			TweenLite.to( _dummyCam, duration, { 	z:1, 
 								ease: Strong.easeOut} );
+
+			TweenLite.to( _bookCraft, duration, { 	rotationY:0} );
+ 
 		}
 		public function lookAtDummy():void
 		{
 			_view.camera.lookAt(_dummyCam.position);
 		}
 		public function onAnimateInComplete():void
-		{
+		{	
 			onOpenBook();
 		}
 
 		public function onOpenBook():void
 		{
-			TweenLite.to( _bookCraft, 1, { 	x: 0, 
+			var duration:Number = 1;
+
+			TweenLite.to( _bookCraft, duration, { 	x: 0, 
 							ease: Strong.easeOut,
 							onComplete: onAnimateOpenComplete} );
 			var desty:Number = -25;
-			TweenLite.to( _bookCraft.coverRight, 1, { y: desty, x:0, rotationZ:2,
+			TweenLite.to( _bookCraft.coverRight, duration, { y: desty, x:0, rotationZ:2,
 								ease: Strong.easeOut} );
 
-			TweenLite.to( _bookCraft.coverLeft, 1, { y: desty, x:0, rotationZ:-2,
+			TweenLite.to( _bookCraft.coverLeft, duration, { y: desty, x:0, rotationZ:-2,
 								ease: Strong.easeOut} );
 
-			TweenLite.to( _bookCraft.coverCenter, 1, { y: desty, rotationZ:0,
+			TweenLite.to( _bookCraft.coverCenter, duration, { y: desty, rotationZ:0,
 								ease: Strong.easeOut} );
 		}
 
 		public function onAnimateOpenComplete():void
 		{
 			_bookReady = true;
+			_layout.loadContent();
 			bookReadySignal.dispatch();
 		}
 		  
@@ -222,15 +232,14 @@ package net.psykosoft.psykopaint2.book.views.book
  			_xmlLoader = null;
 
  			// receiver pages data is ready, we can load the data
- 			_layout.loadContent();
+ 			//_layout.loadContent();
  		}
  
  		public function buildBookCraft():void
  		{
  			_bookCraft = new BookCraft(_layout.pageMaterialsManager.craftMaterial);
- 			_bookCraft.visible = false;
  			_bookCraft.setClosedState();
-
+ 			
  			_pagesManager = new PagesManager(_bookCraft);
  			_regionManager = new RegionManager(_view, _pagesManager);
 
@@ -337,6 +346,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		// image picking
  		public function hitTestRegions(mouseX:Number, mouseY:Number):Boolean
  		{
+ 			if(_isLoadingImage) return false;
  			var fileName:String = _regionManager.hitTestRegions(mouseX, mouseY, _currentPage);
  			if(fileName != ""){
  				loadFullImage(_layout.originalsPath+fileName);
