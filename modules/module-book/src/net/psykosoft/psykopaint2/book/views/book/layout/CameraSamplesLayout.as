@@ -107,9 +107,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 			_content = null;
 
-			//for each(var key:String in tmpBitmaps){
-			//	tmpBitmaps[key].dispose();
-			//}
+			for(var key:String in tmpBitmaps){
+				tmpBitmaps[key].dispose();
+			}
 
 			tmpBitmaps = null;
 
