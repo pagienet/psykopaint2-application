@@ -1,5 +1,9 @@
 package net.psykosoft.psykopaint2.core.io
 {
+	import avm2.intrinsics.memory.li8;
+	import avm2.intrinsics.memory.si32;
+	import avm2.intrinsics.memory.si8;
+
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.display.Stage;
@@ -9,6 +13,7 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
+	import flash.system.ApplicationDomain;
 	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
 
@@ -19,6 +24,7 @@ package net.psykosoft.psykopaint2.core.io
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
+	import net.psykosoft.psykopaint2.tdsi.MemoryManagerTdsi;
 
 	/**
 	 * Returns a list of 3 ByteArrays containing data:
@@ -35,8 +41,7 @@ package net.psykosoft.psykopaint2.core.io
 		private var _paintingData : PaintingDataVO;
 		private var _exportingStage : int;
 		private var _workerBitmapData : BitmapData;
-		private var _rgbData : ByteArray;
-		private var _alphaData : ByteArray;
+		private var _mergeBuffer : ByteArray;
 		private var _context3D : Context3D;
 		private var _sourceRect : Rectangle;
 		private var _destRect : Rectangle;
@@ -115,17 +120,19 @@ package net.psykosoft.psykopaint2.core.io
 			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.PROGRESS, _paintingData, _exportingStage, _exportingStages.length));
 		}
 
-	// the stages:
+		// the stages:
 		private function saveColorRGB() : void
 		{
 			ConsoleView.instance.log( this, "saveColorRGB stage..." );
-			_rgbData = extractChannels(_canvas.colorTexture, _copySubTextureChannelsRGB);
+			_mergeBuffer = new ByteArray();
+			_mergeBuffer.length = _canvas.width * _canvas.height * 12;
+			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 4, _canvas.colorTexture, _copySubTextureChannelsRGB);
 		}
 
 		private function saveColorAlpha() : void
 		{
 			ConsoleView.instance.log( this, "saveColorAlpha stage..." );
-			_alphaData = extractChannels(_canvas.colorTexture, _copySubTextureChannelsA);
+			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 8, _canvas.colorTexture, _copySubTextureChannelsA);
 		}
 
 		private function mergeColorData() : void
@@ -137,13 +144,15 @@ package net.psykosoft.psykopaint2.core.io
 		private function extractNormalsColor() : void
 		{
 			ConsoleView.instance.log( this, "extractNormalsColor stage..." );
-			_rgbData = extractChannels(_canvas.normalSpecularMap, _copySubTextureChannelsRGB);
+			_mergeBuffer = new ByteArray();
+			_mergeBuffer.length = _canvas.width * _canvas.height * 12;
+			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 4, _canvas.normalSpecularMap, _copySubTextureChannelsRGB);
 		}
 
 		private function extractNormalsAlpha() : void
 		{
 			ConsoleView.instance.log( this, "extractNormalsAlpha stage..." );
-			_alphaData = extractChannels(_canvas.normalSpecularMap, _copySubTextureChannelsA);
+			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 8, _canvas.normalSpecularMap, _copySubTextureChannelsA);
 		}
 
 		private function mergeNormalData() : void
@@ -194,32 +203,35 @@ package net.psykosoft.psykopaint2.core.io
 		private function mergeRGBAData() : ByteArray
 		{
 			ConsoleView.instance.log( this, "mergeRGBAData..." );
+			var len : int = _canvas.width * _canvas.height * 4;
+			var rOffset : int = len + 1;
+			var gOffset : int = len + 2;
+			var bOffset : int = len + 3;
+			var aOffset : int = len*2 + 3;
 
-			_rgbData.position = 0;
-			_alphaData.position = 0;
-			var outputData : ByteArray = new ByteArray();
+			ApplicationDomain.currentDomain.domainMemory = _mergeBuffer;
 
-			var len : int = _canvas.width * _canvas.height;
-//			ConsoleView.instance.log( this, "mergeRGBAData - len: " + len );
-			for (var i : int = 0; i < len; ++i) {
-				var rgb : uint = _rgbData.readUnsignedInt();
-				var r : uint = rgb & 0x00ff0000;
-				var g : uint = rgb & 0x0000ff00;
-				var b : uint = rgb & 0x000000ff;
-				var a : uint = _alphaData.readUnsignedInt() & 0x000000ff;
+			for (var i : int = 0; i < len; i += 4) {
+				var r : uint = li8(int(i + rOffset));
+				var g : uint = li8(int(i + gOffset));
+				var b : uint = li8(int(i + bOffset));
+				var a : uint = li8(int(i + aOffset));
 
-				outputData.writeUnsignedInt((r >> 8) | (g << 8) | (b << 24) | a);
+				si8(b, i);
+				si8(g, int(i+1));
+				si8(r, int(i+2));
+				si8(a, int(i+3));
 			}
 
-			_rgbData.clear();
-			_alphaData.clear();
-//			ConsoleView.instance.log( this, "mergeRGBAData - cleared" );
-			_rgbData = null;
-			_alphaData = null;
-			return outputData;
+			ApplicationDomain.currentDomain.domainMemory = MemoryManagerTdsi.memory;
+
+			var buffer : ByteArray = _mergeBuffer;
+			_mergeBuffer = null;
+			buffer.length = len;
+			return buffer;
 		}
 
-		private function extractChannels(layer : Texture, copier : CopySubTextureChannels) : ByteArray
+		private function extractChannels(target : ByteArray, offset : uint, layer : Texture, copier : CopySubTextureChannels) : void
 		{
 			_context3D.setRenderToBackBuffer();
 			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
@@ -230,7 +242,8 @@ package net.psykosoft.psykopaint2.core.io
 			_context3D.drawToBitmapData(_workerBitmapData);
 			ConsoleView.instance.log( this, "extractChannels - gpu read back - " + String( getTimer() - _time ) );
 
-			return _workerBitmapData.getPixels(_workerBitmapData.rect);
+			target.position = offset;
+			_workerBitmapData.copyPixelsToByteArray(_workerBitmapData.rect, target);
 		}
 	}
 }
