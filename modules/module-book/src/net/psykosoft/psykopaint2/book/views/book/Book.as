@@ -46,6 +46,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _regionManager:RegionManager;
  		private var _imageLoader:BitmapLoader;
  		private var _isLoadingImage:Boolean;
+ 		private var _currentDegrees:Number = 0;
 
      		public function Book(view:View3D, stage:Stage)
  		{
@@ -287,11 +288,18 @@ package net.psykosoft.psykopaint2.book.views.book
  			_step = 1/_pagesCount;
  		}
 
+ 		public function get currentDegrees():Number
+ 		{
+ 			return _currentDegrees;
+ 		}
+
  		public function updatePages(time:Number):void
  		{
  			_percent = time;
  			var pageid:uint;
 			_currentPage = _percent/_step;
+
+			_currentDegrees = 0;
 
 			for(var i:uint = 0;i<_pagesCount;++i){
 				pageid = i;
@@ -306,6 +314,7 @@ package net.psykosoft.psykopaint2.book.views.book
 					_nearestTime = (inPercent <.5)? _currentPage*_step : (_currentPage+1)*_step;
 					var rotZ:Number = inPercent*180;
 					pagesManager.rotatePage(_currentPage, rotZ );
+					_currentDegrees = rotZ;
 				}
 			}
 
@@ -346,7 +355,6 @@ package net.psykosoft.psykopaint2.book.views.book
  		// image picking
  		public function hitTestRegions(mouseX:Number, mouseY:Number):Boolean
  		{
- 			if(_isLoadingImage) return false;
  			var fileName:String = _regionManager.hitTestRegions(mouseX, mouseY, _currentPage);
  			if(fileName != ""){
  				loadFullImage(_layout.originalsPath+fileName);

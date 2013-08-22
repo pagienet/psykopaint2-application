@@ -78,6 +78,7 @@ package net.psykosoft.psykopaint2.book.views.models
 		{
 			if(force>.98) force = .98;
 			if(force<-.98) force = -.98;
+
 			_bend.force = force;
 			var origin:Number = Math.abs(zeroOne)*PAGE_WIDTH;
 			if(origin<1) origin = 2;

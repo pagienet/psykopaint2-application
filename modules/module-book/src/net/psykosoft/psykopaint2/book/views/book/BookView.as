@@ -27,7 +27,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	{
 		private var _stage3dProxy:Stage3DProxy;
 		private var _view3d:View3D;
-	//	private var _origin:Vector3D;
 		private var _book:Book;
 		//interaction vars
 		private var _startMouseX:Number;
@@ -79,7 +78,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function initVars( ):void
 		{
 			scalesToRetina = false;
-			//_origin = new Vector3D();
 			_startMouseX = 0;
 			_time = 0;
 			imageSelectedSignal = new Signal();
@@ -98,7 +96,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			var currentX:Number = mouseX;
 			_mouseIsDown = true;
 			//simple fast movement detection to prevent image picking while intended to turn page fast
-			if(Math.abs(currentX-_startMouseX) < 5){
+			if(Math.abs(currentX-_startMouseX) < 5 && _book.currentDegrees< 5){
 				if(!_book.hitTestRegions(mouseX, mouseY)){
 					_startTime = _time;
 				}
@@ -136,8 +134,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			_view3d.width = stage.stageWidth;
 			_view3d.height = stage.stageHeight;
 			_view3d.camera.lens.far = 5000;
-			//_view3d.camera.position = new Vector3D( 0, 50, 1250 );
-			//_view3d.camera.lookAt( _origin );
 			_view3d.camera.y = 1500;
 			_view3d.camera.z = 10;
 			addChild( _view3d );
