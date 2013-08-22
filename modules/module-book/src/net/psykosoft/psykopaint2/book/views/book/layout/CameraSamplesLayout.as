@@ -35,11 +35,11 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_ane.initialize( onUserLibraryReady );
 		}
 
-		override protected function initDefaultAssets():void
-		{
-			//debug no ane
-			onUserLibraryReady();
-		}
+		//override protected function initDefaultAssets():void
+		//{
+		//	//debug no ane
+		//	onUserLibraryReady();
+		//}
 		 
   
 		private function onUserLibraryReady():void
