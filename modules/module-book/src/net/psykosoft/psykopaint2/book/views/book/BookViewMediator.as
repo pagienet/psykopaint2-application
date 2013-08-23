@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestBookLoadSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -36,6 +37,9 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		[Inject]
 		public var notifyAnimateBookOutCompleteSignal : NotifyAnimateBookOutCompleteSignal;
+
+		[Inject]
+		public var requestBookLoadSignal:RequestBookLoadSignal;
 
 		override public function initialize():void {
 
@@ -81,6 +85,10 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
+
+			// TODO: use requestBookLoadSignal instead of navigation state changes to determine the data source of the book
+			// The state system will trigger requestSetUpBookModuleSignal and as soon as it is set up it will trigger
+			// requestBookLoadSignal, which carries the appropriate BookImageSource type string.
 
 			switch( newState ) {
 				// Sample images. as default
