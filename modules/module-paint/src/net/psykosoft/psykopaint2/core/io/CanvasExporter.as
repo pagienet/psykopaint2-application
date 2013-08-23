@@ -49,7 +49,6 @@ package net.psykosoft.psykopaint2.core.io
 		private var _stage:Stage;
 
 		private var _exportingStages : Array;
-		private var _time:uint;
 
 		public function CanvasExporter( stage:Stage )
 		{
@@ -165,8 +164,9 @@ package net.psykosoft.psykopaint2.core.io
 		private function saveSourceData() : void
 		{
 			ConsoleView.instance.log( this, "saveSourceData stage..." );
+			var time : int = getTimer();
 			_paintingData.sourceBitmapData = saveLayerNoAlpha(_canvas.sourceTexture);
-			ConsoleView.instance.log( this, "saveSourceData stage - source bmd bytes: " + _paintingData.sourceBitmapData.length );
+			ConsoleView.instance.log( this, "saveSourceData stage - " + (getTimer() - time));
 		}
 
 		private function onComplete() : void
@@ -191,19 +191,19 @@ package net.psykosoft.psykopaint2.core.io
 			context3D.clear(0, 0, 0, 0);
 			context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopySubTexture.copy(layer, _sourceRect, _destRect, context3D);
-			_time = getTimer();
+			var time : int = getTimer();
 			context3D.drawToBitmapData(_workerBitmapData);
-			ConsoleView.instance.log( this, "saveLayerNoAlpha - gpu read back - " + String( getTimer() - _time ) );
+			ConsoleView.instance.log( this, "saveLayerNoAlpha - gpu read back - " + String( getTimer() - time ) );
 			var bytes:ByteArray = _workerBitmapData.getPixels(_workerBitmapData.rect);
-			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd: " + _workerBitmapData.width + "x" + _workerBitmapData.rect.height );
-			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd rect: " + _workerBitmapData.rect );
-			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd bytes: " + bytes.length );
+//			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd: " + _workerBitmapData.width + "x" + _workerBitmapData.rect.height );
+//			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd rect: " + _workerBitmapData.rect );
+//			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd bytes: " + bytes.length );
 			return bytes;
 		}
 
 		private function mergeRGBAData() : ByteArray
 		{
-			ConsoleView.instance.log( this, "mergeRGBAData..." );
+			var time : int = getTimer();
 			var len : int = _canvas.width * _canvas.height * 4;
 			var rOffset : int = len + 1;
 			var gOffset : int = len + 2;
@@ -224,11 +224,16 @@ package net.psykosoft.psykopaint2.core.io
 				si8(a, int(i+3));
 			}
 
+			ConsoleView.instance.log( this, "mergeRGBAData merge..." + (getTimer() - time));
+
 			ApplicationDomain.currentDomain.domainMemory = MemoryManagerTdsi.memory;
 
 			var buffer : ByteArray = _mergeBuffer;
 			_mergeBuffer = null;
+			var time : int = getTimer();
 			buffer.length = len;
+			ConsoleView.instance.log( this, "mergeRGBAData resize..." + (getTimer() - time));
+
 			return buffer;
 		}
 
@@ -239,9 +244,9 @@ package net.psykosoft.psykopaint2.core.io
 
 			_context3D.clear(0, 0, 0, 1);
 			copier.copy(layer, _sourceRect, _destRect, _context3D);
-			_time = getTimer();
+			var time : int = getTimer();
 			_context3D.drawToBitmapData(_workerBitmapData);
-			ConsoleView.instance.log( this, "extractChannels - gpu read back - " + String( getTimer() - _time ) );
+			ConsoleView.instance.log( this, "extractChannels - gpu read back - " + String( getTimer() - time ) );
 
 			target.position = offset;
 			_workerBitmapData.copyPixelsToByteArray(_workerBitmapData.rect, target);
