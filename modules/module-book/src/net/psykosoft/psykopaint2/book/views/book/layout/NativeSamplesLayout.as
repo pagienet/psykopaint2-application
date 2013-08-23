@@ -24,6 +24,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private const INSERT_WIDTH:uint = 200;
 		private const INSERT_HEIGHT:uint = 130;
 
+		private const INSERTS_COUNT:uint = 6;
+
 		private var _loadedResources:uint = 0;
 		private var _resourcesCount:uint;
 		private var _fileLoader:FileLoader;
@@ -75,40 +77,48 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_thumbsLowResPath = paths.child("lowRes");
 
  			var images:XMLList = xml.descendants("images");
- 			var loop :uint = images.child("image").length();
+ 			//var thumbsCount :uint = images.child("image").length();
+ 			_resourcesCount = uint(images.child("image").length() );
 			var node:Object;
 			var name:String;
 			var data:Object;
 			var url:String;
 
 			_pagesFilled = new Dictionary();
-			var destPageIndex:uint;
+			var pageIndex:uint;
+			var inPageIndex:uint;
 
-			for(var i:uint = 0; i < loop;++i){
+			for(var i:uint = 0; i < _resourcesCount;++i){
 				node = images.child("image")[i];
 				name = node.attribute("name")
 				//url = _thumbsLowResPath+name;
 				url = _thumbsHighResPath+name;
+
+				pageIndex = uint(i/INSERTS_COUNT);
+				inPageIndex = uint( i - (pageIndex*INSERTS_COUNT) );
 				 
 				data = {	url:url, 
 						name:name, 
-						index:i, 
-						type:ImageRes.HIGHRES};
+						index:i,
+						type:ImageRes.HIGHRES,
+						pageIndex:pageIndex,
+						inPageIndex:inPageIndex
+					};
 
 				_content.push(data);
 
-				destPageIndex = uint(i/6);
-				if(!_pagesFilled["pageIndex"+destPageIndex]){
-					_pagesFilled["pageIndex"+destPageIndex] = {max:0, inserted:0};
+				//destPageIndex = uint(i/6);
+				if(!_pagesFilled["pageIndex"+pageIndex]){
+					_pagesFilled["pageIndex"+pageIndex] = {max:0, inserted:0};
 				}
 
-				_pagesFilled["pageIndex"+destPageIndex].max++;
+				_pagesFilled["pageIndex"+pageIndex].max++;
 				 
 			}
 
-			_resourcesCount = loop;
+			//_resourcesCount = thumbsCount;
 			//we have 6 images for this layout, 2 sides;
-			var sides:uint = Math.ceil(loop/6);
+			var sides:uint = Math.ceil(_resourcesCount/INSERTS_COUNT);
 
 			if(sides%2 != 0) sides+=1;
 			pageCount = sides*.5;
@@ -197,8 +207,12 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  				insertRef= new InsertRef();
  				insertRect = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
 
- 				pageIndex = insertRef.pageIndex = uint(object.index/6);
-				inPageIndex =  insertRef.inPageIndex = object.index - (pageIndex*6);
+ 			//	pageIndex = insertRef.pageIndex = uint(object.index/6);
+				//inPageIndex =  insertRef.inPageIndex = object.index - (pageIndex*6);
+
+				pageIndex = insertRef.pageIndex =uint(object.pageIndex);
+				inPageIndex = insertRef.inPageIndex = uint(object.inPageIndex);
+
 				if(object.type == ImageRes.HIGHRES) insertRef.hasHighres = true;
 
  				var isRecto:Boolean = (pageIndex %2 == 0)? true : false;

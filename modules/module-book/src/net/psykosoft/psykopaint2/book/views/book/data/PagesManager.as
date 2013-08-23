@@ -63,6 +63,15 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			return _pagesContent[index];
  		}
 
+ 		public function hidePage(index:uint):void
+ 		{
+ 			_pagesContent[index].hide();
+ 		}
+		public function showPage(index:uint):void
+ 		{
+ 			_pagesContent[index].show();
+ 		}
+
  		private function easeOutQuad (t:Number, b:Number, c:Number, d:Number, p_params:Object = null):Number
 		{
 			return -c *(t/=d)*(t-2) + b;
