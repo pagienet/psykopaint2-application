@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 					break;
 				}
 				case STORAGE_TYPE_IOS: {
-					_rootFile = File.applicationStorageDirectory;
+					_rootFile = File.documentsDirectory;
 					break;
 				}
 				default: {

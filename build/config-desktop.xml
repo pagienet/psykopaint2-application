@@ -26,5 +26,6 @@
 		<extensionID>net.psykosoft.photos</extensionID>
 		<extensionID>net.psykosoft.gyroscope</extensionID>
 		<extensionID>net.psykosoft.wacom</extensionID>
+		<extensionID>net.psykosoft.io</extensionID>
     </extensions>
 </application>
