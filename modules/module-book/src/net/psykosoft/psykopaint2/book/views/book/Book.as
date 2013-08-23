@@ -111,15 +111,17 @@ package net.psykosoft.psykopaint2.book.views.book
 
  			var duration:Number = 1.5;
 
+			TweenLite.to( _dummyCam, duration, { 	z:1, 
+				ease: Strong.easeOut} );
+			
+			TweenLite.to( _bookCraft, duration, { 	rotationY:0} );
+			
 			TweenLite.to( _view.camera, duration, {  z:-50,y: 1300,
 				ease: Strong.easeIn,
 				onUpdate:lookAtDummy,
 				onComplete: onAnimateInComplete } );
 
-			TweenLite.to( _dummyCam, duration, { 	z:1, 
-								ease: Strong.easeOut} );
-
-			TweenLite.to( _bookCraft, duration, { 	rotationY:0} );
+		
  
 		}
 		public function lookAtDummy():void
@@ -136,17 +138,14 @@ package net.psykosoft.psykopaint2.book.views.book
 			var duration:Number = 1;
 
 			//tmp ugly fix
-			_view.camera.y = 1300;
-			_view.camera.z=-50;
+			//_view.camera.y = 1300;
+			//_view.camera.z=-50;
 
-			_dummyCam.z=1; 
-			_bookCraft.rotationY=0;
+			//_dummyCam.z=1; 
+			//_bookCraft.rotationY=0;
 			//end ugly tmp fix
 
 
-			TweenLite.to( _bookCraft, duration, { 	x: 0, 
-							ease: Strong.easeOut,
-							onComplete: onAnimateOpenComplete} );
 			var desty:Number = -25;
 			TweenLite.to( _bookCraft.coverRight, duration, { y: desty, x:0, rotationZ:2,
 								ease: Strong.easeOut} );
@@ -157,7 +156,9 @@ package net.psykosoft.psykopaint2.book.views.book
 			TweenLite.to( _bookCraft.coverCenter, duration, { y: desty, rotationZ:0,
 								ease: Strong.easeOut} );
 
-
+			TweenLite.to( _bookCraft, duration, { 	x: 0, 
+				ease: Strong.easeOut,
+				onComplete: onAnimateOpenComplete} );
 		}
 
 		public function onAnimateOpenComplete():void
