@@ -217,8 +217,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 		
 		private function onEarsShowComplete():void {
-			button.showIcon( false );
-			showPreviewHolder();
+			//showPreviewHolder();
 		}
 		
 		private function killEarTweens():void {
@@ -229,6 +228,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		
 		private function showPreviewHolder():void {
 			killPreviewTweens();
+			button.showIcon( false );
 			previewHolder.visible = true;
 			TweenLite.to( previewHolder, PREVIEW_ANIMATION_TIME, { y: _previewHolderOpenY - 120, ease: Strong.easeOut } );
 		}
@@ -360,7 +360,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			if ( !_valueHasChanged && !_checkClosingTap)
 			{
 				showEars();
-				//showPreviewHolder();
+				showPreviewHolder();
 			}
 		}
 
