@@ -74,7 +74,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 		}
 
-		private function initVars( ):void
+		private function initVars():void
 		{
 			scalesToRetina = false;
 			_startMouseX = 0;

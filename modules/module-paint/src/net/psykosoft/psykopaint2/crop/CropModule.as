@@ -122,10 +122,6 @@ package net.psykosoft.psykopaint2.crop
 			// Initialize robotlegs for this module.
 			new CropConfig(_coreModule.injector);
 
-			// Init display tree for this module.
-			var cropRootView : CropRootView = new CropRootView();
-			_coreModule.injector.getInstance(RequestAddViewToMainLayerSignal).dispatch(cropRootView);
-
 			// Notify potential super modules.
 			moduleReadySignal.dispatch();
 		}

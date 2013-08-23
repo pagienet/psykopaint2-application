@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.app.states
 		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			_bookSourceType = data[ 0 ] as String;
+			_bookSourceType = String(data);
 			notifyBookModuleSetUpSignal.addOnce(onBookModuleSetUp);
 			requestSetUpBookModuleSignal.dispatch();
 		}
