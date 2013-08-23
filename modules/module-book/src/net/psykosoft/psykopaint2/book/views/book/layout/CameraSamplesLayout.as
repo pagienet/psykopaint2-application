@@ -188,9 +188,12 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				//insert the normalmap map of the image into the textureNormalmap
 				normalSourceBitmapdata.lock();
 				insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false);
-				normalTextureSource.bitmapData = normalSourceBitmapdata;
 				normalSourceBitmapdata.unlock();
-				if(invalidateContent) normalTextureSource.invalidateContent();
+				
+				if(invalidateContent){
+					normalTextureSource.invalidateContent();
+					normalTextureSource.bitmapData = normalSourceBitmapdata;
+				}
 			}
 
 			//dispatch the rect + object for region. the rect is updated for the shadow, the region will declare its own rect.
