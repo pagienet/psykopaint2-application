@@ -301,6 +301,13 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			for(var i:uint = 0;i<_pagesCount;++i){
 				pageid = i;
+
+				if(pageid >= _currentPage+2 || pageid <= _currentPage-2){
+					pagesManager.hidePage(pageid);
+				} else {
+					pagesManager.showPage(pageid);
+				}
+
 				if(pageid<_currentPage){
 					pagesManager.rotatePage(i, 180 );
 

@@ -37,11 +37,21 @@ package net.psykosoft.psykopaint2.book.views.models
 				_recto = new Mesh(usedBookPage.recto.geometry, materialRecto);
 				addChild(_recto);
 				addChild(_verso);
+
 			} else {
 				generate(materialRecto, materialVerso);
 			}
 
 			initModifiers();
+		}
+
+		public function show():void
+		{
+			_recto.visible = _verso.visible = true;
+		}
+		public function hide():void
+		{
+			_recto.visible = _verso.visible = false;
 		}
 
 		public function set rotation(degrees:Number):void

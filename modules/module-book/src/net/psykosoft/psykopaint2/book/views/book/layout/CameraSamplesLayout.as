@@ -19,6 +19,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private const INSERT_WIDTH:uint = 100;
 		private const INSERT_HEIGHT:uint = 100;
 
+		private const INSERTS_COUNT:uint = 16;
+
 		private var _content:Vector.<Object>;
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
@@ -51,23 +53,31 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var data:Object;
 
 			_pagesFilled = new Dictionary();
-			var destPageIndex:uint;
+
+			var pageIndex:uint;
+			var inPageIndex:uint;
 
 			for(var i:uint = 0; i < thumbsCount;++i){
-				 
-				data = {name:""+i, index:i};
+				
+				pageIndex = uint(i/INSERTS_COUNT);
+				inPageIndex = uint( i - (pageIndex*INSERTS_COUNT) );
+
+				data = {	name:""+i, 
+						index:i, 
+						pageIndex:pageIndex,
+						inPageIndex:inPageIndex
+					};
+
 				_content.push(data);
-
-				destPageIndex = uint(i/16);
-
-				if(!_pagesFilled["pageIndex"+destPageIndex]){
-					_pagesFilled["pageIndex"+destPageIndex] = {max:0, inserted:0};
+ 
+				if(!_pagesFilled["pageIndex"+pageIndex]){
+					_pagesFilled["pageIndex"+pageIndex] = {max:0, inserted:0};
 				}
-				_pagesFilled["pageIndex"+destPageIndex].max++;
+				_pagesFilled["pageIndex"+pageIndex].max++;
 			}
  
 			//we have 16 images for this layout, 2 sides;
-			var sides:uint = Math.ceil(thumbsCount/16);
+			var sides:uint = Math.ceil(thumbsCount/INSERTS_COUNT);
 
 			if(sides%2 != 0) sides+=1;
 			pageCount = sides*.5;
@@ -124,8 +134,11 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 
 			var insertRect:Rectangle = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
-			var pageIndex:uint = uint(object.index/16);
-			var inPageIndex:uint =  object.index - (pageIndex*16);
+			//var pageIndex:uint = uint(object.index/16);
+			//var inPageIndex:uint =  object.index - (pageIndex*16);
+			var pageIndex:uint = uint(object.pageIndex);
+			var inPageIndex:uint = uint(object.inPageIndex);
+
 			var isRecto:Boolean = (pageIndex %2 == 0)? true : false;
 			
 			var col:uint = Math.floor(inPageIndex/4);
@@ -149,8 +162,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			insertRect.y += -2+(Math.random()*4);
 			 
 			var rotation:Number =  -1.5+(Math.random()*3);
- 			 
-			//row layout recto: 50+200+31+200+31
+ 			
 			//the page material
 			pageIndex = Math.floor(pageIndex);
 			var pageMaterial:TextureMaterial = getPageMaterial(pageIndex);
