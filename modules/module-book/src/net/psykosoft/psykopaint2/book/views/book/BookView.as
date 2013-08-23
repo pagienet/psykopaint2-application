@@ -141,13 +141,14 @@ package net.psykosoft.psykopaint2.book.views.book
 		public function set layoutType(type:String):void
 		{
 			_layoutType = type;
-
+			
 			_book = new Book(_view3d, stage);
 
 			_book.bookReadySignal.add(onBookReady);
 			_book.imagePickedSignal.add(dispatchSelectedImage);
 			_book.bookClearedSignal.add(dispatchBookHasClosed);
 			_book.layoutType =_layoutType;
+			
 		}
  
 		public function renderScene(target : Texture):void

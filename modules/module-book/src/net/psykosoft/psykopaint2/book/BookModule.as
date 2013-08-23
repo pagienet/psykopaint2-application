@@ -68,8 +68,8 @@ package net.psykosoft.psykopaint2.book
 			// Initialize robotlegs for this module.
 			new BookConfig(_coreModule.injector);
 
-			var rootView : BookRootView = new BookRootView();
-			_coreModule.injector.getInstance(RequestAddViewToMainLayerSignal).dispatch(rootView);
+		//	var rootView : BookRootView = new BookRootView();
+		//	_coreModule.injector.getInstance(RequestAddViewToMainLayerSignal).dispatch(rootView);
 
 			// Notify potential super modules.
 			moduleReadySignal.dispatch();

@@ -1,27 +1,29 @@
 package net.psykosoft.psykopaint2.book.views.book
 {
-	import away3d.entities.Mesh;
-	import away3d.containers.ObjectContainer3D;
-	import away3d.containers.View3D;
-	import away3d.core.base.Object3D;
-	import away3d.materials.TextureMaterial;
-  
-	import net.psykosoft.psykopaint2.book.views.models.BookCraft;
-	import net.psykosoft.psykopaint2.book.views.book.layout.*;
-	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
-	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
-	
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
 	
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.utils.setTimeout;
-
+	
+	import away3d.containers.ObjectContainer3D;
+	import away3d.containers.View3D;
+	import away3d.core.base.Object3D;
+	import away3d.entities.Mesh;
+	import away3d.materials.TextureMaterial;
+	
+	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
+	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
+	import net.psykosoft.psykopaint2.book.views.book.layout.CameraSamplesLayout;
+	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
+	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutType;
+	import net.psykosoft.psykopaint2.book.views.book.layout.NativeSamplesLayout;
+	import net.psykosoft.psykopaint2.book.views.models.BookCraft;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	
 	import org.osflash.signals.Signal;
-
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Strong;
  
  	public class Book
  	{
@@ -100,6 +102,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		//Animation opening book closed
  		private function animateIn():void
  		{	
+			
  			_dummyCam = new Object3D();
  			_dummyCam.z = 2000;
  			_bookCraft.show();
@@ -108,10 +111,10 @@ package net.psykosoft.psykopaint2.book.views.book
 
  			var duration:Number = 1.5;
 
-			TweenLite.to( _view.camera, duration, { 	y: 1300, z:-50,
-								ease: Strong.easeIn,
-								onUpdate:lookAtDummy,
-								onComplete: onAnimateInComplete } );
+			TweenLite.to( _view.camera, duration, {  z:-50,y: 1300,
+				ease: Strong.easeIn,
+				onUpdate:lookAtDummy,
+				onComplete: onAnimateInComplete } );
 
 			TweenLite.to( _dummyCam, duration, { 	z:1, 
 								ease: Strong.easeOut} );
