@@ -20,12 +20,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		protected var _layoutType:String;
  		protected var _inserts:Dictionary;
 
- 		//to be removed
-	 	//	protected var _thumbsLowResPath:String;
-			//protected var _thumbsHighResPath:String;
-			//protected var _originalsPath:String;
-		//end to be removed
-
 		protected var _collection:SourceImageCollectionVO;
 
  		private var _pageMaterialsManager:PageMaterialsManager;
@@ -82,21 +76,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			return _pageMaterialsManager.getPageMaterial(index);
 		}
-
-//these will be removed at some point as the collection vo makes them obsolete
-//public function get thumbsLowResPath():String
-//{
-//	return _thumbsLowResPath;
-//}
-//public function get thumbsHighResPath():String
-//{
-//	return _thumbsHighResPath;
-//}
-//public function get originalsPath():String
-//{
-//	return _originalsPath;
-//}
-//end to be removed
 
 		public function set collection(collection : SourceImageCollectionVO):void
  		{
