@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
+	import net.psykosoft.psykopaint2.core.views.components.previews.PreviewIconFactory;
 	import net.psykosoft.psykopaint2.core.views.components.previews.SizePreview;
 
 	public class SliderButton extends Sprite
@@ -111,7 +112,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			button.labelText = "";
 
 			
-			_previewIcon = new SizePreview();
+			_previewIcon = PreviewIconFactory.getPreviewIcon(int(Math.random()*2));
 			_previewIcon.mouseEnabled = _previewIcon.mouseChildren = false;
 			_previewIcon.x = PREVIEW_ICON_OFFSET_X;
 			_previewIcon.y = PREVIEW_ICON_OFFSET_Y;
