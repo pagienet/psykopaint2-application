@@ -5,13 +5,19 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import com.greensock.easing.Strong;
 	
 	import flash.display.Bitmap;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.text.Font;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
+	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
+	import net.psykosoft.psykopaint2.core.views.components.previews.SizePreview;
 
 	public class SliderButton extends Sprite
 	{
@@ -44,6 +50,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private var _valueHasChanged:Boolean;
 		private var _checkClosingTap:Boolean;
+		
+		private var _previewIcon:MovieClip;
 		
 		private const EAR_MOTION_RANGE:Number = 50;
 		private const EAR_ANIMATION_TIME:Number = 0.2;
@@ -99,6 +107,22 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 			button.labelText = "";
 
+			
+			var tf:TextField = new TextField();
+			
+			
+			tf.defaultTextFormat = PsykoFonts.BookFontSmall;
+			tf.autoSize = "left";
+			tf.embedFonts = true;
+			tf.text = "TEST 12345";
+			tf.rotation = 45;
+			tf.y -= 16;
+			addChild(tf);
+			
+			_previewIcon = new SizePreview();
+			_previewIcon.gotoAndStop(50);
+			addChild(_previewIcon);
+			
 			_stage = stage;
 			
 			_valueHasChanged = false;
@@ -108,7 +132,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function postSetupAfterStageIsAvailable():void {
 			button.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
-			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			
 		}
 
 		// -----------------------
@@ -359,6 +383,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			startSliding();
 			if ( !_valueHasChanged && !_checkClosingTap)
 			{
+				stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 				showEars();
 				showPreviewHolder();
 			}
@@ -370,6 +395,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			if ( _valueHasChanged || _checkClosingTap || !isOver)
 			{
 				//hideEars();
+				stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 				hidePreviewHolder();
 				_valueHasChanged = false;
 				_checkClosingTap = false;
