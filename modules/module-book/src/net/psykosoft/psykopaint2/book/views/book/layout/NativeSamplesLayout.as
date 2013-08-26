@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.book.views.book.layout
 {
 	import net.psykosoft.psykopaint2.book.BookImageSource;
-	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
 

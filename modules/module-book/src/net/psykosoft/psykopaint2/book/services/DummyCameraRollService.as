@@ -58,6 +58,7 @@ package net.psykosoft.psykopaint2.book.services
 			for (var i : uint = index; i < max; ++i) {
 				var baseFilename : String = images[i].@name;
 				var imageVO : SourceImageVO = new SourceImageVO();
+				imageVO.id = i;
 				imageVO.highResThumbnailFilename = highResPath + baseFilename;
 				imageVO.lowResThumbnailFilename = lowResPath + baseFilename;
 				imageVO.originalFilename = originalFilename + baseFilename;
