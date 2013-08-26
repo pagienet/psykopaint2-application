@@ -60,6 +60,9 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static var STAGE_HEIGHT:Number = 768;
 		public static var STAGE:Stage;
 		public static var DISPLAY_ROOT:Sprite;
+		
+		//This needs to be here to force Flash to include the font swc:
+		private static var EMBED_FONTS_DUMMY:PsykoFonts;
 
 	}
 }
