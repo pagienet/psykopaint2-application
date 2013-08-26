@@ -2,7 +2,12 @@ package net.psykosoft.psykopaint2.book.config
 {
 
 	import net.psykosoft.psykopaint2.book.commands.DestroyBookModuleCommand;
+	import net.psykosoft.psykopaint2.book.commands.FetchSourceImagesCommand;
 	import net.psykosoft.psykopaint2.book.commands.SetUpBookModuleCommand;
+	import net.psykosoft.psykopaint2.book.services.CameraRollService;
+	import net.psykosoft.psykopaint2.book.services.SampleImageService;
+	import net.psykosoft.psykopaint2.book.services.DummyCameraRollService;
+	import net.psykosoft.psykopaint2.book.services.DummySampleImageService;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
@@ -11,6 +16,7 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.signals.RequestBookRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestExitBookSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestFetchSourceImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
@@ -75,7 +81,9 @@ package net.psykosoft.psykopaint2.book.config
 
 		private function mapSingletons() : void
 		{
-
+			// TODO: Provide actual communicating ones
+			_injector.map(CameraRollService).toSingleton(DummyCameraRollService);
+			_injector.map(SampleImageService).toSingleton(DummySampleImageService);
 		}
 
 		// -----------------------
@@ -103,6 +111,7 @@ package net.psykosoft.psykopaint2.book.config
 		{
 			_commandMap.map(RequestSetUpBookModuleSignal).toCommand(SetUpBookModuleCommand);
 			_commandMap.map(RequestDestroyBookModuleSignal).toCommand(DestroyBookModuleCommand);
+			_commandMap.map(RequestFetchSourceImagesSignal).toCommand(FetchSourceImagesCommand);
 		}
 
 		// -----------------------

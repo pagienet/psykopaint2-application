@@ -12,13 +12,11 @@ package net.psykosoft.psykopaint2.book.commands
 		[Inject]
 		public var requestAddViewToMainLayerSignal : RequestAddViewToMainLayerSignal;
 
-		private var _bookRootView : BookRootView;
-
 		public function execute() : void
 		{
-			_bookRootView = new BookRootView();
-			_bookRootView.onSubViewsReady.add(onSubViewReady);
-			requestAddViewToMainLayerSignal.dispatch( _bookRootView );
+			var bookRootView : BookRootView = new BookRootView();
+			bookRootView.onSubViewsReady.add(onSubViewReady);
+			requestAddViewToMainLayerSignal.dispatch(bookRootView);
 		}
 
 		private function onSubViewReady() : void
