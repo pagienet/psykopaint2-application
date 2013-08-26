@@ -11,12 +11,14 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.text.AntiAliasType;
 	import flash.text.Font;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
+	import net.psykosoft.psykopaint2.core.views.components.previews.PreviewIconFactory;
 	import net.psykosoft.psykopaint2.core.views.components.previews.SizePreview;
 
 	public class SliderButton extends Sprite
@@ -56,6 +58,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private const EAR_MOTION_RANGE:Number = 50;
 		private const EAR_ANIMATION_TIME:Number = 0.2;
 		private const PREVIEW_ANIMATION_TIME:Number = 0.2;
+		private const PREVIEW_ICON_OFFSET_X:Number = -64;
+		private const PREVIEW_ICON_OFFSET_Y:Number = -64;
 
 		public static var LABEL_VALUE:int = 0;
 		public static var LABEL_PERCENT:int = 1;
@@ -108,20 +112,12 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			button.labelText = "";
 
 			
-			var tf:TextField = new TextField();
+			_previewIcon = PreviewIconFactory.getPreviewIcon(int(Math.random()*2));
+			_previewIcon.mouseEnabled = _previewIcon.mouseChildren = false;
+			_previewIcon.x = PREVIEW_ICON_OFFSET_X;
+			_previewIcon.y = PREVIEW_ICON_OFFSET_Y;
 			
-			
-			tf.defaultTextFormat = PsykoFonts.BookFontSmall;
-			tf.autoSize = "left";
-			tf.embedFonts = true;
-			tf.text = "TEST 12345";
-			tf.rotation = 45;
-			tf.y -= 16;
-			addChild(tf);
-			
-			_previewIcon = new SizePreview();
-			_previewIcon.gotoAndStop(50);
-			addChild(_previewIcon);
+			button.addChildAt(_previewIcon,1);
 			
 			_stage = stage;
 			
@@ -140,15 +136,16 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		// -----------------------
 
 		private function updateLabelFromValue():void {
+			//values are now always rounded to a full decimal - no fractions (in case you were wondering why you just get 0 with that pesky value range that should be in a human scale in the first place)
 			switch( _labelMode ) {
 				case LABEL_VALUE:
-					button.labelText = formatLabel( _value );
+					button.labelText = formatLabel( int(0.5+_value) );
 					break;
 				case LABEL_PERCENT:
-					button.labelText = formatLabel( _ratio * 100, "%" );
+					button.labelText = formatLabel(  int(0.5+_ratio * 100), "%" );
 					break;
 				case LABEL_DEGREES:
-					button.labelText = formatLabel( _value, "°" );
+					button.labelText = formatLabel(  int(0.5+_value), "°" );
 					break;
 			}
 		}
@@ -185,6 +182,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			updateRatioFromEars();
 			updateValueFromRatio();
 			updateLabelFromValue();
+			updatePreviewIconFromRatio();
 			dispatchEvent( _changeEvt );
 		}
 
@@ -215,6 +213,10 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private function updateEarsFromRatio():void {
 			_earContainer.x = _earContainerX = EAR_MOTION_RANGE * ( 2 * _ratio - 1 );
+		}
+		
+		private function updatePreviewIconFromRatio():void {
+			_previewIcon.gotoAndStop( 1 + int( 0.5 + _ratio * _previewIcon.totalFrames) );
 		}
 
 		// -----------------------
@@ -255,6 +257,11 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			button.showIcon( false );
 			previewHolder.visible = true;
 			TweenLite.to( previewHolder, PREVIEW_ANIMATION_TIME, { y: _previewHolderOpenY - 120, ease: Strong.easeOut } );
+			_previewIcon.x = 0;
+			_previewIcon.y = 0;
+			previewHolder.addChild(_previewIcon);
+			
+			
 		}
 		
 		private function hidePreviewHolder():void {
@@ -263,6 +270,11 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 
 		private function onPreviewHideComplete():void {
+			_previewIcon.x = PREVIEW_ICON_OFFSET_X;
+			_previewIcon.y = PREVIEW_ICON_OFFSET_Y;
+			
+			button.addChildAt(_previewIcon,1);
+			
 			previewHolder.visible = false;
 			button.showIcon( true );
 			hideEars();
@@ -349,6 +361,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			_value = value;
 			updateRatioFromValue();
 			updateEarsFromRatio();
+			updatePreviewIconFromRatio();
 			dispatchEvent( _changeEvt );
 		}
 
