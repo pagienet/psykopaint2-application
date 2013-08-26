@@ -211,7 +211,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			_shadowRect.y = insertRect.y + 35;
  			_shadowRect.width = INSERT_WIDTH+10;
  			_shadowRect.height = 75;
-			insert(_shadow, diffuseSourceBitmapdata, _shadowRect, rotation, false, insertRect.x-_shadowRect.x, insertRect.y-_shadowRect.y);
+			insert(_shadow, diffuseSourceBitmapdata, _shadowRect, rotation, false, true, insertRect.x-_shadowRect.x, insertRect.y-_shadowRect.y);
 			
  			diffuseSourceBitmapdata.unlock();
 

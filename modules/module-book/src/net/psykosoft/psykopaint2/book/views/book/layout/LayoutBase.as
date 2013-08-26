@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.book.views.book.data.PageMaterialsManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.BlankBook;
 	import net.psykosoft.psykopaint2.book.views.book.layout.CompositeHelper;
+	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
 
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
@@ -19,9 +20,13 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		protected var _layoutType:String;
  		protected var _inserts:Dictionary;
 
- 		protected var _thumbsLowResPath:String;
-		protected var _thumbsHighResPath:String;
-		protected var _originalsPath:String;
+ 		//to be removed
+	 	//	protected var _thumbsLowResPath:String;
+			//protected var _thumbsHighResPath:String;
+			//protected var _originalsPath:String;
+		//end to be removed
+
+		protected var _collection:SourceImageCollectionVO;
 
  		private var _pageMaterialsManager:PageMaterialsManager;
  		private var _blankBook:BlankBook;
@@ -29,7 +34,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		private var _pageCount:uint = 0;
  		private var _currentQuality:String;
  		private var _stage:Stage;
- 		 
+ 		
  		public var requiredAssetsReadySignal:Signal;
  		public var requiredCraftSignal:Signal;
  		public var regionSignal:Signal;
@@ -52,11 +57,21 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			initDefaultAssets();
  		}
  
- 		protected function insert(insertSource:BitmapData, destSource:BitmapData, insertRect:Rectangle, rotation:Number = 0, disposeInsert:Boolean = false, offsetRotationX:Number = 0, offsetRotationY:Number = 0 ):BitmapData
+ 		protected function insert(insertSource:BitmapData, destSource:BitmapData, insertRect:Rectangle, rotation:Number = 0, disposeInsert:Boolean = false, keepRatio:Boolean = false, offsetRotationX:Number = 0, offsetRotationY:Number = 0, offsetX:Number = 0, offsetY:Number = 0):BitmapData
  		{
- 			return _compositeHelper.insert(insertSource, destSource, insertRect, rotation, disposeInsert, offsetRotationX, offsetRotationY);
+ 			return _compositeHelper.insert(insertSource, destSource, insertRect, rotation, disposeInsert, keepRatio, offsetRotationX, offsetRotationY, offsetX, offsetY);
  		}
 
+ 		protected function get lastWidth():Number
+ 		{
+ 			return _compositeHelper.lastWidth;
+ 		}
+
+ 		protected function get lastHeight():Number
+ 		{
+ 			return _compositeHelper.lastHeight;
+ 		}
+ 
  		//the count of pages (2 sides per page)
  		protected function set pageCount(val:uint):void
 		{
@@ -68,18 +83,25 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			return _pageMaterialsManager.getPageMaterial(index);
 		}
 
-		public function get thumbsLowResPath():String
-		{
-			return _thumbsLowResPath;
-		}
-		public function get thumbsHighResPath():String
-		{
-			return _thumbsHighResPath;
-		}
-		public function get originalsPath():String
-		{
-			return _originalsPath;
-		}
+//these will be removed at some point as the collection vo makes them obsolete
+//public function get thumbsLowResPath():String
+//{
+//	return _thumbsLowResPath;
+//}
+//public function get thumbsHighResPath():String
+//{
+//	return _thumbsHighResPath;
+//}
+//public function get originalsPath():String
+//{
+//	return _originalsPath;
+//}
+//end to be removed
+
+		public function set collection(collection : SourceImageCollectionVO):void
+ 		{
+ 			_collection = collection;
+ 		}
 
 		public function getPageCount():uint
 		{
@@ -169,7 +191,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		protected function initDefaultAssets():void{}
  
  		/* data parsing/collecting*/
- 		public function parseXml( xml:XML ):void{}
+ 		//public function parseXml( xml:XML ):void{} to be removed
 
  		/* loading the collected content once default receivers pages are generated*/
  		public function loadContent():void{throw new Error(this+":loadContent function: must be overrided");}
