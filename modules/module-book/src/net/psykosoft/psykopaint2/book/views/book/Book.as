@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.materials.TextureMaterial;
 
 	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
 
 	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
@@ -48,7 +49,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		private var _isLoadingImage:Boolean;
  		private var _currentDegrees:Number = 0;
 
-     		public function Book(view:View3D, stage:Stage)
+     	public function Book(view:View3D, stage:Stage)
  		{
  			_view = view;
  			_stage = stage;
@@ -59,9 +60,11 @@ package net.psykosoft.psykopaint2.book.views.book
  			bookClearedSignal = new Signal();
  		}
 
- 		public function set layoutType(type:String):void
+ 		public function setSourceImages(collection : SourceImageCollectionVO):void
  		{
- 			switch(type){
+			var type : String = collection.source;
+
+			switch(type){
  				case BookImageSource.SAMPLE_IMAGES:
  					_layout = new NativeSamplesLayout(_stage);
  					break;

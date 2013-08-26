@@ -6,14 +6,17 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.html.script.Package;
 
 	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
+	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
+	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestFetchSourceImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestBookLoadSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -39,7 +42,10 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var notifyAnimateBookOutCompleteSignal : NotifyAnimateBookOutCompleteSignal;
 
 		[Inject]
-		public var requestBookLoadSignal:RequestBookLoadSignal;
+		public var notifySourceImagesFetchedSignal : NotifySourceImagesFetchedSignal;
+
+		[Inject]
+		public var requestFetchSourceImagesSignal : RequestFetchSourceImagesSignal;
 
 		override public function initialize():void {
 
@@ -65,6 +71,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onEnabled() : void
 		{
 			view.imageSelectedSignal.add(onImageSelected);
+			view.requestData.add(onDataRequested);
 			requestAnimateBookOutSignal.add(onRequestAnimateBookOutSignal);
 			requestSetBookBackgroundSignal.add(onRequestSetBookBackgroundSignal);
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
@@ -82,26 +89,28 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			view.backgroundTexture = texture;
 		}
- 
+
+		private function onDataRequested(source : String, index : int, amount : int) : void
+		{
+			requestSourceImages(source, index, amount);
+		}
+
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
 
-			// TODO: use requestBookLoadSignal instead of navigation state changes to determine the data source of the book
-			// The state system will trigger requestSetUpBookModuleSignal and as soon as it is set up it will trigger
-			// requestBookLoadSignal, which carries the appropriate BookImageSource type string.
+			// TODO: pass correct amount (load per page!)
 			switch( newState ) {
-				
 				case NavigationStateType.BOOK:
-					view.layoutType = BookImageSource.SAMPLE_IMAGES;
+					requestSourceImages(BookImageSource.SAMPLE_IMAGES, 0, 0);
 					break;
 
 				case NavigationStateType.CAPTURE_IMAGE:
-					view.layoutType = BookImageSource.CAMERA_IMAGES;
+					requestSourceImages(BookImageSource.CAMERA_IMAGES, 0, 0);
 					break;
 					
 				// Sample images. as default for now
 				default:
-					view.layoutType = BookImageSource.SAMPLE_IMAGES;
+					requestSourceImages(BookImageSource.SAMPLE_IMAGES, 0, 0);
 			}
 		}
 
@@ -119,6 +128,17 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onAnimateOutComplete() : void
 		{
 			notifyAnimateBookOutCompleteSignal.dispatch();
+		}
+
+		private function requestSourceImages(source : String, index : int, amount : int) : void
+		{
+			notifySourceImagesFetchedSignal.addOnce(onSourceImagesFetched);
+			requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(source, index, amount));
+		}
+
+		private function onSourceImagesFetched(collection : SourceImageCollectionVO) : void
+		{
+			view.setSourceImages(collection);
 		}
 	}
 }

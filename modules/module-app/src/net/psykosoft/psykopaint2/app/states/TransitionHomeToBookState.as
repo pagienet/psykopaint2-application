@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
-	import net.psykosoft.psykopaint2.core.signals.RequestBookLoadSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 
 	public class TransitionHomeToBookState extends State
@@ -31,9 +30,6 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var bookState : BookState;
 
-		[Inject]
-		public var requestBookLoadSignal:RequestBookLoadSignal;
-
 		private var _background : RefCountedTexture;
 		private var _bookSourceType:String;
 
@@ -53,8 +49,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onBookModuleSetUp() : void
 		{
-			requestBookLoadSignal.dispatch( _bookSourceType );
-
 			notifyBackgroundSetSignal.addOnce(onBackgroundSet);
 			requestCreateBookBackgroundSignal.dispatch();
 		}

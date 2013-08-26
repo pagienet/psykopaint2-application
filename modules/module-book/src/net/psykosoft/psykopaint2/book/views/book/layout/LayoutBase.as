@@ -182,6 +182,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
  		/* triggers the specific data parsing per layout to be able to generate the receiving pages*/
  		public function loadBookContent(cb:Function):void {}
- 
+
  	}
  } 

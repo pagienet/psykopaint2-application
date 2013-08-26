@@ -43,14 +43,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 			super(BookImageSource.SAMPLE_IMAGES, stage);
 		}
-  
-		override public function loadBookContent(cbxml:Function):void
+
+		override public function loadBookContent(onContentLoaded:Function):void
  		{	
- 			_cbxml = cbxml;
+ 			_cbxml = onContentLoaded;
  			_xmlLoader = new XMLLoader();
  			var date:Date = new Date();
 			var cacheAnnihilator:String = "?t=" + String( date.getTime() ) + Math.round( 1000 * Math.random() );
- 
+
 			_xmlLoader.loadAsset( "/book-packaged/samples/samples_thumbs.xml" + cacheAnnihilator, parseXml );
  		}
 

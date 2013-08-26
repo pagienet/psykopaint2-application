@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.tools.utils.TextureUtils;
 	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
@@ -37,12 +38,18 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var imageSelectedSignal:Signal;
 		public var bookHasClosedSignal:Signal;
 
-		private var _layoutType:String;
 		private var _backgroundTexture : RefCountedTexture;
+
+		public var requestData : Signal;
 
 		public function BookView() {
 			super();
 			bookHasClosedSignal = new Signal();
+
+			// todo: dispatch this on page turns and when first page shows for dynamic loading
+			// requestData.dispatch(_layout, thumbnailIndex, numThumbnailsToLoad)
+			requestData = new Signal(String, int, int);
+
 			initVars();
 		}
 
@@ -116,6 +123,15 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			// Initialize view.
 			initView3D();
+			initBook();
+		}
+
+		private function initBook() : void
+		{
+			_book = new Book(_view3d, stage);
+			_book.bookReadySignal.add(onBookReady);
+			_book.imagePickedSignal.add(dispatchSelectedImage);
+			_book.bookClearedSignal.add(dispatchBookHasClosed);
 		}
 
 		// Interaction declared on book ready
@@ -138,19 +154,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			addChild( _view3d );
 		}
 
-		public function set layoutType(type:String):void
-		{
-			_layoutType = type;
-			
-			_book = new Book(_view3d, stage);
-
-			_book.bookReadySignal.add(onBookReady);
-			_book.imagePickedSignal.add(dispatchSelectedImage);
-			_book.bookClearedSignal.add(dispatchBookHasClosed);
-			_book.layoutType =_layoutType;
-			
-		}
- 
 		public function renderScene(target : Texture):void
 		{
 			if( !(_isEnabled && _view3d && _view3d.parent) ) return;
@@ -218,6 +221,11 @@ package net.psykosoft.psykopaint2.book.views.book
 		public function get backgroundTexture() : RefCountedTexture
 		{
 			return _backgroundTexture;
+		}
+
+		public function setSourceImages(collection : SourceImageCollectionVO) : void
+		{
+			_book.setSourceImages(collection);
 		}
 	}
 }

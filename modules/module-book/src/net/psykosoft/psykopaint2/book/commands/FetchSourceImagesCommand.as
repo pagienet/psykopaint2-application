@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.book.commands
 {
 	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
 	import net.psykosoft.psykopaint2.book.services.CameraRollService;
 	import net.psykosoft.psykopaint2.book.services.ImageService;
 	import net.psykosoft.psykopaint2.book.services.SampleImageService;
@@ -8,13 +9,7 @@ package net.psykosoft.psykopaint2.book.commands
 	public class FetchSourceImagesCommand
 	{
 		[Inject]
-		public var bookImageSource : String;
-
-		[Inject]
-		public var index : int;
-
-		[Inject]
-		public var amount : int;
+		public var requestVO : SourceImageRequestVO;
 
 		[Inject]
 		public var cameraRollService : CameraRollService;
@@ -25,14 +20,14 @@ package net.psykosoft.psykopaint2.book.commands
 		public function execute() : void
 		{
 			var service : ImageService = getService();
-			service.fetchImages(index, amount);
+			service.fetchImages(requestVO.index, requestVO.amount);
 		}
 
 		private function getService() : ImageService
 		{
 			var service : ImageService;
 
-			switch (bookImageSource) {
+			switch (requestVO.bookImageSource) {
 				case BookImageSource.USER_IMAGES:
 					service = cameraRollService;
 					break;

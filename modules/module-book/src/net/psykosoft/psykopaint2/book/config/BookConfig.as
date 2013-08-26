@@ -7,11 +7,12 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.services.CameraRollService;
 	import net.psykosoft.psykopaint2.book.services.SampleImageService;
 	import net.psykosoft.psykopaint2.book.services.DummyCameraRollService;
-	import net.psykosoft.psykopaint2.book.services.DummySampleImageService;
+	import net.psykosoft.psykopaint2.book.services.XMLSampleImageService;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
+	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestBookRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
@@ -81,9 +82,9 @@ package net.psykosoft.psykopaint2.book.config
 
 		private function mapSingletons() : void
 		{
-			// TODO: Provide actual communicating ones
+			// TODO: Provide actual communicating service
 			_injector.map(CameraRollService).toSingleton(DummyCameraRollService);
-			_injector.map(SampleImageService).toSingleton(DummySampleImageService);
+			_injector.map(SampleImageService).toSingleton(XMLSampleImageService);
 		}
 
 		// -----------------------
@@ -100,6 +101,7 @@ package net.psykosoft.psykopaint2.book.config
 			_injector.map(RequestAnimateBookOutSignal).asSingleton();
 			_injector.map(NotifyAnimateBookOutCompleteSignal).asSingleton();
 			_injector.map(RequestExitBookSignal).asSingleton();
+			_injector.map(NotifySourceImagesFetchedSignal).asSingleton();
 
 		}
 
