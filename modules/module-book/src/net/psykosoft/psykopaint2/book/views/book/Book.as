@@ -13,16 +13,16 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.core.base.Object3D;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
-	
+
+	import net.psykosoft.psykopaint2.book.BookImageSource;
+
 	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
 	import net.psykosoft.psykopaint2.book.views.book.layout.CameraSamplesLayout;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
-	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutType;
 	import net.psykosoft.psykopaint2.book.views.book.layout.NativeSamplesLayout;
 	import net.psykosoft.psykopaint2.book.views.models.BookCraft;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	
+
 	import org.osflash.signals.Signal;
  
  	public class Book
@@ -62,22 +62,21 @@ package net.psykosoft.psykopaint2.book.views.book
  		public function set layoutType(type:String):void
  		{
  			switch(type){
-
- 				case LayoutType.SAMPLE_IMAGES:
+ 				case BookImageSource.SAMPLE_IMAGES:
  					_layout = new NativeSamplesLayout(_stage);
  					break;
 
- 				case LayoutType.CAMERA_IMAGES:
+ 				case BookImageSource.CAMERA_IMAGES:
  					_layout = new CameraSamplesLayout(_stage);
  					break;
 
- 				case LayoutType.USER_IMAGES:
+ 				case BookImageSource.USER_IMAGES:
  					//break;
 
- 				case LayoutType.FRIENDS_IMAGES:
+ 				case BookImageSource.FRIENDS_IMAGES:
  					//break;
 
- 				case LayoutType.COMMUNITY_IMAGES:
+ 				case BookImageSource.COMMUNITY_IMAGES:
  					//break;
 
  				default:
