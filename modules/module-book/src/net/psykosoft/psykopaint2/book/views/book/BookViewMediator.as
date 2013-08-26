@@ -82,20 +82,26 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			view.backgroundTexture = texture;
 		}
-
+ 
 		override protected function onStateChange( newState:String ):void {
 			super.onStateChange( newState );
 
 			// TODO: use requestBookLoadSignal instead of navigation state changes to determine the data source of the book
 			// The state system will trigger requestSetUpBookModuleSignal and as soon as it is set up it will trigger
 			// requestBookLoadSignal, which carries the appropriate BookImageSource type string.
-
 			switch( newState ) {
-				// Sample images. as default
+				
 				case NavigationStateType.BOOK:
 					view.layoutType = BookImageSource.SAMPLE_IMAGES;
-					// User photos iOS.//defaulted to samples for now
 					break;
+
+				case NavigationStateType.CAPTURE_IMAGE:
+					view.layoutType = BookImageSource.CAMERA_IMAGES;
+					break;
+					
+				// Sample images. as default for now
+				default:
+					view.layoutType = BookImageSource.SAMPLE_IMAGES;
 			}
 		}
 

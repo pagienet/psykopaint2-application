@@ -99,10 +99,9 @@ package net.psykosoft.psykopaint2.book.views.book
  			setTimeout(animateIn, 250);
  		}
 
- 		//Animation opening book closed
+ 		//Animation book
  		private function animateIn():void
  		{	
-			
  			_dummyCam = new Object3D();
  			_dummyCam.z = 2000;
  			_bookCraft.show();
@@ -120,14 +119,13 @@ package net.psykosoft.psykopaint2.book.views.book
 				ease: Strong.easeIn,
 				onUpdate:lookAtDummy,
 				onComplete: onAnimateInComplete } );
-
-		
- 
 		}
+
 		public function lookAtDummy():void
 		{
 			_view.camera.lookAt(_dummyCam.position);
 		}
+
 		public function onAnimateInComplete():void
 		{	
 			onOpenBook();
@@ -136,16 +134,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		public function onOpenBook():void
 		{
 			var duration:Number = 1;
-
-			//tmp ugly fix
-			//_view.camera.y = 1300;
-			//_view.camera.z=-50;
-
-			//_dummyCam.z=1; 
-			//_bookCraft.rotationY=0;
-			//end ugly tmp fix
-
-
+ 
 			var desty:Number = -25;
 			TweenLite.to( _bookCraft.coverRight, duration, { y: desty, x:0, rotationZ:2,
 								ease: Strong.easeOut} );
@@ -186,7 +175,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		public function animateOut():void
 		{
-		
 			TweenLite.to( _bookCraft.coverRight, 1, { y: -23, x:-13, rotationZ:-180,
 								ease: Strong.easeOut} );
 
