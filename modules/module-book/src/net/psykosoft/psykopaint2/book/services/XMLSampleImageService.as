@@ -45,9 +45,9 @@ package net.psykosoft.psykopaint2.book.services
 
 		private function parseXML(index : uint, amount : uint) : void
 		{
-			var lowResPath : String = _xml.path;
-			var highResPath : String = _xml.highRes;
-			var originalFilename : String = _xml.originals;
+			var lowResPath : String = _xml.path.lowRes;
+			var highResPath : String = _xml.path.highRes;
+			var originalFilename : String = _xml.path.originals;
 			var images : XMLList = _xml.images.image;
 			var collection : SourceImageCollectionVO = new SourceImageCollectionVO();
 			var max : int = index + amount;

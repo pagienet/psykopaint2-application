@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 		{
 		}
 		
-		public static function getPreviewIcon(index:int):MovieClip
+		public static function getPreviewIcon(index:int):AbstractPreview
 		{
 			return new IconClasses[index]();
 		}
