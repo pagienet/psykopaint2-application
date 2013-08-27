@@ -87,7 +87,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  			if(_enviroMethod) applyEnviroMethod(textureMaterial);
 
- 			if(PlatformUtil.performanceRating() >= 2)  textureMaterial.normalMap = generatePageNormalMap();
+ 			if(PlatformUtil.hasRequiredPerformanceRating(2))  textureMaterial.normalMap = generatePageNormalMap();
 
  			_materials["mat"+index] = textureMaterial;
 
@@ -134,7 +134,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
 		private function applyEnviroMethod(material:MaterialBase):void
  		{
- 			if(PlatformUtil.performanceRating() >= 2) SinglePassMaterialBase(material).addMethod(_enviroMethod);
+ 			if(PlatformUtil.hasRequiredPerformanceRating(2)) SinglePassMaterialBase(material).addMethod(_enviroMethod);
  		}
  
 		private function validateMap(origBmd:BitmapData):BitmapData
