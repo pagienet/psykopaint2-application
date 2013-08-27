@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.commands
 {
 
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
+	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
 	import flash.events.Event;
 	import flash.filesystem.File;
@@ -13,23 +14,55 @@ package net.psykosoft.psykopaint2.core.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoDeserializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.data.RetrievePaintingsVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 
 	public class
-	RetrievePaintingDataCommand extends AsyncCommand
+	RetrievePaintingDataCommand extends SequenceMacro
 	{
 		[Inject]
 		public var paintingModel:PaintingModel;
 
-		private var _paintingFileNames:Vector.<String>;
+		private var _retrieveVoInstance:RetrievePaintingsVO;
+
+		override public function prepare():void {
+
+			trace( this, "prepare()" );
+
+			mapMacroConsistentData();
+
+			add( RetrieveSavedPaintingNamesCommand );
+			add( RetrieveAllSavedPaintingInfosCommand );
+
+			registerCompleteCallback( onMacroComplete );
+		}
+
+		private function onMacroComplete( success:Boolean ):void {
+			trace( this, "macro complete - success: " + success );
+			unMapMacroConsistentData();
+		}
+
+		private function mapMacroConsistentData():void {
+			trace( this, "mapping..." );
+			_retrieveVoInstance = new RetrievePaintingsVO();
+			injector.map( RetrievePaintingsVO ).toValue( _retrieveVoInstance );
+		}
+
+		private function unMapMacroConsistentData():void {
+			trace( this, "un-mapping..." );
+			injector.unmap( RetrievePaintingsVO );
+			if( _retrieveVoInstance ) _retrieveVoInstance.dispose();
+		}
+
+		// ---------------------------------------------------------------------
+		// OLD...
+		// ---------------------------------------------------------------------
+
+		/*private var _paintingFileNames:Vector.<String>;
 		private var _numPaintingFiles:uint;
 		private var _indexOfPaintingFileBeingRead:uint;
 		private var _paintingVos:Vector.<PaintingInfoVO>;
 		private var _readUtil:BinaryIoUtil;
-
-		public function RetrievePaintingDataCommand() {
-			super();
-		}
 
 		override public function execute():void {
 
@@ -108,6 +141,6 @@ package net.psykosoft.psykopaint2.core.commands
 				_readUtil = null;
 				dispatchComplete( true );
 			}
-		}
+		}*/
 	}
 }

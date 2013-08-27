@@ -80,6 +80,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 			trace( this, "async writing bytes done - filename: " + _fileName );
 			_fileStream.removeEventListener( Event.CLOSE, onWriteBytesAsyncClosed );
 			if( _onWriteCompleteCallback != null) _onWriteCompleteCallback();
+			_onWriteCompleteCallback = null;
 			removeAsyncWriteListeners();
 			_fileStream = null;
 		}
@@ -125,6 +126,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 			var bytes:ByteArray = new ByteArray();
 			_fileStream.readBytes( bytes, 0, _fileStream.bytesAvailable );
 			if( _onReadCompleteCallback != null) _onReadCompleteCallback( bytes );
+			_onReadCompleteCallback = null;
 			removeReadListeners();
 			_fileStream = null;
 		}
@@ -136,9 +138,19 @@ package net.psykosoft.psykopaint2.base.utils.io
 		}
 
 		private function removeReadListeners():void {
-			_fileStream.removeEventListener( Event.COMPLETE, onReadBytesAsyncComplete );
-			_fileStream.removeEventListener( OutputProgressEvent.OUTPUT_PROGRESS, onReadBytesAsyncProgress );
-			_fileStream.removeEventListener( IOErrorEvent.IO_ERROR, onReadBytesAsyncError );
+			if( !_fileStream ) return;
+			if( _fileStream.hasEventListener( Event.COMPLETE ) ) _fileStream.removeEventListener( Event.COMPLETE, onReadBytesAsyncComplete );
+			if( _fileStream.hasEventListener( OutputProgressEvent.OUTPUT_PROGRESS ) ) _fileStream.removeEventListener( OutputProgressEvent.OUTPUT_PROGRESS, onReadBytesAsyncProgress );
+			if( _fileStream.hasEventListener( IOErrorEvent.IO_ERROR ) ) _fileStream.removeEventListener( IOErrorEvent.IO_ERROR, onReadBytesAsyncError );
+		}
+
+		public function dispose():void {
+			removeReadListeners();
+			_onReadCompleteCallback = null;
+			_onWriteCompleteCallback = null;
+			if( _fileStream ) _fileStream.close();
+			_rootFile = null;
+			_fileStream = null;
 		}
 	}
 }

@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.configuration
 
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
+	import net.psykosoft.psykopaint2.core.commands.ReadPaintingInfoFileCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.commands.UpdateFrameCommand;
@@ -30,6 +31,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoFileReadSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
@@ -57,6 +59,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestPaintingInfoFileReadSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -205,6 +208,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestShowPopUpSignal ).asSingleton();
 			_injector.map( RequestHidePopUpSignal ).asSingleton();
 			_injector.map( NotifySplashScreenRemovedSignal ).asSingleton();
+			_injector.map( NotifyPaintingInfoFileReadSignal ).asSingleton();
 
 		}
 
@@ -218,6 +222,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_commandMap.map( RequestPaintingDataRetrievalSignal ).toCommand( RetrievePaintingDataCommand );
 			_commandMap.map( RequestCoreModuleBootstrapSignal ).toCommand( BootstrapCoreModuleCommand );
 			_commandMap.map( RequestFrameUpdateSignal ).toCommand( UpdateFrameCommand );
+			_commandMap.map( RequestPaintingInfoFileReadSignal ).toCommand( ReadPaintingInfoFileCommand );
 		}
 
 		// -----------------------
