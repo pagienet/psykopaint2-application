@@ -22,28 +22,42 @@ package net.psykosoft.psykopaint2.base.utils.misc
 		// 2 desktop, ipad mini, ipad 4
 		// not that there might be higher values coming for future models 
 		
+		private static var _rating:int = -1;
 		
 		//TODO: android and iphone
 		//for internal model numbers: http://theiphonewiki.com/wiki/IPad 
 		//http://theiphonewiki.com/wiki/IPad_mini
 		public static function hasRequiredPerformanceRating( value:int ):Boolean
 		{
-			if ( !isRunningOnIPad()) return 2 >= value;
-			
-			var os:String = Capabilities.os.toLowerCase();
-			if ( os.indexOf("ipad1") != -1 ) return 0 >= value;
-			
-			if ( os.indexOf("ipad3,1") != -1 || 
-				 os.indexOf("ipad3,2") != -1 ||  	
-				 os.indexOf("ipad3,3") != -1 || 
-				 os.indexOf("ipad2,1") != -1 || 
-				 os.indexOf("ipad2,2") != -1  || 
-				 os.indexOf("ipad2,3") != -1  || 
-				 os.indexOf("ipad2,4") != -1) return 1 >= value;
-			
-			//mini 1 is 2,5/2,6/2,7
-			
-			return 2 >= value;
+			if ( _rating == -1)
+			{
+				if ( !isRunningOnIPad())
+				{
+					_rating =  2;
+				} else 
+				{
+					var os:String = Capabilities.os.toLowerCase();
+					if ( os.indexOf("ipad1") != -1 ) 
+					{ 
+						_rating = 0;
+					} else if ( os.indexOf("ipad3,1") != -1 || 
+						os.indexOf("ipad3,2") != -1 ||  	
+						os.indexOf("ipad3,3") != -1 || 
+						os.indexOf("ipad2,1") != -1 || 
+						os.indexOf("ipad2,2") != -1  || 
+						os.indexOf("ipad2,3") != -1  || 
+						os.indexOf("ipad2,4") != -1)
+					{
+						_rating = 1;
+					} else
+					{
+						//mini 1 is 2,5/2,6/2,7
+						_rating = 2;
+					}
+				}
+			}
+			return _rating >= value;
 		}
+		
 	}
 }
