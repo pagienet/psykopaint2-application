@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.core.commands.HidePopUpCommand;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -13,6 +14,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
+	import net.psykosoft.psykopaint2.paint.commands.WritePaintingDataANECommand;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
 
 	public class SavePaintingCommand extends SequenceMacro
@@ -52,7 +54,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			add( DisplaySavingPopUpCommand );
 			add( ExportCanvasSurfacesCommand );
 			add( SerializePaintingCommand );
-			add( WritePaintingCommand );
+			add( WritePaintingAS3Command );
+//			if( CoreSettings.RUNNING_ON_iPAD ) add( WritePaintingDataANECommand ); else add( WritePaintingAS3Command );
 			add( HidePopUpCommand );
 
 			registerCompleteCallback( onMacroComplete );
@@ -76,8 +79,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function unMapMacroConsistentData():void {
 			trace( this, "un-mapping..." );
-			if( _savingVoInstance ) _savingVoInstance.dispose();
 			injector.unmap( SavePaintingVO );
+			if( _savingVoInstance ) _savingVoInstance.dispose();
 		}
 	}
 }

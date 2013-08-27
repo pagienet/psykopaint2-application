@@ -1,32 +1,32 @@
 package net.psykosoft.psykopaint2.book.views.book
 {
-	import flash.display3D.Context3D;
-	import flash.display3D.Context3DBlendFactor;
-	import flash.display3D.Context3DCompareMode;
-	import flash.geom.Rectangle;
-	import flash.display3D.textures.Texture;
-	import flash.events.MouseEvent;
-	import flash.display.BitmapData;
-	import flash.utils.setTimeout;
 
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.tools.utils.TextureUtils;
-	
+
+	import flash.display.BitmapData;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.textures.Texture;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	import flash.utils.setTimeout;
+
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 
-	import net.psykosoft.psykopaint2.book.views.book.Book;
-
 	import org.osflash.signals.Signal;
- 	 
+
 	public class BookView extends ViewBase
 	{
 		private var _stage3dProxy:Stage3DProxy;
 		private var _view3d:View3D;
+
 		private var _book:Book;
 		//interaction vars
 		private var _startMouseX:Number;

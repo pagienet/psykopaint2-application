@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
+	import net.psykosoft.psykopaint2.core.views.components.previews.AbstractPreview;
 	import net.psykosoft.psykopaint2.core.views.components.previews.PreviewIconFactory;
 	import net.psykosoft.psykopaint2.core.views.components.previews.SizePreview;
 
@@ -53,7 +54,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _valueHasChanged:Boolean;
 		private var _checkClosingTap:Boolean;
 		
-		private var _previewIcon:MovieClip;
+		private var _previewIcon:AbstractPreview;
 		
 		private const EAR_MOTION_RANGE:Number = 50;
 		private const EAR_ANIMATION_TIME:Number = 0.2;
@@ -216,7 +217,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 		
 		private function updatePreviewIconFromRatio():void {
-			_previewIcon.gotoAndStop( 1 + int( 0.5 + _ratio * _previewIcon.totalFrames) );
+			_previewIcon.ratio = _ratio;
 		}
 
 		// -----------------------

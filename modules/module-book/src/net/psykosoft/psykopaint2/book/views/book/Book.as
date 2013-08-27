@@ -87,6 +87,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
  			}
 
+ 			_layout.collection = collection;
+
  			_layout.requiredCraftSignal.add(initOpenAnimation);
  			_layout.requiredAssetsReadySignal.add(loadBookContent);
  		}

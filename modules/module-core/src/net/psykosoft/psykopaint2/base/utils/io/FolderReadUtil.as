@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		}
 
 		public static function readFilesInIosFolder( folderName:String ):Array {
-			var dir:File = File.applicationStorageDirectory.resolvePath( folderName );
+			var dir:File = File.documentsDirectory.resolvePath( folderName );
 			var list:Array = [];
 			try {
 				list = dir.getDirectoryListing();

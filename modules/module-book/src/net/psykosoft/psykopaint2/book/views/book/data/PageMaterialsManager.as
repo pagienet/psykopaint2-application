@@ -15,8 +15,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.book.views.book.data.BlankBook;
-
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 
  	public class PageMaterialsManager
  	{
@@ -88,7 +87,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  			if(_enviroMethod) applyEnviroMethod(textureMaterial);
 
- 			if(CoreSettings.RUNNING_ON_RETINA_DISPLAY) textureMaterial.normalMap = generatePageNormalMap();
+ 			if(PlatformUtil.performanceRating() >= 2)  textureMaterial.normalMap = generatePageNormalMap();
 
  			_materials["mat"+index] = textureMaterial;
 
@@ -135,7 +134,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
 		private function applyEnviroMethod(material:MaterialBase):void
  		{
- 			if(CoreSettings.RUNNING_ON_RETINA_DISPLAY) SinglePassMaterialBase(material).addMethod(_enviroMethod);
+ 			if(PlatformUtil.performanceRating() >= 2) SinglePassMaterialBase(material).addMethod(_enviroMethod);
  		}
  
 		private function validateMap(origBmd:BitmapData):BitmapData

@@ -4,25 +4,19 @@ package net.psykosoft.psykopaint2.core.commands
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
 	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.ProgressEvent;
-	import flash.events.SecurityErrorEvent;
 	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryIoUtil;
-
 	import net.psykosoft.psykopaint2.base.utils.io.FolderReadUtil;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoDeserializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 
-	public class RetrievePaintingDataCommand extends AsyncCommand
+	public class
+	RetrievePaintingDataCommand extends AsyncCommand
 	{
 		[Inject]
 		public var paintingModel:PaintingModel;

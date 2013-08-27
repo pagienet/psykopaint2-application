@@ -19,6 +19,8 @@
             <array>
                 <string>2</string>
             </array>
+            <key>UIFileSharingEnabled</key>
+            <true/>
             ]]>
         </InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
@@ -28,6 +30,7 @@
         <extensionID>net.psykosoft.photos</extensionID>
 		<extensionID>net.psykosoft.gyroscope</extensionID>
 		<extensionID>net.psykosoft.wacom</extensionID>
+		<extensionID>net.psykosoft.io</extensionID>
     </extensions>
 	<icon>
 		<!-- TODO: need more icons for itunes, store, etc: http://mrgan.tumblr.com/post/708404794/ios-app-icon-sizes -->

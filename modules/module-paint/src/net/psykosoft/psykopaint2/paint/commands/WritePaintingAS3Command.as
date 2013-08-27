@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
 
-	public class WritePaintingCommand extends AsyncCommand
+	public class WritePaintingAS3Command extends AsyncCommand
 	{
 		[Inject]
 		public var saveVO:SavePaintingVO;
@@ -19,6 +19,8 @@ package net.psykosoft.psykopaint2.paint.commands
 		private var _time:uint;
 
 		private const ASYNC_MODE:Boolean = false;
+
+		// TODO: remove ios impl. as this is now only being used for desktop
 
 		override public function execute():void {
 			ConsoleView.instance.log( this, "execute()" );

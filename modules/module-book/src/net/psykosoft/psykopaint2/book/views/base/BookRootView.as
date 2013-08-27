@@ -13,50 +13,43 @@ package net.psykosoft.psykopaint2.book.views.base
 
 	public class BookRootView extends Sprite
 	{
-		public var onSubViewsReady : Signal;
-		private var _bookView : BookView;
-		private var _subViewsReady : Boolean;
+		public var onSubViewsReady:Signal;
+		private var _bookView:BookView;
+		private var _bookReady:Boolean;
 
 		public function BookRootView() {
 			super();
 
 			onSubViewsReady = new Signal();
+			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 
 			// Add main views.
 			addChild( _bookView = new BookView() );
+			_bookView.addEventListener( Event.ADDED_TO_STAGE, onBookViewAddedToStage );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK, BookSubNavView );
 		}
 
-		public function init() : void
-		{
-			// TODO: move this block to where all views are really ready; assets loaded etc etc
-			{
-				_subViewsReady = true;
-				notifyIfReady();
-			}
-
-			if (!stage)
-				addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		private function onBookViewAddedToStage( event:Event ):void {
+			_bookView.removeEventListener( Event.ADDED_TO_STAGE, onBookViewAddedToStage );
+			_bookReady = true;
+			checkReady();
 		}
 
-		private function onAddedToStage(event : Event) : void
-		{
-			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			notifyIfReady();
+		private function onAddedToStage( event:Event ):void {
+			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			checkReady();
 		}
 
-		public function notifyIfReady() : void
-		{
-			if (stage != null && _subViewsReady)
+		public function checkReady():void {
+			if( stage && _bookReady )
 				onSubViewsReady.dispatch();
 		}
 
-		public function dispose() : void
-		{
+		public function dispose():void {
 			_bookView.dispose();
-			removeChild(_bookView);
+			removeChild( _bookView );
 		}
 	}
 }

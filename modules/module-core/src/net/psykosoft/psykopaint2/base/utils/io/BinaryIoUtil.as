@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 					break;
 				}
 				case STORAGE_TYPE_IOS: {
-					_rootFile = File.applicationStorageDirectory;
+					_rootFile = File.documentsDirectory;
 					break;
 				}
 				default: {
@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 		private function onWriteBytesAsyncClosed( event:Event ):void {
 			trace( this, "async writing bytes done - filename: " + _fileName );
 			_fileStream.removeEventListener( Event.CLOSE, onWriteBytesAsyncClosed );
-			if( _onWriteCompleteCallback ) _onWriteCompleteCallback();
+			if( _onWriteCompleteCallback != null) _onWriteCompleteCallback();
 			removeAsyncWriteListeners();
 			_fileStream = null;
 		}
@@ -124,7 +124,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 			trace( this, "async reading bytes done - filename: " + _fileName );
 			var bytes:ByteArray = new ByteArray();
 			_fileStream.readBytes( bytes, 0, _fileStream.bytesAvailable );
-			if( _onReadCompleteCallback ) _onReadCompleteCallback( bytes );
+			if( _onReadCompleteCallback != null) _onReadCompleteCallback( bytes );
 			removeReadListeners();
 			_fileStream = null;
 		}

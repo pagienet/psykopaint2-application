@@ -5,13 +5,14 @@ package net.psykosoft.psykopaint2.book.views.book.data
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.psykopaint2.book.views.book.data.BookPageSize;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
 
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.text.TextField;
-	import flash.text.TextFormat
+	import flash.text.TextFormat;
 	import flash.text.TextFieldAutoSize;
 
 	import away3d.textures.BitmapTexture;
@@ -150,20 +151,17 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
 		private function initTextField():void
 		{
-			var textFormat:TextFormat = new TextFormat();
-			//textFormat.font = myFont.fontName;//ask LI when the fonts will be available
-			textFormat.font = "verdana";
+			var textFormat:TextFormat = PsykoFonts.BookFontSmall;
 			textFormat.color = 0x333333;
 			textFormat.size = 10;
-			textFormat.bold = true;
 			textFormat.align = TextFieldAutoSize.LEFT;
-			 
+ 
 		 	_pageNumber_txt = new TextField();
-		  	//_pageNumber_txt.embedFonts = true; //ask LI when the fonts will be available
+		  	_pageNumber_txt.embedFonts = true; //ask LI when the fonts will be available
 			_pageNumber_txt.width = 20;
 			_pageNumber_txt.height = 15;
 			_pageNumber_txt.x = 10;
-			_pageNumber_txt.y = _pageSprite.height - 15-5;
+			_pageNumber_txt.y = _pageSprite.height - 20;
 			 //_pageNumber_txt.scaleY --> to fix the distort if the texture would not be projected as a square
 			 //_pageNumber_txt.border = true; to debug visually
 

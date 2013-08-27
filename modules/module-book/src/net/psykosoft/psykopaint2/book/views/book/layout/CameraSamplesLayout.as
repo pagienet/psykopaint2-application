@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.photos.UserPhotosExtension;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 
 	import flash.utils.Dictionary;
 	import flash.display.BitmapData;
@@ -178,7 +178,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var invalidateContent:Boolean = (_pagesFilled["pageIndex"+pageIndex].inserted >= _pagesFilled["pageIndex"+pageIndex].max)? true : false;
 			
 			// no need to update the nroalmap if no shader uses it
-			if(CoreSettings.RUNNING_ON_RETINA_DISPLAY) {
+			if(PlatformUtil.performanceRating() >= 2) {
 
 				var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
 				var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
@@ -211,7 +211,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			_shadowRect.y = insertRect.y + 35;
  			_shadowRect.width = INSERT_WIDTH+10;
  			_shadowRect.height = 75;
-			insert(_shadow, diffuseSourceBitmapdata, _shadowRect, rotation, false, insertRect.x-_shadowRect.x, insertRect.y-_shadowRect.y);
+			insert(_shadow, diffuseSourceBitmapdata, _shadowRect, rotation, false, true, insertRect.x-_shadowRect.x, insertRect.y-_shadowRect.y);
 			
  			diffuseSourceBitmapdata.unlock();
 

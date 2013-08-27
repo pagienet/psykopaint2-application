@@ -58,6 +58,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		private var _showInUI:Boolean;
 		private var _label:String;
 		private var _colorValue:int;
+		private var _previewID:String;
 		
 		public static function fromXML( data:XML ):PsykoParameter
 		{
@@ -113,6 +114,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			}
 			
 			if ( data.hasOwnProperty("@label") ) pp.label = data.@label;
+			if ( data.hasOwnProperty("@previewID") ) pp.previewID = data.@previewID;
 			if ( data.hasOwnProperty("@showInUI") ) pp.showInUI = ( data.@showInUI == "1");
 			return pp;
 		}
@@ -441,6 +443,16 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			_label = value;
 		}
 		
+		public function get previewID():String
+		{
+			return _previewID;
+		}
+		
+		public function set previewID( value:String ):void
+		{
+			_previewID = value;
+		}
+		
 		public function get showInUI():Boolean
 		{
 			return _showInUI;
@@ -489,6 +501,9 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			
 			if (  message.hasOwnProperty("@label") )
 				label = message.@label;
+			
+			if (  message.hasOwnProperty("@previewID") )
+				previewID = message.@previewID;
 			
 			switch ( type )
 			{
@@ -566,7 +581,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		
 		public function toXML( path:Array ):XML
 		{
-			var result:XML = <parameter id={id} label={label} type={type} path={path.join(".")} showInUI={_showInUI ? "1" : "0" } />
+			var result:XML = <parameter id={id} label={label} type={type} path={path.join(".")} previewID={_previewID} showInUI={_showInUI ? "1" : "0" } />
 			switch ( type )
 			{
 				case NumberParameter:
