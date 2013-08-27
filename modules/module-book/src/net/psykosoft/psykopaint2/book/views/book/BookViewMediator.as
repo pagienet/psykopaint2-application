@@ -1,9 +1,9 @@
 package net.psykosoft.psykopaint2.book.views.book
 {
+
 	import away3d.core.managers.Stage3DProxy;
 
 	import flash.display.BitmapData;
-	import flash.html.script.Package;
 
 	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
@@ -14,12 +14,11 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestFetchSourceImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
-
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
+	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class BookViewMediator extends MediatorBase
 	{
