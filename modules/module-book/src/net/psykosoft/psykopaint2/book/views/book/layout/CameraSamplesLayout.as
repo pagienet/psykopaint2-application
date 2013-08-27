@@ -178,7 +178,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var invalidateContent:Boolean = (_pagesFilled["pageIndex"+pageIndex].inserted >= _pagesFilled["pageIndex"+pageIndex].max)? true : false;
 			
 			// no need to update the nroalmap if no shader uses it
-			if(PlatformUtil.performanceRating() >= 2) {
+			if(PlatformUtil.hasRequiredPerformanceRating(2)) {
 
 				var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
 				var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
