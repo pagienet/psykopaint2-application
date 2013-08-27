@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.psykopaint2.book.views.book.layout.NativeSamplesLayout;
 	import net.psykosoft.psykopaint2.book.views.models.BookCraft;
+	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
 
 	import org.osflash.signals.Signal;
  
@@ -356,11 +357,11 @@ package net.psykosoft.psykopaint2.book.views.book
  		// image picking
  		public function hitTestRegions(mouseX:Number, mouseY:Number):Boolean
  		{
- 			var fileName:String = _regionManager.hitTestRegions(mouseX, mouseY, _currentPage);
+ 			var data:BookThumbnailData = _regionManager.hitTestRegions(mouseX, mouseY, _currentPage);
 
- 			if(fileName != ""){
+ 			if(data){
  				_isLoadingImage = true;
-				_layout.loadFullImage(fileName, onFullSizeImageLoaded);
+				_layout.loadFullImage(data.imageVO.originalFilename, onFullSizeImageLoaded);
  				
  				return true;
  			}

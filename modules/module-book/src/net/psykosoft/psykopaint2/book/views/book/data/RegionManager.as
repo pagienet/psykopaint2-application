@@ -9,8 +9,10 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
- 
- 	public class RegionManager
+
+	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
+
+	public class RegionManager
  	{
  		private var _regions:Vector.<Region>;
  		private var _view:View3D;
@@ -44,28 +46,28 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			return _regionZoffset;
  		}
 
- 		public function addRegion(rect:Rectangle, object:Object):void
+ 		public function addRegion(rect:Rectangle, data:BookThumbnailData):void
  		{
  			var region:Region = new Region();
- 			region.object = object;
+ 			region.data = data;
  			region.UVRect = new Rectangle(rect.x/BookPageSize.WIDTH, rect.y/BookPageSize.HEIGHT, rect.width/BookPageSize.WIDTH, rect.height/BookPageSize.WIDTH);
- 			region.pageIndex = object.pageIndex;
+ 			region.pageIndex = data.pageIndex;
  			//should not happend if the book was propperly cleared
  			if(!_regions)_regions = new Vector.<Region>();
  			_regions.push(region);
  		}
  
- 		public function hitTestRegions(x:Number, y:Number, pageIndex:uint):String
+ 		public function hitTestRegions(x:Number, y:Number, pageIndex:uint):BookThumbnailData
  		{
- 			if(_regions.length == 0) return "";
+ 			if(_regions.length == 0) return null;
  			
  			var isRecto:Boolean = (x>_middle) ? true : false;
 
- 			if(pageIndex == 0 && !isRecto) return "";
+ 			if(pageIndex == 0 && !isRecto) return null
  
  			var pageSideIndex:uint = ( isRecto)? pageIndex*2 : (pageIndex*2)-1;
  			var bookPage:BookPage = _pagesManager.getPage((isRecto)? pageIndex :  pageIndex-1 );
- 			if(!bookPage) return "";
+ 			if(!bookPage) return null;
 
  			if(!_np) _np = new Vector3D(0.0, 1, 0.1);
  			 
@@ -86,7 +88,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  
 			hitZ -= regionZoffset;
  
- 			if(hitX > _extremeX || hitX < -_extremeX || hitZ< -_extremeZ || hitZ > _extremeZ) return "";
+ 			if(hitX > _extremeX || hitX < -_extremeX || hitZ< -_extremeZ || hitZ > _extremeZ) return null;
 
 			hitZ += _extremeZ;
  
@@ -98,12 +100,12 @@ package net.psykosoft.psykopaint2.book.views.book.data
  				region = _regions[i];
  				if(region.pageIndex == pageSideIndex){
 					if(region.UVRect.contains(u, v)){
-						return region.object.name;
+						return region.data;
 					}	
 				}
  			}
 
- 			return "";
+ 			return null;
  		}
  
 
@@ -112,7 +114,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			if(_regions){
  				for(var i:uint = 0;i<_regions.length;++i){
  					_regions[i].UVRect = null;
- 					_regions[i].object = null;
+ 					_regions[i].data = null;
  					_regions[i] = null;
  				}
  				_regions = null;

@@ -15,7 +15,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 	import away3d.textures.BitmapTexture;
 	import away3d.materials.TextureMaterial;
- 
+
+	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
+
 	public class NativeSamplesLayout extends LayoutBase
 	{
 		private const INSERT_WIDTH:uint = 200;
@@ -26,7 +28,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _loadedResources:uint = 0;
 		private var _resourcesCount:uint;
 		private var _fileLoader:FileLoader;
-		private var _content:Vector.<Object>;
+		private var _content:Vector.<BookThumbnailData>;
 		private var _shadowRect:Rectangle;
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
@@ -43,7 +45,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		override public function loadBookContent(onContentLoaded:Function):void
  		{	
- 			_content = new Vector.<Object>();
+ 			_content = new Vector.<BookThumbnailData>();
 			
 			var images : Vector.<SourceImageVO> = _collection.images;
 			 
@@ -51,7 +53,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
  			_resourcesCount = images.length;
  
-			var data:Object;
+			var data:BookThumbnailData;
 			var url:String;
 
 			_pagesFilled = new Dictionary();
@@ -65,12 +67,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				pageIndex = uint(i/INSERTS_COUNT);
 				inPageIndex = uint( i - (pageIndex*INSERTS_COUNT) );
 				 
-				data = {	thumbNail:imageVO.highResThumbnailFilename,
-						name:imageVO.originalFilename,
-						index:i,
-						pageIndex:pageIndex,
-						inPageIndex:inPageIndex
-					};
+				data = new BookThumbnailData(imageVO, i, pageIndex, inPageIndex);
 
 				_content.push(data);
  
@@ -101,9 +98,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_content = null;
 		}
 
-		private function loadImage( object:Object):void
+		private function loadImage( object:BookThumbnailData):void
 		{
-			_fileLoader.loadImage(object.thumbNail, onImageLoadedComplete, onImageLoadError, object);
+			_fileLoader.loadImage(object.imageVO.highResThumbnailFilename, onImageLoadedComplete, onImageLoadError, object);
 		}
  
 		private function onImageLoadedComplete( e:AssetLoadedEvent):void
