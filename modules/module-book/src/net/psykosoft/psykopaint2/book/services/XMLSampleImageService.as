@@ -1,8 +1,9 @@
 package net.psykosoft.psykopaint2.book.services
 {
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
-	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
-	import net.psykosoft.psykopaint2.book.model.SourceImageVO;
+	import net.psykosoft.psykopaint2.book.model.FileSourceImageProxy;
+	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
+	import net.psykosoft.psykopaint2.book.model.SourceImageProxy;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
 
 	public class XMLSampleImageService implements SampleImageService
@@ -49,7 +50,7 @@ package net.psykosoft.psykopaint2.book.services
 			var highResPath : String = _xml.path.highRes;
 			var originalFilename : String = _xml.path.originals;
 			var images : XMLList = _xml.images.image;
-			var collection : SourceImageCollectionVO = new SourceImageCollectionVO();
+			var collection : SourceImageCollection = new SourceImageCollection();
 			var max : int = index + amount;
 
 			if (amount == 0 || max > images.length())
@@ -57,7 +58,7 @@ package net.psykosoft.psykopaint2.book.services
 
 			for (var i : uint = index; i < max; ++i) {
 				var baseFilename : String = images[i].@name;
-				var imageVO : SourceImageVO = new SourceImageVO();
+				var imageVO : FileSourceImageProxy = new FileSourceImageProxy();
 				imageVO.id = i;
 				imageVO.highResThumbnailFilename = highResPath + baseFilename;
 				imageVO.lowResThumbnailFilename = lowResPath + baseFilename;

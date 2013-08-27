@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.materials.TextureMaterial;
 
 	import net.psykosoft.psykopaint2.book.BookImageSource;
-	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
+	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
 
 	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
@@ -61,7 +61,7 @@ package net.psykosoft.psykopaint2.book.views.book
  			bookClearedSignal = new Signal();
  		}
 
- 		public function setSourceImages(collection : SourceImageCollectionVO):void
+ 		public function setSourceImages(collection : SourceImageCollection):void
  		{
 			var type : String = collection.source;
 
@@ -361,13 +361,18 @@ package net.psykosoft.psykopaint2.book.views.book
 
  			if(data){
  				_isLoadingImage = true;
-				_layout.loadFullImage(data.imageVO.originalFilename, onFullSizeImageLoaded);
- 				
+				data.imageVO.loadFullSized(onFullSizeImageLoaded, onFullSizeImageError);
+
  				return true;
  			}
  
  			return false;
  		}
+
+		private function onFullSizeImageError() : void
+		{
+			throw new Error("Failed to load fullsize image");
+		}
  
 		private function onFullSizeImageLoaded( bmd:BitmapData ):void
 		{

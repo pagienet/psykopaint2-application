@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.book.signals
 {
-	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
+	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
 
 	import org.osflash.signals.Signal;
 
@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.book.signals
 	{
 		public function NotifySourceImagesFetchedSignal()
 		{
-			super(SourceImageCollectionVO);
+			super(SourceImageCollection);
 		}
 	}
 }

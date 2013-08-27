@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.book.BookImageSource;
-	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
+	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
 	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
@@ -135,7 +135,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(source, index, amount));
 		}
 
-		private function onSourceImagesFetched(collection : SourceImageCollectionVO) : void
+		private function onSourceImagesFetched(collection : SourceImageCollection) : void
 		{
 			view.setSourceImages(collection);
 		}

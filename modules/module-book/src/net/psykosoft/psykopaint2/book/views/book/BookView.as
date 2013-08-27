@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
+	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
@@ -223,7 +223,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			return _backgroundTexture;
 		}
 
-		public function setSourceImages(collection : SourceImageCollectionVO) : void
+		public function setSourceImages(collection : SourceImageCollection) : void
 		{
 			_book.setSourceImages(collection);
 		}

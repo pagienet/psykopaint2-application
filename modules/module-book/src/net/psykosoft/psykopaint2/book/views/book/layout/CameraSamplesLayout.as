@@ -13,7 +13,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 	import away3d.textures.BitmapTexture;
 	import away3d.materials.TextureMaterial;
- 
+
+	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
+
 	public class CameraSamplesLayout extends LayoutBase
 	{
 		private const INSERT_WIDTH:uint = 100;
@@ -21,7 +23,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		private const INSERTS_COUNT:uint = 16;
 
-		private var _content:Vector.<Object>;
+		private var _content:Vector.<BookThumbnailData>;
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
 		private var _pagesFilled:Dictionary;
@@ -49,8 +51,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_aneReady = true;
 			var thumbsCount:uint = _ane.getNumberOfLibraryItems();
  
-			_content = new Vector.<Object>();
-			var data:Object;
+			_content = new Vector.<BookThumbnailData>();
+			var data:BookImageSource;
 
 			_pagesFilled = new Dictionary();
 
@@ -62,11 +64,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				pageIndex = uint(i/INSERTS_COUNT);
 				inPageIndex = uint( i - (pageIndex*INSERTS_COUNT) );
 
-				data = {	name:""+i, 
-						index:i, 
-						pageIndex:pageIndex,
-						inPageIndex:inPageIndex
-					};
+				//data = new BookThumbnailData(	""+i, i, pageIndex, inPageIndex );
 
 				_content.push(data);
  
@@ -130,14 +128,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		//Custom compositing variation per layout and region registration for mouse detection
 		//
 		// sample case: we insert 6 images per page
-		override protected function composite(insertSource:BitmapData, object:Object):void
+		override protected function composite(insertSource:BitmapData, data:BookThumbnailData):void
 		{
 
 			var insertRect:Rectangle = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
-			//var pageIndex:uint = uint(object.index/16);
-			//var inPageIndex:uint =  object.index - (pageIndex*16);
-			var pageIndex:uint = uint(object.pageIndex);
-			var inPageIndex:uint = uint(object.inPageIndex);
+			//var pageIndex:uint = uint(data.index/16);
+			//var inPageIndex:uint =  data.index - (pageIndex*16);
+			var pageIndex:uint = uint(data.pageIndex);
+			var inPageIndex:uint = uint(data.inPageIndex);
 
 			var isRecto:Boolean = (pageIndex %2 == 0)? true : false;
 			
@@ -196,10 +194,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				}
 			}
 
-			//dispatch the rect + object for region. the rect is updated for the shadow, the region will declare its own rect.
-			object.inPageIndex = inPageIndex;
-			object.pageIndex = pageIndex;
- 			dispatchRegion(insertRect, object);
+			//dispatch the rect + data for region. the rect is updated for the shadow, the region will declare its own rect.
+			data.inPageIndex = inPageIndex;
+			data.pageIndex = pageIndex;
+ 			dispatchRegion(insertRect, data);
 
 			//insert the shadow map
 			if(!_shadow) _shadow = getShadow();
@@ -222,13 +220,5 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			}
  			
 		}
-
-		override public function loadFullImage( fileName:String, cb:Function ):void
-		{
-			var index:uint = parseInt(fileName);
-			var bmd:BitmapData = _ane.getFullImageAtIndex( index);
-			cb(bmd);
-		}
-
 	}
 }

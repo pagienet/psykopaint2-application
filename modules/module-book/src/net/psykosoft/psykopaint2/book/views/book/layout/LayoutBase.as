@@ -3,14 +3,16 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.book.views.book.data.PageMaterialsManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.BlankBook;
 	import net.psykosoft.psykopaint2.book.views.book.layout.CompositeHelper;
-	import net.psykosoft.psykopaint2.book.model.SourceImageCollectionVO;
+	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
 
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
 	import flash.display.Stage;
 	import flash.display.StageQuality;
 	import flash.utils.Dictionary;
- 
+
+	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
+
 	import org.osflash.signals.Signal;
 
 	import away3d.materials.TextureMaterial;
@@ -20,7 +22,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		protected var _layoutType:String;
  		protected var _inserts:Dictionary;
 
-		protected var _collection:SourceImageCollectionVO;
+		protected var _collection:SourceImageCollection;
 
  		private var _pageMaterialsManager:PageMaterialsManager;
  		private var _blankBook:BlankBook;
@@ -77,7 +79,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			return _pageMaterialsManager.getPageMaterial(index);
 		}
 
-		public function set collection(collection : SourceImageCollectionVO):void
+		public function set collection(collection : SourceImageCollection):void
  		{
  			_collection = collection;
  		}
@@ -155,9 +157,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		}
 
  		//register regions
- 		public function dispatchRegion(rect:Rectangle, object:Object):void
+ 		public function dispatchRegion(rect:Rectangle, data:BookThumbnailData):void
  		{
- 			regionSignal.dispatch(rect, object);
+ 			regionSignal.dispatch(rect, data);
  		}
 
  		//when the enviro elements are all loaded, we can build the enviromethod. no need for a signal, only pageMaterialsManager needs it
@@ -176,10 +178,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		public function loadContent():void{throw new Error(this+":loadContent function: must be overrided");}
 
  		/* loaded image insert/compositing in page*/
- 		protected function composite(image:BitmapData, object:Object):void{throw new Error(this+":composite function: must be overrided");}
-
- 		/* loads high res version of an image*/
- 		public function loadFullImage( fileName:String, cb:Function ):void {}
+ 		protected function composite(image:BitmapData, data:BookThumbnailData):void{throw new Error(this+":composite function: must be overrided");}
 
  		/* triggers the specific data parsing per layout to be able to generate the receiving pages*/
  		public function loadBookContent(cb:Function):void {}

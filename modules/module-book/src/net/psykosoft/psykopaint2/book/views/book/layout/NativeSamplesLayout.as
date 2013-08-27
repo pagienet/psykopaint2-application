@@ -1,21 +1,16 @@
 package net.psykosoft.psykopaint2.book.views.book.layout
 {
-	import net.psykosoft.psykopaint2.book.BookImageSource;
-	import net.psykosoft.psykopaint2.base.utils.io.BitmapLoader;
-
-	import net.psykosoft.psykopaint2.book.views.book.data.FileLoader;
-	import net.psykosoft.psykopaint2.book.views.book.data.events.AssetLoadedEvent;
-	import net.psykosoft.psykopaint2.book.model.SourceImageVO;
-	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
-
-	import flash.utils.Dictionary;
-	import flash.display.BitmapData;
-	import flash.geom.Rectangle;
-	import flash.display.Stage;
-
-	import away3d.textures.BitmapTexture;
 	import away3d.materials.TextureMaterial;
+	import away3d.textures.BitmapTexture;
 
+	import flash.display.BitmapData;
+	import flash.display.Stage;
+	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
+
+	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
+	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.book.model.SourceImageProxy;
 	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
 
 	public class NativeSamplesLayout extends LayoutBase
@@ -25,21 +20,17 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		private const INSERTS_COUNT:uint = 6;
 
-		private var _loadedResources:uint = 0;
+		private var _loadIndex:uint = 0;
 		private var _resourcesCount:uint;
-		private var _fileLoader:FileLoader;
 		private var _content:Vector.<BookThumbnailData>;
 		private var _shadowRect:Rectangle;
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
-		private var _imageLoader:BitmapLoader;
 		private var _pagesFilled:Dictionary;
-		private var _cb:Function;
+		private var _loadQueue : Vector.<BookThumbnailData>;
 
 		public function NativeSamplesLayout(stage:Stage)
 		{
-			_fileLoader = new FileLoader();
-
 			super(BookImageSource.SAMPLE_IMAGES, stage);
 		}
 
@@ -47,9 +38,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		{	
  			_content = new Vector.<BookThumbnailData>();
 			
-			var images : Vector.<SourceImageVO> = _collection.images;
+			var images : Vector.<SourceImageProxy> = _collection.images;
 			 
-			var imageVO:SourceImageVO;
+			var imageVO:SourceImageProxy;
 
  			_resourcesCount = images.length;
  
@@ -92,44 +83,51 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			switchToHighDrawQuality();
 
-			for(var i:uint = 0; i < _content.length;++i){
-				loadImage(_content[i]);
-			}
+			_loadQueue = new Vector.<BookThumbnailData>();
+			_loadIndex = 0;
+
+			for(var i:uint = 0; i < _content.length;++i)
+				_loadQueue.push(_content[i]);
+
+			loadCurrentThumbnail();
+
 			_content = null;
 		}
 
-		private function loadImage( object:BookThumbnailData):void
+		private function loadCurrentThumbnail() : void
 		{
-			_fileLoader.loadImage(object.imageVO.highResThumbnailFilename, onImageLoadedComplete, onImageLoadError, object);
-		}
- 
-		private function onImageLoadedComplete( e:AssetLoadedEvent):void
-		{
-			composite(e.data, e.customData);
-			clearFileloader();
+			_loadQueue[_loadIndex].imageVO.loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);
 		}
 
-		private function onImageLoadError(e:AssetLoadedEvent):void
+		private function continueLoading() : void
 		{
-			clearFileloader();
-		}
-
-		private function clearFileloader():void
-		{
-			_loadedResources++;
-			
-			if(_resourcesCount == _loadedResources){
-				_fileLoader = null;
+			++_loadIndex;
+			if (_loadIndex == _resourcesCount) {
+				_loadQueue = null;
 				restoreQuality();
 			}
+			else
+				loadCurrentThumbnail();
+		}
+
+		private function onThumbnailLoadedComplete(bitmapData : BitmapData):void
+		{
+			composite(bitmapData, _loadQueue[_loadIndex]);
+			continueLoading();
+		}
+
+		private function onThumbnailLoadedError() : void
+		{
+			trace ("Warning: Failed to load thumbnail!");
+			continueLoading();
 		}
 
 		//Custom compositing variation per layout and region registration for mouse detection
-		override protected function composite(insertSource:BitmapData, object:Object):void
+		override protected function composite(insertSource:BitmapData, data:BookThumbnailData):void
 		{
 			var insertRect:Rectangle = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
-			var pageIndex:uint = uint(object.pageIndex);
-			var inPageIndex:uint = uint(object.inPageIndex);
+			var pageIndex:uint = uint(data.pageIndex);
+			var inPageIndex:uint = uint(data.inPageIndex);
 			var isRecto:Boolean = (pageIndex %2 == 0)? true : false;
 				
 			if(isRecto){
@@ -206,9 +204,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			}
 
 			//dispatch the rect + object for region. the rect is updated for the shadow, the region will declare its own rect.
-			object.inPageIndex = inPageIndex;
-			object.pageIndex = pageIndex;
- 			dispatchRegion(insertRect, object);
+			data.inPageIndex = inPageIndex;
+			data.pageIndex = pageIndex;
+ 			dispatchRegion(insertRect, data);
 
 			//insert the shadow map
 			if(!_shadow)  _shadow = getShadow();
@@ -229,21 +227,5 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			}
  			
 		}
-
-		// if VO is consistant, this could be moved to base as we do not need variations for the highres lookups.
-		override public function loadFullImage( fileName:String, cb:Function ):void
- 		{
-			_imageLoader = new BitmapLoader();
-			_cb = cb;
-			_imageLoader.loadAsset( fileName, onFullSizeImageLoaded );
-		}
-
-		private function onFullSizeImageLoaded( bmd:BitmapData ):void
-		{
-			_cb( bmd );
-			_imageLoader.dispose();
-			_imageLoader = null;
-		}
-
 	}
 }
