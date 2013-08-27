@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 
@@ -28,18 +29,28 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 		[Inject]
 		public var memoryWarningManager:MemoryWarningManager;
 
+		[Inject]
+		public var ioAne:IOAneManager;
+
 		override public function execute():void {
 
 			trace( this, "execute" );
 
+			// Gestures...
 			gestureManager.stage = stage;
 
+			// Keyboard debugging...
 			if( CoreSettings.USE_DEBUG_KEYS ) {
 				keyDebuggingManager.initialize();
 			}
 
+			// Memory warnings...
 			memoryWarningManager.initialize();
 
+			// IO ANE.
+			ioAne.initialize();
+
+			// Tweens.
 			// Used to color button labels.
 			TweenPlugin.activate( [ ColorMatrixFilterPlugin ] );
 

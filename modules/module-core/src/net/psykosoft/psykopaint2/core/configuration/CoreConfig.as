@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.commands.UpdateFrameCommand;
 	import net.psykosoft.psykopaint2.core.commands.bootstrap.BootstrapCoreModuleCommand;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
@@ -158,6 +159,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		// -----------------------
 
 		private function mapSingletons():void {
+			_injector.map( IOAneManager ).asSingleton();
 			_injector.map( GestureManager ).asSingleton();
 			_injector.map( ApplicationRenderer ).asSingleton();
 			_injector.map( MemoryWarningManager ).asSingleton();
