@@ -5,8 +5,10 @@ package net.psykosoft.psykopaint2.home.commands
 
 	import flash.events.Event;
 	import flash.filesystem.File;
+	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
+	import net.psykosoft.psykopaint2.base.utils.io.BinaryIoUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataDeserializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
@@ -31,37 +33,33 @@ package net.psykosoft.psykopaint2.home.commands
 		[Inject]
 		public var requestOpenPaintingDataVOSignal : RequestOpenPaintingDataVOSignal;
 
-		private var _file:File;
-
-		public function LoadPaintingDataCommand() {
-			super();
-		}
+		private var _as3ReadUtil:BinaryIoUtil;
 
 		override public function execute():void {
 			super.execute();
 
-			// Read surface data.
-			context.detain( this );
-			var file:File = CoreSettings.RUNNING_ON_iPAD ? File.applicationStorageDirectory : File.desktopDirectory;
-			var path:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION;
-			trace ("resolving path: " + path);
-			_file = file.resolvePath( path );
-			_file.addEventListener( Event.COMPLETE, onFileRead, false, 0, true );
-			_file.load();
+			readAS3();
 		}
 
-		private function onFileRead( event:Event ):void {
-			_file.removeEventListener( Event.COMPLETE, onFileRead );
-			_file.data.uncompress();
+		private function readAS3():void {
+			if( !_as3ReadUtil ) {
+				_as3ReadUtil = new BinaryIoUtil( CoreSettings.RUNNING_ON_iPAD ? BinaryIoUtil.STORAGE_TYPE_IOS : BinaryIoUtil.STORAGE_TYPE_DESKTOP );
+			}
+			_as3ReadUtil.readBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, onAs3FileRead );
+		}
+
+		private function onAs3FileRead( bytes:ByteArray ):void {
+			bytes.uncompress();
+			onFileRead( bytes );
+		}
+
+		private function onFileRead( bytes:ByteArray ):void {
 
 			// De-serialize.
 			var deserializer:PaintingDataDeserializer = new PaintingDataDeserializer();
-			var vo:PaintingDataVO = deserializer.deserialize( _file.data );
-			_file.data.clear();
-			_file = null;
-
+			var vo:PaintingDataVO = deserializer.deserialize( bytes );
 			requestOpenPaintingDataVOSignal.dispatch(vo);
-
+			if( _as3ReadUtil ) _as3ReadUtil.dispose();
 			dispatchComplete( true );
 		}
 	}
