@@ -59,8 +59,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private const EAR_MOTION_RANGE:Number = 50;
 		private const EAR_ANIMATION_TIME:Number = 0.2;
 		private const PREVIEW_ANIMATION_TIME:Number = 0.2;
-		private const PREVIEW_ICON_OFFSET_X:Number = -64;
-		private const PREVIEW_ICON_OFFSET_Y:Number = -64;
+		private const PREVIEW_ICON_OFFSET_X:Number = 64;
+		private const PREVIEW_ICON_OFFSET_Y:Number = 64;
 
 		public static var LABEL_VALUE:int = 0;
 		public static var LABEL_PERCENT:int = 1;
@@ -113,11 +113,11 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			button.labelText = "";
 
 			
-			_previewIcon = PreviewIconFactory.getPreviewIcon(int(Math.random()*2));
+			_previewIcon = PreviewIconFactory.getPreviewIcon(int(Math.random()*9));
 			_previewIcon.mouseEnabled = _previewIcon.mouseChildren = false;
-			_previewIcon.x = PREVIEW_ICON_OFFSET_X;
-			_previewIcon.y = PREVIEW_ICON_OFFSET_Y;
-			
+			_previewIcon.x = 0;
+			_previewIcon.y = 0;
+			_previewIcon.scaleX = _previewIcon.scaleY = 0.5;
 			button.addChildAt(_previewIcon,1);
 			
 			_stage = stage;
@@ -258,8 +258,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			button.showIcon( false );
 			previewHolder.visible = true;
 			TweenLite.to( previewHolder, PREVIEW_ANIMATION_TIME, { y: _previewHolderOpenY - 120, ease: Strong.easeOut } );
-			_previewIcon.x = 0;
-			_previewIcon.y = 0;
+			_previewIcon.x = PREVIEW_ICON_OFFSET_X;
+			_previewIcon.y = PREVIEW_ICON_OFFSET_Y;
 			previewHolder.addChild(_previewIcon);
 			
 			
@@ -271,8 +271,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 
 		private function onPreviewHideComplete():void {
-			_previewIcon.x = PREVIEW_ICON_OFFSET_X;
-			_previewIcon.y = PREVIEW_ICON_OFFSET_Y;
+			_previewIcon.x = 0;
+			_previewIcon.y = 0;
 			
 			button.addChildAt(_previewIcon,1);
 			
