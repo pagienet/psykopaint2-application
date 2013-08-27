@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.core.commands
 		}
 
 		private function onFileRead( info:PaintingInfoVO ):void {
-			vo.paintingVos.push( info );
+			if( info ) vo.paintingVos.push( info );
 			vo.paintingInfoBeingReadIndex++;
 			if( vo.paintingInfoBeingReadIndex < vo.numPaintingFiles ) {
 				readNextFile();

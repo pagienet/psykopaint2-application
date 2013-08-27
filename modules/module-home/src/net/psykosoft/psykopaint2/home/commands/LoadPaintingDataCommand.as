@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.home.commands
 {
 
+	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
+
 	import flash.events.Event;
 	import flash.filesystem.File;
 
@@ -15,16 +17,13 @@ package net.psykosoft.psykopaint2.home.commands
 
 	import robotlegs.bender.framework.api.IContext;
 
-	public class LoadPaintingDataCommand extends TracingCommand
+	public class LoadPaintingDataCommand extends AsyncCommand
 	{
 		[Inject]
 		public var paintingId:String; // From signal.
 
 		[Inject]
 		public var paintingDataModel:PaintingModel;
-
-		[Inject]
-		public var context:IContext;
 
 		[Inject]
 		public var requestStateChangeSignal:RequestNavigationStateChangeSignal;
@@ -53,6 +52,7 @@ package net.psykosoft.psykopaint2.home.commands
 
 		private function onFileRead( event:Event ):void {
 			_file.removeEventListener( Event.COMPLETE, onFileRead );
+			_file.data.uncompress();
 
 			// De-serialize.
 			var deserializer:PaintingDataDeserializer = new PaintingDataDeserializer();
@@ -62,7 +62,7 @@ package net.psykosoft.psykopaint2.home.commands
 
 			requestOpenPaintingDataVOSignal.dispatch(vo);
 
-			context.release( this );
+			dispatchComplete( true );
 		}
 	}
 }

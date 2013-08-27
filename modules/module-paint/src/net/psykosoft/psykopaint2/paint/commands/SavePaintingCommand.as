@@ -54,8 +54,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			add( DisplaySavingPopUpCommand );
 			add( ExportCanvasSurfacesCommand );
 			add( SerializePaintingCommand );
-			add( WritePaintingAS3Command );
-//			if( CoreSettings.RUNNING_ON_iPAD ) add( WritePaintingDataANECommand ); else add( WritePaintingAS3Command );
+//			add( WritePaintingAS3Command );
+			if( CoreSettings.RUNNING_ON_iPAD ) add( WritePaintingDataANECommand ); else add( WritePaintingAS3Command );
 			add( HidePopUpCommand );
 
 			registerCompleteCallback( onMacroComplete );

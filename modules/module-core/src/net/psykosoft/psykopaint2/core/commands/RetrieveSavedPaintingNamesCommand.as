@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.core.commands
 
 			// Read files in app data folder or bundle.
 			var files:Array;
-			if( CoreSettings.RUNNING_ON_iPAD ) files = FolderReadUtil.readFilesInIosFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
+			if( CoreSettings.RUNNING_ON_iPAD ) files = FolderReadUtil.readFilesInIosFolder( "" );
 			else files = FolderReadUtil.readFilesInDesktopFolder( CoreSettings.PAINTING_DATA_FOLDER_NAME );
 			var len:uint = files.length;
 			trace( this, "found files in paint data: " + len );
