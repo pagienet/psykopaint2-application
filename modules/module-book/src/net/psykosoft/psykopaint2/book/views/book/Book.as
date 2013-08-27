@@ -19,7 +19,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
-	import net.psykosoft.psykopaint2.book.views.book.layout.CameraSamplesLayout;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.psykopaint2.book.views.book.layout.NativeSamplesLayout;
 	import net.psykosoft.psykopaint2.book.views.models.BookCraft;
@@ -71,7 +70,7 @@ package net.psykosoft.psykopaint2.book.views.book
  					break;
 
  				case BookImageSource.CAMERA_IMAGES:
- 					_layout = new CameraSamplesLayout(_stage);
+ 					_layout = new NativeSamplesLayout(_stage);
  					break;
 
  				case BookImageSource.USER_IMAGES:

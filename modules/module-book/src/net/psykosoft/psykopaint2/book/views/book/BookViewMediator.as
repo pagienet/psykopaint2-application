@@ -5,14 +5,11 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
-	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestFetchSourceImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -43,9 +40,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		[Inject]
 		public var notifySourceImagesFetchedSignal : NotifySourceImagesFetchedSignal;
 
-		[Inject]
-		public var requestFetchSourceImagesSignal : RequestFetchSourceImagesSignal;
-
 		override public function initialize():void {
 
 			// Init.
@@ -70,9 +64,9 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onEnabled() : void
 		{
 			view.imageSelectedSignal.add(onImageSelected);
-			view.requestData.add(onDataRequested);
 			requestAnimateBookOutSignal.add(onRequestAnimateBookOutSignal);
 			requestSetBookBackgroundSignal.add(onRequestSetBookBackgroundSignal);
+			notifySourceImagesFetchedSignal.add(onSourceImagesFetched);
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
 
@@ -81,36 +75,13 @@ package net.psykosoft.psykopaint2.book.views.book
 			view.imageSelectedSignal.remove(onImageSelected);
 			requestAnimateBookOutSignal.remove(onRequestAnimateBookOutSignal);
 			requestSetBookBackgroundSignal.remove(onRequestSetBookBackgroundSignal);
+			notifySourceImagesFetchedSignal.remove(onSourceImagesFetched);
 			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
 
 		private function onRequestSetBookBackgroundSignal(texture : RefCountedTexture) : void
 		{
 			view.backgroundTexture = texture;
-		}
-
-		private function onDataRequested(source : String, index : int, amount : int) : void
-		{
-			requestSourceImages(source, index, amount);
-		}
-
-		override protected function onStateChange( newState:String ):void {
-			super.onStateChange( newState );
-
-			// TODO: pass correct amount (load per page!)
-			switch( newState ) {
-				case NavigationStateType.BOOK:
-					requestSourceImages(BookImageSource.SAMPLE_IMAGES, 0, 0);
-					break;
-
-				case NavigationStateType.CAPTURE_IMAGE:
-					requestSourceImages(BookImageSource.CAMERA_IMAGES, 0, 0);
-					break;
-					
-				// Sample images. as default for now
-				default:
-					requestSourceImages(BookImageSource.SAMPLE_IMAGES, 0, 0);
-			}
 		}
 
 		private function onImageSelected(selectedBmd:BitmapData):void
@@ -127,12 +98,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onAnimateOutComplete() : void
 		{
 			notifyAnimateBookOutCompleteSignal.dispatch();
-		}
-
-		private function requestSourceImages(source : String, index : int, amount : int) : void
-		{
-			notifySourceImagesFetchedSignal.addOnce(onSourceImagesFetched);
-			requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(source, index, amount));
 		}
 
 		private function onSourceImagesFetched(collection : SourceImageCollection) : void

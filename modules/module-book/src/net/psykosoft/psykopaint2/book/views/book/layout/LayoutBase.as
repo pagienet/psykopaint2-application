@@ -19,7 +19,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
  	public class LayoutBase
  	{
- 		protected var _layoutType:String;
  		protected var _inserts:Dictionary;
 
 		protected var _collection:SourceImageCollection;
@@ -35,9 +34,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		public var requiredCraftSignal:Signal;
  		public var regionSignal:Signal;
  		
-     	public function LayoutBase(type:String, stage:Stage)
+     	public function LayoutBase(stage:Stage)
  		{
- 			_layoutType = type;
  			_stage = stage;
  			_inserts = new Dictionary();
 

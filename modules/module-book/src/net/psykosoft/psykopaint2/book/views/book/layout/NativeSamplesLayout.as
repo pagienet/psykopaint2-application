@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		public function NativeSamplesLayout(stage:Stage)
 		{
-			super(BookImageSource.SAMPLE_IMAGES, stage);
+			super(stage);
 		}
 
 		override public function loadBookContent(onContentLoaded:Function):void
@@ -45,7 +45,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			_resourcesCount = images.length;
  
 			var data:BookThumbnailData;
-			var url:String;
 
 			_pagesFilled = new Dictionary();
 			var pageIndex:uint;

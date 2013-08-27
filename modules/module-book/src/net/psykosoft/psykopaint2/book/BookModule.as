@@ -8,8 +8,10 @@ package net.psykosoft.psykopaint2.book
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.book.config.BookConfig;
 	import net.psykosoft.psykopaint2.book.config.BookSettings;
+	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestFetchSourceImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.core.CoreModule;
@@ -102,6 +104,7 @@ package net.psykosoft.psykopaint2.book
 		{
 			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1, 0.5);
 			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.BOOK);
+			_coreModule.injector.getInstance(RequestFetchSourceImagesSignal).dispatch(new SourceImageRequestVO(BookImageSource.SAMPLE_IMAGES, 0, 0));
 		}
 
 		private function destroyStandaloneModule() : void

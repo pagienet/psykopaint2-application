@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.app.states
 				_background.dispose();
 
 			_background = background.newReference();
-			stateMachine.setActiveState(bookState);
+			stateMachine.setActiveState(bookState, _bookSourceType);
 		}
 
 		override ns_state_machine function deactivate() : void

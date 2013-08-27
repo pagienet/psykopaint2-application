@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.book.services
 {
 	import net.psykosoft.photos.UserPhotosExtension;
+	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.book.model.ANESourceImageProxy;
+	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
 
 	public class ANECameraRollService implements CameraRollService
@@ -38,7 +41,18 @@ package net.psykosoft.psykopaint2.book.services
 
 		private function getImages() : void
 		{
+			var collection : SourceImageCollection = new SourceImageCollection();
+			var imageCount:uint = _ane.getNumberOfLibraryItems();
 
+			collection.source = BookImageSource.CAMERA_IMAGES;
+
+			for (var i : int = 0; i < imageCount; ++i) {
+				var imageVO : ANESourceImageProxy = new ANESourceImageProxy(_ane);
+				imageVO.id = i;
+				collection.images.push(imageVO);
+			}
+
+			notifySourceImagesFetchedSignal.dispatch(collection);
 		}
 	}
 }

@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.commands.DestroyBookModuleCommand;
 	import net.psykosoft.psykopaint2.book.commands.FetchSourceImagesCommand;
 	import net.psykosoft.psykopaint2.book.commands.SetUpBookModuleCommand;
+	import net.psykosoft.psykopaint2.book.services.ANECameraRollService;
 	import net.psykosoft.psykopaint2.book.services.CameraRollService;
 	import net.psykosoft.psykopaint2.book.services.SampleImageService;
 	import net.psykosoft.psykopaint2.book.services.DummyCameraRollService;
@@ -83,7 +84,7 @@ package net.psykosoft.psykopaint2.book.config
 		private function mapSingletons() : void
 		{
 			// TODO: Provide actual communicating service
-			_injector.map(CameraRollService).toSingleton(DummyCameraRollService);
+			_injector.map(CameraRollService).toSingleton(ANECameraRollService);
 			_injector.map(SampleImageService).toSingleton(XMLSampleImageService);
 		}
 
