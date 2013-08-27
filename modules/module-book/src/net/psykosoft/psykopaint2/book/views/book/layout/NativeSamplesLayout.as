@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _loadIndex:uint = 0;
 		private var _resourcesCount:uint;
 		private var _content:Vector.<BookThumbnailData>;
-		private var _shadowRect:Rectangle;
+		private var _insertNRMRect:Rectangle;
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
 		private var _pagesFilled:Dictionary;
@@ -179,22 +179,32 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var diffuseSourceBitmapdata:BitmapData = diffuseTextureSource.bitmapData;
 			diffuseSourceBitmapdata.lock();
 			//insert the image loaded into diffuse map
-			insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, true);
+			insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, true, true);
+			var offset:Number = (lastHeight*.5);
+
 			diffuseSourceBitmapdata.unlock();
  
 			_pagesFilled["pageIndex"+pageIndex].inserted +=1;
 			var invalidateContent:Boolean = (_pagesFilled["pageIndex"+pageIndex].inserted >= _pagesFilled["pageIndex"+pageIndex].max)? true : false;
-			 
+			
+			if(!_insertNRMRect) _insertNRMRect = new Rectangle();
+ 
+			_insertNRMRect.x = insertRect.x+((insertRect.width - lastWidth)*.5);
+			_insertNRMRect.y = insertRect.y+((insertRect.height - lastHeight)*.5);
+			_insertNRMRect.width = lastWidth;
+			_insertNRMRect.height = lastHeight;
+ 
 			// no need to update the normalmap if no shader uses it
 			if(PlatformUtil.hasRequiredPerformanceRating(2) ) {
 				var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
 				var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
  
 				if(!_insertNormalmap) _insertNormalmap = getInsertNormalMap();
- 
+				 
 				//insert the normalmap map of the image into the textureNormalmap
 				normalSourceBitmapdata.lock();
-				insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation);
+				//insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false, true);
+				insert(_insertNormalmap, normalSourceBitmapdata, _insertNRMRect, rotation, false, false);
 				normalSourceBitmapdata.unlock();
 				
 				if(invalidateContent) {
@@ -211,14 +221,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			//insert the shadow map
 			if(!_shadow)  _shadow = getShadow();
 
-			// because shadow is partly covering the image, update the insertRect, we keep the insertRect intact for regions
-			if(!_shadowRect)  _shadowRect = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
-			 
-			_shadowRect.x = insertRect.x - 10;
- 			_shadowRect.y = insertRect.y + 40;
- 			_shadowRect.width = INSERT_WIDTH+15;
- 			_shadowRect.height = 105;
-			insert(_shadow, diffuseSourceBitmapdata, _shadowRect, rotation, false, false, insertRect.x-_shadowRect.x, insertRect.y-_shadowRect.y);
+			insert(_shadow, diffuseSourceBitmapdata, _insertNRMRect, rotation, false, true, 0,0,-5, offset);
 
  			//update after inserts
  			if(invalidateContent){

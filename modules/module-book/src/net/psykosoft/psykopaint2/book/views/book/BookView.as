@@ -93,31 +93,70 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onStageMouseDown( event:MouseEvent ):void
 		{
 			if(_book.ready){
+				_mouseIsDown = true;
 				_startMouseX = mouseX;
-				setTimeout(delayedMouseDown, 100);
-			}
-		}
-		private function delayedMouseDown():void
-		{
-			var currentX:Number = mouseX;
-			_mouseIsDown = true;
-			//simple fast movement detection to prevent image picking while intended to turn page fast
-			if(Math.abs(currentX-_startMouseX) < 5 && _book.currentDegrees< 5){
-				if(!_book.hitTestRegions(mouseX, mouseY)){
-					_startTime = _time;
-				}
-			} else {
-				_book.killSnapTween();
 				_startTime = _time;
 			}
-			
 		}
+		//private function delayedMouseDown():void
+		//{
+		//	//var currentX:Number = mouseX;
+		//	//_mouseIsDown = true;
+		//	//simple fast movement detection to prevent image picking while intended to turn page fast
+		//	if(Math.abs(currentX-_startMouseX) < 5 && _book.currentDegrees< 5){
+		//		if(!_book.hitTestRegions(mouseX, mouseY)){
+		//			_startTime = _time;
+		//		}
+		//	} else {
+		//		_book.killSnapTween();
+		//		_startTime = _time;
+		//	}
+			
+		//}
 
 		private function onStageMouseUp( event:MouseEvent ):void
 		{
 			_mouseIsDown = false;
-			if(_book.ready && !_book.isLoadingImage) _time = _book.snapToNearestTime();
+			if(_book.ready && !_book.isLoadingImage) {
+				var currentX:Number = mouseX;
+				if(Math.abs(currentX-_startMouseX) < 5 && _book.currentDegrees< 3){
+					if(!_book.hitTestRegions(mouseX, mouseY)){
+						_time = _book.snapToNearestTime();
+					}
+				} else {
+					_time = _book.snapToNearestTime();
+				}
+			}//_time = _book.snapToNearestTime();
 		}
+
+		//private function onStageMouseDown( event:MouseEvent ):void
+		//{
+		//	if(_book.ready){
+		//		_startMouseX = mouseX;
+		//		setTimeout(delayedMouseDown, 100);
+		//	}
+		//}
+		//private function delayedMouseDown():void
+		//{
+		//	var currentX:Number = mouseX;
+		//	_mouseIsDown = true;
+		//	//simple fast movement detection to prevent image picking while intended to turn page fast
+		//	if(Math.abs(currentX-_startMouseX) < 5 && _book.currentDegrees< 5){
+		//		if(!_book.hitTestRegions(mouseX, mouseY)){
+		//			_startTime = _time;
+		//		}
+		//	} else {
+		//		_book.killSnapTween();
+		//		_startTime = _time;
+		//	}
+			
+		//}
+
+		//private function onStageMouseUp( event:MouseEvent ):void
+		//{
+		//	_mouseIsDown = false;
+		//	if(_book.ready && !_book.isLoadingImage) _time = _book.snapToNearestTime();
+		//}
  
 		override protected function onEnabled():void
 		{

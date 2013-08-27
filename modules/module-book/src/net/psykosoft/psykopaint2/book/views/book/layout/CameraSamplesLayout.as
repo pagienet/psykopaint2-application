@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
 		private var _pagesFilled:Dictionary;
-		private var _shadowRect:Rectangle;
+		//private var _shadowRect:Rectangle;
 		private var _ane:UserPhotosExtension;
 		private var _aneReady:Boolean;
 
@@ -170,7 +170,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var diffuseSourceBitmapdata:BitmapData = diffuseTextureSource.bitmapData;
 			diffuseSourceBitmapdata.lock();
 			//insert the image loaded into diffuse map. no need to dispose map, its being reused and finally destroyed when all is constructed
-			insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, false);
+			insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, false, true);
+			var lastHeight:Number = lastHeight;
+			var lastScaleY:Number = lastScaleY;
+			var offset:Number = (lastHeight*.5);
  
 			_pagesFilled["pageIndex"+pageIndex].inserted +=1;
 			var invalidateContent:Boolean = (_pagesFilled["pageIndex"+pageIndex].inserted >= _pagesFilled["pageIndex"+pageIndex].max)? true : false;
@@ -185,7 +188,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 				//insert the normalmap map of the image into the textureNormalmap
 				normalSourceBitmapdata.lock();
-				insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false);
+				insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false, true);
 				normalSourceBitmapdata.unlock();
 				
 				if(invalidateContent){
@@ -201,16 +204,20 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 			//insert the shadow map
 			if(!_shadow) _shadow = getShadow();
-			if(!_shadowRect)  _shadowRect = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
-			// because shadow is partly covering the image, update the insertRect
-			// we need keep the insertRect intact for regions
-			_shadowRect = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
-			_shadowRect.x = insertRect.x - 5;
- 			_shadowRect.y = insertRect.y + 35;
- 			_shadowRect.width = INSERT_WIDTH+10;
- 			_shadowRect.height = 75;
-			insert(_shadow, diffuseSourceBitmapdata, _shadowRect, rotation, false, true, insertRect.x-_shadowRect.x, insertRect.y-_shadowRect.y);
-			
+			//if(!_shadowRect)  _shadowRect = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
+			//// because shadow is partly covering the image, update the insertRect
+			//// we need keep the insertRect intact for regions
+			//_shadowRect = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
+			//_shadowRect.x = insertRect.x - 5;
+ 		//	_shadowRect.y = insertRect.y + 35;
+ 		//	_shadowRect.width = INSERT_WIDTH+10;
+ 		//	_shadowRect.height = 75;
+			//insert(_shadow, diffuseSourceBitmapdata, _shadowRect, rotation, false, true, insertRect.x-_shadowRect.x, insertRect.y-_shadowRect.y);
+
+			insert(_shadow, diffuseSourceBitmapdata, insertRect, rotation, false, true, 0,0,0,offset);
+			 
+
+
  			diffuseSourceBitmapdata.unlock();
 
  			//update after inserts

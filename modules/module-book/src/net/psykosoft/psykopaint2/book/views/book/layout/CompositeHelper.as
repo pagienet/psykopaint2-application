@@ -27,7 +27,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			if(!_t) {
 				_t = new Matrix();
 			} else {
-
 				_t.identity();
 			}
 
@@ -35,23 +34,47 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var arbY:Number = (insertRect.height*.5)+offsetRotationY;
  
 			if(keepRatio){
-
+				
 				if(w>h){
-					h /= w;
-					cy = (insertRect.height - (insertSource.height * h) )*.5;
+					
+					if(insertSource.width < insertRect.width){
+						w = Math.min(insertRect.width, insertSource.width) / Math.max(insertRect.width, insertSource.width);
+						h = w;
+
+					} else {
+						h = Math.min(insertRect.height,insertSource.height) / Math.max(insertRect.height,insertSource.height);
+						w = h;
+					}
+
 				} else {
-					w /= h;
-					cx = (insertRect.width - (insertSource.width * w) )*.5;
+ 
+					if(insertSource.width > insertRect.width){
+						w = Math.min(insertRect.width, insertSource.width) / Math.max(insertRect.width, insertSource.width);
+						h = w;
+ 
+					} else {
+						h = Math.min(insertRect.height,insertSource.height) / Math.max(insertRect.height,insertSource.height);
+						w = h;
+					}
+  
 				}
+
+				cx = (insertRect.width - (insertSource.width * h) )*.5;
+				cy = (insertRect.height - (insertSource.height * h) )*.5;
+ 
 			}
+ 
+			cx += offsetX;
+			cy += offsetY;
 
 			_lastWidth = insertSource.width*w;
 			_lastHeight = insertSource.height*h;
-
+			
 			_t.scale(w, h);
-			_t.translate(-arbX+cx+offsetX, -arbY+cy+offsetY );
+			_t.translate(-arbX+cx, -arbY+cy );
 			_t.rotate(rotation*DEGREES_TO_RADIANS);
 			_t.translate(insertRect.x+arbX , insertRect.y+arbY);
+ 
 
 			destSource.draw(insertSource, _t, null, "normal", null, true);
 
@@ -59,7 +82,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 			return destSource;
 		}
-
+ 
 		public function get lastWidth():Number
 		{
 			return _lastWidth;
@@ -69,7 +92,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			return _lastHeight;
 		}
- 
 
  	}
  }

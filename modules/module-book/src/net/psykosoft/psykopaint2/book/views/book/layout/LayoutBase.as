@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		public var requiredCraftSignal:Signal;
  		public var regionSignal:Signal;
  		
-     	public function LayoutBase(type:String, stage:Stage)
+     		public function LayoutBase(type:String, stage:Stage)
  		{
  			_layoutType = type;
  			_stage = stage;
@@ -113,6 +113,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			var bmdPage:BitmapData = _blankBook.getBasePageBitmapData(index);
 			var pageMaterial:TextureMaterial  = _pageMaterialsManager.registerPageMaterial(index, bmdPage);
+			//pageMaterial.alphaBlending = true;
 
 			return pageMaterial;
 		}

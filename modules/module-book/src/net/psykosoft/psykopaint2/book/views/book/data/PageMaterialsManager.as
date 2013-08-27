@@ -114,9 +114,9 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		{
  			bitmapData = validateMap(bitmapData);
  
- 			//old
 			var bitmapTexture:BitmapTexture = new BitmapTexture(bitmapData);
 			var textureMaterial:TextureMaterial = new TextureMaterial(bitmapTexture);
+			//if(bitmapData.transparent) textureMaterial.alphaBlending = true;
 
 			//to do once David has the equivallent for BitmapTexture
 			//var bitmapTexture:TrackedTexture = new TrackedTexture(bitmapData);
