@@ -10,117 +10,28 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.book.BookImageSource;
-	import net.psykosoft.psykopaint2.book.model.SourceImageProxy;
 	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
 
 	public class NativeSamplesLayout extends LayoutBase
 	{
 		private const INSERT_WIDTH:uint = 200;
 		private const INSERT_HEIGHT:uint = 130;
-
 		private const INSERTS_COUNT:uint = 6;
 
-		private var _loadIndex:uint = 0;
-		private var _resourcesCount:uint;
-		private var _content:Vector.<BookThumbnailData>;
 		private var _insertNRMRect:Rectangle;
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
-		private var _pagesFilled:Dictionary;
-		private var _loadQueue : Vector.<BookThumbnailData>;
 
 		public function NativeSamplesLayout(stage:Stage)
 		{
-			super(stage);
+			super(BookImageSource.SAMPLE_IMAGES, stage);
 		}
 
 		override public function loadBookContent(onContentLoaded:Function):void
  		{	
- 			_content = new Vector.<BookThumbnailData>();
-			
-			var images : Vector.<SourceImageProxy> = _collection.images;
-			 
-			var imageVO:SourceImageProxy;
-
- 			_resourcesCount = images.length;
- 
-			var data:BookThumbnailData;
-
-			_pagesFilled = new Dictionary();
-			var pageIndex:uint;
-			var inPageIndex:uint;
-
-			for(var i:uint = 0; i < _resourcesCount;++i){
-
-				imageVO = images[i];
-				
-				pageIndex = uint(i/INSERTS_COUNT);
-				inPageIndex = uint( i - (pageIndex*INSERTS_COUNT) );
-				 
-				data = new BookThumbnailData(imageVO, i, pageIndex, inPageIndex);
-
-				_content.push(data);
- 
-				if(!_pagesFilled["pageIndex"+pageIndex]){
-					_pagesFilled["pageIndex"+pageIndex] = {max:0, inserted:0};
-				}
-
-				_pagesFilled["pageIndex"+pageIndex].max++;
-				 
-			}
- 
-			//we have 6 images for this layout, 2 sides;
-			var sides:uint = Math.ceil(_resourcesCount/INSERTS_COUNT);
-
-			if(sides%2 != 0) sides+=1;
-			pageCount = sides*.5;
-
-			onContentLoaded();
+ 			prepareBookContent(onContentLoaded, INSERTS_COUNT);
  		}
  
-		override public function loadContent():void
-		{
-			switchToHighDrawQuality();
-
-			_loadQueue = new Vector.<BookThumbnailData>();
-			_loadIndex = 0;
-
-			for(var i:uint = 0; i < _content.length;++i)
-				_loadQueue.push(_content[i]);
-
-			loadCurrentThumbnail();
-
-			_content = null;
-		}
-
-		private function loadCurrentThumbnail() : void
-		{
-			_loadQueue[_loadIndex].imageVO.loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);
-		}
-
-		private function continueLoading() : void
-		{
-			++_loadIndex;
-			if (_loadIndex == _resourcesCount) {
-				_loadQueue = null;
-				restoreQuality();
-			}
-			else
-				loadCurrentThumbnail();
-		}
-
-		private function onThumbnailLoadedComplete(bitmapData : BitmapData):void
-		{
-			composite(bitmapData, _loadQueue[_loadIndex]);
-			continueLoading();
-		}
-
-		private function onThumbnailLoadedError() : void
-		{
-			trace ("Warning: Failed to load thumbnail!");
-			continueLoading();
-		}
-
 		//Custom compositing variation per layout and region registration for mouse detection
 		override protected function composite(insertSource:BitmapData, data:BookThumbnailData):void
 		{
