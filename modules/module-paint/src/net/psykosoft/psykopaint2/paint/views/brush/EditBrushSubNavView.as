@@ -109,9 +109,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						}
 					}
 				}
-				else {
-					showRightButton( true );
-				}
+				//else {
+				//	showRightButton( true );
+				//}
 
 
 			}
