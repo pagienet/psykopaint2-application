@@ -2,6 +2,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 {
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.AbstractPathEngine;
@@ -12,6 +14,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
+	import net.psykosoft.psykopaint2.core.views.components.previews.PreviewIconFactory;
 
 	public class BrushKitDefaultSet
 	{
@@ -23,7 +26,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,paint1,splotch,noisy"/>
 
 					<parameterMapping>
-						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush,Speed Brush,Van Gogh,Sprinkle,Smear Brush,Air Brush" showInUI="1"/>
+						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" previewID={PreviewIconFactory.PREVIEW_PAINTBRUSH_STYLE} list="Fat Brush,Speed Brush,Van Gogh,Sprinkle,Smear Brush,Air Brush" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
 							src="Style" 
 							target="pathengine.pointdecorator_0.Factor" 
@@ -269,7 +272,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 				</brush>        -->
 
 				<brush engine={BrushType.SKETCH} name="Pencil">
-					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
+					<parameter id={SketchBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} value="0.5" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="pencilSketch" />
 
@@ -311,9 +314,9 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 
 				<brush engine={BrushType.WATER_COLOR} name="Water Color">
-					<parameter id="Surface influence" path="brush" value="0.5" showInUI="1"/>
-					<parameter id="Pigment staining" path="brush" value=".5" showInUI="1"/>
-					<parameter id="Pigment granulation" path="brush" value=".3" showInUI="1"/>
+					<parameter id={WaterColorBrush.PARAMETER_N_SURFACE_INFLUENCE} previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
+					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_STAINING} path="brush" value=".5" showInUI="1"/>
+					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_GRANULATION} path="brush" value=".3" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet,basic" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}/>
 				</brush>
@@ -324,7 +327,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splotch,basic smooth,splat,basic,noisy" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_SL_BLEND_MODE} path="brush" index="1"/>
 					<parameterMapping>
-						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Color & Relief, Color Only, Relief Only" showInUI="1"/>
+						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} previewID={PreviewIconFactory.PREVIEW_ERASER_STYLE} label="Style" list="Color & Relief, Color Only, Relief Only" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Brush Style" 
 							target="pathengine.pointdecorator_2" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
@@ -334,7 +337,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="0,1"/>
 
-						<parameter id="Strength" type={PsykoParameter.NumberParameter} value="0.5" minValue="0" maxValue="1" showInUI="1"/>
+						<parameter id="Strength" type={PsykoParameter.NumberParameter} value="0.5" previewID={PreviewIconFactory.PREVIEW_ALPHA} minValue="0" maxValue="1" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} src="Strength" 
 							target="pathengine.pointdecorator_1.Opacity" 
 							targetMappings="0,0"
@@ -627,7 +630,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splotch,basic smooth,splat,basic,noisy" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_SL_BLEND_MODE} path="brush" index="1"/>
 					<parameterMapping>
-						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Color & Relief, Color Only, Relief Only" showInUI="1"/>
+						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" previewID={PreviewIconFactory.PREVIEW_ERASER_STYLE} list="Color & Relief, Color Only, Relief Only" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Brush Style" 
 							target="pathengine.pointdecorator_2" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }

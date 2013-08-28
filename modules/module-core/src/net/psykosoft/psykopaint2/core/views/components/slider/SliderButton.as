@@ -17,10 +17,9 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import flash.text.TextFormat;
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
-	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
 	import net.psykosoft.psykopaint2.core.views.components.previews.AbstractPreview;
 	import net.psykosoft.psykopaint2.core.views.components.previews.PreviewIconFactory;
-	import net.psykosoft.psykopaint2.core.views.components.previews.SizePreview;
+	
 
 	public class SliderButton extends Sprite
 	{
@@ -36,6 +35,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _previewHolderOpenY:Number;
 		
 		private var _labelText:String;
+		private var _defaultLabelText:String;
+		private var _previewID:String;
 		private var _value:Number;
 		private var _sliding:Boolean;
 		private var _earContainer:Sprite;
@@ -44,7 +45,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _maxValue:Number = 1;
 		private var _valueRange:Number = 1;
 		private var _labelMode:int = 1;
-		private var _digits:int = 2;
+		private var _digits:int = 0;
 		private var _earContainerX:Number = 0;
 		private var _mouseDownX:Number;
 		private var _changeEvt:Event;
@@ -113,12 +114,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			button.labelText = "";
 
 			
-			_previewIcon = PreviewIconFactory.getPreviewIcon(int(Math.random()*9));
-			_previewIcon.mouseEnabled = _previewIcon.mouseChildren = false;
-			_previewIcon.x = 0;
-			_previewIcon.y = 0;
-			_previewIcon.scaleX = _previewIcon.scaleY = 0.5;
-			button.addChildAt(_previewIcon,1);
+			
 			
 			_stage = stage;
 			
@@ -136,17 +132,16 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		// Label.
 		// -----------------------
 
-		private function updateLabelFromValue():void {
-			//values are now always rounded to a full decimal - no fractions (in case you were wondering why you just get 0 with that pesky value range that should be in a human scale in the first place)
+		public function updateLabelFromValue():void {
 			switch( _labelMode ) {
 				case LABEL_VALUE:
-					button.labelText = formatLabel( int(0.5+_value) );
+					button.labelText = formatLabel( value);
 					break;
 				case LABEL_PERCENT:
-					button.labelText = formatLabel(  int(0.5+_ratio * 100), "%" );
+					button.labelText = formatLabel(  _ratio * 100, "%" );
 					break;
 				case LABEL_DEGREES:
-					button.labelText = formatLabel(  int(0.5+_value), "°" );
+					button.labelText = formatLabel(  value, "°" );
 					break;
 			}
 		}
@@ -164,7 +159,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			if( !hasEventListener( Event.ENTER_FRAME ) ) {
 				addEventListener( Event.ENTER_FRAME, onEnterFrame );
 			}
-			updateLabelFromValue();
+			//updateLabelFromValue();
 			_sliding = true;
 		}
 
@@ -173,7 +168,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			if( hasEventListener( Event.ENTER_FRAME ) ) {
 				removeEventListener( Event.ENTER_FRAME, onEnterFrame );
 			}
-			button.labelText = _labelText;
+			button.labelText = _defaultLabelText;
 			_sliding = false;
 		}
 
@@ -182,7 +177,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			updateEarsFromMouse();
 			updateRatioFromEars();
 			updateValueFromRatio();
-			updateLabelFromValue();
+			//updateLabelFromValue();
 			updatePreviewIconFromRatio();
 			dispatchEvent( _changeEvt );
 		}
@@ -217,7 +212,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 		
 		private function updatePreviewIconFromRatio():void {
-			_previewIcon.ratio = _ratio;
+			if ( _previewIcon ) _previewIcon.ratio = _ratio;
 		}
 
 		// -----------------------
@@ -320,6 +315,29 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		public function set iconType( value:String ):void {
 			button.iconType = value;
 		}
+		
+		
+		public function get previewID():String {
+			return _previewID;
+		}
+		
+		public function set previewID( value:String ):void {
+			_previewID = value;
+			
+			if ( _previewIcon != null && _previewIcon.parent != null)
+			{
+				_previewIcon.parent.removeChild(_previewIcon);
+				_previewIcon = null;
+			}
+			_previewIcon = PreviewIconFactory.getPreviewIcon(previewID);
+			_previewIcon.mouseEnabled = _previewIcon.mouseChildren = false;
+			_previewIcon.x = 0;
+			_previewIcon.y = 0;
+			_previewIcon.scaleX = _previewIcon.scaleY = 0.5;
+			_previewIcon.ratio = _ratio;
+			button.addChildAt(_previewIcon,1);
+			
+		}
 
 		public function get id():String {
 			return button.id;
@@ -356,6 +374,14 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		public function set labelText( value:String ):void {
 			_labelText = value;
 			button.labelText = value;
+		}
+		
+		public function get defaultLabelText():String {
+			return _defaultLabelText;
+		}
+		
+		public function set defaultLabelText( value:String ):void {
+			_defaultLabelText = value;
 		}
 
 		public function set value( value:Number ):void {

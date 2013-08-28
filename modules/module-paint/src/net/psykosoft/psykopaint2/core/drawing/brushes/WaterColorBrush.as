@@ -6,24 +6,20 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.textures.Texture;
 	import flash.geom.Vector3D;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
-
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
-
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
-
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-
 	import net.psykosoft.psykopaint2.core.drawing.shaders.SinglePigmentBlotTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.StrokeColorTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.ApplySlope;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.MovePigment;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.MovePigmentRGB;
-	import net.psykosoft.psykopaint2.core.drawing.shaders.water.RenderPigment;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.RelaxDivergence;
+	import net.psykosoft.psykopaint2.core.drawing.shaders.water.RenderPigment;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.TransferPigment;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.UpdateVelocities;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
@@ -33,6 +29,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 	public class WaterColorBrush extends SimulationBrush
 	{
+		public static const PARAMETER_N_SURFACE_INFLUENCE:String = "Surface influence";
+		public static const PARAMETER_N_GRAVITY_INFLUENCE:String = "Gravity influence";
+		public static const PARAMETER_N_VISCOSITY:String = "Viscosity";
+		public static const PARAMETER_N_DRAG:String = "Drag";
+		public static const PARAMETER_N_PIGMENT_DENSITY:String = "Pigment density";
+		public static const PARAMETER_N_PIGMENT_STAINING:String = "Pigment staining";
+		public static const PARAMETER_N_PIGMENT_GRANULATION:String = "Pigment granulation";
+		
 		private var _velocityPressureField : TrackedTexture;
 		private var _halfSizedBackBuffer : TrackedTexture;
 		private var _velocityPressureFieldBackBuffer : TrackedTexture;
@@ -79,13 +83,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function WaterColorBrush()
 		{
 			super(false);
-			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.5, 0, 10);
-			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter, "Gravity influence", 0.1, 0, .3);
-			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, "Viscosity", .2, 0, 1);
-			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, "Drag", .1, 0, .2);
-			_pigmentDensity = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment density", .25, 0, 1);
-			_pigmentStaining = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment staining", 2, .05, 3);
-			_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment granulation", .81, 0, 1);
+			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, 0.5, 0, 10);
+			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_GRAVITY_INFLUENCE, 0.1, 0, .3);
+			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_VISCOSITY, .2, 0, 1);
+			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_DRAG, .1, 0, .2);
+			_pigmentDensity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_DENSITY, .25, 0, 1);
+			_pigmentStaining = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_STAINING, 2, .05, 3);
+			_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_GRANULATION, .81, 0, 1);
 
 			_parameters.push( _surfaceRelief, _gravityStrength, _pigmentDensity, _pigmentStaining, _pigmentGranulation);
 

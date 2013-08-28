@@ -18,7 +18,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	public class SketchBrush extends SplatBrushBase
 	{
-
+		public static const PARAMETER_N_SURFACE_INFLUENCE : String = "Surface Influence";
+		
 		private var rng:LCG;
 		private var _surfaceRelief : PsykoParameter;
 		
@@ -29,7 +30,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			rng = new LCG(Math.random() * 0xffffff);
 			type = BrushType.SKETCH;
 
-			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", .6, 0, 1.0);
+			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, .6, 0, 1.0);
 			_shininess.numberValue = .3;
 			_glossiness.numberValue = .25;
 			_bumpiness.numberValue = .6;

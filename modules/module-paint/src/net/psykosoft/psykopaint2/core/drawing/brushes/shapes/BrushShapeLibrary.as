@@ -36,9 +36,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			registerShape(new NoisyBrushShape(context3D));
 			registerShape(new ScalesBrushShape(context3D));
 			registerShape(new RenderTextureBrushShape(context3D));
+			registerShape(new BasicSmoothBrushShape(context3D));
 			/*
 			//disabled unused shapes
-			registerShape(new BasicSmoothBrushShape(context3D));
+			
 			registerShape(new SquareBrushShape(context3D));
 			registerShape(new SquareSmoothBrushShape(context3D));
 			

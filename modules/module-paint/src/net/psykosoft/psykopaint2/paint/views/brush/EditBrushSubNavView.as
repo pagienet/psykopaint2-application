@@ -8,18 +8,15 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
-
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
-	
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintModeType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.ComboboxView;
@@ -96,14 +93,25 @@ package net.psykosoft.psykopaint2.paint.views.brush
 							data.minValue = parameter.minLimit;
 							data.maxValue = parameter.maxLimit;
 							data.value = parameter.type == PsykoParameter.AngleParameter ? parameter.degrees : parameter.numberValue;
+							data.previewID = parameter.previewID;
 							data.onItemRendererAssigned = onSliderButtonRendererAssigned;
 							data.onItemRendererReleased = onSliderButtonRendererReleased;
+						} else if ( parameter.type == PsykoParameter.IconListParameter )
+						{
+							data.itemRendererType = SliderButton;
+							data.minValue = parameter.minLimit;
+							data.maxValue = parameter.maxLimit;
+							data.value = parameter.index;
+							data.previewID = parameter.previewID;
+							data.onItemRendererAssigned = onSliderButtonRendererAssigned;
+							data.onItemRendererReleased = onSliderButtonRendererReleased;
+							
 						}
 					}
 				}
-				else {
-					showRightButton( true );
-				}
+				//else {
+				//	showRightButton( true );
+				//}
 
 
 			}
@@ -237,7 +245,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 
 			// Combo box.
-			else if( parameterType == PsykoParameter.StringListParameter || parameterType == PsykoParameter.IconListParameter ) {
+			else if( parameterType == PsykoParameter.StringListParameter) {
+				// || parameterType == PsykoParameter.IconListParameter 
 				var list:Vector.<String> = _parameter.stringList;
 				var len:uint = list.length;
 				var combobox:ComboboxView = new ComboboxView();
@@ -263,7 +272,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				_uiElements.push( checkBox );
 			}
 			// No Ui component for this parameter.
-			else {
+			else if (parameterType == PsykoParameter.IconListParameter)
+			{
+				
+			} else {
 				trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
 				var tf:TextField = new TextField();
 				tf.selectable = tf.mouseEnabled = false;
@@ -343,8 +355,16 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onSliderButtonChanged( event:Event ):void {
 			var slider:SliderButton = event.target as SliderButton;
+			
 			//focusOnParameterWithId( slider.id );
-			_parameter.value = slider.value;
+			if ( _parameter.type == PsykoParameter.IconListParameter )
+			{
+				_parameter.index = slider.value;
+				slider.labelText = _parameter.stringValue;
+			} else {
+				_parameter.value = slider.value;
+				slider.updateLabelFromValue();
+			}
 		}
 
 		private function onRangeSliderChanged( event:Event ):void {
