@@ -210,7 +210,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		private function onStrokeStarted(event : Event) : void
 		{
-			trace ("take snapshot");
 			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
 		}
 		

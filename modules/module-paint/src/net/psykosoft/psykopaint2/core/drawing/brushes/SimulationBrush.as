@@ -37,7 +37,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			super.onPathStart();
 
 			cleanUpTicker();
-			trace ("resetSimulation");
 			resetSimulation();
 
 			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);

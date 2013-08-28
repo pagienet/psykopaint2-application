@@ -33,8 +33,7 @@ package net.psykosoft.psykopaint2.core.io
 	 * 1: normal/specular layer, in BGRA
 	 * 2: the source texture, in RGBA!!! (because it's always used primarily as BitmapData)
 	 */
-	public class
-	CanvasExporter extends EventDispatcher
+	public class CanvasExporter extends EventDispatcher
 	{
 		private static var _copySubTextureChannelsRGB : CopySubTextureChannels;
 		private static var _copySubTextureChannelsA : CopySubTextureChannels;
@@ -205,7 +204,7 @@ package net.psykosoft.psykopaint2.core.io
 			return bytes;
 		}
 
-			private function mergeRGBAData() : ByteArray
+		private function mergeRGBAData() : ByteArray
 		{
 			var time : int = getTimer();
 			var len : int = _canvas.width * _canvas.height * 4;
@@ -235,9 +234,9 @@ package net.psykosoft.psykopaint2.core.io
 				si8(a, int(i+3));
 			}
 
-			ConsoleView.instance.log( this, "mergeRGBAData merge..." + (getTimer() - time));
-
 			ApplicationDomain.currentDomain.domainMemory = MemoryManagerTdsi.memory;
+
+			ConsoleView.instance.log( this, "mergeRGBAData merge..." + (getTimer() - time));
 
 			var buffer : ByteArray = _mergeBuffer;
 			_mergeBuffer = null;
