@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 
 	import net.psykosoft.psykopaint2.core.model.*;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
@@ -47,12 +48,14 @@ package net.psykosoft.psykopaint2.core.io
 		private var _sourceRect : Rectangle;
 		private var _destRect : Rectangle;
 		private var _stage:Stage;
+		private var _ioAne:IOAneManager;
 
 		private var _exportingStages : Array;
 
-		public function CanvasExporter( stage:Stage )
+		public function CanvasExporter( stage:Stage, ioAne:IOAneManager )
 		{
 			_stage = stage;
+			_ioAne = ioAne;
 
 			_exportingStages = [
 				saveColorRGB,
@@ -177,6 +180,7 @@ package net.psykosoft.psykopaint2.core.io
 			_context3D = null;
 			_sourceRect = null;
 			_destRect = null;
+			_ioAne = null;
 			_workerBitmapData.dispose();
 			_workerBitmapData = null;
 
@@ -205,13 +209,19 @@ package net.psykosoft.psykopaint2.core.io
 		{
 			var time : int = getTimer();
 			var len : int = _canvas.width * _canvas.height * 4;
+
+			// Ane 1.
+//			_ioAne.extension.mergeRgbaPerByte( _mergeBuffer );
+
+			// Ane 2.
+//		    _ioAne.extension.mergeRgbaPerInt( _mergeBuffer );
+
+			// As3.
 			var rOffset : int = len + 1;
 			var gOffset : int = len + 2;
 			var bOffset : int = len + 3;
 			var aOffset : int = len*2 + 3;
-
 			ApplicationDomain.currentDomain.domainMemory = _mergeBuffer;
-
 			for (var i : int = 0; i < len; i += 4) {
 				var r : uint = li8(int(i + rOffset));
 				var g : uint = li8(int(i + gOffset));
@@ -230,7 +240,7 @@ package net.psykosoft.psykopaint2.core.io
 
 			var buffer : ByteArray = _mergeBuffer;
 			_mergeBuffer = null;
-			var time : int = getTimer();
+			time = getTimer();
 			buffer.length = len;
 			ConsoleView.instance.log( this, "mergeRGBAData resize..." + (getTimer() - time));
 

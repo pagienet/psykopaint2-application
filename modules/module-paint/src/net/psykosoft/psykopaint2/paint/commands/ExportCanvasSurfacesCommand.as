@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import net.psykosoft.psykopaint2.core.io.CanvasExportEvent;
 	import net.psykosoft.psykopaint2.core.io.CanvasExporter;
+	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
@@ -24,6 +25,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var stage:Stage;
 
+		[Inject]
+		public var ioAne:IOAneManager;
+
 		private var _time:uint;
 
 		override public function execute():void {
@@ -31,7 +35,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			ConsoleView.instance.log( this, "execute()" );
 			_time = getTimer();
 
-			var canvasExporter:CanvasExporter = new CanvasExporter( stage );
+			var canvasExporter:CanvasExporter = new CanvasExporter( stage, ioAne );
 			canvasExporter.addEventListener( CanvasExportEvent.COMPLETE, onExportComplete );
 			canvasExporter.export( canvasModel );
 		}
