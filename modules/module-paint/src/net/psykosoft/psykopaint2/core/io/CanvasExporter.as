@@ -125,14 +125,14 @@ package net.psykosoft.psykopaint2.core.io
 		{
 			ConsoleView.instance.log( this, "saveColorRGB stage..." );
 			_mergeBuffer = new ByteArray();
-			_mergeBuffer.length = _canvas.width * _canvas.height * 12;
-			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 4, _canvas.colorTexture, _copySubTextureChannelsRGB);
+			_mergeBuffer.length = _canvas.width * _canvas.height * 8;
+			extractChannels(_mergeBuffer, 0, _canvas.colorTexture, _copySubTextureChannelsRGB);
 		}
 
 		private function saveColorAlpha() : void
 		{
 			ConsoleView.instance.log( this, "saveColorAlpha stage..." );
-			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 8, _canvas.colorTexture, _copySubTextureChannelsA);
+			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 4, _canvas.colorTexture, _copySubTextureChannelsA);
 		}
 
 		private function mergeColorData() : void
@@ -145,14 +145,14 @@ package net.psykosoft.psykopaint2.core.io
 		{
 			ConsoleView.instance.log( this, "extractNormalsColor stage..." );
 			_mergeBuffer = new ByteArray();
-			_mergeBuffer.length = _canvas.width * _canvas.height * 12;
-			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 4, _canvas.normalSpecularMap, _copySubTextureChannelsRGB);
+			_mergeBuffer.length = _canvas.width * _canvas.height * 8;
+			extractChannels(_mergeBuffer, 0, _canvas.normalSpecularMap, _copySubTextureChannelsRGB);
 		}
 
 		private function extractNormalsAlpha() : void
 		{
 			ConsoleView.instance.log( this, "extractNormalsAlpha stage..." );
-			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 8, _canvas.normalSpecularMap, _copySubTextureChannelsA);
+			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 4, _canvas.normalSpecularMap, _copySubTextureChannelsA);
 		}
 
 		private function mergeNormalData() : void
@@ -205,10 +205,10 @@ package net.psykosoft.psykopaint2.core.io
 		{
 			var time : int = getTimer();
 			var len : int = _canvas.width * _canvas.height * 4;
-			var rOffset : int = len + 1;
-			var gOffset : int = len + 2;
-			var bOffset : int = len + 3;
-			var aOffset : int = len*2 + 3;
+			var rOffset : int = 1;
+			var gOffset : int = 2;
+			var bOffset : int = 3;
+			var aOffset : int = len + 3;
 
 			ApplicationDomain.currentDomain.domainMemory = _mergeBuffer;
 
