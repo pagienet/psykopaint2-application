@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import com.greensock.easing.Sine;
 
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
@@ -23,6 +24,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	public class SetupPaintModuleCommand extends TracingCommand
 	{
+		[Inject]
+		public var stage:Stage;
+
 		[Inject]
 		public var initPaintingVO : PaintingDataVO;
 
@@ -83,13 +87,12 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function waitForNextFrame() : void
 		{
-			var sprite : Sprite = new Sprite();
-			sprite.addEventListener(Event.ENTER_FRAME, onNextFrame);
+			stage.addEventListener(Event.ENTER_FRAME, onNextFrame);
 		}
 
 		private function onNextFrame(event : Event) : void
 		{
-			event.target.removeEventListener(Event.ENTER_FRAME, onNextFrame);
+			stage.removeEventListener(Event.ENTER_FRAME, onNextFrame);
 			notifyPaintModuleSetUpSignal.dispatch();
 		}
 
