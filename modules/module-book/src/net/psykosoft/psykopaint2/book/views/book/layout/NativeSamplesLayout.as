@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.book.BookImageSource;
@@ -113,7 +112,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				 
 				//insert the normalmap map of the image into the textureNormalmap
 				normalSourceBitmapdata.lock();
-				//insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false, true);
 				insert(_insertNormalmap, normalSourceBitmapdata, _insertNRMRect, rotation, false, false);
 				normalSourceBitmapdata.unlock();
 				

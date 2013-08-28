@@ -5,10 +5,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
 
-	import flash.utils.Dictionary;
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
-	import flash.geom.Point;
 	import flash.display.Stage;
 
 	import away3d.textures.BitmapTexture;
@@ -23,6 +21,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _content:Vector.<BookThumbnailData>;
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
+		private var _insertNRMRect:Rectangle;
 		 
 		public function CameraSamplesLayout(stage:Stage)
 		{
@@ -53,8 +52,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			}
 
 			insertRect.y = 30 + ( (INSERT_HEIGHT+spaceRow)*col );
- 
-
+  
 			//random variations
 			insertRect.x += -2+(Math.random()*4);
 			insertRect.y += -2+(Math.random()*4);
@@ -78,6 +76,13 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_pagesFilled["pageIndex"+pageIndex].inserted +=1;
 			var invalidateContent:Boolean = (_pagesFilled["pageIndex"+pageIndex].inserted >= _pagesFilled["pageIndex"+pageIndex].max)? true : false;
 			
+			if(!_insertNRMRect) _insertNRMRect = new Rectangle();
+ 
+			_insertNRMRect.x = insertRect.x+((insertRect.width - lastWidth)*.5);
+			_insertNRMRect.y = insertRect.y+((insertRect.height - lastHeight)*.5);
+			_insertNRMRect.width = lastWidth;
+			_insertNRMRect.height = lastHeight;
+
 			// no need to update the nroalmap if no shader uses it
 			if(PlatformUtil.hasRequiredPerformanceRating(2)) {
 
@@ -88,7 +93,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 				//insert the normalmap map of the image into the textureNormalmap
 				normalSourceBitmapdata.lock();
-				insert(_insertNormalmap, normalSourceBitmapdata, insertRect, rotation, false, true);
+				insert(_insertNormalmap, normalSourceBitmapdata, _insertNRMRect, rotation, false, false);
 				normalSourceBitmapdata.unlock();
 				
 				if(invalidateContent){
@@ -105,7 +110,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			//insert the shadow map
 			if(!_shadow) _shadow = getShadow();
 
-			insert(_shadow, diffuseSourceBitmapdata, insertRect, rotation, false, true, 0,0,0,offset);
+			insert(_shadow, diffuseSourceBitmapdata, _insertNRMRect, rotation, false, true, 0,0,-5, offset);
 			
  			diffuseSourceBitmapdata.unlock();
 
