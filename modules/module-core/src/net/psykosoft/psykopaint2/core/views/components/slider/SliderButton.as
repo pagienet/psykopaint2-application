@@ -334,6 +334,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			_previewIcon.x = 0;
 			_previewIcon.y = 0;
 			_previewIcon.scaleX = _previewIcon.scaleY = 0.5;
+			_previewIcon.ratio = _ratio;
 			button.addChildAt(_previewIcon,1);
 			
 		}
