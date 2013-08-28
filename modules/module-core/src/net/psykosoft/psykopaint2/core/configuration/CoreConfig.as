@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.core.configuration
 
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
-	import net.psykosoft.psykopaint2.core.commands.ReadPaintingInfoFileCommand;
+	import net.psykosoft.psykopaint2.core.commands.LoadPaintingInfoFileCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.commands.UpdateFrameCommand;
@@ -224,7 +224,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_commandMap.map( RequestPaintingDataRetrievalSignal ).toCommand( RetrievePaintingDataCommand );
 			_commandMap.map( RequestCoreModuleBootstrapSignal ).toCommand( BootstrapCoreModuleCommand );
 			_commandMap.map( RequestFrameUpdateSignal ).toCommand( UpdateFrameCommand );
-			_commandMap.map( RequestPaintingInfoFileReadSignal ).toCommand( ReadPaintingInfoFileCommand );
+			_commandMap.map( RequestPaintingInfoFileReadSignal ).toCommand( LoadPaintingInfoFileCommand );
 		}
 
 		// -----------------------

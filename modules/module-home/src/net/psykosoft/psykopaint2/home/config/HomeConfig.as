@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.home.config
 {
 
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
-	import net.psykosoft.psykopaint2.home.commands.LoadPaintingDataCommand;
+	import net.psykosoft.psykopaint2.home.commands.LoadPaintingDataFileCommand;
 	import net.psykosoft.psykopaint2.home.commands.LoadSurfacePreviewCommand;
 	import net.psykosoft.psykopaint2.home.commands.load.SetUpHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.commands.unload.DestroyHomeModuleCommand;
@@ -120,7 +120,7 @@ package net.psykosoft.psykopaint2.home.config
 			_commandMap.map( RequestLoadSurfacePreviewSignal ).toCommand( LoadSurfacePreviewCommand );
 			_commandMap.map( RequestSetupHomeModuleSignal ).toCommand( SetUpHomeModuleCommand );
 			_commandMap.map( RequestDestroyHomeModuleSignal ).toCommand( DestroyHomeModuleCommand );
-			_commandMap.map( RequestLoadPaintingDataSignal ).toCommand( LoadPaintingDataCommand );
+			_commandMap.map( RequestLoadPaintingDataSignal ).toCommand( LoadPaintingDataFileCommand );
 		}
 
 		// -----------------------

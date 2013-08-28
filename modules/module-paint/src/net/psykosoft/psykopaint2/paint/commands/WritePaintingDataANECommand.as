@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import flash.utils.getTimer;
 
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
@@ -25,11 +27,13 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			// Write info bytes.
 			var infoFileName:String = saveVO.paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION;
-			ioAne.extension.writeWithCompression( saveVO.infoBytes, infoFileName );
+			if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) ioAne.extension.writeWithCompression( saveVO.infoBytes, infoFileName );
+			else ioAne.extension.write( saveVO.infoBytes, infoFileName );
 
 			// Write data bytes.
 			var dataFileName:String = saveVO.paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION;
-			ioAne.extension.writeWithCompression( saveVO.dataBytes, dataFileName );
+			if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) ioAne.extension.writeWithCompression( saveVO.dataBytes, dataFileName );
+			else ioAne.extension.write( saveVO.dataBytes, dataFileName );
 
 			ConsoleView.instance.log( this, "done - " + String( getTimer() - time ) );
 		}
