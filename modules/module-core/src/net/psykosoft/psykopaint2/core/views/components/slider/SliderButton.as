@@ -17,10 +17,9 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import flash.text.TextFormat;
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
-	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
 	import net.psykosoft.psykopaint2.core.views.components.previews.AbstractPreview;
 	import net.psykosoft.psykopaint2.core.views.components.previews.PreviewIconFactory;
-	import net.psykosoft.psykopaint2.core.views.components.previews.SizePreview;
+	
 
 	public class SliderButton extends Sprite
 	{
@@ -113,7 +112,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			button.labelText = "";
 
 			
-			_previewIcon = PreviewIconFactory.getPreviewIcon(int(Math.random()*9));
+			_previewIcon = PreviewIconFactory.getPreviewIcon(PreviewIconFactory.PREVIEW_PAINTBRUSH_STYLE);
 			_previewIcon.mouseEnabled = _previewIcon.mouseChildren = false;
 			_previewIcon.x = 0;
 			_previewIcon.y = 0;
