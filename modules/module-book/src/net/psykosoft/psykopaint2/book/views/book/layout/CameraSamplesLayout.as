@@ -172,7 +172,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			//insert the image loaded into diffuse map. no need to dispose map, its being reused and finally destroyed when all is constructed
 			insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, false, true);
 			var lastHeight:Number = lastHeight;
-			var lastScaleY:Number = lastScaleY;
 			var offset:Number = (lastHeight*.5);
  
 			_pagesFilled["pageIndex"+pageIndex].inserted +=1;
