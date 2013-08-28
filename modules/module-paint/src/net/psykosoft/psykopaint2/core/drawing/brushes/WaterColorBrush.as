@@ -189,6 +189,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function resetSimulation() : void
 		{
+			// prevent rendering with a reset brush (results in the previous stroke being deleted if not yet finalized)
+			// the ACTUAL cause is lack of synchronisation control between the GPURenderManager's trigger and the "stroke started" event. Sucks.
+			_renderInvalid = false;
 			_context.setRenderToTexture(_pigmentDensityField.texture, true);
 			_context.clear(0, 0, 0, 0);
 			_context.setRenderToTexture(_pigmentColorField.texture, true);

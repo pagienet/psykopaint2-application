@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 {
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
 	import flash.display3D.textures.TextureBase;
@@ -35,6 +36,9 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 
 		public function updateSnapshot() : void
 		{
+			_context.setStencilActions();
+			_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
+			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			saveSnapShotTo(_canvas.colorTexture, _colorTexture);
 			saveSnapShotTo(_canvas.normalSpecularMap, _normalSpecularTexture);
 		}
@@ -43,7 +47,6 @@ package net.psykosoft.psykopaint2.core.drawing.actions
 		{
 			_context.setRenderToTexture(target.texture);
 			_context.clear(0.0, 0.0, 0.0, 0.0);
-			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopyTexture.copy(source, _context, _canvas.usedTextureWidthRatio, _canvas.usedTextureHeightRatio);
 		}
 

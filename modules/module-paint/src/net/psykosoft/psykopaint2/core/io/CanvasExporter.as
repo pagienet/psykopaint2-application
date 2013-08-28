@@ -201,7 +201,7 @@ package net.psykosoft.psykopaint2.core.io
 			return bytes;
 		}
 
-		private function mergeRGBAData() : ByteArray
+			private function mergeRGBAData() : ByteArray
 		{
 			var time : int = getTimer();
 			var len : int = _canvas.width * _canvas.height * 4;

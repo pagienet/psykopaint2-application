@@ -12,14 +12,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 	public class SimulationBrush extends AbstractBrush
 	{
-		private var _ticker : Sprite;
 		private var _lastDrawCount : int;
 		private var _cleanUpTickerTimer : Timer;
 
 		public function SimulationBrush(drawNormalsOrSpecular : Boolean)
 		{
 			super(drawNormalsOrSpecular, false, true);
-			_ticker = new Sprite();
 		}
 
 		override public function stopProgression() : void
@@ -39,9 +37,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			super.onPathStart();
 
 			cleanUpTicker();
+			trace ("resetSimulation");
 			resetSimulation();
 
-			_ticker.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 
 
@@ -90,7 +89,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_cleanUpTickerTimer = null;
 			}
 
-			_ticker.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			_view.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 
 		protected function resetSimulation() : void

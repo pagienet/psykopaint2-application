@@ -331,13 +331,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				CopyTexture.copy(_canvasModel.colorTexture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 			}
 			else {
-				_context.setStencilReferenceValue(1);
-				_context.setStencilActions("frontAndBack", "always", Context3DStencilAction.SET, Context3DStencilAction.SET, Context3DStencilAction.SET);
-				//TODO after "continue painting" snapshot seems to be null when using watercolor brush first
 				_snapshot.drawColor();
-				_context.setStencilReferenceValue(0);
-				_context.setStencilActions("frontAndBack", Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);
-				if (!_inProgress) CopyTexture.copy(_canvasModel.colorTexture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 				_context.setStencilActions();
 			}
 
