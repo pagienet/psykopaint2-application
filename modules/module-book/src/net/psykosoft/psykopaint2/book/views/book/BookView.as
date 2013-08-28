@@ -24,24 +24,23 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	public class BookView extends ViewBase
 	{
+		private const MOUSE_XTRA:uint = 5;
 		private var _stage3dProxy:Stage3DProxy;
 		private var _view3d:View3D;
-
 		private var _book:Book;
-		//interaction vars
 		private var _startMouseX:Number;
 		private var _startTime:Number;
 		private var _mouseIsDown:Boolean;
 		private var _time:Number;
 		private var _previousTime:Number;
+		
+		private var _mouseBooster:Number = 1;
+		private var _backgroundTexture : RefCountedTexture;
 
 		public var imageSelectedSignal:Signal;
 		public var bookHasClosedSignal:Signal;
-
-		private var _backgroundTexture : RefCountedTexture;
-
 		public var requestData : Signal;
-
+ 
 		public function BookView() {
 			super();
 			bookHasClosedSignal = new Signal();
@@ -98,22 +97,7 @@ package net.psykosoft.psykopaint2.book.views.book
 				_startTime = _time;
 			}
 		}
-		//private function delayedMouseDown():void
-		//{
-		//	//var currentX:Number = mouseX;
-		//	//_mouseIsDown = true;
-		//	//simple fast movement detection to prevent image picking while intended to turn page fast
-		//	if(Math.abs(currentX-_startMouseX) < 5 && _book.currentDegrees< 5){
-		//		if(!_book.hitTestRegions(mouseX, mouseY)){
-		//			_startTime = _time;
-		//		}
-		//	} else {
-		//		_book.killSnapTween();
-		//		_startTime = _time;
-		//	}
-			
-		//}
-
+		
 		private function onStageMouseUp( event:MouseEvent ):void
 		{
 			_mouseIsDown = false;
@@ -126,38 +110,9 @@ package net.psykosoft.psykopaint2.book.views.book
 				} else {
 					_time = _book.snapToNearestTime();
 				}
-			}//_time = _book.snapToNearestTime();
+			}
 		}
 
-		//private function onStageMouseDown( event:MouseEvent ):void
-		//{
-		//	if(_book.ready){
-		//		_startMouseX = mouseX;
-		//		setTimeout(delayedMouseDown, 100);
-		//	}
-		//}
-		//private function delayedMouseDown():void
-		//{
-		//	var currentX:Number = mouseX;
-		//	_mouseIsDown = true;
-		//	//simple fast movement detection to prevent image picking while intended to turn page fast
-		//	if(Math.abs(currentX-_startMouseX) < 5 && _book.currentDegrees< 5){
-		//		if(!_book.hitTestRegions(mouseX, mouseY)){
-		//			_startTime = _time;
-		//		}
-		//	} else {
-		//		_book.killSnapTween();
-		//		_startTime = _time;
-		//	}
-			
-		//}
-
-		//private function onStageMouseUp( event:MouseEvent ):void
-		//{
-		//	_mouseIsDown = false;
-		//	if(_book.ready && !_book.isLoadingImage) _time = _book.snapToNearestTime();
-		//}
- 
 		override protected function onEnabled():void
 		{
 			// Initialize view.
@@ -176,6 +131,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		// Interaction declared on book ready
 		public function onBookReady():void
 		{
+			_mouseBooster = MOUSE_XTRA/_book.pagesCount;
+
 			stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 		}
@@ -200,7 +157,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			if(_book.ready && _mouseIsDown){
 				var doUpdate:Boolean = true;
 				var mx:Number = (mouseX-_startMouseX);
-				var currentTime:Number =   (mx/ stage.stageWidth) *.7;
+				var currentTime:Number =  ((mx*_mouseBooster)/ stage.stageWidth ) *.7;
 				  
 				currentTime *=-1;
 				if(_previousTime > currentTime){

@@ -286,6 +286,11 @@ package net.psykosoft.psykopaint2.book.views.book
  			return _currentDegrees;
  		}
 
+ 		public function get pagesCount():Number
+ 		{
+ 			return _pagesCount;
+ 		}
+
  		public function updatePages(time:Number):void
  		{
  			_percent = time;
