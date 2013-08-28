@@ -1,9 +1,5 @@
 package net.psykosoft.psykopaint2.core.io
 {
-	import avm2.intrinsics.memory.li8;
-	import avm2.intrinsics.memory.si32;
-	import avm2.intrinsics.memory.si8;
-
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.display.Stage;
@@ -16,17 +12,25 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.system.ApplicationDomain;
 	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
-
+	
+	import avm2.intrinsics.memory.li8;
+	import avm2.intrinsics.memory.si32;
+	import avm2.intrinsics.memory.si8;
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 
 	import net.psykosoft.psykopaint2.core.model.*;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
+	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.tdsi.MemoryManagerTdsi;
-
+	import net.psykosoft.psykopaint2.tdsi.MergeUtil;
+	
 	/**
 	 * Returns a list of 3 ByteArrays containing data:
 	 * 0: painted color layer, in BGRA
@@ -244,6 +248,25 @@ package net.psykosoft.psykopaint2.core.io
 			buffer.length = len;
 			ConsoleView.instance.log( this, "mergeRGBAData resize..." + (getTimer() - time));
 
+			return buffer;
+		}
+		
+		private function mergeRGBADataTest() : ByteArray
+		{
+			var time : int = getTimer();
+			var len : int = _canvas.width * _canvas.height * 4;
+			
+			MergeUtil.mergeRGBAData(_mergeBuffer,len);
+				
+			ConsoleView.instance.log( this, "mergeRGBAData merge..." + (getTimer() - time));
+			
+			
+			var buffer : ByteArray = _mergeBuffer;
+			_mergeBuffer = null;
+			var time : int = getTimer();
+			buffer.length = len;
+			ConsoleView.instance.log( this, "mergeRGBAData resize..." + (getTimer() - time));
+			
 			return buffer;
 		}
 
