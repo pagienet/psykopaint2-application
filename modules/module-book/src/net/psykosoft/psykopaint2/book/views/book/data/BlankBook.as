@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.text.TextFieldAutoSize;
+	import flash.text.AntiAliasType;
 
 	import away3d.textures.BitmapTexture;
 	import away3d.materials.methods.EnvMapMethod;
@@ -78,10 +79,12 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
 			//diffuse paper
 			url = "book-packaged/images/page/paperbook512.jpg";
+			//url = "book-packaged/images/page/paperbook512.png";
 			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:7});
 
 			//normalmap paper
 			url = "book-packaged/images/page/paperbook512_NRM.jpg";
+			//url = "book-packaged/images/page/paperbook512_NRM.png";
 			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:8});
 
 			//normalmap insert image
@@ -157,6 +160,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			textFormat.align = TextFieldAutoSize.LEFT;
  
 		 	_pageNumber_txt = new TextField();
+		 	_pageNumber_txt.antiAliasType = AntiAliasType.ADVANCED;
 		  	_pageNumber_txt.embedFonts = true; //ask LI when the fonts will be available
 			_pageNumber_txt.width = 20;
 			_pageNumber_txt.height = 15;
@@ -187,8 +191,6 @@ package net.psykosoft.psykopaint2.book.views.book.data
 				_pageNumber_txt.x = _pageSprite.width -5 - _pageNumber_txt.width;
 			}
 
-			// new BitmapData(...) with new TrackedBitmapData(...)
-			//var pageBitmapData:BitmapData = new BitmapData(BookPageSize.WIDTH, BookPageSize.HEIGHT, false);
 			var pageBitmapData:TrackedBitmapData = new TrackedBitmapData(BookPageSize.WIDTH, BookPageSize.HEIGHT, false);
 			pageBitmapData.draw(_pageSprite, null, null, "normal", null, true);
 

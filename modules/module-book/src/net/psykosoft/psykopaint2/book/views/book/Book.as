@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		private var _isLoadingImage:Boolean;
  		private var _currentDegrees:Number = 0;
 
-     	public function Book(view:View3D, stage:Stage)
+     		public function Book(view:View3D, stage:Stage)
  		{
  			_view = view;
  			_stage = stage;
@@ -93,8 +93,6 @@ package net.psykosoft.psykopaint2.book.views.book
  			_layout.requiredAssetsReadySignal.add(loadBookContent);
  		}
 
- 		/* XXXXXXXXXX scene animations XXXXXXXXX*/
-
  		public function initOpenAnimation(bitmapdata:BitmapData):void
  		{
  			buildBookCraft();
@@ -115,14 +113,14 @@ package net.psykosoft.psykopaint2.book.views.book
  			var duration:Number = 1.5;
 
 			TweenLite.to( _dummyCam, duration, { 	z:1, 
-				ease: Strong.easeOut} );
+									ease: Strong.easeOut} );
 			
-			TweenLite.to( _bookCraft, duration, { 	rotationY:0} );
+			TweenLite.to( _bookCraft, duration, { 		rotationY:0} );
 			
-			TweenLite.to( _view.camera, duration, {  z:-50,y: 1300,
-				ease: Strong.easeIn,
-				onUpdate:lookAtDummy,
-				onComplete: onAnimateInComplete } );
+			TweenLite.to( _view.camera, duration, {  	z:-50,y: 1300,
+									ease: Strong.easeIn,
+									onUpdate:lookAtDummy,
+									onComplete: onAnimateInComplete } );
 		}
 
 		public function lookAtDummy():void
@@ -140,18 +138,17 @@ package net.psykosoft.psykopaint2.book.views.book
 			var duration:Number = 1;
  
 			var desty:Number = -25;
-			TweenLite.to( _bookCraft.coverRight, duration, { y: desty, x:0, rotationZ:2,
-								ease: Strong.easeOut} );
+			TweenLite.to( _bookCraft.coverRight, duration, { 	y: desty, x:0, rotationZ:2,
+										ease: Strong.easeOut} );
 
-			TweenLite.to( _bookCraft.coverLeft, duration, { y: desty, x:0, rotationZ:-2,
-								ease: Strong.easeOut} );
+			TweenLite.to( _bookCraft.coverLeft, duration, { 	y: desty, x:0, rotationZ:-2,
+										ease: Strong.easeOut} );
 
-			TweenLite.to( _bookCraft.coverCenter, duration, { y: desty, rotationZ:0,
-								ease: Strong.easeOut} );
+			TweenLite.to( _bookCraft.coverCenter, duration, { 	y: desty, rotationZ:0,
+										ease: Strong.easeOut} );
 
-			TweenLite.to( _bookCraft, duration, { 	x: 0, 
-				ease: Strong.easeOut,
-				onComplete: onAnimateOpenComplete} );
+			TweenLite.to( _bookCraft, duration, { 			x: 0, ease: Strong.easeOut,
+										onComplete: onAnimateOpenComplete} );
 		}
 
 		public function onAnimateOpenComplete():void
@@ -160,8 +157,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_layout.loadContent();
 			bookReadySignal.dispatch();
 		}
-		  
-		//Animation closing book
+		
 		public function closePages():void
 		{
 			if(_percent == 0){
@@ -188,8 +184,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			TweenLite.to( _bookCraft.coverCenter, 1, { y: 15, rotationZ:90,
 								ease: Strong.easeOut} );
 			 
-			TweenLite.to( _bookCraft, 1, { 	x: 500, 
-							ease: Strong.easeOut} );
+			TweenLite.to( _bookCraft, 1, { 	x: 500, ease: Strong.easeOut} );
 
 			TweenLite.to( _view.camera, 0.75, { y: 50, z:-1250, ease: Strong.easeIn,
 								onComplete: onAnimateOutComplete } );
@@ -287,6 +282,11 @@ package net.psykosoft.psykopaint2.book.views.book
  			return _currentDegrees;
  		}
 
+ 		public function get pagesCount():Number
+ 		{
+ 			return _pagesCount;
+ 		}
+
  		public function updatePages(time:Number):void
  		{
  			_percent = time;
@@ -345,17 +345,14 @@ package net.psykosoft.psykopaint2.book.views.book
 
  		public function updateToNearestTime():void
  		{
- 			if(_isLoadingImage) {
- 				killSnapTween();
- 				return;
- 			}
-
  			updatePages(_percent);
  		}
 
  		// image picking
  		public function hitTestRegions(mouseX:Number, mouseY:Number):Boolean
  		{
+ 			if(_isLoadingImage) return false;
+
  			var data:BookThumbnailData = _regionManager.hitTestRegions(mouseX, mouseY, _currentPage);
 
  			if(data){

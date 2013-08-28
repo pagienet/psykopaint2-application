@@ -111,6 +111,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			var bmdPage:BitmapData = _blankBook.getBasePageBitmapData(index);
 			var pageMaterial:TextureMaterial  = _pageMaterialsManager.registerPageMaterial(index, bmdPage);
+			//pageMaterial.alphaBlending = true;
 
 			return pageMaterial;
 		}

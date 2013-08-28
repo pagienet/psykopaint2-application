@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var saveVO:SavePaintingVO;
 
 		private var _time:uint;
+		private var _preFileName:String;
 
 		private const ASYNC_MODE:Boolean = false;
 
@@ -25,6 +26,8 @@ package net.psykosoft.psykopaint2.paint.commands
 		override public function execute():void {
 			ConsoleView.instance.log( this, "execute()" );
 			_time = getTimer();
+
+			_preFileName = ( CoreSettings.RUNNING_ON_iPAD ? "" : CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" ) + saveVO.paintingId;
 			writeInfoBytes();
 		}
 
@@ -37,15 +40,15 @@ package net.psykosoft.psykopaint2.paint.commands
 			var infoWriteUtil:BinaryIoUtil;
 			var storageType:String = CoreSettings.RUNNING_ON_iPAD ? BinaryIoUtil.STORAGE_TYPE_IOS : BinaryIoUtil.STORAGE_TYPE_DESKTOP;
 
-//			saveVO.infoBytes.compress(); // TODO: as3 compression is disabled for being ridiculously slow on iOS
+			if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) saveVO.infoBytes.compress();
 
 			// Write info.
 			infoWriteUtil = new BinaryIoUtil( storageType );
 			if( ASYNC_MODE ) {
-				infoWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + saveVO.paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, saveVO.infoBytes, writeDataBytes );
+				infoWriteUtil.writeBytesAsync( _preFileName + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, saveVO.infoBytes, writeDataBytes );
 			}
 			else {
-				infoWriteUtil.writeBytesSync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + saveVO.paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, saveVO.infoBytes );
+				infoWriteUtil.writeBytesSync( _preFileName + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION, saveVO.infoBytes );
 				writeDataBytes();
 			}
 		}
@@ -55,15 +58,15 @@ package net.psykosoft.psykopaint2.paint.commands
 			var dataWriteUtil:BinaryIoUtil;
 			var storageType:String = CoreSettings.RUNNING_ON_iPAD ? BinaryIoUtil.STORAGE_TYPE_IOS : BinaryIoUtil.STORAGE_TYPE_DESKTOP;
 
-//			saveVO.dataBytes.compress(); // TODO: as3 compression is disabled for being ridiculously slow on iOS
+			if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) saveVO.dataBytes.compress();
 
 			// Write data.
 			dataWriteUtil = new BinaryIoUtil( storageType );
 			if( ASYNC_MODE ) {
-				dataWriteUtil.writeBytesAsync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + saveVO.paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, saveVO.dataBytes, onWriteComplete );
+				dataWriteUtil.writeBytesAsync( _preFileName + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, saveVO.dataBytes, onWriteComplete );
 			}
 			else {
-				dataWriteUtil.writeBytesSync( CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + saveVO.paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, saveVO.dataBytes );
+				dataWriteUtil.writeBytesSync( _preFileName + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION, saveVO.dataBytes );
 				onWriteComplete();
 			}
 		}

@@ -1,12 +1,17 @@
 package net.psykosoft.psykopaint2.core.views.components.previews
 {
-	import flash.display.MovieClip;
-
 	public class PreviewIconFactory
 	{
 		private static var IconClasses:Vector.<Class> = Vector.<Class>([
+			AlphaPreview,
+			BrightnessPreview,
+			DepthPreview,
+			LengthPreview,
+			OutlinePreview,
+			PrecisionPreview,
+			SaturationPreview,
 			SizePreview,
-			AlphaPreview
+			SurfaceInfluencePreview
 		]);
 		
 		

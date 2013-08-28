@@ -3,9 +3,10 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import flash.utils.getTimer;
 
-	import net.psykosoft.io.IOExtension;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
+	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
 
@@ -16,20 +17,23 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var saveVO:SavePaintingVO;
 
+		[Inject]
+		public var ioAne:IOAneManager;
+
 		override public function execute():void {
 
 			ConsoleView.instance.log( this, "execute()" );
 			var time:uint = getTimer();
 
-			var extension:IOExtension = new IOExtension();
-
 			// Write info bytes.
-			var infoFileName:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + saveVO.paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION;
-			extension.writeWithCompression( saveVO.infoBytes, infoFileName );
+			var infoFileName:String = saveVO.paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION;
+			if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) ioAne.extension.writeWithCompression( saveVO.infoBytes, infoFileName );
+			else ioAne.extension.write( saveVO.infoBytes, infoFileName );
 
 			// Write data bytes.
-			var dataFileName:String = CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" + saveVO.paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION;
-			extension.writeWithCompression( saveVO.dataBytes, dataFileName );
+			var dataFileName:String = saveVO.paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION;
+			if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) ioAne.extension.writeWithCompression( saveVO.dataBytes, dataFileName );
+			else ioAne.extension.write( saveVO.dataBytes, dataFileName );
 
 			ConsoleView.instance.log( this, "done - " + String( getTimer() - time ) );
 		}

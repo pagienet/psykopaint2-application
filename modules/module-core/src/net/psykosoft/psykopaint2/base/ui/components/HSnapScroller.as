@@ -84,8 +84,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function reset():void {
 
-			trace( this, "RESET" );
-
 			_positionManager.reset();
 			_minContentX = 0;
 			_maxContentX = 0;
