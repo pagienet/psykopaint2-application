@@ -93,6 +93,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 							data.minValue = parameter.minLimit;
 							data.maxValue = parameter.maxLimit;
 							data.value = parameter.type == PsykoParameter.AngleParameter ? parameter.degrees : parameter.numberValue;
+							data.previewID = parameter.previewID;
 							data.onItemRendererAssigned = onSliderButtonRendererAssigned;
 							data.onItemRendererReleased = onSliderButtonRendererReleased;
 						} else if ( parameter.type == PsykoParameter.IconListParameter )
@@ -101,6 +102,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 							data.minValue = parameter.minLimit;
 							data.maxValue = parameter.maxLimit;
 							data.value = parameter.index;
+							data.previewID = parameter.previewID;
 							data.onItemRendererAssigned = onSliderButtonRendererAssigned;
 							data.onItemRendererReleased = onSliderButtonRendererReleased;
 							

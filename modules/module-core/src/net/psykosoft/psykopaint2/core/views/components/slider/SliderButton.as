@@ -36,6 +36,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		
 		private var _labelText:String;
 		private var _defaultLabelText:String;
+		private var _previewID:String;
 		private var _value:Number;
 		private var _sliding:Boolean;
 		private var _earContainer:Sprite;
@@ -113,12 +114,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			button.labelText = "";
 
 			
-			_previewIcon = PreviewIconFactory.getPreviewIcon(PreviewIconFactory.PREVIEW_PAINTBRUSH_STYLE);
-			_previewIcon.mouseEnabled = _previewIcon.mouseChildren = false;
-			_previewIcon.x = 0;
-			_previewIcon.y = 0;
-			_previewIcon.scaleX = _previewIcon.scaleY = 0.5;
-			button.addChildAt(_previewIcon,1);
+			
 			
 			_stage = stage;
 			
@@ -216,7 +212,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 		
 		private function updatePreviewIconFromRatio():void {
-			_previewIcon.ratio = _ratio;
+			if ( _previewIcon ) _previewIcon.ratio = _ratio;
 		}
 
 		// -----------------------
@@ -318,6 +314,28 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		public function set iconType( value:String ):void {
 			button.iconType = value;
+		}
+		
+		
+		public function get previewID():String {
+			return _previewID;
+		}
+		
+		public function set previewID( value:String ):void {
+			_previewID = value;
+			
+			if ( _previewIcon != null && _previewIcon.parent != null)
+			{
+				_previewIcon.parent.removeChild(_previewIcon);
+				_previewIcon = null;
+			}
+			_previewIcon = PreviewIconFactory.getPreviewIcon(previewID);
+			_previewIcon.mouseEnabled = _previewIcon.mouseChildren = false;
+			_previewIcon.x = 0;
+			_previewIcon.y = 0;
+			_previewIcon.scaleX = _previewIcon.scaleY = 0.5;
+			button.addChildAt(_previewIcon,1);
+			
 		}
 
 		public function get id():String {

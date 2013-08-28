@@ -52,7 +52,12 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 		
 		public static function getPreviewIcon(id:String):AbstractPreview
 		{
-			return new IconClasses[id2Index.indexOf(id)]();
+			if ( id != null )
+				return new IconClasses[id2Index.indexOf(id)]();
+			else {
+				trace("WARNING - no preview icon id assigned!")
+				return new SizePreview();
+			}
 		}
 	}
 }

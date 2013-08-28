@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
+	import net.psykosoft.psykopaint2.core.views.components.previews.PreviewIconFactory;
 
 	public class BrushKitDefaultSet
 	{
@@ -23,7 +24,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,paint1,splotch,noisy"/>
 
 					<parameterMapping>
-						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush,Speed Brush,Van Gogh,Sprinkle,Smear Brush,Air Brush" showInUI="1"/>
+						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" previewID={PreviewIconFactory.PREVIEW_PAINTBRUSH_STYLE} list="Fat Brush,Speed Brush,Van Gogh,Sprinkle,Smear Brush,Air Brush" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
 							src="Style" 
 							target="pathengine.pointdecorator_0.Factor" 
@@ -627,7 +628,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splotch,basic smooth,splat,basic,noisy" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_SL_BLEND_MODE} path="brush" index="1"/>
 					<parameterMapping>
-						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Color & Relief, Color Only, Relief Only" showInUI="1"/>
+						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" previewID={PreviewIconFactory.PREVIEW_ERASER_STYLE} list="Color & Relief, Color Only, Relief Only" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Brush Style" 
 							target="pathengine.pointdecorator_2" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
