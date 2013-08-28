@@ -94,8 +94,6 @@ package net.psykosoft.psykopaint2.book.views.book
  			_layout.requiredAssetsReadySignal.add(loadBookContent);
  		}
 
- 		/* XXXXXXXXXX scene animations XXXXXXXXX*/
-
  		public function initOpenAnimation(bitmapdata:BitmapData):void
  		{
  			buildBookCraft();
@@ -160,8 +158,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_layout.loadContent();
 			bookReadySignal.dispatch();
 		}
-		  
-		//Animation closing book
+		
 		public function closePages():void
 		{
 			if(_percent == 0){
@@ -349,17 +346,14 @@ package net.psykosoft.psykopaint2.book.views.book
 
  		public function updateToNearestTime():void
  		{
- 			if(_isLoadingImage) {
- 				killSnapTween();
- 				return;
- 			}
-
  			updatePages(_percent);
  		}
 
  		// image picking
  		public function hitTestRegions(mouseX:Number, mouseY:Number):Boolean
  		{
+ 			if(_isLoadingImage) return false;
+
  			var data:BookThumbnailData = _regionManager.hitTestRegions(mouseX, mouseY, _currentPage);
 
  			if(data){
