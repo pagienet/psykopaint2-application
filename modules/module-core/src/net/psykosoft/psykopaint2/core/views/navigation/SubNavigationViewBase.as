@@ -151,7 +151,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false ):ButtonData {
 			if( !_centerButtonData ) _centerButtonData = new Vector.<ISnapListData>();
 			var btnData:ButtonData = new ButtonData();
-			btnData.labelText = label;
+			btnData.labelText = btnData.defaultLabelText = label;
 			btnData.iconType = iconType;
 			btnData.iconBitmap = icon;
 			btnData.selectable = selectable;

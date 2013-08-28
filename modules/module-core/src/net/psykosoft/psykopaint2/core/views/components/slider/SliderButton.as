@@ -35,6 +35,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _previewHolderOpenY:Number;
 		
 		private var _labelText:String;
+		private var _defaultLabelText:String;
 		private var _value:Number;
 		private var _sliding:Boolean;
 		private var _earContainer:Sprite;
@@ -43,7 +44,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _maxValue:Number = 1;
 		private var _valueRange:Number = 1;
 		private var _labelMode:int = 1;
-		private var _digits:int = 2;
+		private var _digits:int = 0;
 		private var _earContainerX:Number = 0;
 		private var _mouseDownX:Number;
 		private var _changeEvt:Event;
@@ -135,17 +136,16 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		// Label.
 		// -----------------------
 
-		private function updateLabelFromValue():void {
-			//values are now always rounded to a full decimal - no fractions (in case you were wondering why you just get 0 with that pesky value range that should be in a human scale in the first place)
+		public function updateLabelFromValue():void {
 			switch( _labelMode ) {
 				case LABEL_VALUE:
-					button.labelText = formatLabel( int(0.5+_value) );
+					button.labelText = formatLabel( value);
 					break;
 				case LABEL_PERCENT:
-					button.labelText = formatLabel(  int(0.5+_ratio * 100), "%" );
+					button.labelText = formatLabel(  _ratio * 100, "%" );
 					break;
 				case LABEL_DEGREES:
-					button.labelText = formatLabel(  int(0.5+_value), "°" );
+					button.labelText = formatLabel(  value, "°" );
 					break;
 			}
 		}
@@ -163,7 +163,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			if( !hasEventListener( Event.ENTER_FRAME ) ) {
 				addEventListener( Event.ENTER_FRAME, onEnterFrame );
 			}
-			updateLabelFromValue();
+			//updateLabelFromValue();
 			_sliding = true;
 		}
 
@@ -172,7 +172,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			if( hasEventListener( Event.ENTER_FRAME ) ) {
 				removeEventListener( Event.ENTER_FRAME, onEnterFrame );
 			}
-			button.labelText = _labelText;
+			button.labelText = _defaultLabelText;
 			_sliding = false;
 		}
 
@@ -181,7 +181,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			updateEarsFromMouse();
 			updateRatioFromEars();
 			updateValueFromRatio();
-			updateLabelFromValue();
+			//updateLabelFromValue();
 			updatePreviewIconFromRatio();
 			dispatchEvent( _changeEvt );
 		}
@@ -355,6 +355,14 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		public function set labelText( value:String ):void {
 			_labelText = value;
 			button.labelText = value;
+		}
+		
+		public function get defaultLabelText():String {
+			return _defaultLabelText;
+		}
+		
+		public function set defaultLabelText( value:String ):void {
+			_defaultLabelText = value;
 		}
 
 		public function set value( value:Number ):void {
