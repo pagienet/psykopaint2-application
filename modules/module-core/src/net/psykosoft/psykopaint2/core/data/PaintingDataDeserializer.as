@@ -1,8 +1,7 @@
 package net.psykosoft.psykopaint2.core.data
 {
-	import flash.utils.ByteArray;
 
-	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+	import flash.utils.ByteArray;
 
 	public class PaintingDataDeserializer
 	{
@@ -13,11 +12,11 @@ package net.psykosoft.psykopaint2.core.data
 		public function deserialize(bytes : ByteArray) : PaintingDataVO
 		{
 			var vo : PaintingDataVO = new PaintingDataVO();
-			PaintingFileUtils.uncompressData(bytes);
 
 			// Read dimensions.
 			vo.width = bytes.readInt();
 			vo.height = bytes.readInt();
+			trace( this, "width: " + vo.width + ", height: " + vo.height );
 
 			// Read painting surfaces.
 			vo.colorData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);

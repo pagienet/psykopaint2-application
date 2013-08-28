@@ -18,16 +18,6 @@ package net.psykosoft.psykopaint2.core.data
 			return imageBytes;
 		}
 
-		static public function compressData(data : ByteArray) : void
-		{
-//			bytes.compress();
-		}
-
-		static public function uncompressData(data : ByteArray) : void
-		{
-//			bytes.uncompress();
-		}
-
 		static public function decodePNG( bytes:ByteArray, numBytes:int, onComplete:Function ):void {
 			// Extract png bytes.
 			var pngBytesOnly:ByteArray = new ByteArray();

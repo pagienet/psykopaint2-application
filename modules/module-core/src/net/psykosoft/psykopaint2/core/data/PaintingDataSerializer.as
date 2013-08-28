@@ -25,8 +25,6 @@ package net.psykosoft.psykopaint2.core.data
 			if (vo.colorBackgroundOriginal)
 				append(vo, vo.colorBackgroundOriginal, bytes);
 
-			PaintingFileUtils.compressData(bytes);
-
 			bytes.position = 0;
 			return bytes;
 		}

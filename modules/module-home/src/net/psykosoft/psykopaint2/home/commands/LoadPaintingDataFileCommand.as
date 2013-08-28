@@ -51,6 +51,7 @@ package net.psykosoft.psykopaint2.home.commands
 		}
 
 		private function readAS3():void {
+			trace( this, "reading with as3... " + _fileName );
 			if( !_as3ReadUtil ) {
 				_as3ReadUtil = new BinaryIoUtil( CoreSettings.RUNNING_ON_iPAD ? BinaryIoUtil.STORAGE_TYPE_IOS : BinaryIoUtil.STORAGE_TYPE_DESKTOP );
 			}
@@ -58,6 +59,7 @@ package net.psykosoft.psykopaint2.home.commands
 		}
 
 		private function onAs3FileRead( bytes:ByteArray ):void {
+			trace( this, "as3 done reading" );
 			if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) bytes.uncompress();
 			onFileRead( bytes );
 		}
@@ -67,20 +69,23 @@ package net.psykosoft.psykopaint2.home.commands
 			var bytes:ByteArray = new ByteArray();
 	   		if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) ioAne.extension.readWithDeCompression( bytes, _fileName );
 			else ioAne.extension.read( bytes, _fileName );
+			trace( this, "ane done reading" );
 			onFileRead( bytes );
 		}
 
 		private function onFileRead( bytes:ByteArray ):void {
 
 			trace( this, "file read: " + bytes.length );
+			ConsoleView.instance.log( this, "done reading - " + String( getTimer() - _time ) );
 
 			// De-serialize.
+			_time = getTimer();
 			var deserializer:PaintingDataDeserializer = new PaintingDataDeserializer();
 			var vo:PaintingDataVO = deserializer.deserialize( bytes );
+			ConsoleView.instance.log( this, "done de-serializing- " + String( getTimer() - _time ) );
 			requestOpenPaintingDataVOSignal.dispatch(vo);
 			if( _as3ReadUtil ) _as3ReadUtil.dispose();
 			dispatchComplete( true );
-			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
 		}
 	}
 }

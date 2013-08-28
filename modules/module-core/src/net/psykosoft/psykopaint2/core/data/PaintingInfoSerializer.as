@@ -32,8 +32,6 @@ package net.psykosoft.psykopaint2.core.data
 			bytes.writeBytes( vo.colorPreviewData, 0, len );
 			bytes.writeBytes( vo.normalSpecularPreviewData, 0, len );
 
-			PaintingFileUtils.compressData( bytes );
-
 			bytes.position = 0;
 			return bytes;
 		}

@@ -24,8 +24,6 @@ package net.psykosoft.psykopaint2.core.data
 			_vo = new PaintingInfoVO();
 			_bytes = bytes;
 
-			PaintingFileUtils.uncompressData(bytes);
-
 			bytes.position = 0;
 			// Check version first.
 			_vo.fileVersion = bytes.readUTF();
