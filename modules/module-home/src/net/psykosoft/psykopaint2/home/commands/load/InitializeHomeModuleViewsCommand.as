@@ -4,12 +4,16 @@ package net.psykosoft.psykopaint2.home.commands.load
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
 
-	public class AddHomeModuleDisplayCommand extends AsyncCommand
+	public class InitializeHomeModuleViewsCommand extends AsyncCommand
 	{
 		[Inject]
 		public var requestAddViewToMainLayerSignal:RequestAddViewToMainLayerSignal;
+
+		[Inject]
+		public var notifyHomeViewSceneReadySignal:NotifyHomeViewSceneReadySignal;
 
 		private var _homeRootView:HomeRootView;
 
@@ -17,12 +21,12 @@ package net.psykosoft.psykopaint2.home.commands.load
 
 			trace( this, "execute()" );
 
+			notifyHomeViewSceneReadySignal.addOnce( onHomeViewsReady );
 			_homeRootView = new HomeRootView();
-			_homeRootView.onSubViewsReady.addOnce( onSubViewReady );
 			requestAddViewToMainLayerSignal.dispatch( _homeRootView );
 		}
 
-		private function onSubViewReady():void {
+		private function onHomeViewsReady():void {
 			dispatchComplete( true );
 		}
 	}

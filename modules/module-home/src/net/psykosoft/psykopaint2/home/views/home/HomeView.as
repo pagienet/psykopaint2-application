@@ -52,6 +52,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var closestPaintingChangedSignal:Signal;
 		public var zoomCompletedSignal:Signal;
 		public var easelRectChanged:Signal;
+		public var sceneReadySignal:Signal;
 
 		public function HomeView() {
 			super();
@@ -59,6 +60,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			closestPaintingChangedSignal = new Signal();
 			zoomCompletedSignal = new Signal();
 			easelRectChanged = new Signal();
+			sceneReadySignal = new Signal();
 		}
 
 		// ---------------------------------------------------------------------
@@ -148,6 +150,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: needed?
 			_stage3dProxy.clear();
 			_view.render();
+
+			sceneReadySignal.dispatch();
 		}
 
 		private function destroyScene():void {

@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
@@ -76,6 +77,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var wallpaperModel:WallpaperModel;
 
+		[Inject]
+		public var notifyHomeViewSceneReadySignal:NotifyHomeViewSceneReadySignal;
+
 		private var _dockedAtPaintingIndex:int = -1;
 
 		override public function initialize():void {
@@ -103,6 +107,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.easelRectChanged.add( onEaselRectChanged );
 			view.enabledSignal.add( onEnabled );
 			view.disabledSignal.add( onDisabled );
+			view.sceneReadySignal.add( onSceneReady );
 
 			view.stage3dProxy = stage3dProxy;
 
@@ -125,6 +130,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.easelRectChanged.remove( onEaselRectChanged );
 			view.enabledSignal.remove( onEnabled );
 			view.disabledSignal.remove( onDisabled );
+			view.sceneReadySignal.remove( onSceneReady );
 
 			view.dispose();
 
@@ -209,6 +215,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onSceneReady():void {
+			notifyHomeViewSceneReadySignal.dispatch();
+		}
 
 		private function onViewZoomComplete():void {
 			notifyHomeViewZoomCompleteSignal.dispatch();
