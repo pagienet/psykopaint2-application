@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.io
 	import avm2.intrinsics.memory.si8;
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 
@@ -215,13 +216,28 @@ package net.psykosoft.psykopaint2.core.io
 
 			// TODO: if we use the ane here, we will still need the as3 version for pure desktop builds
 
-			// Ane 1.
-//			_ioAne.extension.mergeRgbaPerByte( _mergeBuffer );
+			if( CoreSettings.RUNNING_ON_iPAD ) {
+				// Pick 1.
+				_ioAne.extension.mergeRgbaPerByte( _mergeBuffer );
+//		    	_ioAne.extension.mergeRgbaPerInt( _mergeBuffer );
+//				mergeRGBADataAS3Pure( len );
+			}
+			else {
+				mergeRGBADataAS3Pure( len );
+			}
 
-			// Ane 2.
-//		    _ioAne.extension.mergeRgbaPerInt( _mergeBuffer );
+			ConsoleView.instance.log( this, "mergeRGBAData merge..." + (getTimer() - time));
 
-			// As3.
+			var buffer : ByteArray = _mergeBuffer;
+			_mergeBuffer = null;
+			time = getTimer();
+			buffer.length = len;
+			ConsoleView.instance.log( this, "mergeRGBAData resize..." + (getTimer() - time));
+
+			return buffer;
+		}
+
+		private function mergeRGBADataAS3Pure( len:int ):void {
 			var rOffset : int = 1;
 			var gOffset : int = 2;
 			var bOffset : int = 3;
@@ -241,16 +257,6 @@ package net.psykosoft.psykopaint2.core.io
 			}
 
 			ApplicationDomain.currentDomain.domainMemory = MemoryManagerTdsi.memory;
-
-			ConsoleView.instance.log( this, "mergeRGBAData merge..." + (getTimer() - time));
-
-			var buffer : ByteArray = _mergeBuffer;
-			_mergeBuffer = null;
-			time = getTimer();
-			buffer.length = len;
-			ConsoleView.instance.log( this, "mergeRGBAData resize..." + (getTimer() - time));
-
-			return buffer;
 		}
 		
 		private function mergeRGBADataTest() : ByteArray
