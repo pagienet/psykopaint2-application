@@ -3,7 +3,10 @@ package net.psykosoft.psykopaint2.home.commands.load
 
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
+	import flash.utils.getTimer;
+
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
 
@@ -16,10 +19,12 @@ package net.psykosoft.psykopaint2.home.commands.load
 		public var notifyHomeViewSceneReadySignal:NotifyHomeViewSceneReadySignal;
 
 		private var _homeRootView:HomeRootView;
+		private var _time:uint;
 
 		override public function execute():void {
 
 			trace( this, "execute()" );
+			_time = getTimer();
 
 			notifyHomeViewSceneReadySignal.addOnce( onHomeViewsReady );
 			_homeRootView = new HomeRootView();
@@ -28,6 +33,7 @@ package net.psykosoft.psykopaint2.home.commands.load
 
 		private function onHomeViewsReady():void {
 			dispatchComplete( true );
+			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
 		}
 	}
 }

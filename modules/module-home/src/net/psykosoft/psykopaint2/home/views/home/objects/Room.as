@@ -13,6 +13,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.home.assets.HomeEmbeddedAssets;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
 	public class Room extends ObjectContainer3D
@@ -106,7 +108,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_floorGeometry.scaleUV( WALL_WIDTH / _floorGeometry.width, 1 );
 
 			// Texture.
-			_floorTexture = TextureUtil.getAtfTexture( HomeView.HOME_BUNDLE_ID, "floorWood", _view );
+			var cl:Class = CoreSettings.RUNNING_ON_iPAD ? HomeEmbeddedAssets.instance.FloorPaperIos : HomeEmbeddedAssets.instance.FloorPaperDesktop;
+			var bytes:ByteArray = new cl() as ByteArray;
+			_floorTexture = new ATFTexture( bytes );
+			_floorTexture.getTextureForStage3D( _view.stage3DProxy );
+			bytes.clear();
 
 			// Material.
 			_floorMaterial = new TextureMaterial( _floorTexture );

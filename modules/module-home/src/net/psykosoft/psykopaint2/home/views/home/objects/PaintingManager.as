@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.core.views.splash.SplashView;
+	import net.psykosoft.psykopaint2.home.assets.HomeEmbeddedAssets;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.camera.HScrollCameraController;
 
@@ -88,8 +89,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// -----------------------
 
 			// Painting.
+			var settingsBmd:BitmapData = new HomeEmbeddedAssets.instance.SettingsPainting().bitmapData;
 			var settingsPainting:GalleryPainting = createPainting(
-					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPainting", true ),
+					settingsBmd,
 					null
 			);
 			settingsPainting.x = 0;
@@ -98,8 +100,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			addPainting( settingsPainting );
 
 			// Sign.
+			var settingsPanelBmd:BitmapData = new HomeEmbeddedAssets.instance.SettingsPanel().bitmapData;
 			_settingsPanel = TextureUtil.createPlaneThatFitsNonPowerOf2TransparentImage(
-					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( "settingsPanel", true ),
+					settingsPanelBmd,
 					_stage3dProxy,
 					true
 			);
@@ -124,10 +127,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			// Home painting.
 			// -----------------------
 
+			var whiteFrameBmd:BitmapData = new HomeEmbeddedAssets.instance.WhiteFrame().bitmapData;
 			var frameOffset:Point = FrameOffsets.getOffsetForFrameType( FrameType.WHITE_FRAME );
 			var homePainting:GalleryPainting = createPainting(
 					new SplashView.SplashImageAsset().bitmapData,
-					BulkLoader.getLoader( HomeView.HOME_BUNDLE_ID ).getBitmapData( FrameType.WHITE_FRAME, true ),
+					whiteFrameBmd,
 					frameOffset.x, frameOffset.y
 			);
 			homePainting.scale( 0.65 );

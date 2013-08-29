@@ -11,9 +11,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
 
+	import flash.display.BitmapData;
+	import flash.utils.ByteArray;
+
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.home.assets.HomeEmbeddedAssets;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 
 	public class Easel extends GalleryPainting
@@ -67,7 +71,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		public function set easelVisible( visible:Boolean ):void {
 			if( !_easel ) {
 
-				var easelMaterial:TextureMaterial = TextureUtil.getAtfMaterial( HomeView.HOME_BUNDLE_ID, "easelImage", _view );
+				var bytes:ByteArray = new HomeEmbeddedAssets.instance.EaselImage() as ByteArray;
+				var texture:ATFTexture = new ATFTexture( bytes );
+				texture.getTextureForStage3D( _view.stage3DProxy );
+				bytes.clear();
+				var easelMaterial:TextureMaterial = new TextureMaterial( texture );
 				easelMaterial.alphaBlending = true;
 				easelMaterial.mipmap = false;
 
