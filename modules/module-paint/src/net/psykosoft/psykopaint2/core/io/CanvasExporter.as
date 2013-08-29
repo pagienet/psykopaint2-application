@@ -213,6 +213,8 @@ package net.psykosoft.psykopaint2.core.io
 			var time : int = getTimer();
 			var len : int = _canvas.width * _canvas.height * 4;
 
+			// TODO: if we use the ane here, we will still need the as3 version for pure desktop builds
+
 			// Ane 1.
 //			_ioAne.extension.mergeRgbaPerByte( _mergeBuffer );
 
