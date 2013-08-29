@@ -145,7 +145,7 @@ package net.psykosoft.psykopaint2.core.io
 		private function mergeColorData() : void
 		{
 			ConsoleView.instance.log( this, "mergeColorData stage..." );
-			_paintingData.colorData = mergeRGBADataTest();
+			_paintingData.colorData = mergeRGBAData();
 		}
 
 		private function extractNormalsColor() : void
@@ -165,7 +165,7 @@ package net.psykosoft.psykopaint2.core.io
 		private function mergeNormalData() : void
 		{
 			ConsoleView.instance.log( this, "mergeNormalData stage..." );
-			_paintingData.normalSpecularData = mergeRGBADataTest();
+			_paintingData.normalSpecularData = mergeRGBAData();
 		}
 
 		private function saveSourceData() : void
@@ -218,9 +218,9 @@ package net.psykosoft.psykopaint2.core.io
 
 			if( CoreSettings.RUNNING_ON_iPAD ) {
 				// Pick 1.
-				_ioAne.extension.mergeRgbaPerByte( _mergeBuffer );
-//		    	_ioAne.extension.mergeRgbaPerInt( _mergeBuffer );
-//				mergeRGBADataAS3Pure( len );
+				_ioAne.extension.mergeRgbaPerByte( _mergeBuffer ); // Takes about 30ms
+//		    	_ioAne.extension.mergeRgbaPerInt( _mergeBuffer ); // TODO: this method is producing bad results ( a shade of gray ) but could be faster, about 5ms
+//				mergeRGBADataAS3Pure( len ); // Takes about 10s on iPad
 			}
 			else {
 				mergeRGBADataAS3Pure( len );
@@ -259,7 +259,7 @@ package net.psykosoft.psykopaint2.core.io
 			ApplicationDomain.currentDomain.domainMemory = MemoryManagerTdsi.memory;
 		}
 		
-		private function mergeRGBADataTest() : ByteArray
+		/*private function mergeRGBADataTest() : ByteArray
 		{
 			var time : int = getTimer();
 			var len : int = _canvas.width * _canvas.height * 4;
@@ -276,7 +276,7 @@ package net.psykosoft.psykopaint2.core.io
 			ConsoleView.instance.log( this, "mergeRGBAData resize..." + (getTimer() - time));
 			
 			return buffer;
-		}
+		}*/
 
 		private function extractChannels(target : ByteArray, offset : uint, layer : Texture, copier : CopySubTextureChannels) : void
 		{
