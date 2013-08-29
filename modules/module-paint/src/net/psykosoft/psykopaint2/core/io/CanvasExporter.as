@@ -223,7 +223,8 @@ package net.psykosoft.psykopaint2.core.io
 //				mergeRGBADataAS3Pure( len ); // Takes about 10s on iPad
 			}
 			else {
-				mergeRGBADataAS3Pure( len );
+				MergeUtil.mergeRGBAData(_mergeBuffer,len);
+				//mergeRGBADataAS3Pure( len );
 			}
 
 			ConsoleView.instance.log( this, "mergeRGBAData merge..." + (getTimer() - time));

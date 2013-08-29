@@ -18,8 +18,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			_shapes = new Array();
 		}
 
-		[PostConstruct]
-		public function postConstruct() : void
+		public function init() : void
 		{
 			registerDefaultShapes(stage3D.context3D);
 		}
@@ -62,7 +61,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function registerShape(shape : AbstractBrushShape) : void
 		{
-			if (_shapes[shape.id]) throw "Brush shape with id '" + shape.id + "' already registered";
+			//if (_shapes[shape.id]) throw "Brush shape with id '" + shape.id + "' already registered";
 			_shapes[shape.id] = shape;
 		}
 
