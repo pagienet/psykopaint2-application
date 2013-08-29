@@ -145,7 +145,7 @@ package net.psykosoft.psykopaint2.core.io
 		private function mergeColorData() : void
 		{
 			ConsoleView.instance.log( this, "mergeColorData stage..." );
-			_paintingData.colorData = mergeRGBADataTest();
+			_paintingData.colorData = mergeRGBAData();
 		}
 
 		private function extractNormalsColor() : void
@@ -165,7 +165,7 @@ package net.psykosoft.psykopaint2.core.io
 		private function mergeNormalData() : void
 		{
 			ConsoleView.instance.log( this, "mergeNormalData stage..." );
-			_paintingData.normalSpecularData = mergeRGBADataTest();
+			_paintingData.normalSpecularData = mergeRGBAData();
 		}
 
 		private function saveSourceData() : void
@@ -223,7 +223,9 @@ package net.psykosoft.psykopaint2.core.io
 //				mergeRGBADataAS3Pure( len );
 			}
 			else {
-				mergeRGBADataAS3Pure( len );
+				MergeUtil.mergeRGBAData(_mergeBuffer,len);
+				
+				//mergeRGBADataAS3Pure( len );
 			}
 
 			ConsoleView.instance.log( this, "mergeRGBAData merge..." + (getTimer() - time));
@@ -259,25 +261,6 @@ package net.psykosoft.psykopaint2.core.io
 			ApplicationDomain.currentDomain.domainMemory = MemoryManagerTdsi.memory;
 		}
 		
-		private function mergeRGBADataTest() : ByteArray
-		{
-			var time : int = getTimer();
-			var len : int = _canvas.width * _canvas.height * 4;
-			
-			MergeUtil.mergeRGBAData(_mergeBuffer,len);
-				
-			ConsoleView.instance.log( this, "mergeRGBAData merge..." + (getTimer() - time));
-			
-			
-			var buffer : ByteArray = _mergeBuffer;
-			_mergeBuffer = null;
-			var time : int = getTimer();
-			buffer.length = len;
-			ConsoleView.instance.log( this, "mergeRGBAData resize..." + (getTimer() - time));
-			
-			return buffer;
-		}
-
 		private function extractChannels(target : ByteArray, offset : uint, layer : Texture, copier : CopySubTextureChannels) : void
 		{
 			_context3D.setRenderToBackBuffer();
