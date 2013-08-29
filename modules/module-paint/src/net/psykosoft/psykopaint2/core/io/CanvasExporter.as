@@ -144,7 +144,7 @@ package net.psykosoft.psykopaint2.core.io
 		private function mergeColorData() : void
 		{
 			ConsoleView.instance.log( this, "mergeColorData stage..." );
-			_paintingData.colorData = mergeRGBAData();
+			_paintingData.colorData = mergeRGBADataTest();
 		}
 
 		private function extractNormalsColor() : void
@@ -164,7 +164,7 @@ package net.psykosoft.psykopaint2.core.io
 		private function mergeNormalData() : void
 		{
 			ConsoleView.instance.log( this, "mergeNormalData stage..." );
-			_paintingData.normalSpecularData = mergeRGBAData();
+			_paintingData.normalSpecularData = mergeRGBADataTest();
 		}
 
 		private function saveSourceData() : void
