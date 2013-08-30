@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.crop.views.crop
 {
 
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.crop.signals.RequestCancelCropSignal;
