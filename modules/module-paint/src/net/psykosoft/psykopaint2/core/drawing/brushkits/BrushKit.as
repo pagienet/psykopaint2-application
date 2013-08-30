@@ -92,6 +92,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_brushClassFromBrushType[ brushName ] = brushClass;
 		}
 		
+		public static function dispose():void
+		{
+			_availableBrushTypes = null;
+		 	_brushClassFromBrushType = null;
+			_initialized = false;
+		}
 		
 		private var _brushEngine:AbstractBrush;
 		private var _brushName:String;

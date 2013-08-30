@@ -180,7 +180,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		public function activate(mode : int) : void
 		{
-			var brushKitDef : XML = mode == BrushKitMode.PHOTO? BrushKitDefaultSet.brushKitDataPhotoPaintMode : BrushKitDefaultSet.brushKitDataColorMode;
+			brushShapeLibrary.init();
+			
+			var brushKitDef : XML = mode == BrushKitMode.PHOTO? BrushKitDefaultSet.brushKitDataPhotoPaintMode.copy() : BrushKitDefaultSet.brushKitDataColorMode.copy();
 
 			_availableBrushKits = new Vector.<BrushKit>();
 			_availableBrushKitNames = new Vector.<String>();
