@@ -10,11 +10,8 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.display3D.Context3DTriangleFace;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitMode;
 
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
@@ -191,6 +188,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function createBackgroundRect() : Rectangle
 		{
+			trace (_lightingRenderer.renderRect);
 			var canvasRect : Rectangle = _lightingRenderer.renderRect;
 			var rect : Rectangle = new Rectangle();
 

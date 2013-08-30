@@ -312,17 +312,20 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				zoomScale = MAX_ZOOM_SCALE;
 			}
 
-			var offsetX:Number = rect.x / canvasModel.width;
-			var offsetY:Number = rect.y / canvasModel.height;
 			if( zoomScale < 1 )
 			{
-				offsetX = (1 - zoomScale) * .5;
-				offsetY = (1 - zoomScale) * .175;
+				var ratio : Number = (zoomScale - _minZoomScale)/(1 - _minZoomScale);
+				rect.x = (1-ratio)*_easelRectFromHomeView.x;	// linearly interpolate to 0 from zoomed out position
+				rect.y = (1-ratio)*_easelRectFromHomeView.y;
 			} else if ( zoomScale < 1.5 )
 			{
+				var offsetX:Number = rect.x / canvasModel.width;
+				var offsetY:Number = rect.y / canvasModel.height;
 				var ratio:Number = (zoomScale - 1) * 2;
 				offsetX = ratio * offsetX + ( 1-ratio) * (1 - zoomScale) * .5;
 				offsetY = ratio * offsetY + ( 1-ratio) * (1 - zoomScale) * .175;
+				rect.x = offsetX * canvasModel.width;
+				rect.y = offsetY * canvasModel.height;
 			}
 			// TODO: this causes a jump when coming from home, it seems that the .175 value needs to be calculated dynamically
 
@@ -333,8 +336,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				offsetY = 0;
 			}*/
 
-			rect.x = offsetX * canvasModel.width;
-			rect.y = offsetY * canvasModel.height;
+
 		}
 
 		// -----------------------
