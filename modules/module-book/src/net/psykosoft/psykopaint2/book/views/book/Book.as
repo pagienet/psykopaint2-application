@@ -1,5 +1,9 @@
 package net.psykosoft.psykopaint2.book.views.book
 {
+
+	import away3d.containers.ObjectContainer3D;
+	import away3d.containers.Scene3D;
+
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
 	
