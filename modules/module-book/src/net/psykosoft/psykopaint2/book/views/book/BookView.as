@@ -67,8 +67,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		override protected function onDisabled():void 
 		{
-			return; // TODO: disabled because it causes all sorts of runtime errors
-
 			_book.dispose();
 			_book = null;
 

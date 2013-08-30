@@ -200,8 +200,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
  			_isLoadingImage = false;
 			bookClearedSignal.dispatch();
-
-			dispose();
 		}
 
 		/* XXXXXXXXXX pages management XXXXXXXXX*/
