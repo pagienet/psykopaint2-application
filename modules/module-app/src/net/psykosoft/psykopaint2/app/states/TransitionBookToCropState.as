@@ -2,21 +2,15 @@ package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
-	import net.psykosoft.psykopaint2.app.signals.RequestCreateCropBackgroundSignal;
-
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 
 	use namespace ns_state_machine;
 
@@ -35,13 +29,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestDestroyBookModuleSignal : RequestDestroyBookModuleSignal;
 
 		[Inject]
-		public var notifyBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
-
-		[Inject]
 		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
-
-		[Inject]
-		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
 
 		[Inject]
 		public var requestAnimateOutSignal : RequestAnimateBookOutSignal;
@@ -50,6 +38,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var notifyAnimateBookOutCompleteSignal : NotifyAnimateBookOutCompleteSignal;
 
 		private var _background : RefCountedTexture;
+		private var _bitmapData : BitmapData;
 
 		public function TransitionBookToCropState()
 		{
@@ -62,11 +51,11 @@ package net.psykosoft.psykopaint2.app.states
 		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			var bitmapData : BitmapData = BitmapData(data.bitmapData);
+			_bitmapData = BitmapData(data.bitmapData);
 			_background = RefCountedTexture(data.background);
 
 			notifyCropModuleSetUpSignal.addOnce(onCropModuleSetUp);
-			requestSetupCropModuleSignal.dispatch(bitmapData);
+			requestSetupCropModuleSignal.dispatch(_bitmapData);
 		}
 
 		private function onCropModuleSetUp() : void
@@ -78,7 +67,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onAnimateOutComplete() : void
 		{
-			stateMachine.setActiveState(cropState);
+			stateMachine.setActiveState(cropState, {bitmapData: _bitmapData, background: _background.newReference()});
 		}
 
 		override ns_state_machine function deactivate() : void
@@ -86,6 +75,7 @@ package net.psykosoft.psykopaint2.app.states
 			requestDestroyBookModuleSignal.dispatch();
 			_background.dispose();
 			_background = null;
+			_bitmapData = null;
 		}
 	}
 }

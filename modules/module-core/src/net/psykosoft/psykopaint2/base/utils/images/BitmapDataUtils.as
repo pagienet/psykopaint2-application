@@ -16,6 +16,11 @@ package net.psykosoft.psykopaint2.base.utils.images
 
 	public class BitmapDataUtils
 	{
+		static public function aspectRatioMatches( map:BitmapData, targetRatio : Number, errorMargin : Number = .007 ) : Boolean
+		{
+			return Math.abs(map.width/map.height - targetRatio) < errorMargin;
+		}
+
 		static public function getLegalBitmapData( map:BitmapData, forceClone:Boolean = false, maxDimension:int = 2048 ):BitmapData {
 			if( map.width <= maxDimension && map.height <= maxDimension ) return forceClone ? map.clone() : map;
 

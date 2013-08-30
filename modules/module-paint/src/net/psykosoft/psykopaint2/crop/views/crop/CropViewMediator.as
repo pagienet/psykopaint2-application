@@ -51,6 +51,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 			registerView( view );
 			super.initialize();
 			registerEnablingState( NavigationStateType.CROP );
+			registerEnablingState( NavigationStateType.CROP_SKIP );
 
 			// From app.
 			requestUpdateCropImageSignal.add( updateCropSourceImage );

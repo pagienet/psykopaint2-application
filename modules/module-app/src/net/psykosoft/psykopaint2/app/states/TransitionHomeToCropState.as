@@ -61,18 +61,18 @@ package net.psykosoft.psykopaint2.app.states
 			_background = background.newReference();
 			notifyCropModuleSetUpSignal.addOnce(onCropModuleSetUp);
 			requestSetupCropModuleSignal.dispatch(_bitmapData);
-			_bitmapData = null;
 		}
 
 		private function onCropModuleSetUp() : void
 		{
-			stateMachine.setActiveState(cropState);
+			stateMachine.setActiveState(cropState, {bitmapData: _bitmapData, background: _background.newReference()});
 		}
 
 		override ns_state_machine function deactivate() : void
 		{
 			if (_background) _background.dispose();
 			_background = null;
+			_bitmapData = null;
 			requestDestroyHomeModuleSignal.dispatch();
 		}
 	}

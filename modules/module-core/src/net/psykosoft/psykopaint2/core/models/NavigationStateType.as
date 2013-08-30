@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		public static const COLOR_STYLE:String = "state/color_style";
 		public static const CROP:String = "state/crop";
+		public static const CROP_SKIP:String = "state/crop/skip";	// this is used to skip the crop module (but crop state is still responsible for resizing), but still need to show the background
 		public static const PICK_IMAGE:String = "state/pick_image";
 
 		public static const BOOK:String = "state/book";

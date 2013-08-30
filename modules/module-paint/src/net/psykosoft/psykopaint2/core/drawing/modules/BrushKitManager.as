@@ -133,10 +133,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.stopProgression();
 		}
 
-		public function type():String {
-			return ModuleType.PAINT;
-		}
-
 		private function initializeDefaultBrushes():void {
 			notifyAvailableBrushTypesSignal.dispatch( _availableBrushKitNames );
 		}
