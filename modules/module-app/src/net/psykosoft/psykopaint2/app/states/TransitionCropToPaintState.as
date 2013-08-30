@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
 
