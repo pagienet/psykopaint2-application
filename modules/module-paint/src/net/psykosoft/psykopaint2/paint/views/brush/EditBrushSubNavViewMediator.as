@@ -47,8 +47,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				case EditBrushSubNavView.ID_COLOR:
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_COLOR);
 					break;
-				// WARNING: be careful if another side button is added since default should only be for parameter buttons.
-				default: 
+				default:
 					view.openParameterWithId( id );
 					break;
 			}

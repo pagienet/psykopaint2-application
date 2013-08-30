@@ -253,6 +253,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		
 		public function getCurrentBrushParameters( uiOnlyParameters:Boolean = true):ParameterSetVO {
+			trace( this, "getCurrentBrushParameters() - active brush kit name: " + _activeBrushKitName  );
 			return _activeBrushKit.getParameterSet( uiOnlyParameters );
 		}
 		

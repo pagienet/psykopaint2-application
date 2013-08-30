@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
+	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
@@ -40,6 +41,9 @@ package net.psykosoft.psykopaint2.book.views.book
 		[Inject]
 		public var notifySourceImagesFetchedSignal : NotifySourceImagesFetchedSignal;
 
+		[Inject]
+		public var notifyBookModuleDestroyedSignal : NotifyBookModuleDestroyedSignal;
+
 		override public function initialize():void {
 
 			// Init.
@@ -52,6 +56,11 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			view.enabledSignal.add(onEnabled);
 			view.disabledSignal.add(onDisabled);
+			view.bookDisposedSignal.add( onBookDisposed );
+		}
+
+		private function onBookDisposed():void {
+			notifyBookModuleDestroyedSignal.dispatch();
 		}
 
 		override public function destroy() : void

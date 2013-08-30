@@ -40,10 +40,12 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var imageSelectedSignal:Signal;
 		public var bookHasClosedSignal:Signal;
 		public var requestData : Signal;
- 
+		public var bookDisposedSignal : Signal;
+
 		public function BookView() {
 			super();
 			bookHasClosedSignal = new Signal();
+			bookDisposedSignal = new Signal();
 
 			// todo: dispatch this on page turns and when first page shows for dynamic loading
 			// requestData.dispatch(_layout, thumbnailIndex, numThumbnailsToLoad)
@@ -78,6 +80,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		 
 			stage.removeEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
 			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+
+			bookDisposedSignal.dispatch();
 		}
 
 		private function initVars():void
