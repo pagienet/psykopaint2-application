@@ -62,7 +62,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public function setParameters( parameterSetVO:ParameterSetVO ):void {
 
 			_parameterSetVO = parameterSetVO;
-			trace( this, "receiving parameters: " + parameterSetVO.parameters.length );
+			trace( this, "receiving parameters for brush " + parameterSetVO.brushName + ", with num parameters: " + parameterSetVO.parameters.length );
 
 			// Create a center button for each parameter, with a local listener.
 			// Specific parameter ui components will show up when clicking on a button.
