@@ -189,12 +189,11 @@ package net.psykosoft.psykopaint2.book.views.book
 			TweenLite.to( _bookCraft.coverCenter, 1, { y: 15, rotationZ:90,
 								ease: Strong.easeOut} );
 			 
-			TweenLite.to( _bookCraft, 1, { 	x: 500, ease: Strong.easeOut} );
-
-			TweenLite.to( _view.camera, 0.75, { y: 50, z:-1250, ease: Strong.easeIn,
-								onComplete: onAnimateOutComplete } );
+			TweenLite.to( _view.camera, 0.75, { y: 50, z:-1250, ease: Strong.easeIn} );
 
 			TweenLite.to( _dummyCam, 0.5, { z:-2000, ease: Strong.easeIn, onUpdate:lookAtDummy } );
+
+			TweenLite.to( _bookCraft, 1, { 	x: 500, ease: Strong.easeOut, onComplete: onAnimateOutComplete } );
 		}
 		
 		public function onAnimateOutComplete():void
