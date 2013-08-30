@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
@@ -26,9 +25,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var notifyCropModuleSetUpSignal : NotifyCropModuleSetUpSignal;
-
-		[Inject]
-		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
 
 		[Inject]
 		public var notifyBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
@@ -73,7 +69,6 @@ package net.psykosoft.psykopaint2.app.states
 			if (_background) _background.dispose();
 			_background = null;
 			_bitmapData = null;
-			requestDestroyHomeModuleSignal.dispatch();
 		}
 	}
 }

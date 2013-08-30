@@ -8,8 +8,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 
 	public class TransitionBookToHomeState extends State
 	{
@@ -21,12 +19,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
-
-		[Inject]
-		public var requestSetupHomeModuleSignal : RequestSetupHomeModuleSignal;
-
-		[Inject]
-		public var notifyHomeModuleSetUpSignal : NotifyHomeModuleSetUpSignal;
 
 		[Inject]
 		public var requestAnimateBookOutSignal : RequestAnimateBookOutSignal;
@@ -45,16 +37,10 @@ package net.psykosoft.psykopaint2.app.states
 
 		}
 
-		private function onHomeModuleSetUp() : void
+		private function onAnimateBookOutComplete() : void
 		{
 			stateMachine.setActiveState(homeState);
 			requestStateChangeSignal.dispatch(NavigationStateType.PICK_IMAGE);
-		}
-
-		private function onAnimateBookOutComplete() : void
-		{
-			notifyHomeModuleSetUpSignal.addOnce(onHomeModuleSetUp);
-			requestSetupHomeModuleSignal.dispatch();
 		}
 
 		override ns_state_machine function deactivate() : void

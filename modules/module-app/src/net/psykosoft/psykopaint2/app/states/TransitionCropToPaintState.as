@@ -2,6 +2,8 @@ package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
 
+	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
+
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
@@ -15,6 +17,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
@@ -56,6 +59,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var notifyCanvasZoomedToDefaultViewSignal:NotifyCanvasZoomedToDefaultViewSignal;
 
+		[Inject]
+		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
+
 		private var _croppedBitmapData : BitmapData;
 		private var _background : RefCountedTexture;
 
@@ -76,7 +82,6 @@ package net.psykosoft.psykopaint2.app.states
 			_croppedBitmapData = BitmapData(data.bitmapData);
 			_background = RefCountedTexture(data.background);
 
-
 			notifySurfaceLoadedSignal.addOnce(onSurfaceLoaded);
 			requestLoadSurfaceSignal.dispatch(0);
 		}
@@ -87,6 +92,8 @@ package net.psykosoft.psykopaint2.app.states
 
 			_croppedBitmapData.dispose();
 			_croppedBitmapData = null;
+
+			requestDestroyHomeModuleSignal.dispatch();
 
 			notifyPaintModuleSetUp.addOnce(onPaintingModuleSetUp);
 			requestSetupPaintModuleSignal.dispatch(vo);

@@ -19,9 +19,6 @@ package net.psykosoft.psykopaint2.app.states
 		public var notifyBookModuleSetUpSignal : NotifyBookModuleSetUpSignal;
 
 		[Inject]
-		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
-
-		[Inject]
 		public var notifyBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
 
 		[Inject]
@@ -67,7 +64,6 @@ package net.psykosoft.psykopaint2.app.states
 			if (_background)
 				_background.dispose();
 			_background = null;
-			requestDestroyHomeModuleSignal.dispatch();
 		}
 	}
 }
