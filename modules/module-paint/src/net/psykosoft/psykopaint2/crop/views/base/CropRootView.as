@@ -10,15 +10,26 @@ package net.psykosoft.psykopaint2.crop.views.base
 
 	public class CropRootView extends Sprite
 	{
+		private var _cropView:CropView;
+
 		public function CropRootView()
 		{
 			super();
-			addChild( new CropView() );
+			addChild( _cropView = new CropView() );
 
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.CROP, CropSubNavView );
 
 			mouseEnabled = false;
 			name = "CropRootView";
+		}
+
+		public function dispose():void {
+
+			removeChild( _cropView );
+			_cropView = null;
+
+			// Note: removing the views from display will cause the destruction of the mediators which will
+			// in turn destroy the views themselves.
 		}
 	}
 }

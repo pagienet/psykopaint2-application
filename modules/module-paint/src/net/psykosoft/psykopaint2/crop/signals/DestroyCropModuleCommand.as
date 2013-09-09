@@ -10,11 +10,14 @@ package net.psykosoft.psykopaint2.crop.signals
 		[Inject]
 		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
 
+		[Inject]
+		public var requestCropRootViewRemovalSignal:RequestCropRootViewRemovalSignal;
+
 		override public function execute() : void
 		{
 			super.execute();
 
-			requestSetCropBackgroundSignal.dispatch(null);
+			requestCropRootViewRemovalSignal.dispatch();
 			notifyCropModuleDestroyedSignal.dispatch();
 		}
 	}

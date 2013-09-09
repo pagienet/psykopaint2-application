@@ -7,10 +7,13 @@ package net.psykosoft.psykopaint2.crop.configuration
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestCancelCropSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestCropRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.SetupCropModuleCommand;
+	import net.psykosoft.psykopaint2.crop.views.base.CropRootView;
+	import net.psykosoft.psykopaint2.crop.views.base.CropRootViewMediator;
 	import net.psykosoft.psykopaint2.crop.views.crop.CropSubNavView;
 	import net.psykosoft.psykopaint2.crop.views.crop.CropSubNavViewMediator;
 	import net.psykosoft.psykopaint2.crop.views.crop.CropView;
@@ -83,6 +86,7 @@ package net.psykosoft.psykopaint2.crop.configuration
 			_injector.map( RequestCancelCropSignal ).asSingleton();
 			_injector.map( RequestSetCropBackgroundSignal ).asSingleton();
 			_injector.map( RequestClosePaintViewSignal ).asSingleton();
+			_injector.map( RequestCropRootViewRemovalSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -102,6 +106,7 @@ package net.psykosoft.psykopaint2.crop.configuration
 		private function mapMediators():void {
 			_mediatorMap.map( CropSubNavView ).toMediator( CropSubNavViewMediator );
 			_mediatorMap.map( CropView ).toMediator( CropViewMediator );
+			_mediatorMap.map( CropRootView ).toMediator( CropRootViewMediator );
 		}
 	}
 }

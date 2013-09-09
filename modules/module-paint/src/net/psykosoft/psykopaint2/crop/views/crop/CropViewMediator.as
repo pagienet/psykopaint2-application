@@ -59,8 +59,18 @@ package net.psykosoft.psykopaint2.crop.views.crop
 			requestSetCropBackgroundSignal.add( onSetCropBackgroundSignal );
 			requestDestroyCropModuleSignal.add( onRequestDestroyCropModule );
 
+			// From view.
 			view.enabledSignal.add( onEnabled );
 			view.disabledSignal.add( onDisabled );
+		}
+
+		override public function destroy():void {
+			requestUpdateCropImageSignal.remove( updateCropSourceImage );
+			notifyCropConfirmSignal.remove( onRequestFinalizeCrop );
+			requestSetCropBackgroundSignal.remove( onSetCropBackgroundSignal );
+			requestDestroyCropModuleSignal.remove( onRequestDestroyCropModule );
+			view.enabledSignal.remove( onEnabled );
+			view.disabledSignal.remove( onDisabled );
 		}
 
 		private function onEnabled() : void
