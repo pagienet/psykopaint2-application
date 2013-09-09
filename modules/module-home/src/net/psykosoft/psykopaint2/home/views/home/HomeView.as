@@ -47,8 +47,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _mainScene:ObjectContainer3D;
 		private var _currentScene:ObjectContainer3D;
 
-		public static const HOME_BUNDLE_ID:String = "HomeBundle";
-
 		public var closestPaintingChangedSignal:Signal;
 		public var zoomCompletedSignal:Signal;
 		public var easelRectChanged:Signal;

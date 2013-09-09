@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 
 	import flash.display.BitmapData;
 	import flash.display.StageQuality;
-	import flash.display.TriangleCulling;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
@@ -16,7 +15,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
-	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 
 	public class CropView extends ViewBase

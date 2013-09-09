@@ -50,8 +50,9 @@ package net.psykosoft.psykopaint2.crop.views.crop
 
 			registerView( view );
 			super.initialize();
-			registerEnablingState( NavigationStateType.CROP );
-			registerEnablingState( NavigationStateType.CROP_SKIP );
+			manageStateChanges = false;
+//			registerEnablingState( NavigationStateType.CROP );
+//			registerEnablingState( NavigationStateType.CROP_SKIP );
 
 			// From app.
 			requestUpdateCropImageSignal.add( updateCropSourceImage );
@@ -62,26 +63,37 @@ package net.psykosoft.psykopaint2.crop.views.crop
 			// From view.
 			view.enabledSignal.add( onEnabled );
 			view.disabledSignal.add( onDisabled );
+
+			// Enable view.
+			view.enable();
+			GpuRenderManager.addRenderingStep(render, GpuRenderingStepType.NORMAL,0);
 		}
 
 		override public function destroy():void {
+
+			// Clean up listeners.
 			requestUpdateCropImageSignal.remove( updateCropSourceImage );
 			notifyCropConfirmSignal.remove( onRequestFinalizeCrop );
 			requestSetCropBackgroundSignal.remove( onSetCropBackgroundSignal );
 			requestDestroyCropModuleSignal.remove( onRequestDestroyCropModule );
 			view.enabledSignal.remove( onEnabled );
 			view.disabledSignal.remove( onDisabled );
+
+			// Disable view.
+			view.disable();
+			GpuRenderManager.removeRenderingStep(render, GpuRenderingStepType.NORMAL);
+			view.background = null;
 		}
 
 		private function onEnabled() : void
 		{
-			GpuRenderManager.addRenderingStep(render, GpuRenderingStepType.NORMAL,0);
+//			GpuRenderManager.addRenderingStep(render, GpuRenderingStepType.NORMAL,0);
 		}
 
 		private function onDisabled() : void
 		{
-			GpuRenderManager.removeRenderingStep(render, GpuRenderingStepType.NORMAL);
-			view.background = null;
+//			GpuRenderManager.removeRenderingStep(render, GpuRenderingStepType.NORMAL);
+//			view.background = null;
 		}
 
 		private function render(target:Texture) : void
