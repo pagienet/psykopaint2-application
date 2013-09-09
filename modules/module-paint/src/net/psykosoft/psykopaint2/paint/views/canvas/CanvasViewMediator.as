@@ -109,7 +109,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// From app.
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 
-			requestZoomCanvasToDefaultViewSignal.add( zoomToFullView );
+			requestZoomCanvasToDefaultViewSignal.add( zoomToDefaultView );
 			requestZoomCanvasToEaselViewSignal.add( zoomToEaselView );
 
 			_transformMatrix = new Matrix();
@@ -129,7 +129,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 
 			notifyGlobalGestureSignal.remove( onGlobalGesture );
-			requestZoomCanvasToDefaultViewSignal.remove( zoomToFullView );
+			requestZoomCanvasToDefaultViewSignal.remove( zoomToDefaultView );
 			requestZoomCanvasToEaselViewSignal.remove( zoomToEaselView );
 			view.enabledSignal.remove(onEnabled);
 			view.disabledSignal.remove(onDisabled);
@@ -250,26 +250,34 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			view.graphics.endFill();*/
 		}
 
-		private function zoomToFullView():void
+		private function zoomToDefaultView():void
+		{
+			updateEaselRect();
+			updateCanvasRect( _easelRectFromHomeView );
+			TweenLite.killTweensOf( this );
+			var targetScale : Number = (canvasModel.height - 400)/canvasModel.height;
+			TweenLite.to( this, 1, { zoomScale: targetScale, onUpdate: onZoomUpdate, onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
+		}
+
+		/*private function zoomToFullView():void
 		{
 //			trace( this, "zoomToFullView" );
 			updateEaselRect();
 			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomToFullViewComplete, ease: Strong.easeInOut } );
-		}
-		private function onZoomToFullViewComplete():void {
-//			trace( this, "onZoomToFullViewComplete" );
+			TweenLite.to( this, 1, { zoomScale: 1, onUpdate: onZoomUpdate, onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
+		} */
+
+		private function onZoomToDefaultViewComplete():void {
 			notifyCanvasZoomedToDefaultViewSignal.dispatch();
 		}
 
 		public function zoomToEaselView():void {
-//			trace( this, "zoomToEaselView" );
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomToEaselViewComplete, ease: Strong.easeInOut } );
 		}
+
 		private function onZoomToEaselViewComplete():void {
-//			trace( this, "onZoomToEaselViewComplete" );
 			notifyCanvasZoomedToEaselViewSignal.dispatch();
 		}
 

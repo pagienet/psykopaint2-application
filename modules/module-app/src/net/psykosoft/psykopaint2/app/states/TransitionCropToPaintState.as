@@ -116,11 +116,11 @@ package net.psykosoft.psykopaint2.app.states
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_PAINT_MODE);
 			requestSetCanvasBackgroundSignal.dispatch(_background.newReference(), easelRectModel.absoluteScreenRect);
 
-			notifyCanvasZoomedToDefaultViewSignal.addOnce( onZoomOutComplete );
+			notifyCanvasZoomedToDefaultViewSignal.addOnce( onZoomInComplete );
 			requestZoomCanvasToDefaultViewSignal.dispatch();
 		}
 
-		private function onZoomOutComplete() : void
+		private function onZoomInComplete() : void
 		{
 			stateMachine.setActiveState(paintState);
 		}
