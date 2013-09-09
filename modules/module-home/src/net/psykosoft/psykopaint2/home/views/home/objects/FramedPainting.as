@@ -71,7 +71,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		private function initPainting(transparent : Boolean) : void
 		{
-			_paintingTexture = new BitmapTexture(null);
+			_paintingTexture = new BitmapTexture(null, false);
 			_paintingMaterial = createMaterial(_paintingTexture, transparent);
 			_paintingGeometry = new PlaneGeometry(1, 1, 1, 1, false);
 			_paintingMesh = new Mesh(_paintingGeometry, _paintingMaterial);
@@ -83,6 +83,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			var material : TextureMaterial = new TextureMaterial(texture);
 			material.alphaBlending = transparent;
 			material.animateUVs = true;
+			material.mipmap = false;
 			return material;
 		}
 

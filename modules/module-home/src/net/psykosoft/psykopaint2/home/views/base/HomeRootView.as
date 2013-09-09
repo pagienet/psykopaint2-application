@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.views.base
 {
 
 	import flash.display.Sprite;
+	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;

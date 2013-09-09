@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
+	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -74,6 +75,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function buildScene():void {
+
+//			trace( this, "building scene..." );
+//			var time:uint;
+//			var methodTime:uint = getTimer();
 
 			// -----------------------
 			// Initialize view.
@@ -140,14 +145,20 @@ package net.psykosoft.psykopaint2.home.views.home
 			_mainScene.addChild( _light );
 
 			_room.initialize();
+//			time = getTimer();
 			_paintingManager.createDefaultPaintings();
+//			trace( this, "time taken to init paintings: " + String( getTimer() - time ) );
 
 			// Always start at easel.
 			_scrollCameraController.jumpToSnapPointIndex( 1 );
 
 			// TODO: needed?
+//			time = getTimer();
 			_stage3dProxy.clear();
 			_view.render();
+//			trace( this, "time taken for first render: " + String( getTimer() - time ) );
+
+//			trace( this, "method time: " + String( getTimer() - methodTime ) );
 
 			sceneReadySignal.dispatch();
 		}

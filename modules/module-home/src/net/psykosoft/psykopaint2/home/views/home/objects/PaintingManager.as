@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
+	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.core.views.splash.SplashView;
@@ -84,9 +85,14 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 		public function createDefaultPaintings():void {
 
+//			trace( this, "creating paintings..." );
+//			var time:uint;
+
 			// -----------------------
 			// Settings painting.
 			// -----------------------
+
+//			time = getTimer();
 
 			// Painting.
 			var settingsBmd:BitmapData = new HomeEmbeddedAssets.instance.SettingsPainting().bitmapData;
@@ -98,6 +104,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			settingsPainting.z = -50;
 			settingsPainting.scale( 1.5 );
 			addPainting( settingsPainting );
+
+//			trace( this, "time taken to create settings painting: " + String( getTimer() - time ) );
+//			time = getTimer();
 
 			// Sign.
 			var settingsPanelBmd:BitmapData = new HomeEmbeddedAssets.instance.SettingsPanel().bitmapData;
@@ -112,9 +121,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_settingsPanel.rotationX = -90;
 			addChild( _settingsPanel );
 
+//			trace( this, "time taken to create settings sign: " + String( getTimer() - time ) );
+
 			// -----------------------
 			// Easel.
 			// -----------------------
+
+//			time = getTimer();
 
 			_easel.easelVisible = true;
 			_easel.scale( 1.5 );
@@ -123,9 +136,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_easel.y = -75;
 			addPainting( _easel );
 
+//			trace( this, "time taken to create easel: " + String( getTimer() - time ) );
+
 			// -----------------------
 			// Home painting.
 			// -----------------------
+
+//			time = getTimer();
 
 			var whiteFrameBmd:BitmapData = new HomeEmbeddedAssets.instance.WhiteFrame().bitmapData;
 			var frameOffset:Point = FrameOffsets.getOffsetForFrameType( FrameType.WHITE_FRAME );
@@ -140,6 +157,8 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			homePainting.z = -50;
 			homePaintingIndex = 2;
 			addPainting( homePainting );
+
+//			trace( this, "time taken to create home painting: " + String( getTimer() - time ) );
 		}
 
 		public function createPainting( paintingBmd:BitmapData, frameBmd:BitmapData, frameOffsetX:Number = 0, frameOffsetY:Number = 0 ):FramedPainting {
