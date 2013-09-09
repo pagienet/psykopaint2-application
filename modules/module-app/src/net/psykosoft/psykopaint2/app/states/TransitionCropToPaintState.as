@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
@@ -63,8 +64,12 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestDestroyHomeModuleSignal : RequestDestroyHomeModuleSignal;
 
+		[Inject]
+		public var notifyHomeModuleDestroyedSignal:NotifyHomeModuleDestroyedSignal;
+
 		private var _croppedBitmapData : BitmapData;
 		private var _background : RefCountedTexture;
+		private var _surfaceData:SurfaceDataVO;
 
 		public function TransitionCropToPaintState()
 		{
@@ -89,12 +94,18 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onSurfaceLoaded(data : SurfaceDataVO) : void
 		{
-			var vo : PaintingDataVO = createPaintingVO(data);
+			_surfaceData = data;
+			notifyHomeModuleDestroyedSignal.addOnce( onHomeModuleDestroyed );
+			requestDestroyHomeModuleSignal.dispatch();
+		}
+
+		private function onHomeModuleDestroyed():void {
+
+			var vo : PaintingDataVO = createPaintingVO(_surfaceData);
+			_surfaceData = null;
 
 			_croppedBitmapData.dispose();
 			_croppedBitmapData = null;
-
-			requestDestroyHomeModuleSignal.dispatch();
 
 			notifyPaintModuleSetUp.addOnce(onPaintingModuleSetUp);
 			requestSetupPaintModuleSignal.dispatch(vo);
