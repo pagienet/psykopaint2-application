@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.core.drawing.paths
 {
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	
 	public class PathEngineBasic extends AbstractPathEngine
 	{
@@ -43,6 +44,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			
 			if ( _lastPressure == -1 && sampledPoints[_lastOutputIndex].pressure != -1 ) _lastPressure = 0;
 			var speedSmoothingFactor:Number = _speedSmoothing.numberValue;
+			var speedCorrection:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 0.5 : 1;
+			
 			var pi:Number = Math.PI;
 			var outputStep:Number = _outputStepSize.numberValue;
 			for ( var i:int = _lastOutputIndex; i < nextIndex; i++ )
@@ -94,7 +97,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						_lastAngle = angle + da *(-Math.pow(2, -10 * step) + 1);
 						_lastPressure += dp;
 						step+=stepSize;
-						result.push( PathManager.getSamplePoint( _lastX, _lastY, _lastSpeed,0, _lastAngle, _lastPressure, pb ) );
+						result.push( PathManager.getSamplePoint( _lastX, _lastY, _lastSpeed * speedCorrection,0, _lastAngle, _lastPressure, pb ) );
 						_accumulatedDistance-=outputStep;
 						
 						if ( _accumulatedDistance > outputStep )
@@ -114,7 +117,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 								_lastAngle = angle + da *(-Math.pow(2, -10 * step) + 1);
 								_lastPressure += dp;
 								step+=stepSize;
-								result.push( PathManager.getSamplePoint( _lastX, _lastY, _lastSpeed,0, _lastAngle, _lastPressure, pb ) );
+								result.push( PathManager.getSamplePoint( _lastX, _lastY, _lastSpeed * speedCorrection,0, _lastAngle, _lastPressure, pb ) );
 								_accumulatedDistance-=outputStep;
 							}
 						}
