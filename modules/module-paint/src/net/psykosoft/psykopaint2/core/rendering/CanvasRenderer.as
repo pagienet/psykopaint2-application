@@ -188,7 +188,6 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function createBackgroundRect() : Rectangle
 		{
-			trace (_lightingRenderer.renderRect);
 			var canvasRect : Rectangle = _lightingRenderer.renderRect;
 			var rect : Rectangle = new Rectangle();
 
