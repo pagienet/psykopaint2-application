@@ -66,14 +66,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( xml.hasOwnProperty("@value" )) result.value = Number( xml.@value );
 			if ( xml.hasOwnProperty("@indices" )) result.indices = Vector.<int>(String( xml.@indices ).split(","));
 			if ( xml.hasOwnProperty("@condition" )) result.condition = String( xml.@condition );
-			if ( xml.hasOwnProperty("@targetMappings" )) 
-			{
-				var mappingIndices:Array = String( xml.@targetMappings ).split(",");
-				for ( var i:int = 0; i < mappingIndices.length; i++ )
-				{
-					result.targetMappings[i] = mappingFunctions[int( mappingIndices[i] )];
-				}
-			}
+			
 			if ( xml.hasOwnProperty("@targetOffsets" )) 
 			{
 				var mappingOffsets:Array = String( xml.@targetOffsets ).split(",");
@@ -96,6 +89,21 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				for ( i = 0; i < mappingProperties.length; i++ )
 				{
 					result.targetProperties[i] = mappingProperties[i];
+				}
+			}
+			if ( xml.hasOwnProperty("@targetMappings" )) 
+			{
+				var mappingIndices:Array = String( xml.@targetMappings ).split(",");
+				for ( var i:int = 0; i < mappingIndices.length; i++ )
+				{
+					result.targetMappings[i] = mappingFunctions[int( mappingIndices[i] )];
+				}
+			} else {
+				
+				//default to linear mapping
+				for ( i = 0; i < result.targetProperties.length; i++ )
+				{
+					result.targetMappings[i] = mappingFunctions[0];
 				}
 			}
 			
@@ -134,6 +142,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 						var applyArray:Array = _applyArray;
 						
 						applyArray[0] = parameter.numberValue;
+						
 						for ( var i:int = 0; i < targetProperties.length; i++)
 						{
 							target_parameter[targetProperties[i]] = targetMappings[i].apply(null,applyArray) * targetFactors[i] + targetOffsets[i];
