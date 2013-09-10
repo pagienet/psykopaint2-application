@@ -47,6 +47,8 @@ package net.psykosoft.psykopaint2.core.io
 			canvas.setColorBackgroundOriginal(paintingData.colorBackgroundOriginal);
 
 			// transfer of ownership so this does not get disposed
+			if (paintingData.normalSpecularData == paintingData.normalSpecularOriginal)
+				paintingData.normalSpecularData = null;
 			paintingData.normalSpecularOriginal = null;
 			paintingData.colorBackgroundOriginal = null;
 		}

@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
 
-	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
 

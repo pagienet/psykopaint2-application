@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.core.data
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
 				UndisposedObjects.getInstance().remove(this);
 			colorData.clear();
-			normalSpecularData.clear();
+			if (normalSpecularData) normalSpecularData.clear();
 			if (sourceBitmapData) sourceBitmapData.clear();
 			if (normalSpecularOriginal) normalSpecularOriginal.clear();
 			if (colorBackgroundOriginal) colorBackgroundOriginal.clear();
