@@ -19,7 +19,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	final public class SizeDecorator extends AbstractPointDecorator
 	{
 		static public const PARAMETER_SL_MODE:String = "Mode";
-		static public const PARAMETER_NR_FACTOR:String = "Factor";
+		static public const PARAMETER_N_FACTOR:String = "Factor";
+		static public const PARAMETER_N_RANGE:String = "Range";
+		
 		static public const PARAMETER_SL_MAPPING:String = "Mapping";
 		static public const PARAMETER_B_INVERT_MAPPING:String = "Invert Mapping";
 		static public const PARAMETER_N_MAXIMUM_SPEED:String  = "Maximum Speed";
@@ -45,6 +47,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		private var mappingMode:PsykoParameter;
 		private var mappingFactor:PsykoParameter;
+		private var mappingRange:PsykoParameter;
 		private var mappingFunction:PsykoParameter;
 		private var invertMapping:PsykoParameter;
 		private var maxSpeed:PsykoParameter;
@@ -66,7 +69,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super();
 			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,INDEX_MODE_FIXED,["Fixed","Speed","Pressure/Speed","Multiply","Add"]);
-			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_FACTOR,0,1,0,1);
+			mappingFactor   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_FACTOR,0,1,0.5);
+			mappingRange   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_RANGE,0,1,0.5);
+			
 			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,INDEX_MAPPING_LINEAR,["Linear",
 				"CircQuad",
 				"Circular",
@@ -80,7 +85,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_INVERT_MAPPING,0);
 			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
-			_parameters.push(mappingMode,mappingFactor,mappingFunction,invertMapping,maxSpeed );
+			_parameters.push(mappingMode,mappingFactor,mappingRange,mappingFunction,invertMapping,maxSpeed );
 			
 		}
 		
@@ -88,8 +93,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			var applyArray:Array = _applyArray;
 			var mode:int = mappingMode.index;
-			var minFactor:Number = mappingFactor.lowerRangeValue;
-			var maxFactor:Number = mappingFactor.upperRangeValue;
+			var minFactor:Number = mappingFactor.numberValue - mappingRange.numberValue;
+			if ( minFactor < 0 ) minFactor = 0;
+			if ( minFactor > 1 ) minFactor = 1;
+			var maxFactor:Number = mappingFactor.numberValue + mappingRange.numberValue;
+			if ( maxFactor < 0 ) maxFactor = 0;
+			if ( maxFactor > 1 ) maxFactor = 1;
 			
 			var mapping:Function = mappingFunctions[mappingFunction.index];
 			var ms:Number = maxSpeed.numberValue;
@@ -99,7 +108,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				var point:SamplePoint = points[i];
 				if ( mode == 0)
 				{
-					point.size = mappingFactor.randomValue;
+					point.size =  minFactor + Math.random() * (maxFactor - minFactor );
 				} else if ( mode == 1 )
 				{
 					applyArray[0] = Math.min(point.speed,ms) / ms;
@@ -120,10 +129,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					point.size = minFactor + point.size * (maxFactor - minFactor );
 				}  else if ( mode == 3 )
 				{
-					point.size *= mappingFactor.randomValue;
+					point.size *=  minFactor + Math.random() * (maxFactor - minFactor );
 				} else if ( mode == 4 )
 				{
-					point.size *= mappingFactor.randomValue;
+					point.size *=  minFactor + Math.random() * (maxFactor - minFactor );
 				} 
 			}
 			return points;
