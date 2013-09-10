@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.Context3DClearMask;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.textures.Texture;
 	import flash.events.MouseEvent;
@@ -181,6 +182,9 @@ package net.psykosoft.psykopaint2.book.views.book
 				}
 
 			}
+
+			// TODO: Remove this once home view stops rendering
+			_stage3dProxy.context3D.clear(0, 0, 0, 1, 1, 0, Context3DClearMask.DEPTH);
 
 			if (_backgroundTexture)
 				renderBackground();
