@@ -122,6 +122,8 @@ package net.psykosoft.psykopaint2.core.model
 				return;
 			}
 
+			// TODO: this is not ideal since in wastes 25% memory by making a square bitmap
+			// if we ever need to free some memory this is a good place to start digging.
 			var fixed : BitmapData = fixSourceDimensions(sourceBitmapData);
 			
 			if (_pyramidMap)
