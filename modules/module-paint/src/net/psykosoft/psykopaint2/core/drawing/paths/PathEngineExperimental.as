@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.core.drawing.paths
 {
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	
 	public class PathEngineExperimental extends AbstractPathEngine
 	{
@@ -38,7 +39,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			
 			var speedSmoothingFactor:Number = _speedSmoothing.numberValue;
 			var stepFactor:Number = _outputStepSize.numberValue;
-			
+			var speedCorrection:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 0.5 : 1;
 			var first:Boolean = false;
 			if ( p1 == null )
 			{
@@ -71,7 +72,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						
 						var p:SamplePoint = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
 																		ti2*p1y+tit*cy+tt*p2y,
-																		((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
+																		((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ) * speedCorrection,
 																		0,
 																		angle,
 																		ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
@@ -120,7 +121,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						p = PathManager.getSamplePoint( 
 							ti2*p1x+tit*cx+tt*p2x, 
 							ti2*p1y+tit*cy+tt*p2y,
-							((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
+							((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ) * speedCorrection,
 							0,
 							angle,
 							ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
@@ -160,7 +161,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					
 					p = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
 						ti2*p1y+tit*cy+tt*p2y,
-						((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ),
+						((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ) * speedCorrection,
 						0,
 						angle,
 						ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,

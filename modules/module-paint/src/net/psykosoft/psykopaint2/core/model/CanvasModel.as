@@ -7,9 +7,12 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
+	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -120,7 +123,7 @@ package net.psykosoft.psykopaint2.core.model
 			}
 
 			var fixed : BitmapData = fixSourceDimensions(sourceBitmapData);
-
+			
 			if (_pyramidMap)
 				_pyramidMap.setSource(fixed);
 			else
@@ -139,8 +142,18 @@ package net.psykosoft.psykopaint2.core.model
 				var tmpBmd : BitmapData = new TrackedBitmapData(_textureWidth, _textureHeight, false, 0xffffffff);
 				var scl : Number = Math.min(textureWidth / sourceBitmapData.width, textureHeight / sourceBitmapData.height);
 
-				var m : Matrix = new Matrix(scl, 0, 0, scl, 0.5 * (_textureWidth - sourceBitmapData.width * scl), 0)
+				var m : Matrix = new Matrix(scl, 0, 0, scl, 0.5 * (_textureWidth - sourceBitmapData.width * scl), 0);
+				
 				tmpBmd.draw(sourceBitmapData, m, null, "normal", null, true);
+				
+				// This part fills the lower quarter of the texture with the lowest pixel line of the source in order to avoid white bleeding when painting
+				// currently this assumes that the incoming source is landscape
+				// TODO: fix it for portrait format images 
+				var tmpBmd2:BitmapData = new BitmapData(_textureWidth,1,false,0);
+				tmpBmd2.copyPixels(tmpBmd,new Rectangle(0,int( scl * sourceBitmapData.height-2),_textureWidth,1),new Point());
+				tmpBmd.draw(tmpBmd2, new Matrix(1,0,0,_textureHeight - scl * sourceBitmapData.height,0,int( scl * sourceBitmapData.height-1)), null, "normal", null,false);
+				
+				
 				return tmpBmd;
 			} else {
 				return sourceBitmapData;
