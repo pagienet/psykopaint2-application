@@ -255,7 +255,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			updateEaselRect();
 			updateCanvasRect( _easelRectFromHomeView );
 			TweenLite.killTweensOf( this );
-			var targetScale : Number = (canvasModel.height - 400)/canvasModel.height;
+			var targetScale : Number = (canvasModel.height - 200*CoreSettings.GLOBAL_SCALING)/canvasModel.height;
 			TweenLite.to( this, 1, { zoomScale: targetScale, onUpdate: onZoomUpdate, onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
 		}
 
