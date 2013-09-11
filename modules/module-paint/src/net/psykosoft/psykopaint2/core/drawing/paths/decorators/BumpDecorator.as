@@ -24,7 +24,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		public static const PARAMETER_N_SHININESS : String = "Shininess";
 		public static const PARAMETER_N_GLOSSINESS : String = "Glossiness";
-		public static const PARAMETER_NR_BUMPINESS : String = "Bumpiness";
+		public static const PARAMETER_N_BUMPINESS : String = "Bumpiness";
+		public static const PARAMETER_N_BUMPINESS_RANGE : String = "Bumpiness Range";
 		public static const PARAMETER_N_BUMP_INFLUENCE : String = "Bump Influence";
 		static public const PARAMETER_SL_MODE:String = "Mode";
 		static public const PARAMETER_NR_FACTOR:String = "Factor";
@@ -43,6 +44,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var shininess:PsykoParameter;
 		private var glossiness:PsykoParameter;
 		private var bumpiness:PsykoParameter;
+		private var bumpinessRange:PsykoParameter;
 		private var bumpInfluence:PsykoParameter;
 		private var mappingMode:PsykoParameter;
 		private var mappingFactor:PsykoParameter;
@@ -90,10 +92,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			shininess     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_SHININESS, 0.4, 0, 5);
 			glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 5);
-			bumpiness     = new PsykoParameter( PsykoParameter.NumberRangeParameter, PARAMETER_NR_BUMPINESS, 0, 2, -10, 10 );
+			bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS, 1, -10, 10 );
+			bumpinessRange  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS_RANGE, 0.2, 0, 10 );
 			bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, -1, 1 );
 			
-			_parameters.push(shininess, glossiness, bumpiness, bumpInfluence, mappingMode,mappingFactor,mappingFunction,invertMapping,maxSpeed);
+			_parameters.push(shininess, glossiness, bumpiness, bumpinessRange,bumpInfluence, mappingMode,mappingFactor,mappingFunction,invertMapping,maxSpeed);
 			
 		}
 		
@@ -155,7 +158,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				} 
 				
 				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = glossiness.numberValue;
-				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = bumpiness.lowerRangeValue + (bumpiness.rangeValue * bmp );
+				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = bumpiness.numberValue - bumpinessRange.numberValue + (  bumpinessRange.numberValue * 2 * bmp );
 				bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = shininess.numberValue;
 				bumpFactors[3] = bumpFactors[7] = bumpFactors[11] = bumpFactors[15] = bumpInfluence.numberValue;
 			}

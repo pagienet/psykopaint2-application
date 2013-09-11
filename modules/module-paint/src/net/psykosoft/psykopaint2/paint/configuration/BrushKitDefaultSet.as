@@ -151,7 +151,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_3" index={BumpDecorator.INDEX_MODE_SPEED} />
 							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_3" value="1" />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPINESS} path="pathengine.pointdecorator_3" value1="0" value2="1" minValue="0" maxValue="1" showInUI="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3" previewID={PreviewIconFactory.PREVIEW_DEPTH} value="0.5" minValue="0" maxValue="1" showInUI="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_3" value="0.5"/>
 						</BumpDecorator>
 						<CircularRotationDecorator active="0">
 							<parameter id={CircularRotationDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_4" index="1" />
@@ -196,7 +197,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</SpawnDecorator>
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.INDEX_MODE_FIXED} />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPINESS} path="pathengine.pointdecorator_2" value1="-1" value2="2" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_2" value="0.5" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_2" value="1.5"/>
 							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_2" value="0.9" />
 							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_2" value="0.4" />
 							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_2" value="0.7" />
@@ -345,7 +347,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</ColorDecorator>
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.INDEX_MODE_FIXED} />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPINESS} path="pathengine.pointdecorator_2" value1="0" value2="0" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_2" value="0" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_2" value="0"/>
 							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_2" value="0" />
 							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_2" value="0" />
 							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} label="Depth Removal" path="pathengine.pointdecorator_2" value="1" minValue="0" maxValue="1" showInUI="1"/>
@@ -507,7 +510,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_3" index={BumpDecorator.INDEX_MODE_SPEED} />
 							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_3" value="1" />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPINESS} path="pathengine.pointdecorator_3" value1="0" value2="1" minValue="0" maxValue="1" showInUI="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3" previewID={PreviewIconFactory.PREVIEW_DEPTH} value="0.5" minValue="0" maxValue="1" showInUI="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_3" value="0.5"/>
 						</BumpDecorator>
 						<CircularRotationDecorator active="0">
 							<parameter id={CircularRotationDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_4" index="1" />
@@ -549,7 +553,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</SpawnDecorator>
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.INDEX_MODE_FIXED} />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPINESS} path="pathengine.pointdecorator_2" value1="-1" value2="2" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_2" value="0.5" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_2" value="1.5"/>
 							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_2" value="0.9" />
 							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_2" value="0.4" />
 							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_2" value="0.7" />
@@ -645,7 +650,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</ColorDecorator>
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.INDEX_MODE_FIXED} />
-							<parameter id={BumpDecorator.PARAMETER_NR_BUMPINESS} path="pathengine.pointdecorator_2" value1="0" value2="0" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_2" value="0"/>
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_2" value="0"/>
 							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_2" value="0" />
 							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_2" value="0" />
 							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} label="Depth Removal" path="pathengine.pointdecorator_2" value="1" minValue="0" maxValue="1" showInUI="1"/>
