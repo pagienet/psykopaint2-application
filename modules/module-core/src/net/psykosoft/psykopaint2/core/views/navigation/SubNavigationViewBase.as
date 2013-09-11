@@ -125,7 +125,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			var button:NavigationButton;
 			for( i = 0; i < numButtons; i++ ) {
 				button = buttons[ i ] as NavigationButton;
-				if( button.labelText == value ) break;
+				if( button.labelText.toLowerCase() == value.toLowerCase() ) break;
 				button = null;
 			}
 
