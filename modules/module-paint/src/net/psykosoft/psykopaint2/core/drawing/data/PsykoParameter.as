@@ -576,7 +576,8 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					break;
 			}
 			
-			_showInUI = message.hasOwnProperty("@showInUI") && message.@showInUI == "1";
+			if ( message.hasOwnProperty("@showInUI") ) _showInUI = ( message.@showInUI == "1");
+			//_showInUI = message.hasOwnProperty("@showInUI") && message.@showInUI == "1";
 		}
 		
 		public function toXML( path:Array ):XML
