@@ -175,6 +175,10 @@ package net.psykosoft.psykopaint2.book.views.book
 				_previousTime = currentTime;
 
 				if(doUpdate){
+					
+					var val:Number = -1+ ( (1-(mouseY/stage.stageHeight))*2);
+					_book.rotateFold(val);
+
 					_time =  currentTime+_startTime;
 					if(_time < 0) _time = 0;
 					if(_time > 1) _time = 1;
