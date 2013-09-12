@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.book.config
 {
 
 	import net.psykosoft.psykopaint2.book.commands.DestroyBookModuleCommand;
+	import net.psykosoft.psykopaint2.book.commands.FetchGalleryImagesCommand;
 	import net.psykosoft.psykopaint2.book.commands.FetchSourceImagesCommand;
 	import net.psykosoft.psykopaint2.book.commands.SetUpBookModuleCommand;
 	import net.psykosoft.psykopaint2.book.services.ANECameraRollService;
@@ -21,6 +22,7 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.signals.RequestBookRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestExitBookSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestFetchGalleryImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestFetchSourceImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
@@ -120,6 +122,7 @@ package net.psykosoft.psykopaint2.book.config
 			_commandMap.map(RequestSetUpBookModuleSignal).toCommand(SetUpBookModuleCommand);
 			_commandMap.map(RequestDestroyBookModuleSignal).toCommand(DestroyBookModuleCommand);
 			_commandMap.map(RequestFetchSourceImagesSignal).toCommand(FetchSourceImagesCommand);
+			_commandMap.map(RequestFetchGalleryImagesSignal).toCommand(FetchGalleryImagesCommand);
 		}
 
 		// -----------------------
