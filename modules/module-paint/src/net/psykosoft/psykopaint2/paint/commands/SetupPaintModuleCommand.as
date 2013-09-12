@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.paint.commands
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Sine;
 
-	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
 
@@ -11,12 +10,12 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
-	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitMode;
 	import net.psykosoft.psykopaint2.core.io.CanvasImporter;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
@@ -55,7 +54,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		{
 			super.execute();
 
-			var mode : int = initPaintingVO.sourceBitmapData? BrushKitMode.PHOTO : BrushKitMode.COLOR;
+			var mode : String = initPaintingVO.sourceBitmapData? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
 
 			addPaintModuleDisplay();
 
@@ -71,7 +70,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			renderer.init(mode);
 
 			// not sure if this should be here at all
-			if (mode == BrushKitMode.PHOTO)
+			if (mode == PaintMode.PHOTO_MODE)
 				TweenLite.to(renderer, 1.6, { sourceTextureAlpha: 0.333, ease: Sine.easeIn });
 
 			GpuRenderManager.addRenderingStep(brushKitManager.update, GpuRenderingStepType.PRE_CLEAR);

@@ -22,6 +22,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
@@ -85,7 +86,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _canvasMatrix : Matrix;
 		private var sourceCanvasViewModes:Array = [[1,0.25],[0.25,0.75],[1,0]];
 		private var sourceCanvasViewModeIndex:int = 0;
-		private var _activeMode : int;
+		private var _activeMode : String;
 		
 		public function BrushKitManager()
 		{
@@ -104,7 +105,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		// TODO: Handle gestures somewhere else
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
-			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED && _activeMode == BrushKitMode.PHOTO )
+			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED && _activeMode == PaintMode.PHOTO_MODE )
 			{
 				sourceCanvasViewModeIndex = ( sourceCanvasViewModeIndex+1) % sourceCanvasViewModes.length;
 				TweenLite.killTweensOf( renderer );
@@ -178,11 +179,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				activateBrushKit();
 		}
 
-		public function activate(mode : int) : void
+		public function activate(mode : String) : void
 		{
 			brushShapeLibrary.init();
 			
-			var brushKitDef : XML = mode == BrushKitMode.PHOTO? BrushKitDefaultSet.brushKitDataPhotoPaintMode.copy() : BrushKitDefaultSet.brushKitDataColorMode.copy();
+			var brushKitDef : XML = mode == PaintMode.PHOTO_MODE? BrushKitDefaultSet.brushKitDataPhotoPaintMode.copy() : BrushKitDefaultSet.brushKitDataColorMode.copy();
 
 			_availableBrushKits = new Vector.<BrushKit>();
 			_availableBrushKitNames = new Vector.<String>();
@@ -272,7 +273,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.brushEngine.freeExpendableMemory();
 		}
 
-		public function get activeMode() : int
+		public function get activeMode() : String
 		{
 			return _activeMode;
 		}

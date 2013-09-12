@@ -12,12 +12,12 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitMode;
 
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
@@ -63,11 +63,11 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		}
 
-		public function init(mode : int) : void
+		public function init(mode : String) : void
 		{
 			_lightingRenderer.init();
 			_context3D = stage3D.context3D;
-			sourceTextureAlpha = mode == BrushKitMode.PHOTO? 1 : 0;
+			sourceTextureAlpha = mode == PaintMode.PHOTO_MODE? 1 : 0;
 			paintAlpha = 1;
 		}
 
