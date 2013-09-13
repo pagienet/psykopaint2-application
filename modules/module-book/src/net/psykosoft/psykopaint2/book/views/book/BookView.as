@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _view3d:View3D;
 		private var _book:Book;
 		private var _startMouseX:Number;
-		private var _startBendMouseX:Number;
+		private var _mouseRange:Number;
 		private var _startMouseY:Number;
 		private var _startTime:Number;
 		private var _mouseIsDown:Boolean;
@@ -91,6 +91,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			scalesToRetina = false;
 			_startMouseX = 0;
+			
 			_time = 0;
 			imageSelectedSignal = new Signal();
 			bookHasClosedSignal = new Signal();
@@ -102,7 +103,6 @@ package net.psykosoft.psykopaint2.book.views.book
 				_mouseIsDown = true;
 				_startMouseX = mouseX;
 				_startMouseY = mouseY;
-
 				_startTime = _time;
 			}
 		}
@@ -124,7 +124,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		override protected function onEnabled():void
 		{
-			// Initialize view.
+			_mouseRange = stage.stageHeight/4;
 			initView3D();
 			initBook();
 		}
@@ -180,27 +180,12 @@ package net.psykosoft.psykopaint2.book.views.book
 
 				if(doUpdate){
 					
-					var angle:Number = -1+ ( (1-(mouseY/stage.stageHeight))*2);
+					var angle:Number = -1+ ( (1-( (mouseY-_startMouseY) / _mouseRange))*2);
 					angle *= .5;
-
-					//var halfScreen:Number = stage.stageWidth * .5;
-					//if(mouseX > halfScreen){
-					//	_startBendMouseX = halfScreen;	
-					//} else {
-					//	_startBendMouseX = 0;
-					//}
-
-					//var angle:Number = 	Math.atan2(mouseY-_startMouseY, mouseX-_startBendMouseX);
-					//angle *= 180 / Math.PI;
-
-					//if(angle<-45) angle = -45;
-					//if(angle>45) angle = 45;
-
-					//if(_startBendMouseX > halfScreen) angle = -angle;
 
 					_book.rotateFold(angle);
 
-					_time =  currentTime+_startTime;
+					_time =  currentTime + _startTime;
 					if(_time < 0) _time = 0;
 					if(_time > 1) _time = 1;
 					_book.updatePages(_time);
