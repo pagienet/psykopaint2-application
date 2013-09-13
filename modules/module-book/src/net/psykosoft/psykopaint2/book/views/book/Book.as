@@ -53,6 +53,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		
  		private var _isLoadingImage:Boolean;
  		private var _currentDegrees:Number = 0;
+ 		public var _foldRotation:Number = 0;
 
      		public function Book(view:View3D, stage:Stage)
  		{
@@ -307,16 +308,16 @@ package net.psykosoft.psykopaint2.book.views.book
 				}
 
 				if(pageid<_currentPage){
-					pagesManager.rotatePage(i, 180 );
+					pagesManager.rotatePage(i, 180,0);
 
 				} else if(pageid>_currentPage){
-					pagesManager.rotatePage(i, 0);
+					pagesManager.rotatePage(i, 0, 0);
 
 				} else {
 					var inPercent:Number = 1- Math.abs( ( ((_currentPage+1)*_step) - _percent) /_step);
 					_nearestTime = (inPercent <.5)? _currentPage*_step : (_currentPage+1)*_step;
 					var rotZ:Number = inPercent*180;
-					pagesManager.rotatePage(_currentPage, rotZ );
+					pagesManager.rotatePage(_currentPage, rotZ, _foldRotation );
 					_currentDegrees = rotZ;
 				}
 			}
@@ -324,12 +325,20 @@ package net.psykosoft.psykopaint2.book.views.book
 			if(_nearestTime>1) _nearestTime = 1;
  		}
 
+ 		//fold -1/1 range
+ 		public function rotateFold(fold:Number):void
+ 		{
+ 			_foldRotation = fold * 45;
+ 		}
+
  		//mouse is loose, goes back to the full openned page and returns the destination time
  		public function snapToNearestTime():Number
  		{
  			if(_percent == _nearestTime || _isLoadingImage || !_bookReady) return _nearestTime;
 
- 			TweenLite.to( this, .25, { 	_percent:_nearestTime, ease: Strong.easeOut,
+ 			TweenLite.to( this, .25, { 	_percent:_nearestTime, 
+ 							_foldRotation:0, 
+ 							ease: Strong.easeOut,
 							onUpdate:updateToNearestTime,
 							onComplete:updateToNearestTime } );
  			return _nearestTime;

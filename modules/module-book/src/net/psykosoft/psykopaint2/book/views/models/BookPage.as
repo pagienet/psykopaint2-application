@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.book.views.models
 	import away3d.primitives.PlaneGeometry;
 
 	import away3d.tools.helpers.MeshHelper;
-	import away3d.modifiers.gpu.Bend;
+	import away3d.modifiers.gpu.PageBender;
 	import away3d.animators.ModifierAnimator;
 
 	public class BookPage extends ObjectContainer3D
@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.book.views.models
 
 		private var _rectoAnimator:ModifierAnimator;
 		private var _versoAnimator:ModifierAnimator;
-		private var _bend:Bend;
+		private var _bend:PageBender;
 		private var _lastRotation:Number;
 
 		function BookPage(materialRecto:TextureMaterial, materialVerso:TextureMaterial, usedBookPage:BookPage = null):void
@@ -73,18 +73,18 @@ package net.psykosoft.psykopaint2.book.views.models
 
 		private function initModifiers():void
 		{
-			_bend = new Bend(PAGE_WIDTH, 1, 1, 1);
+			_bend = new PageBender(PAGE_WIDTH, 1, 1, 1);
 			 
 			_rectoAnimator = new ModifierAnimator(_bend);
 			_versoAnimator = new ModifierAnimator(_bend);
 			_recto.animator = _rectoAnimator;
 			_verso.animator = _versoAnimator;
 
-			bend(1, 1);
+			bend(1, 1, 0);
 		}
 
-		//force -1/1  , origin 0/1
-		public function bend(force:Number, zeroOne:Number):void
+		//force -1/1  , origin 0/1, -45/45
+		public function bend(force:Number, zeroOne:Number, foldRotation:Number):void
 		{
 			if(force>.98) force = .98;
 			if(force<-.98) force = -.98;
@@ -93,6 +93,7 @@ package net.psykosoft.psykopaint2.book.views.models
 			var origin:Number = Math.abs(zeroOne)*PAGE_WIDTH;
 			if(origin<1) origin = 2;
 			_bend.origin = origin;
+			_bend.foldRotation = foldRotation;
 		}
  
 		public function disposeContent():void
@@ -128,12 +129,12 @@ package net.psykosoft.psykopaint2.book.views.models
 
 		private function generate(materialRecto:TextureMaterial, materialVerso:TextureMaterial):void
 		{
-			var rectoGeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 15, 1, true);
+			var rectoGeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 15, 15, true);
 			_recto = new Mesh(rectoGeom, materialRecto);
 			offsetGeometry(_recto);
 			addChild(_recto);
 
-			var versoGeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 15, 1, true);
+			var versoGeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 15, 15, true);
 			_verso = new Mesh(versoGeom, materialVerso);
 			offsetGeometry(_verso);
 

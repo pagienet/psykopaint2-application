@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
-	import net.psykosoft.psykopaint2.core.models.PaintModeType;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			super.initialize();
 
 			// Clear easel if entering photo paint.
-			if( PaintModeModel.activeMode == PaintModeType.PHOTO_MODE ) {
+			if( PaintModeModel.activeMode == PaintMode.PHOTO_MODE ) {
 				requestEaselUpdateSignal.dispatch( null, false, false );
 			}
 		}

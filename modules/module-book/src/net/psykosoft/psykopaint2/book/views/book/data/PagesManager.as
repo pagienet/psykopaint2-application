@@ -77,7 +77,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			return -c *(t/=d)*(t-2) + b;
 		}
 
- 		public function rotatePage(index:uint, degrees:Number):void
+ 		public function rotatePage(index:uint, degrees:Number, foldRotation:Number):void
  		{
  			var bookPage:BookPage = _pagesContent[index];
  			
@@ -86,20 +86,21 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
 	 		//0-1
  			if(degrees < 0.5 || degrees > 179.5){
- 				force = 1;
+ 				force = 0;
  				origin = 1;
  			} else {
 
  				var zeroOne:Number = 1- degrees /180;
- 				//-1 - 1
+ 				//-1 / 1
 				var half:Number =   (zeroOne * 2 ) - 1 ;
  				
+ 				//force = (half<0)? -1 : 1;
 				force = half;
 				force *= 2.5;
+				//force = 1;
 
 				//origin = easeOutQuad (Math.abs(half), 0, 1, 1);
-				//origin *= half;
-				origin = Math.abs(half);
+				origin = Math.abs(half) *.5;
 				
  			//	var direction:int = (bookPage.lastRotation<degrees)? OPEN : CLOSE;
 				//if(direction == OPEN) force = -force;
@@ -107,7 +108,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  			bookPage.rotation = degrees;
   
- 			bookPage.bend(force, origin);
+ 			bookPage.bend(force, origin, foldRotation);
 		}
 
  		public function getPageSide(index:uint):Mesh
@@ -122,6 +123,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			for(i = 0;i<_pages.length;++i){
  				_pages[i] = null;
  			}
+
  			for(i = 0;i<_pagesContent.length;++i){
  				_pagesContent[i].disposeContent();
  				_pagesContent[i] = null;

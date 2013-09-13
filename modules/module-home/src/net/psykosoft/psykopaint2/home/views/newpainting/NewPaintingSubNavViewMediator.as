@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
-	import net.psykosoft.psykopaint2.core.models.PaintModeType;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
@@ -75,7 +75,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				// New color painting.
 				case NewPaintingSubNavView.ID_NEW: {
-					PaintModeModel.activeMode = PaintModeType.COLOR_MODE;
+					PaintModeModel.activeMode = PaintMode.COLOR_MODE;
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + PaintingInfoVO.DEFAULT_VO_ID;
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_PICK_SURFACE );
@@ -84,7 +84,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				// New photo painting.
 				case NewPaintingSubNavView.ID_NEW_PHOTO: {
-					PaintModeModel.activeMode = PaintModeType.PHOTO_MODE;
+					PaintModeModel.activeMode = PaintMode.PHOTO_MODE;
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + PaintingInfoVO.DEFAULT_VO_ID;
 					pickDefaultSurfaceAndContinueToPickImage();
