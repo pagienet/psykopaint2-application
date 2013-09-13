@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	public class BrushKitDefaultSet
 	{
 		
-		public static const brushKitDataPhotoPaintMode:XML = 
+		public static const brushKitDataPhotoPaintMode2:XML = 
 			<brushkits>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
 
@@ -76,7 +76,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 				</brush>
 			</brushkits>
 		
-		public static const brushKitDataPhotoPaintMode2:XML = 
+		public static const brushKitDataPhotoPaintMode:XML = 
 			<brushkits>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
