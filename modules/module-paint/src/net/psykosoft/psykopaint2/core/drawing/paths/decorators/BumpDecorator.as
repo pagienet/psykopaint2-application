@@ -39,6 +39,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MODE_PRESSURE_SPEED:int = 3;
 		static public const INDEX_MODE_MULTIPLY:int = 4;
 		static public const INDEX_MODE_ADD:int = 5;
+		static public const INDEX_MODE_RANDOM:int = 5;
 		
 		
 		private var shininess:PsykoParameter;
@@ -75,7 +76,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super();
 			
-			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Fixed","Speed","Pressure","Automatic","Multiply","Add"]);
+			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Fixed","Speed","Pressure","Automatic","Multiply","Add","Random"]);
 			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_FACTOR,0,1,0,1);
 			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,0,["Linear",
 				"CircQuad",
@@ -94,7 +95,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 5);
 			bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS, 1, -10, 10 );
 			bumpinessRange  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS_RANGE, 0.2, 0, 10 );
-			bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, -1, 1 );
+			bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, -5, 5 );
 			
 			_parameters.push(shininess, glossiness, bumpiness, bumpinessRange,bumpInfluence, mappingMode,mappingFactor,mappingFunction,invertMapping,maxSpeed);
 			
@@ -154,7 +155,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					bmp *= mappingFactor.randomValue;
 				} else if ( mode == 5 )
 				{
-					bmp *= mappingFactor.randomValue;
+					bmp += mappingFactor.randomValue;
+				}  else if ( mode == 6 )
+				{
+					bmp = mappingFactor.randomValue;
 				} 
 				
 				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = glossiness.numberValue;

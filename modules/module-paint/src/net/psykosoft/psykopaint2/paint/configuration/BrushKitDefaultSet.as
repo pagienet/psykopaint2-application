@@ -18,7 +18,65 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 	public class BrushKitDefaultSet
 	{
+		
 		public static const brushKitDataPhotoPaintMode:XML = 
+			<brushkits>
+				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
+
+					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
+					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0"/>
+					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value="2"/>
+					
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="paint1"/>
+
+					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
+
+					<parameter id={AbstractPathEngine.PARAMETER_SPEED_SMOOTHING} path="pathengine" value="0.02" />
+						
+						<SizeDecorator>
+							<parameter id={SizeDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_0" index={SizeDecorator.INDEX_MODE_PRESSURE_SPEED} />
+							<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0" label="Size" previewID={PreviewIconFactory.PREVIEW_SIZE} value="0.48" minValue="0" maxValue="1" showInUI="1"/>
+							<parameter id={SizeDecorator.PARAMETER_N_RANGE} path="pathengine.pointdecorator_0" label="Range" value="0.2" minValue="0" maxValue="1" />
+							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} path="pathengine.pointdecorator_0" index={SizeDecorator.INDEX_MAPPING_CIRCQUAD}/>
+						</SizeDecorator>
+
+						<SplatterDecorator>
+							<parameter id={SplatterDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_1" index={SplatterDecorator.INDEX_MODE_PRESSURE_SPEED} />
+							<parameter id={SplatterDecorator.PARAMETER_SL_OFFSET_MAPPING} path="pathengine.pointdecorator_1" index="1"  />
+							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR}  path="pathengine.pointdecorator_1" value="40" />
+							<parameter id={SplatterDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_1" value="0" />
+							<parameter id={SplatterDecorator.PARAMETER_A_OFFSET_ANGLE_RANGE} path="pathengine.pointdecorator_1" value="15" />
+							<parameter id={SplatterDecorator.PARAMETER_N_SIZE_FACTOR} path="pathengine.pointdecorator_1" value="0.2" />
+						</SplatterDecorator>
+
+						<ColorDecorator>
+							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_2" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" previewID={PreviewIconFactory.PREVIEW_ALPHA}  path="pathengine.pointdecorator_2" value="0.9" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_2" value1="0.5" value2="0.9" />
+							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_2" value1="0.25" value2="0.33" />
+							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_2" value1="0.8" value2="1" />
+							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_2" color="0xffffff" showInUI="1"/>
+						</ColorDecorator>
+
+						<BumpDecorator>
+							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_3" index={BumpDecorator.INDEX_MODE_RANDOM} />
+							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_3" value="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3" previewID={PreviewIconFactory.PREVIEW_DEPTH} value="0.5" minValue="0" maxValue="1" showInUI="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_3" value="1"/>
+							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_3" value="3"   />
+							
+						</BumpDecorator>
+
+						<CircularRotationDecorator active="0">
+							<parameter id={CircularRotationDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_4" index="1" />
+							<parameter id={CircularRotationDecorator.PARAMETER_I_RANDOM_POINT_COUNT} path="pathengine.pointdecorator_4" value="40" />
+							<parameter id={CircularRotationDecorator.PARAMETER_A_ANGLE_ADJUSTMENT} path="pathengine.pointdecorator_4" value="90" />
+						</CircularRotationDecorator>
+					</pathengine>
+				</brush>
+			</brushkits>
+		
+		public static const brushKitDataPhotoPaintMode2:XML = 
 			<brushkits>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
