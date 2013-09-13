@@ -180,7 +180,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 				if(doUpdate){
 					
-					var angle:Number = -1+ ( (1-( (mouseY-_startMouseY) / _mouseRange))*2);
+					var angle:Number = -1+ ( (1-( (mouseY+(_mouseRange*.5) -_startMouseY) / _mouseRange))*2);
 					angle *= .5;
 
 					_book.rotateFold(angle);
