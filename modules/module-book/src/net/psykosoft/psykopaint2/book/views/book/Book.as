@@ -53,7 +53,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		
  		private var _isLoadingImage:Boolean;
  		private var _currentDegrees:Number = 0;
- 		private var _foldRotation:Number = 0;
+ 		public var _foldRotation:Number = 0;
 
      		public function Book(view:View3D, stage:Stage)
  		{
@@ -336,7 +336,9 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			if(_percent == _nearestTime || _isLoadingImage || !_bookReady) return _nearestTime;
 
- 			TweenLite.to( this, .25, { 	_percent:_nearestTime, ease: Strong.easeOut,
+ 			TweenLite.to( this, .25, { 	_percent:_nearestTime, 
+ 							_foldRotation:0, 
+ 							ease: Strong.easeOut,
 							onUpdate:updateToNearestTime,
 							onComplete:updateToNearestTime } );
  			return _nearestTime;
