@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.book.views.book
 {
-
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.tools.utils.TextureUtils;
@@ -212,7 +211,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			var widthRatio : Number = CoreSettings.STAGE_WIDTH / TextureUtils.getBestPowerOf2(CoreSettings.STAGE_WIDTH);
 			var heightRatio : Number = CoreSettings.STAGE_HEIGHT / TextureUtils.getBestPowerOf2(CoreSettings.STAGE_HEIGHT);
 			CopySubTexture.copy(_backgroundTexture.texture, new Rectangle(0, 0, widthRatio, heightRatio), new Rectangle(0, 0, 1, 1), context3D);
-//				CopyTexture.copy(_background.texture, context3D, widthRatio, heightRatio);
+			//CopyTexture.copy(_background.texture, context3D, widthRatio, heightRatio);
 			context3D.setDepthTest(true, Context3DCompareMode.LESS);
 		}
 
@@ -225,7 +224,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			bookHasClosedSignal.dispatch();
 		}
-
 
 		public function set backgroundTexture(backgroundTexture : RefCountedTexture) : void
 		{
