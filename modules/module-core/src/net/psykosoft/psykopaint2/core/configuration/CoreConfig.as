@@ -16,10 +16,14 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
+	import net.psykosoft.psykopaint2.core.models.DummyLoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
+	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.UserModel;
+	import net.psykosoft.psykopaint2.core.services.AMFBridge;
+	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
@@ -151,7 +155,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		// -----------------------
 
 		private function mapServices():void {
-
+			_injector.map(AMFBridge);
 		}
 
 		// -----------------------
@@ -212,6 +216,9 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifySplashScreenRemovedSignal ).asSingleton();
 			_injector.map( NotifyPaintingInfoFileReadSignal ).asSingleton();
 
+			// services
+			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);
+			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
 		}
 
 		// -----------------------

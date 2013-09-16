@@ -31,6 +31,11 @@ package net.psykosoft.psykopaint2.core.configuration
 
 		public static const DEBUG_AGAL:Boolean = false; /*false on release*/
 
+		// Data service stuff.
+		public static const GATEWAY_URL : String = "http://www.psykopaint.com/api/amf/v1/";
+		public static const GATEWAY_DEBUG_URL : String = "http://dev.psykopaint.com/api/amf/v1/";
+		public static const ACTIVE_GATEWAY_URL : String	 = GATEWAY_DEBUG_URL;		// GATEWAY_URL on release
+
 		// Other options.
 		public static const USE_DEBUG_KEYS:Boolean = false; /*false on release*/
 		public static const ENABLE_PSYKOSOCKET_CONNECTION:Boolean = false; /*false on release*/
@@ -65,6 +70,5 @@ package net.psykosoft.psykopaint2.core.configuration
 		
 		//This needs to be here to force Flash to include the font swc:
 		private static var EMBED_FONTS_DUMMY:PsykoFonts;
-
 	}
 }

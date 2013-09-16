@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 			add( InitManagersCommand       );
 			add( InitDisplayCommand        );
 			add( InitStage3dCommand        );
+			add( InitAMFCommand        );
 
 			registerCompleteCallback( onMacroComplete );
 		}
