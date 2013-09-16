@@ -28,8 +28,8 @@ package net.psykosoft.psykopaint2.book.services
 
 			for (var i : int = 0; i < amount; ++i) {
 				var item : DummyGalleryImageProxy = new DummyGalleryImageProxy();
-				var index : int = Math.random()*dummyNames.length;
-				item.userName = dummyNames[index];
+				var userIndex : int = Math.random()*dummyNames.length;
+				item.userName = dummyNames[userIndex];
 				item.numComments = Math.random()*1000;
 				item.numLikes = Math.random()*100000;
 				item.paintingMode = Math.random() < .5? PaintMode.COLOR_MODE : PaintMode.PHOTO_MODE;
