@@ -43,8 +43,6 @@ package net.psykosoft.psykopaint2.core.model
 		private var _textureWidth : Number;
 		private var _textureHeight : Number;
 
-		private var _viewport : Rectangle;
-
 		// TODO: should originals be a string path to packaged asset?
 		private var _normalSpecularOriginal : ByteArray;
 		private var _colorBackgroundOriginal : ByteArray;
@@ -74,11 +72,6 @@ package net.psykosoft.psykopaint2.core.model
 		{
 			init(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT);
 			memoryWarningSignal.add(onMemoryWarning);
-		}
-
-		public function get viewport() : Rectangle
-		{
-			return _viewport;
 		}
 
 		public function get width() : Number
@@ -191,7 +184,6 @@ package net.psykosoft.psykopaint2.core.model
 				return;
 
 			dispose();
-			_viewport = new Rectangle(0, 0, _width, _height);
 			_width = canvasWidth;
 			_height = canvasHeight;
 			_textureWidth = TextureUtils.getBestPowerOf2(_width);

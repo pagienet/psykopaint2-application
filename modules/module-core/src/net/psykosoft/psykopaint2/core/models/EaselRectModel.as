@@ -1,11 +1,7 @@
 package net.psykosoft.psykopaint2.core.models
 {
 	import flash.geom.Rectangle;
-
-	import flashx.textLayout.elements.GlobalSettings;
-
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 
 	public class EaselRectModel

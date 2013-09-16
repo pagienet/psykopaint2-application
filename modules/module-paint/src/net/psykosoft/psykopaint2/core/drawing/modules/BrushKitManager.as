@@ -3,14 +3,14 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Sine;
-
+	
 	import flash.display.DisplayObject;
 	import flash.display.Stage3D;
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
-
+	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
@@ -27,12 +27,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
-
+	
 	import org.gestouch.events.GestureEvent;
 
 	// TODO: Clean up by moving into custom stuff where not affecting brush kits
@@ -77,6 +78,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
 		
+	
 		private var _view : DisplayObject;
 		private var _active : Boolean;
 		private var _availableBrushKits:Vector.<BrushKit>;

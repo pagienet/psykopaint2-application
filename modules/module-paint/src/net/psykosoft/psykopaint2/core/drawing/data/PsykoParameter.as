@@ -361,6 +361,11 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			return _numberValues[0] + Math.random() * ( _numberValues[1] - _numberValues[0] );
 		}
 		
+		public function get randomDegreeValue():Number
+		{
+			return randomValue  / Math.PI * 180;
+		}
+		
 		public function get chance():Boolean
 		{
 			return Math.random() < numberValue;
