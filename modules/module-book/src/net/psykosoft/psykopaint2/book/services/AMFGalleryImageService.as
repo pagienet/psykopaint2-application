@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.book.services
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
+	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 
 	public class AMFGalleryImageService implements GalleryImageService
 	{
@@ -48,41 +49,47 @@ package net.psykosoft.psykopaint2.book.services
 
 		private function onUserImagesSuccess(data : Object) : void
 		{
-			translateImages(GalleryType.YOURS, Array(data));
+			translateImages(GalleryType.YOURS, data)
 		}
 
 		private function onFollowedUserImagesSuccess(data : Object) : void
 		{
-			translateImages(GalleryType.FOLLOWING, Array(data));
+			translateImages(GalleryType.FOLLOWING, data);
 		}
 
 		private function onMostLovedSuccess(data : Object) : void
 		{
-			translateImages(GalleryType.MOST_LOVED, Array(data));
+			translateImages(GalleryType.MOST_LOVED, data);
 		}
 
 		private function onMostRecentSuccess(data : Object) : void
 		{
-			translateImages(GalleryType.MOST_RECENT, Array(data));
+			translateImages(GalleryType.MOST_RECENT, data);
 		}
 
 		private function onFailed(data : Object) : void
 		{
-			notifyGalleryImagesFailedSignal.dispatch(data);
+			notifyGalleryImagesFailedSignal.dispatch(AMFErrorCode.CALL_FAILED);
 		}
 
-		private function translateImages(type : uint, data : Array) : void
+		private function translateImages(type : uint, data : Object) : void
 		{
+			if (data["status_code"] != 1) {
+				notifyError(data["status_code"]);
+			}
+
+
+			var array : Array = data["response"];
 			var collection : GalleryImageCollection = new GalleryImageCollection();
 			collection.type = type;
 
-			var len : int = data.length;
+			var len : int = array.length;
 			for (var i : int = 0; i < len; ++i) {
-				var obj : Object = data[i];
+				var obj : Object = array[i];
 				var vo : FileGalleryImageProxy = new FileGalleryImageProxy();
 				vo.id = obj["id"];
 				vo.thumbnailFilename = obj["url_thumb200"];
-				vo.userName = obj["name"];
+				vo.userName = obj["firstname"] + " " + obj["lastname"];
 				vo.numLikes = obj["num_favorite"];
 				vo.numComments = obj["num_comments"];
 				vo.paintingMode = obj["is_photo_painting"] == 1? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
@@ -90,6 +97,11 @@ package net.psykosoft.psykopaint2.book.services
 			}
 
 			notifyGalleryImagesFetchedSignal.dispatch(collection);
+		}
+
+		private function notifyError(statusCode : int) : void
+		{
+			notifyGalleryImagesFailedSignal.dispatch(statusCode);
 		}
 	}
 }
