@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.book.model
 			_ane = ane;
 		}
 
-		public function loadThumbnail(onComplete : Function, onError : Function) : void
+		public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
 		{
 			onComplete(_ane.getThumbnailAtIndex(id));
 		}

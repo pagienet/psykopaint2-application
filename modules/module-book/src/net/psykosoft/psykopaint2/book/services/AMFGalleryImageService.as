@@ -88,7 +88,8 @@ package net.psykosoft.psykopaint2.book.services
 				var obj : Object = array[i];
 				var vo : FileGalleryImageProxy = new FileGalleryImageProxy();
 				vo.id = obj["id"];
-				vo.thumbnailFilename = obj["url_thumb200"];
+				vo.highResThumbnailFilename = obj["url_thumb50"];
+				vo.highResThumbnailFilename = obj["url_thumb200"];
 				vo.userName = obj["firstname"] + " " + obj["lastname"];
 				vo.numLikes = obj["num_favorite"];
 				vo.numComments = obj["num_comments"];

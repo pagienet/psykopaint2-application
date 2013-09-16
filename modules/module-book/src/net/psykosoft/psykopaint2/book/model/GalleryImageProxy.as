@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.book.model
 		public var numComments : uint;
 		public var paintingMode : String;	// any of PaintMode
 
-		public function loadThumbnail(onComplete : Function, onError : Function) : void
+		public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
 		{
 			throw new AbstractMethodError();
 		}

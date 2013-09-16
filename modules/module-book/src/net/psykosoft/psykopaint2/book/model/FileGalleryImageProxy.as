@@ -11,7 +11,8 @@ package net.psykosoft.psykopaint2.book.model
 	{
 		// public for convenience, not accessible through views as interface anyway
 		public var id : int;
-		public var thumbnailFilename : String;
+		public var highResThumbnailFilename : String;
+		public var lowResThumbnailFilename : String;
 
 		private var _onComplete : Function;
 		private var _onError : Function;
@@ -20,7 +21,7 @@ package net.psykosoft.psykopaint2.book.model
 		{
 		}
 
-		override public function loadThumbnail(onComplete : Function, onError : Function) : void
+		override public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
 		{
 			if (_onComplete) throw "Already loading!";
 
@@ -30,7 +31,7 @@ package net.psykosoft.psykopaint2.book.model
 			var loader : Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-			loader.load(new URLRequest(thumbnailFilename));
+			loader.load(new URLRequest(size == ImageThumbnailSize.LARGE? highResThumbnailFilename : lowResThumbnailFilename));
 		}
 
 		private function onLoadComplete(event : Event) : void

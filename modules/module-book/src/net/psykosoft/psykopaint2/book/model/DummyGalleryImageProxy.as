@@ -10,9 +10,23 @@ package net.psykosoft.psykopaint2.book.model
 		{
 		}
 
-		override public function loadThumbnail(onComplete : Function, onError : Function) : void
+		override public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
 		{
-			var bitmapData : TrackedBitmapData = new TrackedBitmapData(400, 300, false, 0);
+			var width : int;
+			var height : int;
+
+			if (size == ImageThumbnailSize.SMALL) {
+				width = 150;
+				height = 100;
+			}
+			else if (size == ImageThumbnailSize.LARGE) {
+				width = 300;
+				height = 200;
+			}
+			else
+				throw "Invalid size!";
+
+			var bitmapData : TrackedBitmapData = new TrackedBitmapData(width, height, false, 0);
 			bitmapData.perlinNoise(64, 64, 8, Math.random(), true, true);
 			onComplete(bitmapData);
 		}

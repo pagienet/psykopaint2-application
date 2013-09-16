@@ -20,9 +20,9 @@ package net.psykosoft.psykopaint2.book.model
 		private var _onComplete : Function;
 		private var _onError : Function;
 
-		public function loadThumbnail(onComplete : Function, onError : Function) : void
+		public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
 		{
-			load(highResThumbnailFilename, onComplete, onError);
+			load(size == ImageThumbnailSize.LARGE? highResThumbnailFilename : lowResThumbnailFilename, onComplete, onError);
 		}
 
 		public function loadFullSized(onComplete : Function, onError : Function) : void
