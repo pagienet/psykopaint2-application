@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.book.views.models
 	{
 		private const PAGE_WIDTH:uint = 970
 		private const PAGE_HEIGHT:uint = 970;
+		private const STEP:uint = 10;
 
 		private var _recto:Mesh;
 		private var _verso:Mesh;
@@ -25,6 +26,12 @@ package net.psykosoft.psykopaint2.book.views.models
 		private var _versoAnimator:ModifierAnimator;
 		private var _bend:PageBender;
 		private var _lastRotation:Number;
+
+		private var _lastDirection:int = -1;
+		private var _factor:Number = 1;
+		private var _increase:Number;
+		private var _force:Number;
+		private var _lastForce:Number;
 
 		function BookPage(materialRecto:TextureMaterial, materialVerso:TextureMaterial, usedBookPage:BookPage = null):void
 		{
@@ -41,6 +48,8 @@ package net.psykosoft.psykopaint2.book.views.models
 			} else {
 				generate(materialRecto, materialVerso);
 			}
+
+			_increase = 1/STEP;
 
 			initModifiers();
 		}
@@ -86,12 +95,16 @@ package net.psykosoft.psykopaint2.book.views.models
 		//force -1/1  , origin 0/1, -45/45
 		public function bend(force:Number, zeroOne:Number, foldRotation:Number):void
 		{
-			if(force>.98) force = .98;
-			if(force<-.98) force = -.98;
+			if(force>.99) force = .99;
+			if(force<-.99) force = -.99;
 
+			_force = force;
+
+			if(_factor<1) force = interpolateForce(_force);
+			
 			_bend.force = force;
 			var origin:Number = Math.abs(zeroOne)*PAGE_WIDTH;
-			if(origin<1) origin = 2;
+			if(origin<1) origin = 1;
 			_bend.origin = origin;
 			_bend.foldRotation = foldRotation;
 		}
@@ -108,7 +121,6 @@ package net.psykosoft.psykopaint2.book.views.models
 			_recto.animator = null;
 			_verso.animator = null;
 
-					
 			if(!_sharedGeom){
 				_recto.geometry.dispose();
 				_verso.geometry.dispose();
@@ -127,6 +139,27 @@ package net.psykosoft.psykopaint2.book.views.models
 			return _verso;
 		}
 
+		public function set direction(dir:int):void
+		{
+			if(_lastDirection != dir){
+				_lastDirection = dir;
+				_lastForce = _force;
+				_factor = 0;
+			}
+		}
+  
+		private function interpolateForce(destForce:Number):Number
+		{
+			if(_factor == 1) return destForce;
+			
+			var currentForce:Number = _lastForce*(1-_factor) + destForce*_factor;
+			_factor += _increase;
+			
+			if(_factor >= 1) _factor = 1;
+	
+			return currentForce;
+		}
+ 
 		private function generate(materialRecto:TextureMaterial, materialVerso:TextureMaterial):void
 		{
 			var rectoGeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 15, 15, true);

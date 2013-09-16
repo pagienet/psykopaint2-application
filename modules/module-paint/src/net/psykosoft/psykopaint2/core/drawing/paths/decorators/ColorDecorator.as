@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_BRIGHTNESS,0,-255, 255);
 			colorBlending  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_COLOR_BLENDING,0.7,0.7,0, 1);
 			brushOpacity  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_OPACITY,0.9,0,1);
-			brushOpacityRange  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_OPACITY,0.2,0,1);
+			brushOpacityRange  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_OPACITY_RANGE,0.2,0,1);
 			
 			pickRadiusMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_PICK_RADIUS_MODE,0,["Fixed","Speed"] );
 			pickRadius  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_PICK_RADIUS,1,1,0,1);

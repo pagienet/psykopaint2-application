@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.book.model
 
 		private function load(filename : String, onComplete : Function, onError : Function) : void
 		{
-			if (_onComplete) throw "Already loading!";
+			if (_onComplete != null) throw "Already loading!";
 
 			_onComplete = onComplete;
 			_onError = onError;

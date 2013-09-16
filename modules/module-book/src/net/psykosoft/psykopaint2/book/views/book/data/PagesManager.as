@@ -86,27 +86,38 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
 	 		//0-1
  			if(degrees < 0.5 || degrees > 179.5){
- 				force = 1;
+ 				force = 0;
  				origin = 1;
  			} else {
 
- 				var zeroOne:Number = 1- degrees /180;
- 				//-1 - 1
-				var half:Number =   (zeroOne * 2 ) - 1 ;
- 				
-				force = half;
-				force *= 2.5;
+ 				 var direction:int = (bookPage.lastRotation<degrees)? OPEN : CLOSE;
+				bookPage.direction = direction;
 
-				//origin = easeOutQuad (Math.abs(half), 0, 1, 1);
-				//origin *= half;
-				origin = Math.abs(half);
-				
- 			//	var direction:int = (bookPage.lastRotation<degrees)? OPEN : CLOSE;
-				//if(direction == OPEN) force = -force;
+				var zeroOne:Number = 1- degrees /180;
+
+				//-1 / 1
+				var half:Number =   (zeroOne * 2 ) - 1 ;
+
+				var reverse:Number;
+				if(half<0){
+					reverse = Math.abs(half+1);
+				} else {
+					reverse = Math.abs(half-1);
+				}
+
+				origin = Math.abs(half)/1.5  -  reverse*.2;
+
+				var offset:Number = .5;
+				half = (half<0)? half-offset : half+offset;
+
+				force = half;
+				force *= reverse*1.6;
+ 
+				if(direction == OPEN && degrees<90) force = -force ;
+				if(direction == CLOSE && degrees>90) force = -force;
  			}
 
  			bookPage.rotation = degrees;
-  
  			bookPage.bend(force, origin, foldRotation);
 		}
 
@@ -122,6 +133,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			for(i = 0;i<_pages.length;++i){
  				_pages[i] = null;
  			}
+
  			for(i = 0;i<_pagesContent.length;++i){
  				_pagesContent[i].disposeContent();
  				_pagesContent[i] = null;

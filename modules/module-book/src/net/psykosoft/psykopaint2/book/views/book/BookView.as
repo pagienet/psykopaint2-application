@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.book.views.book
 {
-
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.tools.utils.TextureUtils;
@@ -30,6 +29,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _view3d:View3D;
 		private var _book:Book;
 		private var _startMouseX:Number;
+		private var _mouseRange:Number;
+		private var _startMouseY:Number;
 		private var _startTime:Number;
 		private var _mouseIsDown:Boolean;
 		private var _time:Number;
@@ -89,6 +90,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			scalesToRetina = false;
 			_startMouseX = 0;
+			
 			_time = 0;
 			imageSelectedSignal = new Signal();
 			bookHasClosedSignal = new Signal();
@@ -99,6 +101,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			if(_book.ready){
 				_mouseIsDown = true;
 				_startMouseX = mouseX;
+				_startMouseY = mouseY;
 				_startTime = _time;
 			}
 		}
@@ -120,7 +123,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		override protected function onEnabled():void
 		{
-			// Initialize view.
+			_mouseRange = stage.stageHeight/4;
 			initView3D();
 			initBook();
 		}
@@ -176,10 +179,12 @@ package net.psykosoft.psykopaint2.book.views.book
 
 				if(doUpdate){
 					
-					var val:Number = -1+ ( (1-(mouseY/stage.stageHeight))*2);
-					_book.rotateFold(val);
+					var angle:Number = -1+ ( (1-( (mouseY+(_mouseRange*.5) -_startMouseY) / _mouseRange))*2);
+					angle *= .5;
 
-					_time =  currentTime+_startTime;
+					_book.rotateFold(angle);
+
+					_time =  currentTime + _startTime;
 					if(_time < 0) _time = 0;
 					if(_time > 1) _time = 1;
 					_book.updatePages(_time);
@@ -206,7 +211,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			var widthRatio : Number = CoreSettings.STAGE_WIDTH / TextureUtils.getBestPowerOf2(CoreSettings.STAGE_WIDTH);
 			var heightRatio : Number = CoreSettings.STAGE_HEIGHT / TextureUtils.getBestPowerOf2(CoreSettings.STAGE_HEIGHT);
 			CopySubTexture.copy(_backgroundTexture.texture, new Rectangle(0, 0, widthRatio, heightRatio), new Rectangle(0, 0, 1, 1), context3D);
-//				CopyTexture.copy(_background.texture, context3D, widthRatio, heightRatio);
+			//CopyTexture.copy(_background.texture, context3D, widthRatio, heightRatio);
 			context3D.setDepthTest(true, Context3DCompareMode.LESS);
 		}
 
@@ -219,7 +224,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			bookHasClosedSignal.dispatch();
 		}
-
 
 		public function set backgroundTexture(backgroundTexture : RefCountedTexture) : void
 		{
