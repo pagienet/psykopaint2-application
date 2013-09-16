@@ -320,16 +320,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				zoomScale = MAX_ZOOM_SCALE;
 			}
 
+			var ratio : Number = 0;
 			if( zoomScale < 1 )
 			{
-				var ratio : Number = (zoomScale - _minZoomScale)/(1 - _minZoomScale);
+				ratio = (zoomScale - _minZoomScale)/(1 - _minZoomScale);
 				rect.x = (1-ratio)*_easelRectFromHomeView.x;	// linearly interpolate to 0 from zoomed out position
 				rect.y = (1-ratio)*_easelRectFromHomeView.y;
 			} else if ( zoomScale < 1.5 )
 			{
 				var offsetX:Number = rect.x / canvasModel.width;
 				var offsetY:Number = rect.y / canvasModel.height;
-				var ratio:Number = (zoomScale - 1) * 2;
+				ratio = (zoomScale - 1) * 2;
 				offsetX = ratio * offsetX + ( 1-ratio) * (1 - zoomScale) * .5;
 				offsetY = ratio * offsetY + ( 1-ratio) * (1 - zoomScale) * .175;
 				rect.x = offsetX * canvasModel.width;
