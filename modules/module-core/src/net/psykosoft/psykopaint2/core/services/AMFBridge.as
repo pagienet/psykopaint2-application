@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.services
 	import flash.events.NetStatusEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.net.NetConnection;
+	import flash.net.Responder;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
@@ -88,6 +89,26 @@ package net.psykosoft.psykopaint2.core.services
 			_connection.removeEventListener(AsyncErrorEvent.ASYNC_ERROR, onAsyncError);
 			_connection.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
 			_connection.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
+		}
+
+		public function getUserImages(userID : uint, index : uint, amount : uint, onSuccess : Function, onFail : Function)
+		{
+			_connection.call("Main/getUserPaintings", new Responder(onSuccess, onFail), [userID, index, amount]);
+		}
+
+		public function getFollowedUserImages(selfUserID : uint, index : uint, amount : uint, onSuccess : Function, onFail : Function)
+		{
+			_connection.call("Main/getFollowedUsersPaintings", new Responder(onSuccess, onFail), [selfUserID, index, amount]);
+		}
+
+		public function getMostLovedImages(index : int, amount : int, onSuccess : Function, onFail : Function) : void
+		{
+			_connection.call("Main/getMostFavoritedPaintings", new Responder(onSuccess, onFail), [index, amount]);
+		}
+
+		public function getMostRecentPaintings(index : int, amount : int, onSuccess : Function, onFail : Function) : void
+		{
+			_connection.call("Main/getLastPaintings", new Responder(onSuccess, onFail), [index, amount]);
 		}
 	}
 }

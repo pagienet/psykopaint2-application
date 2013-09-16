@@ -23,7 +23,8 @@ package net.psykosoft.psykopaint2.book.services
 				"Don Corleone", "Il Palazzo", "Pedro", "Ikari Gendo", "Nabeshin", "Spike Spiegel", "Fritz Lang",
 				"Freddy Mercury", "George Costanza", "Jay Intelli", "Chuck H. Norris", "Good ol' Chimney Trick",
 				"Al Bundy", "Pensman", "Timmy Downdewell", "Nicolas Cage", "Shao Khan", "Bedrich Smetana",
-				"Jimi Hendrix", "Jeremy Spoken", "No Jokes about Belgians!", "Larry David", "Mario and RobotLegs' love child"
+				"Jimi Hendrix", "Jeremy Spoken", "Larry David", "Mario and RobotLegs' love child", "Garth Marenghi",
+				"Rick Dagless", "Dean Learner", "Steve Pising", "Rick Deckard"
 			];
 
 			for (var i : int = 0; i < amount; ++i) {
