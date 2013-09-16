@@ -3,6 +3,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.core.managers.Stage3DProxy;
 
+	import flash.geom.Matrix3D;
+	import flash.geom.Vector3D;
+
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
@@ -14,6 +17,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
@@ -77,6 +81,12 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyHomeViewSceneReadySignal:NotifyHomeViewSceneReadySignal;
 
+		[Inject]
+		public var notifyGyroscopeUpdateSignal:NotifyGyroscopeUpdateSignal;
+
+		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
+		private var _lightDistance : Number = 1000;
+
 		private var _dockedAtPaintingIndex:int = -1;
 
 		override public function initialize():void {
@@ -97,6 +107,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
 			requestHomeViewScrollSignal.add( onScrollRequested );
 			requestHomeIntroSignal.add( onIntroRequested );
+			notifyGyroscopeUpdateSignal.add ( onGyroscopeUpdate );
 
 			// From view.
 			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
@@ -106,6 +117,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.disabledSignal.add( onDisabled );
 			view.sceneReadySignal.add( onSceneReady );
 
+			view.targetLightPosition = new Vector3D(0, 0, -_lightDistance);
 			view.stage3dProxy = stage3dProxy;
 
 			view.enable();
@@ -128,10 +140,21 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.enabledSignal.remove( onEnabled );
 			view.disabledSignal.remove( onDisabled );
 			view.sceneReadySignal.remove( onSceneReady );
+			notifyGyroscopeUpdateSignal.remove ( onGyroscopeUpdate );
 
 			view.dispose();
 
 			super.destroy();
+		}
+
+		private function onGyroscopeUpdate(orientationMatrix : Matrix3D) : void
+		{
+			var pos : Vector3D = view.targetLightPosition;
+			targetPos.x = 0;
+			targetPos.y = 0;
+			targetPos.z = -_lightDistance;
+
+			view.targetLightPosition = orientationMatrix.transformVector(targetPos);
 		}
 
 		private function onEnabled() : void

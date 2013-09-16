@@ -39,6 +39,7 @@ package net.psykosoft.psykopaint2.core.materials
 					"sub " + targetReg + ".xy, " + targetReg + ".xy, " + _sharedRegisters.commons + ".x	\n" +
 					"mul " + targetReg + ".xy, " + targetReg + ".xy, " + bumpiness + ".x\n" +
 					"mov " + targetReg + ".z, " + _sharedRegisters.commons + ".w\n" +
+//					"neg " + targetReg + ".x, " + targetReg + ".x\n" +	// rotated by 180
 					"nrm " + targetReg + ".xyz, " + targetReg + ".xyz\n";
 		}
 	}

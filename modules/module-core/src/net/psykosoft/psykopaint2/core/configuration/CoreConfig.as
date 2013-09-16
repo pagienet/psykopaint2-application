@@ -10,6 +10,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.commands.UpdateFrameCommand;
 	import net.psykosoft.psykopaint2.core.commands.bootstrap.BootstrapCoreModuleCommand;
+	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
+	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
@@ -29,7 +31,9 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
@@ -169,6 +173,10 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( MemoryWarningManager ).asSingleton();
 			_injector.map( KeyDebuggingManager ).asSingleton();
 			_injector.map( UnDisposedObjectsManager ).asSingleton();
+
+			_injector.map(GyroscopeManager).asSingleton();
+			_injector.map(AccelerometerManager).asSingleton();
+
 		}
 
 		// -----------------------
@@ -215,6 +223,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestHidePopUpSignal ).asSingleton();
 			_injector.map( NotifySplashScreenRemovedSignal ).asSingleton();
 			_injector.map( NotifyPaintingInfoFileReadSignal ).asSingleton();
+			_injector.map( NotifyGyroscopeUpdateSignal ).asSingleton();
+			_injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 
 			// services
 			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);

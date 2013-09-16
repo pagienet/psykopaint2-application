@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 	import flash.display.Stage;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
@@ -32,6 +33,9 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 		[Inject]
 		public var ioAne:IOAneManager;
 
+		[Inject]
+		public var gyroscopeManager : GyroscopeManager;
+
 		override public function execute():void {
 
 			trace( this, "execute" );
@@ -49,6 +53,8 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 
 			// IO ANE.
 			ioAne.initialize();
+
+			gyroscopeManager.initialize();
 
 			// Tweens.
 			// Used to color button labels.

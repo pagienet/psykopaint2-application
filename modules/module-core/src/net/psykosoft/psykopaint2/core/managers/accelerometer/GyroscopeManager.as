@@ -28,7 +28,12 @@ package net.psykosoft.psykopaint2.core.managers.accelerometer
 		private static var _orientation : String;
 		static private var _orientationMatrix : Matrix3D = new Matrix3D();
 
-		
+
+		public function GyroscopeManager()
+		{
+			_orientationMatrix.identity();
+		}
+
 		static public function get orientationMatrix():Matrix3D
 		{
 			return _orientationMatrix;
@@ -39,14 +44,7 @@ package net.psykosoft.psykopaint2.core.managers.accelerometer
 			return _orientation;
 		}
 
-		public function GyroscopeManager()
-		{
-			_orientationMatrix.identity();
-		}
-
-		
-		[PostConstruct]
-		public function init() : void
+		public function initialize() : void
 		{
 			gyroscope = new GyroscopeExtension();
 			gyroscope.addEventListener(GyroscopeExtensionEvent.READING, onGyroscopeReading);

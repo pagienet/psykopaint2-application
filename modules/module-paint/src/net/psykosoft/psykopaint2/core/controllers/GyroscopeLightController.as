@@ -3,17 +3,12 @@ package net.psykosoft.psykopaint2.core.controllers
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 
-	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
-
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 
 	public class GyroscopeLightController
 	{
 		private var _lightDistance : Number = 2;
-
-		[Inject]
-		public var gyroscopeManager : GyroscopeManager;
 
 		[Inject]
 		public var lightModel : LightingModel;

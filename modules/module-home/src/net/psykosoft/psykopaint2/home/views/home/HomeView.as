@@ -53,6 +53,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var zoomCompletedSignal:Signal;
 		public var easelRectChanged:Signal;
 		public var sceneReadySignal:Signal;
+		private var _targetLightPosition : Vector3D = new Vector3D(0, 0, -1);
+		private var _lightInterpolation : Number = .99;
 
 		public function HomeView() {
 			super();
@@ -117,7 +119,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_light = new PointLight();
 			// TODO: Use gyromoscope on this too?
-			_light.position = new Vector3D( 600, 600, -2500 );
+			_light.position = new Vector3D( 1500 * .8, 1500 * .8, -750 - 1750 * .8 );
 			_light.ambient = 1;
 			_light.color = 0x989589;
 			_light.ambientColor = 0x808088;
@@ -159,11 +161,25 @@ package net.psykosoft.psykopaint2.home.views.home
 //			time = getTimer();
 			_stage3dProxy.clear();
 			_view.render();
+
+
 //			trace( this, "time taken for first render: " + String( getTimer() - time ) );
 
 //			trace( this, "method time: " + String( getTimer() - methodTime ) );
 
 			sceneReadySignal.dispatch();
+		}
+
+		private function updateLightPosition() : void
+		{
+			var pos : Vector3D = _light.position;
+			var targetX : Number = _targetLightPosition.x + _paintingManager.easel.scenePosition.x;
+			var targetY : Number = _targetLightPosition.y + _paintingManager.easel.scenePosition.y;
+			var targetZ : Number = _targetLightPosition.z + _paintingManager.easel.scenePosition.z;
+			pos.x += (targetX - pos.x) * _lightInterpolation;
+			pos.y += (targetY - pos.y) * _lightInterpolation;
+			pos.z += (targetZ - pos.z) * _lightInterpolation;
+			_light.position = pos;
 		}
 
 		private function destroyScene():void {
@@ -241,6 +257,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 
 			_scrollCameraController.update();
+			updateLightPosition();
 			_view.render( target );
 		}
 
@@ -346,7 +363,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 //			trace( this, "positioning settings panel - x: " + _room.settingsPanel.x + ", y: " + _room.settingsPanel.y );
 //			trace( this, "positioning wall - x: " + _room.wall.x );
-			trace( this, "positioning camera, Y: " + _view.camera.y + ", Z: " + _view.camera.z );
+//			trace( this, "positioning camera, Y: " + _view.camera.y + ", Z: " + _view.camera.z );
 		}
 
 		private function onCameraSceneTransformChanged( event:Object3DEvent ):void {
@@ -379,6 +396,16 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function set stage3dProxy( stage3dProxy:Stage3DProxy ):void {
 			_stage3dProxy = stage3dProxy;
+		}
+
+		public function get targetLightPosition() : Vector3D
+		{
+			return _targetLightPosition;
+		}
+
+		public function set targetLightPosition(value : Vector3D) : void
+		{
+			_targetLightPosition = value;
 		}
 	}
 }

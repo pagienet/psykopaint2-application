@@ -7,8 +7,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
-	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
-	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -114,8 +112,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 		// -----------------------
 
 		private function mapSingletons():void {
-			_injector.map(GyroscopeManager).asSingleton();
-			_injector.map(AccelerometerManager).asSingleton();
 			_injector.map(WacomPenManager).asSingleton();
 			_injector.map(GyroscopeLightController).asSingleton();
 			_injector.map(BrushShapeLibrary).asSingleton();
@@ -159,9 +155,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyNavigationHideSignal ).asSingleton();
 
 			_injector.map( NotifyHistoryStackChangedSignal ).asSingleton();
-
-			_injector.map( NotifyGyroscopeUpdateSignal ).asSingleton();
-			_injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 		}
 
 		// -----------------------
