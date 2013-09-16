@@ -60,7 +60,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_textureMaterial.lightPicker = lightPicker;
 			_textureMaterial.ambientColor = 0xffffff;
 			_textureMaterial.ambient = 1;
-			_textureMaterial.specular = .5;
+			_textureMaterial.specular = 1;
 			_textureMaterial.gloss = 200;
 			material = _textureMaterial;
 		}
@@ -99,6 +99,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			_textureMaterial.texture = _diffuseTexture;
 			_textureMaterial.normalMap = _normalSpecularTexture;
+			_textureMaterial.specularMap = _normalSpecularTexture;
 
 			subMeshes[0].scaleU = paintingVO.width / _diffuseTexture.width;
 			subMeshes[0].scaleV = paintingVO.height / _diffuseTexture.height;

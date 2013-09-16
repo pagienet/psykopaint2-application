@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
 	import away3d.lights.DirectionalLight;
+	import away3d.lights.PointLight;
 	import away3d.materials.lightpickers.StaticLightPicker;
 
 	import flash.display3D.textures.Texture;
@@ -43,7 +44,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _view:View3D;
 		private var _stage3dProxy:Stage3DProxy;
 		private var _shiftMultiplier:Number = 1;
-		private var _light:DirectionalLight;
+		private var _light:PointLight;
 		private var _lightPicker:StaticLightPicker;
 		private var _mainScene:ObjectContainer3D;
 		private var _currentScene:ObjectContainer3D;
@@ -114,7 +115,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Initialize objects.
 			// -----------------------
 
-			_light = new DirectionalLight( -1, -1, 2 );
+			_light = new PointLight();
+			// TODO: Use gyromoscope on this too?
+			_light.position = new Vector3D( 600, 600, -2500 );
 			_light.ambient = 1;
 			_light.color = 0x989589;
 			_light.ambientColor = 0x808088;
