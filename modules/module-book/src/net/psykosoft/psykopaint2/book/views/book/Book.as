@@ -99,15 +99,8 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			var type:uint = galleryCollection.type;
 
- 			switch(type){
-
- 				case BookImageSource.GALLERY_IMAGES:
- 					_layout = new GalleryLayout(_stage);
- 					break;
-
- 				default:
- 					_layout = new GalleryLayout(_stage);
- 			}
+			// Note to Fabrice: always should be GalleryLayout, no need to check on type here
+			_layout = new GalleryLayout(_stage);
 
  			_layout.galleryCollection = galleryCollection;
  			setLayoutSignals();

@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.app.signals.RequestCreateBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
+	import net.psykosoft.psykopaint2.book.model.GalleryType;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
@@ -56,7 +57,8 @@ package net.psykosoft.psykopaint2.app.states
 				_background.dispose();
 
 			_background = background.newReference();
-			stateMachine.setActiveState(bookState, _bookSourceType);
+			// for now, just get most recent to test
+			stateMachine.setActiveState(bookState, {source: _bookSourceType, type: GalleryType.MOST_RECENT});
 		}
 
 		override ns_state_machine function deactivate() : void

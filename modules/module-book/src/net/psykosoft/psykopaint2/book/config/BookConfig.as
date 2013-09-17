@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.commands.FetchGalleryImagesCommand;
 	import net.psykosoft.psykopaint2.book.commands.FetchSourceImagesCommand;
 	import net.psykosoft.psykopaint2.book.commands.SetUpBookModuleCommand;
+	import net.psykosoft.psykopaint2.book.services.AMFGalleryImageService;
 	import net.psykosoft.psykopaint2.book.services.ANECameraRollService;
 	import net.psykosoft.psykopaint2.book.services.CameraRollService;
 	import net.psykosoft.psykopaint2.book.services.DummyGalleryImageService;
@@ -94,6 +95,7 @@ package net.psykosoft.psykopaint2.book.config
 			_injector.map(CameraRollService).toSingleton(ANECameraRollService);
 			_injector.map(SampleImageService).toSingleton(XMLSampleImageService);
 			_injector.map(GalleryImageService).toSingleton(DummyGalleryImageService);
+//			_injector.map(GalleryImageService).toSingleton(AMFGalleryImageService);
 		}
 
 		// -----------------------

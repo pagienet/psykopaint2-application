@@ -159,7 +159,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		// -----------------------
 
 		private function mapServices():void {
-			_injector.map(AMFBridge);
+			_injector.map(AMFBridge).asSingleton();
 		}
 
 		// -----------------------

@@ -76,8 +76,8 @@ package net.psykosoft.psykopaint2.book.services
 		{
 			if (data["status_code"] != 1) {
 				notifyError(data["status_code"]);
+				return;
 			}
-
 
 			var array : Array = data["response"];
 			var collection : GalleryImageCollection = new GalleryImageCollection();

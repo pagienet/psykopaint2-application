@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.book.model
 {
-	import flash.display.BitmapData;
-
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class DummyGalleryImageProxy extends GalleryImageProxy
