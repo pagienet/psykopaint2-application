@@ -1,15 +1,18 @@
 package net.psykosoft.psykopaint2.book.views.book
 {
-
 	import away3d.core.managers.Stage3DProxy;
 
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
+	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
+	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
+	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelected;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
@@ -44,6 +47,12 @@ package net.psykosoft.psykopaint2.book.views.book
 		[Inject]
 		public var notifyBookModuleDestroyedSignal : NotifyBookModuleDestroyedSignal;
 
+		[Inject]
+		public var notifyGalleryImagesFetchedSignal : NotifyGalleryImagesFetchedSignal;
+
+		[Inject]
+		public var notifyGalleryImageSelected:NotifyGalleryImageSelected;
+
 		override public function initialize():void {
 
 			// Init.
@@ -73,18 +82,24 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onEnabled() : void
 		{
 			view.imageSelectedSignal.add(onImageSelected);
+			view.galleryImageSelectedSignal.add(onGalleryImageSelected);
 			requestAnimateBookOutSignal.add(onRequestAnimateBookOutSignal);
 			requestSetBookBackgroundSignal.add(onRequestSetBookBackgroundSignal);
+			//todo: check type book to have either notifySourceImagesFetchedSignal or notifyGalleryImagesFetchedSignal
+			//as both data returned do not share same type
 			notifySourceImagesFetchedSignal.add(onSourceImagesFetched);
+			notifyGalleryImagesFetchedSignal.add(onGalleryImageCollectionFetched);
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
 
 		private function onDisabled() : void
 		{
 			view.imageSelectedSignal.remove(onImageSelected);
+			view.galleryImageSelectedSignal.remove(onGalleryImageSelected);
 			requestAnimateBookOutSignal.remove(onRequestAnimateBookOutSignal);
 			requestSetBookBackgroundSignal.remove(onRequestSetBookBackgroundSignal);
 			notifySourceImagesFetchedSignal.remove(onSourceImagesFetched);
+			notifyGalleryImagesFetchedSignal.remove(onGalleryImageCollectionFetched);
 			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
 
@@ -96,6 +111,11 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onImageSelected(selectedBmd:BitmapData):void
 		{
 			notifyImageSelectedFromBookSignal.dispatch( selectedBmd );
+		}
+
+		private function onGalleryImageSelected(selectedGalleryImage : GalleryImageProxy) : void
+		{
+			notifyGalleryImageSelected.dispatch(selectedGalleryImage);
 		}
 
 		private function onRequestAnimateBookOutSignal() : void
@@ -113,5 +133,10 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			view.setSourceImages(collection);
 		}
+		private function onGalleryImageCollectionFetched(collection : GalleryImageCollection) : void
+		{
+			view.setGalleryImageCollection(collection);
+		}
+
 	}
 }

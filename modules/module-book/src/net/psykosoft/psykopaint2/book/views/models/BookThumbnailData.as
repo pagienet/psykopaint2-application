@@ -1,20 +1,16 @@
 package net.psykosoft.psykopaint2.book.views.models
 {
 	import net.psykosoft.psykopaint2.book.model.SourceImageProxy;
+	import net.psykosoft.psykopaint2.book.views.models.BookData;
 
-	public class BookThumbnailData
+	public class BookThumbnailData extends BookData
 	{
 		public var imageVO : SourceImageProxy;
-		public var index : uint;
-		public var pageIndex : uint;
-		public var inPageIndex : uint;
 
 		public function BookThumbnailData(imageVO : SourceImageProxy, index : uint, pageIndex : uint, inPageIndex : uint)
 		{
+			super(index, pageIndex, inPageIndex);
 			this.imageVO = imageVO;
-			this.index = index;
-			this.pageIndex = pageIndex;
-			this.inPageIndex = inPageIndex;
 		}
 	}
 }

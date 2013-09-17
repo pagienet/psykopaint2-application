@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
 
-	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
+	import net.psykosoft.psykopaint2.book.views.models.BookData;
 
 	public class RegionManager
  	{
@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			return _regionZoffset;
  		}
 
- 		public function addRegion(rect:Rectangle, data:BookThumbnailData):void
+ 		public function addRegion(rect:Rectangle, data:BookData):void
  		{
  			var region:Region = new Region();
  			region.data = data;
@@ -57,7 +57,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			_regions.push(region);
  		}
  
- 		public function hitTestRegions(x:Number, y:Number, pageIndex:uint):BookThumbnailData
+ 		public function hitTestRegions(x:Number, y:Number, pageIndex:uint):BookData
  		{
  			if(_regions.length == 0) return null;
  			

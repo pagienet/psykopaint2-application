@@ -16,6 +16,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
+	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
+	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
@@ -25,6 +27,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	public class BookView extends ViewBase
 	{
 		private const MOUSE_XTRA:uint = 5;
+		
 		private var _stage3dProxy:Stage3DProxy;
 		private var _view3d:View3D;
 		private var _book:Book;
@@ -40,6 +43,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _backgroundTexture : RefCountedTexture;
 
 		public var imageSelectedSignal:Signal;
+		public var galleryImageSelectedSignal:Signal;
 		public var bookHasClosedSignal:Signal;
 		public var requestData : Signal;
 		public var bookDisposedSignal : Signal;
@@ -69,6 +73,10 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		override protected function onDisabled():void 
 		{
+			_book.bookReadySignal.remove(onBookReady);
+			_book.imagePickedSignal.remove(dispatchSelectedImage);
+			_book.galleryImagePickedSignal.remove(dispatchSelectedGalleryImage);
+			_book.bookClearedSignal.remove(dispatchBookHasClosed);
 			_book.dispose();
 			_book = null;
 
@@ -93,6 +101,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			
 			_time = 0;
 			imageSelectedSignal = new Signal();
+			galleryImageSelectedSignal = new Signal();
 			bookHasClosedSignal = new Signal();
 		}
 
@@ -133,6 +142,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_book = new Book(_view3d, stage);
 			_book.bookReadySignal.add(onBookReady);
 			_book.imagePickedSignal.add(dispatchSelectedImage);
+			_book.galleryImagePickedSignal.add(dispatchSelectedGalleryImage);
 			_book.bookClearedSignal.add(dispatchBookHasClosed);
 		}
 
@@ -179,10 +189,10 @@ package net.psykosoft.psykopaint2.book.views.book
 
 				if(doUpdate){
 					
-					var angle:Number = -1+ ( (1-( (mouseY+(_mouseRange*.5) -_startMouseY) / _mouseRange))*2);
+					var angle:Number = -1+(1-( (mouseY+(_mouseRange*.5) -_startMouseY) / _mouseRange))*2;
 					angle *= .5;
 
-					_book.rotateFold(angle);
+					_book.rotateFold(-angle);
 
 					_time =  currentTime + _startTime;
 					if(_time < 0) _time = 0;
@@ -220,6 +230,11 @@ package net.psykosoft.psykopaint2.book.views.book
 			imageSelectedSignal.dispatch(selectedImage);
 		}
 
+		public function dispatchSelectedGalleryImage(selectedGalleryImage : GalleryImageProxy):void
+		{
+			galleryImageSelectedSignal.dispatch(selectedGalleryImage);
+		}
+ 
 		public function dispatchBookHasClosed():void
 		{
 			bookHasClosedSignal.dispatch();
@@ -239,5 +254,11 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			_book.setSourceImages(collection);
 		}
+
+		public function setGalleryImageCollection(collection : GalleryImageCollection) : void
+		{
+			_book.setGalleryImageCollection(collection);
+		}
+
 	}
 }

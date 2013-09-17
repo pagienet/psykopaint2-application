@@ -4,13 +4,18 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.book.views.book.data.BlankBook;
 	import net.psykosoft.psykopaint2.book.views.book.layout.CompositeHelper;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
+	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
+	import net.psykosoft.psykopaint2.book.views.models.BookGalleryData;
+	import net.psykosoft.psykopaint2.book.views.models.BookData;
 	import net.psykosoft.psykopaint2.book.model.SourceImageProxy;
+	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
 
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
 	import flash.display.Stage;
 	import flash.display.StageQuality;
+	import flash.display.Sprite;
 	import flash.utils.Dictionary;
 
 	import org.osflash.signals.Signal;
@@ -22,6 +27,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		protected var _layoutType:String;
  		protected var _inserts:Dictionary;
 		protected var _collection:SourceImageCollection;
+		protected var _galleryCollection:GalleryImageCollection;
 		protected var _pagesFilled:Dictionary;
 
  		private var _pageMaterialsManager:PageMaterialsManager;
@@ -32,8 +38,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		private var _stage:Stage;
  		private var _loadIndex:uint = 0;
 		private var _resourcesCount:uint;
-		private var _content:Vector.<BookThumbnailData>;
-		private var _loadQueue : Vector.<BookThumbnailData>;
+		private var _content:Vector.<BookData>;
+		private var _loadQueue : Vector.<BookData>;
  		
  		public var requiredAssetsReadySignal:Signal;
  		public var requiredCraftSignal:Signal;
@@ -63,6 +69,16 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			return _compositeHelper.insert(insertSource, destSource, insertRect, rotation, disposeInsert, keepRatio, offsetRotationX, offsetRotationY, offsetX, offsetY);
  		}
 
+ 		protected function copyAt(insertSource:BitmapData, destSource:BitmapData, x:Number, y:Number):BitmapData
+ 		{
+ 			return _compositeHelper.copyAt(insertSource, destSource, x, y);
+ 		}
+
+ 		protected function insertSpriteAt(insertSprite:Sprite, destSource:BitmapData, x:Number, y:Number):BitmapData
+ 		{
+ 			return _compositeHelper.insertSpriteAt(insertSprite, destSource, x, y);
+ 		}
+
  		protected function get lastWidth():Number
  		{
  			return _compositeHelper.lastWidth;
@@ -87,6 +103,11 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		public function set collection(collection : SourceImageCollection):void
  		{
  			_collection = collection;
+ 		}
+
+ 		public function set galleryCollection(collection : GalleryImageCollection):void
+ 		{
+ 			_galleryCollection = collection;
  		}
 
 		public function getPageCount():uint
@@ -116,8 +137,108 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		protected function prepareBookContent(onContentLoaded:Function, insertsPerPage:uint):void
 		{
-			_content = new Vector.<BookThumbnailData>();
-			
+			_content = new Vector.<BookData>();
+
+			if(_galleryCollection){
+				prepareGalleryData(insertsPerPage);
+			} else {
+				prepareImageData(insertsPerPage);
+			}
+
+			onContentLoaded();
+		}
+ 
+		public function loadContent():void
+		{
+			switchToHighDrawQuality();
+
+			_loadQueue = new Vector.<BookData>();
+			_loadIndex = 0;
+
+			for(var i:uint = 0; i < _content.length;++i)
+				_loadQueue.push(_content[i]);
+
+			loadCurrentThumbnail();
+
+			_content = null;
+		}
+ 
+ 		public function generateDefaultPageMaterial(index:uint):TextureMaterial
+		{
+			var bmdPage:BitmapData = _blankBook.getBasePageBitmapData(index);
+			var pageMaterial:TextureMaterial  = _pageMaterialsManager.registerPageMaterial(index, bmdPage);
+			//pageMaterial.alphaBlending = true;
+
+			return pageMaterial;
+		}
+
+ 		public function dispose():void
+ 		{
+ 			_pageMaterialsManager.dispose();
+ 			_pageMaterialsManager = null;
+
+ 			_blankBook.dispose();
+ 			_blankBook = null;
+
+ 			_compositeHelper.dispose();
+ 			_compositeHelper = null;
+
+ 			for(var key:String in _inserts){
+ 				_inserts[key] = null;
+ 			}
+ 			_inserts = null;
+
+ 			disposeLayoutElements();
+ 		}
+
+ 		//draw quality
+ 		protected function switchToHighDrawQuality():void
+		{
+			_currentQuality = _stage.quality;
+			_stage.quality = StageQuality.BEST;//should be better than StageQuality.HIGH
+		}
+		protected function restoreQuality():void
+		{
+			_stage.quality = _currentQuality;
+		}
+ 
+ 		//when all basic elements for a the book are ready
+ 		public function dispatchMinimumRequiredReady():void
+ 		{
+ 			requiredAssetsReadySignal.dispatch();
+ 		}
+ 		//when craft is there, book can be displayed, the anim will already cover a part of waiting time while loading the pages assets
+ 		public function dispatchCraftReady(bmd:BitmapData):void
+ 		{
+ 			_pageMaterialsManager.generateCraftMaterial(bmd);
+ 			requiredCraftSignal.dispatch(bmd);
+ 		}
+
+ 		//register regions
+ 		public function dispatchRegion(rect:Rectangle, data:BookData):void
+ 		{
+ 			regionSignal.dispatch(rect, data);
+ 		}
+
+ 		//when the enviro elements are all loaded, we can build the enviromethod. no need for a signal, only pageMaterialsManager needs it
+ 		public function dispatchEnviromapsReady(enviroMaps:Vector.<BitmapData>):void
+ 		{
+ 			_pageMaterialsManager.generateEnviroMapMethod(enviroMaps);
+ 		}
+
+ 		//to be overrided per type layout if any dedicated content is required
+ 		protected function initDefaultAssets():void{}
+
+ 		protected function disposeLayoutElements():void{}
+  
+ 		/* loaded image insert/compositing in page*/
+ 		protected function composite(image:BitmapData, data:BookData):void{throw new Error(this+":composite function: must be overrided");}
+
+ 		/* triggers the specific data parsing per layout to be able to generate the receiving pages*/
+ 		public function loadBookContent(onContentLoaded:Function):void {}
+
+ 		private function prepareImageData(insertsPerPage:uint):void
+		{
 			var images : Vector.<SourceImageProxy> = _collection.images;
 			 
 			var imageVO:SourceImageProxy;
@@ -155,29 +276,64 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 			if(sides%2 != 0) sides+=1;
 			pageCount = sides*.5;
-
-			onContentLoaded();
 		}
 
-
-		public function loadContent():void
+		private function prepareGalleryData(insertsPerPage:uint):void
 		{
-			switchToHighDrawQuality();
+			 
+			var images : Vector.<GalleryImageProxy> = _galleryCollection.images;
+			 
+			var imageVO:GalleryImageProxy;
 
-			_loadQueue = new Vector.<BookThumbnailData>();
-			_loadIndex = 0;
+ 			_resourcesCount = images.length;
+ 
+			var data:BookGalleryData;
+			var url:String;
 
-			for(var i:uint = 0; i < _content.length;++i)
-				_loadQueue.push(_content[i]);
+			_pagesFilled = new Dictionary();
+			var pageIndex:uint;
+			var inPageIndex:uint;
 
-			loadCurrentThumbnail();
+			for(var i:uint = 0; i < _resourcesCount;++i){
 
-			_content = null;
+				imageVO = images[i];
+				
+				pageIndex = uint(i/insertsPerPage);
+				inPageIndex = uint( i - (pageIndex*insertsPerPage) );
+				 
+				data = new BookGalleryData(imageVO, i, pageIndex, inPageIndex);
+
+				_content.push(data);
+ 
+				if(!_pagesFilled["pageIndex"+pageIndex]){
+					_pagesFilled["pageIndex"+pageIndex] = {max:0, inserted:0};
+				}
+
+				_pagesFilled["pageIndex"+pageIndex].max++;
+				 
+			}
+ 
+			//we have xx images for this layout, 2 sides;
+			var sides:uint = Math.ceil(_resourcesCount/insertsPerPage);
+
+			if(sides%2 != 0) sides+=1;
+			pageCount = sides*.5;
 		}
+		
 
 		private function loadCurrentThumbnail() : void
 		{
-			_loadQueue[_loadIndex].imageVO.loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);
+			if(_loadQueue[_loadIndex] is BookThumbnailData){
+				var btd:BookThumbnailData = BookThumbnailData(_loadQueue[_loadIndex]);
+				SourceImageProxy(btd.imageVO).loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);
+			} else {
+				var bgd:BookGalleryData = BookGalleryData(_loadQueue[_loadIndex]);
+				GalleryImageProxy(bgd.imageVO).loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);
+			}
+			
+			//debug override var bmd:BitmapData = new BitmapData(300, 200, false, 0xFF0000);
+			//composite(bmd, BookData( _loadQueue[_loadIndex]) );
+			//continueLoading();
 		}
 
 		private function continueLoading() : void
@@ -193,7 +349,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		private function onThumbnailLoadedComplete(bitmapData : BitmapData):void
 		{
-			composite(bitmapData, _loadQueue[_loadIndex]);
+			composite(bitmapData, BookData( _loadQueue[_loadIndex]) );
 			continueLoading();
 		}
 
@@ -201,75 +357,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			continueLoading();
 		}
- 
- 		public function generateDefaultPageMaterial(index:uint):TextureMaterial
-		{
-			var bmdPage:BitmapData = _blankBook.getBasePageBitmapData(index);
-			var pageMaterial:TextureMaterial  = _pageMaterialsManager.registerPageMaterial(index, bmdPage);
-			//pageMaterial.alphaBlending = true;
-
-			return pageMaterial;
-		}
-
- 		public function dispose():void
- 		{
- 			_pageMaterialsManager.dispose();
- 			_pageMaterialsManager = null;
-
- 			_blankBook.dispose();
- 			_blankBook = null;
-
- 			_compositeHelper = null;
-
- 			for(var key:String in _inserts){
- 				_inserts[key] = null;
- 			}
- 			_inserts = null;
- 		}
-
- 		//draw quality
- 		protected function switchToHighDrawQuality():void
-		{
-			_currentQuality = _stage.quality;
-			_stage.quality = StageQuality.BEST;//should be better than StageQuality.HIGH
-		}
-		protected function restoreQuality():void
-		{
-			_stage.quality = _currentQuality;
-		}
- 
- 		//when all basic elements for a the book are ready
- 		public function dispatchMinimumRequiredReady():void
- 		{
- 			requiredAssetsReadySignal.dispatch();
- 		}
- 		//when craft is there, book can be displayed, the anim will already cover a part of waiting time while loading the pages assets
- 		public function dispatchCraftReady(bmd:BitmapData):void
- 		{
- 			_pageMaterialsManager.generateCraftMaterial(bmd);
- 			requiredCraftSignal.dispatch(bmd);
- 		}
-
- 		//register regions
- 		public function dispatchRegion(rect:Rectangle, data:BookThumbnailData):void
- 		{
- 			regionSignal.dispatch(rect, data);
- 		}
-
- 		//when the enviro elements are all loaded, we can build the enviromethod. no need for a signal, only pageMaterialsManager needs it
- 		public function dispatchEnviromapsReady(enviroMaps:Vector.<BitmapData>):void
- 		{
- 			_pageMaterialsManager.generateEnviroMapMethod(enviroMaps);
- 		}
-
- 		//to be overrided per type layout if any dedicated content is required
- 		protected function initDefaultAssets():void{}
-  
- 		/* loaded image insert/compositing in page*/
- 		protected function composite(image:BitmapData, data:BookThumbnailData):void{throw new Error(this+":composite function: must be overrided");}
-
- 		/* triggers the specific data parsing per layout to be able to generate the receiving pages*/
- 		public function loadBookContent(onContentLoaded:Function):void {}
 
  	}
  } 

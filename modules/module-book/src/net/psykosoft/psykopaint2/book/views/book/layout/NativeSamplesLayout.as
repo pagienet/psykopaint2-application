@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.book.BookImageSource;
-	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
+	import net.psykosoft.psykopaint2.book.views.models.BookData;
 
 	public class NativeSamplesLayout extends LayoutBase
 	{
@@ -30,9 +30,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		{	
  			prepareBookContent(onContentLoaded, INSERTS_COUNT);
  		}
+
+ 		override protected function disposeLayoutElements():void
+		{
+			_insertNRMRect = null;
+		}
  
 		//Custom compositing variation per layout and region registration for mouse detection
-		override protected function composite(insertSource:BitmapData, data:BookThumbnailData):void
+		override protected function composite(insertSource:BitmapData, data:BookData):void
 		{
 			var insertRect:Rectangle = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
 			var pageIndex:uint = uint(data.pageIndex);

@@ -20,22 +20,27 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
+	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
 
 	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.psykopaint2.book.views.book.layout.NativeSamplesLayout;
 	import net.psykosoft.psykopaint2.book.views.book.layout.CameraSamplesLayout;
+	import net.psykosoft.psykopaint2.book.views.book.layout.GalleryLayout;
 	import net.psykosoft.psykopaint2.book.views.models.BookCraft;
 	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
+	import net.psykosoft.psykopaint2.book.views.models.BookGalleryData;
+	import net.psykosoft.psykopaint2.book.views.models.BookData;
 
 	import org.osflash.signals.Signal;
- 
+
  	public class Book
  	{
  		public var _percent:Number;
  		public var bookReadySignal:Signal;
  		public var imagePickedSignal:Signal;
+ 		public var galleryImagePickedSignal:Signal;
  		public var bookClearedSignal:Signal;
 
  		private var _bookCraft:BookCraft;
@@ -63,9 +68,11 @@ package net.psykosoft.psykopaint2.book.views.book
 
  			bookReadySignal = new Signal();
  			imagePickedSignal = new Signal();
+ 			galleryImagePickedSignal = new Signal();
  			bookClearedSignal = new Signal();
  		}
 
+ 		//todo: look at how merge setSourceImages & setGalleryImageCollection
  		public function setSourceImages(collection : SourceImageCollection):void
  		{
 			var type : String = collection.source;
@@ -79,24 +86,31 @@ package net.psykosoft.psykopaint2.book.views.book
  					_layout = new CameraSamplesLayout(_stage);
  					break;
 
- 				case BookImageSource.USER_IMAGES:
- 					//break;
-
- 				case BookImageSource.FRIENDS_IMAGES:
- 					//break;
-
- 				case BookImageSource.COMMUNITY_IMAGES:
- 					//break;
-
  				default:
  					_layout = new NativeSamplesLayout(_stage);
 
  			}
 
  			_layout.collection = collection;
+ 			setLayoutSignals();
+ 		}
 
- 			_layout.requiredCraftSignal.add(initOpenAnimation);
- 			_layout.requiredAssetsReadySignal.add(loadBookContent);
+ 		public function setGalleryImageCollection(galleryCollection : GalleryImageCollection):void
+ 		{
+ 			var type:uint = galleryCollection.type;
+
+ 			switch(type){
+
+ 				case BookImageSource.GALLERY_IMAGES:
+ 					_layout = new GalleryLayout(_stage);
+ 					break;
+
+ 				default:
+ 					_layout = new GalleryLayout(_stage);
+ 			}
+
+ 			_layout.galleryCollection = galleryCollection;
+ 			setLayoutSignals();
  		}
 
  		public function initOpenAnimation(bitmapdata:BitmapData):void
@@ -108,6 +122,12 @@ package net.psykosoft.psykopaint2.book.views.book
  		}
 
  		//Animation book
+ 		private function setLayoutSignals():void
+ 		{
+ 			_layout.requiredCraftSignal.add(initOpenAnimation);
+ 			_layout.requiredAssetsReadySignal.add(loadBookContent);
+ 		}
+
  		private function animateIn():void
  		{	
  			_dummyCam = new Object3D();
@@ -364,11 +384,16 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			if(_isLoadingImage) return false;
 
- 			var data:BookThumbnailData = _regionManager.hitTestRegions(mouseX, mouseY, _currentPage);
+ 			var data:BookData = _regionManager.hitTestRegions(mouseX, mouseY, _currentPage);
 
  			if(data){
  				_isLoadingImage = true;
-				data.imageVO.loadFullSized(onFullSizeImageLoaded, onFullSizeImageError);
+ 				if(data is BookThumbnailData){
+ 					BookThumbnailData(data).imageVO.loadFullSized(onFullSizeImageLoaded, onFullSizeImageError);
+ 				} else {
+ 					galleryImagePickedSignal.dispatch(BookGalleryData(data).imageVO);
+ 				}
+				
 
  				return true;
  			}

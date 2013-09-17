@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
+	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelected;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestBookRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
@@ -112,6 +113,7 @@ package net.psykosoft.psykopaint2.book.config
 			_injector.map(NotifySourceImagesFetchedSignal).asSingleton();
 			_injector.map(NotifyGalleryImagesFetchedSignal).asSingleton();
 			_injector.map(NotifyGalleryImagesFailedSignal).asSingleton();
+			_injector.map(NotifyGalleryImageSelected).asSingleton();
 
 		}
 

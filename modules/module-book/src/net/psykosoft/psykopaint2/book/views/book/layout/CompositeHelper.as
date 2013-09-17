@@ -5,12 +5,15 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	import flash.geom.Point;
+	import flash.display.Sprite
 	 
  	public class CompositeHelper
  	{
  		private const DEGREES_TO_RADIANS:Number = Math.PI/180;
 
  		private var _t:Matrix;
+ 		private var _p:Point;
  		private var _lastWidth:Number = 0;
 		private var _lastHeight:Number = 0;
  
@@ -74,11 +77,36 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_t.translate(-arbX+cx, -arbY+cy );
 			_t.rotate(rotation*DEGREES_TO_RADIANS);
 			_t.translate(insertRect.x+arbX , insertRect.y+arbY);
- 
 
 			destSource.draw(insertSource, _t, null, "normal", null, true);
 
 			if(disposeInsert) insertSource.dispose();
+
+			return destSource;
+		}
+
+		public function copyAt(insertSource:BitmapData, destSource:BitmapData, x:uint, y:uint):BitmapData
+		{
+			if(!_p) _p = new Point();
+			_p.x = x;
+			_p.y = y;
+
+			destSource.copyPixels(insertSource, insertSource.rect, _p);
+
+			return destSource;
+		}
+
+		public function insertSpriteAt(insertSprite:Sprite, destSource:BitmapData, x:uint, y:uint):BitmapData
+		{
+			if(!_t) {
+				_t = new Matrix();
+			} else {
+				_t.identity();
+			}
+
+			_t.translate(x , y);
+
+			destSource.draw(insertSprite, _t, null, "normal", null, true);
 
 			return destSource;
 		}
@@ -92,6 +120,12 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			return _lastHeight;
 		}
+
+		public function dispose():void
+ 		{
+ 			if(_t) _t = null;
+ 			if(_p) _p = null;
+ 		}
 
  	}
  }

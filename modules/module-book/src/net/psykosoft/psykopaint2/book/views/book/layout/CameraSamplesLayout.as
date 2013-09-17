@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
-	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
+	import net.psykosoft.psykopaint2.book.views.models.BookData;
 
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
@@ -18,7 +18,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private const INSERT_HEIGHT:uint = 100;
 		private const INSERTS_COUNT:uint = 16;
 
-		private var _content:Vector.<BookThumbnailData>;
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
 		private var _insertNRMRect:Rectangle;
@@ -32,9 +31,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		{	
  			prepareBookContent(onContentLoaded, INSERTS_COUNT);
  		}
+
+ 		override protected function disposeLayoutElements():void
+		{
+			_insertNRMRect = null;
+		}
 		 
 		// sample case: we insert 6 images per page
-		override protected function composite(insertSource:BitmapData, data:BookThumbnailData):void
+		override protected function composite(insertSource:BitmapData, data:BookData):void
 		{
 			var insertRect:Rectangle = new Rectangle(0, 0, INSERT_WIDTH, INSERT_HEIGHT);
 			var pageIndex:uint = uint(data.pageIndex);
