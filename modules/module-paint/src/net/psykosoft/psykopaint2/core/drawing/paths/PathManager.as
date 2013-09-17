@@ -13,10 +13,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.utils.clearTimeout;
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -110,6 +108,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var _canvasScaleY:Number;
 		private var _canvasOffsetX:Number;
 		private var _canvasOffsetY:Number;
+		
 		private var recordedData:Vector.<Number>;
 		private var playbackActive:Boolean;
 		private var singleStepPlaybackActive:Boolean;
@@ -712,5 +711,27 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			GestureManager.gesturesEnabled = enable;
 			gestureStopTimeout = -1;
 		}
+
+		public function get canvasScaleX():Number
+		{
+			return _canvasScaleX;
+		}
+
+		public function get canvasScaleY():Number
+		{
+			return _canvasScaleY;
+		}
+
+		public function get canvasOffsetX():Number
+		{
+			return _canvasOffsetX;
+		}
+
+		public function get canvasOffsetY():Number
+		{
+			return _canvasOffsetY;
+		}
+
+
 	}
 }

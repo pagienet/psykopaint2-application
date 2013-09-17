@@ -140,7 +140,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			previewShp.graphics.lineStyle(0);
 			_view.stage.quality = StageQuality.HIGH;
 			(_view as Sprite).addChild(previewShp);
-			
+			previewShp.scaleX = 1 / _pathManager.canvasScaleX;
+			previewShp.scaleY = 1 / _pathManager.canvasScaleY; 
+			previewShp.x = -_pathManager.canvasOffsetX / _pathManager.canvasScaleX;
+			previewShp.y = -_pathManager.canvasOffsetY / _pathManager.canvasScaleY; 
 		}
 		
 		override  protected function onPathPoints(points : Vector.<SamplePoint>) : void

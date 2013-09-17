@@ -14,9 +14,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_SL_COLOR_MODE:String = "Color Mode";
 		public static const PARAMETER_IL_COLOR_SWATCH:String = "Color Swatch";
 		public static const PARAMETER_C_COLOR:String = "Color";
-		public static const PARAMETER_N_SATURATION:String = "Saturation";
-		public static const PARAMETER_A_HUE:String = "Hue";
-		public static const PARAMETER_N_BRIGHTNESS:String = "Brightness";
+		public static const PARAMETER_B_COLORMATRIX:String = "Appy Color Matrix";
+		public static const PARAMETER_NR_SATURATION:String = "Saturation";
+		public static const PARAMETER_AR_HUE:String = "Hue";
+		public static const PARAMETER_NR_BRIGHTNESS:String = "Brightness";
 		public static const PARAMETER_NR_COLOR_BLENDING:String = "Color Blending";
 		public static const PARAMETER_N_OPACITY:String = "Opacity";
 		public static const PARAMETER_N_OPACITY_RANGE:String = "Opacity Range";
@@ -41,6 +42,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var pickRadius:PsykoParameter;
 		private var pickRadiusMode:PsykoParameter;
 		private var maxSpeed:PsykoParameter;
+		private var applyColorMatrix:PsykoParameter;
 		
 		private var smoothFactor:PsykoParameter;
 		private var color:PsykoParameter;
@@ -54,9 +56,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			super();
 			colorMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_COLOR_MODE,0,["Pick Color","Fixed Color"] );
 			presetColor = new PsykoParameter( PsykoParameter.IntListParameter,PARAMETER_IL_COLOR_SWATCH,0,[0x000000,0xffffff,0x808080,0xc00000]);
-			saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SATURATION,1,-3, 3);
-			hueAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_HUE,0,-180, 180);
-			brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_BRIGHTNESS,0,-255, 255);
+			
+			applyColorMatrix  = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_COLORMATRIX,false);
+			
+			saturationAdjustment  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_SATURATION,1,1,-3, 3);
+			hueAdjustment  = new PsykoParameter( PsykoParameter.AngleRangeParameter,PARAMETER_AR_HUE,0,0,-180, 180);
+			brightnessAdjustment  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_BRIGHTNESS,0,0,-255, 255);
+			
 			colorBlending  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_COLOR_BLENDING,0.7,0.7,0, 1);
 			brushOpacity  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_OPACITY,0.9,0,1);
 			brushOpacityRange  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_OPACITY_RANGE,0.2,0,1);
@@ -68,21 +74,21 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			maxSpeed  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
 			
-			_parameters.push(colorMode, presetColor, saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,brushOpacityRange,pickRadius,pickRadiusMode,smoothFactor,color,maxSpeed);
+			_parameters.push(colorMode, presetColor, applyColorMatrix,saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,brushOpacityRange,pickRadius,pickRadiusMode,smoothFactor,color,maxSpeed);
 			cm = new ColorMatrix();
 		}
 		
 		override public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
-			var applyMatrix:Boolean = ( saturationAdjustment.numberValue != 1 || hueAdjustment.degrees != 0 || brightnessAdjustment.numberValue != 0 );
+			var applyMatrix:Boolean = applyColorMatrix.booleanValue;
 			var applyArray:Array = _applyArray;
 			
 			if ( applyMatrix )
 			{
 				cm.reset();
-				cm.adjustSaturation( saturationAdjustment.numberValue );
-				cm.adjustHue( hueAdjustment.degrees );
-				cm.adjustBrightness( brightnessAdjustment.numberValue );
+				cm.adjustSaturation( saturationAdjustment.randomValue );
+				cm.adjustHue( hueAdjustment.randomDegreeValue );
+				cm.adjustBrightness( brightnessAdjustment.randomValue );
 			}
 			
 			var radiusMode:int = pickRadiusMode.index;

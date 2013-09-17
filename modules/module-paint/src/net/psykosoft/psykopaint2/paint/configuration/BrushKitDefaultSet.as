@@ -22,7 +22,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 		public static const brushKitDataPhotoPaintMode2:XML = 
 			<brushkits>
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
-
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value="2"/>
@@ -41,8 +40,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 							src="Size" 
 							target={"pathengine.pointdecorator_0."+SizeDecorator.PARAMETER_N_RANGE}
 							targetProperties="value"
-							targetOffsets="0"
-							targetFactors="0.3"
+							targetOffsets="-0.05"
+							targetFactors="0.2"
 							/>
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
 							src="Size" 
@@ -80,7 +79,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_2" value1="0.5" value2="0.9" />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_2" value1="0.25" value2="0.33" />
 							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_2" value1="0.8" value2="1" />
-							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_2" color="0xffffff" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_B_COLORMATRIX}  path="pathengine.pointdecorator_2" value="1" />
+							<parameter id={ColorDecorator.PARAMETER_NR_BRIGHTNESS}  path="pathengine.pointdecorator_2" value1="-15" value2="15" />
 						</ColorDecorator>
 
 						<BumpDecorator>
@@ -89,15 +89,21 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3" previewID={PreviewIconFactory.PREVIEW_DEPTH} value="0" minValue="0" maxValue="3" showInUI="1" />
 							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_3" value="3"/>
 							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_3" value="3"   />
-							
 						</BumpDecorator>
-
-						<CircularRotationDecorator active="0">
-							<parameter id={CircularRotationDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_4" index="1" />
-							<parameter id={CircularRotationDecorator.PARAMETER_I_RANDOM_POINT_COUNT} path="pathengine.pointdecorator_4" value="40" />
-							<parameter id={CircularRotationDecorator.PARAMETER_A_ANGLE_ADJUSTMENT} path="pathengine.pointdecorator_4" value="90" />
-						</CircularRotationDecorator>
 					</pathengine>
+				</brush>
+				
+				<brush engine={BrushType.BLOB} name="Test">
+						<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="render"/>
+
+						<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
+							<ColorDecorator>
+								<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_0" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
+								<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_0" value="0.9" showInUI="1"/>
+								<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING} path="pathengine.pointdecorator_0" value1="1" value2="1" />
+							
+							</ColorDecorator>
+						</pathengine>
 				</brush>
 			</brushkits>
 		
