@@ -65,7 +65,7 @@ package net.psykosoft.psykopaint2.home.config
 
 			mapMediators();
 			mapCommands();
-			mapNotifications();
+			mapSignals();
 			mapSingletons();
 			mapServices();
 			mapModels();
@@ -104,7 +104,7 @@ package net.psykosoft.psykopaint2.home.config
 		// Notifications.
 		// -----------------------
 
-		private function mapNotifications():void {
+		private function mapSignals():void {
 			_injector.map( NotifyCameraSnapshotRequest ).asSingleton();
 			_injector.map( NotifyCameraFlipRequest ).asSingleton();
 	   		_injector.map( RequestWallpaperChangeSignal ).asSingleton();

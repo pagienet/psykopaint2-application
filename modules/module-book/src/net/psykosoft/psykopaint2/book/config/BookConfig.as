@@ -54,7 +54,7 @@ package net.psykosoft.psykopaint2.book.config
 
 			mapMediators();
 			mapCommands();
-			mapNotifications();
+			mapSignals();
 			mapSingletons();
 			mapServices();
 			mapModels();
@@ -100,7 +100,7 @@ package net.psykosoft.psykopaint2.book.config
 		// Notifications.
 		// -----------------------
 
-		private function mapNotifications() : void
+		private function mapSignals() : void
 		{
 			_injector.map(NotifyBookModuleSetUpSignal).asSingleton();
 			_injector.map(NotifyBookModuleDestroyedSignal).asSingleton();

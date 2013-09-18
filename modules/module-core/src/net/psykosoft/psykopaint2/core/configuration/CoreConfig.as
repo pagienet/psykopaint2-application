@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			mapClasses();
 			mapMediators();
 			mapCommands();
-			mapNotifications();
+			mapSignals();
 			mapSingletons();
 			mapServices();
 			mapModels();
@@ -183,7 +183,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		// Notifications.
 		// -----------------------
 
-		private function mapNotifications():void {
+		private function mapSignals():void {
 			_injector.map( RequestFinalizeCropSignal ).asSingleton();
 			_injector.map( NotifyNavigationStateChangeSignal ).asSingleton();
 			_injector.map( NotifyGlobalGestureSignal ).asSingleton();
