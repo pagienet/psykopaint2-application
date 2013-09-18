@@ -476,7 +476,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 				</brush>-->
 				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
 					<parameter id={WaterDamageBrush.PARAMETER_N_SURFACE_INFLUENCE} previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
-					<parameter id={WaterDamageBrush.PARAMETER_N_PIGMENT_FLOW} path="brush" value="0.5" showInUI="1"/>
+					<parameter id={WaterDamageBrush.PARAMETER_N_PIGMENT_FLOW} path="brush" value="0.25" showInUI="1"/>
 					<!--<parameter id="Pigment bleaching" path="brush" value="0.07" showInUI="1"/> -->
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet" showInUI="0"/>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}/>
@@ -775,7 +775,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
 					<parameter id={WaterDamageBrush.PARAMETER_N_SURFACE_INFLUENCE} previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
-					<parameter id={WaterDamageBrush.PARAMETER_N_PIGMENT_FLOW} path="brush" value="0.5" showInUI="1"/>
+					<parameter id={WaterDamageBrush.PARAMETER_N_PIGMENT_FLOW} path="brush" value="0.25" showInUI="1"/>
 					<!--<parameter id="Pigment bleaching" path="brush" value="0.07" showInUI="1"/> -->
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet" showInUI="0"/>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}/>
