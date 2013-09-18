@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import flash.geom.Rectangle;
 	import flash.display.Stage;
 	import flash.display.StageQuality;
-	import flash.display.Sprite;
+	import flash.display.IBitmapDrawable;
 	import flash.utils.Dictionary;
 
 	import org.osflash.signals.Signal;
@@ -45,7 +45,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		public var requiredCraftSignal:Signal;
  		public var regionSignal:Signal;
  		
-     	public function LayoutBase(type:String, stage:Stage)
+     		public function LayoutBase(type:String, stage:Stage)
  		{
  			_layoutType = type;
  			_stage = stage;
@@ -74,9 +74,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			return _compositeHelper.copyAt(insertSource, destSource, x, y);
  		}
 
- 		protected function insertSpriteAt(insertSprite:Sprite, destSource:BitmapData, x:Number, y:Number):BitmapData
+ 		protected function insertObjectAt(insertSource:IBitmapDrawable, destSource:BitmapData, x:Number, y:Number, sclX:Number = 1, sclY:Number = 1):BitmapData
  		{
- 			return _compositeHelper.insertSpriteAt(insertSprite, destSource, x, y);
+ 			return _compositeHelper.insertObjectAt(insertSource, destSource, x, y, sclX, sclY);
  		}
 
  		protected function get lastWidth():Number

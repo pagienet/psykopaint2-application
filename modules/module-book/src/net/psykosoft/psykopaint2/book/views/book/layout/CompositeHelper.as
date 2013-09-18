@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.geom.Point;
-	import flash.display.Sprite
+	import flash.display.IBitmapDrawable;
 	 
  	public class CompositeHelper
  	{
@@ -96,7 +96,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			return destSource;
 		}
 
-		public function insertSpriteAt(insertSprite:Sprite, destSource:BitmapData, x:uint, y:uint):BitmapData
+		public function insertObjectAt(insertSprite:IBitmapDrawable, destSource:BitmapData, x:uint, y:uint, sclX:Number = 1, sclY:Number = 1):BitmapData
 		{
 			if(!_t) {
 				_t = new Matrix();
@@ -104,6 +104,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				_t.identity();
 			}
 
+			_t.scale(sclX , sclY);
 			_t.translate(x , y);
 
 			destSource.draw(insertSprite, _t, null, "normal", null, true);

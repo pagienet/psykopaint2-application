@@ -12,8 +12,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.DrawingApiBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.DelaunayBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.DrawingApiBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.HitTestBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.PencilBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.RibbonBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.ShatterBrush;
@@ -82,6 +83,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			registerBrush( BrushType.RIBBON, RibbonBrush );
 			registerBrush( BrushType.SKETCH, SketchBrush );
 			registerBrush( BrushType.BLOB, DrawingApiBrush );
+			registerBrush( BrushType.HITTEST, HitTestBrush );
 			_initialized = true;
 		}
 		

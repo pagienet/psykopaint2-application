@@ -225,6 +225,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				//insert the normalmap map of the image into the textureNormalmap
 				normalSourceBitmapdata.lock();
 				insert(_insertNormalmap, normalSourceBitmapdata, _insertNRMRect, rotation, false, false);
+
+				//insert the bits of normalmaps asset heart and comment bubble
+				var destX:Number = insertRect.x + _bmComment.x;
+				var destY:Number = insertRect.y+insertRect.height+2;
+				if(_commentNMap) insertObjectAt(_commentNMap, normalSourceBitmapdata, destX, destY+_bmComment.y, _bmComment.width/_commentNMap.width, _bmComment.height/_commentNMap.height);
+				destX = insertRect.x + _bmHeart.x;
+				if(_heartNMap) insertObjectAt(_heartNMap, normalSourceBitmapdata, destX, destY+_bmHeart.y, _bmHeart.width/_heartNMap.width, _bmHeart.height/_heartNMap.height);
+				
 				normalSourceBitmapdata.unlock();
 				
 				if(invalidateContent) {
@@ -246,11 +254,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			//update after inserts
  			if(invalidateContent){
  				diffuseTextureSource.invalidateContent();
- 				diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;
+ 				diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;//normalSourceBitmapdata
  			}
  			
 		}
-		
 
 		private function updateAndInsertTextInformation(vo: GalleryImageProxy, rect:Rectangle, destSource:BitmapData):void
 		{
@@ -263,7 +270,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_bmHeart.x = _hartCountTextField.x - _bmHeart.width - SPACE;
 			_commentsCountTextField.x = _bmHeart.x - SPACE - _commentsCountTextField.textWidth;
 
-			insertSpriteAt(_infoSprite, destSource, rect.x, rect.y+rect.height+2);
+			insertObjectAt(_infoSprite, destSource, rect.x, rect.y+rect.height+2);
 		}
 
 		private function initTextField():void
@@ -304,7 +311,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_hartCountTextField.y = 1;
 			_hartCountTextField.defaultTextFormat = textFormatCount;
 			_hartCountTextField.text = "000";
-			//_hartCountTextField.border = true;
 			_infoSprite.addChild(_hartCountTextField);
 
 			_commentsCountTextField = new TextField();
@@ -316,7 +322,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_commentsCountTextField.y = 1;
 			_commentsCountTextField.defaultTextFormat = textFormatCount;
 			_commentsCountTextField.text = "000";
-			//_commentsCountTextField.border = true;
 			_infoSprite.addChild(_commentsCountTextField);
  
 			_bmComment = new Bitmap(_commentMap);
@@ -329,12 +334,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  
 			_infoSprite.addChild(_bmComment);
 			_infoSprite.addChild(_bmHeart);
-
-			//bmComment.x = INSERT_WIDTH - bmHeart.width;
-			//_hartCountTextField.x = bmComment.x - SPACE - _hartCountTextField.textWidth;
-			//bmHeart.x = _hartCountTextField.x - bmHeart.width - SPACE;
-			//_commentsCountTextField.x = bmHeart.x - SPACE - _commentsCountTextField.textWidth;
-
 		}
 	}
 }

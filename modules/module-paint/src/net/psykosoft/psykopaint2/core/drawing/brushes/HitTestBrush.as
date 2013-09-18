@@ -48,11 +48,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	
-	public class DrawingApiBrush extends AbstractBrush
+	public class HitTestBrush extends AbstractBrush
 	{
 
-		private var pathPoints:Vector.<Vector2>;
-		private const ps:WhyattSimplification = new WhyattSimplification();
+		private var circle:Circle;
 		private var shpHolder:Sprite;
 		private var previewShp:Shape;
 		private var shp1:Shape;
@@ -61,13 +60,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var opacity:Number;
 		private var drawMatrix:Matrix;
 		private var fillMatrix:Matrix;
+		private var hitMap:BitmapData;
+		private var hitMap2:BitmapData;
+		private const origin:Point = new Point();
+		private var lastFillColor:int;
 		
 		private var testTexture:BitmapData;
 		[Embed( source = "shapes/assets/paper_seamless.png", mimeType="image/png")]
 		protected var SourceImage : Class;
 		private var _pathSmoothing:PsykoParameter;
 		
-		public function DrawingApiBrush()
+		public function HitTestBrush()
 		{
 			super(true);
 			type = BrushType.BLOB;
@@ -92,6 +95,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			shpHolder.addChild(shp3);
 			shp1.filters = [ new BlurFilter(16,16,2)];
 			
+			
 			drawMatrix = new Matrix();
 			fillMatrix = new Matrix();
 			//x,y,u,v,d1,d2,d3,unused
@@ -101,8 +105,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			}
 			testTexture = (new SourceImage() as Bitmap).bitmapData;
 			
-			_pathSmoothing = new PsykoParameter( PsykoParameter.NumberParameter, "Path Smoothing", 0.5, 0, 1 );
-			_parameters.push(_pathSmoothing);
+			
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
@@ -110,6 +113,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			super.activate(view, context, canvasModel, renderer);
 			if (_brushShape)
 				assignBrushShape();
+			if ( !hitMap )
+			{
+				hitMap = new BitmapData(_canvasModel.width,_canvasModel.height,true,0);
+				hitMap2 = new BitmapData(_canvasModel.width,_canvasModel.height,true,0);
+			}
 		}
 
 		override protected function createBrushMesh() : IBrushMesh
@@ -140,10 +148,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		override protected function onPathStart() : void
 		{
 			super.onPathStart();
-			pathPoints = new Vector.<Vector2>();
+			circle = null; 
 			previewShp.graphics.clear();
-			previewShp.graphics.lineStyle(0);
+			
 			_view.stage.quality = StageQuality.HIGH;
+			
+			
+			
 			(_view as Sprite).addChild(previewShp);
 			previewShp.scaleX = 1 / _pathManager.canvasScaleX;
 			previewShp.scaleY = 1 / _pathManager.canvasScaleY; 
@@ -157,16 +168,41 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var i0:int = 0;
 			if (len > 0 && _firstPoint )
 			{
-				previewShp.graphics.moveTo( points[0].x,points[0].y);
-				pathPoints.push( new Vector2(points[0].x,points[0].y));
+				circle = new Circle( points[0].x,points[0].y, 1 );
 				i0++;
 				opacity = points[0].colorsRGBA[3];
 			}
+			var lastR:Number = circle.r;
+			if ( len > 1 )
+			{
+				circle.r = Math.sqrt( Math.pow(circle.c.x - points[len-1].x,2)+ Math.pow(circle.c.y - points[len-1].y,2));
+			}
 			
-			for (var i : int = i0; i < len; i++) {
-				var point : SamplePoint = points[i];
-				previewShp.graphics.lineTo( point.x,point.y);
-				pathPoints.push( new Vector2(point.x,point.y));
+			
+			var colors:Vector.<Number> = points[0].colorsRGBA;
+			
+			
+			_colorStrategy.getColor(circle.c.x,circle.c.y,circle.r*2,colors,1);
+			
+			previewShp.graphics.clear();
+			var fillColor:int = (int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]);
+			previewShp.graphics.beginFill(fillColor);
+			circle.draw(previewShp.graphics);
+			previewShp.graphics.endFill();
+			
+			hitMap2.fillRect(hitMap.rect,0);
+			hitMap2.draw( previewShp );
+			if ( hitMap2.hitTest(origin,1,hitMap,origin,1 ))
+			{
+				circle.r = lastR;
+				previewShp.graphics.clear();
+				previewShp.graphics.beginFill(lastFillColor);
+				circle.draw(previewShp.graphics);
+				previewShp.graphics.endFill();
+				hitMap2.fillRect(hitMap.rect,0);
+				hitMap2.draw( previewShp );
+			} else {
+				lastFillColor = fillColor;
 			}
 			
 			if ( _firstPoint )
@@ -190,96 +226,63 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			g3.clear();
 			g3.lineStyle();
 			
-			var smoothing:Number = _pathSmoothing.numberValue;
-			
-			if ( pathPoints.length > 1 )
+			if ( circle != null )
 			{
+			 	hitMap.draw(hitMap2);
 				var colors:Vector.<Number> = _appendVO.point.colorsRGBA;
-				var lm:LinearMesh = new LinearMesh();
-				pathPoints = ps.simplifyPath( pathPoints, 100);
-				lm.addPathFromPoints(pathPoints);
-				var polys:Vector.<Polygon> = lm.getPolygons();
-				if ( polys.length == 0 )
-				{
-					lm.addPointConnection(pathPoints[0],pathPoints[pathPoints.length-1]);
-					polys= lm.getPolygons();
-				}
 				
-				if ( polys.length > 0 )
-				{
+				fillMatrix.identity();
+				fillMatrix.rotate( (Math.random()-Math.random())*Math.PI*0.5);
+				fillMatrix.translate(Math.random()*1024,Math.random()*1024);
+					
+				g2.beginBitmapFill(testTexture,fillMatrix,true,true);
+				circle.draw(g2);
+				g2.endFill();
+					
+				_colorStrategy.getColor(circle.c.x,circle.c.y,circle.r * 2,colors,1);
+				g3.beginFill((int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]),opacity);
+				circle.draw(g3);
+				g3.endFill();
+					
+				g1.beginFill(0x000000);
+				circle.draw(g1);
+				g1.endFill();
+				
 					
 					
-					for ( var i:int = 0; i < polys.length; i++ )
-					{
-						var poly:Polygon = polys[i];
-						
-						var center:Vector2 = poly.centroid;
-						var polyBounds:Rectangle = poly.getBoundingRect();
-						
-						var mp:MixedPath = PolygonUtils.getSmoothPath(poly,smoothing);
-						
-						fillMatrix.identity();
-						
-						fillMatrix.rotate( (Math.random()-Math.random())*Math.PI*0.5);
-						//var s:Number = 0.1 + Math.random() * 0.03;
-						//fillMatrix.scale(s,s);
-						fillMatrix.translate(Math.random()*1024,Math.random()*1024);
-						
-						g2.beginBitmapFill(testTexture,fillMatrix,true,true);
-						mp.draw(g2);
-						g2.endFill();
-						
-						_colorStrategy.getColor(center.x,center.y,Math.min(polyBounds.width,polyBounds.height) * 0.5,colors,1);
-						g3.beginFill((int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]),opacity);
-						mp.draw(g3);
-						g3.endFill();
-						for ( var j:int = 0; j < poly.pointCount; j++ )
-						{
-							if( Math.random() < 0.5 ) poly.getPointAt(j).minus(poly.getNormalAtIndex(j,16 * (Math.random()-Math.random())));
-						}
-						mp = PolygonUtils.getSmoothPath(poly,1);
-						
-						g1.beginFill(0x000000);
-						mp.draw(g1);
-						g1.endFill();
-					}
+				var bds:Rectangle = shpHolder.getBounds(shpHolder);
+				bds.x -= 8;
+				bds.y -= 8;
+				bds.width += 16;
+				bds.height += 16;
+				var bm:BitmapData = (_brushShape as RenderTextureBrushShape)._brushMap;
+				drawMatrix.tx = -bds.x + 1;
+				drawMatrix.ty = -bds.y + 1;
+				_appendVO.diagonalAngle = Math.atan2(bds.height,bds.width);
+				_appendVO.diagonalLength = Math.sqrt(bds.width*bds.width+bds.height*bds.height); 
+				_appendVO.size = _canvasScaleW; 
+				_appendVO.point.x = bds.x -1 + bds.width * 0.5
+				_appendVO.point.y = bds.y -1 + bds.height * 0.5;
+				_appendVO.point.normalizeXY(_canvasScaleW,_canvasScaleH);
+				_appendVO.uvBounds.width  = (bds.width + 1) / _brushShape.size;
+				_appendVO.uvBounds.height = (bds.height +1) / _brushShape.size;
+				
 					
-					
-					var bds:Rectangle = shpHolder.getBounds(shpHolder);
-					bds.x -= 8;
-					bds.y -= 8;
-					bds.width += 16;
-					bds.height += 16;
-					var bm:BitmapData = (_brushShape as RenderTextureBrushShape)._brushMap;
-					drawMatrix.tx = -bds.x + 1;
-					drawMatrix.ty = -bds.y + 1;
-					_appendVO.diagonalAngle = Math.atan2(bds.height,bds.width);
-					_appendVO.diagonalLength = Math.sqrt(bds.width*bds.width+bds.height*bds.height); 
-					_appendVO.size = _canvasScaleW; 
-					_appendVO.point.x = bds.x -1 + bds.width * 0.5
-					_appendVO.point.y = bds.y -1 + bds.height * 0.5;
-					_appendVO.point.normalizeXY(_canvasScaleW,_canvasScaleH);
-					_appendVO.uvBounds.width  = (bds.width + 1) / _brushShape.size;
-					_appendVO.uvBounds.height = (bds.height +1) / _brushShape.size;
-					
-						
-					bds.x = bds.y = 0;
-					bds.width += 2;
-					bds.height += 2;
-					bm.fillRect(bds,0);
-					bm.drawWithQuality(shpHolder,drawMatrix,null,"normal",null,true,StageQuality.HIGH);
-					//bm.drawWithQuality(shp1,drawMatrix,null,"normal",null,true,StageQuality.HIGH);
-					//bm.drawWithQuality(shp2,drawMatrix,null,"multiply",null,true,StageQuality.HIGH);
-					_brushShape.update(false);
-					
-					
-					
-					_brushMesh.append(_appendVO);
-					
-					
-				}
+				bds.x = bds.y = 0;
+				bds.width += 2;
+				bds.height += 2;
+				bm.fillRect(bds,0);
+				bm.drawWithQuality(shpHolder,drawMatrix,null,"normal",null,true,StageQuality.HIGH);
+				//bm.drawWithQuality(shp1,drawMatrix,null,"normal",null,true,StageQuality.HIGH);
+				//bm.drawWithQuality(shp2,drawMatrix,null,"multiply",null,true,StageQuality.HIGH);
+				_brushShape.update(false);
+				
+				
+				
+				_brushMesh.append(_appendVO);
+			}		
 				invalidateRender();
-			}
+			
 			setTimeout(super.onPathEnd,1);
 		}
 		override protected function onPickColor( point : SamplePoint, pickRadius : Number, smoothFactor : Number ) : void
