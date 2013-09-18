@@ -12,11 +12,15 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
@@ -110,6 +114,10 @@ package net.psykosoft.psykopaint2.home.config
 	   		_injector.map( RequestOpenPaintingDataVOSignal ).asSingleton();
 	   		_injector.map( RequestHomeRootViewRemovalSignal ).asSingleton();
 	   		_injector.map( NotifyHomeViewSceneReadySignal ).asSingleton();
+			_injector.map( RequestBrowseSampleImagesSignal ).asSingleton();
+			_injector.map( RequestBrowseUserImagesSignal ).asSingleton();
+			_injector.map( RequestExitPickAnImageSignal ).asSingleton();
+			_injector.map( RequestRetrieveCameraImageSignal ).asSingleton();
 		}
 
 		// -----------------------

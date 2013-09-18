@@ -4,11 +4,11 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
-	import net.psykosoft.psykopaint2.core.signals.RequestBrowseSampleImagesSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestBrowseUserImagesSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestExitPickAnImageSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestRetrieveCameraImageSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
 	public class PickAnImageSubNavViewMediator extends SubNavigationMediatorBase

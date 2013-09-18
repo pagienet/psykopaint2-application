@@ -51,14 +51,11 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestBrowseSampleImagesSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestExitPickAnImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFrameUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
@@ -73,7 +70,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingInfoFileReadSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestRetrieveCameraImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
@@ -220,8 +216,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestSaveCPUForUISignal ).asSingleton();
 			_injector.map( RequestResumeCPUUsageForUISignal ).asSingleton();
 			_injector.map( RequestNavigationDisposalSignal ).asSingleton();
-			_injector.map( RequestBrowseSampleImagesSignal ).asSingleton();
-			_injector.map( RequestBrowseUserImagesSignal ).asSingleton();
 			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
 			_injector.map( RequestShowPopUpSignal ).asSingleton();
 			_injector.map( RequestHidePopUpSignal ).asSingleton();
@@ -231,8 +225,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 			_injector.map( NotifyUserLoggedInSignal ).asSingleton();
 			_injector.map( NotifyUserLogInFailedSignal ).asSingleton();
-			_injector.map( RequestExitPickAnImageSignal ).asSingleton();
-			_injector.map( RequestRetrieveCameraImageSignal ).asSingleton();
 
 			// services
 			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);

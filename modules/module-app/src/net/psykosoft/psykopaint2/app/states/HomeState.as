@@ -8,12 +8,12 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestBrowseSampleImagesSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestBrowseUserImagesSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestExitPickAnImageSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestRetrieveCameraImageSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 
 	use namespace ns_state_machine;
