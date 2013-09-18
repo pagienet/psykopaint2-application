@@ -38,29 +38,31 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 
-				case PickAnImageSubNavView.ID_BACK:
+				case PickAnImageSubNavView.ID_BACK: {
 					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
 					break;
+				}
 
-				case PickAnImageSubNavView.ID_USER:
+				case PickAnImageSubNavView.ID_USER: {
 					requestBrowseUserImagesSignal.dispatch();
 					break;
+				}
 
-				case PickAnImageSubNavView.ID_SAMPLES:
+				case PickAnImageSubNavView.ID_SAMPLES: {
 					requestBrowseSampleImagesSignal.dispatch();
 					break;
+				}
 
-/*				case PickAnImageSubNavView.ID_FACEBOOK:
+				case PickAnImageSubNavView.ID_CAMERA: {
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.CAPTURE_IMAGE );
+					break;
+				}
+
+				/*				case PickAnImageSubNavView.ID_FACEBOOK:
 				{
 					//TODO.
 					break;
 				}*/
-
-				case PickAnImageSubNavView.ID_CAMERA:
-				{
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.CAPTURE_IMAGE );
-					break;
-				}
 			}
 		}
 	}
