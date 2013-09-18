@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.book.views.base
 	import net.psykosoft.psykopaint2.book.views.book.BookView;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	import org.osflash.signals.Signal;
 
@@ -28,7 +29,7 @@ package net.psykosoft.psykopaint2.book.views.base
 			_bookView.addEventListener( Event.ADDED_TO_STAGE, onBookViewAddedToStage );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK, BookSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK, SubNavigationViewBase ); // Abstract class linkage causes the navigation to keep the last used view.
 		}
 
 		private function onBookViewAddedToStage( event:Event ):void {
