@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterDamageBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.AbstractPathEngine;
@@ -121,6 +122,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							</ColorDecorator>
 						</pathengine>
 				</brush>
+
 			</brushkits>
 		
 		public static const brushKitDataPhotoPaintMode:XML = 
@@ -472,6 +474,13 @@ package net.psykosoft.psykopaint2.paint.configuration
 							</ColorDecorator>
 						</pathengine>
 				</brush>-->
+				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
+					<parameter id={WaterDamageBrush.PARAMETER_N_SURFACE_INFLUENCE} previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
+					<parameter id={WaterDamageBrush.PARAMETER_N_PIGMENT_FLOW} path="brush" value="0.5" showInUI="1"/>
+					<!--<parameter id="Pigment bleaching" path="brush" value="0.07" showInUI="1"/> -->
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet" showInUI="0"/>
+					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}/>
+				</brush>
 		</brushkits>;
 		
 		
@@ -763,7 +772,15 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</BumpDecorator>
 					</pathengine>
 				</brush>
-				
+
+				<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
+					<parameter id={WaterDamageBrush.PARAMETER_N_SURFACE_INFLUENCE} previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
+					<parameter id={WaterDamageBrush.PARAMETER_N_PIGMENT_FLOW} path="brush" value="0.5" showInUI="1"/>
+					<!--<parameter id="Pigment bleaching" path="brush" value="0.07" showInUI="1"/> -->
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet" showInUI="0"/>
+					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}/>
+				</brush>
+
 		</brushkits>;
 	/*
 		public static const brushKitData:XML = 

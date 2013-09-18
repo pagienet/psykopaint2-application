@@ -203,7 +203,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		protected function sendEndCallbacks() : void
 		{
-			if (!_strokeInProgress) _view.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame, false );
+			if (!_strokeInProgress)
+				_view.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame, false );
 		
 			if (_startCallbacksSent && _callbacks.onPathEnd) _callbacks.onPathEnd.apply(_callbacks.callbackObject);
 			_startCallbacksSent = false;

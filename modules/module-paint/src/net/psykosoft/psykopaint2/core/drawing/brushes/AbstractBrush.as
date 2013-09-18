@@ -254,6 +254,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			// override for async brushes and call finalizeStroke when necessary
 			growBounds(_brushMesh.getBounds());
 			finalizeStroke();
+			_snapshot = null;
 			_inProgress = false;
 			_renderInvalid = false;
 		}
@@ -267,6 +268,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		protected function invalidateRender() : void
 		{
+			// icky!
+			if (!_snapshot) return;
 			_renderInvalid = true;
 		}
 
@@ -309,7 +312,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function draw() : void
 		{
 			if (!_renderInvalid) return;
-
 			drawColor();
 			if (_drawNormalsOrSpecular)
 				drawNormalsAndSpecular();
