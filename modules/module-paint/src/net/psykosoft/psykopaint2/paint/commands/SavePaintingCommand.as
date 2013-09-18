@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
@@ -18,9 +17,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	public class SavePaintingCommand extends SequenceMacro
 	{
-		[Inject]
-		public var userModel:UserModel;
-
 		[Inject]
 		public var paintingModel:PaintingModel;
 
@@ -72,7 +68,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function mapMacroConsistentData():void {
 			trace( this, "mapping..." );
-			_savingVoInstance = new SavePaintingVO( paintingModel.activePaintingId, userModel.uniqueUserId );
+			_savingVoInstance = new SavePaintingVO( paintingModel.activePaintingId );
 			injector.map( SavePaintingVO ).toValue( _savingVoInstance );
 		}
 

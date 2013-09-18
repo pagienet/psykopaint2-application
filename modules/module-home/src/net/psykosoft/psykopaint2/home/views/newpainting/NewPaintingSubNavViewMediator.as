@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.models.UserModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
@@ -29,9 +28,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		[Inject]
 		public var paintingModel:PaintingModel;
-
-		[Inject]
-		public var userModel:UserModel;
 
 		[Inject]
 		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
@@ -81,7 +77,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				case NewPaintingSubNavView.ID_NEW: {
 					PaintModeModel.activeMode = PaintMode.COLOR_MODE;
 					requestDrawingCoreResetSignal.dispatch();
-					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + PaintingInfoVO.DEFAULT_VO_ID;
+					paintingModel.activePaintingId = "psyko-" + PaintingInfoVO.DEFAULT_VO_ID;
 					requestNavigationStateChange( NavigationStateType.HOME_PICK_SURFACE );
 					requestHomePanningToggleSignal.dispatch( false );
 					break;
@@ -91,7 +87,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				case NewPaintingSubNavView.ID_NEW_PHOTO: {
 					PaintModeModel.activeMode = PaintMode.PHOTO_MODE;
 					requestDrawingCoreResetSignal.dispatch();
-					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + PaintingInfoVO.DEFAULT_VO_ID;
+					paintingModel.activePaintingId = "psyko-" + PaintingInfoVO.DEFAULT_VO_ID;
 					pickDefaultSurfaceAndContinueToPickImage();
 					requestHomePanningToggleSignal.dispatch( false );
 					break;
@@ -107,7 +103,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				//  Paintings.
 				default: {
-					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + id;
+					paintingModel.activePaintingId = "psyko-" + id;
 					var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
 					trace( this, "clicked on painting: " + vo.id );
 					requestEaselUpdateSignal.dispatch( vo, true, false );

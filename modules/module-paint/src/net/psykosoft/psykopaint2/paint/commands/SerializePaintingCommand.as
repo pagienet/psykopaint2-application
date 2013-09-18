@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.paint.commands
 				saveVO.info.dispose();
 			}
 
-			saveVO.info = factory.createFromData( saveVO.data, saveVO.paintingId, saveVO.userId, generateThumbnail() );
+			saveVO.info = factory.createFromData( saveVO.data, saveVO.paintingId, generateThumbnail() );
 			saveVO.paintingId = saveVO.info.id;
 
 			var infoSerializer:PaintingInfoSerializer = new PaintingInfoSerializer();

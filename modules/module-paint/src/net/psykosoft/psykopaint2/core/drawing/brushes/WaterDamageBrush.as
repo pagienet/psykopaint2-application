@@ -1,9 +1,9 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
- 	import flash.display3D.Context3DBlendFactor;
+	import flash.display.DisplayObject;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
-	import flash.display3D.textures.Texture;
-	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
@@ -22,10 +22,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.RenderPigmentRGB;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.UpdateVelocities;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
+	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
 	public class WaterDamageBrush extends SimulationBrush
 	{
+		public static const PARAMETER_N_SURFACE_INFLUENCE:String = "Surface influence";
+		public static const PARAMETER_N_GRAVITY_INFLUENCE:String = "Gravity influence";
+		public static const PARAMETER_N_VISCOSITY:String = "Viscosity";
+		public static const PARAMETER_N_DRAG:String = "Drag";
+		public static const PARAMETER_N_PIGMENT_FLOW:String = "Pigment flow";
+
 		private var _velocityPressureField : TrackedTexture;
 		private var _halfSizedBackBuffer : TrackedTexture;
 		private var _velocityPressureFieldBackBuffer : TrackedTexture;
@@ -60,11 +68,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			super(false);
 
-			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence", 0.3, 0, 5);
-			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter, "Gravity influence", 0.1, 0, .3);
-			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, "Viscosity", .1, 0, 1);
-			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, "Drag",.1, 0, .2);
-			_pigmentFlow = new PsykoParameter( PsykoParameter.NumberParameter, "Pigment flow", .5, 0, 1);
+			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, 0.3, 0, 5);
+			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_GRAVITY_INFLUENCE, 0.1, 0, .3);
+			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_VISCOSITY, .1, 0, 1);
+			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_DRAG,.1, 0, .2);
+			_pigmentFlow = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_FLOW, .5, 0, 1);
 
 			_parameters.push( _surfaceRelief, _gravityStrength, _pigmentFlow);
 
@@ -141,10 +149,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			}
 		}
 
-		override protected function resetSimulation() : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer : CanvasRenderer) : void
 		{
+			super.activate(view, context, canvasModel, renderer);
+
 			if (!_velocityPressureField)
 				initBuffers();
+		}
+
+		override protected function resetSimulation() : void
+		{
+			_renderInvalid = false;
 
 			_context.setRenderToTexture(_pigmentColorField.texture, true);
 			_context.clear();

@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.data
 		{
 		}
 
-		public function createFromData(paintingData : PaintingDataVO, paintingId : String, userId : String, thumbnail : BitmapData) : PaintingInfoVO
+		public function createFromData(paintingData : PaintingDataVO, paintingId : String, thumbnail : BitmapData) : PaintingInfoVO
 		{
 			var info : PaintingInfoVO = new PaintingInfoVO();
 			var dateMs:Number = new Date().getTime();
@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.core.data
 			trace( this, "paintingDate: " + paintingDate );
 			if( isNaN( paintingDate ) ) {
 				// Create id and focus model on it.
-				paintingId = userId + "-" + dateMs;
+				paintingId = "psyko-" + dateMs;
 				trace( this, "creating new id: " + paintingId );
 			}
 
