@@ -1,5 +1,10 @@
 package net.psykosoft.psykopaint2.core.services
 {
+	import by.blooddy.crypto.MD5;
+	import by.blooddy.crypto.SHA1;
+	import by.blooddy.crypto.SHA224;
+	import by.blooddy.crypto.SHA256;
+
 	import flash.events.AsyncErrorEvent;
 	import flash.events.IOErrorEvent;
 	import flash.events.NetStatusEvent;
@@ -84,9 +89,9 @@ package net.psykosoft.psykopaint2.core.services
 			_connection.call("Main/getUserPaintings", new Responder(onSuccess, onFail), userID, index, amount);
 		}
 
-		public function getFollowedUserImages(selfUserID : uint, index : uint, amount : uint, onSuccess : Function, onFail : Function)
+		public function getFollowedUserImages(sessionID : String, index : uint, amount : uint, onSuccess : Function, onFail : Function)
 		{
-			_connection.call("Main/getFollowedUsersPaintings", new Responder(onSuccess, onFail), selfUserID, index, amount);
+			_connection.call("Main/getFollowedUsersPaintings", new Responder(onSuccess, onFail), sessionID, index, amount);
 		}
 
 		public function getMostLovedImages(index : int, amount : int, onSuccess : Function, onFail : Function) : void
@@ -97,6 +102,11 @@ package net.psykosoft.psykopaint2.core.services
 		public function getMostRecentPaintings(index : int, amount : int, onSuccess : Function, onFail : Function) : void
 		{
 			_connection.call("Main/getLastPaintings", new Responder(onSuccess, onFail), index, amount);
+		}
+
+		public function logIn(email : String, password : String, onSuccess : Function, onFail : Function) : void
+		{
+			_connection.call("Main/loginUser", new Responder(onSuccess, onFail), email, MD5.hash(email + MD5.hash(password)));
 		}
 	}
 }

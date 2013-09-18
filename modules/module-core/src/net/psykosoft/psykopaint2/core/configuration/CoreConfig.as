@@ -48,6 +48,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifySplashScreenRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBrowseUserImagesSignal;
@@ -225,6 +227,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyPaintingInfoFileReadSignal ).asSingleton();
 			_injector.map( NotifyGyroscopeUpdateSignal ).asSingleton();
 			_injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
+			_injector.map( NotifyUserLoggedInSignal ).asSingleton();
+			_injector.map( NotifyUserLogInFailedSignal ).asSingleton();
 
 			// services
 			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);

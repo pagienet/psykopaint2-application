@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.book.services
 					amfBridge.getUserImages(userProxy.userID, index, amount, onUserImagesSuccess, onFailed);
 					break;
 				case GalleryType.FOLLOWING:
-					amfBridge.getFollowedUserImages(userProxy.userID, index, amount, onFollowedUserImagesSuccess, onFailed);
+					amfBridge.getFollowedUserImages(userProxy.sessionID, index, amount, onFollowedUserImagesSuccess, onFailed);
 					break;
 				case GalleryType.MOST_LOVED:
 					amfBridge.getMostLovedImages(index, amount, onMostLovedSuccess, onFailed);
