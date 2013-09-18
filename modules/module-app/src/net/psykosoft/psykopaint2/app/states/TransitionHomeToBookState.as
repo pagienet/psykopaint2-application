@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
-	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 
 	public class TransitionHomeToBookState extends State
 	{

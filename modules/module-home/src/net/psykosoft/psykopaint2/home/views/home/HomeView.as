@@ -157,7 +157,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Always start at easel.
 			_scrollCameraController.jumpToSnapPointIndex( 1 );
 
-			// TODO: needed?
+			// TODO: needed? - it seems to be required for a correct positioning for 1st zoom out
 //			time = getTimer();
 			_stage3dProxy.clear();
 			_view.render();
