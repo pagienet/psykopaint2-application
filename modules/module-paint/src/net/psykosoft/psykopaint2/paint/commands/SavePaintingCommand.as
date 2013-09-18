@@ -14,7 +14,6 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.paint.commands.WritePaintingDataANECommand;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
 
 	public class SavePaintingCommand extends SequenceMacro

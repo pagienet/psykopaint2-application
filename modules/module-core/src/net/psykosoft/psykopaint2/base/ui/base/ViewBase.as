@@ -65,8 +65,8 @@ package net.psykosoft.psykopaint2.base.ui.base
 		public function disable():void {
 			if( !visible ) return;
 			trace( this, "disabled" );
-			onDisabled();
 			_isEnabled = visible = false;
+			onDisabled();
 			disabledSignal.dispatch();
 			if( hasEventListener( Event.ENTER_FRAME ) ) {
 				removeEventListener( Event.ENTER_FRAME, onEnterFrame );
