@@ -42,10 +42,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			trace( this, "button clicked - id: " + id );
 			switch( id ) {
 				case EditBrushSubNavView.ID_BACK:
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREVIOUS );
+					requestNavigationStateChange( NavigationStateType.PREVIOUS );
 					break;
 				case EditBrushSubNavView.ID_COLOR:
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_COLOR);
+					requestNavigationStateChange( NavigationStateType.PAINT_COLOR);
 					break;
 				default:
 					view.openParameterWithId( id );
