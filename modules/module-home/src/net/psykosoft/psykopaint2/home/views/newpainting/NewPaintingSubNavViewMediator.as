@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataSignal;
 
 	public class NewPaintingSubNavViewMediator extends SubNavigationMediatorBase
@@ -31,6 +32,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		[Inject]
 		public var userModel:UserModel;
+
+		[Inject]
+		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
 
 		override public function initialize():void {
 
@@ -79,6 +83,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + PaintingInfoVO.DEFAULT_VO_ID;
 					requestNavigationStateChange( NavigationStateType.HOME_PICK_SURFACE );
+					requestHomePanningToggleSignal.dispatch( false );
 					break;
 				}
 
@@ -88,6 +93,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + PaintingInfoVO.DEFAULT_VO_ID;
 					pickDefaultSurfaceAndContinueToPickImage();
+					requestHomePanningToggleSignal.dispatch( false );
 					break;
 				}
 

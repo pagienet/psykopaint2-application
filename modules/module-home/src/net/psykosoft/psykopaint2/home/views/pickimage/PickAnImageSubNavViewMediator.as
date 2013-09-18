@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 
 	public class PickAnImageSubNavViewMediator extends SubNavigationMediatorBase
@@ -30,6 +31,9 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		[Inject]
 		public var requestExitPickAnImageSignal:RequestExitPickAnImageSignal;
 
+		[Inject]
+		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
+
 		override public function initialize():void {
 
 			// Init.
@@ -47,6 +51,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 				case PickAnImageSubNavView.ID_BACK: {
 					requestExitPickAnImageSignal.dispatch();
+					requestHomePanningToggleSignal.dispatch( true );
 					break;
 				}
 

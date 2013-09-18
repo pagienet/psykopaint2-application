@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	import org.gestouch.events.GestureEvent;
@@ -84,6 +85,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyGyroscopeUpdateSignal:NotifyGyroscopeUpdateSignal;
 
+		[Inject]
+		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
+
 		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightDistance : Number = 1000;
 
@@ -108,6 +112,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHomeViewScrollSignal.add( onScrollRequested );
 			requestHomeIntroSignal.add( onIntroRequested );
 			notifyGyroscopeUpdateSignal.add ( onGyroscopeUpdate );
+			requestHomePanningToggleSignal.add ( onTogglePanning );
 
 			// From view.
 			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
@@ -141,10 +146,16 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.disabledSignal.remove( onDisabled );
 			view.sceneReadySignal.remove( onSceneReady );
 			notifyGyroscopeUpdateSignal.remove ( onGyroscopeUpdate );
+			requestHomePanningToggleSignal.remove ( onTogglePanning );
 
 			view.dispose();
 
 			super.destroy();
+		}
+
+		private var _allowPanning:Boolean = true;
+		private function onTogglePanning( enable:Boolean ):void {
+			_allowPanning = enable;
 		}
 
 		private function onGyroscopeUpdate(orientationMatrix : Matrix3D) : void
@@ -202,7 +213,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
 //			trace( this, "onGlobalGesture: " + gestureType );
-			if( !view.visible ) return;
+			if( !view.visible || !_allowPanning ) return;
 			if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN || gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
 				view.scrollCameraController.startPanInteraction();
 			}
