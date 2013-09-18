@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.paint.configuration
 {
+	import flash.profiler.showRedrawRegions;
+	
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
@@ -93,9 +95,23 @@ package net.psykosoft.psykopaint2.paint.configuration
 					</pathengine>
 				</brush>
 				
-				<brush engine={BrushType.BLOB} name="Test">
+				<brush engine={BrushType.BLOB} name="Papercut">
 						<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="render"/>
+						<parameter id="Path Smoothing" path="brush" value="0.5" showInUI="1"/>
 
+						<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
+							<ColorDecorator>
+								<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_0" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
+								<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_0" value="0.9" showInUI="1"/>
+								<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING} path="pathengine.pointdecorator_0" value1="1" value2="1" />
+							
+							</ColorDecorator>
+						</pathengine>
+				</brush>
+
+				<brush engine={BrushType.HITTEST} name="Circles">
+						<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="render"/>
+						
 						<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 							<ColorDecorator>
 								<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_0" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
