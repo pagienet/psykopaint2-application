@@ -31,8 +31,6 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootViewMediator;
-	import net.psykosoft.psykopaint2.book.views.book.BookSubNavView;
-	import net.psykosoft.psykopaint2.book.views.book.BookSubNavViewMediator;
 	import net.psykosoft.psykopaint2.book.views.book.BookView;
 	import net.psykosoft.psykopaint2.book.views.book.BookViewMediator;
 
@@ -139,7 +137,6 @@ package net.psykosoft.psykopaint2.book.config
 		{
 			_mediatorMap.map(BookRootView).toMediator(BookRootViewMediator);
 			_mediatorMap.map(BookView).toMediator(BookViewMediator);
-			_mediatorMap.map(BookSubNavView).toMediator(BookSubNavViewMediator);
 		}
 	}
 }
