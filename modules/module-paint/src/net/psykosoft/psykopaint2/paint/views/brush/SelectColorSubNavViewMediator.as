@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 				case SelectColorSubNavView.ID_BACK:
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREVIOUS );
+					requestNavigationStateChange( NavigationStateType.PREVIOUS );
 					break;
 				
 				// WARNING: be careful if another side button is added since default should only be for parameter buttons.

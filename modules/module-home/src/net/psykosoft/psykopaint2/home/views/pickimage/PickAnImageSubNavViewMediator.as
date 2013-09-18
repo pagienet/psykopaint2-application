@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			switch( id ) {
 
 				case PickAnImageSubNavView.ID_BACK:
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
+					requestNavigationStateChange( NavigationStateType.HOME_ON_EASEL );
 					break;
 
 				case PickAnImageSubNavView.ID_USER:
@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 				case PickAnImageSubNavView.ID_CAMERA:
 				{
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.CAPTURE_IMAGE );
+					requestNavigationStateChange( NavigationStateType.CAPTURE_IMAGE );
 					break;
 				}
 			}

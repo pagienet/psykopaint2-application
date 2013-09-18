@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 				case SettingsSubNavView.ID_WALLPAPER: {
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.SETTINGS_WALLPAPER );
+					requestNavigationStateChange( NavigationStateType.SETTINGS_WALLPAPER );
 					break;
 				}
 			}

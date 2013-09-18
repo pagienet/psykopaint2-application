@@ -101,7 +101,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case CanvasSubNavView.ID_PICK_A_BRUSH:
 				{
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_SELECT_BRUSH );
+					requestNavigationStateChange( NavigationStateType.PAINT_SELECT_BRUSH );
 					break;
 				}
 			}
