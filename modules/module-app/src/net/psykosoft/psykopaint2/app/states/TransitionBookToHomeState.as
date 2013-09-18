@@ -26,12 +26,15 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var notifyAnimateBookOutCompleteSignal : NotifyAnimateBookOutCompleteSignal;
 
+		private var _targetNavigationState:String;
+
 		public function TransitionBookToHomeState()
 		{
 		}
 
 		override ns_state_machine function activate(data : Object = null) : void
 		{
+			_targetNavigationState = data.target;
 			notifyAnimateBookOutCompleteSignal.addOnce(onAnimateBookOutComplete);
 			requestAnimateBookOutSignal.dispatch();
 
@@ -40,7 +43,7 @@ package net.psykosoft.psykopaint2.app.states
 		private function onAnimateBookOutComplete() : void
 		{
 			stateMachine.setActiveState(homeState);
-			requestStateChangeSignal.dispatch(NavigationStateType.PICK_IMAGE);
+			requestStateChangeSignal.dispatch(_targetNavigationState);
 		}
 
 		override ns_state_machine function deactivate() : void

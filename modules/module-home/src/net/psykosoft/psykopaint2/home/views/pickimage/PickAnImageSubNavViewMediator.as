@@ -7,6 +7,8 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import net.psykosoft.psykopaint2.core.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestExitPickAnImageSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestRetrieveCameraImageSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
 	public class PickAnImageSubNavViewMediator extends SubNavigationMediatorBase
@@ -22,6 +24,12 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		[Inject]
 		public var requestBrowseUserImagesSignal:RequestBrowseUserImagesSignal;
+
+		[Inject]
+		public var requestRetrieveCameraImageSignal:RequestRetrieveCameraImageSignal;
+
+		[Inject]
+		public var requestExitPickAnImageSignal:RequestExitPickAnImageSignal;
 
 		override public function initialize():void {
 
@@ -39,7 +47,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			switch( id ) {
 
 				case PickAnImageSubNavView.ID_BACK: {
-					requestNavigationStateChange( NavigationStateType.HOME_ON_EASEL );
+					requestExitPickAnImageSignal.dispatch();
 					break;
 				}
 
@@ -54,11 +62,11 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 				}
 
 				case PickAnImageSubNavView.ID_CAMERA: {
-					requestNavigationStateChange( NavigationStateType.CAPTURE_IMAGE );
+					requestRetrieveCameraImageSignal.dispatch();
 					break;
 				}
 
-				/*				case PickAnImageSubNavView.ID_FACEBOOK:
+				/* case PickAnImageSubNavView.ID_FACEBOOK:
 				{
 					//TODO.
 					break;

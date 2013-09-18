@@ -11,7 +11,9 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestExitPickAnImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestRetrieveCameraImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 
 	use namespace ns_state_machine;
@@ -51,6 +53,12 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestBrowseUserImagesSignal : RequestBrowseUserImagesSignal;
 
+		[Inject]
+		public var requestRetrieveCameraImageSignal:RequestRetrieveCameraImageSignal;
+
+		[Inject]
+		public var requestExitPickAnImageSignal:RequestExitPickAnImageSignal;
+
 		public function HomeState()
 		{
 		}
@@ -70,6 +78,8 @@ package net.psykosoft.psykopaint2.app.states
 			requestCropSourceImageSignal.add(onRequestCropState);
 			requestBrowseSampleImagesSignal.add(onBrowseSampleImagesSignal);
 			requestBrowseUserImagesSignal.add(onBrowseUserImagesSignal);
+			requestRetrieveCameraImageSignal.add(onRequestRetrieveCameraImageSignal);
+			requestExitPickAnImageSignal.add(onRequestExitPickAnImageSignal);
 		}
 
 		override ns_state_machine function deactivate() : void
@@ -78,6 +88,8 @@ package net.psykosoft.psykopaint2.app.states
 			requestCropSourceImageSignal.remove(onRequestCropState);
 			requestBrowseSampleImagesSignal.remove(onBrowseSampleImagesSignal);
 			requestBrowseUserImagesSignal.remove(onBrowseUserImagesSignal);
+			requestRetrieveCameraImageSignal.remove(onRequestRetrieveCameraImageSignal);
+			requestExitPickAnImageSignal.remove(onRequestExitPickAnImageSignal);
 		}
 
 		private function onRequestOpenPaintingDataVO(paintingData : PaintingDataVO) : void
@@ -101,6 +113,14 @@ package net.psykosoft.psykopaint2.app.states
 		private function onBrowseSampleImagesSignal() : void
 		{
 			stateMachine.setActiveState(transitionToBookState, BookImageSource.SAMPLE_IMAGES);
+		}
+
+		private function onRequestExitPickAnImageSignal():void {
+			requestStateChange.dispatch( NavigationStateType.HOME_ON_EASEL );
+		}
+
+		private function onRequestRetrieveCameraImageSignal():void {
+			requestStateChange.dispatch( NavigationStateType.CAPTURE_IMAGE );
 		}
 	}
 }
