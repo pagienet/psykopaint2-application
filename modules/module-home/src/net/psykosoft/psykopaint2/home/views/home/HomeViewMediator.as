@@ -254,19 +254,19 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Trigger SETTINGS state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState != NavigationStateType.SETTINGS && paintingIndex == 0 ) {
-				requestNavigationStateChange( NavigationStateType.SETTINGS );
+				requestStateChange__OLD_TO_REMOVE( NavigationStateType.SETTINGS );
 				return;
 			}
 
 			// Trigger NEW PAINTING state if closest to easel ( index 1 ).
 			if( stateModel.currentState != NavigationStateType.HOME_ON_EASEL && paintingIndex == 1 ) {
-				requestNavigationStateChange( NavigationStateType.HOME_ON_EASEL );
+				requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
 				return;
 			}
 
 			// Restore HOME state if closest to home painting ( index 2 ).
 			if( stateModel.currentState != NavigationStateType.HOME && paintingIndex == homePaintingIndex ) {
-				requestNavigationStateChange( NavigationStateType.HOME );
+				requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME );
 				return;
 			}
 
@@ -278,7 +278,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 				// TODO: delete this bit
 				if( stateModel.currentState != NavigationStateType.HOME ) {
-					requestNavigationStateChange( NavigationStateType.HOME );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME );
 					return;
 				}
 

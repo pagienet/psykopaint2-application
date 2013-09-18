@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 				case ColorStyleSubNavView.ID_PICK_AN_IMAGE: {
-					requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PICK_IMAGE );
 					break;
 				}
 				case ColorStyleSubNavView.ID_CONFIRM: {

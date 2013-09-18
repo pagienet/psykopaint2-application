@@ -65,7 +65,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 			switch( id ) {
 				case PickSurfaceSubNavView.ID_BACK:
-					requestNavigationStateChange( NavigationStateType.HOME_ON_EASEL );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
 					break;
 				case PickSurfaceSubNavView.ID_CONTINUE:
 					continueToColorPaint();

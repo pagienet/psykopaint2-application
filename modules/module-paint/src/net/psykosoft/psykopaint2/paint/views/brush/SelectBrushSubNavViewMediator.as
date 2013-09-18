@@ -35,17 +35,17 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			switch( id ) {
 
 				case SelectBrushSubNavView.ID_BACK:
-					requestNavigationStateChange( NavigationStateType.PAINT );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT );
 					break;
 				
 				case SelectBrushSubNavView.ID_EDIT_BRUSH:
-					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_BRUSH );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_ADJUST_BRUSH );
 					break;
 
 				// Center buttons select a brush.
 				default:
 					activateBrush( id );
-					if( hasParameters() ) requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_BRUSH );
+					if( hasParameters() ) requestStateChange__OLD_TO_REMOVE( NavigationStateType.PAINT_ADJUST_BRUSH );
 					break;
 			}
 		}

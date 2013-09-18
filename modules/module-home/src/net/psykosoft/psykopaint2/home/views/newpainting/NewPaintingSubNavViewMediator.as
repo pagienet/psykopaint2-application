@@ -78,7 +78,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					PaintModeModel.activeMode = PaintMode.COLOR_MODE;
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = userModel.uniqueUserId + "-" + PaintingInfoVO.DEFAULT_VO_ID;
-					requestNavigationStateChange( NavigationStateType.HOME_PICK_SURFACE );
+					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_PICK_SURFACE );
 					break;
 				}
 
@@ -110,7 +110,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		}
 
 		private function pickDefaultSurfaceAndContinueToPickImage():void {
-			requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
+			requestStateChange__OLD_TO_REMOVE( NavigationStateType.PICK_IMAGE );
 		}
 	}
 }

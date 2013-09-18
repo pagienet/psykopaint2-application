@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		private function onImagePicked( bmd:BitmapData ):void {
 			if( bmd ) requestCropSourceImageSignal.dispatch( bmd );
-			else requestNavigationStateChange( NavigationStateType.PREVIOUS );
+			else requestStateChange__OLD_TO_REMOVE( NavigationStateType.PREVIOUS );
 		}
 	}
 }

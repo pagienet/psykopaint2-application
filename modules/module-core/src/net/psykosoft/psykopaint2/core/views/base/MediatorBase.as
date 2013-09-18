@@ -56,7 +56,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			_enablingStates.push( state );
 		}
 
-		protected function requestNavigationStateChange( state:String ):void {
+		protected function requestStateChange__OLD_TO_REMOVE( state:String ):void {
 			requestStateChangeSignal.dispatch( state );
 		}
 
