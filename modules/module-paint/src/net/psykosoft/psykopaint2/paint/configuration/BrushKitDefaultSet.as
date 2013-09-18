@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.paint.configuration
 {
-	import flash.profiler.showRedrawRegions;
 	
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
