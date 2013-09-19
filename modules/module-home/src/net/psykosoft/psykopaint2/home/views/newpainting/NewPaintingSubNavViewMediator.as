@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 
 	public class NewPaintingSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var view:NewPaintingSubNavView;
 
 		[Inject]
-		public var requestLoadPaintingDataSignal:RequestLoadPaintingDataSignal;
+		public var requestLoadPaintingDataSignal:RequestLoadPaintingDataFileSignal;
 
 		[Inject]
 		public var requestEaselUpdateSignal:RequestEaselUpdateSignal;

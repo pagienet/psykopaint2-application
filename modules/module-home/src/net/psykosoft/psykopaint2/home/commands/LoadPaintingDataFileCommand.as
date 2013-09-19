@@ -13,8 +13,15 @@ package net.psykosoft.psykopaint2.home.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
+	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
+	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 
 	public class LoadPaintingDataFileCommand extends AsyncCommand
@@ -34,6 +41,21 @@ package net.psykosoft.psykopaint2.home.commands
 		[Inject]
 		public var ioAne:IOAneManager;
 
+		[Inject]
+		public var requestShowPopUpSignal:RequestShowPopUpSignal;
+
+		[Inject]
+		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
+
+		[Inject]
+		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
+
+		[Inject]
+		public var requestHidePopUpSignal:RequestHidePopUpSignal;
+
+		[Inject]
+		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
+
 		private var _fileName:String;
 		private var _as3ReadUtil:BinaryIoUtil;
 		private var _time:uint;
@@ -41,6 +63,24 @@ package net.psykosoft.psykopaint2.home.commands
 		override public function execute():void {
 
 			trace( this, "execute()" );
+
+			showPopUp();
+		}
+
+		private function showPopUp():void {
+			requestShowPopUpSignal.dispatch( PopUpType.MESSAGE );
+
+			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
+			requestUpdateMessagePopUpSignal.dispatch( "Loading...", randomJoke );
+
+			notifyPopUpShownSignal.addOnce( onPopUpShown );
+		}
+
+		private function onPopUpShown():void {
+			startLoading();
+		}
+
+		private function startLoading():void {
 			_time = getTimer();
 
 			var folder:String = CoreSettings.RUNNING_ON_iPAD ? "" : CoreSettings.PAINTING_DATA_FOLDER_NAME + "/";
@@ -85,6 +125,16 @@ package net.psykosoft.psykopaint2.home.commands
 			ConsoleView.instance.log( this, "done de-serializing- " + String( getTimer() - _time ) );
 			requestOpenPaintingDataVOSignal.dispatch(vo);
 			if( _as3ReadUtil ) _as3ReadUtil.dispose();
+
+			hidePopUp();
+		}
+
+		private function hidePopUp():void {
+			notifyPopUpRemovedSignal.addOnce( onPopUpRemoved );
+			requestHidePopUpSignal.dispatch();
+		}
+
+		private function onPopUpRemoved():void {
 			dispatchComplete( true );
 		}
 	}
