@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;

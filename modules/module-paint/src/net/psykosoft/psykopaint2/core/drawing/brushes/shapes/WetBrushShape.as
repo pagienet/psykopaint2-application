@@ -27,5 +27,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			texture.uploadFromBitmapData(bitmapData);
 			bitmapData.dispose();
 		}
+
+
+		override protected function setVariationFactors(cols : int, rows : int) : void
+		{
+			super.setVariationFactors(cols, rows);
+
+			// kind of nasty, but why was the meaning of scale factor changed? :s
+			_scaleFactor = 3;
+		}
 	}
 }

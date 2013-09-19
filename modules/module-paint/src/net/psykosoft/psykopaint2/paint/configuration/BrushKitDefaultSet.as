@@ -419,7 +419,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={WaterColorBrush.PARAMETER_N_SURFACE_INFLUENCE} previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
 					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_STAINING} path="brush" value=".5" showInUI="1"/>
 					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_GRANULATION} path="brush" value=".3" showInUI="1"/>
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet,basic" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="basic,wet" showInUI="1"/>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}/>
 				</brush>
 

@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.SinglePigmentBlotTransfer;
@@ -189,6 +190,27 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			if (!_velocityPressureField)
 				initBuffers();
+		}
+
+		override protected function set brushShape(brushShape : AbstractBrushShape) : void
+		{
+			super.brushShape = brushShape;
+			_wetBrush = brushShape.id == "wet";
+
+			// buffers not created yet, so no need to recreate them here
+			if (!_velocityPressureField) return;
+
+			if (_addWetness && !_wetBrush) {
+				_addWetness.dispose();
+				_addWetness = null;
+				_addPigmentToPressure.dispose();
+				_addPigmentToPressure = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, "zw");
+			}
+			else if (!_addWetness && _wetBrush) {
+				_addWetness = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, "w", false);
+				if (_addPigmentToPressure) _addPigmentToPressure.dispose();
+				_addPigmentToPressure = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, SinglePigmentBlotTransfer.TARGET_Z);
+			}
 		}
 
 		override protected function resetSimulation() : void
