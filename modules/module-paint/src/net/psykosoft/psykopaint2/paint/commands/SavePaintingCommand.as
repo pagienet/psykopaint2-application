@@ -5,10 +5,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import flash.utils.getTimer;
 
-	import net.psykosoft.psykopaint2.core.commands.HidePopUpCommand;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
-	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
@@ -36,12 +33,10 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			mapMacroConsistentData();
 
-			add( DisplaySavingPopUpCommand );
 			add( ExportCanvasSurfacesCommand );
 			add( SerializePaintingCommand );
 			if( CoreSettings.RUNNING_ON_iPAD && CoreSettings.USE_IO_ANE_ON_PAINTING_FILES ) add( WritePaintingDataANECommand );
 			else add( WritePaintingAS3Command );
-			add( HidePopUpCommand );
 
 			registerCompleteCallback( onMacroComplete );
 
