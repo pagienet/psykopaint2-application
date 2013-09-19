@@ -56,8 +56,8 @@ package net.psykosoft.psykopaint2.app.states
 				_background.dispose();
 
 			_background = background.newReference();
-			// for now, just get most recent to test
-			stateMachine.setActiveState(bookState, {source: _bookSourceType, type: GalleryType.MOST_RECENT});
+
+			stateMachine.setActiveState(bookState, {source: _bookSourceType});
 		}
 
 		override ns_state_machine function deactivate() : void

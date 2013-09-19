@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.model.GalleryImageRequestVO;
+	import net.psykosoft.psykopaint2.book.model.GalleryType;
 	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
 	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestFetchGalleryImagesSignal;
@@ -15,6 +16,8 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 
@@ -47,26 +50,11 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestExitPickAnImageSignal:RequestExitPickAnImageSignal;
 
-//		[Inject]
-//		public var requestBrowseSampleImagesSignal : RequestBrowseSampleImagesSignal;
+		[Inject]
+		public var requestBrowseSampleImagesSignal : RequestBrowseSampleImagesSignal;
 
-//		[Inject]
-//		public var requestBrowseUserImagesSignal : RequestBrowseUserImagesSignal;
-
-//		[Inject]
-//		public var requestAnimateBookOutSignal : RequestAnimateBookOutSignal;
-
-//		[Inject]
-//		public var notifyAnimateBookOutCompleteSignal : NotifyAnimateBookOutCompleteSignal;
-
-//		[Inject]
-//		public var requestDestroyBookModuleSignal : RequestDestroyBookModuleSignal;
-
-//		[Inject]
-//		public var notifyBookModuleDestroyedSignal:NotifyBookModuleDestroyedSignal;
-
-//		[Inject]
-//		public var transitionToBookState : TransitionHomeToBookState;
+		[Inject]
+		public var requestBrowseUserImagesSignal : RequestBrowseUserImagesSignal;
 
 		private var _background : RefCountedTexture;
 		private var _activeSourceType:String;
@@ -106,13 +94,10 @@ package net.psykosoft.psykopaint2.app.states
 
 			_activeSourceType = data.source;
 
-			if (_activeSourceType == BookImageSource.GALLERY_IMAGES)
-				requestFetchGalleryImagesSignal.dispatch(new GalleryImageRequestVO(data.type, 0, 16));
-			else
-				requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(data.source, 0, 0));
+			refreshBookSource();
 
-//			requestBrowseSampleImagesSignal.add(onBrowseSampleImagesSignal);
-//			requestBrowseUserImagesSignal.add(onBrowseUserImagesSignal);
+			requestBrowseSampleImagesSignal.add(onBrowseSampleImagesSignal);
+			requestBrowseUserImagesSignal.add(onBrowseUserImagesSignal);
 			notifyImageSelectedFromBookSignal.add(onImageSelectedFromBookSignal);
 			requestRetrieveCameraImageSignal.add(onRequestRetrieveCameraImageSignal);
 			requestExitPickAnImageSignal.add(onRequestExitPickAnImageSignal);
@@ -123,48 +108,35 @@ package net.psykosoft.psykopaint2.app.states
 			if (_background)
 				_background.dispose();
 			_background = null;
-//			requestBrowseSampleImagesSignal.remove(onBrowseSampleImagesSignal);
-//			requestBrowseUserImagesSignal.remove(onBrowseUserImagesSignal);
+			requestBrowseSampleImagesSignal.remove(onBrowseSampleImagesSignal);
+			requestBrowseUserImagesSignal.remove(onBrowseUserImagesSignal);
 			notifyImageSelectedFromBookSignal.remove(onImageSelectedFromBookSignal);
 			requestRetrieveCameraImageSignal.remove(onRequestRetrieveCameraImageSignal);
 			requestExitPickAnImageSignal.remove(onRequestExitPickAnImageSignal);
 		}
 
-//		private function onBrowseUserImagesSignal() : void
-//		{
-//			if( _activeSourceType == BookImageSource.USER_IMAGES ) return;
-//
-//			_activeSourceType = BookImageSource.USER_IMAGES;
-//			notifyAnimateBookOutCompleteSignal.addOnce(onAnimateBookOutComplete);
-//			requestAnimateBookOutSignal.dispatch();
-//		}
+		private function onBrowseUserImagesSignal() : void
+		{
+			if( _activeSourceType == BookImageSource.USER_IMAGES ) return;
+			_activeSourceType = BookImageSource.USER_IMAGES;
 
-//		private function onBrowseSampleImagesSignal() : void
-//		{
-//			if( _activeSourceType == BookImageSource.SAMPLE_IMAGES ) return;
-//
-//			_activeSourceType = BookImageSource.SAMPLE_IMAGES;
-//			notifyAnimateBookOutCompleteSignal.addOnce(onAnimateBookOutComplete);
-//			requestAnimateBookOutSignal.dispatch();
-//		}
+			refreshBookSource();
+		}
 
-//		private function onAnimateBookOutComplete() : void
-//		{
-//			notifyBookModuleDestroyedSignal.addOnce( onBookModuleDestroyed );
-//			requestDestroyBookModuleSignal.dispatch();
-//		}
+		private function onBrowseSampleImagesSignal() : void
+		{
+			if( _activeSourceType == BookImageSource.SAMPLE_IMAGES ) return;
+			_activeSourceType = BookImageSource.SAMPLE_IMAGES;
 
-//		private function onBookModuleDestroyed():void {
-//			if( _activeSourceType == BookImageSource.USER_IMAGES ) {
-//				if (CoreSettings.RUNNING_ON_iPAD)
-//					stateMachine.setActiveState(transitionToBookState, BookImageSource.USER_IMAGES);
-//				else
-//					requestStateChange.dispatch(NavigationStateType.PICK_USER_IMAGE_DESKTOP);
-//			}
-//			else if( _activeSourceType == BookImageSource.SAMPLE_IMAGES ) {
-//				stateMachine.setActiveState(transitionToBookState, BookImageSource.SAMPLE_IMAGES);
-//			}
-//		}
+			refreshBookSource();
+		}
+
+		private function refreshBookSource():void {
+			if (_activeSourceType == BookImageSource.GALLERY_IMAGES)
+				requestFetchGalleryImagesSignal.dispatch(new GalleryImageRequestVO(GalleryType.MOST_RECENT, 0, 16));
+			else
+				requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(_activeSourceType, 0, 0));
+		}
 
 		private function onImageSelectedFromBookSignal(bitmapData : BitmapData) : void
 		{
