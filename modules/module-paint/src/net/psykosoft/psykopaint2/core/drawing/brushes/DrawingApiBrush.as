@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
 	import com.quasimondo.geom.Circle;
+	import com.quasimondo.geom.LineSegment;
 	import com.quasimondo.geom.LinearMesh;
 	import com.quasimondo.geom.LinearPath;
 	import com.quasimondo.geom.MixedPath;
@@ -10,6 +11,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import com.quasimondo.geom.Triangle;
 	import com.quasimondo.geom.Vector2;
 	import com.quasimondo.geom.WhyattSimplification;
+	import com.quasimondo.geom.utils.LinearPathUtils;
+	import com.quasimondo.geom.utils.MixedPathUtils;
 	import com.quasimondo.geom.utils.PolygonUtils;
 	
 	import flash.display.Bitmap;
@@ -63,9 +66,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var fillMatrix:Matrix;
 		
 		private var testTexture:BitmapData;
-		[Embed( source = "shapes/assets/paper_seamless.png", mimeType="image/png")]
+		[Embed( source = "shapes/assets/fabric2.png", mimeType="image/png")]
 		protected var SourceImage : Class;
 		private var _pathSmoothing:PsykoParameter;
+		private var _edgeType:PsykoParameter;
 		
 		public function DrawingApiBrush()
 		{
@@ -102,7 +106,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			testTexture = (new SourceImage() as Bitmap).bitmapData;
 			
 			_pathSmoothing = new PsykoParameter( PsykoParameter.NumberParameter, "Path Smoothing", 0.5, 0, 1 );
-			_parameters.push(_pathSmoothing);
+			_edgeType = new PsykoParameter( PsykoParameter.StringListParameter,"Edge Type",0,["Straight","Zig Zag","Wave","Ripped"]);
+			_parameters.push(_pathSmoothing,_edgeType);
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
@@ -190,10 +195,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			g3.clear();
 			g3.lineStyle();
 			
-			var smoothing:Number = _pathSmoothing.numberValue;
-			
 			if ( pathPoints.length > 1 )
 			{
+				var smoothing:Number = _pathSmoothing.numberValue;
+				var edgeType:int = _edgeType.index;
+				
 				var colors:Vector.<Number> = _appendVO.point.colorsRGBA;
 				var lm:LinearMesh = new LinearMesh();
 				pathPoints = ps.simplifyPath( pathPoints, 100);
@@ -215,29 +221,60 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 						
 						var center:Vector2 = poly.centroid;
 						var polyBounds:Rectangle = poly.getBoundingRect();
+						if ( poly.windingDirection == "CW" ) poly.reverse();
+						//var lp1:LinearPath = PolygonUtils.getSmoothPath(poly,smoothing).toLinearPath(4,0);
+						var sp:MixedPath = PolygonUtils.getSmoothPath(poly,smoothing);
+					//	var poly2:Polygon = sp.toPolygon(4);
+						var lp1:LinearPath = sp.toLinearPath(4,0);
 						
-						var mp:MixedPath = PolygonUtils.getSmoothPath(poly,smoothing);
+						var l:Number = lp1.length;
+					
+						//var lp:LinearPath = LinearPathUtils.getFunctionPath(lp,function( t, functionFactor):Number{ return Math.random()*2-1;},1,1,0);
+						var lp:LinearPath = LinearPathUtils.getFunctionPath(lp1,function( t, functionFactor):Number{ return 3 + Math.sin(t*Math.PI*2*functionFactor);},4,2,l*0.05);
+						//var lp:LinearPath = PolygonUtils.getFunctionPath(poly2,function( t, functionFactor):Number{ return 3 + Math.sin(t*Math.PI*2*functionFactor);},4,3,l*0.05);
 						
+						//
+							
 						fillMatrix.identity();
-						
 						fillMatrix.rotate( (Math.random()-Math.random())*Math.PI*0.5);
 						//var s:Number = 0.1 + Math.random() * 0.03;
 						//fillMatrix.scale(s,s);
 						fillMatrix.translate(Math.random()*1024,Math.random()*1024);
 						
+						/*
+						var c:int = lp.pointCount * (0.1 + Math.random() * 0.4);
+						var idx:int = Math.random() * lp.pointCount;
+						while ( --c > -1 )
+						{
+							g2.lineStyle(Math.random()*5,0xffffff);
+							lp.getSegment(idx++).draw(g2);
+						}
+						g2.lineStyle();
+						*/
+						
 						g2.beginBitmapFill(testTexture,fillMatrix,true,true);
-						mp.draw(g2);
+						lp.draw(g2);
 						g2.endFill();
 						
+						
+						
 						_colorStrategy.getColor(center.x,center.y,Math.min(polyBounds.width,polyBounds.height) * 0.5,colors,1);
-						g3.beginFill((int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]),opacity);
-						mp.draw(g3);
+						g3.beginFill((int(0xff *colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]),opacity);
+						lp.draw(g3);
 						g3.endFill();
+						
+						g3.lineStyle(2,0xffffff);
+						for ( var j:int = 0; j < lp1.pointCount; j+=2 )
+						{
+							lp1.getSegment(j).draw(g3);
+						}
+						
+						
 						for ( var j:int = 0; j < poly.pointCount; j++ )
 						{
 							if( Math.random() < 0.5 ) poly.getPointAt(j).minus(poly.getNormalAtIndex(j,16 * (Math.random()-Math.random())));
 						}
-						mp = PolygonUtils.getSmoothPath(poly,1);
+						var mp:MixedPath = PolygonUtils.getSmoothPath(poly,1);
 						
 						g1.beginFill(0x000000);
 						mp.draw(g1);

@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.app.config
 
 			mapMediators();
 			mapCommands();
-			mapNotifications();
+			mapSignals();
 			mapSingletons();
 			mapServices();
 			mapModels();
@@ -91,7 +91,7 @@ package net.psykosoft.psykopaint2.app.config
 		// Notifications.
 		// -----------------------
 
-		private function mapNotifications():void {
+		private function mapSignals():void {
 			injector.map(NotifyFrozenBackgroundCreatedSignal).asSingleton();
 		}
 

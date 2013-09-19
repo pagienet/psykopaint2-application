@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 
 	public class PickSurfaceSubNavViewMediator extends SubNavigationMediatorBase
@@ -36,6 +37,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		[Inject]
 		public var requestOpenPaintingDataVOSignal : RequestOpenPaintingDataVOSignal;
+
+		[Inject]
+		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
 
 		private var _selectedIndex:int;
 
@@ -65,7 +69,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 			switch( id ) {
 				case PickSurfaceSubNavView.ID_BACK:
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
+					requestNavigationStateChange( NavigationStateType.HOME_ON_EASEL );
+					requestHomePanningToggleSignal.dispatch( true );
 					break;
 				case PickSurfaceSubNavView.ID_CONTINUE:
 					continueToColorPaint();

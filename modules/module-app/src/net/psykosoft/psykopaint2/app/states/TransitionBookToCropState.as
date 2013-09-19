@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
 
 		[Inject]
-		public var requestAnimateOutSignal : RequestAnimateBookOutSignal;
+		public var requestAnimateBookOutSignal : RequestAnimateBookOutSignal;
 
 		[Inject]
 		public var notifyAnimateBookOutCompleteSignal : NotifyAnimateBookOutCompleteSignal;
@@ -62,7 +62,7 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			requestSetCropBackgroundSignal.dispatch(_background.newReference());
 			notifyAnimateBookOutCompleteSignal.addOnce(onAnimateOutComplete);
-			requestAnimateOutSignal.dispatch();
+			requestAnimateBookOutSignal.dispatch();
 		}
 
 		private function onAnimateOutComplete() : void

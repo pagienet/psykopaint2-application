@@ -80,7 +80,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 			mapMediators();
 			mapCommands();
-			mapNotifications();
+			mapSignals();
 			mapSingletons();
 			mapServices();
 			mapModels();
@@ -131,7 +131,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 		// Notifications.
 		// -----------------------
 
-		private function mapNotifications():void {
+		private function mapSignals():void {
 			_injector.map( NotifyCanvasMatrixChanged ).asSingleton();
 			_injector.map( RequestZoomCanvasToDefaultViewSignal ).asSingleton();
 			_injector.map( NotifyCanvasZoomedToDefaultViewSignal ).asSingleton();
@@ -141,19 +141,14 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyPaintModuleDestroyedSignal ).asSingleton();
 			_injector.map( RequestSetCanvasBackgroundSignal ).asSingleton();
 			_injector.map( RequestPaintRootViewRemovalSignal ).asSingleton();
-
-			// Map notification signals.
 			_injector.map( NotifyAvailableBrushTypesSignal ).asSingleton();
 			_injector.map( NotifyActivateBrushChangedSignal ).asSingleton();
-
 			_injector.map( NotifyColorStyleModuleActivatedSignal ).asSingleton();
 			_injector.map( NotifySetColorStyleSignal ).asSingleton();
 			_injector.map( NotifyColorStylePresetsAvailableSignal ).asSingleton();
 			_injector.map( NotifyColorStyleChangedSignal ).asSingleton();
 			_injector.map( NotifyColorStyleConfirmSignal ).asSingleton();
-
 			_injector.map( NotifyNavigationHideSignal ).asSingleton();
-
 			_injector.map( NotifyHistoryStackChangedSignal ).asSingleton();
 		}
 

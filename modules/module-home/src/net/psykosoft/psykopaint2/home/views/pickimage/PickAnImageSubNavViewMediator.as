@@ -1,13 +1,15 @@
 package net.psykosoft.psykopaint2.home.views.pickimage
 {
 
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
-	import net.psykosoft.psykopaint2.core.signals.RequestBrowseSampleImagesSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestBrowseUserImagesSignal;
+	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 
 	public class PickAnImageSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -22,6 +24,15 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		[Inject]
 		public var requestBrowseUserImagesSignal:RequestBrowseUserImagesSignal;
+
+		[Inject]
+		public var requestRetrieveCameraImageSignal:RequestRetrieveCameraImageSignal;
+
+		[Inject]
+		public var requestExitPickAnImageSignal:RequestExitPickAnImageSignal;
+
+		[Inject]
+		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
 
 		override public function initialize():void {
 
@@ -38,29 +49,32 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 
-				case PickAnImageSubNavView.ID_BACK:
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
+				case PickAnImageSubNavView.ID_BACK: {
+					requestExitPickAnImageSignal.dispatch();
+					requestHomePanningToggleSignal.dispatch( true );
 					break;
+				}
 
-				case PickAnImageSubNavView.ID_USER:
+				case PickAnImageSubNavView.ID_USER: {
 					requestBrowseUserImagesSignal.dispatch();
 					break;
+				}
 
-				case PickAnImageSubNavView.ID_SAMPLES:
+				case PickAnImageSubNavView.ID_SAMPLES: {
 					requestBrowseSampleImagesSignal.dispatch();
 					break;
+				}
 
-/*				case PickAnImageSubNavView.ID_FACEBOOK:
+				case PickAnImageSubNavView.ID_CAMERA: {
+					requestRetrieveCameraImageSignal.dispatch();
+					break;
+				}
+
+				/* case PickAnImageSubNavView.ID_FACEBOOK:
 				{
 					//TODO.
 					break;
 				}*/
-
-				case PickAnImageSubNavView.ID_CAMERA:
-				{
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.CAPTURE_IMAGE );
-					break;
-				}
 			}
 		}
 	}

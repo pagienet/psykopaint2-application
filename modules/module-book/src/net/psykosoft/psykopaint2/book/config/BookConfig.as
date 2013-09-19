@@ -5,34 +5,29 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.commands.FetchGalleryImagesCommand;
 	import net.psykosoft.psykopaint2.book.commands.FetchSourceImagesCommand;
 	import net.psykosoft.psykopaint2.book.commands.SetUpBookModuleCommand;
-	import net.psykosoft.psykopaint2.book.services.AMFGalleryImageService;
 	import net.psykosoft.psykopaint2.book.services.ANECameraRollService;
 	import net.psykosoft.psykopaint2.book.services.CameraRollService;
 	import net.psykosoft.psykopaint2.book.services.DummyGalleryImageService;
 	import net.psykosoft.psykopaint2.book.services.GalleryImageService;
 	import net.psykosoft.psykopaint2.book.services.SampleImageService;
-	import net.psykosoft.psykopaint2.book.services.DummyCameraRollService;
 	import net.psykosoft.psykopaint2.book.services.XMLSampleImageService;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelected;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFailedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelected;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestBookRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestExitBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestFetchGalleryImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestFetchSourceImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootViewMediator;
-	import net.psykosoft.psykopaint2.book.views.book.BookSubNavView;
-	import net.psykosoft.psykopaint2.book.views.book.BookSubNavViewMediator;
 	import net.psykosoft.psykopaint2.book.views.book.BookView;
 	import net.psykosoft.psykopaint2.book.views.book.BookViewMediator;
 
@@ -56,7 +51,7 @@ package net.psykosoft.psykopaint2.book.config
 
 			mapMediators();
 			mapCommands();
-			mapNotifications();
+			mapSignals();
 			mapSingletons();
 			mapServices();
 			mapModels();
@@ -102,7 +97,7 @@ package net.psykosoft.psykopaint2.book.config
 		// Notifications.
 		// -----------------------
 
-		private function mapNotifications() : void
+		private function mapSignals() : void
 		{
 			_injector.map(NotifyBookModuleSetUpSignal).asSingleton();
 			_injector.map(NotifyBookModuleDestroyedSignal).asSingleton();
@@ -111,7 +106,6 @@ package net.psykosoft.psykopaint2.book.config
 			_injector.map(NotifyImageSelectedFromBookSignal).asSingleton();
 			_injector.map(RequestAnimateBookOutSignal).asSingleton();
 			_injector.map(NotifyAnimateBookOutCompleteSignal).asSingleton();
-			_injector.map(RequestExitBookSignal).asSingleton();
 			_injector.map(NotifySourceImagesFetchedSignal).asSingleton();
 			_injector.map(NotifyGalleryImagesFetchedSignal).asSingleton();
 			_injector.map(NotifyGalleryImagesFailedSignal).asSingleton();
@@ -139,7 +133,6 @@ package net.psykosoft.psykopaint2.book.config
 		{
 			_mediatorMap.map(BookRootView).toMediator(BookRootViewMediator);
 			_mediatorMap.map(BookView).toMediator(BookViewMediator);
-			_mediatorMap.map(BookSubNavView).toMediator(BookSubNavViewMediator);
 		}
 	}
 }

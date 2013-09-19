@@ -50,8 +50,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestBrowseSampleImagesSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
@@ -123,7 +121,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			mapClasses();
 			mapMediators();
 			mapCommands();
-			mapNotifications();
+			mapSignals();
 			mapSingletons();
 			mapServices();
 			mapModels();
@@ -183,7 +181,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		// Notifications.
 		// -----------------------
 
-		private function mapNotifications():void {
+		private function mapSignals():void {
 			_injector.map( RequestFinalizeCropSignal ).asSingleton();
 			_injector.map( NotifyNavigationStateChangeSignal ).asSingleton();
 			_injector.map( NotifyGlobalGestureSignal ).asSingleton();
@@ -216,8 +214,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestSaveCPUForUISignal ).asSingleton();
 			_injector.map( RequestResumeCPUUsageForUISignal ).asSingleton();
 			_injector.map( RequestNavigationDisposalSignal ).asSingleton();
-			_injector.map( RequestBrowseSampleImagesSignal ).asSingleton();
-			_injector.map( RequestBrowseUserImagesSignal ).asSingleton();
 			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
 			_injector.map( RequestShowPopUpSignal ).asSingleton();
 			_injector.map( RequestHidePopUpSignal ).asSingleton();

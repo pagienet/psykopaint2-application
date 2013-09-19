@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			switch( id ) {
 				case CaptureImageSubNavView.ID_BACK:
 				{
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.PICK_IMAGE );
+					requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
 					break;
 				}
 				case CaptureImageSubNavView.ID_CAPTURE:

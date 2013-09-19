@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 				// Left.
 				case WallpaperSubNavView.ID_BACK: {
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.SETTINGS );
+					requestNavigationStateChange( NavigationStateType.SETTINGS );
 					break;
 				}
 

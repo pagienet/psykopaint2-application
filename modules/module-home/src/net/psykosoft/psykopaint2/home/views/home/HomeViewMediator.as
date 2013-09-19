@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	import org.gestouch.events.GestureEvent;
@@ -84,6 +85,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyGyroscopeUpdateSignal:NotifyGyroscopeUpdateSignal;
 
+		[Inject]
+		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
+
 		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightDistance : Number = 1000;
 
@@ -108,6 +112,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHomeViewScrollSignal.add( onScrollRequested );
 			requestHomeIntroSignal.add( onIntroRequested );
 			notifyGyroscopeUpdateSignal.add ( onGyroscopeUpdate );
+			requestHomePanningToggleSignal.add ( onTogglePanning );
 
 			// From view.
 			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
@@ -141,10 +146,16 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.disabledSignal.remove( onDisabled );
 			view.sceneReadySignal.remove( onSceneReady );
 			notifyGyroscopeUpdateSignal.remove ( onGyroscopeUpdate );
+			requestHomePanningToggleSignal.remove ( onTogglePanning );
 
 			view.dispose();
 
 			super.destroy();
+		}
+
+		private var _allowPanning:Boolean = true;
+		private function onTogglePanning( enable:Boolean ):void {
+			_allowPanning = enable;
 		}
 
 		private function onGyroscopeUpdate(orientationMatrix : Matrix3D) : void
@@ -202,7 +213,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
 //			trace( this, "onGlobalGesture: " + gestureType );
-			if( !view.visible ) return;
+			if( !view.visible || !_allowPanning ) return;
 			if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN || gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
 				view.scrollCameraController.startPanInteraction();
 			}
@@ -254,19 +265,19 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Trigger SETTINGS state if closest to settings painting ( index 0 ).
 			if( stateModel.currentState != NavigationStateType.SETTINGS && paintingIndex == 0 ) {
-				requestStateChange__OLD_TO_REMOVE( NavigationStateType.SETTINGS );
+				requestNavigationStateChange( NavigationStateType.SETTINGS );
 				return;
 			}
 
 			// Trigger NEW PAINTING state if closest to easel ( index 1 ).
 			if( stateModel.currentState != NavigationStateType.HOME_ON_EASEL && paintingIndex == 1 ) {
-				requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME_ON_EASEL );
+				requestNavigationStateChange( NavigationStateType.HOME_ON_EASEL );
 				return;
 			}
 
 			// Restore HOME state if closest to home painting ( index 2 ).
 			if( stateModel.currentState != NavigationStateType.HOME && paintingIndex == homePaintingIndex ) {
-				requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME );
+				requestNavigationStateChange( NavigationStateType.HOME );
 				return;
 			}
 
@@ -278,7 +289,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 				// TODO: delete this bit
 				if( stateModel.currentState != NavigationStateType.HOME ) {
-					requestStateChange__OLD_TO_REMOVE( NavigationStateType.HOME );
+					requestNavigationStateChange( NavigationStateType.HOME );
 					return;
 				}
 
