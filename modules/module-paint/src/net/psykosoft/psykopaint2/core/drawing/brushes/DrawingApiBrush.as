@@ -34,6 +34,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 	
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
@@ -150,10 +151,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			previewShp.graphics.lineStyle(0);
 			_view.stage.quality = StageQuality.HIGH;
 			(_view as Sprite).addChild(previewShp);
-			previewShp.scaleX = 1 / _pathManager.canvasScaleX;
-			previewShp.scaleY = 1 / _pathManager.canvasScaleY; 
-			previewShp.x = -_pathManager.canvasOffsetX / _pathManager.canvasScaleX;
-			previewShp.y = -_pathManager.canvasOffsetY / _pathManager.canvasScaleY; 
+			previewShp.scaleX = 1 / _pathManager.canvasScaleX / CoreSettings.GLOBAL_SCALING;
+			previewShp.scaleY = 1 / _pathManager.canvasScaleY / CoreSettings.GLOBAL_SCALING; 
+			previewShp.x = -_pathManager.canvasOffsetX / (_pathManager.canvasScaleX / CoreSettings.GLOBAL_SCALING);
+			previewShp.y = -_pathManager.canvasOffsetY / (_pathManager.canvasScaleY / CoreSettings.GLOBAL_SCALING); 
 		}
 		
 		override  protected function onPathPoints(points : Vector.<SamplePoint>) : void
