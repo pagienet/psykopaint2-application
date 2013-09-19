@@ -1,18 +1,13 @@
 package net.psykosoft.psykopaint2.app.states
 {
 
-	import flash.utils.setTimeout;
-
-	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-
 	import net.psykosoft.psykopaint2.base.states.State;
+	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
@@ -55,12 +50,6 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
 
-		[Inject]
-		public var requestHidePopUpSignal:RequestHidePopUpSignal;
-
-		[Inject]
-		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
-
 		public function PaintState() {
 		}
 
@@ -74,15 +63,19 @@ package net.psykosoft.psykopaint2.app.states
 		}
 
 		private function onClosePaintView():void {
-			if( canvasHistoryModel.hasHistory ) displaySavingPopUpCommand();
-			else continueToHome();
+			displaySavingPopUp();
 		}
 
-		private function displaySavingPopUpCommand():void {
+		private function displaySavingPopUp():void {
 			requestShowPopUpSignal.dispatch( PopUpType.MESSAGE );
 			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
 			requestUpdateMessagePopUpSignal.dispatch( "Saving...", randomJoke );
-			notifyPopUpShownSignal.addOnce( savePainting );
+			notifyPopUpShownSignal.addOnce( onSavingPopUpShown );
+		}
+
+		private function onSavingPopUpShown():void {
+			if( canvasHistoryModel.hasHistory ) savePainting();
+			else continueToHome();
 		}
 
 		private function savePainting():void {
@@ -91,15 +84,6 @@ package net.psykosoft.psykopaint2.app.states
 		}
 
 		private function onPaintingSaved( success:Boolean ):void {
-			setTimeout( hideSavingPopUp, 1000 );
-		}
-
-		private function hideSavingPopUp():void {
-			notifyPopUpRemovedSignal.addOnce( onPopUpRemoved );
-			requestHidePopUpSignal.dispatch();
-		}
-
-		private function onPopUpRemoved():void {
 			continueToHome();
 		}
 
