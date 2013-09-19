@@ -44,9 +44,13 @@ package net.psykosoft.psykopaint2.book.services
 			var collection : SourceImageCollection = new SourceImageCollection();
 			var imageCount:uint = _ane.getNumberOfLibraryItems();
 
-			collection.source = BookImageSource.CAMERA_IMAGES;
+			if (_amountToFetch > 0)
+				imageCount = Math.min(imageCount, _indexToFetch + _amountToFetch);
 
-			for (var i : int = 0; i < imageCount; ++i) {
+			collection.source = BookImageSource.CAMERA_IMAGES;
+			collection.index = _indexToFetch;
+
+			for (var i : int = _indexToFetch; i < imageCount; ++i) {
 				var imageVO : ANESourceImageProxy = new ANESourceImageProxy(_ane);
 				imageVO.id = i;
 				collection.images.push(imageVO);

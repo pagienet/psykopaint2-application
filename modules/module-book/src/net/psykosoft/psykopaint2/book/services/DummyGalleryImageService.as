@@ -24,7 +24,7 @@ package net.psykosoft.psykopaint2.book.services
 				"Freddy Mercury", "George Costanza", "Jay Intelli", "Chuck H. Norris", "Good ol' Chimney Trick",
 				"Al Bundy", "Pensman", "Timmy Downdewell", "Nicolas Cage", "Shao Khan", "Bedrich Smetana",
 				"Jimi Hendrix", "Jeremy Spoken", "Larry David", "Mario and RobotLegs' love child", "Garth Marenghi",
-				"Rick Dagless", "Dean Learner", "Steve Pising", "Rick Deckard"
+				"Rick Dagless", "Dean Learner", "Steve Pising", "Rick Deckard", "Benny Lava"
 			];
 
 			for (var i : int = 0; i < amount; ++i) {
@@ -36,6 +36,9 @@ package net.psykosoft.psykopaint2.book.services
 				item.paintingMode = Math.random() < .5? PaintMode.COLOR_MODE : PaintMode.PHOTO_MODE;
 				collection.images.push(item);
 			}
+
+			collection.type = source;
+			collection.index = index;
 
 			notifyGalleryImagesFetchedSignal.dispatch(collection);
 		}

@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.book.services
 {
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
+	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.model.FileSourceImageProxy;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
 	import net.psykosoft.psykopaint2.book.model.SourceImageProxy;
@@ -52,6 +53,9 @@ package net.psykosoft.psykopaint2.book.services
 			var images : XMLList = _xml.images.image;
 			var collection : SourceImageCollection = new SourceImageCollection();
 			var max : int = index + amount;
+
+			collection.source = BookImageSource.SAMPLE_IMAGES;
+			collection.index = index;
 
 			if (amount == 0 || max > images.length())
 				max = images.length();

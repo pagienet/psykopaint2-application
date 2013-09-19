@@ -25,6 +25,8 @@ package net.psykosoft.psykopaint2.book.services
 		[Inject]
 		public var notifyGalleryImagesFailedSignal : NotifyGalleryImagesFailedSignal;
 
+		private var _index : int;
+
 		public function AMFGalleryImageService()
 		{
 		}
@@ -45,6 +47,8 @@ package net.psykosoft.psykopaint2.book.services
 					amfBridge.getMostRecentPaintings(index, amount, onMostRecentSuccess, onFailed);
 					break;
 			}
+
+			_index = index;
 		}
 
 		private function onUserImagesSuccess(data : Object) : void
@@ -82,7 +86,7 @@ package net.psykosoft.psykopaint2.book.services
 			var array : Array = data["response"];
 			var collection : GalleryImageCollection = new GalleryImageCollection();
 			collection.type = type;
-
+			collection.index = _index;
 			var len : int = array.length;
 			for (var i : int = 0; i < len; ++i) {
 				var obj : Object = array[i];
