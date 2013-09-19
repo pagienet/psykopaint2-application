@@ -57,12 +57,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onHomeModuleSetUp() : void
 		{
-			hideSavingPopUp();
-		}
-
-		private function hideSavingPopUp():void {
-			notifyPopUpRemovedSignal.addOnce( zoomOut );
-			requestHidePopUpSignal.dispatch();
+			zoomOut();
 		}
 
 		private function zoomOut():void {
@@ -76,6 +71,12 @@ package net.psykosoft.psykopaint2.app.states
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_HOME_MODE);
 			requestStateChangeSignal.dispatch(NavigationStateType.PREPARE_FOR_HOME_MODE);
 			stateMachine.setActiveState(homeState);
+			hideSavingPopUp();
+		}
+
+		private function hideSavingPopUp():void {
+			notifyPopUpRemovedSignal.addOnce( zoomOut );
+			requestHidePopUpSignal.dispatch();
 		}
 
 		override ns_state_machine function deactivate() : void
