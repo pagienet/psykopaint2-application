@@ -21,9 +21,6 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var paintingModel:PaintingModel;
 
 		[Inject]
-		public var canvasHistoryModel:CanvasHistoryModel;
-
-		[Inject]
 		public var notifyPaintingSavingStartedSignal:NotifyPaintingSavingStartedSignal;
 
 		[Inject]
@@ -36,13 +33,6 @@ package net.psykosoft.psykopaint2.paint.commands
 
 			ConsoleView.instance.log( this, "prepare()" );
 			_time = getTimer();
-
-
-			// Do not save if there is nothing to save.
-			if( !canvasHistoryModel.hasHistory ) {
-				notifyPaintingSavedSignal.dispatch( true );
-				return;
-			}
 
 			mapMacroConsistentData();
 

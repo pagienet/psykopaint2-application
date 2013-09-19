@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 
 	import net.psykosoft.psykopaint2.base.states.State;
+	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
@@ -32,6 +33,8 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var paintingModel : PaintingModel;
 
+		[Inject]
+		public var canvasHistoryModel:CanvasHistoryModel;
 
 		public function PaintState()
 		{
@@ -50,13 +53,21 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onClosePaintView() : void
 		{
+			if( canvasHistoryModel.hasHistory ) savePainting();
+			else continueToHome();
+		}
+
+		private function savePainting():void {
 			notifyPaintingSavedSignal.addOnce(onPaintingSaved);
 			requestPaintingSaveSignal.dispatch(paintingModel.activePaintingId, true);
 		}
 
-
 		private function onPaintingSaved(success : Boolean) : void
 		{
+			continueToHome();
+		}
+
+		private function continueToHome():void {
 			stateMachine.setActiveState(transitionToHomeState);
 		}
 	}
