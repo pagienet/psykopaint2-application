@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
 
+	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
+
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -15,9 +17,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
 
-	import robotlegs.bender.bundles.mvcs.Command;
-
-	public class SerializePaintingCommand extends Command
+	public class SerializePaintingCommand extends AsyncCommand
 	{
 		[Inject]
 		public var saveVO:SavePaintingVO;
@@ -69,6 +69,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			trace( this, "data num bytes: " + saveVO.dataBytes.length );
 
 			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
+
+			dispatchComplete( true );
 		}
 
 		private function generateThumbnail():BitmapData {

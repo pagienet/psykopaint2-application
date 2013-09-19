@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.paint.commands
 {
 
+	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
+
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.utils.getTimer;
@@ -13,9 +15,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
 
-	import robotlegs.bender.bundles.mvcs.Command;
-
-	public class WritePaintingDataANECommand extends Command
+	public class WritePaintingDataANECommand extends AsyncCommand
 	{
 		[Inject]
 		public var saveVO:SavePaintingVO;
@@ -57,6 +57,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			else ioAne.extension.write( saveVO.dataBytes, dataFileName );
 
 			ConsoleView.instance.log( this, "done - " + String( getTimer() - time ) );
+
+			dispatchComplete( true );
 		}
 	}
 }

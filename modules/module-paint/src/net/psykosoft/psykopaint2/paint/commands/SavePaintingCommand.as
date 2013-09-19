@@ -61,6 +61,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			trace( this, "un-mapping..." );
 			injector.unmap( SavePaintingVO );
 			if( _savingVoInstance ) _savingVoInstance.dispose();
+			_savingVoInstance = null;
 		}
 	}
 }

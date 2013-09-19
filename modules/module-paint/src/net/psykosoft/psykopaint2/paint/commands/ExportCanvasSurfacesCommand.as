@@ -40,6 +40,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			ConsoleView.instance.log( this, "execute()" );
 			_time = getTimer();
 
+			trace( this, "vo: " + saveVO );
+
 			requestUpdateMessagePopUpSignal.dispatch( "Saving: Exporting...", "" );
 			stage.addEventListener( Event.ENTER_FRAME, onOneFrame );
 		}
