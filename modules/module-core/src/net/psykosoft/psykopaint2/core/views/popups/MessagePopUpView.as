@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 		public function updateMessage( newTitle:String, newMessage:String ):void {
 			main.text = newTitle;
 			if( newMessage != "" ) {
-				extra.htmlText = '" ' + newMessage + ' "';
+				extra.htmlText = newMessage;
 			}
 		}
 	}

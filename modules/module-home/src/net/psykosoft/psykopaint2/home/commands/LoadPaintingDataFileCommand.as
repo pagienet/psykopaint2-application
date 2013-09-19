@@ -20,8 +20,8 @@ package net.psykosoft.psykopaint2.home.commands
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
+	import net.psykosoft.psykopaint2.core.views.popups.base.Quotes;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 
 	public class LoadPaintingDataFileCommand extends AsyncCommand
@@ -61,18 +61,14 @@ package net.psykosoft.psykopaint2.home.commands
 		private var _time:uint;
 
 		override public function execute():void {
-
 			trace( this, "execute()" );
-
 			showPopUp();
 		}
 
 		private function showPopUp():void {
 			requestShowPopUpSignal.dispatch( PopUpType.MESSAGE );
-
-			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
-			requestUpdateMessagePopUpSignal.dispatch( "Loading...", randomJoke );
-
+			var randomQuote:String = Quotes.QUOTES[ Math.floor( Quotes.QUOTES.length * Math.random() ) ];
+			requestUpdateMessagePopUpSignal.dispatch( "Loading...", randomQuote );
 			notifyPopUpShownSignal.addOnce( onPopUpShown );
 		}
 
