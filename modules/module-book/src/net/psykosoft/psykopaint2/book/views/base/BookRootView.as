@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.book.views.base
 	import flash.display.Sprite;
 	import flash.events.Event;
 
-	import net.psykosoft.psykopaint2.book.views.book.BookSubNavView;
 	import net.psykosoft.psykopaint2.book.views.book.BookView;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.StateToSubNavLinker;
