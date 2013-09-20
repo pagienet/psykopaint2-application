@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.home.commands.load
 
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
-	import net.psykosoft.psykopaint2.core.commands.RetrievePaintingDataCommand;
+	import net.psykosoft.psykopaint2.core.commands.RetrieveAllPaintingDataCommand;
 	import net.psykosoft.psykopaint2.home.commands.*;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 
@@ -17,7 +17,7 @@ package net.psykosoft.psykopaint2.home.commands.load
 			trace( this, "prepare()" );
 
 			add( InitializeHomeModuleViewsCommand );
-			add( RetrievePaintingDataCommand );
+			add( RetrieveAllPaintingDataCommand );
 			add( UpdateEaselWithLatestPaintingCommand );
 
 			registerCompleteCallback( onMacroComplete );

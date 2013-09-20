@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeRootViewRemovalSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
@@ -132,7 +132,7 @@ package net.psykosoft.psykopaint2.home.config
 			_commandMap.map( RequestLoadSurfacePreviewSignal ).toCommand( LoadSurfacePreviewCommand );
 			_commandMap.map( RequestSetupHomeModuleSignal ).toCommand( SetUpHomeModuleCommand );
 			_commandMap.map( RequestDestroyHomeModuleSignal ).toCommand( DestroyHomeModuleCommand );
-			_commandMap.map( RequestLoadPaintingDataSignal ).toCommand( LoadPaintingDataFileCommand );
+			_commandMap.map( RequestLoadPaintingDataFileSignal ).toCommand( LoadPaintingDataFileCommand );
 		}
 
 		// -----------------------

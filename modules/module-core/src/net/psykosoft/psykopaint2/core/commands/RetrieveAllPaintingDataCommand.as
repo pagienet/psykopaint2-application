@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.core.commands
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 
-	public class RetrievePaintingDataCommand extends SequenceMacro
+	public class RetrieveAllPaintingDataCommand extends SequenceMacro
 	{
 		[Inject]
 		public var paintingModel:PaintingModel;
