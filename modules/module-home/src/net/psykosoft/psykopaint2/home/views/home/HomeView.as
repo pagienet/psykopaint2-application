@@ -153,6 +153,7 @@ package net.psykosoft.psykopaint2.home.views.home
 //			time = getTimer();
 			_paintingManager.createDefaultPaintings();
 //			trace( this, "time taken to init paintings: " + String( getTimer() - time ) );
+			_scrollCameraController.positionManager.pushSnapPoint(6000);
 
 			// Always start at easel.
 			_scrollCameraController.jumpToSnapPointIndex( 1 );

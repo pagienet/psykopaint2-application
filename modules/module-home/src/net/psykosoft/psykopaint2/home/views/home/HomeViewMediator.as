@@ -24,8 +24,10 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
@@ -88,10 +90,15 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
 
+		[Inject]
+		public var requestBrowseGallery : RequestBrowseGallerySignal;
+
 		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightDistance : Number = 1000;
 
 		private var _dockedAtSnapIndex:int = -1;
+
+		private var _allowPanning:Boolean = true;
 
 		override public function initialize():void {
 
@@ -153,7 +160,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			super.destroy();
 		}
 
-		private var _allowPanning:Boolean = true;
 		private function onTogglePanning( enable:Boolean ):void {
 			_allowPanning = enable;
 		}
@@ -278,6 +284,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Restore HOME state if closest to home painting ( index 2 ).
 			if( stateModel.currentState != NavigationStateType.HOME && snapPointIndex == homePaintingIndex ) {
 				requestNavigationStateChange( NavigationStateType.HOME );
+				return;
+			}
+
+			// Restore HOME state if closest to home painting ( index 3 ).
+			if( stateModel.currentState != NavigationStateType.BOOK_GALLERY && snapPointIndex == 3 ) {
+				requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
 				return;
 			}
 

@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
@@ -117,6 +118,7 @@ package net.psykosoft.psykopaint2.home.config
 	   		_injector.map( NotifyHomeViewSceneReadySignal ).asSingleton();
 			_injector.map( RequestBrowseSampleImagesSignal ).asSingleton();
 			_injector.map( RequestBrowseUserImagesSignal ).asSingleton();
+			_injector.map( RequestBrowseGallerySignal ).asSingleton();
 			_injector.map( RequestExitPickAnImageSignal ).asSingleton();
 			_injector.map( RequestRetrieveCameraImageSignal ).asSingleton();
 			_injector.map( RequestHomePanningToggleSignal ).asSingleton();

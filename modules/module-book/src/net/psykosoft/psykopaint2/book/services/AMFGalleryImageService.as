@@ -2,8 +2,7 @@ package net.psykosoft.psykopaint2.book.services
 {
 	import net.psykosoft.psykopaint2.book.model.FileGalleryImageProxy;
 	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
-	import net.psykosoft.psykopaint2.book.model.GalleryType;
+	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFailedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
