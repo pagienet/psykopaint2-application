@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightDistance : Number = 1000;
-
+		private var _allowPanning:Boolean = true;
 		private var _dockedAtPaintingIndex:int = -1;
 
 		override public function initialize():void {
@@ -153,7 +153,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			super.destroy();
 		}
 
-		private var _allowPanning:Boolean = true;
 		private function onTogglePanning( enable:Boolean ):void {
 			_allowPanning = enable;
 		}
