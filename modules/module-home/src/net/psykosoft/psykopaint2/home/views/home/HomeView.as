@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _mainScene:ObjectContainer3D;
 		private var _currentScene:ObjectContainer3D;
 
-		public var closestPaintingChangedSignal:Signal;
+		public var closestSnapPointChangedSignal:Signal;
 		public var zoomCompletedSignal:Signal;
 		public var easelRectChanged:Signal;
 		public var sceneReadySignal:Signal;
@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function HomeView() {
 			super();
 			scalesToRetina = false;
-			closestPaintingChangedSignal = new Signal();
+			closestSnapPointChangedSignal = new Signal();
 			zoomCompletedSignal = new Signal();
 			easelRectChanged = new Signal();
 			sceneReadySignal = new Signal();
@@ -129,7 +129,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			var cameraTarget:Object3D = new Object3D();
 			_scrollCameraController = new HScrollCameraController();
 			_zoomCameraController = new ZoomCameraController();
-			_scrollCameraController.closestSnapPointChangedSignal.add( onClosestPaintingChanged );
+			_scrollCameraController.closestSnapPointChangedSignal.add( onClosestSnapPointChanged );
 			_zoomCameraController.zoomCompleteSignal.add( onZoomComplete );
 			_scrollCameraController.setCamera( _view.camera, cameraTarget );
 			_zoomCameraController.setCamera( _view.camera, cameraTarget );
@@ -200,7 +200,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 
 			if( _scrollCameraController ) {
-				_scrollCameraController.closestSnapPointChangedSignal.remove( onClosestPaintingChanged );
+				_scrollCameraController.closestSnapPointChangedSignal.remove( onClosestSnapPointChanged );
 				_scrollCameraController.dispose();
 				_scrollCameraController = null;
 			}
@@ -312,8 +312,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			zoomCompletedSignal.dispatch();
 		}
 
-		private function onClosestPaintingChanged( index:uint ):void {
-			closestPaintingChangedSignal.dispatch( index );
+		private function onClosestSnapPointChanged( index:uint ):void {
+			closestSnapPointChangedSignal.dispatch( index );
 		}
 
 		private function onStageKeyUp( event:KeyboardEvent ):void {

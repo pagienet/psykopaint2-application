@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.app.states
 		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			requestStateChange.dispatch(NavigationStateType.BOOK);
+			requestStateChange.dispatch(NavigationStateType.BOOK_SOURCE_IMAGES);
 
 			_activeSourceType = data.source;
 
