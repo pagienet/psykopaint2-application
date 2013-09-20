@@ -37,6 +37,7 @@ package net.psykosoft.psykopaint2.book.services
 				collection.images.push(item);
 			}
 
+			collection.numTotalPaintings = 38;
 			collection.type = source;
 			collection.index = index;
 

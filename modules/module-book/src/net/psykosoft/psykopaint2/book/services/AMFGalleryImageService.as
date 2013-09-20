@@ -83,8 +83,9 @@ package net.psykosoft.psykopaint2.book.services
 				return;
 			}
 
-			var array : Array = data["response"];
+			var array : Array = data["response"].items;
 			var collection : GalleryImageCollection = new GalleryImageCollection();
+			collection.numTotalPaintings = data["response"].numAvailable;
 			collection.type = type;
 			collection.index = _index;
 			var len : int = array.length;
