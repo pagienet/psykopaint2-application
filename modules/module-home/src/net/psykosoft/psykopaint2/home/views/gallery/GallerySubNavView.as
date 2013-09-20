@@ -23,10 +23,14 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		override protected function onSetup():void {
 			super.onSetup();
-			createCenterButton( ID_YOURS, ID_YOURS, ButtonIconType.YOU );
-			createCenterButton( ID_FOLLOWING, ID_FOLLOWING, ButtonIconType.GALLERY );
-			createCenterButton( ID_MOST_RECENT, ID_MOST_RECENT, ButtonIconType.GALLERY );
-			createCenterButton( ID_MOST_LOVED, ID_MOST_LOVED, ButtonIconType.GALLERY );
+//			createCenterButton( ID_YOURS, ID_YOURS, ButtonIconType.YOUR_GALLERY );
+//			createCenterButton( ID_FOLLOWING, ID_FOLLOWING, ButtonIconType.FOLLOWING_GALLERY );
+//			createCenterButton( ID_MOST_RECENT, ID_MOST_RECENT, ButtonIconType.MOST_RECENT_GALLERY );
+//			createCenterButton( ID_MOST_LOVED, ID_MOST_LOVED, ButtonIconType.MOST_LOVED_GALLERY );
+			createCenterButton( ID_YOURS, ID_YOURS, ButtonIconType.YOUR_IMAGES );
+			createCenterButton( ID_FOLLOWING, ID_FOLLOWING, ButtonIconType.YOUR_IMAGES );
+			createCenterButton( ID_MOST_RECENT, ID_MOST_RECENT, ButtonIconType.YOUR_IMAGES );
+			createCenterButton( ID_MOST_LOVED, ID_MOST_LOVED, ButtonIconType.YOUR_IMAGES );
 			validateCenterButtons();
 		}
 	}
