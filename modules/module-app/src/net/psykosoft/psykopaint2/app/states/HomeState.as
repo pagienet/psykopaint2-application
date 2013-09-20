@@ -124,7 +124,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onBrowseGallerySignal(galleryID : uint) : void
 		{
-			// TODO: Not sure which gallery should be default
 			stateMachine.setActiveState(transitionToBookState, {source: BookImageSource.GALLERY_IMAGES, type: galleryID})
 		}
 

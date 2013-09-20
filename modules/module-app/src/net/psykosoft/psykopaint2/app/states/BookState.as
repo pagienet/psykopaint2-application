@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestExitGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 
@@ -59,9 +60,13 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestBrowseGallerySignal : RequestBrowseGallerySignal;
 
+		[Inject]
+		public var requestExitGallerySignal : RequestExitGallerySignal;
+
 		private var _background : RefCountedTexture;
 		private var _activeSourceType:String;
 		private var _galleryType : uint;
+
 
 
 		public function BookState()
@@ -112,6 +117,7 @@ package net.psykosoft.psykopaint2.app.states
 			notifyImageSelectedFromBookSignal.add(onImageSelectedFromBookSignal);
 			requestRetrieveCameraImageSignal.add(onRequestRetrieveCameraImageSignal);
 			requestExitPickAnImageSignal.add(onRequestExitPickAnImageSignal);
+			requestExitGallerySignal.add(onRequestExitGallerySignal);
 		}
 
 		private function onRequestBrowseGallerySignal(galleryID : uint) : void
@@ -127,6 +133,8 @@ package net.psykosoft.psykopaint2.app.states
 			if (_background)
 				_background.dispose();
 
+			_activeSourceType = null;
+			_galleryType = 0;
 			_background = null;
 			requestBrowseSampleImagesSignal.remove(onBrowseSampleImagesSignal);
 			requestBrowseUserImagesSignal.remove(onBrowseUserImagesSignal);
@@ -134,6 +142,7 @@ package net.psykosoft.psykopaint2.app.states
 			notifyImageSelectedFromBookSignal.remove(onImageSelectedFromBookSignal);
 			requestRetrieveCameraImageSignal.remove(onRequestRetrieveCameraImageSignal);
 			requestExitPickAnImageSignal.remove(onRequestExitPickAnImageSignal);
+			requestExitGallerySignal.remove(onRequestExitGallerySignal);
 		}
 
 		private function onBrowseUserImagesSignal() : void
@@ -165,6 +174,11 @@ package net.psykosoft.psykopaint2.app.states
 		}
 
 		private function onRequestExitPickAnImageSignal():void {
+			stateMachine.setActiveState(transitionToHomeState, { target: NavigationStateType.HOME_ON_EASEL });
+		}
+
+		private function onRequestExitGallerySignal() : void
+		{
 			stateMachine.setActiveState(transitionToHomeState, { target: NavigationStateType.HOME_ON_EASEL });
 		}
 

@@ -289,6 +289,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Restore HOME state if closest to home painting ( index 3 ).
 			if( stateModel.currentState != NavigationStateType.BOOK_GALLERY && snapPointIndex == 3 ) {
+				requestHomePanningToggleSignal.dispatch(false);
 				requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
 				return;
 			}
