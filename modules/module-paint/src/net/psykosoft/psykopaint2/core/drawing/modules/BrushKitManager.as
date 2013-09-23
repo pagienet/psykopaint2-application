@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
@@ -33,6 +34,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	
 	import org.gestouch.events.GestureEvent;
 
@@ -78,6 +80,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;
 		
+		[Inject]
+		public var notifyPickedColorChangedSignal : NotifyPickedColorChangedSignal;
+		
 	
 		private var _view : DisplayObject;
 		private var _active : Boolean;
@@ -89,6 +94,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var sourceCanvasViewModes:Array = [[1,0.25],[0.25,0.75],[1,0]];
 		private var sourceCanvasViewModeIndex:int = 0;
 		private var _activeMode : String;
+		private var _currentPaintColor:int;
 		
 		public function BrushKitManager()
 		{
@@ -102,6 +108,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			memoryWarningSignal.add(onMemoryWarning);
 			notifyCanvasMatrixChanged.add(onCanvasMatrixChanged);
 			notifyGlobalGestureSignal.add( onGlobalGesture );
+			notifyPickedColorChangedSignal.add( onPickedColorChanged );
 		}
 
 		// TODO: Handle gestures somewhere else
@@ -128,6 +135,19 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_canvasMatrix = matrix;
 			if (_activeBrushKit)
 				_activeBrushKit.setCanvasMatrix(matrix);
+		}
+		
+		private function onPickedColorChanged( newColor:int ):void
+		{
+			var parameterSetVO:ParameterSetVO = getCurrentBrushParameters(false);
+			var list:Vector.<PsykoParameter> = parameterSetVO.parameters;
+			var numParameters:uint = list.length;
+			for( var i:uint = 0; i < numParameters; ++i ) {
+				var parameter:PsykoParameter = list[ i ];
+				if( parameter.type == PsykoParameter.ColorParameter ) {
+					_currentPaintColor = parameter.colorValue = newColor;
+				} 
+			}
 		}
 		
 		public function stopAnimations() : void
@@ -228,6 +248,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.brushEngine.addEventListener( AbstractBrush.STROKE_STARTED, onStrokeStarted);
 				_activeBrushKit.brushEngine.addEventListener( AbstractBrush.STROKE_ENDED, onStrokeEnded );
 				_activeBrushKit.addEventListener( Event.CHANGE, onActiveBrushKitChanged );
+				onPickedColorChanged( _currentPaintColor );
 			}
 		}
 

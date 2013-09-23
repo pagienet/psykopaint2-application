@@ -1,24 +1,18 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
-	import flash.display.DisplayObject;
 	import flash.events.Event;
 	
-	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.ColorSwatches;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-
-	// TODO: remove minimalcomps dependency when done
+	
+	import org.osflash.signals.Signal;
 
 	public class SelectColorSubNavView extends SubNavigationViewBase
 	{
-		private var _colorParameter:PsykoParameter;
-
+		
 		public static const ID_BACK:String = "Edit Brush";
 
 		// TODO: complete navigation refactor
@@ -26,15 +20,21 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		static private var _lastSelectedParameter:Object = {};
 		static public var lastScrollerPosition:Number = 372; //TODO: hardcode works, might want to do it cleaner.
 
+		
+		public var colorChangedSignal:Signal;
+		
+		
 		private const UI_ELEMENT_Y:uint = 560;
 
 		private var colorMixer1:Colormixer;
-
 		private var colorMixer2:Colormixer;
 		private var colorSwatches:ColorSwatches;
 
+		public var currentColor:int = 0;
+		
 		public function SelectColorSubNavView() {
 			super();
+			colorChangedSignal = new Signal();
 		}
 
 		override protected function onEnabled():void {
@@ -74,24 +74,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			removeChild( colorMixer1 );
 			removeChild( colorMixer2 );
 			removeChild( colorSwatches );
-			_colorParameter = null;
 		}
 
 		// ---------------------------------------------------------------------
 		// Public.
 		// ---------------------------------------------------------------------
-
-		public function connectColorParameter( parameterSetVO:ParameterSetVO ):void {
-			_colorParameter = null;
-			var list:Vector.<PsykoParameter> = parameterSetVO.parameters;
-			var numParameters:uint = list.length;
-			for( var i:uint = 0; i < numParameters; ++i ) {
-				var parameter:PsykoParameter = list[ i ];
-				if( parameter.type == PsykoParameter.ColorParameter ) {
-					_colorParameter = parameter;
-				} 
-			}
-		}
+		
 
 		// ---------------------------------------------------------------------
 		// Listeners.
@@ -100,18 +88,15 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		
 
 		protected function onColorPicked( event:Event ):void {
-			if( _colorParameter != null ) {
-				_colorParameter.colorValue = Colormixer( event.target ).pickedColor;
-				colorSwatches.setSelection( -1 );
-			}
-
+			
+			currentColor = Colormixer( event.target ).pickedColor;
+			colorSwatches.setSelection( -1 );
+			colorChangedSignal.dispatch();
 		}
 
 		protected function onSwatchColorPicked( event:Event ):void {
-			if( _colorParameter != null ) 
-			{
-				_colorParameter.colorValue = ColorSwatches( event.target ).pickedColor;
-			}
+			currentColor = ColorSwatches( event.target ).pickedColor;
+			colorChangedSignal.dispatch();
 		}
 	}
 }

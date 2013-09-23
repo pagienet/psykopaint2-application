@@ -379,7 +379,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_2" value="0.7" />
 						</BumpDecorator>
 						<ColorDecorator>
-							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_3" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
+							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_3" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS} path="pathengine.pointdecorator_3" value1="0.0005" value2="0.1" />
 							<parameter id={ColorDecorator.PARAMETER_SL_PICK_RADIUS_MODE} path="pathengine.pointdecorator_3" index="1" />
 							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity"  previewID={PreviewIconFactory.PREVIEW_ALPHA} path="pathengine.pointdecorator_3" value="0.75" showInUI="1" />
