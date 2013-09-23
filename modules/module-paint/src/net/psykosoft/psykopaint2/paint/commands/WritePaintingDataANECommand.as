@@ -44,19 +44,24 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function write():void {
 
+			var overallTime:uint = getTimer();
 			var time:uint = getTimer();
 
 			// Write info bytes.
+			time = getTimer();
 			var infoFileName:String = saveVO.paintingId + PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION;
 			if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) ioAne.extension.writeWithCompression( saveVO.infoBytes, infoFileName );
 			else ioAne.extension.write( saveVO.infoBytes, infoFileName );
+			ConsoleView.instance.log( this, "write info - " + String( getTimer() - time ) );
 
 			// Write data bytes.
+			time = getTimer();
 			var dataFileName:String = saveVO.paintingId + PaintingFileUtils.PAINTING_DATA_FILE_EXTENSION;
 			if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) ioAne.extension.writeWithCompression( saveVO.dataBytes, dataFileName );
 			else ioAne.extension.write( saveVO.dataBytes, dataFileName );
+			ConsoleView.instance.log( this, "write data - " + String( getTimer() - time ) );
 
-			ConsoleView.instance.log( this, "done - " + String( getTimer() - time ) );
+			ConsoleView.instance.log( this, "done - " + String( getTimer() - overallTime ) );
 
 			dispatchComplete( true );
 		}

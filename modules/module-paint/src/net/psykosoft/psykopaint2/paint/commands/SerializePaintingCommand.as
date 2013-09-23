@@ -31,6 +31,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var stage:Stage;
 
+		private var _overallTime:uint;
 		private var _time:uint;
 
 		override public function execute():void {
@@ -47,7 +48,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function serialize():void {
-			_time = getTimer();
+			_overallTime = getTimer();
 
 			trace( this, "vo: " + saveVO );
 
@@ -58,17 +59,25 @@ package net.psykosoft.psykopaint2.paint.commands
 				saveVO.info.dispose();
 			}
 
+			_time = getTimer();
 			saveVO.info = factory.createFromData( saveVO.data, saveVO.paintingId, generateThumbnail() );
+			ConsoleView.instance.log( this, "info vo creation - " + String( getTimer() - _time ) );
 			saveVO.paintingId = saveVO.info.id;
 
+			_time = getTimer();
 			var infoSerializer:PaintingInfoSerializer = new PaintingInfoSerializer();
-			var dataSerializer:PaintingDataSerializer = new PaintingDataSerializer();
 			saveVO.infoBytes = infoSerializer.serialize( saveVO.info );
-			saveVO.dataBytes = dataSerializer.serialize( saveVO.data );
-			trace( this, "info num bytes: " + saveVO.infoBytes.length );
-			trace( this, "data num bytes: " + saveVO.dataBytes.length );
+			ConsoleView.instance.log( this, "info vo serialization - " + String( getTimer() - _time ) );
 
-			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
+			_time = getTimer();
+			var dataSerializer:PaintingDataSerializer = new PaintingDataSerializer();
+			saveVO.dataBytes = dataSerializer.serialize( saveVO.data );
+			ConsoleView.instance.log( this, "data vo serialization - " + String( getTimer() - _time ) );
+
+//			trace( this, "info num bytes: " + saveVO.infoBytes.length );
+//			trace( this, "data num bytes: " + saveVO.dataBytes.length );
+
+			ConsoleView.instance.log( this, "done - " + String( getTimer() - _overallTime ) );
 
 			dispatchComplete( true );
 		}
