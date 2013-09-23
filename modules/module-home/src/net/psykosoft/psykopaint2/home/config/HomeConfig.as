@@ -12,9 +12,11 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestExitGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
@@ -26,6 +28,8 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootViewMediator;
+	import net.psykosoft.psykopaint2.home.views.gallery.GallerySubNavView;
+	import net.psykosoft.psykopaint2.home.views.gallery.GallerySubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
@@ -117,7 +121,9 @@ package net.psykosoft.psykopaint2.home.config
 	   		_injector.map( NotifyHomeViewSceneReadySignal ).asSingleton();
 			_injector.map( RequestBrowseSampleImagesSignal ).asSingleton();
 			_injector.map( RequestBrowseUserImagesSignal ).asSingleton();
+			_injector.map( RequestBrowseGallerySignal ).asSingleton();
 			_injector.map( RequestExitPickAnImageSignal ).asSingleton();
+			_injector.map( RequestExitGallerySignal ).asSingleton();
 			_injector.map( RequestRetrieveCameraImageSignal ).asSingleton();
 			_injector.map( RequestHomePanningToggleSignal ).asSingleton();
 		}
@@ -148,6 +154,7 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( HomeSubNavView ).toMediator( HomeSubNavViewMediator );
 			_mediatorMap.map( PickSurfaceSubNavView ).toMediator( PickSurfaceSubNavViewMediator );
 			_mediatorMap.map( PickAnImageSubNavView ).toMediator( PickAnImageSubNavViewMediator );
+			_mediatorMap.map( GallerySubNavView ).toMediator( GallerySubNavViewMediator );
 			_mediatorMap.map( PickAUserImageView ).toMediator( PickAUserImageViewMediator );
 			_mediatorMap.map( CaptureImageSubNavView ).toMediator( CaptureImageSubNavViewMediator );
 			_mediatorMap.map( CaptureImageView ).toMediator( CaptureImageViewMediator );

@@ -161,7 +161,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 //			trace( this, "time taken to create home painting: " + String( getTimer() - time ) );
 		}
 
-		public function createPainting( paintingBmd:BitmapData, frameBmd:BitmapData, frameOffsetX:Number = 0, frameOffsetY:Number = 0 ):FramedPainting {
+		private function createPainting( paintingBmd:BitmapData, frameBmd:BitmapData, frameOffsetX:Number = 0, frameOffsetY:Number = 0 ):FramedPainting {
 			var hasFrame:Boolean = frameBmd != null;
 			// TODO: right now, transparency is based on frame presence. This is probably not a safe assumption.
 			var framedPainting:FramedPainting = new FramedPainting( _view, hasFrame, true );

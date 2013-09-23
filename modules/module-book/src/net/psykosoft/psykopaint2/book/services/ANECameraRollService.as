@@ -49,6 +49,7 @@ package net.psykosoft.psykopaint2.book.services
 
 			collection.source = BookImageSource.CAMERA_IMAGES;
 			collection.index = _indexToFetch;
+			collection.numTotalImages = imageCount;
 
 			for (var i : int = _indexToFetch; i < imageCount; ++i) {
 				var imageVO : ANESourceImageProxy = new ANESourceImageProxy(_ane);

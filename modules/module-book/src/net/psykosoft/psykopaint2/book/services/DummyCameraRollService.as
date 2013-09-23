@@ -58,6 +58,7 @@ package net.psykosoft.psykopaint2.book.services
 
 			collection.source = BookImageSource.CAMERA_IMAGES;
 			collection.index = _index;
+			collection.numTotalImages = 38;
 
 			if (amount == 0 || max > images.length())
 				max = images.length();
