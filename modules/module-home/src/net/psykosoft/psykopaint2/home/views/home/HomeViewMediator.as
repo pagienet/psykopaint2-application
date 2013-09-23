@@ -24,8 +24,10 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
@@ -88,10 +90,13 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
 
+		[Inject]
+		public var requestBrowseGallery : RequestBrowseGallerySignal;
+
 		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightDistance : Number = 1000;
+		private var _dockedAtSnapIndex:int = -1;
 		private var _allowPanning:Boolean = true;
-		private var _dockedAtPaintingIndex:int = -1;
 
 		override public function initialize():void {
 
@@ -115,7 +120,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHomePanningToggleSignal.add ( onTogglePanning );
 
 			// From view.
-			view.closestPaintingChangedSignal.add( onViewClosestPaintingChanged );
+			view.closestSnapPointChangedSignal.add( onViewClosestSnapPointChanged );
 			view.zoomCompletedSignal.add( onViewZoomComplete );
 			view.easelRectChanged.add( onEaselRectChanged );
 			view.enabledSignal.add( onEnabled );
@@ -139,7 +144,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestEaselPaintingUpdateSignal.remove( onEaselUpdateRequest );
 			requestHomeViewScrollSignal.remove( onScrollRequested );
 			requestHomeIntroSignal.remove( onIntroRequested );
-			view.closestPaintingChangedSignal.remove( onViewClosestPaintingChanged );
+			view.closestSnapPointChangedSignal.remove( onViewClosestSnapPointChanged );
 			view.zoomCompletedSignal.remove( onViewZoomComplete );
 			view.easelRectChanged.remove( onEaselRectChanged );
 			view.enabledSignal.remove( onEnabled );
@@ -254,29 +259,36 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyHomeViewZoomCompleteSignal.dispatch();
 		}
 
-		private function onViewClosestPaintingChanged( paintingIndex:uint ):void {
+		private function onViewClosestSnapPointChanged( snapPointIndex:uint ):void {
 
-			trace( this, "closest painting changed to index: " + paintingIndex );
-			_dockedAtPaintingIndex = paintingIndex;
+			trace( this, "closest painting changed to index: " + snapPointIndex );
+			_dockedAtSnapIndex = snapPointIndex;
 
 			// Variable.
 			var homePaintingIndex:uint = view.paintingManager.homePaintingIndex;
 
 			// Trigger SETTINGS state if closest to settings painting ( index 0 ).
-			if( stateModel.currentState != NavigationStateType.SETTINGS && paintingIndex == 0 ) {
+			if( stateModel.currentState != NavigationStateType.SETTINGS && snapPointIndex == 0 ) {
 				requestNavigationStateChange( NavigationStateType.SETTINGS );
 				return;
 			}
 
 			// Trigger NEW PAINTING state if closest to easel ( index 1 ).
-			if( stateModel.currentState != NavigationStateType.HOME_ON_EASEL && paintingIndex == 1 ) {
+			if( stateModel.currentState != NavigationStateType.HOME_ON_EASEL && snapPointIndex == 1 ) {
 				requestNavigationStateChange( NavigationStateType.HOME_ON_EASEL );
 				return;
 			}
 
 			// Restore HOME state if closest to home painting ( index 2 ).
-			if( stateModel.currentState != NavigationStateType.HOME && paintingIndex == homePaintingIndex ) {
+			if( stateModel.currentState != NavigationStateType.HOME && snapPointIndex == homePaintingIndex ) {
 				requestNavigationStateChange( NavigationStateType.HOME );
+				return;
+			}
+
+			// Restore HOME state if closest to home painting ( index 3 ).
+			if( stateModel.currentState != NavigationStateType.BOOK_GALLERY && snapPointIndex == 3 ) {
+				requestHomePanningToggleSignal.dispatch(false);
+				requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
 				return;
 			}
 
@@ -284,7 +296,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// TODO: use proper names
 			// TODO: implement painting sub-nav
 			var temporaryPaintingNames:Array = [ "house on country side", "digital cowboy", "microcosmos", "patio", "jesse", "flower spots", "beautiful danger" ];
-			if( paintingIndex > homePaintingIndex ) {
+			if( snapPointIndex > homePaintingIndex ) {
 
 				// TODO: delete this bit
 				if( stateModel.currentState != NavigationStateType.HOME ) {
@@ -296,7 +308,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				 requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN_ON_PAINTING ) );
 				 }*/
 
-//				var temporaryPaintingName:String = temporaryPaintingNames[ paintingIndex - 3 ];
+//				var temporaryPaintingName:String = temporaryPaintingNames[ snapPointIndex - 3 ];
 //				notifyFocusedPaintingChangedSignal.dispatch( temporaryPaintingName );
 			}
 		}

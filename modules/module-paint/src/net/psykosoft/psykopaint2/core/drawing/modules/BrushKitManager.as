@@ -116,10 +116,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
-				_activeBrushKit.deactivate();
+				_activeBrushKit.brushEngine.pathManager.deactivate();
 			}  else if ( gestureType == GestureType.TRANSFORM_GESTURE_ENDED )
 			{
-				_activeBrushKit.activate(_view, stage3D.context3D, canvasModel, renderer);
+				_activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
 			}
 		}
 

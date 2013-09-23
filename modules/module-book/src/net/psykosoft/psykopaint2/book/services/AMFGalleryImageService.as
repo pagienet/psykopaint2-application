@@ -2,8 +2,7 @@ package net.psykosoft.psykopaint2.book.services
 {
 	import net.psykosoft.psykopaint2.book.model.FileGalleryImageProxy;
 	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
-	import net.psykosoft.psykopaint2.book.model.GalleryType;
+	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFailedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
@@ -83,8 +82,9 @@ package net.psykosoft.psykopaint2.book.services
 				return;
 			}
 
-			var array : Array = data["response"];
+			var array : Array = data["response"].items;
 			var collection : GalleryImageCollection = new GalleryImageCollection();
+			collection.numTotalPaintings = data["response"].numAvailable;
 			collection.type = type;
 			collection.index = _index;
 			var len : int = array.length;

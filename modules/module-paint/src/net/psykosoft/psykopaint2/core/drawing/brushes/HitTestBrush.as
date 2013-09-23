@@ -64,7 +64,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var hitMap2:BitmapData;
 		private const origin:Point = new Point();
 		private var lastFillColor:int;
-		
+		private var fillRect:Rectangle;
 		private var testTexture:BitmapData;
 		[Embed( source = "shapes/assets/paper_seamless.png", mimeType="image/png")]
 		protected var SourceImage : Class;
@@ -95,7 +95,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			shpHolder.addChild(shp3);
 			shp1.filters = [ new BlurFilter(16,16,2)];
 			
-			
+			fillRect = new Rectangle();
 			drawMatrix = new Matrix();
 			fillMatrix = new Matrix();
 			//x,y,u,v,d1,d2,d3,unused
@@ -117,6 +117,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			{
 				hitMap = new BitmapData(_canvasModel.width,_canvasModel.height,true,0);
 				hitMap2 = new BitmapData(_canvasModel.width,_canvasModel.height,true,0);
+			} else {
+				hitMap.fillRect(hitMap.rect,0);
+				
 			}
 		}
 
@@ -154,6 +157,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_view.stage.quality = StageQuality.HIGH;
 			
 			
+			hitMap2.fillRect(hitMap2.rect,0);
 			
 			(_view as Sprite).addChild(previewShp);
 			previewShp.scaleX = 1 / _pathManager.canvasScaleX;
@@ -165,11 +169,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		override  protected function onPathPoints(points : Vector.<SamplePoint>) : void
 		{
 			var len : uint = points.length;
-			var i0:int = 0;
-			if (len > 0 && _firstPoint )
+			if ( len == 0 ) return;
+			
+			if ( _firstPoint )
 			{
+				if ( hitMap.getPixel32( points[0].x,points[0].y ) != 0 ) return;
 				circle = new Circle( points[0].x,points[0].y, 1 );
-				i0++;
 				opacity = points[0].colorsRGBA[3];
 			}
 			var lastR:Number = circle.r;
@@ -182,29 +187,57 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var colors:Vector.<Number> = points[0].colorsRGBA;
 			
 			
-			_colorStrategy.getColor(circle.c.x,circle.c.y,circle.r*2,colors,1);
-			
-			previewShp.graphics.clear();
-			var fillColor:int = (int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]);
-			previewShp.graphics.beginFill(fillColor);
-			circle.draw(previewShp.graphics);
-			previewShp.graphics.endFill();
-			
-			hitMap2.fillRect(hitMap.rect,0);
-			hitMap2.draw( previewShp );
-			if ( hitMap2.hitTest(origin,1,hitMap,origin,1 ))
+			if ( circle.r > lastR )
 			{
-				circle.r = lastR;
+				
+				_colorStrategy.getColor(circle.c.x,circle.c.y,circle.r*2,colors,1);
+				var fillColor:int = (int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]);
+				
 				previewShp.graphics.clear();
-				previewShp.graphics.beginFill(lastFillColor);
+				previewShp.graphics.beginFill(fillColor);
 				circle.draw(previewShp.graphics);
 				previewShp.graphics.endFill();
-				hitMap2.fillRect(hitMap.rect,0);
 				hitMap2.draw( previewShp );
+				if ( hitMap2.hitTest(origin,1,hitMap,origin,1 ))
+				{
+					fillRect.width = fillRect.height = circle.r * 2 + 2;
+					fillRect.x = circle.c.x - circle.r - 1;
+					fillRect.y = circle.c.y - circle.r - 1;
+					hitMap2.fillRect(fillRect,0);
+					
+					var maxR:Number =  circle.r;
+					for ( var r:Number = lastR + 1; r < maxR; r++ )
+					{
+						circle.r = r;
+						_colorStrategy.getColor(circle.c.x,circle.c.y,circle.r*2,colors,1);
+						var fillColor:int = (int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]);
+						
+						previewShp.graphics.clear();
+						previewShp.graphics.beginFill(fillColor);
+						circle.draw(previewShp.graphics);
+						previewShp.graphics.endFill();
+						hitMap2.draw( previewShp );
+						if ( hitMap2.hitTest(origin,1,hitMap,origin,1 ))
+						{
+							circle.r = r -1;
+							break;
+						}
+					}
+				}
 			} else {
-				lastFillColor = fillColor;
+				_colorStrategy.getColor(circle.c.x,circle.c.y,circle.r*2,colors,1);
+				var fillColor:int = (int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]);
+				
+				previewShp.graphics.clear();
+				previewShp.graphics.beginFill(fillColor);
+				circle.draw(previewShp.graphics);
+				previewShp.graphics.endFill();
 			}
 			
+			fillRect.width = fillRect.height = circle.r * 2 + 2;
+			fillRect.x = circle.c.x - circle.r - 1;
+			fillRect.y = circle.c.y - circle.r - 1;
+			hitMap2.fillRect(fillRect,0);
 			if ( _firstPoint )
 			{
 				_firstPoint = false;
@@ -228,7 +261,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			if ( circle != null )
 			{
-			 	hitMap.draw(hitMap2);
+			 	hitMap.draw(previewShp);
 				var colors:Vector.<Number> = _appendVO.point.colorsRGBA;
 				
 				fillMatrix.identity();

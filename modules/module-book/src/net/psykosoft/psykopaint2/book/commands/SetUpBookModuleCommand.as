@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.book.commands
 
 		override public function execute() : void
 		{
+			trace(this, "execute");
 			var bookRootView : BookRootView = new BookRootView();
 			bookRootView.onSubViewsReady.add(onSubViewReady);
 			requestAddViewToMainLayerSignal.dispatch(bookRootView);

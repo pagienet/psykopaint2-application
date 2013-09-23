@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.book.commands
 
 		public function execute() : void
 		{
+			trace (this, "execute()");
 			galleryImageService.fetchImages(requestVO.galleryType, requestVO.index, requestVO.amount);
 		}
 	}
