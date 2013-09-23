@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
@@ -114,12 +115,17 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		// TODO: Handle gestures somewhere else
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
-			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED && _activeMode == PaintMode.PHOTO_MODE )
+			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED  )
 			{
-				sourceCanvasViewModeIndex = ( sourceCanvasViewModeIndex+1) % sourceCanvasViewModes.length;
-				TweenLite.killTweensOf( renderer );
-				TweenLite.to( renderer, 0.3, { paintAlpha:sourceCanvasViewModes[sourceCanvasViewModeIndex][0],sourceTextureAlpha: sourceCanvasViewModes[sourceCanvasViewModeIndex][1], ease: Sine.easeInOut } );
-				
+				if ( _activeMode == PaintMode.PHOTO_MODE )
+				{
+					sourceCanvasViewModeIndex = ( sourceCanvasViewModeIndex+1) % sourceCanvasViewModes.length;
+					TweenLite.killTweensOf( renderer );
+					TweenLite.to( renderer, 0.3, { paintAlpha:sourceCanvasViewModes[sourceCanvasViewModeIndex][0],sourceTextureAlpha: sourceCanvasViewModes[sourceCanvasViewModeIndex][1], ease: Sine.easeInOut } );
+				} else if ( _activeMode == PaintMode.COLOR_MODE)
+				{
+					requestStateChangeSignal.dispatch( NavigationStateType.PAINT_COLOR );
+				}
 				
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
