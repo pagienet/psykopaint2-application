@@ -39,6 +39,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintRootViewRemovalSignal;
@@ -60,7 +61,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasViewMediator;
-
+	
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IInjector;
@@ -138,6 +139,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyCanvasZoomedToEaselViewSignal ).asSingleton();
 			_injector.map( RequestZoomCanvasToEaselViewSignal ).asSingleton();
 			_injector.map( NotifyPaintModuleSetUpSignal ).asSingleton();
+			_injector.map( NotifyPickedColorChangedSignal ).asSingleton();
 			_injector.map( NotifyPaintModuleDestroyedSignal ).asSingleton();
 			_injector.map( RequestSetCanvasBackgroundSignal ).asSingleton();
 			_injector.map( RequestPaintRootViewRemovalSignal ).asSingleton();

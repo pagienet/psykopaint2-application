@@ -270,15 +270,13 @@ package net.psykosoft.psykopaint2.paint.configuration
 							target="pathengine.pointdecorator_2.Opacity" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="5"
-							value1="0.1"
-							value2="0.25"/>			
+							value="0.175"/>			
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
 							src="Style" 
 							target="pathengine.pointdecorator_2.Opacity" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="0,1,2,3,4"
-							value1="0.9" 
-							value2="0.9" />	
+							value="0.9" />	
 
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} 
 							src="Style" 
@@ -426,10 +424,10 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<parameter id="Intensity" type={PsykoParameter.NumberParameter} value=".4" minValue="0" maxValue="1" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} src="Intensity" 
 							target="pathengine.pointdecorator_1.Opacity" 
-							targetMappings="0,0"
-							targetOffsets="0,0"
-							targetFactors="1,1"
-							targetProperties="lowerRangeValue,upperRangeValue"/>	
+							targetMappings="0"
+							targetOffsets="0"
+							targetFactors="1"
+							targetProperties="value"/>	
 					</parameterMapping>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 						<SizeDecorator>
@@ -440,7 +438,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.4" value2="0.4" />
-							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY} label="Intensity" path="pathengine.pointdecorator_1" value1=".4" value2=".4" />
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_1" value=".4"/>
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" value1="0.7" value2="0.9" />
 							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" showInUI="1"/>
 						
@@ -538,7 +536,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 							<ColorDecorator>
 								<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_0" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
-								<parameter id={ColorDecorator.PARAMETER_NR_OPACITY} label="Intensity" path="pathengine.pointdecorator_0" value1="0.9" value2="0.9" showInUI="1"/>
+								<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_0" value="0.9" showInUI="1"/>
 								<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING} path="pathengine.pointdecorator_0" value1="1" value2="1" />
 							
 							</ColorDecorator>
@@ -633,16 +631,15 @@ package net.psykosoft.psykopaint2.paint.configuration
 							target="pathengine.pointdecorator_2.Opacity" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="5"
-							value1="0.1"
-							value2="0.25"/>			
+							value="0.175"/>			
 
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
 							src="Style" 
 							target="pathengine.pointdecorator_2.Opacity" 
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
 							indices="0,1,2,3,4"
-							value1="0.9" 
-							value2="0.9" />	
+							value="0.9" 
+							/>	
 
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} 
 							src="Style" 
@@ -778,15 +775,15 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} index="2" path="pathengine.pointdecorator_0"/>
 						</SizeDecorator>
 						<ColorDecorator>
-							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
+							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.4" value2="0.4" />
 							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_1" value="0.15" showInUI="1" />
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" value1="0.1" value2="0.3" />
 							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" showInUI="1"/>
 						</ColorDecorator>
 						<SpawnDecorator>
-							<parameter id={SpawnDecorator.PARAMETER_SL_OFFSET_MODE} index={SpawnDecorator.INDEX_MODE_PRESSURE_SPEED} path="pathengine.pointdecorator_1" />
-							<parameter id={SpawnDecorator.PARAMETER_IR_MULTIPLES} value1="8" value2="8" path="pathengine.pointdecorator_1" />
+							<parameter id={SpawnDecorator.PARAMETER_SL_OFFSET_MODE} index={SpawnDecorator.INDEX_MODE_PRESSURE_SPEED} path="pathengine.pointdecorator_2" />
+							<parameter id={SpawnDecorator.PARAMETER_IR_MULTIPLES} value1="8" value2="8" path="pathengine.pointdecorator_2" />
 							<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_OFFSET} path="pathengine.pointdecorator_2" value="8" minValue="0" maxValue="200"/>
 							<parameter id={SpawnDecorator.PARAMETER_AR_OFFSET_ANGLE} path="pathengine.pointdecorator_2" value1="-1" value2="1" />
 							<parameter id={SpawnDecorator.PARAMETER_AR_BRUSH_ANGLE_VARIATION} path="pathengine.pointdecorator_2" value1="-2" value2="2" />
@@ -815,10 +812,10 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<parameter id="Strength" type={PsykoParameter.NumberParameter} value="0.5" minValue="0" maxValue="1" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} src="Strength" 
 							target="pathengine.pointdecorator_1.Opacity" 
-							targetMappings="0,0"
-							targetOffsets="0,0"
-							targetFactors="0.05,0.05"
-							targetProperties="lowerRangeValue,upperRangeValue"/>	
+							targetMappings="0"
+							targetOffsets="0"
+							targetFactors="0.05"
+							targetProperties="value"/>	
 						
 					</parameterMapping>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
@@ -867,7 +864,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			<ColorDecorator>
 			<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_2" index="1" />
 			<parameter id={ColorDecorator.PARAMETER_IL_COLOR}  path="pathengine.pointdecorator_2" index="1" />
-			<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_2" value1="1" value2="1" />
+			<parameter id={ColorDecorator.PARAMETER_N_OPACITY}  path="pathengine.pointdecorator_2" value="1" />
 			</ColorDecorator>
 			<ConditionalDecorator>
 			<!-- if pen button 1 pressed -->
@@ -1001,7 +998,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_2" index="0" />
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_2" value1="1" value2="1" showInUI="1" />
-							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY}  path="pathengine.pointdecorator_2" value1="1" value2="1" showInUI="1" />
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY}  path="pathengine.pointdecorator_2" value="1" showInUI="1" />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_2" value1="1" value2="1" showInUI="1" />
 						</ColorDecorator>
 					</pathengine>
@@ -1063,7 +1060,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</SizeDecorator>
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index="1" />
-							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY} path="pathengine.pointdecorator_1" value1="0.5" value2="0.75" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} path="pathengine.pointdecorator_1" value="0.66" showInUI="1"/>
 					
 						</ColorDecorator>
 					</pathengine>
@@ -1084,7 +1081,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</GridDecorator>
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index="1" />
-							<parameter id={ColorDecorator.PARAMETER_NR_OPACITY} path="pathengine.pointdecorator_1" value1="0.5" value2="0.75" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} path="pathengine.pointdecorator_1" value="0.66" showInUI="1"/>
 						</ColorDecorator>
 					</pathengine>
 				</brush>

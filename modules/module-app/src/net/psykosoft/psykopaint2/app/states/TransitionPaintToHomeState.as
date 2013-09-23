@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
@@ -34,6 +36,12 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var notifyCanvasZoomedToEaselViewSignal:NotifyCanvasZoomedToEaselViewSignal;
 
+		[Inject]
+		public var requestHidePopUpSignal:RequestHidePopUpSignal;
+
+		[Inject]
+		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
+
 		// needs to be set from HomeState -_-
 		public var homeState : HomeState;
 
@@ -49,6 +57,10 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onHomeModuleSetUp() : void
 		{
+			zoomOut();
+		}
+
+		private function zoomOut():void {
 			notifyCanvasZoomedToEaselViewSignal.addOnce( onZoomOutComplete );
 			requestZoomCanvasToEaselViewSignal.dispatch();
 		}
@@ -59,6 +71,12 @@ package net.psykosoft.psykopaint2.app.states
 			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_HOME_MODE);
 			requestStateChangeSignal.dispatch(NavigationStateType.PREPARE_FOR_HOME_MODE);
 			stateMachine.setActiveState(homeState);
+			hideSavingPopUp();
+		}
+
+		private function hideSavingPopUp():void {
+			notifyPopUpRemovedSignal.addOnce( zoomOut );
+			requestHidePopUpSignal.dispatch();
 		}
 
 		override ns_state_machine function deactivate() : void

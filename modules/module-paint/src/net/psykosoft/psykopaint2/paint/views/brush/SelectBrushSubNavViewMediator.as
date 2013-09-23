@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		[Inject]
 		public var paintModule:BrushKitManager;
-
+		
 		override public function initialize():void {
 
 			// Init.

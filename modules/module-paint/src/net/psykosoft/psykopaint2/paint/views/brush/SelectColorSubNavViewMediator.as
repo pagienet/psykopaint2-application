@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 
 	public class SelectColorSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -13,14 +14,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		[Inject]
 		public var paintModule:BrushKitManager;
 		
+		[Inject]
+		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
+
+		
 		override public function initialize():void {
 
 			// Init.
 			registerView( view );
 			super.initialize();
-
-			// Post init.
-			view.connectColorParameter( paintModule.getCurrentBrushParameters(false) );
+			view.colorChangedSignal.add( onColorChanged );
+		}
+		
+		override protected function onViewEnabled():void {
+			 super.onViewEnabled();
 		}
 
 		override protected function onButtonClicked( id:String ):void {
@@ -35,5 +42,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					break;
 			}
 		}
+		
+		private function onColorChanged():void
+		{
+			notifyPickedColorChangedSignal.dispatch(view.currentColor);
+		}
+		
 	}
 }

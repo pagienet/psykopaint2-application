@@ -3,11 +3,15 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
+	import flash.display.Stage;
+	import flash.events.Event;
+
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryIoUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
 
@@ -15,6 +19,12 @@ package net.psykosoft.psykopaint2.paint.commands
 	{
 		[Inject]
 		public var saveVO:SavePaintingVO;
+
+		[Inject]
+		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
+
+		[Inject]
+		public var stage:Stage;
 
 		private var _time:uint;
 		private var _preFileName:String;
@@ -27,6 +37,16 @@ package net.psykosoft.psykopaint2.paint.commands
 			ConsoleView.instance.log( this, "execute()" );
 			_time = getTimer();
 
+			requestUpdateMessagePopUpSignal.dispatch( "Saving: Writing...", "" );
+			stage.addEventListener( Event.ENTER_FRAME, onOneFrame );
+		}
+
+		private function onOneFrame( event:Event ):void {
+			stage.removeEventListener( Event.ENTER_FRAME, onOneFrame );
+			write();
+		}
+
+		private function write():void {
 			_preFileName = ( CoreSettings.RUNNING_ON_iPAD ? "" : CoreSettings.PAINTING_DATA_FOLDER_NAME + "/" ) + saveVO.paintingId;
 			writeInfoBytes();
 		}
