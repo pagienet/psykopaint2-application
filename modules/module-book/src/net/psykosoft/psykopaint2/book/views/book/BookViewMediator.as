@@ -60,6 +60,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			super.initialize();
 
 			registerEnablingState( NavigationStateType.BOOK_SOURCE_IMAGES );
+			registerEnablingState( NavigationStateType.BOOK_GALLERY );
 
 			view.stage3dProxy = stage3dProxy;
 

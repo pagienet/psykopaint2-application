@@ -50,16 +50,19 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _currentScene:ObjectContainer3D;
 
 		public var closestSnapPointChangedSignal:Signal;
+		public var scrollMotionEndedSignal : Signal;
 		public var zoomCompletedSignal:Signal;
 		public var easelRectChanged:Signal;
 		public var sceneReadySignal:Signal;
 		private var _targetLightPosition : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightInterpolation : Number = .99;
 
+
 		public function HomeView() {
 			super();
 			scalesToRetina = false;
 			closestSnapPointChangedSignal = new Signal();
+			scrollMotionEndedSignal = new Signal();
 			zoomCompletedSignal = new Signal();
 			easelRectChanged = new Signal();
 			sceneReadySignal = new Signal();
@@ -130,6 +133,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_scrollCameraController = new HScrollCameraController();
 			_zoomCameraController = new ZoomCameraController();
 			_scrollCameraController.closestSnapPointChangedSignal.add( onClosestSnapPointChanged );
+			_scrollCameraController.scrollMotionEndedSignal.add( onScrollMotionEnded );
 			_zoomCameraController.zoomCompleteSignal.add( onZoomComplete );
 			_scrollCameraController.setCamera( _view.camera, cameraTarget );
 			_zoomCameraController.setCamera( _view.camera, cameraTarget );
@@ -171,6 +175,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			sceneReadySignal.dispatch();
 		}
 
+		private function onScrollMotionEnded() : void
+		{
+			scrollMotionEndedSignal.dispatch(_scrollCameraController.closestSnapPointIndex);
+		}
+
 		private function updateLightPosition() : void
 		{
 			var pos : Vector3D = _light.position;
@@ -202,6 +211,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			if( _scrollCameraController ) {
 				_scrollCameraController.closestSnapPointChangedSignal.remove( onClosestSnapPointChanged );
+				_scrollCameraController.scrollMotionEndedSignal.remove( onScrollMotionEnded );
 				_scrollCameraController.dispose();
 				_scrollCameraController = null;
 			}

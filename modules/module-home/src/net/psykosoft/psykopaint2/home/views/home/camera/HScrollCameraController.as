@@ -174,6 +174,16 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 			return _positionManager.closestSnapPointChangedSignal;
 		}
 
+		public function get scrollMotionEndedSignal() : Signal
+		{
+			return _positionManager.motionEndedSignal;
+		}
+
+		public function set motionEndedSignal(value : Signal) : void
+		{
+			_positionManager.motionEndedSignal = value;
+		}
+
 		public function get positionManager():SnapPositionManager {
 			return _positionManager;
 		}
@@ -184,6 +194,11 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 
 		public function set isEnabled( value:Boolean ):void {
 			_isEnabled = value;
+		}
+
+		public function get closestSnapPointIndex() : int
+		{
+			return _positionManager.closestSnapPointIndex;
 		}
 	}
 }

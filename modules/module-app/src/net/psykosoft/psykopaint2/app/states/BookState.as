@@ -163,9 +163,10 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function refreshBookSource():void {
 			if (_activeSourceType == BookImageSource.GALLERY_IMAGES)
-				requestFetchGalleryImagesSignal.dispatch(new GalleryImageRequestVO(_galleryType, 0, 16));
-			else
-				requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(_activeSourceType, 0, 0));
+				requestFetchGalleryImagesSignal.dispatch(new GalleryImageRequestVO(_galleryType, 0, 24));
+			else {
+				requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(_activeSourceType, 0, 48));
+			}
 		}
 
 		private function onImageSelectedFromBookSignal(bitmapData : BitmapData) : void

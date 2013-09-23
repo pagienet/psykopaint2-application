@@ -123,6 +123,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// From view.
 			view.closestSnapPointChangedSignal.add( onViewClosestSnapPointChanged );
+			view.scrollMotionEndedSignal.add( onScrollMotionEnded );
 			view.zoomCompletedSignal.add( onViewZoomComplete );
 			view.easelRectChanged.add( onEaselRectChanged );
 			view.enabledSignal.add( onEnabled );
@@ -141,6 +142,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			requestWallpaperChangeSignal.remove( onWallPaperChanged );
 			notifyGlobalGestureSignal.remove( onGlobalGesture );
+			view.scrollMotionEndedSignal.remove( onScrollMotionEnded );
 			notifyNavigationToggleSignal.remove( onNavigationToggled );
 			notifyPaintingDataRetrievedSignal.remove( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.remove( onEaselUpdateRequest );
@@ -261,6 +263,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyHomeViewZoomCompleteSignal.dispatch();
 		}
 
+		private function onScrollMotionEnded(snapPointIndex : uint) : void
+		{
+			if( stateModel.currentState != NavigationStateType.BOOK_GALLERY && snapPointIndex == 3 ) {
+				requestHomePanningToggleSignal.dispatch(false);
+				requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
+			}
+		}
+
 		private function onViewClosestSnapPointChanged( snapPointIndex:uint ):void {
 
 			trace( this, "closest painting changed to index: " + snapPointIndex );
@@ -284,13 +294,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			// Restore HOME state if closest to home painting ( index 2 ).
 			if( stateModel.currentState != NavigationStateType.HOME && snapPointIndex == homePaintingIndex ) {
 				requestNavigationStateChange( NavigationStateType.HOME );
-				return;
-			}
-
-			// Restore HOME state if closest to home painting ( index 3 ).
-			if( stateModel.currentState != NavigationStateType.BOOK_GALLERY && snapPointIndex == 3 ) {
-				requestHomePanningToggleSignal.dispatch(false);
-				requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
 				return;
 			}
 
