@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.commands.RetrieveAllPaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.commands.UpdateFrameCommand;
 	import net.psykosoft.psykopaint2.core.commands.bootstrap.BootstrapCoreModuleCommand;
+	import net.psykosoft.psykopaint2.core.data.RetrievePaintingsDataProcessModel;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
@@ -171,9 +172,9 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( MemoryWarningManager ).asSingleton();
 			_injector.map( KeyDebuggingManager ).asSingleton();
 			_injector.map( UnDisposedObjectsManager ).asSingleton();
-
 			_injector.map(GyroscopeManager).asSingleton();
 			_injector.map(AccelerometerManager).asSingleton();
+			_injector.map(RetrievePaintingsDataProcessModel).asSingleton();
 
 		}
 

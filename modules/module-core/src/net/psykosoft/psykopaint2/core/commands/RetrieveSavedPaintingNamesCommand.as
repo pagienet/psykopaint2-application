@@ -6,14 +6,14 @@ package net.psykosoft.psykopaint2.core.commands
 	import net.psykosoft.psykopaint2.base.utils.io.FolderReadUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
-	import net.psykosoft.psykopaint2.core.data.RetrievePaintingsVO;
+	import net.psykosoft.psykopaint2.core.data.RetrievePaintingsDataProcessModel;
 
 	import robotlegs.bender.bundles.mvcs.Command;
 
 	public class RetrieveSavedPaintingNamesCommand extends Command
 	{
 		[Inject]
-		public var vo:RetrievePaintingsVO;
+		public var vo:RetrievePaintingsDataProcessModel;
 
 		override public function execute():void {
 

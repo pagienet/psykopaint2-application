@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
+	import net.psykosoft.psykopaint2.paint.data.SavingProcessModel;
 
 	public class ExportCanvasSurfacesCommand extends AsyncCommand
 	{
@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		public var canvasModel:CanvasModel;
 
 		[Inject]
-		public var saveVO:SavePaintingVO;
+		public var saveVo:SavingProcessModel;
 
 		[Inject]
 		public var stage:Stage;
@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			ConsoleView.instance.log( this, "execute()" );
 			_time = getTimer();
 
-			trace( this, "vo: " + saveVO );
+			trace( this, "vo: " + saveVo );
 
 			requestUpdateMessagePopUpSignal.dispatch( "Saving: Exporting...", "" );
 			stage.addEventListener( Event.ENTER_FRAME, onOneFrame );
@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function onExportComplete( event:CanvasExportEvent ):void {
 			event.target.removeEventListener( CanvasExportEvent.COMPLETE, onExportComplete );
-			saveVO.data = event.paintingDataVO;
+			saveVo.data = event.paintingDataVO;
 			dispatchComplete( true );
 			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
 		}

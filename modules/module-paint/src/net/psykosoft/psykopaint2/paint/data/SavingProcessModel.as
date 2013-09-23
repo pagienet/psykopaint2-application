@@ -6,17 +6,13 @@ package net.psykosoft.psykopaint2.paint.data
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 
-	public class SavePaintingVO
+	public class SavingProcessModel
 	{
 		public var paintingId:String;
 		public var info:PaintingInfoVO;
 		public var data:PaintingDataVO;
 		public var infoBytes:ByteArray;
 		public var dataBytes:ByteArray;
-
-		public function SavePaintingVO( paintingId:String ) {
-			this.paintingId = paintingId;
-		}
 
 		public function toString():String {
 			return "SavePaintingVO - [ paintingId: " + paintingId + " ]";

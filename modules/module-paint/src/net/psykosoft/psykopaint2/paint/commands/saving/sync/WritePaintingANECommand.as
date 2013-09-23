@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.commands
+package net.psykosoft.psykopaint2.paint.commands.saving.sync
 {
 
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
@@ -13,12 +13,12 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.paint.data.SavePaintingVO;
+	import net.psykosoft.psykopaint2.paint.data.SavingProcessModel;
 
-	public class WritePaintingDataANECommand extends AsyncCommand
+	public class WritePaintingANECommand extends AsyncCommand
 	{
 		[Inject]
-		public var saveVO:SavePaintingVO;
+		public var saveVO:SavingProcessModel;
 
 		[Inject]
 		public var ioAne:IOAneManager;

@@ -21,8 +21,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleConfirmSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySetColorStyleSignal;
@@ -33,8 +31,9 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.commands.DestroyPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.LoadSurfaceCommand;
-	import net.psykosoft.psykopaint2.paint.commands.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetupPaintModuleCommand;
+	import net.psykosoft.psykopaint2.paint.commands.saving.SavePaintingCommand;
+	import net.psykosoft.psykopaint2.paint.data.SavingProcessModel;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
@@ -120,14 +119,13 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map(BrushShapeLibrary).asSingleton();
 			_injector.map(BrushKitManager).asSingleton();
 			_injector.map(ColorStyleModule).asSingleton();
-
 			_injector.map(CanvasRenderer).asSingleton();
 			_injector.map(LightingModel).asSingleton();
 			_injector.map(CanvasModel).asSingleton();
 			_injector.map(CanvasHistoryModel).asSingleton();
-
 			_injector.map(RubberMeshRenderer).asSingleton();
 			_injector.map(RubberMeshModel).asSingleton();
+			_injector.map(SavingProcessModel).asSingleton();
 		}
 
 		// -----------------------
