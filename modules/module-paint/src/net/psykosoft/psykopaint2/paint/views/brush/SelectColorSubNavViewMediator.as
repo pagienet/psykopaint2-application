@@ -20,7 +20,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			super.initialize();
 
 			// Post init.
-			view.connectColorParameter( paintModule.getCurrentBrushParameters(false) );
+			//view.connectColorParameter( paintModule.getCurrentBrushParameters(false) );
+		}
+		
+		override protected function onViewEnabled():void {
+			 super.onViewEnabled();
+			 view.connectColorParameter( paintModule.getCurrentBrushParameters(false) );
 		}
 
 		override protected function onButtonClicked( id:String ):void {

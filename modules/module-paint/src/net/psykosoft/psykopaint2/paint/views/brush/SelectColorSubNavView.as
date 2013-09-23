@@ -82,6 +82,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// ---------------------------------------------------------------------
 
 		public function connectColorParameter( parameterSetVO:ParameterSetVO ):void {
+			_colorParameter = null;
 			var list:Vector.<PsykoParameter> = parameterSetVO.parameters;
 			var numParameters:uint = list.length;
 			for( var i:uint = 0; i < numParameters; ++i ) {
