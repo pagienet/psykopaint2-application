@@ -95,9 +95,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightDistance : Number = 1000;
-
 		private var _dockedAtSnapIndex:int = -1;
-
 		private var _allowPanning:Boolean = true;
 
 		override public function initialize():void {
