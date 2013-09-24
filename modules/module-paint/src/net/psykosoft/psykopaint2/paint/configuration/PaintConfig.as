@@ -61,6 +61,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasViewMediator;
+	import net.psykosoft.psykopaint2.paint.views.color.ColorPickerView;
+	import net.psykosoft.psykopaint2.paint.views.color.ColorPickerViewMediator;
 	
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
@@ -185,6 +187,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_mediatorMap.map( CanvasSubNavView ).toMediator( CanvasSubNavViewMediator );
 			_mediatorMap.map( CanvasView ).toMediator( CanvasViewMediator );
 			_mediatorMap.map( PaintRootView ).toMediator( PaintRootViewMediator );
+			_mediatorMap.map( ColorPickerView ).toMediator( ColorPickerViewMediator );
 		}
 	}
 }

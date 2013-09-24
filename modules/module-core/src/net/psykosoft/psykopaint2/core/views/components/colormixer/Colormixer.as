@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.MovieClip;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.StageQuality;
@@ -135,7 +134,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 			cmf = new ColorMatrixFilter([0.999,0,0,0,0,0,0.999,0,0,0,0,0,0.999,0,0,0,0,1.02,0]);
 			
-			for ( var i:int = 0; i < 3; i++)
+			for ( i = 0; i < 3; i++)
 			{
 				_displacementFilter.scaleX = 32 * Math.random() - 16;
 				_displacementFilter.scaleY = 32 * Math.random() - 16;
