@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.commands.saving.async.SavePaintingAsyncCommand;
 	import net.psykosoft.psykopaint2.paint.commands.saving.sync.SavePaintingSyncCommand;
-	import net.psykosoft.psykopaint2.paint.data.SavingProcessModel;
+	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 
 	/*
 		Bootstraps the saving process and triggers either the sync or the async saving process.

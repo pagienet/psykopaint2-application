@@ -144,11 +144,37 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			}
 		}
 
+		public function enableButtonWithId( id:String, enabled:Boolean ):void {
+
+			trace( this, "enabling button with id: " + id );
+
+			var targetData:ButtonData;
+			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
+			if( dataProvider ) {
+				var numData:uint = dataProvider.length;
+				for( var i:uint = 0; i < numData; i++ ) {
+					var data:ButtonData = dataProvider[ i ] as ButtonData;
+					trace( "button id: " + data.id );
+					trace( "contains: " + id.indexOf( data.id ) );
+					if( id.indexOf( data.id ) != -1 ) {
+					    targetData = data;
+						break;
+					}
+				}
+			}
+
+			if( !targetData ) return;
+
+			targetData.enabled = enabled;
+
+			_scroller.updateAllItemRenderersFromData();
+		}
+
 		// ---------------------------------------------------------------------
 		// Protected.
 		// ---------------------------------------------------------------------
 
-		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false ):ButtonData {
+		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false, enabled:Boolean = true ):ButtonData {
 			if( !_centerButtonData ) _centerButtonData = new Vector.<ISnapListData>();
 			var btnData:ButtonData = new ButtonData();
 			btnData.labelText = btnData.defaultLabelText = label;
@@ -158,6 +184,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			btnData.id = id;
 			btnData.itemRendererWidth = 100;
 			btnData.itemRendererType = rendererClass || IconButton;
+			btnData.enabled = enabled;
 			_centerButtonData.push( btnData );
 			return btnData;
 		}
@@ -214,7 +241,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 					data.selected = false;
 				}
 			}
-			// Note, to changes to take effect visually, you need to call _scroller.refreshItemRenderers();
+			// Note, for changes to take effect visually, you need to call _scroller.refreshItemRenderers();
 		}
 
 		// ---------------------------------------------------------------------

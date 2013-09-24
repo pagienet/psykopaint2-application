@@ -38,13 +38,14 @@ package net.psykosoft.psykopaint2.core.commands
 		}
 
 		private function readNextFile():void {
-			var fileName:String = vo.paintingFileNames[ vo.paintingInfoBeingReadIndex ];
+			var fileName:String = vo.paintingInfoFileNames[ vo.paintingInfoBeingReadIndex ];
 			notifyPaintingInfoFileReadSignal.addOnce( onFileRead );
 			requestPaintingInfoFileReadSignal.dispatch( fileName );
 		}
 
 		private function onFileRead( info:PaintingInfoVO ):void {
 			if( info ) vo.paintingVos.push( info );
+
 			vo.paintingInfoBeingReadIndex++;
 			if( vo.paintingInfoBeingReadIndex < vo.numPaintingFiles ) {
 				readNextFile();

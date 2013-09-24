@@ -3,13 +3,15 @@ package net.psykosoft.psykopaint2.paint.commands.saving.async
 
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
+	import flash.utils.setTimeout;
+
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryIoUtil;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
 
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.paint.data.SavingProcessModel;
+	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 
 	public class WritePaintingDataAS3Command extends AsyncCommand
 	{
@@ -34,6 +36,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.async
 
 		private function onWriteComplete():void {
 			ConsoleView.instance.log( this, "onWriteComplete()" );
+//			setTimeout( function():void { dispatchComplete( true ) }, 5000 ); // Simulate slow write times in desktop...
 			dispatchComplete( true );
 		}
 	}

@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _iconBitmap:Bitmap;
 		protected var _selectable:Boolean;
 		protected var _selected:Boolean;
+		protected var _enabled:Boolean;
 
 		public var id:String;
 
@@ -74,7 +75,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 //			trace( this, "selected: " + value + ", " + _label.text );
 			if( !_selectable ) return;
 			_selected = value;
-			mouseEnabled = mouseChildren = !_selected;
+			mouseEnabled = mouseChildren = !_selected && _enabled;
 			updateSelected();
 		}
 
@@ -122,7 +123,6 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_icon.visible = show;
 		}
 		
-
 		// ---------------------------------------------------------------------
 		// Protected.
 		// ---------------------------------------------------------------------
@@ -163,6 +163,17 @@ package net.psykosoft.psykopaint2.base.ui.components
 				stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			}
 			scaleIcon( 0.98 );
+		}
+
+		public function get enabled():Boolean {
+			return _enabled;
+		}
+
+		public function set enabled( value:Boolean ):void {
+			_enabled = value;
+			if( !_enabled ) transform.colorTransform = new ColorTransform( -1, -1, -1, 1 );
+			else transform.colorTransform = new ColorTransform();
+			mouseEnabled = mouseChildren = _enabled;
 		}
 	}
 }

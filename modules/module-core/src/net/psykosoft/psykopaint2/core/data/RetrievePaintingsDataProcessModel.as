@@ -1,10 +1,11 @@
 package net.psykosoft.psykopaint2.core.data
 {
 
+
 	public class RetrievePaintingsDataProcessModel
 	{
 		public var paintingVos:Vector.<PaintingInfoVO>;
-		public var paintingFileNames:Vector.<String>;
+		public var paintingInfoFileNames:Vector.<String>;
 		public var numPaintingFiles:uint;
 		public var paintingInfoBeingReadIndex:uint;
 
@@ -14,7 +15,7 @@ package net.psykosoft.psykopaint2.core.data
 		public function dispose():void {
 			numPaintingFiles = 0;
 			paintingInfoBeingReadIndex = 0;
-			paintingFileNames = null;
+			paintingInfoFileNames = null;
 			paintingVos = null;
 		}
 	}

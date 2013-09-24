@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
@@ -152,6 +153,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NavigationStateModel ).asSingleton();
 			_injector.map( PaintingModel ).asSingleton();
 			_injector.map( EaselRectModel ).asSingleton();
+			_injector.map(SavingProcessModel).asSingleton();
 		}
 
 		// -----------------------

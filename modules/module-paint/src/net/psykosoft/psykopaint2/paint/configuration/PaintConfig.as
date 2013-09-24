@@ -33,7 +33,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.commands.LoadSurfaceCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetupPaintModuleCommand;
 	import net.psykosoft.psykopaint2.paint.commands.saving.SavePaintingCommand;
-	import net.psykosoft.psykopaint2.paint.data.SavingProcessModel;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
@@ -62,7 +61,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorPickerView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorPickerViewMediator;
-	
+
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IInjector;
@@ -125,7 +124,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map(CanvasHistoryModel).asSingleton();
 			_injector.map(RubberMeshRenderer).asSingleton();
 			_injector.map(RubberMeshModel).asSingleton();
-			_injector.map(SavingProcessModel).asSingleton();
 		}
 
 		// -----------------------

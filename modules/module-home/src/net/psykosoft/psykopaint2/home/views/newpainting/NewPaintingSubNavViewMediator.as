@@ -6,8 +6,11 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
@@ -32,14 +35,36 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		[Inject]
 		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
 
+		[Inject]
+		public var notifyPaintingDataSavedSignal:NotifyPaintingDataSavedSignal;
+
+		[Inject]
+		public var savingProcessModel:SavingProcessModel;
+
 		override public function initialize():void {
 
 			// Init.
 			registerView( view );
 			super.initialize();
+
+			// From app.
+			notifyPaintingDataSavedSignal.add( onPaintingDataSaved );
+		}
+
+		override public function destroy():void {
+			notifyPaintingDataSavedSignal.remove( onPaintingDataSaved );
+			super.destroy();
+		}
+
+		private function onPaintingDataSaved( success:Boolean ):void {
+			ConsoleView.instance.log( this, "knows of painting data saved..." );
+			view.enableDisabledButtons();
+			view.showRightButton( true );
 		}
 
 		override protected function onViewSetup():void {
+
+			ConsoleView.instance.log( this, "view set up" );
 
 			view.createNewPaintingButtons();
 
@@ -49,7 +74,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			// Also requests an easel update on the home view.
 			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
 			if( data && data.length > 0 ) {
-				view.createInProgressPaintings( data );
+				view.createInProgressPaintings( data, savingProcessModel.paintingId );
 			}
 
 			view.validateCenterButtons();
@@ -103,6 +128,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				//  Paintings.
 				default: {
+//					view.showRightButton( true );
 					paintingModel.activePaintingId = "psyko-" + id;
 					var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
 					trace( this, "clicked on painting: " + vo.id );

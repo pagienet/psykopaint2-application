@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.async
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.paint.data.SavingProcessModel;
+	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 
 	public class WritePaintingDataANECommand extends AsyncCommand
 	{

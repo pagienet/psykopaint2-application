@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.paint.data.SavingProcessModel;
+	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 
 	public class ExportCanvasSurfacesCommand extends AsyncCommand
 	{

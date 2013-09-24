@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.paint.data
+package net.psykosoft.psykopaint2.core.models
 {
 
 	import flash.utils.ByteArray;
@@ -27,6 +27,7 @@ package net.psykosoft.psykopaint2.paint.data
 			data = null;
 			infoBytes = null;
 			dataBytes = null;
+			paintingId = null;
 		}
 	}
 }

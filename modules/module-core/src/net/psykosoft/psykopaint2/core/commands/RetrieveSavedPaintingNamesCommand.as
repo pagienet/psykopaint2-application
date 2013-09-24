@@ -25,15 +25,15 @@ package net.psykosoft.psykopaint2.core.commands
 			trace( this, "found files in paint data: " + len );
 
 			// Sweep files and focus on the ones that have the .psy extension, which represents paintings.
-			vo.paintingFileNames = new Vector.<String>();
+			vo.paintingInfoFileNames = new Vector.<String>();
 			for( var i:uint; i < len; i++ ) {
 				var file:File = files[ i ];
 				trace( "  file: " + file.name );
 				if( file.name.indexOf( PaintingFileUtils.PAINTING_INFO_FILE_EXTENSION ) != -1 ) {
-					vo.paintingFileNames.push( file.name );
+					vo.paintingInfoFileNames.push( file.name );
 				}
 			}
-			vo.numPaintingFiles = vo.paintingFileNames.length;
+			vo.numPaintingFiles = vo.paintingInfoFileNames.length;
 		}
 	}
 }

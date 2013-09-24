@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public var minValue:Number;
 		public var maxValue:Number;
 		public var previewID:String;
+		public var enabled:Boolean;
 
 		public function ButtonData() {
 			super();
