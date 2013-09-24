@@ -71,11 +71,14 @@ package net.psykosoft.psykopaint2.core.views.debug
 //			}
 		}
 
+		//Removed - funny idea, but we have no memory to waste
+		/*
 		private function playPsychoSound():void {
 			var newClipClass:Class = Class( getDefinitionByName( "psycho" ) );
 			var hh:MovieClip = new newClipClass();
 			hh.play();
 		}
+		*/
 
 		private function onErrorsMouseUp( event:MouseEvent ):void {
 			_errorsTextField.visible = false;

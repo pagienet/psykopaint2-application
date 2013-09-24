@@ -153,7 +153,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			}
 			
 			var colorSet2:Vector.<uint> = ColorHarmony.getGradient(ARGB.fromARGBUint(colorSet1[selectedTopIndex]),6);
-			for ( var x:int = 0; x < 6; x++ )
+			for ( x = 0; x < 6; x++ )
 			{
 				g.beginFill(colorSet2[x] );
 				g.drawCircle( 93 + x * 151, 90 + 1 * 202, 67 );
