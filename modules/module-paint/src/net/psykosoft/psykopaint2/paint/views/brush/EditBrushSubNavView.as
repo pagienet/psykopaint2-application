@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.ComboboxView;
-	import net.psykosoft.psykopaint2.core.views.components.rangeslider.RangedSlider;
+//	import net.psykosoft.psykopaint2.core.views.components.rangeslider.RangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.Slider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SliderButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
@@ -190,6 +190,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// Range slider.
 			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter ) {
+				throw("Range Slider has been deprecated - use something else");
+				/*
 				var rangeSlider:RangedSlider = new RangedSlider();
 				rangeSlider.minValue = _parameter.minLimit;
 				rangeSlider.maxValue = _parameter.maxLimit;
@@ -200,9 +202,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				positionUiElement( rangeSlider );
 				addChild( rangeSlider );
 				_uiElements.push( rangeSlider );
+				*/
 			}
+			
 
 			else if( parameterType == PsykoParameter.AngleRangeParameter ) {
+				throw("Range Slider has been deprecated - use something else");
+				/*
 				rangeSlider = new RangedSlider();
 				rangeSlider.labelMode = RangedSlider.LABEL_DEGREES;
 				rangeSlider.minValue = _parameter.minLimit;
@@ -214,6 +220,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				positionUiElement( rangeSlider );
 				addChild( rangeSlider );
 				_uiElements.push( rangeSlider );
+				*/
 			}
 
 			// Angle.
@@ -297,7 +304,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			for( var i:uint; i < len; ++i ) {
 				var uiElement:DisplayObject = _uiElements[ i ];
 				if( uiElement is Slider ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
-				else if( uiElement is RangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
 				else if( uiElement is ComboBox ) {
 					uiElement.removeEventListener( Event.SELECT, onComboBoxChanged );
 				}
@@ -306,6 +312,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				else {
 					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
 				}
+				//else if( uiElement is RangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
 				removeChild( uiElement );
 			}
 			_uiElements = null;
@@ -366,7 +373,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				slider.updateLabelFromValue();
 			}
 		}
-
+/*
 		private function onRangeSliderChanged( event:Event ):void {
 			var slider:RangedSlider = event.target as RangedSlider;
 			if( _parameter.type == PsykoParameter.AngleRangeParameter ) {
@@ -377,5 +384,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				_parameter.upperRangeValue = slider.value2;
 			}
 		}
+		*/
 	}
 }
