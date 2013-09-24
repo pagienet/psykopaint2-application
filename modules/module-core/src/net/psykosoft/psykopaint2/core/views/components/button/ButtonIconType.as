@@ -65,5 +65,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const NEW_PAINTING_MANUAL:String = "newManual";
 		public static const NEW_PAINTING_AUTO:String = "newAuto";
 		public static const PAINTING:String = "painting";
+		public static const YOURS : String = "yours";
+		public static const MOST_LOVED : String = "mostLoved";
+		public static const MOST_RECENT : String = "mostRecent";
 	}
 }
