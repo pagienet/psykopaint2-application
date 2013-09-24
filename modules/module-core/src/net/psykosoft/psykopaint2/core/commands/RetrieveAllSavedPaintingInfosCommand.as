@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.core.commands
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 
-	import net.psykosoft.psykopaint2.core.data.RetrievePaintingsVO;
+	import net.psykosoft.psykopaint2.core.data.RetrievePaintingsDataProcessModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoFileReadSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingInfoFileReadSignal;
@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.commands
 	public class RetrieveAllSavedPaintingInfosCommand extends AsyncCommand
 	{
 		[Inject]
-		public var vo:RetrievePaintingsVO;
+		public var vo:RetrievePaintingsDataProcessModel;
 
 		[Inject]
 		public var paintingModel:PaintingModel;

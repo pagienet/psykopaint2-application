@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.core.commands
 
 	import flash.utils.getTimer;
 
-	import net.psykosoft.psykopaint2.core.data.RetrievePaintingsVO;
+	import net.psykosoft.psykopaint2.core.data.RetrievePaintingsDataProcessModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 
@@ -14,15 +14,15 @@ package net.psykosoft.psykopaint2.core.commands
 		[Inject]
 		public var paintingModel:PaintingModel;
 
-		private var _retrieveVoInstance:RetrievePaintingsVO;
+		[Inject]
+		public var retrieveModel:RetrievePaintingsDataProcessModel;
+
 		private var _time:uint;
 
 		override public function prepare():void {
 
 			trace( this, "prepare()" );
 			_time = getTimer();
-
-			mapMacroConsistentData();
 
 			add( RetrieveSavedPaintingNamesCommand );
 			add( RetrieveAllSavedPaintingInfosCommand );
@@ -32,20 +32,8 @@ package net.psykosoft.psykopaint2.core.commands
 
 		private function onMacroComplete( success:Boolean ):void {
 			trace( this, "macro complete - success: " + success );
-			unMapMacroConsistentData();
+			retrieveModel.dispose();
 			ConsoleView.instance.log( this, "done - " + String( getTimer() - _time ) );
-		}
-
-		private function mapMacroConsistentData():void {
-			trace( this, "mapping..." );
-			_retrieveVoInstance = new RetrievePaintingsVO();
-			injector.map( RetrievePaintingsVO ).toValue( _retrieveVoInstance );
-		}
-
-		private function unMapMacroConsistentData():void {
-			trace( this, "un-mapping..." );
-			injector.unmap( RetrievePaintingsVO );
-			if( _retrieveVoInstance ) _retrieveVoInstance.dispose();
 		}
 	}
 }

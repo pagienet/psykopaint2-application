@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 

@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.commands.RetrieveAllPaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.commands.UpdateFrameCommand;
 	import net.psykosoft.psykopaint2.core.commands.bootstrap.BootstrapCoreModuleCommand;
+	import net.psykosoft.psykopaint2.core.data.RetrievePaintingsDataProcessModel;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
@@ -38,9 +39,10 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoFileReadSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
@@ -171,9 +173,9 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( MemoryWarningManager ).asSingleton();
 			_injector.map( KeyDebuggingManager ).asSingleton();
 			_injector.map( UnDisposedObjectsManager ).asSingleton();
-
 			_injector.map(GyroscopeManager).asSingleton();
 			_injector.map(AccelerometerManager).asSingleton();
+			_injector.map(RetrievePaintingsDataProcessModel).asSingleton();
 
 		}
 
@@ -205,7 +207,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifySurfaceLoadedSignal ).asSingleton();
 			_injector.map( RequestCropSourceImageSignal ).asSingleton();
 			_injector.map( RequestHideSplashScreenSignal ).asSingleton();
-			_injector.map( NotifyPaintingSavedSignal ).asSingleton();
+			_injector.map( NotifyPaintingInfoSavedSignal ).asSingleton();
+			_injector.map( NotifyPaintingDataSavedSignal ).asSingleton();
 			_injector.map( NotifyPaintingSavingStartedSignal ).asSingleton();
 			_injector.map( NotifyCanvasExportStartedSignal ).asSingleton();
 			_injector.map( NotifyCanvasExportEndedSignal ).asSingleton();
