@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.async
 
 			ConsoleView.instance.log( this, "execute()" );
 
+			// TODO: SavePaintingAsyncCommand serializes both at the same time using SerializePaintingCommand, this needs to be async.
 		}
 	}
 }

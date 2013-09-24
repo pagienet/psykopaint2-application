@@ -39,9 +39,10 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoFileReadSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
@@ -206,7 +207,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifySurfaceLoadedSignal ).asSingleton();
 			_injector.map( RequestCropSourceImageSignal ).asSingleton();
 			_injector.map( RequestHideSplashScreenSignal ).asSingleton();
-			_injector.map( NotifyPaintingSavedSignal ).asSingleton();
+			_injector.map( NotifyPaintingInfoSavedSignal ).asSingleton();
+			_injector.map( NotifyPaintingDataSavedSignal ).asSingleton();
 			_injector.map( NotifyPaintingSavingStartedSignal ).asSingleton();
 			_injector.map( NotifyCanvasExportStartedSignal ).asSingleton();
 			_injector.map( NotifyCanvasExportEndedSignal ).asSingleton();

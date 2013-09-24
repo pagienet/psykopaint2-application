@@ -31,8 +31,8 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 			saveVo.paintingId = paintingModel.activePaintingId;
 
 			// *** PICK ONE ***
-//			add( SavePaintingAsyncCommand );
-			add( SavePaintingSyncCommand );
+			add( SavePaintingAsyncCommand );
+//			add( SavePaintingSyncCommand );
 
 			registerCompleteCallback( onMacroComplete );
 

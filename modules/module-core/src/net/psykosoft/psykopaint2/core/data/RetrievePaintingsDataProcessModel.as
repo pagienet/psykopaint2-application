@@ -12,7 +12,10 @@ package net.psykosoft.psykopaint2.core.data
 		}
 
 		public function dispose():void {
+			numPaintingFiles = 0;
+			paintingInfoBeingReadIndex = 0;
 			paintingFileNames = null;
+			paintingVos = null;
 		}
 	}
 }

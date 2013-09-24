@@ -4,7 +4,8 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSavedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasSurfacesCommand;
 	import net.psykosoft.psykopaint2.paint.data.SavingProcessModel;
@@ -12,7 +13,10 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 	public class SavePaintingSyncCommand extends SequenceMacro
 	{
 		[Inject]
-		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
+		public var notifyPaintingInfoSavedSignal:NotifyPaintingInfoSavedSignal;
+
+		[Inject]
+		public var notifyPaintingDataSavedSignal:NotifyPaintingDataSavedSignal;
 
 		[Inject]
 		public var saveVo:SavingProcessModel;
@@ -31,7 +35,10 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 
 		private function onMacroComplete( success:Boolean ):void {
 			trace( this, "macro complete - success: " + success );
-			if( success ) notifyPaintingSavedSignal.dispatch( true );
+			if( success ) {
+				notifyPaintingInfoSavedSignal.dispatch( true );
+				notifyPaintingDataSavedSignal.dispatch( true );
+			}
 			else throw new Error( "Error saving the painting." ); // TODO: should we verify saved data and remove it from disk if invalid?
 		}
 	}

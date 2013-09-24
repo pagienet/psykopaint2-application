@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestPaintingSaveSignal:RequestPaintingSaveSignal;
 
 		[Inject]
-		public var notifyPaintingSavedSignal:NotifyPaintingSavedSignal;
+		public var notifyPaintingSavedSignal:NotifyPaintingInfoSavedSignal;
 
 		[Inject]
 		public var paintingModel:PaintingModel;
