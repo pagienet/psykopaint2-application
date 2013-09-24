@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
-	public class GallerySubNavView extends SubNavigationViewBase
+	public class GalleryBrowseSubNavView extends SubNavigationViewBase
 	{
 		public static const ID_BACK:String = "Back";
 		public static const ID_YOURS:String = "Yours";
@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public static const ID_MOST_RECENT:String = "Most recent";
 		public static const ID_MOST_LOVED:String = "Most loved";
 
-		public function GallerySubNavView() {
+		public function GalleryBrowseSubNavView() {
 			super();
 		}
 

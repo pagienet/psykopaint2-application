@@ -7,10 +7,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.home.signals.RequestExitGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 
-	public class GallerySubNavViewMediator extends SubNavigationMediatorBase
+	public class GalleryBrowseSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
-		public var view:GallerySubNavView;
+		public var view:GalleryBrowseSubNavView;
 
 		[Inject]
 		public var requestBrowseGallerySignal : RequestBrowseGallerySignal;
@@ -30,19 +30,25 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			super.initialize();
 
 			_galleryTypeMap = [];
-			_galleryTypeMap[GallerySubNavView.ID_FOLLOWING] = GalleryType.FOLLOWING;
-			_galleryTypeMap[GallerySubNavView.ID_MOST_LOVED] = GalleryType.MOST_LOVED;
-			_galleryTypeMap[GallerySubNavView.ID_MOST_RECENT] = GalleryType.MOST_RECENT;
-			_galleryTypeMap[GallerySubNavView.ID_YOURS] = GalleryType.YOURS;
+			_galleryTypeMap[GalleryBrowseSubNavView.ID_FOLLOWING] = GalleryType.FOLLOWING;
+			_galleryTypeMap[GalleryBrowseSubNavView.ID_MOST_LOVED] = GalleryType.MOST_LOVED;
+			_galleryTypeMap[GalleryBrowseSubNavView.ID_MOST_RECENT] = GalleryType.MOST_RECENT;
+			_galleryTypeMap[GalleryBrowseSubNavView.ID_YOURS] = GalleryType.YOURS;
+		}
+
+		override protected function onViewDisabled() : void
+		{
+			requestHomePanningToggleSignal.dispatch(true);
+			super.onViewDisabled();
 		}
 
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
-				case GallerySubNavView.ID_BACK:
+				case GalleryBrowseSubNavView.ID_BACK:
 					requestExitGallerySignal.dispatch();
-					requestHomePanningToggleSignal.dispatch( true );
+//					requestHomePanningToggleSignal.dispatch(true);
 					break;
-				default :
+				default:
 					requestBrowseGallerySignal.dispatch(_galleryTypeMap[id]);
 			}
 		}
