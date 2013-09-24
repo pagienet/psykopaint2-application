@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static const SHOW_ERRORS:Boolean = false; /*false on release*/
 		public static const SHOW_MEMORY_WARNINGS:Boolean = false; /*false on release*/
 		public static const SHOW_MEMORY_USAGE:Boolean = false; /*false on release - this feature costs about 20 fps */
-		public static const ENABLE_CONSOLE:Boolean = true; /*false on release*/
+		public static const ENABLE_CONSOLE:Boolean = false; /*false on release*/
 
 		// Other visual debugging utils.
 		public static const TINT_SPLASH_SCREEN:Boolean = false; /*false on release*/

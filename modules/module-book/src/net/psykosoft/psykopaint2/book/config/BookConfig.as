@@ -14,10 +14,10 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelected;
+	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFailedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFetchedSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
+	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestBookRootViewRemovalSignal;
@@ -103,13 +103,13 @@ package net.psykosoft.psykopaint2.book.config
 			_injector.map(NotifyBookModuleDestroyedSignal).asSingleton();
 			_injector.map(RequestBookRootViewRemovalSignal).asSingleton();
 			_injector.map(RequestSetBookBackgroundSignal).asSingleton();
-			_injector.map(NotifyImageSelectedFromBookSignal).asSingleton();
+			_injector.map(NotifySourceImageSelectedFromBookSignal).asSingleton();
 			_injector.map(RequestAnimateBookOutSignal).asSingleton();
 			_injector.map(NotifyAnimateBookOutCompleteSignal).asSingleton();
 			_injector.map(NotifySourceImagesFetchedSignal).asSingleton();
 			_injector.map(NotifyGalleryImagesFetchedSignal).asSingleton();
 			_injector.map(NotifyGalleryImagesFailedSignal).asSingleton();
-			_injector.map(NotifyGalleryImageSelected).asSingleton();
+			_injector.map(NotifyGalleryImageSelectedFromBookSignal).asSingleton();
 
 		}
 

@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.book.model
 
 	public class GalleryImageProxy
 	{
+		public var id :int;
 		public var userName : String;
 		public var numLikes : uint;
 		public var numComments : uint;

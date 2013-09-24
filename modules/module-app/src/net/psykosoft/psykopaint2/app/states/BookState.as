@@ -6,9 +6,11 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.book.model.GalleryImageRequestVO;
 	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
-	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
+	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
+	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestFetchGalleryImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestFetchSourceImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
@@ -28,7 +30,10 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestNavigationStateChange : RequestNavigationStateChangeSignal;
 
 		[Inject]
-		public var notifyImageSelectedFromBookSignal : NotifyImageSelectedFromBookSignal;
+		public var notifySourceImageSelectedFromBookSignal : NotifySourceImageSelectedFromBookSignal;
+
+		[Inject]
+		public var notifyGalleryImageSelectedSignal : NotifyGalleryImageSelectedFromBookSignal;
 
 		[Inject]
 		public var transitionToCropState : TransitionBookToCropState;
@@ -114,7 +119,8 @@ package net.psykosoft.psykopaint2.app.states
 			requestBrowseSampleImagesSignal.add(onBrowseSampleImagesSignal);
 			requestBrowseUserImagesSignal.add(onBrowseUserImagesSignal);
 			requestBrowseGallerySignal.add(onRequestBrowseGallerySignal);
-			notifyImageSelectedFromBookSignal.add(onImageSelectedFromBookSignal);
+			notifySourceImageSelectedFromBookSignal.add(onImageSelectedFromBookSignal);
+			notifyGalleryImageSelectedSignal.add(onGalleryImageSelected);
 			requestRetrieveCameraImageSignal.add(onRequestRetrieveCameraImageSignal);
 			requestExitPickAnImageSignal.add(onRequestExitPickAnImageSignal);
 			requestExitGallerySignal.add(onRequestExitGallerySignal);
@@ -139,7 +145,8 @@ package net.psykosoft.psykopaint2.app.states
 			requestBrowseSampleImagesSignal.remove(onBrowseSampleImagesSignal);
 			requestBrowseUserImagesSignal.remove(onBrowseUserImagesSignal);
 			requestBrowseGallerySignal.remove(onRequestBrowseGallerySignal);
-			notifyImageSelectedFromBookSignal.remove(onImageSelectedFromBookSignal);
+			notifySourceImageSelectedFromBookSignal.remove(onImageSelectedFromBookSignal);
+			notifyGalleryImageSelectedSignal.remove(onGalleryImageSelected);
 			requestRetrieveCameraImageSignal.remove(onRequestRetrieveCameraImageSignal);
 			requestExitPickAnImageSignal.remove(onRequestExitPickAnImageSignal);
 			requestExitGallerySignal.remove(onRequestExitGallerySignal);
@@ -174,7 +181,13 @@ package net.psykosoft.psykopaint2.app.states
 			stateMachine.setActiveState(transitionToCropState, {bitmapData: bitmapData, background: _background.newReference()});
 		}
 
-		private function onRequestExitPickAnImageSignal():void {
+		private function onGalleryImageSelected(selectedGalleryImage : GalleryImageProxy) : void
+		{
+			stateMachine.setActiveState(transitionToHomeState, { target: NavigationStateType.GALLERY_PAINTING, galleryImage: selectedGalleryImage});
+		}
+
+		private function onRequestExitPickAnImageSignal():void
+		{
 			stateMachine.setActiveState(transitionToHomeState, { target: NavigationStateType.HOME_ON_EASEL });
 		}
 

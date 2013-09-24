@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.book.model
 	public class FileGalleryImageProxy extends GalleryImageProxy
 	{
 		// public for convenience, not accessible through views as interface anyway
-		public var id : int;
 		public var highResThumbnailFilename : String;
 		public var lowResThumbnailFilename : String;
 

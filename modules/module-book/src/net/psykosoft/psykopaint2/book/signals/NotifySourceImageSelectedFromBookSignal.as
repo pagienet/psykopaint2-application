@@ -4,9 +4,9 @@ package net.psykosoft.psykopaint2.book.signals
 
 	import org.osflash.signals.Signal;
 
-	public class NotifyImageSelectedFromBookSignal extends Signal
+	public class NotifySourceImageSelectedFromBookSignal extends Signal
 	{
-		public function NotifyImageSelectedFromBookSignal()
+		public function NotifySourceImageSelectedFromBookSignal()
 		{
 			super(BitmapData);
 		}

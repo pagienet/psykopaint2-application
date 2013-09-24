@@ -30,6 +30,7 @@ package net.psykosoft.psykopaint2.book.services
 			for (var i : int = 0; i < amount; ++i) {
 				var item : DummyGalleryImageProxy = new DummyGalleryImageProxy();
 				var userIndex : int = Math.random()*dummyNames.length;
+				item.id = i;
 				item.userName = dummyNames[userIndex];
 				item.numComments = Math.random()*1000;
 				item.numLikes = Math.random()*100000;

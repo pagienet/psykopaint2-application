@@ -10,9 +10,9 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifyImageSelectedFromBookSignal;
+	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelected;
+	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
@@ -33,7 +33,10 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var requestSetBookBackgroundSignal : RequestSetBookBackgroundSignal;
 
 		[Inject]
-		public var notifyImageSelectedFromBookSignal:NotifyImageSelectedFromBookSignal;
+		public var notifySourceImageSelectedFromBookSignal:NotifySourceImageSelectedFromBookSignal;
+
+		[Inject]
+		public var notifyGalleryImageSelected:NotifyGalleryImageSelectedFromBookSignal;
 
 		[Inject]
 		public var requestAnimateBookOutSignal : RequestAnimateBookOutSignal;
@@ -49,9 +52,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		[Inject]
 		public var notifyGalleryImagesFetchedSignal : NotifyGalleryImagesFetchedSignal;
-
-		[Inject]
-		public var notifyGalleryImageSelected:NotifyGalleryImageSelected;
 
 		override public function initialize():void {
 
@@ -111,7 +111,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onImageSelected(selectedBmd:BitmapData):void
 		{
-			notifyImageSelectedFromBookSignal.dispatch( selectedBmd );
+			notifySourceImageSelectedFromBookSignal.dispatch( selectedBmd );
 		}
 
 		private function onGalleryImageSelected(selectedGalleryImage : GalleryImageProxy) : void
