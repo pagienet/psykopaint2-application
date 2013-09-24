@@ -77,9 +77,6 @@ package net.psykosoft.psykopaint2.app.states
 			transitionBookToHomeState.homeState = this;
 		}
 
-		/**
-		 * @param data An OPTIONAL object with a field galleryImageID
-		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
 			requestOpenPaintingDataVOSignal.add(onRequestOpenPaintingDataVO);

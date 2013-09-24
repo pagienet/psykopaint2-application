@@ -22,6 +22,7 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestOpenGalleryImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
@@ -126,6 +127,7 @@ package net.psykosoft.psykopaint2.home.config
 			_injector.map( RequestExitGallerySignal ).asSingleton();
 			_injector.map( RequestRetrieveCameraImageSignal ).asSingleton();
 			_injector.map( RequestHomePanningToggleSignal ).asSingleton();
+			_injector.map( RequestOpenGalleryImageSignal ).asSingleton();
 		}
 
 		// -----------------------
