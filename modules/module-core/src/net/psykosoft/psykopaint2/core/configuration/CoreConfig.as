@@ -75,6 +75,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.ToggleTransformGestureSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
 	import net.psykosoft.psykopaint2.core.views.blocker.BlockerView;
@@ -228,6 +229,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 			_injector.map( NotifyUserLoggedInSignal ).asSingleton();
 			_injector.map( NotifyUserLogInFailedSignal ).asSingleton();
+			_injector.map( ToggleTransformGestureSignal ).asSingleton();
 
 			// services
 			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);

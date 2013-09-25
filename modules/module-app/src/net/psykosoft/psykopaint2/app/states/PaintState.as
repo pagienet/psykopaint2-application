@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.ToggleTransformGestureSignal;
 	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
@@ -50,16 +51,21 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
 
+		[Inject]
+		public var toggleTransformGestureSignal:ToggleTransformGestureSignal;
+
 		public function PaintState() {
 		}
 
 		override ns_state_machine function activate( data:Object = null ):void {
 			requestClosePaintView.add( onClosePaintView );
 			requestStateChangeSignal.dispatch( NavigationStateType.PAINT_SELECT_BRUSH );
+			toggleTransformGestureSignal.dispatch( true );
 		}
 
 		override ns_state_machine function deactivate():void {
 			requestClosePaintView.remove( onClosePaintView );
+			toggleTransformGestureSignal.dispatch( false );
 		}
 
 		private function onClosePaintView():void {

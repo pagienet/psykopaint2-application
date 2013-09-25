@@ -218,7 +218,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
-//			trace( this, "onGlobalGesture: " + gestureType );
+			trace( this, "onGlobalGesture: " + gestureType );
 			if( !view.visible || !_allowPanning ) return;
 			if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_BEGAN || gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
 				view.scrollCameraController.startPanInteraction();
