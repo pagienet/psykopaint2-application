@@ -81,6 +81,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			trace( ">>> SCROLLER UPDATE: " + id );
 		}*/
 
+		public function toggleScrolling( value:Boolean ):void {
+			_scroller.scrollingAllowed = value;
+		}
+
 		// ---------------------------------------------------------------------
 		// SbNavigationView wrapping.
 		// ---------------------------------------------------------------------

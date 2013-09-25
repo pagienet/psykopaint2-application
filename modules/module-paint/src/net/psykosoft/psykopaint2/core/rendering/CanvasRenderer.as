@@ -89,7 +89,7 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function postConstruct() : void
 		{
 			_lightingRenderer = new LightingRenderer(lightingModel, stage3D.context3D);
-			requestSaveCPUForUISignal.add(freezeRendering);
+//			requestSaveCPUForUISignal.add(freezeRendering);
 			requestResumeCPUUsageForUISignal.add(resumeRendering);
 			requestChangeRenderRect.add(onChangeRenderRect);
 			requestSetCanvasBackgroundSignal.add(onSetCanvasBackground);

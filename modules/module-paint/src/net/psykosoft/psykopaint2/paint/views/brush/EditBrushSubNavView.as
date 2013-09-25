@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		public function EditBrushSubNavView() {
 			super();
+			toggleScrolling( false );
 		}
 
 		override protected function onEnabled():void {
