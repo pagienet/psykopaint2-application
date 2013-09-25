@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function evaluateInteractionStart():void {
-			trace( this, "evaluateInteractionStart()" );
+//			trace( this, "evaluateInteractionStart()" );
 			if( !scrollingAllowed ) return;
 			if( _container.numChildren == 0 ) return;
 			if( !mouseHitsInteractiveArea() ) return;
@@ -131,7 +131,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function evaluateInteractionEnd():void {
-			trace( this, "evaluateInteractionEnd()" );
+//			trace( this, "evaluateInteractionEnd()" );
 			if( !_active ) return;
 			_interactionManager.stopInteraction();
 		}
