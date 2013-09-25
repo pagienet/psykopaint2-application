@@ -92,14 +92,14 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onTwoFingerSwipeRight( event:GestureEvent ):void {
-			trace( this, "onTwoFingerSwipeRight" );
+//			trace( this, "onTwoFingerSwipeRight" );
 			if( !_gesturesEnabled ) return;
 			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_RIGHT, event );
 			notifyBlockingGestureSignal.dispatch( false );
 		}
 
 		private function onTwoFingerSwipeLeft( event:GestureEvent ):void {
-			trace( this, "onTwoFingerSwipeLeft" );
+//			trace( this, "onTwoFingerSwipeLeft" );
 			if( !_gesturesEnabled ) return;
 			notifyGlobalGestureSignal.dispatch( GestureType.TWO_FINGER_SWIPE_LEFT, event );
 			notifyBlockingGestureSignal.dispatch( false );
@@ -121,13 +121,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onHorizontalPanGestureBegan( event:GestureEvent ):void {
-			trace( this, "onHorizontalPanGestureBegan" );
+//			trace( this, "onHorizontalPanGestureBegan" );
 			if ( _gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_BEGAN, event );
 		}
 
 		private function onHorizontalPanGestureEnded( event:GestureEvent ):void {
-			trace( this, "onHorizontalPanGestureEnded" );
+//			trace( this, "onHorizontalPanGestureEnded" );
 		//	if ( _gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.HORIZONTAL_PAN_GESTURE_ENDED, event );
 		}
@@ -148,13 +148,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		private function onVerticalPanGestureBegan( event:GestureEvent ):void {
-			trace( this, "onVerticalPanGestureBegan" );
+//			trace( this, "onVerticalPanGestureBegan" );
 			if ( _gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_BEGAN, event );
 		}
 
 		private function onVerticalPanGestureEnded( event:GestureEvent ):void {
-			trace( this, "onVerticalPanGestureEnded" );
+//			trace( this, "onVerticalPanGestureEnded" );
 		//	if ( gesturesEnabled )
 				notifyGlobalGestureSignal.dispatch( GestureType.VERTICAL_PAN_GESTURE_ENDED, event );
 		}
@@ -212,7 +212,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		private function onTransformGestureStarted( event:GestureEvent ):void {
-			trace( this, "onTransformGestureStarted" );
+//			trace( this, "onTransformGestureStarted" );
 			if ( _gesturesEnabled )
 			{
 				if (TransformGesture( event.target).touchesCount > 1 )
@@ -225,14 +225,14 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		private function onTransformGestureEnded( event:GestureEvent ):void {
-			trace( this, "onTransformGestureEnded" );
+//			trace( this, "onTransformGestureEnded" );
 			notifyGlobalGestureSignal.dispatch( GestureType.TRANSFORM_GESTURE_ENDED, event );
 			_transformGesture.removeEventListener( GestureEvent.GESTURE_ENDED, onTransformGestureEnded );
 			_transformGesture.removeEventListener( GestureEvent.GESTURE_CHANGED, onTransformGestureChanged );	
 		}
 		
 		private function onTransformGestureChanged( event:GestureEvent ):void {
-			trace( this, "onTransformGestureChanged" );
+//			trace( this, "onTransformGestureChanged" );
 			notifyGlobalGestureSignal.dispatch( GestureType.TRANSFORM_GESTURE_CHANGED, event );
 		}
 
@@ -261,7 +261,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		private function onTapGestureRecognized( event:GestureEvent ):void {
-			trace( this, "onTapGestureRecognized" );
+//			trace( this, "onTapGestureRecognized" );
 			var target:Stage =  Stage(TapGesture(event.target).target);
 			var obj:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);
 			if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
@@ -271,7 +271,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		private function onTwoFingerTapGestureRecognized( event:GestureEvent ):void {
-			trace( this, "onTwoFingerTapGestureRecognized" );
+//			trace( this, "onTwoFingerTapGestureRecognized" );
 			var target:Stage =  Stage(TapGesture(event.target).target);
 			var obj:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);
 			if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
@@ -295,7 +295,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		private function onDoubleTapGestureRecognized( event:GestureEvent ):void {
-			trace( this, "onTwoFingerTapGestureRecognized" );
+//			trace( this, "onTwoFingerTapGestureRecognized" );
 			if ( _gesturesEnabled )
 			{
 				notifyGlobalGestureSignal.dispatch( GestureType.DOUBLE_TAP_GESTURE_RECOGNIZED, event );
@@ -311,7 +311,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		public static function set gesturesEnabled( value:Boolean ):void {
-			trace( "GestureManager - gesturesEnabled: " + value );
+//			trace( "GestureManager - gesturesEnabled: " + value );
 			_gesturesEnabled = value;
 		}
 	}
