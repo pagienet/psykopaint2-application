@@ -22,8 +22,8 @@ package net.psykosoft.psykopaint2.core.views.base
 			requestAddViewToMainLayerSignal.add( onRequestToAddViewToMainLayer );
 		}
 
-		private function onRequestToAddViewToMainLayer( child:DisplayObjectContainer ):void {
-			view.addToMainLayer( child );
+		private function onRequestToAddViewToMainLayer( child:DisplayObjectContainer, layerOrdering:int ):void {
+			view.addToMainLayer( child, layerOrdering );
 		}
 	}
 }

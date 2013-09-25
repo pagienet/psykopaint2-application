@@ -12,16 +12,13 @@ package net.psykosoft.psykopaint2.crop
 	import net.psykosoft.psykopaint2.crop.configuration.CropConfig;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedBitmapData;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
-	import net.psykosoft.psykopaint2.crop.views.base.CropRootView;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintSettings;
 
 	public class CropModule extends ModuleBase

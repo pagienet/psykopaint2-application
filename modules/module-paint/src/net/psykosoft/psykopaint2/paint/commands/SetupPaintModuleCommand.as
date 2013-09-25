@@ -2,10 +2,10 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Sine;
-
+	
 	import flash.display.Stage;
 	import flash.events.Event;
-
+	
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
+	import net.psykosoft.psykopaint2.core.views.base.ViewLayerOrdering;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 
@@ -81,7 +82,7 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		private function addPaintModuleDisplay():void {
 			var paintRootView : PaintRootView = new PaintRootView();
-			requestAddViewToMainLayerSignal.dispatch( paintRootView );
+			requestAddViewToMainLayerSignal.dispatch( paintRootView, ViewLayerOrdering.AT_BOTTOM_LAYER );
 		}
 
 		private function waitForNextFrame() : void

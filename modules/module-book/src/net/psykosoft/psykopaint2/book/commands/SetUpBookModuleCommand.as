@@ -2,10 +2,11 @@ package net.psykosoft.psykopaint2.book.commands
 {
 
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
-
+	
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
+	import net.psykosoft.psykopaint2.core.views.base.ViewLayerOrdering;
 
 	public class SetUpBookModuleCommand extends AsyncCommand
 	{
@@ -20,7 +21,7 @@ package net.psykosoft.psykopaint2.book.commands
 			trace(this, "execute");
 			var bookRootView : BookRootView = new BookRootView();
 			bookRootView.onSubViewsReady.add(onSubViewReady);
-			requestAddViewToMainLayerSignal.dispatch(bookRootView);
+			requestAddViewToMainLayerSignal.dispatch(bookRootView, ViewLayerOrdering.AT_BOTTOM_LAYER);
 		}
 
 		private function onSubViewReady() : void

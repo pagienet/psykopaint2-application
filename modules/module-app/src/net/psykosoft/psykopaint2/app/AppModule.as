@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.app
 {
 
 	import flash.events.Event;
-
+	
 	import net.psykosoft.psykopaint2.app.config.AppConfig;
 	import net.psykosoft.psykopaint2.app.states.TransitionSplashToHomeState;
 	import net.psykosoft.psykopaint2.app.views.base.AppRootView;
@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.app
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
+	import net.psykosoft.psykopaint2.core.views.base.ViewLayerOrdering;
 	import net.psykosoft.psykopaint2.crop.CropModule;
 	import net.psykosoft.psykopaint2.home.HomeModule;
 	import net.psykosoft.psykopaint2.paint.PaintModule;
@@ -123,7 +124,7 @@ package net.psykosoft.psykopaint2.app
 
 			// Init display tree for this module.
 			var appRootView : AppRootView = new AppRootView();
-			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( appRootView );
+			_coreModule.injector.getInstance( RequestAddViewToMainLayerSignal ).dispatch( appRootView, ViewLayerOrdering.AT_BOTTOM_LAYER );
 
 			transitionToHomeState();
 		}

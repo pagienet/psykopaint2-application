@@ -15,7 +15,6 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.PaintConfig;
@@ -23,8 +22,7 @@ package net.psykosoft.psykopaint2.paint
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
-	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
-
+	
 	public class PaintModule extends ModuleBase
 	{
 		private var _coreModule:CoreModule;

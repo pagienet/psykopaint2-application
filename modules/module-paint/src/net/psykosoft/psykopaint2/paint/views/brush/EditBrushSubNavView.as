@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private var _parameter:PsykoParameter;
 
 		public static const ID_BACK:String = "Pick a Brush";
-		public static const ID_COLOR:String = "Pick a Color";
+		//public static const ID_COLOR:String = "Pick a Color";
 
 		public static const CUSTOM_COLOR_ID:String = "Custom Color";
 
@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onEnabled():void {
 			setHeader( "" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
-			setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.CONTINUE );
+			//setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.CONTINUE );
 			showRightButton( false );
 		}
 

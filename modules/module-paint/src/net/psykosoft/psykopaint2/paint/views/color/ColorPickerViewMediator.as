@@ -2,9 +2,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 {
 
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
-	
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
+	import net.psykosoft.psykopaint2.paint.views.brush.SelectColorSubNavView;
 	
 	public class ColorPickerViewMediator extends MediatorBase
 	{
@@ -25,14 +26,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 			manageStateChanges = false;
 			view.enable();
-
+			view.colorChangedSignal.add( onColorChanged );
 			
 		}
-
+		
 		// -----------------------
 		// From view.
 		// -----------------------
-
+		private function onColorChanged():void
+		{
+			notifyPickedColorChangedSignal.dispatch(view.currentColor);
+		}
 		
 		
 		// -----------------------
@@ -40,11 +44,5 @@ package net.psykosoft.psykopaint2.paint.views.color
 		// -----------------------
 
 		
-
-		override protected function onStateChange( newState:String ):void {
-//			trace( this, "state change: " + newState );
-
-			
-		}
 	}
 }

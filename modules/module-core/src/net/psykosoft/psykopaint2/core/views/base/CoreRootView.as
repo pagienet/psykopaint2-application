@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
@@ -16,13 +16,15 @@ package net.psykosoft.psykopaint2.core.views.base
 
 	public class CoreRootView extends Sprite
 	{
+		private var navigationView:NavigationView;
+		
 		public function CoreRootView() {
 			super();
 
 			trace( this, "constructor" );
 
 			// Core module's main views.
-			addChild( new NavigationView() );
+			addChild( navigationView = new NavigationView() );
 			addChild( new VideoView() );
 			addChild( new PopUpManagerView() );
 			addChild( new DebugView() );
@@ -43,8 +45,24 @@ package net.psykosoft.psykopaint2.core.views.base
 			addChild( btn );*/
 		}
 
-		public function addToMainLayer( child:DisplayObject ):void {
-			addChildAt( child, 0 );
+		public function addToMainLayer( child:DisplayObject, layerOrdering ):void {
+			switch ( layerOrdering )
+			{
+				case ViewLayerOrdering.AT_BOTTOM_LAYER:
+					addChildAt( child, 0 );
+				break;
+				case ViewLayerOrdering.AT_TOP_LAYER:
+					addChild( child );
+					break;
+				case ViewLayerOrdering.IN_FRONT_OF_NAVIGATION:
+					addChildAt( child,getChildIndex(navigationView)+1);	
+					break;
+				case ViewLayerOrdering.BEHIND_NAVIGATION:
+					addChildAt( child,getChildIndex(navigationView));	
+					break;
+			}
+			
+				
 		}
 	}
 }

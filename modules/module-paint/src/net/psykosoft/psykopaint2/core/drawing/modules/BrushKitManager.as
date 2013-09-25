@@ -32,10 +32,14 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.views.base.ViewLayerOrdering;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
+	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
+	import net.psykosoft.psykopaint2.paint.views.color.ColorPickerView;
 	
 	import org.gestouch.events.GestureEvent;
 
@@ -84,6 +88,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var notifyPickedColorChangedSignal : NotifyPickedColorChangedSignal;
 		
+		[Inject]
+		public var requestAddViewToMainLayerSignal:RequestAddViewToMainLayerSignal;
 	
 		private var _view : DisplayObject;
 		private var _active : Boolean;
@@ -96,6 +102,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var sourceCanvasViewModeIndex:int = 0;
 		private var _activeMode : String;
 		private var _currentPaintColor:int;
+		private var colorPickerView : ColorPickerView;
 		
 		public function BrushKitManager()
 		{
@@ -110,6 +117,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyCanvasMatrixChanged.add(onCanvasMatrixChanged);
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyPickedColorChangedSignal.add( onPickedColorChanged );
+			
 		}
 
 		// TODO: Handle gestures somewhere else
@@ -124,7 +132,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					TweenLite.to( renderer, 0.3, { paintAlpha:sourceCanvasViewModes[sourceCanvasViewModeIndex][0],sourceTextureAlpha: sourceCanvasViewModes[sourceCanvasViewModeIndex][1], ease: Sine.easeInOut } );
 				} else if ( _activeMode == PaintMode.COLOR_MODE)
 				{
-					requestStateChangeSignal.dispatch( NavigationStateType.PAINT_COLOR );
+			//		requestStateChangeSignal.dispatch( NavigationStateType.PAINT_COLOR );
+					colorPickerView.visible = !colorPickerView.visible;
+					
 				}
 				
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
@@ -225,6 +235,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_active = true;
 			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
+			
+			colorPickerView = new ColorPickerView();
+			
+			requestAddViewToMainLayerSignal.dispatch( colorPickerView, ViewLayerOrdering.IN_FRONT_OF_NAVIGATION );
 		}
 
 		public function deactivate() : void
