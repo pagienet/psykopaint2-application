@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		
 		private const DRAW_SCALE:Number = 1;
 		
-		private const FLUID_WIDTH:uint = 50;
+		private const FLUID_WIDTH:uint = 60;
 		
 		private const isw:Number = 1 / sw;
 		private const ish:Number = 1 / sh;
@@ -64,12 +64,10 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
-			fSolver.rgb = true;
-			fSolver.fadeSpeed = 0.001;//.007;
+			fSolver.fadeSpeed = 0;// 0.001;//.007;
 			fSolver.deltaT = .7;
 			fSolver.viscosity = .0025;
 			//fSolver.colorDiffusion = 0.00005;
-			fSolver.vorticityConfinement = false;
 			
 			var dw:Number = sw / fluid.width;
 			var dh:Number = sh / fluid.height;

@@ -214,6 +214,11 @@ package com.quasimondo.color.utils
 		{
 			return value.alpha << 24 | value.red << 16 | value.green << 8 | value.blue;
 		}
+		
+		public static function UINTtoHSL( value: uint ): HSL
+		{
+			return RGBtoHSL(new RGB( value >> 16 & 0xFF, value >> 8 & 0xFF, value & 0xFF));
+		}
 
 		/**
 		 * Converts <code>CMYK</code> data to <code>RGB</code> data.
@@ -364,6 +369,49 @@ package com.quasimondo.color.utils
 
 			return RGB(RGB(hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ]).clone());
 		}
+		
+		/**
+		 * Converts <code>HSL</code> data to <code>IRGB</code> data.
+		 * 
+		 * @param hsl Data to be converted
+		 * @return Converted data
+		 */
+		public static function HSLtoUINT( hsl: HSL ): uint
+		{
+			if ( !hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ] )
+			{
+				var r: Number;
+				var g: Number;
+				var b: Number;
+				var h: Number = hsl.hue;
+				var s: Number = hsl.saturation / 100;
+				var l: Number = hsl.lightness / 100;
+				
+				if ( s == 0 )
+				{
+					r = g = b = l * 255;
+				}
+				else
+				{
+					var val1: Number;
+					var val2: Number;
+					if ( l <= 50 )
+						val2 = l * ( 1 + s );
+					else
+						val2 = ( l + s - l * s );
+					val1 = 2 * l - val2;
+					
+					r = innerHSLtoRGB( val1, val2, h + 120 );
+					g = innerHSLtoRGB( val1, val2, h );
+					b = innerHSLtoRGB( val1, val2, h - 120 );					
+				}
+				
+				hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ] = new RGB( r, g, b );
+			}		
+			var rgb:RGB = hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ];
+			return 0xff000000 | rgb.red << 16 | rgb.green << 8 | rgb.blue;
+		}
+		
 		
 		public static function HSLtoARGB( hsl: HSL, alpha: int = 255 ): ARGB
 		{
