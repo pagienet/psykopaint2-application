@@ -62,11 +62,11 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			if(_regions.length == 0) return null;
  			
  			var isRecto:Boolean = (x>_middle) ? true : false;
-
- 			if(pageIndex == 0 && !isRecto) return null
- 
- 			var pageSideIndex:uint = ( isRecto)? pageIndex*2 : (pageIndex*2)-1;
- 			var bookPage:BookPage = _pagesManager.getPage((isRecto)? pageIndex :  pageIndex-1 );
+ 			//if(pageIndex == 0 && !isRecto) return null// left side case
+ 			//var pageSideIndex:uint = ( isRecto)? pageIndex*2 : (pageIndex*2)-1;
+ 			var pageSideIndex:uint = ( isRecto)? (pageIndex*2)+1 : (pageIndex*2);
+ 			var bookPage:BookPage = _pagesManager.getPage((isRecto)? pageIndex :  pageIndex+1 );
+ 			
  			if(!bookPage) return null;
 
  			if(!_np) _np = new Vector3D(0.0, 1, 0.1);
