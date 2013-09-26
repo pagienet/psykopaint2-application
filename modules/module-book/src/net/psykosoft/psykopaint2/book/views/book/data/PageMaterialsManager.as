@@ -5,12 +5,15 @@ package net.psykosoft.psykopaint2.book.views.book.data
 	import away3d.materials.SinglePassMaterialBase;
 	import away3d.textures.BitmapCubeTexture;
 	import away3d.materials.methods.EnvMapMethod;
+	import away3d.materials.SinglePassMaterialBase;
 	import away3d.tools.utils.TextureUtils;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.MaterialBase;
+	import away3d.materials.methods.EffectMethodBase;
 
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
 	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 
@@ -20,16 +23,21 @@ package net.psykosoft.psykopaint2.book.views.book.data
  	public class PageMaterialsManager
  	{
  		private var _materials:Dictionary;
+ 		private var _textures:Dictionary;
  		private var _defaultPageMaterial:TextureMaterial;
- 		private var _enviroMethod:EnvMapMethod;
- 		private var _enviroMethodRings:EnvMapMethod;
  		private var _pageBitmapCubeTexture:BitmapCubeTexture;
  		private var _craftMaterial:TextureMaterial;
+ 		private var _ringsMaterial:TextureMaterial;
  		private var _blankBook:BlankBook;
+ 		private var _hasNuffPower:Boolean;
+ 		private var _maskBitmap:BitmapData;
+ 		private var _hasEnviro:Boolean;
  
      		public function PageMaterialsManager()
  		{
  			_materials = new Dictionary();
+ 			_textures = new Dictionary();
+ 			_hasNuffPower = PlatformUtil.hasRequiredPerformanceRating(2);
  		}
 
  		public function set blankBook(blankBook:BlankBook):void
@@ -47,9 +55,18 @@ package net.psykosoft.psykopaint2.book.views.book.data
 										bitmapDatas[4],
 										bitmapDatas[5]);
 
-			_enviroMethod = new EnvMapMethod(_pageBitmapCubeTexture, 0.16);
+			if(_hasNuffPower) _hasEnviro = true;
+ 
+			var bt:BitmapTexture;
+			if(_craftMaterial){
+				bt = applyEnviroMethod(_craftMaterial);
+ 				if(bt) _textures["craft"] = bt;
+			}
 
-			if(_craftMaterial) applyEnviroMethod(_craftMaterial);
+			if(_ringsMaterial){
+				bt = applyEnviroMethod(_ringsMaterial);
+ 				if(bt) _textures["rings"] = bt;
+			}
 
  		}
  
@@ -58,56 +75,146 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		{
  			_craftMaterial = generateMaterialFromBitmapData(bitmapData);
 
- 			if(_enviroMethod) applyEnviroMethod(_craftMaterial);
+ 			if(_hasNuffPower && _hasEnviro){
+ 				var bt:BitmapTexture = applyEnviroMethod(_craftMaterial);
+ 				if(bt) _textures["craft"] = bt;
+ 			}
  		}
- 		
+
+ 		public function generateRingsMaterial(bitmapData:BitmapData):void
+ 		{
+ 			_ringsMaterial = generateMaterialFromBitmapData(bitmapData);
+
+ 			if(_hasNuffPower && _hasEnviro){
+ 				var bt:BitmapTexture = applyEnviroMethod(_ringsMaterial);
+ 				if(bt) _textures["rings"] = bt;
+ 			}
+ 		}
+ 
  		public function get craftMaterial():TextureMaterial
  		{
  			return _craftMaterial;
  		}
 
+ 		public function get ringsMaterial():TextureMaterial
+ 		{
+ 			return _ringsMaterial;
+ 		}
+
  		//pages
- 		//returns the material per page side
- 		public function getPageMaterial(index:uint):TextureMaterial
+ 		//returns the material for content per page side
+ 		public function getPageContentMaterial(index:uint):TextureMaterial
+ 		{
+ 			return getPageMaterial("mat"+index);
+ 		}
+ 		//returns the material of top and down marging (numbered) per page side
+ 		public function getPageMarginMaterial(index:uint):TextureMaterial
+ 		{
+ 			return getPageMaterial("margin"+index);
+ 		}
+
+ 		public function getEnviroMask(index:uint):BitmapTexture
+ 		{
+ 			return _textures["mask"+index];
+ 		}
+ 
+ 		private function getPageMaterial(id:String):TextureMaterial
  		{
  			var textureMaterial:TextureMaterial;
 
- 			if(_materials["mat"+index]){
- 				textureMaterial = _materials["mat"+index];
+ 			if(_materials[id]){
+ 				textureMaterial = _materials[id];
  			} else {
- 				throw new Error("The requested page ("+index+") has not been builded yet!!");
+ 				throw new Error("The requested page ("+id+") has not been builded yet!!");
  			}
  			
  			return textureMaterial;
  		}
 
- 		public function registerPageMaterial(index:uint, bitmapData:BitmapData):TextureMaterial
+ 		public function registerMarginPageMaterial(index:uint, bitmapData:BitmapData):TextureMaterial
  		{
- 			var textureMaterial:TextureMaterial = generateMaterialFromBitmapData(bitmapData);
+ 			return registerMaterial("margin"+index, bitmapData);
+ 		}
 
- 			if(_enviroMethod) applyEnviroMethod(textureMaterial);
-
- 			if(PlatformUtil.hasRequiredPerformanceRating(2))  textureMaterial.normalMap = generatePageNormalMap();
-
- 			_materials["mat"+index] = textureMaterial;
-
- 			return textureMaterial;
+ 		public function registerContentPageMaterial(index:uint, bitmapData:BitmapData):TextureMaterial
+ 		{
+ 			return registerMaterial("mat"+index, bitmapData, index);
  		}
 
  		public function dispose():void
  		{
  			var material:TextureMaterial;
+ 			var spm:SinglePassMaterialBase;
+ 			var methodsCount:uint;
+ 			var loop:uint;
+ 			var method:EffectMethodBase;
+ 			var mask:BitmapTexture;
+
  			for(var key:String in _materials){
  				material = _materials[key];
  				material.texture.dispose();
+ 				if(material.normalMap) material.normalMap.dispose();
+
+				spm = SinglePassMaterialBase(material);
+				methodsCount = spm.numMethods;
+				if(methodsCount > 0){
+					loop = methodsCount;
+					while(loop!=0){
+						method = spm.getMethodAt(loop);
+						spm.removeMethod(method);
+						/*
+						//clean up maps via dictionary clean up lower in code
+						if(method is EnvMapMethod){
+							mask = BitmapTexture(method);
+							mask.bitmapData.dispose();
+							mask.dispose();
+							mask = null;
+						} else {
+							method.dispose();
+						}
+						*/
+						method = null;
+						loop--;
+					}
+				}
+				material = null;
  				_materials[key] = null;
  			}
+			 
+ 			if(_maskBitmap)_maskBitmap.dispose();
  			_pageBitmapCubeTexture.dispose();
  			_craftMaterial.dispose();
  			_craftMaterial = null;
  			_materials = null;
- 			_enviroMethod = null;
- 			_enviroMethodRings = null;
+
+ 			if(_textures){
+ 				var bmd:BitmapData;
+
+ 				for(key in _textures){//var key:String
+ 					bmd = BitmapTexture(_textures[key]).bitmapData;
+ 					bmd.dispose();
+ 					_textures[key].dispose();
+ 					_textures[key] = null;
+	 			}
+	 			_textures = null;
+ 			}
+ 		}
+
+ 		private function registerMaterial(id:String, bitmapData:BitmapData, ref:int = -1):TextureMaterial
+ 		{
+ 			var textureMaterial:TextureMaterial = generateMaterialFromBitmapData(bitmapData);
+
+ 			if(_hasNuffPower){
+ 				if(_hasEnviro && ref != -1 ){
+ 					var bt:BitmapTexture = applyEnviroMethod(textureMaterial);
+ 					_textures["mask"+ref] = bt;
+ 			 		textureMaterial.normalMap = generatePageNormalMap(id);
+ 			 	}
+ 			 }
+
+ 			_materials[id] = textureMaterial;
+ 
+ 			return textureMaterial;
  		}
 
  		private function generateMaterialFromBitmapData(bitmapData:BitmapData):TextureMaterial
@@ -125,17 +232,54 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			return textureMaterial;
 		}
 
-		private function generatePageNormalMap():BitmapTexture
+		private function generatePageNormalMap(id:String):BitmapTexture
 		{
 			var bitmapTexture:BitmapTexture = new BitmapTexture(_blankBook.getBasePageNormalmap(true));
 
 			return bitmapTexture;
 		}
 
-		private function applyEnviroMethod(material:MaterialBase):void
+		private function applyEnviroMethod(material:MaterialBase):BitmapTexture
  		{
- 			if(PlatformUtil.hasRequiredPerformanceRating(2)) SinglePassMaterialBase(material).addMethod(_enviroMethod);
+ 			if(_hasNuffPower) {
+				if(!_maskBitmap) buildMaskEnviro();
+				
+				var enviroMethod:EnvMapMethod = new EnvMapMethod(_pageBitmapCubeTexture, .35);//0.16
+				var bt:BitmapTexture = new BitmapTexture(_maskBitmap.clone());
+				enviroMethod.mask = bt;
+				SinglePassMaterialBase(material).addMethod(enviroMethod);
+
+				return bt;
+ 			}
+
+ 			return null;
  		}
+
+ 		private function buildMaskEnviro():void
+		{
+			var maskColor:uint = 0x222222;
+			_maskBitmap = new BitmapData(512,512, false, maskColor);
+			var h:Number = 35;
+			var rect:Rectangle = new Rectangle(0, 0, 512, h);
+			_maskBitmap.fillRect(rect, 0);
+			rect.y = 477;
+			_maskBitmap.fillRect(rect, 0);
+			var val:Number;
+			var color:uint;
+			rect.height = 1;
+			var baseVal:uint = maskColor >> 16 & 0xFF;
+
+			var j:uint;
+			for(var i:uint = h; i<99; ++i){
+				rect.y = i;
+				val = baseVal * ( j/64);
+				color = val << 16 | val << 8 | val;
+				_maskBitmap.fillRect(rect, color );
+				rect.y = 512 - i;
+				_maskBitmap.fillRect(rect, color );
+				j++;
+			}
+		}
  
 		private function validateMap(origBmd:BitmapData):BitmapData
 		{

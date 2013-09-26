@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.book.views.book
 {
-
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.Scene3D;
 
@@ -21,7 +20,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
 	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
-
 	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
@@ -32,6 +30,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
 	import net.psykosoft.psykopaint2.book.views.models.BookGalleryData;
 	import net.psykosoft.psykopaint2.book.views.models.BookData;
+	import net.psykosoft.psykopaint2.book.views.models.BookPage;
 
 	import org.osflash.signals.Signal;
 
@@ -58,7 +57,11 @@ package net.psykosoft.psykopaint2.book.views.book
  		
  		private var _isLoadingImage:Boolean;
  		private var _currentDegrees:Number = 0;
+ 		private var _firstPage:BookPage;
  		public var _foldRotation:Number = 0;
+
+ 		public var _originalType:Number = 0;
+
 
      		public function Book(view:View3D, stage:Stage)
  		{
@@ -72,7 +75,7 @@ package net.psykosoft.psykopaint2.book.views.book
  			bookClearedSignal = new Signal();
  		}
 
- 		//todo: look at how merge setSourceImages & setGalleryImageCollection
+ 		//todo: implement the paging
  		public function setSourceImages(collection : SourceImageCollection):void
  		{
 			var type : String = collection.source;
@@ -113,8 +116,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
  			setTimeout(animateIn, 250);
  		}
-
- 		//Animation book
+ 
  		private function setLayoutSignals():void
  		{
  			_layout.requiredCraftSignal.add(initOpenAnimation);
@@ -136,7 +138,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			
 			TweenLite.to( _bookCraft, duration, { 		rotationY:0} );
 			
-			TweenLite.to( _view.camera, duration, {  	z:-50,y: 1300,
+			TweenLite.to( _view.camera, duration, {  	z:-50,y: 1600,
 									ease: Strong.easeIn,
 									onUpdate:lookAtDummy,
 									onComplete: onAnimateInComplete } );
@@ -157,21 +159,23 @@ package net.psykosoft.psykopaint2.book.views.book
 			var duration:Number = 1;
  
 			var desty:Number = -25;
-			TweenLite.to( _bookCraft.coverRight, duration, { 	y: desty, x:0, rotationZ:2,
-										ease: Strong.easeOut} );
-
-			TweenLite.to( _bookCraft.coverLeft, duration, { 	y: desty, x:0, rotationZ:-2,
-										ease: Strong.easeOut} );
-
-			TweenLite.to( _bookCraft.coverCenter, duration, { 	y: desty, rotationZ:0,
+			TweenLite.to( _bookCraft.coverRight, duration, { 	y: desty, x:0, rotationZ:180,
 										ease: Strong.easeOut} );
 
 			TweenLite.to( _bookCraft, duration, { 			x: 0, ease: Strong.easeOut,
+										onUpdate:updateFirstPageRotation,
 										onComplete: onAnimateOpenComplete} );
 		}
 
+		public function updateFirstPageRotation():void
+		{
+			if(_firstPage) _firstPage.rotation = Math.abs(_bookCraft.coverRight.rotationZ);
+		}
+			
+
 		public function onAnimateOpenComplete():void
 		{
+			if(_firstPage) _firstPage.rotation = 180;
 			_bookReady = true;
 			_layout.loadContent();
 			bookReadySignal.dispatch();
@@ -195,12 +199,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		public function animateOut():void
 		{
 			TweenLite.to( _bookCraft.coverRight, 1, { y: -23, x:-13, rotationZ:-180,
-								ease: Strong.easeOut} );
-
-			TweenLite.to( _bookCraft.coverLeft, 1, { y: 0, x:0, rotationZ:0,
-								ease: Strong.easeOut} );
-
-			TweenLite.to( _bookCraft.coverCenter, 1, { y: 15, rotationZ:90,
 								ease: Strong.easeOut} );
 			 
 			TweenLite.to( _view.camera, 0.75, { y: 50, z:-1250, ease: Strong.easeIn} );
@@ -226,16 +224,31 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			// data is parsed, we build the default required content
  			_pagesCount = _layout.getPageCount();
+
  			var rectoMaterial:TextureMaterial;
  			var versoMaterial:TextureMaterial;
+ 			var marginRectoMaterial:TextureMaterial;
+ 			var marginVersoMaterial:TextureMaterial;
+
  			var pageIndex:uint = 0;
+  
+			versoMaterial = _layout.generateEmptyPageMaterial(pageIndex);
+			marginVersoMaterial = _layout.generateNumberedPageMaterial(pageIndex);
+			_firstPage = _pagesManager.addPage(0, _pagesCount, null, null, versoMaterial, marginVersoMaterial, true);
+			
+			pageIndex++;
 
  			for(var i:uint = 0;i<_pagesCount;i++){
- 				rectoMaterial = _layout.generateDefaultPageMaterial(pageIndex);
+
+ 				rectoMaterial = _layout.generateEmptyPageMaterial(pageIndex);
+ 				marginRectoMaterial = _layout.generateNumberedPageMaterial(pageIndex);
  				pageIndex++;
- 				versoMaterial = _layout.generateDefaultPageMaterial(pageIndex);
+
+ 				versoMaterial = _layout.generateEmptyPageMaterial(pageIndex);
+ 				marginVersoMaterial = _layout.generateNumberedPageMaterial(pageIndex);
  				pageIndex++;
- 				_pagesManager.addPage(i, _pagesCount, rectoMaterial, versoMaterial);	
+
+ 				_pagesManager.addPage(i, _pagesCount, rectoMaterial, marginRectoMaterial, versoMaterial, marginVersoMaterial);	
  			}
 
  			initPagesInteraction();
@@ -243,7 +256,7 @@ package net.psykosoft.psykopaint2.book.views.book
  
  		public function buildBookCraft():void
  		{
- 			_bookCraft = new BookCraft(_layout.pageMaterialsManager.craftMaterial);
+ 			_bookCraft = new BookCraft(_layout.pageMaterialsManager.craftMaterial, _layout.pageMaterialsManager.ringsMaterial);
  			_bookCraft.setClosedState();
  			
  			_pagesManager = new PagesManager(_bookCraft);
@@ -321,7 +334,7 @@ package net.psykosoft.psykopaint2.book.views.book
 				}
 
 				if(pageid<_currentPage){
-					pagesManager.rotatePage(i, 180,0);
+					pagesManager.rotatePage(i, 180, 0);
 
 				} else if(pageid>_currentPage){
 					pagesManager.rotatePage(i, 0, 0);

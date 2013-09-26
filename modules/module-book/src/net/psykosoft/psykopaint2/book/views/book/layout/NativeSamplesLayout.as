@@ -13,13 +13,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 	public class NativeSamplesLayout extends LayoutBase
 	{
-		private const INSERT_WIDTH:uint = 200;
-		private const INSERT_HEIGHT:uint = 130;
+		private const INSERT_WIDTH:uint = 220;
+		private const INSERT_HEIGHT:uint = 152;
 		private const INSERTS_COUNT:uint = 6;
 
 		private var _insertNRMRect:Rectangle;
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
+		private var _baseMask:BitmapData;
 
 		public function NativeSamplesLayout(stage:Stage)
 		{
@@ -34,6 +35,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		override protected function disposeLayoutElements():void
 		{
 			_insertNRMRect = null;
+			if(_baseMask)_baseMask.dispose();
 		}
  
 		//Custom compositing variation per layout and region registration for mouse detection
@@ -43,37 +45,37 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var pageIndex:uint = uint(data.pageIndex);
 			var inPageIndex:uint = uint(data.inPageIndex);
 			var isRecto:Boolean = (pageIndex %2 == 0)? true : false;
+			var hasPower:Boolean = PlatformUtil.hasRequiredPerformanceRating(2);
 				
 			if(isRecto){
 
 				if(inPageIndex %2 == 0){
-					insertRect.x = 50;
+					insertRect.x = 35;
 				} else {
-					insertRect.x = 281;
+					insertRect.x = 260;
 				}
 
 			} else {
 
 				if(inPageIndex %2 == 0){
-					insertRect.x = 31;
+					insertRect.x = 40;
 				} else {
-					insertRect.x = 262;
+					insertRect.x = 265;
 				}
 
 			}
 
-			//col layout recto: 31+130+31+130+31+130
 			var col:uint = Math.floor(inPageIndex/2);
 
 			switch(col){
 				case 0:
-					insertRect.y = 31;
+					insertRect.y = 5;
 					break;
 				case 1:
-					insertRect.y = 192;
+					insertRect.y = 172;
 					break;
 				case 2:
-					insertRect.y = 353;
+					insertRect.y = 342;
 					break;
 			}
 
@@ -82,8 +84,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			insertRect.y += -3+(Math.random()*6);
 
 			var rotation:Number = -1.5+(Math.random()*3);
- 
-			//row layout recto: 50+200+31+200+31
+
 			//the page material
 			pageIndex = Math.floor(pageIndex);
 			var pageMaterial:TextureMaterial = getPageMaterial(pageIndex);
@@ -92,8 +93,29 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			//the destination diffuse bitmapdata
 			var diffuseSourceBitmapdata:BitmapData = diffuseTextureSource.bitmapData;
 			diffuseSourceBitmapdata.lock();
-			//insert the image loaded into diffuse map
-			insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, true, true);
+			
+			//insert brighter reflection
+			if(hasPower){
+				var btMask:BitmapTexture = getEnviroMaskTexture(pageIndex);
+				var maskBMD:BitmapData = btMask.bitmapData;
+
+				if(_baseMask && (_baseMask.width != insertSource.width || _baseMask.height != insertSource.height) ){
+					_baseMask.dispose();
+					_baseMask = new BitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
+
+				} else if(!_baseMask){
+					_baseMask = new BitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
+				}
+
+				//insert the image loaded into diffuse map
+				insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, true, true);
+				insert(_baseMask, maskBMD, insertRect, rotation, false, true);
+
+			} else {
+				insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, true, true);
+			}
+			
+
 			var offset:Number = (lastHeight*.5);
 
 			diffuseSourceBitmapdata.unlock();
@@ -109,7 +131,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_insertNRMRect.height = lastHeight;
  
 			// no need to update the normalmap if no shader uses it
-			if(PlatformUtil.hasRequiredPerformanceRating(2) ) {
+			if(hasPower) {
 				var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
 				var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
  
@@ -140,8 +162,11 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			if(invalidateContent){
  				diffuseTextureSource.invalidateContent();
  				diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;
+ 				btMask.invalidateContent();
+ 				btMask.bitmapData = maskBMD;
  			}
  			
 		}
+ 
 	}
 }

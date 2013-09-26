@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 	import away3d.materials.TextureMaterial;
 	import away3d.entities.Mesh;
 	import away3d.containers.ObjectContainer3D;
+	import away3d.materials.TextureMaterial;
  
  	public class PagesManager
  	{
@@ -31,18 +32,19 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			return _pageHeight;
  		}
 
- 		public function addPage(index:uint, totalPages:uint, materialRecto:TextureMaterial, materialVerso:TextureMaterial):void
+ 		public function addPage(index:uint, totalPages:uint, materialRecto:TextureMaterial, marginRectoMaterial:TextureMaterial, materialVerso:TextureMaterial, marginVersoMaterial:TextureMaterial, isBlankRecto:Boolean = false):BookPage
  		{
  			if(!_pages){
- 				_pages = new Vector.<Mesh>(totalPages*2, true);
- 				_pagesContent = new Vector.<BookPage>(totalPages, true);
+ 				_pages = new Vector.<Mesh>();
+ 				_pagesContent = new Vector.<BookPage>();
  			}
 
  			var page:BookPage;
+ 			 
  			if(_pagesContent.length>0){
- 				page = new BookPage(materialRecto, materialVerso, _pagesContent[0]);
+ 				page = new BookPage(materialRecto, marginRectoMaterial, materialVerso, marginVersoMaterial, _pagesContent[0], isBlankRecto);
 			} else {
-				page = new BookPage(materialRecto, materialVerso);
+				page = new BookPage(materialRecto, marginRectoMaterial, materialVerso, marginVersoMaterial, null, isBlankRecto);
 				_pageHeight = page.pageWidth;
  				_pageWidth = page.pageHeight;
 			}
@@ -50,11 +52,13 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			_container.addChild(page);
  			_pagesContent[index] = page;
  			
- 			var y:Number = totalPages-index+10;
- 			page.recto.y = page.verso.y = y;
- 			
- 			_pages[index*2] = page.recto;
- 			_pages[(index*2)+1] = page.verso;
+ 			var y:Number = totalPages-index+12;
+ 			page.recto.y = page.verso.y = page.marginRecto.y = page.marginVerso.y = y;
+ 
+ 			_pages[index*2] = page.verso;
+ 			_pages[(index*2)+1] = page.recto;
+
+ 			return page;
  		}
 
  		public function getPage(index:uint):BookPage
@@ -141,9 +145,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  			_pages = null;
  			_pagesContent = null;
- 		
  		}
-
  
  	}
  } 
