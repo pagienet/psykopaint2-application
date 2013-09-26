@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.views.popups
+package net.psykosoft.psykopaint2.core.views.popups.messages
 {
 
 	import flash.display.Sprite;
@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 	public class MessagePopUpView extends PopUpViewBase
 	{
 		// Declared in Flash.
-		public var popup:Sprite;
+		public var bg:Sprite;
 		public var main:TextField;
 		public var extra:TextField;
 
@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 		}
 
 		override protected function onEnabled():void {
+
 			super.onEnabled();
 
 			main.selectable = main.mouseEnabled = false;
@@ -26,7 +27,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 			extra.text = "";
 
 			// TODO: why the reparenting?
-			_container.addChild( popup );
+			_container.addChild( bg );
 			_container.addChild( main );
 			_container.addChild( extra );
 

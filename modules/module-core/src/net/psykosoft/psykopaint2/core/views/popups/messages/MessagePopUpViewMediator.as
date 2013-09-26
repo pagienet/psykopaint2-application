@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.views.popups
+package net.psykosoft.psykopaint2.core.views.popups.messages
 {
 
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;

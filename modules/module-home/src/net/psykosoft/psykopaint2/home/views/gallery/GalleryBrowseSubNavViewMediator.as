@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestExitGallerySignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 
 	public class GalleryBrowseSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		override protected function onViewDisabled() : void
 		{
-			requestHomePanningToggleSignal.dispatch(true);
+			requestHomePanningToggleSignal.dispatch(1);
 			super.onViewDisabled();
 		}
 
