@@ -128,8 +128,6 @@ package net.psykosoft.psykopaint2.home.config
 			_injector.map( RequestExitPickAnImageSignal ).asSingleton();
 			_injector.map( RequestExitGallerySignal ).asSingleton();
 			_injector.map( RequestRetrieveCameraImageSignal ).asSingleton();
-			_injector.map( RequestHomePanningToggleSignal ).asSingleton();
-			_injector.map( RequestOpenGalleryImageSignal ).asSingleton();
 		}
 
 		// -----------------------

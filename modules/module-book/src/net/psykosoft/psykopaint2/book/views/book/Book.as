@@ -19,7 +19,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
@@ -31,6 +30,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.book.views.models.BookGalleryData;
 	import net.psykosoft.psykopaint2.book.views.models.BookData;
 	import net.psykosoft.psykopaint2.book.views.models.BookPage;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 
 	import org.osflash.signals.Signal;
 
