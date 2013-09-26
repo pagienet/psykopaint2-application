@@ -7,8 +7,6 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.commands.SetUpBookModuleCommand;
 	import net.psykosoft.psykopaint2.book.services.ANECameraRollService;
 	import net.psykosoft.psykopaint2.book.services.CameraRollService;
-	import net.psykosoft.psykopaint2.core.models.DummyGalleryImageService;
-	import net.psykosoft.psykopaint2.core.models.GalleryImageService;
 	import net.psykosoft.psykopaint2.book.services.SampleImageService;
 	import net.psykosoft.psykopaint2.book.services.XMLSampleImageService;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;

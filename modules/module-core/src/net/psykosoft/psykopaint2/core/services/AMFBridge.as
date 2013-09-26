@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.core.services
 	import flash.net.Responder;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.models.UserRegistrationVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 
 	public class AMFBridge
@@ -106,7 +107,23 @@ package net.psykosoft.psykopaint2.core.services
 
 		public function logIn(email : String, password : String, onSuccess : Function, onFail : Function) : void
 		{
-			_connection.call("Main/loginUser", new Responder(onSuccess, onFail), email, MD5.hash(email + MD5.hash(password)));
+			_connection.call("Main/loginUser", new Responder(onSuccess, onFail), email, hashPassword(email, password));
+		}
+
+		public function registerAndLogIn(userRegistrationVO : UserRegistrationVO, onSuccess : Function, onFail : Function) : void
+		{
+			_connection.call(	"Main/loginUser", new Responder(onSuccess, onFail),
+								userRegistrationVO.facebookID,
+								userRegistrationVO.email,
+								hashPassword(userRegistrationVO.email, userRegistrationVO.password),
+								userRegistrationVO.firstName,
+								userRegistrationVO.lastName
+							);
+		}
+
+		private function hashPassword(email : String, password : String) : String
+		{
+			return MD5.hash(email + MD5.hash(password));
 		}
 	}
 }

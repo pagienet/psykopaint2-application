@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.models
 	{
 		function isLoggedIn() : Boolean;
 		function logIn(username : String, password : String) : void;
+		function registerAndLogIn(userRegisterationVO : UserRegistrationVO) : void;
+
 		function get userID() : int;
 		function get sessionID() : String;
 		function get firstName() : String;

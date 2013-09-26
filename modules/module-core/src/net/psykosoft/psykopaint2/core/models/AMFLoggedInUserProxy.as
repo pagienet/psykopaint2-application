@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.models
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegistrationFailedSignal;
 
 	public class AMFLoggedInUserProxy implements LoggedInUserProxy
 	{
@@ -15,6 +17,13 @@ package net.psykosoft.psykopaint2.core.models
 
 		[Inject]
 		public var notifyUserLogInFailedSignal : NotifyUserLogInFailedSignal;
+
+		[Inject]
+		public var notifyUserRegistrationFailedSignal : NotifyUserRegistrationFailedSignal;
+
+		[Inject]
+		public var notifyUserRegisteredSignal : NotifyUserRegisteredSignal;
+
 
 		private var _userID : int = -1;
 
@@ -42,6 +51,11 @@ package net.psykosoft.psykopaint2.core.models
 			_userID = 1;
 		}
 
+		public function registerAndLogIn(userRegistrationVO : UserRegistrationVO) : void
+		{
+			amfBridge.registerAndLogIn(userRegistrationVO, onRegisterSuccess, onRegisterFail);
+		}
+
 		private function onLogInSuccess(data : Object) : void
 		{
 			if (data["status_code"] != 1) {
@@ -49,6 +63,12 @@ package net.psykosoft.psykopaint2.core.models
 				return;
 			}
 
+			populateUserData(data);
+			notifyUserLoggedInSignal.dispatch();
+		}
+
+		private function populateUserData(data : Object) : void
+		{
 			_sessionID = data["session_id"];
 
 			var userData : Object = data["userData"];
@@ -60,13 +80,28 @@ package net.psykosoft.psykopaint2.core.models
 			_numComments = userData["num_comments"];
 			_active = userData["active"];
 			_banned = userData["banned"];
-
-			notifyUserLoggedInSignal.dispatch();
 		}
 
 		private function onLogInFail(data : Object) : void
 		{
 			notifyUserLogInFailedSignal.dispatch(AMFErrorCode.CALL_FAILED);
+		}
+
+		private function onRegisterSuccess(data : Object) : void
+		{
+			if (data["status_code"] != 1) {
+				notifyUserRegistrationFailedSignal.dispatch(data["status_code"]);
+				return;
+			}
+
+			populateUserData(data);
+			notifyUserRegisteredSignal.dispatch();
+			notifyUserLoggedInSignal.dispatch();
+		}
+
+		private function onRegisterFail(data : Object) : void
+		{
+			notifyUserRegistrationFailedSignal.dispatch(AMFErrorCode.CALL_FAILED);
 		}
 
 		public function get sessionID() : String

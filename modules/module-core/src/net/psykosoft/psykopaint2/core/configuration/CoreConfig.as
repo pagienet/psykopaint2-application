@@ -56,6 +56,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegistrationFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
@@ -240,13 +242,15 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 			_injector.map( NotifyUserLoggedInSignal ).asSingleton();
 			_injector.map( NotifyUserLogInFailedSignal ).asSingleton();
+			_injector.map( NotifyUserRegisteredSignal ).asSingleton();
+			_injector.map( NotifyUserRegistrationFailedSignal ).asSingleton();
 			_injector.map( ToggleTransformGestureSignal ).asSingleton();
 			_injector.map( RequestHomePanningToggleSignal ).asSingleton();
 			_injector.map( NotifyGalleryPaintingLoadedSignal ).asSingleton();
 			_injector.map( NotifyGalleryPaintingIOErrorSignal ).asSingleton();
 
+			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
-
 		}
 
 		// -----------------------
@@ -272,7 +276,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_mediatorMap.map( PsykoSocketView ).toMediator( PsykoSocketViewMediator );
 			_mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
 			_mediatorMap.map( MessagePopUpView ).toMediator( MessagePopUpViewMediator );
-			_mediatorMap.map( LoginPopUpView ).toMediator( LoginPopUpViewMediator );
 			_mediatorMap.map( DebugView ).toMediator( DebugViewMediator );
 			_mediatorMap.map( ErrorsView ).toMediator( ErrorsViewMediator );
 			_mediatorMap.map( VideoView ).toMediator( VideoViewMediator );

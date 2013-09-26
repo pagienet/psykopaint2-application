@@ -1,11 +1,15 @@
 package net.psykosoft.psykopaint2.core.models
 {
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
 
 	public class DummyLoggedInUserProxy implements LoggedInUserProxy
 	{
 		[Inject]
 		public var notifyUserLoggedInSignal : NotifyUserLoggedInSignal;
+
+		[Inject]
+		public var notifyUserRegisteredSignal : NotifyUserRegisteredSignal;
 
 		private var _userID : int = -1;
 		private var _sessionID : String;
@@ -38,6 +42,22 @@ package net.psykosoft.psykopaint2.core.models
 			_numFollowers = 5;
 			_active = true;
 			_banned = false;
+			notifyUserLoggedInSignal.dispatch();
+		}
+
+		public function registerAndLogIn(userRegisterationVO : UserRegistrationVO) : void
+		{
+			_userID = 1;
+			_sessionID = "1";
+
+			_firstName = userRegisterationVO.firstName;
+			_lastName = userRegisterationVO.lastName;
+			_facebookID = userRegisterationVO.facebookID;
+			_numComments = 0;
+			_numFollowers = 0;
+			_active = true;
+			_banned = false;
+			notifyUserRegisteredSignal.dispatch();
 			notifyUserLoggedInSignal.dispatch();
 		}
 
