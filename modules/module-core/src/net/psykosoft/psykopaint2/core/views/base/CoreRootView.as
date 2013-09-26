@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.display.Sprite;
 	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.debug.DebugView;
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsView;
@@ -43,6 +44,12 @@ package net.psykosoft.psykopaint2.core.views.base
 			btn.value = 60;
 			btn.labelMode = SbSliderButton.LABEL_VALUE;
 			addChild( btn );*/
+
+//			var input:PsykoInput = new PsykoInput();
+//			input.defaultText = "email";
+//			input.x = 400;
+//			input.y = 200;
+//			addChild( input );
 		}
 
 		public function addToMainLayer( child:DisplayObject, layerOrdering:int ):void {

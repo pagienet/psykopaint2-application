@@ -347,16 +347,16 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Event handlers.
 		// ---------------------------------------------------------------------
 
-		override protected function onAddedToStage():void {
-			// TODO: remove on release
-			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
-		}
+//		override protected function onAddedToStage():void {
+//			// TODO: remove on release
+//			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
+//		}
 
-		private function onStageKeyDown( event:KeyboardEvent ):void {
-			if( event.keyCode == Keyboard.H ) {
-				_forceHidden = !_forceHidden;
-				visible = !_forceHidden;
-			}
-		}
+//		private function onStageKeyDown( event:KeyboardEvent ):void {
+//			if( event.keyCode == Keyboard.H ) {
+//				_forceHidden = !_forceHidden;
+//				visible = !_forceHidden;
+//			}
+//		}
 	}
 }
