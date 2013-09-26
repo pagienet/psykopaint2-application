@@ -45,7 +45,7 @@ package net.psykosoft.psykopaint2.core.views.base
 			addChild( btn );*/
 		}
 
-		public function addToMainLayer( child:DisplayObject, layerOrdering ):void {
+		public function addToMainLayer( child:DisplayObject, layerOrdering:int ):void {
 			switch ( layerOrdering )
 			{
 				case ViewLayerOrdering.AT_BOTTOM_LAYER:
