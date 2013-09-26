@@ -108,8 +108,13 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			return null;
  		}
  
-
  		public function dispose():void
+ 		{
+ 			clearCurrentRegions();
+ 			if(_np) _np = null;
+ 		}
+
+ 		public function clearCurrentRegions():void
  		{
  			if(_regions){
  				for(var i:uint = 0;i<_regions.length;++i){
@@ -119,8 +124,6 @@ package net.psykosoft.psykopaint2.book.views.book.data
  				}
  				_regions = null;
  			}
- 			
- 			if(_np) _np = null;
  		}
  
  	}

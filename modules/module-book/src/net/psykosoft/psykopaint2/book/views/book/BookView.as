@@ -132,9 +132,11 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		override protected function onEnabled():void
 		{
-			_mouseRange = stage.stageHeight/4;
-			initView3D();
-			initBook();
+			if(!_book){
+				_mouseRange = stage.stageHeight/4;
+				initView3D();
+				initBook();
+			}
 		}
 
 		private function initBook() : void

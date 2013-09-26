@@ -27,9 +27,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  
 	public class GalleryLayout extends LayoutBase
 	{
+		public static const INSERTS_COUNT:uint = 6;
+
 		private const INSERT_WIDTH:uint = 204;
-		private const INSERT_HEIGHT:uint = 149;
-		private const INSERTS_COUNT:uint = 6;
+		private const INSERT_HEIGHT:uint = 149;	
 		private const SPACE:Number = 5;
 		private const DEDICATED_ASSETS:uint = 7;
 

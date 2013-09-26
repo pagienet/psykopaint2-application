@@ -13,9 +13,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 	public class NativeSamplesLayout extends LayoutBase
 	{
+		public static const INSERTS_COUNT:uint = 6;
+		
 		private const INSERT_WIDTH:uint = 220;
 		private const INSERT_HEIGHT:uint = 152;
-		private const INSERTS_COUNT:uint = 6;
 
 		private var _insertNRMRect:Rectangle;
 		private var _insertNormalmap:BitmapData;

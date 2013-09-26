@@ -14,9 +14,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  
 	public class CameraSamplesLayout extends LayoutBase
 	{
+		public static const INSERTS_COUNT:uint = 16;
+
 		private const INSERT_WIDTH:uint = 100;
 		private const INSERT_HEIGHT:uint = 100;
-		private const INSERTS_COUNT:uint = 16;
 
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;

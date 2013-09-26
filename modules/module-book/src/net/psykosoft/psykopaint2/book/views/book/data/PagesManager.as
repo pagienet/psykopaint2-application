@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		private var _container:ObjectContainer3D;
  		private var _pageHeight:uint;
  		private var _pageWidth:uint;
+ 		private var _updateState:Boolean;
  
      		public function PagesManager(container:ObjectContainer3D)
  		{
@@ -31,6 +32,16 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		{
  			return _pageHeight;
  		}
+
+ 		public function setUpdateState():void
+ 		{
+ 			_updateState = true;
+ 		}
+ 		public function get updateState():Boolean
+ 		{
+ 			return _updateState;
+ 		}
+ 
 
  		public function addPage(index:uint, totalPages:uint, materialRecto:TextureMaterial, marginRectoMaterial:TextureMaterial, materialVerso:TextureMaterial, marginVersoMaterial:TextureMaterial, isBlankRecto:Boolean = false):BookPage
  		{
@@ -130,11 +141,9 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			return _pages[index];
  		}
 
- 		public function dispose():void
+ 		public function dispose( count:int = -1):void
  		{
- 			var i:uint;
-
- 			for(i = 0;i<_pages.length;++i){
+ 			for(var i:uint = 0;i<_pages.length;++i){
  				_pages[i] = null;
  			}
 
@@ -145,6 +154,31 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  			_pages = null;
  			_pagesContent = null;
+ 		}
+
+ 		public function removePages( count:uint):void
+ 		{
+ 			if(count<_pages.length){
+ 				for(var i:uint = count; i<_pages.length;++i){
+ 					_pages[i] = null;
+ 				}
+ 				var page:BookPage
+ 				for(i = count;i<_pagesContent.length;++i){
+ 					page = _pagesContent[i];
+
+ 					_container.removeChild(page);
+	 				page.disposeContent();
+	 				page = null;
+ 				}
+ 				
+ 				for(i = 0;i<_pages.length;++i){
+ 					if(_pages[i] == null){
+ 						_pages.splice(i, 1);
+ 						i--;
+ 					}
+ 				}
+ 			}
+ 			
  		}
  
  	}

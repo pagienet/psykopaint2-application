@@ -60,9 +60,9 @@ package net.psykosoft.psykopaint2.book.views.book
  		private var _firstPage:BookPage;
  		public var _foldRotation:Number = 0;
 
- 		public var _originalType:Number = 0;
-
-
+ 		private var _currentDataType:String = "";
+ 		private var _isBookUpdate:Boolean;
+ 
      		public function Book(view:View3D, stage:Stage)
  		{
  			_view = view;
@@ -75,27 +75,65 @@ package net.psykosoft.psykopaint2.book.views.book
  			bookClearedSignal = new Signal();
  		}
 
- 		//todo: implement the paging
  		public function setSourceImages(collection : SourceImageCollection):void
  		{
+ 			var layoutExists:Boolean  = (_layout) ? true : false;
+
 			var type : String = collection.source;
+ 
+			if(_layout){
 
-			switch(type){
- 				case BookImageSource.SAMPLE_IMAGES:
- 					_layout = new NativeSamplesLayout(_stage);
- 					break;
+				//same type, its a paging thingy, amount of pages can only be bigger, we need update the numbering
+				if(_currentDataType == type){
 
- 				case BookImageSource.CAMERA_IMAGES:
- 					_layout = new CameraSamplesLayout(_stage);
- 					break;
+				//no its a total new layout, we need clear data but keep pages and reset the textures
+				} else {
+					removeLayoutSignals();
 
- 				default:
- 					_layout = new NativeSamplesLayout(_stage);
+					var newPageCount:uint;
+					var insertCount:uint;
 
- 			}
+					switch(type){
+		 				case BookImageSource.SAMPLE_IMAGES:
+		 				 	insertCount = NativeSamplesLayout.INSERTS_COUNT;
+		 					newPageCount = Math.round(collection.images.length/insertCount);
+		 					_layout = new NativeSamplesLayout(_stage);
+		 					break;
 
+		 				case BookImageSource.CAMERA_IMAGES:
+		 					insertCount = CameraSamplesLayout.INSERTS_COUNT;
+		 					newPageCount = Math.round(collection.images.length/insertCount);
+		 					_layout = new CameraSamplesLayout(_stage);
+		 					break;
+		 			}
+
+					clearCurrentLayout(newPageCount);
+				}
+
+
+			} else {
+
+				switch(type){
+	 				case BookImageSource.SAMPLE_IMAGES:
+	 					_layout = new NativeSamplesLayout(_stage);
+	 					break;
+
+	 				case BookImageSource.CAMERA_IMAGES:
+	 					_layout = new CameraSamplesLayout(_stage);
+	 					break;
+
+	 				default:
+	 					_layout = new NativeSamplesLayout(_stage);
+
+	 			}
+
+	 			setLayoutSignals();
+			}
+
+			_currentDataType = type;
+			
  			_layout.collection = collection;
- 			setLayoutSignals();
+ 			
  		}
 
  		public function setGalleryImageCollection(galleryCollection : GalleryImageCollection):void
@@ -105,9 +143,23 @@ package net.psykosoft.psykopaint2.book.views.book
 			// Note to Fabrice: always should be GalleryLayout, no need to check on type here
 			_layout = new GalleryLayout(_stage);
 
+			_currentDataType = BookImageSource.GALLERY_IMAGES;
+
  			_layout.galleryCollection = galleryCollection;
  			setLayoutSignals();
  		}
+
+ 		//paging & clearing of an exiting book
+ 		public function clearCurrentLayout(newPageCount:uint):void
+ 		{
+ 			updatePages(0);
+ 			
+ 			_pagesManager.setUpdateState();
+ 			_pagesManager.removePages(newPageCount);
+
+ 			_regionManager.clearCurrentRegions();
+ 		}
+ 		//end paging & clearing
 
  		public function initOpenAnimation(bitmapdata:BitmapData):void
  		{
@@ -121,6 +173,11 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			_layout.requiredCraftSignal.add(initOpenAnimation);
  			_layout.requiredAssetsReadySignal.add(loadBookContent);
+ 		}
+ 		private function removeLayoutSignals():void
+ 		{
+ 			_layout.requiredCraftSignal.remove(initOpenAnimation);
+ 			_layout.requiredAssetsReadySignal.remove(loadBookContent);
  		}
 
  		private function animateIn():void
