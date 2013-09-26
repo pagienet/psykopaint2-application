@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		
 		private const DRAW_SCALE:Number = 1;
 		
-		private const FLUID_WIDTH:uint = 60;
+		private const FLUID_WIDTH:uint = 50;
 		
 		private const isw:Number = 1 / sw;
 		private const ish:Number = 1 / sh;
@@ -87,6 +87,9 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			picker.graphics.drawCircle(0,0,24);
 			picker.x = sw*0.5;
 			picker.y = sh*0.5;
+			stage.quality = StageQuality.HIGH;
+			picker.cacheAsBitmap = true;
+			stage.quality = StageQuality.LOW;
 			addChild(picker);
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
@@ -138,7 +141,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		
 		private function handleForce(x:Number, y:Number):void
 		{
-			var count:int = 8;
+			var count:int = 16;
 			const NormX:Number = x * isw;
 			const NormY:Number = y * ish;
 			const VelX:Number = (x - prevMouse.x) * isw / count;
@@ -146,7 +149,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 			for ( var i:int = 0; i < count; i++ )
 			{
-				addForce(NormX + 0.05 * (Math.random() - Math.random()), NormY + 0.05 * (Math.random() - Math.random()), VelX, VelY, _currentColor,colorInfluence);
+				addForce(NormX + 0.1 * (Math.random() - Math.random()), NormY + 0.1 * (Math.random() - Math.random()), VelX, VelY, _currentColor,colorInfluence);
 			}
 			
 			prevMouse.x = x;
