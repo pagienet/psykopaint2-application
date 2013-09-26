@@ -1,14 +1,9 @@
-package net.psykosoft.psykopaint2.book.services
+package net.psykosoft.psykopaint2.core.models
 {
-	import net.psykosoft.psykopaint2.book.model.FileGalleryImageProxy;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
-	import net.psykosoft.psykopaint2.core.models.GalleryType;
-	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFailedSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFetchedSignal;
-	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFetchedSignal;
 
 	public class AMFGalleryImageService implements GalleryImageService
 	{
@@ -48,6 +43,10 @@ package net.psykosoft.psykopaint2.book.services
 			}
 
 			_index = index;
+		}
+
+		public function fetchPainting(paintingID : int) : void
+		{
 		}
 
 		private function onUserImagesSuccess(data : Object) : void
@@ -92,7 +91,9 @@ package net.psykosoft.psykopaint2.book.services
 				var obj : Object = array[i];
 				var vo : FileGalleryImageProxy = new FileGalleryImageProxy();
 				vo.id = obj["id"];
-				vo.highResThumbnailFilename = obj["url_thumb50"];
+				vo.title = obj["title"];
+				vo.fullsizeFilename = obj["url_image"];
+				vo.lowResThumbnailFilename = obj["url_thumb50"];
 				vo.highResThumbnailFilename = obj["url_thumb200"];
 				vo.userName = obj["firstname"] + " " + obj["lastname"];
 				vo.numLikes = obj["num_favorite"];

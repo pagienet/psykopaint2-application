@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.book.signals
 {
-	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 
 	import org.osflash.signals.Signal;
 

@@ -5,9 +5,9 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
-	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFetchedSignal;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;

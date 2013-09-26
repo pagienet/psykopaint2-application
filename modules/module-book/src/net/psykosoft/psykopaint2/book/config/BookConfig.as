@@ -7,16 +7,16 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.commands.SetUpBookModuleCommand;
 	import net.psykosoft.psykopaint2.book.services.ANECameraRollService;
 	import net.psykosoft.psykopaint2.book.services.CameraRollService;
-	import net.psykosoft.psykopaint2.book.services.DummyGalleryImageService;
-	import net.psykosoft.psykopaint2.book.services.GalleryImageService;
+	import net.psykosoft.psykopaint2.core.models.DummyGalleryImageService;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageService;
 	import net.psykosoft.psykopaint2.book.services.SampleImageService;
 	import net.psykosoft.psykopaint2.book.services.XMLSampleImageService;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFailedSignal;
-	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFetchedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
@@ -89,8 +89,6 @@ package net.psykosoft.psykopaint2.book.config
 			// TODO: Provide actual communicating services to replace the dummy ones
 			_injector.map(CameraRollService).toSingleton(ANECameraRollService);
 			_injector.map(SampleImageService).toSingleton(XMLSampleImageService);
-			_injector.map(GalleryImageService).toSingleton(DummyGalleryImageService);
-//			_injector.map(GalleryImageService).toSingleton(AMFGalleryImageService);
 		}
 
 		// -----------------------

@@ -43,6 +43,7 @@ package net.psykosoft.psykopaint2.home.views.base
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PREPARE_FOR_PAINT_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_IMAGE, PickAnImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK_GALLERY, GalleryBrowseSubNavView );
+//			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_LOADING, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_PAINTING, GalleryPaintingSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.CAPTURE_IMAGE, CaptureImageSubNavView );
 

@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.core.managers.Stage3DProxy;
 
+	import flash.display.BitmapData;
+
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 
@@ -13,9 +15,12 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryPaintingIOErrorSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryPaintingLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
@@ -93,6 +98,12 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var requestBrowseGallery : RequestBrowseGallerySignal;
 
+		[Inject]
+		public var notifyGalleryPaintingLoadedSignal : NotifyGalleryPaintingLoadedSignal;
+
+		[Inject]
+		public var notifyGalleryPaintingIOErrorSignal : NotifyGalleryPaintingIOErrorSignal;
+
 		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightDistance : Number = 1000;
 		private var _dockedAtSnapIndex:int = -1;
@@ -118,6 +129,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHomeIntroSignal.add( onIntroRequested );
 			notifyGyroscopeUpdateSignal.add ( onGyroscopeUpdate );
 			requestHomePanningToggleSignal.add ( onTogglePanning );
+			notifyGalleryPaintingLoadedSignal.add ( onGalleryPaintingLoaded );
+			notifyGalleryPaintingIOErrorSignal.add ( onGalleryPaintingIOError );
 
 			// From view.
 			view.closestSnapPointChangedSignal.add( onViewClosestSnapPointChanged );
@@ -154,6 +167,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.sceneReadySignal.remove( onSceneReady );
 			notifyGyroscopeUpdateSignal.remove ( onGyroscopeUpdate );
 			requestHomePanningToggleSignal.remove ( onTogglePanning );
+			notifyGalleryPaintingLoadedSignal.remove ( onGalleryPaintingLoaded );
+			notifyGalleryPaintingIOErrorSignal.remove ( onGalleryPaintingIOError );
 
 			view.dispose();
 
@@ -314,6 +329,19 @@ package net.psykosoft.psykopaint2.home.views.home
 //				var temporaryPaintingName:String = temporaryPaintingNames[ snapPointIndex - 3 ];
 //				notifyFocusedPaintingChangedSignal.dispatch( temporaryPaintingName );
 			}
+		}
+
+		private function onGalleryPaintingLoaded(galleryImageProxy : GalleryImageProxy, bitmapData : BitmapData) : void
+		{
+			requestStateChangeSignal.dispatch(NavigationStateType.GALLERY_PAINTING);
+//			notifyFocusedPaintingChangedSignal.dispatch( galleryImageProxy.title );
+			// TODO: Pass stuff on to view
+			// TODO: Navigation needs to update depending on the image (if already favourited, don't show love icon etc)
+		}
+
+		private function onGalleryPaintingIOError() : void
+		{
+			// TODO: Display error message
 		}
 	}
 }

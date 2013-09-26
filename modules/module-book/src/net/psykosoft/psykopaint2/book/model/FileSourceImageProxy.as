@@ -9,6 +9,8 @@ package net.psykosoft.psykopaint2.book.model
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
 
+	import net.psykosoft.psykopaint2.core.models.ImageThumbnailSize;
+
 	public class FileSourceImageProxy implements SourceImageProxy
 	{
 		// public for convenience, not accessible through interface anyway

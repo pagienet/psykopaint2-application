@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.book.model
+package net.psykosoft.psykopaint2.core.models
 {
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
@@ -26,6 +26,13 @@ package net.psykosoft.psykopaint2.book.model
 
 			var bitmapData : TrackedBitmapData = new TrackedBitmapData(width, height, false, 0);
 			bitmapData.perlinNoise(64, 64, 8, Math.random(), true, true);
+			onComplete(bitmapData);
+		}
+
+		override public function loadFullsized(onComplete : Function, onError : Function) : void
+		{
+			var bitmapData : TrackedBitmapData = new TrackedBitmapData(1024, 768, false, 0);
+			bitmapData.perlinNoise(512, 512, 8, Math.random(), true, true);
 			onComplete(bitmapData);
 		}
 	}

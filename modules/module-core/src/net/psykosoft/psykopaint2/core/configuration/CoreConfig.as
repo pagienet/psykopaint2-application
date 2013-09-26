@@ -19,8 +19,10 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
+	import net.psykosoft.psykopaint2.core.models.DummyGalleryImageService;
 	import net.psykosoft.psykopaint2.core.models.DummyLoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageService;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -32,6 +34,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryPaintingIOErrorSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryPaintingLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
@@ -179,6 +183,10 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map(GyroscopeManager).asSingleton();
 			_injector.map(AccelerometerManager).asSingleton();
 			_injector.map(RetrievePaintingsDataProcessModel).asSingleton();
+			// services
+			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);
+			_injector.map(GalleryImageService).toSingleton(DummyGalleryImageService);
+//			_injector.map(GalleryImageService).toSingleton(AMFGalleryImageService);
 
 		}
 
@@ -230,10 +238,11 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyUserLoggedInSignal ).asSingleton();
 			_injector.map( NotifyUserLogInFailedSignal ).asSingleton();
 			_injector.map( ToggleTransformGestureSignal ).asSingleton();
+			_injector.map( NotifyGalleryPaintingLoadedSignal ).asSingleton();
+			_injector.map( NotifyGalleryPaintingIOErrorSignal ).asSingleton();
 
-			// services
-			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
+
 		}
 
 		// -----------------------

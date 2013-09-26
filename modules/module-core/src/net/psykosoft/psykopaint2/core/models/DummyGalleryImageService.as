@@ -1,9 +1,6 @@
-package net.psykosoft.psykopaint2.book.services
+package net.psykosoft.psykopaint2.core.models
 {
-	import net.psykosoft.psykopaint2.book.model.DummyGalleryImageProxy;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
-	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImagesFetchedSignal;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFetchedSignal;
 
 	public class DummyGalleryImageService implements GalleryImageService
 	{
@@ -27,11 +24,31 @@ package net.psykosoft.psykopaint2.book.services
 				"Rick Dagless", "Dean Learner", "Steve Pising", "Rick Deckard", "Benny Lava"
 			];
 
+			var dummyTitles : Array = [
+					"The Rise and Fall of Dr. Flabbybottoms",
+					"Sausage Man with a Little Bit of a Hand",
+					"North Malden",
+					"A Scotsman on a Horse",
+					"Burns Verkaufen der Kraftwerk",
+					"You Only Move Twice",
+					"My eyes! Ze goggles do nossink!",
+					"Mr. Plow",
+					"Whither Canada?",
+					"Owl Stretching Time",
+					"How to Recognize Different Parts of the Body",
+					"Scott of the Antarctic",
+					"Njorl's Saga",
+					"Blood, Devastation, Death, War and Horror",
+					"Mr. Neutron"
+			];
+
 			for (var i : int = 0; i < amount; ++i) {
 				var item : DummyGalleryImageProxy = new DummyGalleryImageProxy();
 				var userIndex : int = Math.random()*dummyNames.length;
+				var titleIndex : int = Math.random()*dummyTitles.length;
 				item.id = i;
 				item.userName = dummyNames[userIndex];
+				item.title = dummyTitles[titleIndex];
 				item.numComments = Math.random()*1000;
 				item.numLikes = Math.random()*100000;
 				item.paintingMode = Math.random() < .5? PaintMode.COLOR_MODE : PaintMode.PHOTO_MODE;
@@ -43,6 +60,10 @@ package net.psykosoft.psykopaint2.book.services
 			collection.index = index;
 
 			notifyGalleryImagesFetchedSignal.dispatch(collection);
+		}
+
+		public function fetchPainting(paintingID : int) : void
+		{
 		}
 	}
 }

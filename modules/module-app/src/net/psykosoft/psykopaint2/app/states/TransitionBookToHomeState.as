@@ -3,14 +3,14 @@ package net.psykosoft.psykopaint2.app.states
 
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestOpenGalleryImageSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestLoadGalleryPaintingSignal;
 
 	public class TransitionBookToHomeState extends State
 	{
@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestHomeViewScrollSignal : RequestHomeViewScrollSignal;
 
 		[Inject]
-		public var requestOpenGalleryImageSignal : RequestOpenGalleryImageSignal;
+		public var requestLoadGalleryPaintingSignal : RequestLoadGalleryPaintingSignal;
 
 		private var _targetNavigationState:String;
 		private var _galleryImage : GalleryImageProxy;
@@ -67,11 +67,10 @@ package net.psykosoft.psykopaint2.app.states
 			stateMachine.setActiveState(homeState);
 			requestStateChangeSignal.dispatch(_targetNavigationState);
 
-			// always go back to easel, or depends on targetNavigationState?
-			if (_targetNavigationState != NavigationStateType.GALLERY_PAINTING)
+			if (_targetNavigationState != NavigationStateType.GALLERY_LOADING)
 				requestHomeViewScrollSignal.dispatch(1);
 			else
-				requestOpenGalleryImageSignal.dispatch(_galleryImage.id);
+				requestLoadGalleryPaintingSignal.dispatch(_galleryImage);
 		}
 
 		override ns_state_machine function deactivate() : void

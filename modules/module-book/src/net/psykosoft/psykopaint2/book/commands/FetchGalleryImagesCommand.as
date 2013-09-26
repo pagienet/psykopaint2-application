@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.book.commands
 {
-	import net.psykosoft.psykopaint2.book.model.GalleryImageRequestVO;
-	import net.psykosoft.psykopaint2.book.services.GalleryImageService;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageRequestVO;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageService;
 
 	public class FetchGalleryImagesCommand
 	{

@@ -18,7 +18,6 @@ package net.psykosoft.psykopaint2.core.models
 		public static const PICK_IMAGE:String = "state/pick_image";
 
 		public static const BOOK_SOURCE_IMAGES:String = "state/book_source_images";
-		public static const BOOK_GALLERY:String = "state/book_gallery";
 		public static const PICK_USER_IMAGE_DESKTOP:String = "state/pick_user_image_desktop";
 		public static const PICK_SAMPLE_IMAGE:String = "state/pick_sample_image"; // TODO: delete
 		public static const CAPTURE_IMAGE:String = "state/capture_image";
@@ -33,9 +32,11 @@ package net.psykosoft.psykopaint2.core.models
 		public static const PAINT_ADJUST_BRUSH:String = "state/paint/adjust_brush";
 
 		public static const PAINT_COLOR:String = "state/paint/select_color";
-		public static const GALLERY_PAINTING : String = "state/gallery/painting";
 		//public static const PAINT_HIDE_SOURCE:String = "state/paint/hide_source";
-		
+
+		public static const BOOK_GALLERY:String = "state/book_gallery";
+		public static const GALLERY_LOADING : String = "state/gallery/loading";
+		public static const GALLERY_PAINTING : String = "state/gallery/painting";
 
 	}
 }

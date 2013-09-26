@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
 	import net.psykosoft.psykopaint2.book.views.book.data.FileLoader;
 	import net.psykosoft.psykopaint2.book.views.book.data.events.AssetLoadedEvent;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 
 	import away3d.textures.BitmapTexture;
 	import away3d.materials.TextureMaterial;

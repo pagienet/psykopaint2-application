@@ -16,8 +16,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;

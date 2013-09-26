@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.config
 {
 
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
+	import net.psykosoft.psykopaint2.home.commands.LoadGalleryPaintingCommand;
 	import net.psykosoft.psykopaint2.home.commands.LoadPaintingDataFileCommand;
 	import net.psykosoft.psykopaint2.home.commands.LoadSurfacePreviewCommand;
 	import net.psykosoft.psykopaint2.home.commands.load.SetUpHomeModuleCommand;
@@ -22,7 +23,7 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestOpenGalleryImageSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestLoadGalleryPaintingSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
@@ -129,7 +130,6 @@ package net.psykosoft.psykopaint2.home.config
 			_injector.map( RequestExitGallerySignal ).asSingleton();
 			_injector.map( RequestRetrieveCameraImageSignal ).asSingleton();
 			_injector.map( RequestHomePanningToggleSignal ).asSingleton();
-			_injector.map( RequestOpenGalleryImageSignal ).asSingleton();
 		}
 
 		// -----------------------
@@ -143,6 +143,7 @@ package net.psykosoft.psykopaint2.home.config
 			_commandMap.map( RequestSetupHomeModuleSignal ).toCommand( SetUpHomeModuleCommand );
 			_commandMap.map( RequestDestroyHomeModuleSignal ).toCommand( DestroyHomeModuleCommand );
 			_commandMap.map( RequestLoadPaintingDataFileSignal ).toCommand( LoadPaintingDataFileCommand );
+			_commandMap.map( RequestLoadGalleryPaintingSignal ).toCommand( LoadGalleryPaintingCommand );
 		}
 
 		// -----------------------

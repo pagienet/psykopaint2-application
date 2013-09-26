@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageCollection;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 
 	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;

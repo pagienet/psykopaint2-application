@@ -84,12 +84,12 @@ package net.psykosoft.psykopaint2.core.services
 			_connection.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
 		}
 
-		public function getUserImages(userID : uint, index : uint, amount : uint, onSuccess : Function, onFail : Function)
+		public function getUserImages(userID : uint, index : uint, amount : uint, onSuccess : Function, onFail : Function) : void
 		{
 			_connection.call("Main/getUserPaintings", new Responder(onSuccess, onFail), userID, index, amount);
 		}
 
-		public function getFollowedUserImages(sessionID : String, index : uint, amount : uint, onSuccess : Function, onFail : Function)
+		public function getFollowedUserImages(sessionID : String, index : uint, amount : uint, onSuccess : Function, onFail : Function) : void
 		{
 			_connection.call("Main/getFollowedUsersPaintings", new Responder(onSuccess, onFail), sessionID, index, amount);
 		}

@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.book.model
+package net.psykosoft.psykopaint2.core.models
 {
 	import flash.display.Bitmap;
 	import flash.display.Loader;
@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.book.model
 	public class FileGalleryImageProxy extends GalleryImageProxy
 	{
 		// public for convenience, not accessible through views as interface anyway
+		public var fullsizeFilename : String;
 		public var highResThumbnailFilename : String;
 		public var lowResThumbnailFilename : String;
 
@@ -22,6 +23,16 @@ package net.psykosoft.psykopaint2.book.model
 
 		override public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
 		{
+			load(onComplete, onError, size == ImageThumbnailSize.LARGE ? highResThumbnailFilename : lowResThumbnailFilename);
+		}
+
+		override public function loadFullsized(onComplete : Function, onError : Function) : void
+		{
+			load(onComplete, onError, fullsizeFilename);
+		}
+
+		private function load(onComplete : Function, onError : Function, filename : String) : void
+		{
 			if (_onComplete) throw "Already loading!";
 
 			_onComplete = onComplete;
@@ -30,7 +41,7 @@ package net.psykosoft.psykopaint2.book.model
 			var loader : Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-			loader.load(new URLRequest(size == ImageThumbnailSize.LARGE? highResThumbnailFilename : lowResThumbnailFilename));
+			loader.load(new URLRequest(filename));
 		}
 
 		private function onLoadComplete(event : Event) : void

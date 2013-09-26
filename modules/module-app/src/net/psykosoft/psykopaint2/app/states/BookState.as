@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.book.BookImageSource;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageProxy;
-	import net.psykosoft.psykopaint2.book.model.GalleryImageRequestVO;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageRequestVO;
 	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
@@ -183,7 +183,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onGalleryImageSelected(selectedGalleryImage : GalleryImageProxy) : void
 		{
-			stateMachine.setActiveState(transitionToHomeState, { target: NavigationStateType.GALLERY_PAINTING, galleryImage: selectedGalleryImage});
+			stateMachine.setActiveState(transitionToHomeState, { target: NavigationStateType.GALLERY_LOADING, galleryImage: selectedGalleryImage});
 		}
 
 		private function onRequestExitPickAnImageSignal():void
