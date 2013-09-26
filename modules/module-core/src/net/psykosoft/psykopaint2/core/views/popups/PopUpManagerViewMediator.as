@@ -5,20 +5,14 @@ package net.psykosoft.psykopaint2.core.views.popups
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
-
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
-
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
-
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
-
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 
 	public class PopUpManagerViewMediator extends MediatorBase
@@ -40,6 +34,9 @@ package net.psykosoft.psykopaint2.core.views.popups
 
 		[Inject]
 		public var requestHidePopUpSignal:RequestHidePopUpSignal;
+
+		[Inject]
+		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
 
 		override public function initialize():void {
 
@@ -113,10 +110,12 @@ package net.psykosoft.psykopaint2.core.views.popups
 		private function showPopUp( popUpType:String ):void {
 			var popUpClass:Class = Class( getDefinitionByName( popUpType ) );
 			view.showPopUpOfClass( popUpClass );
+			requestHomePanningToggleSignal.dispatch( -1 );
 		}
 
 		private function hidePopUp():void {
 			view.hideLastPopUp();
+			requestHomePanningToggleSignal.dispatch( 0 );
 		}
 	}
 }

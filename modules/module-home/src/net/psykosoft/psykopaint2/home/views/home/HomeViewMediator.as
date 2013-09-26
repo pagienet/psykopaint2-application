@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	import org.gestouch.events.GestureEvent;
@@ -175,8 +175,19 @@ package net.psykosoft.psykopaint2.home.views.home
 			super.destroy();
 		}
 
-		private function onTogglePanning( enable:Boolean ):void {
-			_allowPanning = enable;
+		// 1 = allow, -1 not allow, 0 whatever it was before last not allow
+		private var _lastAllowPanningBeforeNegation:int;
+		private function onTogglePanning( enable:int ):void {
+			if( enable == -1 ) {
+				_lastAllowPanningBeforeNegation = _allowPanning ? 1 : -1;
+				_allowPanning = false;
+			}
+			else if( enable == 0 ) {
+				_allowPanning = _lastAllowPanningBeforeNegation;
+			}
+			else {
+				_allowPanning = true;
+			}
 		}
 
 		private function onGyroscopeUpdate(orientationMatrix : Matrix3D) : void
@@ -279,7 +290,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onScrollMotionEnded(snapPointIndex : uint) : void
 		{
 			if( stateModel.currentState != NavigationStateType.BOOK_GALLERY && snapPointIndex == 3 ) {
-				requestHomePanningToggleSignal.dispatch(false);
+				requestHomePanningToggleSignal.dispatch(-1);
 				requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
 			}
 		}

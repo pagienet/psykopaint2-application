@@ -23,12 +23,13 @@ package net.psykosoft.psykopaint2.book.views.book.data
 	/* holds the minimum bitmaps data for a book  */
  	public class BlankBook
  	{
- 		private const REQUIRED:uint = 11;
+ 		private const REQUIRED:uint = 12;
 
  		private var _requiredLoaded:uint;
  		private var _enviroRequiredLoaded:uint;
  		private var _paper:BitmapData ;
 		private var _craftMap:BitmapData;
+		private var _ringsMap:BitmapData;
 		private var _paperNormalMap:BitmapData;
 		private var _paperInsertNormalMap:BitmapData;
 		private var _shadowPictMap:BitmapData;
@@ -58,42 +59,47 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			//craft
 			var url:String = "book-packaged/images/book/cover.jpg";
 			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:0});
+
+			//rings
+			url = "book-packaged/images/book/rings.jpg";
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:1});
+
 			//enviro sources (x6)
 			url = "book-packaged/images/page/pageEnv0.jpg";
-			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:1, index:0});
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:2, index:0});
 
 			url = "book-packaged/images/page/pageEnv1.jpg";
-			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:2, index:1});
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:3, index:1});
 
 			url = "book-packaged/images/page/pageEnv2.jpg";
-			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:3, index:2});
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:4, index:2});
 
 			url = "book-packaged/images/page/pageEnv3.jpg";
-			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:4, index:3});
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:5, index:3});
 
 			url = "book-packaged/images/page/pageEnv4.jpg";
-			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:5, index:4});
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:6, index:4});
 
 			url = "book-packaged/images/page/pageEnv5.jpg";
-			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:6, index:5});
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:7, index:5});
 
 			//diffuse paper
 			url = "book-packaged/images/page/paperbook512.jpg";
 			//url = "book-packaged/images/page/paperbook512.png";
-			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:7});
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:8});
 
 			//normalmap paper
+			//url = "book-packaged/images/page/paperbook256_NRM.jpg";
 			url = "book-packaged/images/page/paperbook512_NRM.jpg";
-			//url = "book-packaged/images/page/paperbook512_NRM.png";
-			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:8});
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:9});
 
 			//normalmap insert image
 			url = "book-packaged/images/page/volume_pict_NRM_128.jpg";
-			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:9});
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:10});
 
 			//shadow
 			url = "book-packaged/images/page/pict_shadow.png";
-			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:10});
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:11});
 		}
 
 		private function onImageLoadedComplete( e:AssetLoadedEvent):void
@@ -104,33 +110,40 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			switch(type){
 				case 0:
 					_craftMap = e.data;
-					_layoutBase.dispatchCraftReady(_craftMap);
+					if(_ringsMap)_layoutBase.dispatchCraftReady(_craftMap, _ringsMap);
 					break;
 				case 1:
+					_ringsMap = e.data;
+					if(_craftMap)_layoutBase.dispatchCraftReady(_craftMap, _ringsMap);
+					break;
+
+				
 				case 2:
 				case 3:
 				case 4:
 				case 5:
 				case 6:
+				case 7:
 					_enviroSources[e.customData.index] = e.data;
 					_enviroRequiredLoaded++;
 
 					if(_enviroRequiredLoaded == 6)  _layoutBase.dispatchEnviromapsReady(_enviroSources);
 					 
 					break;
-				case 7:
+				case 8:
 					_paper = e.data;
 					prepareBasePage();
 					break;
-				case 8:
+				case 9:
 					_paperNormalMap = e.data;
 					break;
-				case 9:
+				case 10:
 					_paperInsertNormalMap = e.data;
 					break;
-				case 10:
+				case 11:
 					_shadowPictMap = e.data;
 					break;
+				
 			}
 
 			if(_requiredLoaded == REQUIRED){
@@ -161,12 +174,11 @@ package net.psykosoft.psykopaint2.book.views.book.data
  
 		 	_pageNumber_txt = new TextField();
 		 	_pageNumber_txt.antiAliasType = AntiAliasType.ADVANCED;
-		  	_pageNumber_txt.embedFonts = true; //ask LI when the fonts will be available
+		  	_pageNumber_txt.embedFonts = true;
 			_pageNumber_txt.width = 20;
 			_pageNumber_txt.height = 15;
 			_pageNumber_txt.x = 10;
 			_pageNumber_txt.y = _pageSprite.height - 20;
-			 //_pageNumber_txt.scaleY --> to fix the distort if the texture would not be projected as a square
 			 //_pageNumber_txt.border = true; to debug visually
 
 			_pageNumber_txt.defaultTextFormat = textFormat;
@@ -175,11 +187,21 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			_pageSprite.addChild(_pageNumber_txt);
 		}
 
-		public function getBasePageBitmapData(index:uint):BitmapData
+		public function getNumberedBasePageBitmapData(index:uint):BitmapData
 		{
-			_pageNumber_txt.text = ""+(index+1);
+			return getPageBitmapData(""+(index+1), index);
+		}
 
-			if(index%2 != 0){
+		public function getEmptyPageBitmapData(index:uint):BitmapData
+		{
+			return getPageBitmapData(" ", index);
+		}
+
+		private function getPageBitmapData(pagingText:String, index:uint):BitmapData
+		{
+			_pageNumber_txt.text = pagingText;
+
+			if(index%2 == 0){ //as we now begin left
 				_pageNumber_txt.x = 5;
 				_paperBM.rotation = 180;
 				_paperBM.x = BookPageSize.WIDTH;

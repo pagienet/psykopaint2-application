@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 	public class SettingsSubNavView extends SubNavigationViewBase
 	{
 		public static const ID_WALLPAPER:String = "Change Wallpaper";
+		public static const ID_LOGIN:String = "Login";
 
 		public function SettingsSubNavView() {
 			super();
@@ -17,6 +18,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		override protected function onSetup():void {
 			createCenterButton( ID_WALLPAPER, ID_WALLPAPER );
+			createCenterButton( ID_LOGIN, ID_LOGIN );
 			validateCenterButtons();
 		}
 	}

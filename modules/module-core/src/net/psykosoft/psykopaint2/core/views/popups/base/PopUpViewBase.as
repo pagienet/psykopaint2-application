@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 		protected var _container:Sprite;
 		protected var _useBlocker:Boolean = true;
 
-		private var _blocker:Sprite;
+		protected var _blocker:Sprite;
 
 		public function PopUpViewBase() {
 			super();
@@ -27,16 +27,16 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 
 		override protected function onEnabled():void {
 
+			_container = new Sprite();
+			addChild( _container );
+
 			if( _useBlocker ) {
 				_blocker = new Sprite();
 				_blocker.graphics.beginFill( 0x000000, 0 );
 				_blocker.graphics.drawRect( 0, 0, 1024, 768 );
 				_blocker.graphics.endFill();
-				addChild( _blocker );
+				addChildAt( _blocker, 0 );
 			}
-
-			_container = new Sprite();
-			addChild( _container );
 
 			layout();
 		}

@@ -67,6 +67,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
@@ -90,8 +91,10 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
-	import net.psykosoft.psykopaint2.core.views.popups.MessagePopUpView;
-	import net.psykosoft.psykopaint2.core.views.popups.MessagePopUpViewMediator;
+	import net.psykosoft.psykopaint2.core.views.popups.login.LoginPopUpView;
+	import net.psykosoft.psykopaint2.core.views.popups.login.LoginPopUpViewMediator;
+	import net.psykosoft.psykopaint2.core.views.popups.messages.MessagePopUpView;
+	import net.psykosoft.psykopaint2.core.views.popups.messages.MessagePopUpViewMediator;
 	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
 	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerViewMediator;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
@@ -238,6 +241,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyUserLoggedInSignal ).asSingleton();
 			_injector.map( NotifyUserLogInFailedSignal ).asSingleton();
 			_injector.map( ToggleTransformGestureSignal ).asSingleton();
+			_injector.map( RequestHomePanningToggleSignal ).asSingleton();
 			_injector.map( NotifyGalleryPaintingLoadedSignal ).asSingleton();
 			_injector.map( NotifyGalleryPaintingIOErrorSignal ).asSingleton();
 
@@ -268,6 +272,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_mediatorMap.map( PsykoSocketView ).toMediator( PsykoSocketViewMediator );
 			_mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
 			_mediatorMap.map( MessagePopUpView ).toMediator( MessagePopUpViewMediator );
+			_mediatorMap.map( LoginPopUpView ).toMediator( LoginPopUpViewMediator );
 			_mediatorMap.map( DebugView ).toMediator( DebugViewMediator );
 			_mediatorMap.map( ErrorsView ).toMediator( ErrorsViewMediator );
 			_mediatorMap.map( VideoView ).toMediator( VideoViewMediator );

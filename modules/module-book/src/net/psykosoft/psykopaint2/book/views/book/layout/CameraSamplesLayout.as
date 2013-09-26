@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
 		private var _insertNRMRect:Rectangle;
+		private var _baseMask:BitmapData;
 		 
 		public function CameraSamplesLayout(stage:Stage)
 		{
@@ -35,6 +36,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		override protected function disposeLayoutElements():void
 		{
 			_insertNRMRect = null;
+			if(_baseMask)_baseMask.dispose();
 		}
 		 
 		// sample case: we insert 6 images per page
@@ -48,6 +50,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var spaceCol:Number = 19;
 			var spaceRow:Number = 15;
 			var row:uint = Math.floor( inPageIndex%4);
+			var hasPower:Boolean = PlatformUtil.hasRequiredPerformanceRating(2);
 
 			if(isRecto){				
 				insertRect.x = 33+ ( (INSERT_WIDTH+spaceCol)*row );
@@ -71,8 +74,27 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			//the destination diffuse bitmapdata
 			var diffuseSourceBitmapdata:BitmapData = diffuseTextureSource.bitmapData;
 			diffuseSourceBitmapdata.lock();
-			//insert the image loaded into diffuse map. no need to dispose map, its being reused and finally destroyed when all is constructed
-			insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, false, true);
+			
+			if(hasPower){
+				//insert brighter reflection
+				var btMask:BitmapTexture = getEnviroMaskTexture(pageIndex);
+				var maskBMD:BitmapData = btMask.bitmapData;
+
+				if(_baseMask && (_baseMask.width != insertSource.width || _baseMask.height != insertSource.height) ){
+					_baseMask.dispose();
+					_baseMask = new BitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
+
+				} else if(!_baseMask){
+					_baseMask = new BitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
+				}
+				//insert the image loaded into diffuse map. no need to dispose map, its being reused and finally destroyed when all is constructed
+				insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, false, true);
+				insert(_baseMask, maskBMD, insertRect, rotation, false, true);
+				
+			} else {
+				insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, false, true);
+			}
+ 
 			var lastHeight:Number = lastHeight;
 			var lastScaleY:Number = lastScaleY;
 			var offset:Number = (lastHeight*.5);
@@ -87,8 +109,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_insertNRMRect.width = lastWidth;
 			_insertNRMRect.height = lastHeight;
 
-			// no need to update the nroalmap if no shader uses it
-			if(PlatformUtil.hasRequiredPerformanceRating(2)) {
+			// no need to update the normalmap if no shader uses it
+			if(hasPower) {
 
 				var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
 				var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
@@ -122,6 +144,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			if(invalidateContent){
  				diffuseTextureSource.invalidateContent();
  				diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;
+ 				btMask.invalidateContent();
+ 				btMask.bitmapData = maskBMD;
  			}
  			
 		}

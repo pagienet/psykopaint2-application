@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import org.osflash.signals.Signal;
 
 	import away3d.materials.TextureMaterial;
+	import away3d.textures.BitmapTexture;
 
  	public class LayoutBase
  	{
@@ -97,7 +98,12 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		protected function getPageMaterial(index:uint):TextureMaterial
 		{
-			return _pageMaterialsManager.getPageMaterial(index);
+			return _pageMaterialsManager.getPageContentMaterial(index);
+		}
+
+		protected function getEnviroMaskTexture(index:uint):BitmapTexture
+		{
+			return _pageMaterialsManager.getEnviroMask(index);
 		}
 
 		public function set collection(collection : SourceImageCollection):void
@@ -163,13 +169,20 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_content = null;
 		}
  
- 		public function generateDefaultPageMaterial(index:uint):TextureMaterial
+ 		public function generateNumberedPageMaterial(index:uint):TextureMaterial
 		{
-			var bmdPage:BitmapData = _blankBook.getBasePageBitmapData(index);
-			var pageMaterial:TextureMaterial  = _pageMaterialsManager.registerPageMaterial(index, bmdPage);
-			//pageMaterial.alphaBlending = true;
+			var bmdPage:BitmapData = _blankBook.getNumberedBasePageBitmapData(index);
+			var numberedPageMaterial:TextureMaterial  = _pageMaterialsManager.registerMarginPageMaterial(index, bmdPage);
+			 
+			return numberedPageMaterial;
+		}
 
-			return pageMaterial;
+		public function generateEmptyPageMaterial(index:uint):TextureMaterial
+		{
+			var bmdPage:BitmapData = _blankBook.getEmptyPageBitmapData(index);
+			var emptyPageMaterial:TextureMaterial  = _pageMaterialsManager.registerContentPageMaterial(index, bmdPage);
+			
+			return emptyPageMaterial;
 		}
 
  		public function dispose():void
@@ -208,9 +221,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			requiredAssetsReadySignal.dispatch();
  		}
  		//when craft is there, book can be displayed, the anim will already cover a part of waiting time while loading the pages assets
- 		public function dispatchCraftReady(bmd:BitmapData):void
+ 		public function dispatchCraftReady(bmd:BitmapData, bmd2:BitmapData):void
  		{
  			_pageMaterialsManager.generateCraftMaterial(bmd);
+ 			_pageMaterialsManager.generateRingsMaterial(bmd2);
  			requiredCraftSignal.dispatch(bmd);
  		}
 
@@ -274,7 +288,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			//we have xx images for this layout, 2 sides;
 			var sides:uint = Math.ceil(_resourcesCount/insertsPerPage);
 
-			if(sides%2 != 0) sides+=1;
+		//	if(sides%2 != 0) sides+=1;  because we start verso left
 			pageCount = sides*.5;
 		}
 
@@ -316,7 +330,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			//we have xx images for this layout, 2 sides;
 			var sides:uint = Math.ceil(_resourcesCount/insertsPerPage);
 
-			if(sides%2 != 0) sides+=1;
+		//	if(sides%2 != 0) sides+=1;  because we start verso left
 			pageCount = sides*.5;
 		}
 		
@@ -331,7 +345,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				GalleryImageProxy(bgd.imageVO).loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);
 			}
 			
-			//debug override var bmd:BitmapData = new BitmapData(300, 200, false, 0xFF0000);
+			//debug
+			//var bmd:BitmapData = new BitmapData(300, 200, false, 0xFF0000);
 			//composite(bmd, BookData( _loadQueue[_loadIndex]) );
 			//continueLoading();
 		}

@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestHomePanningToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 
 	public class GalleryPaintingSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			switch (id) {
 				case GalleryBrowseSubNavView.ID_BACK:
-					requestHomePanningToggleSignal.dispatch(false);
+					requestHomePanningToggleSignal.dispatch(-1);
 					// TODO:Should go back to previously active book state
 					requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
 					break;

@@ -27,11 +27,11 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  
 	public class GalleryLayout extends LayoutBase
 	{
-		private const INSERT_WIDTH:uint = 200;
-		private const INSERT_HEIGHT:uint = 130;
+		private const INSERT_WIDTH:uint = 204;
+		private const INSERT_HEIGHT:uint = 149;
 		private const INSERTS_COUNT:uint = 6;
 		private const SPACE:Number = 5;
-		private const DEDICATED_ASSETS:uint = 5;
+		private const DEDICATED_ASSETS:uint = 7;
 
 		private var _insertNRMRect:Rectangle;
 		private var _insertPaintingRect:Rectangle;
@@ -48,9 +48,12 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _heartNMap:BitmapData;
 		private var _heartMap:BitmapData;
 		private var _paintingMap:BitmapData;
+		private var _baseMask:BitmapData;
 
 		private var _bmComment:Bitmap;
 		private var _bmHeart:Bitmap;
+		private var _bmCommentMask:BitmapData;
+		private var _bmHeartMask:BitmapData;
 		 
 		public function GalleryLayout(stage:Stage)
 		{
@@ -77,6 +80,11 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			url = "book-packaged/images/layouts/painting.png";
 			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:4});
 
+			url = "book-packaged/images/layouts/comment_mask.jpg";
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:5});
+
+			url = "book-packaged/images/layouts/heart_mask.jpg";
+			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:6});
 		}
 
 		override protected function disposeLayoutElements():void
@@ -90,6 +98,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			if(_heartNMap) _heartNMap.dispose();
 			if(_heartMap) _heartMap.dispose();
 			if(_paintingMap) _paintingMap.dispose();
+			if(_baseMask)_baseMask.dispose();
+			if(_bmCommentMask)_bmCommentMask.dispose();
+			if(_bmHeartMask)_bmHeartMask.dispose();
 
 			if(_bmComment)_bmComment = null;
 			if(_bmHeart)_bmHeart = null;
@@ -116,6 +127,12 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				case 4:
 					_paintingMap = e.data;
 					break;
+				case 5:
+					_bmCommentMask = e.data;
+					break;
+				case 6:
+					_bmHeartMask = e.data;
+					break;
 			}
 
 			if(_assetsLoaded == DEDICATED_ASSETS){
@@ -136,37 +153,37 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var pageIndex:uint = uint(data.pageIndex);
 			var inPageIndex:uint = uint(data.inPageIndex);
 			var isRecto:Boolean = (pageIndex %2 == 0)? true : false;
+			var hasPower:Boolean = PlatformUtil.hasRequiredPerformanceRating(2);
 				
 			if(isRecto){
 
 				if(inPageIndex %2 == 0){
-					insertRect.x = 50;
+					insertRect.x = 35;
 				} else {
-					insertRect.x = 281;
+					insertRect.x = 269;
 				}
 
 			} else {
 
 				if(inPageIndex %2 == 0){
-					insertRect.x = 31;
+					insertRect.x = 40;
 				} else {
-					insertRect.x = 262;
+					insertRect.x = 274;
 				}
 
 			}
 
-			//col layout recto: 31+130+31+130+31+130
 			var col:uint = Math.floor(inPageIndex/2);
 
 			switch(col){
 				case 0:
-					insertRect.y = 20;//31
+					insertRect.y = 5;
 					break;
 				case 1:
-					insertRect.y = 181;//192;
+					insertRect.y = 172;
 					break;
 				case 2:
-					insertRect.y = 342;//353;
+					insertRect.y = 342;
 					break;
 			}
 
@@ -175,8 +192,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			insertRect.y += -3+(Math.random()*6);
 
 			var rotation:Number = -1.5+(Math.random()*3);
- 
-			//row layout recto: 50+200+31+200+31
+  
 			//the page material
 			pageIndex = Math.floor(pageIndex);
 			var pageMaterial:TextureMaterial = getPageMaterial(pageIndex);
@@ -188,7 +204,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 			if(BookGalleryData(data).imageVO.paintingMode != ""){
 
-				if(!_insertPaintingRect) _insertPaintingRect = new Rectangle(0,0,01,1);
+				if(!_insertPaintingRect) _insertPaintingRect = new Rectangle(0, 0, 1, 1);
 
 				_insertPaintingRect.x = -10;
 				_insertPaintingRect.width = insertSource.width/4;
@@ -196,17 +212,35 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 				insert(_paintingMap, insertSource, _insertPaintingRect, rotation, false, true);
 			}
+ 
+			if(hasPower){
+				//insert brighter reflection
+				var btMask:BitmapTexture = getEnviroMaskTexture(pageIndex);
+				var maskBMD:BitmapData = btMask.bitmapData;
 
-			//insert the image loaded into diffuse map
-			insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, true, true);
+				if(_baseMask && (_baseMask.width != insertSource.width || _baseMask.height != insertSource.height) ){
+					_baseMask.dispose();
+					_baseMask = new BitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
+
+				} else if(!_baseMask){
+					_baseMask = new BitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
+				}
+				//insert the image loaded into diffuse map. no need to dispose map, its being reused and finally destroyed when all is constructed
+				insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, true, true);
+				insert(_baseMask, maskBMD, insertRect, rotation, false, true);
+				
+			} else {
+				insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, true, true);
+			}
+ 
 			var offset:Number = (lastHeight*.5);
 
 			updateAndInsertTextInformation(BookGalleryData(data).imageVO, insertRect, diffuseSourceBitmapdata);
 
 			diffuseSourceBitmapdata.unlock();
  
-			_pagesFilled["pageIndex"+pageIndex].inserted +=1;
-			var invalidateContent:Boolean = (_pagesFilled["pageIndex"+pageIndex].inserted >= _pagesFilled["pageIndex"+pageIndex].max)? true : false;
+			//_pagesFilled["pageIndex"+pageIndex].inserted +=1;
+			//var invalidateContent:Boolean = (_pagesFilled["pageIndex"+pageIndex].inserted >= _pagesFilled["pageIndex"+pageIndex].max)? true : false;
 			
 			if(!_insertNRMRect) _insertNRMRect = new Rectangle();
  
@@ -216,7 +250,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_insertNRMRect.height = lastHeight;
  
 			// no need to update the normalmap if no shader uses it
-			if(PlatformUtil.hasRequiredPerformanceRating(2) ) {
+			if(hasPower){
 				var normalTextureSource:BitmapTexture = BitmapTexture( pageMaterial.normalMap);
 				var normalSourceBitmapdata:BitmapData = normalTextureSource.bitmapData;
  
@@ -229,16 +263,23 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				//insert the bits of normalmaps asset heart and comment bubble
 				var destX:Number = insertRect.x + _bmComment.x;
 				var destY:Number = insertRect.y+insertRect.height+2;
-				if(_commentNMap) insertObjectAt(_commentNMap, normalSourceBitmapdata, destX, destY+_bmComment.y, _bmComment.width/_commentNMap.width, _bmComment.height/_commentNMap.height);
+				if(_commentNMap){
+					insertObjectAt(_commentNMap, normalSourceBitmapdata, destX, destY+_bmComment.y, _bmComment.width/_commentNMap.width, _bmComment.height/_commentNMap.height);
+					if(_bmCommentMask) insertObjectAt(_bmCommentMask, maskBMD, destX, destY+_bmComment.y, _bmComment.width/_commentNMap.width, _bmComment.height/_commentNMap.height);
+				}
 				destX = insertRect.x + _bmHeart.x;
-				if(_heartNMap) insertObjectAt(_heartNMap, normalSourceBitmapdata, destX, destY+_bmHeart.y, _bmHeart.width/_heartNMap.width, _bmHeart.height/_heartNMap.height);
-				
+
+				if(_heartNMap){
+					insertObjectAt(_heartNMap, normalSourceBitmapdata, destX, destY+_bmHeart.y, _bmHeart.width/_heartNMap.width, _bmHeart.height/_heartNMap.height);
+					if(_bmHeartMask) insertObjectAt(_bmHeartMask, maskBMD, destX, destY+_bmHeart.y, _bmHeart.width/_heartNMap.width, _bmHeart.height/_heartNMap.height);
+				}
+				 
 				normalSourceBitmapdata.unlock();
 				
-				if(invalidateContent) {
+			//	if(invalidateContent) {
 					normalTextureSource.invalidateContent();
 					normalTextureSource.bitmapData = normalSourceBitmapdata;
-				}
+				//}
 			}
 
 			//dispatch the rect + object for region. the rect is updated for the shadow, the region will declare its own rect.
@@ -251,18 +292,23 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 			insert(_shadow, diffuseSourceBitmapdata, _insertNRMRect, rotation, false, true, 0,0,-5, offset);
 
- 			//update after inserts
- 			if(invalidateContent){
+ 			//update after inserts every time a picture is loaded as its remote and time between loading may differ
+ 			//if(invalidateContent){
  				diffuseTextureSource.invalidateContent();
  				diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;//normalSourceBitmapdata
- 			}
+ 				btMask.invalidateContent();
+ 				btMask.bitmapData = maskBMD;
+ 			//}
  			
 		}
 
 		private function updateAndInsertTextInformation(vo: GalleryImageProxy, rect:Rectangle, destSource:BitmapData):void
 		{
-			_hartCountTextField.text = ""+vo.numLikes;
-			_commentsCountTextField.text = ""+vo.numComments;
+			var likes:String = ""+ ( (vo.numLikes>1000)? Math.round(vo.numLikes/1000)+" k" : vo.numLikes );
+			_hartCountTextField.text = likes;
+
+			var comments:String = ""+ ( (vo.numComments>1000)? Math.round(vo.numComments/1000)+" k" : vo.numComments);
+			_commentsCountTextField.text = comments;
 			_nameTextField.text = ""+vo.userName;
 
 			_bmComment.x = INSERT_WIDTH - _bmComment.width;
@@ -270,7 +316,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			_bmHeart.x = _hartCountTextField.x - _bmHeart.width - SPACE;
 			_commentsCountTextField.x = _bmHeart.x - SPACE - _commentsCountTextField.textWidth;
 
-			insertObjectAt(_infoSprite, destSource, rect.x, rect.y+rect.height+2);
+			insertObjectAt(_infoSprite, destSource, rect.x, rect.y+rect.height);//+2);
 		}
 
 		private function initTextField():void
