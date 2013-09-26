@@ -19,6 +19,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 	public class ColorPickerView extends ViewBase
 	{
 		public var currentColorSwatch:Sprite;
+		public var hueHandle:Sprite;
+		public var saturationHandle:Sprite;
+		public var lightnessHandle:Sprite;
+		public var sliderBackdrop:Sprite;
+		
+		public var hueOverlay:Sprite;
+		public var saturationOverlay:Sprite;
+		public var lightnessOverlay:Sprite;
+		
 		public var colorPalette:ColorPalette;
 		public var colorChangedSignal:Signal;
 		public var currentColor:uint = 0;
@@ -34,6 +43,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var lightnessMapHolder:Bitmap;
 		
 		private var sliderHolder:Sprite;
+
+		private var activeSliderIndex:int;
 		
 	
 		public function ColorPickerView()
@@ -58,9 +69,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			lightnessMap = new BitmapData(256,1,false,0);
 			
 			sliderHolder = new Sprite();
-			sliderHolder.x = 760;
-			sliderHolder.y = 595;
-			addChild(sliderHolder);
+			sliderHolder.x = 753;
+			sliderHolder.y = 599;
+			addChildAt(sliderHolder,getChildIndex(sliderBackdrop)+1);
 			sliderHolder.addEventListener(MouseEvent.MOUSE_DOWN, onSliderMouseDown );
 			
 			hueMapHolder = new Bitmap(hueMap,"auto",false);
@@ -77,27 +88,70 @@ package net.psykosoft.psykopaint2.paint.views.color
 			lightnessMapHolder.y = 59 + 59;
 			sliderHolder.addChild(lightnessMapHolder);
 			
+			hueHandle.mouseEnabled = false;
+			saturationHandle.mouseEnabled = false;
+			lightnessHandle.mouseEnabled = false;
+			hueOverlay.mouseEnabled = false;
+			saturationOverlay.mouseEnabled = false;
+			lightnessOverlay.mouseEnabled = false;
+			
 		}
 		
 		protected function onSliderMouseDown( event:MouseEvent ):void
 		{
 			if ( sliderHolder.mouseX < 0 || sliderHolder.mouseX > 256 || sliderHolder.mouseY < 0) return;
 			
-			var idx:int = sliderHolder.mouseY / 59;
-			if ( idx > 2 || sliderHolder.mouseY % 59 > 41 ) return;
-			switch ( idx )
+			activeSliderIndex = sliderHolder.mouseY / 59;
+			if ( activeSliderIndex > 2 || sliderHolder.mouseY % 59 > 41 ) return;
+			
+			sliderHolder.addEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
+			stage.addEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
+			
+			
+			switch ( activeSliderIndex )
 			{
 				case 0: //hue
+					hueHandle.x = mouseX;
 					setCurrentColor( hueMap.getPixel(sliderHolder.mouseX,0), false );
 				break;
 				case 1: //sat
+					saturationHandle.x = mouseX;
 					setCurrentColor( satMap.getPixel(sliderHolder.mouseX,0), false );
 				break;
 				case 2: //lightness
+					lightnessHandle.x = mouseX;
 					setCurrentColor( lightnessMap.getPixel(sliderHolder.mouseX,0), false );
 				break;
 			}
+		}
+		
+		protected function onSliderMouseMove( event:MouseEvent ):void
+		{
+			var sx:Number = sliderHolder.mouseX;
+			if ( sliderHolder.mouseX < 0 ) sx = 0;
+			if ( sliderHolder.mouseX > 256 ) sx = 256;
 			
+			switch ( activeSliderIndex )
+			{
+				case 0: //hue
+					hueHandle.x = sliderHolder.x + sx;
+					setCurrentColor( hueMap.getPixel(sx,0), false );
+					break;
+				case 1: //sat
+					saturationHandle.x = sliderHolder.x+ sx;
+					setCurrentColor( satMap.getPixel(sx,0), false );
+					break;
+				case 2: //lightness
+					lightnessHandle.x = sliderHolder.x+sx;
+					setCurrentColor( lightnessMap.getPixel(sx,0), false );
+					break;
+			}
+		}
+		
+		protected function onSliderMouseUp( event:MouseEvent ):void
+		{
+			sliderHolder.removeEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
 			
 		}
 		
