@@ -4,9 +4,16 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import flash.display.BitmapData;
 
+	import net.psykosoft.psykopaint2.book.BookImageSource;
+
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
+	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
+	import net.psykosoft.psykopaint2.book.signals.RequestFetchGalleryImagesSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestFetchSourceImagesSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestOpenBookSignal;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageRequestVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
@@ -53,6 +60,15 @@ package net.psykosoft.psykopaint2.book.views.book
 		[Inject]
 		public var notifyGalleryImagesFetchedSignal : NotifyGalleryImagesFetchedSignal;
 
+		[Inject]
+		public var requestOpenBookSignal : RequestOpenBookSignal;
+
+		[Inject]
+		public var requestFetchSourceImagesSignal : RequestFetchSourceImagesSignal;
+
+		[Inject]
+		public var requestFetchGalleryImagesSignal : RequestFetchGalleryImagesSignal;
+
 		override public function initialize():void {
 
 			// Init.
@@ -90,6 +106,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			//as both data returned do not share same type
 			notifySourceImagesFetchedSignal.add(onSourceImagesFetched);
 			notifyGalleryImagesFetchedSignal.add(onGalleryImageCollectionFetched);
+			requestOpenBookSignal.add(onRequestOpenBookSignal);
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
 
@@ -101,7 +118,16 @@ package net.psykosoft.psykopaint2.book.views.book
 			requestSetBookBackgroundSignal.remove(onRequestSetBookBackgroundSignal);
 			notifySourceImagesFetchedSignal.remove(onSourceImagesFetched);
 			notifyGalleryImagesFetchedSignal.remove(onGalleryImageCollectionFetched);
+			requestOpenBookSignal.remove(onRequestOpenBookSignal);
 			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
+		}
+
+		private function onRequestOpenBookSignal(sourceType : String, galleryType : uint) : void
+		{
+			if (sourceType == BookImageSource.GALLERY_IMAGES)
+				requestFetchGalleryImagesSignal.dispatch(new GalleryImageRequestVO(galleryType, 0, 24));
+			else
+				requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(sourceType, 0, 48));
 		}
 
 		private function onRequestSetBookBackgroundSignal(texture : RefCountedTexture) : void

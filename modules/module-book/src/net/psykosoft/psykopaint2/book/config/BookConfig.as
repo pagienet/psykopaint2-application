@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
+	import net.psykosoft.psykopaint2.book.signals.RequestOpenBookSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
@@ -106,6 +107,7 @@ package net.psykosoft.psykopaint2.book.config
 			_injector.map(NotifyGalleryImagesFetchedSignal).asSingleton();
 			_injector.map(NotifyGalleryImagesFailedSignal).asSingleton();
 			_injector.map(NotifyGalleryImageSelectedFromBookSignal).asSingleton();
+			_injector.map(RequestOpenBookSignal).asSingleton();
 
 		}
 

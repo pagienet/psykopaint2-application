@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
+	import net.psykosoft.psykopaint2.core.models.AMFGalleryImageService;
 	import net.psykosoft.psykopaint2.core.models.DummyGalleryImageService;
 	import net.psykosoft.psykopaint2.core.models.DummyLoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
@@ -190,8 +191,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map(RetrievePaintingsDataProcessModel).asSingleton();
 			// services
 			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);
-			_injector.map(GalleryImageService).toSingleton(DummyGalleryImageService);
-//			_injector.map(GalleryImageService).toSingleton(AMFGalleryImageService);
+//			_injector.map(GalleryImageService).toSingleton(DummyGalleryImageService);
+			_injector.map(GalleryImageService).toSingleton(AMFGalleryImageService);
 
 		}
 

@@ -6,9 +6,8 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.book.signals.RequestOpenBookSignal;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
-	import net.psykosoft.psykopaint2.core.models.GalleryImageRequestVO;
-	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestFetchGalleryImagesSignal;
@@ -45,12 +44,6 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestSetBookBackgroundSignal : RequestSetBookBackgroundSignal;
 
 		[Inject]
-		public var requestFetchSourceImagesSignal : RequestFetchSourceImagesSignal;
-
-		[Inject]
-		public var requestFetchGalleryImagesSignal : RequestFetchGalleryImagesSignal;
-
-		[Inject]
 		public var requestRetrieveCameraImageSignal:RequestRetrieveCameraImageSignal;
 
 		[Inject]
@@ -68,11 +61,12 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestExitGallerySignal : RequestExitGallerySignal;
 
+		[Inject]
+		public var requestOpenBookSignal : RequestOpenBookSignal;
+
 		private var _background : RefCountedTexture;
 		private var _activeSourceType:String;
 		private var _galleryType : uint;
-
-
 
 		public function BookState()
 		{
@@ -168,12 +162,9 @@ package net.psykosoft.psykopaint2.app.states
 			refreshBookSource();
 		}
 
-		private function refreshBookSource():void {
-			if (_activeSourceType == BookImageSource.GALLERY_IMAGES)
-				requestFetchGalleryImagesSignal.dispatch(new GalleryImageRequestVO(_galleryType, 0, 24));
-			else {
-				requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(_activeSourceType, 0, 48));
-			}
+		private function refreshBookSource():void
+		{
+			requestOpenBookSignal.dispatch(_activeSourceType, _galleryType);
 		}
 
 		private function onImageSelectedFromBookSignal(bitmapData : BitmapData) : void
