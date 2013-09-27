@@ -24,9 +24,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _insertNRMRect:Rectangle;
 		private var _baseMask:BitmapData;
 		 
-		public function CameraSamplesLayout(stage:Stage)
+		public function CameraSamplesLayout(stage:Stage, previousLayout:LayoutBase = null)
 		{
-			super(BookImageSource.USER_IMAGES, stage);
+			super(BookImageSource.USER_IMAGES, stage, previousLayout);
 		}
 
 		override public function loadBookContent(onContentLoaded:Function):void

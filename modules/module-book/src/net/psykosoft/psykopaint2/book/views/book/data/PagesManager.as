@@ -41,8 +41,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		{
  			return _updateState;
  		}
- 
-
+  
  		public function addPage(index:uint, totalPages:uint, materialRecto:TextureMaterial, marginRectoMaterial:TextureMaterial, materialVerso:TextureMaterial, marginVersoMaterial:TextureMaterial, isBlankRecto:Boolean = false):BookPage
  		{
  			if(!_pages){
@@ -71,7 +70,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  			return page;
  		}
-
+ 
  		public function getPage(index:uint):BookPage
  		{	
  			if(index>_pagesContent.length-1) return null;
@@ -86,12 +85,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		{
  			_pagesContent[index].show();
  		}
-
- 		private function easeOutQuad (t:Number, b:Number, c:Number, d:Number, p_params:Object = null):Number
-		{
-			return -c *(t/=d)*(t-2) + b;
-		}
-
+ 
  		public function rotatePage(index:uint, degrees:Number, foldRotation:Number):void
  		{
  			var bookPage:BookPage = _pagesContent[index];
@@ -180,6 +174,11 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			}
  			
  		}
+
+ 		private function easeOutQuad (t:Number, b:Number, c:Number, d:Number, p_params:Object = null):Number
+		{
+			return -c *(t/=d)*(t-2) + b;
+		}
  
  	}
  } 

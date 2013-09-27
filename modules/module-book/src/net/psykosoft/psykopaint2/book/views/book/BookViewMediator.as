@@ -165,5 +165,8 @@ package net.psykosoft.psykopaint2.book.views.book
 			view.setGalleryImageCollection(collection);
 		}
 
+		//to do dispatch request for next or previous collection
+		//RequestFetchGalleryImagesSignal and RequestFetchSourceImagesSignal
+
 	}
 }

@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		public var requiredCraftSignal:Signal;
  		public var regionSignal:Signal;
  		
-     		public function LayoutBase(type:String, stage:Stage)
+     		public function LayoutBase(type:String, stage:Stage, previousLayout:LayoutBase = null)
  		{
  			_layoutType = type;
  			_stage = stage;
@@ -57,10 +57,16 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			requiredCraftSignal = new Signal();
  			regionSignal = new Signal();
 
- 			_pageMaterialsManager = new PageMaterialsManager();
- 			_blankBook = new BlankBook(this);
- 			_pageMaterialsManager.blankBook = _blankBook;
- 			_compositeHelper = new CompositeHelper();
+ 			if(previousLayout){
+ 				_pageMaterialsManager = previousLayout.pageMaterialsManager;
+	 			_blankBook = previousLayout.blankBook;
+	 			_compositeHelper = previousLayout.compositeHelper;
+ 			} else {
+	 			_pageMaterialsManager = new PageMaterialsManager();
+	 			_blankBook = new BlankBook(this);
+	 			_pageMaterialsManager.blankBook = _blankBook;
+	 			_compositeHelper = new CompositeHelper();
+ 			}
 
  			initDefaultAssets();
  		}
@@ -106,6 +112,19 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			return _pageMaterialsManager.getEnviroMask(index);
 		}
 
+		public function get pageMaterialsManager():PageMaterialsManager
+ 		{
+ 			return _pageMaterialsManager;
+ 		}
+ 		public function get compositeHelper():CompositeHelper
+ 		{
+ 			return _compositeHelper;
+ 		}
+ 		public function get blankBook():BlankBook
+ 		{
+ 			return _blankBook;
+ 		}
+
 		public function set collection(collection : SourceImageCollection):void
  		{
  			_collection = collection;
@@ -120,16 +139,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			return _pageCount;
 		}
-
-		public function get pageMaterialsManager():PageMaterialsManager
- 		{
- 			return _pageMaterialsManager;
- 		}
-
- 		public function get blankBook():BlankBook
- 		{
- 			return _blankBook;
- 		}
 
  		protected function getInsertNormalMap():BitmapData
 		{
@@ -185,8 +194,20 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			return emptyPageMaterial;
 		}
 
+		public function clearData():void
+ 		{
+ 			for(var key:String in _inserts){
+ 				_inserts[key] = null;
+ 			}
+ 			_inserts = null;
+
+ 			disposeLayoutElements();
+ 		}
+
  		public function dispose():void
  		{
+ 			clearData();
+
  			_pageMaterialsManager.dispose();
  			_pageMaterialsManager = null;
 
@@ -195,13 +216,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
  			_compositeHelper.dispose();
  			_compositeHelper = null;
-
- 			for(var key:String in _inserts){
- 				_inserts[key] = null;
- 			}
- 			_inserts = null;
-
- 			disposeLayoutElements();
  		}
 
  		//draw quality

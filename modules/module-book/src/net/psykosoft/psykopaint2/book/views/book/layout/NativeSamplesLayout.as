@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.book.BookImageSource;
 	import net.psykosoft.psykopaint2.book.views.models.BookData;
+	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 
 	public class NativeSamplesLayout extends LayoutBase
 	{
@@ -23,9 +24,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _shadow:BitmapData;
 		private var _baseMask:BitmapData;
 
-		public function NativeSamplesLayout(stage:Stage)
+		public function NativeSamplesLayout(stage:Stage, previousLayout:LayoutBase = null)
 		{
-			super(BookImageSource.SAMPLE_IMAGES, stage);
+			super(BookImageSource.SAMPLE_IMAGES, stage, previousLayout);
 		}
 
 		override public function loadBookContent(onContentLoaded:Function):void
