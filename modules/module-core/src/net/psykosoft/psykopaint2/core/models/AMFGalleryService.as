@@ -4,8 +4,10 @@ package net.psykosoft.psykopaint2.core.models
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFetchedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingCommentAddedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingCommentFailedSignal;
 
-	public class AMFGalleryImageService implements GalleryImageService
+	public class AMFGalleryService implements GalleryService
 	{
 		[Inject]
 		public var amfBridge : AMFBridge;
@@ -19,9 +21,15 @@ package net.psykosoft.psykopaint2.core.models
 		[Inject]
 		public var notifyGalleryImagesFailedSignal : NotifyGalleryImagesFailedSignal;
 
+		[Inject]
+		public var notifyPaintingCommentAddedSignal : NotifyPaintingCommentAddedSignal;
+
+		[Inject]
+		public var notifyPaintingCommentFailedSignal : NotifyPaintingCommentFailedSignal;
+
 		private var _index : int;
 
-		public function AMFGalleryImageService()
+		public function AMFGalleryService()
 		{
 		}
 
@@ -77,7 +85,7 @@ package net.psykosoft.psykopaint2.core.models
 		private function translateImages(type : uint, data : Object) : void
 		{
 			if (data["status_code"] != 1) {
-				notifyError(data["status_code"]);
+				notifyGalleryImagesError(data["status_code"]);
 				return;
 			}
 
@@ -105,9 +113,24 @@ package net.psykosoft.psykopaint2.core.models
 			notifyGalleryImagesFetchedSignal.dispatch(collection);
 		}
 
-		private function notifyError(statusCode : int) : void
+		private function notifyGalleryImagesError(statusCode : int) : void
 		{
 			notifyGalleryImagesFailedSignal.dispatch(statusCode);
+		}
+
+		public function addComment(paintingID : int, text : String) : void
+		{
+			amfBridge.addCommentToPainting(userProxy.sessionID, paintingID, text, onAddCommentSuccess, onAddCommentFailed);
+		}
+
+		private function onAddCommentSuccess() : void
+		{
+			notifyPaintingCommentAddedSignal.dispatch();
+		}
+
+		private function onAddCommentFailed(statusCode : int) : void
+		{
+			notifyPaintingCommentFailedSignal.dispatch(statusCode);
 		}
 	}
 }

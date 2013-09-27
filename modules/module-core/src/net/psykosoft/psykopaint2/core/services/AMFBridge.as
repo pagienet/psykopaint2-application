@@ -121,6 +121,11 @@ package net.psykosoft.psykopaint2.core.services
 							);
 		}
 
+		public function addCommentToPainting(sessionID : String, paintingID : int, text : String, onSuccess : Function, onFail : Function) : void
+		{
+			_connection.call("Main/addCommentToPainting", new Responder(onSuccess, onFail), sessionID, paintingID, text);
+		}
+
 		private function hashPassword(email : String, password : String) : String
 		{
 			return MD5.hash(email + MD5.hash(password));

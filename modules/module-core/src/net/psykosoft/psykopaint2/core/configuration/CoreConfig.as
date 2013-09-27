@@ -19,11 +19,11 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
-	import net.psykosoft.psykopaint2.core.models.AMFGalleryImageService;
-	import net.psykosoft.psykopaint2.core.models.DummyGalleryImageService;
+	import net.psykosoft.psykopaint2.core.models.AMFGalleryService;
+	import net.psykosoft.psykopaint2.core.models.DummyGalleryService;
 	import net.psykosoft.psykopaint2.core.models.DummyLoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
-	import net.psykosoft.psykopaint2.core.models.GalleryImageService;
+	import net.psykosoft.psykopaint2.core.models.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -45,6 +45,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingCommentAddedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingCommentFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoFileReadSignal;
@@ -192,7 +194,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			// services
 			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);
 //			_injector.map(GalleryImageService).toSingleton(DummyGalleryImageService);
-			_injector.map(GalleryImageService).toSingleton(AMFGalleryImageService);
+			_injector.map(GalleryService).toSingleton(AMFGalleryService);
 
 		}
 
@@ -249,6 +251,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestHomePanningToggleSignal ).asSingleton();
 			_injector.map( NotifyGalleryPaintingLoadedSignal ).asSingleton();
 			_injector.map( NotifyGalleryPaintingIOErrorSignal ).asSingleton();
+			_injector.map( NotifyPaintingCommentAddedSignal ).asSingleton();
+			_injector.map( NotifyPaintingCommentFailedSignal ).asSingleton();
 
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
