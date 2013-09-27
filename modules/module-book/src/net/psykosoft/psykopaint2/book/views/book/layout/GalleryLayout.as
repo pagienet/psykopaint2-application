@@ -56,9 +56,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _bmCommentMask:BitmapData;
 		private var _bmHeartMask:BitmapData;
 		 
-		public function GalleryLayout(stage:Stage)
+		public function GalleryLayout(stage:Stage, previousLayout:LayoutBase = null)
 		{
-			super(BookImageSource.GALLERY_IMAGES, stage);
+			super(BookImageSource.GALLERY_IMAGES, stage, previousLayout);
 		}
 
 		override protected function initDefaultAssets():void

@@ -131,6 +131,14 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			return textureMaterial;
  		}
 
+ 		public function resetPage(index:uint, _pageIndex:uint):void
+ 		{
+ 			var material:TextureMaterial = getPageContentMaterial(index);
+ 			//todo reset mask:_maskBitmap.clone()
+ 			//todo reset normalmap:blankbook get map
+ 			//update diffuse with propper number
+ 		}
+
  		public function registerMarginPageMaterial(index:uint, bitmapData:BitmapData):TextureMaterial
  		{
  			return registerMaterial("margin"+index, bitmapData);

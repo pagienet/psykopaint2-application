@@ -187,17 +187,17 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			_pageSprite.addChild(_pageNumber_txt);
 		}
 
-		public function getNumberedBasePageBitmapData(index:uint):BitmapData
+		public function getNumberedBasePageBitmapData(index:uint, previousMap:BitmapData = null):BitmapData
 		{
-			return getPageBitmapData(""+(index+1), index);
+			return getPageBitmapData(""+(index+1), index, previousMap);
 		}
 
-		public function getEmptyPageBitmapData(index:uint):BitmapData
+		public function getEmptyPageBitmapData(index:uint, previousMap:BitmapData = null):BitmapData
 		{
-			return getPageBitmapData(" ", index);
+			return getPageBitmapData(" ", index, previousMap);
 		}
 
-		private function getPageBitmapData(pagingText:String, index:uint):BitmapData
+		private function getPageBitmapData(pagingText:String, index:uint, previousMap:BitmapData = null):BitmapData
 		{
 			_pageNumber_txt.text = pagingText;
 
@@ -213,9 +213,14 @@ package net.psykosoft.psykopaint2.book.views.book.data
 				_pageNumber_txt.x = _pageSprite.width -5 - _pageNumber_txt.width;
 			}
 
+			if(previousMap){
+				previousMap.draw(_pageSprite, null, null, "normal", null, true);
+				return previousMap;
+			}
+
 			var pageBitmapData:TrackedBitmapData = new TrackedBitmapData(BookPageSize.WIDTH, BookPageSize.HEIGHT, false);
 			pageBitmapData.draw(_pageSprite, null, null, "normal", null, true);
-
+			
 			return pageBitmapData;
 		}
 
