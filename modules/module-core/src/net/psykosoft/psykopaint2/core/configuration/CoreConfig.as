@@ -45,8 +45,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingCommentAddedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingCommentFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryServiceCallSucceededSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryServiceCallFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoFileReadSignal;
@@ -251,8 +251,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestHomePanningToggleSignal ).asSingleton();
 			_injector.map( NotifyGalleryPaintingLoadedSignal ).asSingleton();
 			_injector.map( NotifyGalleryPaintingIOErrorSignal ).asSingleton();
-			_injector.map( NotifyPaintingCommentAddedSignal ).asSingleton();
-			_injector.map( NotifyPaintingCommentFailedSignal ).asSingleton();
+			_injector.map( NotifyGalleryServiceCallSucceededSignal ).asSingleton();
+			_injector.map( NotifyGalleryServiceCallFailedSignal ).asSingleton();
 
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();

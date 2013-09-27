@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.models
 {
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFetchedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingCommentAddedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryServiceCallSucceededSignal;
 
 	public class DummyGalleryService implements GalleryService
 	{
@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.core.models
 		public var notifyGalleryImagesFetchedSignal : NotifyGalleryImagesFetchedSignal;
 
 		[Inject]
-		public var notifyPaintingCommentAddedSignal : NotifyPaintingCommentAddedSignal;
+		public var notifyPaintingCommentAddedSignal : NotifyGalleryServiceCallSucceededSignal;
 
 		public function DummyGalleryService()
 		{

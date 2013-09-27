@@ -4,8 +4,8 @@ package net.psykosoft.psykopaint2.core.models
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFetchedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingCommentAddedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingCommentFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryServiceCallSucceededSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryServiceCallFailedSignal;
 
 	public class AMFGalleryService implements GalleryService
 	{
@@ -22,10 +22,10 @@ package net.psykosoft.psykopaint2.core.models
 		public var notifyGalleryImagesFailedSignal : NotifyGalleryImagesFailedSignal;
 
 		[Inject]
-		public var notifyPaintingCommentAddedSignal : NotifyPaintingCommentAddedSignal;
+		public var notifyGalleryServiceCallSucceededSignal : NotifyGalleryServiceCallSucceededSignal;
 
 		[Inject]
-		public var notifyPaintingCommentFailedSignal : NotifyPaintingCommentFailedSignal;
+		public var notifyGalleryServiceCallFailedSignal : NotifyGalleryServiceCallFailedSignal;
 
 		private var _index : int;
 
@@ -123,14 +123,19 @@ package net.psykosoft.psykopaint2.core.models
 			amfBridge.addCommentToPainting(userProxy.sessionID, paintingID, text, onAddCommentSuccess, onAddCommentFailed);
 		}
 
+		public function favorite(paintingID : int) : void
+		{
+			amfBridge.favoritePainting(userProxy.sessionID, paintingID, onAddCommentSuccess, onAddCommentFailed);
+		}
+
 		private function onAddCommentSuccess() : void
 		{
-			notifyPaintingCommentAddedSignal.dispatch();
+			notifyGalleryServiceCallSucceededSignal.dispatch();
 		}
 
 		private function onAddCommentFailed(statusCode : int) : void
 		{
-			notifyPaintingCommentFailedSignal.dispatch(statusCode);
+			notifyGalleryServiceCallFailedSignal.dispatch(statusCode);
 		}
 	}
 }

@@ -2,9 +2,9 @@ package net.psykosoft.psykopaint2.core.signals
 {
 	import org.osflash.signals.Signal;
 
-	public class NotifyPaintingCommentFailedSignal extends Signal
+	public class NotifyGalleryServiceCallFailedSignal extends Signal
 	{
-		public function NotifyPaintingCommentFailedSignal()
+		public function NotifyGalleryServiceCallFailedSignal()
 		{
 			super(uint);	// status code of AMFErrorCode
 		}
