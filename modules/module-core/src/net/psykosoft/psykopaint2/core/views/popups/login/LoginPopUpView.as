@@ -4,9 +4,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
-	import net.psykosoft.psykopaint2.core.views.components.button.FoldButton;
-	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
-
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpViewBase;
 
 	import org.osflash.signals.Signal;
@@ -15,18 +12,23 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	{
 		// Declared in Flash.
 		public var bg:Sprite;
-		public var loginBtn:FoldButton;
-		public var signupBtn:FoldButton;
-		public var emailInput:PsykoInput;
-		public var passwordInput:PsykoInput;
+		public var selectLoginSubView:SelectLoginSubView;
+		public var loginSubView:LoginSubView;
+		public var signupSubView:SignupSubView;
 
 		public var popUpWantsToCloseSignal:Signal;
 		public var popUpWantsToLogInSignal:Signal;
+		public var popUpRequestsForgottenPassword:Signal;
 
 		public function LoginPopUpView() {
 			super();
+
 			popUpWantsToCloseSignal = new Signal();
 			popUpWantsToLogInSignal = new Signal();
+			popUpRequestsForgottenPassword = new Signal();
+
+			loginSubView.visible = false;
+			signupSubView.visible = false;
 		}
 
 		override protected function onEnabled():void {
@@ -35,18 +37,11 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			_blocker.addEventListener( MouseEvent.CLICK, onBlockerClick );
 
-			loginBtn.labelText = "login";
-			signupBtn.labelText = "sign up";
+			selectLoginSubView.loginClickedSignal.add( onSelectLoginSubViewLoginBtnClicked );
+			selectLoginSubView.signupClickedSignal.add( onSelectLoginSubViewSignupBtnClicked );
 
-			emailInput.defaultText = "email";
-			passwordInput.defaultText = "password";
-
-			passwordInput.behavesAsPassword( true );
-
-			emailInput.enterPressedSignal.add( onEmailInputEnterPressed );
-			passwordInput.enterPressedSignal.add( onPasswordInputEnterPressed );
-
-			loginBtn.addEventListener( MouseEvent.CLICK, onLoginBtnClick );
+			loginSubView.viewWantsToLogInSignal.add( onLoginViewWantsToLogIn );
+			loginSubView.forgotBtnClickedSignal.add( onLoginViewForgotButtonClicked );
 
 			layout();
 		}
@@ -54,73 +49,40 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		override protected function onDisabled():void {
 
 			_blocker.removeEventListener( MouseEvent.CLICK, onBlockerClick );
-			loginBtn.removeEventListener( MouseEvent.CLICK, onLoginBtnClick );
 
-			emailInput.enterPressedSignal.remove( onEmailInputEnterPressed );
-			passwordInput.enterPressedSignal.remove( onPasswordInputEnterPressed );
+			selectLoginSubView.loginClickedSignal.remove( onSelectLoginSubViewLoginBtnClicked );
+			selectLoginSubView.signupClickedSignal.remove( onSelectLoginSubViewSignupBtnClicked );
 
-			loginBtn.dispose();
-			signupBtn.dispose();
+			loginSubView.viewWantsToLogInSignal.remove( onLoginViewWantsToLogIn );
+			loginSubView.forgotBtnClickedSignal.remove( onLoginViewForgotButtonClicked );
 
-			emailInput.dispose();
-			passwordInput.dispose();
+			selectLoginSubView.dispose();
+			loginSubView.dispose();
+			signupSubView.dispose();
 
 			super.onDisabled();
-		}
-
-		// -----------------------
-		// Log in stuff.
-		// -----------------------
-
-		private function login():void {
-
-			trace( this, "logging in..." );
-
-			// Validate email address format.
-			var emailRegex:RegExp = /^[\w.-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i;
-			var isEmailValid:Boolean = emailInput.text.length > 0 && emailRegex.test( emailInput.text );
-			if( isEmailValid ) emailInput.showBlueHighlight();
-			else {
-				trace( this, "invalid email format" );
-				emailInput.showRedHighlight();
-				return;
-			}
-
-			// Validate password format.
-			var isPasswordValid:Boolean = passwordInput.text.length > 0;
-			if( isPasswordValid ) passwordInput.showBlueHighlight();
-			else {
-				trace( this, "invalid password format" );
-				passwordInput.showRedHighlight();
-				return;
-			}
-
-			// Request log in to mediator.
-			popUpWantsToLogInSignal.dispatch( emailInput.text, passwordInput.text );
-		}
-
-		public function rejectEmail():void {
-			emailInput.showRedHighlight();
-		}
-
-		public function rejectPassword():void {
-			passwordInput.showRedHighlight();
 		}
 
 		// -----------------------
 		// Event handlers.
 		// -----------------------
 
-		private function onPasswordInputEnterPressed():void {
-			login();
+		private function onLoginViewForgotButtonClicked():void {
+			popUpRequestsForgottenPassword.dispatch();
 		}
 
-		private function onEmailInputEnterPressed():void {
-			passwordInput.focusIn( true );
+		private function onLoginViewWantsToLogIn( email:String, password:String ):void {
+			popUpWantsToLogInSignal.dispatch( email, password );
 		}
 
-		private function onLoginBtnClick( event:MouseEvent ):void {
-			login();
+		private function onSelectLoginSubViewSignupBtnClicked():void {
+			selectLoginSubView.visible = false;
+			signupSubView.visible = true;
+		}
+
+		private function onSelectLoginSubViewLoginBtnClicked():void {
+			selectLoginSubView.visible = false;
+			loginSubView.visible = true;
 		}
 
 		private function onBlockerClick( event:MouseEvent ):void {

@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.core.views.popups.login
 {
 
+	import flash.utils.setTimeout;
+
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
@@ -34,6 +36,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			// From view.
 			view.popUpWantsToCloseSignal.add( onPopUpWantsToClose );
 			view.popUpWantsToLogInSignal.add( onPopUpWantsToLogIn );
+			view.popUpRequestsForgottenPassword.add( onForgottenPassword );
 
 			// From app.
 			notifyUserLoggedInSignal.add( onLoginSuccess );
@@ -42,29 +45,38 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		override public function destroy():void {
 			super.destroy();
-
 			view.popUpWantsToCloseSignal.remove( onPopUpWantsToClose );
 			view.popUpWantsToLogInSignal.remove( onPopUpWantsToLogIn );
 			notifyUserLoggedInSignal.remove( onLoginSuccess );
 			notifyUserLogInFailedSignal.remove( onLoginFailure );
 		}
 
+		// the fail signal contains an int with a value from AMFErrorCode.as
 		private function onLoginFailure( amfErrorCode:int ):void {
 			trace( this, "login failed" );
 			// TODO: give feedback about error
-			view.rejectPassword();
+			view.loginSubView.rejectPassword();
 		}
 
 		private function onLoginSuccess():void {
-			trace( this, "login successful!" );
-			requestHidePopUpSignal.dispatch();
+			view.loginSubView.displayMessage( LoginCopy.WELCOME_BACK + loggedInUserProxy.firstName + "!" );
+			setTimeout( function():void {
+				requestHidePopUpSignal.dispatch();
+			}, 1000 );
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
 
+		private function onForgottenPassword():void {
+			view.loginSubView.displayMessage( LoginCopy.WAITING );
+			// TODO: call service here and listen for reply to display a message below the login button, then dismiss the pop up?
+			// LoginCopy.as -> PASSWORD_REMINDER
+		}
+
 		private function onPopUpWantsToLogIn( email:String, password:String ):void {
+			view.loginSubView.displayMessage( LoginCopy.WAITING );
 			loggedInUserProxy.logIn( email, password );
 		}
 

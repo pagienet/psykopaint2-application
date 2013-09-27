@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.core.views.components.input
 {
 
+	import br.hellokeita.utils.TextFieldColor;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
@@ -43,6 +45,9 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			tf.restrict = "^\u0020\u0013";
 			tf.multiline = false;
 			tf.type = TextFieldType.INPUT;
+
+			// Used to modify the colors during selection
+			new TextFieldColor( tf, 0, 0xFFFFFF, 0x000000 );
 
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
@@ -93,9 +98,10 @@ package net.psykosoft.psykopaint2.core.views.components.input
 
 			if( hideHighlights ) showNoHighlight();
 
+			if( _behavesAsPassword ) tf.displayAsPassword = true;
+
 			// From default text to empty string?
 			if( tf.text == _defaultText ) {
-				if( _behavesAsPassword ) tf.displayAsPassword = true;
 				tf.text = "";
 			}
 
@@ -125,6 +131,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 		}
 
 		private function onTfChange( event:Event ):void {
+			if( _behavesAsPassword ) tf.displayAsPassword = true;
 			showCancelButton( tf.text.length > 0 );
 		}
 

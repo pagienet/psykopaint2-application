@@ -156,6 +156,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		* */
 		private function mapClasses():void {
 			MessagePopUpView;
+			LoginPopUpView;
 		}
 
 		// -----------------------
@@ -281,6 +282,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_mediatorMap.map( PsykoSocketView ).toMediator( PsykoSocketViewMediator );
 			_mediatorMap.map( PopUpManagerView ).toMediator( PopUpManagerViewMediator );
 			_mediatorMap.map( MessagePopUpView ).toMediator( MessagePopUpViewMediator );
+			_mediatorMap.map( LoginPopUpView ).toMediator( LoginPopUpViewMediator );
 			_mediatorMap.map( DebugView ).toMediator( DebugViewMediator );
 			_mediatorMap.map( ErrorsView ).toMediator( ErrorsViewMediator );
 			_mediatorMap.map( VideoView ).toMediator( VideoViewMediator );

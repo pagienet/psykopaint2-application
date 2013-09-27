@@ -1,5 +1,8 @@
 package net.psykosoft.psykopaint2.core.models
 {
+
+	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
 
@@ -7,6 +10,9 @@ package net.psykosoft.psykopaint2.core.models
 	{
 		[Inject]
 		public var notifyUserLoggedInSignal : NotifyUserLoggedInSignal;
+
+		[Inject]
+		public var notifyUserLogInFailedSignal:NotifyUserLogInFailedSignal;
 
 		[Inject]
 		public var notifyUserRegisteredSignal : NotifyUserRegisteredSignal;
@@ -42,7 +48,9 @@ package net.psykosoft.psykopaint2.core.models
 			_numFollowers = 5;
 			_active = true;
 			_banned = false;
+
 			notifyUserLoggedInSignal.dispatch();
+//			notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CALL_STATUS_AUTH_ERROR );
 		}
 
 		public function registerAndLogIn(userRegisterationVO : UserRegistrationVO) : void
