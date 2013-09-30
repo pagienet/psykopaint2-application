@@ -40,7 +40,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			passwordInput.defaultText = "password";
 			forgotButton.labelText = "Forgot your password?";
 
-			messages.multiline = false;
 			messages.visible = false;
 			messages.mouseEnabled = messages.selectable = false;
 
@@ -78,7 +77,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 
 		public function displayMessage( msg:String ):void {
-			messages.text = msg;
+			messages.htmlText = msg;
 			messages.width = messages.textWidth * 1.1;
 			messages.x = 500 - messages.width / 2;
 			messages.visible = true;
