@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.views.popups.login
 {
 
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
@@ -18,14 +19,16 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		public var popUpWantsToCloseSignal:Signal;
 		public var popUpWantsToLogInSignal:Signal;
-		public var popUpRequestsForgottenPassword:Signal;
+		public var popUpRequestsForgottenPasswordSignal:Signal;
+		public var popUpWantsToRegisterSignal:Signal;
 
 		public function LoginPopUpView() {
 			super();
 
 			popUpWantsToCloseSignal = new Signal();
 			popUpWantsToLogInSignal = new Signal();
-			popUpRequestsForgottenPassword = new Signal();
+			popUpRequestsForgottenPasswordSignal = new Signal();
+			popUpWantsToRegisterSignal = new Signal();
 
 			loginSubView.visible = false;
 			signupSubView.visible = false;
@@ -43,6 +46,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			loginSubView.viewWantsToLogInSignal.add( onLoginViewWantsToLogIn );
 			loginSubView.forgotBtnClickedSignal.add( onLoginViewForgotButtonClicked );
 
+			signupSubView.viewWantsToRegisterSignal.add( onSignupViewWantsToRegister );
+
 			layout();
 		}
 
@@ -56,6 +61,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			loginSubView.viewWantsToLogInSignal.remove( onLoginViewWantsToLogIn );
 			loginSubView.forgotBtnClickedSignal.remove( onLoginViewForgotButtonClicked );
 
+			signupSubView.viewWantsToRegisterSignal.remove( onSignupViewWantsToRegister );
+
 			selectLoginSubView.dispose();
 			loginSubView.dispose();
 			signupSubView.dispose();
@@ -67,8 +74,12 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// Event handlers.
 		// -----------------------
 
+		private function onSignupViewWantsToRegister( email:String, password:String, firstName:String, lastName:String, photo:BitmapData ):void {
+			popUpWantsToRegisterSignal.dispatch( email, password, firstName, lastName, photo );
+		}
+
 		private function onLoginViewForgotButtonClicked():void {
-			popUpRequestsForgottenPassword.dispatch();
+			popUpRequestsForgottenPasswordSignal.dispatch();
 		}
 
 		private function onLoginViewWantsToLogIn( email:String, password:String ):void {
