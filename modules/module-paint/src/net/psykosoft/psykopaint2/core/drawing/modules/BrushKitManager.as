@@ -103,6 +103,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _activeMode : String;
 		private var _currentPaintColor:int;
 		private var colorPickerView : ColorPickerView;
+		private var _currentBrushColorParameter:PsykoParameter;
 		
 		public function BrushKitManager()
 		{
@@ -155,13 +156,19 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function onPickedColorChanged( newColor:int ):void
 		{
+			_currentPaintColor =_currentBrushColorParameter.colorValue = newColor;
+		}
+		
+		private function updateCurrentBrushColorParameter( ):void
+		{
 			var parameterSetVO:ParameterSetVO = getCurrentBrushParameters(false);
 			var list:Vector.<PsykoParameter> = parameterSetVO.parameters;
 			var numParameters:uint = list.length;
 			for( var i:uint = 0; i < numParameters; ++i ) {
 				var parameter:PsykoParameter = list[ i ];
 				if( parameter.type == PsykoParameter.ColorParameter ) {
-					_currentPaintColor = parameter.colorValue = newColor;
+					_currentBrushColorParameter = parameter;
+					return;
 				} 
 			}
 		}
@@ -268,6 +275,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.brushEngine.addEventListener( AbstractBrush.STROKE_STARTED, onStrokeStarted);
 				_activeBrushKit.brushEngine.addEventListener( AbstractBrush.STROKE_ENDED, onStrokeEnded );
 				_activeBrushKit.addEventListener( Event.CHANGE, onActiveBrushKitChanged );
+				updateCurrentBrushColorParameter( );
 				onPickedColorChanged( _currentPaintColor );
 			}
 		}
