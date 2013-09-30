@@ -87,6 +87,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _addedMouseWheelListener:Boolean;
 
 		private const MAX_ZOOM_SCALE:Number = 3;
+		private const ZOOM_MARGIN:Number = 100 * CoreSettings.GLOBAL_SCALING;
 
 		public var zoomScale:Number = _minZoomScale;
 
@@ -304,6 +305,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// used for manual zooming
 		private function updateAndConstrainCanvasRect( rect:Rectangle ):void {
 			constrainCanvasRect( rect );
+			trace (rect);
 			requestChangeRenderRectSignal.dispatch(rect);
 		}
 
@@ -321,31 +323,27 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			}
 
 			var ratio : Number = 0;
+			var minPanX : Number, minPanY : Number, maxPanX : Number, maxPanY : Number;
 			if( zoomScale < 1 )
 			{
 				ratio = (zoomScale - _minZoomScale)/(1 - _minZoomScale);
-				rect.x = (1-ratio)*_easelRectFromHomeView.x;	// linearly interpolate to 0 from zoomed out position
-				rect.y = (1-ratio)*_easelRectFromHomeView.y;
-			} else if ( zoomScale < 1.5 )
-			{
-				var offsetX:Number = rect.x / canvasModel.width;
-				var offsetY:Number = rect.y / canvasModel.height;
-				ratio = (zoomScale - 1) * 2;
-				offsetX = ratio * offsetX + ( 1-ratio) * (1 - zoomScale) * .5;
-				offsetY = ratio * offsetY + ( 1-ratio) * (1 - zoomScale) * .175;
-				rect.x = offsetX * canvasModel.width;
-				rect.y = offsetY * canvasModel.height;
+				minPanX = (1-ratio)*_easelRectFromHomeView.x + ZOOM_MARGIN*ratio;
+				minPanY = (1-ratio)*_easelRectFromHomeView.y + ZOOM_MARGIN*ratio;
+				maxPanX = minPanX - ZOOM_MARGIN*ratio;
+				maxPanY = minPanY - ZOOM_MARGIN*ratio;
 			}
-			// TODO: this causes a jump when coming from home, it seems that the .175 value needs to be calculated dynamically
+			else {
+				// clamp to painting edges with margin
+				minPanX = ZOOM_MARGIN;
+				minPanY = ZOOM_MARGIN;
+				maxPanX = canvasModel.width - rect.width - ZOOM_MARGIN;
+				maxPanY = canvasModel.height - rect.height - ZOOM_MARGIN;
+			}
 
-			// TODO: Doesn't feel good while animating - should we use a flag here and enable it when not animating?
-			/*if( zoomScale > 0.95 && zoomScale < 1.05 ) {
-				zoomScale = 1;
-				offsetX = 0;
-				offsetY = 0;
-			}*/
-
-
+			if (rect.x > minPanX) rect.x = minPanX;
+			if (rect.y > minPanY) rect.y = minPanY;
+			if (rect.x < maxPanX) rect.x = maxPanX;
+			if (rect.y < maxPanY) rect.y = maxPanY;
 		}
 
 		// -----------------------
