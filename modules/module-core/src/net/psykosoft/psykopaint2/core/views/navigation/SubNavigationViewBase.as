@@ -150,16 +150,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function enableButtonWithId( id:String, enabled:Boolean ):void {
 
-			trace( this, "enabling button with id: " + id );
-
 			var targetData:ButtonData;
 			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
 			if( dataProvider ) {
 				var numData:uint = dataProvider.length;
 				for( var i:uint = 0; i < numData; i++ ) {
 					var data:ButtonData = dataProvider[ i ] as ButtonData;
-					trace( "button id: " + data.id );
-					trace( "contains: " + id.indexOf( data.id ) );
 					if( id.indexOf( data.id ) != -1 ) {
 					    targetData = data;
 						break;
@@ -170,6 +166,28 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if( !targetData ) return;
 
 			targetData.enabled = enabled;
+
+			_scroller.updateAllItemRenderersFromData();
+		}
+
+		public function relabelButtonWithId( id:String, newLabel:String ):void {
+
+			var targetData:ButtonData;
+			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
+			if( dataProvider ) {
+				var numData:uint = dataProvider.length;
+				for( var i:uint = 0; i < numData; i++ ) {
+					var data:ButtonData = dataProvider[ i ] as ButtonData;
+					if( id.indexOf( data.id ) != -1 ) {
+					    targetData = data;
+						break;
+					}
+				}
+			}
+
+			if( !targetData ) return;
+
+			targetData.labelText = newLabel;
 
 			_scroller.updateAllItemRenderersFromData();
 		}

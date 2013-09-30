@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private function onLoginSuccess():void {
 			trace( this, "logged in" );
-			view.loginSubView.displayMessage( LoginCopy.WELCOME_BACK + loggedInUserProxy.firstName + "!" );
+			view.loginSubView.displayCenterMessage( LoginCopy.WELCOME_BACK + loggedInUserProxy.firstName + "!" );
 			setTimeout( function():void {
 				requestHidePopUpSignal.dispatch();
 			}, 1000 );
@@ -110,13 +110,13 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function onForgottenPassword():void {
-			view.loginSubView.displayMessage( LoginCopy.WAITING );
+			view.loginSubView.displayCenterMessage( LoginCopy.WAITING );
 			// TODO: call service here and listen for reply to display a message below the login button, then dismiss the pop up?
 			// LoginCopy.as -> PASSWORD_REMINDER
 		}
 
 		private function onPopUpWantsToLogIn( email:String, password:String ):void {
-			view.loginSubView.displayMessage( LoginCopy.WAITING );
+			view.loginSubView.displayCenterMessage( LoginCopy.WAITING );
 			loggedInUserProxy.logIn( email, password );
 		}
 

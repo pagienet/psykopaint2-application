@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public var forgotBtnClickedSignal:Signal;
 
 		private var _msgTimer:Timer;
+		private var _satelliteMessages:Vector.<LoginMessageLabel>;
 
 		public function LoginSubView() {
 			super();
@@ -54,6 +55,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			loginBtn.addEventListener( MouseEvent.CLICK, onLoginBtnClick );
 			forgotButton.addEventListener( MouseEvent.CLICK, onForgotBtnClick );
+
+			_satelliteMessages = new Vector.<LoginMessageLabel>();
 		}
 
 		public function dispose():void {
@@ -71,19 +74,29 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			passwordInput.dispose();
 			loginBtn.dispose();
 			forgotButton.dispose();
+
+			clearAllSatelliteMessages();
 		}
 
 		// -----------------------
 		// Interface.
 		// -----------------------
 
-		public function displayMessage( msg:String ):void {
+		public function displayCenterMessage( msg:String ):void {
 			messages.htmlText = msg;
 			messages.width = messages.textWidth * 1.1;
 			messages.x = 500 - messages.width / 2;
 			messages.visible = true;
 			_msgTimer.reset();
 			_msgTimer.start();
+		}
+
+		public function displaySatelliteMessage( targetSource:Sprite, msg:String ):void {
+			// TODO
+		}
+
+		public function clearAllSatelliteMessages():void {
+			// TODO
 		}
 
 		public function rejectEmail():void {
@@ -111,14 +124,14 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private function validateEmailFormat():Boolean {
 			var valid:int = PsykoInputValidationUtil.validateEmailFormat( emailInput );
-			if( valid == 1 ) displayMessage( LoginCopy.NO_EMAIL );
-			if( valid == 2 ) displayMessage( LoginCopy.EMAIL_INVALID );
+			if( valid == 1 ) displayCenterMessage( LoginCopy.NO_EMAIL );
+			if( valid == 2 ) displayCenterMessage( LoginCopy.EMAIL_INVALID );
 			return valid == 0;
 		}
 
 		private function validatePasswordFormat():Boolean {
 			var valid:int = PsykoInputValidationUtil.validatePasswordFormat( passwordInput );
-			if( valid == 1 ) displayMessage( LoginCopy.NO_PASSWORD );
+			if( valid == 1 ) displayCenterMessage( LoginCopy.NO_PASSWORD );
 			return valid == 0;
 		}
 

@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 	{
 		public static const ID_WALLPAPER:String = "Change Wallpaper";
 		public static const ID_LOGIN:String = "Login";
+		public static const ID_LOGOUT:String = "Logout";
 
 		public function SettingsSubNavView() {
 			super();
@@ -20,6 +21,10 @@ package net.psykosoft.psykopaint2.home.views.settings
 			createCenterButton( ID_WALLPAPER, ID_WALLPAPER );
 			createCenterButton( ID_LOGIN, ID_LOGIN );
 			validateCenterButtons();
+		}
+
+		public function setLoginBtn( label:String ):void {
+			relabelButtonWithId( ID_LOGIN, label );
 		}
 	}
 }
