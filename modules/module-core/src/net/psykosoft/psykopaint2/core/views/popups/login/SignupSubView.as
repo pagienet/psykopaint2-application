@@ -76,7 +76,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			firstNameTf.dispose();
 			lastNameTf.dispose();
 
-			_photoUtil.dispose();
+			if(_photoUtil)  _photoUtil.dispose();
 			if( _photoBitmap.bitmapData ) _photoBitmap.bitmapData.dispose();
 
 			_photoRetrieved = false;

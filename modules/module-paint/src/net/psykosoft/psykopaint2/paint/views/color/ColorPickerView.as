@@ -217,15 +217,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 			t.color = currentColor;
 			currentColorSwatch.transform.colorTransform = t;
 			saturationHandleBg.transform.colorTransform = t;
-			
+			/*
 			var hsv:HSV = currentHSV.clone();
 			hsv.value = 100;
 			hsv.saturation = 100;
 			t.color = ColorConverter.HSVtoUINT(hsv);
+			*/
 			hueHandleBg.transform.colorTransform = t;
-			
+			/*
 			var p:int = currentHSV.value * 255 / 100;
 			t.color = p << 16 | p << 8 | p;
+			*/
 			lightnessHandleBg.transform.colorTransform = t;
 			
 			
