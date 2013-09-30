@@ -2,11 +2,11 @@ package com.quasimondo.color.colorspace
 {
 	public class HSL implements IColorSpace
 	{
-		private var _hue: int;
-		private var _saturation: int;
-		private var _lightness: int;
+		private var _hue: Number;
+		private var _saturation: Number;
+		private var _lightness: Number;
 
-		public function HSL( h:int = 0, s:int = 100, l:int = 100 )
+		public function HSL( h:Number = 0, s:Number = 100, l:Number = 100 )
 		{
 			hue = h;
 			saturation = s;
@@ -19,7 +19,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @return int
  		 */
-		public function get hue(): int
+		public function get hue(): Number
 		{
 			return _hue;
 		}
@@ -29,7 +29,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @param h Hue value
  		 */
-		public function set hue( h: int ): void
+		public function set hue( h: Number ): void
 		{
 			h = h % 360;
 			if ( h == 360 ) h = 0;
@@ -43,7 +43,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @return int
  		 */
-		public function get saturation(): int
+		public function get saturation(): Number
 		{
 			return _saturation;
 		}
@@ -53,7 +53,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @param s Saturation value
  		 */
-		public function set saturation( s: int ): void
+		public function set saturation( s: Number ): void
 		{
 			if ( s < 0 ) s = 0;
 			else if ( s > 100 ) s = 100;
@@ -66,7 +66,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @return int
  		 */
-		public function get lightness(): int
+		public function get lightness(): Number
 		{
 			return _lightness;
 		}
@@ -76,7 +76,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @param v Value value
  		 */
-		public function set lightness( l: int ): void
+		public function set lightness( l: Number ): void
 		{
 			if ( l < 0 ) l = 0;
 			else if ( l > 100 ) l = 100;

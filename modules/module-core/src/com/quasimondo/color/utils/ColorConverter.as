@@ -17,6 +17,7 @@ package com.quasimondo.color.utils
 		/**
 		 * Lookup tables
 		 */
+		/*
 		 private static var rgb_hsv_lookup: Dictionary  = new Dictionary();
 		 private static var hsv_rgb_lookup: Dictionary  = new Dictionary();
 		 private static var rgb_hex_lookup: Dictionary  = new Dictionary();
@@ -25,7 +26,7 @@ package com.quasimondo.color.utils
 		 private static var cmyk_rgb_lookup: Dictionary = new Dictionary();
 		 private static var rgb_hsl_lookup: Dictionary  = new Dictionary();
 		 private static var hsl_rgb_lookup: Dictionary  = new Dictionary();
-		 
+		 */
 		/**
 		 * Converts <code>RGB</code> data to <code>HSV</code> data.
 		 * 
@@ -34,8 +35,8 @@ package com.quasimondo.color.utils
   		 */
 		public static function RGBtoHSV( rgb: IRGB ): HSV
 		{
-			if ( !rgb_hsv_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] )
-			{
+		//	if ( !rgb_hsv_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] )
+		//	{
 				var min: Number;
 				var max: Number;
 				var delta: Number;
@@ -65,10 +66,11 @@ package com.quasimondo.color.utils
 				if ( h < 0 )
 					h += 360;
 				
-				rgb_hsv_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] = new HSV( Math.round( h ), s, v );
-			}
+				return  new HSV( Math.round( h ), s, v );
+		//		rgb_hsv_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] = new HSV( Math.round( h ), s, v );
+			//}
 
-			return HSV(rgb_hsv_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ]).clone();
+			//return HSV(rgb_hsv_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ]).clone();
 		}
 		
 		/**
@@ -79,8 +81,8 @@ package com.quasimondo.color.utils
   		 */
 		public static function HSVtoRGB( hsv: HSV ): RGB
 		{
-			if ( !hsv_rgb_lookup[ hsv.hue << 16 | hsv.saturation << 8 | hsv.value ] )
-			{
+			//if ( !hsv_rgb_lookup[ hsv.hue << 16 | hsv.saturation << 8 | hsv.value ] )
+			//{
 				var min: Number;
 				var delta: Number;
 				var r: Number;
@@ -143,10 +145,11 @@ package com.quasimondo.color.utils
 						}
 					}
 				}
-				hsv_rgb_lookup[ hsv.hue << 16 | hsv.saturation << 8 | hsv.value ] = new RGB( r, g, b );
-			}		
+				return new RGB( r, g, b );
+			//	hsv_rgb_lookup[ hsv.hue << 16 | hsv.saturation << 8 | hsv.value ] = new RGB( r, g, b );
+			//}		
 
-			return RGB(RGB(hsv_rgb_lookup[ hsv.hue << 16 | hsv.saturation << 8 | hsv.value ]).clone());
+			//return RGB(RGB(hsv_rgb_lookup[ hsv.hue << 16 | hsv.saturation << 8 | hsv.value ]).clone());
 		}
 		
 		public static function HSVtoARGB( hsv: HSV, alpha: int = 255 ): ARGB
@@ -163,10 +166,13 @@ package com.quasimondo.color.utils
   		 */
 		public static function RGBtoHEX( rgb: IRGB ): HEX
 		{
+			return  new HEX( NumberConverter.intToHex( rgb.red ) + NumberConverter.intToHex( rgb.green ) + NumberConverter.intToHex( rgb.blue ) );
+			/*
 			if ( !rgb_hex_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] )
 				rgb_hex_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] = new HEX( NumberConverter.intToHex( rgb.red ) + NumberConverter.intToHex( rgb.green ) + NumberConverter.intToHex( rgb.blue ) );
 
 			return HEX(rgb_hex_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ]).clone(); 
+			*/
 		}
 
 		/**
@@ -177,10 +183,13 @@ package com.quasimondo.color.utils
   		 */
 		public static function HEXtoRGB( hex: HEX ): RGB
 		{
+			return new RGB( NumberConverter.hexToInt( hex.red ), NumberConverter.hexToInt( hex.green ), NumberConverter.hexToInt( hex.blue ) );
+			/*
 			if ( !hex_rgb_lookup[ hex.value ] )
 				hex_rgb_lookup[ hex.value ] = new RGB( NumberConverter.hexToInt( hex.red ), NumberConverter.hexToInt( hex.green ), NumberConverter.hexToInt( hex.blue ) );
 
 			return RGB(RGB(hex_rgb_lookup[ hex.value ]).clone());
+			*/
 		}
 		
 		public static function HEXtoARGB( hex: HEX, alpha: int = 255 ): ARGB
@@ -219,6 +228,16 @@ package com.quasimondo.color.utils
 		{
 			return RGBtoHSL(new RGB( value >> 16 & 0xFF, value >> 8 & 0xFF, value & 0xFF));
 		}
+		
+		public static function UINTtoHSV( value: uint ): HSV
+		{
+			return RGBtoHSV(new RGB( value >> 16 & 0xFF, value >> 8 & 0xFF, value & 0xFF));
+		}
+		
+		public static function HSVtoUINT( value: HSV ): uint
+		{
+			return RGBtoUINT(HSVtoRGB(value));
+		}
 
 		/**
 		 * Converts <code>CMYK</code> data to <code>RGB</code> data.
@@ -228,17 +247,17 @@ package com.quasimondo.color.utils
   		 */
 		public static function CMYKtoRGB( cmyk: CMYK ): RGB
 		{
-			if ( !cmyk_rgb_lookup[ cmyk.cyan << 24 | cmyk.magenta << 16 | cmyk.yellow << 8 | cmyk.black ] )
-			{
+		//	if ( !cmyk_rgb_lookup[ cmyk.cyan << 24 | cmyk.magenta << 16 | cmyk.yellow << 8 | cmyk.black ] )
+		//	{
 				var k: Number = 1 - cmyk.black / 100;
 				var r: Number = Math.round( ( 255 - cmyk.cyan * 2.55 ) * k );
 				var g: Number = Math.round( ( 255 - cmyk.magenta * 2.55 ) * k );
 				var b: Number = Math.round( ( 255 - cmyk.yellow * 2.55 ) * k );
-				
-				cmyk_rgb_lookup[ cmyk.cyan << 24 | cmyk.magenta << 16 | cmyk.yellow << 8 | cmyk.black ] = new RGB( r, g, b );
-			}
+				return new RGB( r, g, b );
+		//		cmyk_rgb_lookup[ cmyk.cyan << 24 | cmyk.magenta << 16 | cmyk.yellow << 8 | cmyk.black ] = new RGB( r, g, b );
+		//	}
 
-			return RGB(RGB(cmyk_rgb_lookup[ cmyk.cyan << 24 | cmyk.magenta << 16 | cmyk.yellow << 8 | cmyk.black ]).clone());
+		//	return RGB(RGB(cmyk_rgb_lookup[ cmyk.cyan << 24 | cmyk.magenta << 16 | cmyk.yellow << 8 | cmyk.black ]).clone());
 		}
 		
 		public static function CMYKtoARGB( cmyk: CMYK, alpha: int = 255 ): ARGB
@@ -255,8 +274,8 @@ package com.quasimondo.color.utils
   		 */
 		public static function RGBtoCMYK( rgb: IRGB ): CMYK
 		{
-			if ( !rgb_cmyk_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] )
-			{
+			//if ( !rgb_cmyk_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] )
+			//{
 				var c: Number = 1 - rgb.red / 255;
 				var m: Number = 1 - rgb.green / 255;
 				var y: Number = 1 - rgb.blue / 255;
@@ -266,10 +285,11 @@ package com.quasimondo.color.utils
 				y = Math.round( ( y - k ) / ( 1 - k ) * 100 );
 				k = Math.round( k * 100 );
 			
-				rgb_cmyk_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] = new CMYK( c, m, y, k );
-			}
+				return new CMYK( c, m, y, k );
+				//rgb_cmyk_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] = new CMYK( c, m, y, k );
+			//}
 
-			return CMYK(rgb_cmyk_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ]).clone();
+	//		return CMYK(rgb_cmyk_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ]).clone();
 		}
 
 		/**
@@ -280,8 +300,8 @@ package com.quasimondo.color.utils
   		 */
 		public static function RGBtoHSL( rgb: IRGB ): HSL
 		{
-			if ( !rgb_hsl_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] )
-			{
+			//if ( !rgb_hsl_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] )
+			//{
 				var min: Number;
 				var max: Number;
 				var delta: Number;
@@ -321,10 +341,11 @@ package com.quasimondo.color.utils
 				if ( h < 0 )
 					h += 360;
 				
-				rgb_hsl_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] = new HSL( Math.round( h ), s, l );
-			}
+				return new HSL( Math.round( h ), s, l );
+				//rgb_hsl_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] = new HSL( Math.round( h ), s, l );
+			//}
 
-			return HSL(rgb_hsl_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ]).clone();
+			//return HSL(rgb_hsl_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ]).clone();
 			
 		}
 
@@ -336,8 +357,8 @@ package com.quasimondo.color.utils
   		 */
 		public static function HSLtoRGB( hsl: HSL ): RGB
 		{
-			if ( !hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ] )
-			{
+			//if ( !hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ] )
+			//{
 				var r: Number;
 				var g: Number;
 				var b: Number;
@@ -363,11 +384,12 @@ package com.quasimondo.color.utils
 					g = innerHSLtoRGB( val1, val2, h );
 					b = innerHSLtoRGB( val1, val2, h - 120 );					
 				}
+				
+				return  new RGB( r, g, b );
+			//	hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ] = new RGB( r, g, b );
+			//}		
 
-				hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ] = new RGB( r, g, b );
-			}		
-
-			return RGB(RGB(hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ]).clone());
+			//return RGB(RGB(hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ]).clone());
 		}
 		
 		/**
@@ -378,8 +400,8 @@ package com.quasimondo.color.utils
 		 */
 		public static function HSLtoUINT( hsl: HSL ): uint
 		{
-			if ( !hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ] )
-			{
+			//if ( !hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ] )
+			//{
 				var r: Number;
 				var g: Number;
 				var b: Number;
@@ -406,10 +428,10 @@ package com.quasimondo.color.utils
 					b = innerHSLtoRGB( val1, val2, h - 120 );					
 				}
 				
-				hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ] = new RGB( r, g, b );
-			}		
-			var rgb:RGB = hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ];
-			return 0xff000000 | rgb.red << 16 | rgb.green << 8 | rgb.blue;
+			//	hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ] = new RGB( r, g, b );
+			//}		
+			//var rgb:RGB = hsl_rgb_lookup[ hsl.hue << 16 | hsl.saturation << 8 | hsl.lightness ];
+			return 0xff000000 | r << 16 | g << 8 | b;
 		}
 		
 		

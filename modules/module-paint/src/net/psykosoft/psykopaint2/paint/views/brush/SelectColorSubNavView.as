@@ -89,7 +89,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		protected function onColorPicked( event:Event ):void {
 			
-			currentColor = Colormixer( event.target ).pickedColor;
+			currentColor = Colormixer( event.target ).currentColor;
 			colorSwatches.setSelection( -1 );
 			colorChangedSignal.dispatch();
 		}

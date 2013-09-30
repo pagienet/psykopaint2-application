@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
-	import com.quasimondo.color.colorspace.HSL;
+	import com.quasimondo.color.colorspace.HSV;
 	import com.quasimondo.color.utils.ColorConverter;
 	
 	import flash.display.Bitmap;
@@ -58,6 +58,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			colorPalette.addEventListener( Event.CHANGE, onPaletteColorChanged );
 			//colorMixer = new Colormixer( colorPalette.currentPalette );
 			colorMixer = new FluidColorMixer();
+			//colorMixer = new Colormixer(colorPalette.currentPalette);
 			colorMixer.y = 595;
 			colorMixer.x = 3;
 			colorMixer.addEventListener( Event.CHANGE, onMixerColorPicked );
@@ -67,6 +68,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			hueMap = new BitmapData(256,1,false,0);
 			satMap = new BitmapData(256,1,false,0);
 			lightnessMap = new BitmapData(256,1,false,0);
+			generateHueAndLightnessSliders();
 			
 			sliderHolder = new Sprite();
 			sliderHolder.x = 753;
@@ -108,34 +110,23 @@ package net.psykosoft.psykopaint2.paint.views.color
 			stage.addEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
 			
 			
-			switch ( activeSliderIndex )
-			{
-				case 0: //hue
-					hueHandle.x = mouseX;
-					setCurrentColor( hueMap.getPixel(sliderHolder.mouseX,0), false );
-				break;
-				case 1: //sat
-					saturationHandle.x = mouseX;
-					setCurrentColor( satMap.getPixel(sliderHolder.mouseX,0), false );
-				break;
-				case 2: //lightness
-					lightnessHandle.x = mouseX;
-					setCurrentColor( lightnessMap.getPixel(sliderHolder.mouseX,0), false );
-				break;
-			}
+			onSliderMouseMove(event);
 		}
 		
 		protected function onSliderMouseMove( event:MouseEvent ):void
 		{
 			var sx:Number = sliderHolder.mouseX;
 			if ( sliderHolder.mouseX < 0 ) sx = 0;
-			if ( sliderHolder.mouseX > 256 ) sx = 256;
+			if ( sliderHolder.mouseX > 255 ) sx = 255;
 			
 			switch ( activeSliderIndex )
 			{
 				case 0: //hue
 					hueHandle.x = sliderHolder.x + sx;
-					setCurrentColor( hueMap.getPixel(sx,0), false );
+				//setCurrentColor( hueMap.getPixel(sx,0), false );
+					var hsv:HSV = ColorConverter.UINTtoHSV(currentColor);
+					hsv.hue = 360 * sx / 255;
+					setCurrentColor( ColorConverter.HSVtoUINT(hsv), false );
 					break;
 				case 1: //sat
 					saturationHandle.x = sliderHolder.x+ sx;
@@ -143,7 +134,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 					break;
 				case 2: //lightness
 					lightnessHandle.x = sliderHolder.x+sx;
-					setCurrentColor( lightnessMap.getPixel(sx,0), false );
+					//setCurrentColor( lightnessMap.getPixel(sx,0), false );
+					var hsv:HSV = ColorConverter.UINTtoHSV(currentColor);
+					hsv.value = 100 * sx / 255;
+					setCurrentColor( ColorConverter.HSVtoUINT(hsv), false );
 					break;
 			}
 		}
@@ -173,35 +167,47 @@ package net.psykosoft.psykopaint2.paint.views.color
 			if (!fromPalette )  colorPalette.selectedIndex = -1;
 			colorChangedSignal.dispatch();
 			colorMixer.currentColor = newColor;
-			updateColorSliders();
+			updateSaturationSlider();
+			var hsv:HSV = ColorConverter.UINTtoHSV(currentColor);
+			hueHandle.x = sliderHolder.x  + hsv.hue / 360 * 255;
+			saturationHandle.x = sliderHolder.x  +hsv.saturation / 100 * 255
+			lightnessHandle.x = sliderHolder.x  +hsv.value / 100 * 255;
 		}
 		
-		protected function updateColorSliders():void
+		protected function updateSaturationSlider():void
+		{
+			satMap.lock();
+			var hsv:HSV = ColorConverter.UINTtoHSV(currentColor);
+			
+			var vd:Number = 1 / 256; 
+			var v:Number = 0;
+			for ( var i:int = 0; i < 256; i++ )
+			{
+				hsv.saturation = 100 * v;
+				satMap.setPixel(i,0,ColorConverter.HSVtoUINT(hsv));
+				v+=vd;
+			}
+			satMap.unlock();
+			
+		}
+		
+		protected function generateHueAndLightnessSliders():void
 		{
 			hueMap.lock();
-			satMap.lock();
 			lightnessMap.lock();
-			var hsl:HSL = ColorConverter.UINTtoHSL(currentColor);
 			
-			var h:HSL = hsl.clone();
-			var s:HSL = hsl.clone();
-			var l:HSL = hsl.clone();
+			var h:HSV = new HSV(0,100,100);
 			var vd:Number = 1 / 256; 
 			var v:Number = 0;
 			for ( var i:int = 0; i < 256; i++ )
 			{
 				h.hue = 360 * v;
-				s.saturation = 100 * v;
-				l.lightness = 100 * v;
-				hueMap.setPixel(i,0,ColorConverter.HSLtoUINT(h));
-				satMap.setPixel(i,0,ColorConverter.HSLtoUINT(s));
-				lightnessMap.setPixel(i,0,ColorConverter.HSLtoUINT(l));
-								
+				hueMap.setPixel(i,0,ColorConverter.HSVtoUINT(h));
+				lightnessMap.setPixel(i,0,i << 16 | i << 8 | i);
 				v+=vd;
 			}
 			
 			hueMap.unlock();
-			satMap.unlock();
 			lightnessMap.unlock()
 		}
 	}

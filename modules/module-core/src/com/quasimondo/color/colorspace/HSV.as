@@ -2,9 +2,9 @@ package com.quasimondo.color.colorspace
 {
 	public class HSV implements IColorSpace
 	{
-		private var _hue: int;
-		private var _saturation: int;
-		private var _value: int;
+		private var _hue: Number;
+		private var _saturation: Number;
+		private var _value: Number;
 		
 		/**
 		 * Constructor.
@@ -15,7 +15,7 @@ package com.quasimondo.color.colorspace
 		 * @param s Value for saturation
  		 * @param v Value for value
   		 */
-		public function HSV( h: int = 0, s: int = 100, v: int = 0 )
+		public function HSV( h: Number = 0, s: Number = 100, v: Number = 0 )
 		{
 			hue = h;
 			saturation = s;
@@ -28,7 +28,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @return int
  		 */
-		public function get hue(): int
+		public function get hue(): Number
 		{
 			return _hue;
 		}
@@ -38,7 +38,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @param h Hue value
  		 */
-		public function set hue( h: int ): void
+		public function set hue( h: Number ): void
 		{
 			h = h % 360;
 			if ( h == 360 ) h = 0;
@@ -52,7 +52,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @return int
  		 */
-		public function get saturation(): int
+		public function get saturation(): Number
 		{
 			return _saturation;
 		}
@@ -62,7 +62,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @param s Saturation value
  		 */
-		public function set saturation( s: int ): void
+		public function set saturation( s: Number ): void
 		{
 			if ( s < 0 ) s = 0;
 			else if ( s > 100 ) s = 100;
@@ -75,7 +75,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @return int
  		 */
-		public function get value(): int
+		public function get value(): Number
 		{
 			return _value;
 		}
@@ -85,7 +85,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @param v Value value
  		 */
-		public function set value( v: int ): void
+		public function set value( v: Number ): void
 		{
 			if ( v < 0 ) v = 0;
 			else if ( v > 100 ) v = 100;
