@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import net.psykosoft.psykopaint2.core.views.components.button.LinkButton;
 
 	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
+	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInputValidationUtil;
 
 	import org.osflash.signals.Signal;
 
@@ -109,31 +110,16 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function validateEmailFormat():Boolean {
-			if( emailInput.text.length == 0 || emailInput.text == emailInput.defaultText ) {
-				displayMessage( LoginCopy.NO_EMAIL );
-				emailInput.showRedHighlight();
-				return false;
-			}
-			var emailRegex:RegExp = /^[\w.-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i;
-			var isEmailValid:Boolean = emailRegex.test( emailInput.text );
-			if( isEmailValid ) emailInput.showBlueHighlight();
-			else {
-				displayMessage( LoginCopy.EMAIL_INVALID );
-				emailInput.showRedHighlight();
-				return false;
-			}
-			return true;
+			var valid:int = PsykoInputValidationUtil.validateEmailFormat( emailInput );
+			if( valid == 1 ) displayMessage( LoginCopy.NO_EMAIL );
+			if( valid == 2 ) displayMessage( LoginCopy.EMAIL_INVALID );
+			return valid == 0;
 		}
 
 		private function validatePasswordFormat():Boolean {
-			var isPasswordValid:Boolean = passwordInput.text.length > 0 && passwordInput.text != passwordInput.defaultText;
-			if( isPasswordValid ) passwordInput.showBlueHighlight();
-			else {
-				displayMessage( LoginCopy.NO_PASSWORD );
-				passwordInput.showRedHighlight();
-				return false;
-			}
-			return true;
+			var valid:int = PsykoInputValidationUtil.validatePasswordFormat( passwordInput );
+			if( valid == 1 ) displayMessage( LoginCopy.NO_PASSWORD );
+			return valid == 0;
 		}
 
 		// -----------------------

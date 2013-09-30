@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.MovieClip;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -19,9 +21,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 	public class ColorPickerView extends ViewBase
 	{
 		public var currentColorSwatch:Sprite;
-		public var hueHandle:Sprite;
-		public var saturationHandle:Sprite;
-		public var lightnessHandle:Sprite;
+		public var hueHandle:MovieClip;
+		public var saturationHandle:MovieClip;
+		public var lightnessHandle:MovieClip;
 		public var sliderBackdrop:Sprite;
 		
 		public var hueOverlay:Sprite;
@@ -31,6 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var colorPalette:ColorPalette;
 		public var colorChangedSignal:Signal;
 		public var currentColor:uint = 0;
+		public var currentHSV:HSV;
 		//private var colorMixer:Colormixer;
 		private var colorMixer:FluidColorMixer;
 		
@@ -45,8 +48,16 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var sliderHolder:Sprite;
 
 		private var activeSliderIndex:int;
+		private var sliderPaddingLeft:Number = 16;
+		private var sliderPaddingRight:Number = 16;
+		private var saturationSliderValues:Array;
+
+		private var hueHandleBg:Shape;
+
+		private var saturationHandleBg:Shape;
+
+		private var lightnessHandleBg:Shape;
 		
-	
 		public function ColorPickerView()
 		{
 			super();
@@ -70,11 +81,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 			lightnessMap = new BitmapData(256,1,false,0);
 			generateHueAndLightnessSliders();
 			
+			currentHSV = new HSV(0,0,0);
+			
 			sliderHolder = new Sprite();
 			sliderHolder.x = 753;
 			sliderHolder.y = 599;
 			addChildAt(sliderHolder,getChildIndex(sliderBackdrop)+1);
 			sliderHolder.addEventListener(MouseEvent.MOUSE_DOWN, onSliderMouseDown );
+			
 			
 			hueMapHolder = new Bitmap(hueMap,"auto",false);
 			hueMapHolder.height = 41;
@@ -89,6 +103,40 @@ package net.psykosoft.psykopaint2.paint.views.color
 			lightnessMapHolder.height = 41;
 			lightnessMapHolder.y = 59 + 59;
 			sliderHolder.addChild(lightnessMapHolder);
+			
+			
+			//hueHandle.blendMode = saturationHandle.blendMode = lightnessHandle.blendMode = "multiply";
+			hueHandle.gotoAndStop(3);
+			hueHandleBg = new Shape();
+			hueHandleBg.graphics.beginFill(0);
+			hueHandleBg.graphics.moveTo(-18,-25);
+			hueHandleBg.graphics.lineTo(20,-23);
+			hueHandleBg.graphics.lineTo(18,16);
+			hueHandleBg.graphics.lineTo(-20,13);
+			hueHandleBg.graphics.endFill();
+			hueHandle.addChildAt(hueHandleBg,0);
+			
+			saturationHandle.gotoAndStop(3);
+			saturationHandleBg = new Shape();
+			saturationHandleBg.graphics.beginFill(0);
+			saturationHandleBg.graphics.moveTo(-18,-25);
+			saturationHandleBg.graphics.lineTo(20,-23);
+			saturationHandleBg.graphics.lineTo(18,16);
+			saturationHandleBg.graphics.lineTo(-20,13);
+			saturationHandleBg.graphics.endFill();
+			saturationHandle.addChildAt(saturationHandleBg,0);
+			
+			lightnessHandle.gotoAndStop(3);
+			lightnessHandleBg = new Shape();
+			
+			lightnessHandleBg.graphics.beginFill(0);
+			lightnessHandleBg.graphics.moveTo(-18,-25);
+			lightnessHandleBg.graphics.lineTo(20,-23);
+			lightnessHandleBg.graphics.lineTo(18,16);
+			lightnessHandleBg.graphics.lineTo(-20,13);
+			lightnessHandleBg.graphics.endFill();
+			lightnessHandle.addChildAt(lightnessHandleBg,0);
+			
 			
 			hueHandle.mouseEnabled = false;
 			saturationHandle.mouseEnabled = false;
@@ -106,7 +154,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 			activeSliderIndex = sliderHolder.mouseY / 59;
 			if ( activeSliderIndex > 2 || sliderHolder.mouseY % 59 > 41 ) return;
 			
-			sliderHolder.addEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
+			
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
 			stage.addEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
 			
 			
@@ -115,75 +164,98 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		protected function onSliderMouseMove( event:MouseEvent ):void
 		{
+			
 			var sx:Number = sliderHolder.mouseX;
-			if ( sliderHolder.mouseX < 0 ) sx = 0;
-			if ( sliderHolder.mouseX > 255 ) sx = 255;
+			if ( sliderHolder.mouseX < sliderPaddingLeft ) sx = sliderPaddingLeft;
+			if ( sliderHolder.mouseX > 255 - sliderPaddingRight) sx = 255 - sliderPaddingRight;
 			
 			switch ( activeSliderIndex )
 			{
 				case 0: //hue
-					hueHandle.x = sliderHolder.x + sx;
-				//setCurrentColor( hueMap.getPixel(sx,0), false );
-					var hsv:HSV = ColorConverter.UINTtoHSV(currentColor);
-					hsv.hue = 360 * sx / 255;
-					setCurrentColor( ColorConverter.HSVtoUINT(hsv), false );
+					hueHandle.x = sliderHolder.x  + sliderPaddingLeft + sx;
+					currentHSV.hue = 359 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
+					setCurrentColor( false );
 					break;
 				case 1: //sat
-					saturationHandle.x = sliderHolder.x+ sx;
-					setCurrentColor( satMap.getPixel(sx,0), false );
+					saturationHandle.x = sliderHolder.x+ sliderPaddingLeft +  sx;
+					var v:Array = saturationSliderValues[int(255 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight))];
+					currentHSV.saturation = v[0];
+					currentHSV.value = v[1];
+					setCurrentColor( false );
 					break;
 				case 2: //lightness
-					lightnessHandle.x = sliderHolder.x+sx;
-					//setCurrentColor( lightnessMap.getPixel(sx,0), false );
-					var hsv:HSV = ColorConverter.UINTtoHSV(currentColor);
-					hsv.value = 100 * sx / 255;
-					setCurrentColor( ColorConverter.HSVtoUINT(hsv), false );
+					lightnessHandle.x = sliderHolder.x+ sliderPaddingLeft + sx;
+					currentHSV.value = 100 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
+					
+					setCurrentColor( false );
 					break;
 			}
 		}
 		
 		protected function onSliderMouseUp( event:MouseEvent ):void
 		{
-			sliderHolder.removeEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
 			
 		}
 		
 		protected function onPaletteColorChanged(event:Event):void
 		{
-			setCurrentColor( colorPalette.selectedColor, true );
+			currentHSV = ColorConverter.UINTtoHSV(colorPalette.selectedColor);
+			setCurrentColor( true );
 		}
 		
 		protected function onMixerColorPicked( event:Event ):void {
-			setCurrentColor( colorMixer.currentColor, false );
+			currentHSV = ColorConverter.UINTtoHSV( colorMixer.currentColor);
+			setCurrentColor( false );
 		}
 		
-		protected function setCurrentColor( newColor:uint, fromPalette:Boolean):void
+		protected function setCurrentColor( fromPalette:Boolean):void
 		{
-			currentColor = newColor;
+			currentColor =  ColorConverter.HSVtoUINT(currentHSV);
 			var t:ColorTransform = currentColorSwatch.transform.colorTransform;
-			t.color = newColor;
+			t.color = currentColor;
 			currentColorSwatch.transform.colorTransform = t;
+			saturationHandleBg.transform.colorTransform = t;
+			/*
+			var hsv:HSV = currentHSV.clone();
+			hsv.value = 100;
+			hsv.saturation = 100;
+			t.color = ColorConverter.HSVtoUINT(hsv);
+			*/
+			hueHandleBg.transform.colorTransform = t;
+			/*
+			var p:int = currentHSV.value * 255 / 100;
+			t.color = p << 16 | p << 8 | p;
+			*/
+			lightnessHandleBg.transform.colorTransform = t;
+			
+			
 			if (!fromPalette )  colorPalette.selectedIndex = -1;
 			colorChangedSignal.dispatch();
-			colorMixer.currentColor = newColor;
+			colorMixer.currentColor = currentColor;
 			updateSaturationSlider();
-			var hsv:HSV = ColorConverter.UINTtoHSV(currentColor);
-			hueHandle.x = sliderHolder.x  + hsv.hue / 360 * 255;
-			saturationHandle.x = sliderHolder.x  +hsv.saturation / 100 * 255
-			lightnessHandle.x = sliderHolder.x  +hsv.value / 100 * 255;
+			
+			
+			hueHandle.x = sliderHolder.x + sliderPaddingLeft + currentHSV.hue / 360 * (255 -sliderPaddingLeft-sliderPaddingRight);
+			saturationHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.saturation / 100 * (255 -sliderPaddingLeft-sliderPaddingRight)
+			lightnessHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.value / 100 * (255 -sliderPaddingLeft-sliderPaddingRight);
+			
 		}
 		
 		protected function updateSaturationSlider():void
 		{
 			satMap.lock();
-			var hsv:HSV = ColorConverter.UINTtoHSV(currentColor);
-			
+			saturationSliderValues = [];
+			var hsv:HSV = currentHSV.clone();
+			var vdiff:Number = Math.max(20 - hsv.value,0) / 256;
 			var vd:Number = 1 / 256; 
 			var v:Number = 0;
 			for ( var i:int = 0; i < 256; i++ )
 			{
 				hsv.saturation = 100 * v;
+				hsv.value += vdiff;
+				saturationSliderValues.push([hsv.saturation,hsv.value]);
 				satMap.setPixel(i,0,ColorConverter.HSVtoUINT(hsv));
 				v+=vd;
 			}
