@@ -95,14 +95,14 @@ package net.psykosoft.psykopaint2.core.services
 			_connection.call("Main/getFollowedUsersPaintings", new Responder(onSuccess, onFail), sessionID, index, amount);
 		}
 
-		public function getMostLovedImages(index : int, amount : int, onSuccess : Function, onFail : Function) : void
+		public function getMostLovedImages(sessionID : String, index : int, amount : int, onSuccess : Function, onFail : Function) : void
 		{
-			_connection.call("Main/getMostFavoritedPaintings", new Responder(onSuccess, onFail), index, amount);
+			_connection.call("Main/getMostFavoritedPaintings", new Responder(onSuccess, onFail), sessionID, index, amount);
 		}
 
-		public function getMostRecentPaintings(index : int, amount : int, onSuccess : Function, onFail : Function) : void
+		public function getMostRecentPaintings(sessionID : String, index : int, amount : int, onSuccess : Function, onFail : Function) : void
 		{
-			_connection.call("Main/getLastPaintings", new Responder(onSuccess, onFail), index, amount);
+			_connection.call("Main/getLastPaintings", new Responder(onSuccess, onFail), sessionID, index, amount);
 		}
 
 		public function logIn(email : String, password : String, onSuccess : Function, onFail : Function) : void

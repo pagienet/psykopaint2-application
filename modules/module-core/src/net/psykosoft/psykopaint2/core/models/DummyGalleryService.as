@@ -1,7 +1,8 @@
 package net.psykosoft.psykopaint2.core.models
 {
+	import net.psykosoft.psykopaint2.core.signals.NotifyAddCommentSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFetchedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryServiceCallSucceededSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingSucceededSignal;
 
 	public class DummyGalleryService implements GalleryService
 	{
@@ -9,7 +10,10 @@ package net.psykosoft.psykopaint2.core.models
 		public var notifyGalleryImagesFetchedSignal : NotifyGalleryImagesFetchedSignal;
 
 		[Inject]
-		public var notifyPaintingCommentAddedSignal : NotifyGalleryServiceCallSucceededSignal;
+		public var notifyLovePaintingSucceededSignal : NotifyLovePaintingSucceededSignal;
+
+		[Inject]
+		public var notifyAddCommentSucceededSignal : NotifyAddCommentSucceededSignal;
 
 		public function DummyGalleryService()
 		{
@@ -56,6 +60,8 @@ package net.psykosoft.psykopaint2.core.models
 				item.numComments = Math.random()*1000;
 				item.numLikes = Math.random()*100000;
 				item.paintingMode = Math.random() < .5? PaintMode.COLOR_MODE : PaintMode.PHOTO_MODE;
+				item.isFavorited = Math.random() < .5;
+				item.userID = Math.random() * int.MAX_VALUE;
 				collection.images.push(item);
 			}
 
@@ -68,7 +74,13 @@ package net.psykosoft.psykopaint2.core.models
 
 		public function addComment(paintingID : int, text : String) : void
 		{
-			notifyPaintingCommentAddedSignal.dispatch();
+			notifyAddCommentSucceededSignal.dispatch();
+		}
+
+
+		public function favorite(paintingID : int) : void
+		{
+			notifyLovePaintingSucceededSignal.dispatch();
 		}
 	}
 }

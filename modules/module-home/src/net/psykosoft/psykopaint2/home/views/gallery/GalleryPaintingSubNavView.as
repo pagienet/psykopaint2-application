@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 

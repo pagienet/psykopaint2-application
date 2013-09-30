@@ -2,10 +2,12 @@ package net.psykosoft.psykopaint2.core.models
 {
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
+	import net.psykosoft.psykopaint2.core.signals.NotifyAddCommentFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyAddCommentSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryImagesFetchedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryServiceCallSucceededSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryServiceCallFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingSucceededSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingFailedSignal;
 
 	public class AMFGalleryService implements GalleryService
 	{
@@ -22,10 +24,16 @@ package net.psykosoft.psykopaint2.core.models
 		public var notifyGalleryImagesFailedSignal : NotifyGalleryImagesFailedSignal;
 
 		[Inject]
-		public var notifyGalleryServiceCallSucceededSignal : NotifyGalleryServiceCallSucceededSignal;
+		public var notifyLovePaintingSucceededSignal : NotifyLovePaintingSucceededSignal;
 
 		[Inject]
-		public var notifyGalleryServiceCallFailedSignal : NotifyGalleryServiceCallFailedSignal;
+		public var notifyLovePaintingFailedSignal : NotifyLovePaintingFailedSignal;
+
+		[Inject]
+		public var notifyAddCommentSucceededSignal : NotifyAddCommentSucceededSignal;
+
+		[Inject]
+		public var notifyAddCommentFailedSignal : NotifyAddCommentFailedSignal;
 
 		private var _index : int;
 
@@ -43,18 +51,14 @@ package net.psykosoft.psykopaint2.core.models
 					amfBridge.getFollowedUserImages(userProxy.sessionID, index, amount, onFollowedUserImagesSuccess, onFailed);
 					break;
 				case GalleryType.MOST_LOVED:
-					amfBridge.getMostLovedImages(index, amount, onMostLovedSuccess, onFailed);
+					amfBridge.getMostLovedImages(userProxy.sessionID, index, amount, onMostLovedSuccess, onFailed);
 					break;
 				case GalleryType.MOST_RECENT:
-					amfBridge.getMostRecentPaintings(index, amount, onMostRecentSuccess, onFailed);
+					amfBridge.getMostRecentPaintings(userProxy.sessionID, index, amount, onMostRecentSuccess, onFailed);
 					break;
 			}
 
 			_index = index;
-		}
-
-		public function fetchPainting(paintingID : int) : void
-		{
 		}
 
 		private function onUserImagesSuccess(data : Object) : void
@@ -106,6 +110,8 @@ package net.psykosoft.psykopaint2.core.models
 				vo.userName = obj["firstname"] + " " + obj["lastname"];
 				vo.numLikes = obj["num_favorite"];
 				vo.numComments = obj["num_comments"];
+				vo.userID = obj["user_id"];
+				vo.isFavorited = obj.hasOwnProperty("is_favorited")? obj["is_favorited"] : false;
 				vo.paintingMode = obj["is_photo_painting"] == 1? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
 				collection.images.push(vo);
 			}
@@ -125,17 +131,27 @@ package net.psykosoft.psykopaint2.core.models
 
 		public function favorite(paintingID : int) : void
 		{
-			amfBridge.favoritePainting(userProxy.sessionID, paintingID, onAddCommentSuccess, onAddCommentFailed);
+			amfBridge.favoritePainting(userProxy.sessionID, paintingID, onLovePaintingSuccess, onLovePaintingFailed);
 		}
 
 		private function onAddCommentSuccess() : void
 		{
-			notifyGalleryServiceCallSucceededSignal.dispatch();
+			notifyAddCommentSucceededSignal.dispatch();
 		}
 
 		private function onAddCommentFailed(statusCode : int) : void
 		{
-			notifyGalleryServiceCallFailedSignal.dispatch(statusCode);
+			notifyAddCommentFailedSignal.dispatch(statusCode);
+		}
+
+		private function onLovePaintingSuccess() : void
+		{
+			notifyLovePaintingSucceededSignal.dispatch();
+		}
+
+		private function onLovePaintingFailed(statusCode : int) : void
+		{
+			notifyLovePaintingFailedSignal.dispatch(statusCode);
 		}
 	}
 }

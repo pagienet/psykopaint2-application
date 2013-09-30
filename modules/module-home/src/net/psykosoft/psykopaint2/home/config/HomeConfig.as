@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.commands.LoadSurfacePreviewCommand;
 	import net.psykosoft.psykopaint2.home.commands.load.SetUpHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.commands.unload.DestroyHomeModuleCommand;
+	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraFlipRequest;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraSnapshotRequest;
@@ -89,6 +90,7 @@ package net.psykosoft.psykopaint2.home.config
 
 		private function mapModels():void {
 			_injector.map( WallpaperModel ).asSingleton();
+			_injector.map( ActiveGalleryPaintingModel ).asSingleton();
 		}
 
 		// -----------------------

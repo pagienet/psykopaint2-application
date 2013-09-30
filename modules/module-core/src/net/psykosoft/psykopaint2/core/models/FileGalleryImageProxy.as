@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.core.models
 		private var _onComplete : Function;
 		private var _onError : Function;
 
+
 		public function FileGalleryImageProxy()
 		{
 		}
