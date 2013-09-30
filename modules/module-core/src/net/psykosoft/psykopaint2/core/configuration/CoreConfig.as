@@ -198,8 +198,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map(RetrievePaintingsDataProcessModel).asSingleton();
 			// services
 			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);
-			_injector.map(GalleryService).toSingleton(DummyGalleryService);
-//			_injector.map(GalleryService).toSingleton(AMFGalleryService);
+//			_injector.map(GalleryService).toSingleton(DummyGalleryService);
+			_injector.map(GalleryService).toSingleton(AMFGalleryService);
 
 		}
 

@@ -61,6 +61,7 @@ package net.psykosoft.psykopaint2.core.models
 				item.numLikes = Math.random()*100000;
 				item.paintingMode = Math.random() < .5? PaintMode.COLOR_MODE : PaintMode.PHOTO_MODE;
 				item.isFavorited = Math.random() < .5;
+				item.userID = Math.random() * int.MAX_VALUE;
 				collection.images.push(item);
 			}
 

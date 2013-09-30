@@ -110,6 +110,7 @@ package net.psykosoft.psykopaint2.core.models
 				vo.userName = obj["firstname"] + " " + obj["lastname"];
 				vo.numLikes = obj["num_favorite"];
 				vo.numComments = obj["num_comments"];
+				vo.userID = obj["user_id"];
 				vo.isFavorited = obj.hasOwnProperty("is_favorited")? obj["is_favorited"] : false;
 				vo.paintingMode = obj["is_photo_painting"] == 1? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
 				collection.images.push(vo);

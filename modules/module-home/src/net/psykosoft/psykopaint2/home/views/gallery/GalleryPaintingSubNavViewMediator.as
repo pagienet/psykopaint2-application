@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
+	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLovePaintingSignal;
@@ -32,6 +33,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		[Inject]
 		public var activeGalleryPaintingModel : ActiveGalleryPaintingModel;
 
+		[Inject]
+		public var loggedInUser : LoggedInUserProxy;
+
 
 		public function GalleryPaintingSubNavViewMediator()
 		{
@@ -43,8 +47,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			// Init.
 			registerView(view);
 			super.initialize();
-			if (activeGalleryPaintingModel.activePainting)
+			if (activeGalleryPaintingModel.activePainting) {
 				updateLoveButton();
+				updateEditButton();
+			}
 			activeGalleryPaintingModel.onChange.add(onActivePaintingChanged);
 		}
 
@@ -57,11 +63,17 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onActivePaintingChanged() : void
 		{
 			updateLoveButton();
+			updateEditButton();
+		}
+
+		private function updateEditButton() : void
+		{
+			view.enableButtonWithId(GalleryPaintingSubNavView.ID_EDIT, loggedInUser.isLoggedIn() && loggedInUser.userID == activeGalleryPaintingModel.activePainting.userID);
 		}
 
 		private function updateLoveButton() : void
 		{
-			view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, !activeGalleryPaintingModel.activePainting.isFavorited);
+			view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, !activeGalleryPaintingModel.activePainting.isFavorited && loggedInUser.isLoggedIn() && activeGalleryPaintingModel.activePainting.userID != loggedInUser.userID);
 		}
 
 		override protected function onButtonClicked(id : String) : void
