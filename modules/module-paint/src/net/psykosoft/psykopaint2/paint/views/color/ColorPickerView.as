@@ -186,6 +186,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 				case 2: //lightness
 					lightnessHandle.x = sliderHolder.x+ sliderPaddingLeft + sx;
 					currentHSV.value = 100 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
+					
 					setCurrentColor( false );
 					break;
 			}
@@ -237,6 +238,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			hueHandle.x = sliderHolder.x + sliderPaddingLeft + currentHSV.hue / 360 * (255 -sliderPaddingLeft-sliderPaddingRight);
 			saturationHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.saturation / 100 * (255 -sliderPaddingLeft-sliderPaddingRight)
 			lightnessHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.value / 100 * (255 -sliderPaddingLeft-sliderPaddingRight);
+			
 		}
 		
 		protected function updateSaturationSlider():void
