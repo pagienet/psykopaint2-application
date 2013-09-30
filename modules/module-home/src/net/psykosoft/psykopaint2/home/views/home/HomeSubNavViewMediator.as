@@ -10,8 +10,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var view:HomeSubNavView;
 
-		[Inject]
-		public var requestShowPopUpSignal:RequestShowPopUpSignal;
+//		[Inject]
+//		public var requestShowPopUpSignal:RequestShowPopUpSignal;
 
 		override public function initialize():void {
 
@@ -19,7 +19,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			registerView( view );
 			super.initialize();
 
-			requestShowPopUpSignal.dispatch( PopUpType.LOGIN );
+			// Uncomment for faster login views dev.
+//			requestShowPopUpSignal.dispatch( PopUpType.LOGIN );
 		}
 	}
 }

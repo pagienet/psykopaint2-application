@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.BitmapDataChannel;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.StageQuality;
@@ -16,7 +17,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 //	import net.psykosoft.psykopaint2.tdsi.ColorMixer;
@@ -104,7 +105,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 			_displacementMap = new TrackedBitmapData(mixerWidth,mixerHeight,false,0);
 			
-			_displacementFilter = new DisplacementMapFilter(_displacementMap,origin,1,2,128,128, DisplacementMapFilterMode.COLOR,0,0 );
+			_displacementFilter = new DisplacementMapFilter(_displacementMap,origin, BitmapDataChannel.BLUE, BitmapDataChannel.GREEN,256,256, DisplacementMapFilterMode.COLOR,0,0 );
 			
 			
 			shp.graphics.beginFill(0x808080);
@@ -128,7 +129,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 			
 			_turbulenceMap = _maskMap.clone();
-			_turbulenceMap.noise(Math.random() * 0xffffff,0,128,3,false);
+			_turbulenceMap.noise(Math.random() * 0xffffff,127,129,3,false);
 			_turbulenceMap.applyFilter( _turbulenceMap, _turbulenceMap.rect, origin, new BlurFilter(2,2,2));
 			
 			
@@ -186,25 +187,30 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			if ( !(mapDisplay.mouseX > -1 && mapDisplay.mouseX < mixerWidth && mapDisplay.mouseY > -1 && mapDisplay.mouseY < mixerHeight)) return;
 			
 			_displayMap.lock();
-			var dx:int = (mapDisplay.mouseX - _lastMouseX);
-			var dy:int = (mapDisplay.mouseY - _lastMouseY);
+			var dx:int = (mapDisplay.mouseX - _lastMouseX) * 0.25;
+			var dy:int = (mapDisplay.mouseY - _lastMouseY) * 0.25;
 			
-			
+			_displacementMap.fillRect(_displacementMap.rect,((128 - dx)) | ((128 - dy)<<8));
 			//mixer.update( mapDisplay.mouseX, mapDisplay.mouseY, dx, dy, 20, 0xff000000 );
 			
-			
-			copyRect.x = Math.random() * (_turbulenceMap.width - _displacementMap.width);
-			copyRect.y = Math.random() * (_turbulenceMap.height - _displacementMap.height);
-			
-			_displacementMap.copyPixels(_turbulenceMap, copyRect,origin);
-			
 			drawMatrix.a=drawMatrix.d = 1;
-			drawMatrix.tx = mapDisplay.mouseX - _maskCenterX ;
-			drawMatrix.ty = mapDisplay.mouseY - _maskCenterY;
-			_displacementMap.draw( _maskMap, drawMatrix );
+			drawMatrix.tx = -Math.random() * (_turbulenceMap.width - _displacementMap.width);
+			drawMatrix.ty = - Math.random() * (_turbulenceMap.height - _displacementMap.height);
+			//copyRect.x =
+			//copyRect.y = 
 			
-			_displacementFilter.scaleX = 2 * dx;
-			_displacementFilter.scaleY = 2 * dy;
+			//_displacementMap.copyPixels(_turbulenceMap, copyRect,origin);
+			_displacementMap.draw( _turbulenceMap,drawMatrix,null,"overlay" );
+			
+			
+			//drawMatrix.tx = mapDisplay.mouseX - _maskCenterX ;
+			//drawMatrix.ty = mapDisplay.mouseY - _maskCenterY;
+			//_displacementMap.draw( _maskMap, drawMatrix );
+			
+		//	_displacementFilter.scaleX = 2 * dx;
+		//	_displacementFilter.scaleY = 2 * dy;
+			_displacementFilter.scaleX = 256;
+			_displacementFilter.scaleY = 256;
 			_displayMap.applyFilter(_displayMap, mixerRect, origin,_displacementFilter );
 			//_displayMap.draw(_displayMap );
 			
@@ -225,9 +231,14 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 		}
 
-		public function get pickedColor():int
+		public function get currentColor():int
 		{
 			return sampleColor;
+		}
+		
+		public function set currentColor(value:int):void
+		{
+			 sampleColor = currentColor;
 		}
 		
 
