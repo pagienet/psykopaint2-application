@@ -14,7 +14,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
-	import net.psykosoft.psykopaint2.core.views.components.colormixer.FluidColorMixer;
 	
 	import org.osflash.signals.Signal;
 	
@@ -34,9 +33,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var colorChangedSignal:Signal;
 		public var currentColor:uint = 0;
 		public var currentHSV:HSV;
-		//private var colorMixer:Colormixer;
-		private var colorMixer:FluidColorMixer;
-		
+		private var colorMixer:Colormixer;
+		//private var colorMixer:FluidColorMixer;
+		//private var colorMixer:ColorMixerTDSI;
 		private var hueMap:BitmapData;
 		private var satMap:BitmapData;
 		private var lightnessMap:BitmapData;
@@ -67,14 +66,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 		override protected function onSetup():void 
 		{
 			colorPalette.addEventListener( Event.CHANGE, onPaletteColorChanged );
-			//colorMixer = new Colormixer( colorPalette.currentPalette );
-			colorMixer = new FluidColorMixer();
+			colorMixer = new Colormixer( colorPalette.currentPalette );
+			//colorMixer = new FluidColorMixer();
 			//colorMixer = new Colormixer(colorPalette.currentPalette);
+			//colorMixer = new ColorMixerTDSI();
 			colorMixer.y = 595;
 			colorMixer.x = 3;
 			colorMixer.addEventListener( Event.CHANGE, onMixerColorPicked );
 			colorMixer.blendMode = "multiply";
 			addChildAt(colorMixer,getChildIndex(colorPalette));
+			
+			var mixerMap:BitmapData = new BitmapData(270,190,false,0);
 			
 			hueMap = new BitmapData(256,1,false,0);
 			satMap = new BitmapData(256,1,false,0);
@@ -237,7 +239,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			updateSaturationSlider();
 			
 			
-			hueHandle.x = sliderHolder.x + sliderPaddingLeft + currentHSV.hue / 360 * (255 -sliderPaddingLeft-sliderPaddingRight);
+			hueHandle.x = sliderHolder.x + sliderPaddingLeft + (isNaN( currentHSV.hue ) ? 0 : currentHSV.hue) / 360 * (255 -sliderPaddingLeft-sliderPaddingRight);
 			saturationHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.saturation / 100 * (255 -sliderPaddingLeft-sliderPaddingRight)
 			lightnessHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.value / 100 * (255 -sliderPaddingLeft-sliderPaddingRight);
 			
