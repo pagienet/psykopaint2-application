@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.home.views.base
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryBrowseSubNavView;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryPaintingSubNavView;
+	import net.psykosoft.psykopaint2.home.views.gallery.GalleryShareSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavView;
@@ -45,6 +46,7 @@ package net.psykosoft.psykopaint2.home.views.base
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK_GALLERY, GalleryBrowseSubNavView );
 //			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_LOADING, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_PAINTING, GalleryPaintingSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_SHARE, GalleryShareSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.CAPTURE_IMAGE, CaptureImageSubNavView );
 
 			name = "HomeRootView";

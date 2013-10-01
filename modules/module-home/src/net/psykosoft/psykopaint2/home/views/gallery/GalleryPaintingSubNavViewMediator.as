@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLovePaintingSignal;
@@ -47,10 +48,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			// Init.
 			registerView(view);
 			super.initialize();
-			if (activeGalleryPaintingModel.activePainting) {
+
+			if (activeGalleryPaintingModel.activePainting)
 				updateLoveButton();
-				updateEditButton();
-			}
+
 			activeGalleryPaintingModel.onChange.add(onActivePaintingChanged);
 		}
 
@@ -63,12 +64,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onActivePaintingChanged() : void
 		{
 			updateLoveButton();
-			updateEditButton();
-		}
-
-		private function updateEditButton() : void
-		{
-			view.enableButtonWithId(GalleryPaintingSubNavView.ID_EDIT, loggedInUser.isLoggedIn() && loggedInUser.userID == activeGalleryPaintingModel.activePainting.userID);
 		}
 
 		private function updateLoveButton() : void
@@ -80,17 +75,35 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			switch (id) {
 				case GalleryBrowseSubNavView.ID_BACK:
-					requestHomePanningToggleSignal.dispatch(-1);
-					// TODO:Should go back to previously active book state
-					requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
+					goBack();
 					break;
 				case GalleryPaintingSubNavView.ID_LOVE:
-					view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, false);
-					notifyLovePaintingFailedSignal.add(onLovePaintingFailed);
-					notifyLovePaintingSucceededSignal.add(onLovePaintingSucceeded);
-					requestLovePaintingSignal.dispatch(activeGalleryPaintingModel.activePainting.id);
+					lovePainting();
+					break;
+				case GalleryPaintingSubNavView.ID_SHARE:
+					sharePainting();
 					break;
 			}
+		}
+
+		private function sharePainting() : void
+		{
+			requestNavigationStateChange(NavigationStateType.GALLERY_SHARE);
+		}
+
+		private function goBack() : void
+		{
+			requestHomePanningToggleSignal.dispatch(-1);
+			// TODO:Should go back to previously active book state
+			requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
+		}
+
+		private function lovePainting() : void
+		{
+			view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, false);
+			notifyLovePaintingFailedSignal.add(onLovePaintingFailed);
+			notifyLovePaintingSucceededSignal.add(onLovePaintingSucceeded);
+			requestLovePaintingSignal.dispatch(activeGalleryPaintingModel.activePainting.id);
 		}
 
 		private function onLovePaintingSucceeded() : void

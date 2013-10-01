@@ -40,7 +40,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _previousTime:Number;
 		
 		private var _mouseBooster:Number = 1;
-		private var _backgroundTexture : RefCountedTexture;
 
 		public var imageSelectedSignal:Signal;
 		public var galleryImageSelectedSignal:Signal;
@@ -79,9 +78,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			_book.bookClearedSignal.remove(dispatchBookHasClosed);
 			_book.dispose();
 			_book = null;
-
-			if (_backgroundTexture) _backgroundTexture.dispose();
-			_backgroundTexture = null;
 
 			_view3d.dispose();
 			removeChild( _view3d );
@@ -207,24 +203,8 @@ package net.psykosoft.psykopaint2.book.views.book
 			// TODO: Remove this once home view stops rendering
 			_stage3dProxy.context3D.clear(0, 0, 0, 1, 1, 0, Context3DClearMask.DEPTH);
 
-			if (_backgroundTexture)
-				renderBackground();
-
 			_view3d.render(target);
 
-		}
-
-		private function renderBackground() : void
-		{
-			var context3D : Context3D = _stage3dProxy.context3D;
-			context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
-
-			var widthRatio : Number = CoreSettings.STAGE_WIDTH / TextureUtils.getBestPowerOf2(CoreSettings.STAGE_WIDTH);
-			var heightRatio : Number = CoreSettings.STAGE_HEIGHT / TextureUtils.getBestPowerOf2(CoreSettings.STAGE_HEIGHT);
-			CopySubTexture.copy(_backgroundTexture.texture, new Rectangle(0, 0, widthRatio, heightRatio), new Rectangle(0, 0, 1, 1), context3D);
-			//CopyTexture.copy(_background.texture, context3D, widthRatio, heightRatio);
-			context3D.setDepthTest(true, Context3DCompareMode.LESS);
 		}
 
 		public function dispatchSelectedImage(selectedImage:BitmapData):void
@@ -240,16 +220,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		public function dispatchBookHasClosed():void
 		{
 			bookHasClosedSignal.dispatch();
-		}
-
-		public function set backgroundTexture(backgroundTexture : RefCountedTexture) : void
-		{
-			_backgroundTexture = backgroundTexture;
-		}
-
-		public function get backgroundTexture() : RefCountedTexture
-		{
-			return _backgroundTexture;
 		}
 
 		public function setSourceImages(collection : SourceImageCollection) : void

@@ -2,6 +2,10 @@ package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
 
+	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
+
+	import net.psykosoft.psykopaint2.app.signals.RequestCreateCropBackgroundSignal;
+
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
@@ -37,8 +41,14 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var notifyAnimateBookOutCompleteSignal : NotifyAnimateBookOutCompleteSignal;
 
-		private var _background : RefCountedTexture;
+		[Inject]
+		public var notifyBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
+
+		[Inject]
+		public var requestCreateCropBackgroundSignal : RequestCreateCropBackgroundSignal;
+
 		private var _bitmapData : BitmapData;
+		private var _background : RefCountedTexture;
 
 		public function TransitionBookToCropState()
 		{
@@ -52,7 +62,20 @@ package net.psykosoft.psykopaint2.app.states
 		override ns_state_machine function activate(data : Object = null) : void
 		{
 			_bitmapData = BitmapData(data.bitmapData);
-			_background = RefCountedTexture(data.background);
+			notifyAnimateBookOutCompleteSignal.addOnce(onAnimateOutComplete);
+			requestAnimateBookOutSignal.dispatch();
+		}
+
+		private function onAnimateOutComplete() : void
+		{
+			notifyBackgroundSetSignal.addOnce(onBackgroundSet);
+			requestCreateCropBackgroundSignal.dispatch();
+		}
+
+		private function onBackgroundSet(background : RefCountedTexture) : void
+		{
+			if (_background) _background.dispose();
+			_background = background.newReference();
 
 			notifyCropModuleSetUpSignal.addOnce(onCropModuleSetUp);
 			requestSetupCropModuleSignal.dispatch(_bitmapData);
@@ -60,20 +83,13 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onCropModuleSetUp() : void
 		{
-			requestSetCropBackgroundSignal.dispatch(_background.newReference());
-			notifyAnimateBookOutCompleteSignal.addOnce(onAnimateOutComplete);
-			requestAnimateBookOutSignal.dispatch();
-		}
-
-		private function onAnimateOutComplete() : void
-		{
 			stateMachine.setActiveState(cropState, {bitmapData: _bitmapData, background: _background.newReference()});
 		}
 
 		override ns_state_machine function deactivate() : void
 		{
 			requestDestroyBookModuleSignal.dispatch();
-			_background.dispose();
+			if (_background) _background.dispose();
 			_background = null;
 			_bitmapData = null;
 		}

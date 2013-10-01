@@ -23,7 +23,6 @@ package net.psykosoft.psykopaint2.book.config
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestFetchGalleryImagesSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestFetchSourceImagesSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootViewMediator;
@@ -85,7 +84,6 @@ package net.psykosoft.psykopaint2.book.config
 
 		private function mapSingletons() : void
 		{
-			// TODO: Provide actual communicating services to replace the dummy ones
 			_injector.map(CameraRollService).toSingleton(ANECameraRollService);
 			_injector.map(SampleImageService).toSingleton(XMLSampleImageService);
 		}
@@ -99,7 +97,6 @@ package net.psykosoft.psykopaint2.book.config
 			_injector.map(NotifyBookModuleSetUpSignal).asSingleton();
 			_injector.map(NotifyBookModuleDestroyedSignal).asSingleton();
 			_injector.map(RequestBookRootViewRemovalSignal).asSingleton();
-			_injector.map(RequestSetBookBackgroundSignal).asSingleton();
 			_injector.map(NotifySourceImageSelectedFromBookSignal).asSingleton();
 			_injector.map(RequestAnimateBookOutSignal).asSingleton();
 			_injector.map(NotifyAnimateBookOutCompleteSignal).asSingleton();

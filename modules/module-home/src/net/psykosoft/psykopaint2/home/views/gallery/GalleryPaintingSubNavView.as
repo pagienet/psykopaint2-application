@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
@@ -11,7 +10,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public static const ID_LOVE : String = "Love";
 		public static const ID_COMMENT : String = "Comment";
 		public static const ID_SHARE : String = "Share";
-		public static const ID_EDIT : String = "Edit";
 
 		public function GalleryPaintingSubNavView()
 		{
@@ -30,7 +28,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			createCenterButton(ID_LOVE, ID_LOVE, ButtonIconType.LOVE);
 			createCenterButton(ID_COMMENT, ID_COMMENT, ButtonIconType.COMMENT);
 			createCenterButton(ID_SHARE, ID_SHARE, ButtonIconType.SHARE);
-			createCenterButton(ID_EDIT, ID_EDIT, ButtonIconType.EDIT);
 			validateCenterButtons();
 		}
 	}
