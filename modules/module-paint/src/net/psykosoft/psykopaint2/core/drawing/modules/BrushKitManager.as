@@ -242,10 +242,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_active = true;
 			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
+			if ( mode == PaintMode.COLOR_MODE )
+			{
+				colorPickerView = new ColorPickerView();
 			
-			colorPickerView = new ColorPickerView();
-			
-			requestAddViewToMainLayerSignal.dispatch( colorPickerView, ViewLayerOrdering.IN_FRONT_OF_NAVIGATION );
+				requestAddViewToMainLayerSignal.dispatch( colorPickerView, ViewLayerOrdering.IN_FRONT_OF_NAVIGATION );
+			}
 		}
 
 		public function deactivate() : void
