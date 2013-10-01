@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.core.models
 {
 
+	import flash.utils.setTimeout;
+
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
@@ -49,8 +51,11 @@ package net.psykosoft.psykopaint2.core.models
 			_active = true;
 			_banned = false;
 
-			notifyUserLoggedInSignal.dispatch();
-//			notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CALL_STATUS_AUTH_ERROR );
+			setTimeout( function():void {
+				// Pick one.
+				notifyUserLoggedInSignal.dispatch();
+//				notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CALL_STATUS_AUTH_ERROR );
+			}, 2000 );
 		}
 
 		public function registerAndLogIn(userRegisterationVO : UserRegistrationVO) : void
@@ -65,8 +70,11 @@ package net.psykosoft.psykopaint2.core.models
 			_numFollowers = 0;
 			_active = true;
 			_banned = false;
-			notifyUserRegisteredSignal.dispatch();
-			notifyUserLoggedInSignal.dispatch();
+
+			setTimeout( function():void {
+				notifyUserRegisteredSignal.dispatch();
+				notifyUserLoggedInSignal.dispatch();
+			}, 3000 );
 		}
 
 		public function get userID() : int

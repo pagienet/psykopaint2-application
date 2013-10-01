@@ -7,6 +7,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public static const EMAIL_INVALID:String = "Oups. This email isn't valid buddy.";
 		public static const PASSWORD_REMINDER:String = "We just sent you a password reminder to your email address. Check it out";
 		public static const NO_EMAIL:String = "Hep. Why don't you try to put an email in there?<br>I think that will work better";
+		public static const NO_FIELD:String = "You need to put something here lad.";
+		public static const NO_PHOTO:String = "It'd be nice to have you're pic!";
 		public static const PASSWORD_6_CHARS_MIN:String = "To be safe your Password should be 6 characters minimum";
 		public static const ALREADY_REGISTERED:String = "There's already an account registered with this address buddy";
 		public static const NOT_REGISTERED:String = "Your email is not registered yet. You might check the syntax or click register button";

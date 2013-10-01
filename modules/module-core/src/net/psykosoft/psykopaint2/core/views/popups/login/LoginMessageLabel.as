@@ -11,10 +11,14 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		public function LoginMessageLabel() {
 			super();
+			tf.selectable = tf.mouseEnabled = false;
+			tf.multiline = true;
 		}
 
 		public function set labelText( htmlText:String ):void {
 			tf.htmlText = htmlText;
+			tf.width = tf.textWidth + 10;
+			tf.height = 1.25 * tf.textHeight;
 		}
 	}
 }

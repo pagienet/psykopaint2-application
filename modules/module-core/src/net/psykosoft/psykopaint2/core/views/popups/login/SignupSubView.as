@@ -3,10 +3,12 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.base.utils.misc.MathUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import net.psykosoft.psykopaint2.core.views.components.button.FoldButton;
@@ -26,12 +28,14 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public var signupBtn:FoldButton;
 		public var photoHit:Sprite;
 		public var photoHolder:Sprite;
+		public var photoContour:MovieClip;
 
 		public var viewWantsToRegisterSignal:Signal;
 
 		private var _photoUtil:DeviceCameraUtil;
 		private var _photoBitmap:Bitmap;
 		private var _photoRetrieved:Boolean;
+		private var _satelliteMessages:Vector.<LoginMessageLabel>;
 
 		public function SignupSubView() {
 			super();
@@ -51,8 +55,10 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			lastNameTf.enterPressedSignal.add( onLastNameInputEnterPressed );
 
 			photoHit.alpha = 0;
+			photoContour.visible = false;
 
 			_photoBitmap = new Bitmap();
+			_photoBitmap.visible = false;
 			_photoBitmap.bitmapData = new BitmapData( 115, 115, false, 0xFF0000 );
 			photoHolder.addChild( _photoBitmap );
 
@@ -86,6 +92,28 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// Interface.
 		// -----------------------
 
+		public function displaySatelliteMessage( targetSource:Sprite, msg:String, offsetX:Number = 0, offsetY:Number = 0 ):void {
+			var label:LoginMessageLabel = new LoginMessageLabel();
+			label.labelText = msg;
+			label.x = targetSource.x + targetSource.width / 2 + 5 + offsetX;
+			label.y = targetSource.y + MathUtil.rand( -10, 10 ) + offsetY;
+			label.rotation = MathUtil.rand( -10, 10 );
+			addChild( label );
+			if( !_satelliteMessages ) _satelliteMessages = new Vector.<LoginMessageLabel>();
+			_satelliteMessages.push( label );
+		}
+
+		public function clearAllSatelliteMessages():void {
+			if( !_satelliteMessages ) return;
+			var label:LoginMessageLabel;
+			var length:uint = _satelliteMessages.length;
+			for(var i:uint; i < length; ++i) {
+				label = _satelliteMessages[ i ];
+				removeChild( label );
+			}
+			_satelliteMessages = null;
+		}
+
 		public function rejectEmail():void {
 			emailTf.showRedHighlight();
 		}
@@ -99,6 +127,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 
 		private function register():void {
+			photoContour.visible = false;
+			clearAllSatelliteMessages();
 			if( !validateEmailFormat() ) return;
 			if( !validatePasswordFormat() ) return;
 			if( !validateFirstNameFormat() ) return;
@@ -109,29 +139,44 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private function validateEmailFormat():Boolean {
 			var valid:int = PsykoInputValidationUtil.validateEmailFormat( emailTf );
-//			if( valid == 1 ) displayMessage( LoginCopy.NO_EMAIL );
-//			if( valid == 2 ) displayMessage( LoginCopy.EMAIL_INVALID );
+			if( valid == 1 ) displaySatelliteMessage( emailTf, LoginCopy.NO_EMAIL );
+			if( valid == 2 ) displaySatelliteMessage( emailTf, LoginCopy.EMAIL_INVALID );
 			return valid == 0;
 		}
 
 		private function validatePasswordFormat():Boolean {
 			var valid:int = PsykoInputValidationUtil.validatePasswordFormat( passwordTf );
-//			if( valid == 1 ) displayMessage( LoginCopy.NO_PASSWORD );
+			if( valid == 1 ) displaySatelliteMessage( passwordTf, LoginCopy.NO_PASSWORD );
 			return valid == 0;
 		}
 
 		private function validateFirstNameFormat():Boolean {
 			var valid:int = PsykoInputValidationUtil.validateNameFormat( firstNameTf );
+			if( valid == 1 ) displaySatelliteMessage( firstNameTf, LoginCopy.NO_FIELD );
 			return valid == 0;
 		}
 
 		private function validateLastNameFormat():Boolean {
 			var valid:int = PsykoInputValidationUtil.validateNameFormat( lastNameTf );
+			if( valid == 1 ) displaySatelliteMessage( lastNameTf, LoginCopy.NO_FIELD );
 			return valid == 0;
 		}
 
 		private function validatePhoto():Boolean {
-			if( !CoreSettings.RUNNING_ON_iPAD ) return true;
+			if( !CoreSettings.RUNNING_ON_iPAD ) {
+				photoContour.visible = true;
+				photoContour.gotoAndStop( 1 );
+				return true;
+			}
+			if( !_photoRetrieved ) {
+				photoContour.visible = true;
+				photoContour.gotoAndStop( 2 );
+				displaySatelliteMessage( photoHit, LoginCopy.NO_PHOTO, photoHit.width / 2 + 5, photoHit.height / 2 );
+			}
+			else {
+				photoContour.visible = true;
+				photoContour.gotoAndStop( 1 );
+			}
 			return _photoRetrieved;
 		}
 
@@ -156,6 +201,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			_photoBitmap.y = 115 / 2 - _photoBitmap.height / 2;
 			_photoUtil.dispose();
 			_photoRetrieved = true;
+			_photoBitmap.visible = true;
+			photoContour.visible = false;
 		}
 
 		// -----------------------

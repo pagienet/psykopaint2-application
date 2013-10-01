@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.core.views.components.button
 {
 
 	import com.greensock.TweenLite;
-	import com.greensock.easing.Strong;
 
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -15,6 +14,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		// Declared in Flash.
 		public var bg:MovieClip;
 		public var tf:TextField;
+		public var spinner:Sprite;
 
 		public var foldParameter:Number;
 
@@ -31,6 +31,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 			_defaultTfY = tf.y;
 
+			spinner.visible = false;
+
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
@@ -41,6 +43,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			if( hasEventListener( Event.ADDED_TO_STAGE ) )	removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			if( hasEventListener( MouseEvent.MOUSE_DOWN ) )	removeEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			if( stage && stage.hasEventListener( MouseEvent.MOUSE_UP ) ) stage.removeEventListener( MouseEvent.MOUSE_UP, onMouseUp );
+
+			dontSpin();
 		}
 
 		public function set labelText( value:String ):void {
@@ -51,20 +55,43 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		}
 
 		// -----------------------
+		// Spin animation.
+		// -----------------------
+
+		public function spin():void {
+			TweenLite.killTweensOf( this );
+			spinner.visible = true;
+			tf.visible = false;
+			addEventListener( Event.ENTER_FRAME, onEnterFrame );
+			bg.gotoAndStop( 4 );
+		}
+
+		public function dontSpin():void {
+			TweenLite.killTweensOf( this );
+			bg.gotoAndStop( 1 );
+			spinner.visible = false;
+			tf.visible = true;
+			if( hasEventListener( Event.ENTER_FRAME ) ) removeEventListener( Event.ENTER_FRAME, onEnterFrame );
+		}
+
+		// -----------------------
 		// Fold animation.
 		// -----------------------
 
 		private function foldDown():void {
+			if( bg.currentFrame == 4 ) return;
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 0.1, { foldParameter: 0, onUpdate: onFoldUpdate } );
 		}
 
 		private function foldUp():void {
+			if( bg.currentFrame == 4 ) return;
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 0.05, { foldParameter: 1, onUpdate: onFoldUpdate } );
 		}
 
 		private function onFoldUpdate():void {
+			if( bg.currentFrame == 4 ) return;
 			if( foldParameter == 1 ) {
 				bg.gotoAndStop( 1 );
 				tf.y = _defaultTfY;
@@ -82,6 +109,10 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		// -----------------------
 		// Event handlers.
 		// -----------------------
+
+		private function onEnterFrame( event:Event ):void {
+			spinner.rotation += 2;
+		}
 
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );

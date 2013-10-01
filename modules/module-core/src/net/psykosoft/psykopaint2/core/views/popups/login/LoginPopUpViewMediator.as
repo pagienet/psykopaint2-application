@@ -72,25 +72,28 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 
 		private function onRegisterFailure( amfErrorCode:int ):void {
+			view.signupSubView.signupBtn.dontSpin();
 			trace( this, "register failed" );
-			// TODO: give feedback about error
+			// TODO: give feedback about error via view.signupSubView.displaySatelliteMessage()
 			view.signupSubView.rejectPassword();
 		}
 
 		private function onRegisterSuccess():void {
+			view.signupSubView.signupBtn.dontSpin();
 			trace( this, "registered" );
 		}
 
 		// the fail signal contains an int with a value from AMFErrorCode.as
 		private function onLoginFailure( amfErrorCode:int ):void {
+			view.loginSubView.loginBtn.dontSpin();
 			trace( this, "login failed" );
-			// TODO: give feedback about error
+			// TODO: give feedback about error via view.loginSubView.displaySatelliteMessage()
 			view.loginSubView.rejectPassword();
 		}
 
 		private function onLoginSuccess():void {
+			view.loginSubView.loginBtn.dontSpin();
 			trace( this, "logged in" );
-			view.loginSubView.displayCenterMessage( LoginCopy.WELCOME_BACK + loggedInUserProxy.firstName + "!" );
 			setTimeout( function():void {
 				requestHidePopUpSignal.dispatch();
 			}, 1000 );
@@ -101,6 +104,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 
 		private function onPopUpWantsToRegister( email:String, password:String, firstName:String, lastName:String, photo:BitmapData ):void {
+			view.signupSubView.signupBtn.spin();
 			var vo:UserRegistrationVO = new UserRegistrationVO();
 			vo.email = email;
 			vo.password = password;
@@ -110,13 +114,12 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function onForgottenPassword():void {
-			view.loginSubView.displayCenterMessage( LoginCopy.WAITING );
 			// TODO: call service here and listen for reply to display a message below the login button, then dismiss the pop up?
 			// LoginCopy.as -> PASSWORD_REMINDER
 		}
 
 		private function onPopUpWantsToLogIn( email:String, password:String ):void {
-			view.loginSubView.displayCenterMessage( LoginCopy.WAITING );
+			view.loginSubView.loginBtn.spin();
 			loggedInUserProxy.logIn( email, password );
 		}
 
