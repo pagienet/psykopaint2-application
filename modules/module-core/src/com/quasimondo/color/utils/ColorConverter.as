@@ -51,7 +51,7 @@ package com.quasimondo.color.utils
 				delta = max - min;
 				
 				if ( max != 0 )
-					s = Math.round( 100 * ( delta / max ) );
+					s =  100 * ( delta / max ) ;
 				else
 					return new HSV( -1, 0, v );
 
@@ -66,7 +66,7 @@ package com.quasimondo.color.utils
 				if ( h < 0 )
 					h += 360;
 				
-				return  new HSV( Math.round( h ), s, v );
+				return  new HSV( h, s, v );
 		//		rgb_hsv_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] = new HSV( Math.round( h ), s, v );
 			//}
 

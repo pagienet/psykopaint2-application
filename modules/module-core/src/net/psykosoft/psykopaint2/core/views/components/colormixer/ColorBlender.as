@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
-	public class Colormixer extends Sprite
+	public class ColorBlender extends Sprite
 	{
 		private var _id : String;
 		
@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		private var holder1:Bitmap;
 		private var colorInfluence:Number;
 		
-		public function Colormixer( palette:Array ) {
+		public function ColorBlender( palette:Array ) {
 			super();
 			this.palette = palette;
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
@@ -120,6 +120,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 			_displacementFilter = new DisplacementMapFilter(_displacementMap,origin, BitmapDataChannel.BLUE, BitmapDataChannel.GREEN,32,32, DisplacementMapFilterMode.COLOR,0,0 );
 			
+			addChild( new Bitmap(_displacementMap) ).y = -300;
 			
 			_maskMap = new TrackedBitmapData(mixerWidth*3,mixerHeight*3,true,0);
 			
@@ -136,7 +137,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			copyRect = _maskMap.rect;
 			
 			_turbulenceMap = new TrackedBitmapData(mixerWidth*2,mixerHeight*2,false,0);
-			_turbulenceMap.noise(Math.random() * 0xffffff,100,156,7,false);
+			_turbulenceMap.noise(Math.random() * 0xffffff,110,146,7,false);
 			_turbulenceMap.applyFilter( _turbulenceMap, _turbulenceMap.rect, origin, new BlurFilter(4,4,2));
 			
 			
@@ -175,7 +176,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 				
 				shp.graphics.clear();
 				shp.graphics.beginFill( sampleColor);
-				shp.graphics.drawCircle(0,0,24);
+				shp.graphics.drawCircle(0,0,26);
 				shp.graphics.endFill();
 				
 				
@@ -185,12 +186,12 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		
 		protected function onStageMouseMove(event:MouseEvent):void
 		{
-			colorInfluence*=0.96;
+			colorInfluence*=0.8;
 			if ( !(mapDisplay.mouseX > -1 && mapDisplay.mouseX < mixerWidth && mapDisplay.mouseY > -1 && mapDisplay.mouseY < mixerHeight)) return;
 			
 			_displayMap.lock();
-			var dx:int = (mapDisplay.mouseX - _lastMouseX) * 0.3;
-			var dy:int = (mapDisplay.mouseY - _lastMouseY) * 0.3;
+			var dx:int = (mapDisplay.mouseX - _lastMouseX) * 3;
+			var dy:int = (mapDisplay.mouseY - _lastMouseY) * 3;
 			
 			_displacementMap.fillRect(_displacementMap.rect,((128 - dx)) | ((128 - dy)<<8));
 			
