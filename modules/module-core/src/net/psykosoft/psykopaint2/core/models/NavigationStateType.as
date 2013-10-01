@@ -37,6 +37,7 @@ package net.psykosoft.psykopaint2.core.models
 		public static const BOOK_GALLERY:String = "state/book_gallery";
 		public static const GALLERY_LOADING : String = "state/gallery/loading";
 		public static const GALLERY_PAINTING : String = "state/gallery/painting";
+		public static const GALLERY_SHARE : String = "state/gallery/share"
 
 	}
 }

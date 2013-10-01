@@ -21,7 +21,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
@@ -35,9 +34,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		[Inject]
 		public var stage3dProxy:Stage3DProxy;
-
-		[Inject]
-		public var requestSetBookBackgroundSignal : RequestSetBookBackgroundSignal;
 
 		[Inject]
 		public var notifySourceImageSelectedFromBookSignal:NotifySourceImageSelectedFromBookSignal;
@@ -101,7 +97,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			view.imageSelectedSignal.add(onImageSelected);
 			view.galleryImageSelectedSignal.add(onGalleryImageSelected);
 			requestAnimateBookOutSignal.add(onRequestAnimateBookOutSignal);
-			requestSetBookBackgroundSignal.add(onRequestSetBookBackgroundSignal);
 			//todo: check type book to have either notifySourceImagesFetchedSignal or notifyGalleryImagesFetchedSignal
 			//as both data returned do not share same type
 			notifySourceImagesFetchedSignal.add(onSourceImagesFetched);
@@ -115,7 +110,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			view.imageSelectedSignal.remove(onImageSelected);
 			view.galleryImageSelectedSignal.remove(onGalleryImageSelected);
 			requestAnimateBookOutSignal.remove(onRequestAnimateBookOutSignal);
-			requestSetBookBackgroundSignal.remove(onRequestSetBookBackgroundSignal);
 			notifySourceImagesFetchedSignal.remove(onSourceImagesFetched);
 			notifyGalleryImagesFetchedSignal.remove(onGalleryImageCollectionFetched);
 			requestOpenBookSignal.remove(onRequestOpenBookSignal);
@@ -128,11 +122,6 @@ package net.psykosoft.psykopaint2.book.views.book
 				requestFetchGalleryImagesSignal.dispatch(new GalleryImageRequestVO(galleryType, 0, 24));
 			else
 				requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(sourceType, 0, 48));
-		}
-
-		private function onRequestSetBookBackgroundSignal(texture : RefCountedTexture) : void
-		{
-			view.backgroundTexture = texture;
 		}
 
 		private function onImageSelected(selectedBmd:BitmapData):void

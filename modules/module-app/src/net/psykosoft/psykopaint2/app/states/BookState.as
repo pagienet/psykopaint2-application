@@ -10,12 +10,10 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestFetchGalleryImagesSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestFetchSourceImagesSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestSetBookBackgroundSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
@@ -41,9 +39,6 @@ package net.psykosoft.psykopaint2.app.states
 		public var transitionToHomeState : TransitionBookToHomeState;
 
 		[Inject]
-		public var requestSetBookBackgroundSignal : RequestSetBookBackgroundSignal;
-
-		[Inject]
 		public var requestRetrieveCameraImageSignal:RequestRetrieveCameraImageSignal;
 
 		[Inject]
@@ -64,6 +59,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestOpenBookSignal : RequestOpenBookSignal;
 
+		[Inject]
+		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
+
 		private var _background : RefCountedTexture;
 		private var _activeSourceType:String;
 		private var _galleryType : uint;
@@ -75,7 +73,7 @@ package net.psykosoft.psykopaint2.app.states
 		[PostConstruct]
 		public function init() : void
 		{
-			requestSetBookBackgroundSignal.add(onRequestSetCropBackgroundSignal);
+			requestSetCropBackgroundSignal.add(onRequestSetCropBackgroundSignal);
 		}
 
 		private function onRequestSetCropBackgroundSignal(background : RefCountedTexture) : void
@@ -169,7 +167,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onImageSelectedFromBookSignal(bitmapData : BitmapData) : void
 		{
-			stateMachine.setActiveState(transitionToCropState, {bitmapData: bitmapData, background: _background.newReference()});
+			stateMachine.setActiveState(transitionToCropState, {bitmapData: bitmapData});
 		}
 
 		private function onGalleryImageSelected(selectedGalleryImage : GalleryImageProxy) : void

@@ -134,7 +134,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// From view.
 			view.closestSnapPointChangedSignal.add( onViewClosestSnapPointChanged );
-			view.scrollMotionEndedSignal.add( onScrollMotionEnded );
 			view.zoomCompletedSignal.add( onViewZoomComplete );
 			view.easelRectChanged.add( onEaselRectChanged );
 			view.enabledSignal.add( onEnabled );
@@ -153,7 +152,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			requestWallpaperChangeSignal.remove( onWallPaperChanged );
 			notifyGlobalGestureSignal.remove( onGlobalGesture );
-			view.scrollMotionEndedSignal.remove( onScrollMotionEnded );
 			notifyNavigationToggleSignal.remove( onNavigationToggled );
 			notifyPaintingDataRetrievedSignal.remove( onPaintingDataRetrieved );
 			requestEaselPaintingUpdateSignal.remove( onEaselUpdateRequest );
@@ -287,14 +285,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyHomeViewZoomCompleteSignal.dispatch();
 		}
 
-		private function onScrollMotionEnded(snapPointIndex : uint) : void
-		{
-			if( stateModel.currentState != NavigationStateType.BOOK_GALLERY && snapPointIndex == 3 ) {
-				requestHomePanningToggleSignal.dispatch(-1);
-				requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
-			}
-		}
-
 		private function onViewClosestSnapPointChanged( snapPointIndex:uint ):void {
 
 			trace( this, "closest painting changed to index: " + snapPointIndex );
@@ -321,11 +311,18 @@ package net.psykosoft.psykopaint2.home.views.home
 				return;
 			}
 
+			if( stateModel.currentState != NavigationStateType.BOOK_GALLERY && snapPointIndex == 3 ) {
+				requestHomePanningToggleSignal.dispatch(-1);
+				//requestNavigationStateChange( NavigationStateType.BOOK_GALLERY );
+				requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
+				return;
+			}
+
 			// Trigger home-painting state otherwise.
 			// TODO: use proper names
 			// TODO: implement painting sub-nav
 			var temporaryPaintingNames:Array = [ "house on country side", "digital cowboy", "microcosmos", "patio", "jesse", "flower spots", "beautiful danger" ];
-			if( snapPointIndex > homePaintingIndex ) {
+//			if( snapPointIndex > homePaintingIndex ) {
 
 				// TODO: delete this bit
 				if( stateModel.currentState != NavigationStateType.HOME ) {
@@ -339,7 +336,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 //				var temporaryPaintingName:String = temporaryPaintingNames[ snapPointIndex - 3 ];
 //				notifyFocusedPaintingChangedSignal.dispatch( temporaryPaintingName );
-			}
+//			}
 		}
 
 		private function onGalleryPaintingLoaded(galleryImageProxy : GalleryImageProxy, bitmapData : BitmapData) : void
@@ -347,7 +344,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestStateChangeSignal.dispatch(NavigationStateType.GALLERY_PAINTING);
 //			notifyFocusedPaintingChangedSignal.dispatch( galleryImageProxy.title );
 			// TODO: Pass stuff on to view
-			// TODO: Navigation needs to update depending on the image (if already favourited, don't show love icon etc)
 		}
 
 		private function onGalleryPaintingIOError() : void

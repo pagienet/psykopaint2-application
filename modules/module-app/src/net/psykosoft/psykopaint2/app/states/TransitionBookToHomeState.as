@@ -65,12 +65,13 @@ package net.psykosoft.psykopaint2.app.states
 		private function onAnimateBookOutComplete() : void
 		{
 			stateMachine.setActiveState(homeState);
-			requestStateChangeSignal.dispatch(_targetNavigationState);
 
 			if (_targetNavigationState != NavigationStateType.GALLERY_LOADING)
 				requestHomeViewScrollSignal.dispatch(1);
 			else
 				requestLoadGalleryPaintingSignal.dispatch(_galleryImage);
+
+			requestStateChangeSignal.dispatch(_targetNavigationState);
 		}
 
 		override ns_state_machine function deactivate() : void
