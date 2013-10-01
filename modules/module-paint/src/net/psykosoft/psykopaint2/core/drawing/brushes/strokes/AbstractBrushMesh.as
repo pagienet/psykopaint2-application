@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 {
+	import away3d.core.math.PoissonLookup;
+
 	import com.adobe.utils.AGALMiniAssembler;
 
 	import flash.display3D.Context3D;
@@ -14,6 +16,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.utils.ByteArray;
 	import flash.utils.getQualifiedClassName;
 
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.drawing.config.FastBufferManager;
 	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -22,6 +26,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 	public class AbstractBrushMesh implements IBrushMesh
 	{
+		private static const NUM_POISSON_SAMPLES : uint = 5;
+		private static const SAMPLE_RANGE : uint = 3;
+
 		// at some point, it would be nice to have these managed somewhere else
 		private static var _inProgressVertexBuffer : VertexBuffer3D;	// arrays because they're sparse
 		private static var _inProgressIndexBuffer : IndexBuffer3D;
@@ -60,14 +67,35 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		protected var _normalSpecularFragmentData : Vector.<Number>;
 		protected var _normalSpecularVertexData : Vector.<Number>;
+		private var _numFragmentRegisters : Number;
 
 		public function AbstractBrushMesh()
 		{
-			_normalSpecularFragmentData = new <Number>[.5,.5, 0, 0, 1, 0, 0, 1/5];
+			_normalSpecularFragmentData = new <Number>[.5, 1/(NUM_POISSON_SAMPLES + 1), 50, (NUM_POISSON_SAMPLES+1) *.5 ];
 			_normalSpecularVertexData = new <Number>[0, 0, 0, 1, .5, -.5, 0, 1, 0, 0, 0, 0 ,0,0,0,0];
 			_bounds = new Rectangle();
 			_programKey = getQualifiedClassName(this);
 			_fastBuffer = FastBufferManager.getFastBuffer(topologyIndexType);
+
+			initPoisson();
+		}
+
+		private function initPoisson() : void
+		{
+			var fragmentIndex : uint = 4;
+			var points : Vector.<Number> = PoissonLookup.getDistribution(NUM_POISSON_SAMPLES);
+			var pointIndex : int = 0;
+			var rangeX : Number = SAMPLE_RANGE/CoreSettings.STAGE_WIDTH;
+			var rangeY : Number = SAMPLE_RANGE/CoreSettings.STAGE_HEIGHT;
+			for (var i : int = 0; i < NUM_POISSON_SAMPLES; ++i) {
+				_normalSpecularFragmentData[fragmentIndex] = points[pointIndex] * rangeX;
+				_normalSpecularFragmentData[fragmentIndex + 1] = points[pointIndex + 1] * rangeY;
+				_normalSpecularFragmentData[fragmentIndex + 2] = 0.0;
+				_normalSpecularFragmentData[fragmentIndex + 3] = 0.0;
+				fragmentIndex += 4;
+				pointIndex += 2;
+			}
+			_numFragmentRegisters = Math.ceil(fragmentIndex/4);
 		}
 
 		public function finalize() : Boolean
@@ -272,36 +300,58 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		// analytical solutions may be more optimal if possible
 		protected function getNormalSpecularFragmentCode() : String
 		{
-			return 	"tex ft1, v0, fs0 <2d, clamp, linear, miplinear >\n" +
+
+			var registers : Vector.<String> = new Vector.<String>();
+			var i : uint;
+			for (i = 1; i < _numFragmentRegisters; ++i) {
+				registers.push("fc" + i + ".xy");
+				registers.push("fc" + i + ".zw");
+			}
+
+			var code : String = "tex ft1, v0, fs0 <2d, clamp, linear, miplinear >\n" +
 					"tex ft2, v1, fs0 <2d, clamp, linear, miplinear >\n" +
 					"tex ft3, v2, fs0 <2d, clamp, linear, miplinear >\n" +
 					"sub ft0.x, ft1.x, ft2.x\n" +
 					"sub ft0.y, ft1.x, ft3.x\n" +
 
-					"mul ft0.xy, ft0.xy, v4.y\n" +	// bumpiness
+					"mul ft0.xy, ft0.xy, v4.y\n"; 	// bumpiness
 
-					// add brush normal to canvas normals
-					"tex ft3, v3, fs1 <2d, clamp, linear, nomip>\n" +
+			// store original to blend against later
+			code += "tex ft6, v3, fs1 <2d, clamp, linear, nomip>\n" +
+					"sub ft6.xy, ft6.xy, fc0.x\n" +
+					"mul ft6.xy, ft6.xy, v4.w\n" +
+					"add ft6.xy, ft6.xy, fc0.x\n";
 
-					// smooth out underneath
-					"sub ft4.xy, fc0.xx, ft3.xy\n" +
-					"mul ft4.xy, ft4.xy, v4.w\n" +
-					"add ft4.xy, ft4.xy, ft3.xy\n" +
+			for (i = 0; i < NUM_POISSON_SAMPLES; ++i) {
+				code += "add ft7, v3, " + registers[i] + "\n" +
+						"tex ft7, ft7, fs1 <2d, clamp, linear, nomip>\n";
+
+				if (i == 0)
+					code += "add ft3, ft6, ft7\n";
+				else
+					code += "add ft3, ft3, ft7\n";
+			}
+			// instead of doing - .5 for every sample, do it once for the total
+			code += "sub ft3.xy, ft3.xy, fc0.w\n";
+
+			code += "mul ft3, ft3, fc0.y\n" +
+					"add ft0.xy, ft0.xy, ft3.xy\n" +
+					"add ft0.xy, ft0.xy, fc0.x\n";
 
 					// set specular
-					"mul ft0.z, ft1.y, v4.z\n" +
-					"mov ft0.w, v4.x\n" +
+			code +=	"mul ft0.z, ft1.y, v4.z\n" +
+					"mov ft0.w, v4.x\n";
 
-					//					"mul ft0.xy, ft0.xy, fc0.x\n" +
-					"add ft0.xy, ft0.xy, ft4.xy\n" +
-
-					//					"mul ft5.w, fc1.z, ft1.x\n" +
-					"sub ft0, ft0, ft3\n" +
+			// lerp based on height, not really robust
+			code += "sub ft0, ft0, ft6\n" +
+					"mul ft1.x, ft1.x, fc0.z\n" +
+					"sat ft1.x, ft1.x\n" +
 					"mul ft0, ft0, ft1.x\n" +
-					"add ft0, ft0, ft3\n" +
+					"add ft0, ft0, ft6\n";
 
-					"mov oc, ft0";
-			
+			code +=	"mov oc, ft0";
+
+			return code;
 		}
 
 		protected function updateColorProgram(context3d : Context3D) : void
@@ -433,7 +483,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			*/
 			
 			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _normalSpecularVertexData, 4);
-			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _normalSpecularFragmentData, 1);
+			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _normalSpecularFragmentData, _numFragmentRegisters);
 			context3d.drawTriangles(getIndexBuffer(context3d), 0, _numIndices/3);
 			context3d.setTextureAt(0, null);
 			context3d.setTextureAt(1, null);

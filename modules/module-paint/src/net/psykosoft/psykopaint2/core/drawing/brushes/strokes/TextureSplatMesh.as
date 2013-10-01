@@ -80,7 +80,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_fastBuffer.addInterleavedFloatsToVertices( data,_vIndex,8,8);
 			_fastBuffer.addInterleavedFloatsToVertices( point.colorsRGBA,_vIndex+32,4,12);
 			_fastBuffer.addInterleavedFloatsToVertices( point.bumpFactors,_vIndex+48,4,12);
-
 			//_vIndex += 192;
 			_vIndex += 256;
 			
