@@ -57,6 +57,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoFileReadSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPasswordResetFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPasswordResetSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySplashScreenRemovedSignal;
@@ -267,6 +269,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyLovePaintingFailedSignal ).asSingleton();
 			_injector.map( NotifyAddCommentSucceededSignal ).asSingleton();
 			_injector.map( NotifyAddCommentFailedSignal ).asSingleton();
+			_injector.map( NotifyPasswordResetSucceededSignal ).asSingleton();
+			_injector.map( NotifyPasswordResetFailedSignal ).asSingleton();
 
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
