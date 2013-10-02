@@ -108,7 +108,7 @@ package net.psykosoft.psykopaint2.core.model
 		{
 			// TODO: Do not create pyramidmap if sourceBitmapData is null!!!
 			// Currently crashes app
-
+		
 			if (!sourceBitmapData) {
 				if (!_pyramidMap)
 					_pyramidMap = null;

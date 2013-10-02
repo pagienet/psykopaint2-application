@@ -247,7 +247,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		private function initInProgressVertexBuffer(context3d : Context3D) : void
 		{
 			if (_inProgressVertexBuffer) _inProgressVertexBuffer.dispose();
-
+			// if you ever get an error here it means that the reserved memory by the fast buffer is not big enough.
+			// currently the maximum amount of elements per vertex assumed is 16.
 			_inProgressVertexBuffer = context3d.createVertexBuffer(65535, numElementsPerVertex);
 			// initialize with garbage
 			_fastBuffer.uploadVerticesToBuffer(_inProgressVertexBuffer, 0, 0, 65535);

@@ -210,12 +210,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 		//	var pm:PathManager = _activeBrushKit.brushEngine.pathManager;
 			
-			var px : Number = (_view.mouseX - _canvasMatrix.tx * 1024) / _canvasMatrix.a;
+			var px : Number = (_view.mouseX - _canvasMatrix.tx * 1024) / _canvasMatrix.a ;
 			var py : Number = (_view.mouseY - _canvasMatrix.ty * 768)  / _canvasMatrix.d;
 			
 			pickedColorPreview.x = _view.mouseX + 40;
 			pickedColorPreview.y = _view.mouseY - 40;
-			var color:uint = currentColorMap.getPixel(px,py);
+			var color:uint = currentColorMap.getPixel(px* CoreSettings.GLOBAL_SCALING,py* CoreSettings.GLOBAL_SCALING);
 			pickedColorTf.color = color;
 			pickedColorPreview.transform.colorTransform = pickedColorTf;
 			notifyPickedColorChangedSignal.dispatch(color);
