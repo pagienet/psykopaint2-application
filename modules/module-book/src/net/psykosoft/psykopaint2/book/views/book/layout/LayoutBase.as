@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import flash.display.StageQuality;
 	import flash.display.IBitmapDrawable;
 	import flash.utils.Dictionary;
+	import flash.utils.getTimer;
 
 	import org.osflash.signals.Signal;
 
@@ -41,6 +42,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _resourcesCount:uint;
 		private var _content:Vector.<BookData>;
 		private var _loadQueue : Vector.<BookData>;
+		private var _queueID : String;
  		
  		public var requiredAssetsReadySignal:Signal;
  		public var requiredCraftSignal:Signal;
@@ -167,11 +169,17 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			switchToHighDrawQuality();
 
+			if(_loadQueue) clearLoadingQueue();
+			 
 			_loadQueue = new Vector.<BookData>();
 			_loadIndex = 0;
+			var bookData:BookData;
 
-			for(var i:uint = 0; i < _content.length;++i)
-				_loadQueue.push(_content[i]);
+			for(var i:uint = 0; i < _content.length;++i){
+				bookData = _content[i];
+				bookData.queueID = _queueID;
+				_loadQueue.push(bookData);
+			}
 
 			loadCurrentThumbnail();
 
@@ -194,12 +202,25 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			return emptyPageMaterial;
 		}
 
+		private function clearLoadingQueue():void
+ 		{
+			if(_loadQueue){
+
+				for(var i:uint = 0; i < _loadQueue.length;++i){
+					_loadQueue[i] = null;
+				}
+				_loadQueue = null;
+			}
+		}
+
 		public function clearData():void
  		{
  			for(var key:String in _inserts){
  				_inserts[key] = null;
  			}
  			_inserts = null;
+
+ 			clearLoadingQueue();
 
  			disposeLayoutElements();
  		}
@@ -267,6 +288,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
  		private function prepareImageData(insertsPerPage:uint):void
 		{
+			generateQueueID();
+
 			var images : Vector.<SourceImageProxy> = _collection.images;
 			 
 			var imageVO:SourceImageProxy;
@@ -298,8 +321,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				_pagesFilled["pageIndex"+pageIndex].max++;
 				 
 			}
- 
-			//we have xx images for this layout, 2 sides;
+
 			var sides:uint = Math.ceil(_resourcesCount/insertsPerPage);
 
 		//	if(sides%2 != 0) sides+=1;  because we start verso left
@@ -308,7 +330,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		private function prepareGalleryData(insertsPerPage:uint):void
 		{
-			 
+			generateQueueID();
 			var images : Vector.<GalleryImageProxy> = _galleryCollection.images;
 			 
 			var imageVO:GalleryImageProxy;
@@ -340,8 +362,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				_pagesFilled["pageIndex"+pageIndex].max++;
 				 
 			}
- 
-			//we have xx images for this layout, 2 sides;
+
 			var sides:uint = Math.ceil(_resourcesCount/insertsPerPage);
 
 		//	if(sides%2 != 0) sides+=1;  because we start verso left
@@ -351,14 +372,16 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		private function loadCurrentThumbnail() : void
 		{
-			if(_loadQueue[_loadIndex] is BookThumbnailData){
-				var btd:BookThumbnailData = BookThumbnailData(_loadQueue[_loadIndex]);
-				SourceImageProxy(btd.imageVO).loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);
-			} else {
-				var bgd:BookGalleryData = BookGalleryData(_loadQueue[_loadIndex]);
-				GalleryImageProxy(bgd.imageVO).loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);
+			if( _loadQueue && _loadQueue[_loadIndex] && _loadQueue[_loadIndex].queueID == _queueID){
+
+				if(_loadQueue[_loadIndex] is BookThumbnailData){
+					var btd:BookThumbnailData = BookThumbnailData(_loadQueue[_loadIndex]);
+					SourceImageProxy(btd.imageVO).loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);
+				} else {
+					var bgd:BookGalleryData = BookGalleryData(_loadQueue[_loadIndex]);
+					GalleryImageProxy(bgd.imageVO).loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);
+				}
 			}
-			
 			//debug
 			//var bmd:BitmapData = new BitmapData(300, 200, false, 0xFF0000);
 			//composite(bmd, BookData( _loadQueue[_loadIndex]) );
@@ -378,13 +401,20 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		private function onThumbnailLoadedComplete(bitmapData : BitmapData):void
 		{
-			composite(bitmapData, BookData( _loadQueue[_loadIndex]) );
+			if( _loadQueue && _loadQueue[_loadIndex] && _loadQueue[_loadIndex].queueID == _queueID){
+				composite(bitmapData, BookData( _loadQueue[_loadIndex]) );
+			}
 			continueLoading();
 		}
 
 		private function onThumbnailLoadedError() : void
 		{
 			continueLoading();
+		}
+
+		private function generateQueueID():void
+		{
+			_queueID = "q"+getTimer();
 		}
 
  	}
