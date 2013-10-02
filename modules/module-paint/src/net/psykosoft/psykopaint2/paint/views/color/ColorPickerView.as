@@ -176,20 +176,19 @@ package net.psykosoft.psykopaint2.paint.views.color
 				case 0: //hue
 					hueHandle.x = sliderHolder.x  + sliderPaddingLeft + sx;
 					currentHSV.hue = 359 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
-					setCurrentColor( false );
+					setCurrentColor( ColorConverter.HSVtoUINT(currentHSV), false );
 					break;
 				case 1: //sat
 					saturationHandle.x = sliderHolder.x+ sliderPaddingLeft +  sx;
 					var v:Array = saturationSliderValues[int(255 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight))];
 					currentHSV.saturation = v[0];
 					currentHSV.value = v[1];
-					setCurrentColor( false );
+					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false );
 					break;
 				case 2: //lightness
 					lightnessHandle.x = sliderHolder.x+ sliderPaddingLeft + sx;
 					currentHSV.value = 100 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
-					
-					setCurrentColor( false );
+					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false );
 					break;
 			}
 		}
@@ -203,38 +202,28 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		protected function onPaletteColorChanged(event:Event):void
 		{
-			currentHSV = ColorConverter.UINTtoHSV(colorPalette.selectedColor);
-			setCurrentColor( true );
+			setCurrentColor( colorPalette.selectedColor, true );
 		}
 		
 		protected function onMixerColorPicked( event:Event ):void {
-			currentHSV = ColorConverter.UINTtoHSV( colorMixer.currentColor);
-			setCurrentColor( false );
+			setCurrentColor( colorMixer.currentColor, false );
 		}
 		
-		protected function setCurrentColor( fromPalette:Boolean):void
+		public function setCurrentColor( newColor:uint, fromPalette:Boolean, triggerChange:Boolean = true ):void
 		{
-			currentColor =  ColorConverter.HSVtoUINT(currentHSV);
+			currentColor =  newColor;
+			currentHSV = ColorConverter.UINTtoHSV(newColor);
+			
 			var t:ColorTransform = currentColorSwatch.transform.colorTransform;
 			t.color = currentColor;
 			currentColorSwatch.transform.colorTransform = t;
 			saturationHandleBg.transform.colorTransform = t;
-			/*
-			var hsv:HSV = currentHSV.clone();
-			hsv.value = 100;
-			hsv.saturation = 100;
-			t.color = ColorConverter.HSVtoUINT(hsv);
-			*/
 			hueHandleBg.transform.colorTransform = t;
-			/*
-			var p:int = currentHSV.value * 255 / 100;
-			t.color = p << 16 | p << 8 | p;
-			*/
 			lightnessHandleBg.transform.colorTransform = t;
 			
 			
 			if (!fromPalette )  colorPalette.selectedIndex = -1;
-			colorChangedSignal.dispatch();
+			if( triggerChange ) colorChangedSignal.dispatch();
 			colorMixer.currentColor = currentColor;
 			updateSaturationSlider();
 			

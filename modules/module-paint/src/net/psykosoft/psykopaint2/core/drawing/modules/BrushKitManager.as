@@ -144,6 +144,15 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			}  else if ( gestureType == GestureType.TRANSFORM_GESTURE_ENDED )
 			{
 				_activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
+			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN && _activeMode == PaintMode.COLOR_MODE )
+			{
+				notifyPickedColorChangedSignal.dispatch(uint(0xffffff * Math.random()));
+				_activeBrushKit.brushEngine.pathManager.deactivate();
+				_view.addEventListener(Event.ENTER_FRAME, updateColorPicker );
+			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_ENDED )
+			{
+				_view.removeEventListener(Event.ENTER_FRAME, updateColorPicker );
+				_activeBrushKit.brushEngine.pathManager.activate(_view, canvasModel, renderer );
 			}
 		}
 
@@ -158,6 +167,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			_currentPaintColor =_currentBrushColorParameter.colorValue = newColor;
 		}
+		
+		private function updateColorPicker( event:Event ):void
+		{
+			notifyPickedColorChangedSignal.dispatch(uint(0xffffff * Math.random()));
+		}
+		
 		
 		private function updateCurrentBrushColorParameter( ):void
 		{

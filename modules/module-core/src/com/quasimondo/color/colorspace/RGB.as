@@ -2,9 +2,9 @@ package com.quasimondo.color.colorspace
 {
 	public class RGB implements IColorSpace, IRGB
 	{	
-		private var _red: int;
-		private var _green: int;
-		private var _blue: int;
+		private var _red: Number;
+		private var _green: Number;
+		private var _blue: Number;
 		
 		/**
 		 * Constructor.
@@ -17,9 +17,9 @@ package com.quasimondo.color.colorspace
   		 */
 		public function RGB( r: Number = 0, g: Number = 0, b: Number = 0 )
 		{
-			red   = Math.round( r );
-			green = Math.round( g );
-			blue  = Math.round( b );
+			red   = r;
+			green = g;
+			blue  = b;
 		}
 
 		/**
@@ -27,7 +27,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @return int
  		 */
-		public function get red(): int
+		public function get red(): Number
 		{
 			return _red;
 		}
@@ -37,7 +37,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @param r Red value
  		 */
-		public function set red( r: int ): void
+		public function set red( r: Number ): void
 		{
 			if ( r < 0 ) r = 0;
 			else if ( r > 255 ) r = 255;
@@ -49,7 +49,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @return int
  		 */
-		public function get green(): int
+		public function get green(): Number
 		{
 			return _green;
 		}
@@ -59,7 +59,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @param g Green value
  		 */
-		public function set green( g: int ): void
+		public function set green( g: Number ): void
 		{
 			if ( g < 0 ) g = 0;
 			else if ( g > 255 ) g = 255;
@@ -71,7 +71,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @return int
  		 */
-		public function get blue(): int
+		public function get blue(): Number
 		{
 			return _blue;
 		}
@@ -81,7 +81,7 @@ package com.quasimondo.color.colorspace
 		 * 
 		 * @param b Blue value
  		 */
-		public function set blue( b: int ): void
+		public function set blue( b: Number ): void
 		{
 			if ( b < 0 ) b = 0;
 			else if ( b > 255 ) b = 255;
@@ -95,7 +95,7 @@ package com.quasimondo.color.colorspace
 		
 	    public function get color(): uint
 	    {
-	    	return red << 16 | green << 8 | blue;
+	    	return int( red + 0.5) << 16 | int(green+0.5) << 8 | int(blue+0.5);
 	    }
 
 	    /**
