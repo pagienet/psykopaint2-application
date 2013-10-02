@@ -284,14 +284,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function onZoomUpdate():void {
-			var rect:Rectangle = new Rectangle(); //renderer.renderRect;
 			var ratio : Number = (zoomScale - _minZoomScale)/(1 - _minZoomScale);
-			rect.x = (1-ratio)*_easelRectFromHomeView.x;	// linearly interpolate to 0 from zoomed out position
-			rect.y = (1-ratio)*_easelRectFromHomeView.y;
-			rect.width = canvasModel.width * zoomScale;
-			rect.height = canvasModel.height * zoomScale;
+			_canvasRect.x = (1-ratio)*_easelRectFromHomeView.x;	// linearly interpolate to 0 from zoomed out position
+			_canvasRect.y = (1-ratio)*_easelRectFromHomeView.y;
+			_canvasRect.width = canvasModel.width * zoomScale;
+			_canvasRect.height = canvasModel.height * zoomScale;
 			// do not constrain
-			requestChangeRenderRectSignal.dispatch(rect);
+			requestChangeRenderRectSignal.dispatch(_canvasRect);
 		}
 
 
@@ -306,7 +305,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function constrainCanvasRect():void {
-
 			zoomScale = _canvasRect.height / canvasModel.height;
 			if( zoomScale < _minZoomScale ) {
 				_canvasRect.width *= ( _minZoomScale / zoomScale );
