@@ -43,6 +43,7 @@ package net.psykosoft.psykopaint2.book.views.models
 		private var _force:Number;
 		private var _lastForce:Number;
 		private var _isBlankRecto:Boolean;
+		private var _isLocked:Boolean;
 
 		function BookPage(materialRecto:TextureMaterial, marginRectoMaterial:TextureMaterial, materialVerso:TextureMaterial, marginVersoMaterial:TextureMaterial, usedBookPage:BookPage = null, isBlankRecto:Boolean = false):void
 		{
@@ -76,9 +77,26 @@ package net.psykosoft.psykopaint2.book.views.models
 			}
 		}
 
+		public function set lock(b:Boolean):void
+		{
+			_isLocked = b;
+			
+			if(_isLocked){
+				hide();
+			} else {
+				show();
+			}
+		}
+
+		public function get lock():Boolean
+		{
+			return _isLocked;
+		}
+
+
 		public function show():void
 		{
-			_recto.visible = _verso.visible = _marginRecto.visible = _marginVerso.visible = true;
+			if(!_isLocked) _recto.visible = _verso.visible = _marginRecto.visible = _marginVerso.visible = true;
 		}
 		public function hide():void
 		{
@@ -87,7 +105,7 @@ package net.psykosoft.psykopaint2.book.views.models
 
 		public function set rotation(degrees:Number):void
 		{
-			//if(_isBlankRecto) return;
+			if(_isLocked) return;
 
 			this.rotationZ = _lastRotation = degrees;
 		}
@@ -130,7 +148,7 @@ package net.psykosoft.psykopaint2.book.views.models
 		//force -1/1  , origin 0/1, -45/45
 		public function bend(force:Number, zeroOne:Number, foldRotation:Number):void
 		{
-			if(_isBlankRecto) return;
+			if(_isBlankRecto || _isLocked) return;
 
 			if(force>.99) force = .99;
 			if(force<-.99) force = -.99;

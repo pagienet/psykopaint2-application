@@ -32,6 +32,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		private var _hasNuffPower:Boolean;
  		private var _maskBitmap:BitmapData;
  		private var _hasEnviro:Boolean;
+ 		private var _materialsCount:uint = 0;
  
      		public function PageMaterialsManager()
  		{
@@ -125,18 +126,69 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			if(_materials[id]){
  				textureMaterial = _materials[id];
  			} else {
- 				throw new Error("The requested page ("+id+") has not been builded yet!!");
+ 				trace("The requested page ("+id+") has not been builded yet!!");
+ 				return null;
  			}
  			
  			return textureMaterial;
  		}
-
- 		public function resetPage(index:uint, _pageIndex:uint):void
+ 		
+ 		public function resetPages(newStartIndex:uint):void
  		{
- 			var material:TextureMaterial = getPageContentMaterial(index);
- 			//todo reset mask:_maskBitmap.clone()
- 			//todo reset normalmap:blankbook get map
+ 			var material:TextureMaterial;
+ 			var marginMaterial:TextureMaterial;
+
+ 			var verso:Boolean = true;
+ 			for(var i:uint = 0;i<_materialsCount;i++){
+ 				material = getPageContentMaterial(i);
+ 				marginMaterial = getPageMarginMaterial(i);
+ 				verso = !verso;
+ 				resetPage(material, marginMaterial, newStartIndex, (verso)? 2 : 1);
+ 				newStartIndex++;
+ 			}
+ 		}
+
+ 		private function resetPage(material:TextureMaterial, marginMaterial:TextureMaterial, pageNumber:uint, isRecto:uint):void
+ 		{
+ 			if(!material) return;
+
+ 			var bmd:BitmapData;
+ 			var source:BitmapData;
+ 			var bt:BitmapTexture;
+ 			//update diffuse content as empty page
+ 			bt = BitmapTexture(material.texture);
+ 			bmd = bt.bitmapData;
+ 			bmd = _blankBook.getPageBitmapData("", pageNumber, bmd, isRecto);
+ 			bt.invalidateContent();
+ 			bt.bitmapData = bmd;
+
  			//update diffuse with propper number
+ 			bt = BitmapTexture(marginMaterial.texture);
+ 			bmd = _blankBook.getNumberedBasePageBitmapData(pageNumber, bt.bitmapData, isRecto);
+ 			bt.invalidateContent();
+ 			bt.bitmapData = bmd;
+
+ 			//reset normalmap:blankbook get map
+ 			if(material.normalMap){
+ 				bt = BitmapTexture(material.normalMap);
+ 				bmd = bt.bitmapData;
+ 				source = _blankBook.getBasePageNormalmap(false);
+ 				bmd.copyPixels(source, source.rect, source.rect.topLeft);
+ 				bt.invalidateContent();
+ 				bt.bitmapData = bmd;
+ 			}
+
+			var spm:SinglePassMaterialBase = SinglePassMaterialBase(material);
+			if(spm.numMethods>0){
+				var method:EffectMethodBase = spm.getMethodAt(0);
+				if(method is EnvMapMethod && _maskBitmap){
+					bt = BitmapTexture(EnvMapMethod(method).mask);
+					bmd = bt.bitmapData;
+ 					bmd.copyPixels(_maskBitmap, _maskBitmap.rect, _maskBitmap.rect.topLeft);
+	 				bt.invalidateContent();
+	 				bt.bitmapData = bmd;
+				}
+			}
  		}
 
  		public function registerMarginPageMaterial(index:uint, bitmapData:BitmapData):TextureMaterial
@@ -146,6 +198,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  		public function registerContentPageMaterial(index:uint, bitmapData:BitmapData):TextureMaterial
  		{
+ 			_materialsCount++;
  			return registerMaterial("mat"+index, bitmapData, index);
  		}
 
@@ -205,6 +258,22 @@ package net.psykosoft.psykopaint2.book.views.book.data
  					_textures[key] = null;
 	 			}
 	 			_textures = null;
+ 			}
+
+ 			_materialsCount = 0;
+ 		}
+
+ 		public function adjustMaterialCount():void
+ 		{
+ 			var material:TextureMaterial;
+ 			_materialsCount = 0;
+ 			for(var key:String in _materials){
+ 				material = _materials[key];
+ 				if(material){
+ 					_materialsCount++;
+				} else {
+					_materials[key] = null;
+				}
  			}
  		}
 

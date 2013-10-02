@@ -22,6 +22,10 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 
+
+	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageRequestVO;
+
 	import org.osflash.signals.Signal;
 
 	public class BookView extends ViewBase
@@ -47,14 +51,20 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var requestData : Signal;
 		public var bookDisposedSignal : Signal;
 
+		public var onGalleryCollectionRequestedSignal : Signal;
+		public var onImageCollectionRequestedSignal : Signal;
+
 		public function BookView() {
 			super();
 			bookHasClosedSignal = new Signal();
 			bookDisposedSignal = new Signal();
 
+			onGalleryCollectionRequestedSignal = new Signal();
+			onImageCollectionRequestedSignal = new Signal();
+
 			// todo: dispatch this on page turns and when first page shows for dynamic loading
 			// requestData.dispatch(_layout, thumbnailIndex, numThumbnailsToLoad)
-			requestData = new Signal(String, int, int);
+			//requestData = new Signal(String, int, int);
 
 			initVars();
 		}
@@ -76,6 +86,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_book.imagePickedSignal.remove(dispatchSelectedImage);
 			_book.galleryImagePickedSignal.remove(dispatchSelectedGalleryImage);
 			_book.bookClearedSignal.remove(dispatchBookHasClosed);
+			_book.collectionRequestedSignal.remove(dispatchCollectionRequest);
 			_book.dispose();
 			_book = null;
 
@@ -104,10 +115,12 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onStageMouseDown( event:MouseEvent ):void
 		{
 			if(_book.ready){
+				_book.killSnapTween();
 				_mouseIsDown = true;
 				_startMouseX = mouseX;
 				_startMouseY = mouseY;
-				_startTime = _time;
+				if(_time < _book.minTime) _time = _book.minTime;
+				_startTime = _previousTime = _time;
 			}
 		}
 		
@@ -142,6 +155,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_book.imagePickedSignal.add(dispatchSelectedImage);
 			_book.galleryImagePickedSignal.add(dispatchSelectedGalleryImage);
 			_book.bookClearedSignal.add(dispatchBookHasClosed);
+			_book.collectionRequestedSignal.add(dispatchCollectionRequest);
 		}
 
 		// Interaction declared on book ready
@@ -161,7 +175,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_view3d.width = stage.stageWidth;
 			_view3d.height = stage.stageHeight;
 			_view3d.camera.lens.far = 5000;
-			_view3d.camera.y = 1500;
+			_view3d.camera.y = 1300;
 			_view3d.camera.z = 10;
 			addChild( _view3d );
 		}
@@ -194,7 +208,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 					_time =  currentTime + _startTime;
 					if(_time < 0) _time = 0;
-					if(_time > 1) _time = 1;
+					//if(_time > 1) _time = 1;
 					_book.updatePages(_time);
 				}
 
@@ -230,6 +244,18 @@ package net.psykosoft.psykopaint2.book.views.book
 		public function setGalleryImageCollection(collection : GalleryImageCollection) : void
 		{
 			_book.setGalleryImageCollection(collection);
+		}
+
+		//requests for paging
+		public function dispatchCollectionRequest(vo:Object, startIndex : uint, maxItems : uint) : void
+		{
+			if(vo is GalleryImageCollection){
+				//GalleryImageRequestVO
+				onGalleryCollectionRequestedSignal.dispatch( GalleryImageCollection(vo).type, startIndex, maxItems );
+			} else {
+				//SourceImageRequestVO
+				onImageCollectionRequestedSignal.dispatch( vo.source, startIndex, maxItems );
+			}
 		}
 
 	}
