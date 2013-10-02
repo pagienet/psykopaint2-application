@@ -2,6 +2,8 @@ package net.psykosoft.psykopaint2.core.models
 {
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPasswordResetFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPasswordResetSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogOutFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
@@ -31,6 +33,12 @@ package net.psykosoft.psykopaint2.core.models
 
 		[Inject]
 		public var notifyUserRegisteredSignal : NotifyUserRegisteredSignal;
+
+		[Inject]
+		public var notifyPasswordResetSucceededSignal : NotifyPasswordResetSucceededSignal;
+
+		[Inject]
+		public var notifyPasswordResetFailedSignal : NotifyPasswordResetFailedSignal;
 
 
 		private var _userID : int = -1;
@@ -120,6 +128,26 @@ package net.psykosoft.psykopaint2.core.models
 		private function onLogInFail(data : Object) : void
 		{
 			notifyUserLogInFailedSignal.dispatch(AMFErrorCode.CALL_FAILED);
+		}
+
+		public function requestPasswordReset(email : String) : void
+		{
+			amfBridge.logOut(email, onPasswordResetSuccess, onPasswordResetFail);
+		}
+
+		private function onPasswordResetFail(data : Object) : void
+		{
+			notifyPasswordResetSucceededSignal.dispatch(AMFErrorCode.CALL_FAILED);
+		}
+
+		private function onPasswordResetSuccess(data : Object) : void
+		{
+			if (data["status_code"] != 1) {
+				notifyPasswordResetSucceededSignal.dispatch(data["status_code"]);
+				return;
+			}
+
+			notifyPasswordResetSucceededSignal.dispatch();
 		}
 
 		private function onRegisterSuccess(data : Object) : void
