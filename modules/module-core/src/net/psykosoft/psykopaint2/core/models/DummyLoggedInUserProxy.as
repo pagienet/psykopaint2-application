@@ -121,5 +121,11 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			return _banned;
 		}
+
+		public function logOut() : void
+		{
+			_sessionID = null;
+			_userID = -1;
+		}
 	}
 }

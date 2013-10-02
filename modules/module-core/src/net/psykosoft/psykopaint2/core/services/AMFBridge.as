@@ -112,13 +112,18 @@ package net.psykosoft.psykopaint2.core.services
 
 		public function registerAndLogIn(userRegistrationVO : UserRegistrationVO, onSuccess : Function, onFail : Function) : void
 		{
-			_connection.call(	"Main/loginUser", new Responder(onSuccess, onFail),
+			_connection.call(	"Main/createUser", new Responder(onSuccess, onFail),
 								userRegistrationVO.facebookID,
 								userRegistrationVO.email,
 								hashPassword(userRegistrationVO.email, userRegistrationVO.password),
 								userRegistrationVO.firstName,
 								userRegistrationVO.lastName
 							);
+		}
+
+		public function logOut(sessionID : String, onSuccess : Function, onFail : Function) : void
+		{
+			_connection.call("Main/logout", new Responder(onSuccess, onFail), sessionID);
 		}
 
 		public function addCommentToPainting(sessionID : String, paintingID : int, text : String, onSuccess : Function, onFail : Function) : void

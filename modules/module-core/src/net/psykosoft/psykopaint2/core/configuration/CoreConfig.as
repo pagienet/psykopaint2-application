@@ -63,7 +63,9 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogOutFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedOutSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegistrationFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
@@ -253,6 +255,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyGlobalAccelerometerSignal ).asSingleton();
 			_injector.map( NotifyUserLoggedInSignal ).asSingleton();
 			_injector.map( NotifyUserLogInFailedSignal ).asSingleton();
+			_injector.map( NotifyUserLoggedOutSignal ).asSingleton();
+			_injector.map( NotifyUserLogOutFailedSignal ).asSingleton();
 			_injector.map( NotifyUserRegisteredSignal ).asSingleton();
 			_injector.map( NotifyUserRegistrationFailedSignal ).asSingleton();
 			_injector.map( ToggleTransformGestureSignal ).asSingleton();

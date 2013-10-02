@@ -3,7 +3,9 @@ package net.psykosoft.psykopaint2.core.models
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogOutFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedOutSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegistrationFailedSignal;
 
@@ -17,6 +19,12 @@ package net.psykosoft.psykopaint2.core.models
 
 		[Inject]
 		public var notifyUserLogInFailedSignal : NotifyUserLogInFailedSignal;
+
+		[Inject]
+		public var notifyUserLoggedOutSignal : NotifyUserLoggedOutSignal;
+
+		[Inject]
+		public var notifyUserLogOutFailedSignal : NotifyUserLogOutFailedSignal;
 
 		[Inject]
 		public var notifyUserRegistrationFailedSignal : NotifyUserRegistrationFailedSignal;
@@ -56,6 +64,33 @@ package net.psykosoft.psykopaint2.core.models
 			amfBridge.registerAndLogIn(userRegistrationVO, onRegisterSuccess, onRegisterFail);
 		}
 
+		public function logOut() : void
+		{
+			amfBridge.logOut(_sessionID, onLogOutSuccess, onLogOutFail);
+		}
+
+		private function onLogOutSuccess(data : Object) : void
+		{
+			if (data["status_code"] != 1) {
+				notifyUserLogOutFailedSignal.dispatch(data["status_code"]);
+				return;
+			}
+			_userID = -1;
+			_sessionID = null;
+			_facebookID = null;
+			_active = false;
+			_banned = false;
+			_firstName = null;
+			_lastName = null;
+			_numComments = 0;
+			_numFollowers = 0;
+		}
+
+		private function onLogOutFail(data : Object) : void
+		{
+			notifyUserLogOutFailedSignal.dispatch(AMFErrorCode.CALL_FAILED);
+		}
+
 		private function onLogInSuccess(data : Object) : void
 		{
 			if (data["status_code"] != 1) {
@@ -71,7 +106,7 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			_sessionID = data["session_id"];
 
-			var userData : Object = data["userData"];
+			var userData : Object = data["response"];
 			_userID = userData["id"];
 			_firstName = userData["firstname"];
 			_lastName = userData["lastname"];
