@@ -203,8 +203,16 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map(GyroscopeManager).asSingleton();
 			_injector.map(AccelerometerManager).asSingleton();
 			_injector.map(RetrievePaintingsDataProcessModel).asSingleton();
-			// services
-			_injector.map( LoggedInUserProxy ).toSingleton(AMFLoggedInUserProxy);
+
+			// -----------------------
+			// Services.
+			// -----------------------
+
+			// Pick one.
+//			_injector.map( LoggedInUserProxy ).toSingleton(AMFLoggedInUserProxy);
+			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);
+
+			// Pick one.
 //			_injector.map(GalleryService).toSingleton(DummyGalleryService);
 			_injector.map(GalleryService).toSingleton(AMFGalleryService);
 

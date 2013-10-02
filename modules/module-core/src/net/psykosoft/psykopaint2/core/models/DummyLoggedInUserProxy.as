@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.models
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedOutSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
 
 	public class DummyLoggedInUserProxy implements LoggedInUserProxy
@@ -19,6 +20,9 @@ package net.psykosoft.psykopaint2.core.models
 		[Inject]
 		public var notifyUserRegisteredSignal : NotifyUserRegisteredSignal;
 
+		[Inject]
+		public var notifyUserLoggedOutSignal:NotifyUserLoggedOutSignal;
+
 		private var _userID : int = -1;
 		private var _sessionID : String;
 		private var _firstName : String;
@@ -31,6 +35,10 @@ package net.psykosoft.psykopaint2.core.models
 
 		public function DummyLoggedInUserProxy()
 		{
+		}
+
+		public function sendPasswordReminder( email:String ):void {
+			// Does nothing.
 		}
 
 		public function isLoggedIn() : Boolean
@@ -126,6 +134,10 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			_sessionID = null;
 			_userID = -1;
+
+			setTimeout( function():void {
+				notifyUserLoggedOutSignal.dispatch();
+			}, 1000 );
 		}
 	}
 }

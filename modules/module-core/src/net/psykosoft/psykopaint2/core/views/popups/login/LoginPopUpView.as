@@ -42,11 +42,14 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			selectLoginSubView.loginClickedSignal.add( onSelectLoginSubViewLoginBtnClicked );
 			selectLoginSubView.signupClickedSignal.add( onSelectLoginSubViewSignupBtnClicked );
+			selectLoginSubView.backBtnClickedSignal.add( onSelectLoginBackBtnClicked );
 
 			loginSubView.viewWantsToLogInSignal.add( onLoginViewWantsToLogIn );
 			loginSubView.forgotBtnClickedSignal.add( onLoginViewForgotButtonClicked );
+			loginSubView.backBtnClickedSignal.add( onLoginWantsToGoBack );
 
 			signupSubView.viewWantsToRegisterSignal.add( onSignupViewWantsToRegister );
+			signupSubView.backBtnClickedSignal.add( onRegisterWantsToGoBack );
 
 			layout();
 		}
@@ -57,11 +60,14 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			selectLoginSubView.loginClickedSignal.remove( onSelectLoginSubViewLoginBtnClicked );
 			selectLoginSubView.signupClickedSignal.remove( onSelectLoginSubViewSignupBtnClicked );
+			selectLoginSubView.backBtnClickedSignal.remove( onSelectLoginBackBtnClicked );
 
 			loginSubView.viewWantsToLogInSignal.remove( onLoginViewWantsToLogIn );
 			loginSubView.forgotBtnClickedSignal.remove( onLoginViewForgotButtonClicked );
+			loginSubView.backBtnClickedSignal.remove( onLoginWantsToGoBack );
 
 			signupSubView.viewWantsToRegisterSignal.remove( onSignupViewWantsToRegister );
+			signupSubView.backBtnClickedSignal.remove( onRegisterWantsToGoBack );
 
 			selectLoginSubView.dispose();
 			loginSubView.dispose();
@@ -71,8 +77,29 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		// -----------------------
+		// Private.
+		// -----------------------
+
+		private function returnToSelectScreen():void {
+			selectLoginSubView.visible = true;
+			signupSubView.visible = loginSubView.visible = false;
+		}
+
+		// -----------------------
 		// Event handlers.
 		// -----------------------
+
+		private function onSelectLoginBackBtnClicked():void {
+			popUpWantsToCloseSignal.dispatch();
+		}
+
+		private function onRegisterWantsToGoBack():void {
+			returnToSelectScreen();
+		}
+
+		private function onLoginWantsToGoBack():void {
+			returnToSelectScreen();
+		}
 
 		private function onSignupViewWantsToRegister( email:String, password:String, firstName:String, lastName:String, photo:BitmapData ):void {
 			popUpWantsToRegisterSignal.dispatch( email, password, firstName, lastName, photo );

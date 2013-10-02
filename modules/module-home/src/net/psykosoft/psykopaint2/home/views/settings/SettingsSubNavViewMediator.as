@@ -3,7 +3,9 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogOutFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedOutSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
@@ -22,6 +24,12 @@ package net.psykosoft.psykopaint2.home.views.settings
 		[Inject]
 		public var notifyUserLoggedInSignal:NotifyUserLoggedInSignal;
 
+		[Inject]
+		public var notifyUserLoggedOutSignal:NotifyUserLoggedOutSignal;
+
+		[Inject]
+		public var notifyUserLogOutFailedSignal:NotifyUserLogOutFailedSignal;
+
 		override public function initialize():void {
 
 			// Init.
@@ -30,9 +38,18 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 			// From app.
 			notifyUserLoggedInSignal.add( onUserLoggedIn );
+			notifyUserLoggedOutSignal.add( onUserLoggedOut );
+			notifyUserLogOutFailedSignal.add( onLogOutFailed );
 
 			// Login button.
 			view.setLoginBtn( loggedInUserProxy.isLoggedIn() ? SettingsSubNavView.ID_LOGOUT : SettingsSubNavView.ID_LOGIN );
+		}
+
+		override public function destroy():void {
+			super.destroy();
+			notifyUserLoggedInSignal.remove( onUserLoggedIn );
+			notifyUserLoggedOutSignal.remove( onUserLoggedOut );
+			notifyUserLogOutFailedSignal.remove( onLogOutFailed );
 		}
 
 		// -----------------------
@@ -49,7 +66,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 				case SettingsSubNavView.ID_LOGIN: {
 					if( loggedInUserProxy.isLoggedIn() ) {
-						// TODO: request log out and dispatch message...
+						loggedInUserProxy.logOut();
 					}
 					else {
 						requestShowPopUpSignal.dispatch( PopUpType.LOGIN );
@@ -63,8 +80,16 @@ package net.psykosoft.psykopaint2.home.views.settings
 		// From app.
 		// -----------------------
 
+		private function onLogOutFailed( amfErrorCode:int ):void {
+			trace( this, "log out failed - error code: " + amfErrorCode );
+		}
+
 		private function onUserLoggedIn():void {
 			view.relabelButtonWithId( SettingsSubNavView.ID_LOGIN, SettingsSubNavView.ID_LOGOUT );
+		}
+
+		private function onUserLoggedOut():void {
+			view.relabelButtonWithId( SettingsSubNavView.ID_LOGIN, SettingsSubNavView.ID_LOGIN );
 		}
 	}
 }

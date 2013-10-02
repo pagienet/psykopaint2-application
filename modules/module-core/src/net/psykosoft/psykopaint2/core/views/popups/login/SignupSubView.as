@@ -26,11 +26,13 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public var firstNameTf:PsykoInput;
 		public var lastNameTf:PsykoInput;
 		public var signupBtn:FoldButton;
+		public var backBtn:FoldButton;
 		public var photoHit:Sprite;
 		public var photoHolder:Sprite;
 		public var photoContour:MovieClip;
 
 		public var viewWantsToRegisterSignal:Signal;
+		public var backBtnClickedSignal:Signal;
 
 		private var _photoUtil:DeviceCameraUtil;
 		private var _photoBitmap:Bitmap;
@@ -41,8 +43,10 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			super();
 
 			viewWantsToRegisterSignal = new Signal();
+			backBtnClickedSignal = new Signal();
 
 			signupBtn.labelText = "SIGN UP";
+			backBtn.labelText = "BACK";
 
 			emailTf.defaultText = "email";
 			passwordTf.defaultText = "password";
@@ -64,12 +68,14 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			photoHit.addEventListener( MouseEvent.CLICK, onPhotoHitClick );
 			signupBtn.addEventListener( MouseEvent.CLICK, onSignupBtnClick );
+			backBtn.addEventListener( MouseEvent.CLICK, onBackBtnClick );
 		}
 
 		public function dispose():void {
 
 			photoHit.removeEventListener( MouseEvent.CLICK, onPhotoHitClick );
 			signupBtn.removeEventListener( MouseEvent.CLICK, onSignupBtnClick );
+			backBtn.removeEventListener( MouseEvent.CLICK, onBackBtnClick );
 
 			emailTf.enterPressedSignal.remove( onEmailInputEnterPressed );
 			passwordTf.enterPressedSignal.remove( onPasswordInputEnterPressed );
@@ -81,6 +87,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			passwordTf.dispose();
 			firstNameTf.dispose();
 			lastNameTf.dispose();
+			backBtn.dispose();
 
 			if( _photoUtil ) _photoUtil.dispose();
 			if( _photoBitmap.bitmapData ) _photoBitmap.bitmapData.dispose();
@@ -208,6 +215,10 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 		// Event handlers.
 		// -----------------------
+
+		private function onBackBtnClick( event:MouseEvent ):void {
+			backBtnClickedSignal.dispatch();
+		}
 
 		private function onPhotoHitClick( event:MouseEvent ):void {
 			loadPhoto();
