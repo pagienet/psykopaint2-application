@@ -6,13 +6,12 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.misc.MathUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.views.components.button.FoldButton;
-
 	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
 	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInputValidationUtil;
 
@@ -27,14 +26,16 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public var lastNameTf:PsykoInput;
 		public var signupBtn:FoldButton;
 		public var backBtn:FoldButton;
-		public var photoHit:Sprite;
+		public var cameraHit:Sprite;
+		public var folderHit:Sprite;
 		public var photoHolder:Sprite;
 		public var photoContour:MovieClip;
 
 		public var viewWantsToRegisterSignal:Signal;
 		public var backBtnClickedSignal:Signal;
 
-		private var _photoUtil:DeviceCameraUtil;
+		private var _cameraUtil:DeviceCameraUtil;
+		private var _rollUtil:CameraRollUtil;
 		private var _photoBitmap:Bitmap;
 		private var _photoLarge:BitmapData;
 		private var _photoSmall:BitmapData;
@@ -60,7 +61,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			firstNameTf.enterPressedSignal.add( onFirstNameInputEnterPressed );
 			lastNameTf.enterPressedSignal.add( onLastNameInputEnterPressed );
 
-			photoHit.alpha = 0;
+			cameraHit.alpha = 0;
+			folderHit.alpha = 0;
 			photoContour.visible = false;
 
 			_photoBitmap = new Bitmap();
@@ -68,14 +70,16 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			_photoBitmap.bitmapData = new BitmapData( 115, 115, false, 0xFF0000 );
 			photoHolder.addChild( _photoBitmap );
 
-			photoHit.addEventListener( MouseEvent.CLICK, onPhotoHitClick );
+			cameraHit.addEventListener( MouseEvent.CLICK, onCameraHitClick );
+			folderHit.addEventListener( MouseEvent.CLICK, onFolderHitClick );
 			signupBtn.addEventListener( MouseEvent.CLICK, onSignupBtnClick );
 			backBtn.addEventListener( MouseEvent.CLICK, onBackBtnClick );
 		}
 
 		public function dispose():void {
 
-			photoHit.removeEventListener( MouseEvent.CLICK, onPhotoHitClick );
+			cameraHit.removeEventListener( MouseEvent.CLICK, onCameraHitClick );
+			folderHit.removeEventListener( MouseEvent.CLICK, onFolderHitClick );
 			signupBtn.removeEventListener( MouseEvent.CLICK, onSignupBtnClick );
 			backBtn.removeEventListener( MouseEvent.CLICK, onBackBtnClick );
 
@@ -91,7 +95,9 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			lastNameTf.dispose();
 			backBtn.dispose();
 
-			if( _photoUtil ) _photoUtil.dispose();
+			if( _cameraUtil ) _cameraUtil.dispose();
+			if( _rollUtil ) _rollUtil.dispose();
+			if( _photoSmall ) _photoSmall.dispose();
 			if( _photoSmall ) _photoSmall.dispose();
 			if( _photoLarge ) _photoLarge.dispose();
 
@@ -181,7 +187,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			if( !_photoRetrieved ) {
 				photoContour.visible = true;
 				photoContour.gotoAndStop( 2 );
-				displaySatelliteMessage( photoHit, LoginCopy.NO_PHOTO, photoHit.width / 2 + 5, photoHit.height / 2 );
+				displaySatelliteMessage( photoHolder, LoginCopy.NO_PHOTO, 115 / 2 + 5, 115 / 2 );
 			}
 			else {
 				photoContour.visible = true;
@@ -195,10 +201,20 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 
 		private function loadPhoto():void {
-			trace( this, "retrieving photo..." );
-			_photoUtil = new DeviceCameraUtil();
-			_photoUtil.imageRetrievedSignal.add( onPhotoRetrieved );
-			_photoUtil.launch();
+			if( !CoreSettings.RUNNING_ON_iPAD ) return;
+			_rollUtil = new CameraRollUtil();
+			_rollUtil.imageRetrievedSignal.add( onPhotoRetrieved );
+			var w:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1024 : 512;
+			var h:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 512 : 256;
+			_rollUtil.launch( new Rectangle( folderHit.x, folderHit.y, folderHit.width, folderHit.height ), w, h );
+		}
+
+		private function takePhoto():void {
+			if( !CoreSettings.RUNNING_ON_iPAD ) return;
+			trace( this, "taking photo..." );
+			_cameraUtil = new DeviceCameraUtil();
+			_cameraUtil.imageRetrievedSignal.add( onPhotoRetrieved );
+			_cameraUtil.launch();
 		}
 
 		private function onPhotoRetrieved( bmd:BitmapData ):void {
@@ -209,9 +225,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			_photoSmall = BitmapDataUtils.scaleToFit( bmd, 50 );
 
 			_photoBitmap.bitmapData = _photoLarge;
-			_photoBitmap.x = photoHit.width / 2 - _photoBitmap.width / 2;
-			_photoBitmap.y = photoHit.height / 2 - _photoBitmap.height / 2;
-			_photoUtil.dispose();
+			_photoBitmap.x = 115 / 2 - _photoBitmap.width / 2;
+			_photoBitmap.y = 115 / 2 - _photoBitmap.height / 2;
 
 			_photoRetrieved = true;
 
@@ -227,7 +242,11 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			backBtnClickedSignal.dispatch();
 		}
 
-		private function onPhotoHitClick( event:MouseEvent ):void {
+		private function onCameraHitClick( event:MouseEvent ):void {
+			takePhoto();
+		}
+
+		private function onFolderHitClick( event:MouseEvent ):void {
 			loadPhoto();
 		}
 
