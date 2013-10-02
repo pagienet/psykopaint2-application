@@ -216,9 +216,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			// TODO: Remove this once home view stops rendering
 			_stage3dProxy.context3D.clear(0, 0, 0, 1, 1, 0, Context3DClearMask.DEPTH);
-
 			_view3d.render(target);
-
 		}
 
 		public function dispatchSelectedImage(selectedImage:BitmapData):void
