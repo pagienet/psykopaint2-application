@@ -3,14 +3,13 @@ package net.psykosoft.psykopaint2.book.views.book.data
 	import net.psykosoft.psykopaint2.book.views.book.layout.Region;
 	import net.psykosoft.psykopaint2.book.views.book.data.BookPageSize;
 	import net.psykosoft.psykopaint2.book.views.models.BookPage;
+	import net.psykosoft.psykopaint2.book.views.models.BookData;
 
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 
 	import away3d.containers.View3D;
 	import away3d.entities.Mesh;
-
-	import net.psykosoft.psykopaint2.book.views.models.BookData;
 
 	public class RegionManager
  	{
@@ -64,8 +63,17 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			var isRecto:Boolean = (x>_middle) ? true : false;
  			//if(pageIndex == 0 && !isRecto) return null// left side case
  			//var pageSideIndex:uint = ( isRecto)? pageIndex*2 : (pageIndex*2)-1;
- 			var pageSideIndex:uint = ( isRecto)? (pageIndex*2)+1 : (pageIndex*2);
- 			var bookPage:BookPage = _pagesManager.getPage((isRecto)? pageIndex :  pageIndex+1 );
+ 			var pageSideIndex:uint;
+ 			var bookPage:BookPage
+ 			if(_pagesManager.pagesCount > 1){
+ 				pageSideIndex = ( isRecto)? (pageIndex*2)+1 : (pageIndex*2);
+ 				bookPage = _pagesManager.getPage((isRecto)? pageIndex :  pageIndex+1 );
+			} else {
+				isRecto = false;
+				bookPage = _pagesManager.getPage( pageIndex);
+				pageSideIndex = 0;
+			}
+ 			
  			
  			if(!bookPage) return null;
 
@@ -94,7 +102,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  
  			var u:Number = (isRecto)? Math.abs(hitX / _extremeX) : 1 - (Math.abs(hitX) / _extremeX);
  			var v:Number = 1-(Math.abs(hitZ) / (_extremeZ*2));
- 
+
  			var region:Region;
  			for(var i:uint = 0; i <_regions.length;++i){
  				region = _regions[i];

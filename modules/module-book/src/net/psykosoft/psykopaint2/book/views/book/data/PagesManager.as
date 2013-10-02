@@ -17,7 +17,6 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		private var _container:ObjectContainer3D;
  		private var _pageHeight:uint;
  		private var _pageWidth:uint;
- 		//private var _updateState:Boolean;
  
      		public function PagesManager(container:ObjectContainer3D)
  		{
@@ -32,15 +31,10 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		{
  			return _pageHeight;
  		}
-
- 		//public function setUpdateState():void
- 		//{
- 		//	_updateState = true;
- 		//}
- 		//public function get updateState():Boolean
- 		//{
- 		//	return _updateState;
- 		//}
+ 		public function get pagesCount():uint
+ 		{
+ 			return _pagesContent.length;
+ 		}
   
  		public function addPage(index:uint, totalPages:uint, materialRecto:TextureMaterial, marginRectoMaterial:TextureMaterial, materialVerso:TextureMaterial, marginVersoMaterial:TextureMaterial, isBlankRecto:Boolean = false):BookPage
  		{
