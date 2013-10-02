@@ -19,12 +19,21 @@ package net.psykosoft.psykopaint2.core.views.components.input
 		}
 
 		public static function validatePasswordFormat( passwordInput:PsykoInput ):int {
-			var isPasswordValid:Boolean = passwordInput.text.length > 0 && passwordInput.text != passwordInput.defaultText;
-			if( isPasswordValid ) passwordInput.showBlueHighlight();
-			else {
+
+			var enteredPassword:Boolean = passwordInput.text.length > 0 && passwordInput.text != passwordInput.defaultText;
+			if( !enteredPassword ) {
 				passwordInput.showRedHighlight();
 				return 1;
 			}
+
+			var passwordIsLongEnough:Boolean = passwordInput.text.length < 6;
+			if( !passwordIsLongEnough ) {
+				passwordInput.showRedHighlight();
+				return 2;
+			}
+
+			passwordInput.showBlueHighlight();
+
 			return 0;
 		}
 

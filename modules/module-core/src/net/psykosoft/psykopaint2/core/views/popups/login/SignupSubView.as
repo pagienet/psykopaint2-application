@@ -163,18 +163,19 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private function validatePasswordFormat():Boolean {
 			var valid:int = PsykoInputValidationUtil.validatePasswordFormat( passwordTf );
 			if( valid == 1 ) displaySatelliteMessage( passwordTf, LoginCopy.NO_PASSWORD );
+			if( valid == 2 ) displaySatelliteMessage( passwordTf, LoginCopy.PASSWORD_6_CHARS_MIN );
 			return valid == 0;
 		}
 
 		private function validateFirstNameFormat():Boolean {
 			var valid:int = PsykoInputValidationUtil.validateNameFormat( firstNameTf );
-			if( valid == 1 ) displaySatelliteMessage( firstNameTf, LoginCopy.NO_FIELD );
+			if( valid == 1 ) displaySatelliteMessage( firstNameTf, LoginCopy.NO_FIRST_NAME );
 			return valid == 0;
 		}
 
 		private function validateLastNameFormat():Boolean {
 			var valid:int = PsykoInputValidationUtil.validateNameFormat( lastNameTf );
-			if( valid == 1 ) displaySatelliteMessage( lastNameTf, LoginCopy.NO_FIELD );
+			if( valid == 1 ) displaySatelliteMessage( lastNameTf, LoginCopy.NO_LAST_NAME );
 			return valid == 0;
 		}
 
