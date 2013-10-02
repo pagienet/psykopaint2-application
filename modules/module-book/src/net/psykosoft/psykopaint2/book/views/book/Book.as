@@ -483,30 +483,38 @@ package net.psykosoft.psykopaint2.book.views.book
  		{	
  			_percent = time;
  			var pageid:uint;
-			_currentPage = _percent/_step;
+			
 
-			for(var i:uint = 1;i<_pagesCount;++i){
-				pageid = i;
- 
-				if(pageid < _currentPage){
-					pagesManager.rotatePage(i, 180, 0);
+			if(_pagesCount> 1){
 
-				} else if(pageid>_currentPage){
-					pagesManager.rotatePage(i, 0, 0);
+				_currentPage = _percent/_step;
 
-				} else {
-					var inPercent:Number = 1- Math.abs( ( ((_currentPage+1)*_step) - _percent) /_step);
-					_nearestTime = (inPercent <.5)? _currentPage*_step : (_currentPage+1)*_step;
-					var rotZ:Number = inPercent*180;
-					pagesManager.rotatePage(_currentPage, rotZ, _foldRotation );
-					_currentDegrees = rotZ;
+				for(var i:uint = 1;i<_pagesCount;++i){
+					pageid = i;
+	 
+					if(pageid < _currentPage){
+						pagesManager.rotatePage(i, 180, 0);
+
+					} else if(pageid>_currentPage){
+						pagesManager.rotatePage(i, 0, 0);
+
+					} else {
+						var inPercent:Number = 1- Math.abs( ( ((_currentPage+1)*_step) - _percent) /_step);
+						_nearestTime = (inPercent <.5)? _currentPage*_step : (_currentPage+1)*_step;
+						var rotZ:Number = inPercent*180;
+						pagesManager.rotatePage(_currentPage, rotZ, _foldRotation );
+						_currentDegrees = rotZ;
+					}
+
+					if(pageid >= _currentPage+2 || pageid <= _currentPage-2){
+						pagesManager.hidePage(pageid);
+					} else {
+						pagesManager.showPage(pageid);
+					}
 				}
-
-				if(pageid >= _currentPage+2 || pageid <= _currentPage-2){
-					pagesManager.hidePage(pageid);
-				} else {
-					pagesManager.showPage(pageid);
-				}
+			} else {
+				
+				_currentPage = 0;
 			}
 
 			if( _mayRequestPrevious && _percent<_step )  requestPreviousCollection();

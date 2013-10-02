@@ -21,8 +21,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
-
-
 	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageRequestVO;
 
@@ -208,10 +206,9 @@ package net.psykosoft.psykopaint2.book.views.book
 
 					_time =  currentTime + _startTime;
 					if(_time < 0) _time = 0;
-					//if(_time > 1) _time = 1;
+
 					_book.updatePages(_time);
 				}
-
 			}
 
 			// TODO: Remove this once home view stops rendering
