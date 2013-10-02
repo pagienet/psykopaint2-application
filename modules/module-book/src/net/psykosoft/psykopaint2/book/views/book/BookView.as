@@ -250,10 +250,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		public function dispatchCollectionRequest(vo:Object, startIndex : uint, maxItems : uint) : void
 		{
 			if(vo is GalleryImageCollection){
-				//GalleryImageRequestVO
 				onGalleryCollectionRequestedSignal.dispatch( GalleryImageCollection(vo).type, startIndex, maxItems );
 			} else {
-				//SourceImageRequestVO
 				onImageCollectionRequestedSignal.dispatch( vo.source, startIndex, maxItems );
 			}
 		}

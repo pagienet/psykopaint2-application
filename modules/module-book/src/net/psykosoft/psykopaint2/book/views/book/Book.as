@@ -43,7 +43,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		public var bookClearedSignal:Signal;
  		public var collectionRequestedSignal:Signal;
 
- 		private const MAX_REQUESTED_PAGE_SIDES:uint = 7;
+ 		private const MAX_REQUESTED_PAGE_SIDES:uint = 5;
 
  		private var _bookCraft:BookCraft;
  		private var _view:View3D;

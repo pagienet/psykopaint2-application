@@ -120,11 +120,27 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onRequestOpenBookSignal(sourceType : String, galleryType : uint) : void
 		{
-			if (sourceType == BookImageSource.GALLERY_IMAGES)
-				requestFetchGalleryImagesSignal.dispatch(new GalleryImageRequestVO(galleryType, 0, 24));
-			else
-				requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(sourceType, 0, 48));
+			if (sourceType == BookImageSource.GALLERY_IMAGES){
+				onGalleryCollectionRequest(galleryType, 0, 30);
+
+			} else if(sourceType == BookImageSource.SAMPLE_IMAGES){
+				onImageCollectionRequest(sourceType, 0, 30);
+
+			} else if(sourceType == BookImageSource.CAMERA_IMAGES){
+				onImageCollectionRequest(sourceType, 0, 80);
+			}
 		}
+
+		//to do dispatch request for next or previous collection
+		private function onGalleryCollectionRequest(galleryType : uint, fromIndex : uint, max : uint) : void
+		{
+			requestFetchGalleryImagesSignal.dispatch(new GalleryImageRequestVO(galleryType, fromIndex, max));
+		}
+		private function onImageCollectionRequest(sourceType : String, fromIndex : uint, max : uint) : void
+		{
+			requestFetchSourceImagesSignal.dispatch(new SourceImageRequestVO(sourceType, fromIndex, max));
+		}
+
 
 		private function onImageSelected(selectedBmd:BitmapData):void
 		{
@@ -156,17 +172,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			view.setGalleryImageCollection(collection);
 		}
 
-		//to do dispatch request for next or previous collection
-		private function onGalleryCollectionRequest(collection : GalleryImageCollection, from:uint, to:uint) : void
-		{
-			//RequestFetchGalleryImagesSignal
-			requestFetchGalleryImagesSignal.dispatch(collection);
-		}
-		private function onImageCollectionRequest(collection : SourceImageCollection, from:uint, to:uint) : void
-		{
-			//RequestFetchSourceImagesSignal
-			requestFetchSourceImagesSignal.dispatch(collection);
-		}
-
+		
 	}
 }
