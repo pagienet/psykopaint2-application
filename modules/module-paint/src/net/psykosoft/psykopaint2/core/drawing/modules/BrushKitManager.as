@@ -4,21 +4,27 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Sine;
 	
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
+	import flash.display.Shape;
 	import flash.display.Stage3D;
 	import flash.events.Event;
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
 	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
@@ -38,7 +44,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.views.base.ViewLayerOrdering;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
+	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
+	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorPickerView;
 	
 	import org.gestouch.events.GestureEvent;
@@ -104,6 +112,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _currentPaintColor:int;
 		private var colorPickerView : ColorPickerView;
 		private var _currentBrushColorParameter:PsykoParameter;
+		private var copyColorUtil:CopyColorToBitmapDataUtil;
+		private var currentColorMap:BitmapData;
+		private var pickedColorPreview:Shape;
+		private var pickedColorTf:ColorTransform;
 		
 		public function BrushKitManager()
 		{
@@ -146,11 +158,27 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN && _activeMode == PaintMode.COLOR_MODE )
 			{
-				notifyPickedColorChangedSignal.dispatch(uint(0xffffff * Math.random()));
+				if ( copyColorUtil == null )
+				{
+					copyColorUtil = new CopyColorToBitmapDataUtil(); 
+					pickedColorPreview = new Shape();
+					pickedColorPreview.graphics.beginFill(0);
+					pickedColorPreview.graphics.drawCircle(0,0,25);
+					pickedColorPreview.graphics.endFill();
+					
+					pickedColorTf = new ColorTransform();
+				}
+				currentColorMap = copyColorUtil.execute( canvasModel );
 				_activeBrushKit.brushEngine.pathManager.deactivate();
 				_view.addEventListener(Event.ENTER_FRAME, updateColorPicker );
+				(_view as CanvasView).addChild(pickedColorPreview);
+				
+				updateColorPicker(null);
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_ENDED )
 			{
+				copyColorUtil.dispose();
+				(_view as CanvasView).removeChild(pickedColorPreview);
+				
 				_view.removeEventListener(Event.ENTER_FRAME, updateColorPicker );
 				_activeBrushKit.brushEngine.pathManager.activate(_view, canvasModel, renderer );
 			}
@@ -170,7 +198,17 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function updateColorPicker( event:Event ):void
 		{
-			notifyPickedColorChangedSignal.dispatch(uint(0xffffff * Math.random()));
+			var pm:PathManager = _activeBrushKit.brushEngine.pathManager;
+			
+			var px : Number = _view.mouseX * pm.canvasScaleX + pm.canvasOffsetX;
+			var py : Number = _view.mouseY * pm.canvasScaleY + pm.canvasOffsetY;
+			
+			pickedColorPreview.x = _view.mouseX + 30;
+			pickedColorPreview.y = _view.mouseY - 30;
+			var color:uint = currentColorMap.getPixel(px,py);
+			pickedColorTf.color = color;
+			pickedColorPreview.transform.colorTransform = pickedColorTf;
+			notifyPickedColorChangedSignal.dispatch(color);
 		}
 		
 		
