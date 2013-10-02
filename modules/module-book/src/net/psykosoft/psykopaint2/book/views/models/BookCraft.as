@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.book.views.models
 			_coverRight.rotationZ = 0;
 			this.rotationY = 10;
  
-			this.z = 70;
+			this.z = 100;//70;
 			this.x = -500;
  
 		}
@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.book.views.models
 			_backPage = new Mesh(_coverRight.geometry.clone(), material);
 
 			_backPage.y = -10;
-			_coverRight.y = 23;
+			_coverRight.y = 30;
 
 			addChild(_backPage);
 			addChild(_coverRight);

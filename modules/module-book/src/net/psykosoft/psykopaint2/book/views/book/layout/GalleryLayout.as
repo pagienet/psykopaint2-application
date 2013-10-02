@@ -195,7 +195,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var rotation:Number = -1.5+(Math.random()*3);
   
 			//the page material
-			pageIndex = Math.floor(pageIndex);
+			pageIndex = uint( Math.floor(pageIndex) );
 			var pageMaterial:TextureMaterial = getPageMaterial(pageIndex);
  			//the destination diffuse texture
 			var diffuseTextureSource:BitmapTexture = BitmapTexture(pageMaterial.texture);
@@ -239,7 +239,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			updateAndInsertTextInformation(BookGalleryData(data).imageVO, insertRect, diffuseSourceBitmapdata);
 
 			diffuseSourceBitmapdata.unlock();
- 
+ 			
+ 			// because remote, we refresh each time an image is loaded...
 			//_pagesFilled["pageIndex"+pageIndex].inserted +=1;
 			//var invalidateContent:Boolean = (_pagesFilled["pageIndex"+pageIndex].inserted >= _pagesFilled["pageIndex"+pageIndex].max)? true : false;
 			

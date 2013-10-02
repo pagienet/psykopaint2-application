@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 
 	import org.osflash.signals.Signal;
-
+ 
  	public class Book
  	{
  		public var _percent:Number;
@@ -41,6 +41,9 @@ package net.psykosoft.psykopaint2.book.views.book
  		public var imagePickedSignal:Signal;
  		public var galleryImagePickedSignal:Signal;
  		public var bookClearedSignal:Signal;
+ 		public var collectionRequestedSignal:Signal;
+
+ 		private const MAX_REQUESTED_PAGE_SIDES:uint = 7;
 
  		private var _bookCraft:BookCraft;
  		private var _view:View3D;
@@ -66,7 +69,9 @@ package net.psykosoft.psykopaint2.book.views.book
  		private var _previousIndex:int;
  		private var _mayRequestPrevious:Boolean;
  		private var _mayRequestNext:Boolean;
-
+ 		private var _requestedForNewCollection:Boolean;
+ 		private var _currentLayoutInsertCount:uint;
+ 		private var _vo:Object;
  
      		public function Book(view:View3D, stage:Stage)
  		{
@@ -78,56 +83,55 @@ package net.psykosoft.psykopaint2.book.views.book
  			imagePickedSignal = new Signal();
  			galleryImagePickedSignal = new Signal();
  			bookClearedSignal = new Signal();
+ 			collectionRequestedSignal = new Signal();
  		}
-
+ 
  		public function setSourceImages(collection : SourceImageCollection):void
  		{
- 			_isBookUpdate = (_layout) ? true : false;
+ 			_vo = collection;
 
+ 			_isBookUpdate = (_layout) ? true : false;
+ 			
 			var type : String = collection.source;
 			var previousLayout:LayoutBase;
 			var insertCount:uint;
+			var requiredContentIsReady:Boolean;
+			_requestedForNewCollection = false;
  
 			if(_layout){
-
+				requiredContentIsReady = true;
 				var newPageCount:uint;
-				 
-				//collection.index : int; // the index of the first image in entire collection
-				//collection.numTotalImages : int; // the max images available for this book
-
+				
 				switch(type){
 	 				case BookImageSource.SAMPLE_IMAGES:
 	 				 	insertCount = NativeSamplesLayout.INSERTS_COUNT;
-	 					newPageCount = Math.round(collection.images.length/insertCount);
+	 					newPageCount = Math.round(collection.images.length/(insertCount * 2) );
 	 					break;
 
 	 				case BookImageSource.CAMERA_IMAGES:
 	 					insertCount = CameraSamplesLayout.INSERTS_COUNT;
-	 					newPageCount = Math.round(collection.images.length/insertCount);
+	 					newPageCount = Math.round(collection.images.length/(insertCount * 2) );
 	 					break;
 	 			}
-
-				clearCurrentLayout(newPageCount);
-
 				//same type, it's a paging case, we need update the numbering
 				if(_currentDataType == type){
-					if(_previousIndex< collection.index){
-						_pageIndex += uint(collection.images.length/insertCount);
-					} else {
-						_pageIndex -= uint(collection.images.length/insertCount);
-					}
-					
-				//no its a total new layout, we need clear data but keep pages and reset the textures
-				} else {
-					_layout.clearData();
-					previousLayout = _layout;
-					removeLayoutSignals();
-				}
  
+					_pageIndex = uint(Math.floor(collection.index/insertCount) );
+					clearCurrentLayout(newPageCount, (_previousIndex > collection.index)? 1 : 0);	
+				
+ 				} else {
+ 					_pageIndex = 0;
+ 					clearCurrentLayout(newPageCount, 0);
+ 					previousLayout = _layout;
+ 					removeLayoutSignals();
+ 					_layout.clearData();
+ 					_layout = null;
+					
+ 				}
 			}
 
 			if(!_layout){
-
+ 
 				switch(type){
 
 	 				case BookImageSource.SAMPLE_IMAGES:
@@ -146,6 +150,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	 			}
 
+	 			_currentLayoutInsertCount = insertCount;
+
 	 			if(previousLayout) previousLayout = null;
 
 	 			setLayoutSignals();
@@ -159,34 +165,73 @@ package net.psykosoft.psykopaint2.book.views.book
  			//lock or not the request mechanism during page turn
 			_mayRequestPrevious = (collection.index == 0)? false : true;
 		 	_mayRequestNext = (collection.index+(insertCount*2) >= collection.numTotalImages)? false : true;
- 			
+
+		 	if(requiredContentIsReady) loadBookContent();
  		}
+
 
  		public function setGalleryImageCollection(galleryCollection : GalleryImageCollection):void
  		{
- 			var type:uint = galleryCollection.type;
+ 			var previousLayout:LayoutBase;
+			var insertCount:uint;
+			var requiredContentIsReady:Boolean;
 
-			// Note to Fabrice: always should be GalleryLayout, no need to check on type here
-			_layout = new GalleryLayout(_stage);
+			_requestedForNewCollection = false;
+ 			_isBookUpdate = (_layout) ? true : false;
+
+ 			_vo = galleryCollection;
+ 		  
+ 			if(_layout){
+				requiredContentIsReady = true;
+			 	insertCount = NativeSamplesLayout.INSERTS_COUNT;
+				var newPageCount:uint = Math.round(galleryCollection.images.length/(insertCount * 2) );
+	 				 
+				//same type, it's a paging case, we need update the numbering
+				if(_currentDataType == BookImageSource.GALLERY_IMAGES){
+					_pageIndex = uint(Math.floor(galleryCollection.index/insertCount) );
+					clearCurrentLayout(newPageCount, (_previousIndex > galleryCollection.index)? 1 : 0);
+
+ 				} else {
+ 					_pageIndex = 0;
+ 					clearCurrentLayout(newPageCount, 0);
+ 					previousLayout = _layout;
+ 					removeLayoutSignals();
+ 					_layout.clearData();
+ 					_layout = null;
+ 				}
+			}
+ 			
+ 			if(!_layout){
+				_layout = new GalleryLayout(_stage, previousLayout);
+				_currentLayoutInsertCount = insertCount;
+
+	 			if(previousLayout) previousLayout = null;
+
+	 			setLayoutSignals();
+			}
 
 			_currentDataType = BookImageSource.GALLERY_IMAGES;
+			_previousIndex = galleryCollection.index;
 
  			_layout.galleryCollection = galleryCollection;
- 			setLayoutSignals();
+
+			_mayRequestPrevious = (galleryCollection.index == 0)? false : true;
+		 	_mayRequestNext = (galleryCollection.index+(insertCount*2) >= galleryCollection.numTotalPaintings)? false : true;
+
+		 	if(requiredContentIsReady) loadBookContent();
+ 			 
  		}
 
  		//paging & clearing of an exiting book
- 		public function clearCurrentLayout(newPageCount:uint):void
+ 		public function clearCurrentLayout(newPageCount:uint, collectionTime:uint):void
  		{
- 			updatePages(0);
+ 			updatePages(collectionTime);
  			
- 			_pagesManager.setUpdateState();
  			_pagesManager.removePages(newPageCount);
- 			//_pagesManager.updateToNewCount(newPageCount);
-
- 			_regionManager.clearCurrentRegions();
+ 			_layout.pageMaterialsManager.adjustMaterialCount();
+ 			
+ 			_regionManager.clearCurrentRegions(true);
  		}
- 
  		//end paging & clearing
 
  		public function initOpenAnimation(bitmapdata:BitmapData):void
@@ -223,7 +268,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			
 			TweenLite.to( _bookCraft, duration, { 		rotationY:0} );
 			
-			TweenLite.to( _view.camera, duration, {  	z:-50,y: 1600,
+			TweenLite.to( _view.camera, duration, {  	z:-50,y: 1300,
 									ease: Strong.easeIn,
 									onUpdate:lookAtDummy,
 									onComplete: onAnimateInComplete } );
@@ -307,7 +352,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
  		public function buildBookDefaultContent():void
  		{
- 			_pagesCount = _layout.getPageCount();
+ 			_pagesCount = _layout.getPageCount()+1;
  			var rectoMaterial:TextureMaterial;
  			var versoMaterial:TextureMaterial;
  			var marginRectoMaterial:TextureMaterial;
@@ -315,20 +360,15 @@ package net.psykosoft.psykopaint2.book.views.book
  			var i:uint;
 
  			if(_isBookUpdate){
-
  				var page:BookPage;
- 				 
+
+ 				_layout.pageMaterialsManager.resetPages(_pageIndex);
+ 				
+ 				//in case we miss pages
  				for(i = 0;i<_pagesCount;i++){
  					page = _pagesManager.getPage(i);
  					 
- 					if(page){
- 						 
- 						_layout.pageMaterialsManager.resetPage(i, _pageIndex);
- 						_pageIndex++;
- 						_layout.pageMaterialsManager.resetPage(i, _pageIndex);
- 						_pageIndex++;
- 						 
- 					} else {
+ 					if(!page){
  						rectoMaterial = _layout.generateEmptyPageMaterial(_pageIndex);
 		 				marginRectoMaterial = _layout.generateNumberedPageMaterial(_pageIndex);
 		 				_pageIndex++;
@@ -340,27 +380,30 @@ package net.psykosoft.psykopaint2.book.views.book
  					}
  				}
 
+ 				_layout.loadContent();
+
+ 			//new book content	
  			} else {
- 				// data is parsed, we build the default required content
 	 			_pageIndex = 0;
-	  
-				versoMaterial = _layout.generateEmptyPageMaterial(_pageIndex);
-				marginVersoMaterial = _layout.generateNumberedPageMaterial(_pageIndex);
-				_firstPage = _pagesManager.addPage(0, _pagesCount, null, null, versoMaterial, marginVersoMaterial, true);
-				
-				_pageIndex++;
 
-	 			for(i = 0;i<_pagesCount;i++){
+	 			for(i = 0 ;i<_pagesCount;i++){
 
-	 				rectoMaterial = _layout.generateEmptyPageMaterial(_pageIndex);
-	 				marginRectoMaterial = _layout.generateNumberedPageMaterial(_pageIndex);
-	 				_pageIndex++;
+	 				if(i>0){
+		 				rectoMaterial = _layout.generateEmptyPageMaterial(_pageIndex);
+		 				marginRectoMaterial = _layout.generateNumberedPageMaterial(_pageIndex);
+		 				_pageIndex++;
+	 				}
 
 	 				versoMaterial = _layout.generateEmptyPageMaterial(_pageIndex);
 	 				marginVersoMaterial = _layout.generateNumberedPageMaterial(_pageIndex);
 	 				_pageIndex++;
 
-	 				_pagesManager.addPage(i, _pagesCount, rectoMaterial, marginRectoMaterial, versoMaterial, marginVersoMaterial);
+	 				if(i == 0){
+	 					_firstPage = _pagesManager.addPage(0, _pagesCount, null, null, versoMaterial, marginVersoMaterial, true);
+ 					} else {
+ 						_pagesManager.addPage(i, _pagesCount, rectoMaterial, marginRectoMaterial, versoMaterial, marginVersoMaterial);
+ 					}
+		 			
 	 			}
 
 			}
@@ -416,8 +459,9 @@ package net.psykosoft.psykopaint2.book.views.book
  
 		public function initPagesInteraction():void
  		{
- 			_percent = 0;
  			_step = 1/_pagesCount;
+ 			_percent = _nearestTime = _step;
+ 			_currentDegrees = 0;
  		}
 
  		public function get currentDegrees():Number
@@ -430,24 +474,21 @@ package net.psykosoft.psykopaint2.book.views.book
  			return _pagesCount;
  		}
 
- 		public function updatePages(time:Number):void
+ 		public function get minTime():Number
  		{
+ 			return _step;
+ 		}
+
+ 		public function updatePages(time:Number):void
+ 		{	
  			_percent = time;
  			var pageid:uint;
 			_currentPage = _percent/_step;
 
-			_currentDegrees = 0;
-
-			for(var i:uint = 0;i<_pagesCount;++i){
+			for(var i:uint = 1;i<_pagesCount;++i){
 				pageid = i;
-
-				if(pageid >= _currentPage+2 || pageid <= _currentPage-2){
-					pagesManager.hidePage(pageid);
-				} else {
-					pagesManager.showPage(pageid);
-				}
-
-				if(pageid<_currentPage){
+ 
+				if(pageid < _currentPage){
 					pagesManager.rotatePage(i, 180, 0);
 
 				} else if(pageid>_currentPage){
@@ -460,20 +501,38 @@ package net.psykosoft.psykopaint2.book.views.book
 					pagesManager.rotatePage(_currentPage, rotZ, _foldRotation );
 					_currentDegrees = rotZ;
 				}
+
+				if(pageid >= _currentPage+2 || pageid <= _currentPage-2){
+					pagesManager.hidePage(pageid);
+				} else {
+					pagesManager.showPage(pageid);
+				}
 			}
- 
+
+			if( _mayRequestPrevious && _percent<_step )  requestPreviousCollection();
+
+			if( _mayRequestNext && _percent > 1 )  requestNextCollection();
 
 			if(_nearestTime>1) _nearestTime = 1;
  		}
 
- 		//to do: trigger the requests
- 		public function requestNewCollection():void
+ 		//trigger the paging requests
+ 		public function requestPreviousCollection():void
  		{
- 			if(_mayRequestPrevious && _percent == 0) trace("<<<<<<<  request previous collection");
-			if(_mayRequestNext && _percent == 1) trace(">>>>>>>>> request next collection");
-		}
-
-
+ 			if(!_requestedForNewCollection && !_isLoadingImage ){
+ 				_requestedForNewCollection = true;
+ 				collectionRequestedSignal.dispatch(_vo, _previousIndex - (_currentLayoutInsertCount*MAX_REQUESTED_PAGE_SIDES), _previousIndex);
+ 			}
+ 		}
+ 		public function requestNextCollection():void
+ 		{
+ 			if(!_requestedForNewCollection && !_isLoadingImage ){
+ 				_requestedForNewCollection = true;
+ 				//collectionRequestedSignal.dispatch(_vo, _previousIndex, _previousIndex + (_currentLayoutInsertCount*MAX_REQUESTED_PAGE_SIDES));
+ 				collectionRequestedSignal.dispatch(_vo, _previousIndex, _currentLayoutInsertCount*MAX_REQUESTED_PAGE_SIDES);
+ 			}
+ 		}
+ 	
  		//fold -1/1 range
  		public function rotateFold(fold:Number):void
  		{
@@ -485,9 +544,11 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			if(_percent == _nearestTime || _isLoadingImage || !_bookReady) return _nearestTime;
 
- 			TweenLite.to( this, .25, { 	_percent:_nearestTime, 
+ 			var duration:Number = (Math.abs(_nearestTime -_percent) / _step) * .8;
+
+ 			TweenLite.to( this, duration, { 	_percent:_nearestTime, 
  							_foldRotation:0, 
- 							ease: Strong.easeOut,
+ 							ease: Strong.easeIn,
 							onUpdate:updateToNearestTime,
 							onComplete:updateToNearestTime } );
  			return _nearestTime;
@@ -517,6 +578,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
  			if(data){
  				_isLoadingImage = true;
+
  				if(data is BookThumbnailData){
  					BookThumbnailData(data).imageVO.loadFullSized(onFullSizeImageLoaded, onFullSizeImageError);
  				} else {

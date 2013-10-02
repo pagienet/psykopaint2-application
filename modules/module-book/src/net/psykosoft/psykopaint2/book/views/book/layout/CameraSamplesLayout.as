@@ -16,8 +16,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	{
 		public static const INSERTS_COUNT:uint = 16;
 
-		private const INSERT_WIDTH:uint = 100;
-		private const INSERT_HEIGHT:uint = 100;
+		private const INSERT_WIDTH:uint = 108;
+		private const INSERT_HEIGHT:uint = 108;
 
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
@@ -47,19 +47,19 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var pageIndex:uint = uint(data.pageIndex);
 			var inPageIndex:uint = uint(data.inPageIndex);
 			var isRecto:Boolean = (pageIndex %2 == 0)? true : false;
-			var col:uint = Math.floor(inPageIndex/4);
-			var spaceCol:Number = 19;
+			var col:uint = uint(  Math.floor(inPageIndex/4) );
+			var spaceCol:Number = 10;
 			var spaceRow:Number = 15;
-			var row:uint = Math.floor( inPageIndex%4);
+			var row:uint = uint( Math.floor( inPageIndex%4) );
 			var hasPower:Boolean = PlatformUtil.hasRequiredPerformanceRating(2);
 
 			if(isRecto){				
-				insertRect.x = 33+ ( (INSERT_WIDTH+spaceCol)*row );
+				insertRect.x = 15+ ( (INSERT_WIDTH+spaceCol)*row );
 			} else {
-				insertRect.x = 25+ ( (INSERT_WIDTH+spaceCol)*row );
+				insertRect.x = 30+ ( (INSERT_WIDTH+spaceCol)*row );
 			}
 
-			insertRect.y = 30 + ( (INSERT_HEIGHT+spaceRow)*col );
+			insertRect.y = 4 + ( (INSERT_HEIGHT+spaceRow)*col );
   
 			//random variations
 			insertRect.x += -2+(Math.random()*4);
@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var rotation:Number =  -1.5+(Math.random()*3);
  			
 			//the page material
-			pageIndex = Math.floor(pageIndex);
+			pageIndex = uint( Math.floor(pageIndex) );
 			var pageMaterial:TextureMaterial = getPageMaterial(pageIndex);
  			//the destination diffuse texture
 			var diffuseTextureSource:BitmapTexture = BitmapTexture(pageMaterial.texture);

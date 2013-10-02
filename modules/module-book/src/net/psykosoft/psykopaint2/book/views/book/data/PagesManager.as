@@ -17,7 +17,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		private var _container:ObjectContainer3D;
  		private var _pageHeight:uint;
  		private var _pageWidth:uint;
- 		private var _updateState:Boolean;
+ 		//private var _updateState:Boolean;
  
      		public function PagesManager(container:ObjectContainer3D)
  		{
@@ -33,14 +33,14 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			return _pageHeight;
  		}
 
- 		public function setUpdateState():void
- 		{
- 			_updateState = true;
- 		}
- 		public function get updateState():Boolean
- 		{
- 			return _updateState;
- 		}
+ 		//public function setUpdateState():void
+ 		//{
+ 		//	_updateState = true;
+ 		//}
+ 		//public function get updateState():Boolean
+ 		//{
+ 		//	return _updateState;
+ 		//}
   
  		public function addPage(index:uint, totalPages:uint, materialRecto:TextureMaterial, marginRectoMaterial:TextureMaterial, materialVerso:TextureMaterial, marginVersoMaterial:TextureMaterial, isBlankRecto:Boolean = false):BookPage
  		{
@@ -60,13 +60,13 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			}
  			
  			_container.addChild(page);
- 			_pagesContent[index] = page;
+ 			_pagesContent.push(page);
  			
- 			var y:Number = totalPages-index+12;
+ 			var y:Number = ((totalPages-index)*4);
+
  			page.recto.y = page.verso.y = page.marginRecto.y = page.marginVerso.y = y;
- 
- 			_pages[index*2] = page.verso;
- 			_pages[(index*2)+1] = page.recto;
+
+ 			_pages.push(page.verso, page.recto);
 
  			return page;
  		}
@@ -135,7 +135,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			return _pages[index];
  		}
 
- 		public function dispose( count:int = -1):void
+ 		public function dispose():void
  		{
  			for(var i:uint = 0;i<_pages.length;++i){
  				_pages[i] = null;
@@ -152,33 +152,41 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  		public function removePages( count:uint):void
  		{
- 			if(count<_pages.length){
- 				for(var i:uint = count; i<_pages.length;++i){
- 					_pages[i] = null;
- 				}
- 				var page:BookPage
- 				for(i = count;i<_pagesContent.length;++i){
- 					page = _pagesContent[i];
+ 			//not really removed as we are better off hiding them instead
 
- 					_container.removeChild(page);
-	 				page.disposeContent();
-	 				page = null;
- 				}
- 				
- 				for(i = 0;i<_pages.length;++i){
- 					if(_pages[i] == null){
- 						_pages.splice(i, 1);
- 						i--;
- 					}
- 				}
- 			}
+			var page:BookPage;
+
+		 	for(var i:uint = count;i<_pagesContent.length;++i){
+				page = _pagesContent[i];
+				page.lock = (i>count)? true : false ;
+			}
  			
- 		}
+ 			//var removed:uint = 0;
+ 			//if(count<_pages.length){
+ 			//	for(var i:uint = count; i<_pages.length;++i){
+ 			//		_pages[i] = null;
+ 			//	}
+ 			//	var page:BookPage
+ 			//	for(i = count;i<_pagesContent.length;++i){
+ 			//		page = _pagesContent[i];
 
- 		private function easeOutQuad (t:Number, b:Number, c:Number, d:Number, p_params:Object = null):Number
-		{
-			return -c *(t/=d)*(t-2) + b;
-		}
+ 			//		_container.removeChild(page);
+	 		//		page.disposeContent();
+	 		//		page = null;
+
+	 		//		removed += 2;
+ 			//	}
+ 				
+ 			//	for(i = 0;i<_pages.length;++i){
+ 			//		if(_pages[i] == null){
+ 			//			_pages.splice(i, 1);
+ 			//			i--;
+ 			//		}
+ 			//	}
+ 			//}
+
+ 			//return removed;
+ 		}
  
  	}
  } 

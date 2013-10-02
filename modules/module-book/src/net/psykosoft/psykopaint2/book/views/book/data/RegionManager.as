@@ -111,10 +111,11 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		public function dispose():void
  		{
  			clearCurrentRegions();
+ 			
  			if(_np) _np = null;
  		}
 
- 		public function clearCurrentRegions():void
+ 		public function clearCurrentRegions(isUpdate:Boolean = false):void
  		{
  			if(_regions){
  				for(var i:uint = 0;i<_regions.length;++i){
@@ -123,6 +124,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  					_regions[i] = null;
  				}
  				_regions = null;
+ 				if(isUpdate) _regions = new Vector.<Region>();
  			}
  		}
  

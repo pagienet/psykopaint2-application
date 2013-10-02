@@ -96,9 +96,9 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			view.imageSelectedSignal.add(onImageSelected);
 			view.galleryImageSelectedSignal.add(onGalleryImageSelected);
+			view.onGalleryCollectionRequestedSignal.add(onGalleryCollectionRequest);
+			view.onImageCollectionRequestedSignal.add(onImageCollectionRequest);
 			requestAnimateBookOutSignal.add(onRequestAnimateBookOutSignal);
-			//todo: check type book to have either notifySourceImagesFetchedSignal or notifyGalleryImagesFetchedSignal
-			//as both data returned do not share same type
 			notifySourceImagesFetchedSignal.add(onSourceImagesFetched);
 			notifyGalleryImagesFetchedSignal.add(onGalleryImageCollectionFetched);
 			requestOpenBookSignal.add(onRequestOpenBookSignal);
@@ -109,6 +109,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			view.imageSelectedSignal.remove(onImageSelected);
 			view.galleryImageSelectedSignal.remove(onGalleryImageSelected);
+			view.onGalleryCollectionRequestedSignal.remove(onGalleryCollectionRequest);
+			view.onImageCollectionRequestedSignal.remove(onImageCollectionRequest);
 			requestAnimateBookOutSignal.remove(onRequestAnimateBookOutSignal);
 			notifySourceImagesFetchedSignal.remove(onSourceImagesFetched);
 			notifyGalleryImagesFetchedSignal.remove(onGalleryImageCollectionFetched);
@@ -155,7 +157,16 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		//to do dispatch request for next or previous collection
-		//RequestFetchGalleryImagesSignal and RequestFetchSourceImagesSignal
+		private function onGalleryCollectionRequest(collection : GalleryImageCollection, from:uint, to:uint) : void
+		{
+			//RequestFetchGalleryImagesSignal
+			requestFetchGalleryImagesSignal.dispatch(collection);
+		}
+		private function onImageCollectionRequest(collection : SourceImageCollection, from:uint, to:uint) : void
+		{
+			//RequestFetchSourceImagesSignal
+			requestFetchSourceImagesSignal.dispatch(collection);
+		}
 
 	}
 }

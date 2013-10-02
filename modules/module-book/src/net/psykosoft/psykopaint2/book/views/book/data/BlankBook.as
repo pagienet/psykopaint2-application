@@ -187,21 +187,21 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			_pageSprite.addChild(_pageNumber_txt);
 		}
 
-		public function getNumberedBasePageBitmapData(index:uint, previousMap:BitmapData = null):BitmapData
+		public function getNumberedBasePageBitmapData(index:uint, previousMap:BitmapData = null, isRecto:uint = 0):BitmapData
 		{
-			return getPageBitmapData(""+(index+1), index, previousMap);
+			return getPageBitmapData(""+(index+1), index, previousMap, isRecto );
 		}
 
-		public function getEmptyPageBitmapData(index:uint, previousMap:BitmapData = null):BitmapData
+		public function getEmptyPageBitmapData(index:uint, previousMap:BitmapData = null, isRecto:uint = 0):BitmapData
 		{
-			return getPageBitmapData(" ", index, previousMap);
+			return getPageBitmapData(" ", index, previousMap, isRecto);
 		}
 
-		private function getPageBitmapData(pagingText:String, index:uint, previousMap:BitmapData = null):BitmapData
+		public function getPageBitmapData(pagingText:String, index:uint, previousMap:BitmapData = null, isRecto:uint = 0):BitmapData
 		{
 			_pageNumber_txt.text = pagingText;
 
-			if(index%2 == 0){ //as we now begin left
+			if( (index%2 == 0 && !previousMap)  || (isRecto == 1 && previousMap) )  { //as we now begin left
 				_pageNumber_txt.x = 5;
 				_paperBM.rotation = 180;
 				_paperBM.x = BookPageSize.WIDTH;
@@ -229,6 +229,13 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			if(clone) return _paperNormalMap.clone();
 
 			return _paperNormalMap;
+		}
+
+		public function getBaseEmptyPage(clone:Boolean):BitmapData
+		{	
+			if(clone) return _paper.clone();
+
+			return _paper;
 		}
 
 		public function getBasePictShadowMap(clone:Boolean):BitmapData
