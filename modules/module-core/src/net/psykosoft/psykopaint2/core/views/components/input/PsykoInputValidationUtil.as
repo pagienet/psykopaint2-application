@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			}
 			var emailRegex:RegExp = /^[\w.-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i;
 			var isEmailValid:Boolean = emailRegex.test( emailInput.text );
-			if( isEmailValid ) emailInput.showBlueHighlight();
+			if( isEmailValid ) emailInput.showGreenHighlight();
 			else {
 				emailInput.showRedHighlight();
 				return 2;
@@ -32,14 +32,14 @@ package net.psykosoft.psykopaint2.core.views.components.input
 				return 2;
 			}
 
-			passwordInput.showBlueHighlight();
+			passwordInput.showGreenHighlight();
 
 			return 0;
 		}
 
 		public static function validateNameFormat( nameInput:PsykoInput ):int {
 			var isNameValid:Boolean = nameInput.text.length > 0 && nameInput.text != nameInput.defaultText;
-			if( isNameValid ) nameInput.showBlueHighlight();
+			if( isNameValid ) nameInput.showGreenHighlight();
 			else {
 				nameInput.showRedHighlight();
 				return 1;

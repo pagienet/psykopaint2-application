@@ -2,7 +2,8 @@ package net.psykosoft.psykopaint2.core.views.components.input
 {
 
 	import br.hellokeita.utils.TextFieldColor;
-	import br.hellokeita.utils.TextFieldColor;
+
+	import com.greensock.TweenLite;
 
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -19,7 +20,6 @@ package net.psykosoft.psykopaint2.core.views.components.input
 	{
 		// Declared in Flash.
 		public var bg:Sprite;
-		public var selRed:Sprite;
 		public var selBlue:Sprite;
 		public var cancelBtn:Sprite;
 		public var tf:TextField;
@@ -39,10 +39,8 @@ package net.psykosoft.psykopaint2.core.views.components.input
 
 			enterPressedSignal = new Signal();
 
-			selRed.mouseEnabled = selRed.mouseChildren = false;
 			selBlue.mouseEnabled = selBlue.mouseChildren = false;
 
-			selRed.visible = false;
 			selBlue.visible = false;
 
 			showCancelButton( false );
@@ -83,26 +81,31 @@ package net.psykosoft.psykopaint2.core.views.components.input
 		}
 
 		public function showBlueHighlight():void {
-	   		selRed.visible = false;
 			selBlue.visible = true;
+			hueContour( selBlue, 0 );
 		}
 
 		public function showRedHighlight():void {
-			selRed.visible = true;
-			selBlue.visible = false;
+			selBlue.visible = true;
+			hueContour( selBlue, 133 );
+		}
+
+		public function showGreenHighlight():void {
+			selBlue.visible = true;
+			hueContour( selBlue, -106 );
 		}
 
 		public function showNoHighlight():void {
-			selRed.visible = selBlue.visible = false;
+			selBlue.visible = false;
 		}
 
 		public function behavesAsPassword( value:Boolean ):void {
 			_behavesAsPassword = value;
 		}
 
-		public function focusIn( hideHighlights:Boolean = true ):void {
+		public function focusIn():void {
 
-			if( hideHighlights ) showNoHighlight();
+			showBlueHighlight();
 
 			if( _behavesAsPassword ) tf.displayAsPassword = true;
 
@@ -156,19 +159,29 @@ package net.psykosoft.psykopaint2.core.views.components.input
 				tf.text = _defaultText;
 			}
 			showCancelButton( false );
+
+			showNoHighlight();
 		}
 
 		private function onTfClick( event:MouseEvent ):void {
-			focusIn( true );
+			focusIn();
 		}
 
 		private function onCancelBtnMouseDown( event:MouseEvent ):void {
 			tf.text = "";
-			focusIn( true );
+			focusIn();
 		}
 
 		private function showCancelButton( show:Boolean ):void {
 			cancelBtn.visible = show;
+		}
+
+		// -----------------------
+		// Utils.
+		// -----------------------
+
+		private function hueContour( clip:Sprite, hue:Number, saturation:Number = 1 ):void {
+			TweenLite.to( clip, 0, { colorMatrixFilter: { hue: hue, saturation: saturation } } );
 		}
 	}
 }

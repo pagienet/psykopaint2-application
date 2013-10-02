@@ -159,7 +159,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function onEmailInputEnterPressed():void {
-			passwordInput.focusIn( true );
+			passwordInput.focusIn();
 		}
 
 		private function onLoginBtnClick( event:MouseEvent ):void {

@@ -1,9 +1,11 @@
 package net.psykosoft.psykopaint2.core.views.popups.login
 {
 
+	import com.greensock.TweenLite;
+
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.MovieClip;
+	import flash.display.Sprite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
@@ -29,7 +31,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public var cameraHit:Sprite;
 		public var folderHit:Sprite;
 		public var photoHolder:Sprite;
-		public var photoContour:MovieClip;
+		public var photoContour:Sprite;
 
 		public var viewWantsToRegisterSignal:Signal;
 		public var backBtnClickedSignal:Signal;
@@ -182,17 +184,17 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private function validatePhoto():Boolean {
 			if( !CoreSettings.RUNNING_ON_iPAD ) {
 				photoContour.visible = true;
-				photoContour.gotoAndStop( 1 );
+				hueContour( photoContour, -106 );
 				return true;
 			}
 			if( !_photoRetrieved ) {
 				photoContour.visible = true;
-				photoContour.gotoAndStop( 2 );
+				hueContour( photoContour, 133 );
 				displaySatelliteMessage( photoHolder, LoginCopy.NO_PHOTO, 115 / 2 + 5, 115 / 2 );
 			}
 			else {
 				photoContour.visible = true;
-				photoContour.gotoAndStop( 1 );
+				hueContour( photoContour, 133 );
 			}
 			return _photoRetrieved;
 		}
@@ -202,6 +204,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 
 		private function loadPhoto():void {
+			photoContour.visible = false;
 			if( !CoreSettings.RUNNING_ON_iPAD ) return;
 			_rollUtil = new CameraRollUtil();
 			_rollUtil.imageRetrievedSignal.add( onPhotoRetrieved );
@@ -211,6 +214,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function takePhoto():void {
+			photoContour.visible = false;
 			if( !CoreSettings.RUNNING_ON_iPAD ) return;
 			trace( this, "taking photo..." );
 			_cameraUtil = new DeviceCameraUtil();
@@ -269,6 +273,14 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private function onEmailInputEnterPressed():void {
 			passwordTf.focusIn();
+		}
+
+		// -----------------------
+		// Utils.
+		// -----------------------
+
+		private function hueContour( clip:Sprite, hue:Number, saturation:Number = 1 ):void {
+			TweenLite.to( clip, 0, { colorMatrixFilter: { hue: hue, saturation: saturation } } );
 		}
 	}
 }
