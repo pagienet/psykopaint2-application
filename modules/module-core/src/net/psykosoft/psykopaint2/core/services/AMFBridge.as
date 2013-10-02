@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.core.services
 	import flash.events.SecurityErrorEvent;
 	import flash.net.NetConnection;
 	import flash.net.Responder;
+	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.UserRegistrationVO;
@@ -148,6 +149,10 @@ package net.psykosoft.psykopaint2.core.services
 		private function hashPassword(email : String, password : String) : String
 		{
 			return MD5.hash(email + MD5.hash(password));
+		}
+
+		public function setProfileImage( sessionId:String, imageBytes:ByteArray, thumbnailBytes:ByteArray ):void {
+			_connection.call( "Main/setProfileImage", null, sessionId, imageBytes, thumbnailBytes );
 		}
 	}
 }

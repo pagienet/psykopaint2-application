@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 {
 
 	import flash.display.BitmapData;
+	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
@@ -103,15 +104,22 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// From view.
 		// -----------------------
 
-		private function onPopUpWantsToRegister( email:String, password:String, firstName:String, lastName:String, photo:BitmapData ):void {
+		private function onPopUpWantsToRegister( email:String, password:String, firstName:String, lastName:String, photoLarge:BitmapData, photoSmall:BitmapData ):void {
+
 			view.signupSubView.signupBtn.spin();
+
+			// Send registration string stuff via 1 service method.
 			var vo:UserRegistrationVO = new UserRegistrationVO();
 			vo.email = email;
 			vo.password = password;
 			vo.firstName = firstName;
 			vo.lastName = lastName;
 			loggedInUserProxy.registerAndLogIn( vo );
-			// TODO: send photo/photos via separate setProfilePicture() method
+
+			// Send profile images using a separate service call.
+			var largeBytes:ByteArray = new ByteArray(); photoLarge.copyPixelsToByteArray( photoLarge.rect, largeBytes );
+			var smallBytes:ByteArray = new ByteArray(); photoSmall.copyPixelsToByteArray( photoSmall.rect, smallBytes );
+			loggedInUserProxy.sendProfileImages( largeBytes, smallBytes );
 		}
 
 		private function onForgottenPassword( email:String ):void {

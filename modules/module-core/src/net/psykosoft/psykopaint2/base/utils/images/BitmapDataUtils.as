@@ -69,5 +69,12 @@ package net.psykosoft.psykopaint2.base.utils.images
 
 			return bitmapData;
 		}
+
+		static public function scaleToFit( sourceBmd:BitmapData, size:Number ):BitmapData {
+			var wRatio:Number = size / sourceBmd.width;
+			var hRatio:Number = size / sourceBmd.height;
+			var ratio:Number = Math.max( wRatio, hRatio );
+			return BitmapDataUtils.scaleBitmapData( sourceBmd, ratio );
+		}
 	}
 }

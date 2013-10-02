@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.models
 {
 
+	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
@@ -38,6 +39,10 @@ package net.psykosoft.psykopaint2.core.models
 		}
 
 		public function sendPasswordReminder( email:String ):void {
+			// Does nothing.
+		}
+
+		public function sendProfileImages( imageLarge:ByteArray, imageSmall:ByteArray ) {
 			// Does nothing.
 		}
 

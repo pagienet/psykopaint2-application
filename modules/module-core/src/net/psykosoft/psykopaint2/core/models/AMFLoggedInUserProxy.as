@@ -1,5 +1,8 @@
 package net.psykosoft.psykopaint2.core.models
 {
+
+	import flash.utils.ByteArray;
+
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPasswordResetFailedSignal;
@@ -58,6 +61,10 @@ package net.psykosoft.psykopaint2.core.models
 
 		public function sendPasswordReminder( email:String ):void {
 			amfBridge.passwordReset( email );
+		}
+
+		public function sendProfileImages( imageLarge:ByteArray, imageSmall:ByteArray ) {
+			amfBridge.setProfileImage( _sessionID, imageLarge, imageSmall );
 		}
 
 		public function isLoggedIn() : Boolean

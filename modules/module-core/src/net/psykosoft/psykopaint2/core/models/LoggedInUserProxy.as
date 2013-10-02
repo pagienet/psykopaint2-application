@@ -1,5 +1,8 @@
 package net.psykosoft.psykopaint2.core.models
 {
+
+	import flash.utils.ByteArray;
+
 	public interface LoggedInUserProxy
 	{
 		function isLoggedIn() : Boolean;
@@ -7,6 +10,7 @@ package net.psykosoft.psykopaint2.core.models
 		function logOut() : void;
 		function registerAndLogIn(userRegistrationVO : UserRegistrationVO) : void;
 		function sendPasswordReminder( email:String ):void
+		function sendProfileImages( imageLarge:ByteArray, imageSmall:ByteArray );
 
 		function get userID() : int;
 		function get sessionID() : String;

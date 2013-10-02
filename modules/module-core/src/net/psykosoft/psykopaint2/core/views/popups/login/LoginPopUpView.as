@@ -101,8 +101,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			returnToSelectScreen();
 		}
 
-		private function onSignupViewWantsToRegister( email:String, password:String, firstName:String, lastName:String, photo:BitmapData ):void {
-			popUpWantsToRegisterSignal.dispatch( email, password, firstName, lastName, photo );
+		private function onSignupViewWantsToRegister( email:String, password:String, firstName:String, lastName:String, photoLarge:BitmapData, photoSmall:BitmapData ):void {
+			popUpWantsToRegisterSignal.dispatch( email, password, firstName, lastName, photoLarge, photoSmall );
 		}
 
 		private function onLoginViewForgotButtonClicked():void {

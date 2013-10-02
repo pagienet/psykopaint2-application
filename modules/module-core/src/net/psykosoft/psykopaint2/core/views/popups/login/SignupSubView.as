@@ -36,6 +36,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private var _photoUtil:DeviceCameraUtil;
 		private var _photoBitmap:Bitmap;
+		private var _photoLarge:BitmapData;
+		private var _photoSmall:BitmapData;
 		private var _photoRetrieved:Boolean;
 		private var _satelliteMessages:Vector.<LoginMessageLabel>;
 
@@ -90,7 +92,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			backBtn.dispose();
 
 			if( _photoUtil ) _photoUtil.dispose();
-			if( _photoBitmap.bitmapData ) _photoBitmap.bitmapData.dispose();
+			if( _photoSmall ) _photoSmall.dispose();
+			if( _photoLarge ) _photoLarge.dispose();
 
 			_photoRetrieved = false;
 		}
@@ -141,7 +144,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			if( !validateFirstNameFormat() ) return;
 			if( !validateLastNameFormat() ) return;
 			if( !validatePhoto() ) return;
-			viewWantsToRegisterSignal.dispatch( emailTf.text, passwordTf.text, firstNameTf.text, lastNameTf.text, _photoBitmap.bitmapData );
+			viewWantsToRegisterSignal.dispatch( emailTf.text, passwordTf.text, firstNameTf.text, lastNameTf.text, _photoLarge, _photoSmall );
 		}
 
 		private function validateEmailFormat():Boolean {
@@ -199,15 +202,19 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function onPhotoRetrieved( bmd:BitmapData ):void {
+
 			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
-			var wRatio:Number = 115 / bmd.width;
-			var hRatio:Number = 115 / bmd.height;
-			var ratio:Number = Math.max( wRatio, hRatio );
-			_photoBitmap.bitmapData = BitmapDataUtils.scaleBitmapData( bmd, ratio );
-			_photoBitmap.x = 115 / 2 - _photoBitmap.width / 2;
-			_photoBitmap.y = 115 / 2 - _photoBitmap.height / 2;
+
+			_photoLarge = BitmapDataUtils.scaleToFit( bmd, 200 );
+			_photoSmall = BitmapDataUtils.scaleToFit( bmd, 50 );
+
+			_photoBitmap.bitmapData = _photoLarge;
+			_photoBitmap.x = photoHit.width / 2 - _photoBitmap.width / 2;
+			_photoBitmap.y = photoHit.height / 2 - _photoBitmap.height / 2;
 			_photoUtil.dispose();
+
 			_photoRetrieved = true;
+
 			_photoBitmap.visible = true;
 			photoContour.visible = false;
 		}
