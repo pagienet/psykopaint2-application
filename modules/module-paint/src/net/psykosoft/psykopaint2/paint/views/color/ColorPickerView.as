@@ -211,7 +211,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		public function setCurrentColor( newColor:uint, fromPalette:Boolean, fromSlider:Boolean = false, triggerChange:Boolean = true ):void
 		{
-			trace( "setCurrentColor", newColor, fromPalette, fromSlider, triggerChange);
+			//trace( "setCurrentColor", newColor, fromPalette, fromSlider, triggerChange);
 			currentColor =  newColor;
 			currentHSV = ColorConverter.UINTtoHSV(newColor);
 			

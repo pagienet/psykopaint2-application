@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 {
 	
+	import com.greensock.easing.Expo;
+	import com.greensock.easing.Quad;
+	import com.greensock.easing.Strong;
 	import com.quasimondo.geom.ColorMatrix;
 	
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -130,7 +133,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				if ( applyMatrix ) cm.applyMatrixToVector( prgba );
 				
 				var lrgba:Vector.<Number> = lastRGBA;
-				var bo:Number = brushOpacity.numberValue;
+				var bo:Number = Quad.easeIn(brushOpacity.numberValue,0,1,1);
 				var bor:Number = brushOpacityRange.numberValue;
 				var alpha:Number;
 				if (point.first )
