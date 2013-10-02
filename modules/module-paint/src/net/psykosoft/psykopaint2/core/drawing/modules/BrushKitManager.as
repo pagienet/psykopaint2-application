@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.utils.clearTimeout;
+	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
@@ -116,6 +117,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var currentColorMap:BitmapData;
 		private var pickedColorPreview:Shape;
 		private var pickedColorTf:ColorTransform;
+		private var singleTapDelay:int;
 		
 		public function BrushKitManager()
 		{
@@ -138,18 +140,20 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED  )
 			{
-				if ( _activeMode == PaintMode.PHOTO_MODE )
+				if ( getTimer() - singleTapDelay > 700 )
 				{
-					sourceCanvasViewModeIndex = ( sourceCanvasViewModeIndex+1) % sourceCanvasViewModes.length;
-					TweenLite.killTweensOf( renderer );
-					TweenLite.to( renderer, 0.3, { paintAlpha:sourceCanvasViewModes[sourceCanvasViewModeIndex][0],sourceTextureAlpha: sourceCanvasViewModes[sourceCanvasViewModeIndex][1], ease: Sine.easeInOut } );
-				} else if ( _activeMode == PaintMode.COLOR_MODE)
-				{
-			//		requestStateChangeSignal.dispatch( NavigationStateType.PAINT_COLOR );
-					colorPickerView.visible = !colorPickerView.visible;
-					
+					if ( _activeMode == PaintMode.PHOTO_MODE )
+					{
+						sourceCanvasViewModeIndex = ( sourceCanvasViewModeIndex+1) % sourceCanvasViewModes.length;
+						TweenLite.killTweensOf( renderer );
+						TweenLite.to( renderer, 0.3, { paintAlpha:sourceCanvasViewModes[sourceCanvasViewModeIndex][0],sourceTextureAlpha: sourceCanvasViewModes[sourceCanvasViewModeIndex][1], ease: Sine.easeInOut } );
+					} else if ( _activeMode == PaintMode.COLOR_MODE)
+					{
+				//		requestStateChangeSignal.dispatch( NavigationStateType.PAINT_COLOR );
+						colorPickerView.visible = !colorPickerView.visible;
+						
+					}
 				}
-				
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
 				_activeBrushKit.brushEngine.pathManager.deactivate();
@@ -331,7 +335,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function onStrokeEnded(event : Event) : void
 		{
-
+			singleTapDelay = getTimer();
 		}
 
 		private function activateBrushKit() : void
