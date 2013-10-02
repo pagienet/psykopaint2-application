@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			selectLoginSubView.loginClickedSignal.add( onSelectLoginSubViewLoginBtnClicked );
 			selectLoginSubView.signupClickedSignal.add( onSelectLoginSubViewSignupBtnClicked );
+			selectLoginSubView.backBtnClickedSignal.add( onSelectLoginBackBtnClicked );
 
 			loginSubView.viewWantsToLogInSignal.add( onLoginViewWantsToLogIn );
 			loginSubView.forgotBtnClickedSignal.add( onLoginViewForgotButtonClicked );
@@ -59,6 +60,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			selectLoginSubView.loginClickedSignal.remove( onSelectLoginSubViewLoginBtnClicked );
 			selectLoginSubView.signupClickedSignal.remove( onSelectLoginSubViewSignupBtnClicked );
+			selectLoginSubView.backBtnClickedSignal.remove( onSelectLoginBackBtnClicked );
 
 			loginSubView.viewWantsToLogInSignal.remove( onLoginViewWantsToLogIn );
 			loginSubView.forgotBtnClickedSignal.remove( onLoginViewForgotButtonClicked );
@@ -86,6 +88,10 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 		// Event handlers.
 		// -----------------------
+
+		private function onSelectLoginBackBtnClicked():void {
+			popUpWantsToCloseSignal.dispatch();
+		}
 
 		private function onRegisterWantsToGoBack():void {
 			returnToSelectScreen();
