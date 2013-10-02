@@ -9,8 +9,6 @@ package com.quasimondo.color.utils
 	import com.quasimondo.color.colorspace.IRGB;
 	import com.quasimondo.color.colorspace.RGB;
 	
-	import flash.utils.Dictionary;
-	
 	public class ColorConverter
 	{
 		
@@ -66,7 +64,7 @@ package com.quasimondo.color.utils
 				if ( h < 0 )
 					h += 360;
 				
-				return  new HSV( h, s, v );
+				return new HSV( h, s, v );
 		//		rgb_hsv_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] = new HSV( Math.round( h ), s, v );
 			//}
 
@@ -88,9 +86,9 @@ package com.quasimondo.color.utils
 				var r: Number;
 				var g: Number;
 				var b: Number;
-				var h: Number = Math.round( hsv.hue );
-				var s: Number = Math.round( hsv.saturation * ( 255 / 100 ) );
-				var v: Number = Math.round( hsv.value * ( 255 / 100 ) );
+				var h: Number = hsv.hue;
+				var s: Number = hsv.saturation * ( 255 / 100 );
+				var v: Number = hsv.value * ( 255 / 100 );
 	
 				if ( !h && !s )
 				{
@@ -106,42 +104,42 @@ package com.quasimondo.color.utils
 						r = v;
 						if ( h>300 )
 						{
-							g = Math.round( min );
+							g = min ;
 							h = ( h - 360 ) / 60;
-							b = -Math.round( h * delta - min );
+							b = -( h * delta - min );
 						}else
 						{
-							b = Math.round( min );
+							b = ( min );
 							h = h / 60;
-							g = Math.round( h * delta + min );
+							g = h * delta + min;
 						}
 					}else if ( h>60 && h<180 )
 					{
 						g = v;
 						if ( h<120 )
 						{
-							b = Math.round( min );
+							b = min;
 							h = ( h / 60 - 2 ) * delta;
-							r = Math.round( min - h );
+							r = min - h;
 						}else
 						{
-							r = Math.round( min );
+							r = min;
 							h = ( h / 60 - 2 ) * delta;
-							b = Math.round( min + h );
+							b = min + h ;
 						}
 					}else
 					{
 						b = v;
 						if ( h<240 )
 						{
-							r = Math.round( min );
+							r = min;
 							h = ( h / 60 - 4 ) * delta;
-							g = Math.round( min - h );
+							g = min - h ;
 						}else
 						{
-							g = Math.round( min );
+							g =  min ;
 							h = ( h / 60 - 4 ) * delta;
-							r = Math.round( min + h );
+							r =  min + h;
 						}
 					}
 				}

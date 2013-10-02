@@ -2,7 +2,7 @@ package com.quasimondo.color.colorspace
 {
 	public class ARGB extends RGB
 	{
-		private var _alpha: int;
+		private var _alpha: Number;
 		
 		public function ARGB( r: Number = 0, g: Number = 0, b: Number = 0, a: Number = 0 )
 		{
@@ -12,15 +12,15 @@ package com.quasimondo.color.colorspace
 		
 		public function get alphaColor( ): uint
 		{
-			return alpha << 24 | red << 16 | green << 8 | blue;
+			return int(alpha+0.5) << 24 | int(red+0.5) << 16 | int(green+0.5) << 8 | int(blue+0.5);
 		}
 		
-		public function get alpha( ): int
+		public function get alpha( ): Number
 		{
 			return _alpha;
 		}
 		
-		public function set alpha( value: int ): void
+		public function set alpha( value: Number ): void
 		{
 			_alpha = Math.min( Math.max( value, 0 ), 255 );
 		}

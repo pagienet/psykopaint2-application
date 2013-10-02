@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			manageStateChanges = false;
 			view.enable();
 			view.colorChangedSignal.add( onColorChanged );
-			
+			notifyPickedColorChangedSignal.add( onColorChangedFromOutside )
 		}
 		
 		// -----------------------
@@ -42,7 +42,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 		// -----------------------
 		// From app.
 		// -----------------------
-
+		private function onColorChangedFromOutside( newColor:uint):void
+		{
+			view.setCurrentColor(newColor,false,false);
+		}
+		
 		
 	}
 }

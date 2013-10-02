@@ -22,7 +22,6 @@ package com.quasimondo.color.colorspace
 			value = v;
 		}
 
-		[Bindable]		
 		/**
 		 * Getter method for hue data.
 		 * 
@@ -46,7 +45,6 @@ package com.quasimondo.color.colorspace
 			_hue = h;
 		}
 		
-		[Bindable]
 		/**
 		 * Getter method for saturation data.
 		 * 
@@ -69,7 +67,6 @@ package com.quasimondo.color.colorspace
 			_saturation = s;
 		}
 		
-		[Bindable]
 		/**
 		 * Getter method for value data.
 		 * 

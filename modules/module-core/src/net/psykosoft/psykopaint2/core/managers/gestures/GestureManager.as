@@ -3,15 +3,17 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 	import flash.display.Bitmap;
 	import flash.display.Stage;
-
+	
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.ToggleTransformGestureSignal;
-
+	
 	import org.gestouch.core.Gestouch;
+	import org.gestouch.core.GestureState;
 	import org.gestouch.events.GestureEvent;
+	import org.gestouch.gestures.LongPressGesture;
 	import org.gestouch.gestures.PanGesture;
 	import org.gestouch.gestures.PanGestureDirection;
 	import org.gestouch.gestures.SwipeGesture;
@@ -246,12 +248,16 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		//private var _tapGesture:LongPressGesture;
 		
 		private function initTapGesture():void {
-			/*
-			_tapGesture = new LongPressGesture( _stage );
-			_tapGesture.minPressDuration = 150;
-			*/
+			
+			_longTapGesture = new LongPressGesture( _stage );
+			_longTapGesture.minPressDuration = 170;
+			_longTapGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onLongTapGestureBegan );
+			_longTapGesture.addEventListener( GestureEvent.GESTURE_ENDED, onLongTapGestureEnded );
+			
 			_tapGesture = new TapGesture( _stage );
 			_tapGesture.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTapGestureRecognized );
+			_tapGesture.maxTapDuration = 100;
+		
 			
 			_twoFingerTapGesture = new TapGesture( _stage );
 			_twoFingerTapGesture.numTouchesRequired = 2;
@@ -262,12 +268,28 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		
 		private function onTapGestureRecognized( event:GestureEvent ):void {
 //			trace( this, "onTapGestureRecognized" );
+			
 			var target:Stage =  Stage(TapGesture(event.target).target);
 			var obj:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);
 			if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
 			{
 				notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
 			}
+		}
+		
+		private function onLongTapGestureBegan( event:GestureEvent ):void {
+			//			trace( this, "onTapGestureRecognized" );
+			var target:Stage =  Stage(LongPressGesture(event.target).target);
+			var obj:Array = target.getObjectsUnderPoint(LongPressGesture(event.target).location);
+			if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
+			{
+				notifyGlobalGestureSignal.dispatch( GestureType.LONG_TAP_GESTURE_BEGAN, event );
+			}
+		}
+		
+		private function onLongTapGestureEnded( event:GestureEvent ):void {
+			notifyGlobalGestureSignal.dispatch( GestureType.LONG_TAP_GESTURE_ENDED, event );
+			
 		}
 		
 		private function onTwoFingerTapGestureRecognized( event:GestureEvent ):void {
@@ -286,6 +308,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		
 		private var _doubleTapGesture:TapGesture;
 		private var _twoFingerTapGesture:TapGesture;
+		private var _longTapGesture:LongPressGesture;
 		
 		private function initDoubleTapGesture():void {
 			_doubleTapGesture = new TapGesture( _stage );
