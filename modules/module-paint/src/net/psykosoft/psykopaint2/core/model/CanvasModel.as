@@ -111,7 +111,8 @@ package net.psykosoft.psykopaint2.core.model
 
 			if (!sourceBitmapData) {
 				if (!_pyramidMap)
-					_pyramidMap = new PyramidMapTdsi(new BitmapData(_textureWidth, _textureHeight));
+					_pyramidMap = null;
+					//_pyramidMap = new PyramidMapTdsi(new BitmapData(_textureWidth, _textureHeight));
 				return;
 			}
 

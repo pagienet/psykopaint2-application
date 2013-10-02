@@ -188,7 +188,17 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			_canvasMatrix = matrix;
 			if (_activeBrushKit)
+			{
 				_activeBrushKit.setCanvasMatrix(matrix);
+				/*
+				var test:CanvasView = _view as CanvasView;
+				var pm:PathManager = _activeBrushKit.brushEngine.pathManager;
+				
+				test.graphics.clear();
+				test.graphics.lineStyle(2,0xff0000);
+				test.graphics.drawRect(matrix.tx * 1024,matrix.ty * 768,1024*matrix.a,768*matrix.d);
+				*/
+			}
 		}
 		
 		private function onPickedColorChanged( newColor:int ):void
@@ -198,13 +208,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function updateColorPicker( event:Event ):void
 		{
-			var pm:PathManager = _activeBrushKit.brushEngine.pathManager;
+		//	var pm:PathManager = _activeBrushKit.brushEngine.pathManager;
 			
-			var px : Number = _view.mouseX * pm.canvasScaleX + pm.canvasOffsetX;
-			var py : Number = _view.mouseY * pm.canvasScaleY + pm.canvasOffsetY;
+			var px : Number = (_view.mouseX - _canvasMatrix.tx * 1024) / _canvasMatrix.a;
+			var py : Number = (_view.mouseY - _canvasMatrix.ty * 768)  / _canvasMatrix.d;
 			
-			pickedColorPreview.x = _view.mouseX + 30;
-			pickedColorPreview.y = _view.mouseY - 30;
+			pickedColorPreview.x = _view.mouseX + 40;
+			pickedColorPreview.y = _view.mouseY - 40;
 			var color:uint = currentColorMap.getPixel(px,py);
 			pickedColorTf.color = color;
 			pickedColorPreview.transform.colorTransform = pickedColorTf;
