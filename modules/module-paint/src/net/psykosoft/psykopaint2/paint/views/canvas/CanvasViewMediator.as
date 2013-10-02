@@ -85,11 +85,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private var _easelRectFromHomeView:Rectangle;
 		private var _minZoomScale:Number;
 		private var _addedMouseWheelListener:Boolean;
+		private var _canvasRect : Rectangle;
 
 		private const MAX_ZOOM_SCALE:Number = 3;
 		private const ZOOM_MARGIN:Number = 100 * CoreSettings.GLOBAL_SCALING;
 
 		public var zoomScale:Number = _minZoomScale;
+
 
 		override public function initialize():void {
 
@@ -114,6 +116,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			requestZoomCanvasToEaselViewSignal.add( zoomToEaselView );
 
 			_transformMatrix = new Matrix();
+			_canvasRect = new Rectangle(0, 0, CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT);
 
 			view.enabledSignal.add(onEnabled);
 			view.disabledSignal.add(onDisabled);
@@ -159,8 +162,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		//TODO: this is for desktop testing - remove in final version
 		private function onMouseWheel( event:MouseEvent ):void {
 
-			var rect:Rectangle = renderer.renderRect;
-
 			var sc:Number = 1 + event.delta / 50;
 			_transformMatrix.identity();
 			_transformMatrix.translate( -event.localX, -event.localY );
@@ -168,15 +169,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				_transformMatrix.scale(sc,sc );
 			_transformMatrix.translate( event.localX, event.localY );
 
-			var topLeft:Point = _transformMatrix.transformPoint( rect.topLeft );
-			var bottomRight:Point = _transformMatrix.transformPoint( rect.bottomRight );
+			var topLeft:Point = _transformMatrix.transformPoint( _canvasRect.topLeft );
+			var bottomRight:Point = _transformMatrix.transformPoint( _canvasRect.bottomRight );
 
-			rect.x = topLeft.x;
-			rect.y = topLeft.y;
-			rect.width = bottomRight.x - topLeft.x;
-			rect.height = bottomRight.y - topLeft.y;
+			_canvasRect.x = topLeft.x;
+			_canvasRect.y = topLeft.y;
+			_canvasRect.width = bottomRight.x - topLeft.x;
+			_canvasRect.height = bottomRight.y - topLeft.y;
 
-			updateAndConstrainCanvasRect( rect );
+			updateAndConstrainCanvasRect();
 		}
 
 		private function onGlobalGesture( type:String, event:GestureEvent ):void {
@@ -188,22 +189,21 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case GestureType.TRANSFORM_GESTURE_CHANGED:
 					var tg:TransformGesture = (event.target as TransformGesture);
-					var rect:Rectangle = renderer.renderRect;
 					_transformMatrix.identity();
 					_transformMatrix.translate( -tg.location.x, -tg.location.y );
 					if (zoomScale < MAX_ZOOM_SCALE || (zoomScale == MAX_ZOOM_SCALE && tg.scale  <= 1) )
 						_transformMatrix.scale( tg.scale, tg.scale );
 					_transformMatrix.translate( tg.location.x + tg.offsetX, tg.location.y + tg.offsetY );
 
-					var topLeft:Point = _transformMatrix.transformPoint( rect.topLeft );
-					var bottomRight:Point = _transformMatrix.transformPoint( rect.bottomRight );
+					var topLeft:Point = _transformMatrix.transformPoint( _canvasRect.topLeft );
+					var bottomRight:Point = _transformMatrix.transformPoint( _canvasRect.bottomRight );
 
-					rect.x = topLeft.x;
-					rect.y = topLeft.y;
-					rect.width = bottomRight.x - topLeft.x;
-					rect.height = bottomRight.y - topLeft.y;
+					_canvasRect.x = topLeft.x;
+					_canvasRect.y = topLeft.y;
+					_canvasRect.width = bottomRight.x - topLeft.x;
+					_canvasRect.height = bottomRight.y - topLeft.y;
 
-					updateAndConstrainCanvasRect( rect );
+					updateAndConstrainCanvasRect();
 					break;
 
 			}
@@ -254,7 +254,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		private function zoomToDefaultView():void
 		{
 			updateEaselRect();
-			updateCanvasRect( _easelRectFromHomeView );
+			_canvasRect = _easelRectFromHomeView.clone();
+			requestChangeRenderRectSignal.dispatch(_canvasRect);
 			TweenLite.killTweensOf( this );
 			var targetScale : Number = (canvasModel.height - 200*CoreSettings.GLOBAL_SCALING)/canvasModel.height;
 			TweenLite.to( this, 1, { zoomScale: targetScale, onUpdate: onZoomUpdate, onComplete: onZoomToDefaultViewComplete, ease: Strong.easeInOut } );
@@ -298,27 +299,22 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		// Utils.
 		// -----------------------
 
-		private function updateCanvasRect( rect:Rectangle ):void {
-			requestChangeRenderRectSignal.dispatch(rect);
-		}
-
 		// used for manual zooming
-		private function updateAndConstrainCanvasRect( rect:Rectangle ):void {
-			constrainCanvasRect( rect );
-			trace (rect);
-			requestChangeRenderRectSignal.dispatch(rect);
+		private function updateAndConstrainCanvasRect():void {
+			constrainCanvasRect();
+			requestChangeRenderRectSignal.dispatch(_canvasRect);
 		}
 
-		private function constrainCanvasRect( rect:Rectangle ):void {
+		private function constrainCanvasRect():void {
 
-			zoomScale = rect.height / canvasModel.height;
+			zoomScale = _canvasRect.height / canvasModel.height;
 			if( zoomScale < _minZoomScale ) {
-				rect.width *= ( _minZoomScale / zoomScale );
-				rect.height *= ( _minZoomScale / zoomScale );
+				_canvasRect.width *= ( _minZoomScale / zoomScale );
+				_canvasRect.height *= ( _minZoomScale / zoomScale );
 				zoomScale = _minZoomScale;
 			} else if( zoomScale > MAX_ZOOM_SCALE ) {
-				rect.width *= ( MAX_ZOOM_SCALE / zoomScale );
-				rect.height *= ( MAX_ZOOM_SCALE / zoomScale );
+				_canvasRect.width *= ( MAX_ZOOM_SCALE / zoomScale );
+				_canvasRect.height *= ( MAX_ZOOM_SCALE / zoomScale );
 				zoomScale = MAX_ZOOM_SCALE;
 			}
 
@@ -336,14 +332,14 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				// clamp to painting edges with margin
 				minPanX = ZOOM_MARGIN;
 				minPanY = ZOOM_MARGIN;
-				maxPanX = canvasModel.width - rect.width - ZOOM_MARGIN;
-				maxPanY = canvasModel.height - rect.height - ZOOM_MARGIN;
+				maxPanX = canvasModel.width - _canvasRect.width - ZOOM_MARGIN;
+				maxPanY = canvasModel.height - _canvasRect.height - ZOOM_MARGIN;
 			}
 
-			if (rect.x > minPanX) rect.x = minPanX;
-			if (rect.y > minPanY) rect.y = minPanY;
-			if (rect.x < maxPanX) rect.x = maxPanX;
-			if (rect.y < maxPanY) rect.y = maxPanY;
+			if (_canvasRect.x > minPanX) _canvasRect.x = minPanX;
+			if (_canvasRect.y > minPanY) _canvasRect.y = minPanY;
+			if (_canvasRect.x < maxPanX) _canvasRect.x = maxPanX;
+			if (_canvasRect.y < maxPanY) _canvasRect.y = maxPanY;
 		}
 
 		// -----------------------

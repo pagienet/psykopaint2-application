@@ -45,7 +45,6 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		public function LightingRenderer(lightingModel : LightingModel, context3d : Context3D)
 		{
-			_renderRect = new Rectangle(0, 0, CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT);
 			_lightingModel = lightingModel;
 			_lightingModel.onChange.add(onLightingModelChanged);
 			_globalVertexData = new Vector.<Number>();
@@ -73,7 +72,6 @@ package net.psykosoft.psykopaint2.core.rendering
 		public function set renderRect(value : Rectangle) : void
 		{
 			_renderRect = value;
-
 		}
 
 		public function get freezeRender() : Boolean

@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.rendering
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
@@ -57,15 +58,17 @@ package net.psykosoft.psykopaint2.core.rendering
 		private var _lightingRenderer : LightingRenderer;
 		private var _background : RefCountedTexture;
 		private var _backgroundBaseRect : Rectangle;
+		private var _renderRect : Rectangle;
 
 		public function CanvasRenderer()
 		{
-
+			_renderRect = new Rectangle(0, 0, CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT);
 		}
 
 		public function init(mode : String) : void
 		{
 			_lightingRenderer.init();
+			_lightingRenderer.renderRect = _renderRect;
 			_context3D = stage3D.context3D;
 			sourceTextureAlpha = mode == PaintMode.PHOTO_MODE? 1 : 0;
 			paintAlpha = 1;
@@ -104,6 +107,7 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function onChangeRenderRect(rect : Rectangle) : void
 		{
+			_renderRect = rect;
 			_lightingRenderer.renderRect = rect;
 			updateCanvasMatrix(rect);
 		}
@@ -126,12 +130,6 @@ package net.psykosoft.psykopaint2.core.rendering
 		private function freezeRendering() : void
 		{
 			_lightingRenderer.freezeRender = true;
-		}
-
-		//Mario - I will probably land in hell for this:
-		public function get renderRect():Rectangle
-		{
-			return _lightingRenderer.renderRect;
 		}
 
 		public function set sourceTextureAlpha( value:Number ):void
@@ -188,14 +186,13 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function createBackgroundRect() : Rectangle
 		{
-			var canvasRect : Rectangle = _lightingRenderer.renderRect;
 			var rect : Rectangle = new Rectangle();
 
 			// transformation matrix originalRect -> renderRect
-			var scaleX : Number = canvasRect.width / _backgroundBaseRect.width;
-			var scaleY : Number = canvasRect.height / _backgroundBaseRect.height;
-			var tx : Number = canvasRect.x - scaleX*_backgroundBaseRect.x;
-			var ty : Number = canvasRect.y - scaleY*_backgroundBaseRect.y;
+			var scaleX : Number = _renderRect.width / _backgroundBaseRect.width;
+			var scaleY : Number = _renderRect.height / _backgroundBaseRect.height;
+			var tx : Number = _renderRect.x - scaleX*_backgroundBaseRect.x;
+			var ty : Number = _renderRect.y - scaleY*_backgroundBaseRect.y;
 
 			// apply matrix to background rect (= 0, 0, 1, 1)
 			rect.width = scaleX;
@@ -208,8 +205,8 @@ package net.psykosoft.psykopaint2.core.rendering
 
 		private function isBackgroundVisible() : Boolean
 		{
-			return _background && (	renderRect.left > 0 || renderRect.right < canvas.width ||
-									renderRect.top > 0 || renderRect.bottom < canvas.height);
+			return _background && (	_renderRect.left > 0 || _renderRect.right < canvas.width ||
+									_renderRect.top > 0 || _renderRect.bottom < canvas.height);
 		}
 
 		public function renderToBitmapData() : BitmapData
