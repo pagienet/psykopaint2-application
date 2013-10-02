@@ -176,19 +176,19 @@ package net.psykosoft.psykopaint2.paint.views.color
 				case 0: //hue
 					hueHandle.x = sliderHolder.x  + sliderPaddingLeft + sx;
 					currentHSV.hue = 359 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
-					setCurrentColor( ColorConverter.HSVtoUINT(currentHSV), false );
+					setCurrentColor( ColorConverter.HSVtoUINT(currentHSV), false, true );
 					break;
 				case 1: //sat
 					saturationHandle.x = sliderHolder.x+ sliderPaddingLeft +  sx;
 					var v:Array = saturationSliderValues[int(255 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight))];
 					currentHSV.saturation = v[0];
 					currentHSV.value = v[1];
-					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false );
+					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false, true );
 					break;
 				case 2: //lightness
 					lightnessHandle.x = sliderHolder.x+ sliderPaddingLeft + sx;
 					currentHSV.value = 100 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
-					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false );
+					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false, true );
 					break;
 			}
 		}
@@ -209,8 +209,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			setCurrentColor( colorMixer.currentColor, false );
 		}
 		
-		public function setCurrentColor( newColor:uint, fromPalette:Boolean, triggerChange:Boolean = true ):void
+		public function setCurrentColor( newColor:uint, fromPalette:Boolean, fromSlider:Boolean = false, triggerChange:Boolean = true ):void
 		{
+			trace( "setCurrentColor", newColor, fromPalette, fromSlider, triggerChange);
 			currentColor =  newColor;
 			currentHSV = ColorConverter.UINTtoHSV(newColor);
 			
@@ -218,7 +219,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 			t.color = currentColor;
 			currentColorSwatch.transform.colorTransform = t;
 			saturationHandleBg.transform.colorTransform = t;
+			
+			t.color = ColorConverter.HSVtoUINT(new HSV(currentHSV.hue,100,100));
 			hueHandleBg.transform.colorTransform = t;
+			
+			t.color = ColorConverter.HSVtoUINT(new HSV(0,0,currentHSV.value));
 			lightnessHandleBg.transform.colorTransform = t;
 			
 			
@@ -227,11 +232,12 @@ package net.psykosoft.psykopaint2.paint.views.color
 			colorMixer.currentColor = currentColor;
 			updateSaturationSlider();
 			
-			
-			hueHandle.x = sliderHolder.x + sliderPaddingLeft + (isNaN( currentHSV.hue ) ? 0 : currentHSV.hue) / 360 * (255 -sliderPaddingLeft-sliderPaddingRight);
-			saturationHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.saturation / 100 * (255 -sliderPaddingLeft-sliderPaddingRight)
-			lightnessHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.value / 100 * (255 -sliderPaddingLeft-sliderPaddingRight);
-			
+			if ( !fromSlider )
+			{
+				hueHandle.x = sliderHolder.x + sliderPaddingLeft + (isNaN( currentHSV.hue ) ? 0 : currentHSV.hue) / 360 * (255 -sliderPaddingLeft-sliderPaddingRight);
+				saturationHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.saturation / 100 * (255 -sliderPaddingLeft-sliderPaddingRight)
+				lightnessHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.value / 100 * (255 -sliderPaddingLeft-sliderPaddingRight);
+			}
 		}
 		
 		protected function updateSaturationSlider():void

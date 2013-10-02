@@ -33,8 +33,7 @@ package com.quasimondo.color.utils
   		 */
 		public static function RGBtoHSV( rgb: IRGB ): HSV
 		{
-		//	if ( !rgb_hsv_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] )
-		//	{
+		
 				var min: Number;
 				var max: Number;
 				var delta: Number;
@@ -51,7 +50,7 @@ package com.quasimondo.color.utils
 				if ( max != 0 )
 					s =  100 * ( delta / max ) ;
 				else
-					return new HSV( -1, 0, v );
+					return new HSV( 0, 0, v );
 
 				if ( rgb.red == max)
 					h = ( rgb.green - rgb.blue ) * 60 / delta;
@@ -65,10 +64,7 @@ package com.quasimondo.color.utils
 					h += 360;
 				
 				return new HSV( h, s, v );
-		//		rgb_hsv_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ] = new HSV( Math.round( h ), s, v );
-			//}
-
-			//return HSV(rgb_hsv_lookup[ rgb.red << 16 | rgb.green << 8 | rgb.blue ]).clone();
+		
 		}
 		
 		/**

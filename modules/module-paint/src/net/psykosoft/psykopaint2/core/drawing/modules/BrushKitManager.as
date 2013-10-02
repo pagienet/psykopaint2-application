@@ -176,11 +176,14 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				updateColorPicker(null);
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_ENDED )
 			{
-				copyColorUtil.dispose();
-				(_view as CanvasView).removeChild(pickedColorPreview);
-				
-				_view.removeEventListener(Event.ENTER_FRAME, updateColorPicker );
-				_activeBrushKit.brushEngine.pathManager.activate(_view, canvasModel, renderer );
+				if (pickedColorPreview && (_view as CanvasView).contains(pickedColorPreview))
+				{
+					copyColorUtil.dispose();
+					(_view as CanvasView).removeChild(pickedColorPreview);
+					
+					_view.removeEventListener(Event.ENTER_FRAME, updateColorPicker );
+					_activeBrushKit.brushEngine.pathManager.activate(_view, canvasModel, renderer );
+				}
 			}
 		}
 
@@ -201,7 +204,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			}
 		}
 		
-		private function onPickedColorChanged( newColor:int ):void
+		private function onPickedColorChanged( newColor:int, dummy:Boolean ):void
 		{
 			_currentPaintColor =_currentBrushColorParameter.colorValue = newColor;
 		}
@@ -218,7 +221,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			var color:uint = currentColorMap.getPixel(px* CoreSettings.GLOBAL_SCALING,py* CoreSettings.GLOBAL_SCALING);
 			pickedColorTf.color = color;
 			pickedColorPreview.transform.colorTransform = pickedColorTf;
-			notifyPickedColorChangedSignal.dispatch(color);
+			notifyPickedColorChangedSignal.dispatch(color, true);
 		}
 		
 		
@@ -341,7 +344,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.brushEngine.addEventListener( AbstractBrush.STROKE_ENDED, onStrokeEnded );
 				_activeBrushKit.addEventListener( Event.CHANGE, onActiveBrushKitChanged );
 				updateCurrentBrushColorParameter( );
-				onPickedColorChanged( _currentPaintColor );
+				onPickedColorChanged( _currentPaintColor, false );
 			}
 		}
 

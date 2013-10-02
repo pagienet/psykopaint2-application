@@ -35,16 +35,16 @@ package net.psykosoft.psykopaint2.paint.views.color
 		// -----------------------
 		private function onColorChanged():void
 		{
-			notifyPickedColorChangedSignal.dispatch(view.currentColor);
+			notifyPickedColorChangedSignal.dispatch(view.currentColor, false);
 		}
 		
 		
 		// -----------------------
 		// From app.
 		// -----------------------
-		private function onColorChangedFromOutside( newColor:uint):void
+		private function onColorChangedFromOutside( newColor:uint, reallyFromOutside:Boolean ):void
 		{
-			view.setCurrentColor(newColor,false,false);
+			if ( reallyFromOutside ) view.setCurrentColor(newColor,false,false,false);
 		}
 		
 		
