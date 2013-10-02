@@ -209,8 +209,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			// -----------------------
 
 			// Pick one.
-//			_injector.map( LoggedInUserProxy ).toSingleton(AMFLoggedInUserProxy);
-			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);
+			_injector.map( LoggedInUserProxy ).toSingleton(AMFLoggedInUserProxy);
+//			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);
 
 			// Pick one.
 //			_injector.map(GalleryService).toSingleton(DummyGalleryService);
