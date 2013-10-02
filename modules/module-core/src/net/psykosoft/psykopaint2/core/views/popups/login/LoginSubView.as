@@ -119,7 +119,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private function forgot():void {
 			clearAllSatelliteMessages();
 			if( !validateEmailFormat() ) return;
-			forgotBtnClickedSignal.dispatch();
+			forgotBtnClickedSignal.dispatch( emailInput.text );
 		}
 
 		private function validateEmailFormat():Boolean {

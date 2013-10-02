@@ -73,7 +73,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private function onRegisterFailure( amfErrorCode:int ):void {
 			view.signupSubView.signupBtn.dontSpin();
-			trace( this, "register failed" );
+			trace( this, "register failed - error code: " + amfErrorCode );
 			// TODO: give feedback about error via view.signupSubView.displaySatelliteMessage()
 			view.signupSubView.rejectPassword();
 		}
@@ -86,7 +86,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// the fail signal contains an int with a value from AMFErrorCode.as
 		private function onLoginFailure( amfErrorCode:int ):void {
 			view.loginSubView.loginBtn.dontSpin();
-			trace( this, "login failed" );
+			trace( this, "login failed - error code: " + amfErrorCode );
 			// TODO: give feedback about error via view.loginSubView.displaySatelliteMessage()
 			view.loginSubView.rejectPassword();
 		}
@@ -111,11 +111,13 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			vo.firstName = firstName;
 			vo.lastName = lastName;
 			loggedInUserProxy.registerAndLogIn( vo );
+			// TODO: send photo/photos via separate setProfilePicture() method
 		}
 
-		private function onForgottenPassword():void {
-			// TODO: call service here and listen for reply to display a message below the login button, then dismiss the pop up?
-			// LoginCopy.as -> PASSWORD_REMINDER
+		private function onForgottenPassword( email:String ):void {
+			loggedInUserProxy.sendPasswordReminder( email );
+			view.loginSubView.clearAllSatelliteMessages();
+			view.loginSubView.displaySatelliteMessage( view.loginSubView.emailInput, LoginCopy.PASSWORD_REMINDER );
 		}
 
 		private function onPopUpWantsToLogIn( email:String, password:String ):void {

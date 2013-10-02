@@ -121,6 +121,10 @@ package net.psykosoft.psykopaint2.core.services
 							);
 		}
 
+		public function passwordReset( email:String ):void {
+			_connection.call( "Main/passwordReset", null, email );
+		}
+
 		public function logOut(sessionID : String, onSuccess : Function, onFail : Function) : void
 		{
 			_connection.call("Main/logout", new Responder(onSuccess, onFail), sessionID);

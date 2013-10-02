@@ -56,6 +56,10 @@ package net.psykosoft.psykopaint2.core.models
 		{
 		}
 
+		public function sendPasswordReminder( email:String ):void {
+			amfBridge.passwordReset( email );
+		}
+
 		public function isLoggedIn() : Boolean
 		{
 			return _userID != -1;
