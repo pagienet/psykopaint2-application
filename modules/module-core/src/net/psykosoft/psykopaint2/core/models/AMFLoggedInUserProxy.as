@@ -77,7 +77,7 @@ package net.psykosoft.psykopaint2.core.models
 			}
 			_userID = -1;
 			_sessionID = null;
-			_facebookID = null;
+			_facebookID = 0;
 			_active = false;
 			_banned = false;
 			_firstName = null;
