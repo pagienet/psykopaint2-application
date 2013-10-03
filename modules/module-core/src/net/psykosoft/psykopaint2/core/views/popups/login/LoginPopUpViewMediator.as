@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.UserRegistrationVO;
+	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
@@ -86,10 +87,24 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		// the fail signal contains an int with a value from AMFErrorCode.as
 		private function onLoginFailure( amfErrorCode:int, reason:String ):void {
-			view.loginSubView.loginBtn.dontSpin();
+
 			trace( this, "login failed - error code: " + amfErrorCode );
-			// TODO: give feedback about error via view.loginSubView.displaySatelliteMessage()
-			view.loginSubView.rejectPassword();
+			view.loginSubView.loginBtn.dontSpin();
+
+			// Error feedback.
+			if( amfErrorCode == AMFErrorCode.CALL_STATUS_FAILED ) { // LOGIN REJECTED
+				if( reason == "EMAIL" ) {
+					view.loginSubView.rejectEmail();
+					view.loginSubView.displaySatelliteMessage( view.loginSubView.emailInput, LoginCopy.NOT_REGISTERED );
+				}
+				else {
+					view.loginSubView.rejectPassword();
+					view.loginSubView.displaySatelliteMessage( view.loginSubView.passwordInput, LoginCopy.INCORRECT_PASSWORD );
+				}
+			}
+			else {
+				view.loginSubView.displaySatelliteMessage( view.loginSubView.loginBtn, LoginCopy.ERROR, view.loginSubView.loginBtn.width / 2, view.loginSubView.loginBtn.height / 2 );
+			}
 		}
 
 		private function onLoginSuccess():void {

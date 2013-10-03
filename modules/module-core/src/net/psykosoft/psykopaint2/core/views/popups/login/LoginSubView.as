@@ -75,11 +75,11 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// Interface.
 		// -----------------------
 
-		public function displaySatelliteMessage( targetSource:Sprite, msg:String ):void {
+		public function displaySatelliteMessage( targetSource:Sprite, msg:String, offsetX:Number = 0, offsetY:Number = 0 ):void {
 			var label:LoginMessageLabel = new LoginMessageLabel();
 			label.labelText = msg;
-			label.x = targetSource.x + targetSource.width / 2 + 5;
-			label.y = targetSource.y + MathUtil.rand( -10, 10 );
+			label.x = targetSource.x + targetSource.width / 2 + 5 + offsetX;
+			label.y = targetSource.y + MathUtil.rand( -10, 10 ) + offsetY;
 			label.rotation = MathUtil.rand( -10, 10 );
 			addChild( label );
 			if( !_satelliteMessages ) _satelliteMessages = new Vector.<LoginMessageLabel>();
@@ -133,6 +133,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private function validatePasswordFormat():Boolean {
 			var valid:int = PsykoInputValidationUtil.validatePasswordFormat( passwordInput );
+			trace( this, "validating password: " + valid );
 			if( valid == 1 ) displaySatelliteMessage( passwordInput, LoginCopy.NO_PASSWORD );
 			return valid == 0;
 		}

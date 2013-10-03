@@ -64,10 +64,13 @@ package net.psykosoft.psykopaint2.core.models
 			_active = true;
 			_banned = false;
 
+			// Panic not! This time out is ok, it's just for testing...
 			setTimeout( function():void {
 				// Pick one.
-				notifyUserLoggedInSignal.dispatch();
-//				notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CALL_STATUS_AUTH_ERROR );
+//				notifyUserLoggedInSignal.dispatch();
+//				notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CALL_STATUS_FAILED, "EMAIL" );
+//				notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CALL_STATUS_FAILED, "PASSWORD" );
+				notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CONNECTION_IO_ERROR, "" );
 			}, 2000 );
 		}
 
