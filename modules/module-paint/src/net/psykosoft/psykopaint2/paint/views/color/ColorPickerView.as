@@ -279,5 +279,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 			hueMap.unlock();
 			lightnessMap.unlock()
 		}
+		
+		public function attemptPipetteCharge():void
+		{
+			colorPalette.attemptPipetteCharge();
+			
+		}
+		
+		public function endPipetteCharge():void
+		{
+			colorPalette.endPipetteCharge();
+			
+		}
 	}
 }

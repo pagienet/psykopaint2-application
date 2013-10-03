@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
 	import flash.display.Bitmap;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -21,6 +22,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var colorOverlay9:Sprite;
 		public var colorOverlay10:Sprite;
 		public var colorOverlay11:Sprite;
+		public var pipette:MovieClip;
 		
 		public const palettes:Array = [[0x000000,0x062750,0x04396c,0x01315a,0x00353b,0x026d01,
 										0x452204,0x7a1023,0xa91606,0xd94300,0xbd9c01,0xdedddb]];
@@ -98,6 +100,24 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public function get currentPalette():Array
 		{
 			return palettes[selectedPaletteIndex];
+		}
+		
+		public function attemptPipetteCharge():void
+		{
+			if ( mouseY < -100 || mouseX < -225 || mouseX > 240 ) return;
+			
+			pipette.x = mouseX;
+			pipette.y = mouseY;
+			
+			pipette.visible = true;
+			pipette.gotoAndPlay(1);
+		}
+		
+		
+		public function endPipetteCharge():void
+		{
+			pipette.visible = false;
+			pipette.stop();
 		}
 	}
 }
