@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.signals
 	{
 		public function NotifyUserLogOutFailedSignal()
 		{
+			// AMFErrorCode, reason
 			super(int, String);
 		}
 	}
