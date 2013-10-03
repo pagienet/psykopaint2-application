@@ -95,9 +95,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private function onLoginSuccess():void {
 			view.loginSubView.loginBtn.dontSpin();
 			trace( this, "logged in" );
-			setTimeout( function():void {
-				requestHidePopUpSignal.dispatch();
-			}, 1000 );
+			requestHidePopUpSignal.dispatch();
 		}
 
 		// -----------------------

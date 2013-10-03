@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
-	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButtonAlt;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpViewBase;
 
