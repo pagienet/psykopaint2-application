@@ -251,6 +251,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			
 			_longTapGesture = new LongPressGesture( _stage );
 			_longTapGesture.minPressDuration = 170;
+			_longTapGesture.slop = 1;
 			_longTapGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onLongTapGestureBegan );
 			_longTapGesture.addEventListener( GestureEvent.GESTURE_ENDED, onLongTapGestureEnded );
 			

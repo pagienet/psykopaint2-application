@@ -16,19 +16,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function BasicSmoothBrushShape(context3D : Context3D)
 		{
-			super(context3D, "basic smooth", 64);
+			super(context3D, "basic smooth", 128);
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void
 		{
 			var size : Number = _textureSize;
 			var shp : Shape = new Shape();
-			var bitmapData : BitmapData = new TrackedBitmapData(size, size, true, 0);
+			var bitmapData : BitmapData = new TrackedBitmapData(size, size, false, 0);
 			shp.graphics.beginFill(0xffffff);
 		//	var absBlur : Number = size * _blurAmount * .5;
-			shp.graphics.drawCircle(size *.5, size *.5, size * 0.5 - 2);
+			shp.graphics.drawCircle(size *.5, size *.5, size * 0.5 - 10);
 			shp.graphics.endFill();
-			bitmapData.drawWithQuality(shp,null,null,"normal",null,true,StageQuality.HIGH);
+			bitmapData.drawWithQuality(shp,null,null,"normal",null,true,StageQuality.BEST);
 		//	bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(), new BlurFilter(absBlur, absBlur, 3));
 			uploadMips(_textureSize, bitmapData, texture);
 			bitmapData.dispose();
@@ -38,13 +38,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		{
 			var size : Number = _textureSize;
 			var shp : Shape = new Shape();
-			var bitmapData : BitmapData = new TrackedBitmapData(size, size, true, 0);
-			shp.graphics.beginFill(0xffffff);
+			var bitmapData : BitmapData = new TrackedBitmapData(size, size, false, 0);
+			shp.graphics.beginFill(0x10cccc);
 			//var absBlur : Number = size * _blurAmount * .5;
-			shp.graphics.drawCircle(size *.5, size *.5, size * 0.5 - 4);
+			shp.graphics.drawCircle(size *.5, size *.5, size * 0.5 - 8);
 			shp.graphics.endFill();
 			bitmapData.drawWithQuality(shp,null,null,"normal",null,true,StageQuality.HIGH);
-			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(), new BlurFilter(2, 2, 2));
+			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(), new BlurFilter(32, 4, 3));
 			uploadMips(_textureSize, bitmapData, texture);
 			bitmapData.dispose();
 		}
