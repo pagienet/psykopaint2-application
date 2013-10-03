@@ -576,13 +576,52 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_3" index={BumpDecorator.INDEX_MODE_RANDOM} />
 							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_3" value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3" value="0.5" minValue="0" maxValue="3" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_3" value="0.25"/>
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3" value="0.5" minValue="0.5" maxValue="0.5" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_3" value="0.05"/>
 							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_3" value="0.8"   />
 
 						</BumpDecorator>
 					</pathengine>
 				</brush>
+
+
+<brush engine={BrushType.SPRAY_CAN} name="Quill">
+					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="basic smooth"/>
+					
+					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
+
+						<parameter id={AbstractPathEngine.PARAMETER_SPEED_SMOOTHING} path="pathengine" value="0.99" />
+						<parameter id={AbstractPathEngine.PARAMETER_OUTPUT_STEP} path="pathengine" value="1" />
+						
+						<SizeDecorator>
+							<parameter id={SizeDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_0" index={SizeDecorator.INDEX_MODE_PRESSURE_SPEED} />
+							<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0" label="Size" value="0.12" minValue="0" maxValue="1" />
+							<parameter id={SizeDecorator.PARAMETER_N_RANGE} path="pathengine.pointdecorator_0" label="Range" value="0.11" minValue="0" maxValue="1" />
+							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} path="pathengine.pointdecorator_0" index={SizeDecorator.INDEX_MAPPING_CIRCQUAD}/>
+						</SizeDecorator>
+
+						<ColorDecorator>
+							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_1" value="1" />
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY_RANGE}  path="pathengine.pointdecorator_1" value="0" />
+							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" value1="0.5" value2="0.9" />
+							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.25" value2="0.33" />
+							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_1" value1="0.8" value2="1" />
+							<parameter id={ColorDecorator.PARAMETER_B_COLORMATRIX}  path="pathengine.pointdecorator_1" value="1" />
+							<parameter id={ColorDecorator.PARAMETER_NR_BRIGHTNESS}  path="pathengine.pointdecorator_1" value1="-5" value2="5" />
+						</ColorDecorator>
+
+						<BumpDecorator>
+							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.INDEX_MODE_FIXED} />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_2" value="0.1" minValue="0" maxValue="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_2" value="0"/>
+							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_2" value="0.95"   />
+
+						</BumpDecorator>
+					</pathengine>
+				</brush>
+
 				
 				<brush engine={BrushType.SPRAY_CAN} name="Spray Can">
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />

@@ -2,20 +2,21 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 {
 	import flash.display.BitmapData;
 	import flash.display.Shape;
+	import flash.display.StageQuality;
 	import flash.display3D.Context3D;
 	import flash.display3D.textures.Texture;
 	import flash.filters.BlurFilter;
 	import flash.geom.Point;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class BasicSmoothBrushShape extends AbstractBrushShape
 	{
-		private var _blurAmount : Number = .25;
+	//	private var _blurAmount : Number = .05;
 
 		public function BasicSmoothBrushShape(context3D : Context3D)
 		{
-			super(context3D, "basic smooth", 1);
+			super(context3D, "basic smooth", 64);
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void
@@ -24,11 +25,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			var shp : Shape = new Shape();
 			var bitmapData : BitmapData = new TrackedBitmapData(size, size, true, 0);
 			shp.graphics.beginFill(0xffffff);
-			var absBlur : Number = size * _blurAmount * .5;
-			shp.graphics.drawCircle(size *.5, size *.5, size - absBlur);
+		//	var absBlur : Number = size * _blurAmount * .5;
+			shp.graphics.drawCircle(size *.5, size *.5, size * 0.5 - 2);
 			shp.graphics.endFill();
-			bitmapData.draw(shp);
-			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(), new BlurFilter(absBlur, absBlur, 3));
+			bitmapData.drawWithQuality(shp,null,null,"normal",null,true,StageQuality.HIGH);
+		//	bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(), new BlurFilter(absBlur, absBlur, 3));
 			uploadMips(_textureSize, bitmapData, texture);
 			bitmapData.dispose();
 		}
@@ -39,11 +40,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			var shp : Shape = new Shape();
 			var bitmapData : BitmapData = new TrackedBitmapData(size, size, true, 0);
 			shp.graphics.beginFill(0xffffff);
-			var absBlur : Number = size * _blurAmount * .5;
-			shp.graphics.drawCircle(size *.5, size *.5, size - absBlur);
+			//var absBlur : Number = size * _blurAmount * .5;
+			shp.graphics.drawCircle(size *.5, size *.5, size * 0.5 - 4);
 			shp.graphics.endFill();
-			bitmapData.draw(shp);
-			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(), new BlurFilter(absBlur, absBlur, 3));
+			bitmapData.drawWithQuality(shp,null,null,"normal",null,true,StageQuality.HIGH);
+			bitmapData.applyFilter(bitmapData, bitmapData.rect, new Point(), new BlurFilter(2, 2, 2));
 			uploadMips(_textureSize, bitmapData, texture);
 			bitmapData.dispose();
 		}
