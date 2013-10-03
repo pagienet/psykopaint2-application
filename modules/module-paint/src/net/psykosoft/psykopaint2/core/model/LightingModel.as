@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.model
 	import net.psykosoft.psykopaint2.core.rendering.AOShadowModel;
 
 	import net.psykosoft.psykopaint2.core.rendering.AmbientConstantModel;
+	import net.psykosoft.psykopaint2.core.rendering.AmbientEnvMapModel;
 	import net.psykosoft.psykopaint2.core.rendering.AmbientOccludedModel;
 	import net.psykosoft.psykopaint2.core.rendering.CameraEnvMap;
 
@@ -69,6 +70,7 @@ package net.psykosoft.psykopaint2.core.model
 //			_shadowModel = new AOShadowModel();
 //			_shadowModel = new SoftShadowModel();
 			ambientColor = 0x808088;
+//			ambientColor = 0xffffff;
 
 			_diffuseModel = new DiffuseLambertModel();
 			_specularModel = new SpecularBlinnModel();

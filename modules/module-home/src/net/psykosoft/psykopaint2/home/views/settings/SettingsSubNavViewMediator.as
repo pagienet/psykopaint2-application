@@ -80,7 +80,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		// From app.
 		// -----------------------
 
-		private function onLogOutFailed( amfErrorCode:int ):void {
+		private function onLogOutFailed( amfErrorCode:int, reason:String ):void {
 			trace( this, "log out failed - error code: " + amfErrorCode );
 		}
 

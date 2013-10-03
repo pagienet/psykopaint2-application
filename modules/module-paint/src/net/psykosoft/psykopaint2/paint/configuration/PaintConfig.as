@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 {
 
 	import net.psykosoft.psykopaint2.core.commands.ClearCanvasCommand;
+	import net.psykosoft.psykopaint2.core.commands.SavePaintingToServerCommand;
 	import net.psykosoft.psykopaint2.core.commands.UndoCanvasActionCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
@@ -26,6 +27,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifySetColorStyleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.paint.commands.DeletePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.DestroyPaintModuleCommand;
@@ -163,6 +165,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_commandMap.map( RequestPaintingDeletionSignal ).toCommand( DeletePaintingCommand );
 			_commandMap.map( RequestSetupPaintModuleSignal ).toCommand( SetupPaintModuleCommand );
 			_commandMap.map( RequestDestroyPaintModuleSignal ).toCommand( DestroyPaintModuleCommand );
+
+			_commandMap.map( RequestSavePaintingToServerSignal ).toCommand( SavePaintingToServerCommand );
 
 			// TODO: Remove this unmap, this signifies bad cross-modular design
 			_injector.unmap( RequestLoadSurfaceSignal );

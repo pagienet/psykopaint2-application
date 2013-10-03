@@ -91,7 +91,7 @@ package net.psykosoft.psykopaint2.core.models
 		private function onLogOutSuccess(data : Object) : void
 		{
 			if (data["status_code"] != 1) {
-				notifyUserLogOutFailedSignal.dispatch(data["status_code"]);
+				notifyUserLogOutFailedSignal.dispatch(data["status_code"], data["status_reason"]);
 				return;
 			}
 			_userID = -1;
@@ -107,13 +107,13 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onLogOutFail(data : Object) : void
 		{
-			notifyUserLogOutFailedSignal.dispatch(AMFErrorCode.CALL_FAILED);
+			notifyUserLogOutFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
 		}
 
 		private function onLogInSuccess(data : Object) : void
 		{
 			if (data["status_code"] != 1) {
-				notifyUserLogInFailedSignal.dispatch(data["status_code"]);
+				notifyUserLogInFailedSignal.dispatch(data["status_code"], data["status_reason"]);
 				return;
 			}
 
@@ -138,7 +138,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onLogInFail(data : Object) : void
 		{
-			notifyUserLogInFailedSignal.dispatch(AMFErrorCode.CALL_FAILED);
+			notifyUserLogInFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
 		}
 
 		public function requestPasswordReset(email : String) : void
@@ -148,13 +148,13 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onPasswordResetFail(data : Object) : void
 		{
-			notifyPasswordResetSucceededSignal.dispatch(AMFErrorCode.CALL_FAILED);
+			notifyPasswordResetFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
 		}
 
 		private function onPasswordResetSuccess(data : Object) : void
 		{
 			if (data["status_code"] != 1) {
-				notifyPasswordResetSucceededSignal.dispatch(data["status_code"]);
+				notifyPasswordResetFailedSignal	.dispatch(data["status_code"], data["status_reason"]);
 				return;
 			}
 
@@ -164,7 +164,7 @@ package net.psykosoft.psykopaint2.core.models
 		private function onRegisterSuccess(data : Object) : void
 		{
 			if (data["status_code"] != 1) {
-				notifyUserRegistrationFailedSignal.dispatch(data["status_code"]);
+				notifyUserRegistrationFailedSignal.dispatch(data["status_code"], data["status_reason"]);
 				return;
 			}
 
@@ -175,7 +175,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onRegisterFail(data : Object) : void
 		{
-			notifyUserRegistrationFailedSignal.dispatch(AMFErrorCode.CALL_FAILED);
+			notifyUserRegistrationFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
 		}
 
 		public function get sessionID() : String

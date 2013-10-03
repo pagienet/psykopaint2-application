@@ -72,7 +72,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// From app.
 		// -----------------------
 
-		private function onRegisterFailure( amfErrorCode:int ):void {
+		private function onRegisterFailure( amfErrorCode:int, reason:String ):void {
 			view.signupSubView.signupBtn.dontSpin();
 			trace( this, "register failed - error code: " + amfErrorCode );
 			// TODO: give feedback about error via view.signupSubView.displaySatelliteMessage()
@@ -85,7 +85,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		// the fail signal contains an int with a value from AMFErrorCode.as
-		private function onLoginFailure( amfErrorCode:int ):void {
+		private function onLoginFailure( amfErrorCode:int, reason:String ):void {
 			view.loginSubView.loginBtn.dontSpin();
 			trace( this, "login failed - error code: " + amfErrorCode );
 			// TODO: give feedback about error via view.loginSubView.displaySatelliteMessage()

@@ -2,8 +2,13 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Sine;
-	
+
+	import flash.display.BitmapData;
+
 	import flash.display.Stage;
+	import flash.display.Stage3D;
+	import flash.display3D.Context3DTextureFormat;
+	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
@@ -15,6 +20,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
@@ -50,6 +56,12 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var requestAddViewToMainLayerSignal:RequestAddViewToMainLayerSignal;
+
+		[Inject]
+		public var lightingModel : LightingModel;
+
+		[Inject]
+		public var stage3D : Stage3D;
 
 		override public function execute() : void
 		{

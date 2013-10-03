@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.signals
 	{
 		public function NotifyUserLogOutFailedSignal()
 		{
-			super(int);
+			super(int, String);
 		}
 	}
 }
