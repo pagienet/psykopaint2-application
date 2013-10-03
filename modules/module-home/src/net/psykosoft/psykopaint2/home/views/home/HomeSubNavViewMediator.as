@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			super.initialize();
 
 			// Uncomment for faster login views dev.
-//			requestShowPopUpSignal.dispatch( PopUpType.LOGIN );
+			requestShowPopUpSignal.dispatch( PopUpType.LOGIN );
 		}
 	}
 }
