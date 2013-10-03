@@ -456,7 +456,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value=".8"/>
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="paint1"/>
 					<parameterMapping>
-						<parameter id="Size" label="Size" previewID={PreviewIconFactory.PREVIEW_SIZE} value="0.25" minValue="0.1" maxValue="1" showInUI="1"/>
+						<parameter id="Size" label="Size" previewID={PreviewIconFactory.PREVIEW_SIZE} value="0.55" minValue="0.1" maxValue="1" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
 							src="Size" 
 							target={"pathengine.pointdecorator_0."+SizeDecorator.PARAMETER_N_FACTOR}
@@ -477,9 +477,70 @@ package net.psykosoft.psykopaint2.paint.configuration
 							target={"pathengine.pointdecorator_1."+SplatterDecorator.PARAMETER_N_SPLAT_FACTOR}
 							targetProperties="value"
 							targetOffsets="0"
-							targetFactors="50"
+							targetFactors="40"
 							/>
 						
+						<parameter id="Quantity" label="Quantity" previewID={PreviewIconFactory.PREVIEW_PRECISION} value="0.5" minValue="0" maxValue="1" showInUI="1"/>
+						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
+							src="Quantity" 
+							target={"pathengine.pointdecorator_2."+ColorDecorator.PARAMETER_N_OPACITY}
+							targetProperties="value"
+							targetOffsets="0.1"
+							targetFactors="0.9"
+							targetMappings="2"
+							/>
+						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
+							src="Quantity" 
+							target={"pathengine.pointdecorator_2."+ColorDecorator.PARAMETER_N_OPACITY_RANGE}
+							targetProperties="value"
+							targetOffsets="0"
+							targetFactors="0.25"
+							targetMappings="0"
+							/>
+						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
+							src="Quantity" 
+							target={"pathengine.pointdecorator_3."+BumpDecorator.PARAMETER_N_BUMPINESS}
+							targetProperties="value"
+							targetOffsets="0"
+							targetFactors="1"
+							targetMappings="0"
+							/>
+						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
+							src="Quantity" 
+							target={"pathengine.pointdecorator_3."+BumpDecorator.PARAMETER_N_BUMPINESS_RANGE}
+							targetProperties="value"
+							targetOffsets="0"
+							targetFactors="0.25"
+							targetMappings="0"
+							/>
+						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
+							src="Quantity" 
+							target={"pathengine.pointdecorator_3."+BumpDecorator.PARAMETER_N_BUMP_INFLUENCE}
+							targetProperties="value"
+							targetOffsets="0.8"
+							targetFactors="-0.3"
+							targetMappings="0"
+							/>
+
+						<parameter id="Wetness" label="Wetness" previewID={PreviewIconFactory.PREVIEW_PRECISION} value="0.5" minValue="0" maxValue="1" showInUI="1"/>
+						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
+							src="Wetness" 
+							target={"pathengine.pointdecorator_3."+BumpDecorator.PARAMETER_N_SHININESS}
+							targetProperties="value"
+							targetOffsets="0"
+							targetFactors="1"
+							targetMappings="0"
+							/>
+						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
+							src="Wetness" 
+							target={"pathengine.pointdecorator_3."+BumpDecorator.PARAMETER_N_GLOSSINESS}
+							targetProperties="value"
+							targetOffsets="0"
+							targetFactors="1"
+							targetMappings="0"
+							/>
+						
+
 					</parameterMapping>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 
@@ -503,21 +564,22 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_2" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
-							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" previewID={PreviewIconFactory.PREVIEW_ALPHA}  path="pathengine.pointdecorator_2" value="0.9" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_2" value="0.9" />
 							<parameter id={ColorDecorator.PARAMETER_N_OPACITY_RANGE}  path="pathengine.pointdecorator_2" value="0.2" />
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_2" value1="0.5" value2="0.9" />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_2" value1="0.25" value2="0.33" />
 							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_2" value1="0.8" value2="1" />
 							<parameter id={ColorDecorator.PARAMETER_B_COLORMATRIX}  path="pathengine.pointdecorator_2" value="1" />
-							<parameter id={ColorDecorator.PARAMETER_NR_BRIGHTNESS}  path="pathengine.pointdecorator_2" value1="-15" value2="15" />
+							<parameter id={ColorDecorator.PARAMETER_NR_BRIGHTNESS}  path="pathengine.pointdecorator_2" value1="-5" value2="5" />
 						</ColorDecorator>
 
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_3" index={BumpDecorator.INDEX_MODE_RANDOM} />
 							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_3" value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3" previewID={PreviewIconFactory.PREVIEW_DEPTH} value="0" minValue="0" maxValue="3" showInUI="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_3" value="3"/>
-							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_3" value=".8"   />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3" value="0.5" minValue="0" maxValue="3" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_3" value="0.25"/>
+							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_3" value="0.8"   />
+
 						</BumpDecorator>
 					</pathengine>
 				</brush>
