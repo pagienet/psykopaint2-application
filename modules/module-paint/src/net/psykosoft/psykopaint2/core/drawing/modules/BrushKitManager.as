@@ -4,9 +4,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Sine;
 	
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
+	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
@@ -51,6 +53,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.paint.views.color.ColorPickerView;
 	
 	import org.gestouch.events.GestureEvent;
+	import org.gestouch.gestures.LongPressGesture;
 
 	// TODO: Clean up by moving into custom stuff where not affecting brush kits
 	public class BrushKitManager
@@ -162,22 +165,27 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN && _activeMode == PaintMode.COLOR_MODE )
 			{
-				if ( copyColorUtil == null )
+				var target:Stage =  Stage(LongPressGesture(event.target).target);
+				var obj:Array = target.getObjectsUnderPoint(LongPressGesture(event.target).location);
+				if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
 				{
-					copyColorUtil = new CopyColorToBitmapDataUtil(); 
-					pickedColorPreview = new Shape();
-					pickedColorPreview.graphics.beginFill(0);
-					pickedColorPreview.graphics.drawCircle(0,0,25);
-					pickedColorPreview.graphics.endFill();
+					if ( copyColorUtil == null )
+					{
+						copyColorUtil = new CopyColorToBitmapDataUtil(); 
+						pickedColorPreview = new Shape();
+						pickedColorPreview.graphics.beginFill(0);
+						pickedColorPreview.graphics.drawCircle(0,0,25);
+						pickedColorPreview.graphics.endFill();
+						
+						pickedColorTf = new ColorTransform();
+					}
+					currentColorMap = copyColorUtil.execute( canvasModel );
+					_activeBrushKit.brushEngine.pathManager.deactivate();
+					_view.addEventListener(Event.ENTER_FRAME, updateColorPicker );
+					(_view as CanvasView).addChild(pickedColorPreview);
 					
-					pickedColorTf = new ColorTransform();
+					updateColorPicker(null);
 				}
-				currentColorMap = copyColorUtil.execute( canvasModel );
-				_activeBrushKit.brushEngine.pathManager.deactivate();
-				_view.addEventListener(Event.ENTER_FRAME, updateColorPicker );
-				(_view as CanvasView).addChild(pickedColorPreview);
-				
-				updateColorPicker(null);
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_ENDED )
 			{
 				if (pickedColorPreview && (_view as CanvasView).contains(pickedColorPreview))

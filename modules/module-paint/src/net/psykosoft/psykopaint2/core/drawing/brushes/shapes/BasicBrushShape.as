@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function BasicBrushShape(context3D : Context3D)
 		{
-			super(context3D, "basic", 1);
+			super(context3D, "basic",64);
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void

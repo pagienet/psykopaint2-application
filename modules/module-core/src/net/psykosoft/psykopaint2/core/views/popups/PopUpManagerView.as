@@ -43,6 +43,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 		}
 
 		private function showPopUpAnimated( popUp:PopUpViewBase ):void {
+			_popUp.onGoingToAnimateIn();
 			TweenLite.killTweensOf( popUp );
 			popUp.x = 1024;
 			TweenLite.to( popUp, 0.5, { x: 0, delay: 0.0, ease: Strong.easeOut, onComplete: onShowPopUpComplete } );
@@ -50,6 +51,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 
 		private function onShowPopUpComplete():void {
 			popUpShownSignal.dispatch();
+			_popUp.onAnimatedIn();
 		}
 
 		// -----------------------
@@ -62,12 +64,14 @@ package net.psykosoft.psykopaint2.core.views.popups
 		}
 
 		private function hidePopUpAnimated( popUp:PopUpViewBase ):void {
+			_popUp.onGoingToAnimateOut();
 			TweenLite.killTweensOf( popUp );
 			popUp.x = 0;
 			TweenLite.to( popUp, 0.5, { x: 1024, delay: 0.0, ease: Strong.easeIn, onComplete: onHidePopUpComplete } );
 		}
 
 		private function onHidePopUpComplete():void {
+			_popUp.onAnimatedOut();
 			_popUp.disable();
 			removeChild( _popUp );
 			_popUp = null;

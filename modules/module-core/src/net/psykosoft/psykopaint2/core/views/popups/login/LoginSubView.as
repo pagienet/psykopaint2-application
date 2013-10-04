@@ -26,7 +26,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public var forgotButton:LinkButton;
 		public var static1:Sprite;
 		public var static2:Sprite;
-		public var backBtn:FoldButton;
 
 		public var viewWantsToLogInSignal:Signal;
 		public var forgotBtnClickedSignal:Signal;
@@ -42,7 +41,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			backBtnClickedSignal = new Signal();
 
 			loginBtn.labelText = "LOGIN";
-			backBtn.labelText = "BACK";
 
 			emailInput.defaultText = "email";
 			passwordInput.defaultText = "password";
@@ -55,14 +53,12 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			loginBtn.addEventListener( MouseEvent.CLICK, onLoginBtnClick );
 			forgotButton.addEventListener( MouseEvent.CLICK, onForgotBtnClick );
-			backBtn.addEventListener( MouseEvent.CLICK, onBackBtnClick );
 		}
 
 		public function dispose():void {
 
 			loginBtn.removeEventListener( MouseEvent.CLICK, onLoginBtnClick );
 			forgotButton.removeEventListener( MouseEvent.CLICK, onForgotBtnClick );
-			backBtn.removeEventListener( MouseEvent.CLICK, onBackBtnClick );
 
 			emailInput.enterPressedSignal.remove( onEmailInputEnterPressed );
 			passwordInput.enterPressedSignal.remove( onPasswordInputEnterPressed );
@@ -71,7 +67,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			passwordInput.dispose();
 			loginBtn.dispose();
 			forgotButton.dispose();
-			backBtn.dispose();
 
 			clearAllSatelliteMessages();
 		}

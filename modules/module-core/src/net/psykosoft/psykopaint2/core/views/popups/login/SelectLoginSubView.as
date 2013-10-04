@@ -13,7 +13,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// Declared in Flash.
 		public var loginBtn:FoldButton;
 		public var signupBtn:FoldButton;
-		public var backBtn:FoldButton;
 
 		public var loginClickedSignal:Signal;
 		public var signupClickedSignal:Signal;
@@ -28,22 +27,18 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			loginBtn.labelText = "LOGIN";
 			signupBtn.labelText = "SIGN UP";
-			backBtn.labelText = "BACK";
 
 			loginBtn.addEventListener( MouseEvent.CLICK, onLoginBtnClicked );
 			signupBtn.addEventListener( MouseEvent.CLICK, onSignupBtnClicked );
-			backBtn.addEventListener( MouseEvent.CLICK, onBackBtnClick );
 		}
 
 		public function dispose():void {
 
 			loginBtn.dispose();
 			signupBtn.dispose();
-			backBtn.dispose();
 
 			loginBtn.removeEventListener( MouseEvent.CLICK, onLoginBtnClicked );
 			signupBtn.removeEventListener( MouseEvent.CLICK, onSignupBtnClicked );
-			backBtn.removeEventListener( MouseEvent.CLICK, onBackBtnClick );
 		}
 
 		// -----------------------

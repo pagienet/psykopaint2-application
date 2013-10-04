@@ -69,17 +69,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						var angle:Number = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
 						
 						var speed:Number = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
-						
+						lastPointSpeed = ((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed );
 						var p:SamplePoint = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
 																		ti2*p1y+tit*cy+tt*p2y,
-																		((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ) * speedCorrection,
+																		lastPointSpeed * speedCorrection,
 																		0,
 																		angle,
 																		ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
 																		p1.penButtonState
 																		);
 						
-						lastPointSpeed = speed;
+						//lastPointSpeed = speed;
 						result.push(p );
 					}
 					p1 = result[result.length-1];
@@ -118,16 +118,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						tt = t*t;
 						angle = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
 						speed = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
+						lastPointSpeed  = ((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed );
 						p = PathManager.getSamplePoint( 
 							ti2*p1x+tit*cx+tt*p2x, 
 							ti2*p1y+tit*cy+tt*p2y,
-							((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ) * speedCorrection,
+							lastPointSpeed * speedCorrection,
 							0,
 							angle,
 							ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
 							p1.penButtonState);
 						
-						lastPointSpeed  = speed
+						//lastPointSpeed  = speed
 						result.push( p);
 					}
 					
@@ -158,15 +159,15 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					tt = t*t;
 					angle = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
 					speed = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
-					
+					lastPointSpeed  = ((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed );
 					p = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
 						ti2*p1y+tit*cy+tt*p2y,
-						((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed ) * speedCorrection,
+						lastPointSpeed * speedCorrection,
 						0,
 						angle,
 						ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
 						0);
-					lastPointSpeed  = speed
+					//lastPointSpeed  = speed
 					result.push( p);
 				}
 				

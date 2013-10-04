@@ -1,11 +1,22 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
 
+	import flash.display.Shape;
+	import flash.events.Event;
+	import flash.geom.ColorTransform;
+	
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
+	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectColorSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
+	
+	import org.gestouch.events.GestureEvent;
 	
 	public class ColorPickerViewMediator extends MediatorBase
 	{
@@ -17,6 +28,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		[Inject]
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
+		
+		[Inject]
+		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
+		
 
 		override public function initialize():void {
 
@@ -27,8 +42,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 			manageStateChanges = false;
 			view.enable();
 			view.colorChangedSignal.add( onColorChanged );
-			notifyPickedColorChangedSignal.add( onColorChangedFromOutside )
+			notifyPickedColorChangedSignal.add( onColorChangedFromOutside );
+			notifyGlobalGestureSignal.add( onGlobalGestureDetected );
 		}
+		
 		
 		// -----------------------
 		// From view.
@@ -47,6 +64,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 			if ( reallyFromOutside ) view.setCurrentColor(newColor,false,false,false);
 		}
 		
+		private function onGlobalGestureDetected(gestureType:String, event:GestureEvent):void
+		{
+			if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN )
+			{
+				view.attemptPipetteCharge()
+			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_ENDED )
+			{
+				view.endPipetteCharge()
+			}
+			
+		}
 		
 	}
 }

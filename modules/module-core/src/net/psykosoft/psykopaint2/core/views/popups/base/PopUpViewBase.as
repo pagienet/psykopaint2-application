@@ -22,6 +22,26 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 		}
 
 		// ---------------------------------------------------------------------
+		// Methods called by PopUpManagerView during in/out animations.
+		// ---------------------------------------------------------------------
+
+		public function onAnimatedIn():void {
+			// To override...
+		}
+
+		public function onGoingToAnimateIn():void {
+			// To override...
+		}
+
+		public function onGoingToAnimateOut():void {
+			// To override...
+		}
+
+		public function onAnimatedOut():void {
+			// To override...
+		}
+
+		// ---------------------------------------------------------------------
 		// Overrides.
 		// ---------------------------------------------------------------------
 

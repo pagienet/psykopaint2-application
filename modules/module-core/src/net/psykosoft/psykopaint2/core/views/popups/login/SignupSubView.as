@@ -27,7 +27,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public var firstNameTf:PsykoInput;
 		public var lastNameTf:PsykoInput;
 		public var signupBtn:FoldButton;
-		public var backBtn:FoldButton;
 		public var cameraHit:Sprite;
 		public var folderHit:Sprite;
 		public var photoHolder:Sprite;
@@ -51,7 +50,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			backBtnClickedSignal = new Signal();
 
 			signupBtn.labelText = "SIGN UP";
-			backBtn.labelText = "BACK";
 
 			emailTf.defaultText = "email";
 			passwordTf.defaultText = "password";
@@ -75,7 +73,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			cameraHit.addEventListener( MouseEvent.CLICK, onCameraHitClick );
 			folderHit.addEventListener( MouseEvent.CLICK, onFolderHitClick );
 			signupBtn.addEventListener( MouseEvent.CLICK, onSignupBtnClick );
-			backBtn.addEventListener( MouseEvent.CLICK, onBackBtnClick );
 		}
 
 		public function dispose():void {
@@ -83,7 +80,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			cameraHit.removeEventListener( MouseEvent.CLICK, onCameraHitClick );
 			folderHit.removeEventListener( MouseEvent.CLICK, onFolderHitClick );
 			signupBtn.removeEventListener( MouseEvent.CLICK, onSignupBtnClick );
-			backBtn.removeEventListener( MouseEvent.CLICK, onBackBtnClick );
 
 			emailTf.enterPressedSignal.remove( onEmailInputEnterPressed );
 			passwordTf.enterPressedSignal.remove( onPasswordInputEnterPressed );
@@ -95,7 +91,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			passwordTf.dispose();
 			firstNameTf.dispose();
 			lastNameTf.dispose();
-			backBtn.dispose();
 
 			if( _cameraUtil ) _cameraUtil.dispose();
 			if( _rollUtil ) _rollUtil.dispose();

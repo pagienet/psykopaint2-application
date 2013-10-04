@@ -251,6 +251,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			
 			_longTapGesture = new LongPressGesture( _stage );
 			_longTapGesture.minPressDuration = 170;
+			_longTapGesture.slop = 1;
 			_longTapGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onLongTapGestureBegan );
 			_longTapGesture.addEventListener( GestureEvent.GESTURE_ENDED, onLongTapGestureEnded );
 			
@@ -279,12 +280,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		
 		private function onLongTapGestureBegan( event:GestureEvent ):void {
 			//			trace( this, "onTapGestureRecognized" );
-			var target:Stage =  Stage(LongPressGesture(event.target).target);
-			var obj:Array = target.getObjectsUnderPoint(LongPressGesture(event.target).location);
-			if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
-			{
+			//var target:Stage =  Stage(LongPressGesture(event.target).target);
+			//var obj:Array = target.getObjectsUnderPoint(LongPressGesture(event.target).location);
+			//if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
+			//{
 				notifyGlobalGestureSignal.dispatch( GestureType.LONG_TAP_GESTURE_BEGAN, event );
-			}
+			//}
 		}
 		
 		private function onLongTapGestureEnded( event:GestureEvent ):void {
