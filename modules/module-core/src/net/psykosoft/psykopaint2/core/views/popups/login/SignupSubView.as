@@ -45,6 +45,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private const LARGE_PHOTO_SIZE:int = 200;
 		private const SMALL_PHOTO_SIZE:int = 200;
 
+		public var canRequestSignUp:Boolean = true;
+
 		public function SignupSubView() {
 			super();
 
@@ -141,6 +143,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 
 		private function register():void {
+			if( !canRequestSignUp ) return;
 			photoContour.visible = false;
 			clearAllSatelliteMessages();
 			if( !validateEmailFormat() ) return;

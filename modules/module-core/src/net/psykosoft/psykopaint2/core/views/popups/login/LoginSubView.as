@@ -32,6 +32,9 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private var _satelliteMessages:Vector.<LoginMessageLabel>;
 
+		public var canRequestLogin:Boolean = true;
+		public var canRequestReminder:Boolean = true;
+
 		public function LoginSubView() {
 			super();
 
@@ -110,6 +113,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 
 		private function login():void {
+			if( !canRequestLogin ) return;
 			clearAllSatelliteMessages();
 			if( !validateEmailFormat() ) return;
 			if( !validatePasswordFormat() ) return;
@@ -117,6 +121,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function forgot():void {
+			if( !canRequestReminder ) return;
 			clearAllSatelliteMessages();
 			if( !validateEmailFormat() ) return;
 			forgotBtnClickedSignal.dispatch( emailInput.text );

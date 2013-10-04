@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.core.models
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogOutFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedOutSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserPasswordReminderFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserPasswordReminderSentSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegistrationFailedSignal;
 
@@ -43,6 +45,11 @@ package net.psykosoft.psykopaint2.core.models
 		[Inject]
 		public var notifyPasswordResetFailedSignal : NotifyPasswordResetFailedSignal;
 
+		[Inject]
+		public var notifyUserPasswordReminderSentSignal:NotifyUserPasswordReminderSentSignal;
+
+		[Inject]
+		public var notifyUserPasswordReminderFailedSignal:NotifyUserPasswordReminderFailedSignal;
 
 		private var _userID : int = -1;
 
@@ -60,7 +67,15 @@ package net.psykosoft.psykopaint2.core.models
 		}
 
 		public function sendPasswordReminder( email:String ):void {
-			amfBridge.passwordReset( email );
+			amfBridge.passwordReset( email, onSendPasswordReminderSuccess, onSendPasswordReminderFailure );
+		}
+
+		private function onSendPasswordReminderSuccess( data:Object ):void {
+			notifyUserPasswordReminderSentSignal.dispatch();
+		}
+
+		private function onSendPasswordReminderFailure( data:Object ):void {
+			notifyUserPasswordReminderFailedSignal.dispatch( data["status_code"] );
 		}
 
 		public function sendProfileImages( imageLarge:ByteArray, imageSmall:ByteArray ) {
@@ -148,7 +163,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onPasswordResetFail(data : Object) : void
 		{
-			notifyPasswordResetFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
+			notifyPasswordResetFailedSignal.dispatch(data["status_code"], "CALL_FAILED");
 		}
 
 		private function onPasswordResetSuccess(data : Object) : void
@@ -175,7 +190,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onRegisterFail(data : Object) : void
 		{
-			notifyUserRegistrationFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
+			notifyUserRegistrationFailedSignal.dispatch(data["status_code"], data["status_reason"]);
 		}
 
 		public function get sessionID() : String

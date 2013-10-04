@@ -65,10 +65,13 @@ package net.psykosoft.psykopaint2.home.views.settings
 				}
 
 				case SettingsSubNavView.ID_LOGIN: {
+					trace( this, "login clicked" );
 					if( loggedInUserProxy.isLoggedIn() ) {
+						trace( this, "logging out" );
 						loggedInUserProxy.logOut();
 					}
 					else {
+						trace( this, "logging in" );
 						requestShowPopUpSignal.dispatch( PopUpType.LOGIN );
 					}
 					break;
