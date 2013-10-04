@@ -27,16 +27,19 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public var loggedInUserProxy:LoggedInUserProxy;
 
 		[Inject]
-		public var notifyUserLoggedInSignal : NotifyUserLoggedInSignal;
+		public var notifyUserLoggedInSignal:NotifyUserLoggedInSignal;
 
 		[Inject]
-		public var notifyUserLogInFailedSignal : NotifyUserLogInFailedSignal;
+		public var notifyUserLogInFailedSignal:NotifyUserLogInFailedSignal;
 
 		[Inject]
-		public var notifyUserRegistrationFailedSignal : NotifyUserRegistrationFailedSignal;
+		public var notifyUserRegistrationFailedSignal:NotifyUserRegistrationFailedSignal;
 
 		[Inject]
-		public var notifyUserRegisteredSignal : NotifyUserRegisteredSignal;
+		public var notifyUserRegisteredSignal:NotifyUserRegisteredSignal;
+
+		private var _photoLarge:BitmapData;
+		private var _photoSmall:BitmapData;
 
 		override public function initialize():void {
 			super.initialize();
@@ -67,6 +70,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			notifyUserRegisteredSignal.remove( onRegisterSuccess );
 			notifyUserRegistrationFailedSignal.remove( onRegisterFailure );
 			view.popUpWantsToRegisterSignal.remove( onPopUpWantsToRegister );
+			if( _photoLarge ) _photoLarge.dispose();
+			if( _photoSmall ) _photoSmall.dispose();
 		}
 
 		// -----------------------
@@ -81,8 +86,17 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function onRegisterSuccess():void {
-			view.signupSubView.signupBtn.dontSpin();
+
 			trace( this, "registered" );
+
+			view.signupSubView.signupBtn.dontSpin();
+
+			// Send profile images using a separate service call.
+			var largeBytes:ByteArray = new ByteArray();
+			_photoLarge.copyPixelsToByteArray( _photoLarge.rect, largeBytes );
+			var smallBytes:ByteArray = new ByteArray();
+			_photoSmall.copyPixelsToByteArray( _photoSmall.rect, smallBytes );
+			loggedInUserProxy.sendProfileImages( largeBytes, smallBytes );
 		}
 
 		// the fail signal contains an int with a value from AMFErrorCode.as
@@ -108,7 +122,9 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function onLoginSuccess():void {
+
 			view.loginSubView.loginBtn.dontSpin();
+
 			trace( this, "logged in" );
 			requestHidePopUpSignal.dispatch();
 		}
@@ -121,18 +137,17 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			view.signupSubView.signupBtn.spin();
 
-			// Send registration string stuff via 1 service method.
+			// Remember these so we can upload them only after the string part of the registration is done.
+			_photoLarge = photoLarge;
+			_photoSmall = photoSmall;
+
+			// Register.
 			var vo:UserRegistrationVO = new UserRegistrationVO();
 			vo.email = email;
 			vo.password = password;
 			vo.firstName = firstName;
 			vo.lastName = lastName;
 			loggedInUserProxy.registerAndLogIn( vo );
-
-			// Send profile images using a separate service call.
-			var largeBytes:ByteArray = new ByteArray(); photoLarge.copyPixelsToByteArray( photoLarge.rect, largeBytes );
-			var smallBytes:ByteArray = new ByteArray(); photoSmall.copyPixelsToByteArray( photoSmall.rect, smallBytes );
-			loggedInUserProxy.sendProfileImages( largeBytes, smallBytes );
 		}
 
 		private function onForgottenPassword( email:String ):void {

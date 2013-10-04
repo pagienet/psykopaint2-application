@@ -43,6 +43,9 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private var _photoRetrieved:Boolean;
 		private var _satelliteMessages:Vector.<LoginMessageLabel>;
 
+		private const LARGE_PHOTO_SIZE:int = 200;
+		private const SMALL_PHOTO_SIZE:int = 200;
+
 		public function SignupSubView() {
 			super();
 
@@ -179,6 +182,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private function validatePhoto():Boolean {
 			if( !CoreSettings.RUNNING_ON_iPAD ) {
 				photoContour.visible = true;
+				_photoLarge = new BitmapData( LARGE_PHOTO_SIZE, LARGE_PHOTO_SIZE, false, 0xFF0000 );
+				_photoSmall = new BitmapData( SMALL_PHOTO_SIZE, SMALL_PHOTO_SIZE, false, 0xFF0000 );
 				hueContour( photoContour, -106 );
 				return true;
 			}
@@ -221,8 +226,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
 
-			_photoLarge = BitmapDataUtils.scaleToFit( bmd, 200 );
-			_photoSmall = BitmapDataUtils.scaleToFit( bmd, 50 );
+			_photoLarge = BitmapDataUtils.scaleToFit( bmd, LARGE_PHOTO_SIZE );
+			_photoSmall = BitmapDataUtils.scaleToFit( bmd, SMALL_PHOTO_SIZE );
 
 			_photoBitmap.bitmapData = _photoLarge;
 			_photoBitmap.x = 115 / 2 - _photoBitmap.width / 2;
