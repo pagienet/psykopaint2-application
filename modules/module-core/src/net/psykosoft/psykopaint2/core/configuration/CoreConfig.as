@@ -68,6 +68,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogOutFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedOutSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserPasswordReminderFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyUserPasswordReminderSentSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegistrationFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
@@ -279,6 +281,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyAddCommentFailedSignal ).asSingleton();
 			_injector.map( NotifyPasswordResetSucceededSignal ).asSingleton();
 			_injector.map( NotifyPasswordResetFailedSignal ).asSingleton();
+			_injector.map( NotifyUserPasswordReminderSentSignal ).asSingleton();
+			_injector.map( NotifyUserPasswordReminderFailedSignal ).asSingleton();
 
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
