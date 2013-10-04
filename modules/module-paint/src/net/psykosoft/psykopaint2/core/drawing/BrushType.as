@@ -14,5 +14,6 @@ package net.psykosoft.psykopaint2.core.drawing
 		public static const SKETCH : String = "sketch";
 		public static const BLOB : String = "blob";
 		public static const HITTEST : String = "hit";
+		public static const CLASSIC_PSYKO : String = "classic_psyko";
 	}
 }

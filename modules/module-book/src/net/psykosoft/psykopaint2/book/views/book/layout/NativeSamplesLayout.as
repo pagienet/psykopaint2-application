@@ -164,8 +164,12 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			if(invalidateContent){
  				diffuseTextureSource.invalidateContent();
  				diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;
- 				btMask.invalidateContent();
- 				btMask.bitmapData = maskBMD;
+				// Mario - since btMask can be null (at least in debug mode) I added a fail safe here:
+				if ( btMask )
+				{
+ 					btMask.invalidateContent();
+ 					btMask.bitmapData = maskBMD;
+				}
  			}
  			
 		}

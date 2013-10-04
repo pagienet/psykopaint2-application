@@ -18,11 +18,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_NR_BRISTLE_VARIATION:String = "Bristle Variation";
 		public static const PARAMETER_B_AUTOROTATE:String = "Auto Rotate";
 		public static const PARAMETER_N_MAXIMUM_SPEED:String = "Maximum Speed";
+		public static const PARAMETER_SL_MULTIPLE_MODE:String = "Multiples Mode";
 		
 		static public const INDEX_MODE_FIXED:int = 0;
 		static public const INDEX_MODE_RANDOM:int = 1;
 		static public const INDEX_MODE_SPEED:int = 2;
 		static public const INDEX_MODE_PRESSURE_SPEED:int = 3;
+		static public const INDEX_MODE_SIZE:int = 4;
+		static public const INDEX_MODE_SIZE_INV:int = 5;
 		
 		
 		
@@ -34,6 +37,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var bristleVariation:PsykoParameter;
 		private var maxSpeed:PsykoParameter;
 		private var autorotate:PsykoParameter;
+		private var multiplesMode:PsykoParameter;
 		
 		private var rng:LCG;
 		private var swapVector:Vector.<SamplePoint>;
@@ -44,14 +48,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			multiples       = new PsykoParameter( PsykoParameter.IntRangeParameter,PARAMETER_IR_MULTIPLES,1,4,1,16);
 			maxOffset       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_OFFSET,16,0,100);
-			offsetMode      = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_OFFSET_MODE,2,["Fixed","Random","Speed","Pressure/Speed"]);
+			offsetMode      = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_OFFSET_MODE,2,["Fixed","Random","Speed","Pressure/Speed","Size","Size Inverse"]);
+			multiplesMode   = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_MULTIPLE_MODE,5,["Fixed","Random","Speed","Pressure/Speed","Size","Size Inverse"]);
+			
 			offsetAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_OFFSET_ANGLE,0,0,-180,180);
 			brushAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_BRUSH_ANGLE_VARIATION,0,0,-180,180);
 			bristleVariation  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_NR_BRISTLE_VARIATION,1,0,1);
 			autorotate      = new PsykoParameter( PsykoParameter.BooleanParameter, PARAMETER_B_AUTOROTATE,1);
 			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
-			_parameters.push(  multiples, maxOffset, offsetMode, offsetAngleRange, brushAngleRange, bristleVariation,maxSpeed,autorotate);
+			_parameters.push(  multiples,multiplesMode, maxOffset, offsetMode, offsetAngleRange, brushAngleRange, bristleVariation,maxSpeed,autorotate);
 			rng = new LCG(Math.random() * 0xffffffff);
 			swapVector = new Vector.<SamplePoint>()
 		}
@@ -63,9 +69,15 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var count:int = points.length;
 			var ms:Number = maxSpeed.numberValue;
 			var ar:Boolean = autorotate.booleanValue;
+			var mapIndex:int = multiplesMode.index;
+			var maxSize:Number = 1;
 			for ( var j:int = 0; j < count; j++ )
 			{
-				var spawnCount:int = 1 + rng.getNumber(multiples.lowerRangeValue, multiples.upperRangeValue);
+				var point:SamplePoint =  points[j];
+				var spawnCount:int =  multiples.lowerRangeValue + multiples.rangeValue * [1,Math.random(), point.speed / 25, point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, point.size, Math.sqrt(Math.max(0,maxSize - point.size))][mapIndex]; 
+				
+				
+				//var spawnCount:int = 1 + rng.getNumber(multiples.lowerRangeValue, multiples.upperRangeValue);
 				
 				var distance:Number = 2 * maxOffset.numberValue / spawnCount;
 				switch ( offsetMode.index )

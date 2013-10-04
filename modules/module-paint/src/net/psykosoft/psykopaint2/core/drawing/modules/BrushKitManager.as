@@ -218,7 +218,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		private function onPickedColorChanged( newColor:int, dummy:Boolean ):void
 		{
-			_currentPaintColor =_currentBrushColorParameter.colorValue = newColor;
+			_currentPaintColor = newColor;
+			if ( _currentBrushColorParameter ) _currentBrushColorParameter.colorValue = newColor;
 		}
 		
 		private function updateColorPicker( event:Event ):void

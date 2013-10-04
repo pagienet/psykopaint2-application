@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 
 	final public class PathManager
 	{
@@ -108,7 +109,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var _canvasScaleY:Number;
 		private var _canvasOffsetX:Number;
 		private var _canvasOffsetY:Number;
-		
+		private var _canvasMatrix:Matrix;
 		private var recordedData:Vector.<Number>;
 		private var playbackActive:Boolean;
 		private var singleStepPlaybackActive:Boolean;
@@ -256,8 +257,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		{
 			
 			//Navbar touched?
-			var stage : Stage = event.target as Stage;
-			if (!stage) return;
+			//var stage : Stage = event.target as Stage;
+			if (!(event.target is Stage) && !(event.target is CanvasView)) return;
 			
 			if (_touchID == -1) {
 				_strokeInProgress = true;
@@ -664,6 +665,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 
 		public function setCanvasMatrix(matrix : Matrix) : void
 		{
+			_canvasMatrix = matrix;
 			if (!matrix) {
 				_canvasScaleX = _canvasScaleY = 1;
 				_canvasOffsetX = _canvasOffsetY = 0;
@@ -733,6 +735,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			return _canvasOffsetY;
 		}
 
-
+		public function get canvasMatrix():Matrix
+		{
+			return _canvasMatrix;
+		}
 	}
 }

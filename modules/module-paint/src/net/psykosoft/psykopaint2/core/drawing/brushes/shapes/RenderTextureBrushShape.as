@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	import flash.geom.Rectangle;
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	public class RenderTextureBrushShape extends AbstractBrushShape
 	{
@@ -21,7 +22,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		
 		public function RenderTextureBrushShape(context3D : Context3D)
 		{
-			super(context3D, "render", 1,1024,1,1);
+			super(context3D, "render", 1,1024 * CoreSettings.GLOBAL_SCALING,1,1);
 		}
 
 		override protected function uploadBrushTexture(texture : Texture) : void
