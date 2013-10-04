@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.core.views.components.input
 {
 
-	import br.hellokeita.utils.TextFieldColor;
-
 	import com.greensock.TweenLite;
 
 	import flash.display.Sprite;
@@ -32,8 +30,6 @@ package net.psykosoft.psykopaint2.core.views.components.input
 		private const _defaultTextColor:uint = 0x646464;
 		private const _activeTextColor:uint = 0x000000;
 
-		private var _textFieldColor:TextFieldColor;
-
 		public function PsykoInput() {
 			super();
 
@@ -49,9 +45,6 @@ package net.psykosoft.psykopaint2.core.views.components.input
 			tf.restrict = "^\u0020\u0013";
 			tf.multiline = false;
 			tf.type = TextFieldType.INPUT;
-
-			// Used to modify the colors during selection
-			_textFieldColor = new TextFieldColor( tf, _defaultTextColor, 0xFFFFFF, _activeTextColor );
 
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
@@ -114,7 +107,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 				tf.text = "";
 			}
 
-			_textFieldColor.textColor = _activeTextColor;
+			tf.textColor = _activeTextColor;
 
 			// Show cancel button?
 			showCancelButton( tf.text.length > 0 );
@@ -155,7 +148,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 
 			if( tf.text == "" ) {
 				if( _behavesAsPassword ) tf.displayAsPassword = false;
-				_textFieldColor.textColor = _defaultTextColor;
+				tf.textColor = _defaultTextColor;
 				tf.text = _defaultText;
 			}
 			showCancelButton( false );
