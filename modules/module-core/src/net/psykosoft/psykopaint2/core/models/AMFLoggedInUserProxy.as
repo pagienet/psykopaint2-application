@@ -83,6 +83,23 @@ package net.psykosoft.psykopaint2.core.models
 			amfBridge.registerAndLogIn(userRegistrationVO, onRegisterSuccess, onRegisterFail);
 		}
 
+		private function onRegisterSuccess(data : Object) : void
+		{
+			if (data["status_code"] != 1) {
+				notifyUserRegistrationFailedSignal.dispatch(data["status_code"], data["status_reason"]);
+				return;
+			}
+
+			populateUserData(data);
+			notifyUserRegisteredSignal.dispatch();
+			notifyUserLoggedInSignal.dispatch();
+		}
+
+		private function onRegisterFail(data : Object) : void
+		{
+			notifyUserRegistrationFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
+		}
+
 		public function logOut() : void
 		{
 			amfBridge.logOut(_sessionID, onLogOutSuccess, onLogOutFail);
@@ -91,7 +108,7 @@ package net.psykosoft.psykopaint2.core.models
 		private function onLogOutSuccess(data : Object) : void
 		{
 			if (data["status_code"] != 1) {
-				notifyUserLogOutFailedSignal.dispatch(data["status_code"], data["status_reason"]);
+				notifyUserLogOutFailedSignal.dispatch(data["status_code"], "FAIL");
 				return;
 			}
 			_userID = -1;
@@ -159,23 +176,6 @@ package net.psykosoft.psykopaint2.core.models
 			}
 
 			notifyPasswordResetSucceededSignal.dispatch();
-		}
-
-		private function onRegisterSuccess(data : Object) : void
-		{
-			if (data["status_code"] != 1) {
-				notifyUserRegistrationFailedSignal.dispatch(data["status_code"], data["status_reason"]);
-				return;
-			}
-
-			populateUserData(data);
-			notifyUserRegisteredSignal.dispatch();
-			notifyUserLoggedInSignal.dispatch();
-		}
-
-		private function onRegisterFail(data : Object) : void
-		{
-			notifyUserRegistrationFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
 		}
 
 		public function get sessionID() : String

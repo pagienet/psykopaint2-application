@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.core.services
 	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.models.UserRegistrationVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 
@@ -129,6 +130,19 @@ package net.psykosoft.psykopaint2.core.services
 		public function logOut(sessionID : String, onSuccess : Function, onFail : Function) : void
 		{
 			_connection.call("Main/logout", new Responder(onSuccess, onFail), sessionID);
+		}
+
+		public function publishPainting(sessionID : String, paintingDataVO : PaintingDataVO, compositeData : ByteArray, onSuccess : Function, onFail : Function) : void
+		{
+			// TODO: a in frameID
+			_connection.call("Main/publishPainting", new Responder(onSuccess, onFail),
+					sessionID,
+					0,
+					Boolean(paintingDataVO.sourceImageData),
+					paintingDataVO.normalSpecularData,
+					paintingDataVO.colorData,
+					paintingDataVO.sourceImageData,
+					compositeData);
 		}
 
 		public function requestPasswordReset(email : String, onSuccess : Function, onFail : Function) : void

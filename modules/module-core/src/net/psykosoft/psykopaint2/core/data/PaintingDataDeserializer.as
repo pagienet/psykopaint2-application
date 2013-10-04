@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.core.data
 			// Read painting surfaces.
 			vo.colorData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
 			vo.normalSpecularData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
-			vo.sourceBitmapData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
+			vo.sourceImageData = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
 			vo.normalSpecularOriginal = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
 
 			if (bytes.bytesAvailable > 0)

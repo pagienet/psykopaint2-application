@@ -24,6 +24,9 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerSucceededSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySetColorStyleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
@@ -152,6 +155,9 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyColorStyleConfirmSignal ).asSingleton();
 			_injector.map( NotifyNavigationHideSignal ).asSingleton();
 			_injector.map( NotifyHistoryStackChangedSignal ).asSingleton();
+			_injector.map( NotifySaveToServerStartedSignal ).asSingleton();
+			_injector.map( NotifySaveToServerSucceededSignal ).asSingleton();
+			_injector.map( NotifySaveToServerFailedSignal ).asSingleton();
 		}
 
 		// -----------------------

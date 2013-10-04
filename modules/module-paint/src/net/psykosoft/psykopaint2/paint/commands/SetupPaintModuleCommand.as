@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		{
 			super.execute();
 
-			var mode : String = initPaintingVO.sourceBitmapData? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
+			var mode : String = initPaintingVO.sourceImageData? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
 
 			addPaintModuleDisplay();
 

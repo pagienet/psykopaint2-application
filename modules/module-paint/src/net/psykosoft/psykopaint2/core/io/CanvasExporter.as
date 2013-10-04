@@ -1,20 +1,22 @@
 package net.psykosoft.psykopaint2.core.io
 {
 	import flash.display.BitmapData;
+	import flash.display.JPEGEncoderOptions;
+	import flash.display.PNGEncoderOptions;
 	import flash.display.Sprite;
 	import flash.display.Stage;
+	import flash.display.StageQuality;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.system.ApplicationDomain;
 	import flash.utils.ByteArray;
-	import flash.utils.getTimer;
-	
+
 	import avm2.intrinsics.memory.li8;
-	import avm2.intrinsics.memory.si32;
 	import avm2.intrinsics.memory.si8;
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
@@ -22,13 +24,11 @@ package net.psykosoft.psykopaint2.core.io
 
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 
-	import net.psykosoft.psykopaint2.core.model.*;
-
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
-	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
+	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
 	import net.psykosoft.psykopaint2.tdsi.MemoryManagerTdsi;
 	import net.psykosoft.psykopaint2.tdsi.MergeUtil;
 	
@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.core.io
 	{
 		private static var _copySubTextureChannelsRGB : CopySubTextureChannels;
 		private static var _copySubTextureChannelsA : CopySubTextureChannels;
+		private static var _copyColorToBitmapData : CopyColorToBitmapDataUtil;
 
 		private var _canvas : CanvasModel;
 		private var _paintingData : PaintingDataVO;
@@ -55,12 +56,21 @@ package net.psykosoft.psykopaint2.core.io
 		private var _ioAne:IOAneManager;
 
 		private var _exportingStages : Array;
+		private var _jpegQuality : Number;
+		private var _sourceThumbWidth : Number;
 
 		public function CanvasExporter( stage:Stage, ioAne:IOAneManager )
 		{
 			_stage = stage;
 			_ioAne = ioAne;
 
+			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
+			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
+			_copyColorToBitmapData ||= new CopyColorToBitmapDataUtil();
+		}
+
+		public function export(canvas : CanvasModel) : void
+		{
 			_exportingStages = [
 				saveColorRGB,
 				saveColorAlpha,
@@ -70,16 +80,32 @@ package net.psykosoft.psykopaint2.core.io
 				extractNormalsAlpha,
 				mergeNormalData,
 
-				saveSourceData
+				saveSourceDataToByteArray
 			];
 
-			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
-			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
+			doExport(canvas);
 		}
 
+		// in this case, color will contain JPEG data, sourceImage will contain PNG Thumbnail, and normal data will be compressed with zlib
+		public function exportForPublish(canvas : CanvasModel, jpegQuality : Number = 80, sourceThumbWidth : Number = 200) : void
+		{
+			_sourceThumbWidth = sourceThumbWidth;
+			_jpegQuality = jpegQuality;
+			_exportingStages = [
+				saveColorFlat,
 
+				extractNormalsColor,
+				extractNormalsAlpha,
+				mergeNormalData,
+				compressNormalData,
 
-		public function export(canvas : CanvasModel) : void
+				saveSourceDataToThumb
+			];
+
+			doExport(canvas);
+		}
+
+		private function doExport(canvas : CanvasModel) : void
 		{
 			if (_canvas) throw "Export already in progress!";
 			_canvas = canvas;
@@ -127,6 +153,12 @@ package net.psykosoft.psykopaint2.core.io
 			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.PROGRESS, _paintingData, _exportingStage, _exportingStages.length));
 		}
 
+		private function saveColorFlat() : void
+		{
+			_copyColorToBitmapData.execute(_canvas, _workerBitmapData);
+			_paintingData.colorData = _workerBitmapData.encode(_workerBitmapData.rect, new JPEGEncoderOptions(_jpegQuality));
+		}
+
 		// the stages:
 		private function saveColorRGB() : void
 		{
@@ -168,12 +200,29 @@ package net.psykosoft.psykopaint2.core.io
 			_paintingData.normalSpecularData = mergeRGBAData();
 		}
 
-		private function saveSourceData() : void
+		private function compressNormalData() : void
 		{
-//			ConsoleView.instance.log( this, "saveSourceData stage..." );
-//			var time : int = getTimer();
-			_paintingData.sourceBitmapData = saveLayerNoAlpha(_canvas.sourceTexture);
-//			ConsoleView.instance.log( this, "saveSourceData stage - " + (getTimer() - time));
+			_paintingData.normalSpecularData.compress();
+		}
+
+		private function saveSourceDataToByteArray() : void
+		{
+			_paintingData.sourceImageData = saveLayerNoAlpha(_canvas.sourceTexture);
+		}
+
+		private function saveSourceDataToThumb() : void
+		{
+			var context3D : Context3D = _canvas.stage3D.context3D;
+
+			context3D.setRenderToBackBuffer();
+			context3D.clear(0, 0, 0, 0);
+			context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+			CopySubTexture.copy(_canvas.sourceTexture, _sourceRect, _destRect, context3D);
+			context3D.drawToBitmapData(_workerBitmapData);
+			var scaledBitmapData : BitmapData = new TrackedBitmapData(_sourceThumbWidth, _sourceThumbWidth/_canvas.width*_canvas.height);
+			scaledBitmapData.drawWithQuality(_workerBitmapData, new Matrix(_sourceThumbWidth/_canvas.width, 0, 0, _sourceThumbWidth/_canvas.width), null, null, null, true, StageQuality.BEST);
+			_paintingData.sourceImageData = scaledBitmapData.encode(scaledBitmapData.rect, new PNGEncoderOptions());
+			scaledBitmapData.dispose();
 		}
 
 		private function onComplete() : void
@@ -194,19 +243,12 @@ package net.psykosoft.psykopaint2.core.io
 		private function saveLayerNoAlpha(layer : Texture) : ByteArray
 		{
 			var context3D : Context3D = _canvas.stage3D.context3D;
-
 			context3D.setRenderToBackBuffer();
 			context3D.clear(0, 0, 0, 0);
 			context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			CopySubTexture.copy(layer, _sourceRect, _destRect, context3D);
-//			var time : int = getTimer();
 			context3D.drawToBitmapData(_workerBitmapData);
-//			ConsoleView.instance.log( this, "saveLayerNoAlpha - gpu read back - " + String( getTimer() - time ) );
-			var bytes:ByteArray = _workerBitmapData.getPixels(_workerBitmapData.rect);
-//			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd: " + _workerBitmapData.width + "x" + _workerBitmapData.rect.height );
-//			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd rect: " + _workerBitmapData.rect );
-//			ConsoleView.instance.log( this, "saveLayerNoAlpha - bmd bytes: " + bytes.length );
-			return bytes;
+			return _workerBitmapData.getPixels(_workerBitmapData.rect);
 		}
 
 		private function mergeRGBAData() : ByteArray
@@ -260,25 +302,6 @@ package net.psykosoft.psykopaint2.core.io
 			ApplicationDomain.currentDomain.domainMemory = MemoryManagerTdsi.memory;
 		}
 		
-		/*private function mergeRGBADataTest() : ByteArray
-		{
-			var time : int = getTimer();
-			var len : int = _canvas.width * _canvas.height * 4;
-			
-			MergeUtil.mergeRGBAData(_mergeBuffer,len);
-				
-			ConsoleView.instance.log( this, "mergeRGBAData merge..." + (getTimer() - time));
-			
-			
-			var buffer : ByteArray = _mergeBuffer;
-			_mergeBuffer = null;
-			var time : int = getTimer();
-			buffer.length = len;
-			ConsoleView.instance.log( this, "mergeRGBAData resize..." + (getTimer() - time));
-			
-			return buffer;
-		}*/
-
 		private function extractChannels(target : ByteArray, offset : uint, layer : Texture, copier : CopySubTextureChannels) : void
 		{
 			_context3D.setRenderToBackBuffer();

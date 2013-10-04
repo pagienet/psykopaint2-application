@@ -105,8 +105,7 @@ package net.psykosoft.psykopaint2.core.models
 				vo.id = obj["id"];
 				vo.title = obj["title"];
 				vo.fullsizeFilename = obj["url_image"];
-				vo.lowResThumbnailFilename = obj["url_thumb50"];
-				vo.highResThumbnailFilename = obj["url_thumb200"];
+				vo.thumbnailFilename = obj["composite_thumbnail_url"];
 				vo.userName = obj["firstname"] + " " + obj["lastname"];
 				vo.numLikes = obj["num_favorite"];
 				vo.numComments = obj["num_comments"];

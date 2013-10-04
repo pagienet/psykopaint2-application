@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
@@ -33,6 +34,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		[Inject]
 		public var requestPaintingDeletionSignal:RequestPaintingDeletionSignal;
 
+		[Inject]
+		public var requestSavePaintingToServerSignal : RequestSavePaintingToServerSignal;
+
 		override public function initialize():void {
 
 			// Init.
@@ -50,7 +54,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				case CanvasSubNavView.ID_HOME:
 				{
 					requestClosePaintViewSignal.dispatch();
-
 					break;
 				}
 
@@ -68,36 +71,17 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 
-				/*case CanvasSubNavView.ID_MODEL:
-				 {
-				 requestNavigationToggleSignal.dispatch( -1, 0.5 );
-				 requestStateChange( StateType.PICK_IMAGE );
-				 break;
-				 }*/
-
-				/*case CanvasSubNavView.ID_COLOR:
-				 {
-				 //					requestStateChange( StateType.COLOR_STYLE );
-				 break;
-				 }*/
-
 				case CanvasSubNavView.ID_EXPORT:
 				{
 					requestCanvasExportSignal.dispatch();
 					break;
 				}
 
-				/*case CanvasSubNavView.ID_SAVE:
-				 {
-				 requestPaintingSaveSignal.dispatch( paintingModel.focusedPaintingId, false );
-				 break;
-				 }*/
-
-				/*case CanvasSubNavView.ID_PUBLISH:
-				 {
-				 // TODO: trigger publish process
-				 break;
-				 }*/
+				case CanvasSubNavView.ID_PUBLISH:
+				{
+					requestSavePaintingToServerSignal.dispatch();
+					break;
+				}
 
 				case CanvasSubNavView.ID_PICK_A_BRUSH:
 				{
