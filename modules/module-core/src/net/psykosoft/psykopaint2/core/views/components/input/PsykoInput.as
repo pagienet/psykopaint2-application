@@ -67,6 +67,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 
 		public function set defaultText( value:String ):void {
 			tf.text = _defaultText = value;
+			tf.textColor = _defaultTextColor;
 		}
 
 		public function get text():String {
