@@ -78,14 +78,11 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			selectLoginSubView.loginClickedSignal.add( onSelectLoginSubViewLoginBtnClicked );
 			selectLoginSubView.signupClickedSignal.add( onSelectLoginSubViewSignupBtnClicked );
-			selectLoginSubView.backBtnClickedSignal.add( onSelectLoginBackBtnClicked );
 
 			loginSubView.viewWantsToLogInSignal.add( onLoginViewWantsToLogIn );
 			loginSubView.forgotBtnClickedSignal.add( onLoginViewForgotButtonClicked );
-			loginSubView.backBtnClickedSignal.add( onLoginWantsToGoBack );
 
 			signupSubView.viewWantsToRegisterSignal.add( onSignupViewWantsToRegister );
-			signupSubView.backBtnClickedSignal.add( onRegisterWantsToGoBack );
 
 			layout();
 		}
@@ -99,14 +96,11 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			selectLoginSubView.loginClickedSignal.remove( onSelectLoginSubViewLoginBtnClicked );
 			selectLoginSubView.signupClickedSignal.remove( onSelectLoginSubViewSignupBtnClicked );
-			selectLoginSubView.backBtnClickedSignal.remove( onSelectLoginBackBtnClicked );
 
 			loginSubView.viewWantsToLogInSignal.remove( onLoginViewWantsToLogIn );
 			loginSubView.forgotBtnClickedSignal.remove( onLoginViewForgotButtonClicked );
-			loginSubView.backBtnClickedSignal.remove( onLoginWantsToGoBack );
 
 			signupSubView.viewWantsToRegisterSignal.remove( onSignupViewWantsToRegister );
-			signupSubView.backBtnClickedSignal.remove( onRegisterWantsToGoBack );
 
 			selectLoginSubView.dispose();
 			loginSubView.dispose();
