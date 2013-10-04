@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.core.model
 
 		// surface properties
 		private var _diffuseStrength : Number = 1;
-		private var _specularStrength : Number = 1;
+		private var _specularStrength : Number = 2;
 		private var _glossiness : Number = 200;		// Maximum gloss setting
 		private var _surfaceBumpiness : Number = 20;
 

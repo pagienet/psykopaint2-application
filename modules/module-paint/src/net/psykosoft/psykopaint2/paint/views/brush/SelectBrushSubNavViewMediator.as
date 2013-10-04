@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onViewEnabled():void {
-			activateBrush( paintModule.activeBrushKit );
+			//activateBrush( paintModule.activeBrushKit );
 			super.onViewEnabled();
 		}
 

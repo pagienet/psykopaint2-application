@@ -11,8 +11,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
+	import flash.text.TextField;
 	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
 	
 	import org.osflash.signals.Signal;
@@ -147,6 +149,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			saturationOverlay.mouseEnabled = false;
 			lightnessOverlay.mouseEnabled = false;
 			
+			
 		}
 		
 		protected function onSliderMouseDown( event:MouseEvent ):void
@@ -278,6 +281,18 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			hueMap.unlock();
 			lightnessMap.unlock()
+		}
+		
+		public function attemptPipetteCharge():void
+		{
+			colorPalette.attemptPipetteCharge();
+			
+		}
+		
+		public function endPipetteCharge():void
+		{
+			colorPalette.endPipetteCharge();
+			
 		}
 	}
 }

@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.core.data
 			// Write surfaces.
 			append(vo, vo.colorData, bytes);
 			append(vo, vo.normalSpecularData, bytes);
-			append(vo, vo.sourceBitmapData, bytes);
+			append(vo, vo.sourceImageData, bytes);
 			append(vo, vo.normalSpecularOriginal, bytes);
 			if (vo.colorBackgroundOriginal)
 				append(vo, vo.colorBackgroundOriginal, bytes);

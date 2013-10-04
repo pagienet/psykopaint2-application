@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		{
 			super.execute();
 
-			var mode : String = initPaintingVO.sourceBitmapData? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
+			var mode : String = initPaintingVO.sourceImageData? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
 
 			addPaintModuleDisplay();
 
@@ -83,8 +83,8 @@ package net.psykosoft.psykopaint2.paint.commands
 			renderer.init(mode);
 
 			// not sure if this should be here at all
-			if (mode == PaintMode.PHOTO_MODE)
-				TweenLite.to(renderer, 1.6, { sourceTextureAlpha: 0.333, ease: Sine.easeIn });
+			//if (mode == PaintMode.PHOTO_MODE)
+			//	TweenLite.to(renderer, 1.6, { sourceTextureAlpha: 1, ease: Sine.easeIn });
 
 			GpuRenderManager.addRenderingStep(brushKitManager.update, GpuRenderingStepType.PRE_CLEAR);
 

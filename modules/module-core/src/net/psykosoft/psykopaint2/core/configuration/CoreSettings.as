@@ -44,6 +44,7 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static const TRACK_NON_GCED_OBJECTS:Boolean = false; /*false on release*/
 		public static const USE_COMPRESSION_ON_PAINTING_FILES:Boolean = true; /*true on release*/
 		public static const USE_IO_ANE_ON_PAINTING_FILES:Boolean = true; /*true on release*/
+		public static const PUBLISH_JPEG_QUALITY : uint = 80
 
 		// -----------------------
 		// Fixed constants.
@@ -67,8 +68,9 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static var STAGE_HEIGHT:Number = 768;
 		public static var STAGE:Stage;
 		public static var DISPLAY_ROOT:Sprite;
-		
+
 		//This needs to be here to force Flash to include the font swc:
 		private static var EMBED_FONTS_DUMMY:PsykoFonts;
+
 	}
 }

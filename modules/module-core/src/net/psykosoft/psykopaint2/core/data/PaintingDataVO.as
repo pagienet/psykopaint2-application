@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.data
 	{
 		public var colorData:ByteArray;
 		public var normalSpecularData:ByteArray;
-		public var sourceBitmapData:ByteArray;
+		public var sourceImageData:ByteArray;
 		public var normalSpecularOriginal:ByteArray;
 		public var colorBackgroundOriginal : ByteArray;
 		public var width:uint;
@@ -29,12 +29,12 @@ package net.psykosoft.psykopaint2.core.data
 				UndisposedObjects.getInstance().remove(this);
 			colorData.clear();
 			if (normalSpecularData) normalSpecularData.clear();
-			if (sourceBitmapData) sourceBitmapData.clear();
+			if (sourceImageData) sourceImageData.clear();
 			if (normalSpecularOriginal) normalSpecularOriginal.clear();
 			if (colorBackgroundOriginal) colorBackgroundOriginal.clear();
 			colorData = null;
 			normalSpecularData = null;
-			sourceBitmapData = null;
+			sourceImageData = null;
 			normalSpecularOriginal = null;
 			colorBackgroundOriginal = null;
 		}

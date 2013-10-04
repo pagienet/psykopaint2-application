@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.core.views.components.input
 				return 1;
 			}
 
-			var passwordIsLongEnough:Boolean = passwordInput.text.length > 5;
+			var passwordIsLongEnough:Boolean = passwordInput.text.length >= 6;
 			if( !passwordIsLongEnough ) {
 				passwordInput.showRedHighlight();
 				return 2;

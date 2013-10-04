@@ -130,7 +130,7 @@ package net.psykosoft.psykopaint2.app.states
 			var vo : PaintingDataVO = new PaintingDataVO();
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
-			vo.sourceBitmapData = _croppedBitmapData.getPixels(_croppedBitmapData.rect);
+			vo.sourceImageData = _croppedBitmapData.getPixels(_croppedBitmapData.rect);
 			if (surface.color) {
 				vo.colorBackgroundOriginal = surface.color;
 				vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);

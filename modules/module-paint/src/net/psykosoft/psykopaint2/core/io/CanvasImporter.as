@@ -21,8 +21,8 @@ package net.psykosoft.psykopaint2.core.io
 			if (canvas.width != paintingData.width || canvas.height != paintingData.height)
 				throw new Error("Different painting sizes currently not supported!");
 
-			if (paintingData.sourceBitmapData) {
-				var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(paintingData.sourceBitmapData, canvas.width, canvas.height, false);
+			if (paintingData.sourceImageData) {
+				var sourceBmd : BitmapData = BitmapDataUtils.getBitmapDataFromBytes(paintingData.sourceImageData, canvas.width, canvas.height, false);
 				canvas.setSourceBitmapData(sourceBmd);
 				sourceBmd.dispose();
 			}

@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.core.data
 {
-	import flash.display.JPEGEncoderOptions;
 	import flash.display.PNGEncoderOptions;
 	import flash.utils.ByteArray;
 
