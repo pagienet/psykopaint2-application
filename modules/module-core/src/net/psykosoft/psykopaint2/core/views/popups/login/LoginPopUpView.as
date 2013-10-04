@@ -74,8 +74,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			super.onEnabled();
 
-			_blocker.addEventListener( MouseEvent.CLICK, onBlockerClick );
-
 			selectLoginSubView.loginClickedSignal.add( onSelectLoginSubViewLoginBtnClicked );
 			selectLoginSubView.signupClickedSignal.add( onSelectLoginSubViewSignupBtnClicked );
 
@@ -88,8 +86,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		override protected function onDisabled():void {
-
-			_blocker.removeEventListener( MouseEvent.CLICK, onBlockerClick );
 
 			_leftButton.removeEventListener( MouseEvent.CLICK, onLeftBtnClick );
 			_rightButton.removeEventListener( MouseEvent.CLICK, onRightBtnClick );
@@ -195,7 +191,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			loginSubView.visible = true;
 		}
 
-		private function onBlockerClick( event:MouseEvent ):void {
+		override public function onBlockerClicked():void {
 			popUpWantsToCloseSignal.dispatch();
 		}
 	}

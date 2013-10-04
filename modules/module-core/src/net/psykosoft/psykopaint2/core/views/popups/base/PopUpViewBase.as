@@ -8,9 +8,6 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 	public class PopUpViewBase extends ViewBase
 	{
 		protected var _container:Sprite;
-		protected var _useBlocker:Boolean = true;
-
-		protected var _blocker:Sprite;
 
 		public function PopUpViewBase() {
 			super();
@@ -22,7 +19,7 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 		}
 
 		// ---------------------------------------------------------------------
-		// Methods called by PopUpManagerView during in/out animations.
+		// Methods called by PopUpManagerView
 		// ---------------------------------------------------------------------
 
 		public function onAnimatedIn():void {
@@ -41,6 +38,10 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 			// To override...
 		}
 
+		public function onBlockerClicked():void {
+			// To override...
+		}
+
 		// ---------------------------------------------------------------------
 		// Overrides.
 		// ---------------------------------------------------------------------
@@ -50,23 +51,10 @@ package net.psykosoft.psykopaint2.core.views.popups.base
 			_container = new Sprite();
 			addChild( _container );
 
-			if( _useBlocker ) {
-				_blocker = new Sprite();
-				_blocker.graphics.beginFill( 0x000000, 0 );
-				_blocker.graphics.drawRect( 0, 0, 1024, 768 );
-				_blocker.graphics.endFill();
-				addChildAt( _blocker, 0 );
-			}
-
 			layout();
 		}
 
 		override protected function onDisabled():void {
-
-			if( _blocker ) {
-				removeChild( _blocker );
-				_blocker = null;
-			}
 
 			if( _container ) {
 				removeChild( _container );

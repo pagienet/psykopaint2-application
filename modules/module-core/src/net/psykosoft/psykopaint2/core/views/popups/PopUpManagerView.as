@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.core.views.popups
 {
 
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+
 	import net.psykosoft.psykopaint2.core.views.popups.base.*;
 
 	import com.greensock.TweenLite;
@@ -13,14 +16,25 @@ package net.psykosoft.psykopaint2.core.views.popups
 	public class PopUpManagerView extends ViewBase
 	{
 		private var _popUp:PopUpViewBase;
+		protected var _blocker:Sprite;
 
 		public var popUpHiddenSignal:Signal;
 		public var popUpShownSignal:Signal;
 
 		public function PopUpManagerView() {
 			super();
+
 			popUpHiddenSignal = new Signal();
 			popUpShownSignal = new Signal();
+
+			_blocker = new Sprite();
+			_blocker.visible = false;
+			_blocker.graphics.beginFill( 0x000000, 0.25 );
+			_blocker.graphics.drawRect( 0, 0, 1024, 768 );
+			_blocker.graphics.endFill();
+			_blocker.addEventListener( MouseEvent.CLICK, onBlockerClicked );
+			addChildAt( _blocker, 0 );
+
 			enable();
 		}
 
@@ -39,6 +53,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 			_popUp = new popUpClass();
 			addChild( _popUp );
 			_popUp.enable();
+			_blocker.visible = true;
 			showPopUpAnimated( _popUp );
 		}
 
@@ -60,6 +75,7 @@ package net.psykosoft.psykopaint2.core.views.popups
 
 		public function hideLastPopUp():void {
 			if( !_popUp ) return;
+			_blocker.visible = false;
 			hidePopUpAnimated( _popUp );
 		}
 
@@ -76,6 +92,14 @@ package net.psykosoft.psykopaint2.core.views.popups
 			removeChild( _popUp );
 			_popUp = null;
 			popUpHiddenSignal.dispatch();
+		}
+
+		// -----------------------
+		// Event handlers.
+		// -----------------------
+
+		private function onBlockerClicked( event:MouseEvent ):void {
+			_popUp.onBlockerClicked();
 		}
 	}
 }
