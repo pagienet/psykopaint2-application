@@ -33,7 +33,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public var photoContour:Sprite;
 
 		public var viewWantsToRegisterSignal:Signal;
-		public var backBtnClickedSignal:Signal;
 
 		private var _cameraUtil:DeviceCameraUtil;
 		private var _rollUtil:CameraRollUtil;
@@ -50,7 +49,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			super();
 
 			viewWantsToRegisterSignal = new Signal();
-			backBtnClickedSignal = new Signal();
 
 			signupBtn.labelText = "SIGN UP";
 
@@ -242,10 +240,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 		// Event handlers.
 		// -----------------------
-
-		private function onBackBtnClick( event:MouseEvent ):void {
-			backBtnClickedSignal.dispatch();
-		}
 
 		private function onCameraHitClick( event:MouseEvent ):void {
 			takePhoto();

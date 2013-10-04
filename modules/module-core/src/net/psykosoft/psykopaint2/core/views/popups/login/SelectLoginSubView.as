@@ -16,14 +16,12 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		public var loginClickedSignal:Signal;
 		public var signupClickedSignal:Signal;
-		public var backBtnClickedSignal:Signal;
 
 		public function SelectLoginSubView() {
 			super();
 
 			loginClickedSignal = new Signal();
 			signupClickedSignal = new Signal();
-			backBtnClickedSignal = new Signal();
 
 			loginBtn.labelText = "LOGIN";
 			signupBtn.labelText = "SIGN UP";
@@ -44,10 +42,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 		// Event listeners.
 		// -----------------------
-
-		private function onBackBtnClick( event:MouseEvent ):void {
-			backBtnClickedSignal.dispatch();
-		}
 
 		private function onLoginBtnClicked( event:MouseEvent ):void {
 			loginClickedSignal.dispatch();

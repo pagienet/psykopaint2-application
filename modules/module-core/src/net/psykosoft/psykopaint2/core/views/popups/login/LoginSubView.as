@@ -29,7 +29,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		public var viewWantsToLogInSignal:Signal;
 		public var forgotBtnClickedSignal:Signal;
-		public var backBtnClickedSignal:Signal;
 
 		private var _satelliteMessages:Vector.<LoginMessageLabel>;
 
@@ -38,7 +37,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			viewWantsToLogInSignal = new Signal();
 			forgotBtnClickedSignal = new Signal();
-			backBtnClickedSignal = new Signal();
 
 			loginBtn.labelText = "LOGIN";
 
@@ -141,10 +139,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 		// Event handlers.
 		// -----------------------
-
-		private function onBackBtnClick( event:MouseEvent ):void {
-			backBtnClickedSignal.dispatch();
-		}
 
 		private function onForgotBtnClick( event:MouseEvent ):void {
 			forgot();
