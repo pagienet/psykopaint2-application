@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.ClassicPsykoBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.DelaunayBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.DrawingApiBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.HitTestBrush;
@@ -84,6 +85,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			registerBrush( BrushType.SKETCH, SketchBrush );
 			registerBrush( BrushType.BLOB, DrawingApiBrush );
 			registerBrush( BrushType.HITTEST, HitTestBrush );
+			registerBrush( BrushType.CLASSIC_PSYKO, ClassicPsykoBrush );
 			_initialized = true;
 		}
 		
