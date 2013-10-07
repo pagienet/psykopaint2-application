@@ -100,8 +100,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
 		private var _canvasMatrix : Matrix;
-		private var sourceCanvasViewModes:Array = [[1,1],[1,0.001]];
-		private var sourceCanvasViewModeIndex:int = 0;
 		private var _activeMode : String;
 		private var _currentPaintColor:int;
 		private var _currentBrushColorParameter:PsykoParameter;
@@ -130,18 +128,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		// TODO: Handle gestures somewhere else
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
-			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED  )
-			{
-				if ( getTimer() - singleTapDelay > 500 )
-				{
-					if ( _activeMode == PaintMode.PHOTO_MODE )
-					{
-						sourceCanvasViewModeIndex = ( sourceCanvasViewModeIndex+1) % sourceCanvasViewModes.length;
-						TweenLite.killTweensOf( renderer );
-						TweenLite.to( renderer, 0.3, { paintAlpha:sourceCanvasViewModes[sourceCanvasViewModeIndex][0],sourceTextureAlpha: sourceCanvasViewModes[sourceCanvasViewModeIndex][1], ease: Sine.easeInOut } );
-					}
-				}
-			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
+			if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
 				_activeBrushKit.brushEngine.pathManager.deactivate();
 			}  else if ( gestureType == GestureType.TRANSFORM_GESTURE_ENDED )
