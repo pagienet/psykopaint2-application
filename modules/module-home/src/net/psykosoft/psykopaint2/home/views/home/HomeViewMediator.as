@@ -19,8 +19,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryPaintingIOErrorSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryPaintingLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
@@ -35,6 +33,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	import org.gestouch.events.GestureEvent;
@@ -99,15 +98,13 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var requestBrowseGallery : RequestBrowseGallerySignal;
 
 		[Inject]
-		public var notifyGalleryPaintingLoadedSignal : NotifyGalleryPaintingLoadedSignal;
-
-		[Inject]
-		public var notifyGalleryPaintingIOErrorSignal : NotifyGalleryPaintingIOErrorSignal;
+		public var requestSetGalleryPaintingSignal : RequestSetGalleryPaintingSignal;
 
 		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightDistance : Number = 1000;
 		private var _dockedAtSnapIndex:int = -1;
 		private var _allowPanning:Boolean = true;
+		private var _lastAllowPanningBeforeNegation:int;	// 1 = allow, -1 not allow, 0 whatever it was before last not allow-
 
 		override public function initialize():void {
 
@@ -129,8 +126,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHomeIntroSignal.add( onIntroRequested );
 			notifyGyroscopeUpdateSignal.add ( onGyroscopeUpdate );
 			requestHomePanningToggleSignal.add ( onTogglePanning );
-			notifyGalleryPaintingLoadedSignal.add ( onGalleryPaintingLoaded );
-			notifyGalleryPaintingIOErrorSignal.add ( onGalleryPaintingIOError );
+			requestSetGalleryPaintingSignal.add ( onRequestSetGalleryPainting );
 
 			// From view.
 			view.closestSnapPointChangedSignal.add( onViewClosestSnapPointChanged );
@@ -165,16 +161,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.sceneReadySignal.remove( onSceneReady );
 			notifyGyroscopeUpdateSignal.remove ( onGyroscopeUpdate );
 			requestHomePanningToggleSignal.remove ( onTogglePanning );
-			notifyGalleryPaintingLoadedSignal.remove ( onGalleryPaintingLoaded );
-			notifyGalleryPaintingIOErrorSignal.remove ( onGalleryPaintingIOError );
 
 			view.dispose();
 
 			super.destroy();
 		}
 
-		// 1 = allow, -1 not allow, 0 whatever it was before last not allow
-		private var _lastAllowPanningBeforeNegation:int;
 		private function onTogglePanning( enable:int ):void {
 			if( enable == -1 ) {
 				_lastAllowPanningBeforeNegation = _allowPanning ? 1 : -1;
@@ -234,11 +226,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onNavigationToggled( shown:Boolean ):void {
 			if ( view.isEnabled )
 				view.scrollCameraController.limitInteractionToUpperPartOfTheScreen( shown );
-			// TODO: will the navigation be hide-able in home?
-			/*if( !view.visible ) {
-			 var p:Point = shown ? HomeView.EASEL_FAR_ZOOM_IN : HomeView.EASEL_CLOSE_ZOOM_IN;
-			 view.adjustCamera( p.x, p.y );
-			 }*/
 		}
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
@@ -313,42 +300,14 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			if( stateModel.currentState != NavigationStateType.BOOK_GALLERY && snapPointIndex == 3 ) {
 				requestHomePanningToggleSignal.dispatch(-1);
-				//requestNavigationStateChange( NavigationStateType.BOOK_GALLERY );
 				requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
 				return;
 			}
-
-			// Trigger home-painting state otherwise.
-			// TODO: use proper names
-			// TODO: implement painting sub-nav
-			var temporaryPaintingNames:Array = [ "house on country side", "digital cowboy", "microcosmos", "patio", "jesse", "flower spots", "beautiful danger" ];
-//			if( snapPointIndex > homePaintingIndex ) {
-
-				// TODO: delete this bit
-				if( stateModel.currentState != NavigationStateType.HOME ) {
-					requestNavigationStateChange( NavigationStateType.HOME );
-					return;
-				}
-
-				/*if( stateModel.currentState.name != ApplicationStateType.HOME_SCREEN_ON_PAINTING ) {
-				 requestStateChange( new StateVO( ApplicationStateType.HOME_SCREEN_ON_PAINTING ) );
-				 }*/
-
-//				var temporaryPaintingName:String = temporaryPaintingNames[ snapPointIndex - 3 ];
-//				notifyFocusedPaintingChangedSignal.dispatch( temporaryPaintingName );
-//			}
 		}
 
-		private function onGalleryPaintingLoaded(galleryImageProxy : GalleryImageProxy, bitmapData : BitmapData) : void
+		private function onRequestSetGalleryPainting(galleryImageProxy : GalleryImageProxy) : void
 		{
-			requestStateChangeSignal.dispatch(NavigationStateType.GALLERY_PAINTING);
-//			notifyFocusedPaintingChangedSignal.dispatch( galleryImageProxy.title );
-			// TODO: Pass stuff on to view
-		}
-
-		private function onGalleryPaintingIOError() : void
-		{
-			// TODO: Display error message
+			// TODO: Pass stuff on to view, which loads stuff through proxy
 		}
 	}
 }

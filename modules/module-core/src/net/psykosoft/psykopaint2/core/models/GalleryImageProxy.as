@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.models
 {
 	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
+	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 
 	public class GalleryImageProxy
 	{
@@ -18,7 +19,12 @@ package net.psykosoft.psykopaint2.core.models
 			throw new AbstractMethodError();
 		}
 
-		public function loadFullsized(onComplete : Function, onError : Function) : void
+		public function loadFullSizedComposite(onComplete : Function, onError : Function) : void
+		{
+			throw new AbstractMethodError();
+		}
+
+		public function loadSurfaceData(onComplete : Function, onError : Function) : void
 		{
 			throw new AbstractMethodError();
 		}

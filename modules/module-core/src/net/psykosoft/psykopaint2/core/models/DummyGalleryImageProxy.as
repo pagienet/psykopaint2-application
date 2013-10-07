@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.core.models
 			onComplete(bitmapData);
 		}
 
-		override public function loadFullsized(onComplete : Function, onError : Function) : void
+		override public function loadFullSizedComposite(onComplete : Function, onError : Function) : void
 		{
 			var bitmapData : TrackedBitmapData = new TrackedBitmapData(1024, 768, false, 0);
 			bitmapData.perlinNoise(512, 512, 8, Math.random(), true, true);

@@ -40,8 +40,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryPaintingIOErrorSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryPaintingLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
@@ -271,8 +269,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyUserRegistrationFailedSignal ).asSingleton();
 			_injector.map( ToggleTransformGestureSignal ).asSingleton();
 			_injector.map( RequestHomePanningToggleSignal ).asSingleton();
-			_injector.map( NotifyGalleryPaintingLoadedSignal ).asSingleton();
-			_injector.map( NotifyGalleryPaintingIOErrorSignal ).asSingleton();
 			_injector.map( NotifyLovePaintingSucceededSignal ).asSingleton();
 			_injector.map( NotifyLovePaintingFailedSignal ).asSingleton();
 			_injector.map( NotifyAddCommentSucceededSignal ).asSingleton();

@@ -104,8 +104,11 @@ package net.psykosoft.psykopaint2.core.models
 				var vo : FileGalleryImageProxy = new FileGalleryImageProxy();
 				vo.id = obj["id"];
 				vo.title = obj["title"];
-				vo.fullsizeFilename = obj["url_image"];
+				vo.normalSpecularMapURL = obj["normalmapdata_url"];
+				vo.colorMapURL = obj["colordata_url"];
+				vo.sourceThumbnailURL = obj["source_thumbnail_url"];
 				vo.thumbnailFilename = obj["composite_thumbnail_url"];
+				vo.compositeFilename = obj["composite_url"];
 				vo.userName = obj["firstname"] + " " + obj["lastname"];
 				vo.numLikes = obj["num_favorite"];
 				vo.numComments = obj["num_comments"];

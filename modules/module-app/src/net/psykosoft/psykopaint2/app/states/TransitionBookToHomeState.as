@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestLoadGalleryPaintingSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 
 	public class TransitionBookToHomeState extends State
 	{
@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestHomeViewScrollSignal : RequestHomeViewScrollSignal;
 
 		[Inject]
-		public var requestLoadGalleryPaintingSignal : RequestLoadGalleryPaintingSignal;
+		public var requestSetGalleryPaintingSignal : RequestSetGalleryPaintingSignal;
 
 		private var _targetNavigationState:String;
 		private var _galleryImage : GalleryImageProxy;
@@ -66,12 +66,12 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			stateMachine.setActiveState(homeState);
 
-			if (_targetNavigationState != NavigationStateType.GALLERY_LOADING)
+			requestStateChangeSignal.dispatch(_targetNavigationState);
+
+			if (_targetNavigationState != NavigationStateType.GALLERY_PAINTING)
 				requestHomeViewScrollSignal.dispatch(1);
 			else
-				requestLoadGalleryPaintingSignal.dispatch(_galleryImage);
-
-			requestStateChangeSignal.dispatch(_targetNavigationState);
+				requestSetGalleryPaintingSignal.dispatch(_galleryImage);
 		}
 
 		override ns_state_machine function deactivate() : void

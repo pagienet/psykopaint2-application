@@ -172,7 +172,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onGalleryImageSelected(selectedGalleryImage : GalleryImageProxy) : void
 		{
-			stateMachine.setActiveState(transitionToHomeState, { target: NavigationStateType.GALLERY_LOADING, galleryImage: selectedGalleryImage});
+			stateMachine.setActiveState(transitionToHomeState, { target: NavigationStateType.GALLERY_PAINTING, galleryImage: selectedGalleryImage});
 		}
 
 		private function onRequestExitPickAnImageSignal():void
