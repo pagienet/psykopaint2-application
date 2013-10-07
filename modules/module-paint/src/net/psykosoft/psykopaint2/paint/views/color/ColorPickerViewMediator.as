@@ -1,24 +1,14 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
 
-	import flash.display.Shape;
-	import flash.events.Event;
-	import flash.geom.ColorTransform;
-	
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
-	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
-	import net.psykosoft.psykopaint2.paint.views.brush.SelectColorSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
-	
+
 	import org.gestouch.events.GestureEvent;
-	
-	public class ColorPickerViewMediator extends MediatorBase
+
+	public class ColorPickerViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:ColorPickerView;
@@ -29,19 +19,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 		[Inject]
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
 		
-		[Inject]
-		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
-		
-
 		override public function initialize():void {
 
 			registerView( view );
 			super.initialize();
-			manageMemoryWarnings = false;
 
-			manageStateChanges = false;
-			view.enable();
+			// From view.
 			view.colorChangedSignal.add( onColorChanged );
+
+			// From app.
 			notifyPickedColorChangedSignal.add( onColorChangedFromOutside );
 			notifyGlobalGestureSignal.add( onGlobalGestureDetected );
 		}
@@ -50,6 +36,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		// -----------------------
 		// From view.
 		// -----------------------
+
 		private function onColorChanged():void
 		{
 			notifyPickedColorChangedSignal.dispatch(view.currentColor, false);
@@ -59,6 +46,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		// -----------------------
 		// From app.
 		// -----------------------
+
 		private function onColorChangedFromOutside( newColor:uint, reallyFromOutside:Boolean ):void
 		{
 			if ( reallyFromOutside ) view.setCurrentColor(newColor,false,false,false);
@@ -73,8 +61,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			{
 				view.endPipetteCharge()
 			}
-			
 		}
-		
 	}
 }

@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					break;
 
 				case SelectBrushSubNavView.ID_COLOR:
-					// TODO
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 					break;
 				
 				// Center buttons select a brush.

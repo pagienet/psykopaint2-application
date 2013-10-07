@@ -13,14 +13,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
-	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
-	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.ComboboxView;
-//	import net.psykosoft.psykopaint2.core.views.components.rangeslider.RangedSlider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.Slider;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SliderButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
