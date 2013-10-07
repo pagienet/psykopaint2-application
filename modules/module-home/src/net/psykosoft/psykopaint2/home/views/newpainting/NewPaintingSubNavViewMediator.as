@@ -113,7 +113,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					PaintModeModel.activeMode = PaintMode.PHOTO_MODE;
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = "psyko-" + PaintingInfoVO.DEFAULT_VO_ID;
-					pickDefaultSurfaceAndContinueToPickImage();
+					requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
 					requestHomePanningToggleSignal.dispatch( -1 );
 					break;
 				}
@@ -135,10 +135,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					requestEaselUpdateSignal.dispatch( vo, true, false );
 				}
 			}
-		}
-
-		private function pickDefaultSurfaceAndContinueToPickImage():void {
-			requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
 		}
 	}
 }
