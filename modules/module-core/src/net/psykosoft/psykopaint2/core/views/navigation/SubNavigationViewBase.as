@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
-	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
@@ -115,6 +114,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function get navigationButtonClickedSignal():Signal {
 			return _navigation.buttonClickedSignal;
+		}
+
+		// type - NavigationView.BG_WOOD, etc.
+		public function setBgType( type:uint ):void {
+			_navigation.setBgType( type );
 		}
 
 		// ---------------------------------------------------------------------

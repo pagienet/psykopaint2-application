@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 {
 
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+	import net.psykosoft.psykopaint2.core.views.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class AlphaSubNavView extends SubNavigationViewBase
@@ -16,6 +17,7 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 			setHeader( "" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 			showRightButton( false );
+			setBgType( NavigationView.BG_TYPE_WOOD );
 		}
 
 		override protected function onDisposed():void {
