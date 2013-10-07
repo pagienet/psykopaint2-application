@@ -36,6 +36,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				case SelectBrushSubNavView.ID_BACK:
 					requestNavigationStateChange( NavigationStateType.PAINT );
 					break;
+
+				case SelectBrushSubNavView.ID_COLOR:
+					// TODO
+					break;
 				
 				// Center buttons select a brush.
 				default:

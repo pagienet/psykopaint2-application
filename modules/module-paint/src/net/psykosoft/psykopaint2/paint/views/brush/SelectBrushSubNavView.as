@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
+	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
@@ -8,6 +10,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	public class SelectBrushSubNavView extends SubNavigationViewBase
 	{
 		public static const ID_BACK:String = "Edit Painting";
+		public static const ID_COLOR:String = "Pick a Color";
 
 		public function SelectBrushSubNavView() {
 			super();
@@ -16,6 +19,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onEnabled():void {
 			setHeader( "Pick a Brush" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
+
+			// Show color button?
+			if( PaintModeModel.activeMode == PaintMode.COLOR_MODE ) {
+				setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.CONTINUE );
+			}
 		}
 
 		public function setAvailableBrushes( availableBrushTypes:Vector.<String> ):void {
