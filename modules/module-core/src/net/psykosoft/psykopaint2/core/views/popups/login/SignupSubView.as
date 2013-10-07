@@ -33,7 +33,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public var photoContour:Sprite;
 
 		public var viewWantsToRegisterSignal:Signal;
-		public var backBtnClickedSignal:Signal;
 
 		private var _cameraUtil:DeviceCameraUtil;
 		private var _rollUtil:CameraRollUtil;
@@ -43,11 +42,15 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private var _photoRetrieved:Boolean;
 		private var _satelliteMessages:Vector.<LoginMessageLabel>;
 
+		private const LARGE_PHOTO_SIZE:int = 200;
+		private const SMALL_PHOTO_SIZE:int = 200;
+
+		public var canRequestSignUp:Boolean = true;
+
 		public function SignupSubView() {
 			super();
 
 			viewWantsToRegisterSignal = new Signal();
-			backBtnClickedSignal = new Signal();
 
 			signupBtn.labelText = "SIGN UP";
 
@@ -140,6 +143,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 
 		private function register():void {
+			if( !canRequestSignUp ) return;
 			photoContour.visible = false;
 			clearAllSatelliteMessages();
 			if( !validateEmailFormat() ) return;
@@ -179,6 +183,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private function validatePhoto():Boolean {
 			if( !CoreSettings.RUNNING_ON_iPAD ) {
 				photoContour.visible = true;
+				_photoLarge = new BitmapData( LARGE_PHOTO_SIZE, LARGE_PHOTO_SIZE, false, 0xFF0000 );
+				_photoSmall = new BitmapData( SMALL_PHOTO_SIZE, SMALL_PHOTO_SIZE, false, 0xFF0000 );
 				hueContour( photoContour, -106 );
 				return true;
 			}
@@ -221,8 +227,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
 
-			_photoLarge = BitmapDataUtils.scaleToFit( bmd, 200 );
-			_photoSmall = BitmapDataUtils.scaleToFit( bmd, 50 );
+			_photoLarge = BitmapDataUtils.scaleToFit( bmd, LARGE_PHOTO_SIZE );
+			_photoSmall = BitmapDataUtils.scaleToFit( bmd, SMALL_PHOTO_SIZE );
 
 			_photoBitmap.bitmapData = _photoLarge;
 			_photoBitmap.x = 115 / 2 - _photoBitmap.width / 2;
@@ -237,10 +243,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// -----------------------
 		// Event handlers.
 		// -----------------------
-
-		private function onBackBtnClick( event:MouseEvent ):void {
-			backBtnClickedSignal.dispatch();
-		}
 
 		private function onCameraHitClick( event:MouseEvent ):void {
 			takePhoto();

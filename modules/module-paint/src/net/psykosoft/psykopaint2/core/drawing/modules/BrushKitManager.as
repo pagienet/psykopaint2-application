@@ -110,7 +110,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
 		private var _canvasMatrix : Matrix;
-		private var sourceCanvasViewModes:Array = [[1,0.25],[0.25,0.75],[1,0]];
+		private var sourceCanvasViewModes:Array = [[1,1],[1,0.001]];
 		private var sourceCanvasViewModeIndex:int = 0;
 		private var _activeMode : String;
 		private var _currentPaintColor:int;
@@ -143,7 +143,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			if ( gestureType == GestureType.TAP_GESTURE_RECOGNIZED  )
 			{
-				if ( getTimer() - singleTapDelay > 700 )
+				if ( getTimer() - singleTapDelay > 500 )
 				{
 					if ( _activeMode == PaintMode.PHOTO_MODE )
 					{
@@ -327,6 +327,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			
 				requestAddViewToMainLayerSignal.dispatch( colorPickerView, ViewLayerOrdering.IN_FRONT_OF_NAVIGATION );
 			}
+			
 		}
 
 		public function deactivate() : void

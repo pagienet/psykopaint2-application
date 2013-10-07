@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
-	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButtonAlt;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpViewBase;
 
@@ -75,39 +74,29 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			super.onEnabled();
 
-			_blocker.addEventListener( MouseEvent.CLICK, onBlockerClick );
-
 			selectLoginSubView.loginClickedSignal.add( onSelectLoginSubViewLoginBtnClicked );
 			selectLoginSubView.signupClickedSignal.add( onSelectLoginSubViewSignupBtnClicked );
-			selectLoginSubView.backBtnClickedSignal.add( onSelectLoginBackBtnClicked );
 
 			loginSubView.viewWantsToLogInSignal.add( onLoginViewWantsToLogIn );
 			loginSubView.forgotBtnClickedSignal.add( onLoginViewForgotButtonClicked );
-			loginSubView.backBtnClickedSignal.add( onLoginWantsToGoBack );
 
 			signupSubView.viewWantsToRegisterSignal.add( onSignupViewWantsToRegister );
-			signupSubView.backBtnClickedSignal.add( onRegisterWantsToGoBack );
 
 			layout();
 		}
 
 		override protected function onDisabled():void {
 
-			_blocker.removeEventListener( MouseEvent.CLICK, onBlockerClick );
-
 			_leftButton.removeEventListener( MouseEvent.CLICK, onLeftBtnClick );
 			_rightButton.removeEventListener( MouseEvent.CLICK, onRightBtnClick );
 
 			selectLoginSubView.loginClickedSignal.remove( onSelectLoginSubViewLoginBtnClicked );
 			selectLoginSubView.signupClickedSignal.remove( onSelectLoginSubViewSignupBtnClicked );
-			selectLoginSubView.backBtnClickedSignal.remove( onSelectLoginBackBtnClicked );
 
 			loginSubView.viewWantsToLogInSignal.remove( onLoginViewWantsToLogIn );
 			loginSubView.forgotBtnClickedSignal.remove( onLoginViewForgotButtonClicked );
-			loginSubView.backBtnClickedSignal.remove( onLoginWantsToGoBack );
 
 			signupSubView.viewWantsToRegisterSignal.remove( onSignupViewWantsToRegister );
-			signupSubView.backBtnClickedSignal.remove( onRegisterWantsToGoBack );
 
 			selectLoginSubView.dispose();
 			loginSubView.dispose();
@@ -202,7 +191,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			loginSubView.visible = true;
 		}
 
-		private function onBlockerClick( event:MouseEvent ):void {
+		override public function onBlockerClicked():void {
 			popUpWantsToCloseSignal.dispatch();
 		}
 	}

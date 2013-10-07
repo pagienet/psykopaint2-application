@@ -65,10 +65,14 @@ package net.psykosoft.psykopaint2.home.views.settings
 				}
 
 				case SettingsSubNavView.ID_LOGIN: {
+					trace( this, "login clicked" );
 					if( loggedInUserProxy.isLoggedIn() ) {
+						trace( this, "logging out" );
 						loggedInUserProxy.logOut();
+						view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, false );
 					}
 					else {
+						trace( this, "logging in" );
 						requestShowPopUpSignal.dispatch( PopUpType.LOGIN );
 					}
 					break;
@@ -86,10 +90,12 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		private function onUserLoggedIn():void {
 			view.relabelButtonWithId( SettingsSubNavView.ID_LOGIN, SettingsSubNavView.ID_LOGOUT );
+			view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, true );
 		}
 
 		private function onUserLoggedOut():void {
 			view.relabelButtonWithId( SettingsSubNavView.ID_LOGIN, SettingsSubNavView.ID_LOGIN );
+			view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, true );
 		}
 	}
 }

@@ -6,7 +6,8 @@ package net.psykosoft.psykopaint2.core.signals
 	{
 		public function NotifyPasswordResetFailedSignal()
 		{
-			super(int); // AMFErrorCode
+			// AMFErrorCode, reason
+			super(int, String);
 		}
 	}
 }

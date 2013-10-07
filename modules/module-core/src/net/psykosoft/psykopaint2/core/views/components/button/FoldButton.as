@@ -59,6 +59,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		// -----------------------
 
 		public function spin():void {
+			mouseEnabled = mouseChildren = false;
 			TweenLite.killTweensOf( this );
 			spinner.visible = true;
 			tf.visible = false;
@@ -67,6 +68,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		}
 
 		public function dontSpin():void {
+			mouseEnabled = mouseChildren = true;
 			TweenLite.killTweensOf( this );
 			bg.gotoAndStop( 1 );
 			spinner.visible = false;

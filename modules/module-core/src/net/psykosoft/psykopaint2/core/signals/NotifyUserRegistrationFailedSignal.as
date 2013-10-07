@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.core.signals
 	{
 		function NotifyUserRegistrationFailedSignal()
 		{
-			// fail code (see AMFErrorCode)
-			super(int);
+			// AMFErrorCode, reason
+			super(int, String);
 		}
 	}
 }
