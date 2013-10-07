@@ -46,6 +46,15 @@ package net.psykosoft.psykopaint2.paint.configuration
 							targetMappings="1"
 							/>
 
+						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP}
+							src="Precision"
+							target={"pathengine.pointdecorator_3."+SpawnDecorator.PARAMETER_N_MAXIMUM_SIZE}
+							targetProperties="value"
+							targetOffsets="0.05"
+							targetFactors="0.36"
+							targetMappings="1"
+							/>
+
 					</parameterMapping>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 
@@ -80,6 +89,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={SpawnDecorator.PARAMETER_SL_MULTIPLE_MODE} path="pathengine.pointdecorator_3" index={SpawnDecorator.INDEX_MODE_SIZE_INV} />
 							<parameter id={SpawnDecorator.PARAMETER_SL_OFFSET_MODE} path="pathengine.pointdecorator_3" index={SpawnDecorator.INDEX_MODE_RANDOM} />
 							<parameter id={SpawnDecorator.PARAMETER_AR_OFFSET_ANGLE} path="pathengine.pointdecorator_3" value1="-180" value2="180" />
+							<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_SIZE} path="pathengine.pointdecorator_3" value="0.12"  />
 
 						</SpawnDecorator>
 						
