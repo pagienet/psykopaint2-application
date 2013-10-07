@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Sine;
-	
+
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
@@ -13,32 +13,24 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
-	import flash.utils.clearTimeout;
 	import flash.utils.getTimer;
-	import flash.utils.setTimeout;
-	
+
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
-	import net.psykosoft.psykopaint2.core.drawing.data.ModuleType;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
@@ -48,10 +40,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
-	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
-	import net.psykosoft.psykopaint2.paint.views.color.ColorPickerView;
-	
+
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.LongPressGesture;
 
@@ -114,7 +104,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var sourceCanvasViewModeIndex:int = 0;
 		private var _activeMode : String;
 		private var _currentPaintColor:int;
-		private var colorPickerView : ColorPickerView;
 		private var _currentBrushColorParameter:PsykoParameter;
 		private var copyColorUtil:CopyColorToBitmapDataUtil;
 		private var currentColorMap:BitmapData;
@@ -150,11 +139,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						sourceCanvasViewModeIndex = ( sourceCanvasViewModeIndex+1) % sourceCanvasViewModes.length;
 						TweenLite.killTweensOf( renderer );
 						TweenLite.to( renderer, 0.3, { paintAlpha:sourceCanvasViewModes[sourceCanvasViewModeIndex][0],sourceTextureAlpha: sourceCanvasViewModes[sourceCanvasViewModeIndex][1], ease: Sine.easeInOut } );
-					} else if ( _activeMode == PaintMode.COLOR_MODE)
-					{
-				//		requestStateChangeSignal.dispatch( NavigationStateType.PAINT_COLOR );
-						colorPickerView.visible = !colorPickerView.visible;
-						
 					}
 				}
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
@@ -321,13 +305,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_active = true;
 			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
-			if ( mode == PaintMode.COLOR_MODE )
-			{
-				colorPickerView = new ColorPickerView();
-			
-				requestAddViewToMainLayerSignal.dispatch( colorPickerView, ViewLayerOrdering.IN_FRONT_OF_NAVIGATION );
-			}
-			
 		}
 
 		public function deactivate() : void
