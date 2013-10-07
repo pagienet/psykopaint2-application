@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.book.commands
 			var service : SourceImageService;
 
 			switch (requestVO.bookImageSource) {
-				case BookImageSource.USER_IMAGES:
+				case BookImageSource.CAMERAROLL_IMAGES:
 					service = cameraRollService;
 					break;
 				case BookImageSource.SAMPLE_IMAGES:

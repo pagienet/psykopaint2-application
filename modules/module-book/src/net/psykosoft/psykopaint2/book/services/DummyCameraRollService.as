@@ -56,7 +56,7 @@ package net.psykosoft.psykopaint2.book.services
 			var collection : SourceImageCollection = new SourceImageCollection();
 			var max : int = index + amount;
 
-			collection.source = BookImageSource.CAMERA_IMAGES;
+			collection.source = BookImageSource.CAMERAROLL_IMAGES;
 			collection.index = _index;
 			collection.numTotalImages = 38;
 

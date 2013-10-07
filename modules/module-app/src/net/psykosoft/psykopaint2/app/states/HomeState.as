@@ -112,7 +112,7 @@ package net.psykosoft.psykopaint2.app.states
 		private function onBrowseUserImagesSignal() : void
 		{
 			if (CoreSettings.RUNNING_ON_iPAD)
-				stateMachine.setActiveState(transitionToBookState, {source: BookImageSource.USER_IMAGES});
+				stateMachine.setActiveState(transitionToBookState, {source: BookImageSource.CAMERAROLL_IMAGES});
 			else
 				requestStateChange.dispatch(NavigationStateType.PICK_USER_IMAGE_DESKTOP);
 		}

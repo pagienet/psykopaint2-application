@@ -126,7 +126,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			} else if(sourceType == BookImageSource.SAMPLE_IMAGES){
 				onImageCollectionRequest(sourceType, 0, 30);
 
-			} else if(sourceType == BookImageSource.CAMERA_IMAGES){
+			} else if(sourceType == BookImageSource.CAMERAROLL_IMAGES){
 				onImageCollectionRequest(sourceType, 0, 80);
 			}
 		}

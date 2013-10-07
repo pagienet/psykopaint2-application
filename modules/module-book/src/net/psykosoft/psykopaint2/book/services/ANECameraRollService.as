@@ -47,7 +47,7 @@ package net.psykosoft.psykopaint2.book.services
 			if (_amountToFetch > 0)
 				imageCount = Math.min(imageCount, _indexToFetch + _amountToFetch);
 
-			collection.source = BookImageSource.CAMERA_IMAGES;
+			collection.source = BookImageSource.CAMERAROLL_IMAGES;
 			collection.index = _indexToFetch;
 			collection.numTotalImages = imageCount;
 

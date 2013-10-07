@@ -108,7 +108,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	 					newPageCount = Math.round(collection.images.length/(insertCount * 2) );
 	 					break;
 
-	 				case BookImageSource.CAMERA_IMAGES:
+	 				case BookImageSource.CAMERAROLL_IMAGES:
 	 					insertCount = CameraSamplesLayout.INSERTS_COUNT;
 	 					newPageCount = Math.round(collection.images.length/(insertCount * 2) );
 	 					break;
@@ -139,7 +139,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	 					_layout = new NativeSamplesLayout(_stage, previousLayout);
 	 					break;
 
-	 				case BookImageSource.CAMERA_IMAGES:
+	 				case BookImageSource.CAMERAROLL_IMAGES:
 	 					insertCount = CameraSamplesLayout.INSERTS_COUNT;
 	 					_layout = new CameraSamplesLayout(_stage, previousLayout);
 	 					break;

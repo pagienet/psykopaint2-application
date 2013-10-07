@@ -146,8 +146,8 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onBrowseUserImagesSignal() : void
 		{
-			if( _activeSourceType == BookImageSource.USER_IMAGES ) return;
-			_activeSourceType = BookImageSource.USER_IMAGES;
+			if( _activeSourceType == BookImageSource.CAMERAROLL_IMAGES ) return;
+			_activeSourceType = BookImageSource.CAMERAROLL_IMAGES;
 
 			refreshBookSource();
 		}
