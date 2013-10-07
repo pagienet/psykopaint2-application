@@ -13,6 +13,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
@@ -57,6 +59,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var saturationHandleBg:Shape;
 
 		private var lightnessHandleBg:Shape;
+
+		public static const ID_BACK:String = "Pick a Brush";
 		
 		public function ColorPickerView()
 		{
@@ -148,7 +152,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			saturationOverlay.mouseEnabled = false;
 			lightnessOverlay.mouseEnabled = false;
 			
-			
+			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 		}
 		
 		protected function onSliderMouseDown( event:MouseEvent ):void

@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 
@@ -41,7 +42,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			notifyPickedColorChangedSignal.dispatch(view.currentColor, false);
 		}
-		
+
+		override protected function onButtonClicked( id:String ):void {
+			switch( id ) {
+				case ColorPickerView.ID_BACK:
+					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					break;
+			}
+		}
 		
 		// -----------------------
 		// From app.
