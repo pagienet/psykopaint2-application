@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	{
 		public static const ID_BACK:String = "Edit Painting";
 		public static const ID_COLOR:String = "Pick a Color";
+		public static const ID_ALPHA:String = "Change Opacity";
 
 		public function SelectBrushSubNavView() {
 			super();
@@ -23,6 +24,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			// Show color button?
 			if( PaintModeModel.activeMode == PaintMode.COLOR_MODE ) {
 				setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.CONTINUE );
+			}
+			else {
+				setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.CONTINUE );
 			}
 		}
 

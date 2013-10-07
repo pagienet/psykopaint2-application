@@ -105,6 +105,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( NavigationStateType.TRANSITION_TO_HOME_MODE );
 			registerEnablingState( NavigationStateType.TRANSITION_TO_PAINT_MODE );
 			registerEnablingState( NavigationStateType.PREPARE_FOR_HOME_MODE );
+			registerEnablingState( NavigationStateType.PAINT_ADJUST_ALPHA );
 
 			// Init.
 			// TODO: preferrably do not do this, instead go the other way - get touch events in view, tell module how to deal with them

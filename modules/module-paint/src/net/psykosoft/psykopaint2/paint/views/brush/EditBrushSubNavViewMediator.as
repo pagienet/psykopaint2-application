@@ -33,7 +33,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
-			//view.showRightButton(paintModule.activeMode == PaintMode.COLOR_MODE);
 			view.setParameters( paintModule.getCurrentBrushParameters() );
 		}
 
@@ -43,11 +42,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				case EditBrushSubNavView.ID_BACK:
 					requestNavigationStateChange( NavigationStateType.PREVIOUS );
 					break;
-				/*
-				case EditBrushSubNavView.ID_COLOR:
-					requestNavigationStateChange( NavigationStateType.PAINT_COLOR);
-					break;
-				*/
 				default:
 					view.openParameterWithId( id );
 					break;
