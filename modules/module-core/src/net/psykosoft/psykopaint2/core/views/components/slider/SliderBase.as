@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 
+	import org.osflash.signals.Signal;
+
 	public class SliderBase extends Sprite
 	{
 		public static var LABEL_VALUE:int = 0;
@@ -27,9 +29,12 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _valueRange:Number = 1;
 		private var _labelMode:int = 1;
 		private var _digits:int = 2;
+
+		public var valueChangedSignal:Signal;
 		
 		public function SliderBase() {
 			super();
+			valueChangedSignal = new Signal();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
@@ -73,6 +78,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function updateValueFromView():void {
 			_valueRatio = ( _handleView.x - _minX ) / _xRange;
 			_value = ratioToValue( _valueRatio );
+			valueChangedSignal.dispatch( _value );
 			updateLabel();
 			dispatchEvent( new Event( Event.CHANGE ) );
 		}
@@ -108,6 +114,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function containValue():void {
 			if( _value < _minValue ) _value = _minValue;
 			if( _value > _maxValue ) _value = _maxValue;
+			valueChangedSignal.dispatch( _value );
 		}
 
 		public function setWidth( newWidth:Number ):void{
@@ -144,6 +151,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		public function set value( value:Number ):void {
 			_value = value;
+			valueChangedSignal.dispatch( _value );
 			containValue();
 			_valueRatio = valueToRatio( _value );
 			updateLabel();
