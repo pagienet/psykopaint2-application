@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	public class SelectBrushSubNavView extends SubNavigationViewBase
 	{
 		public static const ID_BACK:String = "Edit Painting";
-		public static const ID_EDIT_BRUSH:String = "Edit Brush";
 
 		public function SelectBrushSubNavView() {
 			super();
@@ -17,7 +16,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onEnabled():void {
 			setHeader( "Pick a Brush" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
-			setRightButton( ID_EDIT_BRUSH, ID_EDIT_BRUSH, ButtonIconType.TWEAK_BRUSH );
 		}
 
 		public function setAvailableBrushes( availableBrushTypes:Vector.<String> ):void {
