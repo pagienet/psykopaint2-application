@@ -386,7 +386,7 @@ package net.psykosoft.psykopaint2.core.rendering
 //			if (_shadowModel) _shadowModel.updateLightingModel(_lightingModel);
 
 			// bumpiness
-			_globalFragmentData[3] = _lightingModel.surfaceBumpiness;
+			_globalFragmentData[3] = _lightingModel.surfaceBumpiness * _paintAlpha;
 
 		}
 
@@ -446,6 +446,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			if (_paintAlpha == 1 || value == 1)
 				invalidateProgram();
 
+			_globalFragmentData[3] = _lightingModel.surfaceBumpiness * _paintAlpha;
 			_globalFragmentData[6] = value;
 		}
 	}
