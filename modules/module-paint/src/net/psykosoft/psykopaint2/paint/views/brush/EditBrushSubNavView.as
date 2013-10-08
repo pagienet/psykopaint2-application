@@ -13,15 +13,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
-	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
-	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.ComboboxView;
-//	import net.psykosoft.psykopaint2.core.views.components.rangeslider.RangedSlider;
-	import net.psykosoft.psykopaint2.core.views.components.slider.Slider;
+	import net.psykosoft.psykopaint2.core.views.components.slider.SliderBase;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SliderButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
@@ -34,7 +30,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private var _parameter:PsykoParameter;
 
 		public static const ID_BACK:String = "Pick a Brush";
-		//public static const ID_COLOR:String = "Pick a Color";
 
 		public static const CUSTOM_COLOR_ID:String = "Custom Color";
 
@@ -48,7 +43,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onEnabled():void {
 			setHeader( "" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
-			//setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.CONTINUE );
 			showRightButton( false );
 		}
 
@@ -173,7 +167,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var parameterType:int = _parameter.type;
 
 			var i:uint;
-			var slider:Slider;
+			var slider:SliderBase;
 
 			// Simple slider.
 			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
@@ -304,7 +298,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			var len:uint = _uiElements.length;
 			for( var i:uint; i < len; ++i ) {
 				var uiElement:DisplayObject = _uiElements[ i ];
-				if( uiElement is Slider ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
+				if( uiElement is SliderBase ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
 				else if( uiElement is ComboBox ) {
 					uiElement.removeEventListener( Event.SELECT, onComboBoxChanged );
 				}
@@ -357,7 +351,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		private function onSliderChanged( event:Event ):void {
-			var slider:Slider = event.target as Slider;
+			var slider:SliderBase = event.target as SliderBase;
 			_parameter.value = slider.value;
 		}
 

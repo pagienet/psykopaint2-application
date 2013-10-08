@@ -1,8 +1,9 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
+
 	import com.quasimondo.color.colorspace.HSV;
 	import com.quasimondo.color.utils.ColorConverter;
-	
+
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
@@ -11,15 +12,16 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
-	import flash.text.TextField;
-	
-	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
+
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
-	
+	import net.psykosoft.psykopaint2.core.views.navigation.NavigationView;
+	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
+
 	import org.osflash.signals.Signal;
-	
-	public class ColorPickerView extends ViewBase
+
+	public class ColorPickerView extends SubNavigationViewBase
 	{
 		public var currentColorSwatch:Sprite;
 		public var hueHandle:MovieClip;
@@ -58,6 +60,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var saturationHandleBg:Shape;
 
 		private var lightnessHandleBg:Shape;
+
+		public static const ID_BACK:String = "Pick a Brush";
 		
 		public function ColorPickerView()
 		{
@@ -65,7 +69,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			colorChangedSignal = new Signal();
 		}
 		
-		override protected function onSetup():void 
+		override protected function onEnabled():void
 		{
 			colorPalette.addEventListener( Event.CHANGE, onPaletteColorChanged );
 			colorMixer = new Colormixer( colorPalette.currentPalette );
@@ -149,7 +153,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			saturationOverlay.mouseEnabled = false;
 			lightnessOverlay.mouseEnabled = false;
 			
-			
+			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
+
+			setBgType( NavigationView.BG_TYPE_WOOD );
 		}
 		
 		protected function onSliderMouseDown( event:MouseEvent ):void

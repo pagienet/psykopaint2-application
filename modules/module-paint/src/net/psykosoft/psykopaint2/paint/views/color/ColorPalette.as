@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
@@ -31,14 +32,18 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var selectedPaletteIndex:int;
 		private var _selectedColor:uint;
 		private var _currentIndex:int;
+		private var _stage:Stage;
 		
 		public function ColorPalette()
 		{
 			super();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
+
+		// TODO: review disposal of view
 		
 		private function onAddedToStage( event:Event ):void {
+			_stage = stage;
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			
 			swatches = Vector.<Sprite>([colorOverlay0,colorOverlay1,colorOverlay2,colorOverlay3,colorOverlay4,colorOverlay5,
@@ -117,7 +122,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 					pipette.gotoAndStop(1);
 					pipette.colorbar.transform.colorTransform = swatches[i].transform.colorTransform;
 					
-					stage.addEventListener(Event.ENTER_FRAME, suckInPipette );
+					_stage.addEventListener(Event.ENTER_FRAME, suckInPipette );
 					break;
 				}
 			}
@@ -137,7 +142,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			{
 				pipette.visible = false;
 				pipette.stop();
-				stage.removeEventListener(Event.ENTER_FRAME, suckInPipette );
+				_stage.removeEventListener(Event.ENTER_FRAME, suckInPipette );
 			}
 		}
 	}

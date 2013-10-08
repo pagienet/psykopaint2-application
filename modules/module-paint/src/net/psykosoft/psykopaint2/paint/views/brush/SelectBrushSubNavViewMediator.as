@@ -22,7 +22,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onViewEnabled():void {
-			//activateBrush( paintModule.activeBrushKit );
 			super.onViewEnabled();
 		}
 
@@ -37,11 +36,15 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				case SelectBrushSubNavView.ID_BACK:
 					requestNavigationStateChange( NavigationStateType.PAINT );
 					break;
-				
-				case SelectBrushSubNavView.ID_EDIT_BRUSH:
-					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_BRUSH );
+
+				case SelectBrushSubNavView.ID_COLOR:
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 					break;
 
+				case SelectBrushSubNavView.ID_ALPHA:
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_ALPHA );
+					break;
+				
 				// Center buttons select a brush.
 				default:
 					activateBrush( id );

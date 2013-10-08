@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_NR_BRISTLE_VARIATION:String = "Bristle Variation";
 		public static const PARAMETER_B_AUTOROTATE:String = "Auto Rotate";
 		public static const PARAMETER_N_MAXIMUM_SPEED:String = "Maximum Speed";
+		public static const PARAMETER_N_MAXIMUM_SIZE:String = "Maximum Size";
 		public static const PARAMETER_SL_MULTIPLE_MODE:String = "Multiples Mode";
 		
 		static public const INDEX_MODE_FIXED:int = 0;
@@ -36,6 +37,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var brushAngleRange:PsykoParameter;
 		private var bristleVariation:PsykoParameter;
 		private var maxSpeed:PsykoParameter;
+		private var maxSize:PsykoParameter;
+		
 		private var autorotate:PsykoParameter;
 		private var multiplesMode:PsykoParameter;
 		
@@ -56,8 +59,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			bristleVariation  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_NR_BRISTLE_VARIATION,1,0,1);
 			autorotate      = new PsykoParameter( PsykoParameter.BooleanParameter, PARAMETER_B_AUTOROTATE,1);
 			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
+			maxSize   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SIZE,1,0,1);
 			
-			_parameters.push(  multiples,multiplesMode, maxOffset, offsetMode, offsetAngleRange, brushAngleRange, bristleVariation,maxSpeed,autorotate);
+			_parameters.push(  multiples,multiplesMode, maxOffset, offsetMode, offsetAngleRange, brushAngleRange, bristleVariation,maxSpeed,autorotate,maxSize);
 			rng = new LCG(Math.random() * 0xffffffff);
 			swapVector = new Vector.<SamplePoint>()
 		}
@@ -70,14 +74,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var ms:Number = maxSpeed.numberValue;
 			var ar:Boolean = autorotate.booleanValue;
 			var mapIndex:int = multiplesMode.index;
-			var maxSize:Number = 1;
+			var msz:Number = maxSize.numberValue;
 			for ( var j:int = 0; j < count; j++ )
 			{
 				var point:SamplePoint =  points[j];
-				var spawnCount:int =  multiples.lowerRangeValue + multiples.rangeValue * [1,Math.random(), point.speed / 25, point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, point.size, Math.sqrt(Math.max(0,maxSize - point.size))][mapIndex]; 
+				var spawnCount:int =  multiples.lowerRangeValue + multiples.rangeValue * [1,Math.random(), point.speed / 25, point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, point.size, Math.max(0,msz - point.size) / msz][mapIndex]; 
 				
-				
-				//var spawnCount:int = 1 + rng.getNumber(multiples.lowerRangeValue, multiples.upperRangeValue);
+				//trace(spawnCount, point.size);
 				
 				var distance:Number = 2 * maxOffset.numberValue / spawnCount;
 				switch ( offsetMode.index )

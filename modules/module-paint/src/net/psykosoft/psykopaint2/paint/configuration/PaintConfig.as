@@ -52,6 +52,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
+	import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
@@ -194,6 +196,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_mediatorMap.map( CanvasView ).toMediator( CanvasViewMediator );
 			_mediatorMap.map( PaintRootView ).toMediator( PaintRootViewMediator );
 			_mediatorMap.map( ColorPickerView ).toMediator( ColorPickerViewMediator );
+			_mediatorMap.map( AlphaSubNavView ).toMediator( AlphaSubNavViewMediator );
 		}
 	}
 }

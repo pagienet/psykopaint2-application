@@ -54,6 +54,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _subNavDictionary:Dictionary;
 		private var _numSubNavsBeingDisposed:int;
 
+		public static const BG_TYPE_ROPE:uint = 0;
+		public static const BG_TYPE_WOOD:uint = 1;
+
 		public function NavigationView() {
 			super();
 
@@ -111,6 +114,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			// Disable old view.
 			disableCurrentSubNavigation();
+
+			// Defaults to rope bg.
+			setBgType( NavigationView.BG_TYPE_ROPE );
 
 			// Reset.
 			header.visible = false;
@@ -274,6 +280,21 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		private function onHeaderOutComplete():void {
 			header.visible = headerBg.visible = false;
+		}
+
+		// ---------------------------------------------------------------------
+		// Bg.
+		// ---------------------------------------------------------------------
+
+		public function setBgType( type:uint ):void {
+			if( type == NavigationView.BG_TYPE_ROPE ) {
+				woodBg.visible = false;
+				wire.visible = true;
+			}
+			else {
+				woodBg.visible = true;
+				wire.visible = false;
+			}
 		}
 
 		// ---------------------------------------------------------------------
