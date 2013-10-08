@@ -72,10 +72,11 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function set selected( value:Boolean ):void {
-//			trace( this, "selected: " + value + ", " + _label.text );
+			trace( this, "selected: " + value + ", " + _label.text );
 			if( !_selectable ) return;
 			_selected = value;
 			mouseEnabled = mouseChildren = !_selected && _enabled;
+			trace( "mouse enabled: " + mouseEnabled );
 			updateSelected();
 		}
 
@@ -173,7 +174,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_enabled = value;
 			if( !_enabled ) transform.colorTransform = new ColorTransform( -1, -1, -1, 1 );
 			else transform.colorTransform = new ColorTransform();
-			mouseEnabled = mouseChildren = _enabled;
+			mouseEnabled = mouseChildren = !_selected && _enabled;
 		}
 	}
 }
