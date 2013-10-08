@@ -61,7 +61,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 		private var lightnessHandleBg:Shape;
 
-		public static const ID_BACK:String = "Pick a Brush";
+		public static const ID_BACK:String = "Back";
 		
 		public function ColorPickerView()
 		{

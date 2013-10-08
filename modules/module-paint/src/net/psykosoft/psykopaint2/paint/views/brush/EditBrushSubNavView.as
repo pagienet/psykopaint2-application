@@ -13,6 +13,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
+	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
@@ -30,6 +32,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		private var _parameter:PsykoParameter;
 
 		public static const ID_BACK:String = "Pick a Brush";
+		public static const ID_COLOR:String = "Pick a Color";
+		public static const ID_ALPHA:String = "Change Opacity";
 
 		public static const CUSTOM_COLOR_ID:String = "Custom Color";
 
@@ -43,7 +47,14 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onEnabled():void {
 			setHeader( "" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
-			showRightButton( false );
+
+			// Show color button?
+			if( PaintModeModel.activeMode == PaintMode.COLOR_MODE ) {
+				setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.CONTINUE );
+			}
+			else {
+				setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.CONTINUE );
+			}
 		}
 
 		override protected function onDisposed():void {

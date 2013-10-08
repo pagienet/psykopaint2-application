@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 
 	public class AlphaSubNavView extends SubNavigationViewBase
 	{
-		public static const ID_BACK:String = "Pick a Brush";
+		public static const ID_BACK:String = "Back";
 
 		private var _alphaSlider:AlphaSlider;
 

@@ -39,9 +39,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onButtonClicked( id:String ):void {
 			trace( this, "button clicked - id: " + id );
 			switch( id ) {
+
 				case EditBrushSubNavView.ID_BACK:
 					requestNavigationStateChange( NavigationStateType.PREVIOUS );
 					break;
+
+				case SelectBrushSubNavView.ID_COLOR:
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
+					break;
+
+				case SelectBrushSubNavView.ID_ALPHA:
+					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_ALPHA );
+					break;
+
+				// Activates parameter editing.
 				default:
 					view.openParameterWithId( id );
 					break;
