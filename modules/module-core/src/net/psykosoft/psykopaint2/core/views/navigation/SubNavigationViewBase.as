@@ -200,11 +200,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Protected.
 		// ---------------------------------------------------------------------
 
-		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false, enabled:Boolean = true ):ButtonData {
+		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false, enabled:Boolean = true, disableMouseInteractivityWhenSelected:Boolean = true ):ButtonData {
 			if( !_centerButtonData ) _centerButtonData = new Vector.<ISnapListData>();
 			var btnData:ButtonData = new ButtonData();
 			btnData.labelText = btnData.defaultLabelText = label;
 			btnData.iconType = iconType;
+			btnData.disableMouseInteractivityWhenSelected = disableMouseInteractivityWhenSelected;
 			btnData.iconBitmap = icon;
 			btnData.selectable = selectable;
 			btnData.id = id;

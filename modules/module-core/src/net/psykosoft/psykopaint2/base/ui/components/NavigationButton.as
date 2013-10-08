@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _selectable:Boolean;
 		protected var _selected:Boolean;
 		protected var _enabled:Boolean;
+		protected var _disableMouseInteractivityWhenSelected:Boolean = true;
 
 		public var id:String;
 
@@ -72,11 +73,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function set selected( value:Boolean ):void {
-			trace( this, "selected: " + value + ", " + _label.text );
+//			trace( this, "selected: " + value + ", " + _label.text );
 			if( !_selectable ) return;
 			_selected = value;
-			mouseEnabled = mouseChildren = !_selected && _enabled;
-			trace( "mouse enabled: " + mouseEnabled );
+			mouseInteractive = _disableMouseInteractivityWhenSelected ? !_selected && _enabled : _enabled;
 			updateSelected();
 		}
 
@@ -174,7 +174,19 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_enabled = value;
 			if( !_enabled ) transform.colorTransform = new ColorTransform( -1, -1, -1, 1 );
 			else transform.colorTransform = new ColorTransform();
-			mouseEnabled = mouseChildren = !_selected && _enabled;
+			mouseInteractive = _disableMouseInteractivityWhenSelected ? !_selected && _enabled : _enabled;
+		}
+
+		public function set mouseInteractive( value:Boolean ):void {
+			mouseEnabled = mouseChildren = value;
+		}
+
+		public function get disableMouseInteractivityWhenSelected():Boolean {
+			return _disableMouseInteractivityWhenSelected;
+		}
+
+		public function set disableMouseInteractivityWhenSelected( value:Boolean ):void {
+			_disableMouseInteractivityWhenSelected = value;
 		}
 	}
 }

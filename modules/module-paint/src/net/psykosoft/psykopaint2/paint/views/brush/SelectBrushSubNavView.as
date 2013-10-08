@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public function setAvailableBrushes( availableBrushTypes:Vector.<String> ):void {
 
 			var len:uint = availableBrushTypes.length;
-			trace( this, "setAvailableBrushes - len: " + len );
+//			trace( this, "setAvailableBrushes - len: " + len );
 
 			for( var i:uint; i < len; ++i ) {
 				var iconType:String;
@@ -62,7 +62,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						iconType = ButtonIconType.DEFAULT;
 					}
 				}
-				createCenterButton( availableBrushTypes[ i ], availableBrushTypes[ i ], iconType, IconButton, null, true );
+				createCenterButton( availableBrushTypes[ i ], availableBrushTypes[ i ], iconType, IconButton, null, true, true, false );
 			}
 
 			validateCenterButtons();
