@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const CAMERA_ROLL:String = "cameraRoll";
 		public static const COMMENT:String = "comment";
 		public static const CONTINUE:String = "continue";
+		public static const ALPHA:String = "alpha";
 		public static const DESTROY:String = "destroy";
 		public static const DISCARD:String = "discard";
 		public static const EDIT:String = "edit";

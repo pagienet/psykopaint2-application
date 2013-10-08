@@ -222,6 +222,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function getButtonIconForRightButton():Sprite {
+			if( _rightButton.icon.numChildren < 2 ) return null;
 			return _rightButton.icon.getChildAt( 1 ) as Sprite;
 		}
 

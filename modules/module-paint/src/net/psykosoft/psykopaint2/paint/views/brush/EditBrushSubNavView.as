@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.COLOR );
 			}
 			else {
-				setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.CONTINUE );
+				setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.ALPHA );
 			}
 		}
 
