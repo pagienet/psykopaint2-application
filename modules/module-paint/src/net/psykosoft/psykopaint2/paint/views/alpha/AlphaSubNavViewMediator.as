@@ -41,7 +41,13 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 		// -----------------------
 
 		private function onViewWantsToChangeAlpha( value:Number ):void {
-			renderer.sourceTextureAlpha = 1 - value;
+			// The incoming slider value is 0 at left and 1 at right.
+			// Here it is split to control 2 variables:
+			// value - 0    0.5   1
+			// photo - 1    1     0
+			// paint - 0    1     1
+			renderer.sourceTextureAlpha = value < 0.5 ? 1 : 1 - ( value - 0.5 ) / 0.5;
+			renderer.paintAlpha = value > 0.5 ? 1 : value / 0.5;
 		}
 
 		override protected function onButtonClicked( id:String ):void {

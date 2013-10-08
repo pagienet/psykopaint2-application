@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		public function AlphaSlider() {
 			super();
-			setRange( 75, 580 );
+			setRange( 72.6, 540.1 );
 			setHandle( handleView );
 			setBg( bgView );
 			setLabel( valueLabel );
