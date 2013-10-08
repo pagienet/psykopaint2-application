@@ -31,6 +31,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onButtonClicked( id:String ):void {
+
+			trace( this, "clicked: " + id);
+
 			switch( id ) {
 
 				case SelectBrushSubNavView.ID_BACK:
@@ -48,19 +51,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				// Center buttons select a brush.
 				default:
 					activateBrush( id );
-					if( hasParameters() ) requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_BRUSH );
+//					if( hasParameters() ) requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_BRUSH );
 					break;
 			}
 		}
 
 		private function activateBrush( name:String ):void {
 			paintModule.activeBrushKit = name;
-			view.showRightButton( hasParameters() );
-		}
-
-		private function hasParameters():Boolean{
-			var parameterSet:ParameterSetVO = paintModule.getCurrentBrushParameters();
-			return parameterSet.parameters.length > 0;
 		}
 	}
 }
