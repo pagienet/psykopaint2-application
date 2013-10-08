@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
@@ -119,6 +120,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// type - NavigationView.BG_WOOD, etc.
 		public function setBgType( type:uint ):void {
 			_navigation.setBgType( type );
+		}
+
+		public function getButtonIconForRightButton():Sprite {
+			return _navigation.getButtonIconForRightButton();
 		}
 
 		// ---------------------------------------------------------------------

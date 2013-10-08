@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 
 	public class SelectBrushSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -14,13 +15,17 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		[Inject]
 		public var paintModule:BrushKitManager;
 
+		[Inject]
+		public var notifyPickedColorChangedSignal : NotifyPickedColorChangedSignal;
+
 		private var _activeBrushId:String = "";
 		
 		override public function initialize():void {
-
 			// Init.
 			registerView( view );
 			super.initialize();
+			// From app.
+			notifyPickedColorChangedSignal.add( onColorPicked );
 		}
 
 		override protected function onViewSetup():void {
@@ -28,10 +33,28 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			super.onViewSetup();
 		}
 
+		override protected function onViewEnabled():void {
+			super.onViewEnabled();
+			view.setColorButtonHex( paintModule.currentPaintColor );
+		}
+
 		override public function destroy():void {
 			super.destroy();
 			_activeBrushId = "";
+			notifyPickedColorChangedSignal.remove( onColorPicked );
 		}
+
+		// -----------------------
+		// From app.
+		// -----------------------
+
+		private function onColorPicked( hex:uint, dummy:Boolean ):void {
+			view.setColorButtonHex( hex );
+		}
+
+		// -----------------------
+		// From view.
+		// -----------------------
 
 		override protected function onButtonClicked( id:String ):void {
 
@@ -66,6 +89,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					break;
 			}
 		}
+
+		// -----------------------
+		// Utils.
+		// -----------------------
 
 		private function activateBrush( name:String ):void {
 			paintModule.activeBrushKit = name;

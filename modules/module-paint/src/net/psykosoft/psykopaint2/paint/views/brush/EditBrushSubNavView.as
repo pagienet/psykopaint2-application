@@ -5,8 +5,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import com.bit101.components.Knob;
 	
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
@@ -50,7 +52,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// Show color button?
 			if( PaintModeModel.activeMode == PaintMode.COLOR_MODE ) {
-				setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.CONTINUE );
+				setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.COLOR );
 			}
 			else {
 				setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.CONTINUE );
@@ -59,6 +61,16 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override protected function onDisposed():void {
 			closeLastParameter();
+		}
+
+		public function setColorButtonHex( hex:uint ):void {
+			var icon:Sprite = getButtonIconForRightButton();
+			if( icon ) {
+				var ct:ColorTransform = new ColorTransform();
+				ct.color = hex;
+				var overlay:Sprite = icon.getChildByName( "overlay" ) as Sprite;
+				overlay.transform.colorTransform = ct;
+			}
 		}
 
 		// ---------------------------------------------------------------------

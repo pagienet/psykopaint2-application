@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.paint.views.brush
 {
 
+	import flash.display.Sprite;
+	import flash.geom.ColorTransform;
+
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
@@ -23,10 +26,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// Show color button?
 			if( PaintModeModel.activeMode == PaintMode.COLOR_MODE ) {
-				setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.CONTINUE );
+				setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.COLOR );
 			}
 			else {
 				setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.CONTINUE );
+			}
+		}
+
+		public function setColorButtonHex( hex:uint ):void {
+			var icon:Sprite = getButtonIconForRightButton();
+			if( icon ) {
+				var ct:ColorTransform = new ColorTransform();
+				ct.color = hex;
+				var overlay:Sprite = icon.getChildByName( "overlay" ) as Sprite;
+				overlay.transform.colorTransform = ct;
 			}
 		}
 

@@ -221,6 +221,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			rightBtnSide.visible = value;
 		}
 
+		public function getButtonIconForRightButton():Sprite {
+			return _rightButton.icon.getChildAt( 1 ) as Sprite;
+		}
+
 		// ---------------------------------------------------------------------
 		// Button clicks.
 		// ---------------------------------------------------------------------

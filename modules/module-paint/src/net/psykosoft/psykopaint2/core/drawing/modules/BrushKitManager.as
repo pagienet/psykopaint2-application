@@ -374,5 +374,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			return _activeMode;
 		}
+
+		public function get currentPaintColor():int {
+			return _currentPaintColor;
+		}
 	}
 }
