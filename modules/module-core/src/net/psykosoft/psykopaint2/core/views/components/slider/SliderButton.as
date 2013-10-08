@@ -57,6 +57,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		
 		private var _previewIcon:AbstractPreview;
 		
+		private var state:int;
+		
 		private const EAR_MOTION_RANGE:Number = 50;
 		private const EAR_ANIMATION_TIME:Number = 0.2;
 		private const PREVIEW_ANIMATION_TIME:Number = 0.2;
@@ -66,6 +68,12 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		public static var LABEL_VALUE:int = 0;
 		public static var LABEL_PERCENT:int = 1;
 		public static var LABEL_DEGREES:int = 2;
+		
+		private static var STATE_CLOSED:int = 0;
+		private static var STATE_OPENING:int = 1;
+		private static var STATE_CLOSING:int = 2;
+		private static var STATE_OPEN:int = 3;
+		private static var STATE_SLIDING:int = 4;
 
 		public function SliderButton() {
 			super();
@@ -120,11 +128,14 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			
 			_valueHasChanged = false;
 			_checkClosingTap = false;
+			
+			
 		}
 
 		private function postSetupAfterStageIsAvailable():void {
 			button.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			state = STATE_CLOSED;
 			
 		}
 
@@ -220,6 +231,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		// -----------------------
 
 		private function showEars():void {
+			state = STATE_OPENING;
 			killEarTweens();
 			_earContainer.visible = true;
 			TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: _leftEarOpenX, ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
@@ -228,6 +240,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 
 		private function hideEars():void {
+			state = STATE_CLOSING;
 			killEarTweens();
 			TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn, onComplete: onEarsHideComplete } );
 			TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
@@ -420,6 +433,21 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function onBtnMouseDown( event:MouseEvent ):void {
 			_mouseDownX = mouseX;
 			_earContainerXOnMouseDown = _earContainerX;
+			
+			trace("SilderButton State:",state);
+			switch ( state )
+			{
+				case STATE_CLOSED:
+					showEars();
+				break;
+				case STATE_OPEN:
+				break;
+				case STATE_CLOSING:
+				break;
+				case STATE_OPENING:
+				break;
+			}
+			
 			startSliding();
 			if ( !_valueHasChanged && !_checkClosingTap)
 			{
@@ -431,6 +459,19 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private function onStageMouseUp( event:MouseEvent ):void {
 			var isOver:Boolean = this.hitTestPoint(stage.mouseX, stage.mouseY,true);
+			
+			switch ( state )
+			{
+				case STATE_CLOSED:
+					break;
+				case STATE_OPEN:
+					break;
+				case STATE_CLOSING:
+					break;
+				case STATE_OPENING:
+					break;
+			}
+			
 			stopSliding();
 			if ( _valueHasChanged || _checkClosingTap || !isOver)
 			{
