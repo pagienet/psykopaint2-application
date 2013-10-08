@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			super();
 			super.setLabel( label );
 			super.setIcon( icon );
+			label.visible = false; // TODO: if we are not using the label in the end, remove it from logic and fla to save resources
 		}
 	}
 }
