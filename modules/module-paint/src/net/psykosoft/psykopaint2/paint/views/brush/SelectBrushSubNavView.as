@@ -16,6 +16,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public static const ID_COLOR:String = "Pick a Color";
 		public static const ID_ALPHA:String = "Change Opacity";
 
+		private var _defaultBrushLabel:String;
+
 		public function SelectBrushSubNavView() {
 			super();
 		}
@@ -79,7 +81,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 
 			validateCenterButtons();
-			selectButtonWithLabel( availableBrushTypes[ 0 ] );
+			_defaultBrushLabel = availableBrushTypes[ 0 ];
+			selectButtonWithLabel(_defaultBrushLabel);
+		}
+
+		public function getLabelForDefaultBrush():String {
+			return _defaultBrushLabel;
 		}
 	}
 }

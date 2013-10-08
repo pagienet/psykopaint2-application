@@ -30,6 +30,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override protected function onViewSetup():void {
 			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
+			_activeBrushId = view.getLabelForDefaultBrush();
 			super.onViewSetup();
 		}
 
