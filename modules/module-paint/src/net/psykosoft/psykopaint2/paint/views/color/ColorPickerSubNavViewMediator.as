@@ -9,10 +9,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 	import org.gestouch.events.GestureEvent;
 
-	public class ColorPickerViewMediator extends SubNavigationMediatorBase
+	public class ColorPickerSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
-		public var view:ColorPickerView;
+		public var view:ColorPickerSubNavView;
 
 		[Inject]
 		public var paintModule:BrushKitManager;
@@ -45,7 +45,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
-				case ColorPickerView.ID_BACK:
+				case ColorPickerSubNavView.ID_BACK:
 					requestNavigationStateChange( NavigationStateType.PREVIOUS );
 					break;
 			}

@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 	import org.osflash.signals.Signal;
 
-	public class ColorPickerView extends SubNavigationViewBase
+	public class ColorPickerSubNavView extends SubNavigationViewBase
 	{
 		public var currentColorSwatch:Sprite;
 		public var hueHandle:MovieClip;
@@ -63,7 +63,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 		public static const ID_BACK:String = "Back";
 		
-		public function ColorPickerView()
+		public function ColorPickerSubNavView()
 		{
 			super();
 			colorChangedSignal = new Signal();
