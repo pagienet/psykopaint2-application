@@ -96,7 +96,6 @@ package net.psykosoft.psykopaint2.book.views.book
 			var previousLayout:LayoutBase;
 			var insertCount:uint;
 			var requiredContentIsReady:Boolean;
-			_requestedForNewCollection = false;
  
 			if(_layout){
 				requiredContentIsReady = true;
@@ -175,8 +174,6 @@ package net.psykosoft.psykopaint2.book.views.book
  			var previousLayout:LayoutBase;
 			var insertCount:uint;
 			var requiredContentIsReady:Boolean;
-
-			_requestedForNewCollection = false;
  			_isBookUpdate = (_layout) ? true : false;
 
  			_vo = galleryCollection;
@@ -408,6 +405,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			}
 
+			_requestedForNewCollection = false;
+
  			initPagesInteraction();
  		}
  
@@ -469,9 +468,14 @@ package net.psykosoft.psykopaint2.book.views.book
  			return _currentDegrees;
  		}
 
- 		public function get pagesCount():Number
+ 		public function get pagesCount():uint
  		{
  			return _pagesCount;
+ 		}
+
+ 		public function get currentPageIndex():uint
+ 		{
+ 			return _currentPage;
  		}
 
  		public function get minTime():Number
@@ -481,6 +485,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
  		public function updatePages(time:Number):void
  		{	
+ 			if(_requestedForNewCollection) return;
+
  			_percent = time;
  			var pageid:uint;
 			
@@ -494,7 +500,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	 
 					if(pageid < _currentPage){
 						pagesManager.rotatePage(i, 180, 0);
-
+ 
 					} else if(pageid>_currentPage){
 						pagesManager.rotatePage(i, 0, 0);
 
@@ -517,6 +523,10 @@ package net.psykosoft.psykopaint2.book.views.book
 				_currentPage = 0;
 			}
 
+			//if(_currentPage>1){
+			//		pagesManager.shadeScale(_currentPage-1, rotZ/180);
+			//}
+
 			if( _mayRequestPrevious && _percent<_step )  requestPreviousCollection();
 
 			if( _mayRequestNext && _percent > 1 )  requestNextCollection();
@@ -536,7 +546,6 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			if(!_requestedForNewCollection && !_isLoadingImage ){
  				_requestedForNewCollection = true;
- 				//collectionRequestedSignal.dispatch(_vo, _previousIndex, _previousIndex + (_currentLayoutInsertCount*MAX_REQUESTED_PAGE_SIDES));
  				collectionRequestedSignal.dispatch(_vo, _previousIndex, _currentLayoutInsertCount*MAX_REQUESTED_PAGE_SIDES);
  			}
  		}
@@ -552,7 +561,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			if(_percent == _nearestTime || _isLoadingImage || !_bookReady) return _nearestTime;
 
- 			var duration:Number = (Math.abs(_nearestTime -_percent) / _step) * .8;
+ 			var duration:Number = (Math.abs(_nearestTime -_percent) / _step) * .7;
 
  			TweenLite.to( this, duration, { 	_percent:_nearestTime, 
  							_foldRotation:0, 
@@ -578,11 +587,11 @@ package net.psykosoft.psykopaint2.book.views.book
  		}
 
  		// image picking
- 		public function hitTestRegions(mouseX:Number, mouseY:Number):Boolean
+ 		public function hitTestRegions(mouseX:Number, mouseY:Number, pageIndexOnMouseDown:uint):Boolean
  		{
  			if(_isLoadingImage) return false;
 
- 			var data:BookData = _regionManager.hitTestRegions(mouseX, mouseY, _currentPage);
+ 			var data:BookData = _regionManager.hitTestRegions(mouseX, mouseY, pageIndexOnMouseDown);
 
  			if(data){
  				_isLoadingImage = true;

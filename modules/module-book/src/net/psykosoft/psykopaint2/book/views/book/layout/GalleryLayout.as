@@ -282,6 +282,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 					normalTextureSource.invalidateContent();
 					normalTextureSource.bitmapData = normalSourceBitmapdata;
 				//}
+
+	 			btMask.invalidateContent();
+	 			btMask.bitmapData = maskBMD;
 			}
 
 			//dispatch the rect + object for region. the rect is updated for the shadow, the region will declare its own rect.
@@ -298,10 +301,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			//if(invalidateContent){
  				diffuseTextureSource.invalidateContent();
  				diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;//normalSourceBitmapdata
- 				btMask.invalidateContent();
- 				btMask.bitmapData = maskBMD;
  			//}
- 			
 		}
 
 		private function updateAndInsertTextInformation(vo: GalleryImageProxy, rect:Rectangle, destSource:BitmapData):void

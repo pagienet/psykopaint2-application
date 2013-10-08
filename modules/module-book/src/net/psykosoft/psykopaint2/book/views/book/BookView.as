@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _mouseIsDown:Boolean;
 		private var _time:Number;
 		private var _previousTime:Number;
-		
+		private var _pageIndexOnMouseDown:uint = 0;
 		private var _mouseBooster:Number = 1;
 
 		public var imageSelectedSignal:Signal;
@@ -114,6 +114,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			if(_book.ready){
 				_book.killSnapTween();
+				_pageIndexOnMouseDown = _book.currentPageIndex;
+				if (mouseX<(stage.stageWidth*.5))  _pageIndexOnMouseDown--;
 				_mouseIsDown = true;
 				_startMouseX = mouseX;
 				_startMouseY = mouseY;
@@ -128,7 +130,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			if(_book.ready && !_book.isLoadingImage) {
 				var currentX:Number = mouseX;
 				if(Math.abs(currentX-_startMouseX) < 5 && _book.currentDegrees< 3){
-					if(!_book.hitTestRegions(mouseX, mouseY)){
+					if(!_book.hitTestRegions(mouseX, mouseY, _pageIndexOnMouseDown)){
 						_time = _book.snapToNearestTime();
 					}
 				} else {
@@ -183,6 +185,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			if( !(_isEnabled && _view3d && _view3d.parent) ) return;
 
 			if(_book.ready && _mouseIsDown){
+
 				var doUpdate:Boolean = true;
 				var mx:Number = (mouseX-_startMouseX);
 				var currentTime:Number =  ((mx*_mouseBooster)/ stage.stageWidth ) *.7;

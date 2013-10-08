@@ -59,6 +59,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			var y:Number = ((totalPages-index)*4);
 
  			page.recto.y = page.verso.y = page.marginRecto.y = page.marginVerso.y = y;
+ 			//page.shade.y = y - 1;
 
  			_pages.push(page.verso, page.recto);
 
@@ -79,6 +80,11 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		{
  			_pagesContent[index].show();
  		}
+
+ 		//public function shadeScale(index:uint, value:Number):void
+ 		//{
+ 		//	_pagesContent[index].shadeScale = value;
+ 		//}
  
  		public function rotatePage(index:uint, degrees:Number, foldRotation:Number):void
  		{

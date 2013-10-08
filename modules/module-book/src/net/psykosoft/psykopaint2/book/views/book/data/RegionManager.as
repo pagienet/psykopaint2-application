@@ -73,8 +73,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 				bookPage = _pagesManager.getPage( pageIndex);
 				pageSideIndex = 0;
 			}
- 			
- 			
+
  			if(!bookPage) return null;
 
  			if(!_np) _np = new Vector3D(0.0, 1, 0.1);

@@ -126,6 +126,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				if(invalidateContent){
 					normalTextureSource.invalidateContent();
 					normalTextureSource.bitmapData = normalSourceBitmapdata;
+
+					btMask.invalidateContent();
+	 				btMask.bitmapData = maskBMD;
 				}
 			}
 
@@ -145,8 +148,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  			if(invalidateContent){
  				diffuseTextureSource.invalidateContent();
  				diffuseTextureSource.bitmapData = diffuseSourceBitmapdata;
- 				btMask.invalidateContent();
- 				btMask.bitmapData = maskBMD;
  			}
  			
 		}

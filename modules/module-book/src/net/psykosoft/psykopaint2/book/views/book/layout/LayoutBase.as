@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.book.views.models.BookData;
 	import net.psykosoft.psykopaint2.book.model.SourceImageProxy;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	//import net.psykosoft.psykopaint2.book.model.FileSourceImageProxy;
 
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
@@ -373,10 +374,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private function loadCurrentThumbnail() : void
 		{
 			if( _loadQueue && _loadQueue[_loadIndex] && _loadQueue[_loadIndex].queueID == _queueID){
-
 				if(_loadQueue[_loadIndex] is BookThumbnailData){
 					var btd:BookThumbnailData = BookThumbnailData(_loadQueue[_loadIndex]);
 					SourceImageProxy(btd.imageVO).loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);
+					//_loadQueue[_loadIndex].originalFilename = FileSourceImageProxy(btd.imageVO).originalFilename;
 				} else {
 					var bgd:BookGalleryData = BookGalleryData(_loadQueue[_loadIndex]);
 					GalleryImageProxy(bgd.imageVO).loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);

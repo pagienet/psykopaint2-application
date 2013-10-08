@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.book.views.models
 	import away3d.entities.Mesh;
 	import away3d.core.base.Geometry;
 	import away3d.materials.TextureMaterial;
+	//import away3d.materials.ColorMaterial;
 	import away3d.core.base.Geometry;
 	import away3d.core.base.CompactSubGeometry;
 	import away3d.primitives.PlaneGeometry;
@@ -24,6 +25,7 @@ package net.psykosoft.psykopaint2.book.views.models
 
 		private var _recto:Mesh;
 		private var _verso:Mesh;
+		//private var _shade:Mesh;
 
 		private var _marginRecto:Mesh;
 		private var _marginVerso:Mesh;
@@ -55,6 +57,8 @@ package net.psykosoft.psykopaint2.book.views.models
 				_sharedGeom = true;
 				_recto = new Mesh(usedBookPage.recto.geometry, materialRecto);
 				_verso = new Mesh(usedBookPage.verso.geometry, materialVerso);
+
+				//_shade = new Mesh(usedBookPage.shade.geometry, usedBookPage.shade.material);
 				
 				_marginRecto = new Mesh(usedBookPage.marginRecto.geometry, marginRectoMaterial);
 				_marginVerso = new Mesh(usedBookPage.marginVerso.geometry, marginVersoMaterial);
@@ -109,6 +113,12 @@ package net.psykosoft.psykopaint2.book.views.models
 
 			this.rotationZ = _lastRotation = degrees;
 		}
+
+		//public function set shadeScale(val:Number):void
+		//{
+		//	_shade.scaleX = Math.abs(val);
+		//}
+
 		public function get lastRotation():Number
 		{
 			return _lastRotation;
@@ -203,6 +213,12 @@ package net.psykosoft.psykopaint2.book.views.models
 		{
 			return _verso;
 		}
+
+		//public function get shade():Mesh
+		//{
+		//	return _shade;
+		//}
+ 
 		public function get marginRecto():Mesh
 		{
 			return _marginRecto;
@@ -260,6 +276,13 @@ package net.psykosoft.psykopaint2.book.views.models
 			_verso = new Mesh(_recto.geometry.clone(), materialVerso);
 			invertFacesSubgeometry(CompactSubGeometry(_verso.geometry.subGeometries[0]) );
 
+			
+			//var _shadegeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT+ ( (PAGE_HEIGHT * FACTOR_MARGIN) *2), 1, 1, true);
+			//var _shadegeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT*2, 1, 1, true);
+			//invertFacesSubgeometry(CompactSubGeometry(_shade.geometry.subGeometries[0]) );
+			//_shade = new Mesh(_verso.geometry.clone(), new ColorMaterial(0xff0000, 1));
+			//_shade.y -= 3;
+
 			if(!_isBlankRecto){
 				addChild(_recto);
 				addChild(_marginRecto);	
@@ -267,6 +290,8 @@ package net.psykosoft.psykopaint2.book.views.models
 			
 			addChild(_verso);
  			addChild(_marginVerso);
+
+			//addChild(_shade);
  			
 			_recto.x =  _verso.x = _marginRecto.x = _marginVerso.x = 0;
 		}
@@ -391,52 +416,6 @@ package net.psykosoft.psykopaint2.book.views.models
 
 			return subGeometry;
 		}
-
-		//works but performs slower when nested subgeometries are using animator
-		//private function generate(materialRecto:TextureMaterial, marginRectoMaterial:TextureMaterial, materialVerso:TextureMaterial, marginVersoMaterial:TextureMaterial):void
-		//{
-		//	var rectoGeom:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT, 15, 15, true);
-		//	_recto = new Mesh(rectoGeom);
-		//	offsetGeometry(CompactSubGeometry(_recto.geometry.subGeometries[0]) );
-
-		//	var rTopMargin:PlaneGeometry = new PlaneGeometry(PAGE_WIDTH, PAGE_HEIGHT * FACTOR_MARGIN, 15, 1, true);
-		//	var subgeom:CompactSubGeometry = CompactSubGeometry(rTopMargin.subGeometries[0]);
-		//	offsetGeometry( subgeom);
-
-		//	var subgeomBottom:CompactSubGeometry = new CompactSubGeometry();
-		//	subgeomBottom.updateData(subgeom.vertexData.concat());
-		//	subgeomBottom.updateIndexData(subgeom.indexData.concat());
-		//	offsetUVs(subgeom, true);
-		//	offsetUVs(subgeomBottom, false);
-		//	//insertSubGeometry(subgeomBottom, _recto);
-		//	mergeSubGeometries(subgeom, subgeomBottom);
-		//	insertSubGeometry(subgeom, _recto);
-
-		//	_marginRecto = new Mesh();
-		//	_marginVerso= new Mesh();
- 
-		//	_verso = new Mesh(_recto.geometry.clone());
-    
-		//	_recto.subMeshes[0].material = materialRecto;
-		//	_recto.subMeshes[1].material = marginRectoMaterial;
-			
-		//	_verso.subMeshes[0].material = materialVerso;
-		//	_verso.subMeshes[1].material = marginVersoMaterial;
- 			
- 		//	var geometries:Vector.<ISubGeometry> = _verso.geometry.subGeometries;
-		//	invertFacesSubgeometry(CompactSubGeometry(geometries[0]) );
-		//	invertFacesSubgeometry(CompactSubGeometry(geometries[1]) );
-
-		//	addChild(_verso);
- 		//	addChild(_recto);
-		//	_recto.x = 0;
- 		//	_verso.x = 0;
-		//}
-
-		//private function insertSubGeometry(marginSubGeometry:CompactSubGeometry, pageMesh:Mesh):void
-		//{
-		//	pageMesh.geometry.addSubGeometry(marginSubGeometry);
-		//}
 
 	}
 }
