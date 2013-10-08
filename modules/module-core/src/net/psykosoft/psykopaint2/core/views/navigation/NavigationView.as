@@ -303,6 +303,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function adaptToCanvas( canvas:Rectangle ):void {
 
+			return;
+
 			var screenHeight:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1536 : 768;
 			var availableSpace:Number = screenHeight - canvas.height - canvas.y;
 			if( availableSpace > _bgHeight ) {
