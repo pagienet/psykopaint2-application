@@ -78,6 +78,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			woodBg.visible = false;
 
+			woodBg.mouseEnabled = woodBg.mouseChildren = false;
+			wire.mouseEnabled = wire.mouseChildren = false;
+
 			_subNavDictionary = new Dictionary();
 		}
 
