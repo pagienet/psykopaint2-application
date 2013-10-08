@@ -13,6 +13,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
 
+	import flashx.textLayout.elements.GlobalSettings;
+
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
@@ -343,8 +345,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_showing = false;
 			_animating = true;
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, time, { y: _bgHeight, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease: Strong.easeOut } );
-			TweenLite.to( this, time, { y: _bgHeight, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease: Strong.easeOut } );
+			TweenLite.to( this, time, { y: _bgHeight * CoreSettings.GLOBAL_SCALING, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease: Strong.easeOut } );
+			TweenLite.to( this, time, { y: _bgHeight * CoreSettings.GLOBAL_SCALING, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease: Strong.easeOut } );
 		}
 
 		private function onHideAnimatedComplete():void {
