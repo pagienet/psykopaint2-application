@@ -17,6 +17,7 @@ package net.psykosoft.psykopaint2.core.data
 			var thumbnailPNGBytes:ByteArray = vo.thumbnail.encode( vo.thumbnail.rect, new PNGEncoderOptions() );
 			var thumbnailBytesLength:uint = thumbnailPNGBytes.length;
 
+			bytes.writeUTF("IPP2");
 			// Write exposed single value data.
 			bytes.writeUTF( vo.fileVersion );
 			bytes.writeUTF( vo.id );

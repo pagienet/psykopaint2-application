@@ -106,13 +106,11 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function setSourceBitmapData(sourceBitmapData : BitmapData) : void
 		{
-			// TODO: Do not create pyramidmap if sourceBitmapData is null!!!
-			// Currently crashes app
-		
 			if (!sourceBitmapData) {
-				if (!_pyramidMap)
+				if (_pyramidMap) {
+					_pyramidMap.dispose();
 					_pyramidMap = null;
-					//_pyramidMap = new PyramidMapTdsi(new BitmapData(_textureWidth, _textureHeight));
+				}
 				return;
 			}
 
@@ -312,6 +310,11 @@ package net.psykosoft.psykopaint2.core.model
 		public function getNormalSpecularOriginal() : ByteArray
 		{
 			return _normalSpecularOriginal;
+		}
+
+		public function hasSourceImage() : Boolean
+		{
+			return _pyramidMap != null;
 		}
 	}
 }

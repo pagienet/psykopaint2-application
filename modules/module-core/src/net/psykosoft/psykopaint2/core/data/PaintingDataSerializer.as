@@ -13,15 +13,22 @@ package net.psykosoft.psykopaint2.core.data
 		{
 			var bytes : ByteArray = new ByteArray();
 
+			bytes.writeUTF("DPP2");
+			bytes.writeUTF(PaintingFileUtils.PAINTING_FILE_VERSION);
+
 			// Write dimensions.
 			bytes.writeInt(vo.width);
 			bytes.writeInt(vo.height);
 
+			// write isPhotoPainting flag
+			bytes.writeBoolean(vo.sourceImageData != null);
+
 			// Write surfaces.
 			append(vo, vo.colorData, bytes);
 			append(vo, vo.normalSpecularData, bytes);
-			append(vo, vo.sourceImageData, bytes);
 			append(vo, vo.normalSpecularOriginal, bytes);
+			if (vo.sourceImageData != null)
+				append(vo, vo.sourceImageData, bytes);
 			if (vo.colorBackgroundOriginal)
 				append(vo, vo.colorBackgroundOriginal, bytes);
 

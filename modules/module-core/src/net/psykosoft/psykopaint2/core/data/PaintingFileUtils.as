@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.data
 
 	public class PaintingFileUtils
 	{
-		public static const PAINTING_FILE_VERSION:String = "12";
+		public static const PAINTING_FILE_VERSION:String = "13";
 		public static const PAINTING_INFO_FILE_EXTENSION:String = ".ipp2";
 		public static const PAINTING_DATA_FILE_EXTENSION:String = ".dpp2";
 

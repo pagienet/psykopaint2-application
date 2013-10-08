@@ -78,10 +78,11 @@ package net.psykosoft.psykopaint2.core.io
 
 				extractNormalsColor,
 				extractNormalsAlpha,
-				mergeNormalData,
-
-				saveSourceDataToByteArray
+				mergeNormalData
 			];
+
+			if (canvas.hasSourceImage())
+				_exportingStages.push(saveSourceDataToByteArray);
 
 			doExport(canvas);
 		}
@@ -97,10 +98,11 @@ package net.psykosoft.psykopaint2.core.io
 				extractNormalsColor,
 				extractNormalsAlpha,
 				mergeNormalData,
-				compressNormalData,
-
-				saveSourceDataToThumb
+				compressNormalData
 			];
+
+			if (canvas.hasSourceImage())
+				_exportingStages.push(saveSourceDataToThumb);
 
 			doExport(canvas);
 		}

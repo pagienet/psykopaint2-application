@@ -26,11 +26,12 @@ package net.psykosoft.psykopaint2.core.data
 
 			bytes.position = 0;
 			// Check version first.
+			if (bytes.readUTF() != "IPP2")
+				throw "Incorrect file type";
+
 			_vo.fileVersion = bytes.readUTF();
-			if (_vo.fileVersion != PaintingFileUtils.PAINTING_FILE_VERSION) {
-				trace("PaintingVO deSerialize() - ***WARNING*** Unable to interpret loaded painting file, version is [" + _vo.fileVersion + "] and app is using version [" + PaintingFileUtils.PAINTING_FILE_VERSION + "]");
-				return;
-			}
+			if (_vo.fileVersion != PaintingFileUtils.PAINTING_FILE_VERSION)
+				throw "Incorrect file version";
 
 			// Read and set exposed single value data.
 			_vo.id = bytes.readUTF();

@@ -134,7 +134,7 @@ package net.psykosoft.psykopaint2.core.services
 
 		public function publishPainting(sessionID : String, paintingDataVO : PaintingDataVO, compositeData : ByteArray, onSuccess : Function, onFail : Function) : void
 		{
-			// TODO: a in frameID
+			// TODO: pass in a frameID
 			_connection.call("Main/publishPainting", new Responder(onSuccess, onFail),
 					sessionID,
 					0,
