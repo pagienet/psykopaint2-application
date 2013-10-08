@@ -1,10 +1,10 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
+
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
@@ -18,9 +18,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestClearCanvasSignal:RequestClearCanvasSignal;
-
-		[Inject]
-		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
 		[Inject]
 		public var requestCanvasExportSignal:RequestCanvasExportSignal;

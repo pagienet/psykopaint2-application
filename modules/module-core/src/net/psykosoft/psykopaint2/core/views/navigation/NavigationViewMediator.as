@@ -3,13 +3,18 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import flash.geom.Rectangle;
 
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
+
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationDisposalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
+
+	import org.gestouch.events.GestureEvent;
 
 	public class NavigationViewMediator extends MediatorBase
 	{
@@ -31,6 +36,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		[Inject]
 		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
 
+		[Inject]
+		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
+
 		override public function initialize():void {
 
 			registerView( view );
@@ -44,6 +52,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			requestNavigationToggleSignal.add( onToggleRequest );
 			requestNavigationDisposalSignal.add( onNavigationDisposalRequest );
 			requestChangeRenderRectSignal.add( onRenderRectChanged );
+			notifyGlobalGestureSignal.add( onGlobalGesture );
 
 			// From view.
 			view.shownSignal.add( onViewShown );
@@ -79,16 +88,27 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			notifyNavigationToggledSignal.dispatch( true );
 		}
 
-		private function onToggleRequest( value:int, time: Number = 0.5 ):void {
+		private function onToggleRequest( value:int, time:Number = 0.5 ):void {
 			if( value == 1 ) view.show( time );
 			else if( value == -1 ) view.hide( time );
-			else view.toggle(time);
+			else view.toggle( time );
 		}
 
-		
+
 		// -----------------------
 		// From app.
 		// -----------------------
+
+		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
+			if( gestureType == GestureType.TAP_GESTURE_RECOGNIZED ) {
+				if( !view.showing ) {
+					view.show();
+				}
+				else {
+					view.hide();
+				}
+			}
+		}
 
 		private function onRenderRectChanged( rect:Rectangle ):void {
 			view.adaptToCanvas( rect );

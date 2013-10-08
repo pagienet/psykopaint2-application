@@ -1,9 +1,6 @@
 package net.psykosoft.psykopaint2.core.drawing.modules
 {
 
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Sine;
-
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
@@ -35,8 +32,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.views.base.ViewLayerOrdering;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
@@ -80,9 +75,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		[Inject]
 		public var notifyGlobalGestureSignal : NotifyGlobalGestureSignal;
-		
-		[Inject]
-		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 		
 		[Inject]
 		public var notifyCanvasMatrixChanged : NotifyCanvasMatrixChanged;

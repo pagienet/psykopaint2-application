@@ -66,9 +66,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			initOneFingerVerticalPan();
 			initTransformGesture();
 			initTapGesture();
-			//initDoubleTapGesture();
-			//initPinch();
-//			initTap();
 		}
 
 		// ---------------------------------------------------------------------
@@ -163,44 +160,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		
 		// ---------------------------------------------------------------------
-		// Pinch.
-		// ---------------------------------------------------------------------
- 		/*
-		private var _pinchGesture:ZoomGesture;
-		private var _initialPinchDistance:Number;
-		private var _finalPinchDistance:Number;
-
-		private function initPinch():void {
-			_pinchGesture = new ZoomGesture( _stage );
-			_pinchGesture.lockAspectRatio = false;
-			_pinchGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onPinchGestureStarted );
-			_pinchGesture.addEventListener( GestureEvent.GESTURE_ENDED, onPinchGestureEnded );
-			_pinchGesture.addEventListener( GestureEvent.GESTURE_CHANGED, onPinchGestureChanged );
-		}
-
-		private function onPinchGestureStarted( event:GestureEvent ):void {
-			var x:Number = _pinchGesture.scaleX;
-			var y:Number = _pinchGesture.scaleY;
-			_initialPinchDistance = Math.sqrt( x * x + y * y );
-		}
-
-		private function onPinchGestureEnded( event:GestureEvent ):void {
-			var x:Number = _pinchGesture.scaleX;
-			var y:Number = _pinchGesture.scaleY;
-			_finalPinchDistance = Math.sqrt( x * x + y * y );
-			if( _finalPinchDistance - _initialPinchDistance > 0 ) { // grew?
-				notifyGlobalGestureSignal.dispatch( GestureType.PINCH_GREW );
-			}
-			else {
-				notifyGlobalGestureSignal.dispatch( GestureType.PINCH_SHRANK );
-			}
-		}
-
-		private function onPinchGestureChanged( event:GestureEvent ):void {
-		}
-		*/
-		
-		// ---------------------------------------------------------------------
 		// Transform.
 		// ---------------------------------------------------------------------
 		
@@ -268,7 +227,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		private function onTapGestureRecognized( event:GestureEvent ):void {
-//			trace( this, "onTapGestureRecognized" );
+			trace( this, "onTapGestureRecognized" );
 			
 			var target:Stage =  Stage(TapGesture(event.target).target);
 			var obj:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);

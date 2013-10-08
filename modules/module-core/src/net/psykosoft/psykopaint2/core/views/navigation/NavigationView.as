@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private var _showing:Boolean;
 		private var _forceHidden:Boolean;
 		private var _hidden:Boolean;
-		private var _bgHeight:uint = 140;
+		private var _bgHeight:uint;
 		private var _headerDefaultY:Number;
 		private var _headerTextDefaultOffset:Number;
 		private var _subNavDictionary:Dictionary;
@@ -59,6 +59,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function NavigationView() {
 			super();
+
+			_bgHeight = 140;
 
 			shownSignal = new Signal();
 			hidingSignal = new Signal();
@@ -298,10 +300,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if( type == NavigationView.BG_TYPE_ROPE ) {
 				woodBg.visible = false;
 				wire.visible = true;
+				_bgHeight = 140;
 			}
 			else {
 				woodBg.visible = true;
 				wire.visible = false;
+				_bgHeight = 256;
 			}
 		}
 
@@ -389,5 +393,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 //				visible = !_forceHidden;
 //			}
 //		}
+		public function get showing():Boolean {
+			return _showing;
+		}
 	}
 }
