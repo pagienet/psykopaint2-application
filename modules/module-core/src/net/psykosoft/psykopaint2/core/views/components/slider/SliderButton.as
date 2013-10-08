@@ -50,10 +50,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _mouseDownX:Number;
 		private var _changeEvt:Event;
 		private var _earContainerXOnMouseDown:Number = 0;
-		private var _stage:Stage;
-
+		
 		private var _valueHasChanged:Boolean;
-		private var _checkClosingTap:Boolean;
 		
 		private var _previewIcon:AbstractPreview;
 		
@@ -87,12 +85,13 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			button.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			button.dispose();
-
-			if( _stage ) {
-				_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			removeEventListener( Event.ENTER_FRAME, onEnterFrame );
+			if( stage ) {
+				stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+				stage.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			}
 
-			_stage = null;
+			
 		}
 
 		// ----------------------------
@@ -124,10 +123,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			
 			
 			
-			_stage = stage;
-			
 			_valueHasChanged = false;
-			_checkClosingTap = false;
+			
 			
 			
 		}
@@ -168,10 +165,12 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function startSliding():void {
 			if( _sliding ) return;
 			if( !hasEventListener( Event.ENTER_FRAME ) ) {
+				
 				addEventListener( Event.ENTER_FRAME, onEnterFrame );
 			}
 			//updateLabelFromValue();
 			_sliding = true;
+			_valueHasChanged = false;
 		}
 
 		private function stopSliding():void {
@@ -179,12 +178,12 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			if( hasEventListener( Event.ENTER_FRAME ) ) {
 				removeEventListener( Event.ENTER_FRAME, onEnterFrame );
 			}
-			button.labelText = _defaultLabelText;
+			
 			_sliding = false;
 		}
 
 		private function update():void {
-			if( !_sliding ) return;
+			//if( !_sliding ) return;
 			updateEarsFromMouse();
 			updateRatioFromEars();
 			updateValueFromRatio();
@@ -237,6 +236,11 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: _leftEarOpenX, ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
 			TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: _rightEarOpenX, ease: Strong.easeOut } );
 			TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: _earContainerX, ease: Strong.easeOut } );
+			
+			button.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			stage.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			
 		}
 
 		private function hideEars():void {
@@ -245,14 +249,24 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn, onComplete: onEarsHideComplete } );
 			TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
 			TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
+			
+			button.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			stage.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 		}
 		
 		private function onEarsHideComplete():void {
 			_earContainer.visible = false;
+			state = STATE_CLOSED;
+			button.labelText = _defaultLabelText;
+			
 		}
 		
 		private function onEarsShowComplete():void {
 			//showPreviewHolder();
+			state = STATE_OPEN;
+			
+			
 		}
 		
 		private function killEarTweens():void {
@@ -431,58 +445,61 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 
 		private function onBtnMouseDown( event:MouseEvent ):void {
+			
 			_mouseDownX = mouseX;
 			_earContainerXOnMouseDown = _earContainerX;
-			
-			trace("SilderButton State:",state);
+			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			switch ( state )
 			{
 				case STATE_CLOSED:
 					showEars();
+					showPreviewHolder();
+					startSliding();
+					
 				break;
 				case STATE_OPEN:
-				break;
-				case STATE_CLOSING:
-				break;
-				case STATE_OPENING:
+					var isOnSlider:Boolean = _earContainer.hitTestPoint(stage.mouseX, stage.mouseY,true);
+					if ( isOnSlider ) startSliding();
+					else {
+						hidePreviewHolder();
+					}
 				break;
 			}
 			
-			startSliding();
-			if ( !_valueHasChanged && !_checkClosingTap)
-			{
-				stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-				showEars();
-				showPreviewHolder();
-			}
 		}
 
 		private function onStageMouseUp( event:MouseEvent ):void {
-			var isOver:Boolean = this.hitTestPoint(stage.mouseX, stage.mouseY,true);
+			
+			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			
 			switch ( state )
 			{
-				case STATE_CLOSED:
-					break;
 				case STATE_OPEN:
+					stopSliding();
+					if ( !_valueHasChanged && _earContainer.hitTestPoint(stage.mouseX, stage.mouseY,true))
+					{
+						if ( Math.abs(_earContainer.mouseX) > 25 )
+						{
+							if ( _earContainer.mouseX < 0 )
+							{
+								_ratio -= 0.02;
+								if ( _ratio < 0 ) _ratio = 0;
+							} else {
+								_ratio += 0.02;
+								if ( _ratio > 1 ) _ratio = 1;
+							}
+							updateValueFromRatio();
+							updateEarsFromRatio();
+						}
+					}
 					break;
-				case STATE_CLOSING:
-					break;
+				
 				case STATE_OPENING:
+					
+					stopSliding();
 					break;
 			}
 			
-			stopSliding();
-			if ( _valueHasChanged || _checkClosingTap || !isOver)
-			{
-				//hideEars();
-				stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-				hidePreviewHolder();
-				_valueHasChanged = false;
-				_checkClosingTap = false;
-			} else {
-				_checkClosingTap = true;
-			}
 		}
 	}
 }
