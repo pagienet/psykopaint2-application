@@ -21,14 +21,10 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 
 			// From view.
 			view.viewWantsToChangeAlphaSignal.add( onViewWantsToChangeAlpha );
-
-			// From app.
-
 		}
 
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
-			view.setAlpha( 1 - renderer.sourceTextureAlpha );
 		}
 
 		override public function destroy():void {

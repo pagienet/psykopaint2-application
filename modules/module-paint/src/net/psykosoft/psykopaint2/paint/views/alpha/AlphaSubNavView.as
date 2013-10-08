@@ -19,6 +19,12 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 		public function AlphaSubNavView() {
 			super();
 			viewWantsToChangeAlphaSignal = new Signal();
+			_alphaSlider = new AlphaSlider();
+			_alphaSlider.valueChangedSignal.add( onSliderValueChanged );
+			_alphaSlider.x = 1024 / 2 - _alphaSlider.width / 2;
+			_alphaSlider.y = 630;
+			addChild( _alphaSlider );
+			setAlpha( 0.5 );
 		}
 
 		override protected function onEnabled():void {
@@ -26,12 +32,6 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 			showRightButton( false );
 			setBgType( NavigationView.BG_TYPE_WOOD );
-
-			_alphaSlider = new AlphaSlider();
-			_alphaSlider.valueChangedSignal.add( onSliderValueChanged );
-			_alphaSlider.x = 1024 / 2 - _alphaSlider.width / 2;
-			_alphaSlider.y = 640;
-			addChild( _alphaSlider );
 		}
 
 		override protected function onDisposed():void {
