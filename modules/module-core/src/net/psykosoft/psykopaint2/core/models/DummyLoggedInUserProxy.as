@@ -16,13 +16,13 @@ package net.psykosoft.psykopaint2.core.models
 		public var notifyUserLoggedInSignal : NotifyUserLoggedInSignal;
 
 		[Inject]
-		public var notifyUserLogInFailedSignal:NotifyUserLogInFailedSignal;
+		public var notifyUserLogInFailedSignal : NotifyUserLogInFailedSignal;
 
 		[Inject]
 		public var notifyUserRegisteredSignal : NotifyUserRegisteredSignal;
 
 		[Inject]
-		public var notifyUserLoggedOutSignal:NotifyUserLoggedOutSignal;
+		public var notifyUserLoggedOutSignal : NotifyUserLoggedOutSignal;
 
 		private var _userID : int = -1;
 		private var _sessionID : String;
@@ -38,13 +38,15 @@ package net.psykosoft.psykopaint2.core.models
 		{
 		}
 
-		public function sendPasswordReminder( email:String ):void {
+		public function sendPasswordReminder(email : String) : void
+		{
 			// Does nothing.
 		}
 
-		public function sendProfileImages( imageLarge:ByteArray, imageSmall:ByteArray ) {
+		public function sendProfileImages(imageLarge : ByteArray, imageSmall : ByteArray) : void
+		{
 			// Does nothing.
-			trace( this, "sendProfileImages..." );
+			trace(this, "sendProfileImages...");
 		}
 
 		public function isLoggedIn() : Boolean
@@ -66,18 +68,19 @@ package net.psykosoft.psykopaint2.core.models
 			_banned = false;
 
 			// Panic not! This time out is ok, it's just for testing...
-			setTimeout( function():void {
+			setTimeout(function () : void
+			{
 				// Pick one.
 				notifyUserLoggedInSignal.dispatch();
 //				notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CALL_STATUS_FAILED, "EMAIL" );
 //				notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CALL_STATUS_FAILED, "PASSWORD" );
 //				notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CONNECTION_IO_ERROR, "" );
-			}, 2000 );
+			}, 2000);
 		}
 
 		public function registerAndLogIn(userRegisterationVO : UserRegistrationVO) : void
 		{
-			trace( this, "registering..." );
+			trace(this, "registering...");
 
 			_userID = 1;
 			_sessionID = "1";
@@ -90,10 +93,11 @@ package net.psykosoft.psykopaint2.core.models
 			_active = true;
 			_banned = false;
 
-			setTimeout( function():void {
+			setTimeout(function () : void
+			{
 				notifyUserRegisteredSignal.dispatch();
 				notifyUserLoggedInSignal.dispatch();
-			}, 3000 );
+			}, 3000);
 		}
 
 		public function get userID() : int
@@ -146,9 +150,10 @@ package net.psykosoft.psykopaint2.core.models
 			_sessionID = null;
 			_userID = -1;
 
-			setTimeout( function():void {
+			setTimeout(function () : void
+			{
 				notifyUserLoggedOutSignal.dispatch();
-			}, 1000 );
+			}, 1000);
 		}
 	}
 }

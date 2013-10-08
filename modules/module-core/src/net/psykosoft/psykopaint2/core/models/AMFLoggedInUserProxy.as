@@ -78,7 +78,8 @@ package net.psykosoft.psykopaint2.core.models
 			notifyUserPasswordReminderFailedSignal.dispatch( data["status_code"] );
 		}
 
-		public function sendProfileImages( imageLarge:ByteArray, imageSmall:ByteArray ) {
+		public function sendProfileImages( imageLarge:ByteArray, imageSmall:ByteArray ) : void
+		{
 			amfBridge.setProfileImage( _sessionID, imageLarge, imageSmall );
 		}
 
