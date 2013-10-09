@@ -27,7 +27,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_SL_PICK_RADIUS_MODE:String = "Pick Radius Mode";
 		public static const PARAMETER_NR_PICK_RADIUS:String = "Color Pick Radius";
 		public static const PARAMETER_NR_SMOOTH_FACTOR:String = "Color Smooth Factor";
-		static public const PARAMETER_N_MAXIMUM_SPEED:String  = "Maximum Speed";
+		public static const PARAMETER_N_MAXIMUM_SPEED:String  = "Maximum Speed";
+		public static const PARAMETER_N_PICK_RANDOM_OFFSET_FACTOR:String  = "Random Pick Offset";
 		
 		public static const INDEX_MODE_PICK_COLOR:int = 0;
 		public static const INDEX_MODE_FIXED_COLOR:int = 1;
@@ -46,6 +47,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var pickRadiusMode:PsykoParameter;
 		private var maxSpeed:PsykoParameter;
 		private var applyColorMatrix:PsykoParameter;
+		private var pickOffsetFactor:PsykoParameter;
 		
 		private var smoothFactor:PsykoParameter;
 		private var color:PsykoParameter;
@@ -72,12 +74,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			pickRadiusMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_PICK_RADIUS_MODE,0,["Fixed","Speed"] );
 			pickRadius  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_PICK_RADIUS,1,1,0,1);
+			pickOffsetFactor  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_PICK_RANDOM_OFFSET_FACTOR,0,0,200);
+			
 			smoothFactor  = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_SMOOTH_FACTOR,1,1,0,1);
 			color  = new PsykoParameter( PsykoParameter.ColorParameter,PARAMETER_C_COLOR,0x000000);
 			maxSpeed  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
 			
-			_parameters.push(colorMode, presetColor, applyColorMatrix,saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,brushOpacityRange,pickRadius,pickRadiusMode,smoothFactor,color,maxSpeed);
+			_parameters.push(colorMode, presetColor, applyColorMatrix,saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,brushOpacityRange,pickRadius,pickRadiusMode,smoothFactor,color,maxSpeed,pickOffsetFactor);
 			cm = new ColorMatrix();
 		}
 		
@@ -98,6 +102,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var minPickRadius:Number = pickRadius.lowerRangeValue;
 			var pickRadiusRange:Number = pickRadius.rangeValue;
 			var ms:Number = maxSpeed.numberValue;
+			var pof:Number = pickOffsetFactor.numberValue;
 			
 			var mode:int = colorMode.index;
 			if ( mode == 1 ) 
@@ -118,10 +123,20 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				if ( mode == 0 )
 				{
 					if ( cb.onPickColor ) {
+						
+						var tmp_x:Number = point.x;
+						var tmp_y:Number = point.y;
+						if ( pof != 0 )
+						{
+							point.x += (Math.random() - Math.random()) * pof * point.size;
+							point.y += (Math.random() - Math.random()) * pof * point.size;
+						}
 						applyArray[0] = point;
 						applyArray[1] = minPickRadius + pickRadiusRange * [Math.random(),Math.min(point.speed,ms) / ms][radiusMode];
 						applyArray[2] = smoothFactor.randomValue;
 						cb.onPickColor.apply(cb.callbackObject, applyArray );
+						point.x = tmp_x;
+						point.y = tmp_y;
 					}
 				} else {
 					prgba[0] = prgba[4] = prgba[8] = prgba[12] = r;
