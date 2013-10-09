@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
@@ -39,6 +40,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		[Inject]
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
 
+		[Inject]
+		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
+
+		private var _navigationCanHideWithGestures:Boolean;
+
 		override public function initialize():void {
 
 			registerView( view );
@@ -53,6 +59,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			requestNavigationDisposalSignal.add( onNavigationDisposalRequest );
 			requestChangeRenderRectSignal.add( onRenderRectChanged );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
+			navigationCanHideWithGesturesSignal.add( onNavigationCanHideWithGestures );
 
 			// From view.
 			view.shownSignal.add( onViewShown );
@@ -99,13 +106,15 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// From app.
 		// -----------------------
 
+		private function onNavigationCanHideWithGestures( value:Boolean ):void {
+			_navigationCanHideWithGestures = value;
+		}
+
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
 			if( gestureType == GestureType.TAP_GESTURE_RECOGNIZED ) {
-				if( !view.showing ) {
-					view.show();
-				}
-				else {
-					view.hide();
+				if( _navigationCanHideWithGestures ) {
+					if( !view.showing ) view.show();
+					else view.hide();
 				}
 			}
 		}

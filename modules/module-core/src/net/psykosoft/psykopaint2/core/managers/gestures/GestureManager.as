@@ -228,13 +228,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		
 		private function onTapGestureRecognized( event:GestureEvent ):void {
 			trace( this, "onTapGestureRecognized" );
-			
-			var target:Stage =  Stage(TapGesture(event.target).target);
-			var obj:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);
-			if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
-			{
-				notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
-			}
+			notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
 		}
 		
 		private function onLongTapGestureBegan( event:GestureEvent ):void {

@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
@@ -54,12 +55,16 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var toggleTransformGestureSignal:ToggleTransformGestureSignal;
 
+		[Inject]
+		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
+
 		public function PaintState() {
 		}
 
 		override ns_state_machine function activate( data:Object = null ):void {
 			requestClosePaintView.add( onClosePaintView );
 			requestStateChangeSignal.dispatch( NavigationStateType.PAINT_SELECT_BRUSH );
+			navigationCanHideWithGesturesSignal.dispatch( true );
 			toggleTransformGestureSignal.dispatch( true );
 		}
 

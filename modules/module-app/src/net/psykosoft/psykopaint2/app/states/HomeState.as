@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
@@ -68,6 +69,9 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
+		[Inject]
+		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
+
 		public function HomeState()
 		{
 		}
@@ -91,6 +95,7 @@ package net.psykosoft.psykopaint2.app.states
 			requestRetrieveCameraImageSignal.add(onRequestRetrieveCameraImageSignal);
 			requestExitPickAnImageSignal.add(onRequestExitPickAnImageSignal);
 
+			navigationCanHideWithGesturesSignal.dispatch( false );
 			requestNavigationToggleSignal.dispatch( 1, 0.5 );
 		}
 
