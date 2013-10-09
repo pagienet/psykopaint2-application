@@ -6,7 +6,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.ColorTransform;
+	import flash.utils.Timer;
 	
 	public class ColorPalette extends Sprite
 	{
@@ -33,6 +35,16 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var _selectedColor:uint;
 		private var _currentIndex:int;
 		private var _stage:Stage;
+		private var _pipetteStartMouseY:Number;
+		private var _suckTimer:Timer;
+		private var palette_red:Number;
+		private var palette_green:Number;
+		private var palette_blue:Number;
+		private var incoming_red:Number;
+		private var incoming_green:Number;
+		private var incoming_blue:Number;
+		private var ct:ColorTransform;
+		private var lastPipetteDirection:int;
 		
 		public function ColorPalette()
 		{
@@ -60,6 +72,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			_currentIndex = -1;
 			showPalette(0);
 			selectedIndex = 0;
+			palette_red = palette_green= palette_blue = 0;
+			ct = new ColorTransform()
+			pipette.gotoAndStop(1);
 		}
 		
 		private function showPalette( index:int ):void
@@ -89,6 +104,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 					paletteSelector.x = swatches[index].x;
 					paletteSelector.y = swatches[index].y+2;
 					_selectedColor = palettes[selectedPaletteIndex][index];
+					
+					
 					dispatchEvent( new Event(Event.CHANGE) );
 				}
 			} else {
@@ -110,30 +127,61 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public function attemptPipetteCharge():void
 		{
 			if ( mouseY < -100 || mouseX < -225 || mouseX > 240 ) return;
-			
+			_pipetteStartMouseY = mouseY;
+			lastPipetteDirection = 0;
 			for ( var i:int = 0; i < swatches.length; i++ )
 			{
 				if ( swatches[i].hitTestPoint(stage.mouseX,stage.mouseY,true ) )
 				{
 					pipette.x = swatches[i].x;
-					pipette.y = swatches[i].y;
+					pipette.y = swatches[i].y - 32;
 					
 					pipette.visible = true;
-					pipette.gotoAndStop(1);
-					pipette.colorbar.transform.colorTransform = swatches[i].transform.colorTransform;
+					//
+					//pipette.colorbar.transform.colorTransform = swatches[i].transform.colorTransform;
+					var incomingColor:int= palettes[selectedPaletteIndex][i]
+					incoming_red = (incomingColor >> 16) & 0xff;
+					incoming_green = (incomingColor >> 8) & 0xff;
+					incoming_blue = incomingColor & 0xff;
 					
-					_stage.addEventListener(Event.ENTER_FRAME, suckInPipette );
+					if ( _suckTimer == null )
+					{
+						_suckTimer = new Timer(60);
+					}
+					_suckTimer.addEventListener(TimerEvent.TIMER, suckInPipette );
+					_suckTimer.start()
 					break;
 				}
 			}
 			
-			
 		}
 		
-		protected function suckInPipette(event:Event):void
+		protected function suckInPipette(event:TimerEvent):void
 		{
-			if ( pipette.currentFrame < pipette.totalFrames ) pipette.nextFrame();
-			else stage.removeEventListener(Event.ENTER_FRAME, suckInPipette );
+			var dy:int = mouseY - _pipetteStartMouseY;
+			var i:int = Math.ceil(Math.sqrt(Math.abs(dy)));
+			var direction:int = dy < 0 ? -1 : ( dy > 0 ? 1 : 0 );
+			if ( direction != 0 && lastPipetteDirection != direction ) _pipetteStartMouseY = mouseY;
+			lastPipetteDirection = direction;
+			
+			while (--i > -1 )
+			{
+					
+				if ( dy > 0 && pipette.currentFrame > 1)
+					pipette.prevFrame()
+				else if ( dy < 0  ){
+					if ( pipette.currentFrame < pipette.totalFrames ) pipette.nextFrame();
+					var blendFactor:Number = pipette.currentFrame -1; 
+					palette_red = (palette_red * blendFactor + incoming_red) / (blendFactor +1 );
+					palette_green = (palette_green * blendFactor + incoming_green) / (blendFactor +1 );
+					palette_blue = (palette_blue * blendFactor + incoming_blue) / (blendFactor +1 );
+				}
+				
+				
+				
+			}
+			ct.color = int(palette_red+0.5) << 16 | int(palette_green+0.5) << 8 | int(palette_blue+0.5);
+			pipette.colorbar.transform.colorTransform = ct;
 		}		
 		
 		public function endPipetteCharge():void
@@ -142,7 +190,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 			{
 				pipette.visible = false;
 				pipette.stop();
-				_stage.removeEventListener(Event.ENTER_FRAME, suckInPipette );
+				_suckTimer.removeEventListener(TimerEvent.TIMER, suckInPipette );
+				_suckTimer.stop();
+				_selectedColor = ct.color;
+				dispatchEvent( new Event(Event.CHANGE) );
 			}
 		}
 	}

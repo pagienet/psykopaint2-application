@@ -54,12 +54,13 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var sliderPaddingLeft:Number = 16;
 		private var sliderPaddingRight:Number = 16;
 		private var saturationSliderValues:Array;
-
+/*
 		private var hueHandleBg:Shape;
 
 		private var saturationHandleBg:Shape;
 
 		private var lightnessHandleBg:Shape;
+		*/
 
 		public static const ID_BACK:String = "Back";
 		
@@ -112,8 +113,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 			lightnessMapHolder.y = 59 + 59;
 			sliderHolder.addChild(lightnessMapHolder);
 			
-			
+			hueHandle.gotoAndStop(1);
+			lightnessHandle.gotoAndStop(1);
+			saturationHandle.gotoAndStop(1);
 			//hueHandle.blendMode = saturationHandle.blendMode = lightnessHandle.blendMode = "multiply";
+			/*
 			hueHandle.gotoAndStop(3);
 			hueHandleBg = new Shape();
 			hueHandleBg.graphics.beginFill(0);
@@ -144,7 +148,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			lightnessHandleBg.graphics.lineTo(-20,13);
 			lightnessHandleBg.graphics.endFill();
 			lightnessHandle.addChildAt(lightnessHandleBg,0);
-			
+			*/
 			
 			hueHandle.mouseEnabled = false;
 			saturationHandle.mouseEnabled = false;
@@ -227,6 +231,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			var t:ColorTransform = currentColorSwatch.transform.colorTransform;
 			t.color = currentColor;
 			currentColorSwatch.transform.colorTransform = t;
+			/*
 			saturationHandleBg.transform.colorTransform = t;
 			
 			t.color = ColorConverter.HSVtoUINT(new HSV(currentHSV.hue,100,100));
@@ -234,7 +239,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			t.color = ColorConverter.HSVtoUINT(new HSV(0,0,currentHSV.value));
 			lightnessHandleBg.transform.colorTransform = t;
-			
+			*/
 			
 			if (!fromPalette )  colorPalette.selectedIndex = -1;
 			if( triggerChange ) colorChangedSignal.dispatch();

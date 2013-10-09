@@ -27,7 +27,8 @@ package net.psykosoft.psykopaint2.core.managers.accelerometer
 
 		private static var _orientation : String;
 		static private var _orientationMatrix : Matrix3D = new Matrix3D();
-
+		static private var _angleAdjustment : Number = 0;
+		
 
 		public function GyroscopeManager()
 		{
@@ -42,6 +43,16 @@ package net.psykosoft.psykopaint2.core.managers.accelerometer
 		public static function get orientation() : String
 		{
 			return _orientation;
+		}
+		
+		static public function get angleAdjustment():Number
+		{
+			return _angleAdjustment;
+		}
+		
+		public static function set angleAdjustment( value:Number ) : void
+		{
+			_angleAdjustment = value;
 		}
 
 		public function initialize() : void
@@ -80,7 +91,8 @@ package net.psykosoft.psykopaint2.core.managers.accelerometer
 			var zAxis : Vector3D = new Vector3D();
 
 			_orientationMatrix.copyFrom(event.rotationMatrix);
-
+			_orientationMatrix.appendRotation( _angleAdjustment / Math.PI * 180,Vector3D.Z_AXIS );
+			
 			if (_orientation == StageOrientation.ROTATED_RIGHT) {
 				_orientationMatrix.transpose();
 				_orientationMatrix.appendRotation(90, Vector3D.Z_AXIS);
@@ -91,7 +103,8 @@ package net.psykosoft.psykopaint2.core.managers.accelerometer
 				_orientationMatrix.appendRotation(-90, Vector3D.Z_AXIS);
 				_orientationMatrix.transpose();
 			}
-
+			
+			
 			_orientationMatrix.copyRowTo(2, zAxis);
 
 			updateMatrixFromZAxis(zAxis);

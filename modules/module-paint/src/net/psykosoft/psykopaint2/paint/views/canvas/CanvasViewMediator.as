@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
-
+	
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.display3D.textures.Texture;
@@ -11,9 +11,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
+	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -30,7 +31,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
-
+	
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.TransformGesture;
 
@@ -178,7 +179,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			_canvasRect.y = topLeft.y;
 			_canvasRect.width = bottomRight.x - topLeft.x;
 			_canvasRect.height = bottomRight.y - topLeft.y;
-
+			GyroscopeManager.angleAdjustment += 0.02;
 			updateAndConstrainCanvasRect();
 		}
 
@@ -204,7 +205,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					_canvasRect.y = topLeft.y;
 					_canvasRect.width = bottomRight.x - topLeft.x;
 					_canvasRect.height = bottomRight.y - topLeft.y;
-
 					updateAndConstrainCanvasRect();
 					break;
 
