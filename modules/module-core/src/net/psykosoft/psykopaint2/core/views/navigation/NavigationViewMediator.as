@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
+	import flash.display.Stage;
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
@@ -16,6 +17,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	import org.gestouch.events.GestureEvent;
+	import org.gestouch.gestures.TapGesture;
 
 	public class NavigationViewMediator extends MediatorBase
 	{
@@ -111,10 +113,18 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
+
+			// Under given conditions, a tap could hide the navigation.
 			if( gestureType == GestureType.TAP_GESTURE_RECOGNIZED ) {
-				if( _navigationCanHideWithGestures ) {
-					if( !view.showing ) view.show();
-					else view.hide();
+				if( _navigationCanHideWithGestures ) { // Condition 1: tap hiding is enabled
+					// Condition 2: The tap did not occur on any display object in the navigation.
+					var target:Stage =  Stage(TapGesture(event.target).target);
+					var objsUnderMouse:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);
+					if( objsUnderMouse.length == 0 ) { // We only want clicks on the stage.
+						// Perform hide/show
+						if( !view.showing ) view.show();
+						else view.hide();
+					}
 				}
 			}
 		}
