@@ -169,6 +169,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer : CanvasRenderer) : void
 		{
 			_brushMesh = createBrushMesh();
+			// the purpose of this is to avoid a bit of the delay when drawing the very first time
+			_brushMesh.assembleShaderPrograms(context);
 			brushShape = brushShapeLibrary.getBrushShape(_shapes.stringValue);
 			
 			_view = view;

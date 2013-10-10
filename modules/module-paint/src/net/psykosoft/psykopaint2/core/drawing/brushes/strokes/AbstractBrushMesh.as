@@ -200,6 +200,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		{
 			return false;
 		}
+		
+		public function assembleShaderPrograms(context3d : Context3D) : void
+		{
+			if (!_normalSpecularPrograms[_programKey])
+				updateNormalSpecularProgram(context3d);
+			if (!_colorPrograms[_programKey])
+				updateColorProgram(context3d);
+		}
 
 		protected function invalidateBounds() : void
 		{
