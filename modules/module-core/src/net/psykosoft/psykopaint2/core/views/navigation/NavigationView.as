@@ -6,11 +6,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-	import flash.events.KeyboardEvent;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
-	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
 
 	import flashx.textLayout.elements.GlobalSettings;
@@ -381,8 +380,74 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		// ---------------------------------------------------------------------
+		// Pan show/hide.
+		// ---------------------------------------------------------------------
+
+		private var _onPanDrag:Boolean;
+		private var _mouseAtPanStart:Number;
+		private var _visibleCache:Boolean;
+
+		public function startPanDrag( panY:Number ):void {
+
+			if( _onPanDrag ) return;
+
+			// Check if the pan started in the appropriate area.
+			var interactionY:Number = _hidden ? 768: 768 - _bgHeight;
+			interactionY *= CoreSettings.GLOBAL_SCALING;
+			var dy:Number = interactionY - panY;
+			if( !_hidden && Math.abs( dy ) > 50 ) return;
+			if( _hidden && Math.abs( dy ) > 100 ) return;
+
+			_visibleCache = visible;
+			visible = true;
+
+			_mouseAtPanStart = stage.mouseY;
+
+			startPanDragEnterFrame();
+		}
+
+		public function endPanDrag():void {
+			stopPanDragEnterFrame();
+
+			visible = _visibleCache;
+
+			// Determine if we should complete a show or a hide.
+			if( y > _bgHeight * CoreSettings.GLOBAL_SCALING / 2 ) {
+		   		hide();
+			}
+			else {
+				show();
+			}
+		}
+
+		private function startPanDragEnterFrame():void {
+			if( _onPanDrag ) return;
+			_onPanDrag = true;
+			addEventListener( Event.ENTER_FRAME, onPanDragEnterframe );
+		}
+
+		private function stopPanDragEnterFrame():void {
+			if( !_onPanDrag ) return;
+			_onPanDrag = false;
+			removeEventListener( Event.ENTER_FRAME, onPanDragEnterframe );
+		}
+
+		private function updatePanDrag():void {
+
+			y = _hidden ? stage.mouseY - _mouseAtPanStart + _bgHeight * CoreSettings.GLOBAL_SCALING : stage.mouseY - _mouseAtPanStart;
+
+			if( y < 0 ) {
+				y = 0;
+			}
+		}
+
+		// ---------------------------------------------------------------------
 		// Event handlers.
 		// ---------------------------------------------------------------------
+
+		private function onPanDragEnterframe( event:Event ):void {
+			updatePanDrag();
+		}
 
 //		override protected function onAddedToStage():void {
 //			// TODO: remove on release

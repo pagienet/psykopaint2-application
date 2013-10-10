@@ -139,7 +139,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function initOneFingerVerticalPan():void {
 			_panGestureVertical = new PanGesture( _stage );
-			_panGestureVertical.minNumTouchesRequired = _panGestureVertical.maxNumTouchesRequired = 2;
+			_panGestureVertical.minNumTouchesRequired = _panGestureVertical.maxNumTouchesRequired = 1;
 			_panGestureVertical.direction = PanGestureDirection.VERTICAL;
 			_panGestureVertical.addEventListener( GestureEvent.GESTURE_BEGAN, onVerticalPanGestureBegan );
 			_panGestureVertical.addEventListener( GestureEvent.GESTURE_ENDED, onVerticalPanGestureEnded );
