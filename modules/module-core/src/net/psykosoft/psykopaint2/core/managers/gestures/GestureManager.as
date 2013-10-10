@@ -227,7 +227,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		private function onTapGestureRecognized( event:GestureEvent ):void {
-			trace( this, "onTapGestureRecognized" );
+//			trace( this, "onTapGestureRecognized" );
 			notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
 		}
 		
