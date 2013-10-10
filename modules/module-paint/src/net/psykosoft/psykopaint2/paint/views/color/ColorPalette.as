@@ -75,6 +75,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			palette_red = palette_green= palette_blue = 0;
 			ct = new ColorTransform()
 			pipette.gotoAndStop(1);
+			pipette.visible = false;
 		}
 		
 		private function showPalette( index:int ):void
