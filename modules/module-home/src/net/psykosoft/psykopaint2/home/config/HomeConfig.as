@@ -34,10 +34,16 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryPaintingSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryShareSubNavView;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryShareSubNavViewMediator;
+	import net.psykosoft.psykopaint2.home.views.home.EaselView;
+	import net.psykosoft.psykopaint2.home.views.home.EaselViewMediator;
+	import net.psykosoft.psykopaint2.home.views.home.GalleryView;
+	import net.psykosoft.psykopaint2.home.views.home.GalleryViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeViewMediator;
+	import net.psykosoft.psykopaint2.home.views.home.RoomView;
+	import net.psykosoft.psykopaint2.home.views.home.RoomViewMediator;
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavView;
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageSubNavView;
@@ -152,6 +158,9 @@ package net.psykosoft.psykopaint2.home.config
 		private function mapMediators():void {
 			_mediatorMap.map( HomeRootView ).toMediator( HomeRootViewMediator );
 			_mediatorMap.map( HomeView ).toMediator( HomeViewMediator );
+			_mediatorMap.map( EaselView ).toMediator( EaselViewMediator );
+			_mediatorMap.map( RoomView ).toMediator( RoomViewMediator );
+			_mediatorMap.map( GalleryView ).toMediator( GalleryViewMediator );
 			_mediatorMap.map( NewPaintingSubNavView ).toMediator( NewPaintingSubNavViewMediator );
 			_mediatorMap.map( SettingsSubNavView ).toMediator( SettingsSubNavViewMediator );
 			_mediatorMap.map( WallpaperSubNavView ).toMediator( WallpaperSubNavViewMediator );

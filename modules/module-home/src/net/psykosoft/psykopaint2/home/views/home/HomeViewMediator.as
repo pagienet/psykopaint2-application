@@ -3,19 +3,12 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import away3d.core.managers.Stage3DProxy;
 
-	import flash.display.BitmapData;
-
 	import flash.geom.Matrix3D;
-	import flash.geom.Vector3D;
 
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
-	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
-	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -23,18 +16,13 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
-	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 
 	import org.gestouch.events.GestureEvent;
 
@@ -47,9 +35,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var stateModel:NavigationStateModel;
 
 		[Inject]
-		public var requestWallpaperChangeSignal:RequestWallpaperChangeSignal;
-
-		[Inject]
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
 
 		[Inject]
@@ -59,13 +44,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var stage3dProxy:Stage3DProxy;
 
 		[Inject]
-		public var notifyPaintingDataRetrievedSignal:NotifyPaintingDataSetSignal;
-
-		[Inject]
 		public var paintingModel:PaintingModel;
-
-		[Inject]
-		public var requestEaselPaintingUpdateSignal:RequestEaselUpdateSignal;
 
 		[Inject]
 		public var applicationRenderer:ApplicationRenderer;
@@ -80,12 +59,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var requestHomeIntroSignal:RequestHomeIntroSignal;
 
 		[Inject]
-		public var easelRectModel : EaselRectModel;
-
-		[Inject]
-		public var wallpaperModel:WallpaperModel;
-
-		[Inject]
 		public var notifyHomeViewSceneReadySignal:NotifyHomeViewSceneReadySignal;
 
 		[Inject]
@@ -97,11 +70,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var requestBrowseGallery : RequestBrowseGallerySignal;
 
-		[Inject]
-		public var requestSetGalleryPaintingSignal : RequestSetGalleryPaintingSignal;
-
-		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
-		private var _lightDistance : Number = 1000;
 		private var _dockedAtSnapIndex:int = -1;
 		private var _allowPanning:Boolean = true;
 		private var _lastAllowPanningBeforeNegation:int;	// 1 = allow, -1 not allow, 0 whatever it was before last not allow-
@@ -117,26 +85,21 @@ package net.psykosoft.psykopaint2.home.views.home
 			// NOTE: home view is no longer associated to states
 
 			// From app.
-			requestWallpaperChangeSignal.add( onWallPaperChanged );
-			notifyGlobalGestureSignal.add( onGlobalGesture );
-			notifyNavigationToggleSignal.add( onNavigationToggled );
-			notifyPaintingDataRetrievedSignal.add( onPaintingDataRetrieved );
-			requestEaselPaintingUpdateSignal.add( onEaselUpdateRequest );
-			requestHomeViewScrollSignal.add( onScrollRequested );
+// TODO: Reenable
+//			notifyGlobalGestureSignal.add( onGlobalGesture );
+//			notifyNavigationToggleSignal.add( onNavigationToggled );
+//			requestHomeViewScrollSignal.add( onScrollRequested );
 			requestHomeIntroSignal.add( onIntroRequested );
 			notifyGyroscopeUpdateSignal.add ( onGyroscopeUpdate );
 			requestHomePanningToggleSignal.add ( onTogglePanning );
-			requestSetGalleryPaintingSignal.add ( onRequestSetGalleryPainting );
 
 			// From view.
-			view.closestSnapPointChangedSignal.add( onViewClosestSnapPointChanged );
-			view.zoomCompletedSignal.add( onViewZoomComplete );
-			view.easelRectChanged.add( onEaselRectChanged );
 			view.enabledSignal.add( onEnabled );
 			view.disabledSignal.add( onDisabled );
-			view.sceneReadySignal.add( onSceneReady );
 
-			view.targetLightPosition = new Vector3D(0, 0, -_lightDistance);
+//			view.closestSnapPointChangedSignal.add( onViewClosestSnapPointChanged );
+//			view.zoomCompletedSignal.add( onViewZoomComplete );
+			view.sceneReadySignal.add( onSceneReady );
 			view.stage3dProxy = stage3dProxy;
 
 			view.enable();
@@ -146,16 +109,16 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			view.disable();
 
-			requestWallpaperChangeSignal.remove( onWallPaperChanged );
-			notifyGlobalGestureSignal.remove( onGlobalGesture );
-			notifyNavigationToggleSignal.remove( onNavigationToggled );
-			notifyPaintingDataRetrievedSignal.remove( onPaintingDataRetrieved );
-			requestEaselPaintingUpdateSignal.remove( onEaselUpdateRequest );
-			requestHomeViewScrollSignal.remove( onScrollRequested );
+			// TODO: Reenable
+//			notifyGlobalGestureSignal.remove( onGlobalGesture );
+//			notifyNavigationToggleSignal.remove( onNavigationToggled );
+//			requestHomeViewScrollSignal.remove( onScrollRequested );
 			requestHomeIntroSignal.remove( onIntroRequested );
-			view.closestSnapPointChangedSignal.remove( onViewClosestSnapPointChanged );
-			view.zoomCompletedSignal.remove( onViewZoomComplete );
-			view.easelRectChanged.remove( onEaselRectChanged );
+
+			// TODO: Re-implement these properly
+//			view.closestSnapPointChangedSignal.remove( onViewClosestSnapPointChanged );
+//			view.zoomCompletedSignal.remove( onViewZoomComplete );
+
 			view.enabledSignal.remove( onEnabled );
 			view.disabledSignal.remove( onDisabled );
 			view.sceneReadySignal.remove( onSceneReady );
@@ -182,18 +145,12 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onGyroscopeUpdate(orientationMatrix : Matrix3D) : void
 		{
-			var pos : Vector3D = view.targetLightPosition;
-			targetPos.x = 0;
-			targetPos.y = 0;
-			targetPos.z = -_lightDistance;
-
-			view.targetLightPosition = orientationMatrix.transformVector(targetPos);
+			view.setOrientationMatrix(orientationMatrix);
 		}
 
 		private function onEnabled() : void
 		{
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL, 0 );
-			changeWallpaperFromId( wallpaperModel.wallpaperId );
 		}
 
 		private function onDisabled() : void
@@ -206,24 +163,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 
 		private function onIntroRequested():void {
-			view.introAnimation();
+			view.playIntroAnimation();
 		}
 
-		private function onEaselRectChanged():void {
-			easelRectModel.localScreenRect = view.easelRect;
-		}
-
-		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animateIn:Boolean, disposeWhenDone:Boolean ):void {
-			view.paintingManager.easel.setContent( paintingVO, animateIn, disposeWhenDone );
-		}
-
-		private function onPaintingDataRetrieved( data:Vector.<PaintingInfoVO> ):void {
-			if( data.length == 0 ) return;
-			var latestVo:PaintingInfoVO = data[ 0 ];
-			view.paintingManager.easel.setContent( latestVo );
-		}
-
-		private function onNavigationToggled( shown:Boolean ):void {
+		/*private function onNavigationToggled( shown:Boolean ):void {
 			if ( view.isEnabled )
 				view.scrollCameraController.limitInteractionToUpperPartOfTheScreen( shown );
 		}
@@ -237,28 +180,16 @@ package net.psykosoft.psykopaint2.home.views.home
 			else if( gestureType == GestureType.HORIZONTAL_PAN_GESTURE_ENDED || gestureType == GestureType.VERTICAL_PAN_GESTURE_ENDED ) {
 				view.scrollCameraController.endPanInteraction();
 			}
-		}
-
-		private function onWallPaperChanged( id:String ):void {
-			if( !view.visible ) return;
-			changeWallpaperFromId( id );
-		}
-
-		private function changeWallpaperFromId( id:String ):void {
-			var rootUrl:String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
-			var extra:String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
-			var url:String = rootUrl + "away3d/wallpapers/fullsize/" + id + extra + ".atf";
-			view.room.changeWallpaper( url );
-		}
+		}   */
 
 		override protected function onStateChange( newState:String ):void {
 
 			super.onStateChange( newState );
 		}
 
-		private function onScrollRequested( index:int ):void {
+		/*private function onScrollRequested( index:int ):void {
 			view.scrollCameraController.positionManager.animateToIndex( index );
-		}
+		} */
 
 		// -----------------------
 		// From view.
@@ -272,7 +203,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyHomeViewZoomCompleteSignal.dispatch();
 		}
 
-		private function onViewClosestSnapPointChanged( snapPointIndex:uint ):void {
+		/*private function onViewClosestSnapPointChanged( snapPointIndex:uint ):void {
 
 			trace( this, "closest painting changed to index: " + snapPointIndex );
 			_dockedAtSnapIndex = snapPointIndex;
@@ -303,11 +234,6 @@ package net.psykosoft.psykopaint2.home.views.home
 				requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
 				return;
 			}
-		}
-
-		private function onRequestSetGalleryPainting(galleryImageProxy : GalleryImageProxy) : void
-		{
-			// TODO: Pass stuff on to view, which loads stuff through proxy
-		}
+		}   */
 	}
 }
