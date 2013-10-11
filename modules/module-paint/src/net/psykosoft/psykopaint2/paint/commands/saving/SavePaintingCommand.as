@@ -35,10 +35,9 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 			saveVo.paintingId = paintingModel.activePaintingId;
 
 			// *** PICK ONE ***
-//			add( SavePaintingAsyncCommand );
+			add( SavePaintingAsyncCommand );
 //			add( SavePaintingSyncCommand );
-			// TODO: saving temporarily disabled for presentation...
-			notifyPaintingInfoSavedSignal.dispatch( true );
+//			notifyPaintingInfoSavedSignal.dispatch( true ); // Pick this one to disable saving...
 
 			registerCompleteCallback( onMacroComplete );
 
