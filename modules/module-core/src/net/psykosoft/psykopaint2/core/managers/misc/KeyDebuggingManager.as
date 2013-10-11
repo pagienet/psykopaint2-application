@@ -42,7 +42,7 @@ package net.psykosoft.psykopaint2.core.managers.misc
 					break;
 
 				case Keyboard.SPACE:
-//					_requestNavigationToggleSignal.dispatch( 0, 0.5 );
+//					_requestNavigationToggleSignal.dispatch( 0 );
 					break;
 			}
 		}

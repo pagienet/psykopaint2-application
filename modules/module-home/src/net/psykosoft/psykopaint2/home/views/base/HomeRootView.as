@@ -10,7 +10,6 @@ package net.psykosoft.psykopaint2.home.views.base
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryBrowseSubNavView;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryPaintingSubNavView;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryShareSubNavView;
-	import net.psykosoft.psykopaint2.home.views.home.HomeSubNavView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.newpainting.NewPaintingSubNavView;
 	import net.psykosoft.psykopaint2.home.views.pickimage.CaptureImageSubNavView;
@@ -36,7 +35,6 @@ package net.psykosoft.psykopaint2.home.views.base
 			addChild( _captureImageView = new CaptureImageView() );
 
 			// Link sub-navigation views that are created dynamically by CrNavigationView
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.HOME, HomeSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.HOME_ON_EASEL, NewPaintingSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.SETTINGS, SettingsSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.SETTINGS_WALLPAPER, WallpaperSubNavView );

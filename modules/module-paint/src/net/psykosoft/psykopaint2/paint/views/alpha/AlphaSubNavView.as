@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.slider.AlphaSlider;
-	import net.psykosoft.psykopaint2.core.views.navigation.NavigationView;
+	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	import org.osflash.signals.Signal;
@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 			setHeader( "" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 			showRightButton( false );
-			setBgType( NavigationView.BG_TYPE_WOOD );
+			setBgType( NavigationBg.BG_TYPE_WOOD );
 		}
 
 		override protected function onDisposed():void {

@@ -96,7 +96,7 @@ package net.psykosoft.psykopaint2.app.states
 			requestExitPickAnImageSignal.add(onRequestExitPickAnImageSignal);
 
 			navigationCanHideWithGesturesSignal.dispatch( false );
-			requestNavigationToggleSignal.dispatch( 1, 0.5 );
+			requestNavigationToggleSignal.dispatch( 1 );
 		}
 
 		override ns_state_machine function deactivate() : void

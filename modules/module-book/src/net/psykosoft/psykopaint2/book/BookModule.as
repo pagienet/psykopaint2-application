@@ -99,7 +99,7 @@ package net.psykosoft.psykopaint2.book
 
 		private function onBookModuleSetUp() : void
 		{
-			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1, 0.5);
+			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1);
 			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.BOOK_SOURCE_IMAGES);
 			_coreModule.injector.getInstance(RequestFetchSourceImagesSignal).dispatch(new SourceImageRequestVO(BookImageSource.SAMPLE_IMAGES, 0, 0));
 		}

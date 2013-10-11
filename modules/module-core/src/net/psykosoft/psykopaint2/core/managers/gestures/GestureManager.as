@@ -3,15 +3,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 	import flash.display.Bitmap;
 	import flash.display.Stage;
-	
+
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.ToggleTransformGestureSignal;
-	
+
 	import org.gestouch.core.Gestouch;
-	import org.gestouch.core.GestureState;
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.LongPressGesture;
 	import org.gestouch.gestures.PanGesture;

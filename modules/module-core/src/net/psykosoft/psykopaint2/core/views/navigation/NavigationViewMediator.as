@@ -2,16 +2,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import flash.display.Stage;
-	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
-
-	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationDisposalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -38,9 +34,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var requestNavigationDisposalSignal:RequestNavigationDisposalSignal;
 
 		[Inject]
-		public var requestChangeRenderRectSignal:RequestChangeRenderRectSignal;
-
-		[Inject]
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
 
 		[Inject]
@@ -60,16 +53,15 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			// From app.
 			requestNavigationToggleSignal.add( onToggleRequest );
 			requestNavigationDisposalSignal.add( onNavigationDisposalRequest );
-			requestChangeRenderRectSignal.add( onRenderRectChanged );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			navigationCanHideWithGesturesSignal.add( onNavigationCanHideWithGestures );
 
 			// From view.
-			view.shownSignal.add( onViewShown );
-			view.showingSignal.add( onViewShowing );
-			view.hiddenSignal.add( onViewHidden );
-			view.hidingSignal.add( onViewHiding );
-			view.showHideUpdateSignal.add( onViewShowHideUpdate );
+			view.panel.shownSignal.add( onViewShown );
+			view.panel.showingSignal.add( onViewShowing );
+			view.panel.hiddenSignal.add( onViewHidden );
+			view.panel.hidingSignal.add( onViewHiding );
+			view.panel.showHideUpdateSignal.add( onViewShowHideUpdate );
 		}
 
 		// -----------------------
@@ -98,10 +90,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			notifyNavigationToggledSignal.dispatch( true );
 		}
 
-		private function onToggleRequest( value:int, time:Number = 0.5 ):void {
-			if( value == 1 ) view.show( time );
-			else if( value == -1 ) view.hide( time );
-			else view.toggle( time );
+		private function onToggleRequest( value:int ):void {
+			if( value == 1 ) view.panel.show();
+			else if( value == -1 ) view.panel.hide();
+			else view.panel.toggle();
 		}
 
 
@@ -113,39 +105,38 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_navigationCanHideWithGestures = value;
 		}
 
+		private const ACCEPT_TAP_GESTURES_FOR_SHOW_HIDE:Boolean = false;
+		private const ALWAYS_SHOW_HIDE:Boolean = true;
+
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
 
 //			trace( this, "gesture - type: " + gestureType );
 
 			// Gestures to show/hide the nav.
-			if( _navigationCanHideWithGestures ) {
+			if( ALWAYS_SHOW_HIDE || _navigationCanHideWithGestures ) {
 
 				// Tap.
-				if( gestureType == GestureType.TAP_GESTURE_RECOGNIZED ) {
-					// Condition: The tap did not occur on any display object in the navigation.
-					var target:Stage = Stage( TapGesture( event.target ).target );
-					var objsUnderMouse:Array = target.getObjectsUnderPoint( TapGesture( event.target ).location );
-					if( objsUnderMouse.length == 0 ) { // We only want clicks on the stage.
+				// Nav show/hide with nav is currently disabled.
+				if( ACCEPT_TAP_GESTURES_FOR_SHOW_HIDE && gestureType == GestureType.TAP_GESTURE_RECOGNIZED ) {
+					// Uncomment these lines to only accept taps on stage ( hence only in paint mode ).
+//					var target:Stage = Stage( TapGesture( event.target ).target );
+//					var objsUnderMouse:Array = target.getObjectsUnderPoint( TapGesture( event.target ).location );
+//					if( objsUnderMouse.length == 0 ) { // We only want clicks on the stage.
 						// Perform hide/show
-						if( !view.showing ) view.show();
-						else view.hide();
-					}
+						if( !view.panel.shown ) view.panel.show();
+						else view.panel.hide();
+//					}
 				}
 
 				// Vertical pan.
-				// TODO: swipe disabled atm
-//				if( gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
-//					view.startPanDrag( PanGesture( event.target ).location.y );
-//				}
-//				if( gestureType == GestureType.VERTICAL_PAN_GESTURE_ENDED ) {
-//					view.endPanDrag();
-//				}
+				if( gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
+					view.panel.startPanDrag( PanGesture( event.target ).location.y );
+				}
+				if( gestureType == GestureType.VERTICAL_PAN_GESTURE_ENDED ) {
+					view.panel.endPanDrag();
+				}
 
 			}
-		}
-
-		private function onRenderRectChanged( rect:Rectangle ):void {
-			view.adaptToCanvas( rect );
 		}
 
 		private function onNavigationDisposalRequest():void {

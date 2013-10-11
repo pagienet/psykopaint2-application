@@ -99,7 +99,7 @@ package net.psykosoft.psykopaint2.home
 		private function onHomeModuleSetUp() : void
 		{
 			// TODO: this probably needs to be moved to some activation command
-			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1, 0.5);
+			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1);
 			_coreModule.injector.getInstance(RequestHomeViewScrollSignal).dispatch(1);
 			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME);
 		}

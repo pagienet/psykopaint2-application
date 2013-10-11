@@ -87,7 +87,8 @@ package net.psykosoft.psykopaint2.core
 			// Standalone...
 			if( parent == stage ) {
 				_injector.getInstance( RequestHideSplashScreenSignal ).dispatch();
-				_injector.getInstance( RequestNavigationToggleSignal ).dispatch( 1, 0.5 );
+				_injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME);
+				_injector.getInstance( RequestNavigationToggleSignal ).dispatch( 1);
 			}
 		}
 
