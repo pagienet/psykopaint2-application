@@ -133,12 +133,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				}
 
 				// Vertical pan.
-				if( gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
-					view.startPanDrag( PanGesture( event.target ).location.y );
-				}
-				if( gestureType == GestureType.VERTICAL_PAN_GESTURE_ENDED ) {
-					view.endPanDrag();
-				}
+				// TODO: swipe disabled atm
+//				if( gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN ) {
+//					view.startPanDrag( PanGesture( event.target ).location.y );
+//				}
+//				if( gestureType == GestureType.VERTICAL_PAN_GESTURE_ENDED ) {
+//					view.endPanDrag();
+//				}
 
 			}
 		}
