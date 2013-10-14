@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
@@ -37,6 +38,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		[Inject]
 		public var savingProcessModel:SavingProcessModel;
 
+		[Inject]
+		public var notifyEaselTappedSignal:NotifyEaselTappedSignal;
+
 		override public function initialize():void {
 
 			// Init.
@@ -52,11 +56,34 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			super.destroy();
 		}
 
+		override protected function onViewEnabled():void {
+			super.onViewEnabled();
+			notifyEaselTappedSignal.add( onEaselTapped );
+		}
+
+		override protected function onViewDisabled():void {
+			super.onViewDisabled();
+			notifyEaselTappedSignal.remove( onEaselTapped );
+		}
+
+		// -----------------------
+		// From app.
+		// -----------------------
+
+		private function onEaselTapped():void {
+			trace( "focused: " + paintingModel.activePaintingId );
+			requestLoadPaintingDataSignal.dispatch( paintingModel.activePaintingId );
+		}
+
 		private function onPaintingDataSaved( success:Boolean ):void {
 			ConsoleView.instance.log( this, "knows of painting data saved..." );
 			view.enableDisabledButtons();
 			view.showRightButton( true );
 		}
+
+		// -----------------------
+		// From view.
+		// -----------------------
 
 		override protected function onViewSetup():void {
 
@@ -87,10 +114,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			super.onViewSetup();
 		}
 
-		// -----------------------
-		// From view.
-		// -----------------------
-
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 
@@ -109,14 +132,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = "psyko-" + PaintingInfoVO.DEFAULT_VO_ID;
 					requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
-					break;
-				}
-
-				// Continue painting.
-				case NewPaintingSubNavView.ID_CONTINUE: {
-					trace( "focused: " + paintingModel.activePaintingId );
-					requestLoadPaintingDataSignal.dispatch( paintingModel.activePaintingId );
-					//TODO: blocker activation
 					break;
 				}
 

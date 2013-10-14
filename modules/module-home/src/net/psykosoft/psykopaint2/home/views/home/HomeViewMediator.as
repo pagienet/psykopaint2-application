@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
@@ -63,8 +65,21 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private var _currentNavigationState : String;
 
+<<<<<<< HEAD
 		override public function initialize() : void
 		{
+=======
+		[Inject]
+		public var notifyEaselTappedSignal:NotifyEaselTappedSignal;
+
+		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
+		private var _lightDistance : Number = 1000;
+		private var _dockedAtSnapIndex:int = -1;
+		private var _allowPanning:Boolean = true;
+		private var _lastAllowPanningBeforeNegation:int;	// 1 = allow, -1 not allow, 0 whatever it was before last not allow-
+
+		override public function initialize():void {
+>>>>>>> removed continue button from NewPaitingSubNav and PickSurfaceSubNav - action is now triggered by clicking on easel
 
 			// Init.
 			registerView(view);
@@ -84,6 +99,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			view.activeSectionChanged.add(onActiveSectionChanged);
 			view.sceneReadySignal.add(onSceneReady);
+			view.easelTappedSignal.add( onEaselTapped );
 			view.stage3dProxy = stage3dProxy;
 
 			view.enable();
@@ -122,6 +138,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.disabledSignal.remove(onDisabled);
 			view.sceneReadySignal.remove(onSceneReady);
 			notifyGyroscopeUpdateSignal.remove(onGyroscopeUpdate);
+			view.easelTappedSignal.remove( onEaselTapped );
 
 			view.dispose();
 
@@ -205,6 +222,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		// From view.
 		// -----------------------
+
+		private function onEaselTapped():void {
+			notifyEaselTappedSignal.dispatch();
+		}
 
 		private function onSceneReady() : void
 		{

@@ -39,6 +39,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
@@ -273,6 +274,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyUserPasswordReminderSentSignal ).asSingleton();
 			_injector.map( NotifyUserPasswordReminderFailedSignal ).asSingleton();
 			_injector.map( NavigationCanHideWithGesturesSignal ).asSingleton();
+			_injector.map( NotifyEaselTappedSignal ).asSingleton();
 
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
