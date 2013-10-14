@@ -200,9 +200,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Bg.
 		// ---------------------------------------------------------------------
 
-		public function setBgType( type:uint ):void {
+		public function setBgType( type:String ):void {
 			bg.setBgType( type );
-			if( type == NavigationBg.BG_TYPE_ROPE ) {
+			if( type == NavigationBg.BG_TYPE_ROPE || type == NavigationBg.BG_TYPE_WOOD_LOW ) {
 				_panel.contentHeight = 140;
 			}
 			else {

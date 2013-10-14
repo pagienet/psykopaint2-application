@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.views.components.combobox.ComboboxView;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SliderBase;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SliderButton;
+	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	// TODO: remove minimalcomps dependency when done
@@ -57,6 +58,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			else {
 				setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.ALPHA );
 			}
+
+			setBgType( NavigationBg.BG_TYPE_WOOD_LOW );
 		}
 
 		override protected function onDisposed():void {
