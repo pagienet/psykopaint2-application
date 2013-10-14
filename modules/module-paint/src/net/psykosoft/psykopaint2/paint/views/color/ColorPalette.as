@@ -150,7 +150,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 						_suckTimer = new Timer(60);
 					}
 					_suckTimer.addEventListener(TimerEvent.TIMER, suckInPipette );
-					_suckTimer.start()
+					_suckTimer.start();
+					stage.addEventListener(MouseEvent.MOUSE_UP, endPipetteCharge );
+					
 					break;
 				}
 			}
@@ -185,8 +187,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			pipette.colorbar.transform.colorTransform = ct;
 		}		
 		
-		public function endPipetteCharge():void
+		public function endPipetteCharge(event:MouseEvent = null):void
 		{
+			stage.removeEventListener(MouseEvent.MOUSE_UP, endPipetteCharge );
 			if ( pipette.visible )
 			{
 				pipette.visible = false;

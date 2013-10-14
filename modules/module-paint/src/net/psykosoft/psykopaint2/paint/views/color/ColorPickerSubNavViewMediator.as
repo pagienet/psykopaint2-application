@@ -1,12 +1,15 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
 
+	import flash.events.MouseEvent;
+	
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
-
+	
 	import org.gestouch.events.GestureEvent;
 
 	public class ColorPickerSubNavViewMediator extends SubNavigationMediatorBase
@@ -20,6 +23,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		[Inject]
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
 		
+		[Inject]
+		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
+		
 		override public function initialize():void {
 
 			registerView( view );
@@ -31,6 +37,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			// From app.
 			notifyPickedColorChangedSignal.add( onColorChangedFromOutside );
 			notifyGlobalGestureSignal.add( onGlobalGestureDetected );
+			
+			view.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
+			
 		}
 		
 		
@@ -51,6 +60,18 @@ package net.psykosoft.psykopaint2.paint.views.color
 			}
 		}
 		
+		private function onMouseDown( event:MouseEvent):void
+		{
+			navigationCanHideWithGesturesSignal.dispatch(false);
+			view.stage.addEventListener( MouseEvent.MOUSE_UP, onMouseUp);
+		}
+		
+		private function onMouseUp( event:MouseEvent):void
+		{
+			navigationCanHideWithGesturesSignal.dispatch(true);
+			view.stage.removeEventListener( MouseEvent.MOUSE_UP, onMouseUp);
+		}
+		
 		// -----------------------
 		// From app.
 		// -----------------------
@@ -64,10 +85,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN )
 			{
-				view.attemptPipetteCharge()
-			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_ENDED )
+				view.attemptPipetteCharge();
+			}  else if ( gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN )
 			{
-				view.endPipetteCharge()
+				 view.attemptPipetteCharge();
 			}
 		}
 	}
