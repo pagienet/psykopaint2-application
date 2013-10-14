@@ -1,10 +1,15 @@
 package net.psykosoft.psykopaint2.home.views.pickimage
 {
 
+	import flash.display.BitmapData;
+
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
+	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.core.views.popups.login.DeviceCameraUtil;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
@@ -30,6 +35,11 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		[Inject]
 		public var requestExitPickAnImageSignal:RequestExitPickAnImageSignal;
 
+		[Inject]
+		public var requestCropSourceImageSignal:RequestCropSourceImageSignal;
+
+		private var _cameraUtil:DeviceCameraUtil;
+
 		override public function initialize():void {
 
 			// Init.
@@ -40,6 +50,12 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			if( PaintModeModel.activeMode == PaintMode.PHOTO_MODE ) {
 				requestEaselUpdateSignal.dispatch( null, false, null );
 			}
+		}
+
+		override public function destroy():void {
+			super.destroy();
+			_cameraUtil.dispose();
+			_cameraUtil = null;
 		}
 
 		override protected function onButtonClicked( id:String ):void {
@@ -61,7 +77,12 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 				}
 
 				case PickAnImageSubNavView.ID_CAMERA: {
-					requestRetrieveCameraImageSignal.dispatch();
+					if( !CoreSettings.RUNNING_ON_iPAD ) {
+						requestRetrieveCameraImageSignal.dispatch();
+					}
+					else {
+						takePhoto();
+					}
 					break;
 				}
 
@@ -71,6 +92,22 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 					break;
 				}*/
 			}
+		}
+
+		// -----------------------
+		// Photo stuff.
+		// -----------------------
+
+		private function takePhoto():void {
+			trace( this, "taking photo..." );
+			_cameraUtil = new DeviceCameraUtil();
+			_cameraUtil.imageRetrievedSignal.add( onPhotoRetrieved );
+			_cameraUtil.launch();
+		}
+
+		private function onPhotoRetrieved( bmd:BitmapData ):void {
+			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
+			requestCropSourceImageSignal.dispatch( bmd );
 		}
 	}
 }
