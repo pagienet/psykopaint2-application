@@ -2,7 +2,9 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 {
 
 	import away3d.containers.View3D;
+	import away3d.core.pick.PickingColliderType;
 	import away3d.entities.Mesh;
+	import away3d.events.MouseEvent3D;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.primitives.PlaneGeometry;
@@ -11,14 +13,13 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
 
-	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
-	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.home.assets.HomeEmbeddedAssets;
-	import net.psykosoft.psykopaint2.home.views.home.HomeView;
+
+	import org.osflash.signals.Signal;
 
 	public class Easel extends GalleryPainting
 	{
@@ -28,6 +29,16 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _lightPicker:LightPickerBase;
 		private var _disposeVoWhenDone:Boolean;
 		private var _voToBeSetAfterAnimation:PaintingInfoVO;
+
+		public var easelTappedSignal:Signal;
+
+		public function Easel( view:View3D, lightPicker:LightPickerBase ) {
+			super();
+			easelTappedSignal = new Signal();
+			_view = view;
+			_lightPicker = lightPicker;
+			initPainting();
+		}
 
 		override public function dispose():void {
 
@@ -48,13 +59,6 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			super.dispose();
 		}
 
-		public function Easel( view:View3D, lightPicker:LightPickerBase ) {
-			super();
-			_view = view;
-			_lightPicker = lightPicker;
-			initPainting();
-		}
-
 		private function initPainting():void {
 			_painting = new EaselPainting( _lightPicker );
 			_painting.scale( 0.75 );
@@ -62,10 +66,19 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 			_painting.y -= 78;
 			addChild( _painting );
 
+			_painting.mouseEnabled = true;
+			_painting.pickingCollider = PickingColliderType.BOUNDS_ONLY;
+			_painting.showBounds = true;
+			_painting.addEventListener( MouseEvent3D.MOUSE_UP, onEaselMouseUp );
+
 			if( CoreSettings.RUNNING_ON_RETINA_DISPLAY ) {
 				_painting.scaleX *= 0.5;
 				_painting.scaleY = _painting.scaleX;
 			}
+		}
+
+		private function onEaselMouseUp( event:MouseEvent3D ):void {
+			easelTappedSignal.dispatch();
 		}
 
 		public function set easelVisible( visible:Boolean ):void {

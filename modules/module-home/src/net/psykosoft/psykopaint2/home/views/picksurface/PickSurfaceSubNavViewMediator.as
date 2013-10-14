@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
@@ -41,6 +42,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		[Inject]
 		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
 
+		[Inject]
+		public var notifyEaselTappedSignal:NotifyEaselTappedSignal;
+
 		private var _selectedIndex:int;
 
 		override public function initialize():void {
@@ -63,6 +67,12 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			super.onViewEnabled();
 			view.showRightButton( false );
 			requestEaselPaintingUpdateSignal.dispatch( null, false, false );
+			notifyEaselTappedSignal.add( onEaselTapped );
+		}
+
+		override protected function onViewDisabled():void {
+			super.onViewDisabled();
+			notifyEaselTappedSignal.remove( onEaselTapped );
 		}
 
 		override protected function onButtonClicked( id:String ):void {
@@ -71,9 +81,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 				case PickSurfaceSubNavView.ID_BACK:
 					requestNavigationStateChange( NavigationStateType.HOME_ON_EASEL );
 					requestHomePanningToggleSignal.dispatch( 1 );
-					break;
-				case PickSurfaceSubNavView.ID_CONTINUE:
-					continueToColorPaint();
 					break;
 				case PickSurfaceSubNavView.ID_SURF1:
 					loadSurfaceByIndex( 0 );
@@ -85,6 +92,10 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 					loadSurfaceByIndex( 2 );
 					break;
 			}
+		}
+
+		private function onEaselTapped():void {
+			continueToColorPaint();
 		}
 
 		private function loadSurfaceByIndex( index:uint ):void {

@@ -13,10 +13,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	{
 		public static const ID_NEW:String = "Color Painting";
 		public static const ID_NEW_PHOTO:String = "Photo Painting";
-		public static const ID_CONTINUE:String = "Continue Painting";
 
 		private var _disabledId:String;
-		private var _rightButtonIsHidden:Boolean;
 
 		public function NewPaintingSubNavView() {
 			super();
@@ -24,11 +22,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		override protected function onEnabled():void {
 			setHeader( "" );
-			setRightButton( ID_CONTINUE, ID_CONTINUE, ButtonIconType.CONTINUE );
-			if( _rightButtonIsHidden ) {
-				_rightButtonIsHidden = false;
-				showRightButton( false );
-			}
 		}
 
 		public function createNewPaintingButtons():void {
@@ -44,10 +37,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
 				var btnIsEnabled:Boolean = vo.id != unavailablePaintingId;
-				if( !btnIsEnabled ) {
-					_rightButtonIsHidden = true;
-					showRightButton( false );
-				}
 				createCenterButton( str, str, null, BitmapButton, new Bitmap( vo.thumbnail ), true, btnIsEnabled );
 			}
 		}

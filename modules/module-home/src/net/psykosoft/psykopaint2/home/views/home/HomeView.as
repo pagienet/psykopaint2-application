@@ -57,6 +57,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _targetLightPosition : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightInterpolation : Number = .99;
 
+		public var easelTappedSignal:Signal;
 
 		public function HomeView() {
 			super();
@@ -66,6 +67,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			zoomCompletedSignal = new Signal();
 			easelRectChanged = new Signal();
 			sceneReadySignal = new Signal();
+			easelTappedSignal = new Signal();
 		}
 
 		// ---------------------------------------------------------------------
@@ -172,7 +174,13 @@ package net.psykosoft.psykopaint2.home.views.home
 
 //			trace( this, "method time: " + String( getTimer() - methodTime ) );
 
+			_paintingManager.easel.easelTappedSignal.add( onEaselTapped );
+
 			sceneReadySignal.dispatch();
+		}
+
+		private function onEaselTapped():void {
+			easelTappedSignal.dispatch();
 		}
 
 		private function onScrollMotionEnded() : void
@@ -204,6 +212,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 
 			if( _paintingManager ) {
+				_paintingManager.easel.easelTappedSignal.remove( onEaselTapped );
 				_mainScene.removeChild( _paintingManager );
 				_paintingManager.dispose();
 				_paintingManager = null;

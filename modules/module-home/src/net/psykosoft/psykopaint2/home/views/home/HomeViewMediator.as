@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
@@ -100,6 +101,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var requestSetGalleryPaintingSignal : RequestSetGalleryPaintingSignal;
 
+		[Inject]
+		public var notifyEaselTappedSignal:NotifyEaselTappedSignal;
+
 		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightDistance : Number = 1000;
 		private var _dockedAtSnapIndex:int = -1;
@@ -135,6 +139,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.enabledSignal.add( onEnabled );
 			view.disabledSignal.add( onDisabled );
 			view.sceneReadySignal.add( onSceneReady );
+			view.easelTappedSignal.add( onEaselTapped );
 
 			view.targetLightPosition = new Vector3D(0, 0, -_lightDistance);
 			view.stage3dProxy = stage3dProxy;
@@ -161,10 +166,22 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.sceneReadySignal.remove( onSceneReady );
 			notifyGyroscopeUpdateSignal.remove ( onGyroscopeUpdate );
 			requestHomePanningToggleSignal.remove ( onTogglePanning );
+			view.easelTappedSignal.remove( onEaselTapped );
 
 			view.dispose();
 
 			super.destroy();
+		}
+
+		private function onEnabled() : void
+		{
+			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL, 0 );
+			changeWallpaperFromId( wallpaperModel.wallpaperId );
+		}
+
+		private function onDisabled() : void
+		{
+			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
 
 		private function onTogglePanning( enable:int ):void {
@@ -188,17 +205,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			targetPos.z = -_lightDistance;
 
 			view.targetLightPosition = orientationMatrix.transformVector(targetPos);
-		}
-
-		private function onEnabled() : void
-		{
-			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL, 0 );
-			changeWallpaperFromId( wallpaperModel.wallpaperId );
-		}
-
-		private function onDisabled() : void
-		{
-			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
 		}
 
 		// -----------------------
@@ -263,6 +269,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onEaselTapped():void {
+			notifyEaselTappedSignal.dispatch();
+		}
 
 		private function onSceneReady():void {
 			notifyHomeViewSceneReadySignal.dispatch();
