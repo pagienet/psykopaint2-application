@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var colorOverlay9:Sprite;
 		public var colorOverlay10:Sprite;
 		public var colorOverlay11:Sprite;
-		public var pipette:Pipette;
+		//public var pipette:Pipette;
 		
 		public const palettes:Array = [[0x000000,0x062750,0x04396c,0x01315a,0x00353b,0x026d01,
 										0x452204,0x7a1023,0xa91606,0xd94300,0xbd9c01,0xdedddb]];
@@ -35,16 +35,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var _selectedColor:uint;
 		private var _currentIndex:int;
 		private var _stage:Stage;
-		private var _pipetteStartMouseY:Number;
-		private var _suckTimer:Timer;
-		private var palette_red:Number;
-		private var palette_green:Number;
-		private var palette_blue:Number;
-		private var incoming_red:Number;
-		private var incoming_green:Number;
-		private var incoming_blue:Number;
-		private var ct:ColorTransform;
-		private var lastPipetteDirection:int;
+		
+		
+		
+		
 		
 		public function ColorPalette()
 		{
@@ -72,13 +66,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 			_currentIndex = -1;
 			showPalette(0);
 			selectedIndex = 0;
-			palette_red = palette_green= palette_blue = 0;
-			ct = new ColorTransform();
-			pipette = new Pipette();
-			addChild(pipette);
-				
-			pipette.gotoAndStop(1);
-			pipette.visible = false;
+		
+			
 		}
 		
 		private function showPalette( index:int ):void
@@ -128,80 +117,20 @@ package net.psykosoft.psykopaint2.paint.views.color
 			return palettes[selectedPaletteIndex];
 		}
 		
-		public function attemptPipetteCharge():void
+		public function getSwatchUnderMouse():Sprite
 		{
-			if ( mouseY < -100 || mouseX < -225 || mouseX > 240 ) return;
-			_pipetteStartMouseY = mouseY;
-			lastPipetteDirection = 0;
 			for ( var i:int = 0; i < swatches.length; i++ )
 			{
 				if ( swatches[i].hitTestPoint(stage.mouseX,stage.mouseY,true ) )
 				{
-					pipette.x = swatches[i].x;
-					pipette.y = swatches[i].y - 32;
 					
-					pipette.visible = true;
-					//
 					//pipette.colorbar.transform.colorTransform = swatches[i].transform.colorTransform;
-					var incomingColor:int= palettes[selectedPaletteIndex][i]
-					incoming_red = (incomingColor >> 16) & 0xff;
-					incoming_green = (incomingColor >> 8) & 0xff;
-					incoming_blue = incomingColor & 0xff;
-					
-					if ( _suckTimer == null )
-					{
-						_suckTimer = new Timer(60);
-					}
-					_suckTimer.addEventListener(TimerEvent.TIMER, suckInPipette );
-					_suckTimer.start();
-					stage.addEventListener(MouseEvent.MOUSE_UP, endPipetteCharge );
-					
-					break;
+					//var incomingColor:int= palettes[selectedPaletteIndex][i]
+					return swatches[i];
 				}
 			}
-			
+			return null;
 		}
 		
-		protected function suckInPipette(event:TimerEvent):void
-		{
-			var dy:int = mouseY - _pipetteStartMouseY;
-			var i:int = Math.ceil(Math.sqrt(Math.abs(dy)));
-			var direction:int = dy < 0 ? -1 : ( dy > 0 ? 1 : 0 );
-			if ( direction != 0 && lastPipetteDirection != direction ) _pipetteStartMouseY = mouseY;
-			lastPipetteDirection = direction;
-			
-			while (--i > -1 )
-			{
-					
-				if ( dy > 0 && pipette.currentFrame > 1)
-					pipette.prevFrame()
-				else if ( dy < 0  ){
-					if ( pipette.currentFrame < pipette.totalFrames ) pipette.nextFrame();
-					var blendFactor:Number = pipette.currentFrame -1; 
-					palette_red = (palette_red * blendFactor + incoming_red) / (blendFactor +1 );
-					palette_green = (palette_green * blendFactor + incoming_green) / (blendFactor +1 );
-					palette_blue = (palette_blue * blendFactor + incoming_blue) / (blendFactor +1 );
-				}
-				
-				
-				
-			}
-			ct.color = int(palette_red+0.5) << 16 | int(palette_green+0.5) << 8 | int(palette_blue+0.5);
-			pipette.colorbar.transform.colorTransform = ct;
-		}		
-		
-		public function endPipetteCharge(event:MouseEvent = null):void
-		{
-			stage.removeEventListener(MouseEvent.MOUSE_UP, endPipetteCharge );
-			if ( pipette.visible )
-			{
-				pipette.visible = false;
-				pipette.stop();
-				_suckTimer.removeEventListener(TimerEvent.TIMER, suckInPipette );
-				_suckTimer.stop();
-				_selectedColor = ct.color;
-				dispatchEvent( new Event(Event.CHANGE) );
-			}
-		}
 	}
 }

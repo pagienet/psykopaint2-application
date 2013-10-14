@@ -3,20 +3,22 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 	import com.quasimondo.color.colorspace.HSV;
 	import com.quasimondo.color.utils.ColorConverter;
-
+	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.ColorTransform;
-
+	import flash.utils.Timer;
+	
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class ColorPickerSubNavView extends SubNavigationViewBase
@@ -52,6 +54,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var sliderPaddingLeft:Number = 16;
 		private var sliderPaddingRight:Number = 16;
 		private var saturationSliderValues:Array;
+		
+		private var pipette:Pipette;
+		
 /*
 		private var hueHandleBg:Shape;
 
@@ -158,6 +163,13 @@ package net.psykosoft.psykopaint2.paint.views.color
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 
 			setBgType( NavigationBg.BG_TYPE_WOOD );
+			
+			pipette = new Pipette();
+			pipette.addEventListener( Event.CHANGE, onPipetteColorPicked );
+			addChild(pipette);
+			
+			pipette.gotoAndStop(1);
+			pipette.visible = false;
 		}
 		
 		protected function onSliderMouseDown( event:MouseEvent ):void
@@ -218,6 +230,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		protected function onMixerColorPicked( event:Event ):void {
 			setCurrentColor( colorMixer.currentColor, false );
+		}
+		
+		protected function onPipetteColorPicked( event:Event ):void {
+			setCurrentColor( pipette.currentColor, false );
 		}
 		
 		public function setCurrentColor( newColor:uint, fromPalette:Boolean, fromSlider:Boolean = false, triggerChange:Boolean = true ):void
@@ -294,14 +310,21 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		public function attemptPipetteCharge():void
 		{
-			colorPalette.attemptPipetteCharge();
+			//if ( mouseY < -100 || mouseX < -225 || mouseX > 240 ) return;
+			if ( colorPalette.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
+			{
+				var swatch:Sprite = colorPalette.getSwatchUnderMouse();
+				if ( swatch != null )
+				{
+					pipette.x = colorPalette.x + swatch.x;
+					pipette.y = colorPalette.y + swatch.y - 32;
+					pipette.startCharge( swatch.transform.colorTransform.color );
+				}
+			}
+			
 			
 		}
 		
-		public function endPipetteCharge():void
-		{
-			colorPalette.endPipetteCharge();
-			
-		}
+		
 	}
 }
