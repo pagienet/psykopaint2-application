@@ -2,6 +2,10 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 {
 
 	import flash.display.BitmapData;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+
+	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
@@ -9,6 +13,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.core.views.popups.login.CameraRollUtil;
 	import net.psykosoft.psykopaint2.core.views.popups.login.DeviceCameraUtil;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
@@ -39,6 +44,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		public var requestCropSourceImageSignal:RequestCropSourceImageSignal;
 
 		private var _cameraUtil:DeviceCameraUtil;
+		private var _rollUtil:CameraRollUtil;
 
 		override public function initialize():void {
 
@@ -54,8 +60,16 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		override public function destroy():void {
 			super.destroy();
-			_cameraUtil.dispose();
-			_cameraUtil = null;
+
+			if( _cameraUtil ) {
+				_cameraUtil.dispose();
+				_cameraUtil = null;
+			}
+
+			if( _rollUtil ) {
+				_rollUtil.dispose();
+				_rollUtil = null;
+			}
 		}
 
 		override protected function onButtonClicked( id:String ):void {
@@ -67,7 +81,12 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 				}
 
 				case PickAnImageSubNavView.ID_USER: {
-					requestBrowseUserImagesSignal.dispatch();
+					if( !CoreSettings.RUNNING_ON_iPAD ) {
+						requestBrowseUserImagesSignal.dispatch();
+					}
+					else {
+						loadPhoto();
+					}
 					break;
 				}
 
@@ -97,6 +116,14 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		// -----------------------
 		// Photo stuff.
 		// -----------------------
+
+		private function loadPhoto():void {
+			_rollUtil = new CameraRollUtil();
+			_rollUtil.imageRetrievedSignal.add( onPhotoRetrieved );
+			var w:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1024 : 512;
+			var h:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 512 : 256;
+			_rollUtil.launch( new Rectangle( view.mouseX, view.mouseY, 100, 100 ), w, h );
+		}
 
 		private function takePhoto():void {
 			trace( this, "taking photo..." );
