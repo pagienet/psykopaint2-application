@@ -8,7 +8,7 @@
 	<property name="debug" value="false"/>
 	<property name="inline" value=""/> <!-- '-inline' or '' (empty) -->
 	<property name="telemetry" value="-advanced-telemetry=false"/> <!-- '-advanced-telemetry=true' or '' (empty) -->
-	<property name="swfVersion" value="21"/> <!-- just a number -->
+	<property name="swfVersion" value="22"/> <!-- just a number -->
 
 	<property name="rootDir" value="../../../workspaces/psykopaint2-official"/>
 

@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import flash.events.Event;
 	import flash.geom.Point;
 
-	import net.psykosoft.psykopaint2.base.utils.ui.ScrollInteractionManager;
+	import net.psykosoft.psykopaint2.base.utils.ui.HScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 	* */
 	public class HSnapScroller extends Sprite
 	{
-		protected var _interactionManager:ScrollInteractionManager;
+		protected var _interactionManager:HScrollInteractionManager;
 		protected var _positionManager:SnapPositionManager;
 		protected var _container:Sprite;
 		protected var _active:Boolean;
@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			super();
 
 			_positionManager = new SnapPositionManager();
-			_interactionManager = new ScrollInteractionManager( _positionManager );
+			_interactionManager = new HScrollInteractionManager( _positionManager );
 			_interactionManager.useDetailedDelta = false;
 
 			motionStartedSignal = new Signal();
@@ -181,7 +181,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			return _positionManager;
 		}
 
-		public function get interactionManager():ScrollInteractionManager {
+		public function get interactionManager():HScrollInteractionManager {
 			return _interactionManager;
 		}
 

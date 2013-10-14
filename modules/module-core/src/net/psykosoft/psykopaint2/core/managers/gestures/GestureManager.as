@@ -3,15 +3,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 	import flash.display.Bitmap;
 	import flash.display.Stage;
-	
+
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.ToggleTransformGestureSignal;
-	
+
 	import org.gestouch.core.Gestouch;
-	import org.gestouch.core.GestureState;
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.LongPressGesture;
 	import org.gestouch.gestures.PanGesture;
@@ -139,7 +136,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function initOneFingerVerticalPan():void {
 			_panGestureVertical = new PanGesture( _stage );
-			_panGestureVertical.minNumTouchesRequired = _panGestureVertical.maxNumTouchesRequired = 2;
+			_panGestureVertical.minNumTouchesRequired = _panGestureVertical.maxNumTouchesRequired = 1;
 			_panGestureVertical.direction = PanGestureDirection.VERTICAL;
 			_panGestureVertical.addEventListener( GestureEvent.GESTURE_BEGAN, onVerticalPanGestureBegan );
 			_panGestureVertical.addEventListener( GestureEvent.GESTURE_ENDED, onVerticalPanGestureEnded );
@@ -227,14 +224,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 		
 		private function onTapGestureRecognized( event:GestureEvent ):void {
-			trace( this, "onTapGestureRecognized" );
-			
-			var target:Stage =  Stage(TapGesture(event.target).target);
-			var obj:Array = target.getObjectsUnderPoint(TapGesture(event.target).location);
-			if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
-			{
-				notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
-			}
+//			trace( this, "onTapGestureRecognized" );
+			notifyGlobalGestureSignal.dispatch( GestureType.TAP_GESTURE_RECOGNIZED, event );
 		}
 		
 		private function onLongTapGestureBegan( event:GestureEvent ):void {

@@ -1,24 +1,14 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Strong;
-
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	import flash.text.TextField;
-	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
-
-	import flashx.textLayout.elements.GlobalSettings;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.LeftButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.RightButton;
@@ -28,62 +18,33 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	public class NavigationView extends ViewBase
 	{
 		// Declared in Flash.
-		public var woodBg:Sprite;
-		public var wire:Sprite;
-		public var header:TextField;
-		public var headerBg:Sprite;
+		public var bg:NavigationBg;
+		public var header:NavigationHeader;
 		public var leftBtnSide:Sprite;
 		public var rightBtnSide:Sprite;
 
-		public var shownSignal:Signal;
-		public var showingSignal:Signal;
-		public var hidingSignal:Signal;
-		public var hiddenSignal:Signal;
-		public var showHideUpdateSignal:Signal;
 		public var buttonClickedSignal:Signal;
 
 		private var _leftButton:LeftButton;
 		private var _rightButton:RightButton;
 		private var _currentSubNavView:SubNavigationViewBase;
 
-		private var _animating:Boolean;
-		private var _showing:Boolean;
-		private var _forceHidden:Boolean;
-		private var _hidden:Boolean;
-		private var _bgHeight:uint;
-		private var _headerDefaultY:Number;
-		private var _headerTextDefaultOffset:Number;
 		private var _subNavDictionary:Dictionary;
 		private var _numSubNavsBeingDisposed:int;
 
-		public static const BG_TYPE_ROPE:uint = 0;
-		public static const BG_TYPE_WOOD:uint = 1;
+		private var _panel:NavigationPanel;
 
 		public function NavigationView() {
 			super();
 
-			_bgHeight = 140;
-
-			shownSignal = new Signal();
-			hidingSignal = new Signal();
-			showingSignal = new Signal();
-			hiddenSignal = new Signal();
-			showHideUpdateSignal = new Signal();
 			buttonClickedSignal = new Signal();
 
 			_leftButton = leftBtnSide.getChildByName( "btn" ) as LeftButton;
 			_rightButton = rightBtnSide.getChildByName( "btn" ) as RightButton;
-			_bgHeight *= CoreSettings.GLOBAL_SCALING;
 
-			// Starts hidden.
-			visible = false;
-			_hidden = true;
-			y = _bgHeight;
+			initializePanel();
 
-			woodBg.visible = false;
-
-			woodBg.mouseEnabled = woodBg.mouseChildren = false;
-			wire.mouseEnabled = wire.mouseChildren = false;
+			setBgType( NavigationBg.BG_TYPE_ROPE );
 
 			_subNavDictionary = new Dictionary();
 		}
@@ -91,9 +52,19 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		override protected function onSetup():void {
 			_leftButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
 			_rightButton.addEventListener( MouseEvent.CLICK, onButtonClicked );
-			_headerDefaultY = headerBg.y;
-			_headerTextDefaultOffset = headerBg.y - header.y;
 			visible = false;
+		}
+
+		// ---------------------------------------------------------------------
+		// Container/panel.
+		// ---------------------------------------------------------------------
+
+		private function initializePanel():void {
+			_panel = new NavigationPanel();
+			_panel.addChild( bg );
+			_panel.addChild( leftBtnSide );
+			_panel.addChild( rightBtnSide );
+			addChildAt( _panel, 0 );
 		}
 
 		// ---------------------------------------------------------------------
@@ -101,15 +72,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// ---------------------------------------------------------------------
 
 		public function updateSubNavigation( subNavType:Class ):void {
-
-			// TODO: review...
-			if( subNavType == null ) {
-				visible = false;
-				return;
-			}
-			else {
-				visible = true && !_forceHidden;
-			}
 
 			// Keep current nav when incoming class is the abstract one.
 			// TODO: review...
@@ -123,50 +85,36 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			disableCurrentSubNavigation();
 
 			// Defaults to rope bg.
-			setBgType( NavigationView.BG_TYPE_ROPE );
+			setBgType( NavigationBg.BG_TYPE_ROPE );
 
 			// Reset.
-			header.visible = false;
 			leftBtnSide.visible = false;
 			rightBtnSide.visible = false;
 
-			// Hide?
-			// TODO: review...
 			if( !subNavType ) {
-				visible = false;
+				header.setTitle( "" );
 				return;
-			}
-			else if( !_hidden ) {
-				visible = true && !_forceHidden;
 			}
 
 			// Try to restore cached view, or create a new one.
 			if( _subNavDictionary[ subNavType ] ) {
-
-				trace( this, "reusing cached sub navigation view" );
-
+//				trace( this, "reusing cached sub navigation view" );
 				_currentSubNavView = _subNavDictionary[ subNavType ];
-				_currentSubNavView.enable();
 			}
 			else {
-
-				trace( this, "creating new sub navigation view" );
-
+//				trace( this, "creating new sub navigation view" );
 				_currentSubNavView = new subNavType();
 				_currentSubNavView.setNavigation( this );
 				_subNavDictionary[ subNavType ] = _currentSubNavView;
-				addChildAt( _currentSubNavView, 2 );
-				_currentSubNavView.enable();
+				_panel.addChildAt( _currentSubNavView, 1 );
 			}
+			_currentSubNavView.enable();
 			_currentSubNavView.scrollerButtonClickedSignal.add( onSubNavigationScrollerButtonClicked );
 		}
 
 		public function disposeSubNavigation():void {
-
-			trace( this, "disposing sub-navigation views...." );
-
+//			trace( this, "disposing sub-navigation views...." );
 			disableCurrentSubNavigation();
-
 			var subNavigation:SubNavigationViewBase;
 
 			// Sweep the current state of the dictionary and identify views that are to be removed.
@@ -181,8 +129,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			for( var i:uint; i < _numSubNavsBeingDisposed; i++ ) {
 				subNavigation = viewsToRemove[ i ] as SubNavigationViewBase;
-				trace( "disposing sub nav: " + subNavigation );
-				removeChild( subNavigation );
+//				trace( "disposing sub nav: " + subNavigation );
+				_panel.removeChild( subNavigation );
 				// Note: removing each from display causes the disposal of the mediators, which is in charge of disposing the view itself
 			}
 		}
@@ -249,154 +197,25 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		// ---------------------------------------------------------------------
-		// Header.
-		// ---------------------------------------------------------------------
-
-		public function setHeader( value:String ):void {
-
-			TweenLite.killTweensOf( headerBg );
-			headerBg.y = _headerDefaultY + headerBg.height;
-			adjustHeaderTextPosition();
-
-			if( value == "" ) {
-				header.visible = headerBg.visible = false;
-				return;
-			}
-			else {
-				header.visible = headerBg.visible = true;
-			}
-
-			header.text = value.toUpperCase();
-
-			header.height = 1.25 * header.textHeight;
-			header.width = 15 + header.textWidth;
-			header.x = 1024 / 2 - header.width / 2;
-
-			headerBg.width = header.width + 50;
-			headerBg.x = 1024 / 2 - headerBg.width / 2 + 5;
-
-			animateHeaderIn();
-		}
-
-		private function animateHeaderIn():void {
-			TweenLite.to( headerBg, 0.5, { y: _headerDefaultY, ease: Strong.easeOut, onUpdate: adjustHeaderTextPosition, onComplete: animateHeaderOut } );
-		}
-
-		private function animateHeaderOut():void {
-			TweenLite.to( headerBg, 0.25, { delay: 2, y: _headerDefaultY + headerBg.height, ease: Strong.easeIn, onUpdate: adjustHeaderTextPosition, onComplete: onHeaderOutComplete } );
-		}
-
-		private function adjustHeaderTextPosition():void {
-			header.y = headerBg.y - _headerTextDefaultOffset;
-		}
-
-		private function onHeaderOutComplete():void {
-			header.visible = headerBg.visible = false;
-		}
-
-		// ---------------------------------------------------------------------
 		// Bg.
 		// ---------------------------------------------------------------------
 
 		public function setBgType( type:uint ):void {
-			if( type == NavigationView.BG_TYPE_ROPE ) {
-				woodBg.visible = false;
-				wire.visible = true;
-				_bgHeight = 140;
+			bg.setBgType( type );
+			if( type == NavigationBg.BG_TYPE_ROPE ) {
+				_panel.contentHeight = 140;
 			}
 			else {
-				woodBg.visible = true;
-				wire.visible = false;
-				_bgHeight = 256;
+				_panel.contentHeight = 256;
 			}
 		}
 
 		// ---------------------------------------------------------------------
-		// Adapt to canvas rect.
+		// Getters.
 		// ---------------------------------------------------------------------
 
-		public function adaptToCanvas( canvas:Rectangle ):void {
-
-			return;
-
-			var screenHeight:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1536 : 768;
-			var availableSpace:Number = screenHeight - canvas.height - canvas.y;
-			if( availableSpace > _bgHeight ) {
-				this.y = 0;
-			}
-			else {
-				this.y = _bgHeight - availableSpace;
-			}
-		}
-
-		// ---------------------------------------------------------------------
-		// Show/hide.
-		// ---------------------------------------------------------------------
-
-		public function toggle( time:Number = 0.5 ):void {
-			if( _showing ) hide( time );
-			else show( time );
-		}
-
-		public function hide( time:Number = 0.5 ):void {
-			if( _animating ) return;
-			trace( this, "hide" );
-			hidingSignal.dispatch();
-			_showing = false;
-			_animating = true;
-			TweenLite.killTweensOf( this );
-			TweenLite.to( this, time, { y: _bgHeight * CoreSettings.GLOBAL_SCALING, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease: Strong.easeOut } );
-			TweenLite.to( this, time, { y: _bgHeight * CoreSettings.GLOBAL_SCALING, onUpdate: onShowHideUpdate, onComplete: onHideAnimatedComplete, ease: Strong.easeOut } );
-		}
-
-		private function onHideAnimatedComplete():void {
-			hiddenSignal.dispatch();
-			visible = false;
-			_animating = false;
-			_hidden = true;
-			NavigationCache.isHidden = true;
-		}
-
-		public function show( time:Number = 0.5 ):void {
-			trace( this, "trying to show: animating: " + _animating + ", showing: " + _showing );
-			if( _animating ) return;
-			trace( this, "show" );
-			_showing = true;
-			_animating = true;
-			showingSignal.dispatch();
-			visible = true && !_forceHidden;
-			TweenLite.killTweensOf( this );
-			TweenLite.to( this, time, { y: 0, onUpdate: onShowHideUpdate, onComplete: onShowAnimatedComplete, ease: Strong.easeOut } );
-		}
-
-		private function onShowAnimatedComplete():void {
-			_animating = false;
-			shownSignal.dispatch();
-			_hidden = false;
-			NavigationCache.isHidden = false;
-		}
-
-		private function onShowHideUpdate():void {
-			showHideUpdateSignal.dispatch( y / _bgHeight );
-		}
-
-		// ---------------------------------------------------------------------
-		// Event handlers.
-		// ---------------------------------------------------------------------
-
-//		override protected function onAddedToStage():void {
-//			// TODO: remove on release
-//			stage.addEventListener( KeyboardEvent.KEY_DOWN, onStageKeyDown );
-//		}
-
-//		private function onStageKeyDown( event:KeyboardEvent ):void {
-//			if( event.keyCode == Keyboard.H ) {
-//				_forceHidden = !_forceHidden;
-//				visible = !_forceHidden;
-//			}
-//		}
-		public function get showing():Boolean {
-			return _showing;
+		public function get panel():NavigationPanel {
+			return _panel;
 		}
 	}
 }

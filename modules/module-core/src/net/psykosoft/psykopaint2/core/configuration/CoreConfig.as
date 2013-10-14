@@ -32,6 +32,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
+	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAddCommentFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAddCommentSucceededSignal;
@@ -279,6 +280,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyPasswordResetFailedSignal ).asSingleton();
 			_injector.map( NotifyUserPasswordReminderSentSignal ).asSingleton();
 			_injector.map( NotifyUserPasswordReminderFailedSignal ).asSingleton();
+			_injector.map( NavigationCanHideWithGesturesSignal ).asSingleton();
 
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();

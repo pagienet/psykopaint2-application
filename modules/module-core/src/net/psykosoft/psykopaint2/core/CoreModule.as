@@ -12,7 +12,9 @@ package net.psykosoft.psykopaint2.core
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestFrameUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 
 	import robotlegs.bender.framework.api.IInjector;
 
@@ -47,6 +49,7 @@ package net.psykosoft.psykopaint2.core
 			trace( this, "stage resize: " + stage.stageWidth + "x" + stage.stageHeight );
 			if( stage.stageWidth == 1024 || stage.stageWidth == 2048 ) {
 				stage.removeEventListener( Event.RESIZE, onStageResize );
+				trace( this, "parent: " + this.parent );
 				initialize();
 			}
 		}
@@ -75,9 +78,18 @@ package net.psykosoft.psykopaint2.core
 		}
 
 		private function onBootstrapComplete():void {
+
 			trace( this, "onBootstrapComplete()" );
+
 			_coreConfig.injector.getInstance( RequestNavigationStateChangeSignal ).dispatch( NavigationStateType.IDLE );
 			moduleReadySignal.dispatch();
+
+			// Standalone...
+			if( parent == stage ) {
+				_injector.getInstance( RequestHideSplashScreenSignal ).dispatch();
+				_injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME);
+				_injector.getInstance( RequestNavigationToggleSignal ).dispatch( 1);
+			}
 		}
 
 		public function startEnterFrame():void {

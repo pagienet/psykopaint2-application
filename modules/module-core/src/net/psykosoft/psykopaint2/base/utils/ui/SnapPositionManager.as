@@ -101,6 +101,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			_snapMotionSpeed = 0;
 
 			// Avoid wimp throws, still 0 is allowed for returns to last snap.
+			trace( this, "throw speed: " + speed );
 			if( speed != 0 ) {
 				var speedAbs:Number = Math.abs( speed );
 				if( speedAbs < _minimumThrowingSpeed ) {

@@ -3,11 +3,11 @@
     <id>com.psykosoft.psykopaint</id>
     <filename>Psykopaint2</filename>
     <name>Psykopaint2</name>
-    <versionNumber>0.7.20</versionNumber>
+    <versionNumber>0.7.23</versionNumber>
     <initialWindow>
         <content>SWF file name is set automatically at compile time</content>
         <aspectRatio>landscape</aspectRatio>
-        <autoOrients>true</autoOrients>
+        <autoOrients>false</autoOrients>
         <fullScreen>true</fullScreen>
         <renderMode>direct</renderMode>
 		<depthAndStencil>true</depthAndStencil>
@@ -21,6 +21,10 @@
             </array>
             <key>UIFileSharingEnabled</key>
             <true/>
+            <key>UIViewControllerBasedStatusBarAppearance</key>
+		    <false/>
+		    <key>UIStatusBarStyle</key>
+			<string>UIStatusBarStyleLightContent</string>
             ]]>
         </InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>

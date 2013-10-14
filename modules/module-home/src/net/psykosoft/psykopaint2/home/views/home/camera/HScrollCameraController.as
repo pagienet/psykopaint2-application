@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 	import flash.display.Stage;
 	import flash.geom.Vector3D;
 
-	import net.psykosoft.psykopaint2.base.utils.ui.ScrollInteractionManager;
+	import net.psykosoft.psykopaint2.base.utils.ui.HScrollInteractionManager;
 	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 
 	public class HScrollCameraController extends ObjectContainer3D
 	{
-		private var _interactionManager:ScrollInteractionManager;
+		private var _interactionManager:HScrollInteractionManager;
 		private var _positionManager:SnapPositionManager;
 		private var _camera:Camera3D;
 		private var _cameraTarget:Object3D;
@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.home.views.home.camera
 			super();
 
 			_positionManager = new SnapPositionManager();
-			_interactionManager = new ScrollInteractionManager( _positionManager );
+			_interactionManager = new HScrollInteractionManager( _positionManager );
 
 			_interactionManager.throwInputMultiplier = 2;
 			_interactionManager.useDetailedDelta = false;

@@ -13,9 +13,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.geom.ColorTransform;
 
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
-	import net.psykosoft.psykopaint2.core.views.navigation.NavigationView;
+	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	import org.osflash.signals.Signal;
@@ -158,7 +157,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 
-			setBgType( NavigationView.BG_TYPE_WOOD );
+			setBgType( NavigationBg.BG_TYPE_WOOD );
 		}
 		
 		protected function onSliderMouseDown( event:MouseEvent ):void

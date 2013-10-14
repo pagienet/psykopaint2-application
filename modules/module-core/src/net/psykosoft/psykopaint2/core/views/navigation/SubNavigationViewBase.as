@@ -31,6 +31,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function SubNavigationViewBase() {
 			super();
 
+			scalesToRetina = false;
+
 			scrollingStartedSignal = new Signal();
 			scrollingEndedSignal = new Signal();
 			scrollerButtonClickedSignal = new Signal();
@@ -90,7 +92,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// ---------------------------------------------------------------------
 
 		public function setHeader( value:String ):void {
-			_navigation.setHeader( value );
+			_navigation.header.setTitle( value );
 		}
 
 		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK ):void {
