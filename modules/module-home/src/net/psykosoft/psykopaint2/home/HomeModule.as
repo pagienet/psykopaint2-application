@@ -72,7 +72,6 @@ package net.psykosoft.psykopaint2.home
 		private function onCoreModuleReady():void {
 
 			init();
-			_coreModule.injector.getInstance(RequestHideSplashScreenSignal).dispatch();
 			_coreModule.startEnterFrame();
 			setupStandaloneModule();
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp, false, 0, true);
@@ -97,6 +96,7 @@ package net.psykosoft.psykopaint2.home
 
 		private function onHomeModuleSetUp() : void
 		{
+//			_coreModule.injector.getInstance(RequestHideSplashScreenSignal).dispatch();
 			// TODO: this probably needs to be moved to some activation command
 			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1);
 			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME);
