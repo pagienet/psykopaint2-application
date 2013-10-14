@@ -7,8 +7,8 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.book.views.models.BookGalleryData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.PsykoFonts;
-	import net.psykosoft.psykopaint2.book.views.book.data.FileLoader;
-	import net.psykosoft.psykopaint2.book.views.book.data.events.AssetLoadedEvent;
+	import net.psykosoft.psykopaint2.base.utils.io.QueuedFileLoader;
+	import net.psykosoft.psykopaint2.base.utils.io.events.AssetLoadedEvent;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 
 	import away3d.textures.BitmapTexture;
@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _insertNormalmap:BitmapData;
 		private var _shadow:BitmapData;
 		private var _assetsLoaded:uint;
- 		private var _fileLoader:FileLoader;
+ 		private var _fileLoader:QueuedFileLoader;
 		private var _nameTextField:TextField;
 		private var _hartCountTextField:TextField;
 		private var _commentsCountTextField:TextField;
@@ -64,7 +64,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		override protected function initDefaultAssets():void
 		{
 			_assetsLoaded = 0;
-			_fileLoader = new FileLoader();
+			_fileLoader = new QueuedFileLoader();
 
 			var url:String = "book-packaged/images/layouts/comment_NRM.png";
 			_fileLoader.loadImage(url, onImageLoadedComplete, null, {type:0});

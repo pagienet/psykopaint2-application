@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.book.views.book.data
 {
-	import net.psykosoft.psykopaint2.book.views.book.data.FileLoader;
-	import net.psykosoft.psykopaint2.book.views.book.data.events.AssetLoadedEvent;
+	import net.psykosoft.psykopaint2.base.utils.io.QueuedFileLoader;
+	import net.psykosoft.psykopaint2.base.utils.io.events.AssetLoadedEvent;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.psykopaint2.book.views.book.data.BookPageSize;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 		private var _shadowPictMap:BitmapData;
 		private var _pageNumber_txt:TextField;
 		private var _enviroSources:Vector.<BitmapData>;
-		private var _fileLoader:FileLoader;
+		private var _fileLoader:QueuedFileLoader;
 		private var _pageSprite:Sprite;
 		private var _paperBM:Bitmap;
  		private var _layoutBase:LayoutBase;
@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 		{
 			_requiredLoaded = 0;
 			_enviroRequiredLoaded = 0;
-			_fileLoader = new FileLoader();
+			_fileLoader = new QueuedFileLoader();
 			_pageSprite = new Sprite();
 
 			_enviroSources = new Vector.<BitmapData>(6, true);

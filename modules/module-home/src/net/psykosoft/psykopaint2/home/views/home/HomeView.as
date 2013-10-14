@@ -7,10 +7,12 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.lights.PointLight;
 
 	import flash.display3D.textures.Texture;
+	import flash.events.Event;
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.home.views.home.atelier.Atelier;
 	import net.psykosoft.psykopaint2.home.views.home.controllers.OrientationBasedController;
 
 	import org.osflash.signals.Signal;
@@ -29,6 +31,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _easel : Mesh;
 		private var _room : Mesh;
 		private var _gallery : Mesh;
+		private var _atelier : Atelier;
 
 		public function HomeView()
 		{
@@ -66,15 +69,27 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			initView();
 			initLight();
+			initModel();
+		}
 
-			// TODO: init and dispatch when loading is done
-			initLightController();
+		private function initModel() : void
+		{
+			_atelier = new Atelier();
+			_atelier.addEventListener(Event.COMPLETE, onAtelierComplete);
+			_atelier.init();
+		}
+
+		private function onAtelierComplete(event : Event) : void
+		{
+			_view.scene.addChild(_atelier);
+			_atelier.removeEventListener(Event.COMPLETE, onAtelierComplete);
+
 			sceneReadySignal.dispatch();
 		}
 
 		private function initSubViews() : void
 		{
-			// this is a bit shitty, but it'd suck to have to create an entire mediator type for Away3D components
+			// this is a bit shitty, but it'd suck to have to create an entire mediator system for Away3D components, so... we cheat
 			_easelView = new EaselView(_easel);
 			_roomView = new RoomView(_room);
 			_galleryView = new GalleryView(_gallery);
@@ -98,10 +113,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function initLight() : void
 		{
 			_light = new PointLight();
-		}
-
-		private function initLightController() : void
-		{
 			_lightController = new OrientationBasedController(_light);
 //			_lightController.centerPosition = _easel.scenePosition;
 			_lightController.neutralOffset = new Vector3D(0, 0, -1000);
@@ -110,12 +121,16 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function renderScene(target : Texture) : void
 		{
 			_lightController.update();
+			_view.render(target);
 		}
 
 		private function destroyScene() : void
 		{
+			_view.scene.removeChild(_atelier);
+			_atelier.dispose();
 			_light.dispose();
 			_view.dispose();
+			_atelier = null;
 			_light = null;
 			_view = null;
 			_lightController = null;
