@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		public var notifyEaselTappedSignal:NotifyEaselTappedSignal;
 
 		private var _selectedIndex:int;
+		private var _easelContainsSurface:Boolean;
 
 		override public function initialize():void {
 
@@ -53,7 +54,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
-			requestEaselPaintingUpdateSignal.dispatch( null, false, false );
+			_easelContainsSurface = false;
+			loadSurfaceByIndex( 0 );
 			notifyEaselTappedSignal.add( onEaselTapped );
 		}
 
@@ -82,7 +84,9 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		}
 
 		private function onEaselTapped():void {
-			continueToColorPaint();
+			if( _easelContainsSurface ) {
+				continueToColorPaint();
+			}
 		}
 
 		private function loadSurfaceByIndex( index:uint ):void {
@@ -93,7 +97,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		}
 
 		private function continueToColorPaint():void {
-
 			notifySurfaceLoadedSignal.addOnce( onSurfaceLoaded );
 			requestLoadSurfaceSignal.dispatch( _selectedIndex );
 		}
@@ -114,6 +117,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			vo.normalSpecularOriginal = surface.normalSpecular;
 
 			requestOpenPaintingDataVOSignal.dispatch(vo);
+
+			_easelContainsSurface = true;
 		}
 	}
 }

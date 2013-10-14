@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
+	import net.psykosoft.psykopaint2.core.models.EaselModel;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
@@ -103,6 +104,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var notifyEaselTappedSignal:NotifyEaselTappedSignal;
+
+		[Inject]
+		public var easelModel:EaselModel;
 
 		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
 		private var _lightDistance : Number = 1000;
@@ -220,6 +224,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		}
 
 		private function onEaselUpdateRequest( paintingVO:PaintingInfoVO, animateIn:Boolean, disposeWhenDone:Boolean ):void {
+			easelModel.currentVO = paintingVO;
 			view.paintingManager.easel.setContent( paintingVO, animateIn, disposeWhenDone );
 		}
 

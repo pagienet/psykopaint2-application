@@ -56,10 +56,6 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			registerView( view );
 			super.initialize();
 
-			// Clear easel if entering photo paint.
-			if( PaintModeModel.activeMode == PaintMode.PHOTO_MODE ) {
-				requestEaselUpdateSignal.dispatch( null, false, false );
-			}
 		}
 
 		override public function destroy():void {
