@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 {
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.models.EaselModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
@@ -41,6 +42,9 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		[Inject]
 		public var notifyEaselTappedSignal:NotifyEaselTappedSignal;
 
+		[Inject]
+		public var easelModel:EaselModel;
+
 		override public function initialize():void {
 
 			// Init.
@@ -59,6 +63,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
 			notifyEaselTappedSignal.add( onEaselTapped );
+			ensureLatestPaintingIsOnEasel(); // TODO: check first if there is no need to do this?
 		}
 
 		override protected function onViewDisabled():void {
@@ -142,6 +147,18 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
 					trace( this, "clicked on painting: " + vo.id );
 					requestEaselUpdateSignal.dispatch( vo, true, null );
+				}
+			}
+		}
+
+		private function ensureLatestPaintingIsOnEasel():void {
+			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
+			if( data && data.length > 0 ) {
+				var infoVO:PaintingInfoVO = data[ 0 ];
+				if( infoVO ) {
+					if( !easelModel.currentVO || easelModel.currentVO.id != infoVO.id ) {
+						requestEaselUpdateSignal.dispatch( infoVO, true, false );
+					}
 				}
 			}
 		}

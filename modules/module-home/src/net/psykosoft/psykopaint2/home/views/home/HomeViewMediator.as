@@ -65,22 +65,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private var _currentNavigationState : String;
 
-<<<<<<< HEAD
-		override public function initialize() : void
-		{
-=======
 		[Inject]
 		public var notifyEaselTappedSignal:NotifyEaselTappedSignal;
 
-		private var targetPos : Vector3D = new Vector3D(0, 0, -1);
-		private var _lightDistance : Number = 1000;
-		private var _dockedAtSnapIndex:int = -1;
-		private var _allowPanning:Boolean = true;
-		private var _lastAllowPanningBeforeNegation:int;	// 1 = allow, -1 not allow, 0 whatever it was before last not allow-
-
-		override public function initialize():void {
->>>>>>> removed continue button from NewPaitingSubNav and PickSurfaceSubNav - action is now triggered by clicking on easel
-
+		override public function initialize() : void
 			// Init.
 			registerView(view);
 			super.initialize();
