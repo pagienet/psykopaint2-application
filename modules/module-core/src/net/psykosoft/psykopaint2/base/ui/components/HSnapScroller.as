@@ -125,6 +125,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 //			trace( this, "evaluateInteractionStart()" );
 			if( !scrollingAllowed ) return;
 			if( _container.numChildren == 0 ) return;
+			if( !thereIsEnoughContentToScroll() ) return;
 			if( !mouseHitsInteractiveArea() ) return;
 			_interactionManager.startInteraction();
 			startEnterframe();
@@ -280,6 +281,11 @@ package net.psykosoft.psykopaint2.base.ui.components
 			if( stage.mouseY > bottomRight.y ) return false;
 
 			return true;
+		}
+
+		private function thereIsEnoughContentToScroll():Boolean {
+			var contentWidth:Number = _maxContentX - _minContentX;
+			return contentWidth > _visibleWidth;
 		}
 
 		// ---------------------------------------------------------------------
