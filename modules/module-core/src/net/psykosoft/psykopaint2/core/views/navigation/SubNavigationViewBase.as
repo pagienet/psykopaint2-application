@@ -291,11 +291,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		private function onScrollerItemRendererAdded( renderer:DisplayObject ):void {
-			renderer.addEventListener( MouseEvent.MOUSE_DOWN, onButtonClicked );
+			renderer.addEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
 		}
 
 		private function onScrollerItemRendererRemoved( renderer:DisplayObject ):void {
-			renderer.removeEventListener( MouseEvent.MOUSE_DOWN, onButtonClicked );
+			renderer.removeEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
 		}
 	}
 }

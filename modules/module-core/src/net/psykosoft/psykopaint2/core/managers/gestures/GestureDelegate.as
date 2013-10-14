@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 	import org.gestouch.core.Touch;
 	import org.gestouch.gestures.Gesture;
 	import org.gestouch.gestures.PanGesture;
+	import org.gestouch.gestures.TapGesture;
 
 	public class GestureDelegate implements IGestureDelegate
 	{
@@ -22,14 +23,19 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 
 		public function gesturesShouldRecognizeSimultaneously( gesture:Gesture, otherGesture:Gesture ):Boolean {
-			var answer:Boolean = true;
+			var allow:Boolean = true;
 
 			// Avoids horizontal and vertical pan gestures acting simultaneously.
 			if( gesture is PanGesture && otherGesture is PanGesture ) {
-				answer = false;
+				allow = false;
 			}
 
-			return answer;
+			// Avoids taps and pan gestures acting simultaneously.
+			if( gesture is PanGesture && otherGesture is TapGesture ) {
+				allow = false;
+			}
+
+			return allow;
 		}
 	}
 }

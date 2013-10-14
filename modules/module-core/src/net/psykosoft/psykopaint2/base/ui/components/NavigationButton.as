@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
@@ -23,6 +24,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _enabled:Boolean;
 		protected var _disableMouseInteractivityWhenSelected:Boolean = true;
 
+		private var _stage:Stage;
+
 		public var id:String;
 
 		public function NavigationButton() {
@@ -35,8 +38,10 @@ package net.psykosoft.psykopaint2.base.ui.components
 //			trace( this, "dispose()" );
 
 			if( hasEventListener( MouseEvent.MOUSE_UP ) ) {
-				stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+				_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			}
+
+			_stage = null;
 
 			removeEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
 
@@ -147,6 +152,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		// ---------------------------------------------------------------------
 
 		private function onAddedToStage( event:Event ):void {
+			_stage = stage;
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			updateSelected();
 			addEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
