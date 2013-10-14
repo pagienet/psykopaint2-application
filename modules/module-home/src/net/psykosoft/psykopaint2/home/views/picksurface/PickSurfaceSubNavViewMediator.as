@@ -8,8 +8,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
@@ -25,9 +25,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 
 		[Inject]
 		public var requestLoadSurfacePreviewSignal:RequestLoadSurfacePreviewSignal;
-
-		[Inject]
-		public var notifySurfacePreviewLoadedSignal:NotifySurfacePreviewLoadedSignal;
 
 		[Inject]
 		public var requestLoadSurfaceSignal:RequestLoadSurfaceSignal;
@@ -49,19 +46,10 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			registerView( view );
 			super.initialize();
 			_selectedIndex = -1;
-
-			// From app.
-			notifySurfacePreviewLoadedSignal.add( onSurfacePreviewLoaded );
-		}
-
-		override public function destroy():void {
-			notifySurfacePreviewLoadedSignal.remove( onSurfacePreviewLoaded );
-			super.destroy();
 		}
 
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
-			view.showRightButton( false );
 			requestEaselPaintingUpdateSignal.dispatch( null, false, null );
 			notifyEaselTappedSignal.add( onEaselTapped );
 		}
@@ -98,10 +86,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 			view.showRightButton( false );
 			requestLoadSurfacePreviewSignal.dispatch( index );
 			_selectedIndex = index;
-		}
-
-		private function onSurfacePreviewLoaded():void {
-			view.showRightButton( true );
 		}
 
 		private function continueToColorPaint():void {
