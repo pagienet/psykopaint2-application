@@ -163,7 +163,12 @@ package net.psykosoft.psykopaint2.home.views.home
 		// -----------------------
 
 		private function onIntroRequested():void {
-			view.playIntroAnimation();
+			view.playIntroAnimation(onIntroComplete);
+		}
+
+		private function onIntroComplete() : void
+		{
+
 		}
 
 		/*private function onNavigationToggled( shown:Boolean ):void {

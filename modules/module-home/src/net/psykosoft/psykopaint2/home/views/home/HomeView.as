@@ -1,10 +1,13 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
-	import away3d.cameras.lenses.PerspectiveLens;
+	import away3d.cameras.Camera3D;
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.lights.PointLight;
+
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
 
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
@@ -32,6 +35,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _room : Mesh;
 		private var _gallery : Mesh;
 		private var _atelier : Atelier;
+		private var _camera : Camera3D;
 
 		public function HomeView()
 		{
@@ -48,9 +52,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			_stage3dProxy = value;
 		}
 
-		public function playIntroAnimation() : void
+		public function playIntroAnimation(onComplete : Function) : void
 		{
-
+			TweenLite.to(	_camera, 1.5, { 	z:450,
+				ease: Strong.easeInOut,
+				onComplete:onComplete
+			} );
 		}
 
 		override protected function onEnabled() : void
@@ -68,6 +75,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function initScene() : void
 		{
 			initView();
+			initCamera();
 			initLight();
 			initModel();
 		}
@@ -107,7 +115,19 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.height = stage.stageHeight;
 			_view.camera.lens.far = 50000;
 			addChild( _view );
-			PerspectiveLens( _view.camera.lens ).fieldOfView = 70;
+//			PerspectiveLens( _view.camera.lens ).fieldOfView = 70;
+		}
+
+		private function initCamera() : void
+		{
+			_camera = _view.camera;
+			_camera.lens.near = 10;
+			_camera.lens.far = 5000;
+
+			_camera.x =  -266.82;
+			_camera.y = -1.14 ;
+			_camera.z = -146.5;
+			_camera.lookAt(new Vector3D(-266.82, -1.14, -353.10));
 		}
 
 		private function initLight() : void
