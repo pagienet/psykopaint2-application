@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
+	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class SelectBrushSubNavView extends SubNavigationViewBase
@@ -33,6 +34,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			else {
 				setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.ALPHA );
 			}
+
+			setBgType( NavigationBg.BG_TYPE_WOOD_LOW );
 		}
 
 		public function setColorButtonHex( hex:uint ):void {

@@ -120,7 +120,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		// type - NavigationView.BG_WOOD, etc.
-		public function setBgType( type:uint ):void {
+		public function setBgType( type:String ):void {
 			_navigation.setBgType( type );
 		}
 

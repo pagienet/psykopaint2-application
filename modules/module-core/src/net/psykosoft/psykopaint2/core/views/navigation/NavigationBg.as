@@ -1,31 +1,23 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
-	import flash.display.Sprite;
+	import flash.display.MovieClip;
 
-	public class NavigationBg extends Sprite
+	public class NavigationBg extends MovieClip
 	{
-		// Declared in Flash.
-		public var wire:Sprite;
-		public var wood:Sprite;
-
-		public static const BG_TYPE_ROPE:uint = 0;
-		public static const BG_TYPE_WOOD:uint = 1;
+		// These are frame label names, make sure it corresponds in the FLA.
+		public static const BG_TYPE_ROPE:String = "rope";
+		public static const BG_TYPE_WOOD:String = "wood";
+		public static const BG_TYPE_WOOD_LOW:String = "wood1";
 
 		public function NavigationBg() {
 			super();
 			mouseEnabled = mouseChildren = false;
+			stop();
 		}
 
-		public function setBgType( type:uint ):void {
-			if( type == NavigationBg.BG_TYPE_ROPE ) {
-				wood.visible = false;
-				wire.visible = true;
-			}
-			else {
-				wood.visible = true;
-				wire.visible = false;
-			}
+		public function setBgType( type:String ):void {
+			gotoAndStop( type );
 		}
 	}
 }

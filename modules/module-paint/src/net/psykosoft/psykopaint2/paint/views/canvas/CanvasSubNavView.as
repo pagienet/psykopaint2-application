@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class CanvasSubNavView extends SubNavigationViewBase
@@ -26,6 +27,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			setHeader( "Edit Painting" );
 			setLeftButton( ID_HOME, ID_HOME, ButtonIconType.HOME );
 			setRightButton( ID_PICK_A_BRUSH, ID_PICK_A_BRUSH, ButtonIconType.BRUSH );
+			setBgType( NavigationBg.BG_TYPE_WOOD_LOW );
 		}
 
 		override protected function onSetup():void {
