@@ -106,7 +106,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		private const ACCEPT_TAP_GESTURES_FOR_SHOW_HIDE:Boolean = false;
-		private const ALWAYS_SHOW_HIDE:Boolean = true;
+		private const ALWAYS_SHOW_HIDE:Boolean = false;
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
 

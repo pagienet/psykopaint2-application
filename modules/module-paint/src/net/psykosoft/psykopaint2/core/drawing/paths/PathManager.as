@@ -91,7 +91,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		}
 
 		
-		
 		private var _view : DisplayObject;
 		private var _active : Boolean;
 		private var _pathEngine : IPathEngine;
@@ -102,7 +101,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var _brushAngleRange:Number = Math.PI;
 		public var canvasModel:CanvasModel;
 
-		
 		private var _startCallbacksSent : Boolean;
 		
 		private var _canvasScaleX:Number;
@@ -124,11 +122,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var renderer:CanvasRenderer;
 		private const _applyArray:Array = [];
 			
-		//private var twoFingerGestureTimeout:int
-		//private var singleTouchBeginEvent:TouchEvent;
 		private var _strokeInProgress:Boolean;
 		private var _key1isDown:Boolean;
 		private var _key2isDown:Boolean;
+		
+		private var startStageX:Number;
+		private var startStageY:Number;
+		
 		
 		public function PathManager( type:int )
 		{
@@ -141,26 +141,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			if (!CoreSettings.RUNNING_ON_iPAD ) recordedData = new Vector.<Number>();
 		}
 		
-		public function set minSamplesPerStep( value:int ):void
-		{
-			_pathEngine.minSamplesPerStep.intValue = value;
-		}
-		
-		public function set outputStepSize( value:Number ):void
-		{
-			_pathEngine.outputStepSize.numberValue = value;
-		}
-		
-		public function set brushAngleRange( value:Number ):void
-		{
-			_brushAngleRange = value;
-		}
-		
-		public function get brushAngleRange():Number
-		{
-			return _brushAngleRange;
-		}
-
 		public function setCallbacks( callbackObject : Object, onPathPoints : Function, onPathStart : Function = null, onPathEnd : Function = null, onPickColor : Function = null) : void
 		{
 			_callbacks = new PathManagerCallbackInfo(callbackObject, onPathPoints, onPathStart, onPathEnd, onPickColor );
@@ -213,8 +193,191 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			
 		}
 
+		
+		protected function onTouchBegin(event : TouchEvent) : void
+		{
+			//Navbar touched?
+			if (!(event.target is Stage) && !(event.target is CanvasView)) return;
+			
+			if ( _touchID == -1 && event.stageY > CoreSettings.STAGE_HEIGHT - 100 )
+			{
+				recordedData.length = 0;
+				recordedData.push(event.stageX, event.stageY);
+				_view.stage.addEventListener(TouchEvent.TOUCH_MOVE, onPreliminaryTouchMove);
+				_view.stage.addEventListener(TouchEvent.TOUCH_END, onPreliminaryTouchEnd);
+				_touchID = event.touchPointID;
+			} else if (_touchID == -1) {
+				_strokeInProgress = true;
+				_touchID = event.touchPointID;
+				onSingleTouchBegin(event);
+			}
+		}
+		
+		protected function onSingleTouchBegin( event : TouchEvent ) : void
+		{
+			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+			
+			_view.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			_view.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			
+			onSampleStart(event.stageX, event.stageY);
+		
+		}
+		
+		protected function onTouchMove(event : TouchEvent) : void
+		{
+			if (event.touchPointID == _touchID)
+			{
+				if ( gestureStopTimeout == -1 && GestureManager.gesturesEnabled ) gestureStopTimeout = setTimeout(enableGestureRecognition,GESTURE_RECOGNITION_TIME,false);
+				onSamplePoint(event.stageX, event.stageY);
+			}
+		}
+		
+		
+		protected function onTouchEnd(event : TouchEvent) : void
+		{
+			if ( event.touchPointID == _touchID ) 
+			{
+				enableGestureRecognition(true);
+				_strokeInProgress = false;
+				onSampleEnd(event.stageX, event.stageY);
+				_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+				_view.stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+				_touchID = -1;
+			}
+		}
+
+		private function onPreliminaryTouchMove(event : TouchEvent) : void
+		{
+			if (event.touchPointID == _touchID)
+			{
+				recordedData.push(event.stageX, event.stageY);
+				if ( recordedData.length == 10 )
+				{
+					if ( Math.abs(recordedData[0]-recordedData[8]) > recordedData[1] - recordedData[9] )
+					{
+						_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+						_view.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+						_view.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+						
+						_strokeInProgress = true;
+						onSampleStart(recordedData[0], recordedData[1]);
+						for ( var i:int = 2; i < 10; i+=2 )
+						{
+							onSamplePoint(recordedData[i], recordedData[i+1]);
+						}
+					}
+					_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onPreliminaryTouchMove);
+					_view.stage.removeEventListener(TouchEvent.TOUCH_END, onPreliminaryTouchEnd);
+				}
+			}
+		}
+		
+		protected function onPreliminaryTouchEnd(event : TouchEvent) : void
+		{
+			if (event.touchPointID == _touchID)
+			{
+				_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onPreliminaryTouchMove);
+				_view.stage.removeEventListener(TouchEvent.TOUCH_END, onPreliminaryTouchEnd);
+			}
+		}
+		
+		
+		
+		// for purposes of le debug
+		protected function onMouseDown(event : MouseEvent) : void
+		{
+			
+			if (!(event.target is Stage) && !(event.target is CanvasView)) return;
+			
+			if ( event.stageY > CoreSettings.STAGE_HEIGHT - 100 )
+			{
+				recordedData.length = 0;
+				recordedData.push(event.stageX, event.stageY);
+				_view.stage.addEventListener(MouseEvent.MOUSE_MOVE, onPreliminaryMouseMove);
+				_view.stage.addEventListener(MouseEvent.MOUSE_UP, onPreliminaryMouseUp);
+			} else {
+			
+				_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+				_strokeInProgress = true;
+				
+				//TEMPORARY RECORDING FOR TESTS:
+				playbackActive = false;
+				singleStepPlaybackActive = false;
+				playbackOffset = getTimer();
+				
+				if ( !CoreSettings.RUNNING_ON_iPAD )
+				{
+					recordedData.length = 0;
+					recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
+				} 
+				
+				
+				_view.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+				_view.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				
+				onSampleStart(event.stageX, event.stageY);
+			}
+		}
+		
+		private function onPreliminaryMouseMove(event : MouseEvent) : void
+		{
+			recordedData.push(event.stageX, event.stageY);
+			if ( recordedData.length == 10 )
+			{
+				if ( Math.abs(recordedData[0]-recordedData[8]) > recordedData[1] - recordedData[9] )
+				{
+					_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+					_view.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+					_view.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+					
+					_strokeInProgress = true;
+					onSampleStart(recordedData[0], recordedData[1]);
+					for ( var i:int = 2; i < 10; i+=2 )
+					{
+						onSamplePoint(recordedData[i], recordedData[i+1]);
+					}
+				}
+				_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onPreliminaryMouseMove);
+				_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onPreliminaryMouseUp);
+			}
+		}
+		
+		protected function onPreliminaryMouseUp(event : MouseEvent) : void
+		{
+			_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onPreliminaryMouseMove);
+			_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onPreliminaryMouseUp);
+		}
+		
+		
+		private function onMouseMove(event : MouseEvent) : void
+		{
+			if (!CoreSettings.RUNNING_ON_iPAD && !playbackActive )
+			{
+				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
+			}
+			if ( gestureStopTimeout == -1 && GestureManager.gesturesEnabled ) gestureStopTimeout = setTimeout(enableGestureRecognition,GESTURE_RECOGNITION_TIME,false);
+			var stage : Stage = event.target as Stage;
+			
+			onSamplePoint(event.stageX, event.stageY);
+		}
+		
+		protected function onMouseUp(event : MouseEvent) : void
+		{
+			_strokeInProgress = false;
+			enableGestureRecognition(true);
+			if ( !CoreSettings.RUNNING_ON_iPAD && !playbackActive )
+			{
+				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
+			}
+			onSampleEnd(event.stageX, event.stageY);
+			_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		}
+		
 		protected function onEnterFrame(event : Event) : void
 		{
+			// Playback of recorded moves
 			if ( playbackActive && event != null )
 			{
 				if ( playbackIndex == 0 )
@@ -251,121 +414,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				sendEndCallbacks();
 			}
 			
-		}
-
-		protected function onTouchBegin(event : TouchEvent) : void
-		{
-			
-			//Navbar touched?
-			//var stage : Stage = event.target as Stage;
-			if (!(event.target is Stage) && !(event.target is CanvasView)) return;
-			
-			if (_touchID == -1) {
-				_strokeInProgress = true;
-				_touchID = event.touchPointID;
-				/*
-				singleTouchBeginEvent = event;
-				twoFingerGestureTimeout = setTimeout( onSingleTouchBegin, 40 );
-				*/
-				onSingleTouchBegin(event);
-			}
-			/*
-			else {
-				clearTimeout(twoFingerGestureTimeout);
-				_strokeInProgress = false;
-				_touchID = -1;
-			}
-			*/
-		}
-		
-		protected function onSingleTouchBegin( event : TouchEvent ) : void
-		{
-			//clearTimeout(twoFingerGestureTimeout);
-			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
-			
-			_view.stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-			_view.stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-			
-			onSampleStart(event.stageX, event.stageY);
-		
-		}
-		
-		// for purposes of le debug
-		protected function onMouseDown(event : MouseEvent) : void
-		{
-			
-			var stage : Stage = event.target as Stage;
-			if (!stage) {
-				//DisplayObject(event.target).transform.colorTransform = new ColorTransform(-1,-1,-1,1,255,255,255);
-				return;
-			}
-			
-			_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
-			_strokeInProgress = true;
-			
-			//TEMPORARY RECORDING FOR TESTS:
-			playbackActive = false;
-			singleStepPlaybackActive = false;
-			playbackOffset = getTimer();
-			
-			if ( !CoreSettings.RUNNING_ON_iPAD )
-			{
-				recordedData.length = 0;
-				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
-			} 
-			
-			onSampleStart(event.stageX, event.stageY);
-			_view.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			_view.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		}
-		
-		protected function onTouchEnd(event : TouchEvent) : void
-		{
-			if ( event.touchPointID == _touchID ) 
-			{
-				//clearTimeout(twoFingerGestureTimeout);
-				enableGestureRecognition(true);
-				_strokeInProgress = false;
-				onSampleEnd(event.stageX, event.stageY);
-				_view.stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-				_view.stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-				_touchID = -1;
-			}
-		}
-
-		protected function onMouseUp(event : MouseEvent) : void
-		{
-			_strokeInProgress = false;
-			enableGestureRecognition(true);
-			if ( !CoreSettings.RUNNING_ON_iPAD && !playbackActive )
-			{
-				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
-			}
-			onSampleEnd(event.stageX, event.stageY);
-			_view.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			_view.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		}
-		
-		protected function onTouchMove(event : TouchEvent) : void
-		{
-			if (event.touchPointID == _touchID)
-			{
-				//onSingleTouchBegin();
-				if ( gestureStopTimeout == -1 && GestureManager.gesturesEnabled ) gestureStopTimeout = setTimeout(enableGestureRecognition,GESTURE_RECOGNITION_TIME,false);
-				onSamplePoint(event.stageX, event.stageY);
-			}
-		}
-
-		private function onMouseMove(event : MouseEvent) : void
-		{
-			if (!CoreSettings.RUNNING_ON_iPAD && !playbackActive )
-			{
-				recordedData.push(getTimer() - playbackOffset,event.stageX, event.stageY);
-			}
-			if ( gestureStopTimeout == -1 && GestureManager.gesturesEnabled ) gestureStopTimeout = setTimeout(enableGestureRecognition,GESTURE_RECOGNITION_TIME,false);
-			var stage : Stage = event.target as Stage;
-			
-			onSamplePoint(event.stageX, event.stageY);
 		}
 
 		protected function onSampleStart(stageX : Number, stageY : Number) : void
@@ -421,15 +469,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			{
 				sendEndCallbacks();
 			} 
-			
-			
 		}
 		
 		protected function update(forceUpdate : Boolean = false) : void
 		{
 			_pathEngine.update( _accumulatedResults, forceUpdate )
-			//_accumulatedResults = _accumulatedResults.concat( );
-			//updateDecorators();
 		}
 		
 		protected function updateDecorators() : void
@@ -486,78 +530,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				_view.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp );
 			}
 			
-		}
-		
-		protected function onKeyDown(event:KeyboardEvent):void
-		{
-			if ( event.keyCode == Keyboard.P )
-			{
-				if ( recordedData.length > 8 )
-				{
-					playBackOffsetX = 0;
-					playBackOffsetY = 0;
-					
-					playbackIndex = 0;
-					playbackOffset = getTimer();
-					playbackActive = true;
-					_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
-				}
-			} else if ( event.keyCode == Keyboard.O )
-			{
-				if ( recordedData.length > 8 )
-				{
-					playBackOffsetX = _view.stage.mouseX - recordedData[1];
-					playBackOffsetY = _view.stage.mouseY - recordedData[2];
-					
-					playbackIndex = 0;
-					playbackOffset = getTimer();
-					playbackActive = true;
-					_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
-				}
-			}else if ( event.keyCode == Keyboard.RIGHT)
-			{
-				playbackActive = false;
-				_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
-				if ( recordedData.length > 8 )
-				{
-					if ( !singleStepPlaybackActive )
-					{
-						playBackOffsetX = 0;
-						playBackOffsetY = 0;
-						playbackIndex = 0;
-						singleStepPlaybackActive = true;
-						onSampleStart(recordedData[playbackIndex+1] ,recordedData[playbackIndex+2]);
-						
-					} else {
-						if ( playbackIndex == recordedData.length - 3 )
-						{
-							onSampleEnd(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
-							singleStepPlaybackActive = false;
-						} else {
-							onSamplePoint(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
-						}
-					}
-					playbackIndex += 3;
-				}
-			} else if ( event.keyCode == Keyboard.NUMBER_1)
-			{
-				_key1isDown  = true;
-			} else if ( event.keyCode == Keyboard.NUMBER_2)
-			{
-				_key2isDown  = true;
-			}
-			
-		}
-		
-		protected function onKeyUp(event:KeyboardEvent):void
-		{
-			if ( event.keyCode == Keyboard.NUMBER_1)
-			{
-				_key1isDown  = false;
-			} else if ( event.keyCode == Keyboard.NUMBER_2)
-			{
-				_key2isDown  = false;
-			}
 		}
 		
 		public function deactivate() : void
@@ -618,18 +590,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					delete message.parameter[j];
 				}
 			}
-		}
-		
-		public function removePointDecoratorAt(index:int):void
-		{
-			_pointDecorators.splice(index,1);
-			
-		}
-		
-		public function movePointDecorator(oldIndex:int, newIndex:int):void
-		{
-			var decorator:IPointDecorator = _pointDecorators.splice(oldIndex,1)[0];
-			_pointDecorators.splice(newIndex,0,decorator);
 		}
 		
 		public function hasActiveDecorators():Boolean
@@ -714,6 +674,26 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			GestureManager.gesturesEnabled = enable;
 			gestureStopTimeout = -1;
 		}
+		
+		public function set minSamplesPerStep( value:int ):void
+		{
+			_pathEngine.minSamplesPerStep.intValue = value;
+		}
+		
+		public function set outputStepSize( value:Number ):void
+		{
+			_pathEngine.outputStepSize.numberValue = value;
+		}
+		
+		public function set brushAngleRange( value:Number ):void
+		{
+			_brushAngleRange = value;
+		}
+		
+		public function get brushAngleRange():Number
+		{
+			return _brushAngleRange;
+		}
 
 		public function get canvasScaleX():Number
 		{
@@ -738,6 +718,102 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public function get canvasMatrix():Matrix
 		{
 			return _canvasMatrix;
+		}
+		
+		/*****************************************************
+		 * 
+		 * Desktop Debugging Methods
+		 * 
+		 *****************************************************/
+		
+		protected function onKeyDown(event:KeyboardEvent):void
+		{
+			if ( event.keyCode == Keyboard.P )
+			{
+				if ( recordedData.length > 8 )
+				{
+					playBackOffsetX = 0;
+					playBackOffsetY = 0;
+					
+					playbackIndex = 0;
+					playbackOffset = getTimer();
+					playbackActive = true;
+					_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+				}
+			} else if ( event.keyCode == Keyboard.O )
+			{
+				if ( recordedData.length > 8 )
+				{
+					playBackOffsetX = _view.stage.mouseX - recordedData[1];
+					playBackOffsetY = _view.stage.mouseY - recordedData[2];
+					
+					playbackIndex = 0;
+					playbackOffset = getTimer();
+					playbackActive = true;
+					_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+				}
+			}else if ( event.keyCode == Keyboard.RIGHT)
+			{
+				playbackActive = false;
+				_view.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 10000 );
+				if ( recordedData.length > 8 )
+				{
+					if ( !singleStepPlaybackActive )
+					{
+						playBackOffsetX = 0;
+						playBackOffsetY = 0;
+						playbackIndex = 0;
+						singleStepPlaybackActive = true;
+						onSampleStart(recordedData[playbackIndex+1] ,recordedData[playbackIndex+2]);
+						
+					} else {
+						if ( playbackIndex == recordedData.length - 3 )
+						{
+							onSampleEnd(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
+							singleStepPlaybackActive = false;
+						} else {
+							onSamplePoint(recordedData[playbackIndex+1],recordedData[playbackIndex+2]);
+						}
+					}
+					playbackIndex += 3;
+				}
+			} else if ( event.keyCode == Keyboard.NUMBER_1)
+			{
+				_key1isDown  = true;
+			} else if ( event.keyCode == Keyboard.NUMBER_2)
+			{
+				_key2isDown  = true;
+			}
+			
+		}
+		
+		protected function onKeyUp(event:KeyboardEvent):void
+		{
+			if ( event.keyCode == Keyboard.NUMBER_1)
+			{
+				_key1isDown  = false;
+			} else if ( event.keyCode == Keyboard.NUMBER_2)
+			{
+				_key2isDown  = false;
+			}
+		}
+		
+		/*****************************************************
+		 * 
+		 * Remote Admin Methods
+		 * 
+		 *****************************************************/
+		
+		public function removePointDecoratorAt(index:int):void
+		{
+			_pointDecorators.splice(index,1);
+			
+		}
+		
+		public function movePointDecorator(oldIndex:int, newIndex:int):void
+		{
+			var decorator:IPointDecorator = _pointDecorators.splice(oldIndex,1)[0];
+			_pointDecorators.splice(newIndex,0,decorator);
 		}
 	}
 }
