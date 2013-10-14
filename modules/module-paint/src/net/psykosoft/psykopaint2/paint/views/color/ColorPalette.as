@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var colorOverlay9:Sprite;
 		public var colorOverlay10:Sprite;
 		public var colorOverlay11:Sprite;
-		public var pipette:MovieClip;
+		public var pipette:Pipette;
 		
 		public const palettes:Array = [[0x000000,0x062750,0x04396c,0x01315a,0x00353b,0x026d01,
 										0x452204,0x7a1023,0xa91606,0xd94300,0xbd9c01,0xdedddb]];
@@ -73,7 +73,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 			showPalette(0);
 			selectedIndex = 0;
 			palette_red = palette_green= palette_blue = 0;
-			ct = new ColorTransform()
+			ct = new ColorTransform();
+			pipette = new Pipette();
+			addChild(pipette);
+				
 			pipette.gotoAndStop(1);
 			pipette.visible = false;
 		}
