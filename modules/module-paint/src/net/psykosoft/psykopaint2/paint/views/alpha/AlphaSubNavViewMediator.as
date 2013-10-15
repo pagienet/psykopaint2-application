@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.alpha
 {
 
+	import flash.display.Stage;
 	import flash.events.MouseEvent;
 
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
@@ -19,6 +20,8 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 		[Inject]
 		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
 
+		private var _stage:Stage;
+
 		override public function initialize():void {
 
 			// Init.
@@ -32,14 +35,16 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
+			_stage = view.stage;
 		}
 
 		override public function destroy():void {
 			super.destroy();
 			view.viewWantsToChangeAlphaSignal.remove( onViewWantsToChangeAlpha );
 			view.removeEventListener( MouseEvent.MOUSE_DOWN, onViewMouseDown );
-			if( view.stage && view.stage.hasEventListener( MouseEvent.MOUSE_UP ) )
-				view.stage.addEventListener( MouseEvent.MOUSE_UP, onMouseUp );
+			if( _stage.hasEventListener( MouseEvent.MOUSE_UP ) )
+				_stage.removeEventListener( MouseEvent.MOUSE_UP, onMouseUp );
+			_stage = null;
 		}
 
 		// -----------------------
@@ -48,12 +53,12 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 
 		private function onViewMouseDown( event:MouseEvent ):void {
 			navigationCanHideWithGesturesSignal.dispatch( false );
-			view.stage.addEventListener( MouseEvent.MOUSE_UP, onMouseUp );
+			_stage.addEventListener( MouseEvent.MOUSE_UP, onMouseUp );
 		}
 
 		private function onMouseUp( event:MouseEvent ):void {
 			navigationCanHideWithGesturesSignal.dispatch( true );
-			view.stage.removeEventListener( MouseEvent.MOUSE_UP, onMouseUp );
+			_stage.removeEventListener( MouseEvent.MOUSE_UP, onMouseUp );
 		}
 
 		private function onViewWantsToChangeAlpha( value:Number ):void {
