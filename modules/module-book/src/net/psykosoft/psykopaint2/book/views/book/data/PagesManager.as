@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			}
 
  			var page:BookPage;
- 			 
+ 			
  			if(_pagesContent.length>0){
  				page = new BookPage(materialRecto, marginRectoMaterial, materialVerso, marginVersoMaterial, _pagesContent[0], isBlankRecto);
 			} else {
@@ -152,40 +152,12 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  		public function removePages( count:uint):void
  		{
- 			//not really removed as we are better off hiding them instead
-
 			var page:BookPage;
 
 		 	for(var i:uint = count;i<_pagesContent.length;++i){
 				page = _pagesContent[i];
 				page.lock = (i>count)? true : false ;
 			}
- 			
- 			//var removed:uint = 0;
- 			//if(count<_pages.length){
- 			//	for(var i:uint = count; i<_pages.length;++i){
- 			//		_pages[i] = null;
- 			//	}
- 			//	var page:BookPage
- 			//	for(i = count;i<_pagesContent.length;++i){
- 			//		page = _pagesContent[i];
-
- 			//		_container.removeChild(page);
-	 		//		page.disposeContent();
-	 		//		page = null;
-
-	 		//		removed += 2;
- 			//	}
- 				
- 			//	for(i = 0;i<_pages.length;++i){
- 			//		if(_pages[i] == null){
- 			//			_pages.splice(i, 1);
- 			//			i--;
- 			//		}
- 			//	}
- 			//}
-
- 			//return removed;
  		}
  
  	}
