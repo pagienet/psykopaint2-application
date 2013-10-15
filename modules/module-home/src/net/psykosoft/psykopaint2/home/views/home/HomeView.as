@@ -16,15 +16,23 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.home.views.home.atelier.Atelier;
+	import net.psykosoft.psykopaint2.home.views.home.controllers.CameraPromenadeController;
 	import net.psykosoft.psykopaint2.home.views.home.controllers.OrientationBasedController;
 
 	import org.osflash.signals.Signal;
 
 	public class HomeView extends ViewBase
 	{
+		public static var SETTINGS : int = 0;
+		public static var EASEL : int = 1;
+		public static var HOME : int = 2;
+		public static var GALLERY : int = 3;
+
+		public var activeSectionChanged : Signal = new Signal();
 		public var sceneReadySignal : Signal = new Signal();
 
 		private var _lightController : OrientationBasedController;
+		private var _cameraController : CameraPromenadeController;
 		private var _light : PointLight;
 		private var _view : View3D;
 		private var _stage3dProxy : Stage3DProxy;
@@ -56,7 +64,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			TweenLite.to(	_camera, 1.5, { 	z:450,
 				ease: Strong.easeInOut,
-				onComplete:onComplete
+				onComplete:onComplete,
+				overwrite : 0
 			} );
 		}
 
@@ -128,6 +137,19 @@ package net.psykosoft.psykopaint2.home.views.home
 			_camera.y = -1.14 ;
 			_camera.z = -146.5;
 			_camera.lookAt(new Vector3D(-266.82, -1.14, -353.10));
+
+			_cameraController = new CameraPromenadeController(_camera, stage);
+			_cameraController.activePositionChanged.add(onActivePositionChanged);
+			_cameraController.registerTargetPosition(SETTINGS, 814);
+			_cameraController.registerTargetPosition(EASEL, 271);
+			_cameraController.registerTargetPosition(HOME, -271);
+			_cameraController.registerTargetPosition(GALLERY, -814);
+			_cameraController.start();
+		}
+
+		private function onActivePositionChanged() : void
+		{
+			activeSectionChanged.dispatch(_cameraController.activeTargetPositionID);
 		}
 
 		private function initLight() : void
@@ -150,10 +172,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			_atelier.dispose();
 			_light.dispose();
 			_view.dispose();
+			_cameraController.stop();
+			_cameraController.activePositionChanged.remove(onActivePositionChanged);
 			_atelier = null;
 			_light = null;
 			_view = null;
 			_lightController = null;
+			_cameraController = null;
 		}
 
 		private function destroySubViews() : void
@@ -169,6 +194,16 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function setOrientationMatrix(orientationMatrix : Matrix3D) : void
 		{
 			_lightController.orientationMatrix = orientationMatrix;
+		}
+
+		public function get activeSection() : int
+		{
+			return _cameraController.activeTargetPositionID;
+		}
+
+		public function set activeSection(activeSection : int) : void
+		{
+			_cameraController.navigateTo(activeSection);
 		}
 	}
 }

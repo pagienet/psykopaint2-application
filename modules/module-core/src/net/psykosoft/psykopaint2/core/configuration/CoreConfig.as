@@ -22,8 +22,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.models.AMFGalleryService;
 	import net.psykosoft.psykopaint2.core.models.AMFLoggedInUserProxy;
-	import net.psykosoft.psykopaint2.core.models.DummyGalleryService;
-	import net.psykosoft.psykopaint2.core.models.DummyLoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
@@ -83,7 +81,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLovePaintingSignal;
@@ -238,7 +235,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyPopUpRemovedSignal ).asSingleton();
 			_injector.map( NotifyEaselRectUpdateSignal ).asSingleton();
 			_injector.map( NotifyHomeViewZoomCompleteSignal ).asSingleton();
-			_injector.map( RequestHomeViewScrollSignal ).asSingleton();
 			_injector.map( NotifyPopUpShownSignal ).asSingleton();
 			_injector.map( RequestUpdateMessagePopUpSignal ).asSingleton();
 			_injector.map( RequestLoadSurfaceSignal ).asSingleton();

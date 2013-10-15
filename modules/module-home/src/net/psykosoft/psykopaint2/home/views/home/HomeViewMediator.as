@@ -16,7 +16,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
@@ -53,9 +52,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var notifyHomeViewZoomCompleteSignal:NotifyHomeViewZoomCompleteSignal;
 
 		[Inject]
-		public var requestHomeViewScrollSignal:RequestHomeViewScrollSignal;
-
-		[Inject]
 		public var requestHomeIntroSignal:RequestHomeIntroSignal;
 
 		[Inject]
@@ -89,6 +85,8 @@ package net.psykosoft.psykopaint2.home.views.home
 //			notifyGlobalGestureSignal.add( onGlobalGesture );
 //			notifyNavigationToggleSignal.add( onNavigationToggled );
 //			requestHomeViewScrollSignal.add( onScrollRequested );
+//			view.zoomCompletedSignal.add( onViewZoomComplete );
+
 			requestHomeIntroSignal.add( onIntroRequested );
 			notifyGyroscopeUpdateSignal.add ( onGyroscopeUpdate );
 			requestHomePanningToggleSignal.add ( onTogglePanning );
@@ -97,12 +95,29 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.enabledSignal.add( onEnabled );
 			view.disabledSignal.add( onDisabled );
 
-//			view.closestSnapPointChangedSignal.add( onViewClosestSnapPointChanged );
-//			view.zoomCompletedSignal.add( onViewZoomComplete );
+			view.activeSectionChanged.add( onActiveSectionChanged );
 			view.sceneReadySignal.add( onSceneReady );
 			view.stage3dProxy = stage3dProxy;
 
 			view.enable();
+		}
+
+		private function onActiveSectionChanged(sectionID : int) : void
+		{
+			switch (sectionID) {
+				case HomeView.GALLERY:
+					requestNavigationStateChange(NavigationStateType.BOOK_GALLERY);
+					break;
+				case HomeView.EASEL:
+					requestNavigationStateChange(NavigationStateType.HOME_ON_EASEL);
+					break;
+				case HomeView.HOME:
+					requestNavigationStateChange(NavigationStateType.HOME);
+					break;
+				case HomeView.SETTINGS:
+					requestNavigationStateChange(NavigationStateType.SETTINGS);
+					break;
+			}
 		}
 
 		override public function destroy():void {
@@ -113,11 +128,10 @@ package net.psykosoft.psykopaint2.home.views.home
 //			notifyGlobalGestureSignal.remove( onGlobalGesture );
 //			notifyNavigationToggleSignal.remove( onNavigationToggled );
 //			requestHomeViewScrollSignal.remove( onScrollRequested );
-			requestHomeIntroSignal.remove( onIntroRequested );
-
-			// TODO: Re-implement these properly
-//			view.closestSnapPointChangedSignal.remove( onViewClosestSnapPointChanged );
 //			view.zoomCompletedSignal.remove( onViewZoomComplete );
+
+			requestHomeIntroSignal.remove( onIntroRequested );
+			view.activeSectionChanged.remove( onActiveSectionChanged );
 
 			view.enabledSignal.remove( onEnabled );
 			view.disabledSignal.remove( onDisabled );
@@ -168,7 +182,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onIntroComplete() : void
 		{
-
+			notifyHomeViewZoomCompleteSignal.dispatch();
 		}
 
 		/*private function onNavigationToggled( shown:Boolean ):void {
@@ -190,6 +204,22 @@ package net.psykosoft.psykopaint2.home.views.home
 		override protected function onStateChange( newState:String ):void {
 
 			super.onStateChange( newState );
+
+			switch (newState) {
+				case NavigationStateType.HOME:
+					view.activeSection = HomeView.HOME;
+					break;
+				case NavigationStateType.BOOK_GALLERY:
+				case NavigationStateType.GALLERY_PAINTING:
+					view.activeSection = HomeView.GALLERY;
+					break;
+				case NavigationStateType.HOME_ON_EASEL:
+					view.activeSection = HomeView.EASEL;
+					break;
+				case NavigationStateType.SETTINGS:
+					view.activeSection = HomeView.SETTINGS;
+					break;
+			}
 		}
 
 		/*private function onScrollRequested( index:int ):void {

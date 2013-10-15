@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
-	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestExitGallerySignal;

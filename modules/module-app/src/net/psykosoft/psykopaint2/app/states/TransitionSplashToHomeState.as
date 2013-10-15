@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySplashScreenRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHomeViewScrollSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
@@ -34,9 +33,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var requestNavigationToggleSignal : RequestNavigationToggleSignal;
-
-		[Inject]
-		public var requestHomeViewScrollSignal : RequestHomeViewScrollSignal;
 
 		[Inject]
 		public var requestHomeIntroSignal:RequestHomeIntroSignal;
@@ -74,7 +70,7 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			// TODO: this probably needs to be moved to some activation command
 			requestNavigationToggleSignal.dispatch(1);
-			requestHomeViewScrollSignal.dispatch(1);
+			requestStateChangeSignal.dispatch(NavigationStateType.HOME_ON_EASEL);
 
 			stateMachine.setActiveState(homeState);
 		}
