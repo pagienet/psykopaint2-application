@@ -1,8 +1,11 @@
 package net.psykosoft.psykopaint2.paint.views.alpha
 {
 
+	import flash.events.MouseEvent;
+
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
 	public class AlphaSubNavViewMediator extends SubNavigationMediatorBase
@@ -13,6 +16,9 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 		[Inject]
 		public var renderer:CanvasRenderer;
 
+		[Inject]
+		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
+
 		override public function initialize():void {
 
 			// Init.
@@ -21,6 +27,7 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 
 			// From view.
 			view.viewWantsToChangeAlphaSignal.add( onViewWantsToChangeAlpha );
+			view.addEventListener( MouseEvent.MOUSE_DOWN, onViewMouseDown );
 		}
 
 		override protected function onViewEnabled():void {
@@ -30,11 +37,24 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 		override public function destroy():void {
 			super.destroy();
 			view.viewWantsToChangeAlphaSignal.remove( onViewWantsToChangeAlpha );
+			view.removeEventListener( MouseEvent.MOUSE_DOWN, onViewMouseDown );
+			if( view.stage && view.stage.hasEventListener( MouseEvent.MOUSE_UP ) )
+				view.stage.addEventListener( MouseEvent.MOUSE_UP, onMouseUp );
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
+
+		private function onViewMouseDown( event:MouseEvent ):void {
+			navigationCanHideWithGesturesSignal.dispatch( false );
+			view.stage.addEventListener( MouseEvent.MOUSE_UP, onMouseUp );
+		}
+
+		private function onMouseUp( event:MouseEvent ):void {
+			navigationCanHideWithGesturesSignal.dispatch( true );
+			view.stage.removeEventListener( MouseEvent.MOUSE_UP, onMouseUp );
+		}
 
 		private function onViewWantsToChangeAlpha( value:Number ):void {
 			// The incoming slider value is 0 at left and 1 at right.

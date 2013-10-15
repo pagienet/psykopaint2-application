@@ -39,10 +39,18 @@ package net.psykosoft.psykopaint2.paint.views.color
 			notifyGlobalGestureSignal.add( onGlobalGestureDetected );
 			
 			view.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
-			
 		}
-		
-		
+
+		override public function destroy():void {
+			super.destroy();
+			view.removeEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
+			notifyPickedColorChangedSignal.remove( onColorChangedFromOutside );
+			notifyGlobalGestureSignal.remove( onGlobalGestureDetected );
+			view.colorChangedSignal.remove( onColorChanged );
+			if( view.stage && view.stage.hasEventListener( MouseEvent.MOUSE_UP ) )
+				view.stage.addEventListener( MouseEvent.MOUSE_UP, onMouseUp );
+		}
+
 		// -----------------------
 		// From view.
 		// -----------------------
