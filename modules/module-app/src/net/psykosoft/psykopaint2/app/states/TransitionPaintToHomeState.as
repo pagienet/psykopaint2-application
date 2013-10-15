@@ -5,7 +5,6 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
@@ -42,9 +41,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var notifyPopUpRemovedSignal:NotifyPopUpRemovedSignal;
-
-		[Inject]
-		public var requestHomePanningToggleSignal : RequestHomePanningToggleSignal;
 
 		// needs to be set from HomeState -_-
 		public var homeState : HomeState;
@@ -86,7 +82,6 @@ package net.psykosoft.psykopaint2.app.states
 		private function onPopUpRemoved() : void
 		{
 			stateMachine.setActiveState(homeState);
-			requestHomePanningToggleSignal.dispatch(1);
 		}
 
 		override ns_state_machine function deactivate() : void

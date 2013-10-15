@@ -12,7 +12,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 
 	public class NewPaintingSubNavViewMediator extends SubNavigationMediatorBase
@@ -31,9 +30,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		[Inject]
 		public var paintingModel:PaintingModel;
-
-		[Inject]
-		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
 
 		[Inject]
 		public var notifyPaintingDataSavedSignal:NotifyPaintingDataSavedSignal;
@@ -104,7 +100,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = "psyko-" + PaintingInfoVO.DEFAULT_VO_ID;
 					requestNavigationStateChange( NavigationStateType.HOME_PICK_SURFACE );
-					requestHomePanningToggleSignal.dispatch( -1 );
 					break;
 				}
 
@@ -114,7 +109,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = "psyko-" + PaintingInfoVO.DEFAULT_VO_ID;
 					requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
-					requestHomePanningToggleSignal.dispatch( -1 );
 					break;
 				}
 

@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestExitGallerySignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 
 	public class GalleryBrowseSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -13,9 +12,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		[Inject]
 		public var requestBrowseGallerySignal : RequestBrowseGallerySignal;
-
-		[Inject]
-		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
 
 		[Inject]
 		public var requestExitGallerySignal : RequestExitGallerySignal;
@@ -33,12 +29,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_galleryTypeMap[GalleryBrowseSubNavView.ID_MOST_LOVED] = GalleryType.MOST_LOVED;
 			_galleryTypeMap[GalleryBrowseSubNavView.ID_MOST_RECENT] = GalleryType.MOST_RECENT;
 			_galleryTypeMap[GalleryBrowseSubNavView.ID_YOURS] = GalleryType.YOURS;
-		}
-
-		override protected function onViewDisabled() : void
-		{
-			requestHomePanningToggleSignal.dispatch(1);
-			super.onViewDisabled();
 		}
 
 		override protected function onButtonClicked( id:String ):void {

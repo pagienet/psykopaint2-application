@@ -12,9 +12,11 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.geom.Matrix3D;
+	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.home.views.home.atelier.Atelier;
 	import net.psykosoft.psykopaint2.home.views.home.controllers.CameraPromenadeController;
 	import net.psykosoft.psykopaint2.home.views.home.controllers.OrientationBasedController;
@@ -44,10 +46,26 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _gallery : Mesh;
 		private var _atelier : Atelier;
 		private var _camera : Camera3D;
+		private var _scrollingEnabled : Boolean = true;
 
 		public function HomeView()
 		{
 
+		}
+
+		public function get scrollingEnabled() : Boolean
+		{
+			return _scrollingEnabled;
+		}
+
+		public function set scrollingEnabled(value : Boolean) : void
+		{
+			if (_scrollingEnabled == value) return;
+			_scrollingEnabled = value;
+			if (_scrollingEnabled)
+				_cameraController.start();
+			else
+				_cameraController.stop();
 		}
 
 		public function get stage3dProxy() : Stage3DProxy
@@ -145,6 +163,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController.registerTargetPosition(HOME, -271);
 			_cameraController.registerTargetPosition(GALLERY, -814);
 			_cameraController.start();
+			_cameraController.interactionRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight - 150*CoreSettings.GLOBAL_SCALING);
 		}
 
 		private function onActivePositionChanged() : void

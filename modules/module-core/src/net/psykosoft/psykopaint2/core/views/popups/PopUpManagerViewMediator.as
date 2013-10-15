@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.core.views.popups
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -34,9 +33,6 @@ package net.psykosoft.psykopaint2.core.views.popups
 
 		[Inject]
 		public var requestHidePopUpSignal:RequestHidePopUpSignal;
-
-		[Inject]
-		public var requestHomePanningToggleSignal:RequestHomePanningToggleSignal;
 
 		override public function initialize():void {
 
@@ -110,12 +106,10 @@ package net.psykosoft.psykopaint2.core.views.popups
 		private function showPopUp( popUpType:String ):void {
 			var popUpClass:Class = Class( getDefinitionByName( popUpType ) );
 			view.showPopUpOfClass( popUpClass );
-			requestHomePanningToggleSignal.dispatch( -1 );
 		}
 
 		private function hidePopUp():void {
 			view.hideLastPopUp();
-			requestHomePanningToggleSignal.dispatch( 0 );
 		}
 	}
 }

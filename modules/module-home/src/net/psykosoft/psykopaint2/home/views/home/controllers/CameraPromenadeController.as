@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -32,6 +33,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		private var _tweenTime : Number = .5;
 		private var _startTime : Number;
 		private var _startPos : Number;
+		private var _interactionRect : Rectangle;
 
 		// uses X coordinate as distance reference
 		public function CameraPromenadeController(target : Camera3D, stage : Stage, minX : Number = -814, maxX : Number = 814)
@@ -41,6 +43,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			_stage = stage;
 			_minX = minX;
 			_maxX = maxX;
+			_interactionRect = new Rectangle(0, 0, _stage.stageWidth, _stage.stageHeight);
 		}
 
 		public function registerTargetPosition(id : int, positionX : Number) : void
@@ -55,9 +58,11 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 		private function onMouseDown(event : MouseEvent) : void
 		{
-			resetPan(event.stageX);
-			_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			if (_interactionRect.contains(event.stageX, event.stageY)) {
+				resetPan(event.stageX);
+				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			}
 		}
 
 		private function onMouseMove(event : MouseEvent) : void
@@ -100,9 +105,10 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		private function moveToBestPosition() : void
 		{
 			killTween();
+			var targetID : int;
 
 			if (Math.abs(_velocity) < 5) {
-				_activeTargetPositionID = findClosestID(_target.x);
+				targetID = findClosestID(_target.x);
 				TweenLite.to(_target,.5, {x: _targetPositions[_activeTargetPositionID], ease:Quad.easeOut});
 			}
 			else {
@@ -113,7 +119,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 				var targetFriction : Number = .8;
 				if (_velocity > 0) targetFriction = -targetFriction;
 				// where would the target end up with the current speed after aimed time with aimed friction?
-				_activeTargetPositionID = findClosestID(_startPos + _velocity * targetTime + targetFriction * targetTime * targetTime );
+				targetID = findClosestID(_startPos + _velocity * targetTime + targetFriction * targetTime * targetTime );
 
 				// solving:
 				// p(t) = p(0) + v(0)*t + a*t^2 / 2 = target
@@ -128,7 +134,10 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 				_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
 
-			activePositionChanged.dispatch();
+			if (_activeTargetPositionID != targetID) {
+				_activeTargetPositionID = targetID;
+				activePositionChanged.dispatch();
+			}
 		}
 
 		private function onEnterFrame(event : Event) : void
@@ -186,6 +195,17 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 				_stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 				_hasEnterFrame = false;
 			}
+		}
+
+
+		public function get interactionRect() : Rectangle
+		{
+			return _interactionRect;
+		}
+
+		public function set interactionRect(interactionRect : Rectangle) : void
+		{
+			_interactionRect = interactionRect;
 		}
 	}
 }

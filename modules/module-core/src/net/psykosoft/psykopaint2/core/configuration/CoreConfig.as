@@ -80,7 +80,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLovePaintingSignal;
@@ -267,7 +266,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyUserRegisteredSignal ).asSingleton();
 			_injector.map( NotifyUserRegistrationFailedSignal ).asSingleton();
 			_injector.map( ToggleTransformGestureSignal ).asSingleton();
-			_injector.map( RequestHomePanningToggleSignal ).asSingleton();
 			_injector.map( NotifyLovePaintingSucceededSignal ).asSingleton();
 			_injector.map( NotifyLovePaintingFailedSignal ).asSingleton();
 			_injector.map( NotifyAddCommentSucceededSignal ).asSingleton();
