@@ -5,7 +5,7 @@
 	<!-- properties -->
 	<!-- **************************************** -->
 
-	<property name="debug" value="false"/>
+	<property name="debug" value="true"/>
 	<property name="inline" value=""/> <!-- '-inline' or '' (empty) -->
 	<property name="telemetry" value="-advanced-telemetry=false"/> <!-- '-advanced-telemetry=true' or '' (empty) -->
 	<property name="swfVersion" value="22"/> <!-- just a number -->
