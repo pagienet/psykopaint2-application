@@ -53,7 +53,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var requestBrowseGallery : RequestBrowseGallerySignal;
 
-		// TODO: Truly make pop-ups modal!
+		// TODO: Make pop-ups truly modal using blockers instead of enforcing this on mediators!
+		// probably should do the same for book, so "scrollEnabled" is not necessary at all
 		[Inject]
 		public var requestShowPopUpSignal : RequestShowPopUpSignal;
 

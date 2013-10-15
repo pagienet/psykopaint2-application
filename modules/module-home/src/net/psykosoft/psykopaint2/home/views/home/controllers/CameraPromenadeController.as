@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		private function onMouseDown(event : MouseEvent) : void
 		{
 			if (_interactionRect.contains(event.stageX, event.stageY)) {
-				resetPan(event.stageX);
+				resetPan(event.stageX / CoreSettings.GLOBAL_SCALING);
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
@@ -67,7 +67,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 		private function onMouseMove(event : MouseEvent) : void
 		{
-			updateMovement(event.stageX);
+			updateMovement(event.stageX / CoreSettings.GLOBAL_SCALING);
 		}
 
 		private function onMouseUp(event : MouseEvent) : void
@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 		private function resetPan(stageX : Number) : void
 		{
-			_lastPositionX = stageX/CoreSettings.GLOBAL_SCALING;
+			_lastPositionX = stageX;
 			killTween();
 		}
 
@@ -90,7 +90,6 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 		private function updateMovement(stageX : Number) : void
 		{
-			stageX /= CoreSettings.GLOBAL_SCALING;
 			var dx : Number = (stageX - _lastPositionX)*1.2;
 			_velocity = _velocity + (dx - _velocity) * .95;
 			var targetX : Number = _target.x + dx;
@@ -109,7 +108,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 			if (Math.abs(_velocity) < 5) {
 				targetID = findClosestID(_target.x);
-				TweenLite.to(_target,.5, {x: _targetPositions[_activeTargetPositionID], ease:Quad.easeOut});
+				TweenLite.to(_target,.5, {x: _targetPositions[targetID], ease:Quad.easeOut});
 			}
 			else {
 				// convert per frame to per second
@@ -126,7 +125,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 				// v(t) = v(0) + a*t = 0
 				// for a (acceleration, ie negative friction) and t
 
-				_tweenTime = 2 * (_targetPositions[_activeTargetPositionID] - _startPos) / _velocity;
+				_tweenTime = 2 * (_targetPositions[targetID] - _startPos) / _velocity;
 				_friction = -_velocity/_tweenTime;
 
 				_startTime = getTimer();
