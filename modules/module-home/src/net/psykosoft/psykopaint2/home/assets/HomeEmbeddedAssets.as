@@ -3,9 +3,6 @@ package net.psykosoft.psykopaint2.home.assets
 
 	public class HomeEmbeddedAssets
 	{
-		[Embed(source="../../../../../../assets/embedded/away3d/frames/whiteFrame.png")]
-		public var WhiteFrame:Class;
-
 		[Embed(source="../../../../../../assets/embedded/away3d/paintings/settingsFrame.png")]
 		public var SettingsPainting:Class;
 
