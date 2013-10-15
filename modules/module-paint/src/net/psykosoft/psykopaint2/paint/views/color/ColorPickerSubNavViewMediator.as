@@ -85,10 +85,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN )
 			{
-				view.attemptPipetteCharge();
+				view.attemptPipetteCharge(true);
 			}  else if ( gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN )
 			{
-				 view.attemptPipetteCharge();
+				 view.attemptPipetteCharge(false);
 			}
 		}
 	}

@@ -63,6 +63,10 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		private var colorInfluence:Number;
 		private var blurFilter:BlurFilter;
 		private var cornerRect:Rectangle = new Rectangle(0,0,30,34);
+		private var r:Number;
+		private var g:Number;
+		private var b:Number;
+		
 		
 		public function Colormixer( palette:Array ) {
 			super();
@@ -90,7 +94,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 			mixerWidth = 270;
 			mixerHeight = 190;
-			fingerSize = 64;
+			fingerSize = 32;
 			origin = new Point();
 			
 			var shp:Shape = new Shape();
@@ -122,7 +126,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			ct = new ColorTransform();
 			ct_shp = new ColorTransform();
 			sampleColor = -1;
-			
+			r = g = b = 0;
 		//	mixer = new ColorMixer( _displayMap );
 			invalidateLayout();
 		}
@@ -158,11 +162,26 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 		}
 		
+		public function addColorSpot( color:uint, radius:Number ):void
+		{
+			_displayMap.lock();
+			
+			ct_shp.color = color;
+			ct_shp.alphaMultiplier = 0.2;
+			drawMatrix.a = drawMatrix.d = radius / fingerSize; 
+			drawMatrix.tx = mapDisplay.mouseX - radius * 0.5;
+			drawMatrix.ty = mapDisplay.mouseY - radius * 0.5;
+			
+			_displayMap.drawWithQuality(_drawMap,drawMatrix,ct_shp,"normal",null,true,StageQuality.HIGH);
+			_displayMap.unlock();
+		}
+			
+			
+		
 		protected function onStageMouseMove(event:MouseEvent):void
 		{
-			colorInfluence*=0.96;
-			if ( !(mapDisplay.mouseX > -1 && mapDisplay.mouseX < mixerWidth && mapDisplay.mouseY > -1 && mapDisplay.mouseY < mixerHeight)) return;
 			
+			if ( !(mapDisplay.mouseX > -1 && mapDisplay.mouseX < mixerWidth && mapDisplay.mouseY > -1 && mapDisplay.mouseY < mixerHeight)) return;
 			_displayMap.lock();
 			var dx:int = (mapDisplay.mouseX - _lastMouseX) * 0.3;
 			var dy:int = (mapDisplay.mouseY - _lastMouseY) * 0.3;
@@ -175,13 +194,14 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			_samplePixel.setPixel(0,0,0xffffffff);
 			_samplePixel.drawWithQuality( _displayMap, drawMatrix,null,"normal",null,true,StageQuality.HIGH_8X8_LINEAR);
 			var c:int = _samplePixel.getPixel(0,0);
-			var r:int = ((c >> 16) & 0xff) * ( 1-colorInfluence) + ((sampleColor >> 16) & 0xff) * colorInfluence;
-			var g:int = ((c >> 8) & 0xff) * ( 1-colorInfluence) + ((sampleColor >> 8) & 0xff) * colorInfluence;
-			var b:int = (c  & 0xff) * ( 1-colorInfluence) + (sampleColor & 0xff) * colorInfluence;
+			//colorInfluence = 0.5;
+			r = r * ( 1-colorInfluence) + ((c >> 16) & 0xff) * colorInfluence;
+			g = g * ( 1-colorInfluence) + ((c >> 8) & 0xff) * colorInfluence;
+			b = b * ( 1-colorInfluence) + (c & 0xff) * colorInfluence;
 			
 			
-			ct_shp.color = r << 16 | g << 8 | b;
-			ct_shp.alphaMultiplier = 0.1 + colorInfluence * 0.2;
+			ct_shp.color = int(r+0.5) << 16 |  int(g+0.5) << 8 |  int(b+0.5);
+			ct_shp.alphaMultiplier = 0.25 + colorInfluence * 0.4;
 			drawMatrix.a = drawMatrix.d = 1; 
 			drawMatrix.tx = mapDisplay.mouseX - fingerSize * 0.5;
 			drawMatrix.ty = mapDisplay.mouseY - fingerSize * 0.5;
@@ -192,18 +212,38 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 			_lastMouseX = mapDisplay.mouseX;
 			_lastMouseY = mapDisplay.mouseY;
+			if (colorInfluence > 0.5 ) colorInfluence *=0.99;
 			
 			_displayMap.unlock();
 			
 		}
 		
 		public function dispose():void {
-			
+			removeEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
+			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			stage.removeEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
+			_displayMap.dispose();
+			_samplePixel.dispose();
+			_drawMap.dispose();
+			drawMatrix = null;
 		}
 
 		private function invalidateLayout():void {
 			// Update label.
 			
+		}
+		
+		public function set mixEnabled( value:Boolean ):void
+		{
+			if ( value )
+			{
+				addEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
+			} else {
+				removeEventListener( MouseEvent.MOUSE_DOWN, onThisMouseDown );
+				stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+				stage.removeEventListener( MouseEvent.MOUSE_MOVE, onStageMouseMove );
+				
+			}
 		}
 
 		public function get currentColor():int
@@ -216,6 +256,15 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			 sampleColor = value;
 		}
 		
+		public function getColorAtMouse():int
+		{
+			drawMatrix.a = drawMatrix.d = 0.1;
+			drawMatrix.tx = -mapDisplay.mouseX * 0.1;
+			drawMatrix.ty = -mapDisplay.mouseY * 0.1;
+			_samplePixel.setPixel(0,0,0xffffffff);
+			_samplePixel.drawWithQuality( _displayMap, drawMatrix,null,"normal",null,true,StageQuality.HIGH_8X8_LINEAR);
+			return _samplePixel.getPixel32(0,0);
+		}
 
 		override public function get width():Number {
 			return 270;

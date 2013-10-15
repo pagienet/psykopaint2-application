@@ -66,6 +66,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		*/
 
 		public static const ID_BACK:String = "Back";
+		private var pipetteDropSize:int;
 		
 		public function ColorPickerSubNavView()
 		{
@@ -233,7 +234,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		}
 		
 		protected function onPipetteColorPicked( event:Event ):void {
+			colorMixer.mixEnabled = true;
 			setCurrentColor( pipette.currentColor, false );
+			pipette.removeEventListener( "PipetteDischarge", onPipetteDischarge );
 		}
 		
 		public function setCurrentColor( newColor:uint, fromPalette:Boolean, fromSlider:Boolean = false, triggerChange:Boolean = true ):void
@@ -308,10 +311,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 			lightnessMap.unlock()
 		}
 		
-		public function attemptPipetteCharge():void
+		public function attemptPipetteCharge( fromLongTap:Boolean ):void
 		{
+			if ( pipette.visible ) return;
 			//if ( mouseY < -100 || mouseX < -225 || mouseX > 240 ) return;
-			if ( colorPalette.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
+			 if ( colorPalette.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
 			{
 				var swatch:Sprite = colorPalette.getSwatchUnderMouse();
 				if ( swatch != null )
@@ -319,12 +323,33 @@ package net.psykosoft.psykopaint2.paint.views.color
 					pipette.x = colorPalette.x + swatch.x;
 					pipette.y = colorPalette.y + swatch.y - 32;
 					pipette.startCharge( swatch.transform.colorTransform.color );
+					return;
 				}
+			}
+			 
+			if ( currentColorSwatch.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
+			{
+				pipette.x = currentColorSwatch.x + 10;
+				pipette.y = currentColorSwatch.y - 64;
+				pipette.startCharge( currentColorSwatch.transform.colorTransform.color );	
+			} else if ( fromLongTap && colorMixer.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
+			{
+				colorMixer.mixEnabled = false;
+				pipetteDropSize = 1;
+				pipette.x = stage.mouseX + 5;
+				pipette.y = stage.mouseY - 2;
+				pipette.addEventListener( "PipetteDischarge", onPipetteDischarge );
+				pipette.startCharge( colorMixer.getColorAtMouse() );	
+				
 			}
 			
 			
 		}
 		
+		private function onPipetteDischarge( event:Event ):void
+		{
+			colorMixer.addColorSpot( pipette.currentColor, pipetteDropSize++);
+		}
 		
 	}
 }
