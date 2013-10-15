@@ -70,13 +70,16 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 					requestHomePanningToggleSignal.dispatch( 1 );
 					break;
 				case PickSurfaceSubNavView.ID_SURF1:
-					loadSurfaceByIndex( 0 );
+					if( _selectedIndex != 0 ) loadSurfaceByIndex( 0 );
+					else continueToColorPaint();
 					break;
 				case PickSurfaceSubNavView.ID_SURF2:
-					loadSurfaceByIndex( 1 );
+					if( _selectedIndex != 1 ) loadSurfaceByIndex( 1 );
+					else continueToColorPaint();
 					break;
 				case PickSurfaceSubNavView.ID_SURF3:
-					loadSurfaceByIndex( 2 );
+					if( _selectedIndex != 2 ) loadSurfaceByIndex( 2 );
+					else continueToColorPaint();
 					break;
 			}
 		}
