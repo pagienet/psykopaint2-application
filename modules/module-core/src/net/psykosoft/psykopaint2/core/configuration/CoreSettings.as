@@ -42,9 +42,13 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static const SHOW_HIDDEN_BRUSH_PARAMETERS:Boolean = false; /*false on release*/
 		public static const SHOW_INTRO_VIDEO:Boolean = false; /*false on release*/
 		public static const TRACK_NON_GCED_OBJECTS:Boolean = false; /*false on release*/
+		public static const PUBLISH_JPEG_QUALITY : uint = 80;
+
+		// Saving options.
+		public static const USE_SAVING:Boolean = true; /*true on release*/
 		public static const USE_COMPRESSION_ON_PAINTING_FILES:Boolean = true; /*true on release*/
-		public static const USE_IO_ANE_ON_PAINTING_FILES:Boolean = true; /*true on release*/
-		public static const PUBLISH_JPEG_QUALITY : uint = 80
+		public static const USE_IO_ANE_ON_PAINTING_FILES:Boolean = false; /*true on release*/
+		public static const USE_ASYNC_SAVING:Boolean = false; /*true on release*/
 
 		// -----------------------
 		// Fixed constants.
