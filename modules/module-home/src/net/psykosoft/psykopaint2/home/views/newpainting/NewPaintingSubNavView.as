@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var dump:Array = vo.id.split( "-" );
 				var str:String = dump[ dump.length - 1 ];
 				var btnIsEnabled:Boolean = vo.id != unavailablePaintingId;
-				createCenterButton( str, str, null, BitmapButton, new Bitmap( vo.thumbnail ), true, btnIsEnabled );
+				createCenterButton( str, str, null, BitmapButton, new Bitmap( vo.thumbnail ), true, btnIsEnabled, false );
 			}
 		}
 

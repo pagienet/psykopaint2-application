@@ -80,6 +80,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		// -----------------------
 
 		private function onEaselTapped():void {
+			continueToPhotoPainting();
+		}
+
+		private function continueToPhotoPainting():void {
 			trace( "focused: " + paintingModel.activePaintingId );
 			requestLoadPaintingDataSignal.dispatch( paintingModel.activePaintingId );
 		}
@@ -149,10 +153,15 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				//  Paintings.
 				default: {
 //					view.showRightButton( true );
-					paintingModel.activePaintingId = "psyko-" + id;
-					var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
-					trace( this, "clicked on painting: " + vo.id );
-					requestEaselUpdateSignal.dispatch( vo, true, false );
+					if( paintingModel.activePaintingId == "psyko-" + id ) {
+						continueToPhotoPainting();
+					}
+					else {
+						paintingModel.activePaintingId = "psyko-" + id;
+						var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
+						trace( this, "clicked on painting: " + vo.id );
+						requestEaselUpdateSignal.dispatch( vo, true, false );
+					}
 				}
 			}
 		}
