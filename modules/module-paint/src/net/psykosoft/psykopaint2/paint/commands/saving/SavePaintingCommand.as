@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
@@ -34,10 +36,11 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 			saveVo.paintingId = paintingModel.activePaintingId;
 
-			// *** PICK ONE ***
-			add( SavePaintingAsyncCommand );
-//			add( SavePaintingSyncCommand );
-//			notifyPaintingInfoSavedSignal.dispatch( true ); // Pick this one to disable saving...
+			if( CoreSettings.USE_SAVING ) {
+				if( CoreSettings.USE_ASYNC_SAVING ) add( SavePaintingAsyncCommand );
+				else add( SavePaintingSyncCommand );
+			}
+			else notifyPaintingInfoSavedSignal.dispatch( true );
 
 			registerCompleteCallback( onMacroComplete );
 
