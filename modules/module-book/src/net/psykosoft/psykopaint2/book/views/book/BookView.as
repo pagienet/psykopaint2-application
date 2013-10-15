@@ -24,11 +24,18 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageRequestVO;
 
+	//debug
+	import net.psykosoft.psykopaint2.book.views.book.debug.BookDebug;
+
 	import org.osflash.signals.Signal;
 
 	public class BookView extends ViewBase
 	{
 		private const MOUSE_XTRA:uint = 5;
+
+		//debug
+		private const BOOK_DEBUG:Boolean = false;
+		private var _bookDebug:BookDebug;
 		
 		private var _stage3dProxy:Stage3DProxy;
 		private var _view3d:View3D;
@@ -41,6 +48,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _time:Number;
 		private var _previousTime:Number;
 		private var _pageIndexOnMouseDown:uint = 0;
+		private var _pageSideIndexOnMouseDown:uint = 0;
 		private var _mouseBooster:Number = 1;
 
 		public var imageSelectedSignal:Signal;
@@ -91,6 +99,12 @@ package net.psykosoft.psykopaint2.book.views.book
 			_view3d.dispose();
 			removeChild( _view3d );
 
+			if(BOOK_DEBUG){
+				removeChild(_bookDebug);
+				_bookDebug.dispose();
+				_bookDebug = null;
+			}
+
 			_stage3dProxy = null;
 		 
 			stage.removeEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
@@ -115,7 +129,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			if(_book.ready){
 				_book.killSnapTween();
 				_pageIndexOnMouseDown = _book.currentPageIndex;
-				if (mouseX<(stage.stageWidth*.5))  _pageIndexOnMouseDown--;
+				_pageSideIndexOnMouseDown = _book.currentPageSide;
 				_mouseIsDown = true;
 				_startMouseX = mouseX;
 				_startMouseY = mouseY;
@@ -130,9 +144,9 @@ package net.psykosoft.psykopaint2.book.views.book
 			if(_book.ready && !_book.isLoadingImage) {
 				var currentX:Number = mouseX;
 				if(Math.abs(currentX-_startMouseX) < 5 && _book.currentDegrees< 3){
-					if(!_book.hitTestRegions(mouseX, mouseY, _pageIndexOnMouseDown)){
+					if(!_book.hitTestRegions(mouseX, mouseY, _pageIndexOnMouseDown, _pageSideIndexOnMouseDown)){
 						_time = _book.snapToNearestTime();
-					}
+					} 
 				} else {
 					_time = _book.snapToNearestTime();
 				}
@@ -165,6 +179,11 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			stage.addEventListener( MouseEvent.MOUSE_DOWN, onStageMouseDown );
 			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+
+			if(BOOK_DEBUG){
+				_bookDebug = new BookDebug(_view3d, _book.regionManager);
+				addChild(_bookDebug);
+			}
 		}
 
 		private function initView3D():void
@@ -184,34 +203,44 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			if( !(_isEnabled && _view3d && _view3d.parent) ) return;
 
-			if(_book.ready && _mouseIsDown){
+			if(_book.ready){
 
-				var doUpdate:Boolean = true;
-				var mx:Number = (mouseX-_startMouseX);
-				var currentTime:Number =  ((mx*_mouseBooster)/ stage.stageWidth ) *.7;
-				  
-				currentTime *=-1;
-				if(_previousTime > currentTime){
-					_time = _startTime - (- Math.abs(currentTime));
-				} else if(_previousTime < currentTime){
-					_time = _startTime + (-Math.abs(currentTime));
-				} else {
-					doUpdate = false;
+				if(_mouseIsDown){
+
+					var doUpdate:Boolean = true;
+					var mx:Number = (mouseX-_startMouseX);
+					var currentTime:Number =  ((mx*_mouseBooster)/ stage.stageWidth ) *.7;
+					  
+					currentTime *=-1;
+					if(_previousTime > currentTime){
+						_time = _startTime - (- Math.abs(currentTime));
+					} else if(_previousTime < currentTime){
+						_time = _startTime + (-Math.abs(currentTime));
+					} else {
+						doUpdate = false;
+					}
+					_previousTime = currentTime;
+
+					if(doUpdate){
+						
+						var angle:Number = -1+(1-( (mouseY+(_mouseRange*.5) -_startMouseY) / _mouseRange))*2;
+						angle *= .5;
+
+						_book.rotateFold(-angle);
+
+						_time =  currentTime + _startTime;
+						if(_time < 0) _time = 0;
+
+						_book.updatePages(_time);
+					}
+
+				//works only on desktop, as we cannot have on finger move if its not touching the screen
+				} else if(BOOK_DEBUG){
+					var currPageIndex:uint = _book.currentPageIndex;
+					var currPageSideIndex:uint = _book.currentPageSide;
+					_bookDebug.debugMouse(mouseX, mouseY, currPageIndex, currPageSideIndex);
 				}
-				_previousTime = currentTime;
-
-				if(doUpdate){
-					
-					var angle:Number = -1+(1-( (mouseY+(_mouseRange*.5) -_startMouseY) / _mouseRange))*2;
-					angle *= .5;
-
-					_book.rotateFold(-angle);
-
-					_time =  currentTime + _startTime;
-					if(_time < 0) _time = 0;
-
-					_book.updatePages(_time);
-				}
+				
 			}
 
 			// TODO: Remove this once home view stops rendering

@@ -56,6 +56,8 @@ package net.psykosoft.psykopaint2.book.views.book
  		private var _nearestTime:Number;
 		private var _step:Number;
 		private var _currentPage:uint;
+		private var _currentPageSide:uint;
+		private var _isRecto:Boolean;
 		private var _regionManager:RegionManager;
  		
  		private var _isLoadingImage:Boolean;
@@ -427,6 +429,11 @@ package net.psykosoft.psykopaint2.book.views.book
  			return _pagesManager;
  		}
 
+ 		public function get regionManager():RegionManager
+ 		{
+ 			return _regionManager;
+ 		}
+
  		//if book is ready for mouse browsing
  		public function get ready():Boolean
  		{
@@ -460,7 +467,9 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			_step = 1/_pagesCount;
  			_percent = _nearestTime = _step;
- 			_currentDegrees = 0;
+ 			_currentDegrees = _currentPageSide = 0;
+
+ 			updatePages(_percent);
  		}
 
  		public function get currentDegrees():Number
@@ -475,7 +484,21 @@ package net.psykosoft.psykopaint2.book.views.book
 
  		public function get currentPageIndex():uint
  		{
- 			return _currentPage;
+ 			_isRecto = (_stage.mouseX > (_stage.stageWidth * .5) )? true : false;
+ 			return  _isRecto? _currentPage : _currentPage-1;
+ 		}
+ 
+ 		public function get currentPageSide():uint
+ 		{
+ 			var currentPage:uint = currentPageIndex;
+ 			if(currentPage == 0){
+ 				_currentPageSide = 0;
+ 			} else {
+ 				_currentPageSide = currentPage * 2;
+ 				if(_isRecto) _currentPageSide -= 1;
+ 			}
+ 
+ 			return _currentPageSide;
  		}
 
  		public function get minTime():Number
@@ -491,7 +514,7 @@ package net.psykosoft.psykopaint2.book.views.book
  			var pageid:uint;
 			
 
-			if(_pagesCount> 1){
+			//if(_pagesCount> 1){
 
 				_currentPage = _percent/_step;
 
@@ -518,10 +541,11 @@ package net.psykosoft.psykopaint2.book.views.book
 						pagesManager.showPage(pageid);
 					}
 				}
-			} else {
+
+			//} else {
 				
-				_currentPage = 0;
-			}
+			//	_currentPage = 0;
+			//}
 
 			//if(_currentPage>1){
 			//		pagesManager.shadeScale(_currentPage-1, rotZ/180);
@@ -587,14 +611,16 @@ package net.psykosoft.psykopaint2.book.views.book
  		}
 
  		// image picking
- 		public function hitTestRegions(mouseX:Number, mouseY:Number, pageIndexOnMouseDown:uint):Boolean
+ 		public function hitTestRegions(mouseX:Number, mouseY:Number, pageIndexOnMouseDown:uint, pageSideIndexOnMouseDown:uint):Boolean
  		{
  			if(_isLoadingImage) return false;
 
- 			var data:BookData = _regionManager.hitTestRegions(mouseX, mouseY, pageIndexOnMouseDown);
+ 			var data:BookData = _regionManager.hitTestRegions(mouseX, mouseY, pageIndexOnMouseDown, pageSideIndexOnMouseDown);
 
  			if(data){
  				_isLoadingImage = true;
+
+ 				//trace(">>>> loading "+data.originalFilename);
 
  				if(data is BookThumbnailData){
  					BookThumbnailData(data).imageVO.loadFullSized(onFullSizeImageLoaded, onFullSizeImageError);
@@ -611,7 +637,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onFullSizeImageError() : void
 		{
-			throw new Error("Failed to load fullsize image");
+			//throw new Error("Failed to load fullsize image");
+			trace(">>>> Failed to load fullsize image");
 		}
  
 		private function onFullSizeImageLoaded( bmd:BitmapData ):void

@@ -56,23 +56,14 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			_regions.push(region);
  		}
  
- 		public function hitTestRegions(x:Number, y:Number, pageIndex:uint):BookData
+ 		public function hitTestRegions(x:Number, y:Number, pageIndex:uint, pageSideIndex:uint):BookData
  		{
  			if(_regions.length == 0) return null;
  			
  			var isRecto:Boolean = (x>_middle) ? true : false;
- 			//if(pageIndex == 0 && !isRecto) return null// left side case
- 			//var pageSideIndex:uint = ( isRecto)? pageIndex*2 : (pageIndex*2)-1;
- 			var pageSideIndex:uint;
- 			var bookPage:BookPage
- 			if(_pagesManager.pagesCount > 1){
- 				pageSideIndex = ( isRecto)? (pageIndex*2)+1 : (pageIndex*2);
- 				bookPage = _pagesManager.getPage((isRecto)? pageIndex :  pageIndex+1 );
-			} else {
-				isRecto = false;
-				bookPage = _pagesManager.getPage( pageIndex);
-				pageSideIndex = 0;
-			}
+			var bookPage:BookPage = _pagesManager.getPage( pageIndex );
+
+			_debugPage = bookPage;
 
  			if(!bookPage) return null;
 
@@ -107,12 +98,26 @@ package net.psykosoft.psykopaint2.book.views.book.data
  				region = _regions[i];
  				if(region.pageIndex == pageSideIndex){
 					if(region.UVRect.contains(u, v)){
+						//debug
+						_debugRegion = region;
+
 						return region.data;
 					}	
 				}
  			}
 
  			return null;
+ 		}
+
+ 		private var _debugRegion:Region;
+ 		private var _debugPage:BookPage;
+ 		public function get debugPage():BookPage
+ 		{
+ 			return _debugPage;
+ 		}
+ 		public function get debugRegion():Region
+ 		{
+ 			return _debugRegion;
  		}
  
  		public function dispose():void

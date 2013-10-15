@@ -18,6 +18,8 @@ package net.psykosoft.psykopaint2.book.model
 		public var lowResThumbnailFilename : String;
 		public var highResThumbnailFilename : String;
 		public var originalFilename : String;
+		//book debug
+		public var debugFilename : String;
 
 		private var _onComplete : Function;
 		private var _onError : Function;
@@ -43,6 +45,8 @@ package net.psykosoft.psykopaint2.book.model
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 			loader.load(new URLRequest(filename));
+			//book debug
+			debugFilename = filename;
 		}
 
 		private function onLoadComplete(event : Event) : void
