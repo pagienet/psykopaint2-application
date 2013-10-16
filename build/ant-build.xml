@@ -47,7 +47,7 @@
 			<replace path="/:application/:versionNumber/text()" withText="${data.version}"/>
 		</xmltask>
 		<xmltask source="config-ipad-hr.xml" dest="config-ipad-hr.xml" report="true">
-			<replace path="/:application/:name/text()" withText="Psykopaint2-${data.version}"/>
+			<replace path="/:application/:name/text()" withText="Pp2-${data.version}"/>
 		</xmltask>
 	</target>
 
