@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	public class EaselView extends Sprite
 	{
-		private static var CANVAS_WIDTH : Number = 250;
+		private static var CANVAS_WIDTH : Number = 160;
 
 		public var easelRectChanged : Signal = new Signal();
 
@@ -72,7 +72,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_canvas.rotationY = 180;
 //			_canvas.rotationX = 8.5;
 			_canvas.x = 271;
-			_canvas.z = 70;
+			_canvas.y = -35;
+			_canvas.z = 73;
 			_view.scene.addChild(_canvas);
 		}
 
@@ -108,7 +109,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			var projTopLeft : Vector3D = _view.project(vectorTopLeft);
 			var projBottomRight : Vector3D = _view.project(vectorBottomRight);
 
-			trace (projTopLeft.x, projTopLeft.y, projBottomRight.x - projTopLeft.x, projBottomRight.y - projTopLeft.y);
 			return new Rectangle(projTopLeft.x, projTopLeft.y, projBottomRight.x - projTopLeft.x, projBottomRight.y - projTopLeft.y);
 		}
 
