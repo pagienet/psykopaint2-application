@@ -2,19 +2,18 @@ package net.psykosoft.psykopaint2.core.utils
 {
 
 	import flash.display.Bitmap;
-	import flash.display.DisplayObjectContainer;
+	import flash.display.Stage;
 	import flash.geom.Point;
 
 	public class CanvasInteractionUtil
 	{
-		public static function canContentsUnderMouseBeIgnored( target:* ):Boolean {
+		public static function canContentsUnderMouseBeIgnored( stage:Stage ):Boolean {
 
-			var onClip:DisplayObjectContainer = target as DisplayObjectContainer;
-			if( !onClip ) return false;
+//			trace( "CanvasInteractionUtil - canContentsUnderMouseBeIgnored()" );
 
-			var obj:Array = onClip.getObjectsUnderPoint( new Point( onClip.stage.mouseX, onClip.stage.mouseY ) );
+			var obj:Array = stage.getObjectsUnderPoint( new Point( stage.mouseX, stage.mouseY ) );
+//			trace( "looking for exceptions - objs under mouse: " + obj.length + ", " + obj );
 			if( obj.length == 1 ) {
-//				trace( "CanvasInteractionUtil - canContentsUnderMouseBeIgnored - ", "looking for exceptions..." );
 				// Note: add more exceptions here...
 				if( obj[ 0 ] is Bitmap ) {
 //					trace( "bitmap" );
