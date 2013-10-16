@@ -202,8 +202,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onTouchBegin(event : TouchEvent) : void
 		{
 			//Navbar touched?
+//			trace( this, "onTouchBegin - target: " + event.target );
 			if (!(event.target is Stage) && !(event.target is CanvasView)) {
-				if( !CanvasInteractionUtil.canContentsUnderMouseBeIgnored( event.target ) ) return;
+				if( !event.target.stage ) return;
+				if( !CanvasInteractionUtil.canContentsUnderMouseBeIgnored( event.target.stage ) ) return;
 			}
 			
 			if ( _touchID == -1 && event.stageY > CoreSettings.STAGE_HEIGHT - 100 )
@@ -294,8 +296,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		// for purposes of le debug
 		protected function onMouseDown(event : MouseEvent) : void
 		{
+//			trace( this, "onMouseDown - target: " + event.target + ", " + event.target.name );
 			if (!(event.target is Stage) && !(event.target is CanvasView)) {
-				if( !CanvasInteractionUtil.canContentsUnderMouseBeIgnored( event.target ) ) return;
+				if( !event.target.stage ) return;
+				if( !CanvasInteractionUtil.canContentsUnderMouseBeIgnored( event.target.stage ) ) return;
 			}
 
 			if ( event.stageY > CoreSettings.STAGE_HEIGHT - 100 )
