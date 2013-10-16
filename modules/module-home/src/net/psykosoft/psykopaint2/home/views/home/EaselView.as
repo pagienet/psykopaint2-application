@@ -97,15 +97,18 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function get easelRect() : Rectangle
 		{
 			var aspectRatio : Number = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
-			var vectorTopLeft : Vector3D = _canvas.scenePosition;
-			vectorTopLeft.x -= CANVAS_WIDTH*.5;
-			vectorTopLeft.y += CANVAS_WIDTH*aspectRatio*.5;
-			var vectorBottomRight : Vector3D = _canvas.scenePosition;
-			vectorBottomRight.x += CANVAS_WIDTH*.5;
-			vectorBottomRight.y -= CANVAS_WIDTH*aspectRatio*.5;
+			var halfWidth : Number = CANVAS_WIDTH*.5;
+			var halfHeight : Number = CANVAS_WIDTH*aspectRatio*.5;
+			var vectorTopLeft : Vector3D = _canvas.scenePosition.clone();
+			var vectorBottomRight : Vector3D = _canvas.scenePosition.clone();
+			vectorTopLeft.x += halfWidth;
+			vectorTopLeft.y += halfHeight;
+			vectorBottomRight.x -= halfWidth;
+			vectorBottomRight.y -= halfHeight;
 			var projTopLeft : Vector3D = _view.project(vectorTopLeft);
 			var projBottomRight : Vector3D = _view.project(vectorBottomRight);
 
+			trace (projTopLeft.x, projTopLeft.y, projBottomRight.x - projTopLeft.x, projBottomRight.y - projTopLeft.y);
 			return new Rectangle(projTopLeft.x, projTopLeft.y, projBottomRight.x - projTopLeft.x, projBottomRight.y - projTopLeft.y);
 		}
 
