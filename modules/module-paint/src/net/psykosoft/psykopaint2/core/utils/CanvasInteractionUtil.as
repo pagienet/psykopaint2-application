@@ -13,11 +13,17 @@ package net.psykosoft.psykopaint2.core.utils
 			if( !onClip ) return false;
 
 			var obj:Array = onClip.getObjectsUnderPoint( new Point( onClip.stage.mouseX, onClip.stage.mouseY ) );
-			if( obj.length == 0 ) return true;
-			else if( obj.length == 1 ) {
+			if( obj.length == 1 ) {
+//				trace( "CanvasInteractionUtil - canContentsUnderMouseBeIgnored - ", "looking for exceptions..." );
 				// Note: add more exceptions here...
-				if( obj[ 0 ] is Bitmap ) return true;
-				if( obj[ 0 ].parent.name == "woodBgShadow" ) return true;
+				if( obj[ 0 ] is Bitmap ) {
+//					trace( "bitmap" );
+					return true;
+				}
+				if( obj[ 0 ].parent.name == "woodBgShadow" ) {
+//					trace( "woodBgShadow" );
+					return true;
+				}
 			}
 
 			return false;
