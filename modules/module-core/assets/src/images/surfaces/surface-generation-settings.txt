@@ -1,14 +1,18 @@
 Canvas:
-png2surface.exe -n canvas_NRM_1024.png -s canvas_SPEC_1024.png -o canvas_normal_specular_1024.surf -ms .25
-png2surface.exe -n canvas_NRM_2048.png -s canvas_SPEC_2048.png -o canvas_normal_specular_2048.surf -ms .25
+png2surface.exe -n canvas_NRM_512.png -s canvas_SPEC_512.png -o ..\..\..\packaged\core-packaged\images\surfaces\canvas_normal_specular_0_512.surf -ms .25
+png2surface.exe -n canvas_NRM_1024.png -s canvas_SPEC_1024.png -o ..\..\..\packaged\core-packaged\images\surfaces\canvas_normal_specular_0_1024.surf -ms .25
+png2surface.exe -n canvas_NRM_2048.png -s canvas_SPEC_2048.png -o ..\..\..\packaged\core-packaged\images\surfaces\canvas_normal_specular_0_2048.surf -ms .25
 
 Paper:
+png2surface.exe -n grained_paper_NRM_512.png -s grained_paper_SPEC_512.png -o ..\..\..\packaged\core-packaged\images\surfaces\canvas_normal_specular_1_512.surf -b .25
 png2surface.exe -n grained_paper_NRM_1024.png -s grained_paper_SPEC_1024.png -o ..\..\..\packaged\core-packaged\images\surfaces\canvas_normal_specular_1_1024.surf -b .25
 png2surface.exe -n grained_paper_NRM_2048.png -s grained_paper_SPEC_2048.png -o ..\..\..\packaged\core-packaged\images\surfaces\canvas_normal_specular_1_2048.surf -b .25
 
 Wood:
-png2surface.exe -n wood3_NRM_1024.png -s wood3_SPEC_1024.png -o ../packaged/paint-packaged/surfaces/wood3_normal_specular_1024.surf -ms .5 -b .5
-png2surface.exe -n wood3_NRM_2048.png -s wood3_SPEC_2048.png -o ../packaged/paint-packaged/surfaces/wood3_normal_specular_2048.surf -ms .5 -b .5
+png2surface.exe -a canvas_color_2_512.png -o ..\..\..\packaged\core-packaged\images\surfaces\canvas_color_2_512.surf
+png2surface.exe -n wood3_NRM_512.png -s wood3_SPEC_512.png -o ..\..\..\packaged\core-packaged\images\surfaces\canvas_normal_specular_2_512.surf -ms .5 -b .5
+png2surface.exe -n wood3_NRM_1024.png -s wood3_SPEC_1024.png -o ..\..\..\packaged\core-packaged\images\surfaces\canvas_normal_specular_2_1024.surf -ms .5 -b .5
+png2surface.exe -n wood3_NRM_2048.png -s wood3_SPEC_2048.png -o ...\..\..\packaged\core-packaged\images\surfaces\canvas_normal_specular_2_2048.surf -ms .5 -b .5
 
 Painted Wood:
 png2surface.exe -n painted-wood_NRM_1024.png -s painted-wood_SPEC_1024.png -o ../packaged/paint-packaged/surfaces/painted-wood_normal_specular_1024.surf -ms .5 -b .25

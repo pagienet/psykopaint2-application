@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.home.commands
 
 		private function loadColorData():void {
 			_byteLoader = new BinaryLoader();
-			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_color_" + index + "_preview.surf",
+			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_color_" + index + "_512.surf",
 					onColorDataLoaded, onColorDataError);
 		}
 
@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.home.commands
 
 		private function loadNormalSpecularData():void {
 			_byteLoader = new BinaryLoader();
-			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_preview.surf", onSurfaceLoaded );
+			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_512.surf", onSurfaceLoaded );
 		}
 
 		private function onSurfaceLoaded( bytes:ByteArray ):void {
@@ -109,8 +109,8 @@ package net.psykosoft.psykopaint2.home.commands
 
 		private function createPaintingVO():PaintingInfoVO {
 			var vo:PaintingInfoVO = new PaintingInfoVO();
-			vo.width = CoreSettings.STAGE_WIDTH;
-			vo.height = CoreSettings.STAGE_HEIGHT;
+			vo.width = 512;
+			vo.height = 384;
 			if( _loadedColorData ) {
 				vo.colorPreviewData = _loadedColorData;
 				vo.colorPreviewData.uncompress();

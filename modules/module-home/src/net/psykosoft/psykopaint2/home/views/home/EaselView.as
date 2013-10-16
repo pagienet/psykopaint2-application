@@ -138,7 +138,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function areTexturesInvalid(paintingVO : PaintingInfoVO) : Boolean
 		{
-			return !_diffuseTexture || (_textureWidth != paintingVO.width) && (_textureHeight != paintingVO.height);
+			return !_diffuseTexture || _textureWidth != TextureUtil.getNextPowerOfTwo(paintingVO.width) || _textureHeight != TextureUtil.getNextPowerOfTwo(paintingVO.height);
 		}
 
 		private function updateTextures(paintingVO : PaintingInfoVO) : void
