@@ -91,6 +91,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			initScene();
 			initSubViews();
+			initLightController();
 		}
 
 		override protected function onDisabled() : void
@@ -105,6 +106,18 @@ package net.psykosoft.psykopaint2.home.views.home
 			initCamera();
 			initLight();
 			initModel();
+		}
+
+		private function initLightController() : void
+		{
+			var matrix : Matrix3D = new Matrix3D();
+			var center : Vector3D = _easelView.canvasPosition;
+			matrix.appendRotation(180, Vector3D.Y_AXIS);
+			matrix.appendTranslation(center.x, center.y, center.z);
+
+			_lightController = new OrientationBasedController(_light);
+			_lightController.neutralOffset = new Vector3D(0, 0, -1000);
+			_lightController.postMatrix = matrix;
 		}
 
 		private function initModel() : void
@@ -125,7 +138,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function initSubViews() : void
 		{
 			// this is a bit shitty, but it'd suck to have to create an entire mediator system for Away3D components, so... we cheat
-			_easelView = new EaselView(_easel);
+			_easelView = new EaselView(_view, _light, _stage3dProxy.context3D);
 			_roomView = new RoomView(_room);
 			_galleryView = new GalleryView(_gallery);
 			addChild(_easelView);
@@ -174,9 +187,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function initLight() : void
 		{
 			_light = new PointLight();
-			_lightController = new OrientationBasedController(_light);
-//			_lightController.centerPosition = _easel.scenePosition;
-			_lightController.neutralOffset = new Vector3D(0, 0, -1000);
+			_light.ambient = 1;
+			_light.color = 0x989589;
+			_light.ambientColor = 0x808088;
 		}
 
 		public function renderScene(target : Texture) : void
@@ -202,6 +215,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function destroySubViews() : void
 		{
+			_easelView.dispose();
 			removeChild(_easelView);
 			removeChild(_roomView);
 			removeChild(_galleryView);

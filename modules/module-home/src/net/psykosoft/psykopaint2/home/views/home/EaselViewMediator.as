@@ -1,7 +1,5 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
-	import flash.geom.Rectangle;
-
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
@@ -49,7 +47,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyPaintingDataRetrievedSignal.remove(onPaintingDataRetrieved);
 		}
 
-		private function onEaselUpdateRequest(paintingVO : PaintingInfoVO, animateIn : Boolean, disposeWhenDone : Boolean) : void
+		private function onEaselUpdateRequest(paintingVO : PaintingInfoVO, animateIn : Boolean = false, disposeWhenDone : Boolean = false) : void
 		{
 			view.setContent(paintingVO, animateIn, disposeWhenDone);
 		}

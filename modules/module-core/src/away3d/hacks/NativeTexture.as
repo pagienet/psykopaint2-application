@@ -8,7 +8,7 @@ package away3d.hacks
 
 	public class NativeTexture extends Texture2DBase
 	{
-		private var _texture : TextureBase;
+		private var _texture : Texture;
 
 		public function NativeTexture(texture : Texture)
 		{
@@ -17,6 +17,18 @@ package away3d.hacks
 		}
 
 		override public function getTextureForStage3D(stage3DProxy : Stage3DProxy) : TextureBase
+		{
+			return _texture;
+		}
+
+
+		override public function dispose() : void
+		{
+			super.dispose();
+			_texture.dispose();
+		}
+
+		public function get texture() : Texture
 		{
 			return _texture;
 		}

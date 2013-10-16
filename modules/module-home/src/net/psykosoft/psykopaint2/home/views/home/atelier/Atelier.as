@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		private var _assetsLoaded:uint;
 
 		private var _iconTexture:BitmapTexture;
-		private var _floorTexture:BitmapTexture;
+//		private var _floorTexture:BitmapTexture;
 		private var _wallDiffuseTexture:BitmapTexture;
 
 		private var _wallTexture:ATFTexture;
@@ -54,10 +54,10 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		override public function dispose():void
 		{
 			_iconTexture.dispose();
-			_floorTexture.dispose();
+//			_floorTexture.dispose();
 			_wallTexture.dispose();
 			_iconTexture = null;
-			_floorTexture = null;
+//			_floorTexture = null;
 			_wallTexture = null;
 
 			for(var i:uint = 0;i<_meshes.length;++i){
@@ -79,13 +79,13 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		}
 
 		// replaces user floorimage
-		public function set floorImage(bitmapData:BitmapData):void
-		{
-			changeImage(_floorTexture, bitmapData);
-		}
+//		public function set floorImage(bitmapData:BitmapData):void
+//		{
+//			changeImage(_floorTexture, bitmapData);
+//		}
 
 		// replaces user wallimage
-		public function set WallImage(bitmapData:BitmapData):void
+		public function set wallImage(bitmapData:BitmapData):void
 		{
 			changeImage(_wallDiffuseTexture, bitmapData);
 		}
