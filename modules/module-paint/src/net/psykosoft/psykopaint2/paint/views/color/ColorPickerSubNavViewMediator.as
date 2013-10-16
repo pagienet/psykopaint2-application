@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			notifyGlobalGestureSignal.add( onGlobalGestureDetected );
 			
 			view.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
+			_stage = view.stage;
 		}
 
 		override public function destroy():void {
