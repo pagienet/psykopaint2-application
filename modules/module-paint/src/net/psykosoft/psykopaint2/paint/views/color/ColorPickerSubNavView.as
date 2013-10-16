@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.ColorTransform;
+	import flash.geom.Point;
 	import flash.utils.Timer;
 	
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
@@ -314,6 +315,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public function attemptPipetteCharge( fromLongTap:Boolean ):void
 		{
 			if ( pipette.visible ) return;
+			
+			if ( !this.contains(pipette )) this.addChild(pipette);
 			//if ( mouseY < -100 || mouseX < -225 || mouseX > 240 ) return;
 			 if ( colorPalette.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
 			{
@@ -348,8 +351,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		private function onPipetteDischarge( event:Event ):void
 		{
-			colorMixer.addColorSpot( pipette.currentColor, pipetteDropSize++);
+			colorMixer.addColorSpot( pipette.x-colorMixer.x,pipette.y-colorMixer.y,pipette.currentColor, pipetteDropSize++);
 		}
 		
+		public function showPipette( holder:Sprite, color:uint, screenPos:Point):void
+		{
+			if ( !holder.contains(pipette )) holder.addChild(pipette);
+			pipette.x = screenPos.x;
+			pipette.y = screenPos.y;
+			pipette.startCharge( color );	
+			
+			
+		}
 	}
 }

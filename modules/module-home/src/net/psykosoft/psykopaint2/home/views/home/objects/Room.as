@@ -1,16 +1,17 @@
 package net.psykosoft.psykopaint2.home.views.home.objects
 {
 
+	import flash.utils.ByteArray;
+	
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.hacks.RecoverableATFTexture;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.ATFTexture;
-
-	import flash.utils.ByteArray;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -25,7 +26,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		private var _floor:Mesh;
 		private var _floorGeometry:PlaneGeometry;
 		private var _floorMaterial:TextureMaterial;
-		private var _floorTexture:ATFTexture;
+		private var _floorTexture:RecoverableATFTexture;
 
 		private var _wall:Mesh;
 		private var _wallGeometry:PlaneGeometry;
@@ -109,10 +110,11 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			// Texture.
 			var cl:Class = CoreSettings.RUNNING_ON_iPAD ? HomeEmbeddedAssets.instance.FloorPaperIos : HomeEmbeddedAssets.instance.FloorPaperDesktop;
-			var bytes:ByteArray = new cl() as ByteArray;
-			_floorTexture = new ATFTexture( bytes );
+			//var bytes:ByteArray = new cl() as ByteArray;
+			_floorTexture = new RecoverableATFTexture( cl );
 			_floorTexture.getTextureForStage3D( _view.stage3DProxy );
-			bytes.clear();
+			//temporarily disabled for ios error testing
+			//bytes.clear();
 
 			// Material.
 			_floorMaterial = new TextureMaterial( _floorTexture );

@@ -10,8 +10,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.utils.getTimer;
-
+	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
@@ -23,6 +24,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
@@ -34,9 +36,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
-
+	
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.LongPressGesture;
 
@@ -83,6 +86,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var notifyPickedColorChangedSignal : NotifyPickedColorChangedSignal;
 		
 		[Inject]
+		public var notifyShowPipetteSignal : NotifyShowPipetteSignal;
+		
+		[Inject]
 		public var requestAddViewToMainLayerSignal:RequestAddViewToMainLayerSignal;
 	
 		private var _view : DisplayObject;
@@ -100,6 +106,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var pickedColorPreview:Shape;
 		private var pickedColorTf:ColorTransform;
 		private var singleTapDelay:int;
+		private var pipetteActive:Boolean;
+		private var colorPickerOnce:Boolean;
 		
 		public function BrushKitManager()
 		{
@@ -132,33 +140,54 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				var obj:Array = target.getObjectsUnderPoint(LongPressGesture(event.target).location);
 				if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
 				{
+					if ( !colorPickerOnce )
+					{
+						colorPickerOnce = true;
+						requestStateChangeSignal.dispatch( NavigationStateType.PAINT_ADJUST_COLOR );
+					}
 					if ( copyColorUtil == null )
 					{
 						copyColorUtil = new CopyColorToBitmapDataUtil(); 
-						pickedColorPreview = new Shape();
-						pickedColorPreview.graphics.beginFill(0);
-						pickedColorPreview.graphics.drawCircle(0,0,25);
-						pickedColorPreview.graphics.endFill();
-						
-						pickedColorTf = new ColorTransform();
 					}
 					currentColorMap = copyColorUtil.execute( canvasModel );
+					var px : Number = (_view.mouseX - _canvasMatrix.tx * 1024) / _canvasMatrix.a ;
+					var py : Number = (_view.mouseY - _canvasMatrix.ty * 768)  / _canvasMatrix.d;
+					var color:uint = currentColorMap.getPixel(px* CoreSettings.GLOBAL_SCALING,py* CoreSettings.GLOBAL_SCALING);
+					
+					notifyShowPipetteSignal.dispatch( _view, color,new Point(_view.mouseX,_view.mouseY));
+					_activeBrushKit.brushEngine.pathManager.deactivate();
+					pipetteActive = true;
+					/*
+					pickedColorTf = new ColorTransform();
+					pickedColorPreview = new Shape();
+					pickedColorPreview.graphics.beginFill(0);
+					pickedColorPreview.graphics.drawCircle(0,0,25);
+					pickedColorPreview.graphics.endFill();
 					_activeBrushKit.brushEngine.pathManager.deactivate();
 					_view.addEventListener(Event.ENTER_FRAME, updateColorPicker );
 					(_view as CanvasView).addChild(pickedColorPreview);
 					
 					updateColorPicker(null);
+					*/
 				}
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_ENDED )
 			{
+				if ( pipetteActive )
+				{
+					pipetteActive = false;
+					_activeBrushKit.brushEngine.pathManager.activate(_view, canvasModel, renderer );
+					copyColorUtil.dispose();
+				}
+				/*
 				if (pickedColorPreview && (_view as CanvasView).contains(pickedColorPreview))
 				{
-					copyColorUtil.dispose();
+					
 					(_view as CanvasView).removeChild(pickedColorPreview);
 					
 					_view.removeEventListener(Event.ENTER_FRAME, updateColorPicker );
 					_activeBrushKit.brushEngine.pathManager.activate(_view, canvasModel, renderer );
 				}
+				*/
 			}
 		}
 
@@ -185,6 +214,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( _currentBrushColorParameter ) _currentBrushColorParameter.colorValue = newColor;
 		}
 		
+		/*
 		private function updateColorPicker( event:Event ):void
 		{
 		//	var pm:PathManager = _activeBrushKit.brushEngine.pathManager;
@@ -199,6 +229,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			pickedColorPreview.transform.colorTransform = pickedColorTf;
 			notifyPickedColorChangedSignal.dispatch(color, true);
 		}
+		*/
 		
 		
 		private function updateCurrentBrushColorParameter( ):void
@@ -284,6 +315,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_active = true;
 			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
+			
+			
 		}
 
 		public function deactivate() : void
