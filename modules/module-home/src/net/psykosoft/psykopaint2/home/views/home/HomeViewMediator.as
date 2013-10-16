@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var applicationRenderer : ApplicationRenderer;
 
 		[Inject]
-		public var notifyHomeViewZoomCompleteSignal : NotifyHomeViewZoomCompleteSignal;
+		public var notifyHomeViewIntroZoomComplete : NotifyHomeViewIntroZoomCompleteSignal;
 
 		[Inject]
 		public var requestHomeIntroSignal : RequestHomeIntroSignal;
@@ -72,10 +72,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			// Fully active states.
 			manageStateChanges = false;
-
-			// From app.
-			// TODO: Reenable
-//			view.zoomCompletedSignal.add( onViewZoomComplete );
 
 			requestShowPopUpSignal.add(onShowPopUp);
 			requestHidePopUpSignal.add(onHidePopUp);
@@ -116,10 +112,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 
 			view.disable();
-
-			// TODO: Reenable
-
-//			view.zoomCompletedSignal.remove( onViewZoomComplete );
 
 			requestShowPopUpSignal.remove(onShowPopUp);
 			requestHidePopUpSignal.remove(onHidePopUp);
@@ -172,7 +164,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onIntroComplete() : void
 		{
-			notifyHomeViewZoomCompleteSignal.dispatch();
+			notifyHomeViewIntroZoomComplete.dispatch();
 		}
 
 		override protected function onStateChange(newState : String) : void
@@ -215,43 +207,5 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			notifyHomeViewSceneReadySignal.dispatch();
 		}
-
-		private function onViewZoomComplete() : void
-		{
-			notifyHomeViewZoomCompleteSignal.dispatch();
-		}
-
-		/*private function onViewClosestSnapPointChanged( snapPointIndex:uint ):void {
-
-		 trace( this, "closest painting changed to index: " + snapPointIndex );
-		 _dockedAtSnapIndex = snapPointIndex;
-
-		 // Variable.
-		 var homePaintingIndex:uint = view.paintingManager.homePaintingIndex;
-
-		 // Trigger SETTINGS state if closest to settings painting ( index 0 ).
-		 if( stateModel.currentState != NavigationStateType.SETTINGS && snapPointIndex == 0 ) {
-		 requestNavigationStateChange( NavigationStateType.SETTINGS );
-		 return;
-		 }
-
-		 // Trigger NEW PAINTING state if closest to easel ( index 1 ).
-		 if( stateModel.currentState != NavigationStateType.HOME_ON_EASEL && snapPointIndex == 1 ) {
-		 requestNavigationStateChange( NavigationStateType.HOME_ON_EASEL );
-		 return;
-		 }
-
-		 // Restore HOME state if closest to home painting ( index 2 ).
-		 if( stateModel.currentState != NavigationStateType.HOME && snapPointIndex == homePaintingIndex ) {
-		 requestNavigationStateChange( NavigationStateType.HOME );
-		 return;
-		 }
-
-		 if( stateModel.currentState != NavigationStateType.BOOK_GALLERY && snapPointIndex == 3 ) {
-		 requestHomePanningToggleSignal.dispatch(-1);
-		 requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
-		 return;
-		 }
-		 }   */
 	}
 }

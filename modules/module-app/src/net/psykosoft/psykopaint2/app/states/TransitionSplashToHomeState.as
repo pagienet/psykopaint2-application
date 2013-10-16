@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySplashScreenRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
 
 		[Inject]
-		public var notifyHomeViewZoomCompleteSignal : NotifyHomeViewZoomCompleteSignal;
+		public var notifyHomeViewZoomCompleteSignal : NotifyHomeViewIntroZoomCompleteSignal;
 
 		[Inject]
 		public var requestSetupHomeModuleSignal : RequestSetupHomeModuleSignal;

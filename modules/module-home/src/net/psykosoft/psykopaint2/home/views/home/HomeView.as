@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.cameras.Camera3D;
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
-	import away3d.entities.Mesh;
 	import away3d.lights.PointLight;
 
 	import com.greensock.TweenLite;
@@ -41,9 +40,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _easelView : EaselView;
 		private var _roomView : RoomView;
 		private var _galleryView : GalleryView;
-		private var _easel : Mesh;
-		private var _room : Mesh;
-		private var _gallery : Mesh;
 		private var _atelier : Atelier;
 		private var _camera : Camera3D;
 		private var _scrollingEnabled : Boolean = true;
@@ -139,8 +135,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			// this is a bit shitty, but it'd suck to have to create an entire mediator system for Away3D components, so... we cheat
 			_easelView = new EaselView(_view, _light, _stage3dProxy.context3D);
-			_roomView = new RoomView(_room);
-			_galleryView = new GalleryView(_gallery);
+			_roomView = new RoomView();
+			_galleryView = new GalleryView();
 			addChild(_easelView);
 			addChild(_roomView);
 			addChild(_galleryView);

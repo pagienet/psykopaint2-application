@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	public class RoomView extends Sprite
 	{
-		public function RoomView(room : Mesh)
+		public function RoomView()
 		{
 
 		}

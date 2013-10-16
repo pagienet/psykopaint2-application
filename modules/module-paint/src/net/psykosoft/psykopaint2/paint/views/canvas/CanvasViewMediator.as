@@ -276,7 +276,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			notifyCanvasZoomedToDefaultViewSignal.dispatch();
 		}
 
-		public function zoomToEaselView():void {
+		private function zoomToEaselView():void {
 			TweenLite.killTweensOf( this );
 			TweenLite.to( this, 1, { zoomScale: _minZoomScale, onUpdate: onZoomUpdate, onComplete: onZoomToEaselViewComplete, ease: Strong.easeInOut } );
 		}
