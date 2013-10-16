@@ -1,24 +1,22 @@
 package net.psykosoft.psykopaint2.home.views.home.objects
 {
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
+	
 	import away3d.containers.View3D;
 	import away3d.core.pick.PickingColliderType;
 	import away3d.entities.Mesh;
 	import away3d.events.MouseEvent3D;
+	import away3d.hacks.RecoverableATFTexture;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.ATFTexture;
-
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Strong;
-
-	import flash.utils.ByteArray;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.home.assets.HomeEmbeddedAssets;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class Easel extends GalleryPainting
@@ -48,7 +46,7 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 
 			removeChild( _easel );
 			_easel.geometry.dispose();
-			var easelTexture:ATFTexture = TextureMaterial( _easel.material ).texture as ATFTexture;
+			var easelTexture:RecoverableATFTexture = TextureMaterial( _easel.material ).texture as RecoverableATFTexture;
 			_easel.material.dispose();
 			easelTexture.dispose();
 			_easel.dispose();
@@ -84,10 +82,12 @@ package net.psykosoft.psykopaint2.home.views.home.objects
 		public function set easelVisible( visible:Boolean ):void {
 			if( !_easel ) {
 
-				var bytes:ByteArray = new HomeEmbeddedAssets.instance.EaselImage() as ByteArray;
-				var texture:ATFTexture = new ATFTexture( bytes );
+				//var bytes:ByteArray = new HomeEmbeddedAssets.instance.EaselImage() as ByteArray;
+				//var texture:ATFTexture = new ATFTexture( bytes );
+				var texture:RecoverableATFTexture = new RecoverableATFTexture( HomeEmbeddedAssets.instance.EaselImage );
 				texture.getTextureForStage3D( _view.stage3DProxy );
-				bytes.clear();
+				//temporarily disabled to counter ios7 buge
+				//bytes.clear();
 				var easelMaterial:TextureMaterial = new TextureMaterial( texture );
 				easelMaterial.alphaBlending = true;
 				easelMaterial.mipmap = false;

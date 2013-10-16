@@ -94,7 +94,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 			mixerWidth = 270;
 			mixerHeight = 190;
-			fingerSize = 32;
+			fingerSize = 40;
 			origin = new Point();
 			
 			var shp:Shape = new Shape();
@@ -162,15 +162,15 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 			
 		}
 		
-		public function addColorSpot( color:uint, radius:Number ):void
+		public function addColorSpot( x:int, y:int, color:uint, radius:Number ):void
 		{
 			_displayMap.lock();
 			
 			ct_shp.color = color;
 			ct_shp.alphaMultiplier = 0.2;
 			drawMatrix.a = drawMatrix.d = radius / fingerSize; 
-			drawMatrix.tx = mapDisplay.mouseX - radius * 0.5;
-			drawMatrix.ty = mapDisplay.mouseY - radius * 0.5;
+			drawMatrix.tx = x - radius * 0.5;
+			drawMatrix.ty = y - radius * 0.5;
 			
 			_displayMap.drawWithQuality(_drawMap,drawMatrix,ct_shp,"normal",null,true,StageQuality.HIGH);
 			_displayMap.unlock();

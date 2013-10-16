@@ -1,8 +1,10 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
 
+	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
@@ -10,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
 	
 	import org.gestouch.events.GestureEvent;
 
@@ -23,6 +26,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		[Inject]
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
+		
+		[Inject]
+		public var notifyShowPipetteSignal:NotifyShowPipetteSignal;
 		
 		[Inject]
 		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
@@ -40,6 +46,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			// From app.
 			notifyPickedColorChangedSignal.add( onColorChangedFromOutside );
 			notifyGlobalGestureSignal.add( onGlobalGestureDetected );
+			notifyShowPipetteSignal.add( onShowPipette );
 			
 			view.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			_stage = view.stage;
@@ -51,6 +58,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			notifyPickedColorChangedSignal.remove( onColorChangedFromOutside );
 			notifyGlobalGestureSignal.remove( onGlobalGestureDetected );
 			view.colorChangedSignal.remove( onColorChanged );
+			notifyShowPipetteSignal.remove( onShowPipette );
 			if( _stage.hasEventListener( MouseEvent.MOUSE_UP ) )
 				_stage.removeEventListener( MouseEvent.MOUSE_UP, onMouseUp );
 			_stage = null;
@@ -92,6 +100,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private function onColorChangedFromOutside( newColor:uint, reallyFromOutside:Boolean ):void
 		{
 			if ( reallyFromOutside ) view.setCurrentColor(newColor,false,false,false);
+		}
+		
+		private function onShowPipette( holder:Sprite, color:uint, screenPos:Point ):void
+		{
+			view.showPipette( holder, color, screenPos);
 		}
 		
 		private function onGlobalGestureDetected(gestureType:String, event:GestureEvent):void
