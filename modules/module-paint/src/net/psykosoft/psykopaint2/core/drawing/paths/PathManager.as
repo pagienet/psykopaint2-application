@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.core.drawing.paths
 {
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.Shape;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -8,6 +10,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.events.TouchEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import flash.utils.clearTimeout;
@@ -25,6 +28,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.utils.CanvasInteractionUtil;
+	import net.psykosoft.psykopaint2.core.views.navigation.NavigationPanel;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 
 	final public class PathManager
@@ -197,7 +202,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected function onTouchBegin(event : TouchEvent) : void
 		{
 			//Navbar touched?
-			if (!(event.target is Stage) && !(event.target is CanvasView)) return;
+			if (!(event.target is Stage) && !(event.target is CanvasView)) {
+				if( !CanvasInteractionUtil.canContentsUnderMouseBeIgnored( event.target ) ) return;
+			}
 			
 			if ( _touchID == -1 && event.stageY > CoreSettings.STAGE_HEIGHT - 100 )
 			{
@@ -287,9 +294,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		// for purposes of le debug
 		protected function onMouseDown(event : MouseEvent) : void
 		{
-			
-			if (!(event.target is Stage) && !(event.target is CanvasView)) return;
-			
+			if (!(event.target is Stage) && !(event.target is CanvasView)) {
+				if( !CanvasInteractionUtil.canContentsUnderMouseBeIgnored( event.target ) ) return;
+			}
+
 			if ( event.stageY > CoreSettings.STAGE_HEIGHT - 100 )
 			{
 				recordedData.length = 0;

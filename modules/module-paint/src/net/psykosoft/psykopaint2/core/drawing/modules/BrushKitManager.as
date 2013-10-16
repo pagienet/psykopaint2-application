@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Shape;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
@@ -34,6 +35,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.utils.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
@@ -136,9 +138,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN && _activeMode == PaintMode.COLOR_MODE )
 			{
-				var target:Stage =  Stage(LongPressGesture(event.target).target);
+				var clip:* = LongPressGesture(event.target).target;
+				var target:Stage =  Stage( clip );
 				var obj:Array = target.getObjectsUnderPoint(LongPressGesture(event.target).location);
-				if (obj.length == 0 || (obj.length == 1 && obj[0] is Bitmap) )
+				if (obj.length == 0 || CanvasInteractionUtil.canContentsUnderMouseBeIgnored( clip ) )
 				{
 					if ( !colorPickerOnce )
 					{

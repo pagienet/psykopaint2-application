@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			// Uncomment to visualize the panel's active area.
 //			this.graphics.clear();
-//			this.graphics.beginFill( 0xFF0000, 0.0 );
+//			this.graphics.beginFill( 0xFF0000, 0.5 );
 //			this.graphics.drawRect( 0, -_contentHeight, 1024, _contentHeight );
 //			this.graphics.endFill();
 		}
@@ -137,8 +137,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			trace( this, "pan start: " + stage.mouseY );
 
 			// Check if the pan started in the appropriate area.
-			var tolerance:Number = 50;
-			var minY:Number = shown ? 768 - _contentHeight - tolerance : 768 - tolerance;
+			var closedTolerance:Number = 50;
+			var minY:Number = shown ? 768 - _contentHeight : 768 - closedTolerance;
 			minY *= CoreSettings.GLOBAL_SCALING;
 			if( panY < minY ) return;
 

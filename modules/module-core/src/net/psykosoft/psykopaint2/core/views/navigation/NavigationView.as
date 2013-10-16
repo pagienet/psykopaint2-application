@@ -206,7 +206,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				_panel.contentHeight = 140;
 			}
 			else {
-				_panel.contentHeight = 256;
+				_panel.contentHeight = 215;
 			}
 		}
 
