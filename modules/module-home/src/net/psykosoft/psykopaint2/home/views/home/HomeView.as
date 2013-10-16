@@ -134,8 +134,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function initSubViews() : void
 		{
 			// this is a bit shitty, but it'd suck to have to create an entire mediator system for Away3D components, so... we cheat
-			_easelView = new EaselView(_view, _light, _stage3dProxy.context3D);
-			_roomView = new RoomView();
+			_easelView = new EaselView(_view, _light, _stage3dProxy);
+			_roomView = new RoomView(_atelier, _stage3dProxy);
 			_galleryView = new GalleryView();
 			addChild(_easelView);
 			addChild(_roomView);

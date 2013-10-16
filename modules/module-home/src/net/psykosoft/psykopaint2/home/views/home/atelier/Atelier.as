@@ -1,9 +1,11 @@
 package net.psykosoft.psykopaint2.home.views.home.atelier
 {
 	import away3d.containers.ObjectContainer3D;
+	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.methods.LightMapMethod;
+	import away3d.textures.ATFData;
 	import away3d.textures.ATFTexture;
 	import away3d.textures.BitmapTexture;
 	import away3d.materials.SinglePassMaterialBase;
@@ -34,12 +36,14 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 
 		private var _iconTexture:BitmapTexture;
 //		private var _floorTexture:BitmapTexture;
-		private var _wallDiffuseTexture:BitmapTexture;
+		private var _wallDiffuseTexture:ATFTexture;
 
 		private var _wallTexture:ATFTexture;
 		private var _elementsTexture:ATFTexture;
 
 		private var _meshes:Vector.<Mesh>;
+		private var _pendingWallTexture : ByteArray;
+		private var _wallMesh : Mesh;
 
 		function Atelier ():void
 		{
@@ -73,9 +77,10 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		}
 
 		// replaces user icon
-		public function set iconImage(bitmapData:BitmapData):void
+		public function setIconImage(bitmapData:BitmapData):void
 		{
-			changeImage(_iconTexture, bitmapData);
+			_iconTexture.bitmapData.dispose();
+			_iconTexture.bitmapData = bitmapData;
 		}
 
 		// replaces user floorimage
@@ -85,9 +90,18 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 //		}
 
 		// replaces user wallimage
-		public function set wallImage(bitmapData:BitmapData):void
+		public function setWallImage(data:ByteArray):void
 		{
-			changeImage(_wallDiffuseTexture, bitmapData);
+			if (_wallDiffuseTexture)
+				_wallDiffuseTexture.atfData = new ATFData(data);
+			else {
+				if (_wallMesh) {
+					_wallMesh.material = buildATFMaterial(_pendingWallTexture);
+					_wallDiffuseTexture = ATFTexture(TextureMaterial(_wallMesh.material).texture);
+				}
+				else
+					_pendingWallTexture = data;
+			}
 		}
 
 		public function init():void
@@ -228,15 +242,19 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		{
 			var walls_editmaterialData:Walls_editmaterial1Data = new Walls_editmaterial1Data();
 			var walls_editmaterial_rd:Vector.<Number> = Vector.<Number>([-1,-1.5099580252808664e-7,8.742277657347586e-8,0,-1.5099581673894136e-7,1,-1.5099580252808664e-7,0,-8.742275525719378e-8,-1.5099581673894136e-7,-1,0,2.049999952316284,177.3800048828125,1.2799999713897705,1]);
-			var m:Mesh = new Mesh(walls_editmaterialData.geometryData, buildBitmapMaterial( new BitmapData(64, 64, false, 0xFFFFFF) ) );
-			applyTransform(walls_editmaterial_rd, m, "wallsEdit");
+			_wallMesh = new Mesh(walls_editmaterialData.geometryData, null );
+			applyTransform(walls_editmaterial_rd, _wallMesh, "wallsEdit");
 			//the texture we use for walls toggles
-			_wallDiffuseTexture = BitmapTexture(TextureMaterial(m.material).texture);
+			if (_pendingWallTexture) {
+				_wallMesh.material = buildATFMaterial(_pendingWallTexture);
+				_wallDiffuseTexture = ATFTexture(TextureMaterial(_wallMesh.material).texture);
+				_pendingWallTexture = null;
+			}
 			var lightMap:LightMapMethod = new LightMapMethod(_wallTexture, LightMapMethod.MULTIPLY, true);
-			SinglePassMaterialBase(m.material).addMethod(lightMap);
+			SinglePassMaterialBase(_wallMesh.material).addMethod(lightMap);
 
-			_meshes.push(m);
-			this.addChild(m);
+			_meshes.push(_wallMesh);
+			addChild(_wallMesh);
 		}
 
 		private function applyTransform(rawData:Vector.<Number>, mesh:Mesh, id:String):void
@@ -264,14 +282,5 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			var lightMap:LightMapMethod = new LightMapMethod(AFTTexture, LightMapMethod.MULTIPLY, useSecondaryUV);
 			material.addMethod(lightMap);
 		}
-  
-		private function changeImage(texture:BitmapTexture, bitmapData:BitmapData):void
-		{
-			var bmd:BitmapData = texture.bitmapData;
-			bmd.dispose();
-			texture.invalidateContent();
-			texture.bitmapData = bitmapData;
-		}
-
 	}
 }

@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 	import away3d.containers.View3D;
 	import away3d.core.base.Geometry;
+	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
 	import away3d.hacks.NativeTexture;
@@ -46,10 +47,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _lightPicker : LightPickerBase;
 		private var _view : View3D;
 
-		public function EaselView(view : View3D, light : LightBase, context3D : Context3D)
+		public function EaselView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
 			_view = view;
-			_context3D = context3D;
+			_context3D = stage3dProxy.context3D;
 			_lightPicker = new StaticLightPicker([light]);
 			_view.camera.addEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraTransformChanged);
 			initCanvas();
