@@ -194,7 +194,10 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function updateScrollingForState() : void
 		{
-			if (_currentNavigationState == NavigationStateType.BOOK_GALLERY)
+			if (_currentNavigationState == NavigationStateType.BOOK_GALLERY ||
+				_currentNavigationState == NavigationStateType.BOOK_SOURCE_IMAGES ||
+				_currentNavigationState == NavigationStateType.CAPTURE_IMAGE ||
+				_currentNavigationState == NavigationStateType.PICK_USER_IMAGE_DESKTOP )
 				view.scrollingEnabled = false;
 			else
 				view.scrollingEnabled = true;
