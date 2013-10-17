@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onEaselRectChanged() : void
 		{
-			easelRectModel.localScreenRect = view.easelRect;
+			easelRectModel.absoluteScreenRect = view.easelRect;
 		}
 
 		override public function initialize() : void

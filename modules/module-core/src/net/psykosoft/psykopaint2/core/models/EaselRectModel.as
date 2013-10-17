@@ -21,20 +21,20 @@ package net.psykosoft.psykopaint2.core.models
 			return _localScreenRect;
 		}
 
-		public function set localScreenRect(value : Rectangle) : void
-		{
-			_localScreenRect = value;
-			_absoluteScreenRect = value.clone();
-			_absoluteScreenRect.x *= CoreSettings.GLOBAL_SCALING;
-			_absoluteScreenRect.y *= CoreSettings.GLOBAL_SCALING;
-			_absoluteScreenRect.width *= CoreSettings.GLOBAL_SCALING;
-			_absoluteScreenRect.height *= CoreSettings.GLOBAL_SCALING;
-			notifyEaselRectUpdateSignal.dispatch(_localScreenRect);
-		}
-
 		public function get absoluteScreenRect() : Rectangle
 		{
 			return _absoluteScreenRect;
+		}
+
+		public function set absoluteScreenRect(value : Rectangle) : void
+		{
+			_absoluteScreenRect = value;
+			_localScreenRect = value.clone();
+			_localScreenRect.x /= CoreSettings.GLOBAL_SCALING;
+			_localScreenRect.y /= CoreSettings.GLOBAL_SCALING;
+			_localScreenRect.width /= CoreSettings.GLOBAL_SCALING;
+			_localScreenRect.height /= CoreSettings.GLOBAL_SCALING;
+			notifyEaselRectUpdateSignal.dispatch(_localScreenRect);
 		}
 	}
 }

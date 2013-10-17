@@ -53,6 +53,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_context3D = stage3dProxy.context3D;
 			_lightPicker = new StaticLightPicker([light]);
 			_view.camera.addEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraTransformChanged);
+			initMaterial();
 			initCanvas();
 		}
 
@@ -63,7 +64,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function initCanvas() : void
 		{
-			initMaterial();
 			var aspectRatio : Number = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
 			// TODO: Figure out the proper size
 			var geom : Geometry = new PlaneGeometry(CANVAS_WIDTH, CANVAS_WIDTH*aspectRatio, 1, 1, false);
@@ -75,6 +75,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_canvas.x = 271;
 			_canvas.y = -35;
 			_canvas.z = 73;
+			// start invisible until content is added
+			_canvas.visible = false;
 			_view.scene.addChild(_canvas);
 		}
 
