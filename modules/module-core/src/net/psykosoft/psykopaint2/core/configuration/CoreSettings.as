@@ -43,6 +43,8 @@ package net.psykosoft.psykopaint2.core.configuration
 		public static const SHOW_INTRO_VIDEO:Boolean = false; /*false on release*/
 		public static const TRACK_NON_GCED_OBJECTS:Boolean = false; /*false on release*/
 		public static const PUBLISH_JPEG_QUALITY : uint = 80;
+		public static const USE_NATIVE_CAMERA_TO_RETRIEVE_USER_PICTURE:Boolean = false; /*true on release*/
+		public static const USE_NATIVE_CAMERA_ROLL_TO_RETRIEVE_USER_IMAGES:Boolean = false; /*true on release*/
 
 		// Saving options.
 		public static const USE_SAVING:Boolean = true; /*true on release*/
