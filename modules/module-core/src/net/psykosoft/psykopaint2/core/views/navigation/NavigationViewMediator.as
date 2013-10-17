@@ -1,20 +1,16 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
-	import flash.display.Stage;
-
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationDisposalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.PanGesture;
-	import org.gestouch.gestures.TapGesture;
 
 	public class NavigationViewMediator extends MediatorBase
 	{
@@ -29,9 +25,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
-
-		[Inject]
-		public var requestNavigationDisposalSignal:RequestNavigationDisposalSignal;
 
 		[Inject]
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
@@ -52,7 +45,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			// From app.
 			requestNavigationToggleSignal.add( onToggleRequest );
-			requestNavigationDisposalSignal.add( onNavigationDisposalRequest );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			navigationCanHideWithGesturesSignal.add( onNavigationCanHideWithGestures );
 
@@ -137,10 +129,6 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				}
 
 			}
-		}
-
-		private function onNavigationDisposalRequest():void {
-			view.disposeSubNavigation();
 		}
 
 		override protected function onStateChange( newState:String ):void {

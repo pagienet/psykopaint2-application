@@ -22,8 +22,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.models.AMFGalleryService;
 	import net.psykosoft.psykopaint2.core.models.AMFLoggedInUserProxy;
-	import net.psykosoft.psykopaint2.core.models.DummyGalleryService;
-	import net.psykosoft.psykopaint2.core.models.DummyLoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.EaselModel;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.GalleryService;
@@ -47,12 +45,12 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHomeViewZoomCompleteSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingFailedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingSucceededSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoFileReadSignal;
@@ -74,6 +72,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegistrationFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestAllPaintingDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCoreModuleBootstrapSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
@@ -89,10 +88,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLovePaintingSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationDisposalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestAllPaintingDataRetrievalSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingInfoFileReadSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
@@ -109,12 +106,12 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.views.debug.ErrorsViewMediator;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationView;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationViewMediator;
+	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
+	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerViewMediator;
 	import net.psykosoft.psykopaint2.core.views.popups.login.LoginPopUpView;
 	import net.psykosoft.psykopaint2.core.views.popups.login.LoginPopUpViewMediator;
 	import net.psykosoft.psykopaint2.core.views.popups.messages.MessagePopUpView;
 	import net.psykosoft.psykopaint2.core.views.popups.messages.MessagePopUpViewMediator;
-	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerView;
-	import net.psykosoft.psykopaint2.core.views.popups.PopUpManagerViewMediator;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketView;
 	import net.psykosoft.psykopaint2.core.views.socket.PsykoSocketViewMediator;
 	import net.psykosoft.psykopaint2.core.views.splash.SplashView;
@@ -259,7 +256,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestAddViewToMainLayerSignal ).asSingleton();
 			_injector.map( RequestSaveCPUForUISignal ).asSingleton();
 			_injector.map( RequestResumeCPUUsageForUISignal ).asSingleton();
-			_injector.map( RequestNavigationDisposalSignal ).asSingleton();
 			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
 			_injector.map( RequestShowPopUpSignal ).asSingleton();
 			_injector.map( RequestHidePopUpSignal ).asSingleton();
