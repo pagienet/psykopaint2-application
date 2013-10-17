@@ -183,6 +183,14 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			}
 		}
 
+		public function force(positionID : int) : void
+		{
+			_activeTargetPositionID = positionID;
+			killTween();
+			_target.x = _targetPositions[positionID];
+		}
+
+
 		private function killTween() : void
 		{
 			if (_tween) {
@@ -195,7 +203,6 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 				_hasEnterFrame = false;
 			}
 		}
-
 
 		public function get interactionRect() : Rectangle
 		{

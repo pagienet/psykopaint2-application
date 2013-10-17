@@ -43,6 +43,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _atelier : Atelier;
 		private var _camera : Camera3D;
 		private var _scrollingEnabled : Boolean = true;
+		private var _animateToTarget : Boolean = false;
 
 		public function HomeView()
 		{
@@ -76,6 +77,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function playIntroAnimation(onComplete : Function) : void
 		{
+			_animateToTarget = true;
 			TweenLite.to(	_camera, 1.5, { 	z:450,
 				ease: Strong.easeInOut,
 				onComplete:onComplete,
@@ -232,7 +234,14 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function set activeSection(activeSection : int) : void
 		{
-			_cameraController.navigateTo(activeSection);
+			if (_animateToTarget) {
+				_cameraController.navigateTo(activeSection);
+			}
+			else {
+				_animateToTarget = true;
+				_cameraController.force(activeSection);
+				_camera.z = 450;
+			}
 		}
 	}
 }
