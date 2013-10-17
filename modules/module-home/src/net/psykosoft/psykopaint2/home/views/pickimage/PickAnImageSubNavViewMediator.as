@@ -50,6 +50,36 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		private var _cameraUtil:DeviceCameraUtil;
 		private var _rollUtil:CameraRollUtil;
 
+		/*
+
+        Notes on the Context3D loss and toolbar reappearing:
+
+        Atm we are using
+        CoreSettings.USE_NATIVE_CAMERA_ROLL_TO_RETRIEVE_USER_IMAGES = false
+        CoreSettings.USE_NATIVE_CAMERA_TO_RETRIEVE_USER_PICTURE = false
+
+        These 2 settings tell the app to use our custom camera and our custom browser ( the book ) to retrieve images from the user's library.
+        We want to use the native iOS camera app and the native camera roll pop up, which are activated by settings those 2 vars to true,
+        but we can't atm because there is a bug in AIR 3.9 in which the 3D context is loss while triggering any of those 2 iOS elements.
+        This didn't happen in AIR 3.8 and has been reported to Adobe.
+
+        https://bugbase.adobe.com/index.cfm?event=bug&id=3633422
+
+        So, we are waiting for a fix. We can easily check if it has been fixed by updating our AIR 3.9 SDK and settings those 2 vars to true.
+
+        Note that there is a secondary bug associated to this in which not only the context is lost, but the iOS top toolbar reappears. Our app
+        doesnt use it and we tell it so in the app config xml
+        <fullScreen>true</fullScreen>
+        <key>UIViewControllerBasedStatusBarAppearance</key>
+		<false/>
+		<key>UIStatusBarStyle</key>
+		<string>UIStatusBarStyleLightContent</string>
+
+		However, opening the any of the iOS elements reshows the bar. There is a workaround for this by resetting the the stage's fullscreen nature from
+		AS3, but we'd rather wait for the AIR 3.9 fix. If you do want to see more on that, there is more info on the workaround in the adobe link above.
+
+		 */
+
 		override public function initialize():void {
 
 			// Init.
@@ -82,12 +112,8 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 				}
 
 				case PickAnImageSubNavView.ID_USER: {
-					if( !CoreSettings.RUNNING_ON_iPAD ) {
-						requestBrowseUserImagesSignal.dispatch();
-					}
-					else {
-						loadPhoto();
-					}
+					if( !CoreSettings.RUNNING_ON_iPAD || !CoreSettings.USE_NATIVE_CAMERA_ROLL_TO_RETRIEVE_USER_IMAGES ) requestBrowseUserImagesSignal.dispatch();
+					else loadPhoto();
 					break;
 				}
 
@@ -97,12 +123,8 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 				}
 
 				case PickAnImageSubNavView.ID_CAMERA: {
-					if( !CoreSettings.RUNNING_ON_iPAD ) {
-						requestRetrieveCameraImageSignal.dispatch();
-					}
-					else {
-						takePhoto();
-					}
+					if( !CoreSettings.RUNNING_ON_iPAD || !CoreSettings.USE_NATIVE_CAMERA_TO_RETRIEVE_USER_PICTURE ) requestRetrieveCameraImageSignal.dispatch();
+					else takePhoto();
 					break;
 				}
 
