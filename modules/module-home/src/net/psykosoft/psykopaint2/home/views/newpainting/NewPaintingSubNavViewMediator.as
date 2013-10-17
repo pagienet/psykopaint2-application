@@ -126,7 +126,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					paintingModel.activePaintingId = "psyko-" + id;
 					var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
 					trace( this, "clicked on painting: " + vo.id );
-					requestEaselUpdateSignal.dispatch( vo, true, false );
+					requestEaselUpdateSignal.dispatch( vo, true, null );
 				}
 			}
 		}

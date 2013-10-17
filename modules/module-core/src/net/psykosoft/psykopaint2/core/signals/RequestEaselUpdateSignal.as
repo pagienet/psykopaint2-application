@@ -7,7 +7,7 @@ package net.psykosoft.psykopaint2.core.signals
 	public class RequestEaselUpdateSignal extends TracingSignal
 	{
 		public function RequestEaselUpdateSignal() {
-			super( PaintingInfoVO, Boolean, Boolean ); // Painting data, Boolean to use or not use animation, Boolean to discard vo when finished animation
+			super( PaintingInfoVO, Boolean, Function ); // Painting data, Boolean to use or not use animation, Function that will be called when PaintingVO is no longer needed for actions resulting in this callback (allows disposal)
 		}
 	}
 }

@@ -119,7 +119,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		// so we can't do it elsewhere without creating new textures :\
 		// TODO: we should keep control of disposal with the owner by providing a callback function instead of "disposeWhenDone"
 		//		--> ie: an onUploadComplete function accepting paintingVO
-		public function setContent(paintingVO : PaintingInfoVO, animateIn : Boolean = false, disposeWhenDone : Boolean = false) : void
+		public function setContent(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
 			if (!paintingVO) {
 				_canvas.visible = false;
@@ -135,8 +135,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			updateTextures(paintingVO);
 
-			if (disposeWhenDone)
-				paintingVO.dispose();
+			if (onUploadComplete)
+				onUploadComplete(paintingVO);
 		}
 
 		private function areTexturesInvalid(paintingVO : PaintingInfoVO) : Boolean

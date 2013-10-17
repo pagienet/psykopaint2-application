@@ -88,12 +88,17 @@ package net.psykosoft.psykopaint2.home.commands
 			_byteLoader = null;
 
 			var vo:PaintingInfoVO = createPaintingVO();
-			requestEaselPaintingUpdateSignal.dispatch( vo, true, true );
+			requestEaselPaintingUpdateSignal.dispatch( vo, true, onEaselUpdateComplete );
 			// Note: vo is disposed by the home view when the animation finishes ( second boolean parameter of signal )
 
 			notifySurfacePreviewLoadedSignal.dispatch();
 			context.release( this );
 			_busy = false;
+		}
+
+		private function onEaselUpdateComplete(paintingVO : PaintingInfoVO) : void
+		{
+			paintingVO.dispose();
 		}
 
 		private function disposeSurface():void {

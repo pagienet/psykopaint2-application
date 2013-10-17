@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.home.commands
 			if( data && data.length > 0 ) {
 				var infoVO:PaintingInfoVO = data[ 0 ];
 				if( infoVO ) {
-					requestEaselPaintingUpdateSignal.dispatch( infoVO, false, false );
+					requestEaselPaintingUpdateSignal.dispatch( infoVO, false, null );
 				}
 			}
 		}

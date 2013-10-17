@@ -47,9 +47,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyPaintingDataRetrievedSignal.remove(onPaintingDataRetrieved);
 		}
 
-		private function onEaselUpdateRequest(paintingVO : PaintingInfoVO, animateIn : Boolean = false, disposeWhenDone : Boolean = false) : void
+		private function onEaselUpdateRequest(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
-			view.setContent(paintingVO, animateIn, disposeWhenDone);
+			view.setContent(paintingVO, animateIn, onUploadComplete);
 		}
 
 		private function onPaintingDataRetrieved(data : Vector.<PaintingInfoVO>) : void

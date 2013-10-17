@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
 			view.showRightButton( false );
-			requestEaselPaintingUpdateSignal.dispatch( null, false, false );
+			requestEaselPaintingUpdateSignal.dispatch( null, false, null );
 		}
 
 		override protected function onButtonClicked( id:String ):void {

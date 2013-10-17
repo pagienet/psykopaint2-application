@@ -134,37 +134,6 @@ package net.psykosoft.psykopaint2.core.managers.accelerometer
 
 		private function updateGravity() : void
 		{
-			/*var isRandomMovement : Boolean;
-			var unitVector : Vector3D = new Vector3D(_accelerationX, _accelerationY, _accelerationZ);
-			unitVector.normalize();
-
-			if (_numGravitySamples == 24) {
-				isRandomMovement = unitVector.dotProduct(_gravityVector) < .25;	// angle is too different to be gravity, must be some sort of jerkiness
-			}
-
-			if (!isRandomMovement) {
-				_gravityAccumulated.x += unitVector.x;
-				_gravityAccumulated.y += unitVector.y;
-				_gravityAccumulated.z += unitVector.z;
-
-				if (_numGravitySamples == 24) {
-					var removed : Vector3D = _gravityQueue[0];
-					_gravityAccumulated.x -= removed.x;
-					_gravityAccumulated.y -= removed.y;
-					_gravityAccumulated.z -= removed.z;
-					_gravityQueue.splice(0, 1);
-				}
-				else
-					++_numGravitySamples;
-
-				_gravityQueue.push(unitVector);
-			}
-
-
-			_gravityVector.copyFrom(_gravityAccumulated);
-			 _gravityVector.normalize();
-			*/
-
 			_gravityVector.setTo(_accelerationX, _accelerationY, _accelerationZ);
 			_gravityVector.normalize();
 		}
