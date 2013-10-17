@@ -12,6 +12,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Quad;
+
 	import flash.display.Sprite;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
@@ -33,7 +36,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	public class EaselView extends Sprite
 	{
-		private static var CANVAS_WIDTH : Number = 160;
+		public static const CANVAS_DEFAULT_POSITION : Vector3D = new Vector3D(271, -35, 73);
+		private static const CANVAS_WIDTH : Number = 160;
 
 		public var easelRectChanged : Signal = new Signal();
 
@@ -46,6 +50,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _textureHeight : int;
 		private var _lightPicker : LightPickerBase;
 		private var _view : View3D;
+		private var _pendingPaintingInfoVO : PaintingInfoVO;
+		private var _pendingOnUploadComplete : Function;
 
 		public function EaselView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -72,9 +78,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_canvas.material = _material;
 			_canvas.rotationY = 180;
 //			_canvas.rotationX = 8.5;
-			_canvas.x = 271;
-			_canvas.y = -35;
-			_canvas.z = 73;
+			_canvas.position = CANVAS_DEFAULT_POSITION;
 			// start invisible until content is added
 			_canvas.visible = false;
 			_view.scene.addChild(_canvas);
@@ -115,28 +119,66 @@ package net.psykosoft.psykopaint2.home.views.home
 			return new Rectangle(projTopLeft.x, projTopLeft.y, projBottomRight.x - projTopLeft.x, projBottomRight.y - projTopLeft.y);
 		}
 
-		// Problem here is that texture upload needs to happen after outro-animation of previous painting
-		// so we can't do it elsewhere without creating new textures :\
-		// TODO: we should keep control of disposal with the owner by providing a callback function instead of "disposeWhenDone"
-		//		--> ie: an onUploadComplete function accepting paintingVO
 		public function setContent(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
-			if (!paintingVO) {
-				_canvas.visible = false;
-				return;
-			}
-
-			_canvas.visible = true;
-
-			if (areTexturesInvalid(paintingVO)) {
+			if (paintingVO && areTexturesInvalid(paintingVO)) {
 				disposeTextures();
 				initTextures(paintingVO);
 			}
 
-			updateTextures(paintingVO);
+			// previous PaintingVO not necessary anymore at all, so notify callback
+			if (_pendingOnUploadComplete)
+				_pendingOnUploadComplete(_pendingPaintingInfoVO);
+
+			TweenLite.killTweensOf(_canvas);
+
+			if (animateIn) {
+				_pendingPaintingInfoVO = paintingVO;
+				_pendingOnUploadComplete = onUploadComplete;
+				animateCanvasOut();
+			}
+			else {
+				_pendingOnUploadComplete = null;
+				_pendingPaintingInfoVO = null;
+				updateCanvas(paintingVO, onUploadComplete);
+			}
+		}
+
+		private function updateCanvas(paintingVO : PaintingInfoVO, onUploadComplete : Function) : void
+		{
+			if (paintingVO) {
+				_canvas.visible = true;
+				updateTextures(paintingVO);
+			}
+			else
+				_canvas.visible = false;
 
 			if (onUploadComplete)
 				onUploadComplete(paintingVO);
+		}
+
+		private function animateCanvasOut() : void
+		{
+			if (_canvas.visible)
+				TweenLite.to(_canvas,.25, {x: CANVAS_DEFAULT_POSITION.x + 400, ease: Quad.easeIn, onComplete: animateCanvasIn});
+			else {
+				_canvas.x = -600;
+				animateCanvasIn();
+			}
+
+		}
+
+		private function animateCanvasIn() : void
+		{
+			updateCanvas(_pendingPaintingInfoVO, _pendingOnUploadComplete);
+
+			_pendingOnUploadComplete = null;
+			_pendingPaintingInfoVO = null;
+
+			if (_canvas.visible) {
+				_canvas.x = CANVAS_DEFAULT_POSITION.x - 400;
+				TweenLite.to(_canvas, .25, {x: CANVAS_DEFAULT_POSITION.x , ease: Quad.easeOut});
+			}
 		}
 
 		private function areTexturesInvalid(paintingVO : PaintingInfoVO) : Boolean

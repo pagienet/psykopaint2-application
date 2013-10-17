@@ -109,7 +109,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function initLightController() : void
 		{
 			var matrix : Matrix3D = new Matrix3D();
-			var center : Vector3D = _easelView.canvasPosition;
+			var center : Vector3D = EaselView.CANVAS_DEFAULT_POSITION;
 			matrix.appendRotation(180, Vector3D.Y_AXIS);
 			matrix.appendTranslation(center.x, center.y, center.z);
 
