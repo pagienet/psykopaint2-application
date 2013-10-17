@@ -7,11 +7,15 @@ package net.psykosoft.psykopaint2.core.utils
 
 	public class CanvasInteractionUtil
 	{
+		private static var tmpPoint:Point = new Point();
+		
 		public static function canContentsUnderMouseBeIgnored( stage:Stage ):Boolean {
 
 //			trace( "CanvasInteractionUtil - canContentsUnderMouseBeIgnored()" );
-
-			var obj:Array = stage.getObjectsUnderPoint( new Point( stage.mouseX, stage.mouseY ) );
+			tmpPoint.x = stage.mouseX;
+			tmpPoint.y = stage.mouseY;
+			
+			var obj:Array = stage.getObjectsUnderPoint( tmpPoint );
 //			trace( "looking for exceptions - objs under mouse: " + obj.length + ", " + obj );
 			if( obj.length == 1 ) {
 				// Note: add more exceptions here...

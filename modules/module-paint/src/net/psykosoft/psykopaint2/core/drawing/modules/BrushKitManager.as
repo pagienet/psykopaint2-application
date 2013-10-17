@@ -130,10 +130,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		// TODO: Handle gestures somewhere else
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
-			if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
+			if ( !pipetteActive && gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
 				_activeBrushKit.brushEngine.pathManager.deactivate();
-			}  else if ( gestureType == GestureType.TRANSFORM_GESTURE_ENDED )
+			}  else if (!pipetteActive &&  gestureType == GestureType.TRANSFORM_GESTURE_ENDED )
 			{
 				_activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN && _activeMode == PaintMode.COLOR_MODE )
@@ -157,7 +157,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					var py : Number = (_view.mouseY - _canvasMatrix.ty * 768)  / _canvasMatrix.d;
 					var color:uint = currentColorMap.getPixel(px* CoreSettings.GLOBAL_SCALING,py* CoreSettings.GLOBAL_SCALING);
 					
-					notifyShowPipetteSignal.dispatch( _view, color,new Point(_view.mouseX,_view.mouseY));
+					notifyShowPipetteSignal.dispatch( _view, color,new Point(_view.mouseX,_view.mouseY - 32));
 					_activeBrushKit.brushEngine.pathManager.deactivate();
 					pipetteActive = true;
 					/*
