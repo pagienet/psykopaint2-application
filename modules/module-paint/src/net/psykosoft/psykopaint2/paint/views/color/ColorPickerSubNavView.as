@@ -75,13 +75,13 @@ package net.psykosoft.psykopaint2.paint.views.color
 			colorChangedSignal = new Signal();
 		}
 		
-		override protected function onEnabled():void
+		override public function setup():void
 		{
+			super.setup();
+			
 			colorPalette.addEventListener( Event.CHANGE, onPaletteColorChanged );
+			
 			colorMixer = new Colormixer( colorPalette.currentPalette );
-			//colorMixer = new FluidColorMixer();
-			//colorMixer = new Colormixer(colorPalette.currentPalette);
-			//colorMixer = new ColorMixerTDSI();
 			colorMixer.y = 595;
 			colorMixer.x = 3;
 			colorMixer.addEventListener( Event.CHANGE, onMixerColorPicked );
@@ -121,39 +121,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			hueHandle.gotoAndStop(1);
 			lightnessHandle.gotoAndStop(1);
 			saturationHandle.gotoAndStop(1);
-			//hueHandle.blendMode = saturationHandle.blendMode = lightnessHandle.blendMode = "multiply";
-			/*
-			hueHandle.gotoAndStop(3);
-			hueHandleBg = new Shape();
-			hueHandleBg.graphics.beginFill(0);
-			hueHandleBg.graphics.moveTo(-18,-25);
-			hueHandleBg.graphics.lineTo(20,-23);
-			hueHandleBg.graphics.lineTo(18,16);
-			hueHandleBg.graphics.lineTo(-20,13);
-			hueHandleBg.graphics.endFill();
-			hueHandle.addChildAt(hueHandleBg,0);
-			
-			saturationHandle.gotoAndStop(3);
-			saturationHandleBg = new Shape();
-			saturationHandleBg.graphics.beginFill(0);
-			saturationHandleBg.graphics.moveTo(-18,-25);
-			saturationHandleBg.graphics.lineTo(20,-23);
-			saturationHandleBg.graphics.lineTo(18,16);
-			saturationHandleBg.graphics.lineTo(-20,13);
-			saturationHandleBg.graphics.endFill();
-			saturationHandle.addChildAt(saturationHandleBg,0);
-			
-			lightnessHandle.gotoAndStop(3);
-			lightnessHandleBg = new Shape();
-			
-			lightnessHandleBg.graphics.beginFill(0);
-			lightnessHandleBg.graphics.moveTo(-18,-25);
-			lightnessHandleBg.graphics.lineTo(20,-23);
-			lightnessHandleBg.graphics.lineTo(18,16);
-			lightnessHandleBg.graphics.lineTo(-20,13);
-			lightnessHandleBg.graphics.endFill();
-			lightnessHandle.addChildAt(lightnessHandleBg,0);
-			*/
 			
 			hueHandle.mouseEnabled = false;
 			saturationHandle.mouseEnabled = false;
@@ -162,9 +129,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			saturationOverlay.mouseEnabled = false;
 			lightnessOverlay.mouseEnabled = false;
 			
-			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
-
-			setBgType( NavigationBg.BG_TYPE_WOOD );
+			
 			
 			pipette = new Pipette();
 			pipette.addEventListener( Event.CHANGE, onPipetteColorPicked );
@@ -172,6 +137,13 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			pipette.gotoAndStop(1);
 			pipette.visible = false;
+		}
+		
+		override protected function onEnabled():void
+		{
+			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
+			
+			setBgType( NavigationBg.BG_TYPE_WOOD );
 		}
 		
 		protected function onSliderMouseDown( event:MouseEvent ):void
