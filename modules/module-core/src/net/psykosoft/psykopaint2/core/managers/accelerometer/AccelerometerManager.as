@@ -130,10 +130,6 @@ package net.psykosoft.psykopaint2.core.managers.accelerometer
 					lastTrigger = getTimer();
 				}
 			}
-
-			if (sampleCount > uint.MAX_VALUE) {
-				sampleCount = 0;
-			}
 		}
 
 		private function updateGravity() : void
