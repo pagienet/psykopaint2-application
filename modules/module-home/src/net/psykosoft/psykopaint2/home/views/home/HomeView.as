@@ -121,6 +121,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function initModel() : void
 		{
 			_atelier = new Atelier();
+			_atelier.mouseEnabled = false;
+			_atelier.mouseChildren = false;
 			_atelier.addEventListener(Event.COMPLETE, onAtelierComplete);
 			_atelier.init();
 		}
