@@ -22,7 +22,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.models.AMFGalleryService;
 	import net.psykosoft.psykopaint2.core.models.AMFLoggedInUserProxy;
-	import net.psykosoft.psykopaint2.core.models.EaselModel;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
@@ -175,7 +174,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( EaselRectModel ).asSingleton();
 			_injector.map(SavingProcessModel).asSingleton();
 			_injector.map(UserConfigModel).asSingleton();
-			_injector.map(EaselModel).asSingleton();
 		}
 
 		// -----------------------

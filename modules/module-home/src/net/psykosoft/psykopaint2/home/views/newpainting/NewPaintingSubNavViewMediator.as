@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 {
 
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
-	import net.psykosoft.psykopaint2.core.models.EaselModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
@@ -37,9 +36,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		[Inject]
 		public var savingProcessModel:SavingProcessModel;
-
-		[Inject]
-		public var easelModel:EaselModel;
 
 		override public function initialize():void {
 
@@ -154,11 +150,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
 			if( data && data.length > 0 ) {
 				var infoVO:PaintingInfoVO = data[ 0 ];
-				if( infoVO ) {
-					if( !easelModel.currentVO || easelModel.currentVO.id != infoVO.id ) {
-						requestEaselUpdateSignal.dispatch( infoVO, true, null );
-					}
-				}
+				if( infoVO )
+					requestEaselUpdateSignal.dispatch( infoVO, true, null );
 			}
 		}
 	}

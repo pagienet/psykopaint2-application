@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
-	import net.psykosoft.psykopaint2.core.models.EaselModel;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
@@ -22,9 +21,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var notifyPaintingDataRetrievedSignal : NotifyPaintingDataSetSignal;
-
-		[Inject]
-		public var easelModel : EaselModel;
 
 		[Inject]
 		public var requestLoadPaintingDataSignal:RequestLoadPaintingDataFileSignal;
@@ -59,7 +55,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onEaselUpdateRequest(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
 			view.setContent(paintingVO, animateIn, onUploadComplete);
-			easelModel.currentVO = paintingVO;
 		}
 
 		private function onPaintingDataRetrieved(data : Vector.<PaintingInfoVO>) : void
@@ -70,7 +65,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onEaselTapped() : void
 		{
-			requestLoadPaintingDataSignal.dispatch( easelModel.currentVO.id );
+			requestLoadPaintingDataSignal.dispatch( view.paintingID );
 		}
 
 	}

@@ -55,6 +55,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _view : View3D;
 		private var _pendingPaintingInfoVO : PaintingInfoVO;
 		private var _pendingOnUploadComplete : Function;
+		private var _paintingID : String;
 
 		public function EaselView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -137,10 +138,15 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function setContent(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
+			if (paintingVO && paintingVO.id == _paintingID)
+				return;
+
 			if (paintingVO && areTexturesInvalid(paintingVO)) {
 				disposeTextures();
 				initTextures(paintingVO);
 			}
+
+			_paintingID = paintingVO? null : paintingVO.id;
 
 			// previous PaintingVO not necessary anymore at all, so notify callback
 			if (_pendingOnUploadComplete)
@@ -248,6 +254,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			_diffuseTexture = null;
 			_normalSpecularTexture = null;
 			_material = null;
+		}
+
+		public function get paintingID() : String
+		{
+			return _paintingID;
 		}
 
 		private function disposeTextures() : void
