@@ -1,9 +1,11 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.models.EaselModel;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
@@ -21,6 +23,11 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var notifyPaintingDataRetrievedSignal : NotifyPaintingDataSetSignal;
 
+		[Inject]
+		public var easelModel : EaselModel;
+
+		[Inject]
+		public var requestLoadPaintingDataSignal:RequestLoadPaintingDataFileSignal;
 
 		public function EaselViewMediator()
 		{
@@ -35,6 +42,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			super.initialize();
 			view.easelRectChanged.add(onEaselRectChanged);
+			view.easelTappedSignal.add(onEaselTapped);
 			requestEaselPaintingUpdateSignal.add(onEaselUpdateRequest);
 			notifyPaintingDataRetrievedSignal.add(onPaintingDataRetrieved);
 		}
@@ -43,6 +51,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			super.destroy();
 			view.easelRectChanged.remove(onEaselRectChanged);
+			view.easelTappedSignal.remove(onEaselTapped);
 			requestEaselPaintingUpdateSignal.remove(onEaselUpdateRequest);
 			notifyPaintingDataRetrievedSignal.remove(onPaintingDataRetrieved);
 		}
@@ -50,12 +59,18 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onEaselUpdateRequest(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
 			view.setContent(paintingVO, animateIn, onUploadComplete);
+			easelModel.currentVO = paintingVO;
 		}
 
 		private function onPaintingDataRetrieved(data : Vector.<PaintingInfoVO>) : void
 		{
 			if (data.length > 0)
 				view.setContent(data[0]);
+		}
+
+		private function onEaselTapped() : void
+		{
+			requestLoadPaintingDataSignal.dispatch( easelModel.currentVO.id );
 		}
 
 	}

@@ -31,7 +31,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public var activeSectionChanged : Signal = new Signal();
 		public var sceneReadySignal : Signal = new Signal();
-		public var easelTappedSignal:Signal = new Signal();
 
 		private var _lightController : OrientationBasedController;
 		private var _cameraController : CameraPromenadeController;

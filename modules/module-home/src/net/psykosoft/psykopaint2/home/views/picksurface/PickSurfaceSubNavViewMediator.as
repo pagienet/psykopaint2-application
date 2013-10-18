@@ -6,10 +6,8 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestHomePanningToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
@@ -35,9 +33,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		[Inject]
 		public var requestOpenPaintingDataVOSignal : RequestOpenPaintingDataVOSignal;
 
-		[Inject]
-		public var notifyEaselTappedSignal:NotifyEaselTappedSignal;
-
 		private var _selectedIndex:int;
 
 		override public function initialize():void {
@@ -51,12 +46,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
 			loadSurfaceByIndex( 0 );
-			notifyEaselTappedSignal.add( onEaselTapped );
-		}
-
-		override protected function onViewDisabled():void {
-			super.onViewDisabled();
-			notifyEaselTappedSignal.remove( onEaselTapped );
 		}
 
 		override protected function onButtonClicked( id:String ):void {
@@ -78,10 +67,6 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 					else continueToColorPaint();
 					break;
 			}
-		}
-
-		private function onEaselTapped():void {
-			continueToColorPaint();
 		}
 
 		private function loadSurfaceByIndex( index:uint ):void {

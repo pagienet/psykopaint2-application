@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestDrawingCoreResetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
@@ -40,9 +39,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		public var savingProcessModel:SavingProcessModel;
 
 		[Inject]
-		public var notifyEaselTappedSignal:NotifyEaselTappedSignal;
-
-		[Inject]
 		public var easelModel:EaselModel;
 
 		override public function initialize():void {
@@ -62,22 +58,16 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
-			notifyEaselTappedSignal.add( onEaselTapped );
 			ensureLatestPaintingIsOnEasel(); // TODO: check first if there is no need to do this?
 		}
 
 		override protected function onViewDisabled():void {
 			super.onViewDisabled();
-			notifyEaselTappedSignal.remove( onEaselTapped );
 		}
 
 		// -----------------------
 		// From app.
 		// -----------------------
-
-		private function onEaselTapped():void {
-			continueToPhotoPainting();
-		}
 
 		private function continueToPhotoPainting():void {
 			trace( "focused: " + paintingModel.activePaintingId );
@@ -166,7 +156,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var infoVO:PaintingInfoVO = data[ 0 ];
 				if( infoVO ) {
 					if( !easelModel.currentVO || easelModel.currentVO.id != infoVO.id ) {
-						requestEaselUpdateSignal.dispatch( infoVO, true, false );
+						requestEaselUpdateSignal.dispatch( infoVO, true, null );
 					}
 				}
 			}

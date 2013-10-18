@@ -19,6 +19,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.utils.ByteArray;
@@ -40,6 +42,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private static const CANVAS_WIDTH : Number = 160;
 
 		public var easelRectChanged : Signal = new Signal();
+		public var easelTappedSignal : Signal = new Signal();
 
 		private var _canvas : Mesh;
 		private var _material : TextureMaterial;
@@ -61,6 +64,19 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.camera.addEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraTransformChanged);
 			initMaterial();
 			initCanvas();
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+
+		private function onAddedToStage(event : Event) : void
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			stage.addEventListener(MouseEvent.CLICK, onClick);
+		}
+
+		private function onClick(event : MouseEvent) : void
+		{
+			if (easelRect.contains(event.stageX, event.stageY))
+				easelTappedSignal.dispatch();
 		}
 
 		private function onCameraTransformChanged(event : Object3DEvent) : void

@@ -11,8 +11,6 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
-	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
@@ -65,10 +63,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private var _currentNavigationState : String;
 
-		[Inject]
-		public var notifyEaselTappedSignal:NotifyEaselTappedSignal;
-
 		override public function initialize() : void
+		{
 			// Init.
 			registerView(view);
 			super.initialize();
@@ -87,7 +83,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			view.activeSectionChanged.add(onActiveSectionChanged);
 			view.sceneReadySignal.add(onSceneReady);
-			view.easelTappedSignal.add( onEaselTapped );
+
 			view.stage3dProxy = stage3dProxy;
 
 			view.enable();
@@ -126,7 +122,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.disabledSignal.remove(onDisabled);
 			view.sceneReadySignal.remove(onSceneReady);
 			notifyGyroscopeUpdateSignal.remove(onGyroscopeUpdate);
-			view.easelTappedSignal.remove( onEaselTapped );
 
 			view.dispose();
 
@@ -210,10 +205,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		// From view.
 		// -----------------------
-
-		private function onEaselTapped():void {
-			notifyEaselTappedSignal.dispatch();
-		}
 
 		private function onSceneReady() : void
 		{
