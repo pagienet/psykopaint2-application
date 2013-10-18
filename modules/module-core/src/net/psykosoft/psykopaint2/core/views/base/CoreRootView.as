@@ -1,9 +1,13 @@
 package net.psykosoft.psykopaint2.core.views.base
 {
 
+	import com.bit101.components.PushButton;
+
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-	
+	import flash.events.MouseEvent;
+	import flash.system.System;
+
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
@@ -34,6 +38,11 @@ package net.psykosoft.psykopaint2.core.views.base
 			if( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION ) addChild( new PsykoSocketView() );
 			addChild( new SplashView() );
 
+			if( CoreSettings.ENABLE_GC_BUTTON ) {
+				var btn:PushButton = new PushButton( this, ( 1024 - 105 ) * CoreSettings.GLOBAL_SCALING, ( 768 - 25 ) * CoreSettings.GLOBAL_SCALING, "GC()", onGcButtonClicked );
+				btn.scaleX = btn.scaleY = CoreSettings.GLOBAL_SCALING;
+			}
+
 			// TODO: UI tests, remove.
 			/*var btn:SbSliderButton = new SbSliderButton();
 			btn.labelText = "myParam";
@@ -50,6 +59,10 @@ package net.psykosoft.psykopaint2.core.views.base
 //			input.x = 400;
 //			input.y = 200;
 //			addChild( input );
+		}
+
+		private function onGcButtonClicked( event:MouseEvent ):void {
+			System.gc();
 		}
 
 		public function addToMainLayer( child:DisplayObject, layerOrdering:int ):void {
