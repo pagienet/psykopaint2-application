@@ -78,6 +78,8 @@ package net.psykosoft.psykopaint2.base.utils.shakenbake
 
 		public function cleanUp():void {
 			_loader.unloadAndStop( true );
+			_loader = null;
+			connectedSignal = null;
 		}
 	}
 }

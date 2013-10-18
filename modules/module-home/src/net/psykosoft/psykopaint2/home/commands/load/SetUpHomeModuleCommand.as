@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.home.commands.load
 
 			trace( this, "prepare()" );
 
+			add( ConnectHomeModuleShakeAndBakeCommand );
 			add( InitializeHomeModuleViewsCommand );
 			add( RetrieveAllPaintingDataCommand );
 			add( UpdateEaselWithLatestPaintingCommand );
