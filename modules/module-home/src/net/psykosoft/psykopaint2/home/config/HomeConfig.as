@@ -1,9 +1,10 @@
 package net.psykosoft.psykopaint2.home.config
 {
 
-	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
+	import net.psykosoft.psykopaint2.home.commands.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.home.commands.LoadPaintingDataFileCommand;
 	import net.psykosoft.psykopaint2.home.commands.LoadSurfacePreviewCommand;
+	import net.psykosoft.psykopaint2.home.commands.StartNewColorPaintingCommand;
 	import net.psykosoft.psykopaint2.home.commands.load.SetUpHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.commands.unload.DestroyHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
@@ -26,6 +27,7 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootViewMediator;
@@ -144,11 +146,11 @@ package net.psykosoft.psykopaint2.home.config
 
 		private function mapCommands():void {
 
-			_injector.unmap( RequestLoadSurfacePreviewSignal );
 			_commandMap.map( RequestLoadSurfacePreviewSignal ).toCommand( LoadSurfacePreviewCommand );
 			_commandMap.map( RequestSetupHomeModuleSignal ).toCommand( SetUpHomeModuleCommand );
 			_commandMap.map( RequestDestroyHomeModuleSignal ).toCommand( DestroyHomeModuleCommand );
 			_commandMap.map( RequestLoadPaintingDataFileSignal ).toCommand( LoadPaintingDataFileCommand );
+			_commandMap.map( RequestStartNewColorPaintingSignal ).toCommand( StartNewColorPaintingCommand );
 		}
 
 		// -----------------------

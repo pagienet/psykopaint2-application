@@ -82,7 +82,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestGpuRenderingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLovePaintingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
@@ -237,7 +236,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyPopUpShownSignal ).asSingleton();
 			_injector.map( RequestUpdateMessagePopUpSignal ).asSingleton();
 			_injector.map( RequestLoadSurfaceSignal ).asSingleton();
-			_injector.map( RequestLoadSurfacePreviewSignal ).asSingleton();
 			_injector.map( NotifySurfacePreviewLoadedSignal ).asSingleton();
 			_injector.map( NotifySurfaceLoadedSignal ).asSingleton();
 			_injector.map( RequestCropSourceImageSignal ).asSingleton();

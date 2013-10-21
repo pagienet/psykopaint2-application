@@ -1,17 +1,11 @@
 package net.psykosoft.psykopaint2.home.views.picksurface
 {
-
-	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
-	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfacePreviewSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
+	import net.psykosoft.psykopaint2.home.commands.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 
 	public class PickSurfaceSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -25,13 +19,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		public var requestLoadSurfacePreviewSignal:RequestLoadSurfacePreviewSignal;
 
 		[Inject]
-		public var requestLoadSurfaceSignal:RequestLoadSurfaceSignal;
-
-		[Inject]
-		public var notifySurfaceLoadedSignal:NotifySurfaceLoadedSignal;
-
-		[Inject]
-		public var requestOpenPaintingDataVOSignal : RequestOpenPaintingDataVOSignal;
+		public var requestStartColorPaintingSignal : RequestStartNewColorPaintingSignal;
 
 		private var _selectedIndex:int;
 
@@ -76,26 +64,7 @@ package net.psykosoft.psykopaint2.home.views.picksurface
 		}
 
 		private function continueToColorPaint():void {
-			notifySurfaceLoadedSignal.addOnce( onSurfaceLoaded );
-			requestLoadSurfaceSignal.dispatch( _selectedIndex );
-		}
-
-		private function onSurfaceLoaded(surface : SurfaceDataVO):void {
-			var vo : PaintingDataVO = new PaintingDataVO();
-			vo.width = CoreSettings.STAGE_WIDTH;
-			vo.height = CoreSettings.STAGE_HEIGHT;
-
-			if (surface.color) {
-				vo.colorData = surface.color;
-				vo.colorBackgroundOriginal = surface.color;
-			}
-			else
-				vo.colorData = ByteArrayUtil.createBlankColorData(vo.width, vo.height, 0xffffffff);
-
-			vo.normalSpecularData = surface.normalSpecular;
-			vo.normalSpecularOriginal = surface.normalSpecular;
-
-			requestOpenPaintingDataVOSignal.dispatch(vo);
+			requestStartColorPaintingSignal.dispatch(_selectedIndex);
 		}
 	}
 }
