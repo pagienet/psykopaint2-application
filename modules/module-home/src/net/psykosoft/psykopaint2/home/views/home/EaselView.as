@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import com.greensock.easing.Quad;
 
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
@@ -56,6 +57,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _pendingPaintingInfoVO : PaintingInfoVO;
 		private var _pendingOnUploadComplete : Function;
 		private var _paintingID : String;
+		private var _stage : Stage;
 
 		public function EaselView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -71,7 +73,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onAddedToStage(event : Event) : void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			stage.addEventListener(MouseEvent.CLICK, onClick);
+			_stage = stage;
+			_stage.addEventListener(MouseEvent.CLICK, onClick);
 		}
 
 		private function onClick(event : MouseEvent) : void
@@ -243,7 +246,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function dispose() : void
 		{
-			_view.camera.addEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraTransformChanged);
+			_view.camera.removeEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraTransformChanged);
+			_stage.removeEventListener(MouseEvent.CLICK, onClick);
 			_view.scene.removeChild(_canvas);
 			_canvas.geometry.dispose();
 			_canvas.dispose();
