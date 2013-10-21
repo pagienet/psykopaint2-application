@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.data
 		public var colorPreviewBitmap:BitmapData;
 		public var normalSpecularPreviewData:ByteArray;
 		public var lastSavedOnDateMs:Number;
+		public var surfaceID : uint;	// currently only used when id == DEFAULT_VO_ID
 
 		public var fileVersion:String = PaintingFileUtils.PAINTING_FILE_VERSION;
 		public var id:String = DEFAULT_VO_ID;

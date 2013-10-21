@@ -116,6 +116,7 @@ package net.psykosoft.psykopaint2.home.commands
 			var vo:PaintingInfoVO = new PaintingInfoVO();
 			vo.width = 512;
 			vo.height = 384;
+			vo.surfaceID = index;
 			if( _loadedColorData ) {
 				vo.colorPreviewData = _loadedColorData;
 				vo.colorPreviewData.uncompress();

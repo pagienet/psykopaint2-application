@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
@@ -23,7 +24,12 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var notifyPaintingDataRetrievedSignal : NotifyPaintingDataSetSignal;
 
 		[Inject]
-		public var requestLoadPaintingDataSignal:RequestLoadPaintingDataFileSignal;
+		public var requestLoadPaintingDataSignal : RequestLoadPaintingDataFileSignal;
+
+		[Inject]
+		public var requestStartNewPaintingCommand : RequestStartNewColorPaintingSignal;
+
+		private var _selectedSurfaceID : uint;
 
 		public function EaselViewMediator()
 		{
@@ -55,6 +61,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onEaselUpdateRequest(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
 			view.setContent(paintingVO, animateIn, onUploadComplete);
+
+			// TODO: I'm not too fond of this
+			if (paintingVO.id == PaintingInfoVO.DEFAULT_VO_ID)
+				_selectedSurfaceID = paintingVO.surfaceID;
 		}
 
 		private function onPaintingDataRetrieved(data : Vector.<PaintingInfoVO>) : void
@@ -65,7 +75,12 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onEaselTapped() : void
 		{
-			requestLoadPaintingDataSignal.dispatch( view.paintingID );
+			var paintingID : String = view.paintingID;
+
+			if (paintingID == PaintingInfoVO.DEFAULT_VO_ID)
+				requestStartNewPaintingCommand.dispatch(_selectedSurfaceID);
+			else
+				requestLoadPaintingDataSignal.dispatch(view.paintingID);
 		}
 
 	}
