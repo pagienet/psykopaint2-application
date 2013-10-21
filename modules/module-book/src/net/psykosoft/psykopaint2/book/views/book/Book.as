@@ -450,6 +450,7 @@ package net.psykosoft.psykopaint2.book.views.book
  			if(_dummyCam)_dummyCam = null;
  			_bookCraft.disposeContent();
 
+			
  			if(_pagesManager){
  				_pagesManager.dispose();
  				_pagesManager = null;
@@ -461,6 +462,12 @@ package net.psykosoft.psykopaint2.book.views.book
  				_regionManager.dispose();
  				_regionManager = null;
  			}
+			
+			if ( _layout )
+			{
+				_layout.dispose();
+			}
+			
  		}
  
 		public function initPagesInteraction():void

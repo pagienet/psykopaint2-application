@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.base.utils.shakenbake
 {
+
 	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -9,14 +10,15 @@ package net.psykosoft.psykopaint2.base.utils.shakenbake
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
-	import flash.utils.setTimeout;
 
 	import org.osflash.signals.Signal;
 
 	public class ShakeAndBakeConnector extends Sprite
 	{
 		private var _urlLoader:URLLoader;
+		private var _loader:Loader;
 		private var _frameDelayCount:int;
+
 		public var connectedSignal:Signal;
 
 		public function ShakeAndBakeConnector() {
@@ -40,20 +42,25 @@ package net.psykosoft.psykopaint2.base.utils.shakenbake
 
 			_urlLoader.removeEventListener( Event.COMPLETE, onAssetsLoaded );
 
-			var loader:Loader = new Loader();
+			_loader = new Loader();
 			var assetsBytes:ByteArray = _urlLoader.data;
 			var context:LoaderContext = new LoaderContext( false, ApplicationDomain.currentDomain );
 			context.allowCodeImport = true;
-			loader.contentLoaderInfo.addEventListener( Event.INIT, onBytesLoaded );
-			loader.loadBytes( assetsBytes, context );
+			_loader.contentLoaderInfo.addEventListener( Event.INIT, onBytesLoaded );
+			_loader.loadBytes( assetsBytes, context );
 		}
 
 		private function onBytesLoaded( event:Event ):void {
 
-			trace( this, "connecting shake and bake assets - 3/3 waiting 1 frame... " );
+			_loader.contentLoaderInfo.removeEventListener( Event.INIT, onBytesLoaded );
+
+			_urlLoader.data.length = 0;
+			_urlLoader.data = null;
+			_urlLoader = null;
+
+			trace( this, "connecting shake and bake assets - 3/3 waiting a few frames... " );
 			_frameDelayCount = 0;
 			addEventListener( Event.ENTER_FRAME, firstFrameHandler );
-
 		}
 
 		private function firstFrameHandler( event:Event ):void {
@@ -64,17 +71,15 @@ package net.psykosoft.psykopaint2.base.utils.shakenbake
 			} else if ( _frameDelayCount == 3 ) 
 			{
 				trace( this, "connecting shake and bake assets - done " );
-				
 				removeEventListener( Event.ENTER_FRAME, firstFrameHandler );
 				connectedSignal.dispatch();
 			}
-			// TODO: waiting for 1 frame doesn't seem to do the trick on all cases, using a time out for now
-			/*
-			setTimeout( function():void {
-				connectedSignal.dispatch();
-			}, 1000 );
-			*/
-			
+		}
+
+		public function cleanUp():void {
+			_loader.unloadAndStop( true );
+			_loader = null;
+			connectedSignal = null;
 		}
 	}
 }

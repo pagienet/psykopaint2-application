@@ -221,8 +221,15 @@ package net.psykosoft.psykopaint2.book.views.book.data
 				if(methodsCount > 0){
 					loop = methodsCount;
 					while(loop!=0){
-						method = spm.getMethodAt(loop);
-						spm.removeMethod(method);
+						try
+						{
+							method = spm.getMethodAt(loop);
+							spm.removeMethod(method);
+						} catch ( e:Error )
+						{
+							trace("Error in PageMaterialsManager.dispose() - better clean this up");
+							
+						}
 						/*
 						//clean up maps via dictionary clean up lower in code
 						if(method is EnvMapMethod){

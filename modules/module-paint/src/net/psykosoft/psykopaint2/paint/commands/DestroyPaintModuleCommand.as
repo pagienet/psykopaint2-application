@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
+	import net.psykosoft.psykopaint2.core.managers.assets.ShakeAndBakeManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
@@ -42,6 +43,9 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var lightingModel:LightingModel;
 
+		[Inject]
+		public var shaker:ShakeAndBakeManager;
+
 		override public function execute() : void
 		{
 			super.execute();
@@ -57,16 +61,18 @@ package net.psykosoft.psykopaint2.paint.commands
 			brushKitManager.deactivate();
 			GpuRenderManager.removeRenderingStep(brushKitManager.update, GpuRenderingStepType.PRE_CLEAR);
 			BrushKit.dispose();
-			
+
 			removePaintModuleDisplay();
 
 			notifyPaintModuleDestroyedSignal.dispatch();
 		}
 
-		private function removePaintModuleDisplay():void {
-
+		private function removePaintModuleDisplay():void 
+		{
 			// Dispose home root view.
 			requestPaintRootViewRemovalSignal.dispatch();
+			// Flush assets.
+			shaker.disconnect( ShakeAndBakeManager.PAINT_CONNECTOR_URL );
 		}
 	}
 }

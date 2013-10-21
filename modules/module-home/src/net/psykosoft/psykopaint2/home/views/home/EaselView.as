@@ -146,7 +146,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				initTextures(paintingVO);
 			}
 
-			_paintingID = paintingVO? null : paintingVO.id;
+			_paintingID = paintingVO? paintingVO.id : null;
 
 			// previous PaintingVO not necessary anymore at all, so notify callback
 			if (_pendingOnUploadComplete)

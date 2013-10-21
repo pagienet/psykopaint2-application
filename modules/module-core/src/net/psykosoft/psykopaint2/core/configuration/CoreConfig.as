@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.data.RetrievePaintingsDataProcessModel;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.GyroscopeManager;
+	import net.psykosoft.psykopaint2.core.managers.assets.ShakeAndBakeManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
@@ -39,6 +40,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCoreModuleBootstrapCompleteSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyEaselRectUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyEaselTappedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
@@ -195,6 +197,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( MemoryWarningManager ).asSingleton();
 			_injector.map( KeyDebuggingManager ).asSingleton();
 			_injector.map( UnDisposedObjectsManager ).asSingleton();
+			_injector.map( ShakeAndBakeManager ).asSingleton();
 			_injector.map(GyroscopeManager).asSingleton();
 			_injector.map(AccelerometerManager).asSingleton();
 			_injector.map(RetrievePaintingsDataProcessModel).asSingleton();
@@ -271,6 +274,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyUserPasswordReminderSentSignal ).asSingleton();
 			_injector.map( NotifyUserPasswordReminderFailedSignal ).asSingleton();
 			_injector.map( NavigationCanHideWithGesturesSignal ).asSingleton();
+			_injector.map( NotifyEaselTappedSignal ).asSingleton();
 
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();

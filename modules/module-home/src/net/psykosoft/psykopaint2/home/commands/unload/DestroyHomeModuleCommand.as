@@ -13,8 +13,9 @@ package net.psykosoft.psykopaint2.home.commands.unload
 
 		override public function prepare():void {
 
-			add( DisposePaintingDataCommand 	);
-			add( RemoveHomeModuleDisplayCommand );
+			add( DisposePaintingDataCommand 	         );
+			add( RemoveHomeModuleDisplayCommand          );
+			add( DisconnectHomeModuleShakeAndBakeCommand );
 
 			registerCompleteCallback( onMacroComplete );
 		}

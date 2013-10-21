@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.io.CanvasImporter;
+	import net.psykosoft.psykopaint2.core.managers.assets.ShakeAndBakeManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
@@ -63,10 +64,20 @@ package net.psykosoft.psykopaint2.paint.commands
 		[Inject]
 		public var stage3D : Stage3D;
 
+		[Inject]
+		public var shaker:ShakeAndBakeManager;
+
 		override public function execute() : void
 		{
 			super.execute();
+			connectShakeAndBake();
+		}
 
+		private function connectShakeAndBake():void {
+			shaker.connect( ShakeAndBakeManager.PAINT_CONNECTOR_URL, continueInit );
+		}
+
+		private function continueInit():void {
 			var mode : String = initPaintingVO.sourceImageData? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
 
 			addPaintModuleDisplay();

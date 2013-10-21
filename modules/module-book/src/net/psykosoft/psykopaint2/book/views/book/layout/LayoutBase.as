@@ -220,6 +220,11 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  				_inserts[key] = null;
  			}
  			_inserts = null;
+			
+			for( key in _pagesFilled){
+				_pagesFilled[key] = null;
+			}
+			_pagesFilled = null;
 
  			clearLoadingQueue();
 
@@ -238,6 +243,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
  			_compositeHelper.dispose();
  			_compositeHelper = null;
+			
+			
+			_collection = null;
+			_galleryCollection = null;
  		}
 
  		//draw quality
