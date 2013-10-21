@@ -141,7 +141,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function setContent(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
-			if (paintingVO && paintingVO.id == _paintingID)
+			if (paintingVO && paintingVO.id == _paintingID && paintingVO.id != PaintingInfoVO.DEFAULT_VO_ID)
 				return;
 
 			if (paintingVO && areTexturesInvalid(paintingVO)) {
