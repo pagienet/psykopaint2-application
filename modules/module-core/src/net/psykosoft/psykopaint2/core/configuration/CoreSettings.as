@@ -50,8 +50,8 @@ package net.psykosoft.psykopaint2.core.configuration
 		// Saving options.
 		public static const USE_SAVING:Boolean = true; /*true on release*/
 		public static const USE_COMPRESSION_ON_PAINTING_FILES:Boolean = true; /*true on release*/
-		public static const USE_IO_ANE_ON_PAINTING_FILES:Boolean = false; /*true on release*/
-		public static const USE_ASYNC_SAVING:Boolean = false; /*true on release*/
+		public static const USE_IO_ANE_ON_PAINTING_FILES:Boolean = true; /*true on release*/
+		public static const USE_ASYNC_SAVING:Boolean = true; /*true on release*/
 
 		// -----------------------
 		// Fixed constants.
