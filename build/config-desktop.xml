@@ -3,7 +3,7 @@
     <id>com.psykosoft.psykopaint2</id>
     <filename>Psykopaint2</filename>
     <name>Psykopaint2</name>
-    <versionNumber>0.7.31</versionNumber>
+    <versionNumber>0.7.32</versionNumber>
     <initialWindow>
         <content>SWF file name is set automatically at compile time</content>
         <transparent>false</transparent>
@@ -11,9 +11,9 @@
         <minimizable>false</minimizable>
         <maximizable>false</maximizable>
         <resizable>false</resizable>
-        <width>1030</width>
+        <width>1024</width>
         <height>790</height> <!-- would be 768 but the top app bar takes 22 -->
-        <x>1250</x>
+        <x>0</x>
         <y>50</y>
         <aspectRatio>landscape</aspectRatio>
         <autoOrients>false</autoOrients>
