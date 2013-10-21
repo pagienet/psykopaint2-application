@@ -43,13 +43,13 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 			// Gestures...
 			gestureManager.stage = stage;
 
+			// Memory warnings...
+			memoryWarningManager.initialize();
+
 			// Keyboard debugging...
 			if( CoreSettings.USE_DEBUG_KEYS ) {
 				keyDebuggingManager.initialize();
 			}
-
-			// Memory warnings...
-			memoryWarningManager.initialize();
 
 			// IO ANE.
 			ioAne.initialize();

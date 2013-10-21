@@ -10,13 +10,15 @@ package net.psykosoft.psykopaint2.core.managers.misc
 		[Inject]
 		public var notifyMemoryWarningSignal:NotifyMemoryWarningSignal;
 
+		public var extension:NotificationsExtension;
+
 		public function MemoryWarningManager() {
 		}
 
 		public function initialize():void {
-			var notificationsExtension:NotificationsExtension = new NotificationsExtension();
-			notificationsExtension.addEventListener( NotificationExtensionEvent.RECEIVED_MEMORY_WARNING, onMemoryWarning );
-			notificationsExtension.initialize();
+			extension = new NotificationsExtension();
+			extension.addEventListener( NotificationExtensionEvent.RECEIVED_MEMORY_WARNING, onMemoryWarning );
+			extension.initialize();
 		}
 
 		private function onMemoryWarning( event:NotificationExtensionEvent ):void {

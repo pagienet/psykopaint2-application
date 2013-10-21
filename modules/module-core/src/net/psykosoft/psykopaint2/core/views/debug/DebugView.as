@@ -41,7 +41,7 @@ package net.psykosoft.psykopaint2.core.views.debug
 
 		public function flashMemoryIcon():void {
 			if( !_memoryIconTimer ) {
-				_memoryIconTimer = new Timer( 5000, 1 );
+				_memoryIconTimer = new Timer( 120000, 1 );
 				_memoryIconTimer.addEventListener( TimerEvent.TIMER, onMemoryIconTimerTick );
 			}
 			_memoryWarningCount++;
