@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.views.debug
 {
 
 	import flash.display.Sprite;
+	import flash.system.System;
 	import flash.text.TextField;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -51,6 +52,10 @@ package net.psykosoft.psykopaint2.core.views.debug
 			_tf.appendText( msg );
 			_tf.scrollV = _tf.maxScrollV;
 			trace( this, msg );
+		}
+
+		public function logMemory():void {
+			log( "Private memory: " + uint( System.privateMemory / 1024 ) / 1024 + "MB" );
 		}
 	}
 }
