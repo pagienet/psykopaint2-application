@@ -165,16 +165,16 @@ package net.psykosoft.psykopaint2.home.views.home
 			_camera.lens.far = 5000;
 
 			_camera.x =  -266.82;
-			_camera.y = -1.14 ;
+			_camera.y = -1.14;
 			_camera.z = -146.5;
 			_camera.lookAt(new Vector3D(-266.82, -1.14, -353.10));
 
 			_cameraController = new CameraPromenadeController(_camera, stage);
 			_cameraController.activePositionChanged.add(onActivePositionChanged);
-			_cameraController.registerTargetPosition(SETTINGS, 814);
-			_cameraController.registerTargetPosition(EASEL, 271);
-			_cameraController.registerTargetPosition(HOME, -271);
-			_cameraController.registerTargetPosition(GALLERY, -814);
+			_cameraController.registerTargetPosition(SETTINGS, new Vector3D(814, -1.14, 450));
+			_cameraController.registerTargetPosition(EASEL, new Vector3D(271, -1.14, 450));
+			_cameraController.registerTargetPosition(HOME, new Vector3D(-271, -1.14, 450));
+			_cameraController.registerTargetPosition(GALLERY, new Vector3D(-814, -1.14, 450));
 			_cameraController.start();
 			_cameraController.interactionRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight - 150*CoreSettings.GLOBAL_SCALING);
 		}
