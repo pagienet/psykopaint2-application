@@ -123,9 +123,9 @@ package net.psykosoft.psykopaint2.core.model
 			var fixed : BitmapData = fixSourceDimensions(sourceBitmapData);
 			
 			if (_pyramidMap)
-				_pyramidMap.setSource(fixed);
+				_pyramidMap.setSource(sourceBitmapData);
 			else
-				_pyramidMap = new PyramidMapTdsi(fixed);
+				_pyramidMap = new PyramidMapTdsi(sourceBitmapData);
 
 			if (!_sourceTexture) _sourceTexture = createCanvasTexture(false);
 			_sourceTexture.texture.uploadFromBitmapData(fixed);
