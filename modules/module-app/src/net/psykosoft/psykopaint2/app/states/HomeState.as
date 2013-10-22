@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
@@ -87,6 +88,8 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function activate(data : Object = null) : void
 		{
+			ConsoleView.instance.log( this, "activating..." );
+			ConsoleView.instance.logMemory();
 			requestOpenPaintingDataVOSignal.add(onRequestOpenPaintingDataVO);
 			requestCropSourceImageSignal.add(onRequestCropState);
 			requestBrowseSampleImagesSignal.add(onBrowseSampleImagesSignal);
@@ -101,6 +104,8 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function deactivate() : void
 		{
+			ConsoleView.instance.log( this, "de-activating..." );
+			ConsoleView.instance.logMemory();
 			requestOpenPaintingDataVOSignal.remove(onRequestOpenPaintingDataVO);
 			requestCropSourceImageSignal.remove(onRequestCropState);
 			requestBrowseSampleImagesSignal.remove(onBrowseSampleImagesSignal);

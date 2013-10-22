@@ -33,6 +33,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 		override public function prepare():void {
 
 			ConsoleView.instance.log( this, "prepare()" );
+			ConsoleView.instance.logMemory();
 
 			saveVo.paintingId = paintingModel.activePaintingId;
 
