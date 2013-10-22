@@ -223,7 +223,7 @@ package net.psykosoft.psykopaint2.core.model
 			_sourceTexture = null;
 			_normalSpecularOriginal = null;
 			_colorBackgroundOriginal = null;
-			MemoryManagerTdsi.releaseAllMemory();
+
 			if (_pyramidMap )
 			{
 				_pyramidMap.dispose();

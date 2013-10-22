@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintRootViewRemovalSignal;
+	import net.psykosoft.psykopaint2.tdsi.MemoryManagerTdsi;
 
 	public class DestroyPaintModuleCommand extends TracingCommand
 	{
@@ -49,6 +50,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		override public function execute() : void
 		{
 			super.execute();
+			MemoryManagerTdsi.releaseAllMemory();
 			lightController.enabled = false;
 			canvasModel.dispose();
 			canvasHistoryModel.clearHistory();	// cleans up snapshot memory too

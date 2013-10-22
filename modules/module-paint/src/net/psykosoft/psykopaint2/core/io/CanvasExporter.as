@@ -264,7 +264,8 @@ package net.psykosoft.psykopaint2.core.io
 //		    	_ioAne.extension.mergeRgbaPerInt( _mergeBuffer ); // TODO: this method is producing bad results ( a shade of gray ) but could be faster, about 5ms
 			}
 			else {
-				MergeUtil.mergeRGBAData(_mergeBuffer,len);
+//				MergeUtil.mergeRGBAData(_mergeBuffer,len);
+				mergeRGBADataAS3Pure(len);
 			}
 
 			var buffer : ByteArray = _mergeBuffer;
@@ -292,7 +293,7 @@ package net.psykosoft.psykopaint2.core.io
 				si8(a, int(i+3));
 			}
 
-			ApplicationDomain.currentDomain.domainMemory = MemoryManagerTdsi.memory;
+			ApplicationDomain.currentDomain.domainMemory = null;
 		}
 		
 		private function extractChannels(target : ByteArray, offset : uint, layer : Texture, copier : CopySubTextureChannels) : void

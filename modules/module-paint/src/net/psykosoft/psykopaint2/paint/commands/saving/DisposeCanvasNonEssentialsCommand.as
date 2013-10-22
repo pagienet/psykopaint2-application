@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.tdsi.MemoryManagerTdsi;
 
 	public class DisposeCanvasNonEssentialsCommand extends AsyncCommand
 	{
@@ -18,6 +19,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 		{
 			canvasModel.disposeBackBuffer();
 			historyModel.clearHistory();
+			MemoryManagerTdsi.releaseAllMemory();
 			dispatchComplete(true);
 		}
 	}
