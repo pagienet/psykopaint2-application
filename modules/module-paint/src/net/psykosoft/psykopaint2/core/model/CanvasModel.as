@@ -11,12 +11,13 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
+	import net.psykosoft.psykopaint2.tdsi.MemoryManagerTdsi;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
 
 	public class CanvasModel
@@ -222,6 +223,13 @@ package net.psykosoft.psykopaint2.core.model
 			_sourceTexture = null;
 			_normalSpecularOriginal = null;
 			_colorBackgroundOriginal = null;
+			MemoryManagerTdsi.releaseAllMemory();
+			if (_pyramidMap )
+			{
+				_pyramidMap.dispose();
+				_pyramidMap = null;
+			}
+			
 		}
 
 		public function disposeBackBuffer() : void
