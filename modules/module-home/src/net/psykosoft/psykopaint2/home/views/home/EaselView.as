@@ -74,10 +74,16 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			_stage = stage;
-			_stage.addEventListener(MouseEvent.CLICK, onClick);
+			_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		}
 
-		private function onClick(event : MouseEvent) : void
+		private function onMouseDown(event : MouseEvent) : void
+		{
+			if (easelRect.contains(event.stageX, event.stageY))
+				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		}
+
+		private function onMouseUp(event : MouseEvent) : void
 		{
 			if (easelRect.contains(event.stageX, event.stageY))
 				easelTappedSignal.dispatch();
@@ -247,7 +253,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function dispose() : void
 		{
 			_view.camera.removeEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraTransformChanged);
-			_stage.removeEventListener(MouseEvent.CLICK, onClick);
+			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			_view.scene.removeChild(_canvas);
 			_canvas.geometry.dispose();
 			_canvas.dispose();

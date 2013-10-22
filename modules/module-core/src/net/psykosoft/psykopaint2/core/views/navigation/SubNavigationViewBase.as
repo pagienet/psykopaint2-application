@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	public class SubNavigationViewBase extends ViewBase
 	{
-		private var _scroller:HSnapList;
+		protected var _scroller:HSnapList;
 		private var _navigation:NavigationView;
 		private var _centerButtonData:Vector.<ISnapListData>;
 

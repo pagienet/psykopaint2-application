@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasSurfacesCommand;
+	import net.psykosoft.psykopaint2.paint.commands.saving.DisposeCanvasNonEssentialsCommand;
 
 	public class SavePaintingSyncCommand extends SequenceMacro
 	{
@@ -21,6 +22,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 
 			ConsoleView.instance.log( this, "prepare()" );
 
+			add( DisposeCanvasNonEssentialsCommand );
 			add( ExportCanvasSurfacesCommand );
 			add( SerializePaintingCommand );
 			if( CoreSettings.RUNNING_ON_iPAD && CoreSettings.USE_IO_ANE_ON_PAINTING_FILES ) add( WritePaintingANECommand );

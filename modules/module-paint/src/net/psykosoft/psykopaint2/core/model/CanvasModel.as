@@ -7,17 +7,17 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.Texture;
-	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
+	import net.psykosoft.psykopaint2.tdsi.MemoryManagerTdsi;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
 
 	public class CanvasModel
@@ -31,9 +31,9 @@ package net.psykosoft.psykopaint2.core.model
 		[Inject]
 		public var memoryWarningSignal : NotifyMemoryWarningSignal;
 
-		private var _sourceTexture : TrackedTexture;
-		private var _fullSizeBackBuffer : TrackedTexture;
-		private var _colorTexture : TrackedTexture;
+		private var _sourceTexture : TrackedTexture;		// used during export (rendering)
+		private var _fullSizeBackBuffer : TrackedTexture;	// used during export (rendering)
+		private var _colorTexture : TrackedTexture;			// used during export (rendering)
 		private var _normalSpecularMap : TrackedTexture;	// RGB = slope, A = height, half sized
 
 		private var _width : Number;
@@ -44,8 +44,8 @@ package net.psykosoft.psykopaint2.core.model
 		private var _textureHeight : Number;
 
 		// TODO: should originals be a string path to packaged asset?
-		private var _normalSpecularOriginal : ByteArray;
-		private var _colorBackgroundOriginal : ByteArray;
+		private var _normalSpecularOriginal : ByteArray;		// used during export (reference)
+		private var _colorBackgroundOriginal : ByteArray;		// used during export (reference)
 
 		public function CanvasModel()
 		{
@@ -64,6 +64,8 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function get fullSizeBackBuffer() : Texture
 		{
+			if (!_fullSizeBackBuffer)
+				_fullSizeBackBuffer = createCanvasTexture(true);
 			return _fullSizeBackBuffer.texture;
 		}
 
@@ -111,6 +113,10 @@ package net.psykosoft.psykopaint2.core.model
 					_pyramidMap.dispose();
 					_pyramidMap = null;
 				}
+				if (_sourceTexture) {
+					_sourceTexture.dispose();
+					_sourceTexture = null;
+				}
 				return;
 			}
 
@@ -119,12 +125,12 @@ package net.psykosoft.psykopaint2.core.model
 			var fixed : BitmapData = fixSourceDimensions(sourceBitmapData);
 			
 			if (_pyramidMap)
-				_pyramidMap.setSource(fixed);
+				_pyramidMap.setSource(sourceBitmapData);
 			else
-				_pyramidMap = new PyramidMapTdsi(fixed);
+				_pyramidMap = new PyramidMapTdsi(sourceBitmapData);
 
-			if (_sourceTexture)
-				_pyramidMap.uploadMipLevel(_sourceTexture.texture, 0);
+			if (!_sourceTexture) _sourceTexture = createCanvasTexture(false);
+			_sourceTexture.texture.uploadFromBitmapData(fixed);
 
 			fixed.dispose();
 		}
@@ -166,15 +172,7 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function get sourceTexture() : Texture
 		{
-			if (!_pyramidMap) return null;
-			if (!_sourceTexture) initSourceTexture();
-			return _sourceTexture.texture;
-		}
-
-		private function initSourceTexture() : void
-		{
-			_sourceTexture = createCanvasTexture(false);
-			_pyramidMap.uploadMipLevel(_sourceTexture.texture, 0);
+			return _sourceTexture? _sourceTexture.texture : null;
 		}
 
 		public function init(canvasWidth : uint, canvasHeight : uint) : void
@@ -197,9 +195,6 @@ package net.psykosoft.psykopaint2.core.model
 
 			if (!_normalSpecularMap)
 				_normalSpecularMap = createCanvasTexture(true);
-
-			if (!_fullSizeBackBuffer)
-				_fullSizeBackBuffer = createCanvasTexture(true);
 		}
 
 		public function setNormalSpecularOriginal(value : ByteArray) : void
@@ -210,23 +205,6 @@ package net.psykosoft.psykopaint2.core.model
 			_normalSpecularOriginal = value;
 		}
 
-		public function disposePaintTextures() : void
-		{
-			trace ("Disposing paint textures");
-			if (_colorTexture) _colorTexture.dispose();
-			if (_fullSizeBackBuffer) _fullSizeBackBuffer.dispose();
-			if (_normalSpecularMap) _normalSpecularMap.dispose();
-			if (_sourceTexture) _sourceTexture.dispose();
-			if (_normalSpecularOriginal) _normalSpecularOriginal.clear();
-			if (_colorBackgroundOriginal) _colorBackgroundOriginal.clear();
-			_colorTexture = null;
-			_fullSizeBackBuffer = null;
-			_normalSpecularMap = null;
-			_sourceTexture = null;
-			_normalSpecularOriginal = null;
-			_colorBackgroundOriginal = null;
-		}
-
 		public function createCanvasTexture(isRenderTarget : Boolean, scale : Number = 1) : TrackedTexture
 		{
 			return new TrackedTexture(stage3D.context3D.createTexture(_textureWidth * scale, _textureHeight * scale, Context3DTextureFormat.BGRA, isRenderTarget, 0));
@@ -234,7 +212,30 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function dispose() : void
 		{
-			disposePaintTextures();
+			disposeBackBuffer();
+			if (_colorTexture) _colorTexture.dispose();
+			if (_normalSpecularMap) _normalSpecularMap.dispose();
+			if (_sourceTexture) _sourceTexture.dispose();
+			if (_normalSpecularOriginal) _normalSpecularOriginal.clear();
+			if (_colorBackgroundOriginal) _colorBackgroundOriginal.clear();
+			_colorTexture = null;
+			_normalSpecularMap = null;
+			_sourceTexture = null;
+			_normalSpecularOriginal = null;
+			_colorBackgroundOriginal = null;
+
+			if (_pyramidMap )
+			{
+				_pyramidMap.dispose();
+				_pyramidMap = null;
+			}
+			
+		}
+
+		public function disposeBackBuffer() : void
+		{
+			if (_fullSizeBackBuffer) _fullSizeBackBuffer.dispose();
+			_fullSizeBackBuffer = null;
 		}
 
 		public function swapColorLayer() : void
@@ -262,11 +263,6 @@ package net.psykosoft.psykopaint2.core.model
 
 		private function onMemoryWarning() : void
 		{
-			// HAH! BE GONE WITH THEE UNTIL THOU ART NEEDED HENCEFORTH!
-			if (_sourceTexture) {
-				_sourceTexture.dispose();
-				_sourceTexture = null;
-			}
 		}
 
 		public function clearColorTexture() : void

@@ -5,18 +5,25 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import com.greensock.easing.Strong;
 	
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.IGraphicsData;
 	import flash.display.MovieClip;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.text.AntiAliasType;
 	import flash.text.Font;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.utils.getDefinitionByName;
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
+	import net.psykosoft.psykopaint2.core.views.components.slider;
 	import net.psykosoft.psykopaint2.core.views.components.previews.AbstractPreview;
 	import net.psykosoft.psykopaint2.core.views.components.previews.PreviewIconFactory;
 	
@@ -25,13 +32,14 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	{
 		// Declared in Flash.
 		public var button:NavigationButton;
-		public var leftEar:Sprite;
-		public var rightEar:Sprite;
+		//public var leftEar:Sprite;
+		//public var rightEar:Sprite;
 		public var previewHolder:Sprite;
-		
+		private var sliderbar:Sprite;
+		public var sliderframe:Sprite;
 
-		private var _rightEarOpenX:Number;
-		private var _leftEarOpenX:Number;
+		//private var _rightEarOpenX:Number;
+		//private var _leftEarOpenX:Number;
 		private var _previewHolderOpenY:Number;
 		
 		private var _labelText:String;
@@ -39,7 +47,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _previewID:String;
 		private var _value:Number;
 		private var _sliding:Boolean;
-		private var _earContainer:Sprite;
+		//private var _earContainer:Sprite;
 		private var _ratio:Number;
 		private var _minValue:Number = 0;
 		private var _maxValue:Number = 1;
@@ -57,7 +65,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		
 		private var state:int;
 		
-		private const EAR_MOTION_RANGE:Number = 50;
+		private const EAR_MOTION_RANGE:Number = 70;
 		private const EAR_ANIMATION_TIME:Number = 0.2;
 		private const PREVIEW_ANIMATION_TIME:Number = 0.2;
 		private const PREVIEW_ICON_OFFSET_X:Number = 64;
@@ -82,7 +90,9 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		public function dispose():void {
 
 			stopSliding();
-			_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			//_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			sliderbar.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			
 			button.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			button.dispose();
 			removeEventListener( Event.ENTER_FRAME, onEnterFrame );
@@ -104,22 +114,39 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 			_changeEvt = new Event( Event.CHANGE );
 
+			/*
 			_leftEarOpenX = leftEar.x;
 			_rightEarOpenX = rightEar.x;
 
 			leftEar.x = 0;
 			rightEar.x = 0;
+			*/
+			
 			
 			_previewHolderOpenY = previewHolder.y;
 
+			/*
 			_earContainer = new Sprite();
 			_earContainer.visible = false;
 			_earContainer.addChild( rightEar );
 			_earContainer.addChild( leftEar );
 			addChildAt( _earContainer, 0 );
-
+		*/
+			
+		
+			sliderbar = new Sprite();
+			sliderbar.graphics.beginBitmapFill( new SliderButtonSlide() as BitmapData, new Matrix(0.5,0,0,0.5),false,true );
+			sliderbar.graphics.drawRect(0,0,321,115);
+			sliderbar.graphics.endFill();
+			
+			sliderbar.scale9Grid = new Rectangle(50, 10,321 -100, 115 -20);
+			sliderbar.width = 150;
+			sliderbar.x = 0;
+			sliderbar.y = -115 * 0.5;
+			addChildAt( sliderbar,0 );
+			
 			button.labelText = "";
-
+			button.addChildAt(sliderframe,1);
 			
 			
 			
@@ -131,7 +158,9 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private function postSetupAfterStageIsAvailable():void {
 			button.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
-			_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			//_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			sliderbar.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			
 			state = STATE_CLOSED;
 			
 		}
@@ -202,7 +231,9 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			_earContainerX = _earContainerXOnMouseDown + dx;
 			if( _earContainerX < -EAR_MOTION_RANGE ) _earContainerX = -EAR_MOTION_RANGE;
 			if( _earContainerX >  EAR_MOTION_RANGE ) _earContainerX =  EAR_MOTION_RANGE;
-			_earContainer.x = _earContainerX;
+			//_earContainer.x = _earContainerX;
+			sliderbar.x = _earContainerX;
+			
 		}
 
 		private function updateRatioFromEars():void {
@@ -218,7 +249,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 
 		private function updateEarsFromRatio():void {
-			_earContainer.x = _earContainerX = EAR_MOTION_RANGE * ( 2 * _ratio - 1 );
+			//_earContainer.x = _earContainerX = EAR_MOTION_RANGE * ( 2 * _ratio - 1 );
+			sliderbar.x = _earContainerX = EAR_MOTION_RANGE * ( 2 * _ratio - 1 );
 		}
 		
 		private function updatePreviewIconFromRatio():void {
@@ -232,13 +264,15 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function showEars():void {
 			state = STATE_OPENING;
 			killEarTweens();
-			_earContainer.visible = true;
-			TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: _leftEarOpenX, ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
-			TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: _rightEarOpenX, ease: Strong.easeOut } );
-			TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: _earContainerX, ease: Strong.easeOut } );
+			//_earContainer.visible = true;
+			//TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: _leftEarOpenX, ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
+			//TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: _rightEarOpenX, ease: Strong.easeOut } );
+			//TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: _earContainerX, ease: Strong.easeOut } );
+			TweenLite.to( sliderbar, EAR_ANIMATION_TIME, { x: _earContainerX, width:321,ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
 			
 			button.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
-			_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			//_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			sliderbar.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			stage.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			
 		}
@@ -246,17 +280,20 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function hideEars():void {
 			state = STATE_CLOSING;
 			killEarTweens();
-			TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn, onComplete: onEarsHideComplete } );
-			TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
-			TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
+			//TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn, onComplete: onEarsHideComplete } );
+			//TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
+			//TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
+			TweenLite.to( sliderbar, EAR_ANIMATION_TIME, { x: 0, width:150, ease: Strong.easeIn, onComplete: onEarsHideComplete } );
 			
 			button.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
-			_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			//_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			sliderbar.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			
 			stage.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 		}
 		
 		private function onEarsHideComplete():void {
-			_earContainer.visible = false;
+			//_earContainer.visible = false;
 			state = STATE_CLOSED;
 			button.labelText = _defaultLabelText;
 			
@@ -270,9 +307,10 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 		
 		private function killEarTweens():void {
-			TweenLite.killTweensOf( leftEar );
-			TweenLite.killTweensOf( rightEar );
-			TweenLite.killTweensOf( _earContainer );
+			//TweenLite.killTweensOf( leftEar );
+			//TweenLite.killTweensOf( rightEar );
+			//TweenLite.killTweensOf( _earContainer );
+			TweenLite.killTweensOf( sliderbar );
 		}
 		
 		private function showPreviewHolder():void {
@@ -458,7 +496,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 					
 				break;
 				case STATE_OPEN:
-					var isOnSlider:Boolean = _earContainer.hitTestPoint(stage.mouseX, stage.mouseY,true);
+					//var isOnSlider:Boolean = _earContainer.hitTestPoint(stage.mouseX, stage.mouseY,true);
+					var isOnSlider:Boolean = sliderbar.hitTestPoint(stage.mouseX, stage.mouseY,true);
 					if ( isOnSlider ) startSliding();
 					else {
 						hidePreviewHolder();
@@ -476,11 +515,19 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			{
 				case STATE_OPEN:
 					stopSliding();
-					if ( !_valueHasChanged && _earContainer.hitTestPoint(stage.mouseX, stage.mouseY,true))
+					//if ( !_valueHasChanged && _earContainer.hitTestPoint(stage.mouseX, stage.mouseY,true))
+					if ( !_valueHasChanged && sliderbar.hitTestPoint(stage.mouseX, stage.mouseY,true))
 					{
+						/*
+					}
 						if ( Math.abs(_earContainer.mouseX) > 25 )
 						{
 							if ( _earContainer.mouseX < 0 )
+							{
+								*/
+						if ( Math.abs(sliderbar.mouseX) > 25 )
+						{
+							if ( sliderbar.mouseX < 0 )
 							{
 								_ratio -= 0.02;
 								if ( _ratio < 0 ) _ratio = 0;

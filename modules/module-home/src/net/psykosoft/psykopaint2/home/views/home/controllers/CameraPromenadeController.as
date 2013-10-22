@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -20,7 +21,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		public var activePositionChanged : Signal = new Signal();
 
 		private var _target : Camera3D;
-		private var _targetPositions : Vector.<Number>;
+		private var _targetPositions : Vector.<Vector3D>;
 		private var _stage : Stage;
 		private var _lastPositionX : Number;
 		private var _velocity : Number = 0;
@@ -32,28 +33,34 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		private var _friction : Number;
 		private var _tweenTime : Number = .5;
 		private var _startTime : Number;
-		private var _startPos : Number;
+		private var _startPos : Vector3D;
 		private var _interactionRect : Rectangle;
+		private var _started : Boolean;
 
 		// uses X coordinate as distance reference
-		public function CameraPromenadeController(target : Camera3D, stage : Stage, minX : Number = -814, maxX : Number = 814)
+		public function CameraPromenadeController(target : Camera3D, stage : Stage)
 		{
 			_target = target;
-			_targetPositions = new <Number>[];
+			_targetPositions = new <Vector3D>[];
 			_stage = stage;
-			_minX = minX;
-			_maxX = maxX;
+			_minX = Number.POSITIVE_INFINITY;
+			_maxX = Number.NEGATIVE_INFINITY;
 			_interactionRect = new Rectangle(0, 0, _stage.stageWidth, _stage.stageHeight);
 		}
 
-		public function registerTargetPosition(id : int, positionX : Number) : void
+		public function registerTargetPosition(id : int, position : Vector3D) : void
 		{
-			_targetPositions[id] = positionX;
+			_minX = Math.min(_minX, position.x);
+			_maxX = Math.max(_maxX, position.x);
+			_targetPositions[id] = position;
 		}
 
 		public function start() : void
 		{
-			_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			if (!_started) {
+				_started = true;
+				_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			}
 		}
 
 		private function onMouseDown(event : MouseEvent) : void
@@ -85,6 +92,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 		public function stop() : void
 		{
+			_started = false;
 			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		}
 
@@ -92,13 +100,73 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		{
 			var dx : Number = (stageX - _lastPositionX)*1.2;
 			_velocity = _velocity + (dx - _velocity) * .95;
+			_lastPositionX = stageX;
+
 			var targetX : Number = _target.x + dx;
+
 			if (targetX > _maxX)
 				targetX = _maxX;
 			else if (targetX < _minX)
 				targetX = _minX;
-			_target.x = targetX;
-			_lastPositionX = stageX;
+
+			var firstIndex : int = getLowerBoundingIndex(targetX);
+			var secondIndex : int = getUpperBoundingIndex(targetX);
+			if (firstIndex < 0) firstIndex = 0;
+			if (secondIndex < 0) secondIndex = 0;
+
+			var firstSnap : Vector3D = _targetPositions[firstIndex];
+
+			if (firstIndex == secondIndex) {
+				_target.position = firstSnap;
+			}
+			else {
+				var secondSnap : Vector3D = _targetPositions[secondIndex];
+				var ratio : Number = (targetX - firstSnap.x)/(secondSnap.x - firstSnap.x);
+				_target.x = targetX;
+				_target.y = firstSnap.y + ratio*(secondSnap.y - firstSnap.y);
+				_target.z = firstSnap.z + ratio*(secondSnap.z - firstSnap.z);
+			}
+
+		}
+
+		private function getLowerBoundingIndex(x : Number) : int
+		{
+			var len : int = _targetPositions.length;
+			var bestIndex : int = -1;
+			var bestDistance : Number = Number.POSITIVE_INFINITY;
+
+			for (var i : int = 0; i < len; ++i) {
+				var snapX : Number = _targetPositions[i].x;
+				if (snapX < x) {
+					var distance : Number = x - snapX;
+					if (distance < bestDistance) {
+						bestDistance = distance;
+						bestIndex = i;
+					}
+				}
+			}
+
+			return bestIndex;
+		}
+
+		private function getUpperBoundingIndex(x : Number) : int
+		{
+			var len : int = _targetPositions.length;
+			var bestIndex : int = -1;
+			var bestDistance : Number = Number.POSITIVE_INFINITY;
+
+			for (var i : int = 0; i < len; ++i) {
+				var snapX : Number = _targetPositions[i].x;
+				if (snapX > x) {
+					var distance : Number = snapX - x;
+					if (distance < bestDistance) {
+						bestDistance = distance;
+						bestIndex = i;
+					}
+				}
+			}
+
+			return bestIndex;
 		}
 
 		private function moveToBestPosition() : void
@@ -108,24 +176,30 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 			if (Math.abs(_velocity) < 5) {
 				targetID = findClosestID(_target.x);
-				TweenLite.to(_target,.5, {x: _targetPositions[targetID], ease:Quad.easeOut});
+				var targetPos : Vector3D = _targetPositions[targetID];
+				TweenLite.to(_target,.5,
+							{	x: targetPos.x,
+								y: targetPos.y,
+								z: targetPos.z,
+								ease:Quad.easeOut
+							});
 			}
 			else {
 				// convert per frame to per second
 				_velocity *= 60;
-				_startPos = _target.x;
+				_startPos = _target.position;
 				var targetTime : Number = .25;
 				var targetFriction : Number = .8;
 				if (_velocity > 0) targetFriction = -targetFriction;
 				// where would the target end up with the current speed after aimed time with aimed friction?
-				targetID = findClosestID(_startPos + _velocity * targetTime + targetFriction * targetTime * targetTime );
+				targetID = findClosestID(_startPos.x + _velocity * targetTime + targetFriction * targetTime * targetTime );
 
 				// solving:
 				// p(t) = p(0) + v(0)*t + a*t^2 / 2 = target
 				// v(t) = v(0) + a*t = 0
-				// for a (acceleration, ie negative friction) and t
+				// for 'a' (acceleration, ie negative friction) and 't'
 
-				_tweenTime = 2 * (_targetPositions[targetID] - _startPos) / _velocity;
+				_tweenTime = 2 * (_targetPositions[targetID].x - _startPos.x) / _velocity;
 				_friction = -_velocity/_tweenTime;
 
 				_startTime = getTimer();
@@ -142,23 +216,29 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		private function onEnterFrame(event : Event) : void
 		{
 			var t : Number = (getTimer() - _startTime)/1000;
+			var targetPos : Vector3D = _targetPositions[_activeTargetPositionID];
+
 			if (t > _tweenTime) {
-				_target.x = _targetPositions[_activeTargetPositionID];
+				_target.position = targetPos;
 				killTween();
 			}
 			else {
-				_target.x = _startPos + _velocity*t + .5*_friction * t * t;
+				var movement : Number = (_velocity + .5*_friction * t) * t;
+				var ratio : Number = movement/(targetPos.x - _startPos.x);
+				_target.x = _startPos.x + movement;
+				_target.y = _startPos.y + (targetPos.y - _startPos.y)*ratio;
+				_target.z = _startPos.z + (targetPos.z - _startPos.z)*ratio;
 			}
 		}
 
-		private function findClosestID(position : Number) : int
+		private function findClosestID(x : Number) : int
 		{
 			var minDiff : Number = Number.POSITIVE_INFINITY;
-			var currentPosition : Number = position;
+			var currentPosition : Number = x;
 			var bestID : int;
 
 			for (var i : int = 0; i < _targetPositions.length; ++i) {
-				var pos : Number = _targetPositions[i];
+				var pos : Number = _targetPositions[i].x;
 				var diff : Number = Math.abs(pos - currentPosition);
 				if (diff < minDiff) {
 					bestID = i;
@@ -178,8 +258,13 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		{
 			if (_activeTargetPositionID != positionID) {
 				_activeTargetPositionID = positionID;
+				var target : Vector3D = _targetPositions[positionID];
 				killTween();
-				_tween = TweenLite.to(_target, 1, {x : _targetPositions[positionID], ease: Quad.easeInOut, overwrite : 0});
+				_tween = TweenLite.to(_target, 1,
+										{	x : target.x,
+											y : target.y,
+											z : target.z,
+											ease: Quad.easeInOut, overwrite : 0});
 			}
 		}
 
@@ -187,7 +272,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		{
 			_activeTargetPositionID = positionID;
 			killTween();
-			_target.x = _targetPositions[positionID];
+			_target.position = _targetPositions[_activeTargetPositionID];
 		}
 
 
