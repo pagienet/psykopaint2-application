@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public function EditBrushSubNavView() {
 			super();
 			toggleScrolling( false );
+			_scroller.itemGap = 40;
 		}
 
 		override protected function onEnabled():void {
@@ -383,15 +384,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onSliderButtonChanged( event:Event ):void {
 			var slider:SliderButton = event.target as SliderButton;
-			
-			//focusOnParameterWithId( slider.id );
-			if ( _parameter.type == PsykoParameter.IconListParameter )
+			if ( _parameter )
 			{
-				_parameter.index = slider.value;
-				slider.labelText = _parameter.stringValue;
+				//focusOnParameterWithId( slider.id );
+				if ( _parameter.type == PsykoParameter.IconListParameter )
+				{
+					_parameter.index = slider.value;
+					slider.labelText = _parameter.stringValue;
+				} else {
+					_parameter.value = slider.value;
+					slider.updateLabelFromValue();
+				}
 			} else {
-				_parameter.value = slider.value;
-				slider.updateLabelFromValue();
+				trace("ERRROR - something is not right with the parameter in EditBrushSubNavView");
+				
 			}
 		}
 /*
