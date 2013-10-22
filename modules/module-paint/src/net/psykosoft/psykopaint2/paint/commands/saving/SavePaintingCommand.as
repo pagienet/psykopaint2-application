@@ -55,7 +55,6 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 		private function onMacroComplete( success:Boolean ):void {
 			trace( this, "macro complete - success: " + success );
-			canvasHistoryModel.clearHistory(); // Saving can occur without dismounting the paint module, this is to avoid unnecessary savings in such cases.
 			saveVo.dispose();
 		}
 	}
