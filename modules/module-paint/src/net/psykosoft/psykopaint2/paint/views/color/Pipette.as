@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
+	import flash.display.BlendMode;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -36,6 +37,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			super();
 			palette_red = palette_green= palette_blue = 0;
 			ct = new ColorTransform();
+			this.blendMode = BlendMode.LAYER;
 		}
 		
 		public function startCharge( incomingColor:uint):void
