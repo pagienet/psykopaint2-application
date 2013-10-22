@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasSurfacesCommand;
-	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 
 	public class SavePaintingSyncCommand extends SequenceMacro
 	{
@@ -17,9 +16,6 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 
 		[Inject]
 		public var notifyPaintingDataSavedSignal:NotifyPaintingDataSavedSignal;
-
-		[Inject]
-		public var saveVo:SavingProcessModel;
 
 		override public function prepare():void {
 

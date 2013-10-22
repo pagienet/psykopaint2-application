@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 	import eu.alebianco.robotlegs.utils.impl.SequenceMacro;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
@@ -30,6 +31,9 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 		[Inject]
 		public var saveVo:SavingProcessModel;
 
+		[Inject]
+		public var canvasHistoryModel:CanvasHistoryModel;
+
 		override public function prepare():void {
 
 			ConsoleView.instance.log( this, "prepare()" );
@@ -37,7 +41,8 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 			saveVo.paintingId = paintingModel.activePaintingId;
 
-			if( CoreSettings.USE_SAVING ) {
+			if( canvasHistoryModel.hasHistory && CoreSettings.USE_SAVING ) {
+				add( DisplaySavingPopUpCommand );
 				if( CoreSettings.USE_ASYNC_SAVING ) add( SavePaintingAsyncCommand );
 				else add( SavePaintingSyncCommand );
 			}
