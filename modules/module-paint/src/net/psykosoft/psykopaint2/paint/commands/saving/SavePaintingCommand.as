@@ -41,8 +41,8 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 			saveVo.paintingId = paintingModel.activePaintingId;
 
+			add( DisplaySavingPopUpCommand ); // We always show the pop up because it is also used to "hide" the mounting of the home module.
 			if( canvasHistoryModel.hasHistory && CoreSettings.USE_SAVING ) {
-				add( DisplaySavingPopUpCommand );
 				if( CoreSettings.USE_ASYNC_SAVING ) add( SavePaintingAsyncCommand );
 				else add( SavePaintingSyncCommand );
 			}
@@ -55,6 +55,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 		private function onMacroComplete( success:Boolean ):void {
 			trace( this, "macro complete - success: " + success );
+			canvasHistoryModel.clearHistory(); // Saving can occur without dismounting the paint module, this is to avoid unnecessary savings in such cases.
 			saveVo.dispose();
 		}
 	}

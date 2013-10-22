@@ -4,12 +4,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 
 	public class CanvasSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -33,6 +36,15 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestSavePaintingToServerSignal : RequestSavePaintingToServerSignal;
+
+		[Inject]
+		public var notifyPaintingSavedSignal:NotifyPaintingInfoSavedSignal;
+
+		[Inject]
+		public var requestPaintingSaveSignal:RequestPaintingSaveSignal;
+
+		[Inject]
+		public var requestHidePopUpSignal:RequestHidePopUpSignal;
 
 		override public function initialize():void {
 
@@ -80,12 +92,23 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					break;
 				}
 
+				case CanvasSubNavView.ID_SAVE:
+				{
+					notifyPaintingSavedSignal.addOnce( onPaintingSaved );
+					requestPaintingSaveSignal.dispatch();
+					break;
+				}
+
 				case CanvasSubNavView.ID_PICK_A_BRUSH:
 				{
 					requestNavigationStateChange( NavigationStateType.PAINT_SELECT_BRUSH );
 					break;
 				}
 			}
+		}
+
+		private function onPaintingSaved( success:Boolean ):void {
+			requestHidePopUpSignal.dispatch();
 		}
 	}
 }
