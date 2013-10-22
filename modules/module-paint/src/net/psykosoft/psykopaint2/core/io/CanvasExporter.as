@@ -258,27 +258,18 @@ package net.psykosoft.psykopaint2.core.io
 //			var time : int = getTimer();
 			var len : int = _canvas.width * _canvas.height * 4;
 
-			// TODO: if we use the ane here, we will still need the as3 version for pure desktop builds
-
 			if( CoreSettings.RUNNING_ON_iPAD ) {
 				// Pick 1.
 				_ioAne.extension.mergeRgbaPerByte( _mergeBuffer ); // Takes about 30ms
 //		    	_ioAne.extension.mergeRgbaPerInt( _mergeBuffer ); // TODO: this method is producing bad results ( a shade of gray ) but could be faster, about 5ms
-//				mergeRGBADataAS3Pure( len ); // Takes about 10s on iPad
 			}
 			else {
 				MergeUtil.mergeRGBAData(_mergeBuffer,len);
-				//mergeRGBADataAS3Pure( len );
 			}
-
-//			ConsoleView.instance.log( this, "mergeRGBAData merge..." + (getTimer() - time));
 
 			var buffer : ByteArray = _mergeBuffer;
 			_mergeBuffer = null;
-//			time = getTimer();
 			buffer.length = len;
-//			ConsoleView.instance.log( this, "mergeRGBAData resize..." + (getTimer() - time));
-
 			return buffer;
 		}
 

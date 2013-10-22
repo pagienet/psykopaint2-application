@@ -50,7 +50,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		{
 			super.execute();
 			lightController.enabled = false;
-			canvasModel.disposePaintTextures();
+			canvasModel.dispose();
 			canvasHistoryModel.clearHistory();	// cleans up snapshot memory too
 			canvasRenderer.dispose();
 			if (lightingModel.environmentMap) {
