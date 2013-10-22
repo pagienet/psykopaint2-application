@@ -111,6 +111,10 @@ package net.psykosoft.psykopaint2.core.model
 					_pyramidMap.dispose();
 					_pyramidMap = null;
 				}
+				if (_sourceTexture) {
+					_sourceTexture.dispose();
+					_sourceTexture = null;
+				}
 				return;
 			}
 
@@ -123,8 +127,8 @@ package net.psykosoft.psykopaint2.core.model
 			else
 				_pyramidMap = new PyramidMapTdsi(fixed);
 
-			if (_sourceTexture)
-				_pyramidMap.uploadMipLevel(_sourceTexture.texture, 0);
+			if (!_sourceTexture) _sourceTexture = createCanvasTexture(false);
+			_sourceTexture.texture.uploadFromBitmapData(fixed);
 
 			fixed.dispose();
 		}
@@ -166,15 +170,7 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function get sourceTexture() : Texture
 		{
-			if (!_pyramidMap) return null;
-			if (!_sourceTexture) initSourceTexture();
-			return _sourceTexture.texture;
-		}
-
-		private function initSourceTexture() : void
-		{
-			_sourceTexture = createCanvasTexture(false);
-			_pyramidMap.uploadMipLevel(_sourceTexture.texture, 0);
+			return _sourceTexture? _sourceTexture.texture : null;
 		}
 
 		public function init(canvasWidth : uint, canvasHeight : uint) : void
@@ -262,11 +258,6 @@ package net.psykosoft.psykopaint2.core.model
 
 		private function onMemoryWarning() : void
 		{
-			// HAH! BE GONE WITH THEE UNTIL THOU ART NEEDED HENCEFORTH!
-			if (_sourceTexture) {
-				_sourceTexture.dispose();
-				_sourceTexture = null;
-			}
 		}
 
 		public function clearColorTexture() : void
