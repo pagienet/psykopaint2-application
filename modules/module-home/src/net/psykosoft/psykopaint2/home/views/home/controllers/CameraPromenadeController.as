@@ -35,6 +35,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		private var _startTime : Number;
 		private var _startPos : Vector3D;
 		private var _interactionRect : Rectangle;
+		private var _started : Boolean;
 
 		// uses X coordinate as distance reference
 		public function CameraPromenadeController(target : Camera3D, stage : Stage)
@@ -56,7 +57,10 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 		public function start() : void
 		{
-			_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			if (!_started) {
+				_started = true;
+				_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			}
 		}
 
 		private function onMouseDown(event : MouseEvent) : void
@@ -88,6 +92,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 		public function stop() : void
 		{
+			_started = false;
 			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		}
 
@@ -107,7 +112,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			var firstIndex : int = getLowerBoundingIndex(targetX);
 			var secondIndex : int = getUpperBoundingIndex(targetX);
 			if (firstIndex < 0) firstIndex = 0;
-			if (secondIndex < 0) secondIndex = _targetPositions.length - 1;
+			if (secondIndex < 0) secondIndex = 0;
 
 			var firstSnap : Vector3D = _targetPositions[firstIndex];
 
@@ -131,8 +136,9 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			var bestDistance : Number = Number.POSITIVE_INFINITY;
 
 			for (var i : int = 0; i < len; ++i) {
-				if (_targetPositions[i].x < x) {
-					var distance : Number = x - _targetPositions[i].x;
+				var snapX : Number = _targetPositions[i].x;
+				if (snapX < x) {
+					var distance : Number = x - snapX;
 					if (distance < bestDistance) {
 						bestDistance = distance;
 						bestIndex = i;
@@ -150,8 +156,9 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			var bestDistance : Number = Number.POSITIVE_INFINITY;
 
 			for (var i : int = 0; i < len; ++i) {
-				if (_targetPositions[i].x > x) {
-					var distance : Number = _targetPositions[i].x - x;
+				var snapX : Number = _targetPositions[i].x;
+				if (snapX > x) {
+					var distance : Number = snapX - x;
 					if (distance < bestDistance) {
 						bestDistance = distance;
 						bestIndex = i;

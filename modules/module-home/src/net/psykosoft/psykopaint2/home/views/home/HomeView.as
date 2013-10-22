@@ -172,7 +172,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController = new CameraPromenadeController(_camera, stage);
 			_cameraController.activePositionChanged.add(onActivePositionChanged);
 			_cameraController.registerTargetPosition(SETTINGS, new Vector3D(814, -1.14, 450));
-			_cameraController.registerTargetPosition(EASEL, new Vector3D(271, -1.14, 450));
+			_cameraController.registerTargetPosition(EASEL, new Vector3D(271, -20, 300));
 			_cameraController.registerTargetPosition(HOME, new Vector3D(-271, -1.14, 450));
 			_cameraController.registerTargetPosition(GALLERY, new Vector3D(-814, -1.14, 450));
 			_cameraController.start();
