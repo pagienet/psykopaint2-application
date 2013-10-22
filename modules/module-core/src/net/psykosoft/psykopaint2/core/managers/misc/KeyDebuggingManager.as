@@ -12,6 +12,9 @@ package net.psykosoft.psykopaint2.core.managers.misc
 		[Inject]
 		public var stage:Stage;
 
+		[Inject]
+		public var memoryWarningManager:MemoryWarningManager;
+
 		public function KeyDebuggingManager() {
 
 		}
@@ -27,7 +30,7 @@ package net.psykosoft.psykopaint2.core.managers.misc
 			switch( event.keyCode ) {
 
 				case Keyboard.M:
-//					_memoryWarningNotification.dispatch();
+					memoryWarningManager.extension.simulateMemoryWarning();
 					break;
 
 				case Keyboard.F11:

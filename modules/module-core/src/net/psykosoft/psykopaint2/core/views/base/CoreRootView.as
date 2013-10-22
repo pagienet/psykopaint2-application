@@ -63,6 +63,7 @@ package net.psykosoft.psykopaint2.core.views.base
 
 		private function onGcButtonClicked( event:MouseEvent ):void {
 			System.gc();
+			ConsoleView.instance.logMemory();
 		}
 
 		public function addToMainLayer( child:DisplayObject, layerOrdering:int ):void {

@@ -64,6 +64,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 		public function disable():void {
 			if( !visible ) return;
+			if( !_isEnabled ) return;
 			trace( this, "disabled" );
 			_isEnabled = visible = false;
 			onDisabled();
@@ -74,6 +75,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 		}
 
 		public function dispose():void {
+			if( !_setupHasRan ) return;
 			disable();
 			_isEnabled = false;
 			_setupHasRan = false;

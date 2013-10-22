@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.app.states
 {
 
+	import flash.utils.setTimeout;
+
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
@@ -13,6 +15,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.ToggleTransformGestureSignal;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
@@ -62,6 +65,8 @@ package net.psykosoft.psykopaint2.app.states
 		}
 
 		override ns_state_machine function activate( data:Object = null ):void {
+			ConsoleView.instance.log( this, "activating..." );
+			ConsoleView.instance.logMemory();
 			requestClosePaintView.add( onClosePaintView );
 			requestStateChangeSignal.dispatch( NavigationStateType.PAINT_SELECT_BRUSH );
 			navigationCanHideWithGesturesSignal.dispatch( true );
@@ -69,11 +74,15 @@ package net.psykosoft.psykopaint2.app.states
 		}
 
 		override ns_state_machine function deactivate():void {
+			ConsoleView.instance.log( this, "deactivating..." );
+			ConsoleView.instance.logMemory();
 			requestClosePaintView.remove( onClosePaintView );
 			toggleTransformGestureSignal.dispatch( false );
 		}
 
 		private function onClosePaintView():void {
+			ConsoleView.instance.log( this, "closing painting view..." );
+			ConsoleView.instance.logMemory();
 			displaySavingPopUp();
 		}
 
@@ -90,8 +99,13 @@ package net.psykosoft.psykopaint2.app.states
 		}
 
 		private function savePainting():void {
+			ConsoleView.instance.log( this, "saving painting..." );
+			ConsoleView.instance.logMemory();
 			notifyPaintingSavedSignal.addOnce( onPaintingSaved );
 			requestPaintingSaveSignal.dispatch( paintingModel.activePaintingId, true );
+//			setTimeout( function():void {
+//				requestPaintingSaveSignal.dispatch( paintingModel.activePaintingId, true );
+//			}, 2000 );
 		}
 
 		private function onPaintingSaved( success:Boolean ):void {

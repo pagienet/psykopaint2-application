@@ -37,6 +37,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 		override public function execute():void {
 
 			ConsoleView.instance.log( this, "execute()" );
+			ConsoleView.instance.logMemory();
 
 			requestUpdateMessagePopUpSignal.dispatch( "Saving: Serializing...", "" );
 			stage.addEventListener( Event.ENTER_FRAME, onOneFrame );

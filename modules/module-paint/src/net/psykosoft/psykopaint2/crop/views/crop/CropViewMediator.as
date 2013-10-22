@@ -83,6 +83,8 @@ package net.psykosoft.psykopaint2.crop.views.crop
 			view.disable();
 			GpuRenderManager.removeRenderingStep(render, GpuRenderingStepType.NORMAL);
 			view.background = null;
+
+			super.destroy();
 		}
 
 		private function onEnabled() : void

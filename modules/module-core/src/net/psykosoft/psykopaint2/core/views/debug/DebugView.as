@@ -18,7 +18,6 @@ package net.psykosoft.psykopaint2.core.views.debug
 		private var _statsTextField:TextField;
 		private var _versionTextField:TextField;
 		private var _memoryIcon:TextField;
-		private var _memoryIconTimer:Timer;
 		private var _memoryWarningCount:uint;
 		private var _fpsStackUtil:StackUtil;
 		private var _renderTimeStackUtil:StackUtil;
@@ -40,13 +39,8 @@ package net.psykosoft.psykopaint2.core.views.debug
 		}
 
 		public function flashMemoryIcon():void {
-			if( !_memoryIconTimer ) {
-				_memoryIconTimer = new Timer( 5000, 1 );
-				_memoryIconTimer.addEventListener( TimerEvent.TIMER, onMemoryIconTimerTick );
-			}
 			_memoryWarningCount++;
 			_memoryIcon.text = "MEMORY WARNING: " + _memoryWarningCount;
-			_memoryIconTimer.start();
 			_memoryIcon.visible = true;
 		}
 
@@ -107,11 +101,6 @@ package net.psykosoft.psykopaint2.core.views.debug
 			var renderTime:int = int( _renderTimeStackUtil.getAverageValue() );
 			_statsTextField.text = _fps + "/" + stage.frameRate + "fps \n" + "Render time: " + renderTime + "ms\n" +
 					( CoreSettings.SHOW_MEMORY_USAGE ? "Memory usage: " + uint( System.privateMemory / 1024 ) / 1024 + "MB" : "");
-		}
-
-		private function onMemoryIconTimerTick( event:TimerEvent ):void {
-			_memoryIconTimer.reset();
-			_memoryIcon.visible = false;
 		}
 
 		private function onEnterFrame( event:Event ):void {

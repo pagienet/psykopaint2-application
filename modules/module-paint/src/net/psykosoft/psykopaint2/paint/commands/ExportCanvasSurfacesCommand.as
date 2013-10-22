@@ -38,6 +38,8 @@ package net.psykosoft.psykopaint2.paint.commands
 		override public function execute():void {
 
 			ConsoleView.instance.log( this, "execute()" );
+			ConsoleView.instance.logMemory();
+
 			_time = getTimer();
 
 			trace( this, "vo: " + saveVo );
