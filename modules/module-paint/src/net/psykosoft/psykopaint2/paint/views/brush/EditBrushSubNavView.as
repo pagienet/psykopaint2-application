@@ -105,7 +105,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
 
-						var data:ButtonData = createCenterButton( parameter.id, parameter.label, ButtonIconType.DEFAULT, null, null, false );
+						var data:ButtonData = createCenterButton( parameter.id, parameter.label, ButtonIconType.DEFAULT, null, null, false, true, true, MouseEvent.MOUSE_DOWN );
 
 						// Button slider?
 						if( parameter.type == PsykoParameter.IntParameter
@@ -384,6 +384,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onSliderButtonChanged( event:Event ):void {
 			var slider:SliderButton = event.target as SliderButton;
+//			trace( this, "onSliderButtonChanged: " + slider.labelText );
 			if ( _parameter )
 			{
 				//focusOnParameterWithId( slider.id );
@@ -397,7 +398,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				}
 			} else {
 				trace("ERRROR - something is not right with the parameter in EditBrushSubNavView");
-				
 			}
 		}
 /*

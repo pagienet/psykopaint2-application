@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 {
 
 	import flash.display.Bitmap;
+	import flash.events.MouseEvent;
 
 	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapListDataItemBase;
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
@@ -21,6 +22,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public var previewID:String;
 		public var enabled:Boolean;
 		public var disableMouseInteractivityWhenSelected:Boolean;
+		public var clickType:String = MouseEvent.MOUSE_UP;
 
 		public function ButtonData() {
 			super();
