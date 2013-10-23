@@ -13,7 +13,7 @@
         <resizable>false</resizable>
         <width>1024</width>
         <height>790</height> <!-- would be 768 but the top app bar takes 22 -->
-        <x>0</x>
+        <x>1250</x>
         <y>50</y>
         <aspectRatio>landscape</aspectRatio>
         <autoOrients>false</autoOrients>
