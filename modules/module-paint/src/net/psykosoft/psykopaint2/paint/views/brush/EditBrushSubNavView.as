@@ -142,13 +142,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		private function onSliderButtonRendererAssigned( renderer:SliderButton ):void {
-			trace( this, "onSliderButtonRendererAssigned - id: " + renderer.id );
+//			trace( this, "onSliderButtonRendererAssigned - id: " + renderer.id );
 			renderer.addEventListener( Event.CHANGE, onSliderButtonChanged );
 			renderer.addEventListener( MouseEvent.MOUSE_DOWN, onSliderButtonMouseDown );
 		}
 
 		private function onSliderButtonRendererReleased( renderer:SliderButton ):void {
-			trace( this, "onSliderButtonRendererReleased - id: " + renderer.id );
+//			trace( this, "onSliderButtonRendererReleased - id: " + renderer.id );
 			renderer.removeEventListener( Event.CHANGE, onSliderButtonChanged );
 			renderer.removeEventListener( MouseEvent.MOUSE_DOWN, onSliderButtonMouseDown );
 		}
