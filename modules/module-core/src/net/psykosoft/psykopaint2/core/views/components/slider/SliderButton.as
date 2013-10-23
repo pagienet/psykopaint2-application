@@ -11,7 +11,6 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
-
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.core.views.components.previews.AbstractPreview;
@@ -49,6 +48,11 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _mouseDownX:Number;
 		private var _changeEvt:Event;
 		private var _earContainerXOnMouseDown:Number = 0;
+		
+		private var _minSet:Boolean;
+		private var _maxSet:Boolean;
+		private var _delayedUpdate:Boolean;
+		
 		
 		private var _valueHasChanged:Boolean;
 		
@@ -94,7 +98,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 				_stage.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 				_stage = null;
 			}
-
+			_minSet = _maxSet = false;
 			
 		}
 
@@ -104,6 +108,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private function setup():void {
 
+			_minSet = _maxSet = false;
 			_value = _ratio = 0;
 
 			_changeEvt = new Event( Event.CHANGE );
@@ -233,14 +238,22 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private function updateRatioFromEars():void {
 			_ratio = 0.5 * ( _earContainerX / EAR_MOTION_RANGE ) + 0.5;
+			if ( _ratio < 0 || _ratio > 1 )
+			{
+				throw("ButtSlider ratio is wrong",_ratio);
+			}
 		}
 
 		private function updateRatioFromValue():void {
-			_ratio = ( _value - _minValue ) / _valueRange;
+			if (_minSet && _maxSet ) _ratio = ( _value - _minValue ) / _valueRange;
+			if ( _ratio < 0 || _ratio > 1 )
+			{
+				throw("ButtSlider ratio is wrong",_ratio);
+			}
 		}
 
 		private function updateValueFromRatio():void {
-			_value = _ratio * _valueRange + _minValue;
+			if (_minSet && _maxSet ) _value = _ratio * _valueRange + _minValue;
 		}
 
 		private function updateEarsFromRatio():void {
@@ -342,6 +355,14 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function killPreviewTweens():void {
 			TweenLite.killTweensOf( previewHolder );
 		}
+		
+		private function updateFromValue():void
+		{
+			updateRatioFromValue();
+			updateEarsFromRatio();
+			updatePreviewIconFromRatio();
+			dispatchEvent( _changeEvt );
+		}
 
 		// ---------------------------------------------------------------------
 		// Interface.
@@ -420,14 +441,38 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		public function set minValue( minValue:Number ):void {
 			_minValue = minValue;
-			_valueRange = _maxValue - _minValue;
-			updateRatioFromValue();
+			_minSet = true;
+			if ( _minSet && _maxSet )
+			{
+				_valueRange = _maxValue - _minValue;
+				if ( _delayedUpdate )
+				{
+					_delayedUpdate = false;
+					updateFromValue();
+				} else {
+					updateRatioFromValue();
+				}
+			} else {
+				_delayedUpdate = true;
+			}
 		}
 
 		public function set maxValue( maxValue:Number ):void {
 			_maxValue = maxValue;
-			_valueRange = _maxValue - _minValue;
-			updateRatioFromValue();
+			_maxSet = true;
+			if ( _minSet && _maxSet )
+			{
+				_valueRange = _maxValue - _minValue;
+				if ( _delayedUpdate )
+				{
+					_delayedUpdate = false;
+					updateFromValue();
+				} else {
+					updateRatioFromValue();
+				}
+			} else {
+				_delayedUpdate = true;
+			}
 		}
 
 		public function get labelText():String {
@@ -449,10 +494,12 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		public function set value( value:Number ):void {
 			_value = value;
-			updateRatioFromValue();
-			updateEarsFromRatio();
-			updatePreviewIconFromRatio();
-			dispatchEvent( _changeEvt );
+			if ( _minSet && _maxSet )
+			{
+				updateFromValue();
+			} else {
+				_delayedUpdate = true;
+			}
 		}
 
 		public function get value():Number {
