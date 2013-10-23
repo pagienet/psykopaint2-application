@@ -4,16 +4,16 @@ package net.psykosoft.psykopaint2.core.data
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 
-	public class PaintingInfoFactory
+	public class PaintingInfoVOFactory
 	{
 		// todo: parameterize?
 		public static const SURFACE_PREVIEW_SHRINK_FACTOR : Number = 4; // powers of 2, integers > 1
 
-		public function PaintingInfoFactory()
+		public function PaintingInfoVOFactory()
 		{
 		}
 
-		public function createFromData(paintingData : PaintingDataVO, paintingId : String, thumbnail : BitmapData) : PaintingInfoVO
+		public function createFromDataVO(paintingData : PaintingDataVO, paintingId : String, thumbnail : BitmapData) : PaintingInfoVO
 		{
 			var info : PaintingInfoVO = new PaintingInfoVO();
 			var dateMs:Number = new Date().getTime();

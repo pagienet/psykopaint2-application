@@ -8,8 +8,8 @@ package net.psykosoft.psykopaint2.core.commands
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
-	import net.psykosoft.psykopaint2.core.io.CanvasExportEvent;
-	import net.psykosoft.psykopaint2.core.io.CanvasExporter;
+	import net.psykosoft.psykopaint2.core.io.CanvasPublishEvent;
+	import net.psykosoft.psykopaint2.core.io.CanvasPublisher;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
@@ -56,13 +56,13 @@ package net.psykosoft.psykopaint2.core.commands
 			notifySaveToServerStartedSignal.dispatch();
 
 			// dispatch notify started signal
-			var canvasExporter:CanvasExporter = new CanvasExporter( stage, ioAne );
-			canvasExporter.addEventListener( CanvasExportEvent.COMPLETE, onExportComplete );
+			var canvasExporter:CanvasPublisher = new CanvasPublisher( stage, ioAne );
+			canvasExporter.addEventListener( CanvasPublishEvent.COMPLETE, onExportComplete );
 			canvasExporter.exportForPublish( canvasModel, CoreSettings.PUBLISH_JPEG_QUALITY );
 		}
 
-		private function onExportComplete( event:CanvasExportEvent ):void {
-			event.target.removeEventListener( CanvasExportEvent.COMPLETE, onExportComplete );
+		private function onExportComplete( event:CanvasPublishEvent ):void {
+			event.target.removeEventListener( CanvasPublishEvent.COMPLETE, onExportComplete );
 
 			_paintingData = event.paintingDataVO;
 			grabComposite();

@@ -6,9 +6,9 @@ package net.psykosoft.psykopaint2.paint.commands.saving.async
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasSurfacesCommand;
 	import net.psykosoft.psykopaint2.paint.commands.saving.DisposeCanvasNonEssentialsCommand;
-	import net.psykosoft.psykopaint2.paint.commands.saving.sync.SerializePaintingCommand;
+	import net.psykosoft.psykopaint2.paint.commands.saving.sync.SerializeDPPCommand;
+	import net.psykosoft.psykopaint2.paint.commands.saving.sync.SerializeIPPCommand;
 
 	public class SavePaintingAsyncCommand extends SequenceMacro
 	{
@@ -23,8 +23,8 @@ package net.psykosoft.psykopaint2.paint.commands.saving.async
 			ConsoleView.instance.log( this, "prepare()" );
 
 			add( DisposeCanvasNonEssentialsCommand );
-			add( ExportCanvasSurfacesCommand );
-			add( SerializePaintingCommand );
+			add( SerializeDPPCommand );
+			add( SerializeIPPCommand );
 			add( SaveInfoAndDataCommand );
 
 			registerCompleteCallback( onMacroComplete );

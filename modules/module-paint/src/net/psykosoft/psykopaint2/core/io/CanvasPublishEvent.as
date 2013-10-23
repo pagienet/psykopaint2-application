@@ -4,7 +4,7 @@ package net.psykosoft.psykopaint2.core.io
 
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 
-	public class CanvasExportEvent extends Event
+	public class CanvasPublishEvent extends Event
 	{
 		public static const COMPLETE : String = "ExportComplete";
 		public static const PROGRESS : String = "ExportProgress";
@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.io
 		private var _stages : int;
 		private var _numStages : int;
 
-		public function CanvasExportEvent(type : String, paintingDataVO : PaintingDataVO, stages : int = 1, numStages : int = 1, bubbles : Boolean = false, cancelable : Boolean = true)
+		public function CanvasPublishEvent(type : String, paintingDataVO : PaintingDataVO, stages : int = 1, numStages : int = 1, bubbles : Boolean = false, cancelable : Boolean = true)
 		{
 			super(type, bubbles, cancelable);
 			_paintingDataVO = paintingDataVO;
@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.core.io
 
 		override public function clone() : Event
 		{
-			return new CanvasExportEvent(type, _paintingDataVO, _stages, _numStages, bubbles, cancelable);
+			return new CanvasPublishEvent(type, _paintingDataVO, _stages, _numStages, bubbles, cancelable);
 		}
 	}
 }
