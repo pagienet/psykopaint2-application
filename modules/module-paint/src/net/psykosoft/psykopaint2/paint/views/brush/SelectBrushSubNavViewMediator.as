@@ -18,8 +18,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		[Inject]
 		public var notifyPickedColorChangedSignal : NotifyPickedColorChangedSignal;
 
-		private var _activeBrushId:String = "";
-		
+		private static var _activeBrushId:String = "";
+
 		override public function initialize():void {
 			// Init.
 			registerView( view );
@@ -29,8 +29,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onViewSetup():void {
-			view.setAvailableBrushes( paintModule.getAvailableBrushTypes() );
-			_activeBrushId = view.getLabelForDefaultBrush();
+			var brushes:Vector.<String> = paintModule.getAvailableBrushTypes();
+			if( _activeBrushId == "" ) _activeBrushId = brushes[ 0 ];
+			view.setAvailableBrushes( brushes, _activeBrushId );
 			super.onViewSetup();
 		}
 
@@ -41,7 +42,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override public function destroy():void {
 			super.destroy();
-			_activeBrushId = "";
+//			_activeBrushId = "";
 			notifyPickedColorChangedSignal.remove( onColorPicked );
 		}
 
