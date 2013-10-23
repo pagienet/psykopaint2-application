@@ -103,6 +103,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var pickRadiusRange:Number = pickRadius.rangeValue;
 			var ms:Number = maxSpeed.numberValue;
 			var pof:Number = pickOffsetFactor.numberValue;
+			var bo:Number = Quad.easeIn(brushOpacity.numberValue,0,1,1);
+			var bor:Number = brushOpacityRange.numberValue;
 			
 			var mode:int = colorMode.index;
 			if ( mode == 1 ) 
@@ -114,7 +116,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				
 			}
 			
-			var cb:PathManagerCallbackInfo =  manager.callbacks;
+			
+			var cb:PathManagerCallbackInfo = manager.callbacks;
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var point:SamplePoint = points[i];
@@ -148,8 +151,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				if ( applyMatrix ) cm.applyMatrixToVector( prgba );
 				
 				var lrgba:Vector.<Number> = lastRGBA;
-				var bo:Number = Quad.easeIn(brushOpacity.numberValue,0,1,1);
-				var bor:Number = brushOpacityRange.numberValue;
+				
 				var alpha:Number;
 				if (point.first )
 				{

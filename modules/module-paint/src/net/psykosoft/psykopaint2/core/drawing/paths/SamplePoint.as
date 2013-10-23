@@ -32,28 +32,32 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			this.pressure = pressure;
 			this.penButtonState = penButtonState;
 			this.first = first;
+			var i:int;
+			var rgba:Vector.<Number> = this.colorsRGBA;
 			if ( colors == null )
 			{
-				for ( var i:int = 0; i < 16; i++ )
+				for ( i = 0; i < 16; i++ )
 				{
-					colorsRGBA[i] = 0;
+					rgba[i] = 0;
 				}
 			} else {
 				for ( i = 0; i < 16; i++ )
 				{
-					colorsRGBA[i] = colors[i];
+					rgba[i] = colors[i];
 				}
 			}
+			
+			var bf:Vector.<Number> = this.bumpFactors;
 			if ( bumpFactors == null )
 			{
 				for ( i = 0; i < 16; i++ )
 				{
-					this.bumpFactors[i] = 0;
+					bf[i] = 0;
 				}
 			} else {
 				for ( i = 0; i < 16; i++ )
 				{
-					this.bumpFactors[i] = bumpFactors[i];
+					bf[i] = bumpFactors[i];
 				}
 			}
 			

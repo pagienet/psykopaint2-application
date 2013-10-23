@@ -42,7 +42,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var autorotate:PsykoParameter;
 		private var multiplesMode:PsykoParameter;
 		
-		private var rng:LCG;
 		private var swapVector:Vector.<SamplePoint>;
 		
 		public function SpawnDecorator()
@@ -62,7 +61,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			maxSize   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SIZE,1,0,1);
 			
 			_parameters.push(  multiples,multiplesMode, maxOffset, offsetMode, offsetAngleRange, brushAngleRange, bristleVariation,maxSpeed,autorotate,maxSize);
-			rng = new LCG(Math.random() * 0xffffffff);
 			swapVector = new Vector.<SamplePoint>()
 		}
 		
@@ -75,6 +73,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var ar:Boolean = autorotate.booleanValue;
 			var mapIndex:int = multiplesMode.index;
 			var msz:Number = maxSize.numberValue;
+			var c:int = 0;
+			
+			var oar_rng:Number = offsetAngleRange.rangeValue;
+			var oar_lrng:Number = offsetAngleRange.lowerRangeValue;
+			var bn:Number = bristleVariation.numberValue;
+			var bar_rng:Number = brushAngleRange.rangeValue;
+			var bar_lrng:Number = brushAngleRange.lowerRangeValue;
+			
 			for ( var j:int = 0; j < count; j++ )
 			{
 				var point:SamplePoint =  points[j];
@@ -86,7 +92,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				switch ( offsetMode.index )
 				{
 					case 1:
-						distance *= rng.getNumber();
+						distance *= Math.random();
 					break;
 					case 2:
 						distance *=  points[j].speed / ms;
@@ -104,16 +110,18 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				for ( var i:int = 0; i < spawnCount; i++ )
 				{
 					var p:SamplePoint = points[j].getClone();
-					var offsetAngle:Number = ((ar ? p.angle + Math.PI * 0.5 : 0 ) +  rng.getNumber( offsetAngleRange.lowerRangeValue, offsetAngleRange.upperRangeValue ));
-					var radius:Number = (i-spawnCount/2) * distance + rng.getNumber(-distance,distance)*0.5*bristleVariation.numberValue;
-					p.angle += rng.getNumber( brushAngleRange.lowerRangeValue, brushAngleRange.upperRangeValue );
+					var offsetAngle:Number = ((ar ? p.angle + Math.PI * 0.5 : 0 ) + Math.random() * oar_rng + oar_lrng);
+					var radius:Number = (i-spawnCount/2) * distance + (Math.random()-Math.random()) * distance*0.5*bn;
+					p.angle += + Math.random() * bar_rng + bar_lrng;
 					p.x +=  Math.cos(offsetAngle) * radius; 
 					p.y +=  Math.sin(offsetAngle) * radius; 
-					result.push(p );
+					result[c++] = p;
 				}
 				PathManager.recycleSamplePoint(points[j]);
 			}
-			points.length = 0;
+			//points.length = 0;
+			
+			result.length = c;
 			swapVector = points;
 			return result;
 		}
