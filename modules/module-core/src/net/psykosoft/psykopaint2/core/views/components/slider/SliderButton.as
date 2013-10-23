@@ -70,7 +70,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private const PREVIEW_ANIMATION_TIME:Number = 0.2;
 		private const PREVIEW_ICON_OFFSET_X:Number = 64;
 		private const PREVIEW_ICON_OFFSET_Y:Number = 64;
-
+		
 		public static var LABEL_VALUE:int = 0;
 		public static var LABEL_PERCENT:int = 1;
 		public static var LABEL_DEGREES:int = 2;
@@ -135,11 +135,11 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			
 		
 			sliderbar = new Sprite();
-			sliderbar.graphics.beginBitmapFill( new SliderButtonSlide() as BitmapData, new Matrix(0.5,0,0,0.5),false,true );
-			sliderbar.graphics.drawRect(0,0,321,115);
+			sliderbar.graphics.beginBitmapFill( new SliderButtonSlide() as BitmapData, new Matrix(0.5,0,0,0.5,-160),false,true );
+			sliderbar.graphics.drawRect(-160,0,321,115);
 			sliderbar.graphics.endFill();
 			
-			sliderbar.scale9Grid = new Rectangle(50, 10,321 -100, 115 -20);
+			//sliderbar.scale9Grid = new Rectangle(50, 10,321 -100, 115 -20);
 			sliderbar.width = 150;
 			sliderbar.x = 0;
 			sliderbar.y = -115 * 0.5;
