@@ -285,7 +285,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		}
 
 		public static function set gesturesEnabled( value:Boolean ):void {
-//			trace( "GestureManager - gesturesEnabled: " + value );
+			trace( "GestureManager - gesturesEnabled: " + value );
 			_gesturesEnabled = value;
 		}
 	}
