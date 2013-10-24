@@ -85,7 +85,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onMouseUp(event : MouseEvent) : void
 		{
-			if (easelRect.contains(event.stageX, event.stageY))
+			if (mouseEnabled && easelRect.contains(event.stageX, event.stageY))
 				easelTappedSignal.dispatch();
 		}
 
