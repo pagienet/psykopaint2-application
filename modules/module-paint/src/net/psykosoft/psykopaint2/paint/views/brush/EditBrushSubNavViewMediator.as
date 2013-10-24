@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 
 	public class EditBrushSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -19,9 +18,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		[Inject]
 		public var notifyActivateBrushChangedSignal:NotifyActivateBrushChangedSignal;
 
-		[Inject]
-		public var notifyPickedColorChangedSignal : NotifyPickedColorChangedSignal;
-
 		override public function initialize():void {
 
 			// Init.
@@ -33,7 +29,6 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 			// From app.
 			notifyActivateBrushChangedSignal.add( onBrushParameterChangedFromOutside );
-			notifyPickedColorChangedSignal.add( onColorPicked );
 		}
 
 		override protected function onViewEnabled():void {
@@ -46,9 +41,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		// From app.
 		// -----------------------
 
-		private function onColorPicked( hex:uint, dummy:Boolean ):void {
-			view.setColorButtonHex( hex );
-		}
+
 
 		// -----------------------
 		// From view.
