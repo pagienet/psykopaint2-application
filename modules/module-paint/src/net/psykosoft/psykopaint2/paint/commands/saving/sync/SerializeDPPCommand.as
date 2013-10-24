@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 
 	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 
 	public class SerializeDPPCommand extends AsyncCommand
 	{
@@ -32,6 +33,8 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 
 		override public function execute() : void
 		{
+			ConsoleView.instance.log( this, "execute()" );
+
 			requestUpdateMessagePopUpSignal.dispatch("Saving: Serializing...", "");
 
 			var serializer : CanvasDPPSerializer = new CanvasDPPSerializer(stage, ioAne);

@@ -1,21 +1,12 @@
 package net.psykosoft.psykopaint2.paint.commands.saving.sync
 {
+
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
-	import flash.display.Stage;
-	import flash.utils.ByteArray;
-
 	import net.psykosoft.psykopaint2.core.io.CanvasIPPSerializer;
-
-	import net.psykosoft.psykopaint2.core.io.CanvasSerializationEvent;
-
-	import net.psykosoft.psykopaint2.core.io.CanvasDPPSerializer;
-	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
-	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-
 	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 
 	public class SerializeIPPCommand extends AsyncCommand
 	{
@@ -27,6 +18,8 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 
 		override public function execute() : void
 		{
+			ConsoleView.instance.log( this, "execute()" );
+
 			var dateMs:Number = new Date().getTime();
 			// todo: if there's already an id associated with the painting, we need to use that again
 			var paintingDate:Number = Number( saveVO.paintingId.split( "-" )[ 1 ] );
