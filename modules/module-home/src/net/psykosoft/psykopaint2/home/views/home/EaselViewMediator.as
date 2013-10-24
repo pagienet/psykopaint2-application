@@ -2,8 +2,10 @@ package net.psykosoft.psykopaint2.home.views.home
 {
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 
@@ -29,6 +31,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		[Inject]
 		public var requestStartNewPaintingCommand : RequestStartNewColorPaintingSignal;
 
+		[Inject]
+		public var requestNavigationStateChangeSignal : RequestNavigationStateChangeSignal;
+
 		private var _selectedSurfaceID : uint;
 
 		public function EaselViewMediator()
@@ -43,15 +48,27 @@ package net.psykosoft.psykopaint2.home.views.home
 		override public function initialize() : void
 		{
 			super.initialize();
+			view.mouseEnabled = false;
+			requestNavigationStateChangeSignal.add(onRequestNavigationStateChange);
 			view.easelRectChanged.add(onEaselRectChanged);
 			view.easelTappedSignal.add(onEaselTapped);
 			requestEaselPaintingUpdateSignal.add(onEaselUpdateRequest);
 			notifyPaintingDataRetrievedSignal.add(onPaintingDataRetrieved);
 		}
 
+		private function onRequestNavigationStateChange(newState : String) : void
+		{
+			if (newState == NavigationStateType.HOME_ON_EASEL ||
+				newState == NavigationStateType.HOME_PICK_SURFACE)
+				view.mouseEnabled = true;
+			else
+				view.mouseEnabled = false;
+		}
+
 		override public function destroy() : void
 		{
 			super.destroy();
+			requestNavigationStateChangeSignal.add(onRequestNavigationStateChange);
 			view.easelRectChanged.remove(onEaselRectChanged);
 			view.easelTappedSignal.remove(onEaselTapped);
 			requestEaselPaintingUpdateSignal.remove(onEaselUpdateRequest);
