@@ -9,11 +9,9 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.brush.SelectColorSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorPickerSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.color.ColorStyleView;
 
 	public class PaintRootView extends Sprite
 	{
@@ -29,7 +27,6 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT, CanvasSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_SELECT_BRUSH, SelectBrushSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_ADJUST_BRUSH, EditBrushSubNavView );
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_COLOR, SelectColorSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.TRANSITION_TO_HOME_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.TRANSITION_TO_PAINT_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PREPARE_FOR_HOME_MODE, SubNavigationViewBase );
