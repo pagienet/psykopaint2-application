@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		public function EditBrushSubNavView() {
 			super();
 			toggleScrolling( false );
+			_scroller.itemGap = 40;
 		}
 
 		override protected function onEnabled():void {
@@ -104,7 +105,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
 
-						var data:ButtonData = createCenterButton( parameter.id, parameter.label, ButtonIconType.DEFAULT, null, null, false );
+						var data:ButtonData = createCenterButton( parameter.id, parameter.label, ButtonIconType.DEFAULT, null, null, false, true, true, MouseEvent.MOUSE_DOWN );
 
 						// Button slider?
 						if( parameter.type == PsykoParameter.IntParameter
@@ -141,13 +142,13 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		private function onSliderButtonRendererAssigned( renderer:SliderButton ):void {
-			trace( this, "onSliderButtonRendererAssigned - id: " + renderer.id );
+//			trace( this, "onSliderButtonRendererAssigned - id: " + renderer.id );
 			renderer.addEventListener( Event.CHANGE, onSliderButtonChanged );
 			renderer.addEventListener( MouseEvent.MOUSE_DOWN, onSliderButtonMouseDown );
 		}
 
 		private function onSliderButtonRendererReleased( renderer:SliderButton ):void {
-			trace( this, "onSliderButtonRendererReleased - id: " + renderer.id );
+//			trace( this, "onSliderButtonRendererReleased - id: " + renderer.id );
 			renderer.removeEventListener( Event.CHANGE, onSliderButtonChanged );
 			renderer.removeEventListener( MouseEvent.MOUSE_DOWN, onSliderButtonMouseDown );
 		}
@@ -383,15 +384,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		private function onSliderButtonChanged( event:Event ):void {
 			var slider:SliderButton = event.target as SliderButton;
-			
-			//focusOnParameterWithId( slider.id );
-			if ( _parameter.type == PsykoParameter.IconListParameter )
+//			trace( this, "onSliderButtonChanged: " + slider.labelText );
+			if ( _parameter )
 			{
-				_parameter.index = slider.value;
-				slider.labelText = _parameter.stringValue;
+				//focusOnParameterWithId( slider.id );
+				if ( _parameter.type == PsykoParameter.IconListParameter )
+				{
+					_parameter.index = slider.value;
+					slider.labelText = _parameter.stringValue;
+				} else {
+					_parameter.value = slider.value;
+					slider.updateLabelFromValue();
+				}
 			} else {
-				_parameter.value = slider.value;
-				slider.updateLabelFromValue();
+				trace("ERRROR - something is not right with the parameter in EditBrushSubNavView");
 			}
 		}
 /*

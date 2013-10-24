@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 //		public static const ID_MODEL:String = "Source Image";
 //		public static const ID_COLOR:String = "[Color Style]";
 		public static const ID_EXPORT:String = "Export Painting";
-//		public static const ID_SAVE:String = "Save Painting"; // TODO: remove when auto-saving is developed
+		public static const ID_SAVE:String = "Save Painting"; // TODO: remove when auto-saving is developed
 		public static const ID_PUBLISH:String = "Publish Painting";
 
 		public static const ID_PICK_A_BRUSH:String = "Pick a Brush";
@@ -36,6 +36,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			createCenterButton( ID_CLEAR, ID_CLEAR, ButtonIconType.BLANK_CANVAS );
 			createCenterButton( ID_EXPORT, ID_EXPORT );
 			createCenterButton( ID_PUBLISH, ID_PUBLISH, ButtonIconType.PUBLISH );
+			createCenterButton( ID_SAVE, ID_SAVE );
 			validateCenterButtons();
 		}
 	}

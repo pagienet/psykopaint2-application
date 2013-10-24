@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	public class SubNavigationViewBase extends ViewBase
 	{
-		private var _scroller:HSnapList;
+		protected var _scroller:HSnapList;
 		private var _navigation:NavigationView;
 		private var _centerButtonData:Vector.<ISnapListData>;
 
@@ -208,7 +208,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Protected.
 		// ---------------------------------------------------------------------
 
-		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT, rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false, enabled:Boolean = true, disableMouseInteractivityWhenSelected:Boolean = true ):ButtonData {
+		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT,
+											   rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false, enabled:Boolean = true,
+											   disableMouseInteractivityWhenSelected:Boolean = true, clickType:String = MouseEvent.MOUSE_UP ):ButtonData {
 			if( !_centerButtonData ) _centerButtonData = new Vector.<ISnapListData>();
 			var btnData:ButtonData = new ButtonData();
 			btnData.labelText = btnData.defaultLabelText = label;
@@ -220,6 +222,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			btnData.itemRendererWidth = 100;
 			btnData.itemRendererType = rendererClass || IconButton;
 			btnData.enabled = enabled;
+			btnData.clickType = clickType;
 			_centerButtonData.push( btnData );
 			return btnData;
 		}
@@ -292,11 +295,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		private function onScrollerItemRendererAdded( renderer:DisplayObject ):void {
-			renderer.addEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
+			var data:ButtonData = _scroller.getDataForRenderer( renderer );
+			renderer.addEventListener( data.clickType, onButtonClicked );
 		}
 
 		private function onScrollerItemRendererRemoved( renderer:DisplayObject ):void {
-			renderer.removeEventListener( MouseEvent.MOUSE_UP, onButtonClicked );
+			var data:ButtonData = _scroller.getDataForRenderer( renderer );
+			renderer.removeEventListener( data.clickType, onButtonClicked );
 		}
 	}
 }

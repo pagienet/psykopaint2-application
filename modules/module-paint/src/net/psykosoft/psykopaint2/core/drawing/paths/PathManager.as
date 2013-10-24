@@ -140,10 +140,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			_pathEngine = getPathEngine( type );
 			_accumulatedResults = new Vector.<SamplePoint>();
 			_pointDecorators = new Vector.<IPointDecorator>();
-			
-			
-			//FOR DEBUGGING ONLY:
-			if (!CoreSettings.RUNNING_ON_iPAD ) recordedData = new Vector.<Number>();
+			recordedData = new Vector.<Number>();
 		}
 		
 		public function setCallbacks( callbackObject : Object, onPathPoints : Function, onPathStart : Function = null, onPathEnd : Function = null, onPickColor : Function = null) : void

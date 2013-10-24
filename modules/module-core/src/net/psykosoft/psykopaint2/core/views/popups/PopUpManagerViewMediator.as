@@ -28,6 +28,19 @@ package net.psykosoft.psykopaint2.core.views.popups
 		[Inject]
 		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
 
+		/*
+			BEFORE YOU DELETE THESE!
+			If you're thinking about refactoring pop ups so that other application elements do not request
+			when to show/hide pop ups and instead simply notify what they're doing, consider that the
+			current reverse implementation exists because of the lack of workers in iOS and our inhability to
+			run the UI on a separate thread. Hence, we delegate the responsibility of showing and hiding pop ups
+			to other objects.
+			For example, the saving process could notify that it's saving and get on with it right away. This view would listen
+			and trigger a pop up, but since the saving started, the cpu is busy and the pop up will not show until saving is done.
+			Instead, and in the current implementation, saving starts, requests the pop up, -waits for it- and continues. It sucks,
+			but this way we actually see the pop up in time.
+		 */
+
 		[Inject]
 		public var requestShowPopUpSignal:RequestShowPopUpSignal;
 

@@ -18,9 +18,6 @@ package net.psykosoft.psykopaint2.paint.commands.saving.sync
 		[Inject]
 		public var notifyPaintingDataSavedSignal:NotifyPaintingDataSavedSignal;
 
-		[Inject]
-		public var saveVo:SavingProcessModel;
-
 		override public function prepare():void {
 
 			ConsoleView.instance.log( this, "prepare()" );

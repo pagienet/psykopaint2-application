@@ -220,7 +220,7 @@ package net.psykosoft.psykopaint2.core.io
 			var len : int = _canvas.width * _canvas.height * 4;
 
 			if (CoreSettings.RUNNING_ON_iPAD)
-				_ioAne.extension.mergeRgbaPerByte(_output, offset); // Takes about 30ms
+				_ioAne.extension.mergeRgbaPerByte(_output, offset, len); // Takes about 30ms
 			else
 				mergeRGBADataAS3Pure(len, offset);
 		}

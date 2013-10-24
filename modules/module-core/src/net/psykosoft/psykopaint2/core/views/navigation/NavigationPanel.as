@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			_positionManager = new SnapPositionManager();
 			_positionManager.pushSnapPoint( 0 );
-			_positionManager.pushSnapPoint( _contentHeight );
+			_positionManager.pushSnapPoint( _contentHeight ); // Value gets overwritten when setting contentHeight()
 			_positionManager.motionEndedSignal.add( onPositionManagerMotionEnded );
 			_positionManager.frictionFactor = 0.8;
 			_positionManager.minimumThrowingSpeed = 100;
@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			contentHeight = 140;
 			_positionManager.snapAtIndexWithoutEasing( 1 );
 
-			// Se comment on child management.
+			// See comment on child management.
 			y = 768 + _contentHeight;
 
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
@@ -134,10 +134,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function startPanDrag( panY:Number ):void {
 
-			trace( this, "pan start: " + stage.mouseY );
+//			trace( this, "pan start: " + stage.mouseY );
 
 			// Check if the pan started in the appropriate area.
-			var closedTolerance:Number = 50;
+			var closedTolerance:Number = 25;
 			var minY:Number = shown ? 768 - _contentHeight : 768 - closedTolerance;
 			minY *= CoreSettings.GLOBAL_SCALING;
 			if( panY < minY ) return;

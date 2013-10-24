@@ -44,18 +44,6 @@ package net.psykosoft.psykopaint2.app.states
 		public var paintingModel:PaintingModel;
 
 		[Inject]
-		public var canvasHistoryModel:CanvasHistoryModel;
-
-		[Inject]
-		public var requestShowPopUpSignal:RequestShowPopUpSignal;
-
-		[Inject]
-		public var requestUpdateMessagePopUpSignal:RequestUpdateMessagePopUpSignal;
-
-		[Inject]
-		public var notifyPopUpShownSignal:NotifyPopUpShownSignal;
-
-		[Inject]
 		public var toggleTransformGestureSignal:ToggleTransformGestureSignal;
 
 		[Inject]
@@ -83,19 +71,7 @@ package net.psykosoft.psykopaint2.app.states
 		private function onClosePaintView():void {
 			ConsoleView.instance.log( this, "closing painting view..." );
 			ConsoleView.instance.logMemory();
-			displaySavingPopUp();
-		}
-
-		private function displaySavingPopUp():void {
-			requestShowPopUpSignal.dispatch( PopUpType.MESSAGE );
-			var randomJoke:String = Jokes.JOKES[ Math.floor( Jokes.JOKES.length * Math.random() ) ];
-			requestUpdateMessagePopUpSignal.dispatch( "Saving...", randomJoke );
-			notifyPopUpShownSignal.addOnce( onSavingPopUpShown );
-		}
-
-		private function onSavingPopUpShown():void {
-			if( canvasHistoryModel.hasHistory ) savePainting();
-			else continueToHome();
+			savePainting();
 		}
 
 		private function savePainting():void {

@@ -5,16 +5,12 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import com.greensock.easing.Strong;
 	
 	import flash.display.Bitmap;
-	import flash.display.MovieClip;
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.geom.Point;
-	import flash.text.AntiAliasType;
-	import flash.text.Font;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
+	import flash.geom.Matrix;
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.core.views.components.previews.AbstractPreview;
@@ -25,13 +21,14 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	{
 		// Declared in Flash.
 		public var button:NavigationButton;
-		public var leftEar:Sprite;
-		public var rightEar:Sprite;
+		//public var leftEar:Sprite;
+		//public var rightEar:Sprite;
 		public var previewHolder:Sprite;
-		
+		private var sliderbar:Sprite;
+		public var sliderframe:Sprite;
 
-		private var _rightEarOpenX:Number;
-		private var _leftEarOpenX:Number;
+		//private var _rightEarOpenX:Number;
+		//private var _leftEarOpenX:Number;
 		private var _previewHolderOpenY:Number;
 		
 		private var _labelText:String;
@@ -39,7 +36,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _previewID:String;
 		private var _value:Number;
 		private var _sliding:Boolean;
-		private var _earContainer:Sprite;
+		private var _stage:Stage;
+		//private var _earContainer:Sprite;
 		private var _ratio:Number;
 		private var _minValue:Number = 0;
 		private var _maxValue:Number = 1;
@@ -51,18 +49,23 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private var _changeEvt:Event;
 		private var _earContainerXOnMouseDown:Number = 0;
 		
+		private var _minSet:Boolean;
+		private var _maxSet:Boolean;
+		private var _delayedUpdate:Boolean;
+		
+		
 		private var _valueHasChanged:Boolean;
 		
 		private var _previewIcon:AbstractPreview;
 		
 		private var state:int;
 		
-		private const EAR_MOTION_RANGE:Number = 50;
+		private const EAR_MOTION_RANGE:Number = 70;
 		private const EAR_ANIMATION_TIME:Number = 0.2;
 		private const PREVIEW_ANIMATION_TIME:Number = 0.2;
 		private const PREVIEW_ICON_OFFSET_X:Number = 64;
 		private const PREVIEW_ICON_OFFSET_Y:Number = 64;
-
+		
 		public static var LABEL_VALUE:int = 0;
 		public static var LABEL_PERCENT:int = 1;
 		public static var LABEL_DEGREES:int = 2;
@@ -82,15 +85,20 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		public function dispose():void {
 
 			stopSliding();
-			_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			killEarTweens();
+			killPreviewTweens();
+			//_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			sliderbar.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			
 			button.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			button.dispose();
 			removeEventListener( Event.ENTER_FRAME, onEnterFrame );
-			if( stage ) {
-				stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-				stage.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			if( _stage ) {
+				_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+				_stage.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+				_stage = null;
 			}
-
+			_minSet = _maxSet = false;
 			
 		}
 
@@ -100,26 +108,44 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private function setup():void {
 
+			_minSet = _maxSet = false;
 			_value = _ratio = 0;
 
 			_changeEvt = new Event( Event.CHANGE );
 
+			/*
 			_leftEarOpenX = leftEar.x;
 			_rightEarOpenX = rightEar.x;
 
 			leftEar.x = 0;
 			rightEar.x = 0;
+			*/
+			
 			
 			_previewHolderOpenY = previewHolder.y;
 
+			/*
 			_earContainer = new Sprite();
 			_earContainer.visible = false;
 			_earContainer.addChild( rightEar );
 			_earContainer.addChild( leftEar );
 			addChildAt( _earContainer, 0 );
-
+		*/
+			
+		
+			sliderbar = new Sprite();
+			sliderbar.graphics.beginBitmapFill( new SliderButtonSlide() as BitmapData, new Matrix(0.5,0,0,0.5,-160),false,true );
+			sliderbar.graphics.drawRect(-160,0,321,115);
+			sliderbar.graphics.endFill();
+			
+			//sliderbar.scale9Grid = new Rectangle(50, 10,321 -100, 115 -20);
+			sliderbar.width = 150;
+			sliderbar.x = 0;
+			sliderbar.y = -115 * 0.5;
+			addChildAt( sliderbar,0 );
+			
 			button.labelText = "";
-
+			button.addChildAt(sliderframe,1);
 			
 			
 			
@@ -130,8 +156,11 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 
 		private function postSetupAfterStageIsAvailable():void {
+			_stage = stage;
 			button.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
-			_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			//_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			sliderbar.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			
 			state = STATE_CLOSED;
 			
 		}
@@ -202,23 +231,37 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			_earContainerX = _earContainerXOnMouseDown + dx;
 			if( _earContainerX < -EAR_MOTION_RANGE ) _earContainerX = -EAR_MOTION_RANGE;
 			if( _earContainerX >  EAR_MOTION_RANGE ) _earContainerX =  EAR_MOTION_RANGE;
-			_earContainer.x = _earContainerX;
+			//_earContainer.x = _earContainerX;
+			sliderbar.x = _earContainerX;
+			
 		}
 
 		private function updateRatioFromEars():void {
 			_ratio = 0.5 * ( _earContainerX / EAR_MOTION_RANGE ) + 0.5;
+			if ( _ratio < 0 || _ratio > 1 )
+			{
+				throw("ButtSlider ratio is wrong",_ratio);
+			}
 		}
 
 		private function updateRatioFromValue():void {
-			_ratio = ( _value - _minValue ) / _valueRange;
+			if (_minSet && _maxSet ) _ratio = ( _value - _minValue ) / _valueRange;
+			if ( _ratio < 0 || _ratio > 1 )
+			{
+				throw("ButtSlider ratio is wrong",_ratio);
+			}
 		}
 
 		private function updateValueFromRatio():void {
-			_value = _ratio * _valueRange + _minValue;
+			if (_minSet && _maxSet ) _value = _ratio * _valueRange + _minValue;
 		}
 
 		private function updateEarsFromRatio():void {
-			_earContainer.x = _earContainerX = EAR_MOTION_RANGE * ( 2 * _ratio - 1 );
+			//_earContainer.x = _earContainerX = EAR_MOTION_RANGE * ( 2 * _ratio - 1 );
+			 _earContainerX = EAR_MOTION_RANGE * ( 2 * _ratio - 1 );
+			 if ( state == STATE_CLOSED )  sliderbar.x = 0;
+			 if ( state == STATE_OPEN )  sliderbar.x = _earContainerX;
+			
 		}
 		
 		private function updatePreviewIconFromRatio():void {
@@ -232,31 +275,36 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function showEars():void {
 			state = STATE_OPENING;
 			killEarTweens();
-			_earContainer.visible = true;
-			TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: _leftEarOpenX, ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
-			TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: _rightEarOpenX, ease: Strong.easeOut } );
-			TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: _earContainerX, ease: Strong.easeOut } );
+			//_earContainer.visible = true;
+			//TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: _leftEarOpenX, ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
+			//TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: _rightEarOpenX, ease: Strong.easeOut } );
+			//TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: _earContainerX, ease: Strong.easeOut } );
+			TweenLite.to( sliderbar, EAR_ANIMATION_TIME, { x: _earContainerX, width:321,ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
 			
 			button.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
-			_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
-			stage.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			//_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			sliderbar.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			_stage.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			
 		}
 
 		private function hideEars():void {
 			state = STATE_CLOSING;
 			killEarTweens();
-			TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn, onComplete: onEarsHideComplete } );
-			TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
-			TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
+			//TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn, onComplete: onEarsHideComplete } );
+			//TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
+			//TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
+			TweenLite.to( sliderbar, EAR_ANIMATION_TIME, { x: 0, width:150, ease: Strong.easeIn, onComplete: onEarsHideComplete } );
 			
 			button.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
-			_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
-			stage.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			//_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			sliderbar.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
+			
+			_stage.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 		}
 		
 		private function onEarsHideComplete():void {
-			_earContainer.visible = false;
+			//_earContainer.visible = false;
 			state = STATE_CLOSED;
 			button.labelText = _defaultLabelText;
 			
@@ -270,9 +318,10 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 		
 		private function killEarTweens():void {
-			TweenLite.killTweensOf( leftEar );
-			TweenLite.killTweensOf( rightEar );
-			TweenLite.killTweensOf( _earContainer );
+			//TweenLite.killTweensOf( leftEar );
+			//TweenLite.killTweensOf( rightEar );
+			//TweenLite.killTweensOf( _earContainer );
+			TweenLite.killTweensOf( sliderbar );
 		}
 		
 		private function showPreviewHolder():void {
@@ -305,6 +354,14 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		
 		private function killPreviewTweens():void {
 			TweenLite.killTweensOf( previewHolder );
+		}
+		
+		private function updateFromValue():void
+		{
+			updateRatioFromValue();
+			updateEarsFromRatio();
+			updatePreviewIconFromRatio();
+			dispatchEvent( _changeEvt );
 		}
 
 		// ---------------------------------------------------------------------
@@ -384,14 +441,38 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		public function set minValue( minValue:Number ):void {
 			_minValue = minValue;
-			_valueRange = _maxValue - _minValue;
-			updateRatioFromValue();
+			_minSet = true;
+			if ( _minSet && _maxSet )
+			{
+				_valueRange = _maxValue - _minValue;
+				if ( _delayedUpdate )
+				{
+					_delayedUpdate = false;
+					updateFromValue();
+				} else {
+					updateRatioFromValue();
+				}
+			} else {
+				_delayedUpdate = true;
+			}
 		}
 
 		public function set maxValue( maxValue:Number ):void {
 			_maxValue = maxValue;
-			_valueRange = _maxValue - _minValue;
-			updateRatioFromValue();
+			_maxSet = true;
+			if ( _minSet && _maxSet )
+			{
+				_valueRange = _maxValue - _minValue;
+				if ( _delayedUpdate )
+				{
+					_delayedUpdate = false;
+					updateFromValue();
+				} else {
+					updateRatioFromValue();
+				}
+			} else {
+				_delayedUpdate = true;
+			}
 		}
 
 		public function get labelText():String {
@@ -413,10 +494,12 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		public function set value( value:Number ):void {
 			_value = value;
-			updateRatioFromValue();
-			updateEarsFromRatio();
-			updatePreviewIconFromRatio();
-			dispatchEvent( _changeEvt );
+			if ( _minSet && _maxSet )
+			{
+				updateFromValue();
+			} else {
+				_delayedUpdate = true;
+			}
 		}
 
 		public function get value():Number {
@@ -441,6 +524,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private function onAddedToStage( event:Event ):void {
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			
 			postSetupAfterStageIsAvailable();
 		}
 
@@ -448,7 +532,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			
 			_mouseDownX = mouseX;
 			_earContainerXOnMouseDown = _earContainerX;
-			stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			_stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			switch ( state )
 			{
 				case STATE_CLOSED:
@@ -458,7 +542,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 					
 				break;
 				case STATE_OPEN:
-					var isOnSlider:Boolean = _earContainer.hitTestPoint(stage.mouseX, stage.mouseY,true);
+					//var isOnSlider:Boolean = _earContainer.hitTestPoint(stage.mouseX, stage.mouseY,true);
+					var isOnSlider:Boolean = sliderbar.hitTestPoint(_stage.mouseX, _stage.mouseY,true);
 					if ( isOnSlider ) startSliding();
 					else {
 						hidePreviewHolder();
@@ -470,17 +555,25 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private function onStageMouseUp( event:MouseEvent ):void {
 			
-			stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
+			_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			
 			switch ( state )
 			{
 				case STATE_OPEN:
 					stopSliding();
-					if ( !_valueHasChanged && _earContainer.hitTestPoint(stage.mouseX, stage.mouseY,true))
+					//if ( !_valueHasChanged && _earContainer.hitTestPoint(stage.mouseX, stage.mouseY,true))
+					if ( !_valueHasChanged && sliderbar.hitTestPoint(_stage.mouseX, _stage.mouseY,true))
 					{
+						/*
+					}
 						if ( Math.abs(_earContainer.mouseX) > 25 )
 						{
 							if ( _earContainer.mouseX < 0 )
+							{
+								*/
+						if ( Math.abs(sliderbar.mouseX) > 25 )
+						{
+							if ( sliderbar.mouseX < 0 )
 							{
 								_ratio -= 0.02;
 								if ( _ratio < 0 ) _ratio = 0;

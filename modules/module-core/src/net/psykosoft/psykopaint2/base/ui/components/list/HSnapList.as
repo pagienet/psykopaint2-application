@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 	import flash.utils.describeType;
 
 	import net.psykosoft.psykopaint2.base.ui.components.*;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 
 	import org.osflash.signals.Signal;
 
@@ -181,6 +182,7 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				itemRenderer = getNewItemRendererForData( itemData );
 				itemData.itemRenderer = itemRenderer;
 				_dataForRenderer[ itemRenderer ] = itemData;
+				rendererAddedSignal.dispatch( itemRenderer );
 
 				// Configure renderer from data properties.
 				copyAllPropertiesFromObjectAToObjectB( itemData, itemRenderer );
@@ -209,9 +211,12 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		// Item renderers.
 		// ---------------------------------------------------------------------
 
+		public function getDataForRenderer( renderer:DisplayObject ):ButtonData {
+			return _dataForRenderer[ renderer ];
+		}
+
 		private function getNewItemRendererForData( data:ISnapListData ):DisplayObject {
 			var renderer:DisplayObject = _itemRendererFactory.getItemRendererOfType( data.itemRendererType );
-			rendererAddedSignal.dispatch( renderer );
 			return renderer;
 		}
 
