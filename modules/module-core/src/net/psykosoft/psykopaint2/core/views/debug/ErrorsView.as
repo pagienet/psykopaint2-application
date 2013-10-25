@@ -16,13 +16,38 @@ package net.psykosoft.psykopaint2.core.views.debug
 		private var _errorsTextField:TextField;
 		private var _errorCount:uint;
 		private var _playedSound:Boolean;
+		private var _discreteErrorSpr:Sprite;
 
 		public function ErrorsView() {
 			super();
 
+			if( CoreSettings.SHOW_DISCRETE_ERRORS ) {
+				initDiscreteErrorDisplay();
+			}
+
+
 			if( CoreSettings.SHOW_ERRORS ) {
 				initErrorDisplay();
 			}
+
+			if( CoreSettings.SHOW_ERRORS || CoreSettings.SHOW_DISCRETE_ERRORS ) {
+				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			}
+		}
+
+		private function initDiscreteErrorDisplay():void {
+
+			_discreteErrorSpr = new Sprite();
+			addChild( _discreteErrorSpr );
+
+			_discreteErrorSpr.graphics.beginFill(0xFF0000);
+			_discreteErrorSpr.graphics.drawCircle(0, 0, 15);
+			_discreteErrorSpr.graphics.endFill();
+
+			_discreteErrorSpr.x = ( 1024 - 25 ) * CoreSettings.GLOBAL_SCALING;
+			_discreteErrorSpr.y = ( 25 ) * CoreSettings.GLOBAL_SCALING;
+
+			_discreteErrorSpr.visible = false;
 		}
 
 		private function initErrorDisplay():void {
@@ -42,8 +67,6 @@ package net.psykosoft.psykopaint2.core.views.debug
 			_errorsTextField.wordWrap = true;
 			_errorsTextField.visible = false;
 			addChild( _errorsTextField );
-
-			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 		}
 
 		private function onAddedToStage( event:Event ):void {
@@ -52,16 +75,26 @@ package net.psykosoft.psykopaint2.core.views.debug
 		}
 
 		private function onGlobalError( event:UncaughtErrorEvent ):void {
+
 			_errorCount++;
+
 			var error:Error = event.error as Error;
 			if (!error) {
-				_errorsTextField.htmlText += "Anonymous error: " + event.error + "<br>";
-				_errorsTextField.visible = true;
+				if( CoreSettings.SHOW_ERRORS ) {
+					_errorsTextField.htmlText += "Anonymous error: " + event.error + "<br>";
+					_errorsTextField.visible = true;
+				}
 			}
 			else {
-				var stack:String = error.getStackTrace();
-				_errorsTextField.htmlText += "<font color='#FF0000'><b>RUNTIME ERROR - " + _errorCount + "</b></font>: " + error + " - stack: " + stack + "<br>";
-				_errorsTextField.visible = true;
+				if( CoreSettings.SHOW_ERRORS ) {
+					var stack:String = error.getStackTrace();
+					_errorsTextField.htmlText += "<font color='#FF0000'><b>RUNTIME ERROR - " + _errorCount + "</b></font>: " + error + " - stack: " + stack + "<br>";
+					_errorsTextField.visible = true;
+				}
+			}
+
+			if( CoreSettings.SHOW_DISCRETE_ERRORS ) {
+				_discreteErrorSpr.visible = true;
 			}
 
 			// Comment to mute sound!

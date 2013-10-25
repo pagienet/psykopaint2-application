@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.core.views.base
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.system.System;
+	import flash.utils.setTimeout;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
@@ -33,10 +34,10 @@ package net.psykosoft.psykopaint2.core.views.base
 			addChild( new VideoView() );
 			addChild( new PopUpManagerView() );
 			addChild( new DebugView() );
-			addChild( new ErrorsView() );
 			if( CoreSettings.ENABLE_CONSOLE ) addChild( ConsoleView.instance );
 			if( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION ) addChild( new PsykoSocketView() );
 			addChild( new SplashView() );
+			addChild( new ErrorsView() );
 
 			if( CoreSettings.ENABLE_GC_BUTTON ) {
 				var btn:PushButton = new PushButton( this, ( 1024 - 105 ) * CoreSettings.GLOBAL_SCALING, ( 768 - 25 ) * CoreSettings.GLOBAL_SCALING, "GC()", onGcButtonClicked );
@@ -59,6 +60,11 @@ package net.psykosoft.psykopaint2.core.views.base
 //			input.x = 400;
 //			input.y = 200;
 //			addChild( input );
+
+			// To test errors view.
+//			setTimeout( function():void {
+//				stage.scaleX = 2; // Will cause a runtime error.
+//			}, 2000 );
 		}
 
 		private function onGcButtonClicked( event:MouseEvent ):void {
