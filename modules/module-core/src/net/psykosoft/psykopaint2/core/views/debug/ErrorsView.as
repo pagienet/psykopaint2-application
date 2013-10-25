@@ -1,13 +1,11 @@
 package net.psykosoft.psykopaint2.core.views.debug
 {
 
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.UncaughtErrorEvent;
 	import flash.text.TextField;
-	import flash.utils.getDefinitionByName;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
@@ -15,7 +13,6 @@ package net.psykosoft.psykopaint2.core.views.debug
 	{
 		private var _errorsTextField:TextField;
 		private var _errorCount:uint;
-		private var _playedSound:Boolean;
 		private var _discreteErrorSpr:Sprite;
 
 		public function ErrorsView() {
@@ -96,22 +93,7 @@ package net.psykosoft.psykopaint2.core.views.debug
 			if( CoreSettings.SHOW_DISCRETE_ERRORS ) {
 				_discreteErrorSpr.visible = true;
 			}
-
-			// Comment to mute sound!
-//			if( !_playedSound ) {
-//				playPsychoSound();
-//				_playedSound = true;
-//			}
 		}
-
-		//Removed - funny idea, but we have no memory to waste
-		/*
-		private function playPsychoSound():void {
-			var newClipClass:Class = Class( getDefinitionByName( "psycho" ) );
-			var hh:MovieClip = new newClipClass();
-			hh.play();
-		}
-		*/
 
 		private function onErrorsMouseUp( event:MouseEvent ):void {
 			_errorsTextField.visible = false;
