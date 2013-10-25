@@ -1,6 +1,8 @@
 package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
+	import flash.utils.getTimer;
+
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
@@ -8,6 +10,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
@@ -45,6 +48,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var requestHidePopUpSignal:RequestHidePopUpSignal;
+
+		private var _time:uint;
 
 		override public function initialize():void {
 
@@ -94,6 +99,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case CanvasSubNavView.ID_SAVE:
 				{
+					_time = getTimer();
+					ConsoleView.instance.log( this, "saving..." );
+					ConsoleView.instance.logMemory();
+
 					notifyPaintingSavedSignal.addOnce( onPaintingSaved );
 					requestPaintingSaveSignal.dispatch();
 					break;
@@ -108,6 +117,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		private function onPaintingSaved( success:Boolean ):void {
+
+			_time = getTimer() - _time;
+			ConsoleView.instance.log( this, "onPaintingSaved() - saving took: " + _time + "ms" );
+			ConsoleView.instance.logMemory();
+
 			requestHidePopUpSignal.dispatch();
 		}
 	}
