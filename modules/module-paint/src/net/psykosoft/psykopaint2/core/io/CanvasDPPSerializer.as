@@ -25,12 +25,6 @@ package net.psykosoft.psykopaint2.core.io
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
 
-	/**
-	 * Returns a list of 3 ByteArrays containing data:
-	 * 0: painted color layer, in BGRA
-	 * 1: normal/specular layer, in BGRA
-	 * 2: the source texture, in RGBA!!! (because it's always used primarily as BitmapData)
-	 */
 	public class CanvasDPPSerializer extends EventDispatcher
 	{
 		private static var _copySubTextureChannelsRGB : CopySubTextureChannels;
@@ -103,10 +97,32 @@ package net.psykosoft.psykopaint2.core.io
 			_destRect = new Rectangle(0, 0, 1, 1);
 
 			_output = new ByteArray();
+			_output.length = calculateByteArrayLength();
 
 			writeHeader();
 
 			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+
+		private function calculateByteArrayLength() : uint
+		{
+			// HEADER:
+			// 2 UTF-string headers (2 bytes each)
+			// 4 byte-string for DPP2
+			// width, height (4 bytes each)
+			// boolean (1 byte)
+			// = 17
+			var canvasBytes : int = _canvas.width * _canvas.height * 4;
+			var size : int = 17 + PaintingFileUtils.PAINTING_FILE_VERSION.length;
+			size += canvasBytes * 3;	// color data, normal data, normal specular original
+
+			if (_canvas.hasSourceImage())
+				size += canvasBytes;
+
+			if (_canvas.getColorBackgroundOriginal())
+				size += canvasBytes;
+
+			return size;
 		}
 
 		private function writeHeader() : void
@@ -153,7 +169,6 @@ package net.psykosoft.psykopaint2.core.io
 		{
 			mergeRGBAData(_colorDataOffset);
 			_output.position = _colorDataOffset + _canvas.width * _canvas.height * 4;
-			_output.length = _output.position;
 		}
 
 		private function extractNormalsColor() : void
@@ -171,7 +186,6 @@ package net.psykosoft.psykopaint2.core.io
 		{
 			mergeRGBAData(_normalSpecularOffset);
 			_output.position = _normalSpecularOffset + _canvas.width * _canvas.height * 4;
-			_output.length = _output.position;
 		}
 
 		private function writeNormalSpecularOriginal() : void

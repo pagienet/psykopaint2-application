@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.display.BitmapData;
 	import flash.display.PNGEncoderOptions;
 	import flash.utils.ByteArray;
+	import flash.utils.ByteArray;
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 
