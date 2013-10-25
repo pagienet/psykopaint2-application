@@ -3,7 +3,7 @@
     <id>com.psykosoft.psykopaint2</id>
     <filename>Psykopaint2</filename>
     <name>Psykopaint2</name>
-    <versionNumber>0.7.36</versionNumber>
+    <versionNumber>0.7.38</versionNumber>
     <initialWindow>
         <content>SWF file name is set automatically at compile time</content>
         <transparent>false</transparent>
