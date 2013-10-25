@@ -2,14 +2,9 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 {
 
 	import flash.display.BitmapData;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
-	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
-
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
-	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;

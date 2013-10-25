@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import flash.geom.ColorTransform;
 
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
-	import net.psykosoft.psykopaint2.core.models.PaintModeModel;
+	import net.psykosoft.psykopaint2.core.model.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;

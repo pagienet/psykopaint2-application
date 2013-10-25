@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.core.rendering
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
+	import net.psykosoft.psykopaint2.core.model.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.RequestChangeRenderRectSignal;
@@ -65,12 +66,12 @@ package net.psykosoft.psykopaint2.core.rendering
 			_renderRect = new Rectangle(0, 0, CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT);
 		}
 
-		public function init(mode : String) : void
+		public function init() : void
 		{
 			_lightingRenderer.init();
 			_lightingRenderer.renderRect = _renderRect;
 			_context3D = stage3D.context3D;
-			sourceTextureAlpha = mode == PaintMode.PHOTO_MODE? 1 : 0;
+			sourceTextureAlpha = PaintModeModel.activeMode == PaintMode.PHOTO_MODE? 1 : 0;
 			paintAlpha = 1;
 		}
 
