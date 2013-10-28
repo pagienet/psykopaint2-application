@@ -36,6 +36,8 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		private var _startPos : Vector3D;
 		private var _interactionRect : Rectangle;
 		private var _started : Boolean;
+		private var _maxIndex : int;
+		private var _minIndex : int;
 
 		// uses X coordinate as distance reference
 		public function CameraPromenadeController(target : Camera3D, stage : Stage)
@@ -50,8 +52,16 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 		public function registerTargetPosition(id : int, position : Vector3D) : void
 		{
-			_minX = Math.min(_minX, position.x);
-			_maxX = Math.max(_maxX, position.x);
+			if (position.x < _minX) {
+				_minX = position.x;
+				_minIndex = id;
+			}
+
+			if (position.x > _maxX) {
+				_maxX = position.x;
+				_maxIndex = id;
+			}
+
 			_targetPositions[id] = position;
 		}
 
@@ -103,16 +113,25 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			_lastPositionX = stageX;
 
 			var targetX : Number = _target.x + dx;
+			var firstIndex : int;
+			var secondIndex : int;
 
-			if (targetX > _maxX)
+			if (targetX > _maxX) {
 				targetX = _maxX;
-			else if (targetX < _minX)
+				firstIndex = _maxIndex;
+				secondIndex = _maxIndex;
+			}
+			else if (targetX < _minX) {
 				targetX = _minX;
-
-			var firstIndex : int = getLowerBoundingIndex(targetX);
-			var secondIndex : int = getUpperBoundingIndex(targetX);
-			if (firstIndex < 0) firstIndex = 0;
-			if (secondIndex < 0) secondIndex = 0;
+				firstIndex = _minIndex;
+				secondIndex = _minIndex;
+			}
+			else {
+				firstIndex = getLowerBoundingIndex(targetX);
+				secondIndex = getUpperBoundingIndex(targetX);
+				if (firstIndex < 0) firstIndex = 0;
+				if (secondIndex < 0) secondIndex = 0;
+			}
 
 			var firstSnap : Vector3D = _targetPositions[firstIndex];
 
