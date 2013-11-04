@@ -1,0 +1,206 @@
+// ——————————————————————————————
+// Overview:
+// ——————————————————————————————
+
+This document explains Li’s workflow on the production of Adobe Native Extensions or ANEs for Psykopaint2. The workflow is oriented towards development on a Mac but a Windows one should be very similar. The workflow described here not only compiles ANEs but also uses ANT scripts to accelerate development, all of which will be described below.
+
+// ——————————————————————————————
+// Useful online references:
+// ——————————————————————————————
+
+1)
+http://www.adobe.com/devnet/air/articles/building-ane-ios-android-pt1.html
+This is a very detailed tutorial on ANE development on Windows and Mac, not only targeting  iOS but Android as well. It is as basic as it gets and I recommend that anyone developing ANEs at least has a full read at it. It focuses on the fundamentals, setting up the developing environment and compiling ANEs.
+
+2)
+http://www.adobe.com/devnet/air/articles/transferring-data-ane-ios-pt1.html
+This one is good for understanding how Flash communicates with the native code, i.e. how Flash objects become C objects and vice-versa.
+
+3)
+http://help.adobe.com/en_US/air/extensions/index.html
+http://help.adobe.com/en_US/air/extensions/WS469e11871ce827644502a841131fd76570a-8000.html
+These Adobe links are useful for reference, specially on object types on the C side, such as FREObject, etc.
+
+// ——————————————————————————————————————————————————————————————————————————————————————————
+// 1. ANE FUNDAMENTALS
+// ——————————————————————————————————————————————————————————————————————————————————————————
+
+This is thoroughly explained in the 1st link, but basically an ANE is composed of AS3 code and C code. Both are compiled separately and then packaged together in the command line using the Adobe ADT. This produces an .ane file which is treated as a regular .swc library in the main project.
+
+// ——————————————————————————————
+// The AS3 side:
+// ——————————————————————————————
+
+The AS3 code provides the interface to the extension and communicates with the native C code, which does the actual work. This communication is handled via the AS3 object “ExtensionContext”. 
+
+This object is used to initialize any extension with an id:
+_context = ExtensionContext.createExtensionContext( "net.psykosoft.test", null );
+
+And to call methods on the native side ( which can return stuff ).
+var reply:* = _context.call( “myMethod”, param1, param2, … );
+
+The object can also dispatch “StatusEvent” which carry 2 String properties, “code” and “level”.
+_context.addEventListener( StatusEvent.STATUS, onContextStatusUpdate );
+private function onContextStatusUpdate( event:StatusEvent ):void {
+	// Use event.code and event.level here…
+}
+
+// ——————————————————————————————
+// The C (dark) side:
+// ——————————————————————————————
+
+The C code needs to include the header file provided by Adobe “FlashRuntimeExtensions.h”. This provides a series of objects for retrieving data sent from Flash into C and vice-versa as well as providing the basic bootstrap for communications. The rest is regular C, C++ or Objective-C code depending on the platform.
+
+For bootstrapping, these 2 methods are mandatory for initialization. You don’t alter the code on the second one, it just needs to exist, and in the 1st one you define which methods will be available or visible to Flash. Each time you add a method you need to increase the value of numFunctionsToTest and add 3 lines of code to define it in the func[] array.
+
+void TestExtensionContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) {
+    
+    *numFunctionsToTest = 1;
+    
+    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * *numFunctionsToTest);
+    
+    func[ 0 ].name = (const uint8_t*) "initialize";
+    func[ 0 ].functionData = NULL;
+    func[ 0 ].function = &testext_initialize;
+    
+    /* DO NOT FORGET TO INCREASE numFunctionsToTest! - AND make sure indices are right */
+    
+    *functionsToSet = func;
+}
+
+void TestExtensionInitializer(void** extDataToSet, FREContextInitializer* ctxInitializerToSet, FREContextFinalizer* ctxFinalizerToSet) {
+    *extDataToSet = NULL;
+    *ctxInitializerToSet = &TestExtensionContextInitializer;
+}
+
+After that, Flash-visible methods need to have the following signature and structure:
+
+FREObject testext_initialize(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    
+    // Your code here…
+    
+    return NULL;
+}
+
+// ——————————————————————————————
+// Retrieving Flash stuff in C:
+// ——————————————————————————————
+
+You call extension methods in AS3 as we saw before:
+var reply:* = _context.call( “myMethod”, param1, param2, … );
+
+On C, this calls your methods with the signature
+FREObject testext_initialize(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
+
+The params are contained in the argv[] array. As far as you know, is raw Flash data and needs to be processed by the FlashRuntimeExtensions.h library into FREObjects, which expose properties you can interpret in C. I recommend using the 2nd link provided as a reference for each of the type of objects, or having a look into the C code of the native extensions we already have. For example, the IO extension exposes the method:
+
+public function mergeRgbaPerByte( bytes:ByteArray, offset:uint = 0, specifyLength:int = -1 );
+
+Which in turn uses the context to call the C code:
+_context.call( "mergeRgbaPerByte", bytes, offset, specifyLength );
+
+And C retrieves the data like this:
+    
+    // Get offset uint.
+    uint32_t dataOffset;
+    FREGetObjectAsUint32( argv[ 1 ], &dataOffset );
+    
+    // Get length int.
+    int32_t specifyLength;
+    FREGetObjectAsInt32( argv[ 2 ], &specifyLength );
+    
+    // Get byte array.
+    FREByteArray byteArray;
+    FREObject objectByteArray = argv[ 0 ];
+    FREAcquireByteArray( objectByteArray, &byteArray );
+
+// ——————————————————————————————
+// Reading back stuff in Flash:
+// ——————————————————————————————
+
+C methods return stuff, but this hasn’t been used so far in our ANEs. I have nothing against this method, I just didn’t use it. Instead I used async communication or the simple fact that the C side alters AS3 objects like BitmapDatas or ByteArrays directly.
+
+In order to have the extension dispatch StatusEvents, you call in C, where eventCode are uint8_t string arrays.
+FREDispatchStatusEventAsync( extensionFREContext, eventCode, eventCode );
+
+Take a look at our current extensions to see multiple examples of how Flash gets messages and data back from C.
+
+// ——————————————————————————————————————————————————————————————————————————————————————————
+// 2. COMPILATION
+// ——————————————————————————————————————————————————————————————————————————————————————————
+
+This is also explained on the 1st link, but I will summarize it here a bit. The AS3 code is compiled into 2 SWC files. Pne for the actual AS3 interface of the extension and another for a dummy interface which actually doesn’t call any C actions. This is called the default implementation and is used whenever Flash can’t find a native implementation in the extension for the platform your content is running on. More on this shortly.
+
+These 2 SWCs are then unpacked (like regular zip files) and their SWFs are extracted.
+
+Parallely, the C code is compiled, in Mac into .a files.
+
+Finally the ADT is used via the command line to combine the 2 SWFs, the .a file and a couple more xml files into an .ane. The xml files “extension.xml” and “platform options.xml” are used to configure the packaging of the extension.
+
+// ——————————————————————————————
+// The default implementation:
+// ——————————————————————————————
+
+This is a bit of a pain in the ass, but its quite simple. Imagine this case: You develop an ANE that only has an implementation for iOS. This extension is used in your main project, which you usually compile for desktop in order to avoid waiting for the long AS3 -> iOS conversion wait. Now, as your extension doesn’t provide an implementation for the desktop, calling any methods on it would throw a runtime error. In order to avoid that you use the default implementation, which in AS3 looks exactly like your main AS3 class, but doesn’t actually make execute the ExtensionContext call() method. Yep, it does nothing. It just keeps the interface available.
+
+These are examples of methods in a default implementation:
+public function write( bytes:ByteArray, fileName:String ):void {}
+public function read( bytes:ByteArray, fileName:String ):void {}
+
+The signatures must be indetical in the default implementation and the real AS3 implementation, so whenever you add a method or change the signature of one, you have to remember to change it in the default implementation as well.
+
+// ——————————————————————————————
+// The xml files:
+// ——————————————————————————————
+
+Also explained in the 1st link.
+
+Basically, the extensions file tells the ADT where to get the C .a file, where to find its bootstrap method, what platforms are supported and what is the id of the extension. The id is used by ExtensionContext.createExtensionContext and needs to match the id used in compiling c code as well as producing AIR products that use the extension.
+
+The platform options file the is used for specifying additional settings to the ADT such as which iOS frameworks are used that are not commonly bundled in.
+
+// ——————————————————————————————
+// ANT:
+// ——————————————————————————————
+
+The default Adobe workflow for developing ANEs is a bit of a pain since it involves compiling a set of files, moving them around, gathering them and running command line stuff each time you change something in your AS3 or C code. This can become very distracting for development, so I wrote a little ant script called “build.xml” which automates the process. It just goes through each of the steps and automates everything except the C compilation. Potentially, this could be automated too. 
+
+The requirements are that you respect the file structure of on of the ANEs we already have so that everything is in place for the ant script to find. To start a new ANE, I recommend that you copy the test and and change file names as well as references in the xml files and source files and build from there.
+
+This folder structure includes the as3 source, the as3 default source, the iOS source, the ant script, the extension and platform options xml files, as3 code to test the extension, etc.
+
+// ——————————————————————————————————————————————————————————————————————————————————————————
+// 3. GOTCHAS
+// ——————————————————————————————————————————————————————————————————————————————————————————
+
+The process of producing ANEs involves a lot of steps and it’s easy to make a mistake on one and not know what’s going on. These are the gotchas I’ve found so far. Being aware of them could save you a lot of time!
+
+- Be careful with method names on the C side. It seems as if Flash throws all extension methods into the same pool, so it confuses methods on the C side that have the same name. For example, if you have multiple extensions with a visible method called initialize, you may run into some very weird errors. To avoid this, I use a prefix to all method names, such as testext_initiallise or ioext_initialize.
+
+- There is a way to debug your native extensions but I haven’t found the need to do so yet. Instead, I rely on trace statements such as NSLog on iOS. Make sure to use them in a robust manner. Write traces to ensure that the code you are working on is the one that is being packaged. If you don’t see a trace, it is more likely that the packaging is being done incorrectly than something actually wrong in your code.
+
+- Your main app’s config xml needs to refer to the extension ids. For example:
+    <extensions>
+        <extensionID>net.psykosoft.notifications</extensionID>
+		<extensionID>net.psykosoft.photos</extensionID>
+		<extensionID>net.psykosoft.gyroscope</extensionID>
+		<extensionID>net.psykosoft.wacom</extensionID>
+		<extensionID>net.psykosoft.io</extensionID>
+    </extensions>
+
+- There is a weird behaviour on ANE dependencies. For example if your main project has dependencies on sub projects which have dependencies on specific ANEs, you need to set the .ane dependencies on the main project as well to avoid linking errors.
+
+- Id’s can be complicated. Reverse namespace id’s need to be the same on your main app xml, the extension xml, the string on the ExtensionContext init call, provisioning profiles, etc. Failing to do so will cause errors on AS3 -> iOS conversions during compilation.
+
+
+
+
+
+
+
+
+
+
+
+
+
