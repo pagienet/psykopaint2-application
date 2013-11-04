@@ -142,27 +142,6 @@ package net.psykosoft.psykopaint2.core.io
 			_paintingData.colorData = _workerBitmapData.encode(_workerBitmapData.rect, new JPEGEncoderOptions(_jpegQuality));
 		}
 
-		// the stages:
-		private function saveColorRGB() : void
-		{
-//			ConsoleView.instance.log( this, "saveColorRGB stage..." );
-			_mergeBuffer = new ByteArray();
-			_mergeBuffer.length = _canvas.width * _canvas.height * 8;
-			extractChannels(_mergeBuffer, 0, _canvas.colorTexture, _copySubTextureChannelsRGB);
-		}
-
-		private function saveColorAlpha() : void
-		{
-//			ConsoleView.instance.log( this, "saveColorAlpha stage..." );
-			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 4, _canvas.colorTexture, _copySubTextureChannelsA);
-		}
-
-		private function mergeColorData() : void
-		{
-//			ConsoleView.instance.log( this, "mergeColorData stage..." );
-			_paintingData.colorData = mergeRGBAData();
-		}
-
 		private function extractNormalsColor() : void
 		{
 //			ConsoleView.instance.log( this, "extractNormalsColor stage..." );
@@ -186,11 +165,6 @@ package net.psykosoft.psykopaint2.core.io
 		private function compressNormalData() : void
 		{
 			_paintingData.normalSpecularData.compress();
-		}
-
-		private function saveSourceDataToByteArray() : void
-		{
-			_paintingData.sourceImageData = saveLayerNoAlpha(_canvas.sourceTexture);
 		}
 
 		private function saveSourceDataToThumb() : void
@@ -221,17 +195,6 @@ package net.psykosoft.psykopaint2.core.io
 			_workerBitmapData = null;
 
 			dispatchEvent(new CanvasPublishEvent(CanvasPublishEvent.COMPLETE, _paintingData));
-		}
-
-		private function saveLayerNoAlpha(layer : Texture) : ByteArray
-		{
-			var context3D : Context3D = _canvas.stage3D.context3D;
-			context3D.setRenderToBackBuffer();
-			context3D.clear(0, 0, 0, 0);
-			context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			CopySubTexture.copy(layer, _sourceRect, _destRect, context3D);
-			context3D.drawToBitmapData(_workerBitmapData);
-			return _workerBitmapData.getPixels(_workerBitmapData.rect);
 		}
 
 		private function mergeRGBAData() : ByteArray
