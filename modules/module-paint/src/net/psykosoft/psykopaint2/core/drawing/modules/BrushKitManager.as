@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
@@ -100,7 +101,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
 		private var _canvasMatrix : Matrix;
-		private var _activeMode : String;
 		private var _currentPaintColor:int;
 		private var _currentBrushColorParameter:PsykoParameter;
 		private var copyColorUtil:CopyColorToBitmapDataUtil;
@@ -136,7 +136,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			}  else if (!pipetteActive &&  gestureType == GestureType.TRANSFORM_GESTURE_ENDED )
 			{
 				_activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
-			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN && _activeMode == PaintMode.COLOR_MODE )
+			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN && PaintModeModel.activeMode == PaintMode.COLOR_MODE )
 			{
 				var clip:* = LongPressGesture(event.target).target;
 				var target:Stage =  Stage( clip );
@@ -300,11 +300,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				activateBrushKit();
 		}
 
-		public function activate(mode : String) : void
+		public function activate() : void
 		{
 			brushShapeLibrary.init();
 			
-			var brushKitDef : XML = mode == PaintMode.PHOTO_MODE? BrushKitDefaultSet.brushKitDataPhotoPaintMode.copy() : BrushKitDefaultSet.brushKitDataColorMode.copy();
+			var brushKitDef : XML = PaintModeModel.activeMode == PaintMode.PHOTO_MODE? BrushKitDefaultSet.brushKitDataPhotoPaintMode.copy() : BrushKitDefaultSet.brushKitDataColorMode.copy();
 
 			_availableBrushKits = new Vector.<BrushKit>();
 			_availableBrushKitNames = new Vector.<String>();
@@ -314,7 +314,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 			initializeDefaultBrushes();
 
-			_activeMode = mode;
 			_active = true;
 			
 			
@@ -403,11 +402,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			}
 			if (_activeBrushKit)
 				_activeBrushKit.brushEngine.freeExpendableMemory();
-		}
-
-		public function get activeMode() : String
-		{
-			return _activeMode;
 		}
 
 		public function get currentPaintColor():int {

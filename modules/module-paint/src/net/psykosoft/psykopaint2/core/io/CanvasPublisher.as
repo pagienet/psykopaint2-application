@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.core.io
 	 * 1: normal/specular layer, in BGRA
 	 * 2: the source texture, in RGBA!!! (because it's always used primarily as BitmapData)
 	 */
-	public class CanvasExporter extends EventDispatcher
+	public class CanvasPublisher extends EventDispatcher
 	{
 		private static var _copySubTextureChannelsRGB : CopySubTextureChannels;
 		private static var _copySubTextureChannelsA : CopySubTextureChannels;
@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.core.io
 		private var _jpegQuality : Number;
 		private var _sourceThumbWidth : Number;
 
-		public function CanvasExporter( stage:Stage, ioAne:IOAneManager )
+		public function CanvasPublisher( stage:Stage, ioAne:IOAneManager )
 		{
 			_stage = stage;
 			_ioAne = ioAne;
@@ -67,24 +67,6 @@ package net.psykosoft.psykopaint2.core.io
 			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
 			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
 			_copyColorToBitmapData ||= new CopyColorToBitmapDataUtil();
-		}
-
-		public function export(canvas : CanvasModel) : void
-		{
-			_exportingStages = [
-				saveColorRGB,
-				saveColorAlpha,
-				mergeColorData,
-
-				extractNormalsColor,
-				extractNormalsAlpha,
-				mergeNormalData
-			];
-
-			if (canvas.hasSourceImage())
-				_exportingStages.push(saveSourceDataToByteArray);
-
-			doExport(canvas);
 		}
 
 		// in this case, color will contain JPEG data, sourceImage will contain PNG Thumbnail, and normal data will be compressed with zlib
@@ -150,36 +132,14 @@ package net.psykosoft.psykopaint2.core.io
 
 		private function executeStage() : void
 		{
-//			ConsoleView.instance.log( this, "-executeStage-" );
 			_exportingStages[_exportingStage]();
-			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.PROGRESS, _paintingData, _exportingStage, _exportingStages.length));
+			dispatchEvent(new CanvasPublishEvent(CanvasPublishEvent.PROGRESS, _paintingData, _exportingStage, _exportingStages.length));
 		}
 
 		private function saveColorFlat() : void
 		{
 			_copyColorToBitmapData.execute(_canvas, _workerBitmapData);
 			_paintingData.colorData = _workerBitmapData.encode(_workerBitmapData.rect, new JPEGEncoderOptions(_jpegQuality));
-		}
-
-		// the stages:
-		private function saveColorRGB() : void
-		{
-//			ConsoleView.instance.log( this, "saveColorRGB stage..." );
-			_mergeBuffer = new ByteArray();
-			_mergeBuffer.length = _canvas.width * _canvas.height * 8;
-			extractChannels(_mergeBuffer, 0, _canvas.colorTexture, _copySubTextureChannelsRGB);
-		}
-
-		private function saveColorAlpha() : void
-		{
-//			ConsoleView.instance.log( this, "saveColorAlpha stage..." );
-			extractChannels(_mergeBuffer, _canvas.width * _canvas.height * 4, _canvas.colorTexture, _copySubTextureChannelsA);
-		}
-
-		private function mergeColorData() : void
-		{
-//			ConsoleView.instance.log( this, "mergeColorData stage..." );
-			_paintingData.colorData = mergeRGBAData();
 		}
 
 		private function extractNormalsColor() : void
@@ -205,11 +165,6 @@ package net.psykosoft.psykopaint2.core.io
 		private function compressNormalData() : void
 		{
 			_paintingData.normalSpecularData.compress();
-		}
-
-		private function saveSourceDataToByteArray() : void
-		{
-			_paintingData.sourceImageData = saveLayerNoAlpha(_canvas.sourceTexture);
 		}
 
 		private function saveSourceDataToThumb() : void
@@ -239,18 +194,7 @@ package net.psykosoft.psykopaint2.core.io
 			_workerBitmapData.dispose();
 			_workerBitmapData = null;
 
-			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.COMPLETE, _paintingData));
-		}
-
-		private function saveLayerNoAlpha(layer : Texture) : ByteArray
-		{
-			var context3D : Context3D = _canvas.stage3D.context3D;
-			context3D.setRenderToBackBuffer();
-			context3D.clear(0, 0, 0, 0);
-			context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
-			CopySubTexture.copy(layer, _sourceRect, _destRect, context3D);
-			context3D.drawToBitmapData(_workerBitmapData);
-			return _workerBitmapData.getPixels(_workerBitmapData.rect);
+			dispatchEvent(new CanvasPublishEvent(CanvasPublishEvent.COMPLETE, _paintingData));
 		}
 
 		private function mergeRGBAData() : ByteArray
