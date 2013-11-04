@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.core.views.socket
 			var container:Sprite = new Sprite();
 			addChild( container );
 
-			_tf = new InputText( container, 0, 0, "ip address" );
+			_tf = new InputText( container, 0, 0, "192.168.178.26" );
 			_tf.textField.addEventListener( KeyboardEvent.KEY_DOWN, onTfKeyDown );
 			var format:TextFormat = _tf.textField.defaultTextFormat;
 			format.align = TextFormatAlign.CENTER;
