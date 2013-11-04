@@ -22,6 +22,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
+	import net.psykosoft.psykopaint2.core.model.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
@@ -78,24 +79,20 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function continueInit():void {
-			var mode : String = initPaintingVO.sourceImageData? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
+			PaintModeModel.activeMode = initPaintingVO.sourceImageData? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
 
 			addPaintModuleDisplay();
 
 			lightController.enabled = true;
 
 			canvasModel.createPaintTextures();
-			brushKitManager.activate(mode);
+			brushKitManager.activate();
 
 			importPaintingData();
 
 			canvasHistoryModel.clearHistory();
 
-			renderer.init(mode);
-
-			// not sure if this should be here at all
-			//if (mode == PaintMode.PHOTO_MODE)
-			//	TweenLite.to(renderer, 1.6, { sourceTextureAlpha: 1, ease: Sine.easeIn });
+			renderer.init();
 
 			GpuRenderManager.addRenderingStep(brushKitManager.update, GpuRenderingStepType.PRE_CLEAR);
 

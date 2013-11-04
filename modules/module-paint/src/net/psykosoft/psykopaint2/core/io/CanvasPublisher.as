@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.core.io
 	 * 1: normal/specular layer, in BGRA
 	 * 2: the source texture, in RGBA!!! (because it's always used primarily as BitmapData)
 	 */
-	public class CanvasExporter extends EventDispatcher
+	public class CanvasPublisher extends EventDispatcher
 	{
 		private static var _copySubTextureChannelsRGB : CopySubTextureChannels;
 		private static var _copySubTextureChannelsA : CopySubTextureChannels;
@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.core.io
 		private var _jpegQuality : Number;
 		private var _sourceThumbWidth : Number;
 
-		public function CanvasExporter( stage:Stage, ioAne:IOAneManager )
+		public function CanvasPublisher( stage:Stage, ioAne:IOAneManager )
 		{
 			_stage = stage;
 			_ioAne = ioAne;
@@ -67,24 +67,6 @@ package net.psykosoft.psykopaint2.core.io
 			_copySubTextureChannelsRGB ||= new CopySubTextureChannels("xyz", "xyz");
 			_copySubTextureChannelsA ||= new CopySubTextureChannels("w", "z");
 			_copyColorToBitmapData ||= new CopyColorToBitmapDataUtil();
-		}
-
-		public function export(canvas : CanvasModel) : void
-		{
-			_exportingStages = [
-				saveColorRGB,
-				saveColorAlpha,
-				mergeColorData,
-
-				extractNormalsColor,
-				extractNormalsAlpha,
-				mergeNormalData
-			];
-
-			if (canvas.hasSourceImage())
-				_exportingStages.push(saveSourceDataToByteArray);
-
-			doExport(canvas);
 		}
 
 		// in this case, color will contain JPEG data, sourceImage will contain PNG Thumbnail, and normal data will be compressed with zlib
@@ -150,9 +132,8 @@ package net.psykosoft.psykopaint2.core.io
 
 		private function executeStage() : void
 		{
-//			ConsoleView.instance.log( this, "-executeStage-" );
 			_exportingStages[_exportingStage]();
-			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.PROGRESS, _paintingData, _exportingStage, _exportingStages.length));
+			dispatchEvent(new CanvasPublishEvent(CanvasPublishEvent.PROGRESS, _paintingData, _exportingStage, _exportingStages.length));
 		}
 
 		private function saveColorFlat() : void
@@ -239,7 +220,7 @@ package net.psykosoft.psykopaint2.core.io
 			_workerBitmapData.dispose();
 			_workerBitmapData = null;
 
-			dispatchEvent(new CanvasExportEvent(CanvasExportEvent.COMPLETE, _paintingData));
+			dispatchEvent(new CanvasPublishEvent(CanvasPublishEvent.COMPLETE, _paintingData));
 		}
 
 		private function saveLayerNoAlpha(layer : Texture) : ByteArray

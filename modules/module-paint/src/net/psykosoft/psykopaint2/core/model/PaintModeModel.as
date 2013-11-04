@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.models
+package net.psykosoft.psykopaint2.core.model
 {
 
 	public class PaintModeModel
