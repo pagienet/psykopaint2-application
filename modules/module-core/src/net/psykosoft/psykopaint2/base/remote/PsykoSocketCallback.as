@@ -23,7 +23,7 @@ package net.psykosoft.psykopaint2.base.remote
 				if ( targetPath[i] == "*" ) return true;
 				if ( targetPath[i] != incomingPath[i] ) return false;
 			}
-			return targetPath.length != incomingPath.length;
+			return targetPath.length == incomingPath.length;
 		}
 		
 		public function equals(targetPath:String, callbackObject:Object, callbackMethod:Function):Boolean
