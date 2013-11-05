@@ -120,7 +120,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function initModel() : void
 		{
-			_atelier = new Atelier();
+			_atelier = new Atelier(_stage3dProxy);
 			_atelier.mouseEnabled = false;
 			_atelier.mouseChildren = false;
 			_atelier.addEventListener(Event.COMPLETE, onAtelierComplete);
@@ -172,10 +172,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController = new CameraPromenadeController(_camera, stage);
 			_cameraController.activePositionChanged.add(onActivePositionChanged);
 			_cameraController.registerTargetPosition(SETTINGS, new Vector3D(814, -1.14, 450));
-			_cameraController.registerTargetPosition(EASEL, new Vector3D(271, -40, 300));
+//			_cameraController.registerTargetPosition(EASEL, new Vector3D(271, -40, 300));
+			_cameraController.registerTargetPosition(EASEL, new Vector3D(271, -1.14, 450));
 			_cameraController.registerTargetPosition(HOME, new Vector3D(-271, -1.14, 450));
-//			TODO: RE-ENABLE GALLERY
-//			_cameraController.registerTargetPosition(GALLERY, new Vector3D(-814, -1.14, 450));
+			_cameraController.registerTargetPosition(GALLERY, new Vector3D(-814, -1.14, 450));
 			_cameraController.start();
 			_cameraController.interactionRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight - 150*CoreSettings.GLOBAL_SCALING);
 		}

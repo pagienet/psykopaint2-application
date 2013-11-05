@@ -4,6 +4,6 @@
 <TextureAtlas imagePath="wallpapers.png">
     <SubTexture name="bricks" x="214" y="214" width="210" height="210"/>
     <SubTexture name="bluepattern" x="214" y="2" width="210" height="210"/>
-    <SubTexture name="white" x="2" y="214" width="210" height="210"/>
+    <SubTexture name="stucco" x="2" y="214" width="210" height="210"/>
     <SubTexture name="wood" x="2" y="2" width="210" height="210"/>
 </TextureAtlas>

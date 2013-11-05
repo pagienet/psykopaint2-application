@@ -1,13 +1,16 @@
 package net.psykosoft.psykopaint2.home.views.home.atelier
 {
 	import away3d.containers.ObjectContainer3D;
+	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.materials.MaterialBase;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.methods.LightMapMethod;
 	import away3d.textures.ATFData;
 	import away3d.textures.ATFTexture;
 	import away3d.textures.BitmapTexture;
 	import away3d.materials.SinglePassMaterialBase;
+	import away3d.textures.Texture2DBase;
 
 	import flash.events.Event;
 
@@ -18,13 +21,15 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 	import net.psykosoft.psykopaint2.base.utils.io.QueuedFileLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.events.AssetLoadedEvent;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.home.views.home.atelier.data.DomeData;
+	import net.psykosoft.psykopaint2.home.views.home.atelier.data.Elements2Data;
 	import net.psykosoft.psykopaint2.home.views.home.atelier.data.ElementsData;
 	import net.psykosoft.psykopaint2.home.views.home.atelier.data.FloorData;
 	import net.psykosoft.psykopaint2.home.views.home.atelier.data.IconuserData;
+	import net.psykosoft.psykopaint2.home.views.home.atelier.data.Items_no_editData;
 	import net.psykosoft.psykopaint2.home.views.home.atelier.data.LightsData;
 	import net.psykosoft.psykopaint2.home.views.home.atelier.data.LogoData;
 	import net.psykosoft.psykopaint2.home.views.home.atelier.data.TitlesData;
-	import net.psykosoft.psykopaint2.home.views.home.atelier.data.WallsData;
 	import net.psykosoft.psykopaint2.home.views.home.atelier.data.Walls_editmaterial1Data;
 
 	public class Atelier extends ObjectContainer3D
@@ -34,9 +39,6 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		private var _assetsLoaded:uint;
 
 		private var _iconTexture:BitmapTexture;
-//		private var _floorTexture:BitmapTexture;
-		private var _wallDiffuseTexture:ATFTexture;
-
 		private var _wallTexture:ATFTexture;
 		private var _elementsTexture:ATFTexture;
 
@@ -44,10 +46,17 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		private var _pendingWallTexture : ByteArray;
 		private var _wallMesh : Mesh;
 
-		function Atelier ():void
+		private var _textures : Vector.<Texture2DBase>;
+		private var _materials : Vector.<MaterialBase>;
+		private var _stage3DProxy : Stage3DProxy;
+
+		function Atelier (stage3DProxy : Stage3DProxy):void
 		{
 			super();
 
+			_stage3DProxy = stage3DProxy;
+			_textures = new Vector.<Texture2DBase>();
+			_materials = new Vector.<MaterialBase>();
 			_meshes = new Vector.<Mesh>();
 			_fileLoader = new QueuedFileLoader();
 		}
@@ -56,19 +65,25 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		//todo2: imporve disposal of meshes, materials, etc...
 		override public function dispose():void
 		{
-			_iconTexture.dispose();
-//			_floorTexture.dispose();
-			_wallTexture.dispose();
+			var i:uint;
 			_iconTexture = null;
-//			_floorTexture = null;
 			_wallTexture = null;
 
-			for(var i:uint = 0;i<_meshes.length;++i){
+			for (i = 0;i<_meshes.length;++i) {
 				this.removeChild(_meshes[i]);
 				_meshes[i].material = null;
 				_meshes[i].geometry.dispose();
 				_meshes[i] = null;
 			}
+
+			for (i = 0; i < _textures.length; ++i)
+				_textures[i].dispose();
+
+			for (i = 0; i < _materials.length; ++i)
+				_materials[i].dispose();
+
+			_textures = null;
+			_materials = null;
 
 			if(_fileLoader) _fileLoader = null;
 
@@ -82,21 +97,15 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			_iconTexture.bitmapData = bitmapData;
 		}
 
-		// replaces user floorimage
-//		public function set floorImage(bitmapData:BitmapData):void
-//		{
-//			changeImage(_floorTexture, bitmapData);
-//		}
-
 		// replaces user wallimage
 		public function setWallImage(data:ByteArray):void
 		{
-			if (_wallDiffuseTexture)
-				_wallDiffuseTexture.atfData = new ATFData(data);
+			if (_wallTexture)
+				_wallTexture.atfData = new ATFData(data);
 			else {
 				if (_wallMesh) {
 					_wallMesh.material = buildATFMaterial(_pendingWallTexture);
-					_wallDiffuseTexture = ATFTexture(TextureMaterial(_wallMesh.material).texture);
+					_wallTexture = ATFTexture(TextureMaterial(_wallMesh.material).texture);
 				}
 				else
 					_pendingWallTexture = data;
@@ -107,8 +116,9 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		{
 			var atfURL : String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/away3d/atelier/atfs/" : "/home-packaged-desktop/away3d/atelier/atfs/";
 			var imgURL : String = "/home-packaged/away3d/atelier/";
+
 			var titlesData:TitlesData = new TitlesData();
-			var titles_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,0.035400401800870895,300,27.497100830078125,1]);
+			var titles_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,4.273069858551025,249.8874969482422,-4.537360191345215,1]);
 			var titles:Mesh = new Mesh(titlesData.geometryData, null);
 			applyTransform(titles_rd, titles, "titles");
 			loadATFMaterial(titles, atfURL + "titles.atf", 0);
@@ -117,20 +127,19 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			var logo_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-266.8269958496094,-1.1448999643325806,-353.1099853515625,1]);
 			var logo:Mesh = new Mesh(logoData.geometryData, null);
 			applyTransform(logo_rd, logo, "logo");
-			//we should ruse the atf from app
 			loadATFMaterial(logo, atfURL + "logo.atf", 1);
 
 			var iconuserData:IconuserData = new IconuserData();
-			var iconuser_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,983.531982421875,67.75910186767578,-9.93535041809082,1]);
+			var iconuser_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,983.533203125,67.34795379638672,-1.5569911003112793,1]);
 			var iconuser:Mesh = new Mesh(iconuserData.geometryData, null);
 			applyTransform(iconuser_rd, iconuser, "iconuser");
 			loadBitmapMaterial(iconuser, imgURL + "jpgs/iconuser.jpg", 2);
 
 			var floorData:FloorData = new FloorData();
-			var floor_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,2.070430040359497,-176.58900451660156,1.2002899646759033,1]);
+			var floor_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-1.4995100498199463,-178.75999450683594,1.2002899646759033,1]);
 			var floor:Mesh = new Mesh(floorData.geometryData, null);
 			applyTransform(floor_rd, floor, "floor");
-			loadBitmapMaterial(floor, imgURL + "jpgs/floor.jpg", 3);
+			loadBitmapMaterial(floor, imgURL + "jpgs/woodfloor_grey.jpg", 3);
 			loadATFMaterial(floor, atfURL + "floor_LM.atf", 4);
 
 			var lightsData:LightsData = new LightsData();
@@ -140,16 +149,35 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			loadBitmapMaterial(lights, imgURL + "pngs/lights.png", 5);
 
 			var elementsData:ElementsData = new ElementsData();
-			var elements_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,212.177001953125,11.164899826049805,10.134900093078613,1]);
+			var elements_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,376.53948974609375,10.186001777648926,-17.01059913635254,1]);
 			var elements:Mesh = new Mesh(elementsData.geometryData, null);
 			applyTransform(elements_rd, elements, "elements");
 			loadATFMaterial(elements, atfURL + "elements.atf", 6);
 
-			var wallsData:WallsData = new WallsData();
-			var walls_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,2.4526400566101074,153.84300231933594,0.0783080980181694,1]);
+			var elements2Data:Elements2Data = new Elements2Data();
+			var elements2_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-353.1919860839844,19.471200942993164,-47.257301330566406,1]);
+			var elements2:Mesh = new Mesh(elements2Data.geometryData, null);
+			applyTransform(elements2_rd, elements2, "elements2");
+			loadATFMaterial(elements2, atfURL + "elements2.atf", 7);
+
+			var domeData:DomeData = new DomeData();
+			var dome_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,286.0880126953125,332.2690124511719,-52.463199615478516,1]);
+			var dome:Mesh = new Mesh(domeData.geometryData, null);
+			applyTransform(dome_rd, dome, "dome");
+			loadBitmapMaterial(dome, imgURL + "jpgs/dome.jpg", 8);
+
+			var items_no_editData:Items_no_editData = new Items_no_editData();
+			var items_no_edit_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-2.3050498962402344,151.63499450683594,-5.307400226593018,1]);
+			var items_no_edit:Mesh = new Mesh(items_no_editData.geometryData, null);
+			applyTransform(items_no_edit_rd, items_no_edit, "items_no_edit");
+			loadATFMaterial(items_no_edit, atfURL + "items_no_edit.atf", 9);
+
+			var wallsData:Walls_editmaterial1Data = new Walls_editmaterial1Data();
+			var walls_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-1.5399999618530273,158.82000732421875,-1.4199541807174683,1]);
 			var walls:Mesh = new Mesh(wallsData.geometryData, null);
 			applyTransform(walls_rd, walls, "walls");
-			loadATFMaterial(walls, atfURL + "walls.atf", 7);
+//			loadBitmapMaterial(walls, imgURL + "jpgs/stucco.jpg", 11);
+			loadATFMaterial(walls, atfURL + "walls_LM.atf", 10);
 		}
 
 		private function loadATFMaterial(mesh:Mesh, url:String, id:uint):void
@@ -221,36 +249,56 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 					mesh.material = new TextureMaterial(_elementsTexture);
 					break;
 
-				//non editable walls
+				//elements2
 				case 7:
 					mesh.material = buildATFMaterial(ByteArray(e.data));
-					mesh.material.repeat = true;
-					_wallTexture = ATFTexture(TextureMaterial(mesh.material).texture);
+					break;
 
-					//we have all the textures we need for the editable part of the walls model
-					buildWalls();
+				//dome  --> getter for it to update rotation on enterframe
+				case 8:
+					mesh.material = buildBitmapMaterial(BitmapData(e.data));
+					break;
+
+				//items no edit (plints, some ceilings)
+				case 9:
+					mesh.material = buildATFMaterial(ByteArray(e.data));
+					break;
+
+				//walls + diffuse
+//				case 10:
+//					mesh.material = buildBitmapMaterial(BitmapData(e.data));
+//					_wallDiffuseTexture = ATFTexture(TextureMaterial(mesh.material).texture);
+//					mesh.material.repeat = true;
+//					break;
+
+				//walls + lightmap
+				case 10:
+					buildWalls(mesh, ByteArray(e.data));
+					clearLoader();
+					return;
+
 			}
 
-			_meshes.push(mesh);
-			this.addChild(mesh);
+			if (_meshes.indexOf(mesh) == -1) {
+				_meshes.push(mesh);
+				addChild(mesh);
+			}
 
 			clearLoader();
 		}
 
-		private function buildWalls():void
+		private function buildWalls(mesh : Mesh, byteArray : ByteArray):void
 		{
-			var walls_editmaterialData:Walls_editmaterial1Data = new Walls_editmaterial1Data();
-			var walls_editmaterial_rd:Vector.<Number> = Vector.<Number>([-1,-1.5099580252808664e-7,8.742277657347586e-8,0,-1.5099581673894136e-7,1,-1.5099580252808664e-7,0,-8.742275525719378e-8,-1.5099581673894136e-7,-1,0,2.049999952316284,177.3800048828125,1.2799999713897705,1]);
-			_wallMesh = new Mesh(walls_editmaterialData.geometryData, null );
-			applyTransform(walls_editmaterial_rd, _wallMesh, "wallsEdit");
+			_wallMesh = mesh;
 			//the texture we use for walls toggles
 			if (_pendingWallTexture) {
 				_wallMesh.material = buildATFMaterial(_pendingWallTexture);
-				_wallDiffuseTexture = ATFTexture(TextureMaterial(_wallMesh.material).texture);
+				_wallMesh.material.repeat = true;
+				_wallTexture = ATFTexture(TextureMaterial(_wallMesh.material).texture);
 				_pendingWallTexture = null;
 			}
-			var lightMap:LightMapMethod = new LightMapMethod(_wallTexture, LightMapMethod.MULTIPLY, true);
-			SinglePassMaterialBase(_wallMesh.material).addMethod(lightMap);
+
+			addLightMapMethod(SinglePassMaterialBase(mesh.material), byteArray, true);
 
 			_meshes.push(_wallMesh);
 			addChild(_wallMesh);
@@ -265,21 +313,30 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 
 		private function buildATFMaterial(ba:ByteArray):TextureMaterial
 		{
-			var AFTTexture:ATFTexture = new ATFTexture(ba);
-			return new TextureMaterial(AFTTexture);
+			var texture : ATFTexture = new ATFTexture(ba);
+			var material : TextureMaterial = new TextureMaterial(texture);
+			_textures.push(texture);
+			_materials.push(material);
+			return material;
 		}
 
 		private function buildBitmapMaterial(bitmapData:BitmapData):TextureMaterial
 		{
-			var bitmapTexture:BitmapTexture = new BitmapTexture(bitmapData);
-			return new TextureMaterial(bitmapTexture);
+			var texture : BitmapTexture = new BitmapTexture(bitmapData);
+			var material : TextureMaterial = new TextureMaterial(texture);
+			texture.getTextureForStage3D(_stage3DProxy);
+			bitmapData.dispose();
+			_textures.push(texture);
+			_materials.push(material);
+			return material;
 		}
 
 		private function addLightMapMethod(material:SinglePassMaterialBase, ba:ByteArray, useSecondaryUV:Boolean):void
 		{
-			var AFTTexture:ATFTexture = new ATFTexture(ba);
-			var lightMap:LightMapMethod = new LightMapMethod(AFTTexture, LightMapMethod.MULTIPLY, useSecondaryUV);
+			var texture:ATFTexture = new ATFTexture(ba);
+			var lightMap:LightMapMethod = new LightMapMethod(texture, LightMapMethod.MULTIPLY, useSecondaryUV);
 			material.addMethod(lightMap);
+			_textures.push(texture);
 		}
 	}
 }
