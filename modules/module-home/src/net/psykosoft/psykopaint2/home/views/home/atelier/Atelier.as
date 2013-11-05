@@ -93,8 +93,8 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		// replaces user icon
 		public function setIconImage(bitmapData:BitmapData):void
 		{
-			_iconTexture.bitmapData.dispose();
 			_iconTexture.bitmapData = bitmapData;
+			_iconTexture.getTextureForStage3D(_stage3DProxy);
 		}
 
 		// replaces user wallimage
@@ -143,7 +143,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			loadATFMaterial(floor, atfURL + "floor_LM.atf", 4);
 
 			var lightsData:LightsData = new LightsData();
-			var lights_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,213.26800537109375,44.445098876953125,-116.06900024414063,1]);
+			var lights_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,63.72710037231445,21.96869659423828,-78.13249969482422,1]);
 			var lights:Mesh = new Mesh(lightsData.geometryData, null);
 			applyTransform(lights_rd, lights, "lights");
 			loadBitmapMaterial(lights, imgURL + "pngs/lights.png", 5);
