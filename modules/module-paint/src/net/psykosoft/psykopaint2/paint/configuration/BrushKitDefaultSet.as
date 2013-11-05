@@ -531,7 +531,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</BumpDecorator>
 					</pathengine>
 				</brush>
-				<!--<brush engine={BrushType.BLOB} name="Test">
+				<brush engine={BrushType.BLOB} name="Cutout">
 						<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="render"/>
 
 						<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
@@ -542,7 +542,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 							</ColorDecorator>
 						</pathengine>
-				</brush>-->
+				</brush>
 				<!--<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
 					<parameter id={WaterDamageBrush.PARAMETER_N_SURFACE_INFLUENCE} previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
 					<parameter id={WaterDamageBrush.PARAMETER_N_PIGMENT_FLOW} path="brush" value="0.25" showInUI="1"/>

@@ -315,6 +315,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			initializeDefaultBrushes();
 
 			_active = true;
+			
+			
+			if ( CoreSettings.ENABLE_PSYKOSOCKET_CONNECTION )
+			{
+				PsykoSocket.sendString( '<msg src="PaintModule.activate" />' );
+			}
+			
 			if ( !_activeBrushKit ) activeBrushKit = _availableBrushKitNames[0];
 			activateBrushKit();
 			

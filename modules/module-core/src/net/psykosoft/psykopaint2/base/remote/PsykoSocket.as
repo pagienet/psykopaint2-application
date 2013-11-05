@@ -63,6 +63,15 @@ package net.psykosoft.psykopaint2.base.remote
 		{
 			pingCount = 0;
 			
+			if ( udpSocket )
+			{
+				udpSocket.removeEventListener(DatagramSocketDataEvent.DATA, udpDataHandler);
+				udpSocket.removeEventListener(Event.CLOSE, onSocketClosed );
+				udpSocket.close();
+				udpSocket = null;
+				deactivated = true;
+				bound = false;
+			}
 			udpSocket = new UDPSocket();
 			udpSocket.addEventListener(DatagramSocketDataEvent.DATA, udpDataHandler);
 			udpSocket.addEventListener(Event.CLOSE, onSocketClosed );
@@ -117,6 +126,7 @@ package net.psykosoft.psykopaint2.base.remote
 				} catch ( error:Error )
 				{
 					trace(error.message);
+					reactivate();
 				}
 				clearTimeout( pingTimeout );
 				pingTimeout = setTimeout( ping, pingTime );
