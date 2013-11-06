@@ -39,8 +39,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	public class EaselView extends Sprite
 	{
-		public static const CANVAS_DEFAULT_POSITION : Vector3D = new Vector3D(271, -35, 73);
-		private static const CANVAS_WIDTH : Number = 160;
+		public static const CANVAS_DEFAULT_POSITION : Vector3D = new Vector3D(271, -24, -5);
+		private static const CANVAS_WIDTH : Number = 170;
 
 		public var easelRectChanged : Signal = new Signal();
 		public var easelTappedSignal : Signal = new Signal();

@@ -243,7 +243,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			else {
 				_animateToTarget = true;
 				_cameraController.force(activeSection);
-				_camera.z = 450;
 			}
 		}
 	}
