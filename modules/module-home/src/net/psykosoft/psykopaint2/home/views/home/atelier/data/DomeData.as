@@ -4,15 +4,15 @@ package net.psykosoft.psykopaint2.home.views.home.atelier.data
 
 	import away3d.core.base.Geometry;
 
-	public class TitlesData
+	public class DomeData
 	{
 
-		[Embed(source="/../assets/embedded/away3d/atelier/asd/TitlesData.asd", mimeType="application/octet-stream")]
-		private var TitlesDataASD : Class;
+		[Embed(source="/../assets/embedded/away3d/atelier/asd/DomeData.asd", mimeType="application/octet-stream")]
+		private var DomeDataASD : Class;
 
 		public function get geometryData() : Geometry
 		{
-			return ASDReader.decodeGeometry(new TitlesDataASD());
+			return ASDReader.decodeGeometry(new DomeDataASD());
 		}
 
 	}

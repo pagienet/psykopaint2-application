@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			var rootUrl : String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/" : "/home-packaged-desktop/";
 			var extra : String = CoreSettings.RUNNING_ON_iPAD ? "-ios" : "-desktop";
-			var url : String = rootUrl + "away3d/wallpapers/fullsize/" + id + extra + ".atf";
+			var url : String = rootUrl + "away3d/wallpapers/" + id + extra + ".atf";
 			// todo: provide RoomView/RoomViewMediator
 			view.changeWallpaper(url);
 		}

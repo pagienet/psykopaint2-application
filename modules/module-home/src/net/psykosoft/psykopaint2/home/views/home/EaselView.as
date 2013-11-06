@@ -58,6 +58,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _pendingOnUploadComplete : Function;
 		private var _paintingID : String;
 		private var _stage : Stage;
+		private var _mouseDownX : Number;
 
 		public function EaselView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -79,8 +80,20 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onMouseDown(event : MouseEvent) : void
 		{
-			if (easelRect.contains(event.stageX, event.stageY))
+			_mouseDownX = event.stageX;
+
+			if (_canvas.visible && easelRect.contains(_mouseDownX, event.stageY)) {
+				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			}
+		}
+
+		private function onMouseMove(event : MouseEvent) : void
+		{
+			if (Math.abs(event.stageX - _mouseDownX) > 20) {
+				// cancel with swiping
+				_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			}
 		}
 
 		private function onMouseUp(event : MouseEvent) : void
