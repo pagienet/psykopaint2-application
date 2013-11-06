@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.base.remote
 	import flash.events.Event;
 	import flash.utils.ByteArray;
 	import flash.utils.clearTimeout;
+	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
 	
 	import be.aboutme.nativeExtensions.udp.UDPSocket;
@@ -23,6 +24,8 @@ package net.psykosoft.psykopaint2.base.remote
 		private var bound:Boolean;
 		private var deactivated:Boolean;
 		private var pingTimeout:int;
+		private var sendQueue:Vector.<PsykoSocketPacket>;
+		private var queueTimeout:int;
 		
 		public function PsykoSocket(ip:String = "192.168.178.26", port:uint = 1236)
 		{
@@ -41,6 +44,8 @@ package net.psykosoft.psykopaint2.base.remote
 			pingPackage = new ByteArray();
 			
 			reactivate();
+			
+			sendQueue = new Vector.<PsykoSocketPacket>();
 		}
 		
 		
@@ -166,19 +171,25 @@ package net.psykosoft.psykopaint2.base.remote
 			}
 		}
 		
+		protected function _sendBytes( data:ByteArray ):void
+		{
+			if (!bound) return;
+			if ( data.length > PsykoSocketPacket.MAX_PACKET_DATA_SIZE )
+			{
+				_addToSendQueue( PsykoSocketPacket.splitByteArrayToPackets(data ));
+			} else {
+				udpSocket.send(data, ip, port);
+			}
+		}
+		
 		protected function _sendString( data:String ):void
 		{
 			
 			if (!bound) return;
 			var bytes:ByteArray = new ByteArray();
 			bytes.writeUTFBytes(data);
-			udpSocket.send(bytes, ip, port);
-		}
-		
-		protected function _sendBytes( data:ByteArray ):void
-		{
-			if (!bound) return;
-			udpSocket.send(data, ip, port);
+			_sendBytes(bytes);
+			
 		}
 		
 		protected function _sendObject( data:Object ):void
@@ -186,7 +197,38 @@ package net.psykosoft.psykopaint2.base.remote
 			if (!bound) return;
 			var bytes:ByteArray = new ByteArray();
 			bytes.writeObject(data);
-			udpSocket.send(bytes, ip, port);
+			_sendBytes(bytes);
+		}
+		
+		protected function _addToSendQueue( packets:Vector.<PsykoSocketPacket> ):void
+		{
+			sendQueue = sendQueue.concat( packets );
+			if ( sendQueue.length >0 && queueTimeout == 0 )
+			{
+				queueTimeout = setTimeout( _processQueue, 2 );
+			}
+			
+		}
+		
+		protected function _processQueue():void
+		{
+			queueTimeout = 0;
+			var i:int = -1;
+			while ( ++i < sendQueue.length )
+			{
+				if ( getTimer() - sendQueue[i].lastSendAttempt > 1000 )
+				{
+					sendQueue[i].lastSendAttempt = getTimer();
+					sendQueue[i].sendAttempts++;
+					udpSocket.send(sendQueue[i].data, ip, port);
+					sendQueue.push( sendQueue.shift());
+					break;
+				}
+			}
+			if ( sendQueue.length > 0)
+			{
+				queueTimeout = setTimeout( _processQueue, 2 );
+			}
 		}
 		
 		protected function _addMessageCallback( targetPath:String, callbackObject:Object, callbackMethod:Function ):void
