@@ -2,27 +2,17 @@ package net.psykosoft.psykopaint2.book.views.book
 {
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
-	import away3d.tools.utils.TextureUtils;
 
 	import flash.display.BitmapData;
-	import flash.display3D.Context3D;
-	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DClearMask;
-	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.textures.Texture;
 	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	import flash.utils.setTimeout;
+	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
-	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
-	import net.psykosoft.psykopaint2.book.model.SourceImageRequestVO;
-	import net.psykosoft.psykopaint2.core.models.GalleryImageRequestVO;
 
 	//debug
 	import net.psykosoft.psykopaint2.book.views.book.debug.BookDebug;
@@ -54,11 +44,11 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var imageSelectedSignal:Signal;
 		public var galleryImageSelectedSignal:Signal;
 		public var bookHasClosedSignal:Signal;
-		public var requestData : Signal;
 		public var bookDisposedSignal : Signal;
 
 		public var onGalleryCollectionRequestedSignal : Signal;
 		public var onImageCollectionRequestedSignal : Signal;
+		private var _bookEnabled : Boolean;
 
 		public function BookView() {
 			super();
@@ -67,10 +57,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			onGalleryCollectionRequestedSignal = new Signal();
 			onImageCollectionRequestedSignal = new Signal();
-
-			// todo: dispatch this on page turns and when first page shows for dynamic loading
-			// requestData.dispatch(_layout, thumbnailIndex, numThumbnailsToLoad)
-			//requestData = new Signal(String, int, int);
 
 			initVars();
 		}
@@ -126,13 +112,16 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onStageMouseDown( event:MouseEvent ):void
 		{
-			if(_book.ready){
-				_book.killSnapTween();
+			if(!_book.ready) return;
+			_book.killSnapTween();
+
+			_mouseIsDown = true;
+			_startMouseX = mouseX;
+			_startMouseY = mouseY;
+
+			if (_bookEnabled) {
 				_pageIndexOnMouseDown = _book.currentPageIndex;
 				_pageSideIndexOnMouseDown = _book.currentPageSide;
-				_mouseIsDown = true;
-				_startMouseX = mouseX;
-				_startMouseY = mouseY;
 				if(_time < _book.minTime) _time = _book.minTime;
 				_startTime = _previousTime = _time;
 			}
@@ -140,13 +129,18 @@ package net.psykosoft.psykopaint2.book.views.book
 		
 		private function onStageMouseUp( event:MouseEvent ):void
 		{
+			if (!_book.ready) return;
 			_mouseIsDown = false;
-			if(_book.ready && !_book.isLoadingImage) {
+
+			if (!_bookEnabled) {
+				// snap to swipe position
+			}
+			else if (!_book.isLoadingImage) {
 				var currentX:Number = mouseX;
 				if(Math.abs(currentX-_startMouseX) < 5 && _book.currentDegrees< 3){
 					if(!_book.hitTestRegions(mouseX, mouseY, _pageIndexOnMouseDown, _pageSideIndexOnMouseDown)){
 						_time = _book.snapToNearestTime();
-					} 
+					}
 				} else {
 					_time = _book.snapToNearestTime();
 				}
@@ -243,7 +237,6 @@ package net.psykosoft.psykopaint2.book.views.book
 				
 			}
 
-			// TODO: Remove this once home view stops rendering
 			_stage3dProxy.context3D.clear(0, 0, 0, 1, 1, 0, Context3DClearMask.DEPTH);
 			_view3d.render(target);
 		}
@@ -283,5 +276,10 @@ package net.psykosoft.psykopaint2.book.views.book
 			}
 		}
 
+		public function enableSwipeMode() : void
+		{
+			_book.position = new Vector3D(0, 0, -900);
+			_bookEnabled = false;
+		}
 	}
 }

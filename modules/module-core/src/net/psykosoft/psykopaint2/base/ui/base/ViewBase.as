@@ -175,7 +175,7 @@ package net.psykosoft.psykopaint2.base.ui.base
 			return _viewIsReady;
 		}
 
-		public function get isEnabled():Boolean {
+			public function get isEnabled():Boolean {
 			return _isEnabled;
 		}
 	}

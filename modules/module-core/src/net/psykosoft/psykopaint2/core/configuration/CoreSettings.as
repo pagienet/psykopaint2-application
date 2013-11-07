@@ -68,11 +68,8 @@ package net.psykosoft.psykopaint2.core.configuration
 		// ---------------------------------------------------------------------
 
 		// TODO: these should be lower case
-		public static var RUNNING_ON_iPAD:Boolean;
-		public static var RUNNING_ON_RETINA_DISPLAY:Boolean;
 		public static var VERSION:String;
 		public static var NAME:String = "";
-		public static var GLOBAL_SCALING:Number = 1;
 		public static var STAGE_WIDTH:Number = 1024; // Doubled dynamically if on retina iPad.
 		public static var STAGE_HEIGHT:Number = 768;
 		public static var STAGE:Stage;
@@ -80,6 +77,11 @@ package net.psykosoft.psykopaint2.core.configuration
 
 		//This needs to be here to force Flash to include the font swc:
 		private static var EMBED_FONTS_DUMMY:PsykoFonts;
+
+		// TODO: These shouldn't even exist
+		public static var RUNNING_ON_iPAD:Boolean;
+		public static var RUNNING_ON_RETINA_DISPLAY:Boolean;
+		public static var GLOBAL_SCALING:Number = 1;
 
 	}
 }

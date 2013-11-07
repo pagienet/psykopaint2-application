@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
+	import flash.geom.Vector3D;
 	import flash.utils.setTimeout;
 	
 	import away3d.containers.ObjectContainer3D;
@@ -74,8 +75,9 @@ package net.psykosoft.psykopaint2.book.views.book
  		private var _requestedForNewCollection:Boolean;
  		private var _currentLayoutInsertCount:uint;
  		private var _vo:Object;
- 
-     		public function Book(view:View3D, stage:Stage)
+		private var _position : Vector3D;
+
+     	public function Book(view:View3D, stage:Stage)
  		{
  			_view = view;
  			_stage = stage;
@@ -237,8 +239,8 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
  			buildBookCraft();
  			_view.scene.addChild(_bookCraft);
-
- 			setTimeout(animateIn, 250);
+			animateIn();
+// 			setTimeout(animateIn, 250);
  		}
  
  		private function setLayoutSignals():void
@@ -256,6 +258,8 @@ package net.psykosoft.psykopaint2.book.views.book
  		{	
  			_dummyCam = new Object3D();
  			_dummyCam.z = 2000;
+			if (_position)
+				_bookCraft.offset = _position;
  			_bookCraft.show();
 
  			lookAtDummy();
@@ -287,13 +291,13 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			var duration:Number = 1;
  
-			var desty:Number = -25;
-			TweenLite.to( _bookCraft.coverRight, duration, { 	y: desty, x:0, rotationZ:180,
+			var destY:Number = -25;
+			TweenLite.to( _bookCraft.coverRight, duration, { 	y: destY, x:0, rotationZ:180,
 										ease: Strong.easeOut} );
 
-			TweenLite.to( _bookCraft, duration, { 			x: 0, ease: Strong.easeOut,
-										onUpdate:updateFirstPageRotation,
-										onComplete: onAnimateOpenComplete} );
+			TweenLite.to( _bookCraft, duration, { 			x: _position.x, ease: Strong.easeOut,
+															onUpdate:updateFirstPageRotation,
+															onComplete: onAnimateOpenComplete} );
 		}
 
 		public function updateFirstPageRotation():void
@@ -334,7 +338,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			TweenLite.to( _dummyCam, 0.5, { z:-2000, ease: Strong.easeIn, onUpdate:lookAtDummy } );
 
-			TweenLite.to( _bookCraft, 1, { 	x: 500, ease: Strong.easeOut, onComplete: onAnimateOutComplete } );
+			TweenLite.to( _bookCraft, 1, { 	x: _position.x + 500, ease: Strong.easeOut, onComplete: onAnimateOutComplete } );
 		}
 		
 		public function onAnimateOutComplete():void
@@ -420,7 +424,7 @@ package net.psykosoft.psykopaint2.book.views.book
  			_pagesManager = new PagesManager(_bookCraft);
  			_regionManager = new RegionManager(_view, _pagesManager);
 
- 			_regionManager.regionZoffset = _bookCraft.z;
+ 			_regionManager.regionZoffset = _bookCraft.z + _position.z;
  			_layout.regionSignal.add(_regionManager.addRegion);
  		}
 
@@ -535,7 +539,7 @@ package net.psykosoft.psykopaint2.book.views.book
 						pagesManager.rotatePage(i, 0, 0);
 
 					} else {
-						var inPercent:Number = 1- Math.abs( ( ((_currentPage+1)*_step) - _percent) /_step);
+						var inPercent:Number = 1 - Math.abs( ( ((_currentPage+1)*_step) - _percent) /_step);
 						_nearestTime = (inPercent <.5)? _currentPage*_step : (_currentPage+1)*_step;
 						var rotZ:Number = inPercent*180;
 						pagesManager.rotatePage(_currentPage, rotZ, _foldRotation );
@@ -653,5 +657,16 @@ package net.psykosoft.psykopaint2.book.views.book
 			imagePickedSignal.dispatch( bmd );
 		}
 
- 	}
+		public function get position() : Vector3D
+		{
+			return _bookCraft.offset;
+		}
+
+		public function set position(value : Vector3D) : void
+		{
+			_position = value;
+			if (_bookCraft)
+				_bookCraft.offset = value;
+		}
+	}
  } 

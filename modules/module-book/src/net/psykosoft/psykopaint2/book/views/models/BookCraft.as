@@ -2,25 +2,23 @@ package net.psykosoft.psykopaint2.book.views.models
 {
 	import away3d.containers.ObjectContainer3D;
 	import away3d.entities.Mesh;
-	import away3d.core.base.Geometry;
 	import away3d.materials.TextureMaterial;
-	import away3d.core.base.Geometry;
 	import away3d.core.base.CompactSubGeometry;
 
 	import away3d.primitives.PlaneGeometry;
 
-	import net.psykosoft.psykopaint2.book.views.models.Rings;
-
-	import flash.geom.Matrix3D;
+	import flash.geom.Vector3D;
 
 	public class BookCraft extends ObjectContainer3D
 	{
-		private const PAGE_WIDTH:uint = 970
+		private const PAGE_WIDTH:uint = 970;
 		private const PAGE_HEIGHT:uint = 1095;
 
 		private var _coverRight:Mesh;
 		private var _backPage:Mesh;
 		private var _rings:Rings;
+
+		private var _offset : Vector3D = new Vector3D();
 
 		function BookCraft (material:TextureMaterial, ringsMaterial:TextureMaterial):void
 		{
@@ -59,14 +57,17 @@ package net.psykosoft.psykopaint2.book.views.models
 			_coverRight.rotationZ = 0;
 			this.rotationY = 10;
  
-			this.z = 100;//70;
-			this.x = -500;
- 
+			x = -500 + _offset.x;
+			y = _offset.y;
+			z = 100 + _offset.z;//70;
+
 		}
 		public function setOpenState():void
 		{
 			_coverRight.rotationZ = 180;
-			this.x = 0;
+			x = _offset.x;
+			y = _offset.x;
+			z = _offset.x;
 		}
 
 		private function generateRings(material:TextureMaterial):void
@@ -101,6 +102,19 @@ package net.psykosoft.psykopaint2.book.views.models
 
 			subGeometry.updateData(vertexData);
 		}
-  
+
+		public function get offset() : Vector3D
+		{
+			return _offset;
+		}
+
+		public function set offset(value : Vector3D) : void
+		{
+			var diff : Vector3D = value.subtract(_offset);
+			x += diff.x;
+			y += diff.y;
+			z += diff.z;
+			_offset = value;
+		}
 	}
 }

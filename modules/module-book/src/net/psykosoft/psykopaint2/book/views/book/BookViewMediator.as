@@ -121,6 +121,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onRequestOpenBookSignal(sourceType : String, galleryType : uint) : void
 		{
 			if (sourceType == BookImageSource.GALLERY_IMAGES){
+				view.enableSwipeMode();
 				onGalleryCollectionRequest(galleryType, 0, 30);
 
 			} else if(sourceType == BookImageSource.SAMPLE_IMAGES){
