@@ -163,6 +163,9 @@ package net.psykosoft.psykopaint2.base.remote
 								}
 							}
 						}
+					} else if ( message.hasOwnProperty("@ack") )
+					{
+						_removeFromQueue(message.@ack );
 					}
 				} catch (error:Error )
 				{
@@ -205,7 +208,7 @@ package net.psykosoft.psykopaint2.base.remote
 			sendQueue = sendQueue.concat( packets );
 			if ( sendQueue.length >0 && queueTimeout == 0 )
 			{
-				queueTimeout = setTimeout( _processQueue, 2 );
+				queueTimeout = setTimeout( _processQueue, 1 );
 			}
 			
 		}
@@ -220,15 +223,28 @@ package net.psykosoft.psykopaint2.base.remote
 				{
 					sendQueue[i].lastSendAttempt = getTimer();
 					sendQueue[i].sendAttempts++;
-					udpSocket.send(sendQueue[i].data, ip, port);
+					udpSocket.send(sendQueue[i].getObject(), ip, port);
 					sendQueue.push( sendQueue.shift());
 					break;
 				}
 			}
 			if ( sendQueue.length > 0)
 			{
-				queueTimeout = setTimeout( _processQueue, 2 );
+				queueTimeout = setTimeout( _processQueue, 1 );
 			}
+		}
+		
+		protected function _removeFromQueue( id:uint ):void
+		{
+			for ( var i:int = 0; i < sendQueue.length; i++ )
+			{
+				if (sendQueue[i].id == id )
+				{
+					sendQueue.splice(i,1);
+					break;
+				}
+			}
+			
 		}
 		
 		protected function _addMessageCallback( targetPath:String, callbackObject:Object, callbackMethod:Function ):void
