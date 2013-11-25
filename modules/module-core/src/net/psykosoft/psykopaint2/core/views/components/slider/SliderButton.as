@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import flash.geom.Matrix;
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.views.components.previews.AbstractPreview;
 	import net.psykosoft.psykopaint2.core.views.components.previews.PreviewIconFactory;
 	
@@ -538,6 +539,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		private function onBtnMouseDown( event:MouseEvent ):void {
 			
+			GestureManager.gesturesEnabled = false;
+			
 			_mouseDownX = mouseX;
 			_earContainerXOnMouseDown = _earContainerX;
 			_stage.addEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
@@ -562,6 +565,8 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 
 		private function onStageMouseUp( event:MouseEvent ):void {
+			
+			GestureManager.gesturesEnabled = true;
 			
 			_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
 			if ( state != STATE_OPENING )
