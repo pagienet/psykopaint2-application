@@ -375,7 +375,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 
 		private function onActiveBrushKitChanged( event:Event ):void
 		{
-			notifyActivateBrushChangedSignal.dispatch( _activeBrushKit.getParameterSetAsXML() );
+			notifyActivateBrushChangedSignal.dispatch(_activeBrushKit.getParameterSet( !CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS ));
 		}
 		
 		
