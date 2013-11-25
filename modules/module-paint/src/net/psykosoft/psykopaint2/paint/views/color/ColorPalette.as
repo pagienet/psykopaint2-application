@@ -107,6 +107,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 			_currentIndex = index;
 		}
 		
+		public function changeSelectedColor( ct:ColorTransform):void
+		{
+			if ( _currentIndex != -1 )
+			{
+				swatches[_currentIndex].transform.colorTransform = ct;
+				palettes[selectedPaletteIndex][_currentIndex] = ct.color;
+			}
+		}
+		
 		public function get selectedColor():uint
 		{
 			return _selectedColor;

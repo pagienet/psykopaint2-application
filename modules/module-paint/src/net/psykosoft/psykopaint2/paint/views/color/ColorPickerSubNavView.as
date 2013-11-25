@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
-
+	
 	import com.quasimondo.color.colorspace.HSV;
 	import com.quasimondo.color.utils.ColorConverter;
 	
@@ -10,10 +10,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
-	import flash.utils.Timer;
 	
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
@@ -21,7 +19,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	
 	import org.osflash.signals.Signal;
-
+	
 	public class ColorPickerSubNavView extends SubNavigationViewBase
 	{
 		public var currentColorSwatch:Sprite;
@@ -50,7 +48,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var lightnessMapHolder:Bitmap;
 		
 		private var sliderHolder:Sprite;
-
+		
 		private var activeSliderIndex:int;
 		private var sliderPaddingLeft:Number = 16;
 		private var sliderPaddingRight:Number = 16;
@@ -58,14 +56,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		private var pipette:Pipette;
 		
-/*
+		/*
 		private var hueHandleBg:Shape;
-
+		
 		private var saturationHandleBg:Shape;
-
+		
 		private var lightnessHandleBg:Shape;
 		*/
-
+		
 		public static const ID_BACK:String = "Back";
 		private var pipetteDropSize:int;
 		
@@ -221,17 +219,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 			var t:ColorTransform = currentColorSwatch.transform.colorTransform;
 			t.color = currentColor;
 			currentColorSwatch.transform.colorTransform = t;
-			/*
-			saturationHandleBg.transform.colorTransform = t;
 			
-			t.color = ColorConverter.HSVtoUINT(new HSV(currentHSV.hue,100,100));
-			hueHandleBg.transform.colorTransform = t;
-			
-			t.color = ColorConverter.HSVtoUINT(new HSV(0,0,currentHSV.value));
-			lightnessHandleBg.transform.colorTransform = t;
-			*/
-			
-			if (!fromPalette )  colorPalette.selectedIndex = -1;
+			if ( fromSlider )  colorPalette.changeSelectedColor(t);
 			if( triggerChange ) colorChangedSignal.dispatch();
 			colorMixer.currentColor = currentColor;
 			updateSaturationSlider();
@@ -290,7 +279,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			if ( !this.contains(pipette )) this.addChild(pipette);
 			//if ( mouseY < -100 || mouseX < -225 || mouseX > 240 ) return;
-			 if ( colorPalette.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
+			if ( colorPalette.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
 			{
 				var swatch:Sprite = colorPalette.getSwatchUnderMouse();
 				if ( swatch != null )
@@ -301,7 +290,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 					return;
 				}
 			}
-			 
+			
 			if ( currentColorSwatch.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
 			{
 				pipette.x = currentColorSwatch.x + 10;

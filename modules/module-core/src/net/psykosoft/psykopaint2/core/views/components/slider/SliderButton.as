@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		
 		
 		private var _valueHasChanged:Boolean;
-		
+		private var _hidePreviewAfterOpening:Boolean;
 		private var _previewIcon:AbstractPreview;
 		
 		private var state:int;
@@ -326,14 +326,22 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		
 		private function showPreviewHolder():void {
 			killPreviewTweens();
+			_hidePreviewAfterOpening = false;
 			button.showIcon( false );
 			previewHolder.visible = true;
-			TweenLite.to( previewHolder, PREVIEW_ANIMATION_TIME, { y: _previewHolderOpenY - 120, ease: Strong.easeOut } );
+			TweenLite.to( previewHolder, PREVIEW_ANIMATION_TIME, { y: _previewHolderOpenY - 120, ease: Strong.easeOut, onComplete: onPreviewShowComplete } );
 			_previewIcon.x = PREVIEW_ICON_OFFSET_X;
 			_previewIcon.y = PREVIEW_ICON_OFFSET_Y;
 			previewHolder.addChild(_previewIcon);
 			
 			
+		}
+		
+		private function onPreviewShowComplete():void {
+			if ( _hidePreviewAfterOpening ) {
+				stopSliding();
+				hidePreviewHolder();
+			}
 		}
 		
 		private function hidePreviewHolder():void {
@@ -556,21 +564,21 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		private function onStageMouseUp( event:MouseEvent ):void {
 			
 			_stage.removeEventListener( MouseEvent.MOUSE_UP, onStageMouseUp );
-			
+			if ( state != STATE_OPENING )
+			{
+				stopSliding();
+				hidePreviewHolder();
+			} else {
+				_hidePreviewAfterOpening = true;
+			}
+			/*
 			switch ( state )
 			{
+				
 				case STATE_OPEN:
 					stopSliding();
-					//if ( !_valueHasChanged && _earContainer.hitTestPoint(stage.mouseX, stage.mouseY,true))
 					if ( !_valueHasChanged && sliderbar.hitTestPoint(_stage.mouseX, _stage.mouseY,true))
 					{
-						/*
-					}
-						if ( Math.abs(_earContainer.mouseX) > 25 )
-						{
-							if ( _earContainer.mouseX < 0 )
-							{
-								*/
 						if ( Math.abs(sliderbar.mouseX) > 25 )
 						{
 							if ( sliderbar.mouseX < 0 )
@@ -591,8 +599,9 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 					
 					stopSliding();
 					break;
+				
 			}
-			
+			*/
 		}
 	}
 }
