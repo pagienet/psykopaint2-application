@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	{
 		public var colorbar:Sprite;
 		
+		private var bar:Sprite;
 		private var _pipetteStartMouseX:Number;
 		private var _pipetteStartMouseY:Number;
 		
@@ -38,6 +39,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			palette_red = palette_green= palette_blue = 0;
 			ct = new ColorTransform();
 			this.blendMode = BlendMode.LAYER;
+			bar = colorbar["bar"];
 		}
 		
 		public function startCharge( incomingColor:uint):void
@@ -117,7 +119,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			
 			_selectedColor = ct.color = int(palette_red+0.5) << 16 | int(palette_green+0.5) << 8 | int(palette_blue+0.5);
-			colorbar.transform.colorTransform = ct;
+			bar.transform.colorTransform = ct;
 		}		
 		
 		public function endPipetteCharge(event:MouseEvent = null):void
