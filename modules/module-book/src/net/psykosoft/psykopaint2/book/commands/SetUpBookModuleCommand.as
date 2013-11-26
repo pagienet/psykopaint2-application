@@ -2,7 +2,11 @@ package net.psykosoft.psykopaint2.book.commands
 {
 
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
-	
+
+	import flash.events.Event;
+
+	import net.psykosoft.psykopaint2.core.services.CameraRollService;
+
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;

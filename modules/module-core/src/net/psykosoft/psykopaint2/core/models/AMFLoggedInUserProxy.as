@@ -154,6 +154,11 @@ package net.psykosoft.psykopaint2.core.models
 			notifyUserLoggedInSignal.dispatch();
 		}
 
+		private function onLogInFail(data : Object) : void
+		{
+			notifyUserLogInFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
+		}
+
 		private function populateUserData(data : Object) : void
 		{
 			_sessionID = data["session_id"];
@@ -167,11 +172,6 @@ package net.psykosoft.psykopaint2.core.models
 			_numComments = userData["num_comments"];
 			_active = userData["active"];
 			_banned = userData["banned"];
-		}
-
-		private function onLogInFail(data : Object) : void
-		{
-			notifyUserLogInFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
 		}
 
 		public function requestPasswordReset(email : String) : void

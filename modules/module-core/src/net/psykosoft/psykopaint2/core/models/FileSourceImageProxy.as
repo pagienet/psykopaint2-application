@@ -1,5 +1,6 @@
-package net.psykosoft.psykopaint2.book.model
+package net.psykosoft.psykopaint2.core.models
 {
+	import net.psykosoft.psykopaint2.book.model.*;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;

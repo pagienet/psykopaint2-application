@@ -3,14 +3,14 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import net.psykosoft.psykopaint2.book.views.book.data.PageMaterialsManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.BlankBook;
 	import net.psykosoft.psykopaint2.book.views.book.layout.CompositeHelper;
-	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
+	import net.psykosoft.psykopaint2.core.models.SourceImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.book.views.models.BookThumbnailData;
 	import net.psykosoft.psykopaint2.book.views.models.BookGalleryData;
 	import net.psykosoft.psykopaint2.book.views.models.BookData;
-	import net.psykosoft.psykopaint2.book.model.SourceImageProxy;
+	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
-	import net.psykosoft.psykopaint2.book.model.FileSourceImageProxy;
+	import net.psykosoft.psykopaint2.core.models.FileSourceImageProxy;
 
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;

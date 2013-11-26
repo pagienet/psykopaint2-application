@@ -1,7 +1,5 @@
-package net.psykosoft.psykopaint2.book.model
+package net.psykosoft.psykopaint2.core.models
 {
-	import flash.display.BitmapData;
-
 	import net.psykosoft.photos.UserPhotosExtension;
 
 	public class ANESourceImageProxy implements SourceImageProxy

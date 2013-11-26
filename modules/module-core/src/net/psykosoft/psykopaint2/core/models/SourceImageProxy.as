@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.book.model
+package net.psykosoft.psykopaint2.core.models
 {
 	public interface SourceImageProxy
 	{

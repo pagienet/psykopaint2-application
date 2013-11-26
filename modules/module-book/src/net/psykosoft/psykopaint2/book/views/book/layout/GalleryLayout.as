@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.book.views.book.layout
 {
-	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.book.views.models.BookData;
@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		 
 		public function GalleryLayout(stage:Stage, previousLayout:LayoutBase = null)
 		{
-			super(BookImageSource.GALLERY_IMAGES, stage, previousLayout);
+			super(ImageCollectionSource.GALLERY_IMAGES, stage, previousLayout);
 		}
 
 		override protected function initDefaultAssets():void

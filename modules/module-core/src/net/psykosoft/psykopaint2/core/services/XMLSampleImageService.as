@@ -1,36 +1,31 @@
-package net.psykosoft.psykopaint2.book.services
+package net.psykosoft.psykopaint2.core.services
 {
 	import net.psykosoft.psykopaint2.base.utils.io.XMLLoader;
-	import net.psykosoft.psykopaint2.book.BookImageSource;
-	import net.psykosoft.psykopaint2.book.model.FileSourceImageProxy;
-	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
-	import net.psykosoft.psykopaint2.book.model.SourceImageProxy;
-	import net.psykosoft.psykopaint2.book.signals.NotifySourceImagesFetchedSignal;
+	import net.psykosoft.psykopaint2.core.models.FileSourceImageProxy;
+	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
+	import net.psykosoft.psykopaint2.core.models.SourceImageCollection;
 
-	public class DummyCameraRollService implements CameraRollService
+	public class XMLSampleImageService implements SampleImageService
 	{
-		[Inject]
-		public var notifySourceImagesFetchedSignal : NotifySourceImagesFetchedSignal;
-
 		private var _xml : XML;
 		private var _indexToFetch : int;
 		private var _amountToFetch : int;
-		private var _index : int;
+		private var _callback : Function;
 
-		public function DummyCameraRollService()
+		public function XMLSampleImageService()
 		{
 		}
 
-		public function fetchImages(index : int, amount : int) : void
+		public function fetchImages(index : int, amount : int, onSuccess : Function, onFailure : Function) : void
 		{
-			_index = index;
 			if (!_xml) {
 				_indexToFetch = index;
 				_amountToFetch = amount;
+				_callback = onSuccess;
 				loadXML();
 			}
 			else
-				parseXML(index, amount);
+				parseXML(index, amount, onSuccess);
 		}
 
 		private function loadXML() : void
@@ -44,21 +39,21 @@ package net.psykosoft.psykopaint2.book.services
 		private function onXMLLoaded(xml : XML) : void
 		{
 			_xml = xml;
-			parseXML(_indexToFetch, _amountToFetch);
+			parseXML(_indexToFetch, _amountToFetch, _callback);
 		}
 
-		private function parseXML(index : uint, amount : uint) : void
+		private function parseXML(index : uint, amount : uint, onSuccess : Function) : void
 		{
-			var lowResPath : String = _xml.path;
-			var highResPath : String = _xml.highRes;
-			var originalFilename : String = _xml.originals;
+			var lowResPath : String = _xml.path.lowRes;
+			var highResPath : String = _xml.path.highRes;
+			var originalFilename : String = _xml.path.originals;
 			var images : XMLList = _xml.images.image;
 			var collection : SourceImageCollection = new SourceImageCollection();
 			var max : int = index + amount;
 
-			collection.source = BookImageSource.CAMERAROLL_IMAGES;
-			collection.index = _index;
-			collection.numTotalImages = 38;
+			collection.source = ImageCollectionSource.SAMPLE_IMAGES;
+			collection.index = index;
+			collection.numTotalImages = images.length();
 
 			if (amount == 0 || max > images.length())
 				max = images.length();
@@ -73,7 +68,7 @@ package net.psykosoft.psykopaint2.book.services
 				collection.images.push(imageVO);
 			}
 
-			notifySourceImagesFetchedSignal.dispatch(collection);
+			onSuccess(collection);
 		}
 	}
 }

@@ -18,8 +18,8 @@ package net.psykosoft.psykopaint2.book.views.book
 	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 
-	import net.psykosoft.psykopaint2.book.BookImageSource;
-	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
+	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
+	import net.psykosoft.psykopaint2.core.models.SourceImageCollection;
 	import net.psykosoft.psykopaint2.book.views.book.data.PagesManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.RegionManager;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
@@ -106,12 +106,12 @@ package net.psykosoft.psykopaint2.book.views.book
 				var newPageCount:uint;
 				
 				switch(type){
-	 				case BookImageSource.SAMPLE_IMAGES:
+	 				case ImageCollectionSource.SAMPLE_IMAGES:
 	 				 	insertCount = NativeSamplesLayout.INSERTS_COUNT;
 	 					newPageCount = Math.round(collection.images.length/(insertCount * 2) );
 	 					break;
 
-	 				case BookImageSource.CAMERAROLL_IMAGES:
+	 				case ImageCollectionSource.CAMERAROLL_IMAGES:
 	 					insertCount = CameraSamplesLayout.INSERTS_COUNT;
 	 					newPageCount = Math.round(collection.images.length/(insertCount * 2) );
 	 					break;
@@ -137,12 +137,12 @@ package net.psykosoft.psykopaint2.book.views.book
  
 				switch(type){
 
-	 				case BookImageSource.SAMPLE_IMAGES:
+	 				case ImageCollectionSource.SAMPLE_IMAGES:
 	 					insertCount = NativeSamplesLayout.INSERTS_COUNT;
 	 					_layout = new NativeSamplesLayout(_stage, previousLayout);
 	 					break;
 
-	 				case BookImageSource.CAMERAROLL_IMAGES:
+	 				case ImageCollectionSource.CAMERAROLL_IMAGES:
 	 					insertCount = CameraSamplesLayout.INSERTS_COUNT;
 	 					_layout = new CameraSamplesLayout(_stage, previousLayout);
 	 					break;
@@ -188,7 +188,7 @@ package net.psykosoft.psykopaint2.book.views.book
 				var newPageCount:uint = Math.round(galleryCollection.images.length/(insertCount * 2) );
 	 				 
 				//same type, it's a paging case, we need update the numbering
-				if(_currentDataType == BookImageSource.GALLERY_IMAGES){
+				if(_currentDataType == ImageCollectionSource.GALLERY_IMAGES){
 					_pageIndex = uint(Math.floor(galleryCollection.index/insertCount) );
 					clearCurrentLayout(newPageCount, (_previousIndex > galleryCollection.index)? 1 : 0);
 
@@ -211,7 +211,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	 			setLayoutSignals();
 			}
 
-			_currentDataType = BookImageSource.GALLERY_IMAGES;
+			_currentDataType = ImageCollectionSource.GALLERY_IMAGES;
 			_previousIndex = galleryCollection.index;
 
  			_layout.galleryCollection = galleryCollection;

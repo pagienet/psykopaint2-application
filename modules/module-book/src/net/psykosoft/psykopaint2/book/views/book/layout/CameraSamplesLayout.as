@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.book.views.book.layout
 {
-	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.book.views.models.BookData;
@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		 
 		public function CameraSamplesLayout(stage:Stage, previousLayout:LayoutBase = null)
 		{
-			super(BookImageSource.CAMERAROLL_IMAGES, stage, previousLayout);
+			super(ImageCollectionSource.CAMERAROLL_IMAGES, stage, previousLayout);
 		}
 
 		override public function loadBookContent(onContentLoaded:Function):void

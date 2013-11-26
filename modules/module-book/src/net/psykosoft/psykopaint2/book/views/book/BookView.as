@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.book.model.SourceImageCollection;
+	import net.psykosoft.psykopaint2.core.models.SourceImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 

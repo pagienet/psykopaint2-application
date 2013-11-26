@@ -1,6 +1,6 @@
-package net.psykosoft.psykopaint2.book
+package net.psykosoft.psykopaint2.core.models
 {
-	public class BookImageSource
+	public class ImageCollectionSource
 	{
 		public static const CAMERAROLL_IMAGES : String = "cameraImages";
 		public static const SAMPLE_IMAGES : String = "sampleImages";

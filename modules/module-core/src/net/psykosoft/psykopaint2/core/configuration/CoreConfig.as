@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.commands.LoadPaintingInfoFileCommand;
-	import net.psykosoft.psykopaint2.core.commands.LovePaintingCommand;
 	import net.psykosoft.psykopaint2.core.commands.RenderGpuCommand;
 	import net.psykosoft.psykopaint2.core.commands.RetrieveAllPaintingDataCommand;
 	import net.psykosoft.psykopaint2.core.commands.UpdateFrameCommand;
@@ -21,20 +20,22 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
-	import net.psykosoft.psykopaint2.core.models.AMFGalleryService;
+	import net.psykosoft.psykopaint2.core.services.AMFGalleryService;
 	import net.psykosoft.psykopaint2.core.models.AMFLoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
-	import net.psykosoft.psykopaint2.core.models.GalleryService;
+	import net.psykosoft.psykopaint2.core.services.ANECameraRollService;
+	import net.psykosoft.psykopaint2.core.services.CameraRollService;
+	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
+	import net.psykosoft.psykopaint2.core.services.SampleImageService;
+	import net.psykosoft.psykopaint2.core.services.XMLSampleImageService;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
-	import net.psykosoft.psykopaint2.core.signals.NotifyAddCommentFailedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyAddCommentSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportEndedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasExportStartedSignal;
@@ -44,8 +45,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalAccelerometerSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingFailedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingSucceededSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
@@ -83,7 +82,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestLovePaintingSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingInfoFileReadSignal;
@@ -207,11 +205,9 @@ package net.psykosoft.psykopaint2.core.configuration
 
 			// Pick one.
 			_injector.map( LoggedInUserProxy ).toSingleton(AMFLoggedInUserProxy);
-//			_injector.map( LoggedInUserProxy ).toSingleton(DummyLoggedInUserProxy);
-
-			// Pick one.
-//			_injector.map(GalleryService).toSingleton(DummyGalleryService);
 			_injector.map(GalleryService).toSingleton(AMFGalleryService);
+			_injector.map(CameraRollService).toSingleton(ANECameraRollService);
+			_injector.map(SampleImageService).toSingleton(XMLSampleImageService);
 
 		}
 
@@ -263,10 +259,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyUserRegisteredSignal ).asSingleton();
 			_injector.map( NotifyUserRegistrationFailedSignal ).asSingleton();
 			_injector.map( ToggleTransformGestureSignal ).asSingleton();
-			_injector.map( NotifyLovePaintingSucceededSignal ).asSingleton();
-			_injector.map( NotifyLovePaintingFailedSignal ).asSingleton();
-			_injector.map( NotifyAddCommentSucceededSignal ).asSingleton();
-			_injector.map( NotifyAddCommentFailedSignal ).asSingleton();
 			_injector.map( NotifyPasswordResetSucceededSignal ).asSingleton();
 			_injector.map( NotifyPasswordResetFailedSignal ).asSingleton();
 			_injector.map( NotifyUserPasswordReminderSentSignal ).asSingleton();
@@ -289,7 +281,6 @@ package net.psykosoft.psykopaint2.core.configuration
 			_commandMap.map( RequestCoreModuleBootstrapSignal ).toCommand( BootstrapCoreModuleCommand );
 			_commandMap.map( RequestFrameUpdateSignal ).toCommand( UpdateFrameCommand );
 			_commandMap.map( RequestPaintingInfoFileReadSignal ).toCommand( LoadPaintingInfoFileCommand );
-			_commandMap.map( RequestLovePaintingSignal ).toCommand( LovePaintingCommand );
 		}
 
 		// -----------------------

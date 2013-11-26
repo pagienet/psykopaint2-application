@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
-	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
 	import net.psykosoft.psykopaint2.book.views.models.BookData;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 
@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		public function NativeSamplesLayout(stage:Stage, previousLayout:LayoutBase = null)
 		{
-			super(BookImageSource.SAMPLE_IMAGES, stage, previousLayout);
+			super(ImageCollectionSource.SAMPLE_IMAGES, stage, previousLayout);
 		}
 
 		override public function loadBookContent(onContentLoaded:Function):void

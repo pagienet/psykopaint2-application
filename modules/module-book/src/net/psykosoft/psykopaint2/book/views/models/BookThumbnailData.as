@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.book.views.models
 {
-	import net.psykosoft.psykopaint2.book.model.SourceImageProxy;
+	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
 	import net.psykosoft.psykopaint2.book.views.models.BookData;
 
 	public class BookThumbnailData extends BookData

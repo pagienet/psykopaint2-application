@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.app.states
 
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-	import net.psykosoft.psykopaint2.book.BookImageSource;
+	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
 	import net.psykosoft.psykopaint2.book.signals.RequestOpenBookSignal;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.app.states
 		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			if (data.source == BookImageSource.GALLERY_IMAGES) {
+			if (data.source == ImageCollectionSource.GALLERY_IMAGES) {
 				_galleryType = data.type;
 				requestNavigationStateChange.dispatch(NavigationStateType.BOOK_GALLERY);
 			}
@@ -120,7 +120,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onRequestBrowseGallerySignal(galleryID : uint) : void
 		{
-			if( _activeSourceType == BookImageSource.GALLERY_IMAGES && _galleryType == galleryID ) return;
+			if( _activeSourceType == ImageCollectionSource.GALLERY_IMAGES && _galleryType == galleryID ) return;
 			_galleryType = galleryID;
 
 			refreshBookSource();
@@ -146,16 +146,16 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onBrowseUserImagesSignal() : void
 		{
-			if( _activeSourceType == BookImageSource.CAMERAROLL_IMAGES ) return;
-			_activeSourceType = BookImageSource.CAMERAROLL_IMAGES;
+			if( _activeSourceType == ImageCollectionSource.CAMERAROLL_IMAGES ) return;
+			_activeSourceType = ImageCollectionSource.CAMERAROLL_IMAGES;
 
 			refreshBookSource();
 		}
 
 		private function onBrowseSampleImagesSignal() : void
 		{
-			if( _activeSourceType == BookImageSource.SAMPLE_IMAGES ) return;
-			_activeSourceType = BookImageSource.SAMPLE_IMAGES;
+			if( _activeSourceType == ImageCollectionSource.SAMPLE_IMAGES ) return;
+			_activeSourceType = ImageCollectionSource.SAMPLE_IMAGES;
 
 			refreshBookSource();
 		}

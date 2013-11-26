@@ -44,16 +44,6 @@ package net.psykosoft.psykopaint2.core.services
 //			_connection.call("Main/ping", new Responder(onPingSuccess, onPingError), [1]);
 		}
 
-		private function onPingSuccess(result : Object) : void
-		{
-
-		}
-
-		private function onPingError(result : Object) : void
-		{
-			trace ("Error pinging");
-		}
-
 		private function onAsyncError(event : AsyncErrorEvent) : void
 		{
 			notifyAMFConnectionFailed.dispatch(AMFErrorCode.CONNECTION_ASYNC_ERROR);

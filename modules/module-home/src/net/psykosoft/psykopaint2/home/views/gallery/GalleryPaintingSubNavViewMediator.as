@@ -1,12 +1,10 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingFailedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyLovePaintingSucceededSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestLovePaintingSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
@@ -20,16 +18,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public var requestBrowseGallery : RequestBrowseGallerySignal;
 
 		[Inject]
-		public var requestLovePaintingSignal : RequestLovePaintingSignal;
-
-		[Inject]
-		public var notifyLovePaintingSucceededSignal : NotifyLovePaintingSucceededSignal;
-
-		[Inject]
-		public var notifyLovePaintingFailedSignal : NotifyLovePaintingFailedSignal;
-
-		[Inject]
 		public var requestSetGalleryPaintingSignal : RequestSetGalleryPaintingSignal;
+
+		[Inject]
+		public var galleryService : GalleryService;
 
 		[Inject]
 		public var loggedInUser : LoggedInUserProxy;
@@ -97,9 +89,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function lovePainting() : void
 		{
 			view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, false);
-			notifyLovePaintingFailedSignal.add(onLovePaintingFailed);
-			notifyLovePaintingSucceededSignal.add(onLovePaintingSucceeded);
-			requestLovePaintingSignal.dispatch(_activePainting.id);
+			galleryService.favorite(_activePainting.id, onLovePaintingSucceeded, onLovePaintingFailed);
 		}
 
 		private function onLovePaintingSucceeded() : void

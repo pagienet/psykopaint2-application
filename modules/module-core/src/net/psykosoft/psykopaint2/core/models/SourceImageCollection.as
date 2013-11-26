@@ -1,5 +1,6 @@
-package net.psykosoft.psykopaint2.book.model
+package net.psykosoft.psykopaint2.core.models
 {
+	import net.psykosoft.psykopaint2.book.model.*;
 	public class SourceImageCollection
 	{
 		public var source : String;	// any of BookImageSource
