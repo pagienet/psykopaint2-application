@@ -39,8 +39,8 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryShareSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.EaselView;
 	import net.psykosoft.psykopaint2.home.views.home.EaselViewMediator;
-	import net.psykosoft.psykopaint2.home.views.home.GalleryView;
-	import net.psykosoft.psykopaint2.home.views.home.GalleryViewMediator;
+	import net.psykosoft.psykopaint2.home.views.gallery.GalleryView;
+	import net.psykosoft.psykopaint2.home.views.gallery.GalleryViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.RoomView;

@@ -91,6 +91,8 @@ package net.psykosoft.psykopaint2.core.services
 				var obj : Object = array[i];
 				var vo : FileGalleryImageProxy = new FileGalleryImageProxy();
 				vo.id = obj["id"];
+				vo.index = index + i;
+				vo.collectionType = type;
 				vo.title = obj["title"];
 				vo.normalSpecularMapURL = obj["normalmapdata_url"];
 				vo.colorMapURL = obj["colordata_url"];

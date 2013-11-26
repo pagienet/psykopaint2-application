@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.home.views.gallery.GalleryView;
 	import net.psykosoft.psykopaint2.home.views.home.atelier.Atelier;
 	import net.psykosoft.psykopaint2.home.views.home.controllers.CameraPromenadeController;
 	import net.psykosoft.psykopaint2.home.views.home.controllers.OrientationBasedController;

@@ -237,7 +237,9 @@ package net.psykosoft.psykopaint2.book.views.book
 				
 			}
 
-			_stage3dProxy.context3D.clear(0, 0, 0, 1, 1, 0, Context3DClearMask.DEPTH);
+			// this can sometimes be null upon disposal at the end
+			if (_stage3dProxy.context3D)
+				_stage3dProxy.context3D.clear(0, 0, 0, 1, 1, 0, Context3DClearMask.DEPTH);
 			_view3d.render(target);
 		}
 

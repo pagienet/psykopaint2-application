@@ -6,7 +6,6 @@ package net.psykosoft.psykopaint2.core.models
 	import flash.display.LoaderInfo;
 	import flash.display.StageQuality;
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.geom.Matrix;
 	import flash.net.URLLoader;
@@ -28,9 +27,19 @@ package net.psykosoft.psykopaint2.core.models
 		private var _paintingGalleryVO : PaintingGalleryVO;
 		private static var _scaleDownMatrix : Matrix = new Matrix(.5, 0, 0, .5);
 
+		private var _activeLoader : Object;
 
 		public function FileGalleryImageProxy()
 		{
+		}
+
+		override public function cancelLoading() : void
+		{
+			_onComplete = null;
+			_onError = null;
+			if (_activeLoader)
+				_activeLoader.close();
+			_activeLoader = null;
 		}
 
 		override public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
@@ -56,15 +65,15 @@ package net.psykosoft.psykopaint2.core.models
 		private function loadBitmapData(filename : String, onComplete : Function, onError : Function) : void
 		{
 			var loader : Loader = new Loader();
-			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
-			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onError);
+			_activeLoader = loader;
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
+			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
 			loader.load(new URLRequest(filename));
 		}
 
 		private function onThumbLoadComplete(event : Event) : void
 		{
 			var loader : LoaderInfo = LoaderInfo(event.target);
-			removeListeners(loader);
 
 			var bitmapData : BitmapData = Bitmap(loader.content).bitmapData;
 			if (_sizeHint == ImageThumbnailSize.SMALL) {
@@ -81,7 +90,6 @@ package net.psykosoft.psykopaint2.core.models
 		private function onCompositeLoadComplete(event : Event) : void
 		{
 			var loader : LoaderInfo = LoaderInfo(event.target);
-			removeListeners(loader);
 			callOnComplete(Bitmap(loader.content).bitmapData);
 		}
 
@@ -96,8 +104,6 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onLoadError(event : IOErrorEvent) : void
 		{
-			removeListeners(LoaderInfo(event.target));
-
 			// need to nullify before callback because loading needs to be possible again
 			var onError : Function = _onError;
 			_onComplete = null;
@@ -107,12 +113,6 @@ package net.psykosoft.psykopaint2.core.models
 			_paintingGalleryVO = null;
 
 			onError();
-		}
-
-		private function removeListeners(loader : EventDispatcher) : void
-		{
-			loader.removeEventListener(Event.COMPLETE, onThumbLoadComplete);
-			loader.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		}
 
 		override public function loadSurfaceData(onComplete : Function, onError : Function) : void
@@ -128,8 +128,6 @@ package net.psykosoft.psykopaint2.core.models
 		private function onColorMapComplete(event : Event) : void
 		{
 			var loader : LoaderInfo = LoaderInfo(event.target);
-			removeListeners(loader);
-
 			_paintingGalleryVO.colorData = Bitmap(loader.content).bitmapData;
 			loadBitmapData(sourceThumbnailURL, onSourceThumbComplete, onLoadError);
 		}
@@ -137,7 +135,6 @@ package net.psykosoft.psykopaint2.core.models
 		private function onSourceThumbComplete(event : Event) : void
 		{
 			var loader : LoaderInfo = LoaderInfo(event.target);
-			removeListeners(loader);
 			_paintingGalleryVO.sourceThumbnail = Bitmap(loader.content).bitmapData;
 
 			loadNormalSpecular();
@@ -146,16 +143,16 @@ package net.psykosoft.psykopaint2.core.models
 		private function loadNormalSpecular() : void
 		{
 			var loader : URLLoader = new URLLoader();
+			_activeLoader = loader;
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
-			loader.addEventListener(Event.COMPLETE, onNormalSpecularComplete);
-			loader.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+			loader.addEventListener(Event.COMPLETE, onNormalSpecularComplete, false, 0, true);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, onLoadError, false, 0, true);
 			loader.load(new URLRequest(normalSpecularMapURL));
 		}
 
 		private function onNormalSpecularComplete(event : Event) : void
 		{
 			var loader : URLLoader = URLLoader(event.target);
-			removeListeners(loader);
 			_paintingGalleryVO.normalSpecularData = loader.data;
 			_paintingGalleryVO.normalSpecularData.uncompress();
 

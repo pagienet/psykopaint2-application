@@ -6,6 +6,8 @@ package net.psykosoft.psykopaint2.core.models
 	public class GalleryImageProxy
 	{
 		public var id : int;
+		public var index : int;				// the index in the gallery order
+		public var collectionType : uint;   // the gallery it belongs to
 		public var userName : String;
 		public var numLikes : uint;
 		public var title : String;
@@ -27,6 +29,11 @@ package net.psykosoft.psykopaint2.core.models
 		public function loadSurfaceData(onComplete : Function, onError : Function) : void
 		{
 			throw new AbstractMethodError();
+		}
+
+		public function cancelLoading() : void
+		{
+
 		}
 	}
 }
