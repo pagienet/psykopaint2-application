@@ -141,7 +141,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			// this is a bit shitty, but it'd suck to have to create an entire mediator system for Away3D components, so... we cheat
 			_easelView = new EaselView(_view, _light, _stage3dProxy);
 			_roomView = new RoomView(_atelier, _stage3dProxy);
-			_galleryView = new GalleryView();
+			_galleryView = new GalleryView(_view, _light, _stage3dProxy);
 			addChild(_easelView);
 			addChild(_roomView);
 			addChild(_galleryView);
@@ -174,7 +174,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController.activePositionChanged.add(onActivePositionChanged);
 			_cameraController.registerTargetPosition(SETTINGS, new Vector3D(814, -1.14, 450));
 			_cameraController.registerTargetPosition(EASEL, new Vector3D(271, -40, 300));
-//			_cameraController.registerTargetPosition(EASEL, new Vector3D(271, -1.14, 450));
 			_cameraController.registerTargetPosition(HOME, new Vector3D(-271, -1.14, 450));
 			_cameraController.registerTargetPosition(GALLERY, new Vector3D(-814, -1.14, 450));
 			_cameraController.start();

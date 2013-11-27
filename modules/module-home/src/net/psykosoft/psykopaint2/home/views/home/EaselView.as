@@ -110,7 +110,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function initCanvas() : void
 		{
 			var aspectRatio : Number = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
-			// TODO: Figure out the proper size
 			var geom : Geometry = new PlaneGeometry(CANVAS_WIDTH, CANVAS_WIDTH*aspectRatio, 1, 1, false);
 			geom.scaleUV(1, aspectRatio);
 			_canvas = new Mesh(geom);

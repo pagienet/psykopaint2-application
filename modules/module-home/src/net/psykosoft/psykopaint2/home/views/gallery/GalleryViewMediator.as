@@ -34,6 +34,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			super.destroy();
 			requestSetGalleryPaintingSignal.remove(onRequestSetGalleryPainting);
 			view.requestImageCollection.remove(onRequestImageCollection);
+			view.dispose();
 		}
 
 		private function onRequestImageCollection(source : int, index : int, amount : int) : void

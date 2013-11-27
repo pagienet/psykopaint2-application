@@ -75,7 +75,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		private var _requestedForNewCollection:Boolean;
  		private var _currentLayoutInsertCount:uint;
  		private var _vo:Object;
-		private var _position : Vector3D;
+		private var _position : Vector3D = new Vector3D();
 
      	public function Book(view:View3D, stage:Stage)
  		{

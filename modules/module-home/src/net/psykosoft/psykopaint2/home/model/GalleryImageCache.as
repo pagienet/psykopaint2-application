@@ -1,5 +1,9 @@
 package net.psykosoft.psykopaint2.home.model
 {
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.textures.BitmapTexture;
+	import away3d.textures.Texture2DBase;
+
 	import flash.display.BitmapData;
 
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
@@ -10,26 +14,38 @@ package net.psykosoft.psykopaint2.home.model
 
 	public class GalleryImageCache
 	{
-		public var thumbnailLoaded : Signal = new Signal(GalleryImageProxy, BitmapData);
+		public var thumbnailLoaded : Signal = new Signal(GalleryImageProxy, Texture2DBase);
+		public var thumbnailDisposed : Signal = new Signal(GalleryImageProxy);
 
 		private var _proxies : Array;
-		private var _bitmapDatas : Array;
+		private var _textures : Array;
 
 		private var _minIndex : int;
 		private var _maxIndex : int;
 		private var _loadingIndex : int;
 
-		public function GalleryImageCache()
+		private var _stage3DProxy : Stage3DProxy;
+
+		public function GalleryImageCache(stage3DProxy : Stage3DProxy)
 		{
 			_proxies = [];
-			_bitmapDatas = [];
+			_textures = [];
+			_stage3DProxy = stage3DProxy;
+		}
+
+		public function clear() : void
+		{
+			stopCaching();
+			removeCachedImageRange(_minIndex, _maxIndex);
+			_minIndex = 0;
+			_maxIndex = 0;
 		}
 
 		public function replaceCollection(collection : GalleryImageCollection) : void
 		{
 			stopCaching();
 
-			var max : int = collection.index + collection.numTotalPaintings;
+			var max : int = collection.index + collection.images.length;
 			removeCachedImageRange(_minIndex, collection.index);
 			removeCachedImageRange(max, _maxIndex);
 
@@ -43,7 +59,7 @@ package net.psykosoft.psykopaint2.home.model
 
 		private function addProxies(collection : GalleryImageCollection) : void
 		{
-			for (var i : int = 0; i < collection.numTotalPaintings; ++i) {
+			for (var i : int = 0; i < collection.images.length; ++i) {
 				var imageProxy : GalleryImageProxy = collection.images[i];
 				var index : int = imageProxy.index;
 				_proxies[index] = imageProxy;
@@ -58,22 +74,25 @@ package net.psykosoft.psykopaint2.home.model
 		private function onError() : void
 		{
 			trace ("Error loading image");
-			_bitmapDatas[_loadingIndex] = null;
+			_textures[_loadingIndex] = null;
 			cacheNext();
 		}
 
 		private function onComplete(bitmapData : BitmapData) : void
 		{
-			_bitmapDatas[_loadingIndex] = bitmapData;
-			thumbnailLoaded.dispatch(bitmapData);
+			var texture : BitmapTexture = new BitmapTexture(bitmapData);
+			texture.getTextureForStage3D(_stage3DProxy);
+			_textures[_loadingIndex] = texture;
+			thumbnailLoaded.dispatch(_proxies[_loadingIndex], texture);
 			cacheNext();
+			bitmapData.dispose();
 		}
 
 		private function cacheNext() : void
 		{
 			// TODO: Should we put loading queue in a separate collection and sort it based on distance to centre element?
 			if (++_loadingIndex <= _maxIndex) {
-				if (_bitmapDatas[_loadingIndex])
+				if (_textures[_loadingIndex])
 					cacheNext();
 				else
 					_proxies[_loadingIndex].loadThumbnail(onComplete, onError, ImageThumbnailSize.LARGE);
@@ -90,8 +109,11 @@ package net.psykosoft.psykopaint2.home.model
 		private function removeCachedImageRange(start : int, end : int) : void
 		{
 			for (var i : uint = start; i < end; ++i) {
-				if (_bitmapDatas[i]) _bitmapDatas[i].dispose();
-				_bitmapDatas[i] = null;
+				if (_textures[i]) {
+					thumbnailDisposed.dispatch(_proxies[i]);
+					BitmapTexture(_textures[i]).dispose();
+				}
+				_textures[i] = null;
 				_proxies[i] = null;
 			}
 		}

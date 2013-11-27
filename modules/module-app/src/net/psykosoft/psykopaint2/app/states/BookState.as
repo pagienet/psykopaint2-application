@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.home.signals.RequestExitGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 
 	public class BookState extends State
 	{
@@ -61,6 +62,9 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
+
+		[Inject]
+		public var requestSetGalleryPaintingSignal : RequestSetGalleryPaintingSignal;
 
 		private var _background : RefCountedTexture;
 		private var _activeSourceType:String;
@@ -172,7 +176,8 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onGalleryImageSelected(selectedGalleryImage : GalleryImageProxy) : void
 		{
-			stateMachine.setActiveState(transitionToHomeState, { target: NavigationStateType.GALLERY_PAINTING, galleryImage: selectedGalleryImage});
+			//stateMachine.setActiveState(transitionToHomeState, { target: NavigationStateType.GALLERY_PAINTING, galleryImage: selectedGalleryImage});
+			requestSetGalleryPaintingSignal.dispatch(selectedGalleryImage);
 		}
 
 		private function onRequestExitPickAnImageSignal():void
