@@ -629,11 +629,10 @@ package net.psykosoft.psykopaint2.book.views.book
  			var data:BookData = _regionManager.hitTestRegions(mouseX, mouseY, pageIndexOnMouseDown, pageSideIndexOnMouseDown);
 
  			if(data){
- 				_isLoadingImage = true;
-
  				//trace(">>>> loading "+data.originalFilename);
 
  				if(data is BookThumbnailData){
+					_isLoadingImage = true;
  					BookThumbnailData(data).imageVO.loadFullSized(onFullSizeImageLoaded, onFullSizeImageError);
  				} else {
  					galleryImagePickedSignal.dispatch(BookGalleryData(data).imageVO);
