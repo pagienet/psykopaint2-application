@@ -281,7 +281,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		public function enableSwipeMode() : void
 		{
 			_book.position = new Vector3D(0, 0, -900);
-			_bookEnabled = false;
+			_bookEnabled = true; //false;
 		}
 	}
 }

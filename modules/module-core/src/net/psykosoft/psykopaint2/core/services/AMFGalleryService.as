@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.core.services
 
 			var array : Array = data["response"].items;
 			var collection : GalleryImageCollection = new GalleryImageCollection();
-			collection.numTotalPaintings = data["response"].numAvailable;
+			collection.numTotalPaintings = data["response"].num_available;
 			collection.type = type;
 			collection.index = index;
 			var len : int = array.length;

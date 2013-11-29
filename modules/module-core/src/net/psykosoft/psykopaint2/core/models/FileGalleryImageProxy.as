@@ -50,6 +50,7 @@ package net.psykosoft.psykopaint2.core.models
 			_onComplete = onComplete;
 			_onError = onError;
 
+			trace ("Loading: " + thumbnailFilename);
 			loadBitmapData(thumbnailFilename, onThumbLoadComplete, onLoadError);
 		}
 
@@ -108,6 +109,8 @@ package net.psykosoft.psykopaint2.core.models
 			var onError : Function = _onError;
 			_onComplete = null;
 			_onError = null;
+
+			trace ("Error loading image: " + event.text);
 
 			if (_paintingGalleryVO) _paintingGalleryVO.dispose();
 			_paintingGalleryVO = null;
