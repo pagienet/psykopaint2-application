@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 	public class GalleryView extends Sprite
 	{
-		private static const PAINTING_SPACING : Number = 100;
+		private static const PAINTING_SPACING : Number = 120;
 		private static const PAINTING_WIDTH : Number = 100;
 
 		public var requestImageCollection : Signal = new Signal(int, int, int); // source, start index, amount of images
