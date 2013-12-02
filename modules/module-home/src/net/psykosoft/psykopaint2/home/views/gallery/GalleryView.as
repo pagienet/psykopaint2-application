@@ -26,8 +26,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 	public class GalleryView extends Sprite
 	{
-		private static const PAINTING_SPACING : Number = 120;
-		private static const PAINTING_WIDTH : Number = 100;
+		private static const PAINTING_SPACING : Number = 190;
+		private static const PAINTING_WIDTH : Number = 160;
 
 		public var requestImageCollection : Signal = new Signal(int, int, int); // source, start index, amount of images
 
@@ -77,7 +77,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		public function setActiveImage(galleryImageProxy : GalleryImageProxy) : void
 		{
-			const amountOnEachSide : int = 5;
+			const amountOnEachSide : int = 2;
 			var min : int = galleryImageProxy.index - amountOnEachSide;
 			var amount : int = amountOnEachSide * 2 + 1;
 
@@ -86,7 +86,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				min = 0;
 			}
 
-			_container.x = -(824 - galleryImageProxy.index * PAINTING_SPACING);
+			_container.x = -(831 - galleryImageProxy.index * PAINTING_SPACING);
 
 			requestImageCollection.dispatch(galleryImageProxy.collectionType, min, amount);
 		}
@@ -106,6 +106,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 					var material : TextureMaterial = new TextureMaterial(_loadingTexture);
 					var mesh : Mesh = new Mesh(_paintingGeometry, material);
 					mesh.x = i * PAINTING_SPACING;
+					mesh.z = 260;
 					_paintings[start + i] = mesh;
 				}
 

@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 
@@ -26,25 +27,33 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			super.initialize();
 			requestSetGalleryPaintingSignal.add(onRequestSetGalleryPainting);
-			view.requestImageCollection.add(onRequestImageCollection);
+			view.requestImageCollection.add(requestImageCollection);
+			galleryService.fetchImages(GalleryType.MOST_RECENT, 0, 1, onInitialImageFetched, onImageCollectionFailed);
 		}
 
 		override public function destroy() : void
 		{
 			super.destroy();
 			requestSetGalleryPaintingSignal.remove(onRequestSetGalleryPainting);
-			view.requestImageCollection.remove(onRequestImageCollection);
+			view.requestImageCollection.remove(requestImageCollection);
 			view.dispose();
 		}
 
-		private function onRequestImageCollection(source : int, index : int, amount : int) : void
+		private function requestImageCollection(source : int, index : int, amount : int) : void
 		{
 			galleryService.fetchImages(source, index, amount, onImageColectionSuccess, onImageCollectionFailed);
 		}
 
+
+
 		private function onRequestSetGalleryPainting(galleryImageProxy : GalleryImageProxy) : void
 		{
 			view.setActiveImage(galleryImageProxy);
+		}
+
+		private function onInitialImageFetched(collection : GalleryImageCollection) : void
+		{
+			view.setActiveImage(collection.images[0]);
 		}
 
 		private function onImageColectionSuccess(collection : GalleryImageCollection) : void
