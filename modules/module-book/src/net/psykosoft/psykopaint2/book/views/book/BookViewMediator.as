@@ -59,6 +59,8 @@ package net.psykosoft.psykopaint2.book.views.book
 		[Inject]
 		public var galleryService : GalleryService;
 
+		private var _currentGalleryType : int = -1;
+
 		override public function initialize():void {
 
 			// Init.
@@ -163,6 +165,9 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onGalleryImageCollectionFetched(collection : GalleryImageCollection) : void
 		{
 			view.setGalleryImageCollection(collection);
+
+			if (collection.type != _currentGalleryType && collection.images.length > 0)
+				notifyGalleryImageSelected.dispatch(collection.images[0]);
 		}
 
 		private function onFetchImagesFailure(statusCode : int) : void

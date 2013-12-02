@@ -42,6 +42,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _paintingGeometry : Geometry;
 		private var _loadingTexture : BitmapTexture;
 		private var _numPaintings : int;
+		private var _activeImageProxy : GalleryImageProxy;
 
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -77,6 +78,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		public function setActiveImage(galleryImageProxy : GalleryImageProxy) : void
 		{
+			if (_activeImageProxy && _activeImageProxy.collectionType != galleryImageProxy.collectionType)
+				resetPaintings();
+
+			_activeImageProxy = galleryImageProxy;
+
+
 			const amountOnEachSide : int = 2;
 			var min : int = galleryImageProxy.index - amountOnEachSide;
 			var amount : int = amountOnEachSide * 2 + 1;
@@ -89,6 +96,16 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_container.x = -(831 - galleryImageProxy.index * PAINTING_SPACING);
 
 			requestImageCollection.dispatch(galleryImageProxy.collectionType, min, amount);
+		}
+
+		private function resetPaintings() : void
+		{
+			_imageCache.thumbnailLoaded.remove(onThumbnailLoaded);
+			_imageCache.thumbnailDisposed.remove(onThumbnailDisposed);
+			disposePaintings();
+			_imageCache.clear();
+			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
+			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
 		}
 
 		public function setImageCollection(collection : GalleryImageCollection) : void

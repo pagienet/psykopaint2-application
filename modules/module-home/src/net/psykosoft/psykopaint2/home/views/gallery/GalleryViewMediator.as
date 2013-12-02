@@ -44,8 +44,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			galleryService.fetchImages(source, index, amount, onImageColectionSuccess, onImageCollectionFailed);
 		}
 
-
-
 		private function onRequestSetGalleryPainting(galleryImageProxy : GalleryImageProxy) : void
 		{
 			view.setActiveImage(galleryImageProxy);

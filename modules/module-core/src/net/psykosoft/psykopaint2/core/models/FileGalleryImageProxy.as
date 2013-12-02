@@ -100,6 +100,7 @@ package net.psykosoft.psykopaint2.core.models
 			var onComplete : Function = _onComplete;
 			_onComplete = null;
 			_onError = null;
+			_activeLoader = null;
 			onComplete(data);
 		}
 
@@ -109,6 +110,7 @@ package net.psykosoft.psykopaint2.core.models
 			var onError : Function = _onError;
 			_onComplete = null;
 			_onError = null;
+			_activeLoader = null;
 
 			trace ("Error loading image: " + event.text);
 
@@ -158,8 +160,8 @@ package net.psykosoft.psykopaint2.core.models
 			var loader : URLLoader = URLLoader(event.target);
 			_paintingGalleryVO.normalSpecularData = loader.data;
 			_paintingGalleryVO.normalSpecularData.uncompress();
-
-			_onComplete(_paintingGalleryVO);
+			_activeLoader = null;
+			callOnComplete(_paintingGalleryVO);
 		}
 	}
 }
