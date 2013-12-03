@@ -368,16 +368,19 @@ package net.psykosoft.psykopaint2.book.views.book
 				// scaling by 2 because of the screen space -> view space mapping
 				_dragVelocity = -event.velocityY * 2 * 60;
 				_startPos = _book.z;
-				_targetPos = _dragVelocity < 0? -900 : 0;
+				if (_dragVelocity < 0) {
+					switchToHiddenMode();
+					_targetPos = -900;
+				}
+				else {
+					switchToNormalMode();
+					_targetPos = 0;
+				}
 				// solving:
 				// p(t) = p(0) + v(0)*t + a*t^2 / 2 = target
 				// v(t) = v(0) + a*t = 0
 				// for 'a' (acceleration, ie negative friction) and 't'
 
-				// v(t) = v(0) + a*t = 0
-				//	==> a = -v(0)/t
-
-				// a = 2*(p(t) - p(0) - v(0)*t)/(t*t)
 				_tweenTime = 2 * (_targetPos - _startPos) / _dragVelocity;
 				_friction = -_dragVelocity/_tweenTime;
 
