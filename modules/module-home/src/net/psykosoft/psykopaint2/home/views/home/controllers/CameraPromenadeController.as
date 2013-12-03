@@ -13,6 +13,8 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
 
 	import org.osflash.signals.Signal;
 
@@ -23,8 +25,6 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		private var _target : Camera3D;
 		private var _targetPositions : Vector.<Vector3D>;
 		private var _stage : Stage;
-		private var _lastPositionX : Number;
-		private var _velocity : Number = 0;
 		private var _minX : Number;
 		private var _maxX : Number;
 		private var _activeTargetPositionID : int;
@@ -34,20 +34,24 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 		private var _tweenTime : Number = .5;
 		private var _startTime : Number;
 		private var _startPos : Vector3D;
-		private var _interactionRect : Rectangle;
 		private var _started : Boolean;
 		private var _maxIndex : int;
 		private var _minIndex : int;
 
+		private var _grabThrowController : GrabThrowController;
+		private var _velocity : Number;
+
 		// uses X coordinate as distance reference
 		public function CameraPromenadeController(target : Camera3D, stage : Stage)
 		{
-			_target = target;
-			_targetPositions = new <Vector3D>[];
 			_stage = stage;
+			_target = target;
+			_grabThrowController = new GrabThrowController(stage);
+			_grabThrowController.interactionRect = new Rectangle(0, 0, _stage.stageWidth, _stage.stageHeight);
+			_targetPositions = new <Vector3D>[];
 			_minX = Number.POSITIVE_INFINITY;
 			_maxX = Number.NEGATIVE_INFINITY;
-			_interactionRect = new Rectangle(0, 0, _stage.stageWidth, _stage.stageHeight);
+
 		}
 
 		public function registerTargetPosition(id : int, position : Vector3D) : void
@@ -67,52 +71,41 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 		public function start() : void
 		{
-			if (!_started) {
-				_started = true;
-				_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			}
+			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
+			_grabThrowController.start();
 		}
 
-		private function onMouseDown(event : MouseEvent) : void
+		private function onDragStarted(event : GrabThrowEvent) : void
 		{
-			if (_interactionRect.contains(event.stageX, event.stageY)) {
-				resetPan(event.stageX / CoreSettings.GLOBAL_SCALING);
-				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			}
-		}
-
-		private function onMouseMove(event : MouseEvent) : void
-		{
-			updateMovement(event.stageX / CoreSettings.GLOBAL_SCALING);
-		}
-
-		private function onMouseUp(event : MouseEvent) : void
-		{
-			_stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			moveToBestPosition();
-		}
-
-		private function resetPan(stageX : Number) : void
-		{
-			_lastPositionX = stageX;
 			killTween();
+			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
+			_grabThrowController.addEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 		}
 
 		public function stop() : void
 		{
 			_started = false;
-			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
+			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
+			_grabThrowController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 		}
 
-		private function updateMovement(stageX : Number) : void
+		private function onDragUpdate(event : GrabThrowEvent) : void
 		{
-			var dx : Number = (stageX - _lastPositionX)*1.2;
-			_velocity = _velocity + (dx - _velocity) * .95;
-			_lastPositionX = stageX;
+			updateMovement(event.velocityX / CoreSettings.GLOBAL_SCALING * 1.2);
+		}
 
-			var targetX : Number = _target.x + dx;
+		private function onDragRelease(event : GrabThrowEvent) : void
+		{
+			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
+			_grabThrowController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
+			_velocity = event.velocityX / CoreSettings.GLOBAL_SCALING * 1.2;
+			moveToBestPosition();
+		}
+
+		private function updateMovement(velocity : Number) : void
+		{
+			var targetX : Number = _target.x + velocity;
 			var firstIndex : int;
 			var secondIndex : int;
 
@@ -193,6 +186,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			killTween();
 			var targetID : int;
 
+			// just go back to where ye came from!
 			if (Math.abs(_velocity) < 5) {
 				targetID = findClosestID(_target.x);
 				var targetPos : Vector3D = _targetPositions[targetID];
@@ -310,12 +304,12 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 		public function get interactionRect() : Rectangle
 		{
-			return _interactionRect;
+			return _grabThrowController.interactionRect;
 		}
 
 		public function set interactionRect(interactionRect : Rectangle) : void
 		{
-			_interactionRect = interactionRect;
+			_grabThrowController.interactionRect = interactionRect;
 		}
 	}
 }
