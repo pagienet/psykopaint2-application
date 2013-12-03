@@ -18,9 +18,7 @@ package net.psykosoft.psykopaint2.book.views.models
 		private var _backPage:Mesh;
 		private var _rings:Rings;
 
-		private var _offset : Vector3D = new Vector3D();
-
-		function BookCraft (material:TextureMaterial, ringsMaterial:TextureMaterial):void
+		function BookCraft(material:TextureMaterial, ringsMaterial:TextureMaterial):void
 		{
 			super();
 			generateRings(ringsMaterial);
@@ -57,17 +55,14 @@ package net.psykosoft.psykopaint2.book.views.models
 			_coverRight.rotationZ = 0;
 			this.rotationY = 10;
  
-			x = -500 + _offset.x;
-			y = _offset.y;
-			z = 100 + _offset.z;//70;
+			x = -500;
+			y = 0;
+			z = 100;//70;
 
 		}
 		public function setOpenState():void
 		{
 			_coverRight.rotationZ = 180;
-			x = _offset.x;
-			y = _offset.x;
-			z = _offset.x;
 		}
 
 		private function generateRings(material:TextureMaterial):void
@@ -101,20 +96,6 @@ package net.psykosoft.psykopaint2.book.views.models
 				vertexData[i]+= halfWidth;
 
 			subGeometry.updateData(vertexData);
-		}
-
-		public function get offset() : Vector3D
-		{
-			return _offset;
-		}
-
-		public function set offset(value : Vector3D) : void
-		{
-			var diff : Vector3D = value.subtract(_offset);
-			x += diff.x;
-			y += diff.y;
-			z += diff.z;
-			_offset = value;
 		}
 	}
 }

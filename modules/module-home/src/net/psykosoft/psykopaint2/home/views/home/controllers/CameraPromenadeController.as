@@ -187,7 +187,7 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 			var targetID : int;
 
 			// just go back to where ye came from!
-			if (Math.abs(_velocity) < 5) {
+			if (Math.abs(_velocity) < 5*CoreSettings.GLOBAL_SCALING) {
 				targetID = findClosestID(_target.x);
 				var targetPos : Vector3D = _targetPositions[targetID];
 				TweenLite.to(_target,.5,

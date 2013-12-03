@@ -1,21 +1,16 @@
 package net.psykosoft.psykopaint2.book.views.book
 {
 	import away3d.containers.ObjectContainer3D;
-	import away3d.containers.Scene3D;
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
 	
 	import flash.display.BitmapData;
 	import flash.display.Stage;
-	import flash.events.MouseEvent;
 	import flash.geom.Vector3D;
-	import flash.utils.setTimeout;
-	
-	import away3d.containers.ObjectContainer3D;
+
 	import away3d.containers.View3D;
 	import away3d.core.base.Object3D;
-	import away3d.entities.Mesh;
 	import away3d.materials.TextureMaterial;
 
 	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
@@ -35,7 +30,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import org.osflash.signals.Signal;
  
- 	public class Book
+ 	public class Book extends ObjectContainer3D
  	{
  		public var _percent:Number;
  		public var bookReadySignal:Signal;
@@ -238,7 +233,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		public function initOpenAnimation(bitmapdata:BitmapData):void
  		{
  			buildBookCraft();
- 			_view.scene.addChild(_bookCraft);
+ 			addChild(_bookCraft);
 			animateIn();
 // 			setTimeout(animateIn, 250);
  		}
@@ -258,8 +253,6 @@ package net.psykosoft.psykopaint2.book.views.book
  		{	
  			_dummyCam = new Object3D();
  			_dummyCam.z = 2000;
-			if (_position)
-				_bookCraft.offset = _position;
  			_bookCraft.show();
 
  			lookAtDummy();
@@ -445,12 +438,14 @@ package net.psykosoft.psykopaint2.book.views.book
  		}
 
  		//dispose all resources made since init
- 		public function dispose():void
+ 		override public function dispose():void
  		{
+			super.dispose();
+
  			// if the book cleaned itself earlyer
  			if(!_bookCraft) return;
 
- 			_view.scene.removeChild(_bookCraft);
+ 			removeChild(_bookCraft);
  			if(_dummyCam)_dummyCam = null;
  			_bookCraft.disposeContent();
 
@@ -654,18 +649,6 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onFullSizeImageLoaded( bmd:BitmapData ):void
 		{
 			imagePickedSignal.dispatch( bmd );
-		}
-
-		public function get position() : Vector3D
-		{
-			return _bookCraft.offset;
-		}
-
-		public function set position(value : Vector3D) : void
-		{
-			_position = value;
-			if (_bookCraft)
-				_bookCraft.offset = value;
 		}
 	}
  } 
