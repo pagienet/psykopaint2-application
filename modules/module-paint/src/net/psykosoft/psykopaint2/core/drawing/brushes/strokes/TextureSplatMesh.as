@@ -52,6 +52,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if ((v = pny - m) < _minY) _minY = v;
 			
 			var data:Vector.<Number> = _tmpData;
+			/*
 			data[0]  = pnx - cos1;
 			data[1]  = pny - sin1;
 			data[8]  = pnx + cos2;
@@ -60,6 +61,21 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			data[17] = pny + sin1;
 			data[24] = pnx - cos2;
 			data[25] = pny - sin2;
+			*/
+			var ox:Number = appendVO.quadOffsetRatio * (-cos1 - cos2);
+			var oy:Number = appendVO.quadOffsetRatio * (-sin1 - sin2);
+			
+			data[0]  = pnx - cos1 + ox;
+			data[1]  = pny - sin1;
+			
+			data[8]  = pnx + cos2 + ox;
+			data[9]  = pny + sin2 + oy;
+			
+			data[16] = pnx + cos1 + ox;
+			data[17] = pny + sin1 + oy;
+			
+			data[24] = pnx - cos2 + ox;
+			data[25] = pny - sin2 + oy;
 			
 			data[2]  = data[26] = uvBounds.left;
 			data[3]  = data[11] = uvBounds.top;

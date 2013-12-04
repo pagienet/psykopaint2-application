@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value=".8"/>
+					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value=".4"/>
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0"  previewID={PreviewIconFactory.PREVIEW_PAINTBRUSH_STYLE} list="paint1,basic,splat,line,sumi" showInUI="1"/>
 					<parameterMapping>
 						<parameter id="Precision" label="Precision" previewID={PreviewIconFactory.PREVIEW_SIZE} value="0.25" minValue="0" maxValue="1" showInUI="1"/>
@@ -452,7 +453,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={SketchBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} value="0.5" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="pencilSketch" />
-
+					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value=".4"/>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 						<parameter id={AbstractPathEngine.PARAMETER_SEND_TAPS} path="pathengine" value="0" />
 						<parameter id={AbstractPathEngine.PARAMETER_SPEED_SMOOTHING} path="pathengine" value="0.02" />
