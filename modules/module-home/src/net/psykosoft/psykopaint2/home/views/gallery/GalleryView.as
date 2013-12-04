@@ -14,8 +14,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.display.BitmapData;
 
 	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.Event;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
 
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 
@@ -44,6 +48,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _numPaintings : int;
 		private var _activeImageProxy : GalleryImageProxy;
 
+		private var _swipeController : GrabThrowController;
+
+		private var _minSwipe : Number;
+		private var _maxSwipe : Number;
+
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
 			_view = view;
@@ -57,6 +66,43 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_view.scene.addChild(_container);
 			initGeometry();
 			initLoadingTexture();
+
+			if (stage)
+				initGrabThrowController(stage);
+			else
+				addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+
+		private function initGrabThrowController(stage : Stage) : void
+		{
+			_swipeController = new GrabThrowController(stage);
+			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
+			_swipeController.start();
+		}
+
+		private function onDragStarted(event : GrabThrowEvent) : void
+		{
+			_swipeController.addEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
+			_swipeController.addEventListener(GrabThrowEvent.RELEASE, onDragRelease);
+		}
+
+		private function onDragUpdate(event : GrabThrowEvent) : void
+		{
+			constrainSwipe(_container.x - event.velocityX);
+		}
+
+		private function constrainSwipe(position : Number) : void
+		{
+			if (position > _maxSwipe) position = _maxSwipe;
+			else if (position < _minSwipe) position = _minSwipe;
+
+			_container.x = position;
+		}
+
+		private function onDragRelease(event : GrabThrowEvent) : void
+		{
+			_swipeController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
+			_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 		}
 
 		private function initGeometry() : void
@@ -111,9 +157,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public function setImageCollection(collection : GalleryImageCollection) : void
 		{
 			removeSuperfluousPaintings(collection.numTotalPaintings);
+			_numPaintings = collection.numTotalPaintings;
 			_paintings.length = _numPaintings;
 			addPaintings(collection.index, collection.images.length);
 			_imageCache.replaceCollection(collection);
+
+			_minSwipe = -831;
+			_maxSwipe = -(831 - (_numPaintings - 1) * PAINTING_SPACING);
 		}
 
 		private function addPaintings(start : int, amount : int) : void
@@ -136,12 +186,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			for (var i : int = _numPaintings; i < numTotalPaintings; ++i)
 				removePainting(i);
-
-			_numPaintings = numTotalPaintings;
 		}
 
 		public function dispose() : void
 		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			_view.scene.removeChild(_container);
 			disposePaintings();
 			_container.dispose();
@@ -150,6 +199,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.clear();
 			_paintingGeometry.dispose();
 			_loadingTexture.dispose();
+
+			if (_swipeController) {
+				_swipeController.removeEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
+				_swipeController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
+				_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
+			}
 		}
 
 		private function disposePaintings() : void
@@ -182,6 +237,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			TextureMaterial(painting.material).texture = _loadingTexture;
 			if (painting.parent)
 				_container.removeChild(painting);
+		}
+
+		private function onAddedToStage(event : Event) : void
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			initGrabThrowController(stage);
 		}
 	}
 }

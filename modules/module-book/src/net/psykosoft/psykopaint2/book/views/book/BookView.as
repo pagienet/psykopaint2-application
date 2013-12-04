@@ -11,10 +11,12 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.book.views.book.debug.BookDebug;
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
@@ -171,6 +173,7 @@ package net.psykosoft.psykopaint2.book.views.book
 				initBook();
 
 				_grabThrowController = new GrabThrowController(stage);
+				_grabThrowController.interactionRect = new Rectangle(0, CoreSettings.STAGE_HEIGHT - 270 * CoreSettings.GLOBAL_SCALING, CoreSettings.STAGE_WIDTH, 270 * CoreSettings.GLOBAL_SCALING);
 			}
 		}
 
