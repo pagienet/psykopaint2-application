@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.geom.Vector3D;
+	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
@@ -64,8 +65,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _friction : Number;
 		private var _tweenTime : Number = .5;
 		private var _startTime : Number;
-		private var _startPos : Vector3D;
-		private var _started : Boolean;
+		private var _startPos : Number;
+		private var _velocity : Number;
+		private var _targetPos : Number;
 
 
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
@@ -104,7 +106,16 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onEnterFrame(event : Event) : void
 		{
+			var t : Number = (getTimer() - _startTime)/1000;
 
+
+			if (t > _tweenTime) {
+				_container.x = _targetPos;
+				killTween();
+			}
+			else {
+				_container.x = _startPos + (_velocity + .5*_friction * t) * t;
+			}
 		}
 
 		private function onDragUpdate(event : GrabThrowEvent) : void
@@ -120,7 +131,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			}
 
 			if (_hasEnterFrame) {
-				stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 				_hasEnterFrame = false;
 			}
 		}
@@ -138,7 +149,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_swipeController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
 			_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 
-			if (event.velocityX < 5 * CoreSettings.GLOBAL_SCALING) {
+			if (Math.abs(event.velocityX) < 3 * CoreSettings.GLOBAL_SCALING) {
 				moveToNearest(event.velocityX);
 			}
 			else {
@@ -148,7 +159,31 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function throwToPainting(velocity : Number) : void
 		{
+			// convert per frame to per second
+			_velocity = -velocity * 60;
+			_startPos = _container.x;
+			var targetTime : Number = .25;
+			var targetFriction : Number = .8;
+			if (_velocity > 0) targetFriction = -targetFriction;
 
+			// where would the target end up with the current speed after aimed time with aimed friction?
+			_targetPos = _startPos + _velocity * targetTime + targetFriction * targetTime * targetTime;
+
+			if (_targetPos > _maxSwipe) _targetPos = _maxSwipe;
+			else if (_targetPos < _minSwipe) _targetPos = _minSwipe;
+			else _targetPos = Math.round((_targetPos + PAINTING_OFFSET)/PAINTING_SPACING)*PAINTING_SPACING - PAINTING_OFFSET;
+
+			// solving:
+			// p(t) = p(0) + v(0)*t + a*t^2 / 2 = target
+			// v(t) = v(0) + a*t = 0
+			// for 'a' (acceleration, ie negative friction) and 't'
+
+			_tweenTime = 2 * (_targetPos - _startPos) / _velocity;
+			_friction = -_velocity/_tweenTime;
+
+			_startTime = getTimer();
+			_hasEnterFrame = true;
+			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 
 		private function moveToNearest(velocity : Number) : void
