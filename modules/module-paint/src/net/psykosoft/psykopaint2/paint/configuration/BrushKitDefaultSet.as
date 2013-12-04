@@ -331,6 +331,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 				<brush engine={BrushType.SPRAY_CAN} name="Paint Brush">
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="line" />
+					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value="0"/>
+					
 					<parameterMapping>
 						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Small,Medium,Large" index="1" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Brush Style"
@@ -347,7 +349,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 						<SizeDecorator>
 							<parameter id={SizeDecorator.PARAMETER_SL_MODE} index={SizeDecorator.INDEX_MODE_SPEED} path="pathengine.pointdecorator_0" />
-							<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0" label="Size" value="0.4" minValue="0" maxValue="2" showInUI="1"/>
+							<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0" value="0.3" minValue="0" maxValue="2"/>
 							<parameter id={SizeDecorator.PARAMETER_N_RANGE} path="pathengine.pointdecorator_0" label="Range" value="0.2" minValue="0" maxValue="1" />
 
 							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} index="2" path="pathengine.pointdecorator_0"/>
@@ -355,7 +357,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<SpawnDecorator>
 							<parameter id={SpawnDecorator.PARAMETER_SL_OFFSET_MODE} index={SpawnDecorator.INDEX_MODE_PRESSURE_SPEED} path="pathengine.pointdecorator_1" />
 							<parameter id={SpawnDecorator.PARAMETER_IR_MULTIPLES} value1="8" value2="8" path="pathengine.pointdecorator_1" />
-							<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_OFFSET} path="pathengine.pointdecorator_1" value="16" minValue="0" maxValue="200"/>
+							<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_OFFSET} path="pathengine.pointdecorator_1"  label="Size" value="16" minValue="0" maxValue="50" showInUI="1"/>
+							<parameter id={SpawnDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_1" value="1" minValue="0" maxValue="200"/>
 							<parameter id={SpawnDecorator.PARAMETER_AR_OFFSET_ANGLE} path="pathengine.pointdecorator_1" value1="-1" value2="1" />
 							<parameter id={SpawnDecorator.PARAMETER_AR_BRUSH_ANGLE_VARIATION} path="pathengine.pointdecorator_1" value1="-2" value2="2" />
 							<parameter id={SpawnDecorator.PARAMETER_NR_BRISTLE_VARIATION} path="pathengine.pointdecorator_1" value="1"/>
@@ -453,29 +456,31 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={SketchBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} value="0.5" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="pencilSketch" />
-					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value=".4"/>
+					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value="0.25"/>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 						<parameter id={AbstractPathEngine.PARAMETER_SEND_TAPS} path="pathengine" value="0" />
 						<parameter id={AbstractPathEngine.PARAMETER_SPEED_SMOOTHING} path="pathengine" value="0.02" />
-						<parameter id={AbstractPathEngine.PARAMETER_OUTPUT_STEP} path="pathengine" value="8" />
+						<parameter id={AbstractPathEngine.PARAMETER_OUTPUT_STEP} path="pathengine" value="4" />
 
 						<SizeDecorator>
 							<parameter id={SizeDecorator.PARAMETER_SL_MODE} index={SizeDecorator.INDEX_MODE_SPEED} path="pathengine.pointdecorator_0" />
-							<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0" label="Size" value="0.55" minValue="0" maxValue="2" showInUI="1"/>
-							<parameter id={SizeDecorator.PARAMETER_N_RANGE} path="pathengine.pointdecorator_0" label="Range" value="0.25" minValue="0" maxValue="1" />
+							<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0"  value="0.2" minValue="0" maxValue="2"/>
+							<parameter id={SizeDecorator.PARAMETER_N_RANGE} path="pathengine.pointdecorator_0" label="Range" value="0.05" minValue="0" maxValue="1" />
 							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} index="2" path="pathengine.pointdecorator_0"/>
 						</SizeDecorator>
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_1" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.4" value2="0.4" />
-							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity"  previewID={PreviewIconFactory.PREVIEW_ALPHA} path="pathengine.pointdecorator_1" value="0.15"  showInUI="1" />
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity"  previewID={PreviewIconFactory.PREVIEW_ALPHA} path="pathengine.pointdecorator_1"  minValue="0.25" value="0.7"  showInUI="1" />
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" value1="0.1" value2="0.3" />
 							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" showInUI="1"/>
 						</ColorDecorator>
 						<SpawnDecorator>
 							<parameter id={SpawnDecorator.PARAMETER_SL_OFFSET_MODE} index={SpawnDecorator.INDEX_MODE_PRESSURE_SPEED} path="pathengine.pointdecorator_1" />
 							<parameter id={SpawnDecorator.PARAMETER_IR_MULTIPLES} value1="8" value2="8" path="pathengine.pointdecorator_1" />
-							<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_OFFSET} path="pathengine.pointdecorator_2" value="8" minValue="0" maxValue="200"/>
+							<parameter id={SpawnDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_2" value="0.5"/>
+							
+							<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_OFFSET} path="pathengine.pointdecorator_2" label="Size" value="12" minValue="1" maxValue="24"  showInUI="1"/>
 							<parameter id={SpawnDecorator.PARAMETER_AR_OFFSET_ANGLE} path="pathengine.pointdecorator_2" value1="-1" value2="1" />
 							<parameter id={SpawnDecorator.PARAMETER_AR_BRUSH_ANGLE_VARIATION} path="pathengine.pointdecorator_2" value1="-2" value2="2" />
 							<parameter id={SpawnDecorator.PARAMETER_NR_BRISTLE_VARIATION} path="pathengine.pointdecorator_2" value="1"/>
