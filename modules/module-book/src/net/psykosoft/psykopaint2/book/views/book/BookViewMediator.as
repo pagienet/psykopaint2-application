@@ -113,7 +113,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onRequestOpenBookSignal(sourceType : String, galleryType : uint) : void
 		{
 			if (sourceType == ImageCollectionSource.GALLERY_IMAGES){
-				view.enableSwipeMode();
+				view.setHiddenMode();
 				onGalleryCollectionRequest(galleryType, 0, 30);
 
 			} else if(sourceType == ImageCollectionSource.SAMPLE_IMAGES){
@@ -144,6 +144,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		private function onGalleryImageSelected(selectedGalleryImage : GalleryImageProxy) : void
 		{
 			notifyGalleryImageSelected.dispatch(selectedGalleryImage);
+			view.transitionToHiddenMode();
 		}
 
 		private function onRequestAnimateBookOutSignal() : void

@@ -299,9 +299,18 @@ package net.psykosoft.psykopaint2.book.views.book
 			}
 		}
 
-		public function enableSwipeMode() : void
+		public function setHiddenMode() : void
 		{
 			_book.z = -900;
+			switchToHiddenMode();
+		}
+
+		public function transitionToHiddenMode() : void
+		{
+			TweenLite.to(_book,.25,
+					{	z: -900,
+						ease:Quad.easeIn
+					});
 			switchToHiddenMode();
 		}
 

@@ -37,8 +37,13 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			_onComplete = null;
 			_onError = null;
-			if (_activeLoader)
-				_activeLoader.close();
+			try {
+				if (_activeLoader)
+					_activeLoader.close();
+			}
+			catch(error : Error) {
+
+			}
 			_activeLoader = null;
 		}
 
