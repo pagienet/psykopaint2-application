@@ -11,11 +11,15 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.textures.BitmapTexture;
 	import away3d.textures.Texture2DBase;
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Quad;
+
 	import flash.display.BitmapData;
 
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
@@ -30,6 +34,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 	public class GalleryView extends Sprite
 	{
+		private static const PAINTING_OFFSET : Number = 831;
 		private static const PAINTING_SPACING : Number = 190;
 		private static const PAINTING_WIDTH : Number = 160;
 
@@ -52,6 +57,16 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private var _minSwipe : Number;
 		private var _maxSwipe : Number;
+
+		// for throwing:
+		private var _tween : TweenLite;
+		private var _hasEnterFrame : Boolean;
+		private var _friction : Number;
+		private var _tweenTime : Number = .5;
+		private var _startTime : Number;
+		private var _startPos : Vector3D;
+		private var _started : Boolean;
+
 
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -82,13 +97,32 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onDragStarted(event : GrabThrowEvent) : void
 		{
+			killTween();
 			_swipeController.addEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
 			_swipeController.addEventListener(GrabThrowEvent.RELEASE, onDragRelease);
+		}
+
+		private function onEnterFrame(event : Event) : void
+		{
+
 		}
 
 		private function onDragUpdate(event : GrabThrowEvent) : void
 		{
 			constrainSwipe(_container.x - event.velocityX);
+		}
+
+		private function killTween() : void
+		{
+			if (_tween) {
+				_tween.kill();
+				_tween = null;
+			}
+
+			if (_hasEnterFrame) {
+				stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+				_hasEnterFrame = false;
+			}
 		}
 
 		private function constrainSwipe(position : Number) : void
@@ -103,6 +137,41 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			_swipeController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
 			_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
+
+			if (event.velocityX < 5 * CoreSettings.GLOBAL_SCALING) {
+				moveToNearest(event.velocityX);
+			}
+			else {
+				throwToPainting(event.velocityX);
+			}
+		}
+
+		private function throwToPainting(velocity : Number) : void
+		{
+
+		}
+
+		private function moveToNearest(velocity : Number) : void
+		{
+			var position : Number = (_container.x + PAINTING_OFFSET) / PAINTING_SPACING;
+			velocity = -velocity;
+			var fract : Number = position - int(position);
+			if (velocity > 0) {
+				if (fract > .1)
+					position = Math.ceil(position);
+				else
+					position = Math.floor(position);
+			}
+			else {
+				if (fract < .9)
+					position = Math.floor(position);
+				else
+					position = Math.ceil(position);
+			}
+			position = position * PAINTING_SPACING - PAINTING_OFFSET;
+			_tween = TweenLite.to(_container,.5,
+								{	x : position,
+									ease: Quad.easeInOut});
 		}
 
 		private function initGeometry() : void
@@ -139,7 +208,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				min = 0;
 			}
 
-			_container.x = -(831 - galleryImageProxy.index * PAINTING_SPACING);
+			_container.x = -(PAINTING_OFFSET - galleryImageProxy.index * PAINTING_SPACING);
 
 			requestImageCollection.dispatch(galleryImageProxy.collectionType, min, amount);
 		}
@@ -162,8 +231,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			addPaintings(collection.index, collection.images.length);
 			_imageCache.replaceCollection(collection);
 
-			_minSwipe = -831;
-			_maxSwipe = -(831 - (_numPaintings - 1) * PAINTING_SPACING);
+			_minSwipe = -PAINTING_OFFSET;
+			_maxSwipe = -(PAINTING_OFFSET - (_numPaintings - 1) * PAINTING_SPACING);
 		}
 
 		private function addPaintings(start : int, amount : int) : void

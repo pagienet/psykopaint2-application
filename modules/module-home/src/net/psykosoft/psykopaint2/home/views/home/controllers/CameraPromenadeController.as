@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.home.views.home.controllers
 
 	import flash.display.Stage;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
