@@ -19,7 +19,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
-	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -68,6 +67,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _startPos : Number;
 		private var _velocity : Number;
 		private var _targetPos : Number;
+		private var _enableSwiping : Boolean;
 
 
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
@@ -93,15 +93,14 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function initGrabThrowController(stage : Stage) : void
 		{
 			_swipeController = new GrabThrowController(stage);
-			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
-			_swipeController.start();
+			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted, false, 0, true);
 		}
 
 		private function onDragStarted(event : GrabThrowEvent) : void
 		{
 			killTween();
-			_swipeController.addEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
-			_swipeController.addEventListener(GrabThrowEvent.RELEASE, onDragRelease);
+			_swipeController.addEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate, false, 0, true);
+			_swipeController.addEventListener(GrabThrowEvent.RELEASE, onDragRelease, false, 0, true);
 		}
 
 		private function onEnterFrame(event : Event) : void
@@ -204,7 +203,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 					position = Math.ceil(position);
 			}
 			position = position * PAINTING_SPACING - PAINTING_OFFSET;
-			_tween = TweenLite.to(_container,.5,
+			_tween = TweenLite.to(_container, .5,
 								{	x : position,
 									ease: Quad.easeInOut});
 		}
@@ -347,6 +346,20 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			initGrabThrowController(stage);
+		}
+
+		public function get enableSwiping() : Boolean
+		{
+			return _enableSwiping;
+		}
+
+		public function set enableSwiping(enableSwiping : Boolean) : void
+		{
+			_enableSwiping = enableSwiping;
+			if (enableSwiping)
+				_swipeController.start();
+			else
+				_swipeController.stop();
 		}
 	}
 }

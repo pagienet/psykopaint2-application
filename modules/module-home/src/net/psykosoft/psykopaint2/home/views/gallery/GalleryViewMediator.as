@@ -3,7 +3,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
@@ -19,6 +22,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		[Inject]
 		public var requestSetGalleryPaintingSignal : RequestSetGalleryPaintingSignal;
 
+		[Inject]
+		public var notifyStateChangeSignal:NotifyNavigationStateChangeSignal;
+
 		public function GalleryViewMediator()
 		{
 		}
@@ -27,8 +33,22 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			super.initialize();
 			requestSetGalleryPaintingSignal.add(onRequestSetGalleryPainting);
+			notifyStateChangeSignal.add(onStateChangeSignal);
 			view.requestImageCollection.add(requestImageCollection);
 			galleryService.fetchImages(GalleryType.MOST_RECENT, 0, 1, onInitialImageFetched, onImageCollectionFailed);
+		}
+
+		private function onStateChangeSignal(newState:String) : void
+		{
+			switch (newState) {
+				case NavigationStateType.BOOK_GALLERY:
+				case NavigationStateType.GALLERY_PAINTING:
+				case NavigationStateType.GALLERY_SHARE:
+					view.enableSwiping = true;
+					break;
+				default:
+					view.enableSwiping = false;
+			}
 		}
 
 		override public function destroy() : void
