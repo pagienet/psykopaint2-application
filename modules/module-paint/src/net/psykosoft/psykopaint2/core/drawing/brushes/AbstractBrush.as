@@ -43,6 +43,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static const PARAMETER_N_BUMPINESS : String = "Bumpiness";
 		public static const PARAMETER_N_BUMP_INFLUENCE : String = "Bump Influence";
 		public static const PARAMETER_SL_BLEND_MODE : String = "Blend Mode";
+		public static const PARAMETER_N_QUAD_OFFSET_RATIO : String = "Stroke Attachment Ratio";
 		
 		protected const _brushScalingFactor:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 2 : 1;
 		protected var _maxBrushRenderSize: Number;
@@ -71,6 +72,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected var _bumpInfluence:PsykoParameter;
 		protected var _shapes:PsykoParameter;
 		protected var _blendMode:PsykoParameter;
+		protected var _quadOffsetRatio:PsykoParameter;
 		
 		protected var _context : Context3D;
 		private var _inProgress : Boolean;
@@ -88,8 +90,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_incremental = incremental;
 			
 			_parameters = new Vector.<PsykoParameter>();
-			_shapes        = new PsykoParameter( PsykoParameter.IconListParameter,    PARAMETER_IL_SHAPES,0,["basic"]);
-			_sizeFactor    = new PsykoParameter( PsykoParameter.NumberRangeParameter, PARAMETER_NR_SIZE_FACTOR, 0, 1, 0, 1 );
+			_shapes          = new PsykoParameter( PsykoParameter.IconListParameter,    PARAMETER_IL_SHAPES,0,["basic"]);
+			_sizeFactor      = new PsykoParameter( PsykoParameter.NumberRangeParameter, PARAMETER_NR_SIZE_FACTOR, 0, 1, 0, 1 );
+			_quadOffsetRatio = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_QUAD_OFFSET_RATIO, 0,-0.5,0.5);
 			
 			_shininess     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_SHININESS, 0.4, 0, 1);
 			_glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 1);
@@ -98,7 +101,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_blendMode 	   = new PsykoParameter( PsykoParameter.StringListParameter,  PARAMETER_SL_BLEND_MODE,0,[Context3DBlendFactor.ONE,Context3DBlendFactor.ZERO,Context3DBlendFactor] );
 			
 			
-			_parameters.push( _shapes, _sizeFactor,_blendMode ); 
+			_parameters.push( _shapes, _sizeFactor,_blendMode,_quadOffsetRatio ); 
 			if (drawNormalsOrSpecular)
 				_parameters.push(_shininess,_glossiness,_bumpiness,_bumpInfluence);
 
@@ -155,6 +158,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_appendVO.uvBounds.height = _shapeVariations[3];
 			_appendVO.diagonalAngle = _shapeVariations[4];
 			_appendVO.diagonalLength = _shapeVariations[5];
+			_appendVO.quadOffsetRatio = _quadOffsetRatio.numberValue;
 			_rotationRange = _brushShape.rotationRange;
 			//TODO: this must take into account the actual brush size based on col/rows
 			_maxBrushRenderSize = _brushScalingFactor * (256 / _shapeVariations[5]);

@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				return false;
 			}
 				
-			_sampledPoints[nextIndex++] = PathManager.getSamplePoint( x,y, 0, 0, 0, pressure, penButtonState, null, null, first );
+			_sampledPoints[nextIndex++] = PathManager.getSamplePoint( x,y, 0, 0, 0, 0, pressure, penButtonState, null, null, first );
 			return true;
 		}
 		
@@ -109,7 +109,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		{
 			if ( index > nextIndex ) index = nextIndex;
 			if ( index < 0 ) index = 0;
-			var p:SamplePoint = PathManager.getSamplePoint(x,y,0,0,0,pressure,penButtonState);
+			var p:SamplePoint = PathManager.getSamplePoint(x,y,0,0,0,0,pressure,penButtonState);
 			_sampledPoints.splice(index,0,p);
 			nextIndex++;
 			

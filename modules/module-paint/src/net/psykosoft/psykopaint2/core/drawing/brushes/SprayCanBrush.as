@@ -77,7 +77,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (rsize > maxSize) rsize = maxSize;
 			else if (rsize < minSize) rsize = minSize;
 			*/
-			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size;
+			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size * point.curvature;
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;
 			
@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (rsize > maxSize) rsize = maxSize;
 			else if (rsize < minSize) rsize = minSize;
 			*/
-			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size;
+			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size * point.curvature;
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;
 			

@@ -108,25 +108,29 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			var px:Number = appendVO.point.x;
 			var py:Number = appendVO.point.y;
 			
-			_canvasModel.pyramidMap.getRGB(px - cos1,py - sin1,sampleSize,tmpRGB);
+			var ox:Number = appendVO.quadOffsetRatio * (-cos1 - cos2);
+			var oy:Number = appendVO.quadOffsetRatio * (-sin1 - sin2);
+			
+			
+			_canvasModel.pyramidMap.getRGB(px - cos1 + ox,py - sin1 + oy,sampleSize,tmpRGB);
 			target[0] = tmpRGB[0];
 			target[1] = tmpRGB[1];
 			target[2] = tmpRGB[2];
 			//target[3] = 1;
 			
-			_canvasModel.pyramidMap.getRGB(px + cos2,py + sin2,sampleSize,tmpRGB);
+			_canvasModel.pyramidMap.getRGB(px + cos2 + ox,py + sin2 + oy,sampleSize,tmpRGB);
 			target[4] = tmpRGB[0];
 			target[5] = tmpRGB[1];
 			target[6] = tmpRGB[2];
 			//target[7] = 1;
 			
-			_canvasModel.pyramidMap.getRGB(px + cos1,py + sin1,sampleSize,tmpRGB);
+			_canvasModel.pyramidMap.getRGB(px + cos1 + ox,py + sin1 + oy,sampleSize,tmpRGB);
 			target[8] = tmpRGB[0];
 			target[9] = tmpRGB[1];
 			target[10] = tmpRGB[2];
 			//target[11] = 1;
 			
-			_canvasModel.pyramidMap.getRGB(px - cos2,py - sin2,sampleSize,tmpRGB);
+			_canvasModel.pyramidMap.getRGB(px - cos2 + ox,py - sin2 + oy,sampleSize,tmpRGB);
 			target[12] = tmpRGB[0];
 			target[13] = tmpRGB[1];
 			target[14] = tmpRGB[2];

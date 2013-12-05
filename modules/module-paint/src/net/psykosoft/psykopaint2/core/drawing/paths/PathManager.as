@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.paths
 {
+	import com.quasimondo.geom.Vector2;
+	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Shape;
@@ -63,14 +65,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			}
 		}
 
-		static public function getSamplePoint( x: Number, y:Number, speed : Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, bumpFactors:Vector.<Number> = null, first:Boolean = false) : SamplePoint
+		static public function getSamplePoint( x: Number, y:Number, speed : Number = 0, size:Number = 0, angle:Number = 0, curvature:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, bumpFactors:Vector.<Number> = null, first:Boolean = false) : SamplePoint
 		{
 			if (_recycleCount > 0) {
 				var p : SamplePoint = _samplePointDepot[--_recycleCount];
-				return p.resetData(x, y, speed, size, angle, pressure, penButtonState, colors, bumpFactors, first);
+				return p.resetData(x, y, speed, size, angle, curvature, pressure, penButtonState, colors, bumpFactors, first);
 			} else {
 				
-				return new SamplePoint(x, y,  speed, size, angle, pressure, penButtonState, colors, bumpFactors, first);
+				return new SamplePoint(x, y,  speed, size, angle, curvature, pressure, penButtonState, colors, bumpFactors, first);
 			}
 		}
 

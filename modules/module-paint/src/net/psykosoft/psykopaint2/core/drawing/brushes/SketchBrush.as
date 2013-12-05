@@ -84,7 +84,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_colorStrategy.getColorsByVO( _appendVO, rsize* 0.5 * smoothFactor);
 			*/
 			
-			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size;
+			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size * point.curvature;
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;
 			
@@ -96,7 +96,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		override protected function processPoint( point : SamplePoint) : void
 		{
-			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size;
+			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size * point.curvature;
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;
 			/*

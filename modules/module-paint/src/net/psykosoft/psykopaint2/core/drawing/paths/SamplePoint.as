@@ -1,5 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.paths
 {
+	import com.quasimondo.geom.Vector2;
+	
 	import flash.geom.Point;
 	
 	public final class SamplePoint extends Point
@@ -14,20 +16,22 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public var pressure:Number;
 		public var penButtonState:int;
 		public var first:Boolean;
+		public var curvature:Number;
 		
-		public function SamplePoint( x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, bumpFactors:Vector.<Number> = null, first:Boolean = false)
+		public function SamplePoint( x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, curvature:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, bumpFactors:Vector.<Number> = null, first:Boolean = false)
 		{
 			this.colorsRGBA = new Vector.<Number>(16,true);
 			this.bumpFactors = new Vector.<Number>(16,true);
-			resetData(x, y, speed, size, angle, pressure, penButtonState, colors,bumpFactors,first);
+			resetData(x, y, speed, size, angle, curvature, pressure, penButtonState, colors,bumpFactors,first);
 		}
 		
-		public function resetData(x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, bumpFactors:Vector.<Number> = null, first:Boolean = false):SamplePoint
+		public function resetData(x:Number = 0, y:Number = 0, speed:Number = 0, size:Number = 0, angle:Number = 0, curvature:Number = 0, pressure:Number = -1, penButtonState:int = 0, colors:Vector.<Number> = null, bumpFactors:Vector.<Number> = null, first:Boolean = false):SamplePoint
 		{
 			this.x = x;
 			this.y = y;
 			this.speed = speed;
 			this.angle = angle;
+			this.curvature = curvature;
 			this.size = size;
 			this.pressure = pressure;
 			this.penButtonState = penButtonState;
@@ -72,7 +76,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		
 		public function getClone():SamplePoint
 		{
-			return PathManager.getSamplePoint(x,y,speed,size, angle, pressure, penButtonState, colorsRGBA, bumpFactors, first);
+			return PathManager.getSamplePoint(x,y,speed,size, angle, curvature, pressure, penButtonState, colorsRGBA, bumpFactors, first);
 		}
 		
 		public function squaredDistance( p:SamplePoint ):Number

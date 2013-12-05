@@ -8,13 +8,19 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		private var p2:SamplePoint;
 		private var c:SamplePoint;
 		private var lastSpeed:Number;
+		private var lastAngles:Vector.<Number>;
 		private var speed2:Number;
 		private var lastPointSpeed:Number;
+		private var lastAngleIndex:int;
+		private var angleBufferSize:int;
+		private var angleCount:int;
 		
 		public function PathEngineExperimental()
 		{
 			super();
 			sendTaps = true;
+			angleBufferSize = 16;
+			lastAngles = new Vector.<Number>(angleBufferSize,true);
 		}
 		
 		override public function get type():int
@@ -31,6 +37,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 			c = null;
 			lastSpeed = 0;
 			lastPointSpeed = 0;
+			lastAngleIndex = 0;
+			angleCount = 0;
 		}
 		
 		override public function update(result:Vector.<SamplePoint>, forceUpdate : Boolean = false) : void
@@ -67,6 +75,18 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						var tit:Number = ti*t*2;
 						var tt:Number = t*t;
 						var angle:Number = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
+						lastAngles[lastAngleIndex] = angle;
+						if ( angleCount < angleBufferSize ) angleCount++
+						var curvature:Number = 0;
+						for ( var ai:int = 0; ai < angleCount; ai++ )
+						{
+							var angleDiff:Number = lastAngles[(lastAngleIndex-ai+angleBufferSize)%angleBufferSize] -  lastAngles[(lastAngleIndex-ai-1+angleBufferSize)%angleBufferSize];
+							angleDiff = (Math.PI * 0.5 - Math.abs(Math.abs( angleDiff + ((angleDiff>Math.PI) ? -2*Math.PI : (angleDiff<-Math.PI) ? 2 * Math.PI : 0)) - Math.PI * 0.5)) * (1 - ai / (2 * angleCount +1 ));
+							curvature = curvature < angleDiff ? angleDiff : curvature
+						}
+						curvature = 1 - (2 * curvature /  Math.PI );
+						//curvature *= curvature;
+						lastAngleIndex = (lastAngleIndex +1 ) % angleBufferSize;
 						
 						var speed:Number = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
 						lastPointSpeed = ((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed );
@@ -75,6 +95,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 																		lastPointSpeed * speedCorrection,
 																		0,
 																		angle,
+																		curvature,
 																		ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
 																		p1.penButtonState
 																		);
@@ -93,7 +114,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 				}
 			}
 			
-			for ( var i:int = _lastOutputIndex; i < nextIndex; i++ )
+			for (var i:int = _lastOutputIndex; i < nextIndex; i++ )
 			{
 				p2 = sampledPoints[i];
 				speed1 = speed2;
@@ -117,6 +138,18 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						tit = ti*t*2;
 						tt = t*t;
 						angle = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
+						lastAngles[lastAngleIndex] = angle;
+						if ( angleCount < angleBufferSize ) angleCount++
+						curvature = 0;
+						for ( ai = 0; ai < angleCount; ai++ )
+						{
+							angleDiff = lastAngles[(lastAngleIndex-ai+angleBufferSize)%angleBufferSize] -  lastAngles[(lastAngleIndex-ai-1+angleBufferSize)%angleBufferSize];
+							angleDiff = (Math.PI * 0.5 - Math.abs(Math.abs( angleDiff + ((angleDiff>Math.PI) ? -2*Math.PI : (angleDiff<-Math.PI) ? 2 * Math.PI : 0)) - Math.PI * 0.5)) * (1 - ai / (2 * angleCount +1 ));
+							curvature = curvature < angleDiff ? angleDiff : curvature
+						}
+						curvature = 1 - (2 * curvature /  Math.PI );
+						//curvature *= curvature;
+						lastAngleIndex = (lastAngleIndex +1 ) % angleBufferSize;
 						speed = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
 						lastPointSpeed  = ((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed );
 						p = PathManager.getSamplePoint( 
@@ -125,6 +158,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 							lastPointSpeed * speedCorrection,
 							0,
 							angle,
+							curvature,
 							ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
 							p1.penButtonState);
 						
@@ -158,6 +192,18 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 					tit = ti*t*2;
 					tt = t*t;
 					angle = Math.atan2( cy - p1y + t * ( p1y - 2 * cy + p2y), cx - p1x + t * (p1x - 2 * cx + p2x));
+					lastAngles[lastAngleIndex] = angle;
+					if ( angleCount < angleBufferSize ) angleCount++
+					curvature = 0;
+					for (  ai = 0; ai < angleCount; ai++ )
+					{
+						angleDiff = lastAngles[(lastAngleIndex-ai+angleBufferSize)%angleBufferSize] -  lastAngles[(lastAngleIndex-ai-1+angleBufferSize)%angleBufferSize];
+						angleDiff = (Math.PI * 0.5 - Math.abs(Math.abs( angleDiff + ((angleDiff>Math.PI) ? -2*Math.PI : (angleDiff<-Math.PI) ? 2 * Math.PI : 0)) - Math.PI * 0.5)) * (1 - ai / (2 * angleCount +1 ));
+						curvature = curvature < angleDiff ? angleDiff : curvature
+					}
+					curvature = 1 - (2 * curvature /  Math.PI );
+					//curvature *= curvature;
+					lastAngleIndex = (lastAngleIndex +1 ) % angleBufferSize;
 					speed = 0.4 * (ti2*lastSpeed+tit*speed1+tt*speed2);
 					lastPointSpeed  = ((1-speedSmoothingFactor) * speed + speedSmoothingFactor * lastPointSpeed );
 					p = PathManager.getSamplePoint( ti2*p1x+tit*cx+tt*p2x, 
@@ -165,6 +211,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 						lastPointSpeed * speedCorrection,
 						0,
 						angle,
+						curvature,
 						ti2*p1.pressure+tit*c.pressure+tt*p2.pressure,
 						0);
 					//lastPointSpeed  = speed
