@@ -68,6 +68,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _velocity : Number;
 		private var _targetPos : Number;
 		private var _enableSwiping : Boolean;
+		private var _visibleStartIndex : int;
+		private var _visibleEndIndex : int;
 
 
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
@@ -107,6 +109,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var t : Number = (getTimer() - _startTime)/1000;
 
+			updateVisibility();
 
 			if (t > _tweenTime) {
 				_container.x = _targetPos;
@@ -120,6 +123,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onDragUpdate(event : GrabThrowEvent) : void
 		{
 			constrainSwipe(_container.x - event.velocityX);
+			updateVisibility();
 		}
 
 		private function killTween() : void
@@ -148,7 +152,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_swipeController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
 			_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 
-			if (Math.abs(event.velocityX) < 3 * CoreSettings.GLOBAL_SCALING) {
+			if (Math.abs(event.velocityX) < 5 * CoreSettings.GLOBAL_SCALING) {
 				moveToNearest(event.velocityX);
 			}
 			else {
@@ -187,25 +191,19 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function moveToNearest(velocity : Number) : void
 		{
-			var position : Number = (_container.x + PAINTING_OFFSET) / PAINTING_SPACING;
+			var index : int = getNearestPaintingIndex();
 			velocity = -velocity;
-			var fract : Number = position - int(position);
-			if (velocity > 0) {
-				if (fract > .1)
-					position = Math.ceil(position);
-				else
-					position = Math.floor(position);
-			}
-			else {
-				if (fract < .9)
-					position = Math.floor(position);
-				else
-					position = Math.ceil(position);
-			}
-			position = position * PAINTING_SPACING - PAINTING_OFFSET;
+
 			_tween = TweenLite.to(_container, .5,
-								{	x : position,
-									ease: Quad.easeInOut});
+								{	x : index * PAINTING_SPACING - PAINTING_OFFSET,
+									ease: Quad.easeInOut,
+									onUpdate: updateVisibility
+								});
+		}
+
+		private function getNearestPaintingIndex() : Number
+		{
+			return Math.round((_container.x + PAINTING_OFFSET) / PAINTING_SPACING);
 		}
 
 		private function initGeometry() : void
@@ -252,6 +250,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.thumbnailLoaded.remove(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.remove(onThumbnailDisposed);
 			disposePaintings();
+			_visibleEndIndex = -1;
+			_visibleStartIndex = -1;
 			_imageCache.clear();
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
@@ -263,10 +263,34 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_numPaintings = collection.numTotalPaintings;
 			_paintings.length = _numPaintings;
 			addPaintings(collection.index, collection.images.length);
+			updateVisibility();
 			_imageCache.replaceCollection(collection);
 
 			_minSwipe = -PAINTING_OFFSET;
 			_maxSwipe = -(PAINTING_OFFSET - (_numPaintings - 1) * PAINTING_SPACING);
+		}
+
+		private function updateVisibility() : void
+		{
+			var index : int = getNearestPaintingIndex();
+			var visibleStart : int = index - 1;
+			var visibleEnd : int = index + 2;
+		    var i : int;
+
+			if (visibleStart < 0) visibleStart = 0;
+			if (visibleEnd >= _numPaintings) visibleEnd = _numPaintings - 1;
+
+			for (i = _visibleStartIndex; i < visibleStart; ++i)
+				_container.removeChild(_paintings[i]);
+
+			for (i = visibleStart; i < visibleEnd; ++i)
+				_container.addChild(_paintings[i]);
+
+			for (i = visibleEnd; i < _visibleEndIndex; ++i)
+				_container.removeChild(_paintings[i]);
+
+			_visibleStartIndex = visibleStart;
+			_visibleEndIndex = visibleEnd;
 		}
 
 		private function addPaintings(start : int, amount : int) : void
@@ -279,9 +303,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 					mesh.z = 260;
 					_paintings[start + i] = mesh;
 				}
-
-				if (!_paintings[start + i].parent)
-					_container.addChild(_paintings[start + i]);
 			}
 		}
 
