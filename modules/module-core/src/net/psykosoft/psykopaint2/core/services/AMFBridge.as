@@ -94,6 +94,7 @@ package net.psykosoft.psykopaint2.core.services
 
 		public function getMostRecentPaintings(sessionID : String, index : int, amount : int, onSuccess : Function, onFail : Function) : void
 		{
+			sessionID ||= "";
 			_connection.call("Main/getLastPaintings", new Responder(onSuccess, onFail), sessionID, index, amount);
 		}
 

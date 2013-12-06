@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 	import flash.display.Sprite;
 	import flash.display.Stage;
+	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.utils.getTimer;
 
@@ -39,6 +40,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private static const PAINTING_WIDTH : Number = 160;
 
 		public var requestImageCollection : Signal = new Signal(int, int, int); // source, start index, amount of images
+		public var requestActiveImageSignal : Signal = new Signal(int, int); // source, index
 
 		private var _imageCache : GalleryImageCache;
 		private var _view : View3D;
@@ -167,14 +169,26 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_startPos = _container.x;
 			var targetTime : Number = .25;
 			var targetFriction : Number = .8;
+			var targetIndex : int;
 			if (_velocity > 0) targetFriction = -targetFriction;
 
 			// where would the target end up with the current speed after aimed time with aimed friction?
 			_targetPos = _startPos + _velocity * targetTime + targetFriction * targetTime * targetTime;
 
-			if (_targetPos > _maxSwipe) _targetPos = _maxSwipe;
-			else if (_targetPos < _minSwipe) _targetPos = _minSwipe;
-			else _targetPos = Math.round((_targetPos + PAINTING_OFFSET)/PAINTING_SPACING)*PAINTING_SPACING - PAINTING_OFFSET;
+			if (_targetPos > _maxSwipe) {
+				targetIndex = _numPaintings - 1;
+				_targetPos = _maxSwipe;
+			}
+			else if (_targetPos < _minSwipe) {
+				targetIndex = 0;
+				_targetPos = _minSwipe;
+			}
+			else {
+				targetIndex = getNearestPaintingIndex(_targetPos);
+				_targetPos = targetIndex*PAINTING_SPACING - PAINTING_OFFSET;
+			}
+
+			requestActiveImage(targetIndex);
 
 			// solving:
 			// p(t) = p(0) + v(0)*t + a*t^2 / 2 = target
@@ -191,8 +205,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function moveToNearest() : void
 		{
-			var index : int = getNearestPaintingIndex();
-
+			var index : int = getNearestPaintingIndex(_container.x);
+			requestActiveImage(index);
 			_tween = TweenLite.to(_container, .5,
 								{	x : index * PAINTING_SPACING - PAINTING_OFFSET,
 									ease: Quad.easeInOut,
@@ -200,9 +214,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 								});
 		}
 
-		private function getNearestPaintingIndex() : Number
+		private function getNearestPaintingIndex(position : Number) : Number
 		{
-			return Math.round((_container.x + PAINTING_OFFSET) / PAINTING_SPACING);
+			return Math.round((position + PAINTING_OFFSET) / PAINTING_SPACING);
 		}
 
 		private function initGeometry() : void
@@ -244,6 +258,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			requestImageCollection.dispatch(galleryImageProxy.collectionType, min, amount);
 		}
 
+		private function requestActiveImage(index : int) : void
+		{
+			requestActiveImageSignal.dispatch(_activeImageProxy.collectionType, index);
+		}
+
 		private function resetPaintings() : void
 		{
 			_imageCache.thumbnailLoaded.remove(onThumbnailLoaded);
@@ -258,10 +277,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		public function setImageCollection(collection : GalleryImageCollection) : void
 		{
-			removeSuperfluousPaintings(collection.numTotalPaintings);
 			_numPaintings = collection.numTotalPaintings;
 			_paintings.length = _numPaintings;
-			createPaintingMeshes(collection.index, collection.images.length);
 			updateVisibility();
 			_imageCache.replaceCollection(collection);
 
@@ -271,7 +288,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function updateVisibility() : void
 		{
-			var index : int = getNearestPaintingIndex();
+			if (_numPaintings == 0) return;
+			var index : int = getNearestPaintingIndex(_container.x);
 			var visibleStart : int = index - 1;
 			var visibleEnd : int = index + 2;
 		    var i : int;
@@ -279,36 +297,35 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (visibleStart < 0) visibleStart = 0;
 			if (visibleEnd >= _numPaintings) visibleEnd = _numPaintings - 1;
 
-			for (i = _visibleStartIndex; i < visibleStart; ++i)
-				_container.removeChild(_paintings[i]);
+			for (i = _visibleStartIndex; i < visibleStart; ++i) {
+				if (_paintings[i])
+					destroyPainting(i);
+			}
 
-			for (i = visibleStart; i < visibleEnd; ++i)
-				_container.addChild(_paintings[i]);
+			for (i = visibleStart; i < visibleEnd; ++i) {
+				if (!_paintings[i])
+					createPainting(i);
+			}
 
-			for (i = visibleEnd; i < _visibleEndIndex; ++i)
-				_container.removeChild(_paintings[i]);
+			for (i = visibleEnd; i < _visibleEndIndex; ++i) {
+				if (_paintings[i])
+					destroyPainting(i);
+			}
 
 			_visibleStartIndex = visibleStart;
 			_visibleEndIndex = visibleEnd;
 		}
 
-		private function createPaintingMeshes(start : int, amount : int) : void
+		private function createPainting(index : int) : void
 		{
-			for (var i : int = 0; i < amount; ++i) {
-				if (!_paintings[start + i]) {
-					var material : TextureMaterial = new TextureMaterial(_loadingTexture);
-					var mesh : Mesh = new Mesh(_paintingGeometry, material);
-					mesh.x = i * PAINTING_SPACING;
-					mesh.z = 260;
-					_paintings[start + i] = mesh;
-				}
-			}
-		}
-
-		private function removeSuperfluousPaintings(numTotalPaintings : int) : void
-		{
-			for (var i : int = _numPaintings; i < numTotalPaintings; ++i)
-				removePainting(i);
+			var texture : Texture2DBase = _imageCache.getThumbnail(index);
+			texture ||= _loadingTexture;
+			var material : TextureMaterial = new TextureMaterial(texture);
+			var mesh : Mesh = new Mesh(_paintingGeometry, material);
+			mesh.x = index * PAINTING_SPACING;
+			mesh.z = 260;
+			_paintings[index] = mesh;
+			_container.addChild(_paintings[index]);
 		}
 
 		public function dispose() : void
@@ -332,34 +349,36 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function disposePaintings() : void
 		{
-			for (var i : int = 0; i < _numPaintings; ++i)
-				removePainting(i);
+			for (var i : int = 0; i < _numPaintings; ++i) {
+				if (_paintings[i])
+					destroyPainting(i);
+			}
 		}
 
-		private function removePainting(i : int) : void
+		private function destroyPainting(i : int) : void
 		{
-			if (i < _paintings.length && _paintings[i]) {
-				var painting : Mesh = _paintings[i];
-				painting.material.dispose();
-				painting.dispose();
-				if (painting.parent)
-					_container.removeChild(painting);
-				_paintings[i] = null;
-			}
+			var painting : Mesh = _paintings[i];
+			_container.removeChild(painting);
+			painting.material.dispose();
+			painting.dispose();
+			_paintings[i] = null;
 		}
 
 		private function onThumbnailLoaded(imageProxy : GalleryImageProxy, thumbnail : Texture2DBase) : void
 		{
-			TextureMaterial(_paintings[imageProxy.index].material).texture = thumbnail;
+			if (_paintings[imageProxy.index])
+				TextureMaterial(_paintings[imageProxy.index].material).texture = thumbnail;
 		}
 
 		private function onThumbnailDisposed(imageProxy : GalleryImageProxy) : void
 		{
 			// this probably also means the painting shouldn't be visible anymore
 			var painting : Mesh = _paintings[imageProxy.index];
-			TextureMaterial(painting.material).texture = _loadingTexture;
-			if (painting.parent)
-				_container.removeChild(painting);
+			if (painting) {
+				TextureMaterial(painting.material).texture = _loadingTexture;
+				if (painting.parent)
+					_container.removeChild(painting);
+			}
 		}
 
 		private function onAddedToStage(event : Event) : void

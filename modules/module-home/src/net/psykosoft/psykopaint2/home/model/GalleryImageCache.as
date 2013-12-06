@@ -130,5 +130,10 @@ package net.psykosoft.psykopaint2.home.model
 				_proxies[i] = null;
 			}
 		}
+
+		public function getThumbnail(index : int) : Texture2DBase
+		{
+			return _textures[index];
+		}
 	}
 }
