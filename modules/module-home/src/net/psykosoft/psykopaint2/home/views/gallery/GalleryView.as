@@ -153,7 +153,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 
 			if (Math.abs(event.velocityX) < 5 * CoreSettings.GLOBAL_SCALING) {
-				moveToNearest(event.velocityX);
+				moveToNearest();
 			}
 			else {
 				throwToPainting(event.velocityX);
@@ -162,8 +162,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function throwToPainting(velocity : Number) : void
 		{
-			// convert per frame to per second
-			_velocity = -velocity * 60;
+			// convert per frame to per second, and reduce speed (doesn't feel good otherwise)
+			_velocity = -velocity * 60 / 2;
 			_startPos = _container.x;
 			var targetTime : Number = .25;
 			var targetFriction : Number = .8;
@@ -189,10 +189,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 
-		private function moveToNearest(velocity : Number) : void
+		private function moveToNearest() : void
 		{
 			var index : int = getNearestPaintingIndex();
-			velocity = -velocity;
 
 			_tween = TweenLite.to(_container, .5,
 								{	x : index * PAINTING_SPACING - PAINTING_OFFSET,
@@ -262,7 +261,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			removeSuperfluousPaintings(collection.numTotalPaintings);
 			_numPaintings = collection.numTotalPaintings;
 			_paintings.length = _numPaintings;
-			addPaintings(collection.index, collection.images.length);
+			createPaintingMeshes(collection.index, collection.images.length);
 			updateVisibility();
 			_imageCache.replaceCollection(collection);
 
@@ -293,7 +292,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_visibleEndIndex = visibleEnd;
 		}
 
-		private function addPaintings(start : int, amount : int) : void
+		private function createPaintingMeshes(start : int, amount : int) : void
 		{
 			for (var i : int = 0; i < amount; ++i) {
 				if (!_paintings[start + i]) {
