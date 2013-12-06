@@ -18,7 +18,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 	import flash.display.Sprite;
 	import flash.display.Stage;
-	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.utils.getTimer;
 
@@ -236,13 +235,19 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			bitmapData.dispose();
 		}
 
+		public function setImmediateActiveImage(galleryImageProxy : GalleryImageProxy) : void
+		{
+			setActiveImage(galleryImageProxy);
+
+			_container.x = -(PAINTING_OFFSET - galleryImageProxy.index * PAINTING_SPACING);
+		}
+
 		public function setActiveImage(galleryImageProxy : GalleryImageProxy) : void
 		{
 			if (_activeImageProxy && _activeImageProxy.collectionType != galleryImageProxy.collectionType)
 				resetPaintings();
 
 			_activeImageProxy = galleryImageProxy;
-
 
 			const amountOnEachSide : int = 2;
 			var min : int = galleryImageProxy.index - amountOnEachSide;
@@ -252,8 +257,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				amount += min;	// fix amount to still have correct amount of the right
 				min = 0;
 			}
-
-			_container.x = -(PAINTING_OFFSET - galleryImageProxy.index * PAINTING_SPACING);
 
 			requestImageCollection.dispatch(galleryImageProxy.collectionType, min, amount);
 		}
@@ -295,7 +298,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		    var i : int;
 
 			if (visibleStart < 0) visibleStart = 0;
-			if (visibleEnd >= _numPaintings) visibleEnd = _numPaintings - 1;
+			if (visibleEnd >= _numPaintings) visibleEnd = _numPaintings;
 
 			for (i = _visibleStartIndex; i < visibleStart; ++i) {
 				if (_paintings[i])
