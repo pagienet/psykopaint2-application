@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		//public var leftEar:Sprite;
 		//public var rightEar:Sprite;
 		public var previewHolder:Sprite;
-		private var sliderbar:Sprite;
+		private var sliderbar:SliderButtonEarSlide;
 		public var sliderframe:Sprite;
 
 		//private var _rightEarOpenX:Number;
@@ -134,13 +134,13 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		*/
 			
 		
-			sliderbar = new Sprite();
-			sliderbar.graphics.beginBitmapFill( new SliderButtonSlide() as BitmapData, new Matrix(0.5,0,0,0.5,-160),false,true );
-			sliderbar.graphics.drawRect(-160,0,321,115);
-			sliderbar.graphics.endFill();
+			sliderbar = new SliderButtonEarSlide();
+			//sliderbar.graphics.beginBitmapFill( new SliderButtonSlide() as BitmapData, new Matrix(0.5,0,0,0.5,-160),false,true );
+			//sliderbar.graphics.drawRect(-160,0,321,115);
+			//sliderbar.graphics.endFill();
 			
 			//sliderbar.scale9Grid = new Rectangle(50, 10,321 -100, 115 -20);
-			sliderbar.width = 150;
+			sliderbar.displayWidth = 160;
 			sliderbar.x = 0;
 			sliderbar.y = -115 * 0.5;
 			addChildAt( sliderbar,0 );
@@ -280,7 +280,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			//TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: _leftEarOpenX, ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
 			//TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: _rightEarOpenX, ease: Strong.easeOut } );
 			//TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: _earContainerX, ease: Strong.easeOut } );
-			TweenLite.to( sliderbar, EAR_ANIMATION_TIME, { x: _earContainerX, width:321,ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
+			TweenLite.to( sliderbar, EAR_ANIMATION_TIME, { x: _earContainerX, displayWidth:321,ease: Strong.easeOut, onComplete: onEarsShowComplete  } );
 			
 			button.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			//_earContainer.removeEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
@@ -295,7 +295,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			//TweenLite.to( leftEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn, onComplete: onEarsHideComplete } );
 			//TweenLite.to( rightEar, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
 			//TweenLite.to( _earContainer, EAR_ANIMATION_TIME, { x: 0, ease: Strong.easeIn } );
-			TweenLite.to( sliderbar, EAR_ANIMATION_TIME, { x: 0, width:150, ease: Strong.easeIn, onComplete: onEarsHideComplete } );
+			TweenLite.to( sliderbar, EAR_ANIMATION_TIME, { x: 0, displayWidth:160, ease: Strong.easeIn, onComplete: onEarsHideComplete } );
 			
 			button.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
 			//_earContainer.addEventListener( MouseEvent.MOUSE_DOWN, onBtnMouseDown );
