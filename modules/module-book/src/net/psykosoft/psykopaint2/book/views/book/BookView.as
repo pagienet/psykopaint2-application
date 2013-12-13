@@ -350,7 +350,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			var minPos : Number = -900;
 			var maxPos : Number = 0;
-			var bookPos : Number = _book.z - event.velocityY*2;
+			var bookPos : Number = _book.z - event.velocityY*2 / CoreSettings.GLOBAL_SCALING;
 			if (bookPos < minPos) bookPos = minPos;
 			if (bookPos > maxPos) bookPos = maxPos;
 			_book.z = bookPos;
@@ -358,7 +358,9 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onDragRelease(event : GrabThrowEvent) : void
 		{
-			if (Math.abs(event.velocityY) < 5*CoreSettings.GLOBAL_SCALING) {
+			var velocity : Number = event.velocityY / CoreSettings.GLOBAL_SCALING;
+
+			if (Math.abs(velocity) < 5) {
 				var target : Number;
 
 				if ((!_wasOpenBeforeDrag && _book.z > -700) || (_wasOpenBeforeDrag && _book.z < 200)) {
@@ -378,7 +380,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			else {
 				// convert per frame to per second
 				// scaling by 2 because of the screen space -> view space mapping
-				_dragVelocity = -event.velocityY * 2 * 60;
+				_dragVelocity = -velocity * 2 * 60;
 				_startPos = _book.z;
 				if (_dragVelocity < 0) {
 					switchToHiddenMode();

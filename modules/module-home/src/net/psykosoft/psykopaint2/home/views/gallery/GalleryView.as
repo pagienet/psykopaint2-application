@@ -123,7 +123,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onDragUpdate(event : GrabThrowEvent) : void
 		{
-			constrainSwipe(_container.x - event.velocityX);
+			constrainSwipe(_container.x - event.velocityX / CoreSettings.GLOBAL_SCALING);
 			updateVisibility();
 		}
 
@@ -153,11 +153,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_swipeController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
 			_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 
-			if (Math.abs(event.velocityX) < 5 * CoreSettings.GLOBAL_SCALING) {
+			var velocity : Number = event.velocityX / CoreSettings.GLOBAL_SCALING;
+			if (Math.abs(velocity) < 5) {
 				moveToNearest();
 			}
 			else {
-				throwToPainting(event.velocityX);
+				throwToPainting(velocity);
 			}
 		}
 
