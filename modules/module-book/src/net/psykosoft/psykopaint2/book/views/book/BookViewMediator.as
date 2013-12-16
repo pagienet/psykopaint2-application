@@ -114,13 +114,19 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			if (sourceType == ImageCollectionSource.GALLERY_IMAGES){
 				view.setHiddenMode();
+				view.enableVerticalSwipe();
 				onGalleryCollectionRequest(galleryType, 0, 30);
+			}
+			else {
+				view.disableVerticalSwipe();
 
-			} else if(sourceType == ImageCollectionSource.SAMPLE_IMAGES){
-				onImageCollectionRequest(sourceType, 0, 30);
+				if(sourceType == ImageCollectionSource.SAMPLE_IMAGES){
+					onImageCollectionRequest(sourceType, 0, 30);
 
-			} else if(sourceType == ImageCollectionSource.CAMERAROLL_IMAGES){
-				onImageCollectionRequest(sourceType, 0, 80);
+				}
+				else if(sourceType == ImageCollectionSource.CAMERAROLL_IMAGES){
+					onImageCollectionRequest(sourceType, 0, 80);
+				}
 			}
 		}
 

@@ -17,7 +17,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.book.views.book.debug.BookDebug;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
@@ -69,6 +68,12 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _startPos : Number;
 		private var _targetPos : Number;
 
+		private static const UNDECIDED : int = 0;
+		private static const PAGE_SWIPE : int = 1;
+		private static const HIDE_SWIPE : int = 2;
+		private var _swipeMode : int;
+		private var _hidingEnabled : Boolean;
+
 		public function BookView()
 		{
 			super();
@@ -94,6 +99,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		override protected function onDisabled() : void
 		{
+			disableVerticalSwipe();
 			_book.bookReadySignal.remove(onBookReady);
 			_book.imagePickedSignal.remove(dispatchSelectedImage);
 			_book.galleryImagePickedSignal.remove(dispatchSelectedGalleryImage);
@@ -138,6 +144,8 @@ package net.psykosoft.psykopaint2.book.views.book
 			if (!_book.ready) return;
 			_book.killSnapTween();
 
+			_swipeMode = UNDECIDED;
+
 			_mouseIsDown = true;
 			_startMouseX = mouseX;
 			_startMouseY = mouseY;
@@ -173,7 +181,6 @@ package net.psykosoft.psykopaint2.book.views.book
 				initBook();
 
 				_grabThrowController = new GrabThrowController(stage);
-				_grabThrowController.interactionRect = new Rectangle(0, CoreSettings.STAGE_HEIGHT - 270 * CoreSettings.GLOBAL_SCALING, CoreSettings.STAGE_WIDTH, 270 * CoreSettings.GLOBAL_SCALING);
 			}
 		}
 
@@ -225,7 +232,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 				if (_mouseIsDown) {
 
-					var doUpdate : Boolean = true;
+					var doUpdate : Boolean = isPageFlipActive();
 					var mx : Number = (mouseX - _startMouseX);
 					var currentTime : Number = ((mx * _mouseBooster) / stage.stageWidth ) * .7;
 
@@ -265,6 +272,44 @@ package net.psykosoft.psykopaint2.book.views.book
 			if (_stage3dProxy.context3D)
 				_stage3dProxy.context3D.clear(0, 0, 0, 1, 1, 0, Context3DClearMask.DEPTH);
 			_view3d.render(target);
+		}
+
+		private function isPageFlipActive() : Boolean
+		{
+			updateSwipeMode();
+
+			return _swipeMode == PAGE_SWIPE;
+		}
+
+		private function isDraggingVisibility() : Boolean
+		{
+			updateSwipeMode();
+
+			return _swipeMode == HIDE_SWIPE;
+		}
+
+		private function updateSwipeMode() : void
+		{
+			if (_swipeMode == UNDECIDED) {
+				if (!_bookEnabled) {
+					_swipeMode = HIDE_SWIPE;
+					return;
+				}
+				if (!_hidingEnabled) {
+					_swipeMode = PAGE_SWIPE;
+					return;
+				}
+
+				var dx : Number = Math.abs(_startMouseX - stage.mouseX) * CoreSettings.GLOBAL_SCALING;
+				var dy : Number = Math.abs(_startMouseY - stage.mouseY) * CoreSettings.GLOBAL_SCALING;
+
+				if (dx > 20 && dy < 20) {
+					_swipeMode = PAGE_SWIPE;
+				}
+				else if (dy > 20 && dx < 20) {
+					_swipeMode = HIDE_SWIPE;
+				}
+			}
 		}
 
 		public function dispatchSelectedImage(selectedImage : BitmapData) : void
@@ -317,26 +362,36 @@ package net.psykosoft.psykopaint2.book.views.book
 			switchToHiddenMode();
 		}
 
+		public function enableVerticalSwipe() : void
+		{
+			_hidingEnabled = true;
+			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
+			_grabThrowController.start();
+		}
+
+		public function disableVerticalSwipe() : void
+		{
+			_hidingEnabled = false;
+			_grabThrowController.stop();
+			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
+		}
+
 		private function switchToHiddenMode() : void
 		{
 			_wasOpenBeforeDrag = false;
 			_bookEnabled = false;
+			_grabThrowController.interactionRect = new Rectangle(0, CoreSettings.STAGE_HEIGHT - 270 * CoreSettings.GLOBAL_SCALING, CoreSettings.STAGE_WIDTH, 270 * CoreSettings.GLOBAL_SCALING);
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onStageMouseDown);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onStageMouseUp);
-			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
-			_grabThrowController.start();
 		}
 
 		private function switchToNormalMode() : void
 		{
 			_wasOpenBeforeDrag = true;
 			_bookEnabled = true;
+			_grabThrowController.interactionRect = new Rectangle(0, 56 * CoreSettings.GLOBAL_SCALING, CoreSettings.STAGE_WIDTH, 564 * CoreSettings.GLOBAL_SCALING);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageMouseDown);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onStageMouseUp);
-			_grabThrowController.stop();
-			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
-			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
-			_grabThrowController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 		}
 
 		private function onDragStarted(event : GrabThrowEvent) : void
@@ -348,6 +403,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onDragUpdate(event : GrabThrowEvent) : void
 		{
+			if (!isDraggingVisibility())
+				return;
 			var minPos : Number = -900;
 			var maxPos : Number = 0;
 			var bookPos : Number = _book.z - event.velocityY*2 / CoreSettings.GLOBAL_SCALING;
@@ -358,6 +415,12 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onDragRelease(event : GrabThrowEvent) : void
 		{
+			if (!isDraggingVisibility()) {
+				_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
+				_grabThrowController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
+				return;
+			}
+
 			var velocity : Number = event.velocityY / CoreSettings.GLOBAL_SCALING;
 
 			if (Math.abs(velocity) < 5) {

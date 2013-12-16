@@ -54,8 +54,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_started = false;
 
 			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			_stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseDown);
-			_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseDown);
+			_stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		}
 
 		private function onMouseDown(event : MouseEvent) : void
