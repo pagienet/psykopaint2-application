@@ -121,6 +121,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 			return _selectedColor;
 		}
 		
+		public function set selectedColor(value:uint):void
+		{
+			if ( _currentIndex != -1 )
+			{
+				var ct:ColorTransform = new ColorTransform();
+				ct.color = value;
+				swatches[_currentIndex].transform.colorTransform = ct;
+				palettes[selectedPaletteIndex][_currentIndex] = swatches[_currentIndex].transform.colorTransform.color;
+			}
+		}
+		
 		public function get currentPalette():Array
 		{
 			return palettes[selectedPaletteIndex];
@@ -139,6 +150,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 				}
 			}
 			return null;
+		}
+		
+		public function getSelectedSwatch():Sprite
+		{
+			return _currentIndex > -1 ?  swatches[_currentIndex] : null;
 		}
 		
 	}

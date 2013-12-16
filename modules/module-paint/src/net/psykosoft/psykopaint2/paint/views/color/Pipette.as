@@ -24,9 +24,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var incoming_green:Number;
 		private var incoming_blue:Number;
 		
-		private var palette_red:Number;
-		private var palette_green:Number;
-		private var palette_blue:Number;
+		public var pipette_red:Number;
+		public var pipette_green:Number;
+		public var pipette_blue:Number;
 		
 		private var _suckTimer:Timer;
 		private var ct:ColorTransform;
@@ -36,7 +36,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public function Pipette()
 		{
 			super();
-			palette_red = palette_green= palette_blue = 0;
+			pipette_red = pipette_green= pipette_blue = 0;
 			ct = new ColorTransform();
 			this.blendMode = BlendMode.LAYER;
 			bar = colorbar["bar"];
@@ -88,9 +88,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 					} else if ( dy < 0  ){
 						if ( currentFrame < totalFrames ) nextFrame();
 						var blendFactor:Number =currentFrame -1; 
-						palette_red = (palette_red * blendFactor + incoming_red) / (blendFactor +1 );
-						palette_green = (palette_green * blendFactor + incoming_green) / (blendFactor +1 );
-						palette_blue = (palette_blue * blendFactor + incoming_blue) / (blendFactor +1 );
+						pipette_red = (pipette_red * blendFactor + incoming_red) / (blendFactor +1 );
+						pipette_green = (pipette_green * blendFactor + incoming_green) / (blendFactor +1 );
+						pipette_blue = (pipette_blue * blendFactor + incoming_blue) / (blendFactor +1 );
 					}
 				}
 			} else {
@@ -101,24 +101,24 @@ package net.psykosoft.psykopaint2.paint.views.color
 				
 				while (--j > -1 )
 				{
-					var luma:Number = palette_red * 0.299 + palette_green * 0.587 + palette_blue * 0.114;
-					var dr:Number = (palette_red - luma) * direction * 0.004;
-					var dg:Number = (palette_green - luma) * direction * 0.004;
-					var db:Number = (palette_blue - luma) * direction * 0.004;
-					palette_red += dr;
-					palette_green +=  dg;
-					palette_blue += db;
-					if ( palette_red < 0 ) palette_red = 0;
-					if ( palette_green < 0 ) palette_green = 0;
-					if ( palette_blue < 0 ) palette_blue = 0;
-					if ( palette_red > 255 ) palette_red = 255;
-					if ( palette_green > 255 ) palette_green = 255;
-					if ( palette_blue > 255 ) palette_blue = 255;
+					var luma:Number = pipette_red * 0.299 + pipette_green * 0.587 + pipette_blue * 0.114;
+					var dr:Number = (pipette_red - luma) * direction * 0.004;
+					var dg:Number = (pipette_green - luma) * direction * 0.004;
+					var db:Number = (pipette_blue - luma) * direction * 0.004;
+					pipette_red += dr;
+					pipette_green +=  dg;
+					pipette_blue += db;
+					if ( pipette_red < 0 ) pipette_red = 0;
+					if ( pipette_green < 0 ) pipette_green = 0;
+					if ( pipette_blue < 0 ) pipette_blue = 0;
+					if ( pipette_red > 255 ) pipette_red = 255;
+					if ( pipette_green > 255 ) pipette_green = 255;
+					if ( pipette_blue > 255 ) pipette_blue = 255;
 				}
 			}
 			
 			
-			_selectedColor = ct.color = int(palette_red+0.5) << 16 | int(palette_green+0.5) << 8 | int(palette_blue+0.5);
+			_selectedColor = ct.color = int(pipette_red+0.5) << 16 | int(pipette_green+0.5) << 8 | int(pipette_blue+0.5);
 			bar.transform.colorTransform = ct;
 		}		
 		
