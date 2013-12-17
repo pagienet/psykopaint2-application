@@ -328,7 +328,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 				</brush>
 
 -->
-				<brush engine={BrushType.SPRAY_CAN} name="Paint Brush">
+				<brush engine={BrushType.SPRAY_CAN} name="Bristle Brush">
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="line" />
 					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value="0"/>
@@ -970,7 +970,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					</pathengine>
 				</brush>
 
-				<brush engine={BrushType.SPRAY_CAN} name="Paint Brush">
+				<brush engine={BrushType.SPRAY_CAN} name="Bristle Brush">
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="line" />
 					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value="0"/>

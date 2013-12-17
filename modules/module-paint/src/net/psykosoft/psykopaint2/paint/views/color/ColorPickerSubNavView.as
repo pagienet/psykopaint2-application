@@ -66,6 +66,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		public static const ID_BACK:String = "Back";
 		private var pipetteDropSize:int;
+		private var currentSwatchMixRed:Number;
+		private var currentSwatchMixGreen:Number;
+		private var currentSwatchMixBlue:Number;
 		
 		public function ColorPickerSubNavView()
 		{
@@ -207,7 +210,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		protected function onPipetteColorPicked( event:Event ):void {
 			colorMixer.mixEnabled = true;
 			setCurrentColor( pipette.currentColor, false );
-			pipette.removeEventListener( "PipetteDischarge", onPipetteDischarge );
+			pipette.removeEventListener( "PipetteDischarge", onPipetteDischargeOnMixer );
+			pipette.removeEventListener( "PipetteDischarge", onPipetteDischargeOnSwatch );
 		}
 		
 		public function setCurrentColor( newColor:uint, fromPalette:Boolean, fromSlider:Boolean = false, triggerChange:Boolean = true ):void
@@ -287,6 +291,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 					pipette.x = colorPalette.x + swatch.x;
 					pipette.y = colorPalette.y + swatch.y - 32;
 					pipette.startCharge( swatch.transform.colorTransform.color );
+					if ( swatch == colorPalette.getSelectedSwatch() )
+					{
+						var rgb:uint = colorPalette.getSelectedSwatch().transform.colorTransform.color; 
+						currentSwatchMixRed = (rgb >> 16) & 0xff;
+						currentSwatchMixGreen= (rgb >> 8) & 0xff;
+						currentSwatchMixBlue = rgb & 0xff;
+						pipette.addEventListener( "PipetteDischarge", onPipetteDischargeOnSwatch );
+					}
 					return;
 				}
 			}
@@ -296,13 +308,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 				pipette.x = currentColorSwatch.x + 10;
 				pipette.y = currentColorSwatch.y - 64;
 				pipette.startCharge( currentColorSwatch.transform.colorTransform.color );	
+			
 			} else if ( fromLongTap && colorMixer.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
 			{
 				colorMixer.mixEnabled = false;
 				pipetteDropSize = 1;
 				pipette.x = stage.mouseX + 5;
 				pipette.y = stage.mouseY - 2;
-				pipette.addEventListener( "PipetteDischarge", onPipetteDischarge );
+				pipette.addEventListener( "PipetteDischarge", onPipetteDischargeOnMixer );
 				pipette.startCharge( colorMixer.getColorAtMouse() );	
 				
 			}
@@ -310,7 +323,25 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 		}
 		
-		private function onPipetteDischarge( event:Event ):void
+		private function onPipetteDischargeOnSwatch( event:Event ):void
+		{
+			
+			
+			var blendFactor:Number = 0.005;
+			currentSwatchMixRed = pipette.pipette_red * blendFactor + currentSwatchMixRed * ( 1- blendFactor );
+			currentSwatchMixGreen = pipette.pipette_green * blendFactor + currentSwatchMixGreen * ( 1- blendFactor );
+			currentSwatchMixBlue = pipette.pipette_blue * blendFactor + currentSwatchMixBlue * ( 1- blendFactor );
+			if ( currentSwatchMixRed < 0 ) currentSwatchMixRed = 0;
+			else if ( currentSwatchMixRed > 255 ) currentSwatchMixRed = 255;
+			if ( currentSwatchMixGreen < 0 ) currentSwatchMixGreen = 0;
+			else if ( currentSwatchMixGreen > 255 ) currentSwatchMixGreen = 255;
+			if ( currentSwatchMixBlue < 0 ) currentSwatchMixBlue = 0;
+			else if (currentSwatchMixBlue > 255 ) currentSwatchMixBlue = 255;
+			
+			colorPalette.selectedColor = currentSwatchMixRed << 16 | currentSwatchMixGreen << 8 | currentSwatchMixBlue;
+		}
+		
+		private function onPipetteDischargeOnMixer( event:Event ):void
 		{
 			colorMixer.addColorSpot( pipette.x-colorMixer.x,pipette.y-colorMixer.y,pipette.currentColor, pipetteDropSize++);
 		}
