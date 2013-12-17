@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 	import flash.display.Stage;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -45,7 +46,11 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		{
 			if (!_started) {
 				_started = true;
-				_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, priority);
+
+				if (CoreSettings.RUNNING_ON_iPAD)
+					_stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin, priority);
+				else
+					_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, priority);
 			}
 		}
 
@@ -53,42 +58,87 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		{
 			_started = false;
 
-			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			_stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			if (CoreSettings.RUNNING_ON_iPAD) {
+				_stage.removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+				_stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+				_stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			}
+			else {
+				_stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				_stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+				_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			}
 		}
 
 		private function onMouseDown(event : MouseEvent) : void
 		{
-			_lastPositionX = event.stageX;
-			_lastPositionY = event.stageY;
-			_velocityX = 0;
-			_velocityY = 0;
-
-			if (!_interactionRect || _interactionRect.contains(_lastPositionX, _lastPositionY)) {
-				dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_STARTED, _lastPositionX, _lastPositionY, _velocityX, _velocityY));
+			if (beginGrabThrow(event.stageX, event.stageY)) {
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
 		}
 
+		private function onTouchBegin(event : TouchEvent) : void
+		{
+			if (beginGrabThrow(event.stageX, event.stageY)) {
+				_stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+				_stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			}
+		}
+
 		private function onMouseMove(event : MouseEvent) : void
 		{
-			var dx : Number = event.stageX - _lastPositionX;
-			var dy : Number = event.stageY - _lastPositionY;
-			// include slight smoothing of velocity
-			_velocityX += (dx - _velocityX) * .95;
-			_velocityY += (dy - _velocityY) * .95;
-			_lastPositionX = event.stageX;
-			_lastPositionY = event.stageY;
-			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_UPDATE, _lastPositionX, _lastPositionY, _velocityX, _velocityY));
-	}
+			updateMove(event.stageX, event.stageY);
+		}
+
+		private function onTouchMove(event : TouchEvent) : void
+		{
+			updateMove(event.stageX, event.stageY);
+		}
 
 		private function onMouseUp(event : MouseEvent) : void
 		{
 			_stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.RELEASE, event.stageX, event.stageY, _velocityX, _velocityY));
+			endGrabThrow(event.stageX, event.stageY);
+		}
+
+		private function onTouchEnd(event : TouchEvent) : void
+		{
+			_stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			_stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			endGrabThrow(event.stageX, event.stageY);
+		}
+
+		private function beginGrabThrow(x : Number, y : Number) : Boolean
+		{
+			_lastPositionX = x;
+			_lastPositionY = y;
+			_velocityX = 0;
+			_velocityY = 0;
+
+			if (!_interactionRect || _interactionRect.contains(_lastPositionX, _lastPositionY)) {
+				dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_STARTED, _lastPositionX, _lastPositionY, _velocityX, _velocityY));
+				return true;
+			}
+			return false;
+		}
+
+		private function updateMove(x : Number, y : Number) : void
+		{
+			var dx : Number = x - _lastPositionX;
+			var dy : Number = y - _lastPositionY;
+			// include slight smoothing of velocity
+			_velocityX += (dx - _velocityX) * .95;
+			_velocityY += (dy - _velocityY) * .95;
+			_lastPositionX = x;
+			_lastPositionY = y;
+			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_UPDATE, _lastPositionX, _lastPositionY, _velocityX, _velocityY));
+		}
+
+		private function endGrabThrow(x : Number, y : Number) : void
+		{
+			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.RELEASE, x, y, _velocityX, _velocityY));
 		}
 	}
 }

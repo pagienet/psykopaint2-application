@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
 
@@ -125,8 +126,14 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			_stage3dProxy = null;
 
-			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onStageMouseDown);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, onStageMouseUp);
+			if (CoreSettings.RUNNING_ON_iPAD) {
+				stage.removeEventListener(TouchEvent.TOUCH_BEGIN, onStageTouchBegin);
+				stage.removeEventListener(TouchEvent.TOUCH_END, onStageTouchEnd);
+			}
+			else {
+				stage.removeEventListener(MouseEvent.MOUSE_DOWN, onStageTouchBegin);
+				stage.removeEventListener(MouseEvent.MOUSE_UP, onStageTouchEnd);
+			}
 
 			bookDisposedSignal.dispatch();
 		}
@@ -142,7 +149,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			bookHasClosedSignal = new Signal();
 		}
 
-		private function onStageMouseDown(event : MouseEvent) : void
+		private function onStageTouchBegin(event : *) : void
 		{
 			event.stopImmediatePropagation();
 			if (!_book.ready) return;
@@ -160,7 +167,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_startTime = _previousTime = _time;
 		}
 
-		private function onStageMouseUp(event : MouseEvent) : void
+		private function onStageTouchEnd(event : *) : void
 		{
 			if (!_book.ready) return;
 			_mouseIsDown = false;
@@ -385,8 +392,14 @@ package net.psykosoft.psykopaint2.book.views.book
 			_wasOpenBeforeDrag = false;
 			_bookEnabled = false;
 			_grabThrowController.interactionRect = new Rectangle(0, CoreSettings.STAGE_HEIGHT - 270 * CoreSettings.GLOBAL_SCALING, CoreSettings.STAGE_WIDTH, 270 * CoreSettings.GLOBAL_SCALING);
-			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onStageMouseDown);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, onStageMouseUp);
+			if (CoreSettings.RUNNING_ON_iPAD) {
+				stage.removeEventListener(TouchEvent.TOUCH_BEGIN, onStageTouchBegin);
+				stage.removeEventListener(TouchEvent.TOUCH_END, onStageTouchEnd);
+			}
+			else {
+				stage.removeEventListener(MouseEvent.MOUSE_DOWN, onStageTouchBegin);
+				stage.removeEventListener(MouseEvent.MOUSE_UP, onStageTouchEnd);
+			}
 			bookHiddenSignal.dispatch();
 		}
 
@@ -395,8 +408,14 @@ package net.psykosoft.psykopaint2.book.views.book
 			_wasOpenBeforeDrag = true;
 			_bookEnabled = true;
 			_grabThrowController.interactionRect = new Rectangle(0, 56 * CoreSettings.GLOBAL_SCALING, CoreSettings.STAGE_WIDTH, 564 * CoreSettings.GLOBAL_SCALING);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageMouseDown, false, 10000);
-			stage.addEventListener(MouseEvent.MOUSE_UP, onStageMouseUp);
+			if (CoreSettings.RUNNING_ON_iPAD) {
+				stage.addEventListener(TouchEvent.TOUCH_BEGIN, onStageTouchBegin, false, 10000);
+				stage.addEventListener(TouchEvent.TOUCH_END, onStageTouchEnd);
+			}
+			else {
+				stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageTouchBegin, false, 10000);
+				stage.addEventListener(MouseEvent.MOUSE_UP, onStageTouchEnd);
+			}
 			bookShownSignal.dispatch();
 		}
 
