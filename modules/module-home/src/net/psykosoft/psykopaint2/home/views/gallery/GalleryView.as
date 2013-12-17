@@ -19,7 +19,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
 
@@ -57,6 +56,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _activeImageProxy : GalleryImageProxy;
 
 		private var _swipeController : GrabThrowController;
+		private var _cameraZoomController : GalleryCameraZoomController;
 
 		private var _minSwipe : Number;
 		private var _maxSwipe : Number;
@@ -73,10 +73,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _enableSwiping : Boolean;
 		private var _visibleStartIndex : int;
 		private var _visibleEndIndex : int;
-		private var _zoomFactor : Number = 0;
 
 		public static const CAMERA_FAR_POSITION : Vector3D = new Vector3D(-814, -1.14, 450);
 		public static const CAMERA_NEAR_POSITION : Vector3D = new Vector3D(-831, -1.14, -120);
+
 
 
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
@@ -104,28 +104,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_swipeController = new GrabThrowController(stage);
 			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted, false, 0, true);
 
-			if (!CoreSettings.RUNNING_ON_iPAD)
-				stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			_cameraZoomController = new GalleryCameraZoomController(stage, _view.camera, CAMERA_FAR_POSITION, CAMERA_NEAR_POSITION);
+			_cameraZoomController.start();
 		}
 
-		private function onMouseWheel(event : MouseEvent) : void
-		{
-			_zoomFactor += event.delta / 20;
-			if (_zoomFactor > 1) _zoomFactor = 1;
-			else if (_zoomFactor < 0) _zoomFactor = 0;
-
-			updateZoom();
-		}
-
-		private function updateZoom() : void
-		{
-			var pos : Vector3D = new Vector3D(
-					CAMERA_FAR_POSITION.x + (CAMERA_NEAR_POSITION.x - CAMERA_FAR_POSITION.x) * _zoomFactor,
-					CAMERA_FAR_POSITION.y + (CAMERA_NEAR_POSITION.y - CAMERA_FAR_POSITION.y) * _zoomFactor,
-					CAMERA_FAR_POSITION.z + (CAMERA_NEAR_POSITION.z - CAMERA_FAR_POSITION.z) * _zoomFactor
-			);
-			_view.camera.position = pos;
-		}
 
 		private function onDragStarted(event : GrabThrowEvent) : void
 		{
@@ -376,6 +358,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				_swipeController.removeEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
 				_swipeController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
 				_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
+			}
+
+			if (_cameraZoomController) {
+				_cameraZoomController.stop();
 			}
 		}
 
