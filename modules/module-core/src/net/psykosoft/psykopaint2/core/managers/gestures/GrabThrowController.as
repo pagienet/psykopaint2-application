@@ -26,6 +26,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private var _lastPositionY : Number;
 		private var _velocityX : Number = 0;
 		private var _velocityY : Number = 0;
+		private var _touchID : int = -1;
+		private var _isDragging : Boolean;
 
 		public function GrabThrowController(stage : Stage)
 		{
@@ -45,6 +47,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public function start(priority : int = 0) : void
 		{
 			if (!_started) {
+				_touchID = -1;
 				_started = true;
 
 				if (CoreSettings.RUNNING_ON_iPAD)
@@ -80,6 +83,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onTouchBegin(event : TouchEvent) : void
 		{
+			if (!event.isPrimaryTouchPoint) {
+				// multitouch detected, not a pan gesture anymore
+				if (_isDragging) endGrabThrow(_lastPositionX, _lastPositionY);
+				return;
+			}
+
 			if (beginGrabThrow(event.stageX, event.stageY)) {
 				_stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 				_stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
@@ -118,6 +127,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_velocityY = 0;
 
 			if (!_interactionRect || _interactionRect.contains(_lastPositionX, _lastPositionY)) {
+				_isDragging = true;
 				dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_STARTED, _lastPositionX, _lastPositionY, _velocityX, _velocityY));
 				return true;
 			}
@@ -138,6 +148,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function endGrabThrow(x : Number, y : Number) : void
 		{
+			_isDragging = false;
 			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.RELEASE, x, y, _velocityX, _velocityY));
 		}
 	}
