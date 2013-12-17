@@ -41,11 +41,11 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_interactionRect = value;
 		}
 
-		public function start() : void
+		public function start(priority : int = 0) : void
 		{
 			if (!_started) {
 				_started = true;
-				_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, priority);
 			}
 		}
 

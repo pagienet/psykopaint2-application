@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import flash.display.BitmapData;
 
+	import net.psykosoft.psykopaint2.core.models.GalleryType;
+
 	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
 
 	import net.psykosoft.psykopaint2.core.models.SourceImageCollection;
@@ -60,6 +62,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var galleryService : GalleryService;
 
 		private var _currentGalleryType : int = -1;
+		private var _sourceType : String;
 
 		override public function initialize():void {
 
@@ -69,6 +72,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 			registerEnablingState( NavigationStateType.BOOK_SOURCE_IMAGES );
 			registerEnablingState( NavigationStateType.BOOK_GALLERY );
+			registerEnablingState( NavigationStateType.GALLERY_PAINTING );
 
 			view.stage3dProxy = stage3dProxy;
 
@@ -94,9 +98,23 @@ package net.psykosoft.psykopaint2.book.views.book
 			view.galleryImageSelectedSignal.add(onGalleryImageSelected);
 			view.onGalleryCollectionRequestedSignal.add(onGalleryCollectionRequest);
 			view.onImageCollectionRequestedSignal.add(onImageCollectionRequest);
+			view.bookHiddenSignal.add(onBookHidden);
+			view.bookShownSignal.add(onBookShown);
 			requestAnimateBookOutSignal.add(onRequestAnimateBookOutSignal);
 			requestOpenBookSignal.add(onRequestOpenBookSignal);
 			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
+		}
+
+		private function onBookShown() : void
+		{
+			if (_sourceType == ImageCollectionSource.GALLERY_IMAGES)
+				requestNavigationStateChange(NavigationStateType.BOOK_GALLERY);
+		}
+
+		private function onBookHidden() : void
+		{
+			if (_sourceType == ImageCollectionSource.GALLERY_IMAGES)
+				requestNavigationStateChange(NavigationStateType.GALLERY_PAINTING);
 		}
 
 		private function onDisabled() : void
@@ -105,6 +123,8 @@ package net.psykosoft.psykopaint2.book.views.book
 			view.galleryImageSelectedSignal.remove(onGalleryImageSelected);
 			view.onGalleryCollectionRequestedSignal.remove(onGalleryCollectionRequest);
 			view.onImageCollectionRequestedSignal.remove(onImageCollectionRequest);
+			view.bookHiddenSignal.remove(onBookHidden);
+			view.bookShownSignal.remove(onBookShown);
 			requestAnimateBookOutSignal.remove(onRequestAnimateBookOutSignal);
 			requestOpenBookSignal.remove(onRequestOpenBookSignal);
 			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
@@ -112,6 +132,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onRequestOpenBookSignal(sourceType : String, galleryType : uint) : void
 		{
+			_sourceType = sourceType;
 			if (sourceType == ImageCollectionSource.GALLERY_IMAGES){
 				view.setHiddenMode();
 				view.enableVerticalSwipe();
@@ -166,6 +187,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onSourceImagesFetched(collection : SourceImageCollection) : void
 		{
+			_currentGalleryType = -1;
 			view.setSourceImages(collection);
 		}
 

@@ -74,6 +74,9 @@ package net.psykosoft.psykopaint2.book.views.book
 		private var _swipeMode : int;
 		private var _hidingEnabled : Boolean;
 
+		public var bookHiddenSignal : Signal = new Signal();
+		public var bookShownSignal : Signal = new Signal();
+
 		public function BookView()
 		{
 			super();
@@ -141,6 +144,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onStageMouseDown(event : MouseEvent) : void
 		{
+			event.stopImmediatePropagation();
 			if (!_book.ready) return;
 			_book.killSnapTween();
 
@@ -366,7 +370,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			_hidingEnabled = true;
 			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
-			_grabThrowController.start();
+			_grabThrowController.start(20000);
 		}
 
 		public function disableVerticalSwipe() : void
@@ -383,6 +387,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_grabThrowController.interactionRect = new Rectangle(0, CoreSettings.STAGE_HEIGHT - 270 * CoreSettings.GLOBAL_SCALING, CoreSettings.STAGE_WIDTH, 270 * CoreSettings.GLOBAL_SCALING);
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onStageMouseDown);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onStageMouseUp);
+			bookHiddenSignal.dispatch();
 		}
 
 		private function switchToNormalMode() : void
@@ -390,8 +395,9 @@ package net.psykosoft.psykopaint2.book.views.book
 			_wasOpenBeforeDrag = true;
 			_bookEnabled = true;
 			_grabThrowController.interactionRect = new Rectangle(0, 56 * CoreSettings.GLOBAL_SCALING, CoreSettings.STAGE_WIDTH, 564 * CoreSettings.GLOBAL_SCALING);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageMouseDown);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageMouseDown, false, 10000);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onStageMouseUp);
+			bookShownSignal.dispatch();
 		}
 
 		private function onDragStarted(event : GrabThrowEvent) : void
