@@ -53,7 +53,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var sliderPaddingLeft:Number = 16;
 		private var sliderPaddingRight:Number = 16;
 		private var saturationSliderValues:Array;
-		
+		private var sliderOffset:int = - 14;
 		private var pipette:Pipette;
 		
 		/*
@@ -172,19 +172,19 @@ package net.psykosoft.psykopaint2.paint.views.color
 			switch ( activeSliderIndex )
 			{
 				case 0: //hue
-					hueHandle.x = sliderHolder.x  + sliderPaddingLeft + sx;
+					hueHandle.x = sliderHolder.x  + sliderPaddingLeft + sx + sliderOffset;
 					currentHSV.hue = 359 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
 					setCurrentColor( ColorConverter.HSVtoUINT(currentHSV), false, true );
 					break;
 				case 1: //sat
-					saturationHandle.x = sliderHolder.x+ sliderPaddingLeft +  sx;
+					saturationHandle.x = sliderHolder.x+ sliderPaddingLeft +  sx + sliderOffset;
 					var v:Array = saturationSliderValues[int(255 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight))];
 					currentHSV.saturation = v[0];
 					currentHSV.value = v[1];
 					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false, true );
 					break;
 				case 2: //lightness
-					lightnessHandle.x = sliderHolder.x+ sliderPaddingLeft + sx;
+					lightnessHandle.x = sliderHolder.x+ sliderPaddingLeft + sx + sliderOffset;
 					currentHSV.value = 100 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
 					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false, true );
 					break;
@@ -231,9 +231,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			if ( !fromSlider )
 			{
-				hueHandle.x = sliderHolder.x + sliderPaddingLeft + (isNaN( currentHSV.hue ) ? 0 : currentHSV.hue) / 360 * (255 -sliderPaddingLeft-sliderPaddingRight);
-				saturationHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.saturation / 100 * (255 -sliderPaddingLeft-sliderPaddingRight)
-				lightnessHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.value / 100 * (255 -sliderPaddingLeft-sliderPaddingRight);
+				hueHandle.x = sliderOffset + sliderHolder.x + sliderPaddingLeft + (isNaN( currentHSV.hue ) ? 0 : currentHSV.hue) / 360 * (255 -sliderPaddingLeft-sliderPaddingRight);
+				saturationHandle.x = sliderOffset + sliderHolder.x +  sliderPaddingLeft + currentHSV.saturation / 100 * (255 -sliderPaddingLeft-sliderPaddingRight)
+				lightnessHandle.x = sliderOffset + sliderHolder.x +  sliderPaddingLeft + currentHSV.value / 100 * (255 -sliderPaddingLeft-sliderPaddingRight);
 			}
 		}
 		
