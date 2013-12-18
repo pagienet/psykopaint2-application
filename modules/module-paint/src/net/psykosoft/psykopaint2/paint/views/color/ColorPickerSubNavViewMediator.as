@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
@@ -32,6 +33,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		[Inject]
 		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
+		
+		[Inject]
+		public var userPaintSettings:UserPaintSettingsModel;
 
 		private var _stage:Stage;
 
@@ -39,7 +43,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 			registerView( view );
 			super.initialize();
-
+			
+			view.userPaintSettings = userPaintSettings;
 			// From view.
 			view.colorChangedSignal.add( onColorChanged );
 
@@ -70,7 +75,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 		private function onColorChanged():void
 		{
-			notifyPickedColorChangedSignal.dispatch(view.currentColor, false);
+			notifyPickedColorChangedSignal.dispatch(userPaintSettings.currentColor, false);
 		}
 
 		override protected function onButtonClicked( id:String ):void {

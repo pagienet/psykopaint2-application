@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
@@ -22,6 +23,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 	
 	public class ColorPickerSubNavView extends SubNavigationViewBase
 	{
+		public var userPaintSettings:UserPaintSettingsModel;
+		
 		public var currentColorSwatch:Sprite;
 		public var hueHandle:MovieClip;
 		public var saturationHandle:MovieClip;
@@ -34,7 +37,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		public var colorPalette:ColorPalette;
 		public var colorChangedSignal:Signal;
-		public var currentColor:uint = 0;
+		//public var currentColor:uint = 0;
 		public var currentHSV:HSV;
 		private var colorMixer:Colormixer;
 		//private var colorMixer:FluidColorMixer;
@@ -79,6 +82,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		override public function setup():void
 		{
 			super.setup();
+			
+			colorPalette.setPalettes( userPaintSettings.colorPalettes );
 			
 			colorPalette.addEventListener( Event.CHANGE, onPaletteColorChanged );
 			
@@ -217,16 +222,16 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public function setCurrentColor( newColor:uint, fromPalette:Boolean, fromSlider:Boolean = false, triggerChange:Boolean = true ):void
 		{
 			//trace( "setCurrentColor", newColor, fromPalette, fromSlider, triggerChange);
-			currentColor =  newColor;
+			userPaintSettings.currentColor =  newColor;
 			currentHSV = ColorConverter.UINTtoHSV(newColor);
 			
 			var t:ColorTransform = currentColorSwatch.transform.colorTransform;
-			t.color = currentColor;
+			t.color = userPaintSettings.currentColor;
 			currentColorSwatch.transform.colorTransform = t;
 			
 			if ( fromSlider )  colorPalette.changeSelectedColor(t);
 			if( triggerChange ) colorChangedSignal.dispatch();
-			colorMixer.currentColor = currentColor;
+			colorMixer.currentColor = userPaintSettings.currentColor;
 			updateSaturationSlider();
 			
 			if ( !fromSlider )
