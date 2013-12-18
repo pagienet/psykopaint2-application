@@ -35,9 +35,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 	public class GalleryView extends Sprite
 	{
+		public static const CAMERA_FAR_POSITION : Vector3D = new Vector3D(-814, -1.14, 450);
+		public static const CAMERA_NEAR_POSITION : Vector3D = new Vector3D(-831, -20, -120);
+
 		private static const PAINTING_OFFSET : Number = 831;
 		private static const PAINTING_SPACING : Number = 190;
 		private static const PAINTING_WIDTH : Number = 160;
+		private static const PAINTING_Z : Number = -260;
 
 		public var requestImageCollection : Signal = new Signal(int, int, int); // source, start index, amount of images
 		public var requestActiveImageSignal : Signal = new Signal(int, int); // source, index
@@ -74,11 +78,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _visibleStartIndex : int;
 		private var _visibleEndIndex : int;
 
-		public static const CAMERA_FAR_POSITION : Vector3D = new Vector3D(-814, -1.14, 450);
-		public static const CAMERA_NEAR_POSITION : Vector3D = new Vector3D(-831, -1.14, -120);
-
-
-
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
 			_view = view;
@@ -88,6 +87,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
 			_container = new ObjectContainer3D();
+			_container.z = PAINTING_Z;
 			_container.rotationY = 180;
 			_view.scene.addChild(_container);
 			initGeometry();
@@ -104,7 +104,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_swipeController = new GrabThrowController(stage);
 			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted, false, 0, true);
 
-			_cameraZoomController = new GalleryCameraZoomController(stage, _view.camera, CAMERA_FAR_POSITION, CAMERA_NEAR_POSITION);
+			_cameraZoomController = new GalleryCameraZoomController(stage, _view.camera, PAINTING_WIDTH, PAINTING_Z, CAMERA_FAR_POSITION, CAMERA_NEAR_POSITION);
 			_cameraZoomController.start();
 		}
 
@@ -337,7 +337,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			var material : TextureMaterial = new TextureMaterial(texture);
 			var mesh : Mesh = new Mesh(_paintingGeometry, material);
 			mesh.x = index * PAINTING_SPACING;
-			mesh.z = 260;
 			_paintings[index] = mesh;
 			_container.addChild(_paintings[index]);
 		}
@@ -360,9 +359,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 			}
 
-			if (_cameraZoomController) {
+			if (_cameraZoomController)
 				_cameraZoomController.stop();
-			}
 		}
 
 		private function disposePaintings() : void
