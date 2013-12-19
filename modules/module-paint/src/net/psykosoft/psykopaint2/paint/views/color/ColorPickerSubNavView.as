@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
@@ -22,6 +23,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 	
 	public class ColorPickerSubNavView extends SubNavigationViewBase
 	{
+		public var userPaintSettings:UserPaintSettingsModel;
+		
 		public var currentColorSwatch:Sprite;
 		public var hueHandle:MovieClip;
 		public var saturationHandle:MovieClip;
@@ -34,7 +37,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		public var colorPalette:ColorPalette;
 		public var colorChangedSignal:Signal;
-		public var currentColor:uint = 0;
+		//public var currentColor:uint = 0;
 		public var currentHSV:HSV;
 		private var colorMixer:Colormixer;
 		//private var colorMixer:FluidColorMixer;
@@ -53,7 +56,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var sliderPaddingLeft:Number = 16;
 		private var sliderPaddingRight:Number = 16;
 		private var saturationSliderValues:Array;
-		
+		private var sliderOffset:int = - 14;
 		private var pipette:Pipette;
 		
 		/*
@@ -79,6 +82,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		override public function setup():void
 		{
 			super.setup();
+			
+			colorPalette.setPalettes( userPaintSettings.colorPalettes );
 			
 			colorPalette.addEventListener( Event.CHANGE, onPaletteColorChanged );
 			
@@ -172,19 +177,19 @@ package net.psykosoft.psykopaint2.paint.views.color
 			switch ( activeSliderIndex )
 			{
 				case 0: //hue
-					hueHandle.x = sliderHolder.x  + sliderPaddingLeft + sx;
+					hueHandle.x = sliderHolder.x  + sliderPaddingLeft + sx + sliderOffset;
 					currentHSV.hue = 359 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
 					setCurrentColor( ColorConverter.HSVtoUINT(currentHSV), false, true );
 					break;
 				case 1: //sat
-					saturationHandle.x = sliderHolder.x+ sliderPaddingLeft +  sx;
+					saturationHandle.x = sliderHolder.x+ sliderPaddingLeft +  sx + sliderOffset;
 					var v:Array = saturationSliderValues[int(255 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight))];
 					currentHSV.saturation = v[0];
 					currentHSV.value = v[1];
 					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false, true );
 					break;
 				case 2: //lightness
-					lightnessHandle.x = sliderHolder.x+ sliderPaddingLeft + sx;
+					lightnessHandle.x = sliderHolder.x+ sliderPaddingLeft + sx + sliderOffset;
 					currentHSV.value = 100 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
 					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false, true );
 					break;
@@ -217,23 +222,23 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public function setCurrentColor( newColor:uint, fromPalette:Boolean, fromSlider:Boolean = false, triggerChange:Boolean = true ):void
 		{
 			//trace( "setCurrentColor", newColor, fromPalette, fromSlider, triggerChange);
-			currentColor =  newColor;
+			userPaintSettings.currentColor =  newColor;
 			currentHSV = ColorConverter.UINTtoHSV(newColor);
 			
 			var t:ColorTransform = currentColorSwatch.transform.colorTransform;
-			t.color = currentColor;
+			t.color = userPaintSettings.currentColor;
 			currentColorSwatch.transform.colorTransform = t;
 			
 			if ( fromSlider )  colorPalette.changeSelectedColor(t);
 			if( triggerChange ) colorChangedSignal.dispatch();
-			colorMixer.currentColor = currentColor;
+			colorMixer.currentColor = userPaintSettings.currentColor;
 			updateSaturationSlider();
 			
 			if ( !fromSlider )
 			{
-				hueHandle.x = sliderHolder.x + sliderPaddingLeft + (isNaN( currentHSV.hue ) ? 0 : currentHSV.hue) / 360 * (255 -sliderPaddingLeft-sliderPaddingRight);
-				saturationHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.saturation / 100 * (255 -sliderPaddingLeft-sliderPaddingRight)
-				lightnessHandle.x = sliderHolder.x +  sliderPaddingLeft + currentHSV.value / 100 * (255 -sliderPaddingLeft-sliderPaddingRight);
+				hueHandle.x = sliderOffset + sliderHolder.x + sliderPaddingLeft + (isNaN( currentHSV.hue ) ? 0 : currentHSV.hue) / 360 * (255 -sliderPaddingLeft-sliderPaddingRight);
+				saturationHandle.x = sliderOffset + sliderHolder.x +  sliderPaddingLeft + currentHSV.saturation / 100 * (255 -sliderPaddingLeft-sliderPaddingRight)
+				lightnessHandle.x = sliderOffset + sliderHolder.x +  sliderPaddingLeft + currentHSV.value / 100 * (255 -sliderPaddingLeft-sliderPaddingRight);
 			}
 		}
 		

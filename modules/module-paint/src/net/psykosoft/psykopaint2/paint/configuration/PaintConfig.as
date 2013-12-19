@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.model.RubberMeshModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.rendering.RubberMeshRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
@@ -67,7 +68,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorPickerSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.color.ColorPickerSubNavViewMediator;
-
+	
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IInjector;
@@ -128,8 +129,10 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map(LightingModel).asSingleton();
 			_injector.map(CanvasModel).asSingleton();
 			_injector.map(CanvasHistoryModel).asSingleton();
-			_injector.map(RubberMeshRenderer).asSingleton();
-			_injector.map(RubberMeshModel).asSingleton();
+			_injector.map(UserPaintSettingsModel).asSingleton();
+			
+		//	_injector.map(RubberMeshRenderer).asSingleton();
+		//	_injector.map(RubberMeshModel).asSingleton();
 		}
 
 		// -----------------------
