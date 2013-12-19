@@ -92,20 +92,30 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_view.scene.addChild(_container);
 			initGeometry();
 			initLoadingTexture();
-
-			if (stage)
-				initInteraction(stage);
-			else
-				addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 
-		private function initInteraction(stage : Stage) : void
+		public function initInteraction() : void
 		{
-			_swipeController = new GrabThrowController(stage);
-			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted, false, 0, true);
+			_swipeController ||= new GrabThrowController(stage);
+			_cameraZoomController ||= new GalleryCameraZoomController(stage, _view.camera, PAINTING_WIDTH, PAINTING_Z, CAMERA_FAR_POSITION, CAMERA_NEAR_POSITION);
 
-			_cameraZoomController = new GalleryCameraZoomController(stage, _view.camera, PAINTING_WIDTH, PAINTING_Z, CAMERA_FAR_POSITION, CAMERA_NEAR_POSITION);
+			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted, false, 0, true);
+			_swipeController.start();
+
 			_cameraZoomController.start();
+		}
+
+		public function stopInteraction() : void
+		{
+			if (_swipeController) {
+				_swipeController.stop();
+				_swipeController.removeEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
+				_swipeController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
+				_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
+			}
+
+			if (_cameraZoomController)
+				_cameraZoomController.stop();
 		}
 
 
@@ -352,15 +362,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.clear();
 			_paintingGeometry.dispose();
 			_loadingTexture.dispose();
-
-			if (_swipeController) {
-				_swipeController.removeEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
-				_swipeController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
-				_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
-			}
-
-			if (_cameraZoomController)
-				_cameraZoomController.stop();
+			stopInteraction();
 		}
 
 		private function disposePaintings() : void
@@ -400,21 +402,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onAddedToStage(event : Event) : void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			initInteraction(stage);
-		}
-
-		public function get enableSwiping() : Boolean
-		{
-			return _enableSwiping;
-		}
-
-		public function set enableSwiping(enableSwiping : Boolean) : void
-		{
-			_enableSwiping = enableSwiping;
-			if (enableSwiping)
-				_swipeController.start();
-			else
-				_swipeController.stop();
 		}
 	}
 }

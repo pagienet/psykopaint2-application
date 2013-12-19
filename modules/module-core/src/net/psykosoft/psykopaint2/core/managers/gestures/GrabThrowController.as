@@ -128,7 +128,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 			if (!_interactionRect || _interactionRect.contains(_lastPositionX, _lastPositionY)) {
 				_isDragging = true;
-				dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_STARTED, _lastPositionX, _lastPositionY, _velocityX, _velocityY));
+				dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_STARTED, _velocityX, _velocityY));
 				return true;
 			}
 			return false;
@@ -143,13 +143,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_velocityY += (dy - _velocityY) * .95;
 			_lastPositionX = x;
 			_lastPositionY = y;
-			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_UPDATE, _lastPositionX, _lastPositionY, _velocityX, _velocityY));
+			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_UPDATE, _velocityX, _velocityY));
 		}
 
 		private function endGrabThrow(x : Number, y : Number) : void
 		{
 			_isDragging = false;
-			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.RELEASE, x, y, _velocityX, _velocityY));
+			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.RELEASE, _velocityX, _velocityY));
 		}
 	}
 }

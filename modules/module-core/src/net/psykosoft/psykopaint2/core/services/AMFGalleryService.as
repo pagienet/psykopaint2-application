@@ -36,8 +36,8 @@ package net.psykosoft.psykopaint2.core.services
 
 		private function getMostRecentPaintings(index : int, amount : int, onSuccess : Function, onFailure : Function) : void
 		{
-			var failFunction : Function = function(data : Object) { onFailure(AMFErrorCode.CALL_FAILED); }
-			var callback : Function = function(data : Object)
+			var failFunction : Function = function(data : Object) : void { onFailure(AMFErrorCode.CALL_FAILED); }
+			var callback : Function = function(data : Object) : void
 			{
 				translateImages(GalleryType.MOST_RECENT, data, index, onSuccess, onFailure);
 			}
@@ -46,8 +46,8 @@ package net.psykosoft.psykopaint2.core.services
 
 		private function getMostLovedImages(index : int, amount : int, onSuccess : Function, onFailure : Function) : void
 		{
-			var failFunction : Function = function(data : Object) { onFailure(AMFErrorCode.CALL_FAILED); }
-			var callback : Function = function(data : Object)
+			var failFunction : Function = function(data : Object) : void { onFailure(AMFErrorCode.CALL_FAILED); }
+			var callback : Function = function(data : Object) : void
 			{
 				translateImages(GalleryType.MOST_LOVED, data, index, onSuccess, onFailure);
 			}
@@ -56,8 +56,8 @@ package net.psykosoft.psykopaint2.core.services
 
 		private function getFollowedUserImages(index : int, amount : int, onSuccess : Function, onFailure : Function) : void
 		{
-			var failFunction : Function = function(data : Object) { onFailure(AMFErrorCode.CALL_FAILED); }
-			var callback : Function = function (data : Object)
+			var failFunction : Function = function(data : Object) : void { onFailure(AMFErrorCode.CALL_FAILED); }
+			var callback : Function = function (data : Object) : void
 			{
 				translateImages(GalleryType.FOLLOWING, data, index, onSuccess, onFailure);
 			};
@@ -66,8 +66,8 @@ package net.psykosoft.psykopaint2.core.services
 
 		private function getUserImages(index : int, amount : int, onSuccess : Function, onFailure : Function) : void
 		{
-			var failFunction : Function = function(data : Object) { onFailure(AMFErrorCode.CALL_FAILED); }
-			var callback : Function = function (data : Object)
+			var failFunction : Function = function(data : Object) : void { onFailure(AMFErrorCode.CALL_FAILED); }
+			var callback : Function = function (data : Object) : void
 			{
 				translateImages(GalleryType.YOURS, data, index, onSuccess, onFailure);
 			}
@@ -123,7 +123,7 @@ package net.psykosoft.psykopaint2.core.services
 
 		private function emptyCallBack(callback : Function) : Function
 		{
-			return function(data : Object) { callback(); }
+			return function(data : Object) : void { callback(); }
 		}
 	}
 }

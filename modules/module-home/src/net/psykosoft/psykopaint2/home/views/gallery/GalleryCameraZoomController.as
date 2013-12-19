@@ -37,8 +37,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public function start() : void
 		{
 			if (_zoomGesture) return;
+
 			_zoomGesture = new ZoomGesture(_stage);
 			_zoomGesture.addEventListener(GestureEvent.GESTURE_BEGAN, onGestureStart);
+			_zoomGesture.addEventListener(GestureEvent.GESTURE_CHANGED, onGestureChanged);
+			_zoomGesture.slop = 3 * CoreSettings.GLOBAL_SCALING;
 
 			if (!CoreSettings.RUNNING_ON_iPAD)
 				_stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -49,7 +52,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (!_zoomGesture) return;
 			_zoomGesture.removeEventListener(GestureEvent.GESTURE_BEGAN, onGestureStart);
 			_zoomGesture.removeEventListener(GestureEvent.GESTURE_CHANGED, onGestureChanged);
-			_zoomGesture.removeEventListener(GestureEvent.GESTURE_ENDED, onGestureEnd);
 			_zoomGesture.dispose();
 			_zoomGesture = null;
 			if (!CoreSettings.RUNNING_ON_iPAD)
@@ -80,9 +82,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			// the size of the canvas on screen when zooming starts
 			var matrix : Vector.<Number> = _camera.lens.matrix.rawData;
 			_zoomReferenceWidth = _paintingWidth * matrix[0] / (_camera.z - _paintingZ);
-
-			_zoomGesture.addEventListener(GestureEvent.GESTURE_CHANGED, onGestureChanged);
-			_zoomGesture.addEventListener(GestureEvent.GESTURE_ENDED, onGestureEnd);
 		}
 
 		private function onGestureChanged(event : GestureEvent) : void
@@ -96,12 +95,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			else if (_zoomFactor < 0) _zoomFactor = 0;
 
 			updateZoom();
-		}
-
-		private function onGestureEnd(event : GestureEvent) : void
-		{
-			_zoomGesture.removeEventListener(GestureEvent.GESTURE_CHANGED, onGestureChanged);
-			_zoomGesture.removeEventListener(GestureEvent.GESTURE_ENDED, onGestureEnd);
 		}
 	}
 }

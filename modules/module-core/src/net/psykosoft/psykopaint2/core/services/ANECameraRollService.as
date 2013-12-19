@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.core.services
 		{
 			if (!_ane) {
 				_ane = new UserPhotosExtension();
-				_ane.initialize(function() {
+				_ane.initialize(function() : void {
 					doFetch(amount, index, onSuccess);
 				});
 			}
