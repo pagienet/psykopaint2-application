@@ -22,6 +22,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
 
+	import flashx.textLayout.elements.GlobalSettings;
+
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
@@ -143,8 +145,15 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onDragUpdate(event : GrabThrowEvent) : void
 		{
-			constrainSwipe(_container.x - event.velocityX / CoreSettings.GLOBAL_SCALING);
+			constrainSwipe(_container.x - unprojectVelocity(event.velocityX));
 			updateVisibility();
+		}
+
+		private function unprojectVelocity(screenSpaceVelocity : Number) : Number
+		{
+			var matrix : Vector.<Number> = _view.camera.lens.matrix.rawData;
+			var z : Number = _view.camera.z - _container.z;
+			return screenSpaceVelocity / CoreSettings.STAGE_WIDTH * 2 * z / matrix[0];
 		}
 
 		private function killTween() : void
@@ -173,7 +182,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_swipeController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
 			_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 
-			var velocity : Number = event.velocityX / CoreSettings.GLOBAL_SCALING;
+			var velocity : Number = unprojectVelocity(event.velocityX);
 			if (Math.abs(velocity) < 5) {
 				moveToNearest();
 			}
