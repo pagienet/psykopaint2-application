@@ -41,7 +41,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_zoomGesture = new ZoomGesture(_stage);
 			_zoomGesture.addEventListener(GestureEvent.GESTURE_BEGAN, onGestureStart);
 			_zoomGesture.addEventListener(GestureEvent.GESTURE_CHANGED, onGestureChanged);
-			_zoomGesture.slop = 3 * CoreSettings.GLOBAL_SCALING;
+			_zoomGesture.slop = 0; //3 * CoreSettings.GLOBAL_SCALING;
 
 			if (!CoreSettings.RUNNING_ON_iPAD)
 				_stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -88,7 +88,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var targetWidth : Number = _zoomReferenceWidth * _zoomGesture.scaleX;
 			var matrix : Vector.<Number> = _camera.lens.matrix.rawData;
-			var targetZ : Number = matrix[0] * _paintingWidth / targetWidth + _paintingZ;
+			var targetZ : Number = matrix[0] * _zoomReferenceWidth / targetWidth + _paintingZ;
 
 			_zoomFactor = (targetZ - _farPosition.z)/(_nearPosition.z - _farPosition.z);
 			if (_zoomFactor > 1) _zoomFactor = 1;
