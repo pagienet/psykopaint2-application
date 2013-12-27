@@ -29,10 +29,14 @@ package net.psykosoft.psykopaint2.book.views.book
 	//debug
 	public class BookView extends ViewBase
 	{
-		private const MOUSE_XTRA : uint = 5;
+		private static const BOOK_HIDDEN_Z_MIN : Number = -900;
+		private static const BOOK_HIDDEN_Z_MAX : Number = -1400;
+		private static const HIDDEN_INTERACTION_RECT_HEIGHT_MIN : Number = 270 * CoreSettings.GLOBAL_SCALING;
+		private static const HIDDEN_INTERACTION_RECT_HEIGHT_MAX : Number = 0;
+		private static const MOUSE_XTRA : uint = 5;
 
 		//debug
-		private const BOOK_DEBUG : Boolean = false;
+		private static const BOOK_DEBUG : Boolean = false;
 		private var _bookDebug : BookDebug;
 
 		private var _stage3dProxy : Stage3DProxy;
@@ -77,6 +81,10 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		public var bookHiddenSignal : Signal = new Signal();
 		public var bookShownSignal : Signal = new Signal();
+
+		private var _bookHiddenZ : Number = BOOK_HIDDEN_Z_MIN;
+
+		private var _hiddenInterActionRectHeight : Number = HIDDEN_INTERACTION_RECT_HEIGHT_MIN;
 
 		public function BookView()
 		{
@@ -204,6 +212,18 @@ package net.psykosoft.psykopaint2.book.views.book
 			_book.galleryImagePickedSignal.add(dispatchSelectedGalleryImage);
 			_book.bookClearedSignal.add(dispatchBookHasClosed);
 			_book.collectionRequestedSignal.add(dispatchCollectionRequest);
+		}
+
+		// gives the book a ratio between "how off screen" it should be, so we can hide it when zooming in on the gallery etc
+		public function setHiddenOffScreenRatio(value : Number) : void
+		{
+			_bookHiddenZ = BOOK_HIDDEN_Z_MIN + value * (BOOK_HIDDEN_Z_MAX - BOOK_HIDDEN_Z_MIN);
+			_hiddenInterActionRectHeight = HIDDEN_INTERACTION_RECT_HEIGHT_MIN + value * (HIDDEN_INTERACTION_RECT_HEIGHT_MAX - HIDDEN_INTERACTION_RECT_HEIGHT_MIN);
+
+			if (!_bookEnabled && _book) {
+				_book.z = _bookHiddenZ;
+				_grabThrowController.interactionRect = new Rectangle(0, CoreSettings.STAGE_HEIGHT - _hiddenInterActionRectHeight, CoreSettings.STAGE_WIDTH, _hiddenInterActionRectHeight);
+			}
 		}
 
 		// Interaction declared on book ready
@@ -360,14 +380,14 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		public function setHiddenMode() : void
 		{
-			_book.z = -900;
+			_book.z = _bookHiddenZ;
 			switchToHiddenMode();
 		}
 
 		public function transitionToHiddenMode() : void
 		{
 			TweenLite.to(_book,.25,
-					{	z: -900,
+					{	z: _bookHiddenZ,
 						ease:Quad.easeIn
 					});
 			switchToHiddenMode();
@@ -391,7 +411,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			_wasOpenBeforeDrag = false;
 			_bookEnabled = false;
-			_grabThrowController.interactionRect = new Rectangle(0, CoreSettings.STAGE_HEIGHT - 270 * CoreSettings.GLOBAL_SCALING, CoreSettings.STAGE_WIDTH, 270 * CoreSettings.GLOBAL_SCALING);
+			_grabThrowController.interactionRect = new Rectangle(0, CoreSettings.STAGE_HEIGHT - _hiddenInterActionRectHeight, CoreSettings.STAGE_WIDTH, _hiddenInterActionRectHeight);
 			if (CoreSettings.RUNNING_ON_iPAD) {
 				stage.removeEventListener(TouchEvent.TOUCH_BEGIN, onStageTouchBegin);
 				stage.removeEventListener(TouchEvent.TOUCH_END, onStageTouchEnd);
@@ -430,7 +450,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			if (!isDraggingVisibility())
 				return;
-			var minPos : Number = -900;
+			var minPos : Number = _bookHiddenZ;
 			var maxPos : Number = 0;
 			var bookPos : Number = _book.z - event.velocityY*2 / CoreSettings.GLOBAL_SCALING;
 			if (bookPos < minPos) bookPos = minPos;
@@ -457,7 +477,7 @@ package net.psykosoft.psykopaint2.book.views.book
 				}
 				else {
 					switchToHiddenMode();
-					target = -900;
+					target = _bookHiddenZ;
 				}
 
 				_tween = TweenLite.to(_book,.5,
@@ -472,7 +492,7 @@ package net.psykosoft.psykopaint2.book.views.book
 				_startPos = _book.z;
 				if (_dragVelocity < 0) {
 					switchToHiddenMode();
-					_targetPos = -900;
+					_targetPos = _bookHiddenZ;
 				}
 				else {
 					switchToNormalMode();

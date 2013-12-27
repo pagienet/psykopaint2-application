@@ -87,6 +87,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingInfoFileReadSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetBookOffScreenRatioSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.ToggleTransformGestureSignal;
@@ -248,6 +249,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( RequestChangeRenderRectSignal ).asSingleton();
 			_injector.map( RequestShowPopUpSignal ).asSingleton();
 			_injector.map( RequestHidePopUpSignal ).asSingleton();
+			_injector.map( RequestSetBookOffScreenRatioSignal ).asSingleton();
 			_injector.map( NotifySplashScreenRemovedSignal ).asSingleton();
 			_injector.map( NotifyPaintingInfoFileReadSignal ).asSingleton();
 			_injector.map( NotifyGyroscopeUpdateSignal ).asSingleton();

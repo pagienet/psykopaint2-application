@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetBookOffScreenRatioSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
@@ -24,6 +24,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		[Inject]
 		public var notifyStateChangeSignal:NotifyNavigationStateChangeSignal;
+
+		[Inject]
+		public var requestSetBookOffScreenRatioSignal : RequestSetBookOffScreenRatioSignal;
 
 		public function GalleryViewMediator()
 		{
@@ -50,11 +53,29 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				case NavigationStateType.BOOK_GALLERY:
 				case NavigationStateType.GALLERY_PAINTING:
 //				case NavigationStateType.GALLERY_SHARE:	// probably not allowed to swipe when share is open
-					view.initInteraction();
+					initInteraction();
 					break;
 				default:
-					view.stopInteraction();
+					stopInteraction();
 			}
+		}
+
+		private function stopInteraction() : void
+		{
+			if (view.onZoomUpdateSignal)
+				view.onZoomUpdateSignal.remove(onZoomUpdate);
+			view.stopInteraction();
+		}
+
+		private function initInteraction() : void
+		{
+			view.initInteraction();
+			view.onZoomUpdateSignal.add(onZoomUpdate);
+		}
+
+		private function onZoomUpdate(ratio : Number) : void
+		{
+			requestSetBookOffScreenRatioSignal.dispatch(ratio);
 		}
 
 		override public function destroy() : void

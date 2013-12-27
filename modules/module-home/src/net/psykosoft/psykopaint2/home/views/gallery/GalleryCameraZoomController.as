@@ -11,9 +11,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import org.gestouch.events.GestureEvent;
 
 	import org.gestouch.gestures.ZoomGesture;
+	import org.osflash.signals.Signal;
 
 	public class GalleryCameraZoomController
 	{
+		public const onZoomUpdateSignal : Signal = new Signal(Number);
+
 		private var _stage : Stage;
 		private var _camera : Camera3D;
 		private var _zoomFactor : Number = 0;
@@ -65,6 +68,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			else if (_zoomFactor < 0) _zoomFactor = 0;
 
 			updateZoom();
+
+			onZoomUpdateSignal.dispatch(_zoomFactor);
 		}
 
 		private function updateZoom() : void

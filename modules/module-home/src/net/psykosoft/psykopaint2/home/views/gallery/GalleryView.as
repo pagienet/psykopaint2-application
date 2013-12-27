@@ -76,7 +76,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _startPos : Number;
 		private var _velocity : Number;
 		private var _targetPos : Number;
-		private var _enableSwiping : Boolean;
 		private var _visibleStartIndex : int;
 		private var _visibleEndIndex : int;
 
@@ -120,6 +119,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				_cameraZoomController.stop();
 		}
 
+		public function get onZoomUpdateSignal() : Signal
+		{
+			return _cameraZoomController? _cameraZoomController.onZoomUpdateSignal : null;
+		}
 
 		private function onDragStarted(event : GrabThrowEvent) : void
 		{

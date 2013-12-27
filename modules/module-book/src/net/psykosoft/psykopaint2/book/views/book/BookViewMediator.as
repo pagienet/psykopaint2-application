@@ -24,6 +24,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestSetBookOffScreenRatioSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
 	public class BookViewMediator extends MediatorBase
@@ -61,6 +62,9 @@ package net.psykosoft.psykopaint2.book.views.book
 		[Inject]
 		public var galleryService : GalleryService;
 
+		[Inject]
+		public var requestSetBookOffScreenRatioSignal : RequestSetBookOffScreenRatioSignal;
+
 		private var _currentGalleryType : int = -1;
 		private var _sourceType : String;
 
@@ -79,6 +83,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			view.enabledSignal.add(onEnabled);
 			view.disabledSignal.add(onDisabled);
 			view.bookDisposedSignal.add( onBookDisposed );
+			requestSetBookOffScreenRatioSignal.add(view.setHiddenOffScreenRatio);
 		}
 
 		private function onBookDisposed():void {
@@ -88,6 +93,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		override public function destroy() : void
 		{
 			super.destroy();
+			requestSetBookOffScreenRatioSignal.remove(view.setHiddenOffScreenRatio);
 			view.enabledSignal.remove(onEnabled);
 			view.disabledSignal.remove(onDisabled);
 		}
