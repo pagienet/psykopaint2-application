@@ -397,7 +397,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			_hidingEnabled = true;
 			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
-			_grabThrowController.start(20000);
+			_grabThrowController.start(20000, true);
 		}
 
 		public function disableVerticalSwipe() : void

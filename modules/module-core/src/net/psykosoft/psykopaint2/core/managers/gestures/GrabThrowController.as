@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private var _velocityY : Number = 0;
 		private var _touchID : int = -1;
 		private var _isDragging : Boolean;
+		private var _exclusive : Boolean;
 
 		public function GrabThrowController(stage : Stage)
 		{
@@ -44,9 +45,10 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_interactionRect = value;
 		}
 
-		public function start(priority : int = 0) : void
+		public function start(priority : int = 0, exclusive : Boolean = false) : void
 		{
 			if (!_started) {
+				_exclusive = exclusive;
 				_touchID = -1;
 				_started = true;
 
@@ -76,6 +78,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private function onMouseDown(event : MouseEvent) : void
 		{
 			if (beginGrabThrow(event.stageX, event.stageY)) {
+				if (_exclusive) event.stopImmediatePropagation();
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			}
@@ -84,6 +87,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private function onTouchBegin(event : TouchEvent) : void
 		{
 			if (!event.isPrimaryTouchPoint) {
+				if (_exclusive) event.stopImmediatePropagation();
 				// multitouch detected, not a pan gesture anymore
 				if (_isDragging) endGrabThrow(_lastPositionX, _lastPositionY);
 				return;

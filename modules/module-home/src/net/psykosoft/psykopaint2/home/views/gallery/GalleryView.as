@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	public class GalleryView extends Sprite
 	{
 		public static const CAMERA_FAR_POSITION : Vector3D = new Vector3D(-814, -1.14, 450);
-		public static const CAMERA_NEAR_POSITION : Vector3D = new Vector3D(-831, -20, -120);
+		public static const CAMERA_NEAR_POSITION : Vector3D = new Vector3D(-831, -10, -120);
 
 		private static const PAINTING_OFFSET : Number = 831;
 		private static const PAINTING_SPACING : Number = 190;
