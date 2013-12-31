@@ -53,9 +53,9 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 				_started = true;
 
 				if (CoreSettings.RUNNING_ON_iPAD)
-					_stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin, priority);
+					_stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin, false, priority);
 				else
-					_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, priority);
+					_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, false, priority);
 			}
 		}
 
@@ -87,13 +87,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private function onTouchBegin(event : TouchEvent) : void
 		{
 			if (!event.isPrimaryTouchPoint) {
-				if (_exclusive) event.stopImmediatePropagation();
 				// multitouch detected, not a pan gesture anymore
 				if (_isDragging) endGrabThrow(_lastPositionX, _lastPositionY);
 				return;
 			}
 
 			if (beginGrabThrow(event.stageX, event.stageY)) {
+				if (_exclusive) event.stopImmediatePropagation();
 				_stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 				_stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			}
@@ -154,6 +154,11 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		{
 			_isDragging = false;
 			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.RELEASE, _velocityX, _velocityY));
+		}
+
+		public function get isActive() : Boolean
+		{
+			return _started;
 		}
 	}
 }

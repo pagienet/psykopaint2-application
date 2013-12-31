@@ -159,15 +159,18 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onStageTouchBegin(event : *) : void
 		{
-			event.stopImmediatePropagation();
+			// if grab throw is active, it should allow the event to get in there first
+			if (!_grabThrowController.isActive)
+				event.stopImmediatePropagation();
+
 			if (!_book.ready) return;
 			_book.killSnapTween();
 
 			_swipeMode = UNDECIDED;
 
 			_mouseIsDown = true;
-			_startMouseX = mouseX;
-			_startMouseY = mouseY;
+			_startMouseX = event.stageX;
+			_startMouseY = event.stageY;
 
 			_pageIndexOnMouseDown = _book.currentPageIndex;
 			_pageSideIndexOnMouseDown = _book.currentPageSide;
@@ -181,9 +184,9 @@ package net.psykosoft.psykopaint2.book.views.book
 			_mouseIsDown = false;
 
 			if (!_book.isLoadingImage) {
-				var currentX : Number = mouseX;
+				var currentX : Number = event.stageX;
 				if (Math.abs(currentX - _startMouseX) < 5 && _book.currentDegrees < 3) {
-					if (!_book.hitTestRegions(mouseX, mouseY, _pageIndexOnMouseDown, _pageSideIndexOnMouseDown)) {
+					if (!_book.hitTestRegions(event.stageX, event.stageY, _pageIndexOnMouseDown, _pageSideIndexOnMouseDown)) {
 						_time = _book.snapToNearestTime();
 					}
 				} else {
@@ -369,7 +372,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		}
 
 		//requests for paging
-		public function dispatchCollectionRequest(vo : Object, startIndex : uint, maxItems : uint) : void
+		private function dispatchCollectionRequest(vo : Object, startIndex : uint, maxItems : uint) : void
 		{
 			if (vo is GalleryImageCollection) {
 				onGalleryCollectionRequestedSignal.dispatch(GalleryImageCollection(vo).type, startIndex, maxItems);
@@ -397,7 +400,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			_hidingEnabled = true;
 			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
-			_grabThrowController.start(20000, true);
+			_grabThrowController.start(10000, true);
 		}
 
 		public function disableVerticalSwipe() : void
@@ -429,11 +432,11 @@ package net.psykosoft.psykopaint2.book.views.book
 			_bookEnabled = true;
 			_grabThrowController.interactionRect = new Rectangle(0, 56 * CoreSettings.GLOBAL_SCALING, CoreSettings.STAGE_WIDTH, 564 * CoreSettings.GLOBAL_SCALING);
 			if (CoreSettings.RUNNING_ON_iPAD) {
-				stage.addEventListener(TouchEvent.TOUCH_BEGIN, onStageTouchBegin, false, 10000);
+				stage.addEventListener(TouchEvent.TOUCH_BEGIN, onStageTouchBegin, false, 20000);
 				stage.addEventListener(TouchEvent.TOUCH_END, onStageTouchEnd);
 			}
 			else {
-				stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageTouchBegin, false, 10000);
+				stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageTouchBegin, false, 20000);
 				stage.addEventListener(MouseEvent.MOUSE_UP, onStageTouchEnd);
 			}
 			bookShownSignal.dispatch();
