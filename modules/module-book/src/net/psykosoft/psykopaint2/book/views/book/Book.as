@@ -72,7 +72,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		private var _vo:Object;
 		private var _position : Vector3D = new Vector3D();
 
-     	public function Book(view:View3D, stage:Stage)
+		public function Book(view:View3D, stage:Stage)
  		{
  			_view = view;
  			_stage = stage;

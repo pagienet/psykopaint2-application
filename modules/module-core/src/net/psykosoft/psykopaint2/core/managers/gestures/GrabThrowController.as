@@ -29,6 +29,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		private var _touchID : int = -1;
 		private var _isDragging : Boolean;
 		private var _exclusive : Boolean;
+		private var _priority : int;
 
 		public function GrabThrowController(stage : Stage)
 		{
@@ -51,6 +52,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 				_exclusive = exclusive;
 				_touchID = -1;
 				_started = true;
+				_priority = priority;
 
 				if (CoreSettings.RUNNING_ON_iPAD)
 					_stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin, false, priority);
@@ -79,8 +81,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		{
 			if (beginGrabThrow(event.stageX, event.stageY)) {
 				if (_exclusive) event.stopImmediatePropagation();
-				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove, false, _priority);
+				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp, false, _priority);
 			}
 		}
 
@@ -94,8 +96,8 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 			if (beginGrabThrow(event.stageX, event.stageY)) {
 				if (_exclusive) event.stopImmediatePropagation();
-				_stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-				_stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+				_stage.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove, false, _priority);
+				_stage.addEventListener(TouchEvent.TOUCH_END, onTouchEnd, false, _priority);
 			}
 		}
 
