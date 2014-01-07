@@ -5,7 +5,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.core.base.Geometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.hacks.MaskingMethod;
+	import away3d.hacks.StencilMethod;
 	import away3d.lights.LightBase;
+	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
@@ -17,12 +20,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.display.BitmapData;
 
 	import flash.display.Sprite;
-	import flash.display.Stage;
+	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.Context3DStencilAction;
 	import flash.events.Event;
 	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
-
-	import flashx.textLayout.elements.GlobalSettings;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
@@ -38,12 +40,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	public class GalleryView extends Sprite
 	{
 		public static const CAMERA_FAR_POSITION : Vector3D = new Vector3D(-814, -1.14, 450);
-		public static const CAMERA_NEAR_POSITION : Vector3D = new Vector3D(-831, -10, -120);
+		public static const CAMERA_NEAR_POSITION : Vector3D = new Vector3D(-831, -10, 0);
 
 		private static const PAINTING_OFFSET : Number = 831;
-		private static const PAINTING_SPACING : Number = 190;
-		private static const PAINTING_WIDTH : Number = 160;
-		private static const PAINTING_Z : Number = -260;
+		private static const PAINTING_SPACING : Number = 250;
+		private static const PAINTING_WIDTH : Number = 210;
+		private static const PAINTING_Z : Number = -160;
 
 		public var requestImageCollection : Signal = new Signal(int, int, int); // source, start index, amount of images
 		public var requestActiveImageSignal : Signal = new Signal(int, int); // source, index
@@ -79,6 +81,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _visibleStartIndex : int;
 		private var _visibleEndIndex : int;
 
+		private var _paintingOccluder : Mesh;
+
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
 			_view = view;
@@ -93,6 +97,28 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_view.scene.addChild(_container);
 			initGeometry();
 			initLoadingTexture();
+			initOccluder();
+		}
+
+		// this creates a geoemtry that prevents paintings from being rendered outside the gallery area
+		private function initOccluder():void
+		{
+			var occluderGeometry : PlaneGeometry = new PlaneGeometry(500, 200, 1, 1, false);
+			var occluderMaterial : ColorMaterial = new ColorMaterial();
+			var maskingMethod : MaskingMethod = new MaskingMethod();
+			maskingMethod.disableAll();
+			var stencilMethod : StencilMethod = new StencilMethod();
+			stencilMethod.referenceValue = 40;
+			stencilMethod.actionDepthAndStencilPass = Context3DStencilAction.SET;
+			stencilMethod.actionDepthFail = Context3DStencilAction.SET;
+			stencilMethod.actionDepthPassStencilFail = Context3DStencilAction.SET;
+			occluderMaterial.addMethod(maskingMethod);
+			occluderMaterial.addMethod(stencilMethod);
+			_paintingOccluder = new Mesh(occluderGeometry, occluderMaterial);
+			_paintingOccluder.x = -300;
+			_paintingOccluder.z = PAINTING_Z - 100;
+			_paintingOccluder.rotationY = 180;
+			_view.scene.addChild(_paintingOccluder);
 		}
 
 		public function initInteraction() : void
@@ -356,7 +382,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var texture : Texture2DBase = _imageCache.getThumbnail(index);
 			texture ||= _loadingTexture;
+
 			var material : TextureMaterial = new TextureMaterial(texture);
+			var stencilMethod : StencilMethod = new StencilMethod();
+			stencilMethod.referenceValue = 40;
+			stencilMethod.compareMode = Context3DCompareMode.NOT_EQUAL;
+			material.addMethod(stencilMethod);
+
 			var mesh : Mesh = new Mesh(_paintingGeometry, material);
 			mesh.x = index * PAINTING_SPACING;
 			_paintings[index] = mesh;
@@ -374,6 +406,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.clear();
 			_paintingGeometry.dispose();
 			_loadingTexture.dispose();
+			_paintingOccluder.material.dispose();
+			_paintingOccluder.geometry.dispose();
+			_paintingOccluder.dispose();
 			stopInteraction();
 		}
 

@@ -136,7 +136,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			loadBitmapMaterial(iconuser, imgURL + "jpgs/iconuser.jpg", 2);
 
 			var floorData:FloorData = new FloorData();
-			var floor_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-1.4995100498199463,-178.75999450683594,1.2002899646759033,1]);
+			var floor_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-1.4995100498199463,-164.59500122070313,1.2002899646759033,1]);
 			var floor:Mesh = new Mesh(floorData.geometryData, null);
 			applyTransform(floor_rd, floor, "floor");
 			loadBitmapMaterial(floor, imgURL + "jpgs/woodfloor_grey.jpg", 3);
@@ -155,7 +155,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			loadATFMaterial(elements, atfURL + "elements.atf", 6);
 
 			var elements2Data:Elements2Data = new Elements2Data();
-			var elements2_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-353.1919860839844,19.471200942993164,-47.257301330566406,1]);
+			var elements2_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-353.1919860839844,20.652700424194336,-18.818300247192383,1]);
 			var elements2:Mesh = new Mesh(elements2Data.geometryData, null);
 			applyTransform(elements2_rd, elements2, "elements2");
 			loadATFMaterial(elements2, atfURL + "elements2.atf", 7);
@@ -167,13 +167,13 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			loadBitmapMaterial(dome, imgURL + "jpgs/dome.jpg", 8);
 
 			var items_no_editData:Items_no_editData = new Items_no_editData();
-			var items_no_edit_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-2.3050498962402344,151.63499450683594,-5.307400226593018,1]);
+			var items_no_edit_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-2.3050498962402344,153.61300659179688,-5.307400226593018,1]);
 			var items_no_edit:Mesh = new Mesh(items_no_editData.geometryData, null);
 			applyTransform(items_no_edit_rd, items_no_edit, "items_no_edit");
 			loadATFMaterial(items_no_edit, atfURL + "items_no_edit.atf", 9);
 
 			var wallsData:Walls_editmaterial1Data = new Walls_editmaterial1Data();
-			var walls_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-1.5399999618530273,158.82000732421875,-1.4199541807174683,1]);
+			var walls_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-1.5399999618530273,159.82000732421875,-1.4199999570846558,1]);
 			var walls:Mesh = new Mesh(wallsData.geometryData, null);
 			applyTransform(walls_rd, walls, "walls");
 //			loadBitmapMaterial(walls, imgURL + "jpgs/stucco.jpg", 11);

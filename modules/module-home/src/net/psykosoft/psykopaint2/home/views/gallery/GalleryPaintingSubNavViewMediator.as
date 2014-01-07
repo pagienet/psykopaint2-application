@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestExitGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 
 	public class GalleryPaintingSubNavViewMediator extends SubNavigationMediatorBase
@@ -25,6 +26,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		[Inject]
 		public var loggedInUser : LoggedInUserProxy;
+
+		[Inject]
+		public var requestExitGallerySignal : RequestExitGallerySignal;
 
 		private var _activePainting : GalleryImageProxy;
 
@@ -82,8 +86,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function goBack() : void
 		{
-			// TODO:Should go back to previously active book state
-			requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
+			requestExitGallerySignal.dispatch();
 		}
 
 		private function lovePainting() : void

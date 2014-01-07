@@ -68,8 +68,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			else if (_zoomFactor < 0) _zoomFactor = 0;
 
 			updateZoom();
-
-			onZoomUpdateSignal.dispatch(_zoomFactor);
 		}
 
 		private function updateZoom() : void
@@ -80,6 +78,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 					_farPosition.z + (_nearPosition.z - _farPosition.z) * _zoomFactor
 			);
 			_camera.position = pos;
+			onZoomUpdateSignal.dispatch(_zoomFactor);
 		}
 
 		private function onGestureStart(event : GestureEvent) : void
