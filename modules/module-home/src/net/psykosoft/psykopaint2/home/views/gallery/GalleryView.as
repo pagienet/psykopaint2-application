@@ -129,6 +129,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_highQualityMaterial.texture = _highQualityColorTexture;
 			_highQualityMaterial.normalMap = _highQualityNormalSpecularTexture;
 			_highQualityMaterial.specularMap = _highQualityNormalSpecularTexture;
+
+			var stencilMethod : StencilMethod = new StencilMethod();
+			stencilMethod.referenceValue = 40;
+			stencilMethod.compareMode = Context3DCompareMode.NOT_EQUAL;
+			_highQualityMaterial.addMethod(stencilMethod);
 		}
 
 		// this creates a geoemtry that prevents paintings from being rendered outside the gallery area
