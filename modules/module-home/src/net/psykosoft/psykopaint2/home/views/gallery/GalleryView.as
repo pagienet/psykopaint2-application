@@ -92,6 +92,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _highQualityMaterial : TextureMaterial;
 		private var _highQualityNormalSpecularTexture : ByteArrayTexture;
 		private var _highQualityColorTexture : BitmapTexture;
+		private var _showHighQuality:Boolean;
 
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -110,6 +111,34 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			initLoadingTexture();
 			initOccluder();
 			initHighQualityMaterial();
+		}
+
+		public function get showHighQuality() : Boolean
+		{
+			return _showHighQuality;
+		}
+
+		public function set showHighQuality(value:Boolean):void
+		{
+			if (_showHighQuality == value) return;
+			_showHighQuality = value;
+
+			if (_showHighQuality) {
+				showHighQualityMaterial();
+			}
+			else {
+				removeHighQualityMaterial();
+				disposeHighQualityMaterial();
+			}
+		}
+
+		private function showHighQualityMaterial():void
+		{
+			if (!_highQualityMaterial)
+				initHighQualityMaterial();
+
+			if (_activeImageProxy)
+				_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError);
 		}
 
 		private function initHighQualityMaterial():void
@@ -466,10 +495,20 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_paintingOccluder.material.dispose();
 			_paintingOccluder.geometry.dispose();
 			_paintingOccluder.dispose();
-			_highQualityMaterial.dispose();
-			_highQualityColorTexture.dispose();
-			_highQualityNormalSpecularTexture.dispose();
+			disposeHighQualityMaterial();
 			stopInteraction();
+		}
+
+		private function disposeHighQualityMaterial():void
+		{
+			if (_highQualityMaterial) {
+				_highQualityMaterial.dispose();
+				_highQualityColorTexture.dispose();
+				_highQualityNormalSpecularTexture.dispose();
+				_highQualityMaterial = null;
+				_highQualityColorTexture = null;
+				_highQualityNormalSpecularTexture = null;
+			}
 		}
 
 		private function disposePaintings() : void
@@ -510,7 +549,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onThumbnailLoadingComplete():void
 		{
 			// we can load the high resolution now for
-			_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError);
+			if (_showHighQuality)
+				showHighQualityMaterial();
 		}
 
 		private function onSurfaceDataComplete(galleryVO : PaintingGalleryVO):void

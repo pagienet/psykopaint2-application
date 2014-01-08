@@ -54,14 +54,22 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onStateChangeSignal(newState:String) : void
 		{
 			switch (newState) {
+
 				case NavigationStateType.BOOK_GALLERY:
 				case NavigationStateType.GALLERY_PAINTING:
-//				case NavigationStateType.GALLERY_SHARE:	// probably not allowed to swipe when share is open
+//					// probably not allowed to swipe when share is open
 					initInteraction();
+					view.showHighQuality = true;
+					break;
+				case NavigationStateType.GALLERY_SHARE:
+					view.showHighQuality = true;
+					stopInteraction();
 					break;
 				default:
+					view.showHighQuality = false;
 					stopInteraction();
 			}
+
 		}
 
 		private function stopInteraction() : void
