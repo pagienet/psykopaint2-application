@@ -3,7 +3,6 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.display.BitmapData;
 	import flash.display.JPEGEncoderOptions;
 	import flash.display.PNGEncoderOptions;
-	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.display.StageQuality;
 	import flash.display3D.Context3D;
@@ -29,9 +28,7 @@ package net.psykosoft.psykopaint2.core.io
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
-	import net.psykosoft.psykopaint2.tdsi.MemoryManagerTdsi;
-	import net.psykosoft.psykopaint2.tdsi.MergeUtil;
-	
+
 	/**
 	 * Returns a list of 3 ByteArrays containing data:
 	 * 0: painted color layer, in BGRA

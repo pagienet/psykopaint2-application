@@ -2,13 +2,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
-	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestExitGallerySignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestUpdateGalleryPaintingMenuSignal;
 
 	public class GalleryPaintingSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -19,7 +18,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public var requestBrowseGallery : RequestBrowseGallerySignal;
 
 		[Inject]
-		public var requestSetGalleryPaintingSignal : RequestSetGalleryPaintingSignal;
+		public var requestUpdateGalleryPaintingMenuSignal : RequestUpdateGalleryPaintingMenuSignal;
 
 		[Inject]
 		public var galleryService : GalleryService;
@@ -44,16 +43,16 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			registerView(view);
 			super.initialize();
 
-			requestSetGalleryPaintingSignal.add(onRequestSetGalleryPainting);
+			requestUpdateGalleryPaintingMenuSignal.add(onRequestUpdateGalleryPaintingMenu);
 		}
 
 		override public function destroy() : void
 		{
-			requestSetGalleryPaintingSignal.remove(onRequestSetGalleryPainting);
+			requestUpdateGalleryPaintingMenuSignal.remove(onRequestUpdateGalleryPaintingMenu);
 			super.destroy();
 		}
 
-		private function onRequestSetGalleryPainting(painting : GalleryImageProxy) : void
+		private function onRequestUpdateGalleryPaintingMenu(painting : GalleryImageProxy) : void
 		{
 			_activePainting = painting;
 			updateLoveButton();
