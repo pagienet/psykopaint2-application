@@ -10,29 +10,34 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.lights.LightBase;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
+	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
+	import away3d.textures.ByteArrayTexture;
 	import away3d.textures.Texture2DBase;
+	import away3d.tools.utils.TextureUtils;
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Quad;
 
 	import flash.display.BitmapData;
-
 	import flash.display.Sprite;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DStencilAction;
 	import flash.events.Event;
+	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
-
+	import net.psykosoft.psykopaint2.core.materials.PaintingDiffuseMethod;
+	import net.psykosoft.psykopaint2.core.materials.PaintingNormalMethod;
+	import net.psykosoft.psykopaint2.core.materials.PaintingSpecularMethod;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
-
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
 	import net.psykosoft.psykopaint2.home.model.GalleryImageCache;
 
 	import org.osflash.signals.Signal;
@@ -57,6 +62,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _container : ObjectContainer3D;
 
 		private var _paintings : Vector.<Mesh> = new Vector.<Mesh>();
+		private var _lowQualityMaterials : Vector.<TextureMaterial> = new Vector.<TextureMaterial>();
 
 		private var _paintingGeometry : Geometry;
 		private var _loadingTexture : BitmapTexture;
@@ -83,6 +89,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private var _paintingOccluder : Mesh;
 
+		private var _highQualityMaterial : TextureMaterial;
+		private var _highQualityNormalSpecularTexture : ByteArrayTexture;
+		private var _highQualityColorTexture : BitmapTexture;
+
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
 			_view = view;
@@ -91,6 +101,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache = new GalleryImageCache(_stage3DProxy);
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
+			_imageCache.loadingComplete.add(onThumbnailLoadingComplete);
 			_container = new ObjectContainer3D();
 			_container.z = PAINTING_Z;
 			_container.rotationY = 180;
@@ -98,6 +109,26 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			initGeometry();
 			initLoadingTexture();
 			initOccluder();
+			initHighQualityMaterial();
+		}
+
+		private function initHighQualityMaterial():void
+		{
+			_highQualityColorTexture = new BitmapTexture(null);
+			_highQualityNormalSpecularTexture = new ByteArrayTexture(null, 0, 0);
+
+			_highQualityMaterial = new TextureMaterial(null, true, false, false);
+			_highQualityMaterial.normalMethod = new PaintingNormalMethod();
+			_highQualityMaterial.diffuseMethod = new PaintingDiffuseMethod();
+			_highQualityMaterial.specularMethod = new PaintingSpecularMethod();
+			_highQualityMaterial.lightPicker = new StaticLightPicker([_light]);
+			_highQualityMaterial.ambientColor = 0xffffff;
+			_highQualityMaterial.ambient = 1;
+			_highQualityMaterial.specular = 1.5;
+			_highQualityMaterial.gloss = 200;
+			_highQualityMaterial.texture = _highQualityColorTexture;
+			_highQualityMaterial.normalMap = _highQualityNormalSpecularTexture;
+			_highQualityMaterial.specularMap = _highQualityNormalSpecularTexture;
 		}
 
 		// this creates a geoemtry that prevents paintings from being rendered outside the gallery area
@@ -306,7 +337,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (_activeImageProxy && _activeImageProxy.collectionType != galleryImageProxy.collectionType)
 				resetPaintings();
 
-			_activeImageProxy = galleryImageProxy;
+			removeHighQualityMaterial();
+
+			// make sure to clone so we can load while the book is loading
+			_activeImageProxy = galleryImageProxy.clone();
 
 			const amountOnEachSide : int = 2;
 			var min : int = galleryImageProxy.index - amountOnEachSide;
@@ -320,8 +354,21 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			requestImageCollection.dispatch(galleryImageProxy.collectionType, min, amount);
 		}
 
+		private function removeHighQualityMaterial():void
+		{
+			// also test if painting hasn't been destroyed yet due to panning
+			if (_activeImageProxy && _paintings[_activeImageProxy.index]) {
+				_activeImageProxy.cancelLoading();
+				var index:uint = _activeImageProxy.index;
+				_paintings[index].material = _lowQualityMaterials[index];
+			}
+		}
+
 		private function requestActiveImage(index : int) : void
 		{
+			if (_activeImageProxy && _activeImageProxy.index != index) {
+				removeHighQualityMaterial();
+			}
 			requestActiveImageSignal.dispatch(_activeImageProxy.collectionType, index);
 		}
 
@@ -329,6 +376,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			_imageCache.thumbnailLoaded.remove(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.remove(onThumbnailDisposed);
+			_imageCache.loadingComplete.remove(onThumbnailLoadingComplete);
 			disposePaintings();
 			_visibleEndIndex = -1;
 			_visibleStartIndex = -1;
@@ -341,6 +389,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			_numPaintings = collection.numTotalPaintings;
 			_paintings.length = _numPaintings;
+			_lowQualityMaterials.length = _numPaintings;
 			updateVisibility();
 			_imageCache.replaceCollection(collection);
 
@@ -360,8 +409,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (visibleEnd >= _numPaintings) visibleEnd = _numPaintings;
 
 			for (i = _visibleStartIndex; i < visibleStart; ++i) {
-				if (_paintings[i])
+				if (_paintings[i]) {
 					destroyPainting(i);
+				}
 			}
 
 			for (i = visibleStart; i < visibleEnd; ++i) {
@@ -389,6 +439,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			stencilMethod.compareMode = Context3DCompareMode.NOT_EQUAL;
 			material.addMethod(stencilMethod);
 
+			_lowQualityMaterials[index] = material;
+
 			var mesh : Mesh = new Mesh(_paintingGeometry, material);
 			mesh.x = index * PAINTING_SPACING;
 			_paintings[index] = mesh;
@@ -409,6 +461,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_paintingOccluder.material.dispose();
 			_paintingOccluder.geometry.dispose();
 			_paintingOccluder.dispose();
+			_highQualityMaterial.dispose();
+			_highQualityColorTexture.dispose();
+			_highQualityNormalSpecularTexture.dispose();
 			stopInteraction();
 		}
 
@@ -424,9 +479,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var painting : Mesh = _paintings[i];
 			_container.removeChild(painting);
-			painting.material.dispose();
 			painting.dispose();
+			_lowQualityMaterials[i].dispose();
 			_paintings[i] = null;
+			_lowQualityMaterials[i] = null;
 		}
 
 		private function onThumbnailLoaded(imageProxy : GalleryImageProxy, thumbnail : Texture2DBase) : void
@@ -444,6 +500,37 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				if (painting.parent)
 					_container.removeChild(painting);
 			}
+		}
+
+		private function onThumbnailLoadingComplete():void
+		{
+			// we can load the high resolution now for
+			_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError);
+		}
+
+		private function onSurfaceDataComplete(galleryVO : PaintingGalleryVO):void
+		{
+			var width : Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.width);
+			var height : Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.height);
+			var legalBitmap : BitmapData = new BitmapData(width, height, false);
+			legalBitmap.copyPixels(galleryVO.colorData, galleryVO.colorData.rect, new Point());
+
+			_highQualityColorTexture.bitmapData = legalBitmap;
+			_highQualityColorTexture.getTextureForStage3D(_stage3DProxy);
+			legalBitmap.dispose();
+
+			galleryVO.normalSpecularData.length = width*height*4;
+			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, width, height);
+			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
+
+			_paintings[_activeImageProxy.index].material = _highQualityMaterial;
+
+			galleryVO.dispose();
+		}
+
+		private function onSurfaceDataError():void
+		{
+			// TODO: Show error
 		}
 
 		private function onAddedToStage(event : Event) : void

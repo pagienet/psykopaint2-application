@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function requestActiveImage(source : int, index : int) : void
 		{
-			galleryService.fetchImages(source, index, 0, onRequestActiveImageResult, onImageCollectionFailed);
+			galleryService.fetchImages(source, index, 1, onRequestActiveImageResult, onImageCollectionFailed);
 		}
 
 		private function onStateChangeSignal(newState:String) : void

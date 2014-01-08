@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.core.models
 {
 	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
-	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 
 	public class GalleryImageProxy
 	{
@@ -34,6 +33,25 @@ package net.psykosoft.psykopaint2.core.models
 		public function cancelLoading() : void
 		{
 
+		}
+
+		public function clone():GalleryImageProxy
+		{
+			throw new AbstractMethodError();
+		}
+
+		protected function copyTo(clone:GalleryImageProxy):void
+		{
+			clone.id = id;
+			clone.index = index;
+			clone.collectionType = collectionType;
+			clone.userName = userName;
+			clone.numLikes = numLikes;
+			clone.title = title;
+			clone.numComments = numComments;
+			clone.paintingMode = paintingMode;
+			clone.isFavorited = isFavorited;
+			clone.userID = userID;
 		}
 	}
 }

@@ -44,6 +44,12 @@ package net.psykosoft.psykopaint2.core.models
 			catch(error : Error) {
 
 			}
+
+			if (_paintingGalleryVO) {
+				_paintingGalleryVO.dispose();
+				_paintingGalleryVO = null;
+			}
+
 			_activeLoader = null;
 		}
 
@@ -167,6 +173,19 @@ package net.psykosoft.psykopaint2.core.models
 			_paintingGalleryVO.normalSpecularData.uncompress();
 			_activeLoader = null;
 			callOnComplete(_paintingGalleryVO);
+			_paintingGalleryVO = null;
+		}
+
+		override public function clone():GalleryImageProxy
+		{
+			var clone : FileGalleryImageProxy = new FileGalleryImageProxy();
+			copyTo(clone);
+			clone.normalSpecularMapURL = normalSpecularMapURL;
+			clone.colorMapURL = colorMapURL;
+			clone.sourceThumbnailURL = sourceThumbnailURL;
+			clone.thumbnailFilename = thumbnailFilename;
+			clone.compositeFilename = compositeFilename;
+			return clone;
 		}
 	}
 }

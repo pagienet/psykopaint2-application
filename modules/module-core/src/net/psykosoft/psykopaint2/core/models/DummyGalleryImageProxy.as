@@ -35,5 +35,13 @@ package net.psykosoft.psykopaint2.core.models
 			bitmapData.perlinNoise(512, 512, 8, Math.random(), true, true);
 			onComplete(bitmapData);
 		}
+
+		override public function clone():GalleryImageProxy
+		{
+			var clone : DummyGalleryImageProxy = new DummyGalleryImageProxy();
+			copyTo(clone);
+			return clone;
+		}
+
 	}
 }

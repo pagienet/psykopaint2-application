@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.home.model
 	{
 		public var thumbnailLoaded : Signal = new Signal(GalleryImageProxy, Texture2DBase);
 		public var thumbnailDisposed : Signal = new Signal(GalleryImageProxy);
+		public var loadingComplete : Signal = new Signal();
 
 		private var _proxies : Array;
 		private var _textures : Array;
@@ -109,6 +110,9 @@ package net.psykosoft.psykopaint2.home.model
 					cacheNext();
 				else
 					_proxies[_loadingIndex].loadThumbnail(onComplete, onError, ImageThumbnailSize.LARGE);
+			}
+			else {
+				loadingComplete.dispatch();
 			}
 		}
 
