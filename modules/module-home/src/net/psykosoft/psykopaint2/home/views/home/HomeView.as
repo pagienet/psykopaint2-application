@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
+	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -195,6 +196,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function renderScene(target : Texture) : void
 		{
+			_lightController.neutralOffset.x = -_camera.x;
 			_lightController.update();
 			_view.render(target);
 		}
