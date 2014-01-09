@@ -92,7 +92,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var targetWidth : Number = _zoomReferenceWidth * _zoomGesture.scaleX;
 			var matrix : Vector.<Number> = _camera.lens.matrix.rawData;
-			var targetZ : Number = matrix[0] * _zoomReferenceWidth / targetWidth + _paintingZ;
+			var targetZ : Number = _paintingWidth * matrix[0] / targetWidth + _paintingZ;
 
 			_zoomFactor = (targetZ - _farPosition.z)/(_nearPosition.z - _farPosition.z);
 			if (_zoomFactor > 1) _zoomFactor = 1;
