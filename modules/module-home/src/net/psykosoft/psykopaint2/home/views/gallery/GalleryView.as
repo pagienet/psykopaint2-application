@@ -483,6 +483,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			var mesh : Mesh = new Mesh(_paintingGeometry, material);
 			mesh.x = index * PAINTING_SPACING;
 			_paintings[index] = mesh;
+
+			if (_showHighQuality && index == _activeImageProxy.index) {
+				_paintings[index].material = _highQualityMaterial;
+			}
+
 			_container.addChild(_paintings[index]);
 		}
 
@@ -537,7 +542,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onThumbnailLoaded(imageProxy : GalleryImageProxy, thumbnail : Texture2DBase) : void
 		{
 			if (_paintings[imageProxy.index])
-				TextureMaterial(_paintings[imageProxy.index].material).texture = thumbnail;
+				_lowQualityMaterials[imageProxy.index].texture = thumbnail;
 		}
 
 		private function onThumbnailDisposed(imageProxy : GalleryImageProxy) : void
@@ -545,7 +550,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			// this probably also means the painting shouldn't be visible anymore
 			var painting : Mesh = _paintings[imageProxy.index];
 			if (painting) {
-				TextureMaterial(painting.material).texture = _loadingTexture;
+				_lowQualityMaterials[imageProxy.index].texture = _loadingTexture;
 				if (painting.parent)
 					_container.removeChild(painting);
 			}
@@ -573,7 +578,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, width, height);
 			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 
-			_paintings[_activeImageProxy.index].material = _highQualityMaterial;
+			// it may have been disposed before load finished?
+			if (_paintings[_activeImageProxy.index])
+				_paintings[_activeImageProxy.index].material = _highQualityMaterial;
 
 			galleryVO.dispose();
 		}
