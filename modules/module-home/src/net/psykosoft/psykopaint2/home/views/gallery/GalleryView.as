@@ -137,8 +137,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (!_highQualityMaterial)
 				initHighQualityMaterial();
 
-			if (_activeImageProxy)
+			if (_activeImageProxy) {
+				trace ("Loading high quality image data");
 				_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError);
+			}
 		}
 
 		private function initHighQualityMaterial():void
@@ -368,10 +370,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		public function setActiveImage(galleryImageProxy : GalleryImageProxy) : void
 		{
-			if (_activeImageProxy && _activeImageProxy.collectionType != galleryImageProxy.collectionType)
-				resetPaintings();
+			if (_activeImageProxy) {
+				if (_activeImageProxy.collectionType != galleryImageProxy.collectionType)
+					resetPaintings();
 
-			removeHighQualityMaterial();
+				if (_activeImageProxy.id != galleryImageProxy.id)
+					removeHighQualityMaterial();
+			}
 
 			// make sure to clone so we can load while the book is loading
 			_activeImageProxy = galleryImageProxy.clone();
@@ -402,8 +407,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			if (_activeImageProxy && _activeImageProxy.index != index) {
 				removeHighQualityMaterial();
+				requestActiveImageSignal.dispatch(_activeImageProxy.collectionType, index);
 			}
-			requestActiveImageSignal.dispatch(_activeImageProxy.collectionType, index);
 		}
 
 		private function resetPaintings() : void
