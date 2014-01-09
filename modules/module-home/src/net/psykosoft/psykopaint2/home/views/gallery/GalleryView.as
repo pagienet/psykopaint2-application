@@ -93,6 +93,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _highQualityNormalSpecularTexture : ByteArrayTexture;
 		private var _highQualityColorTexture : BitmapTexture;
 		private var _showHighQuality:Boolean;
+		private var _loadingHQ:Boolean;
 
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -138,7 +139,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				initHighQualityMaterial();
 
 			if (_activeImageProxy) {
-				trace ("Loading high quality image data");
+				_loadingHQ = true;
 				_activeImageProxy.loadSurfaceData(onSurfaceDataComplete, onSurfaceDataError);
 			}
 		}
@@ -484,7 +485,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			mesh.x = index * PAINTING_SPACING;
 			_paintings[index] = mesh;
 
-			if (_showHighQuality && index == _activeImageProxy.index) {
+			// in case the active painting was moved out of sight and disposed, reset the HQ material
+			// UNLESS it hasn't finished loading!
+			if (!_loadingHQ && _showHighQuality && index == _activeImageProxy.index) {
 				_paintings[index].material = _highQualityMaterial;
 			}
 
@@ -582,6 +585,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (_paintings[_activeImageProxy.index])
 				_paintings[_activeImageProxy.index].material = _highQualityMaterial;
 
+			_loadingHQ = false;
 			galleryVO.dispose();
 		}
 
