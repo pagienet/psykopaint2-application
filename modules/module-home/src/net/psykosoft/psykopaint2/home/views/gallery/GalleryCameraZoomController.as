@@ -65,6 +65,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onMouseWheel(event : MouseEvent) : void
 		{
+			TweenLite.killTweensOf(this);
 			zoomFactor += event.delta / 20;
 		}
 
@@ -81,6 +82,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onGestureStart(event : GestureEvent) : void
 		{
+			TweenLite.killTweensOf(this);
 			// the size of the canvas on screen when zooming starts
 			var matrix : Vector.<Number> = _camera.lens.matrix.rawData;
 			_zoomReferenceWidth = _paintingWidth * matrix[0] / (_camera.z - _paintingZ);
