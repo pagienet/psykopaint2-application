@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.core.base.Geometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.events.Object3DEvent;
 	import away3d.hacks.MaskingMethod;
 	import away3d.hacks.StencilMethod;
 	import away3d.lights.LightBase;
@@ -52,6 +53,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private static const PAINTING_SPACING : Number = 250;
 		private static const PAINTING_WIDTH : Number = 210;
 		private static const PAINTING_Z : Number = -160;
+		private static const SWIPE_SCENE_RECT : Rectangle = new Rectangle(PAINTING_OFFSET + 10 - 250, -200, 500, 400);
 
 		public var requestImageCollection : Signal = new Signal(int, int, int); // source, start index, amount of images
 		public var requestActiveImageSignal : Signal = new Signal(int, int); // source, index
@@ -112,10 +114,27 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_container.z = PAINTING_Z;
 			_container.rotationY = 180;
 			_view.scene.addChild(_container);
+			_view.camera.addEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraMoved);
 			initGeometry();
 			initLoadingTexture();
 			initOccluder();
 			initHighQualityMaterial();
+			updateSwipeInteractionRect();
+//			showInteractionRect();
+		}
+
+		// for debug purposes:
+		private function showInteractionRect():void
+		{
+			var geometry : PlaneGeometry = new PlaneGeometry(SWIPE_SCENE_RECT.width, SWIPE_SCENE_RECT.height, 1, 1, false);
+			var material : ColorMaterial = new ColorMaterial(0xff0000,.5);
+			var mesh : Mesh = new Mesh(geometry, material);
+			mesh.x = -(SWIPE_SCENE_RECT.x + SWIPE_SCENE_RECT.width*.5);
+			mesh.y = SWIPE_SCENE_RECT.y + SWIPE_SCENE_RECT.height*.5;
+			mesh.z = PAINTING_Z;
+			mesh.rotationY = 180;
+			material.depthCompareMode = Context3DCompareMode.ALWAYS;
+			_view.scene.addChild(mesh);
 		}
 
 		public function get showHighQuality() : Boolean
@@ -172,7 +191,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_highQualityMaterial.addMethod(stencilMethod);
 		}
 
-		// this creates a geoemtry that prevents paintings from being rendered outside the gallery area
+		// this creates a geometry that prevents paintings from being rendered outside the gallery area
 		private function initOccluder():void
 		{
 			var occluderGeometry : PlaneGeometry = new PlaneGeometry(500, 200, 1, 1, false);
@@ -201,7 +220,24 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted, false, 0, true);
 			_swipeController.start();
 
+			updateSwipeInteractionRect();
 			_cameraZoomController.start();
+		}
+
+		private function updateSwipeInteractionRect():void
+		{
+			if (!_swipeController) return;
+			var topLeft : Vector3D = new Vector3D(-SWIPE_SCENE_RECT.x, SWIPE_SCENE_RECT.y + SWIPE_SCENE_RECT.height, PAINTING_Z);
+			var bottomRight : Vector3D = new Vector3D(-(SWIPE_SCENE_RECT.x + SWIPE_SCENE_RECT.width), SWIPE_SCENE_RECT.y, PAINTING_Z);
+
+			trace (topLeft, bottomRight);
+
+			topLeft = _view.project(topLeft);
+			bottomRight = _view.project(bottomRight);
+
+			trace (topLeft, bottomRight);
+
+			_swipeController.interactionRect = new Rectangle(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
 		}
 
 		public function stopInteraction() : void
@@ -213,8 +249,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 			}
 
-			if (_cameraZoomController)
+			if (_cameraZoomController) {
 				_cameraZoomController.stop();
+			}
 		}
 
 		public function get onZoomUpdateSignal() : Signal
@@ -532,6 +569,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		public function dispose() : void
 		{
+			_view.camera.removeEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraMoved);
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			_view.scene.removeChild(_container);
 			disposePaintings();
@@ -546,6 +584,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_paintingOccluder.dispose();
 			disposeHighQualityMaterial();
 			stopInteraction();
+		}
+
+		private function onCameraMoved(event:Object3DEvent):void
+		{
+			updateSwipeInteractionRect();
 		}
 
 		private function disposeHighQualityMaterial():void
