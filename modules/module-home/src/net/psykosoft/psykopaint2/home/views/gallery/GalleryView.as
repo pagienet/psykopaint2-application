@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.display3D.Context3DStencilAction;
 	import flash.events.Event;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
 
@@ -75,7 +76,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _minSwipe : Number;
 		private var _maxSwipe : Number;
 
-		// for throwing:
+		// for throwing/dragging:
+		private var _dragCountsAsTap:Boolean;
 		private var _tween : TweenLite;
 		private var _hasEnterFrame : Boolean;
 		private var _friction : Number;
@@ -94,6 +96,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _highQualityColorTexture : BitmapTexture;
 		private var _showHighQuality:Boolean;
 		private var _loadingHQ:Boolean;
+		private var _dragStartX:Number;
+		private var _dragStartY:Number;
 
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -221,6 +225,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onDragStarted(event : GrabThrowEvent) : void
 		{
 			killTween();
+			_dragStartX = stage.mouseX;
+			_dragStartY = stage.mouseY;
+			_dragCountsAsTap = true;
 			_swipeController.addEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate, false, 0, true);
 			_swipeController.addEventListener(GrabThrowEvent.RELEASE, onDragRelease, false, 0, true);
 		}
@@ -242,6 +249,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onDragUpdate(event : GrabThrowEvent) : void
 		{
+			// when straying too far from start position, it can't possibly be a tap
+			if (	Math.abs(stage.mouseX - _dragStartX) > 2 * CoreSettings.GLOBAL_SCALING ||
+					Math.abs(stage.mouseY - _dragStartY) > 2 * CoreSettings.GLOBAL_SCALING
+				)
+				_dragCountsAsTap = false;
 			constrainSwipe(_container.x - unprojectVelocity(event.velocityX));
 			updateVisibility();
 		}
@@ -281,18 +293,37 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 			var velocity : Number = unprojectVelocity(event.velocityX);
 			if (Math.abs(event.velocityX) < 3 * CoreSettings.GLOBAL_SCALING) {
-				trace ("nearest");
 				moveToNearest();
+				if (_dragCountsAsTap && mousePosInFocusedPainting()) {
+					zoomFully();
+				}
 			}
 			else {
-				trace ("throwing");
 				throwToPainting(velocity);
 			}
 		}
 
+		private function zoomFully():void
+		{
+			TweenLite.to(_cameraZoomController, .5, {zoomFactor: 1.5, ease: Quad.easeOut});
+		}
+
+		private function mousePosInFocusedPainting():Boolean
+		{
+			var painting : Mesh = _paintings[_activeImageProxy.index];
+			var paintingPosition : Vector3D = _view.camera.project(painting.scenePosition);
+			var matrix : Vector.<Number> = _view.camera.lens.matrix.rawData;
+			var z : Number = _view.camera.z - PAINTING_Z;
+			var halfProjSize : Number = PAINTING_WIDTH * matrix[0] / z * .5;
+
+			// TODO: This can be done entirely in NDC
+			var mouseX : Number = stage.mouseX / CoreSettings.STAGE_WIDTH * 2.0 - 1.0 - paintingPosition.x;
+			var mouseY : Number = stage.mouseY / CoreSettings.STAGE_HEIGHT * 2.0 - 1.0 - paintingPosition.y;
+			return mouseX > -halfProjSize && mouseX < halfProjSize && mouseY > -halfProjSize && mouseY < halfProjSize;
+		}
+
 		private function throwToPainting(velocity : Number) : void
 		{
-			trace (velocity);
 			if (velocity > 0 && velocity < 20) velocity = 20;
 			if (velocity < 0 && velocity > -20) velocity = -20;
 			// convert per frame to per second, and reduce speed (doesn't feel good otherwise)

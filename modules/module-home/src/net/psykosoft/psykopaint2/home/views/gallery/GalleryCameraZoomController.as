@@ -2,6 +2,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import away3d.cameras.Camera3D;
 
+	import com.greensock.TweenLite;
+
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.geom.Vector3D;
@@ -63,11 +65,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onMouseWheel(event : MouseEvent) : void
 		{
-			_zoomFactor += event.delta / 20;
-			if (_zoomFactor > 1) _zoomFactor = 1;
-			else if (_zoomFactor < 0) _zoomFactor = 0;
-
-			updateZoom();
+			zoomFactor += event.delta / 20;
 		}
 
 		private function updateZoom() : void
@@ -94,10 +92,19 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			var matrix : Vector.<Number> = _camera.lens.matrix.rawData;
 			var targetZ : Number = _paintingWidth * matrix[0] / targetWidth + _paintingZ;
 
-			_zoomFactor = (targetZ - _farPosition.z)/(_nearPosition.z - _farPosition.z);
+			zoomFactor = (targetZ - _farPosition.z)/(_nearPosition.z - _farPosition.z);
+		}
+
+		public function get zoomFactor():Number
+		{
+			return _zoomFactor;
+		}
+
+		public function set zoomFactor(value:Number):void
+		{
+			_zoomFactor = value;
 			if (_zoomFactor > 1) _zoomFactor = 1;
 			else if (_zoomFactor < 0) _zoomFactor = 0;
-
 			updateZoom();
 		}
 	}
