@@ -249,7 +249,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function unprojectVelocity(screenSpaceVelocity : Number) : Number
 		{
 			var matrix : Vector.<Number> = _view.camera.lens.matrix.rawData;
-			var z : Number = _view.camera.z - _container.z;
+			var z : Number = _view.camera.z - PAINTING_Z;
 			return screenSpaceVelocity / CoreSettings.STAGE_WIDTH * 2 * z / matrix[0];
 		}
 
@@ -280,16 +280,21 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 
 			var velocity : Number = unprojectVelocity(event.velocityX);
-			if (Math.abs(velocity) < 5) {
+			if (Math.abs(event.velocityX) < 3 * CoreSettings.GLOBAL_SCALING) {
+				trace ("nearest");
 				moveToNearest();
 			}
 			else {
+				trace ("throwing");
 				throwToPainting(velocity);
 			}
 		}
 
 		private function throwToPainting(velocity : Number) : void
 		{
+			trace (velocity);
+			if (velocity > 0 && velocity < 20) velocity = 20;
+			if (velocity < 0 && velocity > -20) velocity = -20;
 			// convert per frame to per second, and reduce speed (doesn't feel good otherwise)
 			_velocity = -velocity * 60 / 2;
 			_startPos = _container.x;
