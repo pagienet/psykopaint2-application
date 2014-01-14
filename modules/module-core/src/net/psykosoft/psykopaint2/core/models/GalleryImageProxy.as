@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.core.models
 		public var numLikes : uint;
 		public var title : String;
 		public var numComments : uint;
-		//public var paintingMode : String;	// any of PaintMode
+		public var paintingMode : String;	// any of PaintMode
 		public var isFavorited : Boolean;
 		public var userID : int;
 
