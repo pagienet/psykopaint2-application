@@ -100,7 +100,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			super.initialize();
 			registerEnablingState( NavigationStateType.PAINT );
 			registerEnablingState( NavigationStateType.PAINT_SELECT_BRUSH );
-			registerEnablingState( NavigationStateType.PAINT_ADJUST_BRUSH );
+			//registerEnablingState( NavigationStateType.PAINT_ADJUST_BRUSH );
 			registerEnablingState( NavigationStateType.PAINT_ADJUST_COLOR );
 			registerEnablingState( NavigationStateType.TRANSITION_TO_HOME_MODE );
 			registerEnablingState( NavigationStateType.TRANSITION_TO_PAINT_MODE );

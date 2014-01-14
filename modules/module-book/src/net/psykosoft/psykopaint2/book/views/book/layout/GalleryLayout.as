@@ -203,7 +203,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 			var diffuseSourceBitmapdata:BitmapData = diffuseTextureSource.bitmapData;
 			diffuseSourceBitmapdata.lock();
 
-			if(BookGalleryData(data).imageVO.paintingMode != ""){
+			//Not sure what this does, but since there is no painting mode anymore I just
+			//assume that this should always get applied:
+			//if(BookGalleryData(data).imageVO.paintingMode != ""){
 
 				if(!_insertPaintingRect) _insertPaintingRect = new Rectangle(0, 0, 1, 1);
 
@@ -212,7 +214,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				_insertPaintingRect.height = insertSource.height/4;
 
 				insert(_paintingMap, insertSource, _insertPaintingRect, rotation, false, true);
-			}
+			//}
  
 			if(hasPower){
 				//insert brighter reflection

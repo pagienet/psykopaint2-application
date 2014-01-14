@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
 	
+	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
@@ -24,8 +25,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.IPointDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
-	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	
@@ -82,6 +84,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var _drawNormalsOrSpecular : Boolean;
 		private var _snapshot : CanvasSnapShot;
 		private var _type : String;
+		protected var _paintSettingsModel:UserPaintSettingsModel;
 		
 		public function AbstractBrush(drawNormalsOrSpecular : Boolean, incremental : Boolean = true, useDepthStencil : Boolean = false)
 		{
@@ -170,7 +173,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		}
 		
 		
-		public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer : CanvasRenderer) : void
+		public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer : CanvasRenderer, paintSettingsModel : UserPaintSettingsModel) : void
 		{
 			_brushMesh = createBrushMesh();
 			// the purpose of this is to avoid a bit of the delay when drawing the very first time
@@ -179,6 +182,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			_view = view;
 			_canvasModel = canvasModel;
+			_paintSettingsModel = paintSettingsModel;
 			_context = context;
 			_pathManager.activate( view, canvasModel, renderer );
 			_shapes.addEventListener( Event.CHANGE, onShapeChanged );
@@ -267,9 +271,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		protected function onPickColor( point : SamplePoint, pickRadius:Number, smoothFactor:Number ) : void
 		{
-			_appendVO.size =  _brushShape.size * pickRadius;
-			_appendVO.point = point;
-			_colorStrategy.getColorsByVO( _appendVO,  _brushShape.size* 0.5*smoothFactor);
+			
+			if ( _paintSettingsModel.colorMode == PaintMode.PHOTO_MODE )
+			{
+				_appendVO.size =  _brushShape.size * pickRadius;
+				_appendVO.point = point;
+				_colorStrategy.getColorsByVO( _appendVO,  _brushShape.size* 0.5*smoothFactor);
+			} else {
+				var target:Vector.<Number> = _appendVO.point.colorsRGBA;
+				target[0] = target[4] = target[8] = target[12] = _paintSettingsModel.current_r;
+				target[1] = target[5] = target[9] = target[13] = _paintSettingsModel.current_g;
+				target[2] = target[6] = target[10] = target[14] = _paintSettingsModel.current_b;
+			}
 		}
 
 		protected function invalidateRender() : void

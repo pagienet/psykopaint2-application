@@ -46,6 +46,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	
 	public class HitTestBrush extends AbstractBrush
@@ -108,9 +109,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 		}
 
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer, paintSettingsModel : UserPaintSettingsModel) : void
 		{
-			super.activate(view, context, canvasModel, renderer);
+			super.activate(view, context, canvasModel, renderer, paintSettingsModel);
 			if (_brushShape)
 				assignBrushShape();
 			if ( !hitMap )

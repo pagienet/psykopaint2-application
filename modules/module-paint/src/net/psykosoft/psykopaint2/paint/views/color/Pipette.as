@@ -31,7 +31,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var _suckTimer:Timer;
 		private var ct:ColorTransform;
 		private var _selectedColor:uint;
-		
+		private var lastActionCharge:Boolean;
 		
 		public function Pipette()
 		{
@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public function startCharge( incomingColor:uint):void
 		{
 			visible = true;
+			lastActionCharge = false;
 			_pipetteStartMouseX = parent.mouseX;
 			_pipetteStartMouseY = parent.mouseY;
 			
@@ -83,14 +84,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 					
 					if ( dy > 0 && currentFrame > 1)
 					{
+						lastActionCharge = false; 
 						prevFrame();
 						dispatchEvent( new Event( "PipetteDischarge" ) );
 					} else if ( dy < 0  ){
+						lastActionCharge = true;
 						if ( currentFrame < totalFrames ) nextFrame();
 						var blendFactor:Number =currentFrame -1; 
 						pipette_red = (pipette_red * blendFactor + incoming_red) / (blendFactor +1 );
 						pipette_green = (pipette_green * blendFactor + incoming_green) / (blendFactor +1 );
 						pipette_blue = (pipette_blue * blendFactor + incoming_blue) / (blendFactor +1 );
+						dispatchEvent( new Event("PipetteCharge") );
 					}
 				}
 			} else {
@@ -98,7 +102,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 				direction = dx < 0 ? -1 : ( dx > 0 ? 1 : 0 );
 				if ( direction != 0 && lastPipetteDirectionH != direction ) _pipetteStartMouseX =  parent.mouseX;
 				lastPipetteDirectionH = direction;
-				
+				lastActionCharge = true;
 				while (--j > -1 )
 				{
 					var luma:Number = pipette_red * 0.299 + pipette_green * 0.587 + pipette_blue * 0.114;
@@ -114,6 +118,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 					if ( pipette_red > 255 ) pipette_red = 255;
 					if ( pipette_green > 255 ) pipette_green = 255;
 					if ( pipette_blue > 255 ) pipette_blue = 255;
+					dispatchEvent( new Event("PipetteCharge") );
 				}
 			}
 			
@@ -131,13 +136,18 @@ package net.psykosoft.psykopaint2.paint.views.color
 				stop();
 				_suckTimer.removeEventListener(TimerEvent.TIMER, suckInPipette );
 				_suckTimer.stop();
-				dispatchEvent( new Event(Event.CHANGE) );
+				dispatchEvent( new Event(Event.COMPLETE) );
 			}
 		}
 		
 		public function get currentColor():uint
 		{
 			return _selectedColor;
+		}
+		
+		public function get isEmpty():Boolean
+		{
+			return currentFrame == 1;
 		}
 	}
 }

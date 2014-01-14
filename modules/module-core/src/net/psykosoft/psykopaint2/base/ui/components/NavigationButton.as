@@ -151,7 +151,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		// Listeners.
 		// ---------------------------------------------------------------------
 
-		private function onAddedToStage( event:Event ):void {
+		protected function onAddedToStage( event:Event ):void {
 			_stage = stage;
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			updateSelected();

@@ -10,6 +10,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.geom.ColorTransform;
 	import flash.utils.Timer;
 	
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
+	
 	public class ColorPalette extends Sprite
 	{
 		public var paletteSelector:Sprite;
@@ -23,8 +26,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var colorOverlay7:Sprite;
 		public var colorOverlay8:Sprite;
 		public var colorOverlay9:Sprite;
-		public var colorOverlay10:Sprite;
-		public var colorOverlay11:Sprite;
+		public var autoColorSwatch:Sprite;
+		
 		//public var pipette:Pipette;
 		/*
 		public const palettes:Array = [[0x0b0b0b,0x062750,0x04396c,0x01315a,0x00353b,0x026d01,
@@ -34,17 +37,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var swatches:Vector.<Sprite>;
 		private var selectedPaletteIndex:int;
 		private var _selectedColor:uint;
-		private var _currentIndex:int;
+		//private var _currentIndex:int;
 		private var _stage:Stage;
-		
-		
-		
+		private var userPaintSettings:UserPaintSettingsModel;
+		private var dummyColorTransform:ColorTransform;
 		
 		
 		public function ColorPalette( )
 		{
 			super();
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			dummyColorTransform = new ColorTransform();
 		}
 
 		// TODO: review disposal of view
@@ -53,32 +56,43 @@ package net.psykosoft.psykopaint2.paint.views.color
 			_stage = stage;
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			
-			swatches = Vector.<Sprite>([colorOverlay0,colorOverlay1,colorOverlay2,colorOverlay3,colorOverlay4,colorOverlay5,
-										colorOverlay6,colorOverlay7,colorOverlay8,colorOverlay9,colorOverlay10,colorOverlay11
+			swatches = Vector.<Sprite>([colorOverlay0,colorOverlay1,colorOverlay2,colorOverlay3,colorOverlay4,
+										colorOverlay5,colorOverlay6,colorOverlay7,colorOverlay8,colorOverlay9
 			]);
 			
 			for ( var i:int = 0; i < swatches.length; i++ )
 			{
 				swatches[i].addEventListener(MouseEvent.CLICK, onSwatchClicked );
 			}
-			
+			autoColorSwatch.addEventListener(MouseEvent.CLICK, onSwatchClicked );
 			paletteSelector.visible = false;
 			paletteSelector.mouseEnabled = false;
 		
 		}
 		
-		public function setPalettes( palettes:Array ):void
+		public function setUserPaintSettings( userPaintSettings:UserPaintSettingsModel ):void
 		{
-			this.palettes = palettes;
-			_currentIndex = -1;
+			this.userPaintSettings = userPaintSettings;
+			this.palettes = userPaintSettings.colorPalettes;
 			showPalette(0);
-			selectedIndex = 0;
+		
+			if ( userPaintSettings.hasSourceImage )
+			{
+				swatches[4] = autoColorSwatch;
+				colorOverlay4.visible = false;
+			} else {
+				swatches[4] = colorOverlay4;
+				autoColorSwatch.visible = false;
+				userPaintSettings.setCurrentColor(palettes[0][0]); 
+				
+			} 
+			selectedIndex = userPaintSettings.selectedSwatchIndex;
 		}
 		
 		private function showPalette( index:int ):void
 		{
 			selectedPaletteIndex = index;
-			for ( var i:int = 0; i < 12; i++ )
+			for ( var i:int = 0; i < swatches.length; i++ )
 			{
 				var t:ColorTransform = swatches[i].transform.colorTransform; 
 				t.color = 0xff000000 | palettes[index][i];
@@ -94,47 +108,67 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		public function set selectedIndex(index:int):void
 		{
-			if ( index > -1 )
+			paletteSelector.visible = ( index > -1 );
+			if ( index > -1 &&  userPaintSettings.selectedSwatchIndex != index )
 			{
-				if ( _currentIndex != index )
-				{
-					paletteSelector.visible = true;
+				if ( swatches[index] == autoColorSwatch){
+					paletteSelector.x = swatches[index].x + 32;
+					paletteSelector.y = swatches[index].y+35;
+					_selectedColor = userPaintSettings.currentColor;
+				} else {
 					paletteSelector.x = swatches[index].x;
 					paletteSelector.y = swatches[index].y+2;
 					_selectedColor = palettes[selectedPaletteIndex][index];
-					
-					
-					dispatchEvent( new Event(Event.CHANGE) );
 				}
+				userPaintSettings.selectedSwatchIndex = index;
+				
+				userPaintSettings.setColorMode( autoColor ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE, false );
+				userPaintSettings.setCurrentColor(_selectedColor);
+				
 			} else {
-				paletteSelector.visible = false;
+				userPaintSettings.selectedSwatchIndex = index;
 			}
-			_currentIndex = index;
+			
+			
 		}
 		
-		public function changeSelectedColor( ct:ColorTransform):void
+		public function get autoColor():Boolean
 		{
-			if ( _currentIndex != -1 )
-			{
-				swatches[_currentIndex].transform.colorTransform = ct;
-				palettes[selectedPaletteIndex][_currentIndex] = ct.color;
-			}
+			return (autoColorSwatch.visible && userPaintSettings.selectedSwatchIndex == 4);
 		}
+		
+		public function set autoColor( value:Boolean ):void
+		{
+			if (autoColorSwatch.visible ) 
+			{
+				if ( value )
+					selectedIndex = 4;
+				else if ( userPaintSettings.selectedSwatchIndex == 4 ) selectedIndex = -1;
+			}
+		
+		}
+		
 		
 		public function get selectedColor():uint
 		{
 			return _selectedColor;
 		}
 		
-		public function set selectedColor(value:uint):void
+		public function set selectedColor(argb:uint):void
 		{
-			if ( _currentIndex != -1 )
+			if ( userPaintSettings.selectedSwatchIndex != -1 && !autoColor )
 			{
-				var ct:ColorTransform = new ColorTransform();
-				ct.color = value;
-				swatches[_currentIndex].transform.colorTransform = ct;
-				palettes[selectedPaletteIndex][_currentIndex] = swatches[_currentIndex].transform.colorTransform.color;
-			}
+				dummyColorTransform.color = _selectedColor = argb;
+				swatches[userPaintSettings.selectedSwatchIndex].transform.colorTransform = dummyColorTransform;
+				palettes[selectedPaletteIndex][userPaintSettings.selectedSwatchIndex] = argb;
+			} 
+		}
+		
+		public function changeSwatchColor(swatch:Sprite, color:uint):void
+		{
+			dummyColorTransform.color = color;
+			swatch.transform.colorTransform = dummyColorTransform;
+			palettes[selectedPaletteIndex][getSwatchIndex(swatch)] = color;
 		}
 		
 		public function get currentPalette():Array
@@ -142,24 +176,39 @@ package net.psykosoft.psykopaint2.paint.views.color
 			return palettes[selectedPaletteIndex];
 		}
 		
-		public function getSwatchUnderMouse():Sprite
+		public function getSwatchUnderMouse( ignoreAutoSwatch:Boolean = false):Sprite
 		{
 			for ( var i:int = 0; i < swatches.length; i++ )
 			{
 				if ( swatches[i].hitTestPoint(stage.mouseX,stage.mouseY,true ) )
 				{
 					
-					//pipette.colorbar.transform.colorTransform = swatches[i].transform.colorTransform;
-					//var incomingColor:int= palettes[selectedPaletteIndex][i]
-					return swatches[i];
+					return ( swatches[i]!= autoColorSwatch || !ignoreAutoSwatch ?  swatches[i] : null );
 				}
 			}
 			return null;
 		}
 		
+		public function getSwatchIndex( swatch:Sprite):int
+		{
+			for ( var i:int = 0; i < swatches.length; i++ )
+			{
+				if ( swatches[i]== swatch)
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
+		
+		public function selectSwatch( swatch:Sprite):void
+		{
+			selectedIndex = getSwatchIndex( swatch );
+		}
+		
 		public function getSelectedSwatch():Sprite
 		{
-			return _currentIndex > -1 ?  swatches[_currentIndex] : null;
+			return userPaintSettings.selectedSwatchIndex > -1 ?  swatches[userPaintSettings.selectedSwatchIndex] : null;
 		}
 		
 	}

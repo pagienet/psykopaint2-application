@@ -1,13 +1,13 @@
 package net.psykosoft.psykopaint2.paint
 {
 
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
-
-	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
-
+	import flash.utils.ByteArray;
+	
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
@@ -27,7 +27,10 @@ package net.psykosoft.psykopaint2.paint
 	{
 		private var _coreModule:CoreModule;
 		private var _moduleSetUp : Boolean = true;
-
+		
+		[Embed(source="dummy.jpg", mimeType="image/jpg")]
+		protected var DummyImage:Class;
+		
 		public function PaintModule( core:CoreModule = null ) {
 			super();
 			_coreModule = core;
@@ -88,9 +91,12 @@ package net.psykosoft.psykopaint2.paint
 			paintingDataVO.width = CoreSettings.STAGE_WIDTH;
 			paintingDataVO.height = CoreSettings.STAGE_HEIGHT;
 			paintingDataVO.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);
-			var tempData : BitmapData = new TrackedBitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false);
-			tempData.perlinNoise(64, 64, 8, 50, true, true);
+			
+			var tempData:BitmapData = (new DummyImage() as Bitmap).bitmapData;
+			//var tempData : BitmapData = new TrackedBitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false);
+		//	tempData.perlinNoise(64, 64, 8, 50, true, true);
 			paintingDataVO.sourceImageData = tempData.getPixels(tempData.rect); //ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0xffffffff);
+			//paintingDataVO.sourceImageData = null;
 			paintingDataVO.normalSpecularData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x80808080);
 			paintingDataVO.normalSpecularOriginal = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x80808080);
 			tempData.dispose();

@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.UncoloredTextureSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	
 	public class UncoloredSprayCanBrush extends SplatBrushBase
@@ -20,12 +21,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			super(false);
 			type = BrushType.UNCOLORED_SPRAY_CAN;
 			_yuvMatchingWeights = Vector.<Number>([1, 1, 1]);
-		}
-
-
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
-		{
-			super.activate(view, context, canvasModel, renderer);
 		}
 
 		override protected function createBrushMesh() : IBrushMesh
@@ -55,15 +50,23 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		override protected function onPickColor( point : SamplePoint, pickRadius:Number, smoothFactor:Number ) : void
 		{
-			var minSize:Number = _maxBrushRenderSize * _sizeFactor.lowerRangeValue;
-			var maxSize:Number = _maxBrushRenderSize * _sizeFactor.upperRangeValue;
-			var rsize : Number = minSize + (maxSize - minSize) * point.size;
-			if (rsize > maxSize) rsize = maxSize;
-			else if (rsize < minSize) rsize = minSize;
-			
-			_appendVO.size = rsize * pickRadius;
-			_appendVO.point = point;
-			_colorStrategy.getColorsByVO( _appendVO, rsize* 0.5 * smoothFactor);
+			if ( _paintSettingsModel.colorMode == PaintMode.PHOTO_MODE )
+			{
+				var minSize:Number = _maxBrushRenderSize * _sizeFactor.lowerRangeValue;
+				var maxSize:Number = _maxBrushRenderSize * _sizeFactor.upperRangeValue;
+				var rsize : Number = minSize + (maxSize - minSize) * point.size;
+				if (rsize > maxSize) rsize = maxSize;
+				else if (rsize < minSize) rsize = minSize;
+				
+				_appendVO.size = rsize * pickRadius;
+				_appendVO.point = point;
+				_colorStrategy.getColorsByVO( _appendVO, rsize* 0.5 * smoothFactor);
+			} else {
+				var target:Vector.<Number> = _appendVO.point.colorsRGBA;
+				target[0] = target[4] = target[8] = target[12] = _paintSettingsModel.current_r;
+				target[1] = target[5] = target[9] = target[13] = _paintSettingsModel.current_g;
+				target[2] = target[6] = target[10] = target[14] = _paintSettingsModel.current_b;
+			}
 		}
 		
 

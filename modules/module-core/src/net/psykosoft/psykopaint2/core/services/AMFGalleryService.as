@@ -104,7 +104,10 @@ package net.psykosoft.psykopaint2.core.services
 				vo.numComments = obj["num_comments"];
 				vo.userID = obj["user_id"];
 				vo.isFavorited = obj.hasOwnProperty("is_favorited")? obj["is_favorited"] : false;
-				vo.paintingMode = obj["is_photo_painting"] == 1? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
+				
+				//TODO: this has to be replaced by something meaningful now that we do not distinguish photo and color mode anymore:
+				//vo.paintingMode = obj["is_photo_painting"] == 1? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
+				
 				collection.images.push(vo);
 			}
 

@@ -51,6 +51,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	
 	public class ClassicPsykoBrush extends AbstractBrush
@@ -103,9 +104,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_parameters.push(_density);
 		}
 
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer, paintSettingsModel : UserPaintSettingsModel) : void
 		{
-			super.activate(view, context, canvasModel, renderer);
+			super.activate(view, context, canvasModel, renderer, paintSettingsModel );
 			if (_brushShape)
 				assignBrushShape();
 		}
@@ -251,11 +252,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_view.stage.quality = StageQuality.LOW;
 			setTimeout(super.onPathEnd,1);
 		}
+		/*
 		override protected function onPickColor( point : SamplePoint, pickRadius : Number, smoothFactor : Number ) : void
 		{
 			
 		}
-
+		*/
 		
 		override protected function processPoint( point : SamplePoint) : void
 		{

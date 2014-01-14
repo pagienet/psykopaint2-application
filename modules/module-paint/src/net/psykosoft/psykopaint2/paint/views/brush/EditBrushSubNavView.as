@@ -52,6 +52,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			setHeader( "" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 
+			/*
 			// Show color button?
 			if( PaintModeModel.activeMode == PaintMode.COLOR_MODE ) {
 				setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.COLOR );
@@ -59,7 +60,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			else {
 				setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.ALPHA );
 			}
-
+			*/
+			setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.ALPHA );
 			setBgType( NavigationBg.BG_TYPE_WOOD_LOW );
 		}
 

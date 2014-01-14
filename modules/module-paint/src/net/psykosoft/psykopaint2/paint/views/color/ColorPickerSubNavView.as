@@ -1,21 +1,35 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
 	
+	import com.bit101.components.ComboBox;
+	import com.bit101.components.Knob;
 	import com.quasimondo.color.colorspace.HSV;
 	import com.quasimondo.color.utils.ColorConverter;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
+	import flash.text.TextField;
 	
+	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
+	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
+	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
+	import net.psykosoft.psykopaint2.core.views.components.combobox.ComboboxView;
+	import net.psykosoft.psykopaint2.core.views.components.slider.SliderBase;
+	import net.psykosoft.psykopaint2.core.views.components.slider.SliderButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	
@@ -23,9 +37,24 @@ package net.psykosoft.psykopaint2.paint.views.color
 	
 	public class ColorPickerSubNavView extends SubNavigationViewBase
 	{
-		public var userPaintSettings:UserPaintSettingsModel;
+		public static const ID_BACK:String = "Back";
 		
-		public var currentColorSwatch:Sprite;
+		private var _uiElements:Vector.<DisplayObject>;
+		private var _parameterSetVO:ParameterSetVO;
+		private var _parameter:PsykoParameter;
+		
+		public static const CUSTOM_COLOR_ID:String = "Custom Color";
+		private const UI_ELEMENT_Y:uint = 320;
+
+		private var _userPaintSettings:UserPaintSettingsModel;
+		
+		public var slider1Handle:Sprite;
+		public var slider2Handle:Sprite;
+		public var slider1Bar:Sprite;
+		public var slider2Bar:Sprite;
+		public var styleBar:Sprite;
+		public var styleSelector:Sprite;
+		
 		public var hueHandle:MovieClip;
 		public var saturationHandle:MovieClip;
 		public var lightnessHandle:MovieClip;
@@ -36,12 +65,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var lightnessOverlay:Sprite;
 		
 		public var colorPalette:ColorPalette;
-		public var colorChangedSignal:Signal;
-		//public var currentColor:uint = 0;
-		public var currentHSV:HSV;
-		private var colorMixer:Colormixer;
-		//private var colorMixer:FluidColorMixer;
-		//private var colorMixer:ColorMixerTDSI;
+		
 		private var hueMap:BitmapData;
 		private var satMap:BitmapData;
 		private var lightnessMap:BitmapData;
@@ -50,79 +74,67 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var satMapHolder:Bitmap;
 		private var lightnessMapHolder:Bitmap;
 		
-		private var sliderHolder:Sprite;
+		private var hslSliderHolder:Sprite;
 		
-		private var activeSliderIndex:int;
+		private var activeHSLSliderIndex:int;
+		private var HSLSliderPaddingLeft:Number = 16;
+		private var HSLSliderPaddingRight:Number = 16;
+		private var HSLSliderRange:Number = 255 - HSLSliderPaddingLeft - HSLSliderPaddingRight;
+		private var HSLSliderOffset:int = - 14;
+		
 		private var sliderPaddingLeft:Number = 16;
 		private var sliderPaddingRight:Number = 16;
+		private var sliderRange:Number = 255 - sliderPaddingLeft - sliderPaddingRight;
+		private var sliderOffset:int = 32;
+		
+		
 		private var saturationSliderValues:Array;
-		private var sliderOffset:int = - 14;
-		private var pipette:Pipette;
 		
-		/*
-		private var hueHandleBg:Shape;
 		
-		private var saturationHandleBg:Shape;
-		
-		private var lightnessHandleBg:Shape;
-		*/
-		
-		public static const ID_BACK:String = "Back";
-		private var pipetteDropSize:int;
 		private var currentSwatchMixRed:Number;
 		private var currentSwatchMixGreen:Number;
 		private var currentSwatchMixBlue:Number;
 		
+		private var selectedPipetteChargeSwatch:Sprite;
+		private var activeSliderIndex:int;
+		
 		public function ColorPickerSubNavView()
 		{
 			super();
-			colorChangedSignal = new Signal();
+			_scroller.y -= 200;
 		}
 		
 		override public function setup():void
 		{
 			super.setup();
 			
-			colorPalette.setPalettes( userPaintSettings.colorPalettes );
-			
-			colorPalette.addEventListener( Event.CHANGE, onPaletteColorChanged );
-			
-			colorMixer = new Colormixer( colorPalette.currentPalette );
-			colorMixer.y = 595;
-			colorMixer.x = 3;
-			colorMixer.addEventListener( Event.CHANGE, onMixerColorPicked );
-			colorMixer.blendMode = "multiply";
-			addChildAt(colorMixer,getChildIndex(colorPalette));
-			
-			var mixerMap:BitmapData = new BitmapData(270,190,false,0);
 			
 			hueMap = new BitmapData(256,1,false,0);
 			satMap = new BitmapData(256,1,false,0);
 			lightnessMap = new BitmapData(256,1,false,0);
 			generateHueAndLightnessSliders();
 			
-			currentHSV = new HSV(0,0,0);
-			
-			sliderHolder = new Sprite();
-			sliderHolder.x = 753;
-			sliderHolder.y = 599;
-			addChildAt(sliderHolder,getChildIndex(sliderBackdrop)+1);
-			sliderHolder.addEventListener(MouseEvent.MOUSE_DOWN, onSliderMouseDown );
+			hslSliderHolder = new Sprite();
+			hslSliderHolder.x = 753;
+			hslSliderHolder.y = 599;
+			addChildAt(hslSliderHolder,getChildIndex(sliderBackdrop)+1);
+			hslSliderHolder.addEventListener(MouseEvent.MOUSE_DOWN, onHSLSliderMouseDown );
 			
 			
 			hueMapHolder = new Bitmap(hueMap,"auto",false);
 			hueMapHolder.height = 41;
-			sliderHolder.addChild(hueMapHolder);
+			hueMapHolder.y = -4;
+			hslSliderHolder.addChild(hueMapHolder);
 			
 			satMapHolder = new Bitmap(satMap,"auto",false);
 			satMapHolder.height = 41;
-			satMapHolder.y = 59;
-			sliderHolder.addChild(satMapHolder);
+			satMapHolder.y = 55;
+			hslSliderHolder.addChild(satMapHolder);
 			
 			lightnessMapHolder = new Bitmap(lightnessMap,"auto",false);
 			lightnessMapHolder.height = 41;
-			lightnessMapHolder.y = 59 + 59;
-			sliderHolder.addChild(lightnessMapHolder);
+			lightnessMapHolder.y = 55 + 59;
+			hslSliderHolder.addChild(lightnessMapHolder);
 			
 			hueHandle.gotoAndStop(1);
 			lightnessHandle.gotoAndStop(1);
@@ -130,19 +142,20 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			hueHandle.mouseEnabled = false;
 			saturationHandle.mouseEnabled = false;
+			slider1Handle.mouseEnabled = false;
+			slider2Handle.mouseEnabled = false;
 			lightnessHandle.mouseEnabled = false;
 			hueOverlay.mouseEnabled = false;
 			saturationOverlay.mouseEnabled = false;
 			lightnessOverlay.mouseEnabled = false;
 			
+			styleBar.addEventListener(MouseEvent.MOUSE_DOWN, onStyleMouseDown );
+			slider1Bar.addEventListener(MouseEvent.MOUSE_DOWN, onSlider1MouseDown );
+			slider2Bar.addEventListener(MouseEvent.MOUSE_DOWN, onSlider2MouseDown );
 			
 			
-			pipette = new Pipette();
-			pipette.addEventListener( Event.CHANGE, onPipetteColorPicked );
-			addChild(pipette);
+			colorPalette.setUserPaintSettings( _userPaintSettings );
 			
-			pipette.gotoAndStop(1);
-			pipette.visible = false;
 		}
 		
 		override protected function onEnabled():void
@@ -152,101 +165,122 @@ package net.psykosoft.psykopaint2.paint.views.color
 			setBgType( NavigationBg.BG_TYPE_WOOD );
 		}
 		
-		protected function onSliderMouseDown( event:MouseEvent ):void
+		
+		protected function onStyleMouseDown( event:MouseEvent ):void
 		{
-			if ( sliderHolder.mouseX < 0 || sliderHolder.mouseX > 256 || sliderHolder.mouseY < 0) return;
+			if ( styleBar.mouseX < sliderOffset  || styleBar.mouseX > 256 + sliderOffset  || styleBar.mouseY < 0 || styleBar.mouseY > 69) return;
 			
-			activeSliderIndex = sliderHolder.mouseY / 59;
-			if ( activeSliderIndex > 2 || sliderHolder.mouseY % 59 > 41 ) return;
-			
-			
+			styleSelector.x = sliderOffset + styleBar.x + int((styleBar.mouseX - sliderOffset ) / 60) * 60;
+		}
+		
+		protected function onSlider1MouseDown( event:MouseEvent ):void
+		{
+			if ( slider1Bar.mouseX < 0 || slider1Bar.mouseX > 256 || slider1Bar.mouseY < 0 || slider1Bar.mouseY > 69) return;
+			activeSliderIndex = 0;
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
 			stage.addEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
-			
-			
-			onSliderMouseMove(event);
+		}
+		
+		protected function onSlider2MouseDown( event:MouseEvent ):void
+		{
+			if ( slider2Bar.mouseX < 0 || slider2Bar.mouseX > 256 || slider2Bar.mouseY < 0 || slider2Bar.mouseY > 69) return;
+			activeSliderIndex = 1;
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
+			stage.addEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
 		}
 		
 		protected function onSliderMouseMove( event:MouseEvent ):void
 		{
-			
-			var sx:Number = sliderHolder.mouseX;
-			if ( sliderHolder.mouseX < sliderPaddingLeft ) sx = sliderPaddingLeft;
-			if ( sliderHolder.mouseX > 255 - sliderPaddingRight) sx = 255 - sliderPaddingRight;
+			var sx:Number = slider1Bar.mouseX / sliderRange;
+			if ( sx < 0 ) sx = 0;
+			if ( sx > 1 ) sx = 1;
 			
 			switch ( activeSliderIndex )
 			{
 				case 0: //hue
-					hueHandle.x = sliderHolder.x  + sliderPaddingLeft + sx + sliderOffset;
-					currentHSV.hue = 359 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
-					setCurrentColor( ColorConverter.HSVtoUINT(currentHSV), false, true );
+					slider1Handle.x = sliderOffset + slider1Bar.x  + sliderPaddingLeft + sx * sliderRange;
 					break;
 				case 1: //sat
-					saturationHandle.x = sliderHolder.x+ sliderPaddingLeft +  sx + sliderOffset;
-					var v:Array = saturationSliderValues[int(255 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight))];
-					currentHSV.saturation = v[0];
-					currentHSV.value = v[1];
-					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false, true );
-					break;
-				case 2: //lightness
-					lightnessHandle.x = sliderHolder.x+ sliderPaddingLeft + sx + sliderOffset;
-					currentHSV.value = 100 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
-					setCurrentColor(  ColorConverter.HSVtoUINT(currentHSV), false, true );
+					slider2Handle.x = sliderOffset + slider2Bar.x  + sliderPaddingLeft + sx * sliderRange;
 					break;
 			}
+			
 		}
 		
 		protected function onSliderMouseUp( event:MouseEvent ):void
 		{
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
-			
 		}
 		
-		protected function onPaletteColorChanged(event:Event):void
+		protected function onHSLSliderMouseDown( event:MouseEvent ):void
 		{
-			setCurrentColor( colorPalette.selectedColor, true );
+			if ( hslSliderHolder.mouseX < 0 || hslSliderHolder.mouseX > 256 || hslSliderHolder.mouseY < 0) return;
+			activeHSLSliderIndex = hslSliderHolder.mouseY / 59;
+			if ( activeHSLSliderIndex > 2 || hslSliderHolder.mouseY % 59 > 41 ) return;
+			
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, onHSLSliderMouseMove );
+			stage.addEventListener(MouseEvent.MOUSE_UP, onHSLSliderMouseUp );
+			onHSLSliderMouseMove(event);
 		}
 		
-		protected function onMixerColorPicked( event:Event ):void {
-			setCurrentColor( colorMixer.currentColor, false );
-		}
-		
-		protected function onPipetteColorPicked( event:Event ):void {
-			colorMixer.mixEnabled = true;
-			setCurrentColor( pipette.currentColor, false );
-			pipette.removeEventListener( "PipetteDischarge", onPipetteDischargeOnMixer );
-			pipette.removeEventListener( "PipetteDischarge", onPipetteDischargeOnSwatch );
-		}
-		
-		public function setCurrentColor( newColor:uint, fromPalette:Boolean, fromSlider:Boolean = false, triggerChange:Boolean = true ):void
+		protected function onHSLSliderMouseMove( event:MouseEvent ):void
 		{
-			//trace( "setCurrentColor", newColor, fromPalette, fromSlider, triggerChange);
-			userPaintSettings.currentColor =  newColor;
-			currentHSV = ColorConverter.UINTtoHSV(newColor);
+			var sx:Number = hslSliderHolder.mouseX / HSLSliderRange;
+			if ( sx < 0 ) sx = 0;
+			if ( sx > 1 ) sx = 1;
 			
-			var t:ColorTransform = currentColorSwatch.transform.colorTransform;
-			t.color = userPaintSettings.currentColor;
-			currentColorSwatch.transform.colorTransform = t;
-			
-			if ( fromSlider )  colorPalette.changeSelectedColor(t);
-			if( triggerChange ) colorChangedSignal.dispatch();
-			colorMixer.currentColor = userPaintSettings.currentColor;
-			updateSaturationSlider();
-			
-			if ( !fromSlider )
+			switch ( activeHSLSliderIndex )
 			{
-				hueHandle.x = sliderOffset + sliderHolder.x + sliderPaddingLeft + (isNaN( currentHSV.hue ) ? 0 : currentHSV.hue) / 360 * (255 -sliderPaddingLeft-sliderPaddingRight);
-				saturationHandle.x = sliderOffset + sliderHolder.x +  sliderPaddingLeft + currentHSV.saturation / 100 * (255 -sliderPaddingLeft-sliderPaddingRight)
-				lightnessHandle.x = sliderOffset + sliderHolder.x +  sliderPaddingLeft + currentHSV.value / 100 * (255 -sliderPaddingLeft-sliderPaddingRight);
+				case 0: //hue
+					hueHandle.x = hslSliderHolder.x  + HSLSliderPaddingLeft + sx * HSLSliderRange;//sliderHolder.x  + sliderPaddingLeft + sx + sliderOffset;
+					_userPaintSettings.hue = sx * 359;//359 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
+					updateSaturationSlider();
+					break;
+				case 1: //sat
+					saturationHandle.x = hslSliderHolder.x  + HSLSliderPaddingLeft + sx * HSLSliderRange;//sliderHolder.x+ sliderPaddingLeft +  sx + sliderOffset;
+					var v:Array = saturationSliderValues[int(255 * sx)]; //saturationSliderValues[int(255 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight))];
+					_userPaintSettings.saturation = v[0];
+					_userPaintSettings.lightness = v[1];
+					break;
+				case 2: //lightness
+					lightnessHandle.x = hslSliderHolder.x  + HSLSliderPaddingLeft + sx * HSLSliderRange;//sliderHolder.x+ sliderPaddingLeft + sx + sliderOffset;
+					_userPaintSettings.lightness = 100 * sx;//100 * (sx - sliderPaddingLeft) / (255 -sliderPaddingLeft - sliderPaddingRight);
+					updateSaturationSlider();
+					break;
 			}
+			_userPaintSettings.updateCurrentColorFromHSV();
+		}
+		
+		protected function onHSLSliderMouseUp( event:MouseEvent ):void
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onHSLSliderMouseMove );
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onHSLSliderMouseUp );
+		}
+		
+		public function setCurrentColor( newColor:uint, colorMode:int, fromSliders:Boolean ):void
+		{
+			if ( !fromSliders )
+			{
+				colorPalette.autoColor = (colorMode == PaintMode.PHOTO_MODE);
+				updateSaturationSlider();
+				hueHandle.x = HSLSliderOffset + hslSliderHolder.x + HSLSliderPaddingLeft + (isNaN( _userPaintSettings.hue ) ? 0 : _userPaintSettings.hue) / 360 * HSLSliderRange;
+				saturationHandle.x = HSLSliderOffset + hslSliderHolder.x +  HSLSliderPaddingLeft + _userPaintSettings.saturation / 100 * HSLSliderRange;
+				lightnessHandle.x = HSLSliderOffset + hslSliderHolder.x +  HSLSliderPaddingLeft + _userPaintSettings.lightness / 100 * HSLSliderRange;
+			} else {
+				colorPalette.autoColor = false;
+				colorPalette.selectedColor = newColor;
+				_userPaintSettings.setColorMode(PaintMode.COLOR_MODE);
+			}
+			if (!colorPalette.autoColor && _userPaintSettings.selectedSwatchIndex > -1 && colorPalette.selectedColor != newColor ) colorPalette.selectedIndex = -1;
+			
 		}
 		
 		protected function updateSaturationSlider():void
 		{
 			satMap.lock();
 			saturationSliderValues = [];
-			var hsv:HSV = currentHSV.clone();
+			var hsv:HSV = _userPaintSettings.currentHSV.clone();
 			var vdiff:Number = Math.max(20 - hsv.value,0) / 256;
 			var vd:Number = 1 / 256; 
 			var v:Number = 0;
@@ -282,55 +316,34 @@ package net.psykosoft.psykopaint2.paint.views.color
 			lightnessMap.unlock()
 		}
 		
-		public function attemptPipetteCharge( fromLongTap:Boolean ):void
+		public function canChargePipette():Object
 		{
-			if ( pipette.visible ) return;
-			
-			if ( !this.contains(pipette )) this.addChild(pipette);
-			//if ( mouseY < -100 || mouseX < -225 || mouseX > 240 ) return;
 			if ( colorPalette.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
 			{
-				var swatch:Sprite = colorPalette.getSwatchUnderMouse();
+				var swatch:Sprite = colorPalette.getSwatchUnderMouse( true );
 				if ( swatch != null )
 				{
-					pipette.x = colorPalette.x + swatch.x;
-					pipette.y = colorPalette.y + swatch.y - 32;
-					pipette.startCharge( swatch.transform.colorTransform.color );
-					if ( swatch == colorPalette.getSelectedSwatch() )
-					{
-						var rgb:uint = colorPalette.getSelectedSwatch().transform.colorTransform.color; 
-						currentSwatchMixRed = (rgb >> 16) & 0xff;
-						currentSwatchMixGreen= (rgb >> 8) & 0xff;
-						currentSwatchMixBlue = rgb & 0xff;
-						pipette.addEventListener( "PipetteDischarge", onPipetteDischargeOnSwatch );
-					}
-					return;
+					selectedPipetteChargeSwatch = swatch;
+					var rgb:uint = swatch.transform.colorTransform.color; 
+					currentSwatchMixRed = (rgb >> 16) & 0xff;
+					currentSwatchMixGreen= (rgb >> 8) & 0xff;
+					currentSwatchMixBlue = rgb & 0xff;
+					return {canCharge:true, color:rgb, pos:new Point(colorPalette.x + swatch.x,colorPalette.y + swatch.y - 32)};
 				}
-			}
-			
-			if ( currentColorSwatch.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
-			{
-				pipette.x = currentColorSwatch.x + 10;
-				pipette.y = currentColorSwatch.y - 64;
-				pipette.startCharge( currentColorSwatch.transform.colorTransform.color );	
-			
-			} else if ( fromLongTap && colorMixer.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
-			{
-				colorMixer.mixEnabled = false;
-				pipetteDropSize = 1;
-				pipette.x = stage.mouseX + 5;
-				pipette.y = stage.mouseY - 2;
-				pipette.addEventListener( "PipetteDischarge", onPipetteDischargeOnMixer );
-				pipette.startCharge( colorMixer.getColorAtMouse() );	
-				
-			}
-			
+			} 
+			selectedPipetteChargeSwatch = null;
+			return {canCharge:false};
 			
 		}
 		
-		private function onPipetteDischargeOnSwatch( event:Event ):void
+		public function set userPaintSettings(value:UserPaintSettingsModel):void
 		{
-			
+			_userPaintSettings = value;
+		}
+
+		public function onPipetteDischarging( pipette:Pipette ):void
+		{
+			if (!selectedPipetteChargeSwatch) return;
 			
 			var blendFactor:Number = 0.005;
 			currentSwatchMixRed = pipette.pipette_red * blendFactor + currentSwatchMixRed * ( 1- blendFactor );
@@ -343,22 +356,314 @@ package net.psykosoft.psykopaint2.paint.views.color
 			if ( currentSwatchMixBlue < 0 ) currentSwatchMixBlue = 0;
 			else if (currentSwatchMixBlue > 255 ) currentSwatchMixBlue = 255;
 			
-			colorPalette.selectedColor = currentSwatchMixRed << 16 | currentSwatchMixGreen << 8 | currentSwatchMixBlue;
+			colorPalette.changeSwatchColor( selectedPipetteChargeSwatch, currentSwatchMixRed << 16 | currentSwatchMixGreen << 8 | currentSwatchMixBlue );
 		}
 		
-		private function onPipetteDischargeOnMixer( event:Event ):void
-		{
-			colorMixer.addColorSpot( pipette.x-colorMixer.x,pipette.y-colorMixer.y,pipette.currentColor, pipetteDropSize++);
+		public function setParameters( parameterSetVO:ParameterSetVO ):void {
+			
+			_parameterSetVO = parameterSetVO;
+			trace( this, "receiving parameters for brush " + parameterSetVO.brushName + ", with num parameters: " + parameterSetVO.parameters.length );
+			
+			// Create a center button for each parameter, with a local listener.
+			// Specific parameter ui components will show up when clicking on a button.
+			
+			invalidateCenterButtons();
+			
+			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
+			var numParameters:uint = list.length;
+			
+			for( var i:uint = 0; i < numParameters; ++i ) {
+				
+				var parameter:PsykoParameter = list[ i ];
+				
+				trace( this, "adding parameter with id: " + parameter.id + ", and label: " + parameter.label );
+				
+				if( parameter.type != PsykoParameter.ColorParameter ) {
+					if( parameter.id != CUSTOM_COLOR_ID ) {
+						
+						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
+						
+						var data:ButtonData = createCenterButton( parameter.id, parameter.label, ButtonIconType.DEFAULT, null, null, false, true, true, MouseEvent.MOUSE_DOWN );
+						
+						// Button slider?
+						if( parameter.type == PsykoParameter.IntParameter
+							|| parameter.type == PsykoParameter.NumberParameter
+							|| parameter.type == PsykoParameter.AngleParameter ) {
+							data.itemRendererType = SliderButton;
+							data.minValue = parameter.minLimit;
+							data.maxValue = parameter.maxLimit;
+							data.value = parameter.type == PsykoParameter.AngleParameter ? parameter.degrees : parameter.numberValue;
+							data.previewID = parameter.previewID;
+							data.onItemRendererAssigned = onSliderButtonRendererAssigned;
+							data.onItemRendererReleased = onSliderButtonRendererReleased;
+						} else if ( parameter.type == PsykoParameter.IconListParameter )
+						{
+							data.itemRendererType = SliderButton;
+							data.minValue = parameter.minLimit;
+							data.maxValue = parameter.maxLimit;
+							data.value = parameter.index;
+							data.previewID = parameter.previewID;
+							data.onItemRendererAssigned = onSliderButtonRendererAssigned;
+							data.onItemRendererReleased = onSliderButtonRendererReleased;
+							
+						}
+					}
+				}
+				//else {
+				//	showRightButton( true );
+				//}
+				
+				
+			}
+			
+			validateCenterButtons();
 		}
 		
-		public function showPipette( holder:Sprite, color:uint, screenPos:Point):void
-		{
-			if ( !holder.contains(pipette )) holder.addChild(pipette);
-			pipette.x = screenPos.x;
-			pipette.y = screenPos.y;
-			pipette.startCharge( color );	
+		private function onSliderButtonRendererAssigned( renderer:SliderButton ):void {
+			//			trace( this, "onSliderButtonRendererAssigned - id: " + renderer.id );
+			renderer.addEventListener( Event.CHANGE, onSliderButtonChanged );
+			renderer.addEventListener( MouseEvent.MOUSE_DOWN, onSliderButtonMouseDown );
+		}
+		
+		private function onSliderButtonRendererReleased( renderer:SliderButton ):void {
+			//			trace( this, "onSliderButtonRendererReleased - id: " + renderer.id );
+			renderer.removeEventListener( Event.CHANGE, onSliderButtonChanged );
+			renderer.removeEventListener( MouseEvent.MOUSE_DOWN, onSliderButtonMouseDown );
+		}
+		
+		private function onSliderButtonMouseDown( event:MouseEvent ):void {
+			// Always on top.
+			var slider:SliderButton = ClickUtil.getObjectOfClassInHierarchy( event.target as DisplayObject, SliderButton ) as SliderButton;
+			slider.parent.swapChildren( slider, slider.parent.getChildAt( slider.parent.numChildren - 1 ) );
+		}
+		
+		public function updateParameters( parameterSetVO:ParameterSetVO ):void {
+			_parameterSetVO = parameterSetVO;
+		}
+		
+		private function onSliderButtonChanged( event:Event ):void {
+			var slider:SliderButton = event.target as SliderButton;
+			//			trace( this, "onSliderButtonChanged: " + slider.labelText );
+			if ( _parameter )
+			{
+				//focusOnParameterWithId( slider.id );
+				if ( _parameter.type == PsykoParameter.IconListParameter )
+				{
+					_parameter.index = slider.value;
+					slider.labelText = _parameter.stringValue;
+				} else {
+					_parameter.value = slider.value;
+					slider.updateLabelFromValue();
+				}
+			} else {
+				trace("ERRROR - something is not right with the parameter in EditBrushSubNavView");
+			}
+		}
+		
+		/* called by the mediator */
+		public function openParameterWithId( id:String ):void {
 			
+			trace( this, "opening parameter for id: " + id );
 			
+			closeLastParameter();
+			_uiElements = new Vector.<DisplayObject>();
+			
+			focusOnParameterWithId( id );
+			if( _parameter == null ) return;
+			
+			var parameterType:int = _parameter.type;
+			
+			var i:uint;
+			var slider:SliderBase;
+			
+			// Simple slider.
+			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
+				// Replaced by slider buttons on setParameters().
+				/*slider = new SbSlider();
+				slider.minValue = _parameter.minLimit;
+				slider.maxValue = _parameter.maxLimit;
+				slider.value = _parameter.numberValue;
+				slider.addEventListener( Event.CHANGE, onSliderChanged );
+				slider.setWidth( 276 );
+				positionUiElement( slider );
+				addChild( slider );
+				_uiElements.push( slider );*/
+			}
+				
+				// Range slider.
+			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter ) {
+				throw("Range Slider has been deprecated - use something else");
+				/*
+				var rangeSlider:RangedSlider = new RangedSlider();
+				rangeSlider.minValue = _parameter.minLimit;
+				rangeSlider.maxValue = _parameter.maxLimit;
+				rangeSlider.value1 = _parameter.lowerRangeValue;
+				rangeSlider.value2 = _parameter.upperRangeValue;
+				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
+				rangeSlider.setWidth( 451 );
+				positionUiElement( rangeSlider );
+				addChild( rangeSlider );
+				_uiElements.push( rangeSlider );
+				*/
+			}
+				
+				
+			else if( parameterType == PsykoParameter.AngleRangeParameter ) {
+				throw("Range Slider has been deprecated - use something else");
+				/*
+				rangeSlider = new RangedSlider();
+				rangeSlider.labelMode = RangedSlider.LABEL_DEGREES;
+				rangeSlider.minValue = _parameter.minLimit;
+				rangeSlider.maxValue = _parameter.maxLimit;
+				rangeSlider.value1 = _parameter.lowerDegreesValue;
+				rangeSlider.value2 = _parameter.upperDegreesValue;
+				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
+				rangeSlider.setWidth( 451 );
+				positionUiElement( rangeSlider );
+				addChild( rangeSlider );
+				_uiElements.push( rangeSlider );
+				*/
+			}
+				
+				// Angle.
+			else if( parameterType == PsykoParameter.AngleParameter ) {
+				
+				//sorry, but unfortunately knob is pretty unusable right now, replaced it with regular slider
+				/*
+				var knob:Knob = new Knob( this );
+				knob.value = _parameter.degrees;
+				knob.minimum = _parameter.minLimit;
+				knob.maximum = _parameter.maxLimit;
+				knob.addEventListener( Event.CHANGE, onKnobChanged );
+				knob.draw();
+				positionUiElement( knob as DisplayObject, 0, -20 );
+				_uiElements.push( knob );
+				*/
+				
+				// Replaced by slider buttons on setParameters().
+				/*slider = new SbSlider();
+				slider.minValue = _parameter.minLimit;
+				slider.maxValue = _parameter.maxLimit;
+				slider.value = _parameter.degrees;
+				slider.labelMode = SbRangedSlider.LABEL_DEGREES;
+				slider.addEventListener( Event.CHANGE, onSliderChanged );
+				slider.setWidth( 276 );
+				positionUiElement( slider );
+				addChild( slider );
+				_uiElements.push( slider );*/
+			}
+				
+				// Combo box.
+			else if( parameterType == PsykoParameter.StringListParameter) {
+				// || parameterType == PsykoParameter.IconListParameter 
+				var list:Vector.<String> = _parameter.stringList;
+				var len:uint = list.length;
+				var combobox:ComboboxView = new ComboboxView();
+				combobox.interactionStartedSignal.add( onComboboxInteractionStarted );
+				combobox.interactionEndedSignal.add( onComboboxInteractionEnded );
+				for( i = 0; i < len; ++i ) {
+					combobox.addItem( { label: list[ i ] } );
+				}
+				combobox.selectedIndex = _parameter.index;
+				addChild( combobox );
+				combobox.addEventListener( Event.CHANGE, onComboBoxChanged );
+				positionUiElement( combobox as DisplayObject, 40, 10 );
+				_uiElements.push( combobox );
+			}
+				
+				// Check box
+			else if( parameterType == PsykoParameter.BooleanParameter ) {
+				var checkBox:CheckBox = new CheckBox();
+				checkBox.selected = _parameter.booleanValue;
+				checkBox.addEventListener( Event.CHANGE, onCheckBoxChanged );
+				positionUiElement( checkBox );
+				addChild( checkBox );
+				_uiElements.push( checkBox );
+			}
+				// No Ui component for this parameter.
+			else if (parameterType == PsykoParameter.IconListParameter)
+			{
+				
+			} else {
+				trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
+				var tf:TextField = new TextField();
+				tf.selectable = tf.mouseEnabled = false;
+				tf.text = "parameter type not supported: " + PsykoParameter.getTypeName( parameterType );
+				tf.width = tf.textWidth * 1.2;
+				tf.height = tf.textHeight * 1.2;
+				positionUiElement( tf );
+				addChild( tf );
+				_uiElements.push( tf );
+			}
+		}
+		
+		private function focusOnParameterWithId( id:String ):void {
+			_parameter = null;
+			var numParameters:uint = _parameterSetVO.parameters.length;
+			for( var i:uint = 0; i < numParameters; i++ ) {
+				var parameter:PsykoParameter = _parameterSetVO.parameters[ i ];
+				if( parameter.id == id ) {
+					_parameter = parameter;
+					break;
+				}
+			}
+			trace( this, "focused on parameter: " + _parameter );
+		}
+		
+		private function closeLastParameter():void {
+			
+			if( !_uiElements ) return;
+			
+			// Remove all ui elements from display and clear listeners
+			var len:uint = _uiElements.length;
+			for( var i:uint; i < len; ++i ) {
+				var uiElement:DisplayObject = _uiElements[ i ];
+				if( uiElement is SliderBase ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
+				else if( uiElement is ComboBox ) {
+					uiElement.removeEventListener( Event.SELECT, onComboBoxChanged );
+				}
+				else if( uiElement is CheckBox ) uiElement.removeEventListener( Event.CHANGE, onCheckBoxChanged );
+				else if( uiElement is Knob ) uiElement.removeEventListener( Event.CHANGE, onKnobChanged );
+				else {
+					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
+				}
+				//else if( uiElement is RangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
+				removeChild( uiElement );
+			}
+			_uiElements = null;
+		}
+		
+		private function onKnobChanged( event:Event ):void {
+			var knob:Knob = event.target as Knob;
+			_parameter.degrees = knob.value;
+		}
+		
+		private function onCheckBoxChanged( event:Event ):void {
+			var checkBox:CheckBox = event.target as CheckBox;
+			_parameter.booleanValue = checkBox.selected;
+		}
+		
+		private function onComboBoxChanged( event:Event ):void {
+			var comboBox:ComboboxView = event.target as ComboboxView;
+			_parameter.index = comboBox.selectedIndex;
+		}
+		
+		private function onComboboxInteractionEnded():void {
+			GestureManager.gesturesEnabled = true;
+		}
+		
+		private function onComboboxInteractionStarted():void {
+			GestureManager.gesturesEnabled = false;
+		}
+		
+		private function onSliderChanged( event:Event ):void {
+			var slider:SliderBase = event.target as SliderBase;
+			_parameter.value = slider.value;
+		}
+		
+		private function positionUiElement( element:DisplayObject, offsetX:Number = 0, offsetY:Number = 0 ):void {
+			element.x = 1024 / 2 - element.width / 2 + offsetX;
+			element.y = UI_ELEMENT_Y + offsetY;
 		}
 	}
 }

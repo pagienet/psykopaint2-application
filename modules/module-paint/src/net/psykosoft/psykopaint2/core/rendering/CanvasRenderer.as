@@ -71,7 +71,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_lightingRenderer.init();
 			_lightingRenderer.renderRect = _renderRect;
 			_context3D = stage3D.context3D;
-			sourceTextureAlpha = PaintModeModel.activeMode == PaintMode.PHOTO_MODE? 1 : 0;
+			sourceTextureAlpha = 1; //PaintModeModel.activeMode == PaintMode.PHOTO_MODE? 1 : 0;
 			paintAlpha = 1;
 		}
 
