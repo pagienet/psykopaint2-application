@@ -98,7 +98,6 @@ package net.psykosoft.psykopaint2.book
 		private function onBookModuleSetUp() : void
 		{
 			_coreModule.injector.getInstance(RequestNavigationToggleSignal).dispatch(1);
-			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.BOOK_SOURCE_IMAGES);
 		}
 
 		private function destroyStandaloneModule() : void

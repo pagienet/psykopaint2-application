@@ -55,7 +55,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			switch (newState) {
 
-				case NavigationStateType.BOOK_GALLERY:
+				case NavigationStateType.GALLERY_BROWSE_FOLLOWING:
+				case NavigationStateType.GALLERY_BROWSE_MOST_LOVED:
+				case NavigationStateType.GALLERY_BROWSE_MOST_RECENT:
+				case NavigationStateType.GALLERY_BROWSE_YOURS:
 				case NavigationStateType.GALLERY_PAINTING:
 //					// probably not allowed to swipe when share is open
 					initInteraction();

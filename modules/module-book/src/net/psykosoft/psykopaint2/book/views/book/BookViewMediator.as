@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import flash.display.BitmapData;
 
+	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
+
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 
 	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
@@ -15,19 +17,19 @@ package net.psykosoft.psykopaint2.book.views.book
 	import net.psykosoft.psykopaint2.book.signals.RequestOpenBookSignal;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
-	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetBookOffScreenRatioSignal;
-	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
-	public class BookViewMediator extends MediatorBase
+	import robotlegs.bender.bundles.mvcs.Mediator;
+
+	public class BookViewMediator extends Mediator
 	{
 		[Inject]
 		public var view:BookView;
@@ -42,104 +44,89 @@ package net.psykosoft.psykopaint2.book.views.book
 		public var notifyGalleryImageSelected:NotifyGalleryImageSelectedFromBookSignal;
 
 		[Inject]
-		public var requestAnimateBookOutSignal : RequestAnimateBookOutSignal;
+		public var notifyBookModuleDestroyedSignal:NotifyBookModuleDestroyedSignal;
 
 		[Inject]
-		public var notifyAnimateBookOutCompleteSignal : NotifyAnimateBookOutCompleteSignal;
+		public var requestOpenBookSignal:RequestOpenBookSignal;
 
 		[Inject]
-		public var notifyBookModuleDestroyedSignal : NotifyBookModuleDestroyedSignal;
+		public var cameraRollService:CameraRollService;
 
 		[Inject]
-		public var requestOpenBookSignal : RequestOpenBookSignal;
+		public var sampleImageService:SampleImageService;
 
 		[Inject]
-		public var cameraRollService : CameraRollService;
+		public var galleryService:GalleryService;
 
 		[Inject]
-		public var sampleImageService : SampleImageService;
+		public var requestSetBookOffScreenRatioSignal:RequestSetBookOffScreenRatioSignal;
 
 		[Inject]
-		public var galleryService : GalleryService;
+		public var requestNavigationStateChange:RequestNavigationStateChangeSignal;
 
 		[Inject]
-		public var requestSetBookOffScreenRatioSignal : RequestSetBookOffScreenRatioSignal;
+		public var requestDestroyBookModuleSignal:RequestDestroyBookModuleSignal;
 
-		private var _currentGalleryType : int = -1;
-		private var _sourceType : String;
+		private var _currentGalleryType:int = -1;
+		private var _sourceType:String;
+		private var _galleryNavStateLookUp:Array;
 
-		override public function initialize():void {
+		public function BookViewMediator()
+		{
+			_galleryNavStateLookUp = [];
+			_galleryNavStateLookUp[GalleryType.FOLLOWING] = NavigationStateType.GALLERY_BROWSE_FOLLOWING;
+			_galleryNavStateLookUp[GalleryType.MOST_LOVED] = NavigationStateType.GALLERY_BROWSE_MOST_LOVED;
+			_galleryNavStateLookUp[GalleryType.MOST_RECENT] = NavigationStateType.GALLERY_BROWSE_MOST_RECENT;
+			_galleryNavStateLookUp[GalleryType.YOURS] = NavigationStateType.GALLERY_BROWSE_YOURS;
+		}
 
-			// Init.
-			registerView( view );
+		override public function initialize():void
+		{
+
 			super.initialize();
 
-			registerEnablingState( NavigationStateType.BOOK_SOURCE_IMAGES );
-			registerEnablingState( NavigationStateType.BOOK_GALLERY );
-			registerEnablingState( NavigationStateType.GALLERY_PAINTING );
-
-			view.stage3dProxy = stage3dProxy;
-
-			view.enabledSignal.add(onEnabled);
-			view.disabledSignal.add(onDisabled);
-			view.bookDisposedSignal.add( onBookDisposed );
 			requestSetBookOffScreenRatioSignal.add(view.setHiddenOffScreenRatio);
-		}
-
-		private function onBookDisposed():void {
-			notifyBookModuleDestroyedSignal.dispatch();
-		}
-
-		override public function destroy() : void
-		{
-			super.destroy();
-			requestSetBookOffScreenRatioSignal.remove(view.setHiddenOffScreenRatio);
-			view.enabledSignal.remove(onEnabled);
-			view.disabledSignal.remove(onDisabled);
-		}
-
-		private function onEnabled() : void
-		{
+			requestDestroyBookModuleSignal.add(onRequestDestroyBook);
 			view.imageSelectedSignal.add(onImageSelected);
 			view.galleryImageSelectedSignal.add(onGalleryImageSelected);
 			view.onGalleryCollectionRequestedSignal.add(onGalleryCollectionRequest);
-			view.onImageCollectionRequestedSignal.add(onImageCollectionRequest);
+			view.onImageCollectionRequestedSignal.add(fetchImageCollection);
 			view.bookHiddenSignal.add(onBookHidden);
 			view.bookShownSignal.add(onBookShown);
-			requestAnimateBookOutSignal.add(onRequestAnimateBookOutSignal);
 			requestOpenBookSignal.add(onRequestOpenBookSignal);
-			GpuRenderManager.addRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
+			GpuRenderManager.addRenderingStep(view.renderScene, GpuRenderingStepType.NORMAL);
 		}
 
-		private function onBookShown() : void
+		override public function destroy():void
 		{
-			if (_sourceType == ImageCollectionSource.GALLERY_IMAGES)
-				requestNavigationStateChange(NavigationStateType.BOOK_GALLERY);
-		}
-
-		private function onBookHidden() : void
-		{
-			if (_sourceType == ImageCollectionSource.GALLERY_IMAGES)
-				requestNavigationStateChange(NavigationStateType.GALLERY_PAINTING);
-		}
-
-		private function onDisabled() : void
-		{
+			super.destroy();
+			requestSetBookOffScreenRatioSignal.remove(view.setHiddenOffScreenRatio);
 			view.imageSelectedSignal.remove(onImageSelected);
 			view.galleryImageSelectedSignal.remove(onGalleryImageSelected);
 			view.onGalleryCollectionRequestedSignal.remove(onGalleryCollectionRequest);
-			view.onImageCollectionRequestedSignal.remove(onImageCollectionRequest);
+			view.onImageCollectionRequestedSignal.remove(fetchImageCollection);
 			view.bookHiddenSignal.remove(onBookHidden);
 			view.bookShownSignal.remove(onBookShown);
-			requestAnimateBookOutSignal.remove(onRequestAnimateBookOutSignal);
 			requestOpenBookSignal.remove(onRequestOpenBookSignal);
-			GpuRenderManager.removeRenderingStep( view.renderScene, GpuRenderingStepType.NORMAL );
+			GpuRenderManager.removeRenderingStep(view.renderScene, GpuRenderingStepType.NORMAL);
 		}
 
-		private function onRequestOpenBookSignal(sourceType : String, galleryType : uint) : void
+		private function onBookShown():void
+		{
+			if (_sourceType == ImageCollectionSource.GALLERY_IMAGES)
+				requestNavigationStateChange.dispatch(_galleryNavStateLookUp[_currentGalleryType]);
+		}
+
+		private function onBookHidden():void
+		{
+			if (_sourceType == ImageCollectionSource.GALLERY_IMAGES)
+				requestNavigationStateChange.dispatch(NavigationStateType.GALLERY_PAINTING);
+		}
+
+		private function onRequestOpenBookSignal(sourceType:String, galleryType:uint):void
 		{
 			_sourceType = sourceType;
-			if (sourceType == ImageCollectionSource.GALLERY_IMAGES){
+			if (sourceType == ImageCollectionSource.GALLERY_IMAGES) {
 				view.setHiddenMode();
 				view.enableVerticalSwipe();
 				onGalleryCollectionRequest(galleryType, 0, 30);
@@ -147,67 +134,81 @@ package net.psykosoft.psykopaint2.book.views.book
 			else {
 				view.disableVerticalSwipe();
 
-				if(sourceType == ImageCollectionSource.SAMPLE_IMAGES){
-					onImageCollectionRequest(sourceType, 0, 30);
+				if (sourceType == ImageCollectionSource.SAMPLE_IMAGES) {
+					fetchImageCollection(sourceType, 0, 30);
 
 				}
-				else if(sourceType == ImageCollectionSource.CAMERAROLL_IMAGES){
-					onImageCollectionRequest(sourceType, 0, 80);
+				else if (sourceType == ImageCollectionSource.CAMERAROLL_IMAGES) {
+					fetchImageCollection(sourceType, 0, 80);
 				}
 			}
 		}
 
 		//to do dispatch request for next or previous collection
-		private function onGalleryCollectionRequest(galleryType : uint, index : uint, amount : uint) : void
+		private function onGalleryCollectionRequest(galleryType:uint, index:uint, amount:uint):void
 		{
 			galleryService.fetchImages(galleryType, index, amount, onGalleryImageCollectionFetched, onFetchImagesFailure);
 		}
 
-		private function onImageCollectionRequest(sourceType : String, index : uint, amount : uint) : void
+		private function fetchImageCollection(sourceType:String, index:uint, amount:uint):void
 		{
-			var service : SourceImageService = sourceType == ImageCollectionSource.CAMERAROLL_IMAGES? cameraRollService : sampleImageService;
+			var service:SourceImageService = sourceType == ImageCollectionSource.CAMERAROLL_IMAGES ? cameraRollService : sampleImageService;
 			service.fetchImages(index, amount, onSourceImagesFetched, onFetchImagesFailure);
 		}
 
 		private function onImageSelected(selectedBmd:BitmapData):void
 		{
-			notifySourceImageSelectedFromBookSignal.dispatch( selectedBmd );
+			notifySourceImageSelectedFromBookSignal.dispatch(selectedBmd);
 		}
 
-		private function onGalleryImageSelected(selectedGalleryImage : GalleryImageProxy) : void
+		private function onGalleryImageSelected(selectedGalleryImage:GalleryImageProxy):void
 		{
 			notifyGalleryImageSelected.dispatch(selectedGalleryImage);
 			view.transitionToHiddenMode();
 		}
 
-		private function onRequestAnimateBookOutSignal() : void
+		private function onRequestDestroyBook():void
 		{
 			view.bookHasClosedSignal.addOnce(onAnimateOutComplete);
 			view.book.closePages();
 		}
 
-		private function onAnimateOutComplete() : void
+		private function onAnimateOutComplete():void
 		{
-			notifyAnimateBookOutCompleteSignal.dispatch();
+			view.bookDisposedSignal.addOnce(onBookDisposed);
+			view.dispose();
+			view.parent.removeChild(view);
 		}
 
-		private function onSourceImagesFetched(collection : SourceImageCollection) : void
+		private function onBookDisposed():void
+		{
+			notifyBookModuleDestroyedSignal.dispatch();
+		}
+
+		private function onSourceImagesFetched(collection:SourceImageCollection):void
 		{
 			_currentGalleryType = -1;
 			view.setSourceImages(collection);
 		}
 
-		private function onGalleryImageCollectionFetched(collection : GalleryImageCollection) : void
+		private function onGalleryImageCollectionFetched(collection:GalleryImageCollection):void
 		{
 			view.setGalleryImageCollection(collection);
+
+			_currentGalleryType = collection.type;
 
 			if (collection.type != _currentGalleryType && collection.images.length > 0)
 				notifyGalleryImageSelected.dispatch(collection.images[0]);
 		}
 
-		private function onFetchImagesFailure(statusCode : int) : void
+		private function onFetchImagesFailure(statusCode:int):void
 		{
 			// TODO: handle
+		}
+
+		public function dispose():void
+		{
+
 		}
 	}
 }

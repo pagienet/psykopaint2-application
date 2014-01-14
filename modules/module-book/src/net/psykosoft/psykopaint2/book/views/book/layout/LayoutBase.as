@@ -49,7 +49,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		public var requiredCraftSignal:Signal;
  		public var regionSignal:Signal;
  		
-     		public function LayoutBase(type:String, stage:Stage, previousLayout:LayoutBase = null)
+     	public function LayoutBase(type:String, stage:Stage, previousLayout:LayoutBase = null)
  		{
  			_layoutType = type;
  			_stage = stage;
@@ -270,7 +270,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		{
  			_pageMaterialsManager.generateCraftMaterial(bmd);
  			_pageMaterialsManager.generateRingsMaterial(bmd2);
- 			requiredCraftSignal.dispatch(bmd);
+ 			requiredCraftSignal.dispatch();
  		}
 
  		//register regions

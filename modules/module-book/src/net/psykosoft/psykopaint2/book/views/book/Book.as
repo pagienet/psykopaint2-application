@@ -230,7 +230,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		}
  		//end paging & clearing
 
- 		public function initOpenAnimation(bitmapdata:BitmapData):void
+ 		public function initOpenAnimation():void
  		{
  			buildBookCraft();
  			addChild(_bookCraft);
@@ -442,6 +442,7 @@ package net.psykosoft.psykopaint2.book.views.book
  		{
 			super.dispose();
 
+			TweenLite.killTweensOf(this);
  			// if the book cleaned itself earlyer
  			if(!_bookCraft) return;
 

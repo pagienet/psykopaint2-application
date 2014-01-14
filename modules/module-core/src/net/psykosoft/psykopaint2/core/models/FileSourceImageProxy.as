@@ -1,16 +1,11 @@
 package net.psykosoft.psykopaint2.core.models
 {
-	import net.psykosoft.psykopaint2.book.model.*;
 	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
-	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
-
-	import net.psykosoft.psykopaint2.core.models.ImageThumbnailSize;
 
 	public class FileSourceImageProxy implements SourceImageProxy
 	{

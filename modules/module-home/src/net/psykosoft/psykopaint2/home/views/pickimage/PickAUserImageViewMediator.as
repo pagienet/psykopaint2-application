@@ -21,6 +21,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			registerView( view );
 			super.initialize();
 			registerEnablingState( NavigationStateType.PICK_USER_IMAGE_DESKTOP );
+			registerEnablingState( NavigationStateType.PICK_USER_IMAGE_IOS );
 
 			// From view.
 			view.imagePickedSignal.add( onImagePicked );

@@ -16,9 +16,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 
 	public class HomeViewMediator extends MediatorBase
@@ -49,9 +47,6 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var notifyGyroscopeUpdateSignal : NotifyGyroscopeUpdateSignal;
-
-		[Inject]
-		public var requestBrowseGallery : RequestBrowseGallerySignal;
 
 		// TODO: Make pop-ups truly modal using blockers instead of enforcing this on mediators!
 		// probably should do the same for book, so "scrollEnabled" is not necessary at all
@@ -93,8 +88,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			switch (sectionID) {
 				case HomeView.GALLERY:
-					requestBrowseGallery.dispatch(GalleryType.MOST_RECENT);
-					requestNavigationStateChange(NavigationStateType.BOOK_GALLERY);
+					requestNavigationStateChange(NavigationStateType.GALLERY_BROWSE_MOST_RECENT);
 					break;
 				case HomeView.EASEL:
 					requestNavigationStateChange(NavigationStateType.HOME_ON_EASEL);
@@ -173,11 +167,16 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_currentNavigationState = newState;
 
+			// this is not ideal, but hey!
+
 			switch (newState) {
 				case NavigationStateType.HOME:
 					view.activeSection = HomeView.HOME;
 					break;
-				case NavigationStateType.BOOK_GALLERY:
+				case NavigationStateType.GALLERY_BROWSE_FOLLOWING:
+				case NavigationStateType.GALLERY_BROWSE_MOST_LOVED:
+				case NavigationStateType.GALLERY_BROWSE_MOST_RECENT:
+				case NavigationStateType.GALLERY_BROWSE_YOURS:
 				case NavigationStateType.GALLERY_PAINTING:
 					view.activeSection = HomeView.GALLERY;
 					break;
@@ -194,11 +193,15 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function updateScrollingForState() : void
 		{
-			if (_currentNavigationState == NavigationStateType.BOOK_GALLERY ||
-				_currentNavigationState == NavigationStateType.GALLERY_PAINTING ||
+			if (_currentNavigationState == NavigationStateType.GALLERY_BROWSE_FOLLOWING ||
+				_currentNavigationState == NavigationStateType.GALLERY_BROWSE_MOST_LOVED ||
+				_currentNavigationState == NavigationStateType.GALLERY_BROWSE_MOST_RECENT ||
+				_currentNavigationState == NavigationStateType.GALLERY_BROWSE_YOURS ||
+				// allow swiping out when painting is visible
+				/*_currentNavigationState == NavigationStateType.GALLERY_PAINTING ||*/
 				_currentNavigationState == NavigationStateType.GALLERY_SHARE ||
-				_currentNavigationState == NavigationStateType.BOOK_SOURCE_IMAGES ||
 				_currentNavigationState == NavigationStateType.CAPTURE_IMAGE ||
+				_currentNavigationState == NavigationStateType.PICK_USER_IMAGE_IOS ||
 				_currentNavigationState == NavigationStateType.PICK_USER_IMAGE_DESKTOP )
 				view.scrollingEnabled = false;
 			else

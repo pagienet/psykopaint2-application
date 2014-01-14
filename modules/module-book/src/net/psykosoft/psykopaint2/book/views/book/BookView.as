@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import com.greensock.easing.Quad;
 
 	import flash.display.BitmapData;
+	import flash.display.Sprite;
 	import flash.display3D.Context3DClearMask;
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
@@ -15,7 +16,6 @@ package net.psykosoft.psykopaint2.book.views.book
 	import flash.geom.Rectangle;
 	import flash.utils.getTimer;
 
-	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.book.views.book.debug.BookDebug;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
@@ -27,7 +27,7 @@ package net.psykosoft.psykopaint2.book.views.book
 	import org.osflash.signals.Signal;
 
 	//debug
-	public class BookView extends ViewBase
+	public class BookView extends Sprite
 	{
 		private static const BOOK_HIDDEN_Z_MIN : Number = -900;
 		private static const BOOK_HIDDEN_Z_MAX : Number = -1400;
@@ -86,7 +86,7 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private var _hiddenInterActionRectHeight : Number = HIDDEN_INTERACTION_RECT_HEIGHT_MIN;
 
-		public function BookView()
+		public function BookView(stage3dProxy : Stage3DProxy)
 		{
 			super();
 			bookHasClosedSignal = new Signal();
@@ -95,13 +95,20 @@ package net.psykosoft.psykopaint2.book.views.book
 			onGalleryCollectionRequestedSignal = new Signal();
 			onImageCollectionRequestedSignal = new Signal();
 
+			_mouseRange = CoreSettings.STAGE_HEIGHT / 4;
+			_stage3dProxy = stage3dProxy;
+
 			initVars();
+
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 
-		public function set stage3dProxy(stage3dProxy : Stage3DProxy) : void
+		private function onAddedToStage(event:Event):void
 		{
-			_stage3dProxy = stage3dProxy;
-			setup();
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			initView3D();
+			initBook();
+			_grabThrowController = new GrabThrowController(stage);
 		}
 
 		public function get book() : Book
@@ -109,30 +116,17 @@ package net.psykosoft.psykopaint2.book.views.book
 			return _book;
 		}
 
-		override protected function onDisabled() : void
+		public function dispose() : void
 		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+
 			disableVerticalSwipe();
 			_book.bookReadySignal.remove(onBookReady);
 			_book.imagePickedSignal.remove(dispatchSelectedImage);
 			_book.galleryImagePickedSignal.remove(dispatchSelectedGalleryImage);
-			_book.bookClearedSignal.remove(dispatchBookHasClosed);
 			_book.collectionRequestedSignal.remove(dispatchCollectionRequest);
-			_view3d.scene.removeChild(_book);
-			_book.dispose();
-			_book = null;
 
 			_grabThrowController.stop();
-
-			_view3d.dispose();
-			removeChild(_view3d);
-
-			if (BOOK_DEBUG) {
-				removeChild(_bookDebug);
-				_bookDebug.dispose();
-				_bookDebug = null;
-			}
-
-			_stage3dProxy = null;
 
 			if (CoreSettings.RUNNING_ON_iPAD) {
 				stage.removeEventListener(TouchEvent.TOUCH_BEGIN, onStageTouchBegin);
@@ -144,11 +138,27 @@ package net.psykosoft.psykopaint2.book.views.book
 			}
 
 			bookDisposedSignal.dispatch();
+
+			TweenLite.killTweensOf(this);
+
+			_view3d.scene.removeChild(_book);
+			_book.bookClearedSignal.remove(dispatchBookHasClosed);
+			_book.dispose();
+			_book = null;
+			_view3d.dispose();
+			removeChild(_view3d);
+
+			if (BOOK_DEBUG) {
+				removeChild(_bookDebug);
+				_bookDebug.dispose();
+				_bookDebug = null;
+			}
+
+			_stage3dProxy = null;
 		}
 
 		private function initVars() : void
 		{
-			scalesToRetina = false;
 			_startMouseX = 0;
 
 			_time = 0;
@@ -192,17 +202,6 @@ package net.psykosoft.psykopaint2.book.views.book
 				} else {
 					_time = _book.snapToNearestTime();
 				}
-			}
-		}
-
-		override protected function onEnabled() : void
-		{
-			if (!_book) {
-				_mouseRange = stage.stageHeight / 4;
-				initView3D();
-				initBook();
-
-				_grabThrowController = new GrabThrowController(stage);
 			}
 		}
 
@@ -260,8 +259,6 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		public function renderScene(target : Texture) : void
 		{
-			if (!(_isEnabled && _view3d && _view3d.parent)) return;
-
 			if (_book.ready) {
 
 				if (_mouseIsDown) {
@@ -400,7 +397,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			_hidingEnabled = true;
 			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted);
-			_grabThrowController.start(10000, true);
+			_grabThrowController.start(20000, true);
 		}
 
 		public function disableVerticalSwipe() : void
@@ -412,9 +409,11 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function switchToHiddenMode() : void
 		{
-			_wasOpenBeforeDrag = false;
 			_bookEnabled = false;
 			_grabThrowController.interactionRect = new Rectangle(0, CoreSettings.STAGE_HEIGHT - _hiddenInterActionRectHeight, CoreSettings.STAGE_WIDTH, _hiddenInterActionRectHeight);
+
+			if (!_wasOpenBeforeDrag) return;
+			_wasOpenBeforeDrag = false;
 			if (CoreSettings.RUNNING_ON_iPAD) {
 				stage.removeEventListener(TouchEvent.TOUCH_BEGIN, onStageTouchBegin);
 				stage.removeEventListener(TouchEvent.TOUCH_END, onStageTouchEnd);
@@ -428,9 +427,12 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function switchToNormalMode() : void
 		{
-			_wasOpenBeforeDrag = true;
 			_bookEnabled = true;
 			_grabThrowController.interactionRect = new Rectangle(0, 56 * CoreSettings.GLOBAL_SCALING, CoreSettings.STAGE_WIDTH, 564 * CoreSettings.GLOBAL_SCALING);
+
+			if (_wasOpenBeforeDrag) return;
+			_wasOpenBeforeDrag = true;
+
 			if (CoreSettings.RUNNING_ON_iPAD) {
 				stage.addEventListener(TouchEvent.TOUCH_BEGIN, onStageTouchBegin, false, 20000);
 				stage.addEventListener(TouchEvent.TOUCH_END, onStageTouchEnd);

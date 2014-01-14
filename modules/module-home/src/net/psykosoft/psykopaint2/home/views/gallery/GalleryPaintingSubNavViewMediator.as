@@ -5,17 +5,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestExitGallerySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestUpdateGalleryPaintingMenuSignal;
 
 	public class GalleryPaintingSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view : GalleryPaintingSubNavView;
-
-		[Inject]
-		public var requestBrowseGallery : RequestBrowseGallerySignal;
 
 		[Inject]
 		public var requestUpdateGalleryPaintingMenuSignal : RequestUpdateGalleryPaintingMenuSignal;
@@ -25,9 +20,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		[Inject]
 		public var loggedInUser : LoggedInUserProxy;
-
-		[Inject]
-		public var requestExitGallerySignal : RequestExitGallerySignal;
 
 		private var _activePainting : GalleryImageProxy;
 
@@ -85,7 +77,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function goBack() : void
 		{
-			requestExitGallerySignal.dispatch();
+			requestStateChangeSignal.dispatch(NavigationStateType.HOME_ON_EASEL);
 		}
 
 		private function lovePainting() : void

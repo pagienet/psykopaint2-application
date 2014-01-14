@@ -53,7 +53,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private static const PAINTING_SPACING : Number = 250;
 		private static const PAINTING_WIDTH : Number = 210;
 		private static const PAINTING_Z : Number = -160;
-		private static const SWIPE_SCENE_RECT : Rectangle = new Rectangle(PAINTING_OFFSET + 10 - 250, -200, 500, 400);
+		private static const SWIPE_SCENE_RECT : Rectangle = new Rectangle(PAINTING_OFFSET + 10 - 250, -100, 500, 300);
 
 		public var requestImageCollection : Signal = new Signal(int, int, int); // source, start index, amount of images
 		public var requestActiveImageSignal : Signal = new Signal(int, int); // source, index
@@ -218,7 +218,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_cameraZoomController ||= new GalleryCameraZoomController(stage, _view.camera, PAINTING_WIDTH, PAINTING_Z, CAMERA_FAR_POSITION, CAMERA_NEAR_POSITION);
 
 			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted, false, 0, true);
-			_swipeController.start();
+			_swipeController.start(10000, true);
 
 			updateSwipeInteractionRect();
 			_cameraZoomController.start();
@@ -229,14 +229,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (!_swipeController) return;
 			var topLeft : Vector3D = new Vector3D(-SWIPE_SCENE_RECT.x, SWIPE_SCENE_RECT.y + SWIPE_SCENE_RECT.height, PAINTING_Z);
 			var bottomRight : Vector3D = new Vector3D(-(SWIPE_SCENE_RECT.x + SWIPE_SCENE_RECT.width), SWIPE_SCENE_RECT.y, PAINTING_Z);
-
-			trace (topLeft, bottomRight);
-
 			topLeft = _view.project(topLeft);
 			bottomRight = _view.project(bottomRight);
-
-			trace (topLeft, bottomRight);
-
 			_swipeController.interactionRect = new Rectangle(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
 		}
 

@@ -8,8 +8,6 @@ package net.psykosoft.psykopaint2.app.states
 
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-	import net.psykosoft.psykopaint2.book.signals.NotifyAnimateBookOutCompleteSignal;
-	import net.psykosoft.psykopaint2.book.signals.RequestAnimateBookOutSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
@@ -36,12 +34,6 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
 
 		[Inject]
-		public var requestAnimateBookOutSignal : RequestAnimateBookOutSignal;
-
-		[Inject]
-		public var notifyAnimateBookOutCompleteSignal : NotifyAnimateBookOutCompleteSignal;
-
-		[Inject]
 		public var notifyBackgroundSetSignal : NotifyFrozenBackgroundCreatedSignal;
 
 		[Inject]
@@ -62,8 +54,6 @@ package net.psykosoft.psykopaint2.app.states
 		override ns_state_machine function activate(data : Object = null) : void
 		{
 			_bitmapData = BitmapData(data.bitmapData);
-			notifyAnimateBookOutCompleteSignal.addOnce(onAnimateOutComplete);
-			requestAnimateBookOutSignal.dispatch();
 		}
 
 		private function onAnimateOutComplete() : void

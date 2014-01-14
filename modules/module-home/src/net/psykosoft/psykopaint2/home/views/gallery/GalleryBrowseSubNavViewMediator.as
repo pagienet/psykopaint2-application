@@ -1,22 +1,15 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
-	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.home.signals.RequestExitGallerySignal;
 
 	public class GalleryBrowseSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:GalleryBrowseSubNavView;
 
-		[Inject]
-		public var requestBrowseGallerySignal : RequestBrowseGallerySignal;
-
-		[Inject]
-		public var requestExitGallerySignal : RequestExitGallerySignal;
-
-		private var _galleryTypeMap : Array;
+		private var _navigationStateTypeMap : Array;
 
 		override public function initialize():void {
 
@@ -24,21 +17,21 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			registerView( view );
 			super.initialize();
 
-			_galleryTypeMap = [];
-			_galleryTypeMap[GalleryBrowseSubNavView.ID_FOLLOWING] = GalleryType.FOLLOWING;
-			_galleryTypeMap[GalleryBrowseSubNavView.ID_MOST_LOVED] = GalleryType.MOST_LOVED;
-			_galleryTypeMap[GalleryBrowseSubNavView.ID_MOST_RECENT] = GalleryType.MOST_RECENT;
-			_galleryTypeMap[GalleryBrowseSubNavView.ID_YOURS] = GalleryType.YOURS;
+			_navigationStateTypeMap = [];
+			_navigationStateTypeMap[GalleryBrowseSubNavView.ID_FOLLOWING] = NavigationStateType.GALLERY_BROWSE_FOLLOWING;
+			_navigationStateTypeMap[GalleryBrowseSubNavView.ID_MOST_LOVED] = NavigationStateType.GALLERY_BROWSE_MOST_LOVED;
+			_navigationStateTypeMap[GalleryBrowseSubNavView.ID_MOST_RECENT] = NavigationStateType.GALLERY_BROWSE_MOST_RECENT;
+			_navigationStateTypeMap[GalleryBrowseSubNavView.ID_YOURS] = NavigationStateType.GALLERY_BROWSE_YOURS;
 		}
 
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 				case GalleryBrowseSubNavView.ID_BACK:
-					requestExitGallerySignal.dispatch();
+					requestNavigationStateChange(NavigationStateType.HOME_ON_EASEL);
 //					requestHomePanningToggleSignal.dispatch(true);
 					break;
 				default:
-					requestBrowseGallerySignal.dispatch(_galleryTypeMap[id]);
+					requestNavigationStateChange(_navigationStateTypeMap[id]);
 			}
 		}
 	}
