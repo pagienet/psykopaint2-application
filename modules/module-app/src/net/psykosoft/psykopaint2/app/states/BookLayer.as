@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.app.states
 		private function onBookDestroyed() : void
 		{
 			_galleryType = -1;
-			_onBookDestroyedCallback();
+			if (_onBookDestroyedCallback) _onBookDestroyedCallback();
 			_onBookDestroyedCallback = null;
 		}
 
