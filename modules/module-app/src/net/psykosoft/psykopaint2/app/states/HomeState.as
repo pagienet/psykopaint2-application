@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var notifySourceImageSelectedFromBookSignal : NotifySourceImageSelectedFromBookSignal;
 
 		[Inject]
-		public var bookLayer : BookLayer;
+		public var bookLayer : BookStateLayer;
 
 
 

@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.app.states
 
 	// not really a state, but an overlap
 	// this is just so not everything clutters up HomeState, basically
-	public class BookLayer
+	public class BookStateLayer
 	{
 		[Inject]
 		public var notifyBookModuleSetUpSignal : NotifyBookModuleSetUpSignal;
@@ -51,7 +51,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private var _onBookDestroyedCallback : Function;
 
-		public function BookLayer()
+		public function BookStateLayer()
 		{
 		}
 

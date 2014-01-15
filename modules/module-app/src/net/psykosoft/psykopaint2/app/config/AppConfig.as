@@ -5,10 +5,9 @@ package net.psykosoft.psykopaint2.app.config
 	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
 	import net.psykosoft.psykopaint2.app.signals.RequestCreateCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.app.signals.RequestCreateCropBackgroundSignal;
-	import net.psykosoft.psykopaint2.app.states.BookLayer;
+	import net.psykosoft.psykopaint2.app.states.BookStateLayer;
 	import net.psykosoft.psykopaint2.app.states.CropState;
 	import net.psykosoft.psykopaint2.app.states.HomeState;
-	import net.psykosoft.psykopaint2.app.states.TransitionBookToCropState;
 	import net.psykosoft.psykopaint2.app.states.TransitionCropToHomeState;
 	import net.psykosoft.psykopaint2.app.states.TransitionCropToPaintState;
 	import net.psykosoft.psykopaint2.app.states.TransitionHomeToCropState;
@@ -69,7 +68,7 @@ package net.psykosoft.psykopaint2.app.config
 
 		private function mapSingletons():void {
 			injector.map(TransitionSplashToHomeState).asSingleton();
-			injector.map(BookLayer).asSingleton();
+			injector.map(BookStateLayer).asSingleton();
 			injector.map(HomeState).asSingleton();
 			injector.map(CropState).asSingleton();
 			injector.map(PaintState).asSingleton();
@@ -78,7 +77,6 @@ package net.psykosoft.psykopaint2.app.config
 			injector.map(TransitionCropToPaintState).asSingleton();
 			injector.map(TransitionCropToHomeState).asSingleton();
 			injector.map(TransitionPaintToHomeState).asSingleton();
-			injector.map(TransitionBookToCropState).asSingleton();
 		}
 
 		// -----------------------

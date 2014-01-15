@@ -193,13 +193,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function updateScrollingForState() : void
 		{
-			if (_currentNavigationState == NavigationStateType.GALLERY_BROWSE_FOLLOWING ||
-				_currentNavigationState == NavigationStateType.GALLERY_BROWSE_MOST_LOVED ||
-				_currentNavigationState == NavigationStateType.GALLERY_BROWSE_MOST_RECENT ||
-				_currentNavigationState == NavigationStateType.GALLERY_BROWSE_YOURS ||
-				// allow swiping out when painting is visible
-				/*_currentNavigationState == NavigationStateType.GALLERY_PAINTING ||*/
-				_currentNavigationState == NavigationStateType.GALLERY_SHARE ||
+			if (_currentNavigationState == NavigationStateType.GALLERY_SHARE ||
 				_currentNavigationState == NavigationStateType.CAPTURE_IMAGE ||
 				_currentNavigationState == NavigationStateType.PICK_USER_IMAGE_IOS ||
 				_currentNavigationState == NavigationStateType.PICK_USER_IMAGE_DESKTOP )

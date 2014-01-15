@@ -101,6 +101,7 @@ package net.psykosoft.psykopaint2.book.views.book
 		{
 			super.destroy();
 			requestSetBookOffScreenRatioSignal.remove(view.setHiddenOffScreenRatio);
+			requestDestroyBookModuleSignal.remove(onRequestDestroyBook);
 			view.imageSelectedSignal.remove(onImageSelected);
 			view.galleryImageSelectedSignal.remove(onGalleryImageSelected);
 			view.onGalleryCollectionRequestedSignal.remove(onGalleryCollectionRequest);
