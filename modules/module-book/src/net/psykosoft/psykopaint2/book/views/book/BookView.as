@@ -343,17 +343,17 @@ package net.psykosoft.psykopaint2.book.views.book
 			}
 		}
 
-		public function dispatchSelectedImage(selectedImage : BitmapData) : void
+		private function dispatchSelectedImage(selectedImage : BitmapData) : void
 		{
 			imageSelectedSignal.dispatch(selectedImage);
 		}
 
-		public function dispatchSelectedGalleryImage(selectedGalleryImage : GalleryImageProxy) : void
+		private function dispatchSelectedGalleryImage(selectedGalleryImage : GalleryImageProxy) : void
 		{
 			galleryImageSelectedSignal.dispatch(selectedGalleryImage);
 		}
 
-		public function dispatchBookHasClosed() : void
+		private function dispatchBookHasClosed() : void
 		{
 			bookHasClosedSignal.dispatch();
 		}
@@ -434,11 +434,11 @@ package net.psykosoft.psykopaint2.book.views.book
 			_wasOpenBeforeDrag = true;
 
 			if (CoreSettings.RUNNING_ON_iPAD) {
-				stage.addEventListener(TouchEvent.TOUCH_BEGIN, onStageTouchBegin, false, 20000);
+				stage.addEventListener(TouchEvent.TOUCH_BEGIN, onStageTouchBegin, false, 30000);
 				stage.addEventListener(TouchEvent.TOUCH_END, onStageTouchEnd);
 			}
 			else {
-				stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageTouchBegin, false, 20000);
+				stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageTouchBegin, false, 30000);
 				stage.addEventListener(MouseEvent.MOUSE_UP, onStageTouchEnd);
 			}
 			bookShownSignal.dispatch();

@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.book.signals.RequestOpenBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 
 	// not really a state, but an overlap
@@ -41,9 +42,14 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var notifyBookModuleDestroyedSignal : NotifyBookModuleDestroyedSignal;
 
+		[Inject]
+		public var requestCropSourceImageSignal : RequestCropSourceImageSignal;
+
 		private var _bookOpen:Boolean;
 		private var _bookSourceType:String;
 		private var _galleryType:int;
+
+		private var _onBookDestroyedCallback : Function;
 
 		public function BookLayer()
 		{
@@ -66,8 +72,6 @@ package net.psykosoft.psykopaint2.app.states
 
 			notifySourceImageSelectedFromBookSignal.add(onImageSelectedFromBookSignal);
 			notifyGalleryImageSelectedSignal.add(onGalleryImageSelected);
-			notifySourceImageSelectedFromBookSignal.remove(onImageSelectedFromBookSignal);
-			notifyGalleryImageSelectedSignal.remove(onGalleryImageSelected);
 
 			_bookOpen = true;
 		}
@@ -77,6 +81,8 @@ package net.psykosoft.psykopaint2.app.states
 			if (!_bookOpen) return;
 			_bookOpen = false;
 			_bookSourceType = null;
+			notifySourceImageSelectedFromBookSignal.remove(onImageSelectedFromBookSignal);
+			notifyGalleryImageSelectedSignal.remove(onGalleryImageSelected);
 			notifyBookModuleDestroyedSignal.addOnce(onBookDestroyed);
 			requestDestroyBookModuleSignal.dispatch();
 		}
@@ -84,6 +90,8 @@ package net.psykosoft.psykopaint2.app.states
 		private function onBookDestroyed() : void
 		{
 			_galleryType = -1;
+			_onBookDestroyedCallback();
+			_onBookDestroyedCallback = null;
 		}
 
 		private function onBookModuleSetUp() : void
@@ -98,8 +106,11 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onImageSelectedFromBookSignal(bitmapData : BitmapData) : void
 		{
-			// TODO: notify home view similar to requestSetGalleryPaintingSignal
-			//stateMachine.setActiveState(transitionToCropState, {bitmapData: bitmapData});
+			_onBookDestroyedCallback = function() : void {
+				requestCropSourceImageSignal.dispatch(bitmapData);
+			}
+
+			hide();
 		}
 
 		private function onGalleryImageSelected(selectedGalleryImage : GalleryImageProxy) : void

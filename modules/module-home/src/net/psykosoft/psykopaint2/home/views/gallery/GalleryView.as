@@ -587,6 +587,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function disposeHighQualityMaterial():void
 		{
+			_activeImageProxy.cancelLoading();
 			if (_highQualityMaterial) {
 				_highQualityMaterial.dispose();
 				_highQualityColorTexture.dispose();
