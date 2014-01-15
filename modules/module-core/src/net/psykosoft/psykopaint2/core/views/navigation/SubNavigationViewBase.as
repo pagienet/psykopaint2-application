@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	public class SubNavigationViewBase extends ViewBase
 	{
 		protected var _scroller:HSnapList;
-		private var _navigation:NavigationView;
+		protected var _navigation:NavigationView;
 		private var _centerButtonData:Vector.<ISnapListData>;
 
 		public var scrollingStartedSignal:Signal;
@@ -98,8 +98,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_navigation.header.setTitle( value );
 		}
 
-		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK ):void {
-			_navigation.setLeftButton( id, label, iconType );
+		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK, showBackground:Boolean = true ):void {
+			_navigation.setLeftButton( id, label, iconType, showBackground );
 		}
 
 		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE ):void {

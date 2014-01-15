@@ -5,14 +5,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.LeftButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.RightButton;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class NavigationView extends ViewBase
@@ -114,12 +114,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Side buttons.
 		// ---------------------------------------------------------------------
 
-		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK ):void {
+		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK, showBackground:Boolean = true ):void {
 			_leftButton.id = id;
 			_leftButton.labelText = label;
 			_leftButton.iconType = iconType;
 			_leftButton.visible = true;
 			leftBtnSide.visible = true;
+			leftBtnSide.getChildByName( "clipOverlay" ).visible = leftBtnSide.getChildByName( "paperbg").visible = showBackground;
 		}
 
 		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE ):void {

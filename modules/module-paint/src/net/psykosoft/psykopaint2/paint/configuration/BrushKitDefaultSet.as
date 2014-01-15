@@ -57,7 +57,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							targetMappings="1"
 							/>
 						
-						<parameter id="Color Precision" label="Color Precision" previewID={PreviewIconFactory.PREVIEW_SIZE} value="100" minValue="0" maxValue="100" showInUI="1"/>
+						<parameter id="Color Precision" previewID={PreviewIconFactory.PREVIEW_SIZE} value="100" minValue="0" maxValue="100" />
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP}
 							src="Color Precision"
 							target={"pathengine.pointdecorator_4."+ColorDecorator.PARAMETER_N_PICK_RANDOM_OFFSET_FACTOR}
@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={SplatterDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_1" index={SplatterDecorator.INDEX_MODE_SIZE_INV} />
 							<parameter id={SplatterDecorator.PARAMETER_N_MAX_SIZE} path="pathengine.pointdecorator_1" value="1" />
 							<parameter id={SplatterDecorator.PARAMETER_SL_OFFSET_MAPPING} path="pathengine.pointdecorator_1" index={SplatterDecorator.INDEX_MAPPING_LINEAR}   />
-							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR}  path="pathengine.pointdecorator_1" value="20" maxValue="80" showInUI="1" previewID={PreviewIconFactory.PREVIEW_SIZE} />
+							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR}  path="pathengine.pointdecorator_1" value="20" maxValue="80" previewID={PreviewIconFactory.PREVIEW_SIZE} />
 							<parameter id={SplatterDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_1" value="0" />
 							<parameter id={SplatterDecorator.PARAMETER_A_OFFSET_ANGLE_RANGE} path="pathengine.pointdecorator_1" value="360" />
 							<parameter id={SplatterDecorator.PARAMETER_N_SIZE_FACTOR} path="pathengine.pointdecorator_1" value="0" />

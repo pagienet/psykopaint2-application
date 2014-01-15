@@ -48,8 +48,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 		private var _userPaintSettings:UserPaintSettingsModel;
 		
-		public var slider1Handle:Sprite;
-		public var slider2Handle:Sprite;
+		public var slider1Handle:MovieClip;
+		public var slider2Handle:MovieClip;
 		public var slider1Bar:Sprite;
 		public var slider2Bar:Sprite;
 		public var styleBar:Sprite;
@@ -78,18 +78,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		private var activeHSLSliderIndex:int;
 		private var HSLSliderPaddingLeft:Number = 16;
-		private var HSLSliderPaddingRight:Number = 16;
-		private var HSLSliderRange:Number = 255 - HSLSliderPaddingLeft - HSLSliderPaddingRight;
+		private var HSLSliderRange:Number = 239 - HSLSliderPaddingLeft;
 		private var HSLSliderOffset:int = - 14;
 		
-		private var sliderPaddingLeft:Number = 16;
-		private var sliderPaddingRight:Number = 16;
-		private var sliderRange:Number = 255 - sliderPaddingLeft - sliderPaddingRight;
-		private var sliderOffset:int = 32;
-		
+		private var sliderPaddingLeft:Number = 40;
+		private var sliderRange:Number = 277 - sliderPaddingLeft;
+		private var sliderOffset:int = 42;
 		
 		private var saturationSliderValues:Array;
-		
 		
 		private var currentSwatchMixRed:Number;
 		private var currentSwatchMixGreen:Number;
@@ -97,6 +93,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		private var selectedPipetteChargeSwatch:Sprite;
 		private var activeSliderIndex:int;
+		
+		private var uiParameters:Vector.<PsykoParameter>;
+		private var styleParameter:PsykoParameter;
 		
 		public function ColorPickerSubNavView()
 		{
@@ -143,7 +142,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			hueHandle.mouseEnabled = false;
 			saturationHandle.mouseEnabled = false;
 			slider1Handle.mouseEnabled = false;
+			slider1Handle.gotoAndStop(1);
 			slider2Handle.mouseEnabled = false;
+			slider2Handle.gotoAndStop(2);
 			lightnessHandle.mouseEnabled = false;
 			hueOverlay.mouseEnabled = false;
 			saturationOverlay.mouseEnabled = false;
@@ -156,54 +157,65 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			colorPalette.setUserPaintSettings( _userPaintSettings );
 			
+			
 		}
 		
 		override protected function onEnabled():void
 		{
-			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
-			
+			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK_SLIM, false );
+			_navigation.leftBtnSide.x -= 50;
+			_navigation.leftBtnSide.y -= 50;
 			setBgType( NavigationBg.BG_TYPE_WOOD );
+		}
+		
+		override protected function onDisabled():void
+		{
+			_navigation.leftBtnSide.x += 50;
+			_navigation.leftBtnSide.y += 50;
 		}
 		
 		
 		protected function onStyleMouseDown( event:MouseEvent ):void
 		{
-			if ( styleBar.mouseX < sliderOffset  || styleBar.mouseX > 256 + sliderOffset  || styleBar.mouseY < 0 || styleBar.mouseY > 69) return;
+			if ( styleBar.mouseX < sliderPaddingLeft  || styleBar.mouseX > sliderPaddingLeft + sliderRange  || styleBar.mouseY < 0 || styleBar.mouseY > 60) return;
 			
-			styleSelector.x = sliderOffset + styleBar.x + int((styleBar.mouseX - sliderOffset ) / 60) * 60;
+			styleSelector.x = sliderOffset + styleBar.x + int((styleBar.mouseX - sliderPaddingLeft ) / 60) * 60;
 		}
 		
 		protected function onSlider1MouseDown( event:MouseEvent ):void
 		{
-			if ( slider1Bar.mouseX < 0 || slider1Bar.mouseX > 256 || slider1Bar.mouseY < 0 || slider1Bar.mouseY > 69) return;
+			if ( slider1Bar.mouseX < sliderPaddingLeft || slider1Bar.mouseX > sliderPaddingLeft + sliderRange || slider1Bar.mouseY < 5 || slider1Bar.mouseY > 60) return;
 			activeSliderIndex = 0;
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
 			stage.addEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
+			onSliderMouseMove();
 		}
 		
 		protected function onSlider2MouseDown( event:MouseEvent ):void
 		{
-			if ( slider2Bar.mouseX < 0 || slider2Bar.mouseX > 256 || slider2Bar.mouseY < 0 || slider2Bar.mouseY > 69) return;
+			if ( slider2Bar.mouseX < sliderPaddingLeft || slider2Bar.mouseX > sliderPaddingLeft + sliderRange|| slider2Bar.mouseY < 5 || slider2Bar.mouseY > 60) return;
 			activeSliderIndex = 1;
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
 			stage.addEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
+			onSliderMouseMove();
 		}
 		
-		protected function onSliderMouseMove( event:MouseEvent ):void
+		protected function onSliderMouseMove( event:MouseEvent = null ):void
 		{
-			var sx:Number = slider1Bar.mouseX / sliderRange;
+			var sx:Number = (slider1Bar.mouseX - sliderPaddingLeft) / sliderRange;
 			if ( sx < 0 ) sx = 0;
 			if ( sx > 1 ) sx = 1;
 			
 			switch ( activeSliderIndex )
 			{
-				case 0: //hue
-					slider1Handle.x = sliderOffset + slider1Bar.x  + sliderPaddingLeft + sx * sliderRange;
+				case 0: 
+					slider1Handle.x = sliderOffset + slider1Bar.x  +  + sx * sliderRange;
 					break;
-				case 1: //sat
-					slider2Handle.x = sliderOffset + slider2Bar.x  + sliderPaddingLeft + sx * sliderRange;
+				case 1: 
+					slider2Handle.x = sliderOffset + slider2Bar.x  + sx * sliderRange;
 					break;
 			}
+			uiParameters[activeSliderIndex].normalizedValue = sx;
 			
 		}
 		
@@ -364,249 +376,34 @@ package net.psykosoft.psykopaint2.paint.views.color
 			_parameterSetVO = parameterSetVO;
 			trace( this, "receiving parameters for brush " + parameterSetVO.brushName + ", with num parameters: " + parameterSetVO.parameters.length );
 			
-			// Create a center button for each parameter, with a local listener.
-			// Specific parameter ui components will show up when clicking on a button.
-			
-			invalidateCenterButtons();
+			uiParameters = new Vector.<PsykoParameter>();
+			styleParameter = null;
 			
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
-			
-			var styleListFound:Boolean = false;
-			var slidersFound:int = 0;
-			
-			
 			for( var i:uint = 0; i < numParameters; ++i ) {
 				
 				var parameter:PsykoParameter = list[ i ];
-				
-				trace( this, "adding parameter with id: " + parameter.id + ", and label: " + parameter.label );
-				
-				if( parameter.type != PsykoParameter.ColorParameter ) {
-					if( parameter.id != CUSTOM_COLOR_ID ) {
-						
-						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
-						var data:ButtonData;
-						
-						// Button slider?
-						if( slidersFound < 2 && 
-							(parameter.type == PsykoParameter.IntParameter
-							|| parameter.type == PsykoParameter.NumberParameter
-							|| parameter.type == PsykoParameter.AngleParameter) ) {
-							data = createCenterButton( parameter.id, parameter.label, ButtonIconType.DEFAULT, null, null, false, true, true, MouseEvent.MOUSE_DOWN );
-							
-							data.itemRendererType = SliderButton;
-							data.minValue = parameter.minLimit;
-							data.maxValue = parameter.maxLimit;
-							data.value = parameter.type == PsykoParameter.AngleParameter ? parameter.degrees : parameter.numberValue;
-							data.previewID = parameter.previewID;
-							data.onItemRendererAssigned = onSliderButtonRendererAssigned;
-							data.onItemRendererReleased = onSliderButtonRendererReleased;
-							slidersFound++;
-						} else if (!styleListFound && parameter.type == PsykoParameter.IconListParameter )
-						{
-							data = createCenterButton( parameter.id, parameter.label, ButtonIconType.DEFAULT, null, null, false, true, true, MouseEvent.MOUSE_DOWN );
-							
-							data.itemRendererType = SliderButton;
-							data.minValue = parameter.minLimit;
-							data.maxValue = parameter.maxLimit;
-							data.value = parameter.index;
-							data.previewID = parameter.previewID;
-							data.onItemRendererAssigned = onSliderButtonRendererAssigned;
-							data.onItemRendererReleased = onSliderButtonRendererReleased;
-							styleListFound = true;
-						}
-					}
+				var data:ButtonData;
+				if( uiParameters.length < 2 && 
+					(parameter.type == PsykoParameter.IntParameter
+					|| parameter.type == PsykoParameter.NumberParameter
+					|| parameter.type == PsykoParameter.AngleParameter) ) {
+					uiParameters.push(parameter);
+					//TODO: set slider position
+				} else if (styleParameter==null && parameter.type == PsykoParameter.IconListParameter )
+				{
+					styleParameter = parameter;
+					//TODO: set style index
 				}
-				//else {
-				//	showRightButton( true );
-				//}
-				
-				
 			}
-			
-			validateCenterButtons();
-		}
-		
-		private function onSliderButtonRendererAssigned( renderer:SliderButton ):void {
-			//			trace( this, "onSliderButtonRendererAssigned - id: " + renderer.id );
-			renderer.addEventListener( Event.CHANGE, onSliderButtonChanged );
-			renderer.addEventListener( MouseEvent.MOUSE_DOWN, onSliderButtonMouseDown );
-		}
-		
-		private function onSliderButtonRendererReleased( renderer:SliderButton ):void {
-			//			trace( this, "onSliderButtonRendererReleased - id: " + renderer.id );
-			renderer.removeEventListener( Event.CHANGE, onSliderButtonChanged );
-			renderer.removeEventListener( MouseEvent.MOUSE_DOWN, onSliderButtonMouseDown );
-		}
-		
-		private function onSliderButtonMouseDown( event:MouseEvent ):void {
-			// Always on top.
-			var slider:SliderButton = ClickUtil.getObjectOfClassInHierarchy( event.target as DisplayObject, SliderButton ) as SliderButton;
-			slider.parent.swapChildren( slider, slider.parent.getChildAt( slider.parent.numChildren - 1 ) );
 		}
 		
 		public function updateParameters( parameterSetVO:ParameterSetVO ):void {
 			_parameterSetVO = parameterSetVO;
 		}
 		
-		private function onSliderButtonChanged( event:Event ):void {
-			var slider:SliderButton = event.target as SliderButton;
-			//			trace( this, "onSliderButtonChanged: " + slider.labelText );
-			if ( _parameter )
-			{
-				//focusOnParameterWithId( slider.id );
-				if ( _parameter.type == PsykoParameter.IconListParameter )
-				{
-					_parameter.index = slider.value;
-					slider.labelText = _parameter.stringValue;
-				} else {
-					_parameter.value = slider.value;
-					slider.updateLabelFromValue();
-				}
-			} else {
-				trace("ERRROR - something is not right with the parameter in EditBrushSubNavView");
-			}
-		}
-		
-		/* called by the mediator */
 		public function openParameterWithId( id:String ):void {
-			
-			trace( this, "opening parameter for id: " + id );
-			
-			closeLastParameter();
-			_uiElements = new Vector.<DisplayObject>();
-			
-			focusOnParameterWithId( id );
-			if( _parameter == null ) return;
-			
-			var parameterType:int = _parameter.type;
-			
-			var i:uint;
-			var slider:SliderBase;
-			
-			// Simple slider.
-			if( parameterType == PsykoParameter.IntParameter || parameterType == PsykoParameter.NumberParameter ) {
-				// Replaced by slider buttons on setParameters().
-				/*slider = new SbSlider();
-				slider.minValue = _parameter.minLimit;
-				slider.maxValue = _parameter.maxLimit;
-				slider.value = _parameter.numberValue;
-				slider.addEventListener( Event.CHANGE, onSliderChanged );
-				slider.setWidth( 276 );
-				positionUiElement( slider );
-				addChild( slider );
-				_uiElements.push( slider );*/
-			}
-				
-				// Range slider.
-			else if( parameterType == PsykoParameter.IntRangeParameter || parameterType == PsykoParameter.NumberRangeParameter ) {
-				throw("Range Slider has been deprecated - use something else");
-				/*
-				var rangeSlider:RangedSlider = new RangedSlider();
-				rangeSlider.minValue = _parameter.minLimit;
-				rangeSlider.maxValue = _parameter.maxLimit;
-				rangeSlider.value1 = _parameter.lowerRangeValue;
-				rangeSlider.value2 = _parameter.upperRangeValue;
-				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
-				rangeSlider.setWidth( 451 );
-				positionUiElement( rangeSlider );
-				addChild( rangeSlider );
-				_uiElements.push( rangeSlider );
-				*/
-			}
-				
-				
-			else if( parameterType == PsykoParameter.AngleRangeParameter ) {
-				throw("Range Slider has been deprecated - use something else");
-				/*
-				rangeSlider = new RangedSlider();
-				rangeSlider.labelMode = RangedSlider.LABEL_DEGREES;
-				rangeSlider.minValue = _parameter.minLimit;
-				rangeSlider.maxValue = _parameter.maxLimit;
-				rangeSlider.value1 = _parameter.lowerDegreesValue;
-				rangeSlider.value2 = _parameter.upperDegreesValue;
-				rangeSlider.addEventListener( Event.CHANGE, onRangeSliderChanged );
-				rangeSlider.setWidth( 451 );
-				positionUiElement( rangeSlider );
-				addChild( rangeSlider );
-				_uiElements.push( rangeSlider );
-				*/
-			}
-				
-				// Angle.
-			else if( parameterType == PsykoParameter.AngleParameter ) {
-				
-				//sorry, but unfortunately knob is pretty unusable right now, replaced it with regular slider
-				/*
-				var knob:Knob = new Knob( this );
-				knob.value = _parameter.degrees;
-				knob.minimum = _parameter.minLimit;
-				knob.maximum = _parameter.maxLimit;
-				knob.addEventListener( Event.CHANGE, onKnobChanged );
-				knob.draw();
-				positionUiElement( knob as DisplayObject, 0, -20 );
-				_uiElements.push( knob );
-				*/
-				
-				// Replaced by slider buttons on setParameters().
-				/*slider = new SbSlider();
-				slider.minValue = _parameter.minLimit;
-				slider.maxValue = _parameter.maxLimit;
-				slider.value = _parameter.degrees;
-				slider.labelMode = SbRangedSlider.LABEL_DEGREES;
-				slider.addEventListener( Event.CHANGE, onSliderChanged );
-				slider.setWidth( 276 );
-				positionUiElement( slider );
-				addChild( slider );
-				_uiElements.push( slider );*/
-			}
-				
-				// Combo box.
-			else if( parameterType == PsykoParameter.StringListParameter) {
-				// || parameterType == PsykoParameter.IconListParameter 
-				var list:Vector.<String> = _parameter.stringList;
-				var len:uint = list.length;
-				var combobox:ComboboxView = new ComboboxView();
-				combobox.interactionStartedSignal.add( onComboboxInteractionStarted );
-				combobox.interactionEndedSignal.add( onComboboxInteractionEnded );
-				for( i = 0; i < len; ++i ) {
-					combobox.addItem( { label: list[ i ] } );
-				}
-				combobox.selectedIndex = _parameter.index;
-				addChild( combobox );
-				combobox.addEventListener( Event.CHANGE, onComboBoxChanged );
-				positionUiElement( combobox as DisplayObject, 40, 10 );
-				_uiElements.push( combobox );
-			}
-				
-				// Check box
-			else if( parameterType == PsykoParameter.BooleanParameter ) {
-				var checkBox:CheckBox = new CheckBox();
-				checkBox.selected = _parameter.booleanValue;
-				checkBox.addEventListener( Event.CHANGE, onCheckBoxChanged );
-				positionUiElement( checkBox );
-				addChild( checkBox );
-				_uiElements.push( checkBox );
-			}
-				// No Ui component for this parameter.
-			else if (parameterType == PsykoParameter.IconListParameter)
-			{
-				
-			} else {
-				trace( this, "*** Warning *** - parameter type not supported: " + PsykoParameter.getTypeName( parameterType ) );
-				var tf:TextField = new TextField();
-				tf.selectable = tf.mouseEnabled = false;
-				tf.text = "parameter type not supported: " + PsykoParameter.getTypeName( parameterType );
-				tf.width = tf.textWidth * 1.2;
-				tf.height = tf.textHeight * 1.2;
-				positionUiElement( tf );
-				addChild( tf );
-				_uiElements.push( tf );
-			}
-		}
-		
-		private function focusOnParameterWithId( id:String ):void {
 			_parameter = null;
 			var numParameters:uint = _parameterSetVO.parameters.length;
 			for( var i:uint = 0; i < numParameters; i++ ) {
@@ -619,56 +416,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			trace( this, "focused on parameter: " + _parameter );
 		}
 		
-		private function closeLastParameter():void {
-			
-			if( !_uiElements ) return;
-			
-			// Remove all ui elements from display and clear listeners
-			var len:uint = _uiElements.length;
-			for( var i:uint; i < len; ++i ) {
-				var uiElement:DisplayObject = _uiElements[ i ];
-				if( uiElement is SliderBase ) uiElement.removeEventListener( Event.CHANGE, onSliderChanged );
-				else if( uiElement is ComboBox ) {
-					uiElement.removeEventListener( Event.SELECT, onComboBoxChanged );
-				}
-				else if( uiElement is CheckBox ) uiElement.removeEventListener( Event.CHANGE, onCheckBoxChanged );
-				else if( uiElement is Knob ) uiElement.removeEventListener( Event.CHANGE, onKnobChanged );
-				else {
-					trace( this, "*** Warning *** - don't know how to clean up ui element: " + uiElement );
-				}
-				//else if( uiElement is RangedSlider ) uiElement.removeEventListener( Event.CHANGE, onRangeSliderChanged );
-				removeChild( uiElement );
-			}
-			_uiElements = null;
-		}
-		
-		private function onKnobChanged( event:Event ):void {
-			var knob:Knob = event.target as Knob;
-			_parameter.degrees = knob.value;
-		}
-		
-		private function onCheckBoxChanged( event:Event ):void {
-			var checkBox:CheckBox = event.target as CheckBox;
-			_parameter.booleanValue = checkBox.selected;
-		}
-		
-		private function onComboBoxChanged( event:Event ):void {
-			var comboBox:ComboboxView = event.target as ComboboxView;
-			_parameter.index = comboBox.selectedIndex;
-		}
-		
-		private function onComboboxInteractionEnded():void {
-			GestureManager.gesturesEnabled = true;
-		}
-		
-		private function onComboboxInteractionStarted():void {
-			GestureManager.gesturesEnabled = false;
-		}
-		
-		private function onSliderChanged( event:Event ):void {
-			var slider:SliderBase = event.target as SliderBase;
-			_parameter.value = slider.value;
-		}
 		
 		private function positionUiElement( element:DisplayObject, offsetX:Number = 0, offsetY:Number = 0 ):void {
 			element.x = 1024 / 2 - element.width / 2 + offsetX;
