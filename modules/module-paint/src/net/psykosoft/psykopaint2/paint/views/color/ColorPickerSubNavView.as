@@ -372,6 +372,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
 			
+			var styleListFound:Boolean = false;
+			var slidersFound:int = 0;
+			
+			
 			for( var i:uint = 0; i < numParameters; ++i ) {
 				
 				var parameter:PsykoParameter = list[ i ];
@@ -382,13 +386,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 					if( parameter.id != CUSTOM_COLOR_ID ) {
 						
 						//TODO: handling the custom color switch this way is not really ideal but it has to do for now
-						
-						var data:ButtonData = createCenterButton( parameter.id, parameter.label, ButtonIconType.DEFAULT, null, null, false, true, true, MouseEvent.MOUSE_DOWN );
+						var data:ButtonData;
 						
 						// Button slider?
-						if( parameter.type == PsykoParameter.IntParameter
+						if( slidersFound < 2 && 
+							(parameter.type == PsykoParameter.IntParameter
 							|| parameter.type == PsykoParameter.NumberParameter
-							|| parameter.type == PsykoParameter.AngleParameter ) {
+							|| parameter.type == PsykoParameter.AngleParameter) ) {
+							data = createCenterButton( parameter.id, parameter.label, ButtonIconType.DEFAULT, null, null, false, true, true, MouseEvent.MOUSE_DOWN );
+							
 							data.itemRendererType = SliderButton;
 							data.minValue = parameter.minLimit;
 							data.maxValue = parameter.maxLimit;
@@ -396,8 +402,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 							data.previewID = parameter.previewID;
 							data.onItemRendererAssigned = onSliderButtonRendererAssigned;
 							data.onItemRendererReleased = onSliderButtonRendererReleased;
-						} else if ( parameter.type == PsykoParameter.IconListParameter )
+							slidersFound++;
+						} else if (!styleListFound && parameter.type == PsykoParameter.IconListParameter )
 						{
+							data = createCenterButton( parameter.id, parameter.label, ButtonIconType.DEFAULT, null, null, false, true, true, MouseEvent.MOUSE_DOWN );
+							
 							data.itemRendererType = SliderButton;
 							data.minValue = parameter.minLimit;
 							data.maxValue = parameter.maxLimit;
@@ -405,7 +414,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 							data.previewID = parameter.previewID;
 							data.onItemRendererAssigned = onSliderButtonRendererAssigned;
 							data.onItemRendererReleased = onSliderButtonRendererReleased;
-							
+							styleListFound = true;
 						}
 					}
 				}
