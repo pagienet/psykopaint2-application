@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value=".8"/>
 					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value=".4"/>
 
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0"  previewID={PreviewIconFactory.PREVIEW_PAINTBRUSH_STYLE} list="paint1,basic,splat,line,sumi" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="paint1,basic,splat,line,sumi" showInUI="1"/>
 					<parameterMapping>
 						<parameter id="Precision" label="Precision" previewID={PreviewIconFactory.PREVIEW_SIZE} value="0.25" minValue="0" maxValue="1" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP}
@@ -503,7 +503,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splotch,basic smooth,splat,basic,noisy" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_SL_BLEND_MODE} path="brush" index="1"/>
 					<parameterMapping>
-						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} previewID={PreviewIconFactory.PREVIEW_ERASER_STYLE} label="Style" list="Color & Relief, Color Only, Relief Only" showInUI="1"/>
+						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Color & Relief, Color Only, Relief Only" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Brush Style"
 							target="pathengine.pointdecorator_2"
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }

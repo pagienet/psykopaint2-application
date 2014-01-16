@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
 	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
 	import net.psykosoft.psykopaint2.core.views.components.combobox.ComboboxView;
+	import net.psykosoft.psykopaint2.core.views.components.previews.BrushStylePreview;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SliderBase;
 	import net.psykosoft.psykopaint2.core.views.components.slider.SliderButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
@@ -65,6 +66,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var lightnessOverlay:Sprite;
 		
 		public var colorPalette:ColorPalette;
+		
+		private var styleIconHolder:Sprite;
 		
 		private var hueMap:BitmapData;
 		private var satMap:BitmapData;
@@ -157,6 +160,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			colorPalette.setUserPaintSettings( _userPaintSettings );
 			
+			styleSelector.mouseEnabled = false;
+			
+			styleIconHolder = new Sprite();
+			styleIconHolder.x = styleBar.x + 40;
+			styleIconHolder.y = styleBar.y + 36;
+			styleIconHolder.mouseEnabled = false;
+			styleIconHolder.mouseChildren = false;
+			
+			addChildAt(styleIconHolder,getChildIndex(styleBar)+1);
 			
 		}
 		
@@ -178,8 +190,29 @@ package net.psykosoft.psykopaint2.paint.views.color
 		protected function onStyleMouseDown( event:MouseEvent ):void
 		{
 			if ( styleBar.mouseX < sliderPaddingLeft  || styleBar.mouseX > sliderPaddingLeft + sliderRange  || styleBar.mouseY < 0 || styleBar.mouseY > 60) return;
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, onStyleMouseMove );
+			stage.addEventListener(MouseEvent.MOUSE_UP, onStyleMouseUp );
+			onStyleMouseMove();
+		}
+		
+		protected function onStyleMouseMove( event:MouseEvent = null ):void
+		{
+			var sx:Number = (styleBar.mouseX - sliderPaddingLeft) / sliderRange;
+			if ( sx < 0 ) sx = 0;
+			if ( sx > 1 ) sx = 1;
+			var index:int = sx * (styleParameter.stringList.length - 1) + 0.5;
 			
-			styleSelector.x = sliderOffset + styleBar.x + int((styleBar.mouseX - sliderPaddingLeft ) / 60) * 60;
+			var spacing:Number = sliderRange / (styleParameter.stringList.length - 1);
+			styleSelector.x = sliderOffset + styleBar.x + index * spacing;
+			
+			styleParameter.index = index;
+			
+		}
+		
+		protected function onStyleMouseUp( event:MouseEvent ):void
+		{
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onStyleMouseMove );
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onStyleMouseUp );
 		}
 		
 		protected function onSlider1MouseDown( event:MouseEvent ):void
@@ -390,13 +423,36 @@ package net.psykosoft.psykopaint2.paint.views.color
 					|| parameter.type == PsykoParameter.NumberParameter
 					|| parameter.type == PsykoParameter.AngleParameter) ) {
 					uiParameters.push(parameter);
-					//TODO: set slider position
+					if ( uiParameters.length == 1 )
+						slider1Handle.x = sliderOffset + slider1Bar.x  + parameter.normalizedValue * sliderRange;
+					else 
+						slider2Handle.x = sliderOffset + slider2Bar.x  + parameter.normalizedValue * sliderRange;
+					
 				} else if (styleParameter==null && parameter.type == PsykoParameter.IconListParameter )
 				{
 					styleParameter = parameter;
-					//TODO: set style index
+					showStyleIcons(parameter);
+					var spacing:Number = sliderRange / (styleParameter.stringList.length - 1);
+					styleSelector.x = sliderOffset + styleBar.x + styleParameter.index * spacing;
+					
 				}
 			}
+		}
+		
+		private function showStyleIcons(parameter:PsykoParameter):void
+		{
+			while( styleIconHolder.numChildren > 0 ) styleIconHolder.removeChildAt(0);
+			var styleIds:Vector.<String> = parameter.stringList;
+			for (var i:int = 0; i< styleIds.length; i++ )
+			{
+				var preview:BrushStylePreview = new BrushStylePreview();
+				preview.showIcon(styleIds[i]);
+				preview.height = 48;
+				preview.scaleX = preview.scaleY;
+				preview.x = (sliderRange / (styleIds.length - 1)) * i;
+				styleIconHolder.addChild( preview );
+			}
+			
 		}
 		
 		public function updateParameters( parameterSetVO:ParameterSetVO ):void {

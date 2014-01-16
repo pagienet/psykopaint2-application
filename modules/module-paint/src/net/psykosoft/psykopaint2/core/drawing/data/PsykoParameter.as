@@ -500,6 +500,11 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			value = minLimit + v * ( maxLimit - minLimit );
 		}
 		
+		public function get normalizedValue():Number
+		{
+			return (numberValue - minLimit) / ( maxLimit - minLimit );
+		}
+		
 		public function updateValueFromXML( message:XML ):void
 		{
 			
