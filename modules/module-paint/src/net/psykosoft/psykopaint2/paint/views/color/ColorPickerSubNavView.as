@@ -16,6 +16,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import flash.text.TextField;
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
@@ -99,6 +101,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		private var uiParameters:Vector.<PsykoParameter>;
 		private var styleParameter:PsykoParameter;
+		private var previewIcon:BrushStylePreview;
+		private var previewDelay:int;
 		
 		public function ColorPickerSubNavView()
 		{
@@ -168,6 +172,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 			styleIconHolder.mouseEnabled = false;
 			styleIconHolder.mouseChildren = false;
 			
+			previewIcon = new BrushStylePreview();
+			previewIcon.y = -45;
+			previewIcon.height = 128;
+			previewIcon.scaleX = previewIcon.scaleY;
 			addChildAt(styleIconHolder,getChildIndex(styleBar)+1);
 			
 		}
@@ -189,35 +197,49 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		protected function onStyleMouseDown( event:MouseEvent ):void
 		{
-			if ( styleBar.mouseX < sliderPaddingLeft  || styleBar.mouseX > sliderPaddingLeft + sliderRange  || styleBar.mouseY < 0 || styleBar.mouseY > 60) return;
+			if ( styleBar.mouseX < sliderPaddingLeft - 27 || styleBar.mouseX > sliderPaddingLeft + sliderRange + 32 || styleBar.mouseY < 0 || styleBar.mouseY > 60) return;
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onStyleMouseMove );
 			stage.addEventListener(MouseEvent.MOUSE_UP, onStyleMouseUp );
+			
+			previewDelay = setTimeout(showStylePreview,200);
 			onStyleMouseMove();
+		}
+		
+		private function showStylePreview():void
+		{
+			styleBar.addChild(previewIcon);
 		}
 		
 		protected function onStyleMouseMove( event:MouseEvent = null ):void
 		{
+			
 			var sx:Number = (styleBar.mouseX - sliderPaddingLeft) / sliderRange;
 			if ( sx < 0 ) sx = 0;
 			if ( sx > 1 ) sx = 1;
+			
+			previewIcon.x = sx * sliderRange + sliderPaddingLeft;
+			
+			
 			var index:int = sx * (styleParameter.stringList.length - 1) + 0.5;
 			
 			var spacing:Number = sliderRange / (styleParameter.stringList.length - 1);
 			styleSelector.x = sliderOffset + styleBar.x + index * spacing;
 			
 			styleParameter.index = index;
-			
+			previewIcon.showIcon( styleParameter.stringValue );
 		}
 		
 		protected function onStyleMouseUp( event:MouseEvent ):void
 		{
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onStyleMouseMove );
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onStyleMouseUp );
+			if ( styleBar.contains(previewIcon)) styleBar.removeChild(previewIcon);
+			clearTimeout(previewDelay);
 		}
 		
 		protected function onSlider1MouseDown( event:MouseEvent ):void
 		{
-			if ( slider1Bar.mouseX < sliderPaddingLeft || slider1Bar.mouseX > sliderPaddingLeft + sliderRange || slider1Bar.mouseY < 5 || slider1Bar.mouseY > 60) return;
+			if ( slider1Bar.mouseX < sliderPaddingLeft - 27 || slider1Bar.mouseX > sliderPaddingLeft + sliderRange + 32 || slider1Bar.mouseY < 5 || slider1Bar.mouseY > 60) return;
 			activeSliderIndex = 0;
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
 			stage.addEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );
@@ -226,7 +248,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		protected function onSlider2MouseDown( event:MouseEvent ):void
 		{
-			if ( slider2Bar.mouseX < sliderPaddingLeft || slider2Bar.mouseX > sliderPaddingLeft + sliderRange|| slider2Bar.mouseY < 5 || slider2Bar.mouseY > 60) return;
+			if ( slider2Bar.mouseX < sliderPaddingLeft - 27 || slider2Bar.mouseX > sliderPaddingLeft + sliderRange + 32 || slider2Bar.mouseY < 5 || slider2Bar.mouseY > 60) return;
 			activeSliderIndex = 1;
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onSliderMouseMove );
 			stage.addEventListener(MouseEvent.MOUSE_UP, onSliderMouseUp );

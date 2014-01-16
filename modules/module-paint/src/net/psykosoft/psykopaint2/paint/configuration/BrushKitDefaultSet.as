@@ -453,7 +453,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 				</brush>        -->
 
 				<brush engine={BrushType.SKETCH} name="Pencil">
-					<parameter id={SketchBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} value="0.5" showInUI="1"/>
+					<parameter id={SketchBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" value="0.5" />
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="pencilSketch" />
 					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value="0.25"/>
@@ -470,7 +470,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</SizeDecorator>
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.4" value2="0.4" />
-							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity"  previewID={PreviewIconFactory.PREVIEW_ALPHA} path="pathengine.pointdecorator_1"  minValue="0.25" value="0.7"  showInUI="1" />
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_1"  minValue="0.25" value="0.7"  showInUI="1" />
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" value1="0.1" value2="0.3" />
 							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" showInUI="1"/>
 						</ColorDecorator>

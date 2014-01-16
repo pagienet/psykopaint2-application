@@ -5,12 +5,9 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 	public class BrushStylePreview extends MovieClip
 	{
 		private static var styleToFrame:Array = [
-			"paint1",
-			"basic",
-			"splat",
-			"line",
-			"sumi"
-			];
+			"paint1","basic","splat","line","sumi",
+			"Small","Medium","Large",
+			"splotch","basic smooth","noisy"];
 		
 		public function BrushStylePreview()
 		{
