@@ -134,7 +134,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_material.normalMethod = new PaintingNormalMethod();
 			_material.specularMethod = new PaintingSpecularMethod();
 			_material.lightPicker = _lightPicker;
-			_material.ambientColor = 0xffffff;
+			_material.ambientColor = 0x808088;
 			_material.ambient = 1;
 			_material.specular = 1.5;
 			_material.gloss = 200;

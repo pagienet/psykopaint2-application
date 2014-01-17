@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
 	import away3d.hacks.MaskingMethod;
+	import away3d.hacks.PaintingMaterial;
 	import away3d.hacks.StencilMethod;
 	import away3d.lights.LightBase;
 	import away3d.materials.ColorMaterial;
@@ -93,7 +94,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private var _paintingOccluder : Mesh;
 
-		private var _highQualityMaterial : TextureMaterial;
+		private var _highQualityMaterial : PaintingMaterial;
 		private var _highQualityNormalSpecularTexture : ByteArrayTexture;
 		private var _highQualityColorTexture : BitmapTexture;
 		private var _showHighQuality:Boolean;
@@ -172,7 +173,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_highQualityColorTexture = new BitmapTexture(null);
 			_highQualityNormalSpecularTexture = new ByteArrayTexture(null, 0, 0);
 
-			_highQualityMaterial = new TextureMaterial(null, true, false, false);
+			/*_highQualityMaterial = new TextureMaterial(null, true, false, false);
 			_highQualityMaterial.normalMethod = new PaintingNormalMethod();
 			_highQualityMaterial.diffuseMethod = new PaintingDiffuseMethod();
 			_highQualityMaterial.specularMethod = new PaintingSpecularMethod();
@@ -183,12 +184,19 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_highQualityMaterial.gloss = 200;
 			_highQualityMaterial.texture = _highQualityColorTexture;
 			_highQualityMaterial.normalMap = _highQualityNormalSpecularTexture;
-			_highQualityMaterial.specularMap = _highQualityNormalSpecularTexture;
+			_highQualityMaterial.specularMap = _highQualityNormalSpecularTexture;     */
 
-			var stencilMethod : StencilMethod = new StencilMethod();
-			stencilMethod.referenceValue = 40;
-			stencilMethod.compareMode = Context3DCompareMode.NOT_EQUAL;
-			_highQualityMaterial.addMethod(stencilMethod);
+			_highQualityMaterial = new PaintingMaterial();
+			_highQualityMaterial.lightPicker = new StaticLightPicker([_light]);
+			_highQualityMaterial.albedoTexture = _highQualityColorTexture;
+			_highQualityMaterial.normalSpecularTexture = _highQualityNormalSpecularTexture;
+			_highQualityMaterial.ambientColor = 0xffffff;
+			_highQualityMaterial.specular = 1.5;
+			_highQualityMaterial.gloss = 200;
+
+			_highQualityMaterial.enableStencil = true;
+			_highQualityMaterial.stencilReferenceValue = 40;
+			_highQualityMaterial.stencilCompareMode = Context3DCompareMode.NOT_EQUAL;
 		}
 
 		// this creates a geometry that prevents paintings from being rendered outside the gallery area
