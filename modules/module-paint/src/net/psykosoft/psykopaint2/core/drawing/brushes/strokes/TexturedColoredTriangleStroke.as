@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.display3D.textures.TextureBase;
 	
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.tdsi.FastBuffer;
-
+	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
+	
 	public class TexturedColoredTriangleStroke extends TriangleStroke
 	{
 		public function TexturedColoredTriangleStroke()

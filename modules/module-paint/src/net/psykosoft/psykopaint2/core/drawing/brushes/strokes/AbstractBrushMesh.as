@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.resources.TextureProxy;
-	import net.psykosoft.psykopaint2.tdsi.FastBuffer;
+	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
 
 	public class AbstractBrushMesh implements IBrushMesh
 	{

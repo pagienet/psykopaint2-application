@@ -8,8 +8,8 @@ import flash.display3D.Context3DVertexBufferFormat;
 
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.tdsi.FastBuffer;
-
+	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
+	
 	public class RubbedStrokeMesh extends AbstractBrushMesh
 	{
 		private static var _tmpData : Vector.<Number>;

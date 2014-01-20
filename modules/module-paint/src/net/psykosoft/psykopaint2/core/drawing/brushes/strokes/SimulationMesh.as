@@ -10,8 +10,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.BlendSubTextureCMYK;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
-	import net.psykosoft.psykopaint2.tdsi.FastBuffer;
-
+	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
+	
 	public class SimulationMesh extends AbstractBrushMesh
 	{
 		public static const NO_UVS : int = 0;

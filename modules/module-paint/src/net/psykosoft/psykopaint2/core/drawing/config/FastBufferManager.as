@@ -1,6 +1,6 @@
 package net.psykosoft.psykopaint2.core.drawing.config
 {
-	import net.psykosoft.psykopaint2.tdsi.FastBuffer;
+	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
 	
 	public class FastBufferManager
 	{

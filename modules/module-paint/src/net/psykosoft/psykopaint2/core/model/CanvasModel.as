@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.core.model
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.intrinsics.PyramidMapIntrinsics;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
@@ -38,7 +39,7 @@ package net.psykosoft.psykopaint2.core.model
 		private var _width : Number;
 		private var _height : Number;
 
-		private var _pyramidMap : PyramidMapTdsi;
+		private var _pyramidMap : PyramidMapIntrinsics;
 		private var _textureWidth : Number;
 		private var _textureHeight : Number;
 
@@ -51,7 +52,7 @@ package net.psykosoft.psykopaint2.core.model
 
 		}
 
-		public function get pyramidMap() : PyramidMapTdsi
+		public function get pyramidMap() : PyramidMapIntrinsics
 		{
 			return _pyramidMap;
 		}
@@ -134,7 +135,7 @@ package net.psykosoft.psykopaint2.core.model
 			if (_pyramidMap)
 				_pyramidMap.setSource(sourceBitmapData);
 			else
-				_pyramidMap = new PyramidMapTdsi(sourceBitmapData);
+				_pyramidMap = new PyramidMapIntrinsics(sourceBitmapData);
 
 			if (!_sourceTexture) _sourceTexture = createCanvasTexture(false);
 			_sourceTexture.texture.uploadFromBitmapData(fixed);

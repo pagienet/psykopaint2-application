@@ -2,11 +2,12 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 
 	import flash.display3D.textures.Texture;
-
+	
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
+	import net.psykosoft.psykopaint2.core.intrinsics.MemoryManagerIntrinsics;
 	import net.psykosoft.psykopaint2.core.managers.assets.ShakeAndBakeManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.GpuRenderingStepType;
@@ -16,8 +17,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintRootViewRemovalSignal;
-	import net.psykosoft.psykopaint2.tdsi.MemoryManagerTdsi;
-
+	
 	public class DestroyPaintModuleCommand extends TracingCommand
 	{
 		[Inject]
@@ -50,7 +50,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		override public function execute() : void
 		{
 			super.execute();
-			MemoryManagerTdsi.releaseAllMemory();
+			MemoryManagerIntrinsics.releaseAllMemory();
 			lightController.enabled = false;
 			canvasModel.dispose();
 			canvasHistoryModel.clearHistory();	// cleans up snapshot memory too

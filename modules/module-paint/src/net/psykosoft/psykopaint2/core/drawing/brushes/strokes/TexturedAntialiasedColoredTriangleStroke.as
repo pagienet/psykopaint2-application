@@ -1,20 +1,15 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 {
-	import com.adobe.utils.AGALMiniAssembler;
-	
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.Program3D;
 	import flash.display3D.VertexBuffer3D;
-	import flash.display3D.textures.Texture;
 	import flash.display3D.textures.TextureBase;
-	import flash.utils.ByteArray;
-	import flash.utils.getQualifiedClassName;
 	
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.tdsi.FastBuffer;
-
+	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
+	
 	public class TexturedAntialiasedColoredTriangleStroke extends TriangleStroke
 	{
 		private var postProcessProgramUploaded:Boolean;
