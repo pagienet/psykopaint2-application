@@ -158,7 +158,6 @@ package away3d.hacks
 					"neg vt0.x, vt0.x\n" +
 					"mov v2, vt0\n" +
 
-
 					"mov v0, va1\n";                 // pass on uvs
 		}
 
@@ -169,7 +168,7 @@ package away3d.hacks
 		override arcane function getFragmentCode(fragmentAnimatorCode : String) : String
 		{
 				// albedo in ft0
-			return  "tex ft0, v0, fs0 <2d, clamp, linear, miplinear>\n" +
+			return  "tex ft0, v0, fs0 <2d, clamp, linear, nomip>\n" +
 					"sub ft1.w, fc0.w, ft0.w\n" +
 					"add ft0, ft0, ft1.w\n" +
 
