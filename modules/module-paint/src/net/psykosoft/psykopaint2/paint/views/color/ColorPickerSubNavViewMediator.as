@@ -47,6 +47,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			// From view.
 			view.enabledSignal.add( onViewEnabled );
+			userPaintSettings.setDefaultValues();
 			
 			view.userPaintSettings = userPaintSettings;
 			// From view.

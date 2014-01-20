@@ -1,14 +1,10 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
-	import flash.display.Bitmap;
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
 	import flash.geom.ColorTransform;
-	import flash.utils.Timer;
 	
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
@@ -33,7 +29,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public const palettes:Array = [[0x0b0b0b,0x062750,0x04396c,0x01315a,0x00353b,0x026d01,
 										0x452204,0x7a1023,0xa91606,0xd94300,0xbd9c01,0xdedddb]];
 		*/
-		private var palettes:Array;
+		private var palettes:Vector.<Vector.<uint>>;
 		private var swatches:Vector.<Sprite>;
 		private var selectedPaletteIndex:int;
 		private var _selectedColor:uint;
@@ -57,7 +53,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			
 			swatches = Vector.<Sprite>([colorOverlay0,colorOverlay1,colorOverlay2,colorOverlay3,colorOverlay4,
-										colorOverlay5,colorOverlay6,colorOverlay7,colorOverlay8,colorOverlay9
+										colorOverlay5,colorOverlay6,colorOverlay7,colorOverlay8,colorOverlay9,
 			]);
 			
 			for ( var i:int = 0; i < swatches.length; i++ )
@@ -171,7 +167,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			palettes[selectedPaletteIndex][getSwatchIndex(swatch)] = color;
 		}
 		
-		public function get currentPalette():Array
+		public function get currentPalette():Vector.<uint>
 		{
 			return palettes[selectedPaletteIndex];
 		}

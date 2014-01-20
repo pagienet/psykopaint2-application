@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.home.commands
 	public class LoadSurfacePreviewCommand extends TracingCommand
 	{
 		[Inject]
-		public var index:uint; // From signal.
+		public var index:uint; // From signal. Which Signal???
 
 		[Inject]
 		public var context:IContext;

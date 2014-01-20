@@ -7,8 +7,6 @@ package net.psykosoft.psykopaint2.core.intrinsics
 	import flash.utils.ByteArray;
 	
 	import avm2.intrinsics.memory.li32;
-	import avm2.intrinsics.memory.li8;
-	import avm2.intrinsics.memory.si8;
 	
 	public class PyramidMapIntrinsics
 	{
@@ -16,8 +14,8 @@ package net.psykosoft.psykopaint2.core.intrinsics
 		private var _maxOffsetCount:int;
 		
 		private var _data:ByteArray;
-		private var width:int = -1;
-		private var height:int = -1;
+		private var _width:int = -1;
+		private var _height:int = -1;
 		private var scaleFactor:Number = 1;
 		
 		private const ilog2:Number = 1 / Math.log(2);
@@ -42,7 +40,7 @@ package net.psykosoft.psykopaint2.core.intrinsics
 		
 		public function setSource( map:BitmapData ):void
 		{
-			if ( width != -1 && ( width != map.width || height != map.height ))
+			if ( _width != -1 && ( _width != map.width || _height != map.height ))
 			{
 				throw( new Error("PyramidMapIntrinsics: source map size cannot change once it has been set once!!!! Sorry, we were in a hurry and needed the money. Time to fix memory management, buddy."));	
 			}
@@ -58,30 +56,30 @@ package net.psykosoft.psykopaint2.core.intrinsics
 			}
 			
 			
-			width = map.width;
-			height = map.height;
+			_width = map.width;
+			_height = map.height;
 			
-			var _scaled:BitmapData = new BitmapData(Math.ceil(width * 0.75), Math.ceil(height * 0.5), true, 0 );
+			var _scaled:BitmapData = new BitmapData(Math.ceil(_width * 0.75), Math.ceil(_height * 0.5), true, 0 );
 			var m:Matrix = new Matrix(0.5,0,0,0.5);
 			_scaled.draw( map, m, null, "normal",null,true);
-			m.tx += width * 0.5;
+			m.tx += _width * 0.5;
 			_scaled.draw( _scaled, m, null, "normal",null,true);
-			m.ty += height * 0.25;
+			m.ty += _height * 0.25;
 			m.a = m.d *= 0.5;
 			_scaled.draw( _scaled, m, null, "normal",null,true);
 			m.a = m.d *= 0.25;
-			m.tx += width * 0.125;
-			m.ty += height * 0.0625;
+			m.tx += _width * 0.125;
+			m.ty += _height * 0.0625;
 			_scaled.draw( _scaled, m, null, "normal",null,true);
 			
 			var f:Number = 1;
 			var r:Vector.<Rectangle> = new Vector.<Rectangle>();
-			var rect:Rectangle = new Rectangle(0,0,width*0.5,height*0.5);
+			var rect:Rectangle = new Rectangle(0,0,_width*0.5,_height*0.5);
 			r.push(rect.clone());
 			
 			_offsets = new Vector.<int>();
 			var offset:int = 0;
-			offset +=  width*height*4;
+			offset +=  _width*_height*4;
 			_offsets.push( offset);
 			
 			for ( var i:int = 0; i < 6; i++ )
@@ -90,7 +88,7 @@ package net.psykosoft.psykopaint2.core.intrinsics
 				rect.width >>= 1;
 				rect.height >>= 1;
 				if ( rect.width == 0 || rect.height == 0 ) break;
-				rect.x += int(width * (f *= 0.5));
+				rect.x += int(_width * (f *= 0.5));
 				r.push(rect.clone());
 				
 				_offsets.push(offset);
@@ -99,7 +97,7 @@ package net.psykosoft.psykopaint2.core.intrinsics
 				rect.width  >>= 1;
 				rect.height >>= 1;
 				if ( rect.width == 0 || rect.height == 0 ) break;
-				rect.y += int(height * (f *= 0.5));
+				rect.y += int(_height * (f *= 0.5));
 				r.push(rect.clone());
 				
 				_offsets.push(offset);
@@ -142,11 +140,11 @@ package net.psykosoft.psykopaint2.core.intrinsics
 			
 			
 			if ( xx < 0 ) xx = 0;
-			else if ( xx >= width ) xx = width - 1;
+			else if ( xx >= _width ) xx = _width - 1;
 			if ( yy < 0 )yy = 0;
-			else if ( yy >= height ) yy =height - 1;
+			else if ( yy >= _height ) yy =_height - 1;
 			radius *= 0.5 * scaleFactor;
-			var offset:int = _baseOffset + ((xx + yy * width) << 2 );
+			var offset:int = _baseOffset + ((xx + yy * _width) << 2 );
 			if (radius <= 1 )
 			{
 				var c:uint = li32(offset);
@@ -157,7 +155,7 @@ package net.psykosoft.psykopaint2.core.intrinsics
 			}
 			
 			var index:int = -1;
-			var stride:int = width;
+			var stride:int = _width;
 			var scaledRadius:int = radius+0.5;
 			while ( scaledRadius > 1 && index < _maxOffsetCount)
 			{
@@ -204,6 +202,22 @@ package net.psykosoft.psykopaint2.core.intrinsics
 		{
 			var offset:int = _baseOffset + ( mipLevel > 0 ? _offsets[mipLevel-1] : 0 ); 
 			targetTexture.uploadFromByteArray(_data,offset,mipLevel);
+		}
+		
+		public function getMemoryOffset(scaleLevel:int):int
+		{
+			if ( scaleLevel== 0) return _baseOffset;
+			return _offsets[scaleLevel-1]
+		}
+		
+		public function get width():int
+		{
+			return _width;
+		}
+		
+		public function get height():int
+		{
+			return _height;
 		}
 	}
 }

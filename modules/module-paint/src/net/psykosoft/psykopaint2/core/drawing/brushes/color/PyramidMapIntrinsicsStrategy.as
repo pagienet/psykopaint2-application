@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes.color
 {
 	import flash.display.BitmapData;
-
+	
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.StrokeAppendVO;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -135,6 +135,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			target[13] = tmpRGB[1];
 			target[14] = tmpRGB[2];
 			//target[15] = 1;
+		}
+		
+		public function getSignificantColorPalette( colorCount:int ):Vector.<uint>
+		{
+			var result:Vector.<uint> = new Vector.<uint>(colorCount,false);
+			
+			return result;
 		}
 
 	}

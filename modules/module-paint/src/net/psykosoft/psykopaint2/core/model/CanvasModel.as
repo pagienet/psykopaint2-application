@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.core.model
 {
 
+	import com.quasimondo.color.RGBProximityQuantizer;
+	import com.quasimondo.data.ProximityQuantizer;
+	
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
@@ -318,6 +321,11 @@ package net.psykosoft.psykopaint2.core.model
 		public function hasSourceImage() : Boolean
 		{
 			return _pyramidMap != null;
+		}
+		
+		public function getColorPaletteFromSource( colorCount:int ):Vector.<uint>
+		{
+			return RGBProximityQuantizer.getPalette( _pyramidMap,colorCount,3);
 		}
 	}
 }

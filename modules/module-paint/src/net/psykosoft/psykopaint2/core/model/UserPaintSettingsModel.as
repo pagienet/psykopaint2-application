@@ -10,7 +10,10 @@ package net.psykosoft.psykopaint2.core.model
 		[Inject]
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
 		
-		private var _colorPalettes:Array;
+		[Inject]
+		public var canvasModel:CanvasModel;
+		
+		private var _colorPalettes:Vector.<Vector.<uint>>;
 		private var _currentColor:uint;
 		private var _colorMode:int;
 		public var hasSourceImage:Boolean;
@@ -23,16 +26,19 @@ package net.psykosoft.psykopaint2.core.model
 		public function UserPaintSettingsModel()
 		{}
 		
-		[PostConstruct]
-		public function postConstruct() : void
-		{
-			setDefaultValues();
-		}
 		
-		private function setDefaultValues():void
+		public function setDefaultValues():void
 		{
-			_colorPalettes = [[0x0b0b0b,0x01315a,0x00353b,0x026d01,0x452204,
-				0x7a1023,0xa91606,0xbd9c01,0x04396c,0xdedddb]];
+			_colorPalettes = new Vector.<Vector.<uint>>();
+			if ( hasSourceImage )
+			{
+				_colorPalettes.push( canvasModel.getColorPaletteFromSource(8));
+				_colorPalettes[0].unshift(0x0b0b0b);
+				_colorPalettes[0].push(0xdedddb);
+				while(_colorPalettes[0].length < 10 ) _colorPalettes[0].push( int(Math.random() * 0xffffff));
+			}
+			_colorPalettes.push( Vector.<uint>([0x0b0b0b,0x01315a,0x00353b,0x026d01,0x452204,
+				0x7a1023,0xa91606,0xbd9c01,0x04396c,0xdedddb]));
 			
 			selectedSwatchIndex = -1;
 			_colorMode = -1;
@@ -42,12 +48,12 @@ package net.psykosoft.psykopaint2.core.model
 			//,0xd94300
 		}
 		
-		public function set colorPalettes( value:Array ):void
+		public function set colorPalettes( value:Vector.<Vector.<uint>> ):void
 		{
 			_colorPalettes = value;
 		}
 		
-		public function get colorPalettes():Array
+		public function get colorPalettes():Vector.<Vector.<uint>>
 		{
 			return _colorPalettes;
 		}
