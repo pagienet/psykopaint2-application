@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureMorphingSplatMesh;
@@ -70,7 +70,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createColorStrategy() : IColorStrategy
 		{
-			return new PyramidMapTdsiStrategy(_canvasModel);
+			return new PyramidMapIntrinsicsStrategy(_canvasModel);
 		}
 
 		override protected function onPickColor( point : SamplePoint, pickRadius : Number, smoothFactor : Number ) : void

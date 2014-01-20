@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 
-	public class PyramidMapTdsiStrategy implements  IColorStrategy
+	public class PyramidMapIntrinsicsStrategy implements  IColorStrategy
 	{
 		private var _canvasModel : CanvasModel;
 		private static var _sourceBitmapData : BitmapData;
@@ -17,7 +17,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 		//private var _currentG : Number = 0;
 		//private var _currentB : Number = 0;
 
-		public function PyramidMapTdsiStrategy(canvas : CanvasModel)
+		public function PyramidMapIntrinsicsStrategy(canvas : CanvasModel)
 		{
 			_canvasModel = canvas;
 			tmpRGB = new Vector.<Number>(3,true);

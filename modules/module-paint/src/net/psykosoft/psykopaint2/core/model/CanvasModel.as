@@ -18,8 +18,7 @@ package net.psykosoft.psykopaint2.core.model
 	import net.psykosoft.psykopaint2.core.intrinsics.PyramidMapIntrinsics;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
-	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
-
+	
 	public class CanvasModel
 	{
 		[Inject]

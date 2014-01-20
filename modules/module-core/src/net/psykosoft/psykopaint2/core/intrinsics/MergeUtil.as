@@ -17,6 +17,7 @@ package  net.psykosoft.psykopaint2.core.intrinsics
 		{
 			var aOffset : int = len + 3;
 			
+			var tmp:ByteArray = ApplicationDomain.currentDomain.domainMemory ;
 			ApplicationDomain.currentDomain.domainMemory  = _mergeBuffer;
 			
 			for (var i : int = 0; i < len; i += 4, aOffset += 4  ) 
@@ -26,7 +27,7 @@ package  net.psykosoft.psykopaint2.core.intrinsics
 				si32( (a << 24) | ((rgba << 8 ) & 0xff0000) | ((rgba >>> 8 ) & 0xff00) | ((rgba >>> 24 ) & 0xff ), i);
 			}
 			
-			ApplicationDomain.currentDomain.domainMemory  = MemoryManagerIntrinsics.memory;
+			ApplicationDomain.currentDomain.domainMemory = tmp;
 		}
 
 	}

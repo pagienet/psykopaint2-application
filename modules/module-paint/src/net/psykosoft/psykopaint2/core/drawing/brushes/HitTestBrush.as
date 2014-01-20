@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.RenderTextureBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.DrawingApiMesh;
@@ -146,7 +146,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createColorStrategy() : IColorStrategy
 		{
-			return new PyramidMapTdsiStrategy(_canvasModel);
+			return new PyramidMapIntrinsicsStrategy(_canvasModel);
 		}
 		
 		override protected function onPathStart() : void

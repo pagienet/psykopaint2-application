@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.core.intrinsics
 		{
 			if ( width != -1 && ( width != map.width || height != map.height ))
 			{
-				throw( new Error("PyramidMapTdsi: source map size cannot change once it has been set once!!!! Sorry, we were in a hurry and needed the money. Time to fix memory management, buddy."));	
+				throw( new Error("PyramidMapIntrinsics: source map size cannot change once it has been set once!!!! Sorry, we were in a hurry and needed the money. Time to fix memory management, buddy."));	
 			}
 			
 			scaleFactor = Math.min( 1, MAX_DIMENSION / map.width, MAX_DIMENSION / map.height );
