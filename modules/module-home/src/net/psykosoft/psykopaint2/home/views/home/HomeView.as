@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function playIntroAnimation(onComplete : Function) : void
 		{
-			_animateToTarget = true;
+			initCameraIntroPosition();
 			TweenLite.to(	_camera, 1.5, { 	z:450,
 				ease: Strong.easeInOut,
 				onComplete:onComplete,
@@ -166,10 +166,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_camera.lens.near = 10;
 			_camera.lens.far = 5000;
 
-			_camera.x =  -266.82;
-			_camera.y = -1.14;
-			_camera.z = -146.5;
-			_camera.lookAt(new Vector3D(-266.82, -1.14, -353.10));
+			initCameraIntroPosition();
 
 			_cameraController = new CameraPromenadeController(_camera, stage);
 			_cameraController.activePositionChanged.add(onActivePositionChanged);
@@ -179,6 +176,14 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController.registerTargetPosition(GALLERY, GalleryView.CAMERA_FAR_POSITION);
 			_cameraController.start();
 			_cameraController.interactionRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight - 150*CoreSettings.GLOBAL_SCALING);
+		}
+
+		private function initCameraIntroPosition():void
+		{
+			_camera.x =  -266.82;
+			_camera.y = -1.14;
+			_camera.z = -146.5;
+			_camera.lookAt(new Vector3D(-266.82, -1.14, -353.10));
 		}
 
 		private function onActivePositionChanged() : void

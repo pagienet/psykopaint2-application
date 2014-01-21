@@ -101,7 +101,6 @@ package net.psykosoft.psykopaint2.paint
 			paintingDataVO.normalSpecularOriginal = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x80808080);
 			tempData.dispose();
 
-			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.PREPARE_FOR_PAINT_MODE);
 			_coreModule.injector.getInstance(NotifyPaintModuleSetUpSignal).addOnce(onPaintingModuleSetUp);
 			_coreModule.injector.getInstance(RequestSetupPaintModuleSignal).dispatch((paintingDataVO));
 		}

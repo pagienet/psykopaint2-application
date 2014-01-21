@@ -1,14 +1,13 @@
 package net.psykosoft.psykopaint2.book.commands
 {
 
+	import away3d.core.managers.Stage3DProxy;
+
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 
-	import flash.events.Event;
-
-	import net.psykosoft.psykopaint2.core.services.CameraRollService;
+	import net.psykosoft.psykopaint2.book.views.book.BookView;
 
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
-	import net.psykosoft.psykopaint2.book.views.base.BookRootView;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.views.base.ViewLayerOrdering;
 
@@ -20,16 +19,14 @@ package net.psykosoft.psykopaint2.book.commands
 		[Inject]
 		public var requestAddViewToMainLayerSignal : RequestAddViewToMainLayerSignal;
 
+		[Inject]
+		public var stage3DProxy : Stage3DProxy;
+
 		override public function execute() : void
 		{
 			trace(this, "execute");
-			var bookRootView : BookRootView = new BookRootView();
-			bookRootView.onSubViewsReady.add(onSubViewReady);
-			requestAddViewToMainLayerSignal.dispatch(bookRootView, ViewLayerOrdering.AT_BOTTOM_LAYER);
-		}
-
-		private function onSubViewReady() : void
-		{
+			var bookView : BookView = new BookView(stage3DProxy);
+			requestAddViewToMainLayerSignal.dispatch(bookView, ViewLayerOrdering.AT_BOTTOM_LAYER);
 			notifyBookModuleSetUpSignal.dispatch();
 		}
 	}

@@ -5,15 +5,12 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.core.views.popups.login.CameraRollUtil;
 	import net.psykosoft.psykopaint2.core.views.popups.login.DeviceCameraUtil;
-	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 
 	public class PickAnImageSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -22,18 +19,6 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		[Inject]
 		public var requestEaselUpdateSignal:RequestEaselUpdateSignal;
-
-		[Inject]
-		public var requestBrowseSampleImagesSignal:RequestBrowseSampleImagesSignal;
-
-		[Inject]
-		public var requestBrowseUserImagesSignal:RequestBrowseUserImagesSignal;
-
-		[Inject]
-		public var requestRetrieveCameraImageSignal:RequestRetrieveCameraImageSignal;
-
-		[Inject]
-		public var requestExitPickAnImageSignal:RequestExitPickAnImageSignal;
 
 		[Inject]
 		public var requestCropSourceImageSignal:RequestCropSourceImageSignal;
@@ -96,24 +81,29 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			switch( id ) {
 
 				case PickAnImageSubNavView.ID_BACK: {
-					requestExitPickAnImageSignal.dispatch();
+					requestNavigationStateChange(NavigationStateType.HOME_ON_EASEL);
 					break;
 				}
 
 				case PickAnImageSubNavView.ID_USER: {
-					if( !CoreSettings.RUNNING_ON_iPAD || !CoreSettings.USE_NATIVE_CAMERA_ROLL_TO_RETRIEVE_USER_IMAGES ) requestBrowseUserImagesSignal.dispatch();
+					if(!CoreSettings.RUNNING_ON_iPAD)
+						requestNavigationStateChange(NavigationStateType.PICK_USER_IMAGE_DESKTOP);
+					else if (!CoreSettings.USE_NATIVE_CAMERA_ROLL_TO_RETRIEVE_USER_IMAGES)
+						requestNavigationStateChange(NavigationStateType.PICK_USER_IMAGE_IOS);
 					else loadPhoto();
 					break;
 				}
 
 				case PickAnImageSubNavView.ID_SAMPLES: {
-					requestBrowseSampleImagesSignal.dispatch();
+					requestNavigationStateChange(NavigationStateType.PICK_SAMPLE_IMAGE);
 					break;
 				}
 
 				case PickAnImageSubNavView.ID_CAMERA: {
-					if( !CoreSettings.RUNNING_ON_iPAD || !CoreSettings.USE_NATIVE_CAMERA_TO_RETRIEVE_USER_PICTURE ) requestRetrieveCameraImageSignal.dispatch();
-					else takePhoto();
+					if( !CoreSettings.RUNNING_ON_iPAD || !CoreSettings.USE_NATIVE_CAMERA_TO_RETRIEVE_USER_PICTURE )
+						requestNavigationStateChange(NavigationStateType.CAPTURE_IMAGE);
+					else
+						takePhoto();
 					break;
 				}
 

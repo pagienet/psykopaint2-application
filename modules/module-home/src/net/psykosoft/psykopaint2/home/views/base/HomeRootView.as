@@ -39,10 +39,14 @@ package net.psykosoft.psykopaint2.home.views.base
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.SETTINGS, SettingsSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.SETTINGS_WALLPAPER, WallpaperSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.HOME_PICK_SURFACE, PickSurfaceSubNavView );
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PREPARE_FOR_PAINT_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_IMAGE, PickAnImageSubNavView );
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.BOOK_GALLERY, GalleryBrowseSubNavView );
-//			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_LOADING, SubNavigationViewBase );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_SAMPLE_IMAGE, SubNavigationViewBase );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_USER_IMAGE_DESKTOP, SubNavigationViewBase );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_USER_IMAGE_IOS, SubNavigationViewBase );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_BROWSE_FOLLOWING, GalleryBrowseSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_BROWSE_MOST_LOVED, GalleryBrowseSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_BROWSE_MOST_RECENT, GalleryBrowseSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_BROWSE_YOURS, GalleryBrowseSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_PAINTING, GalleryPaintingSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_SHARE, GalleryShareSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.CAPTURE_IMAGE, CaptureImageSubNavView );

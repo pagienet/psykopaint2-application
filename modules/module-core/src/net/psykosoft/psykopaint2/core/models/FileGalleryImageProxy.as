@@ -144,16 +144,30 @@ package net.psykosoft.psykopaint2.core.models
 		private function onColorMapComplete(event : Event) : void
 		{
 			var loader : LoaderInfo = LoaderInfo(event.target);
-			_paintingGalleryVO.colorData = Bitmap(loader.content).bitmapData;
-			loadBitmapData(sourceThumbnailURL, onSourceThumbComplete, onLoadError);
+			var bitmapData : BitmapData = Bitmap(loader.content).bitmapData;
+
+			// sometimes, a freak occurrence causes the callback to be reached after cancelling
+			if (_paintingGalleryVO) {
+				_paintingGalleryVO.colorData = bitmapData;
+				loadBitmapData(sourceThumbnailURL, onSourceThumbComplete, onLoadError);
+			}
+			else {
+				// may have been disposed()
+				bitmapData.dispose();
+			}
 		}
 
 		private function onSourceThumbComplete(event : Event) : void
 		{
 			var loader : LoaderInfo = LoaderInfo(event.target);
-			_paintingGalleryVO.sourceThumbnail = Bitmap(loader.content).bitmapData;
-
-			loadNormalSpecular();
+			var bitmapData : BitmapData = Bitmap(loader.content).bitmapData;
+			if (_paintingGalleryVO) {
+				_paintingGalleryVO.sourceThumbnail = bitmapData;
+				loadNormalSpecular();
+			}
+			else {
+				bitmapData.dispose();
+			}
 		}
 
 		private function loadNormalSpecular() : void
@@ -169,11 +183,16 @@ package net.psykosoft.psykopaint2.core.models
 		private function onNormalSpecularComplete(event : Event) : void
 		{
 			var loader : URLLoader = URLLoader(event.target);
-			_paintingGalleryVO.normalSpecularData = loader.data;
-			_paintingGalleryVO.normalSpecularData.uncompress();
-			_activeLoader = null;
-			callOnComplete(_paintingGalleryVO);
-			_paintingGalleryVO = null;
+			if (_paintingGalleryVO) {
+				_paintingGalleryVO.normalSpecularData = loader.data;
+				_paintingGalleryVO.normalSpecularData.uncompress();
+				_activeLoader = null;
+				callOnComplete(_paintingGalleryVO);
+				_paintingGalleryVO = null;
+			}
+			else {
+				loader.data.clear();
+			}
 		}
 
 		override public function clone():GalleryImageProxy

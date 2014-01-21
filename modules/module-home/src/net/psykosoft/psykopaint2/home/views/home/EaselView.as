@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
 	import away3d.hacks.NativeTexture;
+	import away3d.hacks.PaintingMaterial;
 	import away3d.lights.LightBase;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.LightPickerBase;
@@ -46,7 +47,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var easelTappedSignal : Signal = new Signal();
 
 		private var _canvas : Mesh;
-		private var _material : TextureMaterial;
+		private var _material : PaintingMaterial;
 		private var _diffuseTexture : NativeTexture;
 		private var _normalSpecularTexture : NativeTexture;
 		private var _context3D : Context3D;
@@ -129,13 +130,9 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function initMaterial() : void
 		{
-			_material = new TextureMaterial(null, true, false, false);
-			_material.diffuseMethod = new PaintingDiffuseMethod();
-			_material.normalMethod = new PaintingNormalMethod();
-			_material.specularMethod = new PaintingSpecularMethod();
+			_material = new PaintingMaterial();
 			_material.lightPicker = _lightPicker;
 			_material.ambientColor = 0xffffff;
-			_material.ambient = 1;
 			_material.specular = 1.5;
 			_material.gloss = 200;
 		}
@@ -257,9 +254,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_diffuseTexture = new NativeTexture(diffuse);
 			_normalSpecularTexture = new NativeTexture(normalSpecular);
-			_material.texture = _diffuseTexture;
-			_material.normalMap = _normalSpecularTexture;
-			_material.specularMap = _normalSpecularTexture;
+			_material.albedoTexture = _diffuseTexture;
+			_material.normalSpecularTexture = _normalSpecularTexture;
 		}
 
 		public function dispose() : void

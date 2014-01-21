@@ -2,23 +2,18 @@ package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
 
-	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.states.State;
-	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
-	import net.psykosoft.psykopaint2.core.models.GalleryType;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
+	import net.psykosoft.psykopaint2.core.models.GalleryType;
+	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.home.signals.RequestBrowseGallerySignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestBrowseSampleImagesSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestBrowseUserImagesSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestExitPickAnImageSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestRetrieveCameraImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 
 	use namespace ns_state_machine;
@@ -35,9 +30,6 @@ package net.psykosoft.psykopaint2.app.states
 		public var transitionToCropState : TransitionHomeToCropState;
 
 		[Inject]
-		public var transitionToBookState : TransitionHomeToBookState;
-
-		[Inject]
 		public var requestCropSourceImageSignal : RequestCropSourceImageSignal;
 
 		[Inject]
@@ -50,28 +42,18 @@ package net.psykosoft.psykopaint2.app.states
 		public var transitionPaintToHomeState : TransitionPaintToHomeState;
 
 		[Inject]
-		public var transitionBookToHomeState : TransitionBookToHomeState;
-
-		[Inject]
-		public var requestBrowseSampleImagesSignal : RequestBrowseSampleImagesSignal;
-
-		[Inject]
-		public var requestBrowseUserImagesSignal : RequestBrowseUserImagesSignal;
-
-		[Inject]
-		public var requestBrowseGallerySignal : RequestBrowseGallerySignal;
-
-		[Inject]
-		public var requestRetrieveCameraImageSignal:RequestRetrieveCameraImageSignal;
-
-		[Inject]
-		public var requestExitPickAnImageSignal:RequestExitPickAnImageSignal;
-
-		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 
 		[Inject]
 		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
+
+		[Inject]
+		public var notifyNavigationStateChangeSignal:NotifyNavigationStateChangeSignal;
+
+		[Inject]
+		public var bookLayer : BookStateLayer;
+
+
 
 		public function HomeState()
 		{
@@ -83,7 +65,6 @@ package net.psykosoft.psykopaint2.app.states
 			// manual injection because robotlegs crashes injecting circular dependencies
 			transitionCropToHomeState.homeState = this;
 			transitionPaintToHomeState.homeState = this;
-			transitionBookToHomeState.homeState = this;
 		}
 
 		override ns_state_machine function activate(data : Object = null) : void
@@ -92,12 +73,8 @@ package net.psykosoft.psykopaint2.app.states
 			ConsoleView.instance.logMemory();
 			requestOpenPaintingDataVOSignal.add(onRequestOpenPaintingDataVO);
 			requestCropSourceImageSignal.add(onRequestCropState);
-			requestBrowseSampleImagesSignal.add(onBrowseSampleImagesSignal);
-			requestBrowseUserImagesSignal.add(onBrowseUserImagesSignal);
-			requestBrowseGallerySignal.add(onBrowseGallerySignal);
-			requestRetrieveCameraImageSignal.add(onRequestRetrieveCameraImageSignal);
-			requestExitPickAnImageSignal.add(onRequestExitPickAnImageSignal);
 
+			notifyNavigationStateChangeSignal.add(onNavigationStateChange);
 			navigationCanHideWithGesturesSignal.dispatch( false );
 			requestNavigationToggleSignal.dispatch( 1 );
 		}
@@ -106,13 +83,9 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			ConsoleView.instance.log( this, "de-activating..." );
 			ConsoleView.instance.logMemory();
+			notifyNavigationStateChangeSignal.remove(onNavigationStateChange);
 			requestOpenPaintingDataVOSignal.remove(onRequestOpenPaintingDataVO);
 			requestCropSourceImageSignal.remove(onRequestCropState);
-			requestBrowseSampleImagesSignal.remove(onBrowseSampleImagesSignal);
-			requestBrowseUserImagesSignal.remove(onBrowseUserImagesSignal);
-			requestBrowseGallerySignal.remove(onBrowseGallerySignal);
-			requestRetrieveCameraImageSignal.remove(onRequestRetrieveCameraImageSignal);
-			requestExitPickAnImageSignal.remove(onRequestExitPickAnImageSignal);
 		}
 
 		private function onRequestOpenPaintingDataVO(paintingData : PaintingDataVO) : void
@@ -125,30 +98,33 @@ package net.psykosoft.psykopaint2.app.states
 			stateMachine.setActiveState(transitionToCropState, bitmapData);
 		}
 
-		private function onBrowseUserImagesSignal() : void
+		private function onNavigationStateChange(state : String) : void
 		{
-			if (CoreSettings.RUNNING_ON_iPAD)
-				stateMachine.setActiveState(transitionToBookState, {source: ImageCollectionSource.CAMERAROLL_IMAGES});
-			else
-				requestStateChange.dispatch(NavigationStateType.PICK_USER_IMAGE_DESKTOP);
-		}
-
-		private function onBrowseSampleImagesSignal() : void
-		{
-			stateMachine.setActiveState(transitionToBookState, {source: ImageCollectionSource.SAMPLE_IMAGES});
-		}
-
-		private function onBrowseGallerySignal(galleryID : uint) : void
-		{
-			stateMachine.setActiveState(transitionToBookState, {source: ImageCollectionSource.GALLERY_IMAGES, type: galleryID})
-		}
-
-		private function onRequestExitPickAnImageSignal():void {
-			requestStateChange.dispatch( NavigationStateType.HOME_ON_EASEL );
-		}
-
-		private function onRequestRetrieveCameraImageSignal():void {
-			requestStateChange.dispatch( NavigationStateType.CAPTURE_IMAGE );
+			switch (state) {
+				case NavigationStateType.PICK_USER_IMAGE_IOS:
+					bookLayer.show(ImageCollectionSource.CAMERAROLL_IMAGES);
+					break;
+				case NavigationStateType.PICK_SAMPLE_IMAGE:
+					bookLayer.show(ImageCollectionSource.SAMPLE_IMAGES);
+					break;
+				case NavigationStateType.GALLERY_BROWSE_FOLLOWING:
+					bookLayer.show(ImageCollectionSource.GALLERY_IMAGES, GalleryType.FOLLOWING);
+					break;
+				case NavigationStateType.GALLERY_BROWSE_MOST_LOVED:
+					bookLayer.show(ImageCollectionSource.GALLERY_IMAGES, GalleryType.MOST_LOVED);
+					break;
+				case NavigationStateType.GALLERY_BROWSE_MOST_RECENT:
+					bookLayer.show(ImageCollectionSource.GALLERY_IMAGES, GalleryType.MOST_RECENT);
+					break;
+				case NavigationStateType.GALLERY_BROWSE_YOURS:
+					bookLayer.show(ImageCollectionSource.GALLERY_IMAGES, GalleryType.YOURS);
+					break;
+				case NavigationStateType.GALLERY_PAINTING:
+					// keep the book where it was
+					break;
+				default:
+					bookLayer.hide();
+			}
 		}
 	}
 }

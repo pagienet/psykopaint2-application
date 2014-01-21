@@ -44,9 +44,6 @@ package net.psykosoft.psykopaint2.paint.commands {
 			}
 			dataFile.deleteFile();
 			infoFile.deleteFile();
-
-			//change state to home
-			requestStateChangeSignal.dispatch( NavigationStateType.TRANSITION_TO_HOME_MODE );
 		}
 	}
 }
