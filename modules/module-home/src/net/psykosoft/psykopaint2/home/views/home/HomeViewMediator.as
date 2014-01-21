@@ -73,14 +73,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyGyroscopeUpdateSignal.add(onGyroscopeUpdate);
 
 			// From view.
-			view.enabledSignal.add(onEnabled);
 			view.disabledSignal.add(onDisabled);
 
 			view.activeSectionChanged.add(onActiveSectionChanged);
 			view.sceneReadySignal.add(onSceneReady);
 
 			view.stage3dProxy = stage3dProxy;
-
 			view.enable();
 		}
 
@@ -112,7 +110,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestHomeIntroSignal.remove(onIntroRequested);
 			view.activeSectionChanged.remove(onActiveSectionChanged);
 
-			view.enabledSignal.remove(onEnabled);
 			view.disabledSignal.remove(onDisabled);
 			view.sceneReadySignal.remove(onSceneReady);
 			notifyGyroscopeUpdateSignal.remove(onGyroscopeUpdate);
@@ -137,14 +134,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.setOrientationMatrix(orientationMatrix);
 		}
 
-		private function onEnabled() : void
-		{
-			GpuRenderManager.addRenderingStep(view.renderScene, GpuRenderingStepType.NORMAL, 0);
-		}
-
 		private function onDisabled() : void
 		{
 			GpuRenderManager.removeRenderingStep(view.renderScene, GpuRenderingStepType.NORMAL);
+			_currentNavigationState = null;
 		}
 
 		// -----------------------
@@ -164,6 +157,10 @@ package net.psykosoft.psykopaint2.home.views.home
 		override protected function onStateChange(newState : String) : void
 		{
 			super.onStateChange(newState);
+
+			// rendering should not happen until we're in an actual state
+			if (!_currentNavigationState)
+				GpuRenderManager.addRenderingStep(view.renderScene, GpuRenderingStepType.NORMAL, 0);
 
 			_currentNavigationState = newState;
 

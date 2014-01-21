@@ -102,9 +102,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			registerEnablingState( NavigationStateType.PAINT_SELECT_BRUSH );
 			registerEnablingState( NavigationStateType.PAINT_ADJUST_BRUSH );
 			registerEnablingState( NavigationStateType.PAINT_ADJUST_COLOR );
-			registerEnablingState( NavigationStateType.TRANSITION_TO_HOME_MODE );
 			registerEnablingState( NavigationStateType.TRANSITION_TO_PAINT_MODE );
-			registerEnablingState( NavigationStateType.PREPARE_FOR_HOME_MODE );
 			registerEnablingState( NavigationStateType.PAINT_ADJUST_ALPHA );
 
 			// Init.
@@ -233,11 +231,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					trace( this, "listener removed" );
 				}
 			}
-
-			// todo: remove this during state introduction
-			if( newState == NavigationStateType.TRANSITION_TO_HOME_MODE )
-				zoomToEaselView();
-
 		}
 
 		private function updateEaselRect():void {

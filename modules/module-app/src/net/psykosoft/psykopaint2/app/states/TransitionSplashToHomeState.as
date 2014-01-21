@@ -1,10 +1,13 @@
 package net.psykosoft.psykopaint2.app.states
 {
+	import flash.display.Sprite;
+	import flash.events.Event;
+
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
+	import net.psykosoft.psykopaint2.base.utils.misc.executeNextFrame;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySplashScreenRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
@@ -38,9 +41,6 @@ package net.psykosoft.psykopaint2.app.states
 		public var requestHomeIntroSignal:RequestHomeIntroSignal;
 
 		[Inject]
-		public var notifySplashScreenRemovedSignal:NotifySplashScreenRemovedSignal;
-
-		[Inject]
 		public var homeState : HomeState;
 
 		public function TransitionSplashToHomeState()
@@ -56,14 +56,18 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onHomeModuleSetUp() : void
 		{
-			notifySplashScreenRemovedSignal.addOnce( onSplashScreenRemoved );
-			requestHideSplashScreenSignal.dispatch();
+			requestStateChangeSignal.dispatch(NavigationStateType.HOME);
+
+			// nasty hack, but I really don't care anymore at this point
+			// not doing this causes a black frame because the home view will be rendered NEXT frame, it would seem
+			executeNextFrame(goHome);
 		}
 
-		private function onSplashScreenRemoved():void {
+		private function goHome():void
+		{
 			notifyHomeViewZoomCompleteSignal.addOnce(onTransitionComplete);
 			requestHomeIntroSignal.dispatch();
-			requestStateChangeSignal.dispatch(NavigationStateType.HOME);
+			requestHideSplashScreenSignal.dispatch();
 		}
 
 		private function onTransitionComplete() : void

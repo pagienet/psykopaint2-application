@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.core.models
 
 		public static const HOME:String = "state/home";
 		public static const HOME_ON_EASEL:String = "state/home/on_empty_easel";
-		public static const HOME_ON_FINISHED_PAINTING:String = "state/home/on_painting";
 		public static const SETTINGS:String = "state/home/settings";
 
 		public static const SETTINGS_WALLPAPER:String = "state/settings/wallpaper";
@@ -22,25 +21,19 @@ package net.psykosoft.psykopaint2.core.models
 		public static const PICK_SAMPLE_IMAGE:String = "state/pick_sample_image";
 		public static const CAPTURE_IMAGE:String = "state/capture_image";
 		public static const HOME_PICK_SURFACE:String = "state/home/pick_surface";
-		public static const PREPARE_FOR_PAINT_MODE:String = "state/home/prepare_for_paint";
-		public static const PREPARE_FOR_HOME_MODE:String = "state/paint/prepare_for_home";
-		public static const TRANSITION_TO_HOME_MODE:String = "state/transition_to_home";
 		public static const TRANSITION_TO_PAINT_MODE:String = "state/transition_to_paint";
-
-		public static const PAINT:String = "state/paint";
-		public static const PAINT_SELECT_BRUSH:String = "state/paint/select_brush";
-		public static const PAINT_ADJUST_BRUSH:String = "state/paint/adjust_brush";
-		public static const PAINT_ADJUST_ALPHA:String = "state/paint/adjust_alpha";
-		public static const PAINT_ADJUST_COLOR:String = "state/paint/adjust_color";
-
-		//public static const PAINT_HIDE_SOURCE:String = "state/paint/hide_source";
 
 		public static const GALLERY_BROWSE_FOLLOWING : String = "state/gallery/gallery_browse_following";
 		public static const GALLERY_BROWSE_MOST_LOVED : String = "state/gallery/gallery_browse_most_loved";
 		public static const GALLERY_BROWSE_MOST_RECENT : String = "state/gallery/gallery_browse_recent";
 		public static const GALLERY_BROWSE_YOURS : String = "state/gallery/gallery_browse_yours";
 		public static const GALLERY_PAINTING : String = "state/gallery/painting";
-		public static const GALLERY_SHARE : String = "state/gallery/share"
+		public static const GALLERY_SHARE : String = "state/gallery/share";
 
+		public static const PAINT:String = "state/paint";
+		public static const PAINT_SELECT_BRUSH:String = "state/paint/select_brush";
+		public static const PAINT_ADJUST_BRUSH:String = "state/paint/adjust_brush";
+		public static const PAINT_ADJUST_ALPHA:String = "state/paint/adjust_alpha";
+		public static const PAINT_ADJUST_COLOR:String = "state/paint/adjust_color";
 	}
 }

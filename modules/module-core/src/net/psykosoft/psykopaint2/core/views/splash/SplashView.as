@@ -26,16 +26,12 @@ package net.psykosoft.psykopaint2.core.views.splash
 		private var _splashScreenBM:Bitmap;
 		private var _quotes:MovieClip;
 
-		public var removedSignal:Signal;
-
 		public function SplashView() {
 			super();
 			initSplashScreen();
 		}
 
 		private function initSplashScreen():void {
-
-			removedSignal = new Signal();
 
 			_splashScreen = new Sprite();
 			addChild( _splashScreen );
@@ -62,7 +58,6 @@ package net.psykosoft.psykopaint2.core.views.splash
 			_splashScreenBM = null;
 			_quotes = null;
 			_splashScreen = null;
-			removedSignal.dispatch();
 		}
 	}
 }

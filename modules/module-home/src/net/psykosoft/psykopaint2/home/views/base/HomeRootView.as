@@ -39,7 +39,6 @@ package net.psykosoft.psykopaint2.home.views.base
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.SETTINGS, SettingsSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.SETTINGS_WALLPAPER, WallpaperSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.HOME_PICK_SURFACE, PickSurfaceSubNavView );
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PREPARE_FOR_PAINT_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_IMAGE, PickAnImageSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_SAMPLE_IMAGE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PICK_USER_IMAGE_DESKTOP, SubNavigationViewBase );

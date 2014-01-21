@@ -4,7 +4,6 @@ package net.psykosoft.psykopaint2.app.states
 
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
@@ -52,9 +51,6 @@ package net.psykosoft.psykopaint2.app.states
 		public var notifyNavigationStateChangeSignal:NotifyNavigationStateChangeSignal;
 
 		[Inject]
-		public var notifySourceImageSelectedFromBookSignal : NotifySourceImageSelectedFromBookSignal;
-
-		[Inject]
 		public var bookLayer : BookStateLayer;
 
 
@@ -78,7 +74,6 @@ package net.psykosoft.psykopaint2.app.states
 			requestOpenPaintingDataVOSignal.add(onRequestOpenPaintingDataVO);
 			requestCropSourceImageSignal.add(onRequestCropState);
 
-			notifySourceImageSelectedFromBookSignal.add(onImageSelectedFromBookSignal);
 			notifyNavigationStateChangeSignal.add(onNavigationStateChange);
 			navigationCanHideWithGesturesSignal.dispatch( false );
 			requestNavigationToggleSignal.dispatch( 1 );
@@ -88,7 +83,6 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			ConsoleView.instance.log( this, "de-activating..." );
 			ConsoleView.instance.logMemory();
-			notifySourceImageSelectedFromBookSignal.remove(onImageSelectedFromBookSignal);
 			notifyNavigationStateChangeSignal.remove(onNavigationStateChange);
 			requestOpenPaintingDataVOSignal.remove(onRequestOpenPaintingDataVO);
 			requestCropSourceImageSignal.remove(onRequestCropState);
@@ -102,13 +96,6 @@ package net.psykosoft.psykopaint2.app.states
 		private function onRequestCropState(bitmapData : BitmapData) : void
 		{
 			stateMachine.setActiveState(transitionToCropState, bitmapData);
-		}
-
-		private function onImageSelectedFromBookSignal(bitmapData : BitmapData) : void
-		{
-
-			// TODO: notify home view similar to requestSetGalleryPaintingSignal
-			//stateMachine.setActiveState(transitionToCropState, {bitmapData: bitmapData});
 		}
 
 		private function onNavigationStateChange(state : String) : void
@@ -133,7 +120,7 @@ package net.psykosoft.psykopaint2.app.states
 					bookLayer.show(ImageCollectionSource.GALLERY_IMAGES, GalleryType.YOURS);
 					break;
 				case NavigationStateType.GALLERY_PAINTING:
-						// keep the book where it was
+					// keep the book where it was
 					break;
 				default:
 					bookLayer.hide();

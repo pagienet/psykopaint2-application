@@ -51,12 +51,6 @@ package net.psykosoft.psykopaint2.app.states
 
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			notifyHomeModuleSetUpSignal.addOnce(onHomeModuleSetUp);
-			requestSetupHomeModuleSignal.dispatch();
-		}
-
-		private function onHomeModuleSetUp() : void
-		{
 			zoomOut();
 		}
 
@@ -67,10 +61,12 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onZoomOutComplete() : void
 		{
-			// todo: remove all these transition and prepare crazies:
-			requestStateChangeSignal.dispatch(NavigationStateType.TRANSITION_TO_HOME_MODE);
-			requestStateChangeSignal.dispatch(NavigationStateType.PREPARE_FOR_HOME_MODE);
+			notifyHomeModuleSetUpSignal.addOnce(onHomeModuleSetUp);
+			requestSetupHomeModuleSignal.dispatch();
+		}
 
+		private function onHomeModuleSetUp() : void
+		{
 			hideSavingPopUp();
 		}
 

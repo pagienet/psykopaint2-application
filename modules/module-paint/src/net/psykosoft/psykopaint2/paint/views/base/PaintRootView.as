@@ -27,9 +27,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT, CanvasSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_SELECT_BRUSH, SelectBrushSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_ADJUST_BRUSH, EditBrushSubNavView );
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.TRANSITION_TO_HOME_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.TRANSITION_TO_PAINT_MODE, SubNavigationViewBase );
-			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PREPARE_FOR_HOME_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_ADJUST_COLOR, ColorPickerSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_ADJUST_ALPHA, AlphaSubNavView );
 
