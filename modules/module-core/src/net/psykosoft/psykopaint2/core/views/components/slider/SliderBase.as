@@ -84,17 +84,20 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		}
 
 		private function updateLabel():void {
-			switch ( _labelMode )
+			if ( _valueLabel )
 			{
-				case LABEL_VALUE:
-					_valueLabel.text = formatLabel(_value);
-					break;
-				case LABEL_PERCENT:
-					_valueLabel.text = formatLabel(_valueRatio * 100,"%" );
-					break;
-				case LABEL_DEGREES:
-					_valueLabel.text = formatLabel(_value, "°" );
-					break;
+				switch ( _labelMode )
+				{
+					case LABEL_VALUE:
+						_valueLabel.text = formatLabel(_value);
+						break;
+					case LABEL_PERCENT:
+						_valueLabel.text = formatLabel(_valueRatio * 100,"%" );
+						break;
+					case LABEL_DEGREES:
+						_valueLabel.text = formatLabel(_value, "°" );
+						break;
+				}
 			}
 		}
 

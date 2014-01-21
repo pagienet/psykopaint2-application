@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			setHeader( "Pick a Brush" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 
+			/*
 			// Show color button?
 			if( PaintModeModel.activeMode == PaintMode.COLOR_MODE ) {
 				setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.COLOR );
@@ -32,15 +33,16 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			else {
 				setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.ALPHA );
 			}
-
+			*/
+			setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.ALPHA );
 			setBgType( NavigationBg.BG_TYPE_WOOD_LOW );
 		}
 
-		public function setColorButtonHex( hex:uint ):void {
+		public function setColorButtonHex( argb:uint ):void {
 			var icon:Sprite = getButtonIconForRightButton();
 			if( icon ) {
 				var ct:ColorTransform = new ColorTransform();
-				ct.color = hex;
+				ct.color = argb;
 				var overlay:Sprite = icon.getChildByName( "overlay" ) as Sprite;
 				overlay.transform.colorTransform = ct;
 			}

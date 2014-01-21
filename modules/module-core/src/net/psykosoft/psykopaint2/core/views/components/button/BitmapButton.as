@@ -1,10 +1,19 @@
 package net.psykosoft.psykopaint2.core.views.components.button
 {
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
+	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
-
+	import flash.events.Event;
+	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
+	
+	import org.gestouch.events.GestureEvent;
+	import org.gestouch.gestures.PanGesture;
+	import org.gestouch.gestures.PanGestureDirection;
 
 	public class BitmapButton extends NavigationButton
 	{
@@ -14,7 +23,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public var pin:MovieClip;
 
 		private var _pin:MovieClip;
-
+		private var _pinDefaultY:Number;
+		private var _panGestureVertical:PanGesture;
+		
 		public function BitmapButton() {
 			super();
 			super.setLabel( label );
@@ -26,6 +37,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		private function setPin():void {
 			_pin = pin;
 			_pin.stop();
+			_pinDefaultY = _pin.y;
 			randomizePinsAndRotation();
 		}
 
@@ -43,6 +55,44 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		override protected function updateSelected():void {
 			var frame:uint = _selected + 1;
 			_pin.gotoAndStop( frame );
+		}
+		
+		override protected function onAddedToStage( event:Event ):void
+		{
+			super.onAddedToStage( event );
+			initOneFingerVerticalPan();
+		}
+		
+		public function enterDeleteMode():void
+		{
+			TweenLite.to( _pin, 0.2, { y: _pinDefaultY - 30, ease: Strong.easeInOut } );
+		}
+		
+		public function enterDefaultMode():void
+		{
+			TweenLite.to( _pin, 0.2, { y: _pinDefaultY, ease: Strong.easeInOut } );
+		}
+		
+		private function initOneFingerVerticalPan():void {
+			if ( !_panGestureVertical )
+			{
+				_panGestureVertical = new PanGesture( this );
+				_panGestureVertical.minNumTouchesRequired = _panGestureVertical.maxNumTouchesRequired = 1;
+				_panGestureVertical.direction = PanGestureDirection.VERTICAL;
+				_panGestureVertical.addEventListener( GestureEvent.GESTURE_BEGAN, onVerticalPanGestureBegan );
+				_panGestureVertical.addEventListener( GestureEvent.GESTURE_ENDED, onVerticalPanGestureEnded );
+			}
+		
+		}
+		
+		private function onVerticalPanGestureBegan( event:GestureEvent ):void {
+			trace("vertical pan started");
+			enterDeleteMode();
+		}
+		
+		private function onVerticalPanGestureEnded( event:GestureEvent ):void {
+			trace("vertical pan ended"); 
+			
 		}
 	}
 }

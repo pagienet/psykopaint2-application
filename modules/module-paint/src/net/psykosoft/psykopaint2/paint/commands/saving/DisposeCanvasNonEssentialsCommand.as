@@ -1,13 +1,12 @@
 package net.psykosoft.psykopaint2.paint.commands.saving
 {
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
-
+	
+	import net.psykosoft.psykopaint2.core.intrinsics.MemoryManagerIntrinsics;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
-
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-	import net.psykosoft.psykopaint2.tdsi.MemoryManagerTdsi;
-
+	
 	public class DisposeCanvasNonEssentialsCommand extends AsyncCommand
 	{
 		[Inject]
@@ -22,7 +21,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 			canvasModel.disposeBackBuffer();
 			historyModel.clearHistory();
-			MemoryManagerTdsi.releaseAllMemory();
+			MemoryManagerIntrinsics.releaseAllMemory();
 			dispatchComplete(true);
 		}
 	}

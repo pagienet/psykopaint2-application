@@ -138,6 +138,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			_brushAlpha = alphaBlendFactor;
 		}
 		*/
-	
+		
 	}
 }

@@ -5,22 +5,24 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	import flash.geom.Point;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class SubNavigationViewBase extends ViewBase
 	{
 		protected var _scroller:HSnapList;
-		private var _navigation:NavigationView;
+		protected var _navigation:NavigationView;
 		private var _centerButtonData:Vector.<ISnapListData>;
 
 		public var scrollingStartedSignal:Signal;
@@ -96,8 +98,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_navigation.header.setTitle( value );
 		}
 
-		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK ):void {
-			_navigation.setLeftButton( id, label, iconType );
+		public function setLeftButton( id:String, label:String, iconType:String = ButtonIconType.BACK, showBackground:Boolean = true ):void {
+			_navigation.setLeftButton( id, label, iconType, showBackground );
 		}
 
 		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE ):void {

@@ -367,6 +367,9 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 		
 		private function updateFromValue():void
 		{
+			if ( _minSet &&  value < _minValue ) value = minValue;
+			if ( _maxSet && value > _maxValue ) value = maxValue;
+			
 			updateRatioFromValue();
 			updateEarsFromRatio();
 			updatePreviewIconFromRatio();
@@ -450,6 +453,7 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 
 		public function set minValue( minValue:Number ):void {
 			_minValue = minValue;
+			value
 			_minSet = true;
 			if ( _minSet && _maxSet )
 			{

@@ -3,13 +3,7 @@ package br.com.stimuli.loading.lazyloaders{
 
 	import flash.events.*;
 	import flash.net.*;
-	import flash.display.*;
-	import flash.media.Sound;
-	import flash.utils.*;
-	import flash.system.LoaderContext;
-	import flash.system.ApplicationDomain;
-	import flash.media.SoundLoaderContext;
-    import br.com.stimuli.loading.BulkLoader;
+	import br.com.stimuli.loading.BulkLoader;
 	
     /**
      *  Dispatched when the external file representing this serialized bulk loader intance has been downloaded and parse. At

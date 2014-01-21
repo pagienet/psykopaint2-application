@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -25,6 +25,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.UpdateVelocities;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
@@ -99,7 +100,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createColorStrategy() : IColorStrategy
 		{
-			var strategy : PyramidMapTdsiStrategy = new PyramidMapTdsiStrategy(_canvasModel);
+			var strategy : PyramidMapIntrinsicsStrategy = new PyramidMapIntrinsicsStrategy(_canvasModel);
 			//strategy.setBlendFactors(.1, 1);
 			return strategy;
 		}
@@ -184,9 +185,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			}
 		}
 
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer : CanvasRenderer) : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer : CanvasRenderer, paintSettingsModel : UserPaintSettingsModel) : void
 		{
-			super.activate(view, context, canvasModel, renderer);
+			super.activate(view, context, canvasModel, renderer, paintSettingsModel);
 
 			if (!_velocityPressureField)
 				initBuffers();

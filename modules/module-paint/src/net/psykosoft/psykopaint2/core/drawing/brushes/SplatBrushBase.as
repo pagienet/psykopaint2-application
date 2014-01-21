@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
 
 	public class SplatBrushBase extends AbstractBrush
 	{
@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createColorStrategy() : IColorStrategy
 		{
-			return new PyramidMapTdsiStrategy(_canvasModel);
+			return new PyramidMapIntrinsicsStrategy(_canvasModel);
 		}
 
 	}

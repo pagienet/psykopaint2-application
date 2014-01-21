@@ -11,7 +11,5 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 		
 		function getColorsByVO(appendVO:StrokeAppendVO, sampleSize : Number) : void;
 		
-		//function setBlendFactors(colorBlendFactor : Number, alphaBlendFactor : Number) : void;
-			
 	}
 }

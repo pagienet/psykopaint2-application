@@ -70,5 +70,6 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const MOST_LOVED : String = "mostLoved";
 		public static const MOST_RECENT : String = "mostRecent";
 		public static const COLOR : String = "color";
+		public static const BACK_SLIM : String = "back_small";
 	}
 }

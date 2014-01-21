@@ -12,9 +12,6 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 		public static const PREVIEW_SATURATION:String = "Saturation";
 		public static const PREVIEW_SIZE:String = "Size";
 		public static const PREVIEW_SURFACE_INFLUENCE:String = "SurfaceInfluence";
-		public static const PREVIEW_ERASER_STYLE:String = "EraserStyle";
-		public static const PREVIEW_PAINTBRUSH_STYLE:String = "PaintbrushStyle";
-		public static const PREVIEW_SHAPE_STYLE:String = "ShapeStyle";
 		
 		private static var IconClasses:Vector.<Class> = Vector.<Class>([
 			AlphaPreview,
@@ -25,10 +22,7 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 			PrecisionPreview,
 			SaturationPreview,
 			SizePreview,
-			SurfaceInfluencePreview,
-			EraserStylePreview,
-			PaintbrushStylePreview,
-			ShapeStylePreview
+			SurfaceInfluencePreview
 		]);
 		
 		private static var id2Index:Array = [
@@ -41,9 +35,6 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 			PREVIEW_SATURATION,
 			PREVIEW_SIZE,
 			PREVIEW_SURFACE_INFLUENCE,
-			PREVIEW_ERASER_STYLE,
-			PREVIEW_PAINTBRUSH_STYLE,
-			PREVIEW_SHAPE_STYLE
 		];
 		
 		public function PreviewIconFactory()

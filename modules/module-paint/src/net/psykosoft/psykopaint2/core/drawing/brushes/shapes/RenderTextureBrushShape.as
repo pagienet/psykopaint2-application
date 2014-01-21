@@ -40,7 +40,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		
 		override protected function uploadNormalSpecularMap(texture : Texture) : void
 		{
-			texture.uploadFromBitmapData(_brushMap, 0);
+			uploadMips(size,_brushMap,texture);
+			//texture.uploadFromBitmapData(_brushMap, 0);
 		}
 	}
 }

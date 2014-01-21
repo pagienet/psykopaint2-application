@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
@@ -13,6 +14,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		[Inject]
 		public var paintModule:BrushKitManager;
+		
+		[Inject]
+		public var userPaintSettingsModel:UserPaintSettingsModel;
 
 		private static var _activeBrushId:String = "";
 
@@ -31,7 +35,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 		override protected function onViewEnabled():void {
 			super.onViewEnabled();
-			view.setColorButtonHex( paintModule.currentPaintColor );
+			view.setColorButtonHex( userPaintSettingsModel.currentColor );
 		}
 
 		override public function destroy():void {
@@ -59,10 +63,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					requestNavigationStateChange( NavigationStateType.PAINT );
 					break;
 
+				/*
 				case SelectBrushSubNavView.ID_COLOR:
 					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 					break;
-
+				*/
 				case SelectBrushSubNavView.ID_ALPHA:
 					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_ALPHA );
 					break;
@@ -71,9 +76,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 				default:
 					// 1st click on a button just activates the brush, 2nd click on it, takes you to edit mode.
 					if( _activeBrushId == id ) {
+						requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
+						/*
 						if( getNumParams() != 0 ) { // Only if there are any params...
 							requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_BRUSH );
 						}
+						*/
 					}
 					else {
 						activateBrush( id );

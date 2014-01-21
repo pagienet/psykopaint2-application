@@ -2,9 +2,8 @@ package net.psykosoft.psykopaint2.paint.commands
 {
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Sine;
-
+	
 	import flash.display.BitmapData;
-
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.display3D.Context3DTextureFormat;
@@ -23,6 +22,7 @@ package net.psykosoft.psykopaint2.paint.commands
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
 	import net.psykosoft.psykopaint2.core.model.PaintModeModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
@@ -61,6 +61,9 @@ package net.psykosoft.psykopaint2.paint.commands
 
 		[Inject]
 		public var lightingModel : LightingModel;
+		
+		[Inject]
+		public var userPaintSettingModel : UserPaintSettingsModel;
 
 		[Inject]
 		public var stage3D : Stage3D;
@@ -79,7 +82,7 @@ package net.psykosoft.psykopaint2.paint.commands
 		}
 
 		private function continueInit():void {
-			PaintModeModel.activeMode = initPaintingVO.sourceImageData? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
+			//PaintModeModel.activeMode = initPaintingVO.sourceImageData? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE;
 
 			addPaintModuleDisplay();
 
@@ -120,7 +123,10 @@ package net.psykosoft.psykopaint2.paint.commands
 		{
 			var canvasImporter : CanvasImporter = new CanvasImporter();
 			canvasImporter.importPainting(canvasModel, initPaintingVO);
+			userPaintSettingModel.setColorMode(initPaintingVO.sourceImageData ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE, false );
+			userPaintSettingModel.hasSourceImage = initPaintingVO.sourceImageData != null;
 			initPaintingVO.dispose();
+		
 		}
 	}
 }

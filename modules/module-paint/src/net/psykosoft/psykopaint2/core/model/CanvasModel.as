@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.core.model
 {
 
+	import com.quasimondo.color.RGBProximityQuantizer;
+	import com.quasimondo.data.ProximityQuantizer;
+	
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
@@ -15,11 +18,10 @@ package net.psykosoft.psykopaint2.core.model
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.intrinsics.PyramidMapIntrinsics;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
-	import net.psykosoft.psykopaint2.tdsi.MemoryManagerTdsi;
-	import net.psykosoft.psykopaint2.tdsi.PyramidMapTdsi;
-
+	
 	public class CanvasModel
 	{
 		[Inject]
@@ -39,7 +41,7 @@ package net.psykosoft.psykopaint2.core.model
 		private var _width : Number;
 		private var _height : Number;
 
-		private var _pyramidMap : PyramidMapTdsi;
+		private var _pyramidMap : PyramidMapIntrinsics;
 		private var _textureWidth : Number;
 		private var _textureHeight : Number;
 
@@ -52,7 +54,7 @@ package net.psykosoft.psykopaint2.core.model
 
 		}
 
-		public function get pyramidMap() : PyramidMapTdsi
+		public function get pyramidMap() : PyramidMapIntrinsics
 		{
 			return _pyramidMap;
 		}
@@ -108,7 +110,14 @@ package net.psykosoft.psykopaint2.core.model
 
 		public function setSourceBitmapData(sourceBitmapData : BitmapData) : void
 		{
+			
 			if (!sourceBitmapData) {
+				sourceBitmapData = new BitmapData(1024,768,false,0xffffffff);
+			}
+			
+			/*
+			if (!sourceBitmapData)
+			{	
 				if (_pyramidMap) {
 					_pyramidMap.dispose();
 					_pyramidMap = null;
@@ -119,6 +128,7 @@ package net.psykosoft.psykopaint2.core.model
 				}
 				return;
 			}
+				*/
 
 			// TODO: this is not ideal since in wastes 25% memory by making a square bitmap
 			// if we ever need to free some memory this is a good place to start digging.
@@ -127,7 +137,7 @@ package net.psykosoft.psykopaint2.core.model
 			if (_pyramidMap)
 				_pyramidMap.setSource(sourceBitmapData);
 			else
-				_pyramidMap = new PyramidMapTdsi(sourceBitmapData);
+				_pyramidMap = new PyramidMapIntrinsics(sourceBitmapData);
 
 			if (!_sourceTexture) _sourceTexture = createCanvasTexture(false);
 			_sourceTexture.texture.uploadFromBitmapData(fixed);
@@ -311,6 +321,11 @@ package net.psykosoft.psykopaint2.core.model
 		public function hasSourceImage() : Boolean
 		{
 			return _pyramidMap != null;
+		}
+		
+		public function getColorPaletteFromSource( colorCount:int ):Vector.<uint>
+		{
+			return RGBProximityQuantizer.getPalette( _pyramidMap,colorCount,3);
 		}
 	}
 }

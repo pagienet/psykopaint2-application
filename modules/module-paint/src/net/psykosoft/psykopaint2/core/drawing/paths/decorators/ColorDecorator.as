@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	
 	final public class ColorDecorator extends AbstractPointDecorator
 	{
-		public static const PARAMETER_SL_COLOR_MODE:String = "Color Mode";
+		//public static const PARAMETER_SL_COLOR_MODE:String = "Color Mode";
 		public static const PARAMETER_IL_COLOR_SWATCH:String = "Color Swatch";
 		public static const PARAMETER_C_COLOR:String = "Color";
 		public static const PARAMETER_B_COLORMATRIX:String = "Appy Color Matrix";
@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const INDEX_MODE_FIXED_COLOR:int = 1;
 		
 		
-		private var colorMode:PsykoParameter;
+		//private var colorMode:PsykoParameter;
 		private var saturationAdjustment:PsykoParameter;
 		private var hueAdjustment:PsykoParameter;
 		private var brightnessAdjustment:PsykoParameter;
@@ -59,7 +59,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function ColorDecorator()
 		{
 			super();
-			colorMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_COLOR_MODE,0,["Pick Color","Fixed Color"] );
+			//colorMode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_COLOR_MODE,0,["Pick Color","Fixed Color"] );
 			presetColor = new PsykoParameter( PsykoParameter.IntListParameter,PARAMETER_IL_COLOR_SWATCH,0,[0x000000,0xffffff,0x808080,0xc00000]);
 			
 			applyColorMatrix  = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_COLORMATRIX,false);
@@ -81,7 +81,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			maxSpeed  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
 			
-			_parameters.push(colorMode, presetColor, applyColorMatrix,saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,brushOpacityRange,pickRadius,pickRadiusMode,smoothFactor,color,maxSpeed,pickOffsetFactor);
+			_parameters.push(presetColor, applyColorMatrix,saturationAdjustment, hueAdjustment, brightnessAdjustment,colorBlending,brushOpacity,brushOpacityRange,pickRadius,pickRadiusMode,smoothFactor,color,maxSpeed,pickOffsetFactor);
 			cm = new ColorMatrix();
 		}
 		
@@ -106,15 +106,15 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var bo:Number = Quad.easeIn(brushOpacity.numberValue,0,1,1);
 			var bor:Number = brushOpacityRange.numberValue;
 			
-			var mode:int = colorMode.index;
-			if ( mode == 1 ) 
-			{
-				var c:uint = color.colorValue;
-				var r:Number = (((c >>> 16) & 0xff) / 255);
-				var g:Number = (((c >>> 8) & 0xff) / 255);
-				var b:Number = ((c & 0xff) / 255);
+			//var mode:int = colorMode.index;
+			//if ( mode == 1 ) 
+			//{
+			var c:uint = color.colorValue;
+			var r:Number = (((c >>> 16) & 0xff) / 255);
+			var g:Number = (((c >>> 8) & 0xff) / 255);
+			var b:Number = ((c & 0xff) / 255);
 				
-			}
+			//}
 			
 			
 			var cb:PathManagerCallbackInfo = manager.callbacks;
@@ -123,8 +123,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				var point:SamplePoint = points[i];
 				var prgba:Vector.<Number> = point.colorsRGBA;
 				
-				if ( mode == 0 )
-				{
+				//if ( mode == 0 )
+				//{
 					if ( cb.onPickColor ) {
 						
 						var tmp_x:Number = point.x;
@@ -141,12 +141,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 						point.x = tmp_x;
 						point.y = tmp_y;
 					}
+					/*
 				} else {
 					prgba[0] = prgba[4] = prgba[8] = prgba[12] = r;
 					prgba[1] = prgba[5] = prgba[9] = prgba[13] = g;
 					prgba[2] = prgba[6] = prgba[10] = prgba[14] = b;
 					prgba[3] = prgba[7] = prgba[11] = prgba[15] = 1;
 				}
+					*/
 				//TODO: this could be skipped if there is no color adjustment:
 				if ( applyMatrix ) cm.applyMatrixToVector( prgba );
 				

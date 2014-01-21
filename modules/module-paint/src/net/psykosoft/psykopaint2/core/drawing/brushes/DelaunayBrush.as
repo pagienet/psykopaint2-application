@@ -17,7 +17,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.data.DelaunayMetaData;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
 
@@ -56,9 +57,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			//appendVO.colorsRGBA[3] = appendVO.colorsRGBA[7] = appendVO.colorsRGBA[11] = 1;
 		}
 
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer, paintSettingsModel : UserPaintSettingsModel) : void
 		{
-			super.activate(view, context, canvasModel,renderer);
+			super.activate(view, context, canvasModel,renderer, paintSettingsModel);
 			pathManager.callbacks.onPickColor = null;
 			
 			delaunay.createBoundingTriangle(canvasModel.width * 0.5,canvasModel.height * 0.5 );
@@ -93,7 +94,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createColorStrategy() : IColorStrategy
 		{
-			var strategy : PyramidMapTdsiStrategy = new PyramidMapTdsiStrategy(_canvasModel);
+			var strategy : PyramidMapIntrinsicsStrategy = new PyramidMapIntrinsicsStrategy(_canvasModel);
 			//strategy.setBlendFactors(1,1);
 			return strategy;
 		}

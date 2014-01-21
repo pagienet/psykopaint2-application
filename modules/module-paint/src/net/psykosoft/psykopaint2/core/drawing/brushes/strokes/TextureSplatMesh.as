@@ -4,12 +4,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.VertexBuffer3D;
 	import flash.display3D.textures.TextureBase;
-	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.tdsi.FastBuffer;
+	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
+	
 
 	public class TextureSplatMesh extends AbstractBrushMesh
 	{

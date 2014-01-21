@@ -23,7 +23,11 @@ package net.psykosoft.psykopaint2.base.ui.components
 		protected var _selected:Boolean;
 		protected var _enabled:Boolean;
 		protected var _disableMouseInteractivityWhenSelected:Boolean = true;
-
+		
+		private static const enabledCtf:ColorTransform = new ColorTransform();
+		private static const disabledCtf:ColorTransform = new ColorTransform( -1, -1, -1, 1);
+		private static const selectedCtf:ColorTransform = new ColorTransform( 1, 0.5, 0.5 );
+		
 		private var _stage:Stage;
 
 		public var id:String;
@@ -61,7 +65,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		protected function updateSelected():void {
-			transform.colorTransform = _selected ? new ColorTransform( 1, 0.5, 0.5 ) : new ColorTransform();
+			transform.colorTransform = _selected ? selectedCtf : enabledCtf;
 		}
 
 		// ---------------------------------------------------------------------
@@ -151,7 +155,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		// Listeners.
 		// ---------------------------------------------------------------------
 
-		private function onAddedToStage( event:Event ):void {
+		protected function onAddedToStage( event:Event ):void {
 			_stage = stage;
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			updateSelected();
@@ -177,9 +181,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 
 		public function set enabled( value:Boolean ):void {
-			_enabled = value;
-			if( !_enabled ) transform.colorTransform = new ColorTransform( -1, -1, -1, 1 );
-			else transform.colorTransform = new ColorTransform();
+			transform.colorTransform = (_enabled = value) ? enabledCtf : disabledCtf;
 			mouseInteractive = _disableMouseInteractivityWhenSelected ? !_selected && _enabled : _enabled;
 		}
 

@@ -34,11 +34,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			}
 		}
 
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
-		{
-			super.activate(view, context, canvasModel, renderer);
-		}
-		
 		override protected function createBrushMesh() : IBrushMesh
 		{
 			return new SourceCopyMesh();

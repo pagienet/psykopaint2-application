@@ -8,18 +8,23 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapTdsiStrategy;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureMorphingSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	
 	public class SprayCanBrush extends SplatBrushBase
 	{
-
+		public static const PARAMETER_I_NICOLAS_COLUMN : String = "Nicolas Column Parameter";
+		
+		
 		public function SprayCanBrush()
 		{
 			super(true);
@@ -30,9 +35,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_bumpiness.numberValue = .6;
 		}
 
-		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer) : void
+		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer, paintSettingsModel : UserPaintSettingsModel) : void
 		{
-			super.activate(view, context, canvasModel, renderer);
+			super.activate(view, context, canvasModel, renderer, paintSettingsModel);
 			if (_brushShape)
 				assignBrushShape();
 		}
@@ -65,28 +70,28 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createColorStrategy() : IColorStrategy
 		{
-			return new PyramidMapTdsiStrategy(_canvasModel);
+			return new PyramidMapIntrinsicsStrategy(_canvasModel);
 		}
 
 		override protected function onPickColor( point : SamplePoint, pickRadius : Number, smoothFactor : Number ) : void
 		{
-			/*
-			var minSize:Number = _maxBrushRenderSize * _sizeFactor.lowerRangeValue;
-			var maxSize:Number = _maxBrushRenderSize * _sizeFactor.upperRangeValue;
-			var rsize : Number = minSize + (maxSize - minSize) * point.size;
-			if (rsize > maxSize) rsize = maxSize;
-			else if (rsize < minSize) rsize = minSize;
-			*/
-			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size * point.curvature;
-			if (rsize > 1) rsize = 1;
-			else if (rsize < 0) rsize = 0;
-			
-			_appendVO.size = _maxBrushRenderSize * rsize * pickRadius;
 			_appendVO.point = point;
-			_colorStrategy.getColorsByVO( _appendVO, _appendVO.diagonalLength*_maxBrushRenderSize *rsize* 0.25 * smoothFactor);
+			if ( _paintSettingsModel.colorMode == PaintMode.PHOTO_MODE )
+			{
+				var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size * point.curvature;
+				if (rsize > 1) rsize = 1;
+				else if (rsize < 0) rsize = 0;
+				
+				_appendVO.size = _maxBrushRenderSize * rsize * pickRadius;
+				_colorStrategy.getColorsByVO( _appendVO, _appendVO.diagonalLength*_maxBrushRenderSize *rsize* 0.25 * smoothFactor);
+			} else {
+				var target:Vector.<Number> = _appendVO.point.colorsRGBA;
+				target[0] = target[4] = target[8] = target[12] = _paintSettingsModel.current_r;
+				target[1] = target[5] = target[9] = target[13] = _paintSettingsModel.current_g;
+				target[2] = target[6] = target[10] = target[14] = _paintSettingsModel.current_b;
+			}
 		}
 
-		
 		override protected function processPoint( point : SamplePoint) : void
 		{
 			/*
@@ -100,7 +105,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size * point.curvature;
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;
-			
 			
 			_appendVO.uvBounds.x = int(Math.random() * _shapeVariations[0]) * _shapeVariations[2];
 			_appendVO.uvBounds.y = int(Math.random() * _shapeVariations[1]) * _shapeVariations[3];

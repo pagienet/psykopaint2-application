@@ -10,16 +10,14 @@ package net.psykosoft.psykopaint2.core.io
 	import flash.geom.Rectangle;
 	import flash.system.ApplicationDomain;
 	import flash.utils.ByteArray;
-
+	
 	import avm2.intrinsics.memory.li8;
 	import avm2.intrinsics.memory.si8;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingFileUtils;
-
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
-
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTextureChannels;
@@ -245,7 +243,8 @@ package net.psykosoft.psykopaint2.core.io
 			var gOffset : int = 2;
 			var bOffset : int = 3;
 			var aOffset : int = len + 3;
-
+			
+			var tmp:ByteArray = ApplicationDomain.currentDomain.domainMemory;
 			ApplicationDomain.currentDomain.domainMemory = _output;
 
 			len += offset;
@@ -262,7 +261,7 @@ package net.psykosoft.psykopaint2.core.io
 				si8(a, int(i + 3));
 			}
 
-			ApplicationDomain.currentDomain.domainMemory = null;
+			ApplicationDomain.currentDomain.domainMemory = tmp;
 		}
 
 		private function extractChannels(layer : Texture, copier : CopySubTextureChannels) : void

@@ -19,11 +19,11 @@ package net.psykosoft.psykopaint2.paint.utils
 	{
 		protected var _fragmentShaderData : Vector.<Number> = new <Number>[0, 0, 0, 1];
 
-		private var _context3D : Context3D;
-		private var _copyProgram : Program3D;
-		private var _quadVertices : VertexBuffer3D;
-		private var _quadIndices : IndexBuffer3D;
-		private var _props : Vector.<Number> = Vector.<Number>([0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0]);
+		protected var _context3D : Context3D;
+		protected var _copyProgram : Program3D;
+		protected var _quadVertices : VertexBuffer3D;
+		protected var _quadIndices : IndexBuffer3D;
+		protected var _props : Vector.<Number> = Vector.<Number>([0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0]);
 
 		public function execute(canvas : CanvasModel, target : BitmapData = null) : BitmapData
 		{
@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.paint.utils
 
 
 
-		private function initProgram() : void
+		protected function initProgram() : void
 		{
 			var vertexCode : String =
 							"mul vt0, va0, vc1\n" +	// calculate size
@@ -63,7 +63,7 @@ package net.psykosoft.psykopaint2.paint.utils
 			_copyProgram.upload(vertexByteCode, fragmentByteCode);
 		}
 
-		private function copy(canvas : CanvasModel, context3D : Context3D) : void
+		protected function copy(canvas : CanvasModel, context3D : Context3D) : void
 		{
 			_context3D = context3D;
 			if (!_copyProgram) initProgram();
@@ -99,7 +99,7 @@ package net.psykosoft.psykopaint2.paint.utils
 			_quadIndices = null;
 		}
 
-		private function initGeometry() : void
+		protected function initGeometry() : void
 		{
 			_quadVertices = _context3D.createVertexBuffer(4, 2);
 			_quadIndices = _context3D.createIndexBuffer(6);

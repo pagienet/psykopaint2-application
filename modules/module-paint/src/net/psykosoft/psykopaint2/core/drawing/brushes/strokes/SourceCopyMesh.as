@@ -4,11 +4,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.VertexBuffer3D;
 	import flash.display3D.textures.TextureBase;
-	import flash.geom.Rectangle;
 	
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.tdsi.FastBuffer;
-
+	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
+	
 	public class SourceCopyMesh extends AbstractBrushMesh
 	{
 		protected static var _tmpData:Vector.<Number>;
