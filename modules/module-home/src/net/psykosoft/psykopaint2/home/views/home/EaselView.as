@@ -60,6 +60,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _paintingID : String;
 		private var _stage : Stage;
 		private var _mouseDownX : Number;
+		private var _texturesInvalid:Boolean;
 
 		public function EaselView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -160,8 +161,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				return;
 
 			if (paintingVO && areTexturesInvalid(paintingVO)) {
-				disposeTextures();
-				initTextures(paintingVO);
+				_texturesInvalid = true;
 			}
 
 			_paintingID = paintingVO? paintingVO.id : null;
@@ -186,6 +186,12 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function updateCanvas(paintingVO : PaintingInfoVO, onUploadComplete : Function) : void
 		{
+			if (_texturesInvalid) {
+				disposeTextures();
+				initTextures(paintingVO);
+				_texturesInvalid = false;
+			}
+
 			if (paintingVO) {
 				_canvas.visible = true;
 				updateTextures(paintingVO);

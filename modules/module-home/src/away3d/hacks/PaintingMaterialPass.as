@@ -128,6 +128,9 @@ package away3d.hacks
 
 		public function set albedoTexture(value : Texture2DBase) : void
 		{
+			if (Boolean(_albedoTexture) != Boolean(value))
+				invalidateShaderProgram();
+
 			_albedoTexture = value;
 		}
 
@@ -168,13 +171,19 @@ package away3d.hacks
 		override arcane function getFragmentCode(fragmentAnimatorCode : String) : String
 		{
 				// albedo in ft0
-			return  "tex ft0, v0, fs0 <2d, clamp, linear, nomip>\n" +
-					"sub ft1.w, fc0.w, ft0.w\n" +
-					"add ft0, ft0, ft1.w\n" +
+			var code : String;
 
+			if (_albedoTexture) {
+				code = "tex ft0, v0, fs0 <2d, clamp, linear, nomip>\n" +
+						"sub ft1.w, fc0.w, ft0.w\n" +
+						"add ft0, ft0, ft1.w\n";
+			}
+			else {
+				code = "mov ft0, fc0.w";
+			}
 
 				// normal in ft2, specular data in ft6
-					"tex ft6, v0, fs1 <2d, clamp, linear, nomip>\n" +
+			code += "tex ft6, v0, fs1 <2d, clamp, linear, nomip>\n" +
 					"sub ft2.xy, ft6.xy, fc0.x	\n" +
 					"mul ft2.xy, ft2.xy, fc1.x\n" +	// apply bumpiness
 					"mov ft2.z, fc0.w\n" +
@@ -204,6 +213,8 @@ package away3d.hacks
 					"mul ft4, ft4, ft6.z\n" +
 
 					"add oc, ft4, ft0\n";
+
+			return code;
 		}
 
 		/**
@@ -218,7 +229,7 @@ package away3d.hacks
 			// retrieve the actual texture object, and assign it to slot 0 (fs0)
 			// we set this in activate, not in render, because the texture is constant for this pass
 			var context : Context3D = stage3DProxy._context3D;
-			context.setTextureAt(0, _albedoTexture.getTextureForStage3D(stage3DProxy));
+			if (_albedoTexture) context.setTextureAt(0, _albedoTexture.getTextureForStage3D(stage3DProxy));
 			context.setTextureAt(1, _normalSpecularTexture.getTextureForStage3D(stage3DProxy));
 
 			var light : PointLight = _lightPicker.pointLights[0];
