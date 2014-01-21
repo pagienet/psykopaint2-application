@@ -164,7 +164,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					var py : Number = (_view.mouseY - _canvasMatrix.ty * 768)  / _canvasMatrix.d;
 					var color:uint = currentColorMap.getPixel(px* CoreSettings.GLOBAL_SCALING,py* CoreSettings.GLOBAL_SCALING);
 					
-					notifyShowPipetteSignal.dispatch( _view, color,new Point(_view.mouseX,_view.mouseY - 32));
+					notifyShowPipetteSignal.dispatch( _view, color,new Point(_view.mouseX,_view.mouseY - 32), true);
 					_activeBrushKit.brushEngine.pathManager.deactivate();
 					pipetteActive = true;
 					/*

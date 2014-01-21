@@ -1,8 +1,7 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
 	
-	import com.bit101.components.ComboBox;
-	import com.bit101.components.Knob;
+	
 	import com.quasimondo.color.colorspace.HSV;
 	import com.quasimondo.color.utils.ColorConverter;
 	
@@ -11,32 +10,27 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	import flash.events.Event;
+	
 	import flash.events.MouseEvent;
-	import flash.geom.ColorTransform;
+	
 	import flash.geom.Point;
-	import flash.text.TextField;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
-	import net.psykosoft.psykopaint2.base.utils.misc.ClickUtil;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-	import net.psykosoft.psykopaint2.core.managers.gestures.GestureManager;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	import net.psykosoft.psykopaint2.core.views.components.checkbox.CheckBox;
-	import net.psykosoft.psykopaint2.core.views.components.colormixer.Colormixer;
-	import net.psykosoft.psykopaint2.core.views.components.combobox.ComboboxView;
+	
 	import net.psykosoft.psykopaint2.core.views.components.previews.BrushStylePreview;
-	import net.psykosoft.psykopaint2.core.views.components.slider.SliderBase;
-	import net.psykosoft.psykopaint2.core.views.components.slider.SliderButton;
+	
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
 	
-	import org.osflash.signals.Signal;
+
 	
 	public class ColorPickerSubNavView extends SubNavigationViewBase
 	{
@@ -61,7 +55,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var hueHandle:MovieClip;
 		public var saturationHandle:MovieClip;
 		public var lightnessHandle:MovieClip;
-		public var sliderBackdrop:Sprite;
+		//public var sliderBackdrop:Sprite;
 		
 		public var hueOverlay:Sprite;
 		public var saturationOverlay:Sprite;
@@ -103,11 +97,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var styleParameter:PsykoParameter;
 		private var previewIcon:BrushStylePreview;
 		private var previewDelay:int;
+		public var notifyChangePipetteColorSignal:NotifyChangePipetteColorSignal;
 		
 		public function ColorPickerSubNavView()
 		{
 			super();
-			_scroller.y -= 200;
 		}
 		
 		override public function setup():void
@@ -123,23 +117,23 @@ package net.psykosoft.psykopaint2.paint.views.color
 			hslSliderHolder = new Sprite();
 			hslSliderHolder.x = 753;
 			hslSliderHolder.y = 599;
-			addChildAt(hslSliderHolder,getChildIndex(sliderBackdrop)+1);
+			addChildAt(hslSliderHolder,Math.min(getChildIndex(hueOverlay),getChildIndex(saturationOverlay),getChildIndex(lightnessOverlay)));
 			hslSliderHolder.addEventListener(MouseEvent.MOUSE_DOWN, onHSLSliderMouseDown );
 			
 			
 			hueMapHolder = new Bitmap(hueMap,"auto",false);
 			hueMapHolder.height = 41;
-			hueMapHolder.y = -4;
+			hueMapHolder.y = hueOverlay.y - hslSliderHolder.y - 26;
 			hslSliderHolder.addChild(hueMapHolder);
 			
 			satMapHolder = new Bitmap(satMap,"auto",false);
 			satMapHolder.height = 41;
-			satMapHolder.y = 55;
+			satMapHolder.y = saturationOverlay.y - hslSliderHolder.y  - 26;
 			hslSliderHolder.addChild(satMapHolder);
 			
 			lightnessMapHolder = new Bitmap(lightnessMap,"auto",false);
 			lightnessMapHolder.height = 41;
-			lightnessMapHolder.y = 55 + 59;
+			lightnessMapHolder.y = lightnessOverlay.y - hslSliderHolder.y  - 26;
 			hslSliderHolder.addChild(lightnessMapHolder);
 			
 			hueHandle.gotoAndStop(1);
@@ -335,6 +329,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 				saturationHandle.x = HSLSliderOffset + hslSliderHolder.x +  HSLSliderPaddingLeft + _userPaintSettings.saturation / 100 * HSLSliderRange;
 				lightnessHandle.x = HSLSliderOffset + hslSliderHolder.x +  HSLSliderPaddingLeft + _userPaintSettings.lightness / 100 * HSLSliderRange;
 			} else {
+				if ( colorPalette.pipetteSwatchSelected ) notifyChangePipetteColorSignal.dispatch(newColor)
 				colorPalette.autoColor = false;
 				colorPalette.selectedColor = newColor;
 				_userPaintSettings.setColorMode(PaintMode.COLOR_MODE);
@@ -406,6 +401,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public function set userPaintSettings(value:UserPaintSettingsModel):void
 		{
 			_userPaintSettings = value;
+		}
+		
+		public function onPipetteCharging( pipette:Pipette ):void
+		{
+			colorPalette.changeCurrentColorSwatch( pipette.currentColor );
 		}
 
 		public function onPipetteDischarging( pipette:Pipette ):void

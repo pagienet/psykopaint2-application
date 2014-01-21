@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.model
 	import com.quasimondo.color.colorspace.HSV;
 	import com.quasimondo.color.utils.ColorConverter;
 	
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 
 	public class UserPaintSettingsModel
@@ -22,6 +23,7 @@ package net.psykosoft.psykopaint2.core.model
 		public var current_b:Number;
 		public var selectedSwatchIndex:int;
 		private var _currentHSV:HSV;
+		public var pipetteIsEmpty:Boolean;
 		
 		public function UserPaintSettingsModel()
 		{}
@@ -30,18 +32,24 @@ package net.psykosoft.psykopaint2.core.model
 		public function setDefaultValues():void
 		{
 			_colorPalettes = new Vector.<Vector.<uint>>();
+			pipetteIsEmpty = true;
 			if ( hasSourceImage )
 			{
 				_colorPalettes.push( canvasModel.getColorPaletteFromSource(8));
 				_colorPalettes[0].unshift(0x0b0b0b);
 				_colorPalettes[0].push(0xdedddb);
 				while(_colorPalettes[0].length < 10 ) _colorPalettes[0].push( int(Math.random() * 0xffffff));
+				selectedSwatchIndex = 4;
+				_colorMode = PaintMode.PHOTO_MODE;
+			} else {
+				selectedSwatchIndex = 0;
+				_colorMode = PaintMode.COLOR_MODE;
 			}
 			_colorPalettes.push( Vector.<uint>([0x0b0b0b,0x01315a,0x00353b,0x026d01,0x452204,
 				0x7a1023,0xa91606,0xbd9c01,0x04396c,0xdedddb]));
 			
-			selectedSwatchIndex = -1;
-			_colorMode = -1;
+			
+			
 			_currentHSV = new HSV(0,0,0);
 			//colorMode = PaintMode.PHOTO_MODE;
 			//0x062750,0x04396c,

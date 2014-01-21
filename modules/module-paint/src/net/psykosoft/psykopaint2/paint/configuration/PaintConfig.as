@@ -41,10 +41,11 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.commands.saving.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyPipetteDischargeSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPipetteChargeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
@@ -166,7 +167,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifySaveToServerSucceededSignal ).asSingleton();
 			_injector.map( NotifySaveToServerFailedSignal ).asSingleton();
 			_injector.map( NotifyShowPipetteSignal ).asSingleton();
-			_injector.map( NotifyPipetteDischargeSignal ).asSingleton();
+			_injector.map( NotifyPipetteChargeChangedSignal ).asSingleton();
+			_injector.map( NotifyChangePipetteColorSignal ).asSingleton();
 		}
 
 		// -----------------------
