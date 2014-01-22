@@ -2,7 +2,6 @@ package net.psykosoft.psykopaint2.core.model
 {
 
 	import com.quasimondo.color.RGBProximityQuantizer;
-	import com.quasimondo.data.ProximityQuantizer;
 	
 	import flash.display.BitmapData;
 	import flash.display.Stage;
@@ -18,6 +17,7 @@ package net.psykosoft.psykopaint2.core.model
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
 	import net.psykosoft.psykopaint2.core.intrinsics.PyramidMapIntrinsics;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
@@ -44,6 +44,7 @@ package net.psykosoft.psykopaint2.core.model
 		private var _pyramidMap : PyramidMapIntrinsics;
 		private var _textureWidth : Number;
 		private var _textureHeight : Number;
+		private var _colorTransfer : ColorTransfer;
 
 		// TODO: should originals be a string path to packaged asset?
 		private var _normalSpecularOriginal : ByteArray;		// used during export (reference)
@@ -142,7 +143,17 @@ package net.psykosoft.psykopaint2.core.model
 			if (!_sourceTexture) _sourceTexture = createCanvasTexture(false);
 			_sourceTexture.texture.uploadFromBitmapData(fixed);
 
+			//TODO: This a temporary test and will be replaced later:
+			_colorTransfer = new ColorTransfer();
+			_colorTransfer.setTarget(sourceBitmapData);
+			
+			
 			fixed.dispose();
+		}
+		
+		private function initColorTransfer():void
+		{
+			
 		}
 
 		private function fixSourceDimensions(sourceBitmapData : BitmapData) : BitmapData
@@ -269,6 +280,11 @@ package net.psykosoft.psykopaint2.core.model
 		public function get colorTexture() : Texture
 		{
 			return _colorTexture.texture;
+		}
+		
+		public function get colorTransfer() : ColorTransfer
+		{
+			return _colorTransfer;
 		}
 
 		private function onMemoryWarning() : void

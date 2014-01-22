@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.core.signals
 	{
 		public function NotifyColorStyleChangedSignal()
 		{
-			// pass style name 
-			super(String);
+			// pass color matrix vector and blend factor
+			super(Vector.<Number>,Number);
 		}
 	}
 }

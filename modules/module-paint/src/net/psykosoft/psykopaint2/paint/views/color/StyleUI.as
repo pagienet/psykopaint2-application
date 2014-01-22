@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
@@ -32,6 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		private var uiParameters:Vector.<PsykoParameter>;
 		private var styleParameter:PsykoParameter;
+		private var previewIcons:Object;
 		
 		
 		
@@ -115,6 +117,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 				var spacing:Number = sliderRange / (styleParameter.stringList.length - 1);
 				styleSelector.x = sliderOffset + styleBar.x + index * spacing;
 				styleParameter.index = index;
+				
+				styleIconHolder.setChildIndex( previewIcons[index], styleIconHolder.numChildren-1);
 				previewIcon.showIcon( styleParameter.stringValue );
 			}
 		}
@@ -187,14 +191,16 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			while( styleIconHolder.numChildren > 0 ) styleIconHolder.removeChildAt(0);
 			var styleIds:Vector.<String> = parameter.stringList;
+			previewIcons = new Vector.<BrushStylePreview>();
 			for (var i:int = 0; i< styleIds.length; i++ )
 			{
 				var preview:BrushStylePreview = new BrushStylePreview();
 				preview.showIcon(styleIds[i]);
 				preview.height = 48;
 				preview.scaleX = preview.scaleY;
-				preview.x = (sliderRange / (styleIds.length - 1)) * i;
-				styleIconHolder.addChild( preview );
+				preview.x = (sliderRange / (styleIds.length - 1)) * i ;
+				styleIconHolder.addChildAt( preview,0 );
+				previewIcons.push( preview );
 			}
 			
 		}

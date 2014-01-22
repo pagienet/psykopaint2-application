@@ -8,8 +8,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleConfirmSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestColorStyleMatrixChangedSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -19,13 +17,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var view:ColorStyleView;
 
 		[Inject]
-		public var notifyColorStyleModuleActivatedSignal:NotifyColorStyleModuleActivatedSignal;
-
-		[Inject]
 		public var notifyColorStyleChangedSignal:NotifyColorStyleChangedSignal;
-
-		[Inject]
-		public var notifyColorStyleConfirmSignal:NotifyColorStyleConfirmSignal;
 
 		[Inject]
 		public var requestColorStyleMatrixChangedSignal:RequestColorStyleMatrixChangedSignal;
@@ -41,16 +33,12 @@ package net.psykosoft.psykopaint2.paint.views.color
 			registerEnablingState( NavigationStateType.COLOR_STYLE );
 
 			// From app.
-			notifyColorStyleModuleActivatedSignal.add( onModuleActivated );
 			notifyColorStyleChangedSignal.add( onColorStyleChanged );
-			notifyColorStyleConfirmSignal.add( confirmColorStyle );
 			requestColorStyleMatrixChangedSignal.add( onColorStyleMatrixChanged );
 		}
 
 		override public function destroy():void {
-			notifyColorStyleModuleActivatedSignal.remove( onModuleActivated );
 			notifyColorStyleChangedSignal.remove( onColorStyleChanged );
-			notifyColorStyleConfirmSignal.remove( confirmColorStyle );
 			requestColorStyleMatrixChangedSignal.remove( onColorStyleMatrixChanged );
 			super.destroy();
 		}

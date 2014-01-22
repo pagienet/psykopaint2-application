@@ -12,23 +12,18 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
-	import net.psykosoft.psykopaint2.core.model.RubberMeshModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.rendering.RubberMeshRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleConfirmSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerSucceededSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySetColorStyleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
@@ -56,12 +51,10 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
-	import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavViewMediator;
+	//import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavView;
+	//import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootViewMediator;
-	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavView;
@@ -156,11 +149,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( RequestPaintRootViewRemovalSignal ).asSingleton();
 			_injector.map( NotifyAvailableBrushTypesSignal ).asSingleton();
 			_injector.map( NotifyActivateBrushChangedSignal ).asSingleton();
-			_injector.map( NotifyColorStyleModuleActivatedSignal ).asSingleton();
-			_injector.map( NotifySetColorStyleSignal ).asSingleton();
 			_injector.map( NotifyColorStylePresetsAvailableSignal ).asSingleton();
 			_injector.map( NotifyColorStyleChangedSignal ).asSingleton();
-			_injector.map( NotifyColorStyleConfirmSignal ).asSingleton();
 			_injector.map( NotifyNavigationHideSignal ).asSingleton();
 			_injector.map( NotifyHistoryStackChangedSignal ).asSingleton();
 			_injector.map( NotifySaveToServerStartedSignal ).asSingleton();
@@ -204,7 +194,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_mediatorMap.map( CanvasView ).toMediator( CanvasViewMediator );
 			_mediatorMap.map( PaintRootView ).toMediator( PaintRootViewMediator );
 			_mediatorMap.map( ColorPickerSubNavView ).toMediator( ColorPickerSubNavViewMediator );
-			_mediatorMap.map( AlphaSubNavView ).toMediator( AlphaSubNavViewMediator );
+			//_mediatorMap.map( AlphaSubNavView ).toMediator( AlphaSubNavViewMediator );
 			_mediatorMap.map( PipetteView ).toMediator( PipetteViewMediator );
 		}
 	}

@@ -4,12 +4,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	
+	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
+	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
@@ -30,6 +33,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var renderer:CanvasRenderer;
 		
 		[Inject]
+		public var canvasModel:CanvasModel;
+		
+		[Inject]
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
 		
 		[Inject]
@@ -43,6 +49,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		[Inject]
 		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
+		
+		[Inject]
+		public var notifyColorStyleChangedSignal:NotifyColorStyleChangedSignal;
+		
 		
 		[Inject]
 		public var userPaintSettings:UserPaintSettingsModel;
@@ -61,6 +71,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 			view.userPaintSettings = userPaintSettings;
 			view.renderer = renderer;
 			view.notifyChangePipetteColorSignal = notifyChangePipetteColorSignal;
+			view.notifyColorStyleChangedSignal = notifyColorStyleChangedSignal;
+			view.setColorTransfer(canvasModel.colorTransfer);
 			view.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			// From view.
 			//view.colorChangedSignal.add( onColorChanged );
@@ -71,6 +83,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			notifyPipetteChargeChangedSignal.add( onPipetteChargeChanged );
 			
 			_stage = view.stage;
+			
+			
+			
 		}
 
 		override public function destroy():void {
@@ -80,6 +95,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			view.userPaintSettings = null;
 			view.renderer = null;
 			view.notifyChangePipetteColorSignal = null;
+			view.notifyColorStyleChangedSignal = null;
 			
 			notifyPickedColorChangedSignal.remove( onColorChanged );
 			notifyGlobalGestureSignal.remove( onGlobalGestureDetected );

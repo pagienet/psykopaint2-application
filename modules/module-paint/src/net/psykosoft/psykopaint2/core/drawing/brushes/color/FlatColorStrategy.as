@@ -139,5 +139,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 		}
 		*/
 		
+		public function setColorMatrix( matrix:Vector.<Number>, blendFactor:Number ):void
+		{
+			//TODO: implement
+		}
+		
 	}
 }

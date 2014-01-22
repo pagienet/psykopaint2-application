@@ -1,20 +1,16 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
-
 	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleConfirmSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.paint.configuration.ColorStylePresets;
 
 	public class ColorStyleSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:ColorStyleSubNavView;
-
-		[Inject]
-		public var notifyColorStyleConfirmSignal:NotifyColorStyleConfirmSignal;
-
+	
 		[Inject]
 		public var colorStyleModule:ColorStyleModule;
 
@@ -28,23 +24,18 @@ package net.psykosoft.psykopaint2.paint.views.color
 			super.initialize();
 
 			// Post init.
-			view.setAvailableColorStyles( colorStyleModule.getAvailableColorStylePresets() );
+			view.setAvailableColorStyles( ColorStylePresets.getAvailableColorStylePresets() );
 		}
 
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
-				case ColorStyleSubNavView.ID_PICK_AN_IMAGE: {
+				case ColorStyleSubNavView.ID_PICK_AN_IMAGE: 
 					requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
 					break;
-				}
-				case ColorStyleSubNavView.ID_CONFIRM: {
-					notifyColorStyleConfirmSignal.dispatch();
-					break;
-				}
-				default: { // Center buttons trigger color style changes.
+				default:  // Center buttons trigger color style changes.
 					notifyColorStyleChangedSignal.dispatch( id );
 					break;
-				}
+				
 			}
 		}
 	}

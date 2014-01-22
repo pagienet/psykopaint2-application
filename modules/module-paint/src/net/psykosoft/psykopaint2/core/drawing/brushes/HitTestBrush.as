@@ -186,13 +186,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			
 			
 			var colors:Vector.<Number> = points[0].colorsRGBA;
-			
+			var fillColor:int;
 			
 			if ( circle.r > lastR )
 			{
 				
 				_colorStrategy.getColor(circle.c.x,circle.c.y,circle.r*2,colors,1);
-				var fillColor:int = (int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]);
+				fillColor = (int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]);
 				
 				previewShp.graphics.clear();
 				previewShp.graphics.beginFill(fillColor);
@@ -211,7 +211,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 					{
 						circle.r = r;
 						_colorStrategy.getColor(circle.c.x,circle.c.y,circle.r*2,colors,1);
-						var fillColor:int = (int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]);
+						fillColor = (int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]);
 						
 						previewShp.graphics.clear();
 						previewShp.graphics.beginFill(fillColor);
@@ -227,7 +227,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				}
 			} else {
 				_colorStrategy.getColor(circle.c.x,circle.c.y,circle.r*2,colors,1);
-				var fillColor:int = (int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]);
+				fillColor = (int(0xff * colors[0]) << 16) | (int(0xff * colors[1]) << 8) | int(0xff * colors[2]);
 				
 				previewShp.graphics.clear();
 				previewShp.graphics.beginFill(fillColor);

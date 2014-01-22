@@ -68,10 +68,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_COLOR );
 					break;
 				*/
+				/*
 				case SelectBrushSubNavView.ID_ALPHA:
 					requestNavigationStateChange( NavigationStateType.PAINT_ADJUST_ALPHA );
 					break;
-				
+				*/
 				// Center buttons select a brush.
 				default:
 					// 1st click on a button just activates the brush, 2nd click on it, takes you to edit mode.

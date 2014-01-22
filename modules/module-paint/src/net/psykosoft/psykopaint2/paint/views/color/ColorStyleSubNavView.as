@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			setRightButton( ID_CONFIRM, ID_CONFIRM, ButtonIconType.OK );
 		}
 
-		public function setAvailableColorStyles( availableColorStylePresets:Array ):void {
+		public function setAvailableColorStyles( availableColorStylePresets:Vector.<String> ):void {
 			// TODO...
 		}
 	}

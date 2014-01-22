@@ -1,10 +1,8 @@
 package net.psykosoft.psykopaint2.core.drawing.modules
 {
 
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
 	import flash.display.Shape;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
@@ -25,14 +23,13 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.core.model.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
+	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
@@ -42,8 +39,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorAndSourceToBitmapDataUtil;
-	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
-	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 	
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.LongPressGesture;
@@ -97,6 +92,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var notifyShowPipetteSignal : NotifyShowPipetteSignal;
 		
 		[Inject]
+		public var notifyColorStyleChangedSignal : NotifyColorStyleChangedSignal;
+		
+		[Inject]
 		public var requestAddViewToMainLayerSignal:RequestAddViewToMainLayerSignal;
 	
 		private var _view : DisplayObject;
@@ -106,7 +104,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
 		private var _canvasMatrix : Matrix;
-		//private var _currentPaintColor:int;
 		private var _currentBrushColorParameter:PsykoParameter;
 		private var copyColorUtil:CopyColorAndSourceToBitmapDataUtil;
 		private var currentColorMap:BitmapData;
@@ -129,7 +126,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyCanvasMatrixChanged.add(onCanvasMatrixChanged);
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyPickedColorChangedSignal.add( onPickedColorChanged );
-			
+			notifyColorStyleChangedSignal.add( onColorStyleChanged );
 		}
 
 		// TODO: Handle gestures somewhere else
@@ -167,18 +164,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					notifyShowPipetteSignal.dispatch( _view, color,new Point(_view.mouseX,_view.mouseY - 32), true);
 					_activeBrushKit.brushEngine.pathManager.deactivate();
 					pipetteActive = true;
-					/*
-					pickedColorTf = new ColorTransform();
-					pickedColorPreview = new Shape();
-					pickedColorPreview.graphics.beginFill(0);
-					pickedColorPreview.graphics.drawCircle(0,0,25);
-					pickedColorPreview.graphics.endFill();
-					_activeBrushKit.brushEngine.pathManager.deactivate();
-					_view.addEventListener(Event.ENTER_FRAME, updateColorPicker );
-					(_view as CanvasView).addChild(pickedColorPreview);
 					
-					updateColorPicker(null);
-					*/
 				}
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_ENDED )
 			{
@@ -188,16 +174,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					_activeBrushKit.brushEngine.pathManager.activate(_view, canvasModel, renderer );
 					copyColorUtil.dispose();
 				}
-				/*
-				if (pickedColorPreview && (_view as CanvasView).contains(pickedColorPreview))
-				{
-					
-					(_view as CanvasView).removeChild(pickedColorPreview);
-					
-					_view.removeEventListener(Event.ENTER_FRAME, updateColorPicker );
-					_activeBrushKit.brushEngine.pathManager.activate(_view, canvasModel, renderer );
-				}
-				*/
 			}
 		}
 
@@ -207,41 +183,19 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if (_activeBrushKit)
 			{
 				_activeBrushKit.setCanvasMatrix(matrix);
-				/*
-				var test:CanvasView = _view as CanvasView;
-				var pm:PathManager = _activeBrushKit.brushEngine.pathManager;
-				
-				test.graphics.clear();
-				test.graphics.lineStyle(2,0xff0000);
-				test.graphics.drawRect(matrix.tx * 1024,matrix.ty * 768,1024*matrix.a,768*matrix.d);
-				*/
 			}
 		}
 		
 		private function onPickedColorChanged( newColor:int, colorMode:int, fromSlider:Boolean ):void
 		{
-			//_currentPaintColor = newColor;
 			if ( _currentBrushColorParameter ) _currentBrushColorParameter.colorValue = paintSettingsModel.currentColor;
 		}
 		
-		/*
-		private function updateColorPicker( event:Event ):void
+		private function onColorStyleChanged( colorMatrix:Vector.<Number>, blendFactor:Number ):void
 		{
-		//	var pm:PathManager = _activeBrushKit.brushEngine.pathManager;
-			
-			var px : Number = (_view.mouseX - _canvasMatrix.tx * 1024) / _canvasMatrix.a ;
-			var py : Number = (_view.mouseY - _canvasMatrix.ty * 768)  / _canvasMatrix.d;
-			
-			pickedColorPreview.x = _view.mouseX + 40;
-			pickedColorPreview.y = _view.mouseY - 40;
-			var color:uint = currentColorMap.getPixel(px* CoreSettings.GLOBAL_SCALING,py* CoreSettings.GLOBAL_SCALING);
-			pickedColorTf.color = color;
-			pickedColorPreview.transform.colorTransform = pickedColorTf;
-			notifyPickedColorChangedSignal.dispatch(color, true);
-		}
-		*/
-		
-		
+			_activeBrushKit.brushEngine.setColorStrategyColorMatrix(colorMatrix,blendFactor);
+		}	
+	
 		private function updateCurrentBrushColorParameter( ):void
 		{
 			var parameterSetVO:ParameterSetVO = getCurrentBrushParameters(false);
@@ -410,10 +364,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if (_activeBrushKit)
 				_activeBrushKit.brushEngine.freeExpendableMemory();
 		}
-		/*
-		public function get currentPaintColor():int {
-			return _currentPaintColor;
-		}
-		*/
+		
 	}
 }

@@ -1,19 +1,12 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 	import flash.display3D.Context3D;
 	
-	import de.popforge.math.LCG;
-	
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureMorphingSplatMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
@@ -66,11 +59,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			TextureSplatMesh(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
 			TextureSplatMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
 			_pathManager.brushAngleRange = brushShape.rotationRange;
-		}
-
-		override protected function createColorStrategy() : IColorStrategy
-		{
-			return new PyramidMapIntrinsicsStrategy(_canvasModel);
 		}
 
 		override protected function onPickColor( point : SamplePoint, pickRadius : Number, smoothFactor : Number ) : void
