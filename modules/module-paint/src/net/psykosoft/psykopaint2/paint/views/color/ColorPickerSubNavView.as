@@ -10,9 +10,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	
 	import flash.events.MouseEvent;
-	
 	import flash.geom.Point;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
@@ -23,12 +21,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
-	
 	import net.psykosoft.psykopaint2.core.views.components.previews.BrushStylePreview;
-	
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	
 
 	
@@ -98,6 +95,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var previewIcon:BrushStylePreview;
 		private var previewDelay:int;
 		public var notifyChangePipetteColorSignal:NotifyChangePipetteColorSignal;
+		public var renderer:CanvasRenderer;
+		private var previousRendererSourceTextureAlpha:Number;
+		private var previousRendererPaintAlpha:Number;
+		private var sourcePreviewActive:Boolean;
 		
 		public function ColorPickerSubNavView()
 		{
@@ -382,15 +383,26 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			if ( colorPalette.hitTestPoint(stage.mouseX,stage.mouseY,true ) )
 			{
-				var swatch:Sprite = colorPalette.getSwatchUnderMouse( true );
+				var swatch:Sprite = colorPalette.getSwatchUnderMouse( false );
 				if ( swatch != null )
 				{
-					selectedPipetteChargeSwatch = swatch;
-					var rgb:uint = swatch.transform.colorTransform.color; 
-					currentSwatchMixRed = (rgb >> 16) & 0xff;
-					currentSwatchMixGreen= (rgb >> 8) & 0xff;
-					currentSwatchMixBlue = rgb & 0xff;
-					return {canCharge:true, color:rgb, pos:new Point(colorPalette.x + swatch.x,colorPalette.y + swatch.y - 32)};
+					var isAutoColor:Boolean;
+					if ( !(( isAutoColor = colorPalette.isAutoColorSwatch( swatch )) || colorPalette.isPipetteSwatch( swatch )))
+					{
+						selectedPipetteChargeSwatch = swatch;
+						var rgb:uint = swatch.transform.colorTransform.color; 
+						currentSwatchMixRed = (rgb >> 16) & 0xff;
+						currentSwatchMixGreen= (rgb >> 8) & 0xff;
+						currentSwatchMixBlue = rgb & 0xff;
+						return {canCharge:true, color:rgb, pos:new Point(colorPalette.x + swatch.x,colorPalette.y + swatch.y - 32)};
+					} else if ( isAutoColor ){
+						
+						previousRendererSourceTextureAlpha = renderer.sourceTextureAlpha;
+						previousRendererPaintAlpha = renderer.paintAlpha;
+						renderer.sourceTextureAlpha = 1;
+						renderer.paintAlpha = 0.01;
+						sourcePreviewActive = true;
+					}
 				}
 			} 
 			selectedPipetteChargeSwatch = null;
@@ -498,6 +510,16 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private function positionUiElement( element:DisplayObject, offsetX:Number = 0, offsetY:Number = 0 ):void {
 			element.x = 1024 / 2 - element.width / 2 + offsetX;
 			element.y = UI_ELEMENT_Y + offsetY;
+		}
+		
+		public function onLongTapGestureEnded():void
+		{
+			if ( sourcePreviewActive )
+			{
+				renderer.sourceTextureAlpha = previousRendererSourceTextureAlpha;
+				renderer.paintAlpha = previousRendererPaintAlpha ;
+				sourcePreviewActive = false;
+			}
 		}
 	}
 }

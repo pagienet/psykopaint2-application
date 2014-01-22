@@ -222,5 +222,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			return userPaintSettings.selectedSwatchIndex == 9 && currentColor.visible;
 		}
+		
+		public function isAutoColorSwatch(swatch:Sprite):Boolean
+		{
+			return swatch == autoColorSwatch;
+		}
+		
+		public function isPipetteSwatch(swatch:Sprite):Boolean
+		{
+			return swatch == currentColorSwatch;
+		}
 	}
 }

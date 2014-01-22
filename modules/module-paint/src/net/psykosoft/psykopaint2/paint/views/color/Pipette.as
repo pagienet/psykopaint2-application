@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 	{
 		public var colorbar:Sprite;
 		public var spotColor:Sprite;
-		
+		public var spotColorSwatch:Sprite;
 		private var bar:Sprite;
 		private var _pipetteStartMouseX:Number;
 		private var _pipetteStartMouseY:Number;
@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 				dummyColorTransform.color = incomingColor;
 				spotColor.transform.colorTransform = dummyColorTransform;
 			} 
-			spotColor.visible = showSpotColor;
+			spotColor.visible = spotColorSwatch.visible = showSpotColor;
 			visible = true;
 			lastActionCharge = false;
 			_pipetteStartMouseX = parent.mouseX;
