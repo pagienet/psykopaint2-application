@@ -105,9 +105,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 				case ColorPickerSubNavView.ID_BACK:
 					requestNavigationStateChange( NavigationStateType.PREVIOUS );
 					break;
-				default:
-					view.openParameterWithId( id );
-					break;
 			}
 		}
 		

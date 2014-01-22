@@ -108,24 +108,30 @@ package net.psykosoft.psykopaint2.paint.views.color
 			if ( index == -1 && !userPaintSettings.pipetteIsEmpty) index = 9;
 			if ( index>-1)
 			{
+				var sendModeSignal:Boolean = false;
+				var sendColorSignal:Boolean = false;
+				
 				//userPaintSettings.selectedSwatchIndex != index &&
 				if ( swatches[index] == autoColorSwatch){
 					paletteSelector.x = swatches[index].x + 32;
 					paletteSelector.y = swatches[index].y+37;
 					_selectedColor = userPaintSettings.currentColor;
+					sendModeSignal = true;
 				} else if ( swatches[index] == currentColor){
 					paletteSelector.x = swatches[index].x-2;
 					paletteSelector.y = swatches[index].y+3;
 					_selectedColor = palettes[selectedPaletteIndex][index];
+					sendColorSignal = true;
 				} else {
 					paletteSelector.x = swatches[index].x;
 					paletteSelector.y = swatches[index].y+2;
 					_selectedColor = palettes[selectedPaletteIndex][index];
+					sendColorSignal = true;
 				}
 				userPaintSettings.selectedSwatchIndex = index;
 				
-				userPaintSettings.setColorMode( autoColor ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE, false );
-				userPaintSettings.setCurrentColor(_selectedColor);
+				userPaintSettings.setColorMode( autoColor ? PaintMode.PHOTO_MODE : PaintMode.COLOR_MODE, sendModeSignal );
+				userPaintSettings.setCurrentColor(_selectedColor, sendColorSignal);
 				
 			} else {
 				userPaintSettings.selectedSwatchIndex = index;
