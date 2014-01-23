@@ -80,7 +80,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			addChild(photoStyleUI);
 			photoStyleUI.visible = false;
 			
-			colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,["No Style","Contrast Style","Black and White Style","Supersaturated Style","Mona Lisa Style","William Turner Style","Miro Style","Picasso Style"]);
+			//colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,["No Style","Contrast Style","Black and White Style","Supersaturated Style","Mona Lisa Style","William Turner Style","Miro Style","Picasso Style"]);
 			styleBlendParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Style Blend Factor",1,0,1);
 			previewMixtureParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Preview Blending",0.5,0,1);
 			
@@ -89,7 +89,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			previewMixtureParameter.addEventListener(Event.CHANGE,onPreviewMixtureChanged );
 			
 			photoStyleUI.setParameters(colorStyleParameter,styleBlendParameter,previewMixtureParameter);
-			
 			
 			//this must be called at the end since it will trigger color change signals
 			colorPalette.setUserPaintSettings( _userPaintSettings );
@@ -284,12 +283,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 			//var cm:ColorMatrix = new ColorMatrix();
 			styleMatrices.push(null);
 			
+			var parameterList:Array = ["No Style"];
 			
 			var presets:Vector.<String> = ColorStylePresets.getAvailableColorStylePresets();
 			var cm:ColorMatrix;
 			for ( var i:int = 0; i < presets.length; i++ )
 			{
+				
 				var preset:XML = ColorStylePresets.getPreset(presets[i]);
+				parameterList.push(preset.@name);
 				colorTransfer.setFactors(0, preset );
 				colorTransfer.calculateColorMatrices();
 				cm = colorTransfer.getColorMatrix(0);
@@ -304,6 +306,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 				styleMatrices.push( v );
 				
 			}
+			
+			
+			colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,parameterList);
+			
+			
 			
 			/*
 			cm.adjustContrast(10);

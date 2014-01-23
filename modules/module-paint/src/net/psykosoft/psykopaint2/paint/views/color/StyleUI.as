@@ -118,7 +118,26 @@ package net.psykosoft.psykopaint2.paint.views.color
 				styleSelector.x = sliderOffset + styleBar.x + index * spacing;
 				styleParameter.index = index;
 				
-				styleIconHolder.setChildIndex( previewIcons[index], styleIconHolder.numChildren-1);
+				var currentIndex:int = styleIconHolder.numChildren-1;
+				var maxIndex:int = currentIndex;
+				styleIconHolder.setChildIndex( previewIcons[index], currentIndex);
+				var maxLoop:int = Math.max(maxIndex-index,index);
+				for ( var i:int = 1; i < maxLoop; i++ )
+				{
+					
+					if ( index + i <=maxIndex )
+					{
+						currentIndex--;
+						styleIconHolder.setChildIndex( previewIcons[index + i],currentIndex);
+					}
+					if ( index - i > -1 )
+					{
+						currentIndex--;
+						styleIconHolder.setChildIndex( previewIcons[index - i],currentIndex);
+					}
+				}
+				
+				//styleIconHolder.setChildIndex( previewIcons[index], styleIconHolder.numChildren-1);
 				previewIcon.showIcon( styleParameter.stringValue );
 			}
 		}
