@@ -2,8 +2,6 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 {
 	import flash.display.MovieClip;
 	
-	import net.psykosoft.psykopaint2.paint.configuration;
-
 	public class BrushStylePreview extends MovieClip
 	{
 		private static var styleToFrame:Array = [

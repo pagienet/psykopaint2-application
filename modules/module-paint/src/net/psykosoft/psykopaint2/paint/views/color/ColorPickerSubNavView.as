@@ -89,7 +89,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			previewMixtureParameter.addEventListener(Event.CHANGE,onPreviewMixtureChanged );
 			
 			photoStyleUI.setParameters(colorStyleParameter,styleBlendParameter,previewMixtureParameter);
-			
+			photoStyleUI.setSnappings(null,Vector.<Number>([0.5]));
 			//this must be called at the end since it will trigger color change signals
 			colorPalette.setUserPaintSettings( _userPaintSettings );
 		}

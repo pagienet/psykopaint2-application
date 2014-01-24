@@ -35,7 +35,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var styleParameter:PsykoParameter;
 		private var previewIcons:Object;
 		
-		
+		private var sliderSnap:Vector.<Vector.<Number>>;
+		private var sliderSnapDistance:Number = 0.05;
 		
 		public function StyleUI()
 		{
@@ -62,6 +63,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 			previewIcon.height = 128;
 			previewIcon.scaleX = previewIcon.scaleY;
 			addChildAt(styleIconHolder,getChildIndex(styleBar)+1);
+			
+			sliderSnap = new Vector.<Vector.<Number>>(2,true);
 		}
 		
 		public function onEnabled():void
@@ -174,6 +177,19 @@ package net.psykosoft.psykopaint2.paint.views.color
 			if ( sx < 0 ) sx = 0;
 			if ( sx > 1 ) sx = 1;
 			
+			if ( sliderSnap[activeSliderIndex] != null )
+			{
+				for ( var i:int = 0; i < sliderSnap[activeSliderIndex].length; i++ )
+				{
+					if ( Math.abs(sliderSnap[activeSliderIndex][i]-sx) <= sliderSnapDistance )
+					{
+						sx = sliderSnap[activeSliderIndex][i];
+						break;
+					}
+				}
+				
+			}
+			
 			switch ( activeSliderIndex )
 			{
 				case 0: 
@@ -204,6 +220,13 @@ package net.psykosoft.psykopaint2.paint.views.color
 			showStyleIcons(styleParameter);
 			var spacing:Number = sliderRange / (styleParameter.stringList.length - 1);
 			styleSelector.x = sliderOffset + styleBar.x + styleParameter.index * spacing;
+		}
+		
+		public function setSnappings( slider1:Vector.<Number> = null, slider2:Vector.<Number> = null ):void
+		{
+			sliderSnap[0] = slider1;
+			sliderSnap[1] = slider2;
+			
 		}
 		
 		private function showStyleIcons(parameter:PsykoParameter):void
