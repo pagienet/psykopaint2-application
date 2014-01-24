@@ -1,4 +1,4 @@
-package net.psykosoft.psykopaint2.core.utils
+package net.psykosoft.psykopaint2.base.utils.ui
 {
 
 	import flash.display.Bitmap;
@@ -16,20 +16,22 @@ package net.psykosoft.psykopaint2.core.utils
 			tmpPoint.y = stage.mouseY;
 			
 			var obj:Array = stage.getObjectsUnderPoint( tmpPoint );
+			
 //			trace( "looking for exceptions - objs under mouse: " + obj.length + ", " + obj );
-			if( obj.length == 1 ) {
+			if( obj.length > 0 ) {
 				// Note: add more exceptions here...
 				if( obj[ 0 ] is Bitmap ) {
 //					trace( "bitmap" );
 					return true;
 				}
-				if( obj[ 0 ].parent.name == "woodBgShadow" ) {
+				if( obj[ 0 ].parent && obj[ 0 ].parent.name == "woodBgShadow" ) {
 //					trace( "woodBgShadow" );
 					return true;
 				}
+				return false;
 			}
-
-			return false;
+			
+			return true;
 		}
 	}
 }

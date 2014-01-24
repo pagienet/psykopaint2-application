@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import flash.display.MovieClip;
+	import flash.display.Sprite;
 
 	public class NavigationBg extends MovieClip
 	{
@@ -18,6 +19,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function setBgType( type:String ):void {
 			gotoAndStop( type );
+			if ( type == BG_TYPE_WOOD || type == BG_TYPE_WOOD_LOW)
+			{
+				((getChildAt(0) as Sprite).getChildByName("woodBgShadow") as Sprite).mouseEnabled = false;
+			}
 		}
 	}
 }

@@ -11,7 +11,6 @@ package net.psykosoft.psykopaint2.core.models
 
 		public static const SETTINGS_WALLPAPER:String = "state/settings/wallpaper";
 
-		public static const COLOR_STYLE:String = "state/color_style";
 		public static const CROP:String = "state/crop";
 		public static const CROP_SKIP:String = "state/crop/skip";	// this is used to skip the crop module (but crop state is still responsible for resizing), but still need to show the background
 		public static const PICK_IMAGE:String = "state/pick_image";
@@ -32,8 +31,6 @@ package net.psykosoft.psykopaint2.core.models
 
 		public static const PAINT:String = "state/paint";
 		public static const PAINT_SELECT_BRUSH:String = "state/paint/select_brush";
-		//public static const PAINT_ADJUST_BRUSH:String = "state/paint/adjust_brush";
-		//public static const PAINT_ADJUST_ALPHA:String = "state/paint/adjust_alpha";
 		public static const PAINT_ADJUST_COLOR:String = "state/paint/adjust_color";
 	}
 }

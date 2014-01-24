@@ -1,25 +1,17 @@
 package net.psykosoft.psykopaint2.core.drawing.paths
 {
-	import com.quasimondo.geom.Vector2;
-	
 	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
-	import flash.display.Shape;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
-	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import flash.utils.clearTimeout;
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
 	
-	import net.psykosoft.psykopaint2.core.configuration.CoreConfig;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -30,8 +22,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.utils.CanvasInteractionUtil;
-	import net.psykosoft.psykopaint2.core.views.navigation.NavigationPanel;
+	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 
 	final public class PathManager
@@ -295,12 +286,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		// for purposes of le debug
 		protected function onMouseDown(event : MouseEvent) : void
 		{
-			trace( "PathManager onMouseDown - target: " + event.target + ", " + event.target.name );
-			if (!(event.target is Stage) && !(event.target is CanvasView)) {
-				if( !event.target.stage ) return;
-				if( !CanvasInteractionUtil.canContentsUnderMouseBeIgnored( event.target.stage ) ) return;
+			
+			if (!(event.target is Stage) && !(event.target is CanvasView)) 
+			{
+				if( !event.target.stage || !CanvasInteractionUtil.canContentsUnderMouseBeIgnored( event.target.stage ) )
+				{
+					trace( "PathManager onMouseDown - rejected: " + event.target + ", " + event.target.name );
+					return;
+				}
 			}
-
+			trace( "PathManager onMouseDown - accepted: " + event.target + ", " + event.target.name );
 			if ( event.stageY > CoreSettings.STAGE_HEIGHT - 100 )
 			{
 				recordedData.length = 0;

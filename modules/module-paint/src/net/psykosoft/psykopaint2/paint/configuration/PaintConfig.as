@@ -121,7 +121,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map(GyroscopeLightController).asSingleton();
 			_injector.map(BrushShapeLibrary).asSingleton();
 			_injector.map(BrushKitManager).asSingleton();
-			_injector.map(ColorStyleModule).asSingleton();
 			_injector.map(CanvasRenderer).asSingleton();
 			_injector.map(LightingModel).asSingleton();
 			_injector.map(CanvasModel).asSingleton();

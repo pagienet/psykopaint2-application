@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.utils.CanvasInteractionUtil;
+	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
@@ -145,26 +145,29 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				var obj:Array = target.getObjectsUnderPoint(LongPressGesture(event.target).location);
 				if (obj.length == 0 || CanvasInteractionUtil.canContentsUnderMouseBeIgnored( clip ) )
 				{
-					if ( !showColorPanelTheFirstTime )
-					{
-						showColorPanelTheFirstTime = true;
-						requestStateChangeSignal.dispatch( NavigationStateType.PAINT_ADJUST_COLOR );
-					}
-					if ( copyColorUtil == null )
-					{
-						copyColorUtil = new CopyColorAndSourceToBitmapDataUtil(); 
-					}
-					copyColorUtil.sourceTextureAlpha = renderer.sourceTextureAlpha;
-					copyColorUtil.paintAlpha = renderer.paintAlpha;
-					currentColorMap = copyColorUtil.execute( canvasModel );
-					var px : Number = (_view.mouseX - _canvasMatrix.tx * 1024) / _canvasMatrix.a ;
-					var py : Number = (_view.mouseY - _canvasMatrix.ty * 768)  / _canvasMatrix.d;
-					var color:uint = currentColorMap.getPixel(px* CoreSettings.GLOBAL_SCALING,py* CoreSettings.GLOBAL_SCALING);
+					var px : Number = (_view.mouseX - _canvasMatrix.tx * 1024) / _canvasMatrix.a * CoreSettings.GLOBAL_SCALING;
+					var py : Number = (_view.mouseY - _canvasMatrix.ty * 768)  / _canvasMatrix.d * CoreSettings.GLOBAL_SCALING;
 					
-					notifyShowPipetteSignal.dispatch( _view, color,new Point(_view.mouseX,_view.mouseY - 32), true);
-					_activeBrushKit.brushEngine.pathManager.deactivate();
-					pipetteActive = true;
-					
+					if ( px >= 0 && px < canvasModel.width && py >= 0 && py < canvasModel.height )
+					{
+						if ( !showColorPanelTheFirstTime )
+						{
+							showColorPanelTheFirstTime = true;
+							requestStateChangeSignal.dispatch( NavigationStateType.PAINT_ADJUST_COLOR );
+						}
+						if ( copyColorUtil == null )
+						{
+							copyColorUtil = new CopyColorAndSourceToBitmapDataUtil(); 
+						}
+						copyColorUtil.sourceTextureAlpha = renderer.sourceTextureAlpha;
+						copyColorUtil.paintAlpha = renderer.paintAlpha;
+						currentColorMap = copyColorUtil.execute( canvasModel );
+						
+						var color:uint = currentColorMap.getPixel(px,py);
+						notifyShowPipetteSignal.dispatch( _view, color,new Point(_view.mouseX,_view.mouseY - 32), true);
+						_activeBrushKit.brushEngine.pathManager.deactivate();
+						pipetteActive = true;
+					}
 				}
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_ENDED )
 			{
