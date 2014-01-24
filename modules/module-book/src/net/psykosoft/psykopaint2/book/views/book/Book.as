@@ -458,15 +458,18 @@ package net.psykosoft.psykopaint2.book.views.book
 
  			_bookReady = false;
 
+			if ( _layout )
+			{
+				_layout.regionSignal.remove(_regionManager.addRegion);
+				_layout.dispose();
+			}
+			
  			if(_regionManager){
  				_regionManager.dispose();
  				_regionManager = null;
  			}
 			
-			if ( _layout )
-			{
-				_layout.dispose();
-			}
+			
 			
  		}
  

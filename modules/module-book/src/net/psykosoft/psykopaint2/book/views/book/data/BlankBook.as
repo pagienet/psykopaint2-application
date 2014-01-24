@@ -258,7 +258,9 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			if(_paperNormalMap) _paperNormalMap.dispose();
 			if(_paperInsertNormalMap) _paperInsertNormalMap.dispose();
 			if(_shadowPictMap) _shadowPictMap.dispose();
-
+			if(_craftMap) _craftMap.dispose();
+			if(_ringsMap) _ringsMap.dispose();
+			
 			_pageNumber_txt = null;
 			_pageSprite = null;
 			if(_enviroSources){
@@ -267,6 +269,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 				}
 				_enviroSources = null;
 			}
+			trace("elo");
 		}
 
  	}
