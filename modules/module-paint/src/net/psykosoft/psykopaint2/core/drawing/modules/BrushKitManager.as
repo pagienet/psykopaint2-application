@@ -7,12 +7,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.utils.clearTimeout;
 	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
+	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
@@ -32,9 +36,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
@@ -96,6 +101,12 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		[Inject]
 		public var requestAddViewToMainLayerSignal:RequestAddViewToMainLayerSignal;
+		
+		[Inject]
+		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
+		
+		[Inject]
+		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 	
 		private var _view : DisplayObject;
 		private var _active : Boolean;
@@ -112,6 +123,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var singleTapDelay:int;
 		private var pipetteActive:Boolean;
 		private var showColorPanelTheFirstTime:Boolean;
+		private var _navigationIsVisible:Boolean;
+		private var _navigationWasHiddenByPainting:Boolean;
+		private var _revealNavigationTimeout:uint;
 		
 		public function BrushKitManager()
 		{
@@ -127,8 +141,15 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyPickedColorChangedSignal.add( onPickedColorChanged );
 			notifyColorStyleChangedSignal.add( onColorStyleChanged );
+			notifyNavigationToggledSignal.add( onNavigationToggled );
+			_navigationIsVisible = true;
 		}
-
+		
+		private function onNavigationToggled( shown:Boolean ):void
+		{
+			_navigationIsVisible = shown;
+		}
+		
 		// TODO: Handle gestures somewhere else
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
@@ -300,16 +321,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			deactivateBrushKit();
 		}
 
-		private function onStrokeStarted(event : Event) : void
-		{
-			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
-		}
-		
-		private function onStrokeEnded(event : Event) : void
-		{
-			singleTapDelay = getTimer();
-		}
-
 		private function activateBrushKit() : void
 		{
 			if ( _activeBrushKit )
@@ -340,6 +351,48 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private function onActiveBrushKitChanged( event:Event ):void
 		{
 			notifyActivateBrushChangedSignal.dispatch(_activeBrushKit.getParameterSet( !CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS ));
+		}
+		
+		private function onStrokeStarted(event : Event) : void
+		{
+			trace("stroke started");
+			clearTimeout( _revealNavigationTimeout );
+			if ( _navigationIsVisible ) {
+				trace("nav is visible - checking for mouse over nav");
+				_view.addEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
+			}
+			
+			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
+			
+		}
+		
+		private function onStrokeEnded(event : Event) : void
+		{
+			singleTapDelay = getTimer();
+			_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
+			if ( _navigationWasHiddenByPainting )
+			{
+				clearTimeout( _revealNavigationTimeout );
+				_revealNavigationTimeout = setTimeout( revealHiddenNavigation,800 );
+			}
+		
+		}
+		
+		private function revealHiddenNavigation() : void
+		{
+			requestNavigationToggleSignal.dispatch(1);
+			_navigationWasHiddenByPainting = false;
+		}
+		
+		protected function onPaintOverNavCheck(event:Event):void
+		{
+			if ( _view.mouseY > 550 )
+			{
+				requestNavigationToggleSignal.dispatch(-1);
+				_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
+				_navigationWasHiddenByPainting = true;
+			}
+			
 		}
 		
 		

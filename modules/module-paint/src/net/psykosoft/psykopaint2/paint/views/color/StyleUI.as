@@ -65,6 +65,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 			addChildAt(styleIconHolder,getChildIndex(styleBar)+1);
 			
 			sliderSnap = new Vector.<Vector.<Number>>(2,true);
+			
+			initUI();
 		}
 		
 		public function onEnabled():void
@@ -121,27 +123,33 @@ package net.psykosoft.psykopaint2.paint.views.color
 				styleSelector.x = sliderOffset + styleBar.x + index * spacing;
 				styleParameter.index = index;
 				
-				var currentIndex:int = styleIconHolder.numChildren-1;
-				var maxIndex:int = currentIndex;
-				styleIconHolder.setChildIndex( previewIcons[index], currentIndex);
-				var maxLoop:int = Math.max(maxIndex-index,index);
-				for ( var i:int = 1; i < maxLoop; i++ )
-				{
-					
-					if ( index + i <=maxIndex )
-					{
-						currentIndex--;
-						styleIconHolder.setChildIndex( previewIcons[index + i],currentIndex);
-					}
-					if ( index - i > -1 )
-					{
-						currentIndex--;
-						styleIconHolder.setChildIndex( previewIcons[index - i],currentIndex);
-					}
-				}
+				updateStyleSliderShuffling();
 				
 				//styleIconHolder.setChildIndex( previewIcons[index], styleIconHolder.numChildren-1);
 				previewIcon.showIcon( styleParameter.stringValue );
+			}
+		}
+		
+		private function updateStyleSliderShuffling():void
+		{
+			var index:int = styleParameter.index;
+			var currentIndex:int = styleIconHolder.numChildren-1;
+			var maxIndex:int = currentIndex;
+			styleIconHolder.setChildIndex( previewIcons[index], currentIndex);
+			var maxLoop:int = Math.max(maxIndex-index,index);
+			for ( var i:int = 1; i < maxLoop; i++ )
+			{
+				
+				if ( index + i <=maxIndex )
+				{
+					currentIndex--;
+					styleIconHolder.setChildIndex( previewIcons[index + i],currentIndex);
+				}
+				if ( index - i > -1 )
+				{
+					currentIndex--;
+					styleIconHolder.setChildIndex( previewIcons[index - i],currentIndex);
+				}
 			}
 		}
 		
@@ -213,13 +221,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 			uiParameters = new Vector.<PsykoParameter>();
 			uiParameters[0] = slider1Parameter;
 			uiParameters[1] = slider2Parameter;
-			slider1Handle.x = sliderOffset + slider1Bar.x  + slider1Parameter.normalizedValue * sliderRange;
-			slider2Handle.x = sliderOffset + slider2Bar.x  + slider2Parameter.normalizedValue * sliderRange;
 				
 			this.styleParameter = styleParameter;
-			showStyleIcons(styleParameter);
-			var spacing:Number = sliderRange / (styleParameter.stringList.length - 1);
-			styleSelector.x = sliderOffset + styleBar.x + styleParameter.index * spacing;
+			//showStyleIcons(styleParameter);
+			
 		}
 		
 		public function setSnappings( slider1:Vector.<Number> = null, slider2:Vector.<Number> = null ):void
@@ -229,10 +234,14 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 		}
 		
-		private function showStyleIcons(parameter:PsykoParameter):void
+		private function initUI():void
 		{
+			slider1Handle.x = sliderOffset + slider1Bar.x  + uiParameters[0].normalizedValue * sliderRange;
+			slider2Handle.x = sliderOffset + slider2Bar.x  + uiParameters[1].normalizedValue * sliderRange;
+			
+			
 			while( styleIconHolder.numChildren > 0 ) styleIconHolder.removeChildAt(0);
-			var styleIds:Vector.<String> = parameter.stringList;
+			var styleIds:Vector.<String> = styleParameter.stringList;
 			previewIcons = new Vector.<BrushStylePreview>();
 			for (var i:int = 0; i< styleIds.length; i++ )
 			{
@@ -245,6 +254,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 				previewIcons.push( preview );
 			}
 			
+			var spacing:Number = sliderRange / (styleParameter.stringList.length - 1);
+			styleSelector.x = sliderOffset + styleBar.x + styleParameter.index * spacing;
+			updateStyleSliderShuffling();
 		}
 		
 	}

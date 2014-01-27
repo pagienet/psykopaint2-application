@@ -1,13 +1,11 @@
 package net.psykosoft.psykopaint2.paint.views.color
 {
-	import com.quasimondo.geom.ColorMatrix;
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
 	
-	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
@@ -18,7 +16,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
-	import net.psykosoft.psykopaint2.paint.configuration.ColorStylePresets;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
 	
 	public class ColorPickerSubNavView extends SubNavigationViewBase
@@ -55,12 +52,13 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var blendFactor:Number;
 		private var blendFactorIncrease:Number;
 		
-		private var colorStyleParameter:PsykoParameter;
-		private var styleBlendParameter:PsykoParameter;
-		private var previewMixtureParameter:PsykoParameter;
+		
+		private var styleParameter:PsykoParameter;
+		private var slider1Parameter:PsykoParameter;
+		private var slider2Parameter:PsykoParameter;
+		
 		public var notifyColorStyleChangedSignal:NotifyColorStyleChangedSignal;
 		
-		private var styleMatrices:Vector.<Vector.<Number>>;
 		
 		public function ColorPickerSubNavView()
 		{
@@ -71,9 +69,12 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			super.setup();
 			
+			brushStyleUI.setParameters(styleParameter,slider1Parameter,slider2Parameter);
 			brushStyleUI.setup(1,2);
 			hslSliders.setup();
 			photoStyleUI = new StyleUI();
+			photoStyleUI.setParameters(_userPaintSettings.colorStyleParameter,_userPaintSettings.styleBlendParameter,_userPaintSettings.previewMixtureParameter);
+			
 			photoStyleUI.x = hslSliders.x - 32;
 			photoStyleUI.y = brushStyleUI.y;
 			photoStyleUI.setup(3,4);
@@ -81,34 +82,46 @@ package net.psykosoft.psykopaint2.paint.views.color
 			photoStyleUI.visible = false;
 			
 			//colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,["No Style","Contrast Style","Black and White Style","Supersaturated Style","Mona Lisa Style","William Turner Style","Miro Style","Picasso Style"]);
-			styleBlendParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Style Blend Factor",1,0,1);
-			previewMixtureParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Preview Blending",0.5,0,1);
 			
-			colorStyleParameter.addEventListener(Event.CHANGE, onStyleParameterChanged );
-			styleBlendParameter.addEventListener(Event.CHANGE, onBlendParameterChanged );
-			previewMixtureParameter.addEventListener(Event.CHANGE,onPreviewMixtureChanged );
+			_userPaintSettings.colorStyleParameter.addEventListener(Event.CHANGE, onStyleParameterChanged );
+			_userPaintSettings.styleBlendParameter.addEventListener(Event.CHANGE, onBlendParameterChanged );
+			_userPaintSettings.previewMixtureParameter.addEventListener(Event.CHANGE,onPreviewMixtureChanged );
 			
-			photoStyleUI.setParameters(colorStyleParameter,styleBlendParameter,previewMixtureParameter);
 			photoStyleUI.setSnappings(null,Vector.<Number>([0.5]));
 			//this must be called at the end since it will trigger color change signals
 			colorPalette.setUserPaintSettings( _userPaintSettings );
 		}
 		
+		override protected function onDisabled():void
+		{
+			super.onDisabled();
+			_userPaintSettings.colorStyleParameter.removeEventListener(Event.CHANGE, onStyleParameterChanged );
+			_userPaintSettings.styleBlendParameter.removeEventListener(Event.CHANGE, onBlendParameterChanged );
+			_userPaintSettings.previewMixtureParameter.removeEventListener(Event.CHANGE,onPreviewMixtureChanged );
+			userPaintSettings = null;
+			renderer = null;
+			_navigation.leftBtnSide.x += 50;
+			_navigation.leftBtnSide.y += 30;
+			hslSliders.onDisabled();
+			brushStyleUI.onDisabled();
+			photoStyleUI.onDisabled();
+		}
+		
 		protected function onPreviewMixtureChanged(event:Event):void
 		{
-			var value:Number = previewMixtureParameter.numberValue;
+			var value:Number = _userPaintSettings.previewMixtureParameter.numberValue;
 			renderer.sourceTextureAlpha = value < 0.5 ? 1 : 1 - ( value - 0.5 ) / 0.5;
 			renderer.paintAlpha = value > 0.5 ? 1 : value / 0.5;
 		}
 		
 		protected function onBlendParameterChanged(event:Event):void
 		{
-			notifyColorStyleChangedSignal.dispatch(styleMatrices[ colorStyleParameter.index],styleBlendParameter.numberValue);
+			notifyColorStyleChangedSignal.dispatch( _userPaintSettings.styleMatrices[ _userPaintSettings.colorStyleParameter.index],_userPaintSettings.styleBlendParameter.numberValue);
 		}
 		
 		protected function onStyleParameterChanged(event:Event):void
 		{
-			notifyColorStyleChangedSignal.dispatch(styleMatrices[ colorStyleParameter.index],styleBlendParameter.numberValue);
+			notifyColorStyleChangedSignal.dispatch( _userPaintSettings.styleMatrices[ _userPaintSettings.colorStyleParameter.index],_userPaintSettings.styleBlendParameter.numberValue);
 		}
 		
 		override protected function onEnabled():void
@@ -121,17 +134,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 			brushStyleUI.onEnabled();
 			photoStyleUI.onEnabled();
 			updateContextUI();
+			brushStyleUI.setParameters(styleParameter,slider1Parameter,slider2Parameter);
+			photoStyleUI.setParameters(_userPaintSettings.colorStyleParameter,_userPaintSettings.styleBlendParameter,_userPaintSettings.previewMixtureParameter);
 			
 		}
 		
-		override protected function onDisabled():void
-		{
-			_navigation.leftBtnSide.x += 50;
-			_navigation.leftBtnSide.y += 30;
-			hslSliders.onDisabled();
-			brushStyleUI.onDisabled();
-			photoStyleUI.onDisabled();
-		}
 		
 		
 		public function setCurrentColor( newColor:uint, colorMode:int, fromSliders:Boolean ):void
@@ -234,9 +241,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			
 			var list:Vector.<PsykoParameter> = _parameterSetVO.parameters;
 			var numParameters:uint = list.length;
-			var styleParameter:PsykoParameter;
-			var slider1Parameter:PsykoParameter;
-			var slider2Parameter:PsykoParameter;
+			
+			
+			
 			
 			for( var i:uint = 0; i < numParameters; ++i ) 
 			{
@@ -254,7 +261,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 					styleParameter = parameter;
 				}
 			}
-			brushStyleUI.setParameters(styleParameter,slider1Parameter,slider2Parameter);
+			
+			
 		}
 		
 		public function updateParameters( parameterSetVO:ParameterSetVO ):void {
@@ -277,68 +285,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			}
 		}
 		
-		public function setColorTransfer(colorTransfer:ColorTransfer):void
-		{
-			styleMatrices = new Vector.<Vector.<Number>>();
-			//var cm:ColorMatrix = new ColorMatrix();
-			styleMatrices.push(null);
-			
-			var parameterList:Array = ["No Style"];
-			
-			var presets:Vector.<String> = ColorStylePresets.getAvailableColorStylePresets();
-			var cm:ColorMatrix;
-			for ( var i:int = 0; i < presets.length; i++ )
-			{
-				
-				var preset:XML = ColorStylePresets.getPreset(presets[i]);
-				parameterList.push(preset.@name);
-				colorTransfer.setFactors(0, preset );
-				colorTransfer.calculateColorMatrices();
-				cm = colorTransfer.getColorMatrix(0);
-				var v:Vector.<Number> = Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]);
-				cm = colorTransfer.getColorMatrix(1);
-				v.push(cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255);
-				var blendIn:Number = preset.@blend_in;
-				var blendOut:Number =  preset.@blend_out;
-				var blendRange:Number = blendIn + blendOut;
-				var threshold:Number = colorTransfer.getThreshold(blendIn,blendOut);
-				v.push((threshold - blendRange *0.5 )/ 255.0 ,  255 / blendRange );
-				styleMatrices.push( v );
-				
-			}
-			
-			
-			colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,parameterList);
-			
-			
-			
-			/*
-			cm.adjustContrast(10);
-			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
-			cm.reset();
-			cm.desaturate();
-			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
-			cm.reset();
-			cm.adjustSaturation(4);
-			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
-			cm.reset();
-			cm.randomize(100);
-			cm.fitRange();
-			cm.adjustContrast(2);
-			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
-			cm.randomize(100);
-			cm.fitRange();
-			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
-			cm.randomize(100);
-			cm.fitRange();
-			cm.adjustContrast(2);
-			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
-			cm.randomize(100);
-			cm.fitRange();
-			cm.adjustContrast(2);
-			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
-			*/
-			
-		}
+		
 	}
 }

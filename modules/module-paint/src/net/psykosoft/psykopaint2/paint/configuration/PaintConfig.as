@@ -20,7 +20,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerSucceededSignal;
@@ -51,8 +50,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
-	//import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavView;
-	//import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
@@ -150,7 +147,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyActivateBrushChangedSignal ).asSingleton();
 			_injector.map( NotifyColorStylePresetsAvailableSignal ).asSingleton();
 			_injector.map( NotifyColorStyleChangedSignal ).asSingleton();
-			_injector.map( NotifyNavigationHideSignal ).asSingleton();
 			_injector.map( NotifyHistoryStackChangedSignal ).asSingleton();
 			_injector.map( NotifySaveToServerStartedSignal ).asSingleton();
 			_injector.map( NotifySaveToServerSucceededSignal ).asSingleton();

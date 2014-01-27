@@ -65,14 +65,13 @@ package net.psykosoft.psykopaint2.paint.views.color
 			super.initialize();
 			
 			// From view.
-			view.enabledSignal.add( onViewEnabled );
-			userPaintSettings.setDefaultValues();
-			
 			view.userPaintSettings = userPaintSettings;
 			view.renderer = renderer;
 			view.notifyChangePipetteColorSignal = notifyChangePipetteColorSignal;
 			view.notifyColorStyleChangedSignal = notifyColorStyleChangedSignal;
-			view.setColorTransfer(canvasModel.colorTransfer);
+			
+			view.enabledSignal.add( onViewEnabled );
+			userPaintSettings.setDefaultValues();
 			view.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			// From view.
 			//view.colorChangedSignal.add( onColorChanged );
@@ -83,7 +82,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			notifyPipetteChargeChangedSignal.add( onPipetteChargeChanged );
 			
 			_stage = view.stage;
-			
+			view.setParameters( paintModule.getCurrentBrushParameters() );
 			
 			
 		}
@@ -92,10 +91,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			super.destroy();
 			view.removeEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			view.enabledSignal.remove(onViewEnabled);
-			view.userPaintSettings = null;
-			view.renderer = null;
-			view.notifyChangePipetteColorSignal = null;
-			view.notifyColorStyleChangedSignal = null;
 			
 			notifyPickedColorChangedSignal.remove( onColorChanged );
 			notifyGlobalGestureSignal.remove( onGlobalGestureDetected );
@@ -106,11 +101,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			_stage = null;
 		}
 
-		
-		override protected function onViewEnabled():void {
-			super.onViewEnabled();
-			view.setParameters( paintModule.getCurrentBrushParameters() );
-		}
 		
 		// -----------------------
 		// From view.

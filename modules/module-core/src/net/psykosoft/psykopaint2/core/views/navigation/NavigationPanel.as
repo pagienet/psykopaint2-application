@@ -1,14 +1,17 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
+	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.ui.SnapPositionManager;
 	import net.psykosoft.psykopaint2.base.utils.ui.VScrollInteractionManager;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class NavigationPanel extends Sprite
@@ -112,20 +115,21 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		public function show():void {
-			trace( this, "show" );
+			//trace( this, "show" );
 			if( _shown ) return;
 			visible = true;
 			showingSignal.dispatch();
-			_positionManager.animateToIndex( 0 );
-			startEnterFrame();
+			
+			TweenLite.killTweensOf( this );
+			TweenLite.to( this, 0.5, { y:  _positionManager.getSnapPointAtIndex( 0 ) + 768, onComplete:function(){_positionManager.position = y - 768;_shown = visible = true;shownSignal.dispatch();}, ease: Strong.easeInOut } );
 		}
 
 		public function hide():void {
-			trace( this, "hide" );
+			//trace( this, "hide" );
 			if( !_shown ) return;
 			hidingSignal.dispatch();
-			_positionManager.animateToIndex( 1 );
-			startEnterFrame();
+			TweenLite.killTweensOf( this );
+			TweenLite.to( this, 0.5, { y:  _positionManager.getSnapPointAtIndex( 1 ) + 768, onComplete:function(){_positionManager.position = y - 768;_shown = visible = false;hiddenSignal.dispatch();}, ease: Strong.easeOut } );
 		}
 
 		// ---------------------------------------------------------------------
