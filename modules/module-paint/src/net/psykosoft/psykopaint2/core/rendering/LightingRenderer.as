@@ -364,7 +364,10 @@ package net.psykosoft.psykopaint2.core.rendering
 
 //			if (_shadowModel)
 //				code += "mul ft4.xyz, ft4.xyz, ft7.w\n";
-
+			
+			//multiplying paint alpha to avoid shoing highlights when paint is hidden:
+			code += "mul ft4, ft4, fc1.z\n";
+			
 			code += "add ft3.xyz, ft3, ft4\n";
 
 			return code;
