@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
@@ -37,6 +39,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var _stage:Stage;
 		private var userPaintSettings:UserPaintSettingsModel;
 		private var dummyColorTransform:ColorTransform;
+		private var triggerSourcePreviewTimeoutID:int;
 		
 		
 		
@@ -62,9 +65,30 @@ package net.psykosoft.psykopaint2.paint.views.color
 				swatches[i].addEventListener(MouseEvent.CLICK, onSwatchClicked );
 			}
 			autoColorSwatch.addEventListener(MouseEvent.CLICK, onSwatchClicked );
+			autoColorSwatch.addEventListener(MouseEvent.MOUSE_DOWN, onAutoColorPressed );
 			paletteSelector.mouseEnabled = false;
 			currentColorSwatch.visible = false;
 			currentColor.visible = false;
+		}
+		
+		protected function onAutoColorPressed(event:MouseEvent):void
+		{
+			stage.addEventListener(MouseEvent.MOUSE_UP, onAutoColorReleased );
+			clearTimeout( triggerSourcePreviewTimeoutID )
+			triggerSourcePreviewTimeoutID = setTimeout( triggerSourcePreview , 100 );
+		}
+		
+		protected function onAutoColorReleased(event:MouseEvent):void
+		{
+			clearTimeout( triggerSourcePreviewTimeoutID )
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onAutoColorReleased );
+			if ( triggerSourcePreviewTimeoutID == -1 ) dispatchEvent( new Event("Hide Source") );
+		}
+		
+		protected function triggerSourcePreview():void
+		{
+			dispatchEvent( new Event("Show Source") );
+			triggerSourcePreviewTimeoutID = -1;
 		}
 		
 		public function setUserPaintSettings( userPaintSettings:UserPaintSettingsModel ):void
@@ -101,6 +125,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		{
 			var swatch:Sprite = event.target as Sprite;
 			selectedIndex = swatches.indexOf( swatch );
+			
 		}
 		
 		public function set selectedIndex(index:int):void

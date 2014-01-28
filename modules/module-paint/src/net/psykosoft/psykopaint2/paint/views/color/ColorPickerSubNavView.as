@@ -105,6 +105,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 			hslSliders.onDisabled();
 			brushStyleUI.onDisabled();
 			photoStyleUI.onDisabled();
+			colorPalette.removeEventListener("Show Source", onShowSource );
+			colorPalette.removeEventListener("Hide Source", onHideSource );
 		}
 		
 		protected function onPreviewMixtureChanged(event:Event):void
@@ -136,7 +138,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			updateContextUI();
 			brushStyleUI.setParameters(styleParameter,slider1Parameter,slider2Parameter);
 			photoStyleUI.setParameters(_userPaintSettings.colorStyleParameter,_userPaintSettings.styleBlendParameter,_userPaintSettings.previewMixtureParameter);
-			
+			colorPalette.addEventListener("Show Source", onShowSource );
+			colorPalette.addEventListener("Hide Source", onHideSource );
+				
 		}
 		
 		
@@ -178,8 +182,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 				var swatch:Sprite = colorPalette.getSwatchUnderMouse( false );
 				if ( swatch != null )
 				{
-					var isAutoColor:Boolean;
-					if ( !(( isAutoColor = colorPalette.isAutoColorSwatch( swatch )) || colorPalette.isPipetteSwatch( swatch )))
+					
+					if ( !(colorPalette.isAutoColorSwatch( swatch ) || colorPalette.isPipetteSwatch( swatch )))
 					{
 						selectedPipetteChargeSwatch = swatch;
 						var rgb:uint = swatch.transform.colorTransform.color; 
@@ -189,14 +193,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 						blendFactor = 0.005;
 						blendFactorIncrease = 1.0175;
 						return {canCharge:true, color:rgb, pos:new Point(colorPalette.x + swatch.x,colorPalette.y + swatch.y - 32)};
-					} else if ( isAutoColor ){
-						
-						previousRendererSourceTextureAlpha = renderer.sourceTextureAlpha;
-						previousRendererPaintAlpha = renderer.paintAlpha;
-						renderer.sourceTextureAlpha = 1;
-						renderer.paintAlpha = 0.01;
-						sourcePreviewActive = true;
-					}
+					} 
 				}
 			} 
 			selectedPipetteChargeSwatch = null;
@@ -275,7 +272,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 			element.y = UI_ELEMENT_Y + offsetY;
 		}
 		
-		public function onLongTapGestureEnded():void
+		
+		public function onShowSource(event:Event):void
+		{
+			previousRendererSourceTextureAlpha = renderer.sourceTextureAlpha;
+			previousRendererPaintAlpha = renderer.paintAlpha;
+			renderer.sourceTextureAlpha = 1;
+			renderer.paintAlpha = 0.01;
+			sourcePreviewActive = true;
+		}
+		
+		public function onHideSource(event:Event):void
 		{
 			if ( sourcePreviewActive )
 			{
@@ -284,7 +291,5 @@ package net.psykosoft.psykopaint2.paint.views.color
 				sourcePreviewActive = false;
 			}
 		}
-		
-		
 	}
 }

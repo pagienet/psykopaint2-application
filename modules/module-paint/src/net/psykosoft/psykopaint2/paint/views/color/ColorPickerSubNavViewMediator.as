@@ -150,10 +150,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			{
 				var result:Object = view.canChargePipette();
 				if ( result.canCharge ) notifyShowPipetteSignal.dispatch( view,  result.color, result.pos, false );
-			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_ENDED )
-			{
-				view.onLongTapGestureEnded();
-			}
+			} 
 			
 		}
 	}
