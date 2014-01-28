@@ -373,7 +373,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if ( _navigationWasHiddenByPainting )
 			{
 				clearTimeout( _revealNavigationTimeout );
-				_revealNavigationTimeout = setTimeout( revealHiddenNavigation,800 );
+				_revealNavigationTimeout = setTimeout( revealHiddenNavigation,400 );
 			}
 		
 		}

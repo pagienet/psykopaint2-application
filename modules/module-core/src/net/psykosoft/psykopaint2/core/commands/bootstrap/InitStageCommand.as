@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 			stage.align = StageAlign.TOP_LEFT;
 			stage.frameRate = 60;
 			//stage.quality = StageQuality.LOW; // Note: On Desktop, the quality will be set to a lowest value of HIGH.
-			stage.quality = StageQuality.MEDIUM;
+			stage.quality = StageQuality.HIGH;
 			
 			trace( this, "incoming stage dimensions: " + stage.stageWidth + "x" + stage.stageHeight );
 			if( CoreSettings.RUNNING_ON_iPAD ) {

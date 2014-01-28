@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class Histogram
@@ -436,39 +436,33 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 			var Ps:Number, Hs:Number, psi:Number;
 			
 			var Hn:Number = 0;
+			var sz:int = __size;
+			var p:Vector.<Number> = __probabilities;
+			var log:Vector.<Number> = new Vector.<Number>();
 			
-			for ( i = 0; i < __size; i++)
-			{
-				if ( __probabilities[i] != 0)
-				{
-					Hn -= __probabilities[i] * Math.log( __probabilities[i] );
-				}
-			}
+			for ( i = 0; i < sz; i++)
+				if ( p[i] != 0) Hn -= p[i] * ( log[i] = Math.log( p[i] ) );
 			
 			var psiMax:Number = 0;
 			
-			for ( i = 1; i < __size; i++ ) 
+			for ( i = 1; i < sz; i++ ) 
 			{
 				Ps = 0;
 				Hs = 0; 
 				for ( j = 0; j < i; j++ ) 
 				{
-					Ps += __probabilities[j];
-					if ( __probabilities[j] > 0.0)
-					{
-						Hs -= __probabilities[j] * Math.log ( __probabilities[j] );
-					}
+					Ps += p[j];
+					if ( p[j] > 0.0) Hs -= p[j] * log[j];
 				}
 				
 				if (Ps > 0.0 && Ps < 1.0)
 				{
 					psi = Math.log ( Ps - Ps * Ps ) + Hs / Ps + ( Hn - Hs ) / ( 1 - Ps );
-				}
-				
-				if ( psi > psiMax)
-				{
-					psiMax = psi;
-					thresh = i;
+					if ( psi > psiMax)
+					{
+						psiMax = psi;
+						thresh = i;
+					}
 				}
 			}
 			return thresh;

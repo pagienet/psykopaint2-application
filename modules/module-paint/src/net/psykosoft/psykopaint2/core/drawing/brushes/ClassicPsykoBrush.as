@@ -144,7 +144,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			//previewShp.graphics.drawRect(0,0,1024,768);
 			
 			previewShp.graphics.lineStyle(0,0,0.25);
-			_view.stage.quality = StageQuality.HIGH;
+		//	_view.stage.quality = StageQuality.HIGH;
 			(_view as Sprite).addChild(previewBmd);
 			(_view as Sprite).addChild(previewShp);
 			
@@ -249,7 +249,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				invalidateRender();
 			}
 			
-			_view.stage.quality = StageQuality.LOW;
+			//_view.stage.quality = StageQuality.LOW;
 			setTimeout(super.onPathEnd,1);
 		}
 		/*

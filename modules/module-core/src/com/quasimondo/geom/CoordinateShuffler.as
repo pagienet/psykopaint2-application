@@ -173,19 +173,24 @@ package com.quasimondo.geom
 			_currentIndex %= maximumIndex;
 			var ys:int = _currentIndex /width;
 			var xs:int = _currentIndex % width;
+			var hl:Vector.<int> = _hLookup;
+			var vl:Vector.<int> = _vLookup;
+			var lt:uint = _lookupTableSize;
+			var h:uint = _height;
+			var w:uint = _width;
 			
-			for ( yy = ys; yy < _height; yy++ )
+			for ( yy = ys; yy < h; yy++ )
 			{
-				for ( xx = xs; xx < _width; xx++ )
+				for ( xx = xs; xx < w; xx++ )
 				{
 					x = xx;
 					y = yy;
 					for ( i = 0; i < _shuffleDepth; i++ )
 					{
-						y = ( y + _hLookup[ uint((i * _width  + x) % _lookupTableSize)] ) % _height;
-						x = ( x + _vLookup[ uint((i * _height + y) % _lookupTableSize)] ) % _width;
+						y = ( y + hl[ uint((i * w  + x) % lt)] ) % h;
+						x = ( x + vl[ uint((i * h + y) % lt)] ) % w;
 					}
-					list[j++] = x + y * _width;
+					list[j++] = x + y * w;
 					_currentIndex = ( _currentIndex + 1 ) % maximumIndex;
 					if ( count-- == 0 ) return list;
 				}

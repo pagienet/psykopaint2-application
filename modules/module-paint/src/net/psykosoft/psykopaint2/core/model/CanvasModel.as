@@ -13,6 +13,7 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
@@ -143,17 +144,17 @@ package net.psykosoft.psykopaint2.core.model
 			if (!_sourceTexture) _sourceTexture = createCanvasTexture(false);
 			_sourceTexture.texture.uploadFromBitmapData(fixed);
 
-			//TODO: This a temporary test and will be replaced later:
-			_colorTransfer = new ColorTransfer();
-			_colorTransfer.setTarget(sourceBitmapData);
-			
 			
 			fixed.dispose();
+			
+			setTimeout(initColorTransfer,5);
 		}
 		
 		private function initColorTransfer():void
 		{
-			
+			//TODO: This a temporary test and will be replaced later:
+			_colorTransfer = new ColorTransfer();
+			_colorTransfer.setTargetFromPyramidMap(_pyramidMap);
 		}
 
 		private function fixSourceDimensions(sourceBitmapData : BitmapData) : BitmapData
