@@ -1,10 +1,10 @@
 package net.psykosoft.psykopaint2.core.views.popups.login
 {
 
-	import flash.desktop.NativeApplication;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -13,17 +13,22 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import flash.media.MediaPromise;
 	import flash.media.MediaType;
 
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
+
 	import org.osflash.signals.Signal;
 
 	public class DeviceCameraUtil extends Sprite
 	{
 		private var _cameraUi:CameraUI;
 		private var _imageLoader:Loader;
+		private var _stage:Stage;
 
 		public var imageRetrievedSignal:Signal;
 
-		public function DeviceCameraUtil() {
+		public function DeviceCameraUtil( stage:Stage ) {
 			super();
+
+			_stage = stage;
 
 			imageRetrievedSignal = new Signal();
 
@@ -35,43 +40,59 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		public function dispose():void {
+
 			_cameraUi.removeEventListener( MediaEvent.COMPLETE, imageCaptured );
 			_cameraUi.removeEventListener( Event.CANCEL, captureCanceled );
 			_cameraUi.removeEventListener( ErrorEvent.ERROR, cameraError );
+			_cameraUi = null;
+
+			if(_imageLoader) {
+				if(_imageLoader.hasEventListener( IOErrorEvent.IO_ERROR)) {
+					_imageLoader.contentLoaderInfo.removeEventListener( Event.COMPLETE, asyncImageLoaded );
+					_imageLoader.removeEventListener( IOErrorEvent.IO_ERROR, cameraError );
+				}
+				_imageLoader = null;
+			}
+
+			_stage = null;
+
+			_stage.autoOrients = false;
 		}
 
 		private function cameraError( event:ErrorEvent ):void {
 			trace( this, "camera error" );
 //			NativeApplication.nativeApplication.exit();
+			_stage.autoOrients = false;
 		}
 
 		private function captureCanceled( event:Event ):void {
-			trace( this, "canceled" );
+//			trace( this, "canceled" );
 //			NativeApplication.nativeApplication.exit();
+			_stage.autoOrients = false;
 		}
 
 		private function imageCaptured( event:MediaEvent ):void {
 
-			trace( "Media captured..." );
+//			trace( "Media captured..." );
 
 			var imagePromise:MediaPromise = event.data;
 
 			if( imagePromise.isAsync ) {
-				trace( "Asynchronous media promise." );
+//				trace( "Asynchronous media promise." );
 				_imageLoader = new Loader();
 				_imageLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, asyncImageLoaded );
 				_imageLoader.addEventListener( IOErrorEvent.IO_ERROR, cameraError );
 				_imageLoader.loadFilePromise( imagePromise );
 			}
 			else {
-				trace( "Synchronous media promise." );
+//				trace( "Synchronous media promise." );
 				_imageLoader.loadFilePromise( imagePromise );
 				reportImage();
 			}
 		}
 
 		private function asyncImageLoaded( event:Event ):void {
-			trace( "Media loaded in memory." );
+//			trace( "Media loaded in memory." );
 			reportImage();
 		}
 
@@ -84,10 +105,17 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			bmd.draw( _imageLoader );
 
 			imageRetrievedSignal.dispatch( bmd );
+
+			_stage.autoOrients = false;
 		}
 
 		public function launch():void {
-			_cameraUi.launch( MediaType.IMAGE )
+			_cameraUi.launch( MediaType.IMAGE );
+
+			// Prevents weird orientation behaviour.
+			// The presence of the native camera app seems to rotate app's stage which is supposed to be locked. The camera rotates it anyway,
+			// but doesn't restore it when returning to the app. Releasing the app's rotation seems to work around the bug.
+			_stage.autoOrients = true;
 		}
 	}
 }

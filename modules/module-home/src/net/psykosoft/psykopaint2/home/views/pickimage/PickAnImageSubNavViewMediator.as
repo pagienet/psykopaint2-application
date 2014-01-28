@@ -129,7 +129,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		private function takePhoto():void {
 			trace( this, "taking photo..." );
-			_cameraUtil = new DeviceCameraUtil();
+			_cameraUtil = new DeviceCameraUtil( view.stage );
 			_cameraUtil.imageRetrievedSignal.add( onPhotoRetrieved );
 			_cameraUtil.launch();
 		}
@@ -137,6 +137,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		private function onPhotoRetrieved( bmd:BitmapData ):void {
 			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
 			requestCropSourceImageSignal.dispatch( bmd );
+			_cameraUtil.dispose();
 		}
 	}
 }

@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import net.psykosoft.psykopaint2.core.views.components.button.FoldButton;
 	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
 	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInputValidationUtil;
+	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 
 	import org.osflash.signals.Signal;
 
@@ -217,8 +218,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		private function takePhoto():void {
 			photoContour.visible = false;
 			if( !CoreSettings.RUNNING_ON_iPAD ) return;
-			trace( this, "taking photo..." );
-			_cameraUtil = new DeviceCameraUtil();
+			ConsoleView.instance.log( this, "taking photo..." );
+			_cameraUtil = new DeviceCameraUtil( stage );
 			_cameraUtil.imageRetrievedSignal.add( onPhotoRetrieved );
 			_cameraUtil.launch();
 		}
@@ -238,6 +239,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			_photoBitmap.visible = true;
 			photoContour.visible = false;
+
+			_cameraUtil.dispose();
 		}
 
 		// -----------------------
