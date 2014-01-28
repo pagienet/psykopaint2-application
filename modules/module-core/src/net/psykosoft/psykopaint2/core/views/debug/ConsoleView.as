@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.core.views.debug
 			_tf.name = "errors text field";
 			_tf.scaleX = _tf.scaleY = CoreSettings.GLOBAL_SCALING;
 			_tf.width = 1024 * CoreSettings.GLOBAL_SCALING;
-			_tf.height = 250 * CoreSettings.GLOBAL_SCALING;
+			_tf.height = 150 * CoreSettings.GLOBAL_SCALING;
 			_tf.background = true;
 			_tf.border = true;
 			_tf.multiline = true;
