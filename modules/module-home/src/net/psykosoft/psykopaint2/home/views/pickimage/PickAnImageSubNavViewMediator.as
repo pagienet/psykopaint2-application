@@ -84,6 +84,11 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 					requestNavigationStateChange(NavigationStateType.HOME_ON_EASEL);
 					break;
 				}
+					
+				case PickAnImageSubNavView.ID_SCRATCH: {
+					requestNavigationStateChange( NavigationStateType.HOME_PICK_SURFACE );
+					break;
+				}
 
 				case PickAnImageSubNavView.ID_USER: {
 					if(!CoreSettings.RUNNING_ON_iPAD)

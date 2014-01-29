@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	public class NewPaintingSubNavView extends SubNavigationViewBase
 	{
 		public static const ID_NEW:String = "Color Painting";
-		public static const ID_NEW_PHOTO:String = "Photo Painting";
+		//public static const ID_NEW_PHOTO:String = "Photo Painting";
 
 		private var _disabledId:String;
 
@@ -25,8 +25,8 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		}
 
 		public function createNewPaintingButtons():void {
-			createCenterButton( ID_NEW, ID_NEW, ButtonIconType.NEW_PAINTING_MANUAL, IconButton );
-			createCenterButton( ID_NEW_PHOTO, ID_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, IconButton );
+			createCenterButton( ID_NEW, "New", ButtonIconType.NEW_PAINTING_MANUAL, IconButton );
+			//createCenterButton( ID_NEW_PHOTO, ID_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, IconButton );
 		}
 
 		public function createInProgressPaintings( data:Vector.<PaintingInfoVO>, unavailablePaintingId:String ):void {

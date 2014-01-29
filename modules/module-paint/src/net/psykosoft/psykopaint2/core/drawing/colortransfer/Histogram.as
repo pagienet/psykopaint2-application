@@ -438,7 +438,7 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 			var Hn:Number = 0;
 			var sz:int = __size;
 			var p:Vector.<Number> = __probabilities;
-			var log:Vector.<Number> = new Vector.<Number>();
+			var log:Vector.<Number> = new Vector.<Number>(256,true);
 			
 			for ( i = 0; i < sz; i++)
 				if ( p[i] != 0) Hn -= p[i] * ( log[i] = Math.log( p[i] ) );

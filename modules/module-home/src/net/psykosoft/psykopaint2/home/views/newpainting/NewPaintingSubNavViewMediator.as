@@ -114,10 +114,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				case NewPaintingSubNavView.ID_NEW: {
 					requestDrawingCoreResetSignal.dispatch();
 					paintingModel.activePaintingId = "psyko-" + PaintingInfoVO.DEFAULT_VO_ID;
-					requestNavigationStateChange( NavigationStateType.HOME_PICK_SURFACE );
+					requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
 					break;
 				}
-
+				/*
 				// New photo painting.
 				case NewPaintingSubNavView.ID_NEW_PHOTO: {
 					requestDrawingCoreResetSignal.dispatch();
@@ -125,7 +125,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
 					break;
 				}
-
+				*/
 				//  Paintings.
 				default: {
 //					view.showRightButton( true );
