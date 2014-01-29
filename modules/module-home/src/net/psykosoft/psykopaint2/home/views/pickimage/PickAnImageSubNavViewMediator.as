@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.core.views.popups.login.CameraRollUtil;
 	import net.psykosoft.psykopaint2.core.views.popups.login.DeviceCameraUtil;
+	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 
 	public class PickAnImageSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -23,6 +24,9 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		[Inject]
 		public var requestCropSourceImageSignal:RequestCropSourceImageSignal;
 
+		[Inject]
+		public var requestStartColorPaintingSignal : RequestStartNewColorPaintingSignal;
+		
 		private var _cameraUtil:DeviceCameraUtil;
 		private var _rollUtil:CameraRollUtil;
 
@@ -86,7 +90,8 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 				}
 					
 				case PickAnImageSubNavView.ID_SCRATCH: {
-					requestNavigationStateChange( NavigationStateType.HOME_PICK_SURFACE );
+					requestStartColorPaintingSignal.dispatch( 0 );
+				//	requestNavigationStateChange( NavigationStateType.HOME_PICK_SURFACE );
 					break;
 				}
 
