@@ -61,21 +61,25 @@ package net.psykosoft.psykopaint2.core.models
 		private var _numFollowers : uint;
 		private var _active : Boolean;
 		private var _banned : Boolean;
+		private var _passwordReminderEmail:String;
 
 		public function AMFLoggedInUserProxy()
 		{
 		}
 
 		public function sendPasswordReminder( email:String ):void {
+			_passwordReminderEmail = email;
 			amfBridge.passwordReset( email, onSendPasswordReminderSuccess, onSendPasswordReminderFailure );
 		}
 
 		private function onSendPasswordReminderSuccess( data:Object ):void {
-			notifyUserPasswordReminderSentSignal.dispatch();
+			notifyUserPasswordReminderSentSignal.dispatch( _passwordReminderEmail );
+			_passwordReminderEmail = null;
 		}
 
 		private function onSendPasswordReminderFailure( data:Object ):void {
 			notifyUserPasswordReminderFailedSignal.dispatch( data["status_code"] );
+			_passwordReminderEmail = null;
 		}
 
 		public function sendProfileImages( imageLarge:ByteArray, imageSmall:ByteArray ) : void
@@ -156,6 +160,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onLogInFail(data : Object) : void
 		{
+			traceResponse("login failed response", data);
 			notifyUserLogInFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
 		}
 
@@ -237,6 +242,10 @@ package net.psykosoft.psykopaint2.core.models
 		public function get banned() : Boolean
 		{
 			return _banned;
+		}
+
+		private function traceResponse( msg:String, data:Object ):void {
+			trace(msg + ": " + data); for (var i in data) trace(i+" = "+data[i]);
 		}
 	}
 }

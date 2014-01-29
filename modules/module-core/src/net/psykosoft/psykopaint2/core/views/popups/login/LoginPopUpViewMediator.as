@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.StringUtil;
+
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.UserRegistrationVO;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
@@ -126,9 +128,12 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 					view.loginSubView.rejectEmail();
 					view.loginSubView.displaySatelliteMessage( view.loginSubView.emailInput, LoginCopy.NOT_REGISTERED );
 				}
-				else {
+				else { // User was recognized but password was rejected.
 					view.loginSubView.rejectPassword();
-					view.loginSubView.displaySatelliteMessage( view.loginSubView.passwordInput, LoginCopy.INCORRECT_PASSWORD );
+
+					var firstname:String = "XXX"; // TODO: current response carries no info about user firstname, we need to modify the service
+					var dynamicCopy:String = StringUtil.replaceWordWith( LoginCopy.INCORRECT_PASSWORD, "[firstname]", firstname );
+					view.loginSubView.displaySatelliteMessage( view.loginSubView.passwordInput, dynamicCopy );
 				}
 			}
 			else {
@@ -153,9 +158,12 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			view.loginSubView.canRequestReminder = true;
 		}
 
-		private function onPasswordReminderSent():void {
+		private function onPasswordReminderSent( email:String ):void {
 			view.loginSubView.clearAllSatelliteMessages();
-			view.loginSubView.displaySatelliteMessage( view.loginSubView.emailInput, LoginCopy.PASSWORD_REMINDER );
+
+			var dynamicCopy:String = StringUtil.replaceWordWith( LoginCopy.PASSWORD_REMINDER, "[email]", email );
+			view.loginSubView.displaySatelliteMessage( view.loginSubView.emailInput, dynamicCopy );
+
 			view.loginSubView.canRequestReminder = true;
 		}
 

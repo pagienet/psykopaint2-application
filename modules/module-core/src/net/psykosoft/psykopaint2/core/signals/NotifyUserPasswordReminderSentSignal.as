@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.signals
 	public class NotifyUserPasswordReminderSentSignal extends Signal
 	{
 		public function NotifyUserPasswordReminderSentSignal() {
-			super();
+			super( String ); // Email
 		}
 	}
 }
