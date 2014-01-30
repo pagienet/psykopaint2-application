@@ -81,12 +81,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					requestClosePaintViewSignal.dispatch( false);
 					break;
 				}
-
+/*
 				case CanvasSubNavView.ID_CLEAR:
 				{
 					requestClearCanvasSignal.dispatch();
 					break;
 				}
+					*/
 
 				case CanvasSubNavView.ID_EXPORT:
 				{
