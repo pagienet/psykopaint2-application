@@ -119,6 +119,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		}
 		
+		public function dispose():void
+		{
+			
+		}
+		
 		protected function createBrushMesh() : IBrushMesh
 		{
 			throw new AbstractMethodError();
@@ -153,7 +158,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected function set brushShape(brushShape : AbstractBrushShape) : void
 		{
 			if (_brushShape == brushShape) return;
-			if (_brushShape) _brushShape.freeMemory();
+			if (_brushShape) _brushShape.dispose();
 			_brushShape = brushShape;
 			_shapeVariations = _brushShape.variationFactors;
 			_appendVO.uvBounds.width = _shapeVariations[2];
@@ -194,7 +199,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_renderInvalid = false;
 			_pathManager.deactivate();
 			_shapes.removeEventListener( Event.CHANGE, onShapeChanged );
-			if (_brushShape) _brushShape.freeMemory();
+			if (_brushShape) _brushShape.dispose();
 		}
 
 		private function finalizeStroke() : void

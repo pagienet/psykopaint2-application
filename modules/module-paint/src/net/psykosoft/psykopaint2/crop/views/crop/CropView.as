@@ -57,6 +57,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		public function disposeCropData() : void
 		{
 			if (_positioningSheet) {
+				removeChild(_positioningSheet);
 				_positioningSheet.dispose();
 				_positioningSheet = null;
 			}

@@ -48,12 +48,14 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		public function start(priority : int = 0, exclusive : Boolean = false) : void
 		{
+			
 			if (!_started) {
 				_exclusive = exclusive;
 				_touchID = -1;
 				_started = true;
 				_priority = priority;
 
+				//FIXME: there are cases when _stage = null
 				if (CoreSettings.RUNNING_ON_iPAD)
 					_stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin, false, priority);
 				else

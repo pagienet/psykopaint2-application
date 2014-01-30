@@ -319,6 +319,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_availableBrushKits = null;
 			_availableBrushKitNames = null;
 			deactivateBrushKit();
+			brushShapeLibrary.dispose();
+			trace("BrushKitManager deactivated");
 		}
 
 		private function activateBrushKit() : void

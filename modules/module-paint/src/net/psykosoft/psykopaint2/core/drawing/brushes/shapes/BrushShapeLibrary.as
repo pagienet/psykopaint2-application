@@ -11,16 +11,25 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		[Inject]
 		public var stage3D : Stage3D;
 
-		private var _shapes : Array;
+		private var _shapes : Object;
 
 		public function BrushShapeLibrary()
 		{
-			_shapes = new Array();
+			_shapes = {};
 		}
 
 		public function init() : void
 		{
 			registerDefaultShapes(stage3D.context3D);
+		}
+		
+		public function dispose() : void
+		{
+			for ( var id:String in _shapes )
+			{
+				_shapes[id].dispose();
+			}
+			_shapes = {};
 		}
 
 		private function registerDefaultShapes(context3D : Context3D) : void
@@ -77,7 +86,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		private function sendAvailableShapes():void
 		{
 			var answer:XML = <msg src="BrushShapeLibrary.sendAvailableShapes" />;
-			for ( var id:* in _shapes )
+			for ( var id:String in _shapes )
 			{
 				answer.appendChild(<shape id={id} />);
 			}
