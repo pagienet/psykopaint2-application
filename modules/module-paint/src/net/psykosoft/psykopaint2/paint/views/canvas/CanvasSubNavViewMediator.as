@@ -67,15 +67,18 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 				case CanvasSubNavView.ID_HOME:
 				{
-					requestClosePaintViewSignal.dispatch();
+					requestClosePaintViewSignal.dispatch( true);
 					break;
 				}
 
-				case CanvasSubNavView.ID_DESTROY:
+				case CanvasSubNavView.ID_DISCARD:
 				{
+					/*
 					if( paintingModel.activePaintingId != PaintingInfoVO.DEFAULT_VO_ID && paintingModel.activePaintingId != "" ) {
 						requestPaintingDeletionSignal.dispatch( paintingModel.activePaintingId );
 					}
+					*/
+					requestClosePaintViewSignal.dispatch( false);
 					break;
 				}
 
@@ -96,7 +99,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					requestSavePaintingToServerSignal.dispatch();
 					break;
 				}
-
+/*
 				case CanvasSubNavView.ID_SAVE:
 				{
 					_time = getTimer();
@@ -107,7 +110,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					requestPaintingSaveSignal.dispatch();
 					break;
 				}
-
+*/
 				case CanvasSubNavView.ID_PICK_A_BRUSH:
 				{
 					requestNavigationStateChange( NavigationStateType.PAINT_SELECT_BRUSH );

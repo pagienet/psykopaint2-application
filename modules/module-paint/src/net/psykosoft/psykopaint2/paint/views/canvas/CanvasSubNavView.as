@@ -9,12 +9,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 	{
 		public static const ID_HOME:String = "Home";
 
-		public static const ID_DESTROY:String = "Destroy";
+		public static const ID_DISCARD:String = "Discard Image";
 		public static const ID_CLEAR:String = "Clear Canvas";
-//		public static const ID_MODEL:String = "Source Image";
-//		public static const ID_COLOR:String = "[Color Style]";
 		public static const ID_EXPORT:String = "Export Painting";
-		public static const ID_SAVE:String = "Save Painting"; // TODO: remove when auto-saving is developed
 		public static const ID_PUBLISH:String = "Publish Painting";
 
 		public static const ID_PICK_A_BRUSH:String = "Pick a Brush";
@@ -32,11 +29,10 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		override protected function onSetup():void {
 			super.onSetup();
-			createCenterButton( ID_DESTROY, ID_DESTROY, ButtonIconType.DESTROY );
-			createCenterButton( ID_CLEAR, ID_CLEAR, ButtonIconType.BLANK_CANVAS );
+			createCenterButton( ID_DISCARD, ID_DISCARD, ButtonIconType.DISCARD );
 			createCenterButton( ID_EXPORT, ID_EXPORT );
 			createCenterButton( ID_PUBLISH, ID_PUBLISH, ButtonIconType.PUBLISH );
-			createCenterButton( ID_SAVE, ID_SAVE );
+			createCenterButton( ID_CLEAR, ID_CLEAR, ButtonIconType.BLANK_CANVAS );
 			validateCenterButtons();
 		}
 	}

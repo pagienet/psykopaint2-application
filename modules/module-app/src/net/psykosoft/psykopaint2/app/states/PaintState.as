@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.app.states
 {
 
 	import flash.utils.setTimeout;
-
+	
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
@@ -11,14 +11,15 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.paint.signals.RequestClosePaintViewSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDiscardSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 
 	use namespace ns_state_machine;
@@ -36,6 +37,9 @@ package net.psykosoft.psykopaint2.app.states
 
 		[Inject]
 		public var requestPaintingSaveSignal:RequestPaintingSaveSignal;
+		
+		[Inject]
+		public var requestPaintingDiscardSignal:RequestPaintingDiscardSignal;
 
 		[Inject]
 		public var notifyPaintingSavedSignal:NotifyPaintingInfoSavedSignal;
@@ -68,12 +72,23 @@ package net.psykosoft.psykopaint2.app.states
 			toggleTransformGestureSignal.dispatch( false );
 		}
 
-		private function onClosePaintView():void {
+		private function onClosePaintView( save:Boolean ):void {
 			ConsoleView.instance.log( this, "closing painting view..." );
 			ConsoleView.instance.logMemory();
-			savePainting();
+			if ( save ) savePainting();
+			else discardPainting();
 		}
 
+		private function discardPainting():void {
+			ConsoleView.instance.log( this, "discarding painting..." );
+			ConsoleView.instance.logMemory();
+			notifyPaintingSavedSignal.addOnce( onPaintingSaved );
+			requestPaintingDiscardSignal.dispatch();
+			//			setTimeout( function():void {
+			//				requestPaintingSaveSignal.dispatch( paintingModel.activePaintingId, true );
+			//			}, 2000 );
+		}
+		
 		private function savePainting():void {
 			ConsoleView.instance.log( this, "saving painting..." );
 			ConsoleView.instance.logMemory();

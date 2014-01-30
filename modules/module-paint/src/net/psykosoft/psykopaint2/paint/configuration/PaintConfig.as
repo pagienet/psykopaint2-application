@@ -7,7 +7,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
-	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -32,6 +31,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.LoadSurfaceCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetupPaintModuleCommand;
+	import net.psykosoft.psykopaint2.paint.commands.saving.DiscardPaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.saving.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
@@ -45,6 +45,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDiscardSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
@@ -154,6 +155,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyShowPipetteSignal ).asSingleton();
 			_injector.map( NotifyPipetteChargeChangedSignal ).asSingleton();
 			_injector.map( NotifyChangePipetteColorSignal ).asSingleton();
+			
 		}
 
 		// -----------------------
@@ -164,6 +166,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
+			_commandMap.map( RequestPaintingDiscardSignal ).toCommand( DiscardPaintingCommand );
 			_commandMap.map( RequestPaintingDeletionSignal ).toCommand( DeletePaintingCommand );
 			_commandMap.map( RequestSetupPaintModuleSignal ).toCommand( SetupPaintModuleCommand );
 			_commandMap.map( RequestDestroyPaintModuleSignal ).toCommand( DestroyPaintModuleCommand );
