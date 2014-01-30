@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
-	import net.psykosoft.psykopaint2.core.signals.ToggleTransformGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.popups.base.Jokes;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
@@ -44,7 +44,7 @@ package net.psykosoft.psykopaint2.app.states
 		public var paintingModel:PaintingModel;
 
 		[Inject]
-		public var toggleTransformGestureSignal:ToggleTransformGestureSignal;
+		public var toggleTransformGestureSignal:NotifyToggleTransformGestureSignal;
 
 		[Inject]
 		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;

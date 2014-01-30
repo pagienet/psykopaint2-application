@@ -30,6 +30,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public static var EASEL : int = 1;
 		public static var HOME : int = 2;
 		public static var GALLERY : int = 3;
+		public static var CROP : int = 4;
 
 		public var activeSectionChanged : Signal = new Signal();
 		public var sceneReadySignal : Signal = new Signal();
@@ -174,6 +175,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController.registerTargetPosition(EASEL, new Vector3D(271, -40, 300));
 			_cameraController.registerTargetPosition(HOME, new Vector3D(-271, -1.14, 450));
 			_cameraController.registerTargetPosition(GALLERY, GalleryView.CAMERA_FAR_POSITION);
+			_cameraController.registerTargetPosition(CROP, new Vector3D(271, -40, 170));
 			_cameraController.start();
 			_cameraController.interactionRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight - 150*CoreSettings.GLOBAL_SCALING);
 		}

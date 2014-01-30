@@ -3,11 +3,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 	import flash.display.Bitmap;
 	import flash.display.Stage;
-
+	
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.ToggleTransformGestureSignal;
-
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleSwipeGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
+	
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.LongPressGesture;
@@ -28,7 +29,10 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public var notifyBlockingGestureSignal:NotifyBlockingGestureSignal;
 
 		[Inject]
-		public var toggleTransformGestureSignal:ToggleTransformGestureSignal;
+		public var toggleTransformGestureSignal:NotifyToggleTransformGestureSignal;
+		
+		[Inject]
+		public var notifyToggleSwipeGestureSignal:NotifyToggleSwipeGestureSignal;
 		
 		private var _stage:Stage;
 		private var _delegate:GestureDelegate;
@@ -54,10 +58,15 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public function postConstruct() : void
 		{
 			toggleTransformGestureSignal.add( onToggleTransformGesture );
+			notifyToggleSwipeGestureSignal.add( onToggleSwipeGesture );
 		}
 
 		private function onToggleTransformGesture( value:Boolean ):void {
 			_transformGesture.enabled = value;
+		}
+		
+		private function onToggleSwipeGesture( value:Boolean ):void {
+			_swipeGestureRight.enabled = _swipeGestureLeft.enabled = value;
 		}
 
 		public function set stage( value:Stage ):void {
