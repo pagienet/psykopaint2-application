@@ -187,6 +187,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (_bakedTexture) _bakedTexture.dispose();
 			if (_vertexBuffer) _vertexBuffer.dispose();
 			if (_indexBuffer) _indexBuffer.dispose();
+			_fastBuffer = null;
 			_bakedTexture = null;
 			_vertexBuffer = null;
 			_indexBuffer = null;
