@@ -84,7 +84,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		public function launch( launcherRect:Rectangle, width:Number, height:Number ):void {
 			var options:CameraRollBrowseOptions = new CameraRollBrowseOptions();
 			options.origin = launcherRect;
-			options.width = width;
+			//options.width = width;
 			options.height = height;
 			_cameraRoll.browseForImage( options );
 		}

@@ -79,13 +79,11 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		override public function enable():void
 		{
 			super.enable();
-			//stage.quality = StageQuality.HIGH;
 		}
 		
 		override public function disable():void
 		{
 			super.disable();
-			//stage.quality = StageQuality.LOW;
 		}
 
 		public function render(context3D : Context3D):void

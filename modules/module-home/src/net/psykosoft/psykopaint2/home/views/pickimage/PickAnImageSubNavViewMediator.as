@@ -134,7 +134,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			_rollUtil.imageRetrievedSignal.add( onPhotoRetrieved );
 			var w:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1024 : 512;
 			var h:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 512 : 256;
-			_rollUtil.launch( new Rectangle( view.mouseX, view.mouseY, 100, 100 ), w, h );
+			_rollUtil.launch( new Rectangle( view.mouseX, view.mouseY, 10, 10 ), w, h );
 		}
 
 		private function takePhoto():void {
@@ -147,7 +147,6 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		private function onPhotoRetrieved( bmd:BitmapData ):void {
 			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
 			requestCropSourceImageSignal.dispatch( bmd );
-			_cameraUtil.dispose();
 		}
 	}
 }
