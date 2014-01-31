@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			motionUpdatedSignal = new Signal();
 
 			_container = new Sprite();
-			_container.cacheAsBitmap = true; // TODO: wouldn't it make more sense to only set cache as bitmap to true after all the children have been added to the container?
+			//_container.cacheAsBitmap = true; // TODO: wouldn't it make more sense to only set cache as bitmap to true after all the children have been added to the container?
 			super.addChild( _container );
 
 			setVisibleDimensions( 800, 100 );

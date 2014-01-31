@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewDeleteModeChangedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 
 	public class NewPaintingSubNavViewMediator extends SubNavigationMediatorBase
@@ -31,6 +32,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 		[Inject]
 		public var notifyPaintingDataSavedSignal:NotifyPaintingDataSavedSignal;
+		
+		[Inject]
+		public var notifyHomeViewDeleteModeChangedSignal:NotifyHomeViewDeleteModeChangedSignal;
+		
 
 		[Inject]
 		public var savingProcessModel:SavingProcessModel;
@@ -40,7 +45,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			// Init.
 			registerView( view );
 			super.initialize();
-
+			view.deleteModeSignal = notifyHomeViewDeleteModeChangedSignal;
 			// From app.
 			notifyPaintingDataSavedSignal.add( onPaintingDataSaved );
 		}
@@ -112,9 +117,14 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 				// New color painting.
 				case NewPaintingSubNavView.ID_NEW: {
-					requestDrawingCoreResetSignal.dispatch();
-					paintingModel.activePaintingId = "psyko-" + PaintingInfoVO.DEFAULT_VO_ID;
-					requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
+					if ( !view.deleteModeActive )
+					{
+						requestDrawingCoreResetSignal.dispatch();
+						paintingModel.activePaintingId = "psyko-" + PaintingInfoVO.DEFAULT_VO_ID;
+						requestNavigationStateChange( NavigationStateType.PICK_IMAGE );
+					} else {
+						view.toggleDeleteMode();
+					}
 					break;
 				}
 				/*
@@ -129,15 +139,19 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				//  Paintings.
 				default: {
 //					view.showRightButton( true );
-					if( paintingModel.activePaintingId == "psyko-" + id ) {
-						continueToPhotoPainting();
-					}
-					else {
-						paintingModel.activePaintingId = "psyko-" + id;
-						var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
-						trace( this, "clicked on painting: " + vo.id );
-						requestEaselUpdateSignal.dispatch( vo, true, null );
-					
+					if ( !view.deleteModeActive )
+					{
+						if( paintingModel.activePaintingId == "psyko-" + id ) {
+							continueToPhotoPainting();
+						} else {
+							paintingModel.activePaintingId = "psyko-" + id;
+							var vo:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
+							trace( this, "clicked on painting: " + vo.id );
+							requestEaselUpdateSignal.dispatch( vo, true, null );
+						
+						}
+					} else {
+						view.removePainting( id );
 					}
 				}
 			}

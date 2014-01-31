@@ -7,11 +7,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 	public class CanvasSubNavView extends SubNavigationViewBase
 	{
-		public static const ID_HOME:String = "Save Painting";
-		public static const ID_DISCARD:String = "Discard Painting";
-		public static const ID_CLEAR:String = "Clear Canvas";
-		public static const ID_EXPORT:String = "Export Image";
-		public static const ID_PUBLISH:String = "Publish Painting";
+		public static const ID_SAVE:String = "Save It";
+		public static const ID_DISCARD:String = "Discard It";
+	//	public static const ID_CLEAR:String = "Clear Canvas";
+		public static const ID_DOWNLOAD:String = "Download It";
+	//	public static const ID_PUBLISH:String = "Publish Painting";
 
 		public static const ID_PICK_A_BRUSH:String = "Pick a Brush";
 
@@ -28,10 +28,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		override protected function onSetup():void {
 			super.onSetup();
-			createCenterButton( ID_HOME, ID_HOME, ButtonIconType.OK );
+			createCenterButton( ID_SAVE, ID_SAVE, ButtonIconType.SAVE );
+		
+			createCenterButton( ID_DOWNLOAD, ID_DOWNLOAD, ButtonIconType.DOWNLOAD );
 			createCenterButton( ID_DISCARD, ID_DISCARD, ButtonIconType.DISCARD );
-			createCenterButton( ID_EXPORT, ID_EXPORT, ButtonIconType.FROM_IPAD );
-			createCenterButton( ID_PUBLISH, ID_PUBLISH, ButtonIconType.PUBLISH );
+			//createCenterButton( ID_PUBLISH, ID_PUBLISH, ButtonIconType.PUBLISH );
 			//createCenterButton( ID_CLEAR, ID_CLEAR, ButtonIconType.BLANK_CANVAS );
 			validateCenterButtons();
 		}

@@ -65,7 +65,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 
-				case CanvasSubNavView.ID_HOME:
+				case CanvasSubNavView.ID_SAVE:
 				{
 					requestClosePaintViewSignal.dispatch( true);
 					break;
@@ -89,18 +89,18 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 				}
 					*/
 
-				case CanvasSubNavView.ID_EXPORT:
+				case CanvasSubNavView.ID_DOWNLOAD:
 				{
 					requestCanvasExportSignal.dispatch();
 					break;
 				}
-
+					/*
 				case CanvasSubNavView.ID_PUBLISH:
 				{
 					requestSavePaintingToServerSignal.dispatch();
 					break;
 				}
-/*
+
 				case CanvasSubNavView.ID_SAVE:
 				{
 					_time = getTimer();

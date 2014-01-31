@@ -27,8 +27,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const COMMENT:String = "comment";
 		public static const CONTINUE:String = "continue";
 		public static const ALPHA:String = "alpha";
-		public static const DESTROY:String = "destroy";
+		public static const SAVE:String = "save";
 		public static const DISCARD:String = "discard";
+		public static const DOWNLOAD:String = "download";
 		public static const EDIT:String = "edit";
 		public static const EDIT_PAINTNG:String = "editPainting";
 		public static const EMAIL:String = "email";

@@ -3,9 +3,10 @@ package net.psykosoft.psykopaint2.base.ui.base
 
 	import flash.display.Sprite;
 	import flash.events.Event;
-
+	import flash.geom.Matrix;
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class ViewBase extends Sprite
@@ -90,6 +91,8 @@ package net.psykosoft.psykopaint2.base.ui.base
 			}
 			setupSignal.dispatch();
 			_setupHasRan = true;
+			cacheAsBitmap = true;
+			cacheAsBitmapMatrix = new Matrix();
 		}
 
 		// ---------------------------------------------------------------------

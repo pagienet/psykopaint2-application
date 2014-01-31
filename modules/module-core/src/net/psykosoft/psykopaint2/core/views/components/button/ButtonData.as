@@ -23,6 +23,8 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public var enabled:Boolean;
 		public var disableMouseInteractivityWhenSelected:Boolean;
 		public var clickType:String = MouseEvent.MOUSE_UP;
+		public var readyCallbackObject:Object;
+		public var readyCallbackMethod:Function;
 
 		public function ButtonData() {
 			super();

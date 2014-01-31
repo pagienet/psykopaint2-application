@@ -183,6 +183,25 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			_scroller.updateAllItemRenderersFromData();
 		}
+		
+		public function removeButtonWithId( id:String):void {
+			
+			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
+			if( dataProvider ) {
+				var numData:uint = dataProvider.length;
+				for( var i:uint = 0; i < numData; i++ ) {
+					var data:ButtonData = dataProvider[ i ] as ButtonData;
+					if( id.indexOf( data.id ) != -1 ) {
+						trace("how the fuck do I remove an item from the hscroller?");
+						break;
+					}
+				}
+				
+			}
+			
+			//_scroller.invalidateContent();
+		}
+
 
 		public function relabelButtonWithId( id:String, newLabel:String ):void {
 
@@ -212,7 +231,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		protected function createCenterButton( id:String, label:String, iconType:String = ButtonIconType.DEFAULT,
 											   rendererClass:Class = null, icon:Bitmap = null, selectable:Boolean = false, enabled:Boolean = true,
-											   disableMouseInteractivityWhenSelected:Boolean = true, clickType:String = MouseEvent.MOUSE_UP ):ButtonData {
+											   disableMouseInteractivityWhenSelected:Boolean = true, clickType:String = MouseEvent.MOUSE_UP,
+												readyCallbackObject:Object= null, readyCallbackMethod:Function = null):ButtonData {
 			if( !_centerButtonData ) _centerButtonData = new Vector.<ISnapListData>();
 			var btnData:ButtonData = new ButtonData();
 			btnData.labelText = btnData.defaultLabelText = label;
@@ -225,6 +245,9 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			btnData.itemRendererType = rendererClass || IconButton;
 			btnData.enabled = enabled;
 			btnData.clickType = clickType;
+			btnData.readyCallbackObject = readyCallbackObject;
+			btnData.readyCallbackMethod = readyCallbackMethod;
+			
 			_centerButtonData.push( btnData );
 			return btnData;
 		}
@@ -299,11 +322,20 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		private function onScrollerItemRendererAdded( renderer:DisplayObject ):void {
 			var data:ButtonData = _scroller.getDataForRenderer( renderer );
 			renderer.addEventListener( data.clickType, onButtonClicked );
+			if ( data.readyCallbackObject )
+			{
+				data.readyCallbackMethod.apply(data.readyCallbackObject,[renderer]);
+			}
 		}
 
 		private function onScrollerItemRendererRemoved( renderer:DisplayObject ):void {
 			var data:ButtonData = _scroller.getDataForRenderer( renderer );
-			renderer.removeEventListener( data.clickType, onButtonClicked );
+			if ( data )
+			{
+				renderer.removeEventListener( data.clickType, onButtonClicked );
+			} else {
+				trace("FIXME SubNavigationViewBase.onScrollerItemRendererRemoved");
+			}
 		}
 	}
 }

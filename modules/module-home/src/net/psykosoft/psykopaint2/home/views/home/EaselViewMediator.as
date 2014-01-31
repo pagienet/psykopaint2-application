@@ -6,9 +6,10 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewDeleteModeChangedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
-
+	
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
 	public class EaselViewMediator extends Mediator
@@ -33,11 +34,16 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		[Inject]
 		public var requestNavigationStateChangeSignal : RequestNavigationStateChangeSignal;
+		
+		[Inject]
+		public var notifyHomeViewDeleteModeChangedSignal : NotifyHomeViewDeleteModeChangedSignal;
 
 		private var _selectedSurfaceID : uint;
+		private var canOpenImageOnEasel:Boolean;
 
 		public function EaselViewMediator()
 		{
+			canOpenImageOnEasel = true;
 		}
 
 		private function onEaselRectChanged() : void
@@ -54,6 +60,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.easelTappedSignal.add(onEaselTapped);
 			requestEaselPaintingUpdateSignal.add(onEaselUpdateRequest);
 			notifyPaintingDataRetrievedSignal.add(onPaintingDataRetrieved);
+			notifyHomeViewDeleteModeChangedSignal.add(onDeleteModeChanged);
 		}
 
 		private function onRequestNavigationStateChange(newState : String) : void
@@ -73,8 +80,15 @@ package net.psykosoft.psykopaint2.home.views.home
 			view.easelTappedSignal.remove(onEaselTapped);
 			requestEaselPaintingUpdateSignal.remove(onEaselUpdateRequest);
 			notifyPaintingDataRetrievedSignal.remove(onPaintingDataRetrieved);
+			notifyHomeViewDeleteModeChangedSignal.remove(onDeleteModeChanged);
 		}
-
+		
+		private function onDeleteModeChanged( deleteModeActive:Boolean ):void
+		{
+			canOpenImageOnEasel = !deleteModeActive;
+			
+		}
+		
 		private function onEaselUpdateRequest(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
 			view.setContent(paintingVO, animateIn, onUploadComplete);
@@ -92,12 +106,15 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onEaselTapped() : void
 		{
-			var paintingID : String = view.paintingID;
-
-			if (paintingID == PaintingInfoVO.DEFAULT_VO_ID)
-				requestStartNewPaintingCommand.dispatch(_selectedSurfaceID);
-			else
-				requestLoadPaintingDataSignal.dispatch(view.paintingID);
+			if ( canOpenImageOnEasel )
+			{
+				var paintingID : String = view.paintingID;
+	
+				if (paintingID == PaintingInfoVO.DEFAULT_VO_ID)
+					requestStartNewPaintingCommand.dispatch(_selectedSurfaceID);
+				else
+					requestLoadPaintingDataSignal.dispatch(view.paintingID);
+			}
 		}
 
 	}
