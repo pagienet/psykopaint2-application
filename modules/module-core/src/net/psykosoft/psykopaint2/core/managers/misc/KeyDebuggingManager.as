@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.core.managers.misc
 
 		private function onStageKeyDown( event:KeyboardEvent ):void {
 
-			trace( this, "key pressed: " + event.keyCode );
+//			trace( this, "key pressed: " + event.keyCode );
 
 			switch( event.keyCode ) {
 

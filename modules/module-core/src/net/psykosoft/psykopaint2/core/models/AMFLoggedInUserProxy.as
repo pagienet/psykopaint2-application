@@ -154,7 +154,9 @@ package net.psykosoft.psykopaint2.core.models
 			if (data["status_code"] != 1) {
 				var firstname:String = "";
 				if(data["status_code"] == 2) {
-					firstname = data["response"]["firstname"];
+					if( data["response"] && data["response"]["firstname"] ) {
+						firstname = data["response"]["firstname"];
+					}
 //					trace("> " + firstname);
 				}
 				notifyUserLogInFailedSignal.dispatch(data["status_code"], data["status_reason"], firstname);
