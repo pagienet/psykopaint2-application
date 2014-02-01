@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.UserRegistrationVO;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
+	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserPasswordReminderFailedSignal;
@@ -48,8 +49,13 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		[Inject]
 		public var notifyUserPasswordReminderFailedSignal:NotifyUserPasswordReminderFailedSignal;
 
+		[Inject]
+		public var notifyAMFConnectionFailed : NotifyAMFConnectionFailed;
+
 		private var _photoLarge:BitmapData;
 		private var _photoSmall:BitmapData;
+		private var _loggingIn:Boolean;
+		private var _signingUp:Boolean;
 
 		override public function initialize():void {
 			super.initialize();
@@ -71,6 +77,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			notifyUserRegistrationFailedSignal.add( onRegisterFailure );
 			notifyUserPasswordReminderSentSignal.add( onPasswordReminderSent );
 			notifyUserPasswordReminderFailedSignal.add( onPasswordReminderFailed );
+			notifyAMFConnectionFailed.add( onConnectionProblems );
 		}
 
 		override public function destroy():void {
@@ -84,6 +91,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			view.popUpWantsToRegisterSignal.remove( onPopUpWantsToRegister );
 			notifyUserPasswordReminderSentSignal.remove( onPasswordReminderSent );
 			notifyUserPasswordReminderFailedSignal.remove( onPasswordReminderFailed );
+			notifyAMFConnectionFailed.remove( onConnectionProblems );
 			if( _photoLarge ) _photoLarge.dispose();
 			if( _photoSmall ) _photoSmall.dispose();
 		}
@@ -94,10 +102,21 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		private function onRegisterFailure( amfErrorCode:int, reason:String ):void {
 			view.signupSubView.signupBtn.dontSpin();
-			trace( this, "register failed - error code: " + amfErrorCode );
-			// TODO: give feedback about error via view.signupSubView.displaySatelliteMessage()
-			view.signupSubView.rejectPassword();
+
+			trace( this, "register failed - error code: " + amfErrorCode + ", reason: " + reason );
+			// Error feedback.
+			if( amfErrorCode == AMFErrorCode.CALL_STATUS_FAILED ) { // LOGIN REJECTED
+				if( reason == "EMAIL_EXISTS" ) {
+					view.signupSubView.rejectEmail();
+					view.signupSubView.displaySatelliteMessage( view.signupSubView.emailTf, LoginCopy.ALREADY_REGISTERED );
+				}
+			}
+			else {
+				displayGenericSignUpConnectionError();
+			}
+
 			view.signupSubView.canRequestSignUp = true;
+			_signingUp = false;
 		}
 
 		private function onRegisterSuccess():void {
@@ -114,6 +133,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			loggedInUserProxy.sendProfileImages( largeBytes, smallBytes );
 
 			view.signupSubView.canRequestSignUp = true;
+			_signingUp = false;
 		}
 
 		// the fail signal contains an int with a value from AMFErrorCode.as
@@ -136,10 +156,11 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 				}
 			}
 			else {
-				view.loginSubView.displaySatelliteMessage( view.loginSubView.loginBtn, LoginCopy.ERROR, view.loginSubView.loginBtn.width / 2, view.loginSubView.loginBtn.height / 2 );
+				displayGenericLoginConnectionError();
 			}
 
 			view.loginSubView.canRequestLogin = true;
+			_loggingIn = false;
 		}
 
 		private function onLoginSuccess():void {
@@ -150,6 +171,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			requestHidePopUpSignal.dispatch();
 
 			view.loginSubView.canRequestLogin = true;
+			_loggingIn = false;
 		}
 
 		private function onPasswordReminderFailed( amfErrorCode:int ):void {
@@ -166,12 +188,34 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			view.loginSubView.canRequestReminder = true;
 		}
 
+		private function onConnectionProblems( errorCode:int ):void {
+			if(_loggingIn) {
+				view.loginSubView.loginBtn.dontSpin();
+				displayGenericLoginConnectionError();
+				_loggingIn = false;
+			}
+			if(_signingUp) {
+				view.signupSubView.signupBtn.dontSpin();
+				displayGenericSignUpConnectionError();
+				_signingUp = false;
+			}
+		}
+
+		private function displayGenericLoginConnectionError():void {
+			view.loginSubView.displaySatelliteMessage( view.loginSubView.loginBtn, LoginCopy.ERROR, view.loginSubView.loginBtn.width / 2, view.loginSubView.loginBtn.height / 2 );
+		}
+
+		private function displayGenericSignUpConnectionError():void {
+			view.signupSubView.displaySatelliteMessage( view.signupSubView.signupBtn, LoginCopy.ERROR, view.signupSubView.signupBtn.width / 2 - 25, view.signupSubView.signupBtn.height / 2 - 25, -15 );
+		}
+
 		// -----------------------
 		// From view.
 		// -----------------------
 
 		private function onPopUpWantsToRegister( email:String, password:String, firstName:String, lastName:String, photoLarge:BitmapData, photoSmall:BitmapData ):void {
 
+			_signingUp = true;
 			view.signupSubView.signupBtn.spin();
 
 			// Remember these so we can upload them only after the string part of the registration is done.
@@ -195,6 +239,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function onPopUpWantsToLogIn( email:String, password:String ):void {
+			_loggingIn = true;
 			view.loginSubView.loginBtn.spin();
 			view.loginSubView.canRequestLogin = false;
 			loggedInUserProxy.logIn( email, password );

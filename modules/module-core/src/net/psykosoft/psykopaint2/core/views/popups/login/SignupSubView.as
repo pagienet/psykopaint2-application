@@ -109,12 +109,15 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		// Interface.
 		// -----------------------
 
-		public function displaySatelliteMessage( targetSource:Sprite, msg:String, offsetX:Number = 0, offsetY:Number = 0 ):void {
+		public function displaySatelliteMessage( targetSource:Sprite, msg:String, offsetX:Number = 0, offsetY:Number = 0, rotation:Number = 0 ):void {
 			var label:LoginMessageLabel = new LoginMessageLabel();
 			label.labelText = msg;
 			label.x = targetSource.x + targetSource.width / 2 + 5 + offsetX;
 			label.y = targetSource.y + MathUtil.rand( -10, 10 ) + offsetY;
-			label.rotation = MathUtil.rand( -10, 10 );
+			if( rotation == 0 ) {
+				label.rotation = MathUtil.rand( -10, 10 );
+			}
+			else label.rotation = rotation;
 			addChild( label );
 			if( !_satelliteMessages ) _satelliteMessages = new Vector.<LoginMessageLabel>();
 			_satelliteMessages.push( label );
