@@ -117,7 +117,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		// the fail signal contains an int with a value from AMFErrorCode.as
-		private function onLoginFailure( amfErrorCode:int, reason:String ):void {
+		private function onLoginFailure( amfErrorCode:int, reason:String, firstname:String ):void {
 
 			trace( this, "login failed - error code: " + amfErrorCode );
 			view.loginSubView.loginBtn.dontSpin();
@@ -131,7 +131,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 				else { // User was recognized but password was rejected.
 					view.loginSubView.rejectPassword();
 
-					var firstname:String = "XXX"; // TODO: current response carries no info about user firstname, we need to modify the service
 					var dynamicCopy:String = StringUtil.replaceWordWith( LoginCopy.INCORRECT_PASSWORD, "[firstname]", firstname );
 					view.loginSubView.displaySatelliteMessage( view.loginSubView.passwordInput, dynamicCopy );
 				}

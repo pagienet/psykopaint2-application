@@ -149,8 +149,15 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onLogInSuccess(data : Object) : void
 		{
+//			traceResponse("onLogInSuccess - (server responded): ", data);
+
 			if (data["status_code"] != 1) {
-				notifyUserLogInFailedSignal.dispatch(data["status_code"], data["status_reason"]);
+				var firstname:String = "";
+				if(data["status_code"] == 2) {
+					firstname = data["response"]["firstname"];
+//					trace("> " + firstname);
+				}
+				notifyUserLogInFailedSignal.dispatch(data["status_code"], data["status_reason"], firstname);
 				return;
 			}
 
@@ -160,8 +167,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function onLogInFail(data : Object) : void
 		{
-			traceResponse("login failed response", data);
-			notifyUserLogInFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
+			notifyUserLogInFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED", "");
 		}
 
 		private function populateUserData(data : Object) : void
