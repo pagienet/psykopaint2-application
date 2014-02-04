@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.home.commands.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewDeleteModeChangedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 
@@ -36,7 +37,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		[Inject]
 		public var notifyHomeViewDeleteModeChangedSignal:NotifyHomeViewDeleteModeChangedSignal;
 		
-
 		[Inject]
 		public var savingProcessModel:SavingProcessModel;
 
@@ -100,15 +100,6 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 
 			view.validateCenterButtons();
 
-			// Auto select first painting.
-			if( data && data.length > 0 ) {
-				var vo:PaintingInfoVO = data[ 0 ];
-				var dump:Array = vo.id.split( "-" );
-				var str:String = dump[ dump.length - 1 ];
-				view.selectButtonWithLabel( str );
-				paintingModel.activePaintingId = vo.id;
-			}
-
 			super.onViewSetup();
 		}
 
@@ -158,11 +149,19 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		}
 
 		private function ensureLatestPaintingIsOnEasel():void {
-			var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
-			if( data && data.length > 0 ) {
-				var infoVO:PaintingInfoVO = data[ 0 ];
-				if( infoVO )
-					requestEaselUpdateSignal.dispatch( infoVO, true, null );
+			var infoVO:PaintingInfoVO = paintingModel.getVoWithId( paintingModel.activePaintingId );
+			if( infoVO )
+			{
+				requestEaselUpdateSignal.dispatch( infoVO, true, null );
+			} else
+			{
+				var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
+				if( data && data.length > 0 ) {
+					
+					var infoVO:PaintingInfoVO = data[ 0 ];
+					if( infoVO )
+						requestEaselUpdateSignal.dispatch( infoVO, true, null );
+				}
 			}
 		}
 	}

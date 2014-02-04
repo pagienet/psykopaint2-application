@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.core.views.popups.login.CameraRollUtil;
 	import net.psykosoft.psykopaint2.core.views.popups.login.DeviceCameraUtil;
+	import net.psykosoft.psykopaint2.home.commands.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 
 	public class PickAnImageSubNavViewMediator extends SubNavigationMediatorBase
@@ -26,6 +27,10 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		[Inject]
 		public var requestStartColorPaintingSignal : RequestStartNewColorPaintingSignal;
+		
+		[Inject]
+		public var requestLoadSurfacePreviewSignal:RequestLoadSurfacePreviewSignal;
+	
 		
 		private var _cameraUtil:DeviceCameraUtil;
 		private var _rollUtil:CameraRollUtil;
@@ -65,6 +70,11 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			// Init.
 			registerView( view );
 			super.initialize();
+		}
+		
+		override protected function onViewEnabled():void {
+			super.onViewEnabled();
+			requestLoadSurfacePreviewSignal.dispatch(0);
 		}
 
 		override public function destroy():void {
