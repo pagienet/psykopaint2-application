@@ -121,7 +121,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		public function dispose():void
 		{
-			
+			if (_brushShape){
+				_brushShape.dispose();
+				_brushShape = null;
+			}
 		}
 		
 		protected function createBrushMesh() : IBrushMesh
@@ -199,7 +202,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_renderInvalid = false;
 			_pathManager.deactivate();
 			_shapes.removeEventListener( Event.CHANGE, onShapeChanged );
-			if (_brushShape) _brushShape.dispose();
+			//if (_brushShape) _brushShape.dispose();
 		}
 
 		private function finalizeStroke() : void
@@ -513,5 +516,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_colorStrategy.setColorMatrix(colorMatrix,blendFactor);
 			
 		}
+		
 	}
 }

@@ -318,7 +318,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_active = false;
 			_availableBrushKits = null;
 			_availableBrushKitNames = null;
-			deactivateBrushKit();
+			deactivateBrushKit(true);
 			brushShapeLibrary.dispose();
 			trace("BrushKitManager deactivated");
 		}
@@ -337,7 +337,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			}
 		}
 
-		private function deactivateBrushKit() : void
+		private function deactivateBrushKit( dispose:Boolean = false) : void
 		{
 			if ( _activeBrushKit )
 			{
@@ -345,6 +345,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				_activeBrushKit.brushEngine.removeEventListener(AbstractBrush.STROKE_STARTED, onStrokeStarted);
 				_activeBrushKit.brushEngine.removeEventListener( AbstractBrush.STROKE_ENDED, onStrokeEnded );
 				_activeBrushKit.removeEventListener( Event.CHANGE, onActiveBrushKitChanged );
+				if ( dispose ) _activeBrushKit.dispose();
 				_activeBrushKit = null;
 				_activeBrushKitName = "";
 			}

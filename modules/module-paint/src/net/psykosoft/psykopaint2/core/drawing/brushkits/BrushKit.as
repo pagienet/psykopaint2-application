@@ -138,7 +138,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			}
 			_brushEngine.deactivate();
 		}
-		
+
+		public function dispose():void
+		{
+			_brushEngine.dispose();
+		}
 		
 		public function set brushEngine( value:AbstractBrush ):void
 		{
