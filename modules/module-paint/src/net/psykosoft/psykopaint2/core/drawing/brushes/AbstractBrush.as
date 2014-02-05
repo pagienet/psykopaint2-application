@@ -161,7 +161,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected function set brushShape(brushShape : AbstractBrushShape) : void
 		{
 			if (_brushShape == brushShape) return;
-			if (_brushShape) _brushShape.dispose();
+			//if (_brushShape) _brushShape.dispose();
 			_brushShape = brushShape;
 			_shapeVariations = _brushShape.variationFactors;
 			_appendVO.uvBounds.width = _shapeVariations[2];
