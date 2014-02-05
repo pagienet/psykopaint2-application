@@ -50,7 +50,7 @@ package net.psykosoft.psykopaint2.core.debug
 			for (var i : int = 0; i < _collection.length; ++i) {
 				var data : UndisposedData = _collection[i];
 				if (!lookUp[data.allocationStackTrace]) {
-					var item : Object = { stackTrace : data.allocationStackTrace, count: 0  };
+					var item : Object = { stackTrace : data.allocationStackTrace, count: 0, size:data.size  };
 					lookUp[data.allocationStackTrace] = item;
 					report.push(item);
 				}
@@ -69,6 +69,11 @@ package net.psykosoft.psykopaint2.core.debug
 		}
 	}
 }
+import away3d.hacks.TrackedATFTexture;
+
+import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
+import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 
 class UndisposedData
 {
@@ -78,6 +83,32 @@ class UndisposedData
 		allocationStackTrace = new Error("new()").getStackTrace();
 		var index : int = allocationStackTrace.indexOf("\n");
 		allocationStackTrace = allocationStackTrace.substr(index+1);
+	}
+	
+	public function get size():int
+	{
+		var v:int = -1;
+		if ( object )
+		{
+			if ( object is TrackedBitmapData )
+			{
+				try
+				{
+					v = (object as TrackedBitmapData).width * (object as TrackedBitmapData).height * 4; 
+				} catch (e:Error)
+				{}
+			} else if ( object is TrackedByteArray )
+			{
+				v = (object as TrackedByteArray).length;
+			} else if ( object is TrackedATFTexture )
+			{
+				v = (object as TrackedATFTexture).width * (object as TrackedATFTexture).height * 4; 
+			} else if ( object is TrackedTexture)
+			{
+				v = (object as TrackedTexture).size; 
+			}
+		} 
+		return v;
 	}
 
 	public var object : Object;

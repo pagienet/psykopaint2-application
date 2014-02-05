@@ -1,12 +1,13 @@
 package net.psykosoft.psykopaint2.home.commands
 {
 
-	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
-
 	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
-
+	
+	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
+	
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryIoUtil;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataDeserializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
@@ -94,7 +95,7 @@ package net.psykosoft.psykopaint2.home.commands
 			_as3ReadUtil.readBytesAsync( _fileName, onAs3FileRead );
 		}
 
-		private function onAs3FileRead( bytes:ByteArray ):void {
+		private function onAs3FileRead( bytes:TrackedByteArray ):void {
 			trace( this, "as3 done reading" );
 			if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) bytes.uncompress();
 			onFileRead( bytes );
@@ -102,14 +103,14 @@ package net.psykosoft.psykopaint2.home.commands
 
 		private function readANE():void {
 			trace( this, "reading with ane... " + _fileName );
-			var bytes:ByteArray = new ByteArray();
+			var bytes:TrackedByteArray = new TrackedByteArray();
 	   		if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) ioAne.extension.readWithDeCompression( bytes, _fileName );
 			else ioAne.extension.read( bytes, _fileName );
 			trace( this, "ane done reading" );
 			onFileRead( bytes );
 		}
 
-		private function onFileRead( bytes:ByteArray ):void {
+		private function onFileRead( bytes:TrackedByteArray ):void {
 
 			trace( this, "file read: " + bytes.length );
 			ConsoleView.instance.log( this, "done reading - " + String( getTimer() - _time ) );

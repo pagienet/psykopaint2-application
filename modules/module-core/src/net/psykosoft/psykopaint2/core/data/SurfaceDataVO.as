@@ -1,10 +1,10 @@
 package net.psykosoft.psykopaint2.core.data
 {
-	import flash.utils.ByteArray;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
 	public class SurfaceDataVO
 	{
-		public var normalSpecular : ByteArray;
-		public var color : ByteArray;
+		public var normalSpecular : TrackedByteArray;
+		public var color : TrackedByteArray;
 	}
 }

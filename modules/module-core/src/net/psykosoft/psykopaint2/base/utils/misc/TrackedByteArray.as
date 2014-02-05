@@ -1,36 +1,30 @@
 package net.psykosoft.psykopaint2.base.utils.misc
 {
-	import flash.display3D.textures.Texture;
-
+	import flash.utils.ByteArray;
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.debug.UndisposedObjects;
 
-	public class TrackedTexture
+	public class TrackedByteArray extends ByteArray
 	{
-		private var _texture : Texture;
-
-		public function TrackedTexture(texture : Texture)
+		public function TrackedByteArray()
 		{
-			_texture = texture;
-
+			/*
+			if ( nativeByteArray != null )
+			{
+				this.endian = nativeByteArray.endian;
+				this.writeBytes( nativeByteArray );
+				this.position = nativeByteArray.position;
+			}
+			*/
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
 				UndisposedObjects.getInstance().add(this);
 		}
-
-		public function get texture() : Texture
-		{
-			return _texture;
-		}
 		
-		public function get size():int
+		override public function clear():void
 		{
-			return -1
-		}
-		
-		public function dispose():void
-		{
-			_texture.dispose();
-
+//			trace("disposed");
+			super.clear();
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
 				UndisposedObjects.getInstance().remove(this);
 		}

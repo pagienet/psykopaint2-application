@@ -3,12 +3,13 @@ package net.psykosoft.psykopaint2.core.data
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.utils.ByteArray;
+	
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
 	public class PaintingInfoDeserializer extends EventDispatcher
 	{
 		private var _vo : PaintingInfoVO;
-		private var _bytes : ByteArray;
+		private var _bytes : TrackedByteArray;
 
 		public function PaintingInfoDeserializer()
 		{
@@ -19,7 +20,7 @@ package net.psykosoft.psykopaint2.core.data
 			return _vo;
 		}
 
-		public function deserialize(bytes : ByteArray) : void
+		public function deserialize(bytes : TrackedByteArray) : void
 		{
 			_vo = new PaintingInfoVO();
 			_bytes = bytes;
@@ -56,7 +57,7 @@ package net.psykosoft.psykopaint2.core.data
 			_vo.normalSpecularPreviewData = PaintingFileUtils.decodeImage(_bytes, _vo.width, _vo.height);
 
 			_bytes.clear();
-
+			_bytes = null;
 			dispatchEvent(new Event(Event.COMPLETE));
 		}
 	}

@@ -1,13 +1,13 @@
 package net.psykosoft.psykopaint2.core.data
 {
 
-	import away3d.tools.utils.TextureUtils;
-
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
-
+	
+	import away3d.tools.utils.TextureUtils;
+	
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.debug.UndisposedObjects;
 
 	public class PaintingInfoVO
@@ -15,9 +15,9 @@ package net.psykosoft.psykopaint2.core.data
 		public static const DEFAULT_VO_ID:String = "new";
 
 		public var thumbnail:BitmapData;
-		public var colorPreviewData:ByteArray;
+		public var colorPreviewData:TrackedByteArray;
 		public var colorPreviewBitmap:BitmapData;
-		public var normalSpecularPreviewData:ByteArray;
+		public var normalSpecularPreviewData:TrackedByteArray;
 		public var lastSavedOnDateMs:Number;
 		public var surfaceID : uint;	// currently only used when id == DEFAULT_VO_ID
 
@@ -40,12 +40,12 @@ package net.psykosoft.psykopaint2.core.data
 			var clone : PaintingInfoVO = new PaintingInfoVO();
 			if (thumbnail) clone.thumbnail = thumbnail.clone();
 			if (colorPreviewData) {
-				clone.colorPreviewData = new ByteArray();
+				clone.colorPreviewData = new TrackedByteArray();
 				clone.colorPreviewData.writeBytes(colorPreviewData);
 			}
 			if (colorPreviewBitmap) clone.colorPreviewBitmap = colorPreviewBitmap.clone();
 
-			clone.normalSpecularPreviewData = new ByteArray();
+			clone.normalSpecularPreviewData = new TrackedByteArray();
 			clone.normalSpecularPreviewData.writeBytes(normalSpecularPreviewData);
 			clone.lastSavedOnDateMs = lastSavedOnDateMs;
 			clone.fileVersion = fileVersion;

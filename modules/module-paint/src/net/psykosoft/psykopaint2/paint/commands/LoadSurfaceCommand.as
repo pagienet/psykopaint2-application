@@ -3,14 +3,15 @@ package net.psykosoft.psykopaint2.paint.commands
 
 	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
-
+	
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-
+	
 	import robotlegs.bender.framework.api.IContext;
 
 	// TODO: Identifying surfaces using indices is error prone, should be actual ids into a (xml) database rather than some hardcoded array
@@ -62,7 +63,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			loadNormalSpecularData();
 		}
 
-		private function onColorDataLoaded( bytes:ByteArray ):void {
+		private function onColorDataLoaded( bytes:TrackedByteArray ):void {
 			bytes.uncompress();
 			_loadedSurfaceData.color = bytes;
 
@@ -76,7 +77,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + _assetSize + ".surf", onSurfaceLoaded );
 		}
 
-		private function onSurfaceLoaded( bytes:ByteArray ):void {
+		private function onSurfaceLoaded( bytes:TrackedByteArray ):void {
 			var unCompressTime:uint = getTimer();
 			bytes.uncompress();
 			ConsoleView.instance.log( this, "onSurfaceLoaded - un-compress time - " + String( getTimer() - unCompressTime ) );

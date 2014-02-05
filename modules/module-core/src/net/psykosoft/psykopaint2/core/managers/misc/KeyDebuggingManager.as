@@ -38,7 +38,7 @@ package net.psykosoft.psykopaint2.core.managers.misc
 					var unDisposedObjects:UndisposedObjects = UndisposedObjects.getInstance();
 					unDisposedObjects.getStackTraceReport().forEach(
 						function ( item:Object, index:int, vector:Vector.<Object> ):void {
-							trace( "Usage count: " + item.count + "\n\n" + item.stackTrace + "\n---------------\n\n" );
+							trace( "Usage count: " + item.count + "\nSize in memory: " + item.size + "\n\n" + item.stackTrace + "\n---------------\n\n" );
 						}
 					);
 

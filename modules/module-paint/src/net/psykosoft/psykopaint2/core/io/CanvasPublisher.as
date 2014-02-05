@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.io
 	import avm2.intrinsics.memory.si8;
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.managers.misc.IOAneManager;
@@ -43,7 +44,7 @@ package net.psykosoft.psykopaint2.core.io
 		private var _paintingData : PaintingDataVO;
 		private var _exportingStage : int;
 		private var _workerBitmapData : BitmapData;
-		private var _mergeBuffer : ByteArray;
+		private var _mergeBuffer : TrackedByteArray;
 		private var _context3D : Context3D;
 		private var _sourceRect : Rectangle;
 		private var _destRect : Rectangle;
@@ -140,7 +141,7 @@ package net.psykosoft.psykopaint2.core.io
 		private function extractNormalsColor() : void
 		{
 //			ConsoleView.instance.log( this, "extractNormalsColor stage..." );
-			_mergeBuffer = new ByteArray();
+			_mergeBuffer = new TrackedByteArray();
 			_mergeBuffer.length = _canvas.width * _canvas.height * 8;
 			extractChannels(_mergeBuffer, 0, _canvas.normalSpecularMap, _copySubTextureChannelsRGB);
 		}
@@ -173,7 +174,7 @@ package net.psykosoft.psykopaint2.core.io
 			context3D.drawToBitmapData(_workerBitmapData);
 			var scaledBitmapData : BitmapData = new TrackedBitmapData(_sourceThumbWidth, _sourceThumbWidth/_canvas.width*_canvas.height);
 			scaledBitmapData.drawWithQuality(_workerBitmapData, new Matrix(_sourceThumbWidth/_canvas.width, 0, 0, _sourceThumbWidth/_canvas.width), null, null, null, true, StageQuality.BEST);
-			_paintingData.sourceImageData = scaledBitmapData.encode(scaledBitmapData.rect, new PNGEncoderOptions());
+			_paintingData.sourceImageData =  scaledBitmapData.encode(scaledBitmapData.rect, new PNGEncoderOptions());
 			scaledBitmapData.dispose();
 		}
 
@@ -192,7 +193,7 @@ package net.psykosoft.psykopaint2.core.io
 			dispatchEvent(new CanvasPublishEvent(CanvasPublishEvent.COMPLETE, _paintingData));
 		}
 
-		private function mergeRGBAData() : ByteArray
+		private function mergeRGBAData() : TrackedByteArray
 		{
 //			var time : int = getTimer();
 			var len : int = _canvas.width * _canvas.height * 4;
@@ -207,7 +208,7 @@ package net.psykosoft.psykopaint2.core.io
 				mergeRGBADataAS3Pure(len);
 			}
 
-			var buffer : ByteArray = _mergeBuffer;
+			var buffer : TrackedByteArray = _mergeBuffer;
 			_mergeBuffer = null;
 			buffer.length = len;
 			return buffer;

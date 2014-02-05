@@ -2,12 +2,12 @@ package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
 	import flash.utils.setTimeout;
-
+	
 	import net.psykosoft.psykopaint2.app.signals.NotifyFrozenBackgroundCreatedSignal;
-
-	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.states.State;
+	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.utils.data.ByteArrayUtil;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingDataVO;
 	import net.psykosoft.psykopaint2.core.data.SurfaceDataVO;
@@ -130,7 +130,7 @@ package net.psykosoft.psykopaint2.app.states
 			var vo : PaintingDataVO = new PaintingDataVO();
 			vo.width = CoreSettings.STAGE_WIDTH;
 			vo.height = CoreSettings.STAGE_HEIGHT;
-			vo.sourceImageData = _croppedBitmapData.getPixels(_croppedBitmapData.rect);
+			vo.sourceImageData =  _croppedBitmapData.getPixels(_croppedBitmapData.rect);
 			if (surface.color) {
 				vo.colorBackgroundOriginal = surface.color;
 				vo.colorData = ByteArrayUtil.createBlankColorData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, 0x00000000);

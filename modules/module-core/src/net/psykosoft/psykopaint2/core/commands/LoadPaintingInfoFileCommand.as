@@ -1,14 +1,13 @@
 package net.psykosoft.psykopaint2.core.commands
 {
 
-	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
-
 	import flash.events.Event;
-
-	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
-
+	
+	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
+	
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryIoUtil;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoDeserializer;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
@@ -47,19 +46,19 @@ package net.psykosoft.psykopaint2.core.commands
 			_as3ReadUtil.readBytesAsync( preFileName + fileName, onAs3FileRead );
 		}
 
-		private function onAs3FileRead( bytes:ByteArray ):void {
+		private function onAs3FileRead( bytes:TrackedByteArray ):void {
 			if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) bytes.uncompress();
 			onFileRead( bytes );
 		}
 
 		private function readANE():void {
-			var bytes:ByteArray = new ByteArray();
+			var bytes:TrackedByteArray = new TrackedByteArray();
 	   		if( CoreSettings.USE_COMPRESSION_ON_PAINTING_FILES ) ioAne.extension.readWithDeCompression( bytes, fileName );
 			else ioAne.extension.read( bytes, fileName );
 			onFileRead( bytes );
 		}
 
-		private function onFileRead( bytes:ByteArray ):void {
+		private function onFileRead( bytes:TrackedByteArray ):void {
 
 			trace( this, "file read: " + bytes.length + " bytes" );
 			trace( this, "de-serializing vo..." );

@@ -1,9 +1,9 @@
 package net.psykosoft.psykopaint2.core.data
 {
 	import flash.utils.ByteArray;
-
+	
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.debug.UndisposedObjects;
 
 	public class PaintingDataVO
@@ -11,8 +11,8 @@ package net.psykosoft.psykopaint2.core.data
 		public var colorData:ByteArray;
 		public var normalSpecularData:ByteArray;
 		public var sourceImageData:ByteArray;
-		public var normalSpecularOriginal:ByteArray;
-		public var colorBackgroundOriginal : ByteArray;
+		public var normalSpecularOriginal:TrackedByteArray;
+		public var colorBackgroundOriginal : TrackedByteArray;
 		public var width:uint;
 		public var height:uint;
 

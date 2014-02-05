@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.core.data
 
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
+	
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
 	public class PaintingInfoVOFactory
 	{
@@ -39,10 +41,10 @@ package net.psykosoft.psykopaint2.core.data
 		}
 
 		// TODO: extremely slow, use native approach?
-		private function reduceSurface( bytes:ByteArray, sourceWidth:uint, sourceHeight:uint, factor:uint ):ByteArray {
+		private function reduceSurface( bytes:ByteArray, sourceWidth:uint, sourceHeight:uint, factor:uint ):TrackedByteArray {
 			var outputWidth : uint = sourceWidth / factor;
 			var outputHeight : uint = sourceHeight / factor;
-			var reducedBytes:ByteArray = new ByteArray();
+			var reducedBytes:TrackedByteArray = new TrackedByteArray();
 			var sampleX : uint, sampleY : uint = 0;
 
 			for( var y : uint = 0; y < outputHeight; ++y ) {

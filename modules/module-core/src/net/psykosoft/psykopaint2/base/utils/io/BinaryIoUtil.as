@@ -8,6 +8,8 @@ package net.psykosoft.psykopaint2.base.utils.io
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	import flash.utils.ByteArray;
+	
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
 	public class BinaryIoUtil
 	{
@@ -123,7 +125,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 
 		private function onReadBytesAsyncComplete( event:Event ):void {
 			trace( this, "async reading bytes done - filename: " + _fileName );
-			var bytes:ByteArray = new ByteArray();
+			var bytes:TrackedByteArray = new TrackedByteArray();
 			_fileStream.readBytes( bytes, 0, _fileStream.bytesAvailable );
 			if( _onReadCompleteCallback != null) _onReadCompleteCallback( bytes );
 			_onReadCompleteCallback = null;

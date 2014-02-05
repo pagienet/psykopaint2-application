@@ -1,7 +1,7 @@
 package net.psykosoft.psykopaint2.core.data
 {
 
-	import flash.utils.ByteArray;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
 	public class PaintingDataDeserializer
 	{
@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.core.data
 		{
 		}
 
-		public function deserialize(bytes : ByteArray) : PaintingDataVO
+		public function deserialize(bytes : TrackedByteArray) : PaintingDataVO
 		{
 			var vo : PaintingDataVO = new PaintingDataVO();
 
@@ -39,6 +39,9 @@ package net.psykosoft.psykopaint2.core.data
 			if (bytes.bytesAvailable > 0)
 				vo.colorBackgroundOriginal = PaintingFileUtils.decodeImage(bytes, vo.width, vo.height);
 
+			//Hopefully this is okay to do here:
+			bytes.clear();
+			
 			return vo;
 		}
 

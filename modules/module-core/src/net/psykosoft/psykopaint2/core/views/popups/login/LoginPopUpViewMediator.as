@@ -4,9 +4,9 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.StringUtil;
-
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.UserRegistrationVO;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
@@ -126,9 +126,9 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			view.signupSubView.signupBtn.dontSpin();
 
 			// Send profile images using a separate service call.
-			var largeBytes:ByteArray = new ByteArray();
+			var largeBytes:TrackedByteArray = new TrackedByteArray();
 			_photoLarge.copyPixelsToByteArray( _photoLarge.rect, largeBytes );
-			var smallBytes:ByteArray = new ByteArray();
+			var smallBytes:TrackedByteArray = new TrackedByteArray();
 			_photoSmall.copyPixelsToByteArray( _photoSmall.rect, smallBytes );
 			loggedInUserProxy.sendProfileImages( largeBytes, smallBytes );
 

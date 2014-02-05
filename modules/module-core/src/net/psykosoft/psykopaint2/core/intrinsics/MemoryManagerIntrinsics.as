@@ -1,13 +1,14 @@
 package net.psykosoft.psykopaint2.core.intrinsics
 {
 	import flash.system.ApplicationDomain;
-	import flash.utils.ByteArray;
 	import flash.utils.Endian;
+	
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	
 	public class MemoryManagerIntrinsics
 	{
 		static private const memoryBlocks:Vector.<int> = new Vector.<int>();
-		static public const memory:ByteArray = new ByteArray();
+		static public const memory:TrackedByteArray = new TrackedByteArray();
 		static private var reservedMemory:int = 0;
 		
 		public function MemoryManagerIntrinsics()

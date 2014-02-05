@@ -2,6 +2,8 @@ package net.psykosoft.psykopaint2.core.data
 {
 	import flash.display.PNGEncoderOptions;
 	import flash.utils.ByteArray;
+	
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 
 	public class PaintingInfoSerializer
 	{
@@ -9,9 +11,9 @@ package net.psykosoft.psykopaint2.core.data
 		{
 		}
 
-		public function serialize(vo : PaintingInfoVO) : ByteArray
+		public function serialize(vo : PaintingInfoVO) : TrackedByteArray
 		{
-			var bytes:ByteArray = new ByteArray();
+			var bytes:TrackedByteArray = new TrackedByteArray();
 
 			// Thumbnail bmd -> jpg.
 			var thumbnailPNGBytes:ByteArray = vo.thumbnail.encode( vo.thumbnail.rect, new PNGEncoderOptions() );
@@ -33,6 +35,7 @@ package net.psykosoft.psykopaint2.core.data
 			bytes.writeBytes( vo.normalSpecularPreviewData, 0, len );
 
 			bytes.position = 0;
+			thumbnailPNGBytes.clear();
 			return bytes;
 		}
 	}

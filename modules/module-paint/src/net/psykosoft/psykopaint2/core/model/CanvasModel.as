@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.model
 	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
@@ -48,8 +49,8 @@ package net.psykosoft.psykopaint2.core.model
 		private var _colorTransfer : ColorTransfer;
 
 		// TODO: should originals be a string path to packaged asset?
-		private var _normalSpecularOriginal : ByteArray;		// used during export (reference)
-		private var _colorBackgroundOriginal : ByteArray;		// used during export (reference)
+		private var _normalSpecularOriginal : TrackedByteArray;		// used during export (reference)
+		private var _colorBackgroundOriginal : TrackedByteArray;		// used during export (reference)
 
 		public function CanvasModel()
 		{
@@ -182,7 +183,7 @@ package net.psykosoft.psykopaint2.core.model
 			}
 		}
 
-		public function setColorBackgroundOriginal(value : ByteArray) : void
+		public function setColorBackgroundOriginal(value : TrackedByteArray) : void
 		{
 			if (_colorBackgroundOriginal) _colorBackgroundOriginal.clear();
 
@@ -219,7 +220,7 @@ package net.psykosoft.psykopaint2.core.model
 				_normalSpecularMap = createCanvasTexture(true);
 		}
 
-		public function setNormalSpecularOriginal(value : ByteArray) : void
+		public function setNormalSpecularOriginal(value : TrackedByteArray) : void
 		{
 			if (_normalSpecularOriginal)
 				_normalSpecularOriginal.clear();
@@ -325,12 +326,12 @@ package net.psykosoft.psykopaint2.core.model
 			_normalSpecularOriginal.length = oldLen;
 		}
 
-		public function getColorBackgroundOriginal() : ByteArray
+		public function getColorBackgroundOriginal() : TrackedByteArray
 		{
 			return _colorBackgroundOriginal;
 		}
 
-		public function getNormalSpecularOriginal() : ByteArray
+		public function getNormalSpecularOriginal() : TrackedByteArray
 		{
 			return _normalSpecularOriginal;
 		}

@@ -2,14 +2,15 @@ package net.psykosoft.psykopaint2.home.commands
 {
 
 	import flash.utils.ByteArray;
-
+	
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
 	import net.psykosoft.psykopaint2.base.utils.io.BinaryLoader;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
-
+	
 	import robotlegs.bender.framework.api.IContext;
 
 	public class LoadSurfacePreviewCommand extends TracingCommand
@@ -29,8 +30,8 @@ package net.psykosoft.psykopaint2.home.commands
 		private static var _busy:Boolean;
 
 		private var _byteLoader:BinaryLoader;
-		private var _loadedNormalSpecularData:ByteArray;
-		private var _loadedColorData:ByteArray;
+		private var _loadedNormalSpecularData:TrackedByteArray;
+		private var _loadedColorData:TrackedByteArray;
 
 		public function LoadSurfacePreviewCommand() {
 			super();
@@ -70,7 +71,7 @@ package net.psykosoft.psykopaint2.home.commands
 			loadNormalSpecularData();
 		}
 
-		private function onColorDataLoaded( bytes:ByteArray ):void {
+		private function onColorDataLoaded( bytes:TrackedByteArray ):void {
 			_loadedColorData = bytes;
 			_byteLoader.dispose();
 			_byteLoader= null;
@@ -82,7 +83,7 @@ package net.psykosoft.psykopaint2.home.commands
 			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_512.surf", onSurfaceLoaded );
 		}
 
-		private function onSurfaceLoaded( bytes:ByteArray ):void {
+		private function onSurfaceLoaded( bytes:TrackedByteArray ):void {
 			_loadedNormalSpecularData = bytes;
 			_byteLoader.dispose();
 			_byteLoader = null;
@@ -123,10 +124,10 @@ package net.psykosoft.psykopaint2.home.commands
 				_loadedColorData = null;
 			}
 			else {
-				vo.colorPreviewData = new ByteArray();
+				vo.colorPreviewData = new TrackedByteArray();
 				vo.colorPreviewData.length = vo.width * vo.height * 4;	// will fill with zeroes
 			}
-			vo.normalSpecularPreviewData = new ByteArray();
+			vo.normalSpecularPreviewData = new TrackedByteArray();
 			vo.normalSpecularPreviewData = _loadedNormalSpecularData;
 			vo.normalSpecularPreviewData.uncompress();
 			_loadedNormalSpecularData = null;
