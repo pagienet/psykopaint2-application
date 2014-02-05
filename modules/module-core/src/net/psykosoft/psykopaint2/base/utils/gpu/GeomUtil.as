@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 
 	import away3d.containers.ObjectContainer3D;
 	import away3d.entities.Sprite3D;
+	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.materials.TextureMaterial;
 	import away3d.textures.BitmapTexture;
 
@@ -51,7 +52,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 			tf.setTextFormat( format );
 			var bmd:BitmapData = new TrackedBitmapData( size, size, false, 0x00FF00 );
 			bmd.draw( tf );
-			var tracer:Sprite3D = new Sprite3D( new TextureMaterial( new BitmapTexture( bmd ) ), size, size );
+			var tracer:Sprite3D = new Sprite3D( new TextureMaterial( new TrackedBitmapTexture( bmd ) ), size, size );
 			tracer.position = object.transform.transformVector( new Vector3D( vx, vy, vz ) );
 			object.parent.addChild( tracer );
 		}

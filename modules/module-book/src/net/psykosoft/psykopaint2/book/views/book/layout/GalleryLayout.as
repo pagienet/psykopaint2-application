@@ -1,7 +1,8 @@
 package net.psykosoft.psykopaint2.book.views.book.layout
 {
+	import away3d.core.managers.Stage3DProxy;
+
 	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
-	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 	import net.psykosoft.psykopaint2.book.views.models.BookData;
 	import net.psykosoft.psykopaint2.book.views.models.BookGalleryData;
@@ -17,7 +18,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import flash.geom.Rectangle;
 	import flash.display.Stage;
 	import flash.display.BitmapData;
-	import flash.display.Graphics;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.text.TextField;
@@ -56,9 +56,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _bmCommentMask:BitmapData;
 		private var _bmHeartMask:BitmapData;
 		 
-		public function GalleryLayout(stage:Stage, previousLayout:LayoutBase = null)
+		public function GalleryLayout(stage:Stage, stage3dProxy : Stage3DProxy, previousLayout:LayoutBase = null)
 		{
-			super(ImageCollectionSource.GALLERY_IMAGES, stage, previousLayout);
+			super(ImageCollectionSource.GALLERY_IMAGES, stage, stage3dProxy, previousLayout);
 		}
 
 		override protected function initDefaultAssets():void
@@ -223,10 +223,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 				if(_baseMask && (_baseMask.width != insertSource.width || _baseMask.height != insertSource.height) ){
 					_baseMask.dispose();
-					_baseMask = new BitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
+					_baseMask = new TrackedBitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
 
 				} else if(!_baseMask){
-					_baseMask = new BitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
+					_baseMask = new TrackedBitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
 				}
 				//insert the image loaded into diffuse map. no need to dispose map, its being reused and finally destroyed when all is constructed
 				insert(insertSource, diffuseSourceBitmapdata, insertRect, rotation, true, true);

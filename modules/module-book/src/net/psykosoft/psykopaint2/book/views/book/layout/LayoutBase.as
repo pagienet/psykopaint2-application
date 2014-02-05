@@ -1,5 +1,9 @@
 package net.psykosoft.psykopaint2.book.views.book.layout
 {
+	import away3d.core.managers.Stage3DProxy;
+
+	import flash.display.Stage3D;
+
 	import net.psykosoft.psykopaint2.book.views.book.data.PageMaterialsManager;
 	import net.psykosoft.psykopaint2.book.views.book.data.BlankBook;
 	import net.psykosoft.psykopaint2.book.views.book.layout.CompositeHelper;
@@ -49,7 +53,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
  		public var requiredCraftSignal:Signal;
  		public var regionSignal:Signal;
  		
-     	public function LayoutBase(type:String, stage:Stage, previousLayout:LayoutBase = null)
+     	public function LayoutBase(type:String, stage:Stage, stage3dProxy : Stage3DProxy, previousLayout:LayoutBase = null)
  		{
  			_layoutType = type;
  			_stage = stage;
@@ -65,7 +69,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	 			_blankBook = previousLayout.blankBook;
 	 			_compositeHelper = previousLayout.compositeHelper;
  			} else {
-	 			_pageMaterialsManager = new PageMaterialsManager();
+	 			_pageMaterialsManager = new PageMaterialsManager(stage3dProxy);
 	 			_blankBook = new BlankBook(this);
 	 			_pageMaterialsManager.blankBook = _blankBook;
 	 			_compositeHelper = new CompositeHelper();
@@ -191,7 +195,6 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			var bmdPage:BitmapData = _blankBook.getNumberedBasePageBitmapData(index);
 			var numberedPageMaterial:TextureMaterial  = _pageMaterialsManager.registerMarginPageMaterial(index, bmdPage);
-			 
 			return numberedPageMaterial;
 		}
 
@@ -199,7 +202,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		{
 			var bmdPage:BitmapData = _blankBook.getEmptyPageBitmapData(index);
 			var emptyPageMaterial:TextureMaterial  = _pageMaterialsManager.registerContentPageMaterial(index, bmdPage);
-			
+
 			return emptyPageMaterial;
 		}
 
@@ -393,7 +396,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 				}
 			}
 			//debug
-			//var bmd:BitmapData = new BitmapData(300, 200, false, 0xFF0000);
+			//var bmd:BitmapData = new TrackedBitmapData(300, 200, false, 0xFF0000);
 			//composite(bmd, BookData( _loadQueue[_loadIndex]) );
 			//continueLoading();
 		}

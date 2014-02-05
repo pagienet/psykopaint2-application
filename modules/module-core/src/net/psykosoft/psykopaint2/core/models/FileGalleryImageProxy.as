@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2.core.models
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class FileGalleryImageProxy extends GalleryImageProxy
 	{
 		// public for convenience, not accessible through views as interface anyway
@@ -90,7 +92,7 @@ package net.psykosoft.psykopaint2.core.models
 			var bitmapData : BitmapData = Bitmap(loader.content).bitmapData;
 			if (_sizeHint == ImageThumbnailSize.SMALL) {
 				var source : BitmapData = bitmapData;
-				bitmapData = new BitmapData(source.width *.5, source.height *.5, false);
+				bitmapData = new TrackedBitmapData(source.width *.5, source.height *.5, false);
 				bitmapData.drawWithQuality(source, _scaleDownMatrix, null, null, null, true, StageQuality.BEST);
 
 				source.dispose();

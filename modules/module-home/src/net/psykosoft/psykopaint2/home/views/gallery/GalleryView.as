@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.hacks.MaskingMethod;
 	import away3d.hacks.PaintingMaterial;
 	import away3d.hacks.StencilMethod;
+	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.lights.LightBase;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
@@ -31,6 +32,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
@@ -170,7 +173,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function initHighQualityMaterial():void
 		{
-			_highQualityColorTexture = new BitmapTexture(null);
+			_highQualityColorTexture = new TrackedBitmapTexture(null);
 			_highQualityNormalSpecularTexture = new ByteArrayTexture(null, 0, 0);
 
 			/*_highQualityMaterial = new TextureMaterial(null, true, false, false);
@@ -430,7 +433,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function initLoadingTexture() : void
 		{
-			var bitmapData : BitmapData = new BitmapData(16, 16);
+			var bitmapData : BitmapData = new TrackedBitmapData(16, 16);
 			bitmapData.perlinNoise(4, 4, 8, 6, false, true, 7, true);
 
 			_loadingTexture = new BitmapTexture(bitmapData);
@@ -654,7 +657,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var width : Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.width);
 			var height : Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.height);
-			var legalBitmap : BitmapData = new BitmapData(width, height, false);
+			var legalBitmap : BitmapData = new TrackedBitmapData(width, height, false);
 			legalBitmap.copyPixels(galleryVO.colorData, galleryVO.colorData.rect, new Point());
 
 			_highQualityColorTexture.bitmapData = legalBitmap;

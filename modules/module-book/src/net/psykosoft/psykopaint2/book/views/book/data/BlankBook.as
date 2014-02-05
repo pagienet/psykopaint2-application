@@ -39,9 +39,13 @@ package net.psykosoft.psykopaint2.book.views.book.data
 		private var _pageSprite:Sprite;
 		private var _paperBM:Bitmap;
  		private var _layoutBase:LayoutBase;
+
+		// horrible horrible disposal hack
+		private var _disposables : Vector.<BitmapData>;
  
 		function BlankBook(layoutBase:LayoutBase){
 			_layoutBase = layoutBase;
+			_disposables = new Vector.<BitmapData>();
 			init();
 		}
 
@@ -110,11 +114,12 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			switch(type){
 				case 0:
 					_craftMap = e.data;
-					if(_ringsMap)_layoutBase.dispatchCraftReady(_craftMap, _ringsMap);
+					notifyCraftReadyIfPossible();
+
 					break;
 				case 1:
 					_ringsMap = e.data;
-					if(_craftMap)_layoutBase.dispatchCraftReady(_craftMap, _ringsMap);
+					notifyCraftReadyIfPossible();
 					break;
 
 				
@@ -151,6 +156,17 @@ package net.psykosoft.psykopaint2.book.views.book.data
 				_layoutBase.dispatchMinimumRequiredReady();
 			} 
  
+		}
+
+		private function notifyCraftReadyIfPossible():void
+		{
+			if (_craftMap && _ringsMap) {
+				_layoutBase.dispatchCraftReady(_craftMap, _ringsMap);
+				_craftMap.dispose();
+				_ringsMap.dispose();
+				_craftMap = null;
+				_ringsMap = null;
+			}
 		}
 
 		private function prepareBasePage():void
@@ -220,7 +236,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
 			var pageBitmapData:TrackedBitmapData = new TrackedBitmapData(BookPageSize.WIDTH, BookPageSize.HEIGHT, false);
 			pageBitmapData.draw(_pageSprite, null, null, "normal", null, true);
-			
+			_disposables.push(pageBitmapData);
 			return pageBitmapData;
 		}
 
@@ -260,16 +276,29 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			if(_shadowPictMap) _shadowPictMap.dispose();
 			if(_craftMap) _craftMap.dispose();
 			if(_ringsMap) _ringsMap.dispose();
-			
+
+			var i:uint;
+
 			_pageNumber_txt = null;
 			_pageSprite = null;
 			if(_enviroSources){
-				for(var i:uint = 0;i<_enviroSources.length;++i){
+				for(i = 0;i<_enviroSources.length;++i){
 					if(_enviroSources[i]) _enviroSources[i].dispose();
 				}
 				_enviroSources = null;
 			}
-			trace("elo");
+
+			if (_disposables) {
+				for (i = 0; i < _disposables.length; ++i) {
+					try {
+						_disposables[i].dispose();
+					}
+					catch(e:Error) {
+						// see if I care
+					}
+				}
+				_disposables = null;
+			}
 		}
 
  	}

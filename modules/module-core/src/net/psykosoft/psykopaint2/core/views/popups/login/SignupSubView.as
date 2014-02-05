@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.misc.MathUtil;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.views.components.button.FoldButton;
 	import net.psykosoft.psykopaint2.core.views.components.input.PsykoInput;
@@ -71,7 +72,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			_photoBitmap = new Bitmap();
 			_photoBitmap.visible = false;
-			_photoBitmap.bitmapData = new BitmapData( 115, 115, false, 0xFF0000 );
+			_photoBitmap.bitmapData = new TrackedBitmapData( 115, 115, false, 0xFF0000 );
 			photoHolder.addChild( _photoBitmap );
 
 			cameraHit.addEventListener( MouseEvent.CLICK, onCameraHitClick );

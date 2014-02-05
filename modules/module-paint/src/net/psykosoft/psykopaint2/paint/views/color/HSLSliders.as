@@ -8,7 +8,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	
 	public class HSLSliders extends Sprite
@@ -47,9 +49,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 		
 		public function setup():void
 		{
-			hueMap = new BitmapData(256,1,false,0);
-			satMap = new BitmapData(256,1,false,0);
-			lightnessMap = new BitmapData(256,1,false,0);
+			hueMap = new TrackedBitmapData(256,1,false,0);
+			satMap = new TrackedBitmapData(256,1,false,0);
+			lightnessMap = new TrackedBitmapData(256,1,false,0);
 			generateHueAndLightnessSliders();
 			
 			hslSliderHolder = new Sprite();

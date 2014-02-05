@@ -13,7 +13,9 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import ru.inspirit.utils.FluidSolver;
 	
 	public class FluidColorMixer extends Sprite
@@ -36,7 +38,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		
 		private const fSolver:FluidSolver = new FluidSolver( FLUID_WIDTH, int( FLUID_WIDTH * sh / sw ) );
 		
-		private var fluid:BitmapData = new BitmapData(fSolver.width - 2, fSolver.height - 2, false, 0);
+		private var fluid:BitmapData = new TrackedBitmapData(fSolver.width - 2, fSolver.height - 2, false, 0);
 		private var displayMap:BitmapData = new BitmapData(sw,sh, true, 0);
 		
 		
@@ -44,7 +46,7 @@ package net.psykosoft.psykopaint2.core.views.components.colormixer
 		
 		private var drawMatrix:Matrix = new Matrix(DRAW_SCALE, 0, 0, DRAW_SCALE, 0, 0);
 		private var drawColor:ColorTransform = new ColorTransform(0.1, 0.1, 0.1);
-		
+
 		private var prevMouse:Point = new Point();
 		private var fluidImage:Bitmap;
 		private var fluidMatrix:Matrix = new Matrix(displayMap.width / fluid.width,0,0, displayMap.height / fluid.height);

@@ -134,17 +134,17 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	 				case ImageCollectionSource.SAMPLE_IMAGES:
 	 					insertCount = NativeSamplesLayout.INSERTS_COUNT;
-	 					_layout = new NativeSamplesLayout(_stage, previousLayout);
+	 					_layout = new NativeSamplesLayout(_stage, _view.stage3DProxy, previousLayout);
 	 					break;
 
 	 				case ImageCollectionSource.CAMERAROLL_IMAGES:
 	 					insertCount = CameraSamplesLayout.INSERTS_COUNT;
-	 					_layout = new CameraSamplesLayout(_stage, previousLayout);
+	 					_layout = new CameraSamplesLayout(_stage, _view.stage3DProxy, previousLayout);
 	 					break;
 
 	 				default:
 	 					insertCount = CameraSamplesLayout.INSERTS_COUNT;
-	 					_layout = new NativeSamplesLayout(_stage, previousLayout);
+	 					_layout = new NativeSamplesLayout(_stage, _view.stage3DProxy, previousLayout);
 
 	 			}
 
@@ -198,7 +198,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			}
  			
  			if(!_layout){
-				_layout = new GalleryLayout(_stage, previousLayout);
+				_layout = new GalleryLayout(_stage, _view.stage3DProxy, previousLayout);
 				_currentLayoutInsertCount = insertCount;
 
 	 			if(previousLayout) previousLayout = null;

@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.app.states
 
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
@@ -66,7 +67,7 @@ package net.psykosoft.psykopaint2.app.states
 			requestStateChangeSignal.dispatch(NavigationStateType.CROP_SKIP);
 
 			if (bitmapData.width != CoreSettings.STAGE_WIDTH || bitmapData.height != CoreSettings.STAGE_HEIGHT) {
-				var newBitmapData : BitmapData = new BitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false);
+				var newBitmapData : BitmapData = new TrackedBitmapData(CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT, false);
 				var matrix : Matrix = new Matrix(CoreSettings.STAGE_WIDTH/bitmapData.width, 0, 0, CoreSettings.STAGE_HEIGHT/bitmapData.height);
 				newBitmapData.draw(bitmapData, matrix, null, null, null, true);
 				bitmapData.dispose();

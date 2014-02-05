@@ -13,6 +13,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import flash.media.MediaPromise;
 	import flash.media.MediaType;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 
 	import org.osflash.signals.Signal;
@@ -101,7 +103,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			_imageLoader.contentLoaderInfo.removeEventListener( Event.COMPLETE, asyncImageLoaded );
 			_imageLoader.removeEventListener( IOErrorEvent.IO_ERROR, cameraError );
 
-			var bmd:BitmapData = new BitmapData( _imageLoader.width, _imageLoader.height, false, 0 );
+			var bmd:BitmapData = new TrackedBitmapData( _imageLoader.width, _imageLoader.height, false, 0 );
 			bmd.draw( _imageLoader );
 
 			imageRetrievedSignal.dispatch( bmd );

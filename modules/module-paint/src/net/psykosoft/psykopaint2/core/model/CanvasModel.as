@@ -114,7 +114,7 @@ package net.psykosoft.psykopaint2.core.model
 		{
 			
 			if (!sourceBitmapData) {
-				sourceBitmapData = new BitmapData(1024,768,false,0xffffffff);
+				sourceBitmapData = new TrackedBitmapData(1024,768,false,0xffffffff);
 			}
 			
 			/*

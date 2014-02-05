@@ -1,30 +1,29 @@
 package net.psykosoft.psykopaint2.book.views.book.data
 {
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.materials.TextureMaterial;
 	import away3d.textures.BitmapTexture;
-	import away3d.materials.SinglePassMaterialBase;
 	import away3d.textures.BitmapCubeTexture;
 	import away3d.materials.methods.EnvMapMethod;
 	import away3d.materials.SinglePassMaterialBase;
 	import away3d.tools.utils.TextureUtils;
-	import away3d.materials.ColorMaterial;
 	import away3d.materials.MaterialBase;
 	import away3d.materials.methods.EffectMethodBase;
 
-	import flash.display.BitmapData;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.display.BitmapData;
 	import flash.utils.Dictionary;
 
-	import net.psykosoft.psykopaint2.book.views.book.data.BlankBook;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
 
  	public class PageMaterialsManager
  	{
  		private var _materials:Dictionary;
- 		private var _textures:Dictionary;
- 		private var _defaultPageMaterial:TextureMaterial;
+ 		private var _textures:Vector.<BitmapTexture>;
  		private var _pageBitmapCubeTexture:BitmapCubeTexture;
  		private var _craftMaterial:TextureMaterial;
  		private var _ringsMaterial:TextureMaterial;
@@ -33,11 +32,14 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		private var _maskBitmap:BitmapData;
  		private var _hasEnviro:Boolean;
  		private var _materialsCount:uint = 0;
- 
-     		public function PageMaterialsManager()
+		private var _stage3DProxy:Stage3DProxy;
+		private var _enviroMasks:Array = [];
+
+     	public function PageMaterialsManager(stage3Dproxy : Stage3DProxy)
  		{
+			_stage3DProxy = stage3Dproxy;
  			_materials = new Dictionary();
- 			_textures = new Dictionary();
+ 			_textures = new Vector.<BitmapTexture>();
  			_hasNuffPower = PlatformUtil.hasRequiredPerformanceRating(2);
  		}
 
@@ -61,12 +63,12 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			var bt:BitmapTexture;
 			if(_craftMaterial){
 				bt = applyEnviroMethod(_craftMaterial);
- 				if(bt) _textures["craft"] = bt;
+ 				if(bt) _textures.push(bt);
 			}
 
 			if(_ringsMaterial){
 				bt = applyEnviroMethod(_ringsMaterial);
- 				if(bt) _textures["rings"] = bt;
+				if(bt) _textures.push(bt);
 			}
 
  		}
@@ -78,7 +80,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  			if(_hasNuffPower && _hasEnviro){
  				var bt:BitmapTexture = applyEnviroMethod(_craftMaterial);
- 				if(bt) _textures["craft"] = bt;
+				if(bt) _textures.push(bt);
  			}
  		}
 
@@ -88,7 +90,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  			if(_hasNuffPower && _hasEnviro){
  				var bt:BitmapTexture = applyEnviroMethod(_ringsMaterial);
- 				if(bt) _textures["rings"] = bt;
+				if(bt) _textures.push(bt);
  			}
  		}
  
@@ -116,7 +118,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 
  		public function getEnviroMask(index:uint):BitmapTexture
  		{
- 			return _textures["mask"+index];
+ 			return _enviroMasks[index];
  		}
  
  		private function getPageMaterial(id:String):TextureMaterial
@@ -254,18 +256,20 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			_craftMaterial.dispose();
  			_craftMaterial = null;
  			_materials = null;
+			_enviroMasks = null;
 
- 			if(_textures){
- 				var bmd:BitmapData;
+			for (var i : int = 0; i < _textures.length; ++i) {
+				try {
+					_textures[i].dispose();
+					_textures[i].bitmapData.dispose();
+				}
+				catch(e : Error) {
+					// CATCH-ALL TO PREVENT MULTIPLE DISPOSALS
+					// but it's too late to save this demonspawn anyhow
+				}
+			}
 
- 				for(key in _textures){//var key:String
- 					bmd = BitmapTexture(_textures[key]).bitmapData;
- 					bmd.dispose();
- 					_textures[key].dispose();
- 					_textures[key] = null;
-	 			}
-	 			_textures = null;
- 			}
+ 			_textures = null;
 			
 			//several lingering objects I found in the debugger:
 			spm.dispose();
@@ -298,7 +302,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  			if(_hasNuffPower){
  				if(_hasEnviro && ref != -1 ){
  					var bt:BitmapTexture = applyEnviroMethod(textureMaterial);
- 					_textures["mask"+ref] = bt;
+					_enviroMasks[ref] = bt;
  			 		textureMaterial.normalMap = generatePageNormalMap(id);
  			 	}
  			 }
@@ -312,21 +316,19 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		{
  			bitmapData = validateMap(bitmapData);
  
-			var bitmapTexture:BitmapTexture = new BitmapTexture(bitmapData);
+			var bitmapTexture:BitmapTexture = new TrackedBitmapTexture(bitmapData);
 			var textureMaterial:TextureMaterial = new TextureMaterial(bitmapTexture);
-			//if(bitmapData.transparent) textureMaterial.alphaBlending = true;
-
-			//to do once David has the equivallent for BitmapTexture
-			//var bitmapTexture:TrackedTexture = new TrackedTexture(bitmapData);
-			//var textureMaterial:TextureMaterial = new TextureMaterial(bitmapTexture);
+			bitmapTexture.getTextureForStage3D(_stage3DProxy);
+			_textures.push(bitmapTexture);
 
 			return textureMaterial;
 		}
 
 		private function generatePageNormalMap(id:String):BitmapTexture
 		{
-			var bitmapTexture:BitmapTexture = new BitmapTexture(_blankBook.getBasePageNormalmap(true));
-
+			var bitmapTexture:BitmapTexture = new TrackedBitmapTexture(_blankBook.getBasePageNormalmap(true));
+			bitmapTexture.getTextureForStage3D(_stage3DProxy);
+			_textures.push(bitmapTexture);
 			return bitmapTexture;
 		}
 
@@ -336,7 +338,8 @@ package net.psykosoft.psykopaint2.book.views.book.data
 				if(!_maskBitmap) buildMaskEnviro();
 				
 				var enviroMethod:EnvMapMethod = new EnvMapMethod(_pageBitmapCubeTexture, .35);//0.16
-				var bt:BitmapTexture = new BitmapTexture(_maskBitmap.clone());
+				var bt:BitmapTexture = new TrackedBitmapTexture(_maskBitmap.clone());
+				_textures.push(bt);
 				enviroMethod.mask = bt;
 				SinglePassMaterialBase(material).addMethod(enviroMethod);
 
@@ -349,7 +352,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
  		private function buildMaskEnviro():void
 		{
 			var maskColor:uint = 0x222222;
-			_maskBitmap = new BitmapData(512,512, false, maskColor);
+			_maskBitmap = new TrackedBitmapData(512,512, false, maskColor);
 			var h:Number = 35;
 			var rect:Rectangle = new Rectangle(0, 0, 512, h);
 			_maskBitmap.fillRect(rect, 0);
@@ -383,7 +386,7 @@ package net.psykosoft.psykopaint2.book.views.book.data
 			if(nw == origBmd.width && nh == origBmd.height)
 				return origBmd;
 			 
-			var bmd:BitmapData = new BitmapData(nw, nh, origBmd.transparent, origBmd.transparent? 0x00FFFFFF : 0x000000);
+			var bmd:BitmapData = new TrackedBitmapData(nw, nh, origBmd.transparent, origBmd.transparent? 0x00FFFFFF : 0x000000);
 			var w:Number = nw/origBmd.width;
 			var h:Number = nh/origBmd.height;
 			var t:Matrix = new Matrix();

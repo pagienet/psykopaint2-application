@@ -30,7 +30,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
@@ -116,8 +118,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				assignBrushShape();
 			if ( !hitMap )
 			{
-				hitMap = new BitmapData(_canvasModel.width,_canvasModel.height,true,0);
-				hitMap2 = new BitmapData(_canvasModel.width,_canvasModel.height,true,0);
+				hitMap = new TrackedBitmapData(_canvasModel.width,_canvasModel.height,true,0);
+				hitMap2 = new TrackedBitmapData(_canvasModel.width,_canvasModel.height,true,0);
 			} else {
 				hitMap.fillRect(hitMap.rect,0);
 				

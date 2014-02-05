@@ -3,6 +3,8 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.hacks.TrackedATFTexture;
+	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.materials.MaterialBase;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.methods.LightMapMethod;
@@ -313,7 +315,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 
 		private function buildATFMaterial(ba:ByteArray):TextureMaterial
 		{
-			var texture : ATFTexture = new ATFTexture(ba);
+			var texture : ATFTexture = new TrackedATFTexture(ba);
 			var material : TextureMaterial = new TextureMaterial(texture);
 			_textures.push(texture);
 			_materials.push(material);
@@ -322,7 +324,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 
 		private function buildBitmapMaterial(bitmapData:BitmapData):TextureMaterial
 		{
-			var texture : BitmapTexture = new BitmapTexture(bitmapData);
+			var texture : BitmapTexture = new TrackedBitmapTexture(bitmapData);
 			var material : TextureMaterial = new TextureMaterial(texture);
 			texture.getTextureForStage3D(_stage3DProxy);
 			bitmapData.dispose();
@@ -333,7 +335,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 
 		private function addLightMapMethod(material:SinglePassMaterialBase, ba:ByteArray, useSecondaryUV:Boolean):void
 		{
-			var texture:ATFTexture = new ATFTexture(ba);
+			var texture:ATFTexture = new TrackedATFTexture(ba);
 			var lightMap:LightMapMethod = new LightMapMethod(texture, LightMapMethod.MULTIPLY, useSecondaryUV);
 			material.addMethod(lightMap);
 			_textures.push(texture);

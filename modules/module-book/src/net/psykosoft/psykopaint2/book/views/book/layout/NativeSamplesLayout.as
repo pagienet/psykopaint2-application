@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.book.views.book.layout
 {
+	import away3d.core.managers.Stage3DProxy;
 	import away3d.materials.TextureMaterial;
 	import away3d.textures.BitmapTexture;
 
@@ -8,6 +9,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 	import flash.geom.Rectangle;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.PlatformUtil;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.models.ImageCollectionSource;
 	import net.psykosoft.psykopaint2.book.views.models.BookData;
 	import net.psykosoft.psykopaint2.book.views.book.layout.LayoutBase;
@@ -24,9 +26,9 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 		private var _shadow:BitmapData;
 		private var _baseMask:BitmapData;
 
-		public function NativeSamplesLayout(stage:Stage, previousLayout:LayoutBase = null)
+		public function NativeSamplesLayout(stage:Stage, stage3dProxy : Stage3DProxy, previousLayout:LayoutBase = null)
 		{
-			super(ImageCollectionSource.SAMPLE_IMAGES, stage, previousLayout);
+			super(ImageCollectionSource.SAMPLE_IMAGES, stage, stage3dProxy, previousLayout);
 		}
 
 		override public function loadBookContent(onContentLoaded:Function):void
@@ -103,10 +105,10 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 				if(_baseMask && (_baseMask.width != insertSource.width || _baseMask.height != insertSource.height) ){
 					_baseMask.dispose();
-					_baseMask = new BitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
+					_baseMask = new TrackedBitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
 
 				} else if(!_baseMask){
-					_baseMask = new BitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
+					_baseMask = new TrackedBitmapData(insertSource.width, insertSource.height, false, 0xBBBBBB);
 				}
 
 				//insert the image loaded into diffuse map

@@ -6,7 +6,9 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	public class SliderButtonEarSlide extends Sprite
 	{
 		private var _width:int = 150;
@@ -21,18 +23,18 @@ package net.psykosoft.psykopaint2.core.views.components.slider
 			super();
 			fillMap = new SliderButtonSlide() as BitmapData;
 			
-			leftBlock = new Bitmap( new BitmapData(80,230,true,0),"auto",true );
+			leftBlock = new Bitmap( new TrackedBitmapData(80,230,true,0),"auto",true );
 			leftBlock.bitmapData.draw(fillMap);
 			leftBlock.scaleX = leftBlock.scaleY = _scale;
 			addChild(leftBlock);
 			
 			
-			middleBlock = new Bitmap(new BitmapData(642 - 160,230,true,0),"auto",true);
+			middleBlock = new Bitmap(new TrackedBitmapData(642 - 160,230,true,0),"auto",true);
 			middleBlock.bitmapData.draw(fillMap, new Matrix(1,0,0,1,-80));
 			middleBlock.scaleX = middleBlock.scaleY = _scale;
 			addChild(middleBlock);
 			
-			rightBlock = new Bitmap( new BitmapData(80,230,true,0),"auto",true );
+			rightBlock = new Bitmap( new TrackedBitmapData(80,230,true,0),"auto",true );
 			rightBlock.bitmapData.draw(fillMap, new Matrix(1,0,0,1,-642+80));
 			rightBlock.scaleX = rightBlock.scaleY = _scale;
 			addChild(rightBlock);

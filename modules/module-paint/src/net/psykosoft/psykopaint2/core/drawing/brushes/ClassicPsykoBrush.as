@@ -33,7 +33,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
-	
+
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
@@ -91,7 +93,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			drawMatrix = new Matrix();
 			fillMatrix = new Matrix();
 			
-			drawingBmd = new BitmapData( 1024 * CoreSettings.GLOBAL_SCALING,768 * CoreSettings.GLOBAL_SCALING,true,0);
+			drawingBmd = new TrackedBitmapData( 1024 * CoreSettings.GLOBAL_SCALING,768 * CoreSettings.GLOBAL_SCALING,true,0);
 			previewBmd = new Bitmap(drawingBmd,"auto",true);
 			//x,y,u,v,d1,d2,d3,unused
 			for ( var i:int = 0; i < 36; i++ )

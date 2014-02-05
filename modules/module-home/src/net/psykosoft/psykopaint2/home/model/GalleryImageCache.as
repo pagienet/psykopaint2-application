@@ -1,14 +1,15 @@
 package net.psykosoft.psykopaint2.home.model
 {
 	import away3d.core.managers.Stage3DProxy;
+	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.textures.BitmapTexture;
 	import away3d.textures.Texture2DBase;
-	import away3d.tools.utils.TextureUtils;
 
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
 
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
@@ -87,15 +88,16 @@ package net.psykosoft.psykopaint2.home.model
 		private function onComplete(bitmapData : BitmapData) : void
 		{
 			var legalSize : int = TextureUtil.getNextPowerOfTwo( bitmapData.width );
-			var correctSize : BitmapData = new BitmapData(legalSize, legalSize, false, 0);
+			var correctSize : BitmapData = new TrackedBitmapData(legalSize, legalSize, false, 0);
 			var scale : Number = legalSize/bitmapData.width;
 			var aspectScale : Number = bitmapData.width / bitmapData.height;
 			aspectScale *= CoreSettings.STAGE_HEIGHT / CoreSettings.STAGE_WIDTH;
 			var matrix : Matrix = new Matrix(scale, 0, 0, scale*aspectScale);
 			correctSize.draw(bitmapData, matrix);
 			bitmapData.dispose();
-			var texture : BitmapTexture = new BitmapTexture(correctSize);
+			var texture : BitmapTexture = new TrackedBitmapTexture(correctSize);
 			texture.getTextureForStage3D(_stage3DProxy);
+			if (_textures[_loadingIndex]) throw "Shouldn't assign more than once!";
 			_textures[_loadingIndex] = texture;
 			thumbnailLoaded.dispatch(_proxies[_loadingIndex], texture);
 			cacheNext();

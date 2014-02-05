@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 	import away3d.core.base.CompactSubGeometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.hacks.TrackedATFTexture;
+	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.materials.MaterialBase;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
@@ -67,7 +69,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 			var diffuseSafeImage:BitmapData = TextureUtil.ensurePowerOf2ByCentering( diffuseImage );
 
 			// Create texture from image.
-			var diffuseTexture:BitmapTexture = new BitmapTexture( diffuseSafeImage );
+			var diffuseTexture:BitmapTexture = new TrackedBitmapTexture( diffuseSafeImage );
 			diffuseTexture.getTextureForStage3D( stage3dProxy ); // Force diffuseImage creation before the disposal of the bitmap data.
 			diffuseImage.dispose();
 			diffuseSafeImage.dispose();
@@ -168,7 +170,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 
 		public static function getAtfTexture( bundle:String, id:String, view:View3D ):ATFTexture {
 			var bytes:ByteArray = BulkLoader.getLoader( bundle ).getBinary( id, true );
-			var texture:ATFTexture = new ATFTexture( bytes );
+			var texture:ATFTexture = new TrackedATFTexture( bytes );
 			texture.getTextureForStage3D( view.stage3DProxy );
 			bytes.clear();
 			return texture;
@@ -176,7 +178,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 
 		public static function getBitmapTexture( bundle:String, id:String, view:View3D ):BitmapTexture {
 			var bmd:BitmapData = BulkLoader.getLoader( bundle ).getBitmapData( id, true );
-			var texture:BitmapTexture = new BitmapTexture( bmd );
+			var texture:BitmapTexture = new TrackedBitmapTexture( bmd );
 			texture.getTextureForStage3D( view.stage3DProxy );
 			bmd.dispose();
 			return texture;
