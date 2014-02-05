@@ -94,13 +94,13 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					requestCanvasExportSignal.dispatch();
 					break;
 				}
-					/*
+					
 				case CanvasSubNavView.ID_PUBLISH:
 				{
 					requestSavePaintingToServerSignal.dispatch();
 					break;
 				}
-
+/*
 				case CanvasSubNavView.ID_SAVE:
 				{
 					_time = getTimer();

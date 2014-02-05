@@ -85,8 +85,8 @@ package net.psykosoft.psykopaint2.core.commands
 		{
 			cleanUp();
 
-				if (data["status_code"] != 1) {
-				notifySaveToServerFailedSignal.dispatch(data["status_code"], data["status_reason"]);
+			if (data["status_code"] != 1) {
+				notifySaveToServerFailedSignal.dispatch(data["status_code"], data["status_reason"] != null ? data["status_reason"] : "unknown reason");
 				return;
 			}
 			else
