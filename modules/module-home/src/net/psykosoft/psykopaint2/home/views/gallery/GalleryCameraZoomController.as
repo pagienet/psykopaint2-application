@@ -46,10 +46,16 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_zoomGesture = new ZoomGesture(_stage);
 			_zoomGesture.addEventListener(GestureEvent.GESTURE_BEGAN, onGestureStart);
 			_zoomGesture.addEventListener(GestureEvent.GESTURE_CHANGED, onGestureChanged);
+			_zoomGesture.addEventListener(GestureEvent.GESTURE_ENDED, onGestureEnded);
 			_zoomGesture.slop = 0; //3 * CoreSettings.GLOBAL_SCALING;
 
 			if (!CoreSettings.RUNNING_ON_iPAD)
 				_stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		}
+
+		private function onGestureEnded(event:GestureEvent):void
+		{
+			_zoomGesture.reset();
 		}
 
 		public function stop() : void
@@ -57,6 +63,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (!_zoomGesture) return;
 			_zoomGesture.removeEventListener(GestureEvent.GESTURE_BEGAN, onGestureStart);
 			_zoomGesture.removeEventListener(GestureEvent.GESTURE_CHANGED, onGestureChanged);
+			_zoomGesture.removeEventListener(GestureEvent.GESTURE_ENDED, onGestureEnded);
 			_zoomGesture.dispose();
 			_zoomGesture = null;
 			if (!CoreSettings.RUNNING_ON_iPAD)
@@ -82,6 +89,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onGestureStart(event : GestureEvent) : void
 		{
+			trace (_zoomGesture.scaleX);
 			TweenLite.killTweensOf(this);
 			// the size of the canvas on screen when zooming starts
 			var matrix : Vector.<Number> = _camera.lens.matrix.rawData;

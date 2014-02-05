@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		{
 			if (!event.isPrimaryTouchPoint) {
 				// multitouch detected, not a pan gesture anymore
-				if (_isDragging) endGrabThrow(_lastPositionX, _lastPositionY);
+				if (_isDragging) endGrabThrow(true);
 				return;
 			}
 
@@ -115,14 +115,14 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		{
 			_stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			endGrabThrow(event.stageX, event.stageY);
+			endGrabThrow(false);
 		}
 
 		private function onTouchEnd(event : TouchEvent) : void
 		{
 			_stage.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			_stage.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-			endGrabThrow(event.stageX, event.stageY);
+			endGrabThrow(false);
 		}
 
 		private function beginGrabThrow(x : Number, y : Number) : Boolean
@@ -149,13 +149,13 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_velocityY += (dy - _velocityY) * .95;
 			_lastPositionX = x;
 			_lastPositionY = y;
-			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_UPDATE, _velocityX, _velocityY));
+			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_UPDATE, _velocityX, _velocityY, false));
 		}
 
-		private function endGrabThrow(x : Number, y : Number) : void
+		private function endGrabThrow(interrupted : Boolean) : void
 		{
 			_isDragging = false;
-			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.RELEASE, _velocityX, _velocityY));
+			dispatchEvent(new GrabThrowEvent(GrabThrowEvent.RELEASE, _velocityX, _velocityY, interrupted));
 		}
 
 		public function get isActive() : Boolean

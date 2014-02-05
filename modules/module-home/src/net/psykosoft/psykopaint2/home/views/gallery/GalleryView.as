@@ -333,7 +333,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			var velocity : Number = unprojectVelocity(event.velocityX);
 			if (Math.abs(event.velocityX) < 3 * CoreSettings.GLOBAL_SCALING) {
 				moveToNearest();
-				if (_dragCountsAsTap && mousePosInFocusedPainting()) {
+
+				if (_dragCountsAsTap && !event.interrupted && mousePosInFocusedPainting()) {
 					zoomFully();
 				}
 			}
