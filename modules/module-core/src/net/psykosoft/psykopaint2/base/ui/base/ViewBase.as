@@ -91,8 +91,8 @@ package net.psykosoft.psykopaint2.base.ui.base
 			}
 			setupSignal.dispatch();
 			_setupHasRan = true;
-			cacheAsBitmap = true;
-			cacheAsBitmapMatrix = new Matrix();
+			//cacheAsBitmap = true;
+			//cacheAsBitmapMatrix = new Matrix();
 		}
 
 		// ---------------------------------------------------------------------
