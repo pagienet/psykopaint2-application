@@ -4,10 +4,12 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 	import flash.display.DisplayObject;
 	import flash.utils.Dictionary;
 	import flash.utils.describeType;
-
-	import net.psykosoft.psykopaint2.base.ui.components.*;
+	
+	import net.psykosoft.psykopaint2.base.ui.components.HSnapScroller;
+	import net.psykosoft.psykopaint2.base.ui.components.ICopyableData;
+	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
-
+	
 	import org.osflash.signals.Signal;
 
 	/*
@@ -185,8 +187,9 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 				rendererAddedSignal.dispatch( itemRenderer );
 
 				// Configure renderer from data properties.
-				copyAllPropertiesFromObjectAToObjectB( itemData, itemRenderer );
-
+				//copyAllPropertiesFromObjectAToObjectB( itemData, itemRenderer );
+				(itemRenderer as ICopyableData).copyData( itemData as ICopyableData );
+				
 				// Add it to display.
 				itemRenderer.x = itemData.itemRendererPosition;
 				itemRenderer.y = itemData.itemRendererWidth / 2;
@@ -259,8 +262,10 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 		public function updateItemRendererAssociatedData( itemRenderer:DisplayObject, propertyName:String = "" ):void {
 			var data:ISnapListData = _dataForRenderer[ itemRenderer ];
 			if( data ) {
-				if( propertyName == "" ) copyAllPropertiesFromObjectAToObjectB( itemRenderer, data );
-				else copyPropertyFromObjectAToObjectB( propertyName, itemRenderer, data );
+				//if( propertyName == "" ) copyAllPropertiesFromObjectAToObjectB( itemRenderer, data );
+				//else copyPropertyFromObjectAToObjectB( propertyName, itemRenderer, data );
+				if( propertyName == "" )(data as ICopyableData).copyData( itemRenderer as ICopyableData );
+				else (data as ICopyableData).copyDataProperty(itemRenderer as ICopyableData, propertyName);
 			}
 		}
 
@@ -271,14 +276,17 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 			for( i = 0; i < numItems; i++ ) {
 				var data:ISnapListData = _dataProvider[ i ];
 				if( data.itemRenderer ) {
-					copyAllPropertiesFromObjectAToObjectB( data, data.itemRenderer );
+					//copyAllPropertiesFromObjectAToObjectB( data, data.itemRenderer );
+					(data.itemRenderer as ICopyableData).copyData(data as ICopyableData);
+					
 				}
 			}
 		}
 
+		/*
 		private function copyAllPropertiesFromObjectAToObjectB( objectA:*, objectB:* ):void {
 
-//			trace( this, "copying properties from " + objectA + " to " + objectB );
+			//trace( this, "copying properties from " + objectA + " to " + objectB );
 
 			// Obtain object a's public interface description in xml.
 			var objectDescriptor:XML = describeType( objectA );
@@ -296,11 +304,12 @@ package net.psykosoft.psykopaint2.base.ui.components.list
 
 		private function copyPropertyFromObjectAToObjectB( propertyName:String, objectA:*, objectB:* ):void {
 			if( objectB.hasOwnProperty( propertyName ) ) {
-//				trace( this, "copying property [" + propertyName + "]" );
+				trace( objectA,objectB, "copying property [" + propertyName + "]" );
 				objectB[ propertyName ] = objectA[ propertyName ];
 			}
 		}
-
+		*/
+		
 		// ---------------------------------------------------------------------
 		// Visualization utils.
 		// ---------------------------------------------------------------------

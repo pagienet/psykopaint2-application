@@ -9,12 +9,13 @@ package net.psykosoft.psykopaint2.base.ui.components
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.label.CenterLabel;
 	import net.psykosoft.psykopaint2.core.views.components.label.Label;
 	import net.psykosoft.psykopaint2.core.views.components.label.LeftLabel;
 	import net.psykosoft.psykopaint2.core.views.components.label.RightLabel;
 
-	public class NavigationButton extends Sprite
+	public class NavigationButton extends Sprite implements ICopyableData
 	{
 		protected var _label:PsykoLabel;
 		protected var _icon:MovieClip;
@@ -195,6 +196,53 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function set disableMouseInteractivityWhenSelected( value:Boolean ):void {
 			_disableMouseInteractivityWhenSelected = value;
+		}
+		
+		public function copyData( data:Object ):void
+		{
+			disableMouseInteractivityWhenSelected = data.disableMouseInteractivityWhenSelected;
+			iconBitmap = data.iconBitmap;
+			selectable = data.selectable;
+			id = data.id;
+			enabled = data.enabled;
+			selected = data.selected;
+			labelText = data.labelText;
+			iconType = data.iconType;
+		}
+		
+		public function copyDataProperty( data:Object, propertyID:String ):void
+		{
+			switch ( propertyID )
+			{
+				case "disableMouseInteractivityWhenSelected":
+					disableMouseInteractivityWhenSelected = data.disableMouseInteractivityWhenSelected;
+					break;
+				case "iconBitmap":
+					iconBitmap = data.iconBitmap;
+				break;
+				case "selectable":
+					selectable = data.selectable;
+				break;
+				case "id":
+					id = data.id;
+				break;
+				case "enabled":
+					enabled = data.enabled;
+				break;
+				case "selected":
+					selected = data.selected;
+				break;
+				case "labelText":
+					labelText = data.labelText;
+				break;
+				case "iconType":
+					iconType = data.iconType;
+				break;
+				default:
+					throw("Error: "+propertyID+" not handled in NavigationButton.setButtonDataProperty");
+					break;
+			}
+			
 		}
 	}
 }
