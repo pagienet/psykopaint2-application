@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.base.utils.ui
 {
 
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Strong;
+	
 	import org.osflash.signals.Signal;
 
 	/*
@@ -136,7 +139,7 @@ package net.psykosoft.psykopaint2.base.utils.ui
 			_onMotion = _onSnapMotion = true;
 			evaluateClosestSnapPointPosition( targetPosition );
 		}
-
+		
 		public function snapAtIndexWithoutEasing( index:uint, notify:Boolean = true ):void {
 			if( numSnapPoints == 0 ) return;
 			_position = _snapPoints[ index ];

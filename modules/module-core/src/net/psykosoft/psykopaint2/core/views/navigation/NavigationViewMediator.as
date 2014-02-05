@@ -1,6 +1,9 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
+	import flash.display.Stage;
+	
+	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
@@ -8,9 +11,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
-
+	
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.PanGesture;
+	import org.gestouch.gestures.TapGesture;
 
 	public class NavigationViewMediator extends MediatorBase
 	{
@@ -97,7 +101,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_navigationCanHideWithGestures = value;
 		}
 
-		private const ACCEPT_TAP_GESTURES_FOR_SHOW_HIDE:Boolean = false;
+		private const ACCEPT_TAP_GESTURES_FOR_SHOW_HIDE:Boolean = true;
 		private const ALWAYS_SHOW_HIDE:Boolean = false;
 
 		private function onGlobalGesture( gestureType:String, event:GestureEvent ):void {
@@ -111,13 +115,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 				// Nav show/hide with nav is currently disabled.
 				if( ACCEPT_TAP_GESTURES_FOR_SHOW_HIDE && gestureType == GestureType.TAP_GESTURE_RECOGNIZED ) {
 					// Uncomment these lines to only accept taps on stage ( hence only in paint mode ).
-//					var target:Stage = Stage( TapGesture( event.target ).target );
-//					var objsUnderMouse:Array = target.getObjectsUnderPoint( TapGesture( event.target ).location );
-//					if( objsUnderMouse.length == 0 ) { // We only want clicks on the stage.
+					var target:Stage = Stage( TapGesture( event.target ).target );
+					
+					//var objsUnderMouse:Array = target.getObjectsUnderPoint( TapGesture( event.target ).location );
+					if( CanvasInteractionUtil.canContentsUnderMouseBeIgnored(target) ) { // We only want clicks on the stage.
 						// Perform hide/show
 						if( !view.panel.shown ) view.panel.show();
 						else view.panel.hide();
-//					}
+					}
 				}
 
 				// Vertical pan.

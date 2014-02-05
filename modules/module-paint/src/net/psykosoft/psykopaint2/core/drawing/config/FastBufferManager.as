@@ -16,5 +16,14 @@ package net.psykosoft.psykopaint2.core.drawing.config
 			}
 			return _fastBuffer;
 		}
+		
+		static public function dispose():void
+		{
+			if ( _fastBuffer )
+			{
+				_fastBuffer.dispose();
+				_fastBuffer = null;
+			}
+		}
 	}
 }

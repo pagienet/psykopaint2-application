@@ -187,9 +187,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (_bakedTexture) _bakedTexture.dispose();
 			if (_vertexBuffer) _vertexBuffer.dispose();
 			if (_indexBuffer) _indexBuffer.dispose();
+			_fastBuffer = null;
 			_bakedTexture = null;
 			_vertexBuffer = null;
 			_indexBuffer = null;
+			trace("test");
 		}
 
 		public function drawColor(context3d : Context3D, canvas : CanvasModel, source : TextureBase = null) : void

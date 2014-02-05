@@ -3,14 +3,20 @@ package net.psykosoft.psykopaint2.paint.views.color
 
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
+	
+	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
+	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyPipetteDischargeSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPipetteChargeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
 	
 	import org.gestouch.events.GestureEvent;
@@ -24,62 +30,78 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public var paintModule:BrushKitManager;
 		
 		[Inject]
+		public var renderer:CanvasRenderer;
+		
+		[Inject]
+		public var canvasModel:CanvasModel;
+		
+		[Inject]
 		public var notifyPickedColorChangedSignal:NotifyPickedColorChangedSignal;
 		
 		[Inject]
-		public var notifyPipetteDischargeSignal:NotifyPipetteDischargeSignal
+		public var notifyPipetteChargeChangedSignal:NotifyPipetteChargeChangedSignal;
 		
 		[Inject]
 		public var notifyShowPipetteSignal:NotifyShowPipetteSignal;
 		
 		[Inject]
+		public var notifyChangePipetteColorSignal:NotifyChangePipetteColorSignal;
+		
+		[Inject]
 		public var navigationCanHideWithGesturesSignal:NavigationCanHideWithGesturesSignal;
+		
+		[Inject]
+		public var notifyColorStyleChangedSignal:NotifyColorStyleChangedSignal;
+		
 		
 		[Inject]
 		public var userPaintSettings:UserPaintSettingsModel;
 		
 		private var _stage:Stage;
-
+		
 		override public function initialize():void {
 
 			registerView( view );
 			super.initialize();
 			
 			// From view.
+			view.userPaintSettings = userPaintSettings;
+			view.renderer = renderer;
+			view.notifyChangePipetteColorSignal = notifyChangePipetteColorSignal;
+			view.notifyColorStyleChangedSignal = notifyColorStyleChangedSignal;
+			
 			view.enabledSignal.add( onViewEnabled );
 			userPaintSettings.setDefaultValues();
-			
-			view.userPaintSettings = userPaintSettings;
+			view.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			// From view.
 			//view.colorChangedSignal.add( onColorChanged );
 
 			// From app.
 			notifyPickedColorChangedSignal.add( onColorChanged );
 			notifyGlobalGestureSignal.add( onGlobalGestureDetected );
-			notifyPipetteDischargeSignal.add( onPipetteDischarging );
+			notifyPipetteChargeChangedSignal.add( onPipetteChargeChanged );
 			
-			view.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
 			_stage = view.stage;
+			view.setParameters( paintModule.getCurrentBrushParameters() );
+			
+			
 		}
 
 		override public function destroy():void {
 			super.destroy();
 			view.removeEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
+			view.enabledSignal.remove(onViewEnabled);
+			
 			notifyPickedColorChangedSignal.remove( onColorChanged );
 			notifyGlobalGestureSignal.remove( onGlobalGestureDetected );
-			//view.colorChangedSignal.remove( onColorChanged );
-			//notifyShowPipetteSignal.remove( onShowPipette );
+			notifyPipetteChargeChangedSignal.remove( onPipetteChargeChanged );
+			
 			if( _stage.hasEventListener( MouseEvent.MOUSE_UP ) )
 				_stage.removeEventListener( MouseEvent.MOUSE_UP, onMouseUp );
 			_stage = null;
 		}
 
 		
-		override protected function onViewEnabled():void {
-			super.onViewEnabled();
-			view.setParameters( paintModule.getCurrentBrushParameters() );
-		}
-
 		// -----------------------
 		// From view.
 		// -----------------------
@@ -88,9 +110,6 @@ package net.psykosoft.psykopaint2.paint.views.color
 			switch( id ) {
 				case ColorPickerSubNavView.ID_BACK:
 					requestNavigationStateChange( NavigationStateType.PREVIOUS );
-					break;
-				default:
-					view.openParameterWithId( id );
 					break;
 			}
 		}
@@ -117,9 +136,11 @@ package net.psykosoft.psykopaint2.paint.views.color
 			view.setCurrentColor( newColor, colorMode, fromSliders);
 		}
 		
-		private function onPipetteDischarging(pipette:Pipette ):void
+		private function onPipetteChargeChanged(pipette:Pipette, isCharging:Boolean ):void
 		{
-			view.onPipetteDischarging( pipette );
+			if ( !isCharging) view.onPipetteDischarging( pipette );
+			else view.onPipetteCharging( pipette );
+			
 		}
 		
 		
@@ -128,8 +149,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 			if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN || gestureType == GestureType.VERTICAL_PAN_GESTURE_BEGAN )
 			{
 				var result:Object = view.canChargePipette();
-				if ( result.canCharge ) notifyShowPipetteSignal.dispatch( view,  result.color, result.pos );
+				if ( result.canCharge ) notifyShowPipetteSignal.dispatch( view,  result.color, result.pos, false );
 			} 
+			
 		}
 	}
 }

@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 	import flash.display3D.Context3DCompareMode;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.TouchSheet;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
@@ -16,6 +16,8 @@ package net.psykosoft.psykopaint2.crop.views.crop
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
+	
+	import org.gestouch.events.GestureEvent;
 
 	public class CropView extends ViewBase
 	{
@@ -55,6 +57,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		public function disposeCropData() : void
 		{
 			if (_positioningSheet) {
+				removeChild(_positioningSheet);
 				_positioningSheet.dispose();
 				_positioningSheet = null;
 			}
@@ -74,18 +77,24 @@ package net.psykosoft.psykopaint2.crop.views.crop
 //			_easelRect.y *= CoreSettings.GLOBAL_SCALING;
 //			_easelRect.width *= CoreSettings.GLOBAL_SCALING;
 //			_easelRect.height *= CoreSettings.GLOBAL_SCALING;
+			if ( _positioningSheet )
+			{
+				_positioningSheet.x = _easelRect.x;
+				_positioningSheet.y = _easelRect.y;
+			 	_positioningSheet.scrollRect = new Rectangle(0,0,_easelRect.width,_easelRect.height);
+				_positioningSheet.centerContent();
+				_positioningSheet.limitsRect = _positioningSheet.scrollRect;
+			}
 		}
 		
 		override public function enable():void
 		{
 			super.enable();
-			stage.quality = StageQuality.HIGH;
 		}
 		
 		override public function disable():void
 		{
 			super.disable();
-			stage.quality = StageQuality.LOW;
 		}
 
 		public function render(context3D : Context3D):void
@@ -112,5 +121,11 @@ package net.psykosoft.psykopaint2.crop.views.crop
 			if (_background) _background.dispose();
 			_background = background;
 		}
+		
+		public function onTransformGesture(event:GestureEvent):void
+		{
+			_positioningSheet.onGesture(event);
+		}
+		
 	}
 }

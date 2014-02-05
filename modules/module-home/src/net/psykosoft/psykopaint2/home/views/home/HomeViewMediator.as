@@ -178,10 +178,14 @@ package net.psykosoft.psykopaint2.home.views.home
 					view.activeSection = HomeView.GALLERY;
 					break;
 				case NavigationStateType.HOME_ON_EASEL:
+				case NavigationStateType.PICK_IMAGE:
 					view.activeSection = HomeView.EASEL;
 					break;
 				case NavigationStateType.SETTINGS:
 					view.activeSection = HomeView.SETTINGS;
+					break;
+				case NavigationStateType.CROP:
+					view.activeSection = HomeView.CROP;
 					break;
 			}
 
@@ -193,7 +197,9 @@ package net.psykosoft.psykopaint2.home.views.home
 			if (_currentNavigationState == NavigationStateType.GALLERY_SHARE ||
 				_currentNavigationState == NavigationStateType.CAPTURE_IMAGE ||
 				_currentNavigationState == NavigationStateType.PICK_USER_IMAGE_IOS ||
-				_currentNavigationState == NavigationStateType.PICK_USER_IMAGE_DESKTOP )
+				_currentNavigationState == NavigationStateType.PICK_USER_IMAGE_DESKTOP ||
+				_currentNavigationState == NavigationStateType.CROP 
+			)
 				view.scrollingEnabled = false;
 			else
 				view.scrollingEnabled = true;

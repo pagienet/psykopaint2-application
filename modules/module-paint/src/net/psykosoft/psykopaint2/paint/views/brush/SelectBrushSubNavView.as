@@ -14,8 +14,8 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	public class SelectBrushSubNavView extends SubNavigationViewBase
 	{
 		public static const ID_BACK:String = "Edit Painting";
-		public static const ID_COLOR:String = "Pick a Color";
-		public static const ID_ALPHA:String = "Change Opacity";
+		public static const ID_COLOR:String = "Paint Settings";
+	//	public static const ID_ALPHA:String = "Change Opacity";
 
 		public function SelectBrushSubNavView() {
 			super();
@@ -24,17 +24,17 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onEnabled():void {
 			setHeader( "Pick a Brush" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
-
+			setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.TWEAK_BRUSH );
 			/*
 			// Show color button?
 			if( PaintModeModel.activeMode == PaintMode.COLOR_MODE ) {
-				setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.COLOR );
+				
 			}
 			else {
 				setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.ALPHA );
 			}
 			*/
-			setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.ALPHA );
+			//setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.ALPHA );
 			setBgType( NavigationBg.BG_TYPE_WOOD_LOW );
 		}
 

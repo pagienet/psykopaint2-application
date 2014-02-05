@@ -2,7 +2,7 @@ package net.psykosoft.psykopaint2.core.configuration
 {
 
 	import flash.display.DisplayObjectContainer;
-
+	
 	import net.psykosoft.psykopaint2.base.robotlegs.bundles.SignalCommandMapBundle;
 	import net.psykosoft.psykopaint2.core.commands.ChangeStateCommand;
 	import net.psykosoft.psykopaint2.core.commands.LoadPaintingInfoFileCommand;
@@ -20,18 +20,18 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
-	import net.psykosoft.psykopaint2.core.services.AMFGalleryService;
 	import net.psykosoft.psykopaint2.core.models.AMFLoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
-	import net.psykosoft.psykopaint2.core.services.ANECameraRollService;
-	import net.psykosoft.psykopaint2.core.services.CameraRollService;
-	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateModel;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.models.SavingProcessModel;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
+	import net.psykosoft.psykopaint2.core.services.AMFGalleryService;
+	import net.psykosoft.psykopaint2.core.services.ANECameraRollService;
+	import net.psykosoft.psykopaint2.core.services.CameraRollService;
+	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.services.SampleImageService;
 	import net.psykosoft.psykopaint2.core.services.XMLSampleImageService;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
@@ -60,6 +60,8 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleSwipeGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogOutFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
@@ -89,7 +91,6 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestSetBookOffScreenRatioSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
-	import net.psykosoft.psykopaint2.core.signals.ToggleTransformGestureSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
 	import net.psykosoft.psykopaint2.core.views.blocker.BlockerView;
@@ -112,7 +113,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.views.splash.SplashViewMediator;
 	import net.psykosoft.psykopaint2.core.views.video.VideoView;
 	import net.psykosoft.psykopaint2.core.views.video.VideoViewMediator;
-
+	
 	import robotlegs.bender.bundles.mvcs.MVCSBundle;
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
@@ -258,7 +259,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyUserLogOutFailedSignal ).asSingleton();
 			_injector.map( NotifyUserRegisteredSignal ).asSingleton();
 			_injector.map( NotifyUserRegistrationFailedSignal ).asSingleton();
-			_injector.map( ToggleTransformGestureSignal ).asSingleton();
+			_injector.map( NotifyToggleTransformGestureSignal ).asSingleton();
+			_injector.map( NotifyToggleSwipeGestureSignal ).asSingleton();
 			_injector.map( NotifyPasswordResetSucceededSignal ).asSingleton();
 			_injector.map( NotifyPasswordResetFailedSignal ).asSingleton();
 			_injector.map( NotifyUserPasswordReminderSentSignal ).asSingleton();

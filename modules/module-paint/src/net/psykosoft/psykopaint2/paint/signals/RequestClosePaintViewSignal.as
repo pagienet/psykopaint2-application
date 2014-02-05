@@ -4,8 +4,10 @@ package net.psykosoft.psykopaint2.paint.signals
 
 	public class RequestClosePaintViewSignal extends Signal
 	{
+		//true = save image, false = discard image
 		public function RequestClosePaintViewSignal()
 		{
+			super( Boolean );
 		}
 	}
 }

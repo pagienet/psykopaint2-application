@@ -1,9 +1,9 @@
 package net.psykosoft.psykopaint2.home.config
 {
 
-	import net.psykosoft.psykopaint2.home.commands.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.home.commands.LoadPaintingDataFileCommand;
 	import net.psykosoft.psykopaint2.home.commands.LoadSurfacePreviewCommand;
+	import net.psykosoft.psykopaint2.home.commands.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.home.commands.StartNewColorPaintingCommand;
 	import net.psykosoft.psykopaint2.home.commands.load.SetUpHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.commands.unload.DestroyHomeModuleCommand;
@@ -12,14 +12,15 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraSnapshotRequest;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeModuleSetUpSignal;
+	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewDeleteModeChangedSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewIntroZoomCompleteSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewSceneReadySignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestDestroyHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestUpdateGalleryPaintingMenuSignal;
@@ -32,10 +33,10 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryPaintingSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryShareSubNavView;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryShareSubNavViewMediator;
-	import net.psykosoft.psykopaint2.home.views.home.EaselView;
-	import net.psykosoft.psykopaint2.home.views.home.EaselViewMediator;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryView;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryViewMediator;
+	import net.psykosoft.psykopaint2.home.views.home.EaselView;
+	import net.psykosoft.psykopaint2.home.views.home.EaselViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.HomeView;
 	import net.psykosoft.psykopaint2.home.views.home.HomeViewMediator;
 	import net.psykosoft.psykopaint2.home.views.home.RoomView;
@@ -56,7 +57,7 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.views.settings.SettingsSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavView;
 	import net.psykosoft.psykopaint2.home.views.settings.WallpaperSubNavViewMediator;
-
+	
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IInjector;
@@ -128,6 +129,7 @@ package net.psykosoft.psykopaint2.home.config
 			_injector.map( RequestSetGalleryPaintingSignal ).asSingleton();
 			_injector.map( NotifyHomeViewIntroZoomCompleteSignal ).asSingleton();
 			_injector.map( RequestUpdateGalleryPaintingMenuSignal ).asSingleton();
+			_injector.map( NotifyHomeViewDeleteModeChangedSignal ).asSingleton();
 		}
 
 		// -----------------------

@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.core.views.popups.login.CameraRollUtil;
 	import net.psykosoft.psykopaint2.core.views.popups.login.DeviceCameraUtil;
+	import net.psykosoft.psykopaint2.home.commands.RequestLoadSurfacePreviewSignal;
+	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 
 	public class PickAnImageSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -23,6 +25,13 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		[Inject]
 		public var requestCropSourceImageSignal:RequestCropSourceImageSignal;
 
+		[Inject]
+		public var requestStartColorPaintingSignal : RequestStartNewColorPaintingSignal;
+		
+		[Inject]
+		public var requestLoadSurfacePreviewSignal:RequestLoadSurfacePreviewSignal;
+	
+		
 		private var _cameraUtil:DeviceCameraUtil;
 		private var _rollUtil:CameraRollUtil;
 
@@ -62,6 +71,11 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			registerView( view );
 			super.initialize();
 		}
+		
+		override protected function onViewEnabled():void {
+			super.onViewEnabled();
+			requestLoadSurfacePreviewSignal.dispatch(0);
+		}
 
 		override public function destroy():void {
 			super.destroy();
@@ -82,6 +96,12 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 				case PickAnImageSubNavView.ID_BACK: {
 					requestNavigationStateChange(NavigationStateType.HOME_ON_EASEL);
+					break;
+				}
+					
+				case PickAnImageSubNavView.ID_SCRATCH: {
+					requestStartColorPaintingSignal.dispatch( 0 );
+				//	requestNavigationStateChange( NavigationStateType.HOME_PICK_SURFACE );
 					break;
 				}
 
@@ -124,12 +144,12 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			_rollUtil.imageRetrievedSignal.add( onPhotoRetrieved );
 			var w:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 1024 : 512;
 			var h:Number = CoreSettings.RUNNING_ON_RETINA_DISPLAY ? 512 : 256;
-			_rollUtil.launch( new Rectangle( view.mouseX, view.mouseY, 100, 100 ), w, h );
+			_rollUtil.launch( new Rectangle( view.mouseX, view.mouseY, 10, 10 ), w, h );
 		}
 
 		private function takePhoto():void {
 			trace( this, "taking photo..." );
-			_cameraUtil = new DeviceCameraUtil();
+			_cameraUtil = new DeviceCameraUtil( view.stage );
 			_cameraUtil.imageRetrievedSignal.add( onPhotoRetrieved );
 			_cameraUtil.launch();
 		}

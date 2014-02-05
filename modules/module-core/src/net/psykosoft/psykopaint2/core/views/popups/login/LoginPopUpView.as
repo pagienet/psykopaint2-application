@@ -173,8 +173,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			popUpWantsToRegisterSignal.dispatch( email, password, firstName, lastName, photoLarge, photoSmall );
 		}
 
-		private function onLoginViewForgotButtonClicked():void {
-			popUpRequestsForgottenPasswordSignal.dispatch();
+		private function onLoginViewForgotButtonClicked( email:String ):void {
+			popUpRequestsForgottenPasswordSignal.dispatch( email );
 		}
 
 		private function onLoginViewWantsToLogIn( email:String, password:String ):void {

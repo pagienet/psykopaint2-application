@@ -1,20 +1,22 @@
 package net.psykosoft.psykopaint2.core.drawing.modules
 {
 
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
 	import flash.display.Shape;
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.utils.clearTimeout;
 	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
+	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
@@ -25,25 +27,23 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
-	import net.psykosoft.psykopaint2.core.model.PaintModeModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
+	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
-	import net.psykosoft.psykopaint2.core.utils.CanvasInteractionUtil;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.paint.configuration.BrushKitDefaultSet;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
 	import net.psykosoft.psykopaint2.paint.utils.CopyColorAndSourceToBitmapDataUtil;
-	import net.psykosoft.psykopaint2.paint.utils.CopyColorToBitmapDataUtil;
-	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 	
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.LongPressGesture;
@@ -97,7 +97,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		public var notifyShowPipetteSignal : NotifyShowPipetteSignal;
 		
 		[Inject]
+		public var notifyColorStyleChangedSignal : NotifyColorStyleChangedSignal;
+		
+		[Inject]
 		public var requestAddViewToMainLayerSignal:RequestAddViewToMainLayerSignal;
+		
+		[Inject]
+		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
+		
+		[Inject]
+		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 	
 		private var _view : DisplayObject;
 		private var _active : Boolean;
@@ -106,7 +115,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var _activeBrushKit : BrushKit;
 		private var _activeBrushKitName : String;
 		private var _canvasMatrix : Matrix;
-		//private var _currentPaintColor:int;
 		private var _currentBrushColorParameter:PsykoParameter;
 		private var copyColorUtil:CopyColorAndSourceToBitmapDataUtil;
 		private var currentColorMap:BitmapData;
@@ -115,6 +123,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		private var singleTapDelay:int;
 		private var pipetteActive:Boolean;
 		private var showColorPanelTheFirstTime:Boolean;
+		private var _navigationIsVisible:Boolean;
+		private var _navigationWasHiddenByPainting:Boolean;
+		private var _revealNavigationTimeout:uint;
 		
 		public function BrushKitManager()
 		{
@@ -129,9 +140,16 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyCanvasMatrixChanged.add(onCanvasMatrixChanged);
 			notifyGlobalGestureSignal.add( onGlobalGesture );
 			notifyPickedColorChangedSignal.add( onPickedColorChanged );
-			
+			notifyColorStyleChangedSignal.add( onColorStyleChanged );
+			notifyNavigationToggledSignal.add( onNavigationToggled );
+			_navigationIsVisible = true;
 		}
-
+		
+		private function onNavigationToggled( shown:Boolean ):void
+		{
+			_navigationIsVisible = shown;
+		}
+		
 		// TODO: Handle gestures somewhere else
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
@@ -148,37 +166,29 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				var obj:Array = target.getObjectsUnderPoint(LongPressGesture(event.target).location);
 				if (obj.length == 0 || CanvasInteractionUtil.canContentsUnderMouseBeIgnored( clip ) )
 				{
-					if ( !showColorPanelTheFirstTime )
-					{
-						showColorPanelTheFirstTime = true;
-						requestStateChangeSignal.dispatch( NavigationStateType.PAINT_ADJUST_COLOR );
-					}
-					if ( copyColorUtil == null )
-					{
-						copyColorUtil = new CopyColorAndSourceToBitmapDataUtil(); 
-					}
-					copyColorUtil.sourceTextureAlpha = renderer.sourceTextureAlpha;
-					copyColorUtil.paintAlpha = renderer.paintAlpha;
-					currentColorMap = copyColorUtil.execute( canvasModel );
-					var px : Number = (_view.mouseX - _canvasMatrix.tx * 1024) / _canvasMatrix.a ;
-					var py : Number = (_view.mouseY - _canvasMatrix.ty * 768)  / _canvasMatrix.d;
-					var color:uint = currentColorMap.getPixel(px* CoreSettings.GLOBAL_SCALING,py* CoreSettings.GLOBAL_SCALING);
+					var px : Number = (_view.mouseX - _canvasMatrix.tx * 1024) / _canvasMatrix.a * CoreSettings.GLOBAL_SCALING;
+					var py : Number = (_view.mouseY - _canvasMatrix.ty * 768)  / _canvasMatrix.d * CoreSettings.GLOBAL_SCALING;
 					
-					notifyShowPipetteSignal.dispatch( _view, color,new Point(_view.mouseX,_view.mouseY - 32));
-					_activeBrushKit.brushEngine.pathManager.deactivate();
-					pipetteActive = true;
-					/*
-					pickedColorTf = new ColorTransform();
-					pickedColorPreview = new Shape();
-					pickedColorPreview.graphics.beginFill(0);
-					pickedColorPreview.graphics.drawCircle(0,0,25);
-					pickedColorPreview.graphics.endFill();
-					_activeBrushKit.brushEngine.pathManager.deactivate();
-					_view.addEventListener(Event.ENTER_FRAME, updateColorPicker );
-					(_view as CanvasView).addChild(pickedColorPreview);
-					
-					updateColorPicker(null);
-					*/
+					if ( px >= 0 && px < canvasModel.width && py >= 0 && py < canvasModel.height )
+					{
+						if ( !showColorPanelTheFirstTime )
+						{
+							showColorPanelTheFirstTime = true;
+							requestStateChangeSignal.dispatch( NavigationStateType.PAINT_ADJUST_COLOR );
+						}
+						if ( copyColorUtil == null )
+						{
+							copyColorUtil = new CopyColorAndSourceToBitmapDataUtil(); 
+						}
+						copyColorUtil.sourceTextureAlpha = renderer.sourceTextureAlpha;
+						copyColorUtil.paintAlpha = renderer.paintAlpha;
+						currentColorMap = copyColorUtil.execute( canvasModel );
+						
+						var color:uint = currentColorMap.getPixel(px,py);
+						notifyShowPipetteSignal.dispatch( _view, color,new Point(_view.mouseX,_view.mouseY - 32), true);
+						_activeBrushKit.brushEngine.pathManager.deactivate();
+						pipetteActive = true;
+					}
 				}
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_ENDED )
 			{
@@ -188,16 +198,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 					_activeBrushKit.brushEngine.pathManager.activate(_view, canvasModel, renderer );
 					copyColorUtil.dispose();
 				}
-				/*
-				if (pickedColorPreview && (_view as CanvasView).contains(pickedColorPreview))
-				{
-					
-					(_view as CanvasView).removeChild(pickedColorPreview);
-					
-					_view.removeEventListener(Event.ENTER_FRAME, updateColorPicker );
-					_activeBrushKit.brushEngine.pathManager.activate(_view, canvasModel, renderer );
-				}
-				*/
 			}
 		}
 
@@ -207,41 +207,19 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if (_activeBrushKit)
 			{
 				_activeBrushKit.setCanvasMatrix(matrix);
-				/*
-				var test:CanvasView = _view as CanvasView;
-				var pm:PathManager = _activeBrushKit.brushEngine.pathManager;
-				
-				test.graphics.clear();
-				test.graphics.lineStyle(2,0xff0000);
-				test.graphics.drawRect(matrix.tx * 1024,matrix.ty * 768,1024*matrix.a,768*matrix.d);
-				*/
 			}
 		}
 		
 		private function onPickedColorChanged( newColor:int, colorMode:int, fromSlider:Boolean ):void
 		{
-			//_currentPaintColor = newColor;
 			if ( _currentBrushColorParameter ) _currentBrushColorParameter.colorValue = paintSettingsModel.currentColor;
 		}
 		
-		/*
-		private function updateColorPicker( event:Event ):void
+		private function onColorStyleChanged( colorMatrix:Vector.<Number>, blendFactor:Number ):void
 		{
-		//	var pm:PathManager = _activeBrushKit.brushEngine.pathManager;
-			
-			var px : Number = (_view.mouseX - _canvasMatrix.tx * 1024) / _canvasMatrix.a ;
-			var py : Number = (_view.mouseY - _canvasMatrix.ty * 768)  / _canvasMatrix.d;
-			
-			pickedColorPreview.x = _view.mouseX + 40;
-			pickedColorPreview.y = _view.mouseY - 40;
-			var color:uint = currentColorMap.getPixel(px* CoreSettings.GLOBAL_SCALING,py* CoreSettings.GLOBAL_SCALING);
-			pickedColorTf.color = color;
-			pickedColorPreview.transform.colorTransform = pickedColorTf;
-			notifyPickedColorChangedSignal.dispatch(color, true);
-		}
-		*/
-		
-		
+			_activeBrushKit.brushEngine.setColorStrategyColorMatrix(colorMatrix,blendFactor);
+		}	
+	
 		private function updateCurrentBrushColorParameter( ):void
 		{
 			var parameterSetVO:ParameterSetVO = getCurrentBrushParameters(false);
@@ -341,16 +319,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_availableBrushKits = null;
 			_availableBrushKitNames = null;
 			deactivateBrushKit();
-		}
-
-		private function onStrokeStarted(event : Event) : void
-		{
-			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
-		}
-		
-		private function onStrokeEnded(event : Event) : void
-		{
-			singleTapDelay = getTimer();
+			brushShapeLibrary.dispose();
+			trace("BrushKitManager deactivated");
 		}
 
 		private function activateBrushKit() : void
@@ -385,6 +355,48 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyActivateBrushChangedSignal.dispatch(_activeBrushKit.getParameterSet( !CoreSettings.SHOW_HIDDEN_BRUSH_PARAMETERS ));
 		}
 		
+		private function onStrokeStarted(event : Event) : void
+		{
+			trace("stroke started");
+			clearTimeout( _revealNavigationTimeout );
+			if ( _navigationIsVisible ) {
+				trace("nav is visible - checking for mouse over nav");
+				_view.addEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
+			}
+			
+			_activeBrushKit.brushEngine.snapShot = canvasHistory.takeSnapshot();
+			
+		}
+		
+		private function onStrokeEnded(event : Event) : void
+		{
+			singleTapDelay = getTimer();
+			_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
+			if ( _navigationWasHiddenByPainting )
+			{
+				clearTimeout( _revealNavigationTimeout );
+				_revealNavigationTimeout = setTimeout( revealHiddenNavigation,400 );
+			}
+		
+		}
+		
+		private function revealHiddenNavigation() : void
+		{
+			requestNavigationToggleSignal.dispatch(1);
+			_navigationWasHiddenByPainting = false;
+		}
+		
+		protected function onPaintOverNavCheck(event:Event):void
+		{
+			if ( _view.mouseY > 550 )
+			{
+				requestNavigationToggleSignal.dispatch(-1);
+				_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
+				_navigationWasHiddenByPainting = true;
+			}
+			
+		}
+		
 		
 		public function getAvailableBrushTypes() : Vector.<String> {
 			return _availableBrushKitNames;
@@ -410,10 +422,6 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			if (_activeBrushKit)
 				_activeBrushKit.brushEngine.freeExpendableMemory();
 		}
-		/*
-		public function get currentPaintColor():int {
-			return _currentPaintColor;
-		}
-		*/
+		
 	}
 }

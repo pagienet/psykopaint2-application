@@ -2,7 +2,12 @@ package net.psykosoft.psykopaint2.core.model
 {
 	import com.quasimondo.color.colorspace.HSV;
 	import com.quasimondo.color.utils.ColorConverter;
+	import com.quasimondo.geom.ColorMatrix;
 	
+	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
+	import net.psykosoft.psykopaint2.paint.configuration.ColorStylePresets;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
 
 	public class UserPaintSettingsModel
@@ -22,31 +27,120 @@ package net.psykosoft.psykopaint2.core.model
 		public var current_b:Number;
 		public var selectedSwatchIndex:int;
 		private var _currentHSV:HSV;
+		public var pipetteIsEmpty:Boolean;
+		public var colorStyleParameter:PsykoParameter;
+		public var styleBlendParameter:PsykoParameter;
+		public var previewMixtureParameter:PsykoParameter;
+		public var styleMatrices:Vector.<Vector.<Number>>;
+		private var initialized:Boolean;
 		
 		public function UserPaintSettingsModel()
-		{}
+		{
+			initialized = false;
+		}
 		
 		
 		public function setDefaultValues():void
 		{
-			_colorPalettes = new Vector.<Vector.<uint>>();
-			if ( hasSourceImage )
+			if ( !initialized )
 			{
-				_colorPalettes.push( canvasModel.getColorPaletteFromSource(8));
-				_colorPalettes[0].unshift(0x0b0b0b);
-				_colorPalettes[0].push(0xdedddb);
-				while(_colorPalettes[0].length < 10 ) _colorPalettes[0].push( int(Math.random() * 0xffffff));
+				_colorPalettes = new Vector.<Vector.<uint>>();
+				pipetteIsEmpty = true;
+				if ( hasSourceImage )
+				{
+					_colorPalettes.push( canvasModel.getColorPaletteFromSource(8));
+					_colorPalettes[0].unshift(0x0b0b0b);
+					_colorPalettes[0].push(0xdedddb);
+					while(_colorPalettes[0].length < 10 ) _colorPalettes[0].push( int(Math.random() * 0xffffff));
+					selectedSwatchIndex = 4;
+					_colorMode = PaintMode.PHOTO_MODE;
+				} else {
+					selectedSwatchIndex = 0;
+					_colorMode = PaintMode.COLOR_MODE;
+				}
+				styleBlendParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Style Blend Factor",1,0,1);
+				previewMixtureParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Preview Blending",0.5,0,1);
+				setupColorTransfer();
+				
+				_colorPalettes.push( Vector.<uint>([0x0b0b0b,0x01315a,0x00353b,0x026d01,0x452204,
+					0x7a1023,0xa91606,0xbd9c01,0x04396c,0xdedddb]));
+				
+				
+				
+				_currentHSV = new HSV(0,0,0);
+				//colorMode = PaintMode.PHOTO_MODE;
+				//0x062750,0x04396c,
+				//,0xd94300
+				
+				initialized = true;
 			}
-			_colorPalettes.push( Vector.<uint>([0x0b0b0b,0x01315a,0x00353b,0x026d01,0x452204,
-				0x7a1023,0xa91606,0xbd9c01,0x04396c,0xdedddb]));
-			
-			selectedSwatchIndex = -1;
-			_colorMode = -1;
-			_currentHSV = new HSV(0,0,0);
-			//colorMode = PaintMode.PHOTO_MODE;
-			//0x062750,0x04396c,
-			//,0xd94300
 		}
+		
+		
+		private function setupColorTransfer():void
+		{
+			styleMatrices = new Vector.<Vector.<Number>>();
+			//var cm:ColorMatrix = new ColorMatrix();
+			styleMatrices.push(null);
+			var colorTransfer:ColorTransfer = canvasModel.colorTransfer;
+			var parameterList:Array = ["No Style"];
+			
+			var presets:Vector.<String> = ColorStylePresets.getAvailableColorStylePresets();
+			var cm:ColorMatrix;
+			for ( var i:int = 0; i < presets.length; i++ )
+			{
+				
+				var preset:XML = ColorStylePresets.getPreset(presets[i]);
+				parameterList.push(preset.@name);
+				colorTransfer.setFactors(0, preset );
+				colorTransfer.calculateColorMatrices();
+				cm = colorTransfer.getColorMatrix(0);
+				var v:Vector.<Number> = Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]);
+				cm = colorTransfer.getColorMatrix(1);
+				v.push(cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255);
+				var blendIn:Number = preset.@blend_in;
+				var blendOut:Number =  preset.@blend_out;
+				var blendRange:Number = blendIn + blendOut;
+				var threshold:Number = colorTransfer.getThreshold(blendIn,blendOut);
+				v.push((threshold - blendRange *0.5 )/ 255.0 ,  255 / blendRange );
+				styleMatrices.push( v );
+				
+			}
+			
+			colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,parameterList);
+			
+			
+			
+			
+			/*
+			cm.adjustContrast(10);
+			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
+			cm.reset();
+			cm.desaturate();
+			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
+			cm.reset();
+			cm.adjustSaturation(4);
+			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
+			cm.reset();
+			cm.randomize(100);
+			cm.fitRange();
+			cm.adjustContrast(2);
+			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
+			cm.randomize(100);
+			cm.fitRange();
+			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
+			cm.randomize(100);
+			cm.fitRange();
+			cm.adjustContrast(2);
+			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
+			cm.randomize(100);
+			cm.fitRange();
+			cm.adjustContrast(2);
+			styleMatrices.push( Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4]/ 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]));
+			*/
+			
+		}
+		
 		
 		public function set colorPalettes( value:Vector.<Vector.<uint>> ):void
 		{

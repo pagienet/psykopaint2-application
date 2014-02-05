@@ -187,27 +187,27 @@ package com.quasimondo.color.utils
 			
 			var result:Vector.<uint> = new Vector.<uint>();
 			var hsl_base:HSL = ColorConverter.AnyToHSL(color);
-			
+			var c:uint, t:Number;
 			for ( var i:int = 0; i < count / 2; i++ )
 			{
 				var hsl:HSL = new HSL();
 				hsl.hue = hsl_base.hue ;
-				var t:Number = i / (count / 2);
+				t = i / (count / 2);
 				
 				hsl.saturation = hsl_base.saturation * t;
 				hsl.lightness = hsl_base.lightness * t;
-				var c:uint = ColorConverter.HSLtoARGB(hsl).alphaColor;
+				c = ColorConverter.HSLtoARGB(hsl).alphaColor;
 				result.push(c);
 			}
-			for ( var i:int = 0; i < count / 2; i++ )
+			for ( i = 0; i < count / 2; i++ )
 			{
 				hsl = new HSL();
 				hsl.hue = hsl_base.hue ;
-				var t:Number = (i+1) / (count / 2);
+				t = (i+1) / (count / 2);
 				
 				hsl.saturation = ( 1-t) * hsl_base.saturation;
 				hsl.lightness = 99 * t + ( 1-t) * hsl_base.lightness;
-				var c:uint = ColorConverter.HSLtoARGB(hsl).alphaColor;
+				c = ColorConverter.HSLtoARGB(hsl).alphaColor;
 				result.push(c);
 			}
 			

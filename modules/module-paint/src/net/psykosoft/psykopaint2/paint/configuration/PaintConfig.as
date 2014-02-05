@@ -7,28 +7,21 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.controllers.GyroscopeLightController;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
-	import net.psykosoft.psykopaint2.core.drawing.modules.ColorStyleModule;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
-	import net.psykosoft.psykopaint2.core.model.RubberMeshModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.rendering.RubberMeshRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyCanvasMatrixChanged;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleConfirmSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyColorStyleModuleActivatedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyColorStylePresetsAvailableSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyHistoryStackChangedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationHideSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerSucceededSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifySetColorStyleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
@@ -38,29 +31,28 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.commands.ExportCanvasCommand;
 	import net.psykosoft.psykopaint2.paint.commands.LoadSurfaceCommand;
 	import net.psykosoft.psykopaint2.paint.commands.SetupPaintModuleCommand;
+	import net.psykosoft.psykopaint2.paint.commands.saving.DiscardPaintingCommand;
 	import net.psykosoft.psykopaint2.paint.commands.saving.SavePaintingCommand;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyCanvasZoomedToEaselViewSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyChangePipetteColorSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleDestroyedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPaintModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyPickedColorChangedSignal;
-	import net.psykosoft.psykopaint2.paint.signals.NotifyPipetteDischargeSignal;
+	import net.psykosoft.psykopaint2.paint.signals.NotifyPipetteChargeChangedSignal;
 	import net.psykosoft.psykopaint2.paint.signals.NotifyShowPipetteSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestCanvasExportSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestDestroyPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDeletionSignal;
+	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingDiscardSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestPaintingSaveSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestSetupPaintModuleSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToDefaultViewSignal;
 	import net.psykosoft.psykopaint2.paint.signals.RequestZoomCanvasToEaselViewSignal;
-	import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootView;
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootViewMediator;
-	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavView;
-	import net.psykosoft.psykopaint2.paint.views.brush.EditBrushSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavView;
@@ -127,7 +119,6 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map(GyroscopeLightController).asSingleton();
 			_injector.map(BrushShapeLibrary).asSingleton();
 			_injector.map(BrushKitManager).asSingleton();
-			_injector.map(ColorStyleModule).asSingleton();
 			_injector.map(CanvasRenderer).asSingleton();
 			_injector.map(LightingModel).asSingleton();
 			_injector.map(CanvasModel).asSingleton();
@@ -155,18 +146,16 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( RequestPaintRootViewRemovalSignal ).asSingleton();
 			_injector.map( NotifyAvailableBrushTypesSignal ).asSingleton();
 			_injector.map( NotifyActivateBrushChangedSignal ).asSingleton();
-			_injector.map( NotifyColorStyleModuleActivatedSignal ).asSingleton();
-			_injector.map( NotifySetColorStyleSignal ).asSingleton();
 			_injector.map( NotifyColorStylePresetsAvailableSignal ).asSingleton();
 			_injector.map( NotifyColorStyleChangedSignal ).asSingleton();
-			_injector.map( NotifyColorStyleConfirmSignal ).asSingleton();
-			_injector.map( NotifyNavigationHideSignal ).asSingleton();
 			_injector.map( NotifyHistoryStackChangedSignal ).asSingleton();
 			_injector.map( NotifySaveToServerStartedSignal ).asSingleton();
 			_injector.map( NotifySaveToServerSucceededSignal ).asSingleton();
 			_injector.map( NotifySaveToServerFailedSignal ).asSingleton();
 			_injector.map( NotifyShowPipetteSignal ).asSingleton();
-			_injector.map( NotifyPipetteDischargeSignal ).asSingleton();
+			_injector.map( NotifyPipetteChargeChangedSignal ).asSingleton();
+			_injector.map( NotifyChangePipetteColorSignal ).asSingleton();
+			
 		}
 
 		// -----------------------
@@ -177,6 +166,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 			_commandMap.map( RequestCanvasExportSignal ).toCommand( ExportCanvasCommand );
 			_commandMap.map( RequestPaintingSaveSignal ).toCommand( SavePaintingCommand );
+			_commandMap.map( RequestPaintingDiscardSignal ).toCommand( DiscardPaintingCommand );
 			_commandMap.map( RequestPaintingDeletionSignal ).toCommand( DeletePaintingCommand );
 			_commandMap.map( RequestSetupPaintModuleSignal ).toCommand( SetupPaintModuleCommand );
 			_commandMap.map( RequestDestroyPaintModuleSignal ).toCommand( DestroyPaintModuleCommand );
@@ -202,7 +192,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_mediatorMap.map( CanvasView ).toMediator( CanvasViewMediator );
 			_mediatorMap.map( PaintRootView ).toMediator( PaintRootViewMediator );
 			_mediatorMap.map( ColorPickerSubNavView ).toMediator( ColorPickerSubNavViewMediator );
-			_mediatorMap.map( AlphaSubNavView ).toMediator( AlphaSubNavViewMediator );
+			//_mediatorMap.map( AlphaSubNavView ).toMediator( AlphaSubNavViewMediator );
 			_mediatorMap.map( PipetteView ).toMediator( PipetteViewMediator );
 		}
 	}

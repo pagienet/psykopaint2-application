@@ -3,11 +3,12 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 	import flash.display.Bitmap;
 	import flash.display.Stage;
-
+	
 	import net.psykosoft.psykopaint2.core.signals.NotifyBlockingGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.ToggleTransformGestureSignal;
-
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleSwipeGestureSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyToggleTransformGestureSignal;
+	
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.LongPressGesture;
@@ -28,12 +29,27 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public var notifyBlockingGestureSignal:NotifyBlockingGestureSignal;
 
 		[Inject]
-		public var toggleTransformGestureSignal:ToggleTransformGestureSignal;
+		public var toggleTransformGestureSignal:NotifyToggleTransformGestureSignal;
+		
+		[Inject]
+		public var notifyToggleSwipeGestureSignal:NotifyToggleSwipeGestureSignal;
 		
 		private var _stage:Stage;
 		private var _delegate:GestureDelegate;
 		
 		private static var _gesturesEnabled:Boolean = true;
+		
+		
+		private var _swipeGestureRight:SwipeGesture;
+		private var _swipeGestureLeft:SwipeGesture;
+		private var _panGestureHorizontal:PanGesture;
+		private var _panGestureVertical:PanGesture;
+		private var _transformGesture:TransformGesture;
+		private var _tapGesture:TapGesture;
+		private var _doubleTapGesture:TapGesture;
+		private var _twoFingerTapGesture:TapGesture;
+		private var _longTapGesture:LongPressGesture;
+		
 		
 		public function GestureManager() {
 		}
@@ -42,10 +58,15 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public function postConstruct() : void
 		{
 			toggleTransformGestureSignal.add( onToggleTransformGesture );
+			notifyToggleSwipeGestureSignal.add( onToggleSwipeGesture );
 		}
 
 		private function onToggleTransformGesture( value:Boolean ):void {
 			_transformGesture.enabled = value;
+		}
+		
+		private function onToggleSwipeGesture( value:Boolean ):void {
+			_swipeGestureRight.enabled = _swipeGestureLeft.enabled = value;
 		}
 
 		public function set stage( value:Stage ):void {
@@ -69,8 +90,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		// Two finger swipes.
 		// ---------------------------------------------------------------------
 
-		private var _swipeGestureRight:SwipeGesture;
-		private var _swipeGestureLeft:SwipeGesture;
 
 		private function initTwoFingerSwipes():void {
 
@@ -105,8 +124,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		// 1 finger, horizontal pan.
 		// ---------------------------------------------------------------------
 
-		private var _panGestureHorizontal:PanGesture;
-
+		
 		private function initOneFingerHorizontalPan():void {
 			_panGestureHorizontal = new PanGesture( _stage );
 			_panGestureHorizontal.minNumTouchesRequired = _panGestureHorizontal.maxNumTouchesRequired = 1;
@@ -131,8 +149,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		// ---------------------------------------------------------------------
 		// 1 finger, vertical pan.
 		// ---------------------------------------------------------------------
-
-		private var _panGestureVertical:PanGesture;
 
 		private function initOneFingerVerticalPan():void {
 			_panGestureVertical = new PanGesture( _stage );
@@ -159,8 +175,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		// ---------------------------------------------------------------------
 		// Transform.
 		// ---------------------------------------------------------------------
-		
-		private var _transformGesture:TransformGesture;
 		
 		private function initTransformGesture():void {
 			_transformGesture = new TransformGesture( _stage );
@@ -198,7 +212,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		// Tap.
 		// ---------------------------------------------------------------------
 		
-		private var _tapGesture:TapGesture;
 		
 		//temporary fix until tap conflict with buttons has been resolved:
 		//private var _tapGesture:LongPressGesture;
@@ -210,6 +223,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 			_longTapGesture.slop = 0.01;
 			_longTapGesture.addEventListener( GestureEvent.GESTURE_BEGAN, onLongTapGestureBegan );
 			_longTapGesture.addEventListener( GestureEvent.GESTURE_ENDED, onLongTapGestureEnded );
+			
 			
 			_tapGesture = new TapGesture( _stage );
 			_tapGesture.addEventListener( GestureEvent.GESTURE_RECOGNIZED, onTapGestureRecognized );
@@ -257,9 +271,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		// Double Tap.
 		// ---------------------------------------------------------------------
 		
-		private var _doubleTapGesture:TapGesture;
-		private var _twoFingerTapGesture:TapGesture;
-		private var _longTapGesture:LongPressGesture;
 		
 		private function initDoubleTapGesture():void {
 			_doubleTapGesture = new TapGesture( _stage );

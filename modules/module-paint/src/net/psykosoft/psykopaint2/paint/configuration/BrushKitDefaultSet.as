@@ -455,7 +455,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 				<brush engine={BrushType.SKETCH} name="Pencil">
 					<parameter id={SketchBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" value="0.5" />
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="pencilSketch" />
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="pencilSketch" showInUI="1"/>
 					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value="0.25"/>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 						<parameter id={AbstractPathEngine.PARAMETER_SEND_TAPS} path="pathengine" value="0" />

@@ -12,7 +12,8 @@ package net.psykosoft.psykopaint2.paint.views.color
 	public class Pipette extends MovieClip
 	{
 		public var colorbar:Sprite;
-		
+		public var spotColor:Sprite;
+		public var spotColorSwatch:Sprite;
 		private var bar:Sprite;
 		private var _pipetteStartMouseX:Number;
 		private var _pipetteStartMouseY:Number;
@@ -32,6 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 		private var ct:ColorTransform;
 		private var _selectedColor:uint;
 		private var lastActionCharge:Boolean;
+		private var dummyColorTransform:ColorTransform;
 		
 		public function Pipette()
 		{
@@ -40,10 +42,17 @@ package net.psykosoft.psykopaint2.paint.views.color
 			ct = new ColorTransform();
 			this.blendMode = BlendMode.LAYER;
 			bar = colorbar["bar"];
+			dummyColorTransform = new ColorTransform()
 		}
 		
-		public function startCharge( incomingColor:uint):void
+		public function startCharge( incomingColor:uint, showSpotColor:Boolean ):void
 		{
+			if ( showSpotColor )
+			{
+				dummyColorTransform.color = incomingColor;
+				spotColor.transform.colorTransform = dummyColorTransform;
+			} 
+			spotColor.visible = spotColorSwatch.visible = showSpotColor;
 			visible = true;
 			lastActionCharge = false;
 			_pipetteStartMouseX = parent.mouseX;
@@ -143,6 +152,15 @@ package net.psykosoft.psykopaint2.paint.views.color
 		public function get currentColor():uint
 		{
 			return _selectedColor;
+		}
+		
+		public function set currentColor(value:uint):void
+		{
+			pipette_red = ( value >> 16) & 0xff;
+			pipette_green = ( value >> 8) & 0xff;
+			pipette_blue = value  & 0xff;
+			_selectedColor = ct.color = int(pipette_red+0.5) << 16 | int(pipette_green+0.5) << 8 | int(pipette_blue+0.5);
+			bar.transform.colorTransform = ct;
 		}
 		
 		public function get isEmpty():Boolean

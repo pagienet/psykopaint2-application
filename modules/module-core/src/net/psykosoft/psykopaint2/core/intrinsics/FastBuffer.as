@@ -176,5 +176,11 @@ package net.psykosoft.psykopaint2.core.intrinsics
 			}
 		}
 		
+		public function dispose():void
+		{
+			_buffer = null;
+			_baseOffset = _indexOffset = _indexMode = -1;
+			 
+		}
 	}
 }

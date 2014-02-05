@@ -50,7 +50,8 @@ package net.psykosoft.psykopaint2.paint.commands
 		override public function execute() : void
 		{
 			super.execute();
-			MemoryManagerIntrinsics.releaseAllMemory();
+			//Not required - already done before
+			//MemoryManagerIntrinsics.releaseAllMemory();
 			lightController.enabled = false;
 			canvasModel.dispose();
 			canvasHistoryModel.clearHistory();	// cleans up snapshot memory too

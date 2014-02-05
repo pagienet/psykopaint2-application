@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.core.signals
 	{
 		public function NotifyUserLogInFailedSignal()
 		{
-			// AMFErrorCode, reason
-			super(int, String);
+			// AMFErrorCode, reason, firstname of user that introduced incorrect password
+			super(int, String, String);
 		}
 	}
 }

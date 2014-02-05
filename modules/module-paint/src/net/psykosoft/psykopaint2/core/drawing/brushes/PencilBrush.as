@@ -14,8 +14,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.core.resources.ITextureManager;
-
+	
 	public class PencilBrush extends AbstractBrush
 	{
         private var _surfaceRelief:PsykoParameter;

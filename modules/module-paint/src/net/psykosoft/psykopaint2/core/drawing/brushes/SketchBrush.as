@@ -6,8 +6,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import de.popforge.math.LCG;
 	
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SketchMesh;
@@ -64,11 +62,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			SketchMesh(_brushMesh).brushTexture = _brushShape.texture;
 			SketchMesh(_brushMesh).pixelUVOffset = 0.5 / _brushShape.size;
 			_pathManager.brushAngleRange = brushShape.rotationRange;
-		}
-
-		override protected function createColorStrategy() : IColorStrategy
-		{
-			return new PyramidMapIntrinsicsStrategy(_canvasModel);
 		}
 
 		override protected function onPickColor( point : SamplePoint, pickRadius:Number, smoothFactor:Number ) : void

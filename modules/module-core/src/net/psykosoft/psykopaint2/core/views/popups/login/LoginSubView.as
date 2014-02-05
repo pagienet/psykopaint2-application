@@ -138,6 +138,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			var valid:int = PsykoInputValidationUtil.validatePasswordFormat( passwordInput );
 			trace( this, "validating password: " + valid );
 			if( valid == 1 ) displaySatelliteMessage( passwordInput, LoginCopy.NO_PASSWORD );
+			if( valid == 2 ) displaySatelliteMessage( passwordInput, LoginCopy.PASSWORD_6_CHARS_MIN );
 			return valid == 0;
 		}
 

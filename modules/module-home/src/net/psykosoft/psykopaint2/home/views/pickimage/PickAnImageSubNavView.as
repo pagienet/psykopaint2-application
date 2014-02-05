@@ -10,6 +10,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		public static const ID_USER:String = "Your files";
 		public static const ID_SAMPLES:String = "Our samples";
 		public static const ID_CAMERA:String = "Your camera";
+		public static const ID_SCRATCH:String = "From Scratch";
 //		public static const ID_FACEBOOK:String = "[Facebook]";
 
 		public function PickAnImageSubNavView() {
@@ -23,7 +24,8 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 
 		override protected function onSetup():void {
 			super.onSetup();
-			createCenterButton( ID_USER, ID_USER, ButtonIconType.PICTURE );
+			createCenterButton( ID_SCRATCH, ID_SCRATCH, ButtonIconType.CAMERA_ROLL );
+			createCenterButton( ID_USER, ID_USER, ButtonIconType.FROM_IPAD );
 			createCenterButton( ID_SAMPLES, ID_SAMPLES, ButtonIconType.SAMPLES );
 			createCenterButton( ID_CAMERA, ID_CAMERA, ButtonIconType.CAMERA );
 			validateCenterButtons();

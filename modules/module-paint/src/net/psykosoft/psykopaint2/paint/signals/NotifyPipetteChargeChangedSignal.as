@@ -4,11 +4,11 @@ package net.psykosoft.psykopaint2.paint.signals
 	
 	import org.osflash.signals.Signal;
 
-	public class NotifyPipetteDischargeSignal extends Signal
+	public class NotifyPipetteChargeChangedSignal extends Signal
 	{
-		public function NotifyPipetteDischargeSignal()
+		public function NotifyPipetteChargeChangedSignal()
 		{
-			super( Pipette );
+			super( Pipette, Boolean );
 		}
 	}
 }

@@ -266,7 +266,14 @@ package net.psykosoft.psykopaint2.book.views.book.data
 	 			}
 	 			_textures = null;
  			}
-
+			
+			//several lingering objects I found in the debugger:
+			spm.dispose();
+			ringsMaterial.dispose();
+			_pageBitmapCubeTexture.dispose();
+			_blankBook.dispose();
+			
+			
  			_materialsCount = 0;
  		}
 

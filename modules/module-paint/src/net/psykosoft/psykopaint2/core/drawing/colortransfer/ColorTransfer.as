@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.colortransfer
 {
 	import com.quasimondo.geom.ColorMatrix;
+	import com.quasimondo.geom.CoordinateShuffler;
 	
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
@@ -8,9 +9,12 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 	import flash.geom.Orientation3D;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
-
+	
+	import avm2.intrinsics.memory.li32;
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-
+	import net.psykosoft.psykopaint2.core.intrinsics.PyramidMapIntrinsics;
+	
 	import ru.inspirit.linalg.JacobiSVD;
 	
 	public class ColorTransfer
@@ -28,6 +32,7 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 		
 		private var currentSourceToTargetMatrices:Vector.<Matrix3D>;
 		private var targetMap:BitmapData;
+		private var targetPyramidMap:PyramidMapIntrinsics;
 		private var threshold_target:int;
 		
 		public function ColorTransfer()
@@ -63,6 +68,13 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 		{
 			if ( value != null ) analyzeMap( value, 1, maxPixelCount );
 			targetMap = value;
+			hasTarget = ( value != null );
+		}
+		
+		public function setTargetFromPyramidMap( value:PyramidMapIntrinsics, maxPixelCount:uint = 0xffffffff ):void
+		{
+			if ( value != null ) analyzePyramidMap( value, 1, maxPixelCount );
+			targetPyramidMap = value;
 			hasTarget = ( value != null );
 		}
 		
@@ -131,6 +143,123 @@ package net.psykosoft.psykopaint2.core.drawing.colortransfer
 					sum_r[binIndex] += ( c >> 16 ) & 0xff;
 					sum_g[binIndex] += ( c >> 8 ) & 0xff;
 					sum_b[binIndex] += c & 0xff;
+					rgbValues[i++] = c;
+					totalColors[binIndex]++;
+				}
+			}
+			
+			if ( totalColors[0] != 0 )
+			{
+				mx[0] = 0.5 + sum_r[0] / totalColors[0];
+				my[0] = 0.5 + sum_g[0] / totalColors[0];
+				mz[0] = 0.5 + sum_b[0] / totalColors[0];
+			} else {
+				totalColors[0] = 1;
+			}
+			
+			if ( totalColors[1] != 0 )
+			{
+				mx[1] = 0.5 + sum_r[1] / totalColors[1];
+				my[1] = 0.5 + sum_g[1] / totalColors[1];
+				mz[1] = 0.5 + sum_b[1] / totalColors[1];
+			}  else {
+				totalColors[1] = 1;
+			}
+			
+			
+			for ( i = rgbValues.length; --i > -1; )
+			{
+				c = rgbValues[i];
+				idx = binIndices[c];
+				var dx:int = (( c >> 16 ) & 0xff) - mx[idx];
+				var dy:int = (( c >> 8 ) & 0xff) - my[idx];
+				var dz:int = (c & 0xff) - mz[idx];
+				c11[idx] += dx * dx;
+				c22[idx] += dy * dy;
+				c33[idx] += dz * dz;
+				c12[idx] += dx * dy;
+				c13[idx] += dx * dz;
+				c23[idx] += dy * dz;
+				
+			}
+			
+			var sv:Vector.<Number> = new Vector.<Number>(3,true);
+			var U:Vector.<Number> = new Vector.<Number>(9,true);
+			var V:Vector.<Number> = new Vector.<Number>(9,true);
+			for ( i = 0; i < 2; i++ )
+			{
+				jacobi.decompose( Vector.<Number>([ c11[i] / totalColors[i], c12[i] / totalColors[i], c13[i] / totalColors[i] ,
+					c12[i] / totalColors[i], c22[i] / totalColors[i], c23[i] / totalColors[i] ,
+					c13[i] / totalColors[i], c23[i] / totalColors[i], c33[i] / totalColors[i] ]),
+					3,3,
+					sv,U,V);
+				
+				var svr:Number = Math.sqrt(sv[0]);
+				var svg:Number = Math.sqrt(sv[1]);
+				var svb:Number = Math.sqrt(sv[2]);
+				
+				
+				var pcv_r:Vector3D = new Vector3D( U[0] * svr, U[3] * svr, U[6] * svr );
+				var pcv_g:Vector3D = new Vector3D( U[1] * svg, U[4] * svg, U[7] * svg );
+				var pcv_b:Vector3D = new Vector3D( U[2] * svb, U[5] * svb, U[8] * svb );
+				
+				dimensions[index][i] = new Vector3D( svr*2, svg*2, svb*2 );
+				invRotationMatrices[index][i] = new Matrix3D( Vector.<Number>([U[0],U[1],U[2],0,U[3],U[4],U[5],0,U[6],U[7],U[8],0,0,0,0,1]));
+				rotationMatrices[index][i] = invRotationMatrices[index][i].clone();
+				rotationMatrices[index][i].invert();
+				
+				means[index][i] = new Vector3D(mx[i],my[i],mz[i]);
+				
+			}
+		}
+		
+		
+		private function analyzePyramidMap( map:PyramidMapIntrinsics, index:int,  maxPixelCount:uint = 0xffffffff ):void
+		{
+			
+			var shuffler:CoordinateShuffler = new CoordinateShuffler(map.width>>1,map.height>>1,777777);
+			maxPixelCount = Math.min(maxPixelCount, (map.width>>1) * (map.height>>1));
+			var idxOffset:int = map.getMemoryOffset(1);
+			var histo:Histogram = new Histogram(256);
+			var lumaLut:Object = {};
+			var indices:Vector.<uint> = shuffler.getCoordinateIndices(maxPixelCount);
+			for ( var i:int = maxPixelCount; --i > -1; )
+			{
+				var c:int = li32(idxOffset+(indices[i]<<2));
+				histo.add( lumaLut[c] = int((76 * (( c >> 8 ) & 0xff) + 150 * (( c >> 16 ) & 0xff) +  29 * (( c >>> 24 ) & 0xff) + 128) >> 8 ));
+			}
+			
+			var threshold:int = histo.getThreshold(Histogram.THRESHOLD_ENTROPY);
+			if ( index == 1 ) threshold_target = threshold;
+			var rgbValues:Vector.<int> = new Vector.<int>();
+			var sum_r:Vector.<Number> = new Vector.<Number>(2,true);
+			var sum_g:Vector.<Number> = new Vector.<Number>(2,true);
+			var sum_b:Vector.<Number> = new Vector.<Number>(2,true);
+			var mx:Vector.<int> = new Vector.<int>(2,true);
+			var my:Vector.<int> = new Vector.<int>(2,true);
+			var mz:Vector.<int> = new Vector.<int>(2,true);
+			var c11:Vector.<Number> = new Vector.<Number>(2,true);
+			var c22:Vector.<Number> = new Vector.<Number>(2,true);
+			var c33:Vector.<Number> = new Vector.<Number>(2,true);
+			var c12:Vector.<Number> = new Vector.<Number>(2,true);
+			var c13:Vector.<Number> = new Vector.<Number>(2,true);
+			var c23:Vector.<Number> = new Vector.<Number>(2,true);
+			var totalColors:Vector.<uint> = new Vector.<uint>(2,true);
+			var binIndices:Object = {};
+			
+			
+			var binIndex:int;
+			var idx:int = maxPixelCount;
+			i = 0;
+			while( --idx > -1 )
+			{
+				c = li32(idxOffset+(indices[idx]<<2));
+				if ( binIndices[c] == null )
+				{
+					binIndices[c] = binIndex = (int(lumaLut[c]) < threshold ? 0 : 1);
+					sum_r[binIndex] += ( c >> 8 ) & 0xff;
+					sum_g[binIndex] += ( c >> 16 ) & 0xff;
+					sum_b[binIndex] += ( c >>> 24 ) & 0xff;
 					rgbValues[i++] = c;
 					totalColors[binIndex]++;
 				}

@@ -92,13 +92,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			TexturedAntialiasedColoredTriangleStroke(_brushMesh).normalTexture = _brushShape.normalSpecularMap;
 		}
 
-		override protected function createColorStrategy() : IColorStrategy
-		{
-			var strategy : PyramidMapIntrinsicsStrategy = new PyramidMapIntrinsicsStrategy(_canvasModel);
-			//strategy.setBlendFactors(1,1);
-			return strategy;
-		}
-		
 		override protected function onPickColor( point : SamplePoint, pickRadius:Number, smoothFactor:Number ) : void
 		{
 			

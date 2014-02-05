@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.paint.signals
 	{
 		public function NotifyShowPipetteSignal()
 		{
-			super( Sprite, uint, Point);
+			super( Sprite, uint, Point, Boolean);
 		}
 	}
 }

@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
@@ -120,6 +119,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		}
 		
+		public function dispose():void
+		{
+			
+		}
+		
 		protected function createBrushMesh() : IBrushMesh
 		{
 			throw new AbstractMethodError();
@@ -154,7 +158,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected function set brushShape(brushShape : AbstractBrushShape) : void
 		{
 			if (_brushShape == brushShape) return;
-			if (_brushShape) _brushShape.freeMemory();
+			if (_brushShape) _brushShape.dispose();
 			_brushShape = brushShape;
 			_shapeVariations = _brushShape.variationFactors;
 			_appendVO.uvBounds.width = _shapeVariations[2];
@@ -186,6 +190,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context = context;
 			_pathManager.activate( view, canvasModel, renderer );
 			_shapes.addEventListener( Event.CHANGE, onShapeChanged );
+			
+			_colorStrategy ||= createColorStrategy();
 		}
 		
 		public function deactivate() : void
@@ -193,7 +199,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_renderInvalid = false;
 			_pathManager.deactivate();
 			_shapes.removeEventListener( Event.CHANGE, onShapeChanged );
-			if (_brushShape) _brushShape.freeMemory();
+			if (_brushShape) _brushShape.dispose();
 		}
 
 		private function finalizeStroke() : void
@@ -212,7 +218,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_inProgress = true;
 			if (_brushShape) _brushShape.update();
 			_brushMesh.clear();
-			_colorStrategy ||= createColorStrategy();
+			
+			// sorry, but this was interfering with color transfer so I moved it into the activation method
+			//_colorStrategy ||= createColorStrategy();
+			
 			_canvasScaleW = 2.0 / _canvasModel.textureWidth;	// 0 - 1
 			_canvasScaleH = 2.0 / _canvasModel.textureHeight;	// 0 - 1
 			_bounds.setEmpty();
@@ -497,6 +506,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function set snapShot(value : CanvasSnapShot) : void
 		{
 			_snapshot = value;
+		}
+		
+		public function setColorStrategyColorMatrix(colorMatrix:Vector.<Number>, blendFactor:Number):void
+		{
+			_colorStrategy.setColorMatrix(colorMatrix,blendFactor);
+			
 		}
 	}
 }

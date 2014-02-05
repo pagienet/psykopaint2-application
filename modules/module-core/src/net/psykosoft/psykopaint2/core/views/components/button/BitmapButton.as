@@ -7,9 +7,9 @@ package net.psykosoft.psykopaint2.core.views.components.button
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.ColorTransform;
 	
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
-	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	
 	import org.gestouch.events.GestureEvent;
 	import org.gestouch.gestures.PanGesture;
@@ -21,10 +21,12 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public var label:Sprite;
 		public var icon:MovieClip;
 		public var pin:MovieClip;
+		public var deleteIcon:MovieClip;
 
 		private var _pin:MovieClip;
 		private var _pinDefaultY:Number;
 		private var _panGestureVertical:PanGesture;
+		public var _deleted:Boolean = false;
 		
 		public function BitmapButton() {
 			super();
@@ -32,6 +34,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			super.setIcon( icon );
 			setPin();
 			label.visible = false;
+			deleteIcon.visible = false;
 		}
 
 		private function setPin():void {
@@ -43,6 +46,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 
 		private function randomizePinsAndRotation():void {
 			_icon.rotation = 4 * Math.random() - 2;
+			_pin.rotation = 4 * Math.random() - 2;
 		}
 
 		override protected function adjustBitmap():void {
@@ -63,14 +67,36 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			initOneFingerVerticalPan();
 		}
 		
+		public function set deleted( value:Boolean ):void
+		{
+			_deleted = value;
+			_iconBitmap.transform.colorTransform = value ? new ColorTransform(0.2,0.2,0.2) : new ColorTransform();
+		}
+		
+		public function get deleted():Boolean
+		{
+			return _deleted;
+		}
+		
 		public function enterDeleteMode():void
 		{
 			TweenLite.to( _pin, 0.2, { y: _pinDefaultY - 30, ease: Strong.easeInOut } );
+			addEventListener(Event.ENTER_FRAME, wigglePin );
+			deleteIcon.visible = true;
+		}
+		
+		protected function wigglePin(event:Event):void
+		{
+			_pin.rotation = Math.random() * 10 - 5;
+			
 		}
 		
 		public function enterDefaultMode():void
 		{
 			TweenLite.to( _pin, 0.2, { y: _pinDefaultY, ease: Strong.easeInOut } );
+			_pin.rotation = 4 * Math.random() - 2;
+			removeEventListener(Event.ENTER_FRAME, wigglePin );
+			deleteIcon.visible = false;
 		}
 		
 		private function initOneFingerVerticalPan():void {
@@ -80,19 +106,15 @@ package net.psykosoft.psykopaint2.core.views.components.button
 				_panGestureVertical.minNumTouchesRequired = _panGestureVertical.maxNumTouchesRequired = 1;
 				_panGestureVertical.direction = PanGestureDirection.VERTICAL;
 				_panGestureVertical.addEventListener( GestureEvent.GESTURE_BEGAN, onVerticalPanGestureBegan );
-				_panGestureVertical.addEventListener( GestureEvent.GESTURE_ENDED, onVerticalPanGestureEnded );
 			}
 		
 		}
 		
 		private function onVerticalPanGestureBegan( event:GestureEvent ):void {
-			trace("vertical pan started");
-			enterDeleteMode();
+			trace("vertical pan started "+_panGestureVertical.offsetY);
+			dispatchEvent(new Event("VerticalSwipe"));
 		}
 		
-		private function onVerticalPanGestureEnded( event:GestureEvent ):void {
-			trace("vertical pan ended"); 
-			
-		}
+		
 	}
 }

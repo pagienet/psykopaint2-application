@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		private var _snapRadians:Number = Math.PI * 1.5 / 180;
 		
 		private var content:Bitmap;
-		private var _transformGesture:TransformGesture;
+		//private var _transformGesture:TransformGesture;
 		
         public function TouchSheet(map:BitmapData, initialContentScale:Number = 1)
         {
@@ -41,10 +41,12 @@ package net.psykosoft.psykopaint2.base.ui.components
 			
 			content.bitmapData = map;
 			content.smoothing = true;
-            content.scaleX =  content.scaleY =initialContentScale;
+            content.scaleX =  content.scaleY = initialContentScale;
 			
 			_contentsWidth = map.width;
 			_contentsHeight = map.height;
+			
+			opaqueBackground = 0xffffff;
 			
 			centerContent();
 		
@@ -52,13 +54,13 @@ package net.psykosoft.psykopaint2.base.ui.components
 		
 		protected function onAddedToStage(event:Event):void
 		{
-			_transformGesture = new TransformGesture(this);
-			_transformGesture.addEventListener(org.gestouch.events.GestureEvent.GESTURE_BEGAN, onGesture);
-			_transformGesture.addEventListener(org.gestouch.events.GestureEvent.GESTURE_CHANGED, onGesture);
+			//_transformGesture = new TransformGesture(this);
+			//_transformGesture.addEventListener(org.gestouch.events.GestureEvent.GESTURE_BEGAN, onGesture);
+			//_transformGesture.addEventListener(org.gestouch.events.GestureEvent.GESTURE_CHANGED, onGesture);
 			centerContent();
 		}
 		
-		private function onGesture(event:org.gestouch.events.GestureEvent):void
+		public function onGesture(event:GestureEvent):void
 		{
 			const gesture:TransformGesture = event.target as TransformGesture;
 			var matrix:Matrix = content.transform.matrix;
@@ -83,7 +85,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		}
 		
 		
-		private function centerContent():void
+		public function centerContent():void
 		{
 			if ( !stage || !content ) return;
 			
@@ -127,7 +129,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 		public function set limitsRect( value:Rectangle ):void
 		{
 			_limitsRect = value;
-			clampToLimitRect(false);
+			clampToLimitRect(true);
 		}
         
 		
@@ -291,12 +293,14 @@ package net.psykosoft.psykopaint2.base.ui.components
         {
 			if (content && content.bitmapData)
 				content.bitmapData.dispose();
-
+			
+			/*
 			if (_transformGesture)
 			{
 				_transformGesture.dispose();
 				_transformGesture = null;
 			}
+			*/
            
         }
     }

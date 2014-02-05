@@ -65,38 +65,42 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		override protected function onButtonClicked( id:String ):void {
 			switch( id ) {
 
-				case CanvasSubNavView.ID_HOME:
+				case CanvasSubNavView.ID_SAVE:
 				{
-					requestClosePaintViewSignal.dispatch();
+					requestClosePaintViewSignal.dispatch( true);
 					break;
 				}
 
-				case CanvasSubNavView.ID_DESTROY:
+				case CanvasSubNavView.ID_DISCARD:
 				{
+					/*
 					if( paintingModel.activePaintingId != PaintingInfoVO.DEFAULT_VO_ID && paintingModel.activePaintingId != "" ) {
 						requestPaintingDeletionSignal.dispatch( paintingModel.activePaintingId );
 					}
+					*/
+					requestClosePaintViewSignal.dispatch( false);
 					break;
 				}
-
+/*
 				case CanvasSubNavView.ID_CLEAR:
 				{
 					requestClearCanvasSignal.dispatch();
 					break;
 				}
+					*/
 
-				case CanvasSubNavView.ID_EXPORT:
+				case CanvasSubNavView.ID_DOWNLOAD:
 				{
 					requestCanvasExportSignal.dispatch();
 					break;
 				}
-
+					
 				case CanvasSubNavView.ID_PUBLISH:
 				{
 					requestSavePaintingToServerSignal.dispatch();
 					break;
 				}
-
+/*
 				case CanvasSubNavView.ID_SAVE:
 				{
 					_time = getTimer();
@@ -107,7 +111,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					requestPaintingSaveSignal.dispatch();
 					break;
 				}
-
+*/
 				case CanvasSubNavView.ID_PICK_A_BRUSH:
 				{
 					requestNavigationStateChange( NavigationStateType.PAINT_SELECT_BRUSH );

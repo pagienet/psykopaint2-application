@@ -20,5 +20,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 		public static const LONG_TAP_GESTURE_ENDED:String        = "longtap/ended";
 		public static const TWO_FINGER_TAP_GESTURE_RECOGNIZED:String  = "two/finger/tap/recognized";
 		public static const DOUBLE_TAP_GESTURE_RECOGNIZED:String = "doubletap/recognized";
+		
 	}
 }

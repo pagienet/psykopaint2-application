@@ -11,6 +11,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 		private var _source:BitmapData;
 		private var _scaled:BitmapData;
 		private var _offsets:Vector.<Matrix>;
+		public var width:int;
+		public var height:int;
 		
 		public function PyramidMap( sourceMap:BitmapData )
 		{
@@ -21,24 +23,28 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 		{
 			_scaled.dispose();
 			_scaled = null;
+			_source = null;
+			_offsets = null;
 		}
 		
 		public function setSource( map:BitmapData ):void
 		{
 			this._source = map;
-
+			width = map.width;
+			height = map.height;
+			
 			if (_scaled) _scaled.dispose();
-			_scaled = new TrackedBitmapData( Math.ceil(map.width * 0.75), Math.ceil(map.height * 0.5), true, 0 );
+			_scaled = new TrackedBitmapData( Math.ceil(width * 0.75), Math.ceil(height * 0.5), true, 0 );
 			var m:Matrix = new Matrix(0.5,0,0,0.5);
 			_scaled.draw( map, m, null, "normal",null,true);
-			m.tx += map.width * 0.5;
+			m.tx += width * 0.5;
 			_scaled.draw( _scaled, m, null, "normal",null,true);
-			m.ty += map.height * 0.25;
+			m.ty += height * 0.25;
 			m.a = m.d *= 0.5;
 			_scaled.draw( _scaled, m, null, "normal",null,true);
 			m.a = m.d *= 0.25;
-			m.tx += map.width * 0.125;
-			m.ty += map.height * 0.0625;
+			m.tx += width * 0.125;
+			m.ty += height * 0.0625;
 			_scaled.draw( _scaled, m, null, "normal",null,true);
 			
 			var f:Number = 1;
@@ -49,10 +55,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			for ( var i:int = 0; i < 15; i++ )
 			{
 				m.a = m.d *= 0.5;
-				m.tx += map.width * (f *= 0.5);
+				m.tx += width * (f *= 0.5);
 				_offsets.push(m.clone());
 				m.a = m.d *= 0.5;
-				m.ty += map.height * (f *= 0.5);
+				m.ty += height * (f *= 0.5);
 				_offsets.push(m.clone());
 			}
 		}

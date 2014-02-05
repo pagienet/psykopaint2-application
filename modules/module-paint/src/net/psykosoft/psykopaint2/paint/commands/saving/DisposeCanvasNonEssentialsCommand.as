@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 {
 	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
 	
+	import net.psykosoft.psykopaint2.core.drawing.config.FastBufferManager;
 	import net.psykosoft.psykopaint2.core.intrinsics.MemoryManagerIntrinsics;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -21,6 +22,7 @@ package net.psykosoft.psykopaint2.paint.commands.saving
 
 			canvasModel.disposeBackBuffer();
 			historyModel.clearHistory();
+			FastBufferManager.dispose();
 			MemoryManagerIntrinsics.releaseAllMemory();
 			dispatchComplete(true);
 		}

@@ -272,7 +272,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 						}
 						
 						
-						for ( var j:int = 0; j < poly.pointCount; j++ )
+						for ( j = 0; j < poly.pointCount; j++ )
 						{
 							if( Math.random() < 0.5 ) poly.getPointAt(j).minus(poly.getNormalAtIndex(j,16 * (Math.random()-Math.random())));
 						}

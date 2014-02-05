@@ -148,12 +148,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			throw new AbstractMethodError();
 		}
 
-		public function freeMemory() : void
+		public function dispose():void
 		{
 			if (_texture) {
 				_texture.dispose();
 				_texture = null;
 			}
+			if (_normalSpecularMap) {
+				_normalSpecularMap.dispose();
+				_normalSpecularMap = null;
+			}
+			_variationFactors.length = 0
+			_YUVWeights.length = 0;
+			_context = null;
 		}
 
 		protected function uploadMips(size : int, source : BitmapData, texture : Texture) : void
