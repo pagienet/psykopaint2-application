@@ -19,7 +19,6 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeIntroSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
@@ -125,7 +124,6 @@ package net.psykosoft.psykopaint2.home.config
 	   		_injector.map( RequestOpenPaintingDataVOSignal ).asSingleton();
 	   		_injector.map( RequestHomeRootViewRemovalSignal ).asSingleton();
 	   		_injector.map( NotifyHomeViewSceneReadySignal ).asSingleton();
-			_injector.map( RequestSetGalleryPaintingSignal ).asSingleton();
 			_injector.map( NotifyHomeViewIntroZoomCompleteSignal ).asSingleton();
 		}
 

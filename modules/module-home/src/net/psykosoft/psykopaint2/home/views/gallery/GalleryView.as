@@ -101,6 +101,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private var _loadingHQ:Boolean;
 		private var _dragStartX:Number;
 		private var _dragStartY:Number;
+		private var _highQualityIndex : int = -1;
 
 		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -172,19 +173,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			_highQualityColorTexture = new BitmapTexture(null);
 			_highQualityNormalSpecularTexture = new ByteArrayTexture(null, 0, 0);
-
-			/*_highQualityMaterial = new TextureMaterial(null, true, false, false);
-			_highQualityMaterial.normalMethod = new PaintingNormalMethod();
-			_highQualityMaterial.diffuseMethod = new PaintingDiffuseMethod();
-			_highQualityMaterial.specularMethod = new PaintingSpecularMethod();
-			_highQualityMaterial.lightPicker = new StaticLightPicker([_light]);
-			_highQualityMaterial.ambientColor = 0xffffff;
-			_highQualityMaterial.ambient = 1;
-			_highQualityMaterial.specular = 1.5;
-			_highQualityMaterial.gloss = 200;
-			_highQualityMaterial.texture = _highQualityColorTexture;
-			_highQualityMaterial.normalMap = _highQualityNormalSpecularTexture;
-			_highQualityMaterial.specularMap = _highQualityNormalSpecularTexture;     */
 
 			_highQualityMaterial = new PaintingMaterial();
 			_highQualityMaterial.lightPicker = new StaticLightPicker([_light]);
@@ -471,6 +459,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function removeHighQualityMaterial():void
 		{
+			_highQualityIndex = -1;
 			if (_activeImageProxy)
 				_activeImageProxy.cancelLoading();
 			// also test if painting hasn't been destroyed yet due to panning
@@ -563,7 +552,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 			// in case the active painting was moved out of sight and disposed, reset the HQ material
 			// UNLESS it hasn't finished loading!
-			if (!_loadingHQ && _showHighQuality && index == _activeImageProxy.index) {
+			if (!_loadingHQ && _showHighQuality && _highQualityIndex == index) {
 				_paintings[index].material = _highQualityMaterial;
 			}
 
@@ -663,6 +652,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			galleryVO.normalSpecularData.length = width*height*4;
 			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, width, height);
 			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
+
+			_highQualityIndex = _activeImageProxy.index;
 
 			// it may have been disposed before load finished?
 			if (_paintings[_activeImageProxy.index])
