@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 	public class GalleryBrowseSubNavView extends SubNavigationViewBase
 	{
-		public static const ID_BACK:String = "Back";
+//		public static const ID_BACK:String = "Back";
 		public static const ID_YOURS:String = "Yours";
 		public static const ID_FOLLOWING:String = "Following";
 		public static const ID_MOST_RECENT:String = "Most recent";
@@ -18,7 +18,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		override protected function onEnabled():void {
 			setHeader( "Gallery" );
-			setLeftButton( ID_BACK, ID_BACK );
+			//setLeftButton( ID_BACK, ID_BACK );
 		}
 
 		override protected function onSetup():void {

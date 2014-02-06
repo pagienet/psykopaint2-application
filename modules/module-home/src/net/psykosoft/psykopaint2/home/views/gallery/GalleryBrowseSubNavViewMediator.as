@@ -25,14 +25,14 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		}
 
 		override protected function onButtonClicked( id:String ):void {
-			switch( id ) {
+			/*switch( id ) {
 				case GalleryBrowseSubNavView.ID_BACK:
 					requestNavigationStateChange(NavigationStateType.HOME_ON_EASEL);
 //					requestHomePanningToggleSignal.dispatch(true);
 					break;
-				default:
+				default:*/
 					requestNavigationStateChange(_navigationStateTypeMap[id]);
-			}
+//			}
 		}
 	}
 }

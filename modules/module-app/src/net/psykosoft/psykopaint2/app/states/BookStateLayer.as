@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.app.states
 	import net.psykosoft.psykopaint2.book.signals.RequestSetUpBookModuleSignal;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
+	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 
 	// not really a state, but an overlap
 	// this is just so not everything clutters up HomeState, basically
@@ -37,13 +37,13 @@ package net.psykosoft.psykopaint2.app.states
 		public var notifyGalleryImageSelectedSignal : NotifyGalleryImageSelectedFromBookSignal;
 
 		[Inject]
-		public var requestSetGalleryPaintingSignal : RequestSetGalleryPaintingSignal;
-
-		[Inject]
 		public var notifyBookModuleDestroyedSignal : NotifyBookModuleDestroyedSignal;
 
 		[Inject]
 		public var requestCropSourceImageSignal : RequestCropSourceImageSignal;
+
+		[Inject]
+		public var activePaintingModel : ActiveGalleryPaintingModel;
 
 		private var _bookOpen:Boolean;
 		private var _bookSourceType:String;
@@ -115,7 +115,7 @@ package net.psykosoft.psykopaint2.app.states
 
 		private function onGalleryImageSelected(selectedGalleryImage : GalleryImageProxy) : void
 		{
-			requestSetGalleryPaintingSignal.dispatch(selectedGalleryImage);
+			activePaintingModel.painting = selectedGalleryImage;
 		}
 	}
 }

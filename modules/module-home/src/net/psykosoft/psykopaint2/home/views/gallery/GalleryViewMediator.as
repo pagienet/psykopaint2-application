@@ -7,8 +7,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetBookOffScreenRatioSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestUpdateGalleryPaintingMenuSignal;
+	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
@@ -18,10 +17,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public var galleryService : GalleryService;
 
 		[Inject]
-		public var view : GalleryView;
+		public var activePaintingModel : ActiveGalleryPaintingModel;
 
 		[Inject]
-		public var requestSetGalleryPaintingSignal : RequestSetGalleryPaintingSignal;
+		public var view : GalleryView;
 
 		[Inject]
 		public var notifyStateChangeSignal:NotifyNavigationStateChangeSignal;
@@ -29,8 +28,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		[Inject]
 		public var requestSetBookOffScreenRatioSignal : RequestSetBookOffScreenRatioSignal;
 
-		[Inject]
-		public var requestUpdateGalleryPaintingMenuSignal : RequestUpdateGalleryPaintingMenuSignal;
+		// keeps track whether or not the active painting update was triggered locally
+		private var internalUpdate : Boolean;
 
 		public function GalleryViewMediator()
 		{
@@ -39,11 +38,17 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		override public function initialize() : void
 		{
 			super.initialize();
-			requestSetGalleryPaintingSignal.add(onRequestSetGalleryPainting);
+			activePaintingModel.onUpdate.add(onActivePaintingUpdate);
 			notifyStateChangeSignal.add(onStateChangeSignal);
 			view.requestImageCollection.add(requestImageCollection);
-			view.requestActiveImageSignal.add(requestActiveImage);
-			galleryService.fetchImages(GalleryType.MOST_RECENT, 0, 1, onInitialImageFetched, onImageCollectionFailed);
+			view.requestActiveImageSignal.add(onRequestActiveImage);
+			requestActiveImage(GalleryType.MOST_RECENT, 0);
+		}
+
+		private function onRequestActiveImage(source : int, index : int) : void
+		{
+			internalUpdate = true;
+			requestActiveImage(source, index);
 		}
 
 		private function requestActiveImage(source : int, index : int) : void
@@ -96,7 +101,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		override public function destroy() : void
 		{
 			super.destroy();
-			requestSetGalleryPaintingSignal.remove(onRequestSetGalleryPainting);
 			view.requestImageCollection.remove(requestImageCollection);
 			view.requestActiveImageSignal.remove(requestActiveImage);
 			view.dispose();
@@ -107,22 +111,19 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			galleryService.fetchImages(source, index, amount, onImageColectionSuccess, onImageCollectionFailed);
 		}
 
-		private function onRequestSetGalleryPainting(galleryImageProxy : GalleryImageProxy) : void
-		{
-			requestUpdateGalleryPaintingMenuSignal.dispatch(galleryImageProxy);
-			view.setImmediateActiveImage(galleryImageProxy);
-		}
-
-		private function onInitialImageFetched(collection : GalleryImageCollection) : void
-		{
-			requestUpdateGalleryPaintingMenuSignal.dispatch(collection.images[0]);
-			view.setImmediateActiveImage(collection.images[0]);
-		}
-
 		private function onRequestActiveImageResult(collection : GalleryImageCollection) : void
 		{
-			requestUpdateGalleryPaintingMenuSignal.dispatch(collection.images[0]);
-			view.setActiveImage(collection.images[0]);
+			activePaintingModel.painting = collection.images[0];
+		}
+
+		private function onActivePaintingUpdate() : void
+		{
+			if (internalUpdate)
+				view.setActiveImage(activePaintingModel.painting);
+			else
+				view.setImmediateActiveImage(activePaintingModel.painting);
+
+			internalUpdate = false;
 		}
 
 		private function onImageColectionSuccess(collection : GalleryImageCollection) : void

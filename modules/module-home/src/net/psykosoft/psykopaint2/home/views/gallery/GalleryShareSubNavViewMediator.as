@@ -27,9 +27,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		override protected function onButtonClicked(id : String) : void
 		{
 			switch (id) {
-				case GalleryBrowseSubNavView.ID_BACK:
-					goBack();
-					break;
+//				case GalleryBrowseSubNavView.ID_BACK:
+//					goBack();
+//					break;
 			}
 		}
 
