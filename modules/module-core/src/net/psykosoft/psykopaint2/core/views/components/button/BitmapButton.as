@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
 	
+	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -48,7 +49,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			_icon.rotation = 4 * Math.random() - 2;
 			_pin.rotation = 4 * Math.random() - 2;
 		}
-
+		
 		override protected function adjustBitmap():void {
 			// TODO: might want to maintain aspect ratio and mask
 			_iconBitmap.width = 256 * 0.5;
@@ -81,6 +82,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public function enterDeleteMode():void
 		{
 			TweenLite.to( _pin, 0.2, { y: _pinDefaultY - 30, ease: Strong.easeInOut } );
+			TweenLite.to( icon, 0.2, { rotation: rotation + Math.random() * 12 - 6, ease: Strong.easeInOut } );
 			addEventListener(Event.ENTER_FRAME, wigglePin );
 			deleteIcon.visible = true;
 		}
@@ -94,6 +96,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public function enterDefaultMode():void
 		{
 			TweenLite.to( _pin, 0.2, { y: _pinDefaultY, ease: Strong.easeInOut } );
+			TweenLite.to( icon, 0.2, { rotation:  4 * Math.random() - 2, ease: Strong.easeInOut } );
 			_pin.rotation = 4 * Math.random() - 2;
 			removeEventListener(Event.ENTER_FRAME, wigglePin );
 			deleteIcon.visible = false;
@@ -114,6 +117,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			trace("vertical pan started "+_panGestureVertical.offsetY);
 			dispatchEvent(new Event("VerticalSwipe"));
 		}
+		
 		
 		
 	}

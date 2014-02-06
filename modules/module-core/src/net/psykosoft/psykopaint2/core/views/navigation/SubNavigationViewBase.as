@@ -186,27 +186,36 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function removeButtonWithId( id:String):void {
 			
 			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
-			
+			var oldPosition:Number = _scroller.positionManager.position;
 			if( dataProvider ) {
 				var numData:uint = dataProvider.length;
 				for( var i:uint = 0; i < numData; i++ ) {
 					var data:ButtonData = dataProvider[ i ] as ButtonData;
 					if( id.indexOf( data.id ) != -1 ) {
 						trace("how the fuck do I remove an item from the hscroller?");
-						for ( var j:int = numData-1; j > i; --j )
+						
+						for ( var j:int = numData-1; j > i; j-- )
 						{
 							
 							(dataProvider[ j] as ButtonData).itemRenderer = (dataProvider[ j-1] as ButtonData).itemRenderer;
+							(dataProvider[ j] as ButtonData).itemRendererPosition = (dataProvider[ j-1] as ButtonData).itemRendererPosition;
+							(dataProvider[ j] as ButtonData).itemRendererType = (dataProvider[ j-1] as ButtonData).itemRendererType;
+							(dataProvider[ j] as ButtonData).itemRendererWidth = (dataProvider[ j-1] as ButtonData).itemRendererWidth;
+							
 							if ( (dataProvider[ j] as ButtonData).itemRenderer is BitmapButton )
 								((dataProvider[ j] as ButtonData).itemRenderer as BitmapButton).deleted = false;
 						}
+						
 						dataProvider.splice(i,1);
 						break;
 					}
 				}
 				
 			}
+			_scroller.updateAllItemRenderersFromData();
 			_scroller.invalidateContent();
+			_scroller.positionManager.position = oldPosition;
+			_scroller.refreshToPosition();
 		}
 
 
