@@ -49,8 +49,8 @@ package net.psykosoft.psykopaint2.core.model
 		private var _colorTransfer : ColorTransfer;
 
 		// TODO: should originals be a string path to packaged asset?
-		private var _normalSpecularOriginal : TrackedByteArray;		// used during export (reference)
-		private var _colorBackgroundOriginal : TrackedByteArray;		// used during export (reference)
+		private var _normalSpecularOriginal : ByteArray;		// used during export (reference)
+		private var _colorBackgroundOriginal : ByteArray;		// used during export (reference)
 
 		public function CanvasModel()
 		{
@@ -183,7 +183,7 @@ package net.psykosoft.psykopaint2.core.model
 			}
 		}
 
-		public function setColorBackgroundOriginal(value : TrackedByteArray) : void
+		public function setColorBackgroundOriginal(value : ByteArray) : void
 		{
 			if (_colorBackgroundOriginal) _colorBackgroundOriginal.clear();
 
@@ -220,7 +220,7 @@ package net.psykosoft.psykopaint2.core.model
 				_normalSpecularMap = createCanvasTexture(true);
 		}
 
-		public function setNormalSpecularOriginal(value : TrackedByteArray) : void
+		public function setNormalSpecularOriginal(value : ByteArray) : void
 		{
 			if (_normalSpecularOriginal)
 				_normalSpecularOriginal.clear();
@@ -326,12 +326,12 @@ package net.psykosoft.psykopaint2.core.model
 			_normalSpecularOriginal.length = oldLen;
 		}
 
-		public function getColorBackgroundOriginal() : TrackedByteArray
+		public function getColorBackgroundOriginal() : ByteArray
 		{
 			return _colorBackgroundOriginal;
 		}
 
-		public function getNormalSpecularOriginal() : TrackedByteArray
+		public function getNormalSpecularOriginal() : ByteArray
 		{
 			return _normalSpecularOriginal;
 		}

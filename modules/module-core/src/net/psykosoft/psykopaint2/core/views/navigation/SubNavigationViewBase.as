@@ -5,10 +5,13 @@ package net.psykosoft.psykopaint2.core.views.navigation
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
+	import mx.collections.ItemResponder;
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.base.ui.components.NavigationButton;
 	import net.psykosoft.psykopaint2.base.ui.components.list.HSnapList;
 	import net.psykosoft.psykopaint2.base.ui.components.list.ISnapListData;
+	import net.psykosoft.psykopaint2.core.views.components.button.BitmapButton;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonData;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
@@ -183,19 +186,27 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function removeButtonWithId( id:String):void {
 			
 			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
+			
 			if( dataProvider ) {
 				var numData:uint = dataProvider.length;
 				for( var i:uint = 0; i < numData; i++ ) {
 					var data:ButtonData = dataProvider[ i ] as ButtonData;
 					if( id.indexOf( data.id ) != -1 ) {
 						trace("how the fuck do I remove an item from the hscroller?");
+						for ( var j:int = numData-1; j > i; --j )
+						{
+							
+							(dataProvider[ j] as ButtonData).itemRenderer = (dataProvider[ j-1] as ButtonData).itemRenderer;
+							if ( (dataProvider[ j] as ButtonData).itemRenderer is BitmapButton )
+								((dataProvider[ j] as ButtonData).itemRenderer as BitmapButton).deleted = false;
+						}
+						dataProvider.splice(i,1);
 						break;
 					}
 				}
 				
 			}
-			
-			//_scroller.invalidateContent();
+			_scroller.invalidateContent();
 		}
 
 

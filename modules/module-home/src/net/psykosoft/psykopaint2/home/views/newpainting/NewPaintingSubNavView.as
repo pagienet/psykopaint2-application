@@ -111,6 +111,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				if ( paintingButtons[i].id == id )
 				{
 					paintingButtons[i].deleted = !paintingButtons[i].deleted;
+					removeButtonWithId(id);
 					return;
 				}
 				

@@ -30,8 +30,8 @@ package net.psykosoft.psykopaint2.home.commands
 		private static var _busy:Boolean;
 
 		private var _byteLoader:BinaryLoader;
-		private var _loadedNormalSpecularData:TrackedByteArray;
-		private var _loadedColorData:TrackedByteArray;
+		private var _loadedNormalSpecularData:ByteArray;
+		private var _loadedColorData:ByteArray;
 
 		public function LoadSurfacePreviewCommand() {
 			super();
@@ -71,7 +71,7 @@ package net.psykosoft.psykopaint2.home.commands
 			loadNormalSpecularData();
 		}
 
-		private function onColorDataLoaded( bytes:TrackedByteArray ):void {
+		private function onColorDataLoaded( bytes:ByteArray ):void {
 			_loadedColorData = bytes;
 			_byteLoader.dispose();
 			_byteLoader= null;
@@ -83,7 +83,7 @@ package net.psykosoft.psykopaint2.home.commands
 			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_512.surf", onSurfaceLoaded );
 		}
 
-		private function onSurfaceLoaded( bytes:TrackedByteArray ):void {
+		private function onSurfaceLoaded( bytes:ByteArray ):void {
 			_loadedNormalSpecularData = bytes;
 			_byteLoader.dispose();
 			_byteLoader = null;

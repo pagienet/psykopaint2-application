@@ -107,6 +107,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
+		
+		
 	
 		private var _view : DisplayObject;
 		private var _active : Boolean;

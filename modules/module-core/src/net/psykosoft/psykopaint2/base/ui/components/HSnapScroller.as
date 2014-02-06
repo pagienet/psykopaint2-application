@@ -123,10 +123,8 @@ package net.psykosoft.psykopaint2.base.ui.components
 
 		public function evaluateInteractionStart():void {
 //			trace( this, "evaluateInteractionStart()" );
-			if( !scrollingAllowed ) return;
-			if( _container.numChildren == 0 ) return;
-			if( !thereIsEnoughContentToScroll() ) return;
-			if( !mouseHitsInteractiveArea() ) return;
+			if( !scrollingAllowed || _container.numChildren == 0|| !thereIsEnoughContentToScroll()  || !mouseHitsInteractiveArea() ) return;
+			
 			_interactionManager.startInteraction();
 			startEnterframe();
 		}

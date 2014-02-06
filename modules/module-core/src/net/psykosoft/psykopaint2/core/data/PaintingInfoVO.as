@@ -15,9 +15,9 @@ package net.psykosoft.psykopaint2.core.data
 		public static const DEFAULT_VO_ID:String = "new";
 
 		public var thumbnail:BitmapData;
-		public var colorPreviewData:TrackedByteArray;
+		public var colorPreviewData:ByteArray;
 		public var colorPreviewBitmap:BitmapData;
-		public var normalSpecularPreviewData:TrackedByteArray;
+		public var normalSpecularPreviewData:ByteArray;
 		public var lastSavedOnDateMs:Number;
 		public var surfaceID : uint;	// currently only used when id == DEFAULT_VO_ID
 

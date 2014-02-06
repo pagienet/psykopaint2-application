@@ -63,7 +63,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			loadNormalSpecularData();
 		}
 
-		private function onColorDataLoaded( bytes:TrackedByteArray ):void {
+		private function onColorDataLoaded( bytes:ByteArray ):void {
 			bytes.uncompress();
 			_loadedSurfaceData.color = bytes;
 
@@ -77,7 +77,7 @@ package net.psykosoft.psykopaint2.paint.commands
 			_byteLoader.loadAsset( "/core-packaged/images/surfaces/canvas_normal_specular_" + index + "_" + _assetSize + ".surf", onSurfaceLoaded );
 		}
 
-		private function onSurfaceLoaded( bytes:TrackedByteArray ):void {
+		private function onSurfaceLoaded( bytes:ByteArray ):void {
 			var unCompressTime:uint = getTimer();
 			bytes.uncompress();
 			ConsoleView.instance.log( this, "onSurfaceLoaded - un-compress time - " + String( getTimer() - unCompressTime ) );
