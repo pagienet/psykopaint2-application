@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.home.signals.RequestUpdateGalleryPaintingMenuSignal;
+	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 
 	public class GalleryPaintingSubNavViewMediator extends SubNavigationMediatorBase
 	{
@@ -13,16 +13,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public var view : GalleryPaintingSubNavView;
 
 		[Inject]
-		public var requestUpdateGalleryPaintingMenuSignal : RequestUpdateGalleryPaintingMenuSignal;
+		public var activePaintingModel : ActiveGalleryPaintingModel;
 
 		[Inject]
 		public var galleryService : GalleryService;
 
 		[Inject]
 		public var loggedInUser : LoggedInUserProxy;
-
-		private var _activePainting : GalleryImageProxy;
-
 
 		public function GalleryPaintingSubNavViewMediator()
 		{
@@ -34,33 +31,34 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			// Init.
 			registerView(view);
 			super.initialize();
+			updateMenu();
 
-			requestUpdateGalleryPaintingMenuSignal.add(onRequestUpdateGalleryPaintingMenu);
+			activePaintingModel.onUpdate.add(updateMenu);
 		}
 
 		override public function destroy() : void
 		{
-			requestUpdateGalleryPaintingMenuSignal.remove(onRequestUpdateGalleryPaintingMenu);
+			activePaintingModel.onUpdate.remove(updateMenu);
 			super.destroy();
 		}
 
-		private function onRequestUpdateGalleryPaintingMenu(painting : GalleryImageProxy) : void
+		private function updateMenu() : void
 		{
-			_activePainting = painting;
 			updateLoveButton();
 		}
 
 		private function updateLoveButton() : void
 		{
-			view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, !_activePainting.isFavorited && loggedInUser.isLoggedIn() && _activePainting.userID != loggedInUser.userID);
+			var painting : GalleryImageProxy = activePaintingModel.painting;
+			view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, !painting.isFavorited && loggedInUser.isLoggedIn() && painting.userID != loggedInUser.userID);
 		}
 
 		override protected function onButtonClicked(id : String) : void
 		{
 			switch (id) {
-				case GalleryBrowseSubNavView.ID_BACK:
-					goBack();
-					break;
+//				case GalleryBrowseSubNavView.ID_BACK:
+//					goBack();
+//					break;
 				case GalleryPaintingSubNavView.ID_LOVE:
 					lovePainting();
 					break;
@@ -82,8 +80,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function lovePainting() : void
 		{
+			var painting : GalleryImageProxy = activePaintingModel.painting;
 			view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, false);
-			galleryService.favorite(_activePainting.id, onLovePaintingSucceeded, onLovePaintingFailed);
+			galleryService.favorite(painting.id, onLovePaintingSucceeded, onLovePaintingFailed);
 		}
 
 		private function onLovePaintingSucceeded() : void

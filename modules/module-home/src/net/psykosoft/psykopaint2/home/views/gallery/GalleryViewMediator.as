@@ -7,8 +7,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetBookOffScreenRatioSignal;
+	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestUpdateGalleryPaintingMenuSignal;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
@@ -16,6 +16,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	{
 		[Inject]
 		public var galleryService : GalleryService;
+
+		[Inject]
+		public var activePaintingModel : ActiveGalleryPaintingModel;
 
 		[Inject]
 		public var view : GalleryView;
@@ -28,9 +31,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		[Inject]
 		public var requestSetBookOffScreenRatioSignal : RequestSetBookOffScreenRatioSignal;
-
-		[Inject]
-		public var requestUpdateGalleryPaintingMenuSignal : RequestUpdateGalleryPaintingMenuSignal;
 
 		public function GalleryViewMediator()
 		{
@@ -109,19 +109,19 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onRequestSetGalleryPainting(galleryImageProxy : GalleryImageProxy) : void
 		{
-			requestUpdateGalleryPaintingMenuSignal.dispatch(galleryImageProxy);
+			activePaintingModel.painting = galleryImageProxy;
 			view.setImmediateActiveImage(galleryImageProxy);
 		}
 
 		private function onInitialImageFetched(collection : GalleryImageCollection) : void
 		{
-			requestUpdateGalleryPaintingMenuSignal.dispatch(collection.images[0]);
+			activePaintingModel.painting = collection.images[0];
 			view.setImmediateActiveImage(collection.images[0]);
 		}
 
 		private function onRequestActiveImageResult(collection : GalleryImageCollection) : void
 		{
-			requestUpdateGalleryPaintingMenuSignal.dispatch(collection.images[0]);
+			activePaintingModel.painting = collection.images[0];
 			view.setActiveImage(collection.images[0]);
 		}
 

@@ -86,7 +86,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			switch (sectionID) {
 				case HomeView.GALLERY:
+					// bit of a hack to make the book show up with the painting details menu
 					requestNavigationStateChange(NavigationStateType.GALLERY_BROWSE_MOST_RECENT);
+					requestNavigationStateChange(NavigationStateType.GALLERY_PAINTING);
 					break;
 				case HomeView.EASEL:
 					requestNavigationStateChange(NavigationStateType.HOME_ON_EASEL);

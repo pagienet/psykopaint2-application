@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 	public class GalleryPaintingSubNavView extends SubNavigationViewBase
 	{
-		public static const ID_BACK : String = "Back";
+//		public static const ID_BACK : String = "Back";
 		public static const ID_LOVE : String = "Love";
 		public static const ID_COMMENT : String = "Comment";
 		public static const ID_SHARE : String = "Share";
@@ -19,7 +19,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		override protected function onEnabled() : void
 		{
 			setHeader("Gallery");
-			setLeftButton(ID_BACK, ID_BACK);
+//			setLeftButton(ID_BACK, ID_BACK);
 		}
 
 		override protected function onSetup() : void

@@ -7,6 +7,7 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.commands.StartNewColorPaintingCommand;
 	import net.psykosoft.psykopaint2.home.commands.load.SetUpHomeModuleCommand;
 	import net.psykosoft.psykopaint2.home.commands.unload.DestroyHomeModuleCommand;
+	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 	import net.psykosoft.psykopaint2.home.model.WallpaperModel;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraFlipRequest;
 	import net.psykosoft.psykopaint2.home.signals.NotifyCameraSnapshotRequest;
@@ -22,7 +23,6 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestUpdateGalleryPaintingMenuSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootViewMediator;
@@ -108,7 +108,7 @@ package net.psykosoft.psykopaint2.home.config
 		// -----------------------
 
 		private function mapSingletons():void {
-
+			_injector.map( ActiveGalleryPaintingModel ).asSingleton();
 		}
 
 		// -----------------------
@@ -127,7 +127,6 @@ package net.psykosoft.psykopaint2.home.config
 	   		_injector.map( NotifyHomeViewSceneReadySignal ).asSingleton();
 			_injector.map( RequestSetGalleryPaintingSignal ).asSingleton();
 			_injector.map( NotifyHomeViewIntroZoomCompleteSignal ).asSingleton();
-			_injector.map( RequestUpdateGalleryPaintingMenuSignal ).asSingleton();
 		}
 
 		// -----------------------
