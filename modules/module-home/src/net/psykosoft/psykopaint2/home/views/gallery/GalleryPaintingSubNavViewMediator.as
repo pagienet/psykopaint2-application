@@ -28,12 +28,17 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		override public function initialize() : void
 		{
+			view.setupSignal.addOnce(onViewSetUp);
 			// Init.
 			registerView(view);
 			super.initialize();
-			updateMenu();
 
 			activePaintingModel.onUpdate.add(updateMenu);
+		}
+
+		private function onViewSetUp() : void
+		{
+			updateMenu();
 		}
 
 		override public function destroy() : void
