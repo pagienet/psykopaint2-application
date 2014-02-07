@@ -40,8 +40,11 @@ package net.psykosoft.psykopaint2.home.views.settings
 			notifyUserLoggedInSignal.add( onUserLoggedIn );
 			notifyUserLoggedOutSignal.add( onUserLoggedOut );
 			notifyUserLogOutFailedSignal.add( onLogOutFailed );
+		}
 
-			// Login button.
+		override protected function onViewSetup():void
+		{
+			super.onViewSetup();
 			view.setLoginBtn( loggedInUserProxy.isLoggedIn() ? SettingsSubNavView.ID_LOGOUT : SettingsSubNavView.ID_LOGIN );
 		}
 
@@ -67,9 +70,9 @@ package net.psykosoft.psykopaint2.home.views.settings
 				case SettingsSubNavView.ID_LOGIN: {
 					trace( this, "login clicked" );
 					if( loggedInUserProxy.isLoggedIn() ) {
+						view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, false );
 						trace( this, "logging out" );
 						loggedInUserProxy.logOut();
-						view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, false );
 					}
 					else {
 						trace( this, "logging in" );
@@ -89,12 +92,12 @@ package net.psykosoft.psykopaint2.home.views.settings
 		}
 
 		private function onUserLoggedIn():void {
-			view.relabelButtonWithId( SettingsSubNavView.ID_LOGIN, SettingsSubNavView.ID_LOGOUT );
+			view.setLoginBtn(SettingsSubNavView.ID_LOGOUT);
 			view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, true );
 		}
 
 		private function onUserLoggedOut():void {
-			view.relabelButtonWithId( SettingsSubNavView.ID_LOGIN, SettingsSubNavView.ID_LOGIN );
+			view.setLoginBtn(SettingsSubNavView.ID_LOGIN);
 			view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, true );
 		}
 	}
