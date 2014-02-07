@@ -4,26 +4,10 @@ package net.psykosoft.psykopaint2.core.models
 	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
 
-	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedOutSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
+	import org.osflash.signals.Signal;
 
 	public class DummyLoggedInUserProxy implements LoggedInUserProxy
 	{
-		[Inject]
-		public var notifyUserLoggedInSignal : NotifyUserLoggedInSignal;
-
-		[Inject]
-		public var notifyUserLogInFailedSignal : NotifyUserLogInFailedSignal;
-
-		[Inject]
-		public var notifyUserRegisteredSignal : NotifyUserRegisteredSignal;
-
-		[Inject]
-		public var notifyUserLoggedOutSignal : NotifyUserLoggedOutSignal;
-
 		private var _userID : int = -1;
 		private var _sessionID : String;
 		private var _firstName : String;
@@ -34,11 +18,13 @@ package net.psykosoft.psykopaint2.core.models
 		private var _active : Boolean;
 		private var _banned : Boolean;
 
+		private var _onChange : Signal = new Signal();
+
 		public function DummyLoggedInUserProxy()
 		{
 		}
 
-		public function sendPasswordReminder(email : String) : void
+		public function sendPasswordReminder(email : String, onSuccess : Function, onFail : Function) : void
 		{
 			// Does nothing.
 		}
@@ -54,7 +40,7 @@ package net.psykosoft.psykopaint2.core.models
 			return _userID != -1;
 		}
 
-		public function logIn(email : String, password : String) : void
+		public function logIn(email : String, password : String, onSuccess : Function, onFail : Function) : void
 		{
 			_userID = 1;
 			_sessionID = "1";
@@ -71,14 +57,15 @@ package net.psykosoft.psykopaint2.core.models
 			setTimeout(function () : void
 			{
 				// Pick one.
-				notifyUserLoggedInSignal.dispatch();
+				_onChange.dispatch();
+				onSuccess();
 //				notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CALL_STATUS_FAILED, "EMAIL" );
 //				notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CALL_STATUS_FAILED, "PASSWORD" );
 //				notifyUserLogInFailedSignal.dispatch( AMFErrorCode.CONNECTION_IO_ERROR, "" );
 			}, 2000);
 		}
 
-		public function registerAndLogIn(userRegisterationVO : UserRegistrationVO) : void
+		public function registerAndLogIn(userRegisterationVO : UserRegistrationVO, onSuccess : Function, onFail : Function) : void
 		{
 			trace(this, "registering...");
 
@@ -95,8 +82,8 @@ package net.psykosoft.psykopaint2.core.models
 
 			setTimeout(function () : void
 			{
-				notifyUserRegisteredSignal.dispatch();
-				notifyUserLoggedInSignal.dispatch();
+				_onChange.dispatch();
+				onSuccess();
 			}, 3000);
 		}
 
@@ -145,15 +132,21 @@ package net.psykosoft.psykopaint2.core.models
 			return _banned;
 		}
 
-		public function logOut() : void
+		public function logOut(onSuccess : Function, onFail : Function) : void
 		{
 			_sessionID = null;
 			_userID = -1;
 
 			setTimeout(function () : void
 			{
-				notifyUserLoggedOutSignal.dispatch();
+				_onChange.dispatch();
+				onSuccess();
 			}, 1000);
+		}
+
+		public function get onChange():Signal
+		{
+			return _onChange;
 		}
 	}
 }

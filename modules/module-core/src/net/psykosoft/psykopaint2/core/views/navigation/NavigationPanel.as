@@ -121,7 +121,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			showingSignal.dispatch();
 			
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 0.5, { y:  _positionManager.getSnapPointAtIndex( 0 ) + 768, onComplete:function(){_positionManager.position = y - 768;_shown = visible = true;shownSignal.dispatch();}, ease: Strong.easeInOut } );
+			TweenLite.to( this, 0.5, { y:  _positionManager.getSnapPointAtIndex( 0 ) + 768, onComplete:function():void{_positionManager.position = y - 768;_shown = visible = true;shownSignal.dispatch();}, ease: Strong.easeInOut } );
 		}
 
 		public function hide():void {
@@ -129,7 +129,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if( !_shown ) return;
 			hidingSignal.dispatch();
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 0.5, { y:  _positionManager.getSnapPointAtIndex( 1 ) + 768, onComplete:function(){_positionManager.position = y - 768;_shown = visible = false;hiddenSignal.dispatch();}, ease: Strong.easeOut } );
+			TweenLite.to( this, 0.5, { y:  _positionManager.getSnapPointAtIndex( 1 ) + 768, onComplete:function():void{_positionManager.position = y - 768;_shown = visible = false;hiddenSignal.dispatch();}, ease: Strong.easeOut } );
 		}
 
 		// ---------------------------------------------------------------------

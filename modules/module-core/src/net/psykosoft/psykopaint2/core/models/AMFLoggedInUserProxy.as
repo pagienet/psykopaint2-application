@@ -5,51 +5,13 @@ package net.psykosoft.psykopaint2.core.models
 
 	import net.psykosoft.psykopaint2.core.services.AMFBridge;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPasswordResetFailedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyPasswordResetSucceededSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogOutFailedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedOutSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserPasswordReminderFailedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserPasswordReminderSentSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegistrationFailedSignal;
+
+	import org.osflash.signals.Signal;
 
 	public class AMFLoggedInUserProxy implements LoggedInUserProxy
 	{
 		[Inject]
 		public var amfBridge : AMFBridge;
-
-		[Inject]
-		public var notifyUserLoggedInSignal : NotifyUserLoggedInSignal;
-
-		[Inject]
-		public var notifyUserLogInFailedSignal : NotifyUserLogInFailedSignal;
-
-		[Inject]
-		public var notifyUserLoggedOutSignal : NotifyUserLoggedOutSignal;
-
-		[Inject]
-		public var notifyUserLogOutFailedSignal : NotifyUserLogOutFailedSignal;
-
-		[Inject]
-		public var notifyUserRegistrationFailedSignal : NotifyUserRegistrationFailedSignal;
-
-		[Inject]
-		public var notifyUserRegisteredSignal : NotifyUserRegisteredSignal;
-
-		[Inject]
-		public var notifyPasswordResetSucceededSignal : NotifyPasswordResetSucceededSignal;
-
-		[Inject]
-		public var notifyPasswordResetFailedSignal : NotifyPasswordResetFailedSignal;
-
-		[Inject]
-		public var notifyUserPasswordReminderSentSignal:NotifyUserPasswordReminderSentSignal;
-
-		[Inject]
-		public var notifyUserPasswordReminderFailedSignal:NotifyUserPasswordReminderFailedSignal;
 
 		private var _userID : int = -1;
 
@@ -63,22 +25,29 @@ package net.psykosoft.psykopaint2.core.models
 		private var _banned : Boolean;
 		private var _passwordReminderEmail:String;
 
+		private var _onChange : Signal = new Signal();
+
+		private var _onFail : Function;
+		private var _onSuccess : Function;
+
 		public function AMFLoggedInUserProxy()
 		{
 		}
 
-		public function sendPasswordReminder( email:String ):void {
+		public function sendPasswordReminder( email:String, onSuccess : Function, onFail : Function ):void {
+			_onFail = onFail;
+			_onSuccess = onSuccess;
 			_passwordReminderEmail = email;
 			amfBridge.passwordReset( email, onSendPasswordReminderSuccess, onSendPasswordReminderFailure );
 		}
 
 		private function onSendPasswordReminderSuccess( data:Object ):void {
-			notifyUserPasswordReminderSentSignal.dispatch( _passwordReminderEmail );
+			if (_onSuccess) _onSuccess(_passwordReminderEmail);
 			_passwordReminderEmail = null;
 		}
 
 		private function onSendPasswordReminderFailure( data:Object ):void {
-			notifyUserPasswordReminderFailedSignal.dispatch( data["status_code"] );
+			_onFail( data["status_code"] );
 			_passwordReminderEmail = null;
 		}
 
@@ -92,43 +61,49 @@ package net.psykosoft.psykopaint2.core.models
 			return _userID != -1;
 		}
 
-		public function logIn(email : String, password : String) : void
+		public function logIn(email : String, password : String, onSuccess : Function, onFail : Function) : void
 		{
+			_onSuccess = onSuccess;
+			_onFail = onFail;
 			amfBridge.logIn(email, password, onLogInSuccess, onLogInFail);
 			_userID = 1;
 		}
 
-		public function registerAndLogIn(userRegistrationVO : UserRegistrationVO) : void
+		public function registerAndLogIn(userRegistrationVO : UserRegistrationVO, onSuccess : Function, onFail : Function) : void
 		{
+			_onSuccess = onSuccess;
+			_onFail = onFail;
 			amfBridge.registerAndLogIn(userRegistrationVO, onRegisterSuccess, onRegisterFail);
 		}
 
 		private function onRegisterSuccess(data : Object) : void
 		{
 			if (data["status_code"] != 1) {
-				notifyUserRegistrationFailedSignal.dispatch(data["status_code"], data["status_reason"]);
+				_onFail(data["status_code"], data["status_reason"]);
 				return;
 			}
 
 			populateUserData(data);
-			notifyUserRegisteredSignal.dispatch();
-			notifyUserLoggedInSignal.dispatch();
+			_onChange.dispatch();
+			if (_onSuccess) _onSuccess();
 		}
 
 		private function onRegisterFail(data : Object) : void
 		{
-			notifyUserRegistrationFailedSignal.dispatch(data["status_code"], data["status_reason"]);
+			_onFail(data["status_code"], data["status_reason"]);
 		}
 
-		public function logOut() : void
+		public function logOut(onSuccess : Function, onFail : Function) : void
 		{
+			_onFail = onFail;
+			_onSuccess = onSuccess;
 			amfBridge.logOut(_sessionID, onLogOutSuccess, onLogOutFail);
 		}
 
 		private function onLogOutSuccess(data : Object) : void
 		{
 			if (data["status_code"] != 1) {
-				notifyUserLogOutFailedSignal.dispatch(data["status_code"], "FAIL");
+				_onFail(data["status_code"], "FAIL");
 				return;
 			}
 			_userID = -1;
@@ -140,11 +115,12 @@ package net.psykosoft.psykopaint2.core.models
 			_lastName = null;
 			_numComments = 0;
 			_numFollowers = 0;
+			if (_onSuccess) _onSuccess();
 		}
 
 		private function onLogOutFail(data : Object) : void
 		{
-			notifyUserLogOutFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
+			_onFail(AMFErrorCode.CALL_FAILED, "CALL_FAILED");
 		}
 
 		private function onLogInSuccess(data : Object) : void
@@ -159,17 +135,18 @@ package net.psykosoft.psykopaint2.core.models
 					}
 //					trace("> " + firstname);
 				}
-				notifyUserLogInFailedSignal.dispatch(data["status_code"], data["status_reason"], firstname);
+				_onFail(data["status_code"], data["status_reason"], firstname);
 				return;
 			}
 
 			populateUserData(data);
-			notifyUserLoggedInSignal.dispatch();
+			_onChange.dispatch();
+			if (_onSuccess) _onSuccess();
 		}
 
 		private function onLogInFail(data : Object) : void
 		{
-			notifyUserLogInFailedSignal.dispatch(AMFErrorCode.CALL_FAILED, "CALL_FAILED", "");
+			_onFail(AMFErrorCode.CALL_FAILED, "CALL_FAILED", "");
 		}
 
 		private function populateUserData(data : Object) : void
@@ -185,26 +162,6 @@ package net.psykosoft.psykopaint2.core.models
 			_numComments = userData["num_comments"];
 			_active = userData["active"];
 			_banned = userData["banned"];
-		}
-
-		public function requestPasswordReset(email : String) : void
-		{
-			amfBridge.logOut(email, onPasswordResetSuccess, onPasswordResetFail);
-		}
-
-		private function onPasswordResetFail(data : Object) : void
-		{
-			notifyPasswordResetFailedSignal.dispatch(data["status_code"], "CALL_FAILED");
-		}
-
-		private function onPasswordResetSuccess(data : Object) : void
-		{
-			if (data["status_code"] != 1) {
-				notifyPasswordResetFailedSignal	.dispatch(data["status_code"], data["status_reason"]);
-				return;
-			}
-
-			notifyPasswordResetSucceededSignal.dispatch();
 		}
 
 		public function get sessionID() : String
@@ -252,5 +209,9 @@ package net.psykosoft.psykopaint2.core.models
 			return _banned;
 		}
 
+		public function get onChange():Signal
+		{
+			return _onChange;
+		}
 	}
 }

@@ -2,21 +2,13 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 {
 
 	import flash.display.BitmapData;
-	import flash.utils.ByteArray;
-	import flash.utils.setTimeout;
-	
+
 	import net.psykosoft.psykopaint2.base.utils.misc.StringUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.UserRegistrationVO;
 	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAMFConnectionFailed;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogInFailedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserPasswordReminderFailedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserPasswordReminderSentSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegisteredSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserRegistrationFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestHidePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
 
@@ -30,24 +22,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 		[Inject]
 		public var loggedInUserProxy:LoggedInUserProxy;
-
-		[Inject]
-		public var notifyUserLoggedInSignal:NotifyUserLoggedInSignal;
-
-		[Inject]
-		public var notifyUserLogInFailedSignal:NotifyUserLogInFailedSignal;
-
-		[Inject]
-		public var notifyUserRegistrationFailedSignal:NotifyUserRegistrationFailedSignal;
-
-		[Inject]
-		public var notifyUserRegisteredSignal:NotifyUserRegisteredSignal;
-
-		[Inject]
-		public var notifyUserPasswordReminderSentSignal:NotifyUserPasswordReminderSentSignal;
-
-		[Inject]
-		public var notifyUserPasswordReminderFailedSignal:NotifyUserPasswordReminderFailedSignal;
 
 		[Inject]
 		public var notifyAMFConnectionFailed : NotifyAMFConnectionFailed;
@@ -71,12 +45,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			view.popUpWantsToRegisterSignal.add( onPopUpWantsToRegister );
 
 			// From app.
-			notifyUserLoggedInSignal.add( onLoginSuccess );
-			notifyUserLogInFailedSignal.add( onLoginFailure );
-			notifyUserRegisteredSignal.add( onRegisterSuccess );
-			notifyUserRegistrationFailedSignal.add( onRegisterFailure );
-			notifyUserPasswordReminderSentSignal.add( onPasswordReminderSent );
-			notifyUserPasswordReminderFailedSignal.add( onPasswordReminderFailed );
 			notifyAMFConnectionFailed.add( onConnectionProblems );
 		}
 
@@ -84,13 +52,8 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			super.destroy();
 			view.popUpWantsToCloseSignal.remove( onPopUpWantsToClose );
 			view.popUpWantsToLogInSignal.remove( onPopUpWantsToLogIn );
-			notifyUserLoggedInSignal.remove( onLoginSuccess );
-			notifyUserLogInFailedSignal.remove( onLoginFailure );
-			notifyUserRegisteredSignal.remove( onRegisterSuccess );
-			notifyUserRegistrationFailedSignal.remove( onRegisterFailure );
+
 			view.popUpWantsToRegisterSignal.remove( onPopUpWantsToRegister );
-			notifyUserPasswordReminderSentSignal.remove( onPasswordReminderSent );
-			notifyUserPasswordReminderFailedSignal.remove( onPasswordReminderFailed );
 			notifyAMFConnectionFailed.remove( onConnectionProblems );
 			if( _photoLarge ) _photoLarge.dispose();
 			if( _photoSmall ) _photoSmall.dispose();
@@ -164,7 +127,6 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 		}
 
 		private function onLoginSuccess():void {
-
 			view.loginSubView.loginBtn.dontSpin();
 
 			trace( this, "logged in" );
@@ -228,21 +190,21 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			vo.password = password;
 			vo.firstName = firstName;
 			vo.lastName = lastName;
-			loggedInUserProxy.registerAndLogIn( vo );
+			loggedInUserProxy.registerAndLogIn( vo, onRegisterSuccess, onRegisterFailure );
 
 			view.signupSubView.canRequestSignUp = false;
 		}
 
 		private function onForgottenPassword( email:String ):void {
 			view.loginSubView.canRequestReminder = false;
-			loggedInUserProxy.sendPasswordReminder( email );
+			loggedInUserProxy.sendPasswordReminder( email, onPasswordReminderSent, onPasswordReminderFailed );
 		}
 
 		private function onPopUpWantsToLogIn( email:String, password:String ):void {
 			_loggingIn = true;
 			view.loginSubView.loginBtn.spin();
 			view.loginSubView.canRequestLogin = false;
-			loggedInUserProxy.logIn( email, password );
+			loggedInUserProxy.logIn( email, password, onLoginSuccess, onLoginFailure );
 		}
 
 		private function onPopUpWantsToClose():void {

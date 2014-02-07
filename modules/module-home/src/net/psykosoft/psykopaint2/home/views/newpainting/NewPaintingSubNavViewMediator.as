@@ -158,7 +158,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 				var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
 				if( data && data.length > 0 ) {
 					
-					var infoVO:PaintingInfoVO = data[ 0 ];
+					infoVO = data[ 0 ];
 					if( infoVO )
 						requestEaselUpdateSignal.dispatch( infoVO, true, null );
 				}

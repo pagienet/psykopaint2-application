@@ -3,9 +3,6 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLogOutFailedSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedInSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyUserLoggedOutSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
@@ -21,15 +18,6 @@ package net.psykosoft.psykopaint2.home.views.settings
 		[Inject]
 		public var loggedInUserProxy:LoggedInUserProxy;
 
-		[Inject]
-		public var notifyUserLoggedInSignal:NotifyUserLoggedInSignal;
-
-		[Inject]
-		public var notifyUserLoggedOutSignal:NotifyUserLoggedOutSignal;
-
-		[Inject]
-		public var notifyUserLogOutFailedSignal:NotifyUserLogOutFailedSignal;
-
 		override public function initialize():void {
 
 			// Init.
@@ -37,9 +25,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 			super.initialize();
 
 			// From app.
-			notifyUserLoggedInSignal.add( onUserLoggedIn );
-			notifyUserLoggedOutSignal.add( onUserLoggedOut );
-			notifyUserLogOutFailedSignal.add( onLogOutFailed );
+			loggedInUserProxy.onChange.add( onLoggedInUserChange );
 		}
 
 		override protected function onViewSetup():void
@@ -50,9 +36,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		override public function destroy():void {
 			super.destroy();
-			notifyUserLoggedInSignal.remove( onUserLoggedIn );
-			notifyUserLoggedOutSignal.remove( onUserLoggedOut );
-			notifyUserLogOutFailedSignal.remove( onLogOutFailed );
+			loggedInUserProxy.onChange.remove( onLoggedInUserChange );
 		}
 
 		// -----------------------
@@ -72,7 +56,8 @@ package net.psykosoft.psykopaint2.home.views.settings
 					if( loggedInUserProxy.isLoggedIn() ) {
 						view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, false );
 						trace( this, "logging out" );
-						loggedInUserProxy.logOut();
+						// no need to check for success, is implicit in onChange
+						loggedInUserProxy.logOut(null, onLogOutFailed);
 					}
 					else {
 						trace( this, "logging in" );
@@ -91,13 +76,13 @@ package net.psykosoft.psykopaint2.home.views.settings
 			trace( this, "log out failed - error code: " + amfErrorCode );
 		}
 
-		private function onUserLoggedIn():void {
-			view.setLoginBtn(SettingsSubNavView.ID_LOGOUT);
-			view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, true );
-		}
-
-		private function onUserLoggedOut():void {
-			view.setLoginBtn(SettingsSubNavView.ID_LOGIN);
+		private function onLoggedInUserChange():void {
+			if (loggedInUserProxy.isLoggedIn()) {
+				view.setLoginBtn(SettingsSubNavView.ID_LOGOUT);
+			}
+			else {
+				view.setLoginBtn(SettingsSubNavView.ID_LOGIN);
+			}
 			view.enableButtonWithId( SettingsSubNavView.ID_LOGIN, true );
 		}
 	}

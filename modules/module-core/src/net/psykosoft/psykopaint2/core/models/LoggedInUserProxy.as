@@ -3,17 +3,19 @@ package net.psykosoft.psykopaint2.core.models
 
 	import flash.utils.ByteArray;
 
+	import org.osflash.signals.Signal;
+
 	public interface LoggedInUserProxy
 	{
 		function isLoggedIn() : Boolean;
 
-		function logIn(username : String, password : String) : void;
+		function logIn(username : String, password : String, onSuccess : Function, onFail : Function) : void;
 
-		function logOut() : void;
+		function logOut(onSuccess : Function, onFail : Function) : void;
 
-		function registerAndLogIn(userRegistrationVO : UserRegistrationVO) : void;
+		function registerAndLogIn(userRegistrationVO : UserRegistrationVO, onSuccess : Function, onFail : Function) : void;
 
-		function sendPasswordReminder(email : String) : void
+		function sendPasswordReminder(email : String, onSuccess : Function, onFail : Function) : void
 
 		function sendProfileImages(imageLarge : ByteArray, imageSmall : ByteArray) : void;
 
@@ -34,5 +36,7 @@ package net.psykosoft.psykopaint2.core.models
 		function get active() : Boolean;
 
 		function get banned() : Boolean;
+
+		function get onChange():Signal;
 	}
 }
