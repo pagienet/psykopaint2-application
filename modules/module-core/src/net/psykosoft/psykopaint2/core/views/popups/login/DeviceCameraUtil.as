@@ -12,11 +12,11 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import flash.media.CameraUI;
 	import flash.media.MediaPromise;
 	import flash.media.MediaType;
-
+	
+	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class DeviceCameraUtil extends Sprite
@@ -106,7 +106,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			var bmd:BitmapData = new TrackedBitmapData( _imageLoader.width, _imageLoader.height, false, 0 );
 			bmd.draw( _imageLoader );
 
-			imageRetrievedSignal.dispatch( bmd );
+			imageRetrievedSignal.dispatch( bmd, CameraRollImageOrientation.ROTATION_0 );
 
 			_stage.autoOrients = false;
 		}

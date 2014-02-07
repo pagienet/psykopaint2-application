@@ -153,6 +153,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 			if( infoVO )
 			{
 				requestEaselUpdateSignal.dispatch( infoVO, true, null );
+				view.selectButtonWithLabel(infoVO.id.split("-")[1]);
 			} else
 			{
 				var data:Vector.<PaintingInfoVO> = paintingModel.getSortedPaintingCollection();
@@ -160,7 +161,10 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					
 					var infoVO:PaintingInfoVO = data[ 0 ];
 					if( infoVO )
+					{
 						requestEaselUpdateSignal.dispatch( infoVO, true, null );
+						view.selectButtonWithLabel(infoVO.id.split("-")[1]);
+					}
 				}
 			}
 		}

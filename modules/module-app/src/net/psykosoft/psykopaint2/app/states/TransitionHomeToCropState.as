@@ -35,6 +35,7 @@ package net.psykosoft.psykopaint2.app.states
 		[Inject]
 		public var requestStateChangeSignal : RequestNavigationStateChangeSignal;
 		private var _bitmapData : BitmapData;
+		private var _orientation : int;
 		private var _background : RefCountedTexture;
 
 		public function TransitionHomeToCropState()
@@ -46,7 +47,8 @@ package net.psykosoft.psykopaint2.app.states
 		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
-			_bitmapData = BitmapData(data);
+			_bitmapData = BitmapData(data.map);
+			_orientation = int( data.orientation );
 			notifyBackgroundSetSignal.addOnce(onBackgroundSet);
 			requestCreateCropBackgroundSignal.dispatch();
 		}
@@ -56,12 +58,12 @@ package net.psykosoft.psykopaint2.app.states
 			if (_background) _background.dispose();
 			_background = background.newReference();
 			notifyCropModuleSetUpSignal.addOnce(onCropModuleSetUp);
-			requestSetupCropModuleSignal.dispatch(_bitmapData);
+			requestSetupCropModuleSignal.dispatch(_bitmapData, _orientation);
 		}
 
 		private function onCropModuleSetUp() : void
 		{
-			stateMachine.setActiveState(cropState, {bitmapData: _bitmapData, background: _background.newReference()});
+			stateMachine.setActiveState(cropState, {bitmapData: _bitmapData, background: _background.newReference(), orientation:_orientation});
 		}
 
 		override ns_state_machine function deactivate() : void
@@ -69,6 +71,7 @@ package net.psykosoft.psykopaint2.app.states
 			if (_background) _background.dispose();
 			_background = null;
 			_bitmapData = null;
+			_orientation = null
 		}
 	}
 }

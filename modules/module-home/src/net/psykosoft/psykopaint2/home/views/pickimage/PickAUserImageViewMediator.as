@@ -38,8 +38,8 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		// From view.
 		// -----------------------
 
-		private function onImagePicked( bmd:BitmapData ):void {
-			if( bmd ) requestCropSourceImageSignal.dispatch( bmd );
+		private function onImagePicked( bmd:BitmapData, orientation:int ):void {
+			if( bmd ) requestCropSourceImageSignal.dispatch( bmd, orientation );
 			else requestNavigationStateChange( NavigationStateType.PREVIOUS );
 		}
 	}

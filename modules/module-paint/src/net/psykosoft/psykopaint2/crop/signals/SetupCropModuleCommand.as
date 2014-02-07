@@ -12,6 +12,9 @@ package net.psykosoft.psykopaint2.crop.signals
 	{
 		[Inject]
 		public var bitmapData : BitmapData;
+		
+		[Inject]
+		public var orientation : int;
 
 		[Inject]
 		public var notifyCropModuleSetUpSignal : NotifyCropModuleSetUpSignal;
@@ -29,7 +32,7 @@ package net.psykosoft.psykopaint2.crop.signals
 			var cropRootView : CropRootView = new CropRootView();
 			requestAddViewToMainLayerSignal.dispatch(cropRootView,ViewLayerOrdering.AT_BOTTOM_LAYER);
 
-			requestUpdateCropImageSignal.dispatch(bitmapData);
+			requestUpdateCropImageSignal.dispatch(bitmapData, orientation);
 			notifyCropModuleSetUpSignal.dispatch();
 		}
 	}

@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.crop.signals
 	{
 		public function RequestSetupCropModuleSignal()
 		{
-			super(BitmapData);
+			super(BitmapData,int);
 		}
 	}
 }

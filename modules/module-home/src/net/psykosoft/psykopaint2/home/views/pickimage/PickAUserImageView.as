@@ -2,10 +2,11 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 {
 
 	import flash.display.BitmapData;
-
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
+	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.base.utils.io.DesktopImageBrowser;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class PickAUserImageView extends ViewBase
@@ -34,7 +35,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		private function onImagePickedFromDesktop( bmd:BitmapData ):void {
 			_browser.dispose();
 			_browser = null;
-			imagePickedSignal.dispatch( bmd );
+			imagePickedSignal.dispatch( bmd, CameraRollImageOrientation.ROTATION_0 );
 		}
 	}
 }
