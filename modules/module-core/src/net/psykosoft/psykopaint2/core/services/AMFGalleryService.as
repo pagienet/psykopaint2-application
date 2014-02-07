@@ -103,6 +103,7 @@ package net.psykosoft.psykopaint2.core.services
 				vo.numLikes = obj["num_favorite"];
 				vo.numComments = obj["num_comments"];
 				vo.userID = obj["user_id"];
+				vo.userThunbnailURL = obj["user_thumbnail_url"];
 				vo.isFavorited = obj.hasOwnProperty("is_favorited")? obj["is_favorited"] : false;
 				
 				//TODO: this has to be replaced by something meaningful now that we do not distinguish photo and color mode anymore:

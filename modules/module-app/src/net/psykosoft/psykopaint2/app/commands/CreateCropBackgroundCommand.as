@@ -6,12 +6,7 @@ package net.psykosoft.psykopaint2.app.commands
 
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.managers.rendering.SnapshotPromise;
-	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
-	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetCropBackgroundSignal;
-	import net.psykosoft.psykopaint2.paint.signals.RequestSetCanvasBackgroundSignal;
-
-	import org.osflash.signals.Signal;
 
 	public class CreateCropBackgroundCommand
 	{

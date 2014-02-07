@@ -101,8 +101,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			_navigation.setLeftButton( id, label, iconType, showBackground );
 		}
 
-		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE ):void {
-			_navigation.setRightButton( id, label, iconType );
+		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE, labelVisible : Boolean = false ):void {
+			_navigation.setRightButton( id, label, iconType, labelVisible );
 		}
 
 		public function showLeftButton( value:Boolean ):void {
@@ -128,6 +128,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function getButtonIconForRightButton():Sprite {
 			return _navigation.getButtonIconForRightButton();
+		}
+
+		// not exactly pretty, but hey
+		public function setRightButtonBitmap(bitmap : Bitmap) : void
+		{
+			_navigation.setRightButtonBitmap(bitmap);
 		}
 
 		// ---------------------------------------------------------------------

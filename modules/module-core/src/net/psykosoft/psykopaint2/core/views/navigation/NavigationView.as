@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.views.navigation
 {
 
+	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -123,11 +124,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			leftBtnSide.getChildByName( "clipOverlay" ).visible = leftBtnSide.getChildByName( "paperbg").visible = showBackground;
 		}
 
-		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE ):void {
+		public function setRightButton( id:String, label:String, iconType:String = ButtonIconType.CONTINUE, labelVisible : Boolean = false ):void {
 			_rightButton.id = id;
 			_rightButton.labelText = label;
 			_rightButton.iconType = iconType;
 			_rightButton.visible = true;
+			_rightButton.label.visible = labelVisible;
 			rightBtnSide.visible = true;
 		}
 
@@ -184,6 +186,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function get panel():NavigationPanel {
 			return _panel;
+		}
+
+		public function setRightButtonBitmap(bitmap:Bitmap):void
+		{
+			_rightButton.iconBitmap = bitmap;
 		}
 	}
 }

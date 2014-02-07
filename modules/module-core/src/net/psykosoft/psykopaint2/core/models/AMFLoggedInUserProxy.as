@@ -252,8 +252,5 @@ package net.psykosoft.psykopaint2.core.models
 			return _banned;
 		}
 
-		private function traceResponse( msg:String, data:Object ):void {
-			trace(msg + ": " + data); for (var i in data) trace(i+" = "+data[i]);
-		}
 	}
 }
