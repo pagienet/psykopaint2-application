@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 {
 
 	import flash.display.BitmapData;
+	import flash.display.JPEGEncoderOptions;
 
 	import net.psykosoft.psykopaint2.base.utils.misc.StringUtil;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedByteArray;
@@ -90,9 +91,9 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 
 			// Send profile images using a separate service call.
 			var largeBytes:TrackedByteArray = new TrackedByteArray();
-			_photoLarge.copyPixelsToByteArray( _photoLarge.rect, largeBytes );
+			_photoLarge.encode(_photoLarge.rect, new JPEGEncoderOptions(), largeBytes);
 			var smallBytes:TrackedByteArray = new TrackedByteArray();
-			_photoSmall.copyPixelsToByteArray( _photoSmall.rect, smallBytes );
+			_photoSmall.encode(_photoLarge.rect, new JPEGEncoderOptions(), smallBytes);
 			loggedInUserProxy.sendProfileImages( largeBytes, smallBytes );
 
 			view.signupSubView.canRequestSignUp = true;
