@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 
 		[Inject]
 		public var view:CropView;
-
+		
 		[Inject]
 		public var requestSetCropBackgroundSignal : RequestSetCropBackgroundSignal;
 
@@ -166,7 +166,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		private function updateCropSourceImage( bitmapData:BitmapData, orientation:int ):void {
 			trace( this, "updateCropSourceImage" );
 			view.easelRect = easelRectModel.localScreenRect;
-			view.sourceMap = bitmapData;
+			view.setSourceMap ( bitmapData, orientation);
 		}
 	}
 }

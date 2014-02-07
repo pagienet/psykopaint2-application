@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.crop.signals
 	import flash.display.BitmapData;
 	
 	import net.psykosoft.psykopaint2.base.robotlegs.commands.TracingCommand;
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.ViewLayerOrdering;
@@ -31,8 +32,7 @@ package net.psykosoft.psykopaint2.crop.signals
 
 			var cropRootView : CropRootView = new CropRootView();
 			requestAddViewToMainLayerSignal.dispatch(cropRootView,ViewLayerOrdering.AT_BOTTOM_LAYER);
-
-			requestUpdateCropImageSignal.dispatch(bitmapData, orientation);
+			requestUpdateCropImageSignal.dispatch(BitmapDataUtils.getLegalBitmapData(bitmapData), orientation);
 			notifyCropModuleSetUpSignal.dispatch();
 		}
 	}

@@ -2,11 +2,11 @@ package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
-
-	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
-
+	
 	import net.psykosoft.psykopaint2.base.states.State;
+	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
@@ -48,13 +48,14 @@ package net.psykosoft.psykopaint2.app.states
 		 */
 		override ns_state_machine function activate(data : Object = null) : void
 		{
+			
 			var bitmapData : BitmapData = BitmapData(data.bitmapData);
 			_background = RefCountedTexture(data.background);
 
 			requestCancelCropSignal.add(onRequestCancelCropSignal);
 			requestOpenCroppedBitmapDataSignal.add(onRequestOpenCroppedBitmapData);
 
-			if (BitmapDataUtils.aspectRatioMatches(bitmapData, CoreSettings.STAGE_WIDTH / CoreSettings.STAGE_HEIGHT))
+			if (data.orientation == CameraRollImageOrientation.ROTATION_0 && BitmapDataUtils.aspectRatioMatches(bitmapData, CoreSettings.STAGE_WIDTH / CoreSettings.STAGE_HEIGHT))
 				advanceDirectly(bitmapData);
 			else
 				requestStateChangeSignal.dispatch(NavigationStateType.CROP);

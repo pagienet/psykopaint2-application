@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 {
 
 	import flash.display.Bitmap;
+	import flash.display.BitmapDataChannel;
 	import flash.display.Loader;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
@@ -18,6 +19,8 @@ package net.psykosoft.psykopaint2.base.utils.io
 	
 	import jp.shichiseki.exif.ExifInfo;
 	import jp.shichiseki.exif.IFD;
+	
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	
 	import org.osflash.signals.Signal;
 
