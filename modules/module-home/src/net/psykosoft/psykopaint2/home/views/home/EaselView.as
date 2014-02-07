@@ -1,5 +1,21 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Quad;
+	
+	import flash.display.BitmapData;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DTextureFormat;
+	import flash.display3D.textures.Texture;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
+	import flash.utils.ByteArray;
+	
 	import away3d.containers.View3D;
 	import away3d.core.base.Geometry;
 	import away3d.core.managers.Stage3DProxy;
@@ -8,34 +24,14 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.hacks.NativeTexture;
 	import away3d.hacks.PaintingMaterial;
 	import away3d.lights.LightBase;
-	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.LightPickerBase;
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
-
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Quad;
-
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.display3D.Context3D;
-	import flash.display3D.Context3DTextureFormat;
-	import flash.display3D.textures.Texture;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	import flash.geom.Vector3D;
-	import flash.utils.ByteArray;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
-	import net.psykosoft.psykopaint2.core.materials.PaintingDiffuseMethod;
-	import net.psykosoft.psykopaint2.core.materials.PaintingNormalMethod;
-	import net.psykosoft.psykopaint2.core.materials.PaintingSpecularMethod;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class EaselView extends Sprite
@@ -61,6 +57,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _stage : Stage;
 		private var _mouseDownX : Number;
 		private var _texturesInvalid:Boolean;
+
+		private var aspectRatio:Number;
 
 		public function EaselView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
@@ -111,7 +109,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function initCanvas() : void
 		{
-			var aspectRatio : Number = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
+			aspectRatio = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
 			var geom : Geometry = new PlaneGeometry(CANVAS_WIDTH, CANVAS_WIDTH*aspectRatio, 1, 1, false);
 			geom.scaleUV(1, aspectRatio);
 			_canvas = new Mesh(geom);
@@ -202,6 +200,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			if (onUploadComplete)
 				onUploadComplete(paintingVO);
 		}
+		
+		
 
 		private function animateCanvasOut() : void
 		{
@@ -293,6 +293,43 @@ package net.psykosoft.psykopaint2.home.views.home
 
 			_diffuseTexture = null;
 			_normalSpecularTexture = null;
+		}
+		
+		public function setCropContent(bitmapData:BitmapData, orientation:int):void
+		{
+			initTexturesFromBitmapData(bitmapData);
+			_canvas.visible = true;
+			updateTexturesFromBitmapData(bitmapData);
+			
+			
+			var m:Matrix = new Matrix();
+			var scale:Number = _textureWidth / bitmapData.width;
+			m.scale(scale,scale * _textureHeight / _textureWidth );
+			m.translate(0,(_textureWidth * 0.75 - (bitmapData.height * scale)) / _textureHeight * 0.5 )
+			m.invert();
+			//m.scale(0.5,0.5);
+			_canvas.geometry.transformUV(m);
+			
+		}
+		
+		private function initTexturesFromBitmapData(bitmapData:BitmapData) : void
+		{
+			_textureWidth = TextureUtil.getNextPowerOfTwo(bitmapData.width);
+			_textureHeight = TextureUtil.getNextPowerOfTwo(bitmapData.height);
+			
+			var diffuse : Texture = _context3D.createTexture(_textureWidth, _textureHeight, Context3DTextureFormat.BGRA, false);
+			var normalSpecular : Texture = _context3D.createTexture(1, 1, Context3DTextureFormat.BGRA, false);
+			
+			_diffuseTexture = new NativeTexture(diffuse);
+			_normalSpecularTexture = new NativeTexture(normalSpecular);
+			_material.albedoTexture = _diffuseTexture;
+			_material.normalSpecularTexture = _normalSpecularTexture;
+		}
+		
+		private function updateTexturesFromBitmapData(bitmapData:BitmapData) : void
+		{
+			_diffuseTexture.texture.uploadFromBitmapData(bitmapData);
+			_normalSpecularTexture.texture.uploadFromBitmapData(new BitmapData(1,1,false,0x808080));
 		}
 	}
 }

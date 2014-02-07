@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.signals
 	{
 		public function RequestCropSourceImageSignal()
 		{
-			super(BitmapData);
+			super(BitmapData, int );
 		}
 	}
 }

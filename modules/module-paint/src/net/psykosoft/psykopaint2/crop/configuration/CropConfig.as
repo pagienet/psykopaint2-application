@@ -80,7 +80,6 @@ package net.psykosoft.psykopaint2.crop.configuration
 
 		private function mapNotifications():void {
 			_injector.map( RequestOpenCroppedBitmapDataSignal ).asSingleton();
-			_injector.map( RequestUpdateCropImageSignal ).asSingleton();
 			_injector.map( NotifyCropModuleSetUpSignal ).asSingleton();
 			_injector.map( NotifyCropModuleDestroyedSignal ).asSingleton();
 			_injector.map( RequestCancelCropSignal ).asSingleton();

@@ -2,7 +2,8 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 {
 
 	import flash.display.BitmapData;
-
+	
+	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -53,7 +54,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 		private function onCameraSnapshotRequest():void {
 			view.pause();
 			var bmd:BitmapData = view.takeSnapshot();
-			requestCropSourceImageSignal.dispatch( bmd );
+			requestCropSourceImageSignal.dispatch( bmd, CameraRollImageOrientation.ROTATION_0 );
 		}
 
 		private function onCameraFlipRequest():void {

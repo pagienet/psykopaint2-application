@@ -80,6 +80,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetBookOffScreenRatioSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateMessagePopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootView;
 	import net.psykosoft.psykopaint2.core.views.base.CoreRootViewMediator;
@@ -247,7 +248,8 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyToggleSwipeGestureSignal ).asSingleton();
 			_injector.map( NavigationCanHideWithGesturesSignal ).asSingleton();
 			_injector.map( NotifyEaselTappedSignal ).asSingleton();
-
+			_injector.map( RequestUpdateCropImageSignal ).asSingleton();
+			
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
 		}

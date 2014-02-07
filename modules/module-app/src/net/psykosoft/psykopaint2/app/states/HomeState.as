@@ -93,9 +93,10 @@ package net.psykosoft.psykopaint2.app.states
 			stateMachine.setActiveState(transitionToPaintState, paintingData);
 		}
 
-		private function onRequestCropState(bitmapData : BitmapData) : void
+		private function onRequestCropState(bitmapData : BitmapData, orientation:int ) : void
 		{
-			stateMachine.setActiveState(transitionToCropState, bitmapData);
+			//TODO: handle orientation
+			stateMachine.setActiveState(transitionToCropState, {map:bitmapData, orientation:orientation });
 		}
 
 		private function onNavigationStateChange(state : String) : void

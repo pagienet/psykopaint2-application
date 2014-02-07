@@ -1,9 +1,9 @@
 package net.psykosoft.psykopaint2.app.states
 {
 	import flash.display.BitmapData;
-
+	
+	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleDestroyedSignal;
-
 	import net.psykosoft.psykopaint2.book.signals.NotifyBookModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifyGalleryImageSelectedFromBookSignal;
 	import net.psykosoft.psykopaint2.book.signals.NotifySourceImageSelectedFromBookSignal;
@@ -107,7 +107,7 @@ package net.psykosoft.psykopaint2.app.states
 		private function onImageSelectedFromBookSignal(bitmapData : BitmapData) : void
 		{
 			_onBookDestroyedCallback = function() : void {
-				requestCropSourceImageSignal.dispatch(bitmapData);
+				requestCropSourceImageSignal.dispatch(bitmapData, CameraRollImageOrientation.ROTATION_0);
 			}
 
 			hide();

@@ -20,6 +20,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 	import net.psykosoft.psykopaint2.core.views.debug.ConsoleView;
 
 	import org.osflash.signals.Signal;
+	import net.psykosoft.psykopaint2.base.utils.io.CameraRollUtil;
 
 	public class SignupSubView extends Sprite
 	{
@@ -228,7 +229,7 @@ package net.psykosoft.psykopaint2.core.views.popups.login
 			_cameraUtil.launch();
 		}
 
-		private function onPhotoRetrieved( bmd:BitmapData ):void {
+		private function onPhotoRetrieved( bmd:BitmapData, orientation:int ):void {
 
 			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
 

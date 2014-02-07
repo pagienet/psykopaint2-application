@@ -6,16 +6,17 @@ package net.psykosoft.psykopaint2.crop
 	import flash.events.KeyboardEvent;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
-
+	
+	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.base.utils.misc.ModuleBase;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.crop.configuration.CropConfig;
 	import net.psykosoft.psykopaint2.core.CoreModule;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.RequestHideSplashScreenSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.crop.configuration.CropConfig;
 	import net.psykosoft.psykopaint2.crop.signals.NotifyCropModuleSetUpSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestDestroyCropModuleSignal;
 	import net.psykosoft.psykopaint2.crop.signals.RequestSetupCropModuleSignal;
@@ -88,7 +89,7 @@ package net.psykosoft.psykopaint2.crop
 			_coreModule.injector.getInstance(EaselRectModel).rect = new Rectangle(200, 200, 500, 500);
 			_coreModule.injector.getInstance(RequestNavigationStateChangeSignal).dispatch(NavigationStateType.HOME_ON_EASEL);
 			_coreModule.injector.getInstance(NotifyCropModuleSetUpSignal).addOnce(onCropModuleSetUp);
-			_coreModule.injector.getInstance(RequestSetupCropModuleSignal).dispatch(tempData);
+			_coreModule.injector.getInstance(RequestSetupCropModuleSignal).dispatch(tempData, CameraRollImageOrientation.ROTATION_0);
 		}
 
 		private function destroyStandaloneModule() : void

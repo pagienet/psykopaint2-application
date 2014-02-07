@@ -21,13 +21,14 @@ package net.psykosoft.psykopaint2.crop.views.crop
 
 	public class CropView extends ViewBase
 	{
-		private var _positioningSheet:TouchSheet;
+	//	private var _positioningSheet:TouchSheet;
 		private var _baseTextureSize:int;
 		private var _canvasWidth:int;
 		private var _canvasHeight:int;
 		private var _easelRect:Rectangle;
 		private var _background : RefCountedTexture;
-
+		private var _sourceMap:BitmapData;
+		
 		public function CropView() {
 			super();
 		}
@@ -37,11 +38,14 @@ package net.psykosoft.psykopaint2.crop.views.crop
 			_canvasHeight = CoreSettings.STAGE_HEIGHT;
 		}
 
-		public function set sourceMap( map:BitmapData ):void {
+		public function setSourceMap( map:BitmapData, orientation:int  ):void {
+			_sourceMap = map;
+			/*
 			if( _positioningSheet ) {
 				_positioningSheet.dispose();
 				removeChild( _positioningSheet );
 			}
+			
 			_positioningSheet = new TouchSheet( map, Math.max( _easelRect.width/ map.width, _easelRect.height / map.height ) );
 			//_positioningSheet.minimumScale = Math.max( stage.stageWidth / _sourceMap.width, stage.stageHeight / _sourceMap.height );
 			//_positioningSheet.limitsRect = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
@@ -50,23 +54,27 @@ package net.psykosoft.psykopaint2.crop.views.crop
 			_positioningSheet.y = _easelRect.y;
 			
 			addChildAt( _positioningSheet, 0 );
-		
+		*/
 			
 		}
 
 		public function disposeCropData() : void
 		{
+			/*
 			if (_positioningSheet) {
 				removeChild(_positioningSheet);
 				_positioningSheet.dispose();
 				_positioningSheet = null;
 			}
+			*/
 		}
 
 		public function getCroppedImage():BitmapData
 		{
 			var croppedMap:BitmapData = new TrackedBitmapData(stage.stageWidth, stage.stageHeight, false, 0xffffffff );
-			croppedMap.draw(_positioningSheet,new Matrix(stage.stageWidth/_easelRect.width,0,0,stage.stageHeight / _easelRect.height),null,"normal",null,true);
+			//croppedMap.draw(_sourceMap,new Matrix(stage.stageWidth/_easelRect.width,0,0,stage.stageHeight / _easelRect.height),null,"normal",null,true);
+			var scale:Number = stage.stageWidth/_sourceMap.width;
+			croppedMap.draw(_sourceMap,new Matrix(scale,0,0,scale,0,(stage.stageHeight - _sourceMap.height * scale) * 0.5),null,"normal",null,true);
 			return croppedMap;
 			
 		}
@@ -77,6 +85,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 //			_easelRect.y *= CoreSettings.GLOBAL_SCALING;
 //			_easelRect.width *= CoreSettings.GLOBAL_SCALING;
 //			_easelRect.height *= CoreSettings.GLOBAL_SCALING;
+			/*
 			if ( _positioningSheet )
 			{
 				_positioningSheet.x = _easelRect.x;
@@ -85,6 +94,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 				_positioningSheet.centerContent();
 				_positioningSheet.limitsRect = _positioningSheet.scrollRect;
 			}
+			*/
 		}
 		
 		override public function enable():void
@@ -124,7 +134,7 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		
 		public function onTransformGesture(event:GestureEvent):void
 		{
-			_positioningSheet.onGesture(event);
+			//_positioningSheet.onGesture(event);
 		}
 		
 	}

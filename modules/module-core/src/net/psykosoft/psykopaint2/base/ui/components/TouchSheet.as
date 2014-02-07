@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_contentsWidth = map.width;
 			_contentsHeight = map.height;
 			
-			opaqueBackground = 0xffffff;
+			//opaqueBackground = 0xffffff;
 			
 			centerContent();
 		

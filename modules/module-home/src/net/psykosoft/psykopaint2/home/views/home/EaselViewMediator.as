@@ -1,11 +1,14 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
+	import flash.display.BitmapData;
+	
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewDeleteModeChangedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
@@ -37,6 +40,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		
 		[Inject]
 		public var notifyHomeViewDeleteModeChangedSignal : NotifyHomeViewDeleteModeChangedSignal;
+		
+		[Inject]
+		public var requestUpdateCropImageSignal:RequestUpdateCropImageSignal;
 
 		private var _selectedSurfaceID : uint;
 		private var canOpenImageOnEasel:Boolean;
@@ -61,6 +67,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestEaselPaintingUpdateSignal.add(onEaselUpdateRequest);
 			notifyPaintingDataRetrievedSignal.add(onPaintingDataRetrieved);
 			notifyHomeViewDeleteModeChangedSignal.add(onDeleteModeChanged);
+			requestUpdateCropImageSignal.add( updateCropSourceImage );
+			
 		}
 
 		private function onRequestNavigationStateChange(newState : String) : void
@@ -81,6 +89,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			requestEaselPaintingUpdateSignal.remove(onEaselUpdateRequest);
 			notifyPaintingDataRetrievedSignal.remove(onPaintingDataRetrieved);
 			notifyHomeViewDeleteModeChangedSignal.remove(onDeleteModeChanged);
+			requestUpdateCropImageSignal.remove( updateCropSourceImage );
+			
 		}
 		
 		private function onDeleteModeChanged( deleteModeActive:Boolean ):void
@@ -98,6 +108,12 @@ package net.psykosoft.psykopaint2.home.views.home
 				_selectedSurfaceID = paintingVO.surfaceID;
 		}
 
+		
+		private function updateCropSourceImage( bitmapData:BitmapData, orientation:int ):void 
+		{
+			view.setCropContent( bitmapData, orientation );
+		}
+		
 		private function onPaintingDataRetrieved(data : Vector.<PaintingInfoVO>) : void
 		{
 			if (data.length > 0)

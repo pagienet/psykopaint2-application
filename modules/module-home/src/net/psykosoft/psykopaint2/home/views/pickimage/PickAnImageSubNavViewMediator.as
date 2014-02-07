@@ -9,7 +9,7 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
-	import net.psykosoft.psykopaint2.core.views.popups.login.CameraRollUtil;
+	import net.psykosoft.psykopaint2.base.utils.io.CameraRollUtil;
 	import net.psykosoft.psykopaint2.core.views.popups.login.DeviceCameraUtil;
 	import net.psykosoft.psykopaint2.home.commands.RequestLoadSurfacePreviewSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
@@ -154,9 +154,9 @@ package net.psykosoft.psykopaint2.home.views.pickimage
 			_cameraUtil.launch();
 		}
 
-		private function onPhotoRetrieved( bmd:BitmapData ):void {
+		private function onPhotoRetrieved( bmd:BitmapData, orientation:int ):void {
 			trace( this, "photo retrieved: " + bmd.width + "x" + bmd.height );
-			requestCropSourceImageSignal.dispatch( bmd );
+			requestCropSourceImageSignal.dispatch( bmd, orientation );
 		}
 	}
 }
