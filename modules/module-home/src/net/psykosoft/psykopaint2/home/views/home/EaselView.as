@@ -32,6 +32,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	
+	import org.gestouch.events.GestureEvent;
+	import org.gestouch.gestures.TransformGesture;
 	import org.osflash.signals.Signal;
 
 	public class EaselView extends Sprite
@@ -56,10 +58,20 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _paintingID : String;
 		private var _stage : Stage;
 		private var _mouseDownX : Number;
+		private var _mouseDownY : Number;
+		
 		private var _texturesInvalid:Boolean;
 
 		private var aspectRatio:Number;
+		private var cropModeIsActive:Boolean;
 
+		private var cropScaleX:Number;
+
+		private var cropScaleY:Number;
+		private var cropTranslateX:int;
+		private var cropTranslateY:int;
+		
+		
 		public function EaselView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
 			_view = view;
@@ -81,7 +93,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function onMouseDown(event : MouseEvent) : void
 		{
 			_mouseDownX = event.stageX;
-
+			_mouseDownY = event.stageY;
+			
 			if (_canvas.visible && easelRect.contains(_mouseDownX, event.stageY)) {
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 				_stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -90,15 +103,33 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onMouseMove(event : MouseEvent) : void
 		{
-			if (Math.abs(event.stageX - _mouseDownX) > 20) {
+			if ( cropModeIsActive && !CoreSettings.RUNNING_ON_iPAD )
+			{
+				var r:Rectangle = easelRect;
+				var scaledX:Number = (( event.stageX - _mouseDownX) / r.width ) / cropScaleX;
+				var scaledY:Number = (( event.stageY - _mouseDownY) / r.width) / cropScaleY;
+				
+				var m:Matrix = new Matrix();
+				m.translate(scaledX,scaledY );
+				m.invert();
+				_canvas.geometry.transformUV(m);
+				cropTranslateX += scaledX;
+				cropTranslateY += scaledY;
+				
+				_mouseDownX = event.stageX;
+				_mouseDownY = event.stageY;
+			} else if (Math.abs(event.stageX - _mouseDownX) > 20) {
 				// cancel with swiping
 				_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				_stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			}
 		}
 
 		private function onMouseUp(event : MouseEvent) : void
 		{
-			if (mouseEnabled && easelRect.contains(event.stageX, event.stageY))
+			_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			_stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			if (!cropModeIsActive && mouseEnabled && easelRect.contains(event.stageX, event.stageY))
 				easelTappedSignal.dispatch();
 		}
 
@@ -155,6 +186,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function setContent(paintingVO : PaintingInfoVO, animateIn : Boolean = false, onUploadComplete : Function = null) : void
 		{
+			cropModeIsActive = false;
+			
 			if (paintingVO && paintingVO.id == _paintingID && paintingVO.id != PaintingInfoVO.DEFAULT_VO_ID)
 				return;
 
@@ -269,6 +302,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.camera.removeEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraTransformChanged);
 			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			_stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel );
 			_view.scene.removeChild(_canvas);
 			_canvas.geometry.dispose();
 			_canvas.dispose();
@@ -303,13 +337,51 @@ package net.psykosoft.psykopaint2.home.views.home
 			
 			
 			var m:Matrix = new Matrix();
-			var scale:Number = _textureWidth / bitmapData.width;
-			m.scale(scale,scale * _textureHeight / _textureWidth );
-			m.translate(0,(_textureWidth * 0.75 - (bitmapData.height * scale)) / _textureHeight * 0.5 )
+			cropScaleX = _textureWidth / bitmapData.width;
+			cropScaleY = cropScaleX * _textureHeight / _textureWidth;
+			m.scale(cropScaleX, cropScaleY );
+			
+			cropTranslateX = 0;
+			cropTranslateY = (_textureWidth * 0.75 - (bitmapData.height * cropScaleX)) / _textureHeight * 0.5;
+			
+			m.translate(cropTranslateX,cropTranslateY);
 			m.invert();
 			//m.scale(0.5,0.5);
 			_canvas.geometry.transformUV(m);
 			
+			cropModeIsActive = true;
+			//temporary to test on desktop
+			if ( !CoreSettings.RUNNING_ON_iPAD )
+			{
+				_stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel );
+			}
+			
+		}
+		
+		protected function onMouseWheel(event:MouseEvent):void
+		{
+			var r:Rectangle = easelRect;
+			if ( r.contains(_stage.mouseX, _stage.mouseY) )
+			{
+				var scaledX:Number = ((stage.mouseX - r.x) / r.width) / cropScaleX;
+				var scaledY:Number = ((stage.mouseY - r.y) / r.width) / cropScaleY;
+				
+				var m:Matrix = new Matrix();
+				m.translate(-cropTranslateX * 0.5 - scaledX,-cropTranslateY * 0.5 - scaledY);
+				var scale:Number = 1 + event.delta / 50;
+				m.scale( scale, scale  );
+				
+				m.translate(cropTranslateX * 0.5 + scaledX,cropTranslateY * 0.5 + scaledY);
+				m.invert();
+				//cropTranslateX += scaledX * scale;
+				//cropTranslateY += scaledY * scale;
+				cropScaleX *= scale;
+				cropScaleY *= scale;
+			
+				
+				//m.scale(0.5,0.5);
+				_canvas.geometry.transformUV(m);
+			}
 		}
 		
 		private function initTexturesFromBitmapData(bitmapData:BitmapData) : void
@@ -330,6 +402,50 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			_diffuseTexture.texture.uploadFromBitmapData(bitmapData);
 			_normalSpecularTexture.texture.uploadFromBitmapData(new BitmapData(1,1,false,0x808080));
+		}
+		
+		public function onTransformGesture(event:GestureEvent):void
+		{
+			if ( cropModeIsActive )
+			{
+				var gesture:TransformGesture = (event.target as TransformGesture);
+				var r:Rectangle = easelRect;
+				if ( r.containsPoint(gesture.location ))
+				{
+					if (  gesture.scale != 1 )
+					{
+						var scaledX:Number = ((gesture.location.x - r.x) / r.width) / cropScaleX;
+						var scaledY:Number = ((gesture.location.y - r.y) / r.width) / cropScaleY;
+						
+						var m:Matrix = new Matrix();
+						m.translate(-cropTranslateX * 0.5 - scaledX,-cropTranslateY * 0.5 - scaledY);
+						var scale:Number = gesture.scale;
+						m.scale( scale, scale  );
+						
+						m.translate(cropTranslateX * 0.5 + scaledX,cropTranslateY * 0.5 + scaledY);
+						m.invert();
+						//cropTranslateX += scaledX * scale;
+						//cropTranslateY += scaledY * scale;
+						cropScaleX *= scale;
+						cropScaleY *= scale;
+					} else {
+						
+						scaledX = (gesture.offsetX / r.width ) / cropScaleX;
+						scaledY = (gesture.offsetY / r.width) / cropScaleY;
+						
+						var m:Matrix = new Matrix();
+						m.translate(scaledX,scaledY );
+						m.invert();
+						cropTranslateX += scaledX;
+						cropTranslateY += scaledY;
+					}
+					
+					//m.scale(0.5,0.5);
+					_canvas.geometry.transformUV(m);
+				}
+			}
+		
+			
 		}
 	}
 }

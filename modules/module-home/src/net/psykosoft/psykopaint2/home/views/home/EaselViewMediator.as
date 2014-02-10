@@ -3,8 +3,10 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.display.BitmapData;
 	
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
@@ -12,6 +14,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewDeleteModeChangedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
+	
+	import org.gestouch.events.GestureEvent;
 	
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
@@ -43,6 +47,9 @@ package net.psykosoft.psykopaint2.home.views.home
 		
 		[Inject]
 		public var requestUpdateCropImageSignal:RequestUpdateCropImageSignal;
+		
+		[Inject]
+		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
 
 		private var _selectedSurfaceID : uint;
 		private var canOpenImageOnEasel:Boolean;
@@ -68,6 +75,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyPaintingDataRetrievedSignal.add(onPaintingDataRetrieved);
 			notifyHomeViewDeleteModeChangedSignal.add(onDeleteModeChanged);
 			requestUpdateCropImageSignal.add( updateCropSourceImage );
+			notifyGlobalGestureSignal.add( onGlobalGesture );
 			
 		}
 
@@ -90,7 +98,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyPaintingDataRetrievedSignal.remove(onPaintingDataRetrieved);
 			notifyHomeViewDeleteModeChangedSignal.remove(onDeleteModeChanged);
 			requestUpdateCropImageSignal.remove( updateCropSourceImage );
-			
+			notifyGlobalGestureSignal.remove( onGlobalGesture );
 		}
 		
 		private function onDeleteModeChanged( deleteModeActive:Boolean ):void
@@ -130,6 +138,14 @@ package net.psykosoft.psykopaint2.home.views.home
 					requestStartNewPaintingCommand.dispatch(_selectedSurfaceID);
 				else
 					requestLoadPaintingDataSignal.dispatch(view.paintingID);
+			}
+		}
+		
+		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
+		{
+			if ( gestureType == GestureType.TRANSFORM_GESTURE_CHANGED )
+			{
+				view.onTransformGesture( event );
 			}
 		}
 
