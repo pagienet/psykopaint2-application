@@ -143,9 +143,15 @@ package net.psykosoft.psykopaint2.home.views.home
 		
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
-			if ( gestureType == GestureType.TRANSFORM_GESTURE_CHANGED )
+			if ( gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
+			{
+				view.onTransformGestureBegan( event );
+			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_CHANGED )
 			{
 				view.onTransformGesture( event );
+			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_ENDED )
+			{
+				view.onTransformGestureended( event );
 			}
 		}
 
