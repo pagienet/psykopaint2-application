@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
@@ -191,6 +192,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function setRightButtonBitmap(bitmap:Bitmap):void
 		{
 			_rightButton.iconBitmap = bitmap;
+		}
+
+		public function getRightButton():Sprite
+		{
+			return _rightButton;
 		}
 	}
 }

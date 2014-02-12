@@ -1,6 +1,15 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 
+	import flash.display.Bitmap;
+	import flash.display.Loader;
+	import flash.display.MovieClip;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.net.URLRequest;
+
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
@@ -10,10 +19,84 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public static const ID_LOVE : String = "Love";
 		public static const ID_COMMENT : String = "Comment";
 		public static const ID_SHARE : String = "Share";
+		public static const PROFILE : String = "profile";
+
+		private var _userThumbnailURL : String;
+		private var _loader:Loader;
+		private var _userBitmap:Bitmap;
+		private var _container:MovieClip;
 
 		public function GalleryPaintingSubNavView()
 		{
 			super();
+			_container = new PhotoFrameAsset();
+			_container.scaleX = _container.scaleY = .5 * CoreSettings.GLOBAL_SCALING;
+			_container.x = -_container.width/2 + 2 * CoreSettings.GLOBAL_SCALING;
+			_container.y = -_container.height/2 + 4 * CoreSettings.GLOBAL_SCALING;
+		}
+
+		public function setUserProfile(name : String, url : String) : void
+		{
+			setRightButton(PROFILE, name, ButtonIconType.DEFAULT, true);
+
+			if (_userThumbnailURL != url) {
+				if (_userBitmap) _container.removeChild(_userBitmap);
+				_userThumbnailURL = url;
+				loadThumbnail();
+			}
+		}
+
+		private function disposeUserBitmap():void
+		{
+			if (_userBitmap) {
+				_container.removeChild(_userBitmap);
+				_userBitmap.bitmapData.dispose();
+				_userBitmap = null;
+			}
+		}
+
+		override public function dispose():void
+		{
+			super.dispose();
+			getRightButton().removeChild(_container);
+			if (_loader) {
+				_loader.close();
+				removeLoadListeners();
+			}
+			disposeUserBitmap();
+		}
+
+		private function loadThumbnail():void
+		{
+			disposeUserBitmap();
+			if (_loader) _loader.close();
+			_loader = new Loader();
+			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
+			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+			_loader.load(new URLRequest(_userThumbnailURL));
+		}
+
+		private function onLoadError(event:IOErrorEvent):void
+		{
+			removeLoadListeners();
+			_loader = null;
+		}
+
+		private function onLoadComplete(event:Event):void
+		{
+			removeLoadListeners();
+			_userBitmap = Bitmap(_loader.content);
+			_userBitmap.x = 7;
+			_userBitmap.y = 7;
+			_container.addChildAt(_userBitmap, 0);
+			_loader = null;
+
+		}
+
+		private function removeLoadListeners():void
+		{
+			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadComplete);
+			_loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		}
 
 		override protected function onEnabled() : void
@@ -30,6 +113,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			createCenterButton(ID_SHARE, ID_SHARE, ButtonIconType.SHARE);
 			
 			validateCenterButtons();
+
+			getRightButton().addChild(_container);
 		}
 	}
 }

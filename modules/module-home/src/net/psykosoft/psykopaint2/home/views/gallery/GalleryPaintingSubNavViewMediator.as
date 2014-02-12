@@ -28,12 +28,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		[Inject]
 		public var loggedInUser : LoggedInUserProxy;
 
-		private static var PROFILE : String = "profile";
-
-		private var _userThumbnailURL : String;
-		private var _loader:Loader;
-		private var _userBitmap:Bitmap;
-
 		public function GalleryPaintingSubNavViewMediator()
 		{
 			super();
@@ -57,21 +51,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		override public function destroy() : void
 		{
 			activePaintingModel.onUpdate.remove(updateMenu);
-			if (_loader) {
-				_loader.close();
-				removeLoadListeners();
-			}
-			disposeUserBitmap();
 			super.destroy();
-		}
-
-		private function disposeUserBitmap():void
-		{
-			if (_userBitmap) {
-				view.setRightButtonBitmap(null);
-				_userBitmap.bitmapData.dispose();
-				_userBitmap = null;
-			}
 		}
 
 		private function updateMenu() : void
@@ -83,41 +63,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function updateUserProfileButton():void
 		{
 			var painting : GalleryImageProxy = activePaintingModel.painting;
-			view.setRightButton(PROFILE, painting.userName, ButtonIconType.DEFAULT, true);
-			if (_userThumbnailURL != painting.userThunbnailURL) {
-				_userThumbnailURL = painting.userThunbnailURL;
-				loadThumbnail();
-			}
-		}
-
-		private function loadThumbnail():void
-		{
-			disposeUserBitmap();
-			if (_loader) _loader.close();
-			_loader = new Loader();
-			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
-			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-			_loader.load(new URLRequest(_userThumbnailURL));
-		}
-
-		private function onLoadError(event:IOErrorEvent):void
-		{
-			removeLoadListeners();
-			_loader = null;
-		}
-
-		private function onLoadComplete(event:Event):void
-		{
-			removeLoadListeners();
-			_userBitmap = Bitmap(_loader.content);
-			_loader = null;
-			view.setRightButtonBitmap(_userBitmap);
-		}
-
-		private function removeLoadListeners():void
-		{
-			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadComplete);
-			_loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+			view.setUserProfile(painting.userName, painting.userThunbnailURL);
 		}
 
 		private function updateLoveButton() : void
@@ -138,7 +84,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				case GalleryPaintingSubNavView.ID_SHARE:
 					sharePainting();
 					break;
-				case PROFILE:
+				case GalleryPaintingSubNavView.PROFILE:
 					// ?
 					break;
 			}

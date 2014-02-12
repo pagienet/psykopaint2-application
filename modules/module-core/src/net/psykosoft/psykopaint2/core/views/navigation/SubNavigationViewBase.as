@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
@@ -129,10 +130,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		// not exactly pretty, but hey
-		public function setRightButtonBitmap(bitmap : Bitmap) : void
+		public function getRightButton() : Sprite
 		{
-			_navigation.setRightButtonBitmap(bitmap);
+			return _navigation.getRightButton();
 		}
+
+
 
 		// ---------------------------------------------------------------------
 		// Public.
