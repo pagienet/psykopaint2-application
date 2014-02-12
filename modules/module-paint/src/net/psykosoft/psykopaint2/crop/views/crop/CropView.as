@@ -40,33 +40,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 
 		public function setSourceMap( map:BitmapData, orientation:int  ):void {
 			_sourceMap = map;
-			/*
-			if( _positioningSheet ) {
-				_positioningSheet.dispose();
-				removeChild( _positioningSheet );
-			}
-			
-			_positioningSheet = new TouchSheet( map, Math.max( _easelRect.width/ map.width, _easelRect.height / map.height ) );
-			//_positioningSheet.minimumScale = Math.max( stage.stageWidth / _sourceMap.width, stage.stageHeight / _sourceMap.height );
-			//_positioningSheet.limitsRect = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
-			_positioningSheet.scrollRect = new Rectangle(0,0,_easelRect.width,_easelRect.height);
-			_positioningSheet.x = _easelRect.x;
-			_positioningSheet.y = _easelRect.y;
-			
-			addChildAt( _positioningSheet, 0 );
-		*/
-			
-		}
-
-		public function disposeCropData() : void
-		{
-			/*
-			if (_positioningSheet) {
-				removeChild(_positioningSheet);
-				_positioningSheet.dispose();
-				_positioningSheet = null;
-			}
-			*/
 		}
 
 		public function getCroppedImage():BitmapData
@@ -81,20 +54,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 
 		public function set easelRect( value:Rectangle ):void {
 			_easelRect = value.clone();
-//			_easelRect.x *= CoreSettings.GLOBAL_SCALING;
-//			_easelRect.y *= CoreSettings.GLOBAL_SCALING;
-//			_easelRect.width *= CoreSettings.GLOBAL_SCALING;
-//			_easelRect.height *= CoreSettings.GLOBAL_SCALING;
-			/*
-			if ( _positioningSheet )
-			{
-				_positioningSheet.x = _easelRect.x;
-				_positioningSheet.y = _easelRect.y;
-			 	_positioningSheet.scrollRect = new Rectangle(0,0,_easelRect.width,_easelRect.height);
-				_positioningSheet.centerContent();
-				_positioningSheet.limitsRect = _positioningSheet.scrollRect;
-			}
-			*/
 		}
 		
 		override public function enable():void
@@ -130,11 +89,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 		{
 			if (_background) _background.dispose();
 			_background = background;
-		}
-		
-		public function onTransformGesture(event:GestureEvent):void
-		{
-			//_positioningSheet.onGesture(event);
 		}
 		
 	}
