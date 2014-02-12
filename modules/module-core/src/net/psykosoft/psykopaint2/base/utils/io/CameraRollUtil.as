@@ -150,7 +150,7 @@ package net.psykosoft.psykopaint2.base.utils.io
 			imageBytes.clear();
 			imageBytes = null;
 			
-			imageRetrievedSignal.dispatch( ((_imageLoader.content) as Bitmap).bitmapData,1 );
+			imageRetrievedSignal.dispatch( ((_imageLoader.content) as Bitmap).bitmapData,parseInt(exifData[0].split(": ")[1]));
 		}
 
 		public function dispose():void {

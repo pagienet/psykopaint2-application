@@ -2,30 +2,25 @@ package net.psykosoft.psykopaint2.crop.views.crop
 {
 
 	import flash.display.BitmapData;
-	import flash.display.StageQuality;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
-	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
-	import net.psykosoft.psykopaint2.base.ui.components.TouchSheet;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.rendering.RefCountedTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.utils.TextureUtils;
 	
-	import org.gestouch.events.GestureEvent;
+	
 
 	public class CropView extends ViewBase
 	{
-	//	private var _positioningSheet:TouchSheet;
 		private var _baseTextureSize:int;
 		private var _canvasWidth:int;
 		private var _canvasHeight:int;
-		private var _easelRect:Rectangle;
 		private var _background : RefCountedTexture;
 		private var _sourceMap:BitmapData;
 		
@@ -38,24 +33,6 @@ package net.psykosoft.psykopaint2.crop.views.crop
 			_canvasHeight = CoreSettings.STAGE_HEIGHT;
 		}
 
-		public function setSourceMap( map:BitmapData, orientation:int  ):void {
-			_sourceMap = map;
-		}
-
-		public function getCroppedImage():BitmapData
-		{
-			var croppedMap:BitmapData = new TrackedBitmapData(stage.stageWidth, stage.stageHeight, false, 0xffffffff );
-			//croppedMap.draw(_sourceMap,new Matrix(stage.stageWidth/_easelRect.width,0,0,stage.stageHeight / _easelRect.height),null,"normal",null,true);
-			var scale:Number = stage.stageWidth/_sourceMap.width;
-			croppedMap.draw(_sourceMap,new Matrix(scale,0,0,scale,0,(stage.stageHeight - _sourceMap.height * scale) * 0.5),null,"normal",null,true);
-			return croppedMap;
-			
-		}
-
-		public function set easelRect( value:Rectangle ):void {
-			_easelRect = value.clone();
-		}
-		
 		override public function enable():void
 		{
 			super.enable();

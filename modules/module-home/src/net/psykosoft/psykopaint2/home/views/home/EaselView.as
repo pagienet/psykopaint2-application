@@ -32,6 +32,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	
 	import net.psykosoft.psykopaint2.base.utils.gpu.CopyMeshToBitmapDataUtil;
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
+	import net.psykosoft.psykopaint2.base.utils.io.CameraRollImageOrientation;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
 	
@@ -364,29 +365,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		
 		public function setCropContent(bitmapData:BitmapData, orientation:int):void
 		{
-			/*
-			var shp:Shape = new Shape();
-			shp.graphics.lineStyle(1,0xff8000);
-			for ( var i:int = 0; i < 11; i++ )
-			{
-				shp.graphics.moveTo(i * bitmapData.width / 10,0);
-				shp.graphics.lineTo(i* bitmapData.width / 10, bitmapData.height);
-				shp.graphics.moveTo(0,i* bitmapData.height / 10);
-				shp.graphics.lineTo(bitmapData.width,i* bitmapData.height / 10);
-			}
-			
-			shp.graphics.moveTo(0,0);
-			shp.graphics.lineTo(bitmapData.width,bitmapData.height);
-			shp.graphics.moveTo(bitmapData.width,0);
-			shp.graphics.lineTo(0,bitmapData.height);
-			
-			shp.graphics.lineStyle(1,0xffff00);
-			shp.graphics.beginFill(0xffff00)
-			shp.graphics.drawCircle(bitmapData.width*0.5,bitmapData.height*0.5,5);
-			bitmapData.draw(shp);
-			shp.graphics.endFill();
-			*/
-				
+			//pad outer edges with white
 			bitmapData.fillRect(new Rectangle(0,0,bitmapData.width,1),0xffffff);
 			bitmapData.fillRect(new Rectangle(0,0,1,bitmapData.height),0xffffff);
 			bitmapData.fillRect(new Rectangle(0,bitmapData.height-1,bitmapData.width,1),0xffffff);
@@ -394,53 +373,106 @@ package net.psykosoft.psykopaint2.home.views.home
 			
 			initTexturesFromBitmapData(bitmapData);
 			updateTexturesFromBitmapData(bitmapData);
-			_canvas.visible = true;
 			
+			var scaleX:Number = (bitmapData.width-2) / _textureWidth;
+			var scaleY:Number = scaleX * ( _textureWidth / _textureHeight );
+			
+			//vertically center source image on canvas:
 			var sg:ISubGeometry = _canvas.geometry.subGeometries[0];
 			var uvData:Vector.<Number> = sg.UVData;
 			var uvOffset:int = sg.UVOffset;
 			var uvStride:int = sg.UVStride;
 			
-			//fit source image width to canvas width:
-			var scaleX:Number = bitmapData.width / _textureWidth;
-			var scaleY:Number = scaleX * ( _textureWidth / _textureHeight );
-			//lower left
-			uvData[uvOffset] *= scaleX;
-			uvData[uvOffset+1] *= scaleY;
-			
-			//lower right
-			uvOffset += uvStride;
-			uvData[uvOffset] *= scaleX;
-			uvData[uvOffset+1] *= scaleY;
-			
-			//upper left
-			uvOffset += uvStride;
-			uvData[uvOffset] *= scaleX;
-			uvData[uvOffset+1] *= scaleY;
-			
-			//upper right
-			uvOffset += uvStride;
-			uvData[uvOffset] *= scaleX;
-			uvData[uvOffset+1] *= scaleY;
-			
 			var r:Rectangle = easelRect;
-			uvOffset = sg.UVOffset;
-			
-			//vertically center source image on canvas:
 			var missing:Number = (bitmapData.height * r.width / bitmapData.width - r.height) * 0.5 ;
-			var offsetV:Number =  missing * uvData[uvOffset+1] / r.height;
-				
-			uvData[uvOffset+1] += offsetV;
-			uvOffset += uvStride;
-			uvData[uvOffset+1] += offsetV;
-			uvOffset += uvStride;
-			uvData[uvOffset+1] += offsetV;
-			uvOffset += uvStride;
-			uvData[uvOffset+1] += offsetV;
-				
-			//this is necessary do make away3d invalidate the buffers
-			_canvas.geometry.transformUV(null);
+			var offsetV:Number =  missing * uvData[uvOffset+1] * scaleY / r.height;
+			
 			_tmpMatrix = new Matrix();
+			_tmpMatrix.scale(scaleX,scaleY);
+			_tmpMatrix.translate(0,offsetV);
+			
+			_canvas.geometry.transformUV(_tmpMatrix);
+			
+			
+			//orientation = CameraRollImageOrientation.ROTATION_270;
+			
+			if ( orientation == CameraRollImageOrientation.ROTATION_90 ||
+				orientation ==  CameraRollImageOrientation.ROTATION_90_HFLIP ||
+				orientation ==  CameraRollImageOrientation.ROTATION_270 ||
+				orientation ==  CameraRollImageOrientation.ROTATION_270_HFLIP )
+			{
+			
+				var x:Number =  r.width *0.5;
+				var y:Number =  r.height*0.5;
+				
+				var f:Number = 1 / (r.width*r.height);
+				var f1:Number = (r.width - x)*(r.height-y);
+				var f2:Number =  x*(r.height-y);
+				var f3:Number = (r.width - x)*y ;
+				var f4:Number = x*y;
+				
+				
+				//lower left
+				var du:Number = f3 * uvData[uvOffset];
+				var dv:Number = f3 * uvData[uvOffset+1];
+				
+				//lower right
+				uvOffset += uvStride;
+				du += f4 * uvData[uvOffset];
+				dv += f4 * uvData[uvOffset+1];
+				
+				//upper left
+				uvOffset += uvStride;
+				du += f1 * uvData[uvOffset];
+				dv += f1 * uvData[uvOffset+1];
+				
+				//upper right
+				uvOffset += uvStride;
+				du += f2 * uvData[uvOffset];
+				dv += f2 * uvData[uvOffset+1];
+				
+				du *= f;
+				dv *= f;
+				
+				var rotation:Number = (orientation == CameraRollImageOrientation.ROTATION_90  || orientation == CameraRollImageOrientation.ROTATION_90_HFLIP ? -Math.PI*0.5 : Math.PI*0.5);
+				_tmpMatrix.identity();
+				_tmpMatrix.translate(-du,-dv);
+				var squeeze:Number = ((bitmapData.height-2) / _textureWidth) / scaleX;
+				_tmpMatrix.scale(1 * squeeze,_textureHeight / _textureWidth * squeeze);
+				_tmpMatrix.rotate(-rotation);
+				_tmpMatrix.scale(1,_textureWidth / _textureHeight);
+				_tmpMatrix.translate(du,dv);
+				_canvas.geometry.transformUV(_tmpMatrix);
+				
+			}
+			
+			
+			
+			
+			_canvas.visible = true;
+			
+			/*
+			
+			//fit source image width to canvas width:
+			switch ( orientation )
+			{
+			case CameraRollImageOrientation.ROTATION_0:
+			case CameraRollImageOrientation.ROTATION_0_HFLIP:
+			case CameraRollImageOrientation.ROTATION_180:
+			case CameraRollImageOrientation.ROTATION_180_HFLIP:
+			
+			break;
+			case CameraRollImageOrientation.ROTATION_90:
+			case CameraRollImageOrientation.ROTATION_90_HFLIP:
+			case CameraRollImageOrientation.ROTATION_270:
+			case CameraRollImageOrientation.ROTATION_270_HFLIP:
+			scaleX = bitmapData.height / _textureWidth;
+			scaleY = scaleX * ( _textureWidth / _textureHeight );
+			
+			break;
+			}
+			*/
+			
 			cropModeIsActive = true;
 			//temporary to test on desktop
 			if ( !CoreSettings.RUNNING_ON_iPAD )
@@ -639,7 +671,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			
 		}
 		
-		public function onTransformGestureended(event:GestureEvent):void
+		public function onTransformGestureEnded(event:GestureEvent):void
 		{
 			if ( cropModeIsActive )
 			{
@@ -650,7 +682,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function getCroppedImage():BitmapData
 		{
 			var util:CopyMeshToBitmapDataUtil = new CopyMeshToBitmapDataUtil();
-			var result:BitmapData = new BitmapData( 1024, 768,false );
+			var result:BitmapData = new BitmapData( CoreSettings.STAGE_WIDTH, CoreSettings.STAGE_HEIGHT,false );
 			return util.execute( _canvas, _diffuseTexture.texture, result, _context3D );;
 		}
 	}

@@ -160,7 +160,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				view.onTransformGesture( event );
 			} else if ( gestureType == GestureType.TRANSFORM_GESTURE_ENDED )
 			{
-				view.onTransformGestureended( event );
+				view.onTransformGestureEnded( event );
 			}
 		}
 
