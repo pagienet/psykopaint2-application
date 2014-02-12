@@ -31,6 +31,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 		{
 			context3D.setRenderToBackBuffer();
 			context3D.clear();
+			//context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 			copy(mesh, sourceTexture, context3D);
 			context3D.drawToBitmapData(target);
 			
@@ -40,7 +41,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 		protected function initProgram() : void
 		{
 			var vertexCode : String =
-							"m44 op, va0, vc0 \n" + // 4x4 matrix transform to output space
+							"mov op, va0 \n" + // 4x4 matrix transform to output space
 							"mov v0, va1      \n";  // pass texture coordinates to fragment program
 							
 			var fragmentCode : String =
@@ -66,7 +67,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 		{
 			_quadVertices = _context3D.createVertexBuffer(4, 4);
 			_quadIndices = _context3D.createIndexBuffer(6);
-			_quadIndices.uploadFromVector(new <uint>[0, 1, 2, 0, 2, 3], 0, 6);
+			_quadIndices.uploadFromVector(new <uint>[0, 2, 1, 0, 3, 2], 0, 6);
 			
 		}
 
@@ -78,10 +79,10 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 
 			
 			var props:Vector.<Number> =new <Number>[	
-				0.0, 0.0, 0.0,0.0,
-				1.0, 0.0, 0.0,0.0,
+				-1.0, -1.0, 0.0,0.0,
+				1.0, -1.0, 0.0,0.0,
 				1.0, 1.0, 0.0,0.0,
-				0.0, 1.0, 0.0,0.0]
+				-1.0, 1.0, 0.0,0.0]
 			
 			
 			var sg:ISubGeometry = mesh.geometry.subGeometries[0];
@@ -94,20 +95,21 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 			props[6] = uvData[uvOffset];
 			props[7] = uvData[uvOffset+1];
 			uvOffset += uvStride;
-			props[10] = uvData[uvOffset];
-			props[11] = uvData[uvOffset+1];
-			uvOffset += uvStride;
 			props[14] = uvData[uvOffset];
 			props[15] = uvData[uvOffset+1];
+			uvOffset += uvStride;
+			props[10] = uvData[uvOffset];
+			props[11] = uvData[uvOffset+1];
+			
 		
 			_quadVertices.uploadFromVector(props, 0, 4);
 			
 			_context3D.setProgram(_copyProgram);
 			_context3D.setVertexBufferAt(0, _quadVertices, 0, Context3DVertexBufferFormat.FLOAT_2); // vertices
-			_context3D.setVertexBufferAt(1, _quadVertices, 2, Context3DVertexBufferFormat.FLOAT_2); // vertices
+			_context3D.setVertexBufferAt(1, _quadVertices, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
 			
-			var m3d:Matrix3D = new Matrix3D();
-			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m3d, true);
+		//	var m3d:Matrix3D = new Matrix3D();
+		//	_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m3d, true);
 			
 			_context3D.setTextureAt(0, sourceTexture );
 			
