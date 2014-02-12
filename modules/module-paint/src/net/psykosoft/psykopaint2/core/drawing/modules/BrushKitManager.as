@@ -157,10 +157,10 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			if ( !pipetteActive && gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
-				_activeBrushKit.brushEngine.pathManager.deactivate();
+				if ( _activeBrushKit ) _activeBrushKit.brushEngine.pathManager.deactivate();
 			}  else if (!pipetteActive &&  gestureType == GestureType.TRANSFORM_GESTURE_ENDED )
 			{
-				_activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
+				if ( _activeBrushKit ) _activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN )
 			{
 				var clip:* = LongPressGesture(event.target).target;

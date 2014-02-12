@@ -4,6 +4,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import com.greensock.easing.Quad;
 	
 	import flash.display.BitmapData;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.display3D.Context3D;
@@ -18,6 +19,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	
 	import away3d.containers.View3D;
 	import away3d.core.base.Geometry;
+	import away3d.core.base.ISubGeometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
@@ -59,19 +61,15 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _stage : Stage;
 		private var _mouseDownX : Number;
 		private var _mouseDownY : Number;
+		private var _tmpMatrix:Matrix;
 		
 		private var _texturesInvalid:Boolean;
 
 		private var aspectRatio:Number;
 		private var cropModeIsActive:Boolean;
 
-		private var cropScaleX:Number;
+		private var cropTransformAccepted:Boolean;
 
-		private var cropScaleY:Number;
-		private var cropTranslateX:int;
-		private var cropTranslateY:int;
-		
-		
 		public function EaselView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
 			_view = view;
@@ -103,18 +101,52 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function onMouseMove(event : MouseEvent) : void
 		{
-			if ( cropModeIsActive && !CoreSettings.RUNNING_ON_iPAD )
+			if ( cropModeIsActive  )
 			{
 				var r:Rectangle = easelRect;
-				var scaledX:Number = (( event.stageX - _mouseDownX) / r.width ) / cropScaleX;
-				var scaledY:Number = (( event.stageY - _mouseDownY) / r.width) / cropScaleY;
 				
-				var m:Matrix = new Matrix();
-				m.translate(scaledX,scaledY );
-				m.invert();
-				_canvas.geometry.transformUV(m);
-				cropTranslateX += scaledX;
-				cropTranslateY += scaledY;
+				
+				var x1:Number = _mouseDownX - r.x;
+				var y1:Number = _mouseDownY - r.y;
+				var x2:Number =  event.stageX  - r.x;
+				var y2:Number =  event.stageY  - r.y;
+				
+				var f:Number = 1 / (r.width*r.height);
+				var f1:Number = (r.width - x1)*(r.height-y1) - (r.width - x2)*(r.height-y2);
+				var f2:Number =  x1*(r.height-y1) - x2*(r.height-y2);
+				var f3:Number = (r.width - x1)*y1 - (r.width - x2)*y2;
+				var f4:Number = x1*y1 - x2*y2;
+				
+				var sg:ISubGeometry = _canvas.geometry.subGeometries[0];
+				var uvData:Vector.<Number> = sg.UVData;
+				var uvOffset:int = sg.UVOffset;
+				var uvStride:int = sg.UVStride;
+				
+				//lower left
+				var du:Number = f3 * uvData[uvOffset];
+				var dv:Number = f3 * uvData[uvOffset+1];
+				
+				//lower right
+				uvOffset += uvStride;
+				du += f4 * uvData[uvOffset];
+				dv += f4 * uvData[uvOffset+1];
+				
+				//upper left
+				uvOffset += uvStride;
+				du += f1 * uvData[uvOffset];
+				dv += f1 * uvData[uvOffset+1];
+				
+				//upper right
+				uvOffset += uvStride;
+				du += f2 * uvData[uvOffset];
+				dv += f2 * uvData[uvOffset+1];
+				
+				du *= f;
+				dv *= f;
+				
+				_tmpMatrix.identity();
+				_tmpMatrix.translate(du,dv);
+				_canvas.geometry.transformUV(_tmpMatrix );
 				
 				_mouseDownX = event.stageX;
 				_mouseDownY = event.stageY;
@@ -331,24 +363,83 @@ package net.psykosoft.psykopaint2.home.views.home
 		
 		public function setCropContent(bitmapData:BitmapData, orientation:int):void
 		{
+			/*
+			var shp:Shape = new Shape();
+			shp.graphics.lineStyle(1,0xff8000);
+			for ( var i:int = 0; i < 11; i++ )
+			{
+				shp.graphics.moveTo(i * bitmapData.width / 10,0);
+				shp.graphics.lineTo(i* bitmapData.width / 10, bitmapData.height);
+				shp.graphics.moveTo(0,i* bitmapData.height / 10);
+				shp.graphics.lineTo(bitmapData.width,i* bitmapData.height / 10);
+			}
+			
+			shp.graphics.moveTo(0,0);
+			shp.graphics.lineTo(bitmapData.width,bitmapData.height);
+			shp.graphics.moveTo(bitmapData.width,0);
+			shp.graphics.lineTo(0,bitmapData.height);
+			
+			shp.graphics.lineStyle(1,0xffff00);
+			shp.graphics.beginFill(0xffff00)
+			shp.graphics.drawCircle(bitmapData.width*0.5,bitmapData.height*0.5,5);
+			bitmapData.draw(shp);
+			shp.graphics.endFill();
+			*/
+				
+			bitmapData.fillRect(new Rectangle(0,0,bitmapData.width,1),0xffffff);
+			bitmapData.fillRect(new Rectangle(0,0,1,bitmapData.height),0xffffff);
+			bitmapData.fillRect(new Rectangle(0,bitmapData.height-1,bitmapData.width,1),0xffffff);
+			bitmapData.fillRect(new Rectangle(bitmapData.width-1,0,1,bitmapData.height),0xffffff);
+			
 			initTexturesFromBitmapData(bitmapData);
-			_canvas.visible = true;
 			updateTexturesFromBitmapData(bitmapData);
+			_canvas.visible = true;
 			
+			var sg:ISubGeometry = _canvas.geometry.subGeometries[0];
+			var uvData:Vector.<Number> = sg.UVData;
+			var uvOffset:int = sg.UVOffset;
+			var uvStride:int = sg.UVStride;
 			
-			var m:Matrix = new Matrix();
-			cropScaleX = _textureWidth / bitmapData.width;
-			cropScaleY = cropScaleX * _textureHeight / _textureWidth;
-			m.scale(cropScaleX, cropScaleY );
+			//fit source image width to canvas width:
+			var scaleX:Number = bitmapData.width / _textureWidth;
+			var scaleY:Number = scaleX * ( _textureWidth / _textureHeight );
+			//lower left
+			uvData[uvOffset] *= scaleX;
+			uvData[uvOffset+1] *= scaleY;
 			
-			cropTranslateX = 0;
-			cropTranslateY = (_textureWidth * 0.75 - (bitmapData.height * cropScaleX)) / _textureHeight * 0.5;
+			//lower right
+			uvOffset += uvStride;
+			uvData[uvOffset] *= scaleX;
+			uvData[uvOffset+1] *= scaleY;
 			
-			m.translate(cropTranslateX,cropTranslateY);
-			m.invert();
-			//m.scale(0.5,0.5);
-			_canvas.geometry.transformUV(m);
+			//upper left
+			uvOffset += uvStride;
+			uvData[uvOffset] *= scaleX;
+			uvData[uvOffset+1] *= scaleY;
 			
+			//upper right
+			uvOffset += uvStride;
+			uvData[uvOffset] *= scaleX;
+			uvData[uvOffset+1] *= scaleY;
+			
+			var r:Rectangle = easelRect;
+			uvOffset = sg.UVOffset;
+			
+			//vertically center source image on canvas:
+			var missing:Number = (bitmapData.height * r.width / bitmapData.width - r.height) * 0.5 ;
+			var offsetV:Number =  missing * uvData[uvOffset+1] / r.height;
+				
+			uvData[uvOffset+1] += offsetV;
+			uvOffset += uvStride;
+			uvData[uvOffset+1] += offsetV;
+			uvOffset += uvStride;
+			uvData[uvOffset+1] += offsetV;
+			uvOffset += uvStride;
+			uvData[uvOffset+1] += offsetV;
+				
+			//this is necessary do make away3d invalidate the buffers
+			_canvas.geometry.transformUV(null);
+			_tmpMatrix = new Matrix();
 			cropModeIsActive = true;
 			//temporary to test on desktop
 			if ( !CoreSettings.RUNNING_ON_iPAD )
@@ -361,26 +452,51 @@ package net.psykosoft.psykopaint2.home.views.home
 		protected function onMouseWheel(event:MouseEvent):void
 		{
 			var r:Rectangle = easelRect;
-			if ( r.contains(_stage.mouseX, _stage.mouseY) )
+			if ( r.contains(event.stageX, event.stageY) )
 			{
-				var scaledX:Number = ((stage.mouseX - r.x) / r.width) / cropScaleX;
-				var scaledY:Number = ((stage.mouseY - r.y) / r.width) / cropScaleY;
 				
-				var m:Matrix = new Matrix();
-				m.translate(-cropTranslateX * 0.5 - scaledX,-cropTranslateY * 0.5 - scaledY);
-				var scale:Number = 1 + event.delta / 50;
-				m.scale( scale, scale  );
+				var x:Number =  event.stageX  - r.x;
+				var y:Number =  event.stageY  - r.y;
 				
-				m.translate(cropTranslateX * 0.5 + scaledX,cropTranslateY * 0.5 + scaledY);
-				m.invert();
-				//cropTranslateX += scaledX * scale;
-				//cropTranslateY += scaledY * scale;
-				cropScaleX *= scale;
-				cropScaleY *= scale;
-			
+				var f:Number = 1 / (r.width*r.height);
+				var f1:Number = (r.width - x)*(r.height-y);
+				var f2:Number =  x*(r.height-y);
+				var f3:Number = (r.width - x)*y ;
+				var f4:Number = x*y;
 				
-				//m.scale(0.5,0.5);
-				_canvas.geometry.transformUV(m);
+				var sg:ISubGeometry = _canvas.geometry.subGeometries[0];
+				var uvData:Vector.<Number> = sg.UVData;
+				var uvOffset:int = sg.UVOffset;
+				var uvStride:int = sg.UVStride;
+				
+				//lower left
+				var du:Number = f3 * uvData[uvOffset];
+				var dv:Number = f3 * uvData[uvOffset+1];
+				
+				//lower right
+				uvOffset += uvStride;
+				du += f4 * uvData[uvOffset];
+				dv += f4 * uvData[uvOffset+1];
+				
+				//upper left
+				uvOffset += uvStride;
+				du += f1 * uvData[uvOffset];
+				dv += f1 * uvData[uvOffset+1];
+				
+				//upper right
+				uvOffset += uvStride;
+				du += f2 * uvData[uvOffset];
+				dv += f2 * uvData[uvOffset+1];
+				
+				du *= f;
+				dv *= f;
+				
+				var scale:Number = 1 - event.delta / 50;
+				_tmpMatrix.identity();
+				_tmpMatrix.translate(-du,-dv);
+				_tmpMatrix.scale(scale,scale);
+				_tmpMatrix.translate(du,dv);
+				_canvas.geometry.transformUV( _tmpMatrix );
 			}
 		}
 		
@@ -400,11 +516,110 @@ package net.psykosoft.psykopaint2.home.views.home
 		
 		private function updateTexturesFromBitmapData(bitmapData:BitmapData) : void
 		{
+		
 			_diffuseTexture.texture.uploadFromBitmapData(bitmapData);
 			_normalSpecularTexture.texture.uploadFromBitmapData(new BitmapData(1,1,false,0x808080));
 		}
 		
 		public function onTransformGesture(event:GestureEvent):void
+		{
+			if ( cropModeIsActive && cropTransformAccepted )
+			{
+				var gesture:TransformGesture = (event.target as TransformGesture);
+				var r:Rectangle = easelRect;
+				if ( r.containsPoint(gesture.location ))
+				{
+					var x:Number =  gesture.location.x - r.x;
+					var y:Number =  gesture.location.y  - r.y;
+					
+					var f:Number = 1 / (r.width*r.height);
+					var f1:Number = (r.width - x)*(r.height-y);
+					var f2:Number =  x*(r.height-y);
+					var f3:Number = (r.width - x)*y ;
+					var f4:Number = x*y;
+					
+					var sg:ISubGeometry = _canvas.geometry.subGeometries[0];
+					var uvData:Vector.<Number> = sg.UVData;
+					var uvOffset:int = sg.UVOffset;
+					var uvStride:int = sg.UVStride;
+					
+					//lower left
+					var du:Number = f3 * uvData[uvOffset];
+					var dv:Number = f3 * uvData[uvOffset+1];
+					
+					//lower right
+					uvOffset += uvStride;
+					du += f4 * uvData[uvOffset];
+					dv += f4 * uvData[uvOffset+1];
+					
+					//upper left
+					uvOffset += uvStride;
+					du += f1 * uvData[uvOffset];
+					dv += f1 * uvData[uvOffset+1];
+					
+					//upper right
+					uvOffset += uvStride;
+					du += f2 * uvData[uvOffset];
+					dv += f2 * uvData[uvOffset+1];
+					
+					du *= f;
+					dv *= f;
+					
+					var scale:Number = 1 / gesture.scale;
+					_tmpMatrix.identity();
+					_tmpMatrix.translate(-du,-dv);
+					_tmpMatrix.scale(scale,scale);
+					_tmpMatrix.scale(1,_textureHeight / _textureWidth);
+					_tmpMatrix.rotate(-gesture.rotation);
+					_tmpMatrix.scale(1,_textureWidth / _textureHeight);
+					_tmpMatrix.translate(du,dv);
+					
+					
+					var x2:Number =  x + gesture.offsetX;
+					var y2:Number =  y + gesture.offsetY;
+					
+					f1 = (r.width - x)*(r.height-y) - (r.width - x2)*(r.height-y2);
+					f2 =  x*(r.height-y) - x2*(r.height-y2);
+					f3 = (r.width - x)*y - (r.width - x2)*y2;
+					f4 = x*y - x2*y2;
+					
+					uvOffset = sg.UVOffset;
+				
+					//lower left
+					du = f3 * uvData[uvOffset];
+					dv = f3 * uvData[uvOffset+1];
+					
+					//lower right
+					uvOffset += uvStride;
+					du += f4 * uvData[uvOffset];
+					dv += f4 * uvData[uvOffset+1];
+					
+					//upper left
+					uvOffset += uvStride;
+					du += f1 * uvData[uvOffset];
+					dv += f1 * uvData[uvOffset+1];
+					
+					//upper right
+					uvOffset += uvStride;
+					du += f2 * uvData[uvOffset];
+					dv += f2 * uvData[uvOffset+1];
+					
+					du *= f;
+					dv *= f;
+					
+					_tmpMatrix.translate(du,dv);
+					
+					_canvas.geometry.transformUV( _tmpMatrix );
+					
+					
+					
+				}
+			}
+		
+			
+		}
+		
+		public function onTransformGestureBegan(event:GestureEvent):void
 		{
 			if ( cropModeIsActive )
 			{
@@ -412,40 +627,23 @@ package net.psykosoft.psykopaint2.home.views.home
 				var r:Rectangle = easelRect;
 				if ( r.containsPoint(gesture.location ))
 				{
-					if (  gesture.scale != 1 )
-					{
-						var scaledX:Number = ((gesture.location.x - r.x) / r.width) / cropScaleX;
-						var scaledY:Number = ((gesture.location.y - r.y) / r.width) / cropScaleY;
-						
-						var m:Matrix = new Matrix();
-						m.translate(-cropTranslateX * 0.5 - scaledX,-cropTranslateY * 0.5 - scaledY);
-						var scale:Number = gesture.scale;
-						m.scale( scale, scale  );
-						
-						m.translate(cropTranslateX * 0.5 + scaledX,cropTranslateY * 0.5 + scaledY);
-						m.invert();
-						//cropTranslateX += scaledX * scale;
-						//cropTranslateY += scaledY * scale;
-						cropScaleX *= scale;
-						cropScaleY *= scale;
-					} else {
-						
-						scaledX = (gesture.offsetX / r.width ) / cropScaleX;
-						scaledY = (gesture.offsetY / r.width) / cropScaleY;
-						
-						var m:Matrix = new Matrix();
-						m.translate(scaledX,scaledY );
-						m.invert();
-						cropTranslateX += scaledX;
-						cropTranslateY += scaledY;
-					}
-					
-					//m.scale(0.5,0.5);
-					_canvas.geometry.transformUV(m);
+					_stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+					_stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+					_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+					cropTransformAccepted = true;
+				} else {
+					cropTransformAccepted = false;
 				}
 			}
-		
 			
+		}
+		
+		public function onTransformGestureended(event:GestureEvent):void
+		{
+			if ( cropModeIsActive )
+			{
+				_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			}
 		}
 	}
 }
