@@ -6,6 +6,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSetBookOffScreenRatioSignal;
 	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 
@@ -27,6 +28,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		[Inject]
 		public var requestSetBookOffScreenRatioSignal : RequestSetBookOffScreenRatioSignal;
+
+		[Inject]
+		public var requestNavigationToggleSignal : RequestNavigationToggleSignal;
 
 		// keeps track whether or not the active painting update was triggered locally
 		private var internalUpdate : Boolean;
@@ -96,6 +100,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onZoomUpdate(ratio : Number) : void
 		{
 			requestSetBookOffScreenRatioSignal.dispatch(ratio);
+			requestNavigationToggleSignal.dispatch(ratio > .9? -1 : 1);
 		}
 
 		override public function destroy() : void
