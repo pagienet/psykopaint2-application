@@ -56,13 +56,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		override public function dispose():void
 		{
-			super.dispose();
 			getRightButton().removeChild(_container);
 			if (_loader) {
 				_loader.close();
 				removeLoadListeners();
 			}
 			disposeUserBitmap();
+			super.dispose();
 		}
 
 		private function loadThumbnail():void
