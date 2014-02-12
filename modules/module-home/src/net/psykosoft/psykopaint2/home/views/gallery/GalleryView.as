@@ -38,9 +38,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
-	import net.psykosoft.psykopaint2.core.materials.PaintingDiffuseMethod;
-	import net.psykosoft.psykopaint2.core.materials.PaintingNormalMethod;
-	import net.psykosoft.psykopaint2.core.materials.PaintingSpecularMethod;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.PaintingGalleryVO;
@@ -50,63 +47,62 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 	public class GalleryView extends Sprite
 	{
-		public static const CAMERA_FAR_POSITION : Vector3D = new Vector3D(-814, -1.14, 450);
-		public static const CAMERA_NEAR_POSITION : Vector3D = new Vector3D(-831, -10, 0);
+		public static const CAMERA_FAR_POSITION:Vector3D = new Vector3D(-814, -1.14, 450);
 
-		private static const PAINTING_OFFSET : Number = 831;
-		private static const PAINTING_SPACING : Number = 250;
-		private static const PAINTING_WIDTH : Number = 210;
-		private static const PAINTING_Z : Number = -160;
-		private static const SWIPE_SCENE_RECT : Rectangle = new Rectangle(PAINTING_OFFSET + 10 - 250, -100, 500, 300);
+		private static const PAINTING_OFFSET:Number = 831;
+		private static const PAINTING_SPACING:Number = 250;
+		private static const PAINTING_WIDTH:Number = 210;
+		private static const PAINTING_Z:Number = -160;
+		private static const SWIPE_SCENE_RECT:Rectangle = new Rectangle(PAINTING_OFFSET + 10 - 250, -100, 500, 300);
 
-		public var requestImageCollection : Signal = new Signal(int, int, int); // source, start index, amount of images
-		public var requestActiveImageSignal : Signal = new Signal(int, int); // source, index
+		public var requestImageCollection:Signal = new Signal(int, int, int); // source, start index, amount of images
+		public var requestActiveImageSignal:Signal = new Signal(int, int); // source, index
 
-		private var _imageCache : GalleryImageCache;
-		private var _view : View3D;
-		private var _stage3DProxy : Stage3DProxy;
-		private var _light : LightBase;
-		private var _container : ObjectContainer3D;
+		private var _imageCache:GalleryImageCache;
+		private var _view:View3D;
+		private var _stage3DProxy:Stage3DProxy;
+		private var _light:LightBase;
+		private var _container:ObjectContainer3D;
 
-		private var _paintings : Vector.<Mesh> = new Vector.<Mesh>();
-		private var _lowQualityMaterials : Vector.<TextureMaterial> = new Vector.<TextureMaterial>();
+		private var _paintings:Vector.<Mesh> = new Vector.<Mesh>();
+		private var _lowQualityMaterials:Vector.<TextureMaterial> = new Vector.<TextureMaterial>();
 
-		private var _paintingGeometry : Geometry;
-		private var _loadingTexture : BitmapTexture;
-		private var _numPaintings : int;
-		private var _activeImageProxy : GalleryImageProxy;
+		private var _paintingGeometry:Geometry;
+		private var _loadingTexture:BitmapTexture;
+		private var _numPaintings:int;
+		private var _activeImageProxy:GalleryImageProxy;
 
-		private var _swipeController : GrabThrowController;
-		private var _cameraZoomController : GalleryCameraZoomController;
+		private var _swipeController:GrabThrowController;
+		private var _cameraZoomController:GalleryCameraZoomController;
 
-		private var _minSwipe : Number;
-		private var _maxSwipe : Number;
+		private var _minSwipe:Number;
+		private var _maxSwipe:Number;
 
 		// for throwing/dragging:
 		private var _dragCountsAsTap:Boolean;
-		private var _tween : TweenLite;
-		private var _hasEnterFrame : Boolean;
-		private var _friction : Number;
-		private var _tweenTime : Number = .5;
-		private var _startTime : Number;
-		private var _startPos : Number;
-		private var _velocity : Number;
-		private var _targetPos : Number;
-		private var _visibleStartIndex : int;
-		private var _visibleEndIndex : int;
+		private var _tween:TweenLite;
+		private var _hasEnterFrame:Boolean;
+		private var _friction:Number;
+		private var _tweenTime:Number = .5;
+		private var _startTime:Number;
+		private var _startPos:Number;
+		private var _velocity:Number;
+		private var _targetPos:Number;
+		private var _visibleStartIndex:int;
+		private var _visibleEndIndex:int;
 
-		private var _paintingOccluder : Mesh;
+		private var _paintingOccluder:Mesh;
 
-		private var _highQualityMaterial : PaintingMaterial;
-		private var _highQualityNormalSpecularTexture : ByteArrayTexture;
-		private var _highQualityColorTexture : BitmapTexture;
+		private var _highQualityMaterial:PaintingMaterial;
+		private var _highQualityNormalSpecularTexture:ByteArrayTexture;
+		private var _highQualityColorTexture:BitmapTexture;
 		private var _showHighQuality:Boolean;
 		private var _loadingHQ:Boolean;
 		private var _dragStartX:Number;
 		private var _dragStartY:Number;
-		private var _highQualityIndex : int = -1;
+		private var _highQualityIndex:int = -1;
 
-		public function GalleryView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
+		public function GalleryView(view:View3D, light:LightBase, stage3dProxy:Stage3DProxy)
 		{
 			_view = view;
 			_stage3DProxy = stage3dProxy;
@@ -128,21 +124,33 @@ package net.psykosoft.psykopaint2.home.views.gallery
 //			showInteractionRect();
 		}
 
+		private function calculateCameraNearPosition():Vector3D
+		{
+			var pos:Vector3D = new Vector3D();
+			pos.x = -PAINTING_OFFSET;
+			pos.y = 0;
+			pos.z = getCameraZForNDCWidth(2);	// -1 to 1 (fullscreen width) = 2
+
+			// proj[0] * PAINTING_WIDTH / camera_z + PAINTING_Z
+
+			return pos;
+		}
+
 		// for debug purposes:
 		private function showInteractionRect():void
 		{
-			var geometry : PlaneGeometry = new PlaneGeometry(SWIPE_SCENE_RECT.width, SWIPE_SCENE_RECT.height, 1, 1, false);
-			var material : ColorMaterial = new ColorMaterial(0xff0000,.5);
-			var mesh : Mesh = new Mesh(geometry, material);
-			mesh.x = -(SWIPE_SCENE_RECT.x + SWIPE_SCENE_RECT.width*.5);
-			mesh.y = SWIPE_SCENE_RECT.y + SWIPE_SCENE_RECT.height*.5;
+			var geometry:PlaneGeometry = new PlaneGeometry(SWIPE_SCENE_RECT.width, SWIPE_SCENE_RECT.height, 1, 1, false);
+			var material:ColorMaterial = new ColorMaterial(0xff0000, .5);
+			var mesh:Mesh = new Mesh(geometry, material);
+			mesh.x = -(SWIPE_SCENE_RECT.x + SWIPE_SCENE_RECT.width * .5);
+			mesh.y = SWIPE_SCENE_RECT.y + SWIPE_SCENE_RECT.height * .5;
 			mesh.z = PAINTING_Z;
 			mesh.rotationY = 180;
 			material.depthCompareMode = Context3DCompareMode.ALWAYS;
 			_view.scene.addChild(mesh);
 		}
 
-		public function get showHighQuality() : Boolean
+		public function get showHighQuality():Boolean
 		{
 			return _showHighQuality;
 		}
@@ -193,11 +201,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		// this creates a geometry that prevents paintings from being rendered outside the gallery area
 		private function initOccluder():void
 		{
-			var occluderGeometry : PlaneGeometry = new PlaneGeometry(500, 200, 1, 1, false);
-			var occluderMaterial : ColorMaterial = new ColorMaterial();
-			var maskingMethod : MaskingMethod = new MaskingMethod();
+			var occluderGeometry:PlaneGeometry = new PlaneGeometry(500, 200, 1, 1, false);
+			var occluderMaterial:ColorMaterial = new ColorMaterial();
+			var maskingMethod:MaskingMethod = new MaskingMethod();
 			maskingMethod.disableAll();
-			var stencilMethod : StencilMethod = new StencilMethod();
+			var stencilMethod:StencilMethod = new StencilMethod();
 			stencilMethod.referenceValue = 40;
 			stencilMethod.actionDepthAndStencilPass = Context3DStencilAction.SET;
 			stencilMethod.actionDepthFail = Context3DStencilAction.SET;
@@ -211,10 +219,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_view.scene.addChild(_paintingOccluder);
 		}
 
-		public function initInteraction() : void
+		public function initInteraction():void
 		{
 			_swipeController ||= new GrabThrowController(stage);
-			_cameraZoomController ||= new GalleryCameraZoomController(stage, _view.camera, PAINTING_WIDTH, PAINTING_Z, CAMERA_FAR_POSITION, CAMERA_NEAR_POSITION);
+			_cameraZoomController ||= new GalleryCameraZoomController(stage, _view.camera, PAINTING_WIDTH, PAINTING_Z, CAMERA_FAR_POSITION, calculateCameraNearPosition());
 
 			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted, false, 0, true);
 			_swipeController.start(10000, true);
@@ -226,14 +234,14 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function updateSwipeInteractionRect():void
 		{
 			if (!_swipeController) return;
-			var topLeft : Vector3D = new Vector3D(-SWIPE_SCENE_RECT.x, SWIPE_SCENE_RECT.y + SWIPE_SCENE_RECT.height, PAINTING_Z);
-			var bottomRight : Vector3D = new Vector3D(-(SWIPE_SCENE_RECT.x + SWIPE_SCENE_RECT.width), SWIPE_SCENE_RECT.y, PAINTING_Z);
+			var topLeft:Vector3D = new Vector3D(-SWIPE_SCENE_RECT.x, SWIPE_SCENE_RECT.y + SWIPE_SCENE_RECT.height, PAINTING_Z);
+			var bottomRight:Vector3D = new Vector3D(-(SWIPE_SCENE_RECT.x + SWIPE_SCENE_RECT.width), SWIPE_SCENE_RECT.y, PAINTING_Z);
 			topLeft = _view.project(topLeft);
 			bottomRight = _view.project(bottomRight);
 			_swipeController.interactionRect = new Rectangle(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
 		}
 
-		public function stopInteraction() : void
+		public function stopInteraction():void
 		{
 			if (_swipeController) {
 				_swipeController.stop();
@@ -247,12 +255,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			}
 		}
 
-		public function get onZoomUpdateSignal() : Signal
+		public function get onZoomUpdateSignal():Signal
 		{
-			return _cameraZoomController? _cameraZoomController.onZoomUpdateSignal : null;
+			return _cameraZoomController ? _cameraZoomController.onZoomUpdateSignal : null;
 		}
 
-		private function onDragStarted(event : GrabThrowEvent) : void
+		private function onDragStarted(event:GrabThrowEvent):void
 		{
 			killTween();
 			_dragStartX = stage.mouseX;
@@ -262,9 +270,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_swipeController.addEventListener(GrabThrowEvent.RELEASE, onDragRelease, false, 0, true);
 		}
 
-		private function onEnterFrame(event : Event) : void
+		private function onEnterFrame(event:Event):void
 		{
-			var t : Number = (getTimer() - _startTime)/1000;
+			var t:Number = (getTimer() - _startTime) / 1000;
 
 			updateVisibility();
 
@@ -273,29 +281,36 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				killTween();
 			}
 			else {
-				_container.x = _startPos + (_velocity + .5*_friction * t) * t;
+				_container.x = _startPos + (_velocity + .5 * _friction * t) * t;
 			}
 		}
 
-		private function onDragUpdate(event : GrabThrowEvent) : void
+		private function onDragUpdate(event:GrabThrowEvent):void
 		{
 			// when straying too far from start position, it can't possibly be a tap
-			if (	Math.abs(stage.mouseX - _dragStartX) > 2 * CoreSettings.GLOBAL_SCALING ||
+			if (Math.abs(stage.mouseX - _dragStartX) > 2 * CoreSettings.GLOBAL_SCALING ||
 					Math.abs(stage.mouseY - _dragStartY) > 2 * CoreSettings.GLOBAL_SCALING
-				)
+					)
 				_dragCountsAsTap = false;
 			constrainSwipe(_container.x - unprojectVelocity(event.velocityX));
 			updateVisibility();
 		}
 
-		private function unprojectVelocity(screenSpaceVelocity : Number) : Number
+		private function getCameraZForNDCWidth(ndcWidth:Number):Number
 		{
-			var matrix : Vector.<Number> = _view.camera.lens.matrix.rawData;
-			var z : Number = _view.camera.z - PAINTING_Z;
+			var matrix:Vector.<Number> = _view.camera.lens.matrix.rawData;
+
+			return PAINTING_WIDTH * matrix[0] / ndcWidth + PAINTING_Z;
+		}
+
+		private function unprojectVelocity(screenSpaceVelocity:Number):Number
+		{
+			var matrix:Vector.<Number> = _view.camera.lens.matrix.rawData;
+			var z:Number = _view.camera.z - PAINTING_Z;
 			return screenSpaceVelocity / CoreSettings.STAGE_WIDTH * 2 * z / matrix[0];
 		}
 
-		private function killTween() : void
+		private function killTween():void
 		{
 			if (_tween) {
 				_tween.kill();
@@ -308,7 +323,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			}
 		}
 
-		private function constrainSwipe(position : Number) : void
+		private function constrainSwipe(position:Number):void
 		{
 			if (position > _maxSwipe) position = _maxSwipe;
 			else if (position < _minSwipe) position = _minSwipe;
@@ -316,12 +331,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_container.x = position;
 		}
 
-		private function onDragRelease(event : GrabThrowEvent) : void
+		private function onDragRelease(event:GrabThrowEvent):void
 		{
 			_swipeController.removeEventListener(GrabThrowEvent.DRAG_UPDATE, onDragUpdate);
 			_swipeController.removeEventListener(GrabThrowEvent.RELEASE, onDragRelease);
 
-			var velocity : Number = unprojectVelocity(event.velocityX);
+			var velocity:Number = unprojectVelocity(event.velocityX);
 			if (Math.abs(event.velocityX) < 3 * CoreSettings.GLOBAL_SCALING) {
 				moveToNearest();
 
@@ -336,33 +351,33 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function zoomFully():void
 		{
-			TweenLite.to(_cameraZoomController, .5, {zoomFactor: 1.5, ease: Quad.easeOut});
+			TweenLite.to(_cameraZoomController, .5, {zoomFactor: 1, ease: Quad.easeOut});
 		}
 
 		private function mousePosInFocusedPainting():Boolean
 		{
-			var painting : Mesh = _paintings[_activeImageProxy.index];
-			var paintingPosition : Vector3D = _view.camera.project(painting.scenePosition);
-			var matrix : Vector.<Number> = _view.camera.lens.matrix.rawData;
-			var z : Number = _view.camera.z - PAINTING_Z;
-			var halfProjSize : Number = PAINTING_WIDTH * matrix[0] / z * .5;
+			var painting:Mesh = _paintings[_activeImageProxy.index];
+			var paintingPosition:Vector3D = _view.camera.project(painting.scenePosition);
+			var matrix:Vector.<Number> = _view.camera.lens.matrix.rawData;
+			var z:Number = _view.camera.z - PAINTING_Z;
+			var halfProjSize:Number = PAINTING_WIDTH * matrix[0] / z * .5;
 
 			// TODO: This can be done entirely in NDC
-			var mouseX : Number = stage.mouseX / CoreSettings.STAGE_WIDTH * 2.0 - 1.0 - paintingPosition.x;
-			var mouseY : Number = stage.mouseY / CoreSettings.STAGE_HEIGHT * 2.0 - 1.0 - paintingPosition.y;
+			var mouseX:Number = stage.mouseX / CoreSettings.STAGE_WIDTH * 2.0 - 1.0 - paintingPosition.x;
+			var mouseY:Number = stage.mouseY / CoreSettings.STAGE_HEIGHT * 2.0 - 1.0 - paintingPosition.y;
 			return mouseX > -halfProjSize && mouseX < halfProjSize && mouseY > -halfProjSize && mouseY < halfProjSize;
 		}
 
-		private function throwToPainting(velocity : Number) : void
+		private function throwToPainting(velocity:Number):void
 		{
 			if (velocity > 0 && velocity < 20) velocity = 20;
 			if (velocity < 0 && velocity > -20) velocity = -20;
 			// convert per frame to per second, and reduce speed (doesn't feel good otherwise)
 			_velocity = -velocity * 60 / 2;
 			_startPos = _container.x;
-			var targetTime : Number = .25;
-			var targetFriction : Number = .8;
-			var targetIndex : int;
+			var targetTime:Number = .25;
+			var targetFriction:Number = .8;
+			var targetIndex:int;
 			if (_velocity > 0) targetFriction = -targetFriction;
 
 			// where would the target end up with the current speed after aimed time with aimed friction?
@@ -378,7 +393,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			}
 			else {
 				targetIndex = getNearestPaintingIndex(_targetPos);
-				_targetPos = targetIndex*PAINTING_SPACING - PAINTING_OFFSET;
+				_targetPos = targetIndex * PAINTING_SPACING - PAINTING_OFFSET;
 			}
 
 			requestActiveImage(targetIndex);
@@ -389,39 +404,39 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			// for 'a' (acceleration, ie negative friction) and 't'
 
 			_tweenTime = 2 * (_targetPos - _startPos) / _velocity;
-			_friction = -_velocity/_tweenTime;
+			_friction = -_velocity / _tweenTime;
 
 			_startTime = getTimer();
 			_hasEnterFrame = true;
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 
-		private function moveToNearest() : void
+		private function moveToNearest():void
 		{
-			var index : int = getNearestPaintingIndex(_container.x);
+			var index:int = getNearestPaintingIndex(_container.x);
 			requestActiveImage(index);
 			_tween = TweenLite.to(_container, .5,
-								{	x : index * PAINTING_SPACING - PAINTING_OFFSET,
-									ease: Quad.easeInOut,
-									onUpdate: updateVisibility
-								});
+					{    x: index * PAINTING_SPACING - PAINTING_OFFSET,
+						ease: Quad.easeInOut,
+						onUpdate: updateVisibility
+					});
 		}
 
-		private function getNearestPaintingIndex(position : Number) : Number
+		private function getNearestPaintingIndex(position:Number):Number
 		{
 			return Math.round((position + PAINTING_OFFSET) / PAINTING_SPACING);
 		}
 
-		private function initGeometry() : void
+		private function initGeometry():void
 		{
-			var aspectRatio : Number = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
-			_paintingGeometry = new PlaneGeometry(PAINTING_WIDTH, PAINTING_WIDTH*aspectRatio, 1, 1, false);
+			var aspectRatio:Number = CoreSettings.STAGE_HEIGHT / CoreSettings.STAGE_WIDTH;
+			_paintingGeometry = new PlaneGeometry(PAINTING_WIDTH, PAINTING_WIDTH * aspectRatio, 1, 1, false);
 			_paintingGeometry.scaleUV(1, aspectRatio);
 		}
 
-		private function initLoadingTexture() : void
+		private function initLoadingTexture():void
 		{
-			var bitmapData : BitmapData = new TrackedBitmapData(16, 16);
+			var bitmapData:BitmapData = new TrackedBitmapData(16, 16);
 			bitmapData.perlinNoise(4, 4, 8, 6, false, true, 7, true);
 
 			_loadingTexture = new BitmapTexture(bitmapData);
@@ -429,14 +444,14 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			bitmapData.dispose();
 		}
 
-		public function setImmediateActiveImage(galleryImageProxy : GalleryImageProxy) : void
+		public function setImmediateActiveImage(galleryImageProxy:GalleryImageProxy):void
 		{
 			setActiveImage(galleryImageProxy);
 
 			_container.x = -(PAINTING_OFFSET - galleryImageProxy.index * PAINTING_SPACING);
 		}
 
-		public function setActiveImage(galleryImageProxy : GalleryImageProxy) : void
+		public function setActiveImage(galleryImageProxy:GalleryImageProxy):void
 		{
 			if (_activeImageProxy) {
 				if (_activeImageProxy.collectionType != galleryImageProxy.collectionType)
@@ -449,9 +464,9 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			// make sure to clone so we can load while the book is loading
 			_activeImageProxy = galleryImageProxy.clone();
 
-			const amountOnEachSide : int = 2;
-			var min : int = galleryImageProxy.index - amountOnEachSide;
-			var amount : int = amountOnEachSide * 2 + 1;
+			const amountOnEachSide:int = 2;
+			var min:int = galleryImageProxy.index - amountOnEachSide;
+			var amount:int = amountOnEachSide * 2 + 1;
 
 			if (min < 0) {
 				amount += min;	// fix amount to still have correct amount of the right
@@ -473,7 +488,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			}
 		}
 
-		private function requestActiveImage(index : int) : void
+		private function requestActiveImage(index:int):void
 		{
 			if (_activeImageProxy && _activeImageProxy.index != index) {
 				removeHighQualityMaterial();
@@ -481,7 +496,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			}
 		}
 
-		private function resetPaintings() : void
+		private function resetPaintings():void
 		{
 			_imageCache.thumbnailLoaded.remove(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.remove(onThumbnailDisposed);
@@ -494,7 +509,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
 		}
 
-		public function setImageCollection(collection : GalleryImageCollection) : void
+		public function setImageCollection(collection:GalleryImageCollection):void
 		{
 			_numPaintings = collection.numTotalPaintings;
 			_paintings.length = _numPaintings;
@@ -506,13 +521,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_maxSwipe = -(PAINTING_OFFSET - (_numPaintings - 1) * PAINTING_SPACING);
 		}
 
-		private function updateVisibility() : void
+		private function updateVisibility():void
 		{
 			if (_numPaintings == 0) return;
-			var index : int = getNearestPaintingIndex(_container.x);
-			var visibleStart : int = index - 1;
-			var visibleEnd : int = index + 2;
-		    var i : int;
+			var index:int = getNearestPaintingIndex(_container.x);
+			var visibleStart:int = index - 1;
+			var visibleEnd:int = index + 2;
+			var i:int;
 
 			if (visibleStart < 0) visibleStart = 0;
 			if (visibleEnd >= _numPaintings) visibleEnd = _numPaintings;
@@ -537,20 +552,20 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_visibleEndIndex = visibleEnd;
 		}
 
-		private function createPainting(index : int) : void
+		private function createPainting(index:int):void
 		{
-			var texture : Texture2DBase = _imageCache.getThumbnail(index);
+			var texture:Texture2DBase = _imageCache.getThumbnail(index);
 			texture ||= _loadingTexture;
 
-			var material : TextureMaterial = new TextureMaterial(texture);
-			var stencilMethod : StencilMethod = new StencilMethod();
+			var material:TextureMaterial = new TextureMaterial(texture);
+			var stencilMethod:StencilMethod = new StencilMethod();
 			stencilMethod.referenceValue = 40;
 			stencilMethod.compareMode = Context3DCompareMode.NOT_EQUAL;
 			material.addMethod(stencilMethod);
 
 			_lowQualityMaterials[index] = material;
 
-			var mesh : Mesh = new Mesh(_paintingGeometry, material);
+			var mesh:Mesh = new Mesh(_paintingGeometry, material);
 			mesh.x = index * PAINTING_SPACING;
 			_paintings[index] = mesh;
 
@@ -563,7 +578,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_container.addChild(_paintings[index]);
 		}
 
-		public function dispose() : void
+		public function dispose():void
 		{
 			_view.camera.removeEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraMoved);
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -600,17 +615,17 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			}
 		}
 
-		private function disposePaintings() : void
+		private function disposePaintings():void
 		{
-			for (var i : int = 0; i < _numPaintings; ++i) {
+			for (var i:int = 0; i < _numPaintings; ++i) {
 				if (_paintings[i])
 					destroyPainting(i);
 			}
 		}
 
-		private function destroyPainting(i : int) : void
+		private function destroyPainting(i:int):void
 		{
-			var painting : Mesh = _paintings[i];
+			var painting:Mesh = _paintings[i];
 			_container.removeChild(painting);
 			painting.dispose();
 			_lowQualityMaterials[i].dispose();
@@ -618,16 +633,16 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_lowQualityMaterials[i] = null;
 		}
 
-		private function onThumbnailLoaded(imageProxy : GalleryImageProxy, thumbnail : Texture2DBase) : void
+		private function onThumbnailLoaded(imageProxy:GalleryImageProxy, thumbnail:Texture2DBase):void
 		{
 			if (_paintings[imageProxy.index])
 				_lowQualityMaterials[imageProxy.index].texture = thumbnail;
 		}
 
-		private function onThumbnailDisposed(imageProxy : GalleryImageProxy) : void
+		private function onThumbnailDisposed(imageProxy:GalleryImageProxy):void
 		{
 			// this probably also means the painting shouldn't be visible anymore
-			var painting : Mesh = _paintings[imageProxy.index];
+			var painting:Mesh = _paintings[imageProxy.index];
 			if (painting) {
 				_lowQualityMaterials[imageProxy.index].texture = _loadingTexture;
 				if (painting.parent)
@@ -642,18 +657,18 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				showHighQualityMaterial();
 		}
 
-		private function onSurfaceDataComplete(galleryVO : PaintingGalleryVO):void
+		private function onSurfaceDataComplete(galleryVO:PaintingGalleryVO):void
 		{
-			var width : Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.width);
-			var height : Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.height);
-			var legalBitmap : BitmapData = new TrackedBitmapData(width, height, false);
+			var width:Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.width);
+			var height:Number = TextureUtils.getBestPowerOf2(galleryVO.colorData.height);
+			var legalBitmap:BitmapData = new TrackedBitmapData(width, height, false);
 			legalBitmap.copyPixels(galleryVO.colorData, galleryVO.colorData.rect, new Point());
 
 			_highQualityColorTexture.bitmapData = legalBitmap;
 			_highQualityColorTexture.getTextureForStage3D(_stage3DProxy);
 			legalBitmap.dispose();
 
-			galleryVO.normalSpecularData.length = width*height*4;
+			galleryVO.normalSpecularData.length = width * height * 4;
 			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, width, height);
 			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 
@@ -672,7 +687,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			// TODO: Show error
 		}
 
-		private function onAddedToStage(event : Event) : void
+		private function onAddedToStage(event:Event):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
