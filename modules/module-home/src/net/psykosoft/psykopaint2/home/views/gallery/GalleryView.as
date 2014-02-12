@@ -47,11 +47,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 	public class GalleryView extends Sprite
 	{
-		public static const CAMERA_FAR_POSITION:Vector3D = new Vector3D(-814, -1.14, 450);
+		public static const CAMERA_FAR_POSITION:Vector3D = new Vector3D(-814, -40.14, 450);
 
 		private static const PAINTING_OFFSET:Number = 831;
 		private static const PAINTING_SPACING:Number = 250;
 		private static const PAINTING_WIDTH:Number = 210;
+		private static const PAINTING_Y:Number = 5;
 		private static const PAINTING_Z:Number = -160;
 		private static const SWIPE_SCENE_RECT:Rectangle = new Rectangle(PAINTING_OFFSET + 10 - 250, -100, 500, 300);
 
@@ -112,6 +113,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);
 			_imageCache.loadingComplete.add(onThumbnailLoadingComplete);
 			_container = new ObjectContainer3D();
+			_container.y = PAINTING_Y;
 			_container.z = PAINTING_Z;
 			_container.rotationY = 180;
 			_view.scene.addChild(_container);
@@ -129,7 +131,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			var matrix:Vector.<Number> = _view.camera.lens.matrix.rawData;
 			var pos:Vector3D = new Vector3D();
 			pos.x = -PAINTING_OFFSET;
-			pos.y = 0;
+			pos.y = PAINTING_Y;
 			// solve projection equation for camera.z with screen width in NDC (= 2)
 			pos.z = PAINTING_WIDTH * matrix[0] / 2 + PAINTING_Z;
 			return pos;
@@ -213,6 +215,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			occluderMaterial.addMethod(stencilMethod);
 			_paintingOccluder = new Mesh(occluderGeometry, occluderMaterial);
 			_paintingOccluder.x = -300;
+			_paintingOccluder.y = PAINTING_Y;
 			_paintingOccluder.z = PAINTING_Z - 100;
 			_paintingOccluder.rotationY = 180;
 			_view.scene.addChild(_paintingOccluder);
