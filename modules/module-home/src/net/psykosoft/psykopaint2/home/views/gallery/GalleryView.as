@@ -126,13 +126,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function calculateCameraNearPosition():Vector3D
 		{
+			var matrix:Vector.<Number> = _view.camera.lens.matrix.rawData;
 			var pos:Vector3D = new Vector3D();
 			pos.x = -PAINTING_OFFSET;
 			pos.y = 0;
-			pos.z = getCameraZForNDCWidth(2);	// -1 to 1 (fullscreen width) = 2
-
-			// proj[0] * PAINTING_WIDTH / camera_z + PAINTING_Z
-
+			// solve projection equation for camera.z with screen width in NDC (= 2)
+			pos.z = PAINTING_WIDTH * matrix[0] / 2 + PAINTING_Z;
 			return pos;
 		}
 
@@ -294,13 +293,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				_dragCountsAsTap = false;
 			constrainSwipe(_container.x - unprojectVelocity(event.velocityX));
 			updateVisibility();
-		}
-
-		private function getCameraZForNDCWidth(ndcWidth:Number):Number
-		{
-			var matrix:Vector.<Number> = _view.camera.lens.matrix.rawData;
-
-			return PAINTING_WIDTH * matrix[0] / ndcWidth + PAINTING_Z;
 		}
 
 		private function unprojectVelocity(screenSpaceVelocity:Number):Number
