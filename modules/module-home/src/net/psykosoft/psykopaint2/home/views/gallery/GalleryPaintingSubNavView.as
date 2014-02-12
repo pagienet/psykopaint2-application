@@ -40,7 +40,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			setRightButton(PROFILE, name, ButtonIconType.DEFAULT, true);
 
 			if (_userThumbnailURL != url) {
-				if (_userBitmap) _container.removeChild(_userBitmap);
 				_userThumbnailURL = url;
 				loadThumbnail();
 			}
@@ -86,8 +85,11 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			removeLoadListeners();
 			_userBitmap = Bitmap(_loader.content);
-			_userBitmap.x = 7;
+			_userBitmap.x = 3;
 			_userBitmap.y = 7;
+			_userBitmap.smoothing = true;
+			_userBitmap.width = 168;
+			_userBitmap.height = 168;
 			_container.addChildAt(_userBitmap, 0);
 			_loader = null;
 
