@@ -9,7 +9,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSetSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestEaselUpdateSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestFinalizeCropSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUpdateCropImageSignal;
 	import net.psykosoft.psykopaint2.home.signals.NotifyHomeViewDeleteModeChangedSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
@@ -49,6 +51,12 @@ package net.psykosoft.psykopaint2.home.views.home
 		public var requestUpdateCropImageSignal:RequestUpdateCropImageSignal;
 		
 		[Inject]
+		public var notifyCropConfirmSignal:RequestFinalizeCropSignal;
+
+		[Inject]
+		public var requestOpenCroppedBitmapDataSignal:RequestOpenCroppedBitmapDataSignal;
+		
+		[Inject]
 		public var notifyGlobalGestureSignal:NotifyGlobalGestureSignal;
 
 		private var _selectedSurfaceID : uint;
@@ -76,7 +84,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyHomeViewDeleteModeChangedSignal.add(onDeleteModeChanged);
 			requestUpdateCropImageSignal.add( updateCropSourceImage );
 			notifyGlobalGestureSignal.add( onGlobalGesture );
-			
+			notifyCropConfirmSignal.add( onRequestFinalizeCrop );
 		}
 
 		private function onRequestNavigationStateChange(newState : String) : void
@@ -99,6 +107,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			notifyHomeViewDeleteModeChangedSignal.remove(onDeleteModeChanged);
 			requestUpdateCropImageSignal.remove( updateCropSourceImage );
 			notifyGlobalGestureSignal.remove( onGlobalGesture );
+			notifyCropConfirmSignal.remove( onRequestFinalizeCrop );
 		}
 		
 		private function onDeleteModeChanged( deleteModeActive:Boolean ):void
@@ -155,5 +164,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 		}
 
+		public function onRequestFinalizeCrop():void {
+			requestOpenCroppedBitmapDataSignal.dispatch( view.getCroppedImage() );
+		}
 	}
 }

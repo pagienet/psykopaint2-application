@@ -30,6 +30,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
 	
+	import net.psykosoft.psykopaint2.base.utils.gpu.CopyMeshToBitmapDataUtil;
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
@@ -644,6 +645,13 @@ package net.psykosoft.psykopaint2.home.views.home
 			{
 				_stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			}
+		}
+		
+		public function getCroppedImage():BitmapData
+		{
+			var util:CopyMeshToBitmapDataUtil = new CopyMeshToBitmapDataUtil();
+			var result:BitmapData = new BitmapData( 1024, 768,false );
+			return util.execute( _canvas, _diffuseTexture.texture, result, _context3D );;
 		}
 	}
 }

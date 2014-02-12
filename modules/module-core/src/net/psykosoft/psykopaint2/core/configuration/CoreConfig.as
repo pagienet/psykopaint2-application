@@ -75,6 +75,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
+	import net.psykosoft.psykopaint2.core.signals.RequestOpenCroppedBitmapDataSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestPaintingInfoFileReadSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestResumeCPUUsageForUISignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSaveCPUForUISignal;
@@ -249,6 +250,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NavigationCanHideWithGesturesSignal ).asSingleton();
 			_injector.map( NotifyEaselTappedSignal ).asSingleton();
 			_injector.map( RequestUpdateCropImageSignal ).asSingleton();
+			_injector.map( RequestOpenCroppedBitmapDataSignal ).asSingleton();
 			
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
