@@ -1,16 +1,9 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
-	import flash.display.Bitmap;
-	import flash.display.Loader;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.net.URLRequest;
-
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
-	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 
@@ -63,13 +56,22 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function updateUserProfileButton():void
 		{
 			var painting : GalleryImageProxy = activePaintingModel.painting;
-			view.setUserProfile(painting.userName, painting.userThunbnailURL);
+			if (painting) {
+				view.setUserProfile(painting.userName, painting.userThunbnailURL);
+				view.getRightButton().visible = true;
+			}
+			else {
+				view.getRightButton().visible = false;
+			}
 		}
 
 		private function updateLoveButton() : void
 		{
 			var painting : GalleryImageProxy = activePaintingModel.painting;
-			view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, !painting.isFavorited && loggedInUser.isLoggedIn() && painting.userID != loggedInUser.userID);
+			if (painting)
+				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, !painting.isFavorited && loggedInUser.isLoggedIn() && painting.userID != loggedInUser.userID);
+			else
+				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, false);
 		}
 
 		override protected function onButtonClicked(id : String) : void
@@ -85,7 +87,10 @@ package net.psykosoft.psykopaint2.home.views.gallery
 					sharePainting();
 					break;
 				case GalleryPaintingSubNavView.PROFILE:
-					// ?
+					galleryService.targetUserID = activePaintingModel.painting.userID;
+					requestNavigationStateChange(NavigationStateType.GALLERY_BROWSE_USER);
+					// hack for correct menu
+					requestNavigationStateChange(NavigationStateType.GALLERY_PAINTING);
 					break;
 			}
 		}
@@ -97,7 +102,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function goBack() : void
 		{
-			requestStateChangeSignal.dispatch(NavigationStateType.HOME_ON_EASEL);
+			requestNavigationStateChange(NavigationStateType.HOME_ON_EASEL);
 		}
 
 		private function lovePainting() : void

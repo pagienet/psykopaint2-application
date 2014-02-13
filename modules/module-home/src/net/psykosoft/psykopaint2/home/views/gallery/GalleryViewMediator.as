@@ -1,7 +1,6 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
-	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
@@ -34,9 +33,18 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		// keeps track whether or not the active painting update was triggered locally
 		private var internalUpdate : Boolean;
+		private var oldState:String;
+		private var isInteractive:Boolean;
+		private var _galleryNavStateLookUp:Array;
 
 		public function GalleryViewMediator()
 		{
+			_galleryNavStateLookUp = [];
+			_galleryNavStateLookUp[NavigationStateType.GALLERY_BROWSE_FOLLOWING] = GalleryType.FOLLOWING;
+			_galleryNavStateLookUp[NavigationStateType.GALLERY_BROWSE_MOST_LOVED] = GalleryType.MOST_LOVED;
+			_galleryNavStateLookUp[NavigationStateType.GALLERY_BROWSE_MOST_RECENT] = GalleryType.MOST_RECENT;
+			_galleryNavStateLookUp[NavigationStateType.GALLERY_BROWSE_YOURS] = GalleryType.YOURS;
+			_galleryNavStateLookUp[NavigationStateType.GALLERY_BROWSE_USER] = GalleryType.USER;
 		}
 
 		override public function initialize() : void
@@ -63,15 +71,18 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function onStateChangeSignal(newState:String) : void
 		{
 			switch (newState) {
-
 				case NavigationStateType.GALLERY_BROWSE_FOLLOWING:
 				case NavigationStateType.GALLERY_BROWSE_MOST_LOVED:
 				case NavigationStateType.GALLERY_BROWSE_MOST_RECENT:
 				case NavigationStateType.GALLERY_BROWSE_YOURS:
+				case NavigationStateType.GALLERY_BROWSE_USER:
 				case NavigationStateType.GALLERY_PAINTING:
-//					// probably not allowed to swipe when share is open
+					// probably not allowed to swipe when share is open
 					initInteraction();
 					view.showHighQuality = true;
+					if (oldState != newState) {
+						resetPaintings(_galleryNavStateLookUp[newState]);
+					}
 					break;
 				case NavigationStateType.GALLERY_SHARE:
 					view.showHighQuality = true;
@@ -81,20 +92,30 @@ package net.psykosoft.psykopaint2.home.views.gallery
 					view.showHighQuality = false;
 					stopInteraction();
 			}
+			oldState = newState;
+		}
 
+		private function resetPaintings(source:uint):void
+		{
+			requestActiveImage(source, 0);
 		}
 
 		private function stopInteraction() : void
 		{
-			if (view.onZoomUpdateSignal)
-				view.onZoomUpdateSignal.remove(onZoomUpdate);
-			view.stopInteraction();
+			if (isInteractive) {
+				if (view.onZoomUpdateSignal)
+					view.onZoomUpdateSignal.remove(onZoomUpdate);
+				view.stopInteraction();
+			}
 		}
 
 		private function initInteraction() : void
 		{
-			view.initInteraction();
-			view.onZoomUpdateSignal.add(onZoomUpdate);
+			if (!isInteractive) {
+				view.initInteraction();
+				view.onZoomUpdateSignal.add(onZoomUpdate);
+				isInteractive = true;
+			}
 		}
 
 		private function onZoomUpdate(ratio : Number) : void
@@ -118,7 +139,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onRequestActiveImageResult(collection : GalleryImageCollection) : void
 		{
-			activePaintingModel.painting = collection.images[0];
+			activePaintingModel.painting = collection.images.length > 0? collection.images[0] : null;
 		}
 
 		private function onActivePaintingUpdate() : void
@@ -136,7 +157,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			view.setImageCollection(collection);
 		}
 
-		private function onImageCollectionFailed() : void
+		private function onImageCollectionFailed(status : uint) : void
 		{
 			// TODO: SHOW FEEDBACK
 			trace ("Failed to fetch image collection!");

@@ -1,6 +1,5 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
-	import net.psykosoft.psykopaint2.core.models.GalleryType;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 

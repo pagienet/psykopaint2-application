@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.core.models
 		public static const GALLERY_BROWSE_MOST_LOVED : String = "state/gallery/gallery_browse_most_loved";
 		public static const GALLERY_BROWSE_MOST_RECENT : String = "state/gallery/gallery_browse_recent";
 		public static const GALLERY_BROWSE_YOURS : String = "state/gallery/gallery_browse_yours";
+		public static const GALLERY_BROWSE_USER : String = "state/gallery/gallery_browse_user";
 		public static const GALLERY_PAINTING : String = "state/gallery/painting";
 		public static const GALLERY_SHARE : String = "state/gallery/share";
 

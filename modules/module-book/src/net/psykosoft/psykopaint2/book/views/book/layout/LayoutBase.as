@@ -385,7 +385,7 @@ package net.psykosoft.psykopaint2.book.views.book.layout
 
 		private function loadCurrentThumbnail() : void
 		{
-			if( _loadQueue && _loadQueue[_loadIndex] && _loadQueue[_loadIndex].queueID == _queueID){
+			if( _loadQueue && _loadQueue.length > 0 && _loadQueue[_loadIndex] && _loadQueue[_loadIndex].queueID == _queueID){
 				if(_loadQueue[_loadIndex] is BookThumbnailData){
 					var btd:BookThumbnailData = BookThumbnailData(_loadQueue[_loadIndex]);
 					SourceImageProxy(btd.imageVO).loadThumbnail(onThumbnailLoadedComplete, onThumbnailLoadedError);

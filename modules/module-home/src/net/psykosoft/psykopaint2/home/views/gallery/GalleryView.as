@@ -443,21 +443,29 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			setActiveImage(galleryImageProxy);
 
-			_container.x = -(PAINTING_OFFSET - galleryImageProxy.index * PAINTING_SPACING);
+			if (galleryImageProxy)
+				_container.x = -(PAINTING_OFFSET - galleryImageProxy.index * PAINTING_SPACING);
+			else
+				_container.x = -PAINTING_OFFSET;
 		}
 
 		public function setActiveImage(galleryImageProxy:GalleryImageProxy):void
 		{
 			if (_activeImageProxy) {
-				if (_activeImageProxy.collectionType != galleryImageProxy.collectionType)
+				if (!galleryImageProxy || _activeImageProxy.collectionType != galleryImageProxy.collectionType)
 					resetPaintings();
 
-				if (_activeImageProxy.id != galleryImageProxy.id)
+				if (!galleryImageProxy || _activeImageProxy.id != galleryImageProxy.id)
 					removeHighQualityMaterial();
 			}
 
 			// make sure to clone so we can load while the book is loading
-			_activeImageProxy = galleryImageProxy.clone();
+			_activeImageProxy = galleryImageProxy? galleryImageProxy.clone() : null;
+
+			if (!_activeImageProxy) {
+				_numPaintings = 0;
+				return;
+			}
 
 			const amountOnEachSide:int = 2;
 			var min:int = galleryImageProxy.index - amountOnEachSide;
@@ -498,7 +506,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.loadingComplete.remove(onThumbnailLoadingComplete);
 			disposePaintings();
 			_visibleEndIndex = -1;
-			_visibleStartIndex = -1;
+			_visibleStartIndex = 0;
 			_imageCache.clear();
 			_imageCache.thumbnailLoaded.add(onThumbnailLoaded);
 			_imageCache.thumbnailDisposed.add(onThumbnailDisposed);

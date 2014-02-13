@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.book.views.book
 
 	import flash.display.BitmapData;
 
+	import net.psykosoft.psykopaint2.base.utils.misc.executeNextFrame;
+
 	import net.psykosoft.psykopaint2.book.signals.RequestDestroyBookModuleSignal;
 
 	import net.psykosoft.psykopaint2.core.models.GalleryType;
@@ -78,6 +80,7 @@ package net.psykosoft.psykopaint2.book.views.book
 			_galleryNavStateLookUp[GalleryType.MOST_LOVED] = NavigationStateType.GALLERY_BROWSE_MOST_LOVED;
 			_galleryNavStateLookUp[GalleryType.MOST_RECENT] = NavigationStateType.GALLERY_BROWSE_MOST_RECENT;
 			_galleryNavStateLookUp[GalleryType.YOURS] = NavigationStateType.GALLERY_BROWSE_YOURS;
+			_galleryNavStateLookUp[GalleryType.USER] = NavigationStateType.GALLERY_BROWSE_USER;
 		}
 
 		override public function initialize():void
@@ -114,14 +117,23 @@ package net.psykosoft.psykopaint2.book.views.book
 
 		private function onBookShown():void
 		{
-			if (_sourceType == ImageCollectionSource.GALLERY_IMAGES)
-				requestNavigationStateChange.dispatch(_galleryNavStateLookUp[_currentGalleryType]);
+			if (_sourceType == ImageCollectionSource.GALLERY_IMAGES) {
+				// I'm so sorry, Universe, but a severe architectural flaw in the view state logic forces my hand
+				// might as well change the entire view instead of trying to fix that
+				executeNextFrame( function() : void {
+					requestNavigationStateChange.dispatch(_galleryNavStateLookUp[_currentGalleryType]);
+				});
+			}
 		}
 
 		private function onBookHidden():void
 		{
-			if (_sourceType == ImageCollectionSource.GALLERY_IMAGES)
-				requestNavigationStateChange.dispatch(NavigationStateType.GALLERY_PAINTING);
+			if (_sourceType == ImageCollectionSource.GALLERY_IMAGES) {
+				// see apology above
+				executeNextFrame( function() : void {
+					requestNavigationStateChange.dispatch(NavigationStateType.GALLERY_PAINTING);
+				});
+			}
 		}
 
 		private function onRequestOpenBookSignal(sourceType:String, galleryType:uint):void

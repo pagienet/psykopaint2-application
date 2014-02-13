@@ -120,6 +120,9 @@ package net.psykosoft.psykopaint2.app.states
 				case NavigationStateType.GALLERY_BROWSE_YOURS:
 					bookLayer.show(ImageCollectionSource.GALLERY_IMAGES, GalleryType.YOURS);
 					break;
+				case NavigationStateType.GALLERY_BROWSE_USER:
+					bookLayer.show(ImageCollectionSource.GALLERY_IMAGES, GalleryType.USER);
+					break;
 				case NavigationStateType.GALLERY_PAINTING:
 					// keep the book where it was
 					break;

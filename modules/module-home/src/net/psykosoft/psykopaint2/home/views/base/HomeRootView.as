@@ -47,6 +47,7 @@ package net.psykosoft.psykopaint2.home.views.base
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_BROWSE_MOST_LOVED, GalleryBrowseSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_BROWSE_MOST_RECENT, GalleryBrowseSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_BROWSE_YOURS, GalleryBrowseSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_BROWSE_USER, GalleryBrowseSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_PAINTING, GalleryPaintingSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.GALLERY_SHARE, GalleryShareSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.CAPTURE_IMAGE, CaptureImageSubNavView );

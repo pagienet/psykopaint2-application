@@ -1,8 +1,6 @@
 package net.psykosoft.psykopaint2.core.services
 {
 	import net.psykosoft.psykopaint2.core.models.*;
-	import net.psykosoft.psykopaint2.core.services.AMFBridge;
-	import net.psykosoft.psykopaint2.core.services.AMFErrorCode;
 
 	public class AMFGalleryService implements GalleryService
 	{
@@ -12,15 +10,29 @@ package net.psykosoft.psykopaint2.core.services
 		[Inject]
 		public var userProxy : LoggedInUserProxy;
 
+		private var _targetUserID:int;
+
 		public function AMFGalleryService()
 		{
+		}
+
+		// used for views to set the user ID that should be used for subsequent user painting requests
+		// dirty, but the navigation system doesn't allow us to pass along optional props like these properly
+		public function get targetUserID():int
+		{
+			return _targetUserID;
+		}
+
+		public function set targetUserID(value:int):void
+		{
+			_targetUserID = value;
 		}
 
 		public function fetchImages(source : int, index : int, amount : int, onSuccess : Function, onFailure : Function) : void
 		{
 			switch (source) {
 				case GalleryType.YOURS:
-					getUserImages(index, amount, onSuccess, onFailure);
+					getLoggedInUserImages(index, amount, onSuccess, onFailure);
 					break;
 				case GalleryType.FOLLOWING:
 					getFollowedUserImages(index, amount, onSuccess, onFailure);
@@ -31,6 +43,8 @@ package net.psykosoft.psykopaint2.core.services
 				case GalleryType.MOST_RECENT:
 					getMostRecentPaintings(index, amount, onSuccess, onFailure);
 					break;
+				case GalleryType.USER:
+					getUserImages(index, amount, onSuccess, onFailure);
 			}
 		}
 
@@ -64,19 +78,30 @@ package net.psykosoft.psykopaint2.core.services
 			amfBridge.getFollowedUserImages(userProxy.sessionID, index, amount, callback, failFunction);
 		}
 
-		private function getUserImages(index : int, amount : int, onSuccess : Function, onFailure : Function) : void
+		private function getLoggedInUserImages(index : int, amount : int, onSuccess : Function, onFailure : Function) : void
 		{
 			var failFunction : Function = function(data : Object) : void { onFailure(AMFErrorCode.CALL_FAILED); }
 			var callback : Function = function (data : Object) : void
 			{
 				translateImages(GalleryType.YOURS, data, index, onSuccess, onFailure);
 			}
-			amfBridge.getUserImages(userProxy.userID, index, amount, callback, failFunction);
+			amfBridge.getUserImages(userProxy.sessionID, userProxy.userID, index, amount, callback, failFunction);
+		}
+
+		private function getUserImages(index : int, amount : int, onSuccess : Function, onFailure : Function) : void
+		{
+			var failFunction : Function = function(data : Object) : void { onFailure(AMFErrorCode.CALL_FAILED); }
+			var callback : Function = function (data : Object) : void
+			{
+				translateImages(GalleryType.USER, data, index, onSuccess, onFailure);
+			}
+			amfBridge.getUserImages(userProxy.sessionID, _targetUserID, index, amount, callback, failFunction);
 		}
 
 		private function translateImages(type : uint, data : Object, index : int, onSuccess : Function, onFailure : Function) : void
 		{
 			if (data["status_code"] != 1) {
+				trace("gallery AMF error with status_code " + data["status_code"]);
 				onFailure(data["status_code"]);
 				return;
 			}

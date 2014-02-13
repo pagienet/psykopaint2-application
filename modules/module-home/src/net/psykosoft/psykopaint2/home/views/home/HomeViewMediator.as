@@ -176,6 +176,7 @@ package net.psykosoft.psykopaint2.home.views.home
 				case NavigationStateType.GALLERY_BROWSE_MOST_LOVED:
 				case NavigationStateType.GALLERY_BROWSE_MOST_RECENT:
 				case NavigationStateType.GALLERY_BROWSE_YOURS:
+				case NavigationStateType.GALLERY_BROWSE_USER:
 				case NavigationStateType.GALLERY_PAINTING:
 					view.activeSection = HomeView.GALLERY;
 					break;
