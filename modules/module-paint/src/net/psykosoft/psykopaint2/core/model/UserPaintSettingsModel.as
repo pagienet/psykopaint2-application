@@ -33,6 +33,7 @@ package net.psykosoft.psykopaint2.core.model
 		public var previewMixtureParameter:PsykoParameter;
 		public var styleMatrices:Vector.<Vector.<Number>>;
 		private var initialized:Boolean;
+		public var isContinuedPainting:Boolean;
 		
 		public function UserPaintSettingsModel()
 		{

@@ -14,6 +14,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		public static const ID_PUBLISH:String = "Publish Painting";
 
 		public static const ID_PICK_A_BRUSH:String = "Pick a Brush";
+		public var isContinuedPainting:Boolean;
 
 		public function CanvasSubNavView() {
 			super();
@@ -31,7 +32,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			createCenterButton( ID_SAVE, ID_SAVE, ButtonIconType.SAVE );
 			createCenterButton( ID_DOWNLOAD, ID_DOWNLOAD, ButtonIconType.DOWNLOAD );
 			createCenterButton( ID_PUBLISH, ID_PUBLISH, ButtonIconType.PUBLISH );
-			createCenterButton( ID_DISCARD, ID_DISCARD, ButtonIconType.DISCARD );
+			createCenterButton( ID_DISCARD,  "Discard " + (isContinuedPainting ? "Changes" : "It"), ButtonIconType.DISCARD );
 			
 			//createCenterButton( ID_CLEAR, ID_CLEAR, ButtonIconType.BLANK_CANVAS );
 			validateCenterButtons();

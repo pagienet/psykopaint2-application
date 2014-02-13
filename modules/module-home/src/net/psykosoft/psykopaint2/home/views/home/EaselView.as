@@ -174,6 +174,11 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function initCanvas() : void
 		{
+			if ( _canvas )
+			{
+				_view.scene.removeChild(_canvas);
+				_canvas.dispose();
+			}
 			aspectRatio = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
 			var geom : Geometry = new PlaneGeometry(CANVAS_WIDTH, CANVAS_WIDTH*aspectRatio, 1, 1, false);
 			geom.scaleUV(1, aspectRatio);
@@ -365,6 +370,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		
 		public function setCropContent(bitmapData:BitmapData, orientation:int):void
 		{
+			initCanvas();
 			//pad outer edges with white
 			bitmapData.fillRect(new Rectangle(0,0,bitmapData.width,1),0xffffff);
 			bitmapData.fillRect(new Rectangle(0,0,1,bitmapData.height),0xffffff);

@@ -119,6 +119,7 @@ package net.psykosoft.psykopaint2.home.commands
 			_time = getTimer();
 			var deserializer:PaintingDataDeserializer = new PaintingDataDeserializer();
 			var vo:PaintingDataVO = deserializer.deserialize( bytes );
+			vo.loadedFileName = _fileName;
 			ConsoleView.instance.log( this, "done de-serializing- " + String( getTimer() - _time ) );
 			requestOpenPaintingDataVOSignal.dispatch(vo);
 			if( _as3ReadUtil ) _as3ReadUtil.dispose();
