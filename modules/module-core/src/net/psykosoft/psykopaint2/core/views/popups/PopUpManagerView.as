@@ -2,7 +2,9 @@ package net.psykosoft.psykopaint2.core.views.popups
 {
 
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 
 	import net.psykosoft.psykopaint2.core.views.popups.base.*;
 
@@ -32,11 +34,24 @@ package net.psykosoft.psykopaint2.core.views.popups
 			_blocker.graphics.beginFill( 0x000000, 0.25 );
 			_blocker.graphics.drawRect( 0, 0, 1024, 768 );
 			_blocker.graphics.endFill();
-			_blocker.mouseEnabled = false;
-
+			_blocker.addEventListener( MouseEvent.CLICK, onBlockerClicked );
 			addChildAt( _blocker, 0 );
 
+			addEventListener(MouseEvent.CLICK, killEvent);
+			addEventListener(MouseEvent.MOUSE_DOWN, killEvent);
+			addEventListener(MouseEvent.MOUSE_MOVE, killEvent);
+			addEventListener(MouseEvent.MOUSE_UP, killEvent);
+			addEventListener(TouchEvent.TOUCH_TAP, killEvent);
+			addEventListener(TouchEvent.TOUCH_BEGIN, killEvent);
+			addEventListener(TouchEvent.TOUCH_END, killEvent);
+			addEventListener(TouchEvent.TOUCH_MOVE, killEvent);
+
 			enable();
+		}
+
+		private function killEvent(event:Event):void
+		{
+			event.stopImmediatePropagation();
 		}
 
 		// -----------------------
@@ -93,6 +108,14 @@ package net.psykosoft.psykopaint2.core.views.popups
 			removeChild( _popUp );
 			_popUp = null;
 			popUpHiddenSignal.dispatch();
+		}
+
+		// -----------------------
+		// Event handlers.
+		// -----------------------
+
+		private function onBlockerClicked( event:MouseEvent ):void {
+			_popUp.onBlockerClicked();
 		}
 	}
 }

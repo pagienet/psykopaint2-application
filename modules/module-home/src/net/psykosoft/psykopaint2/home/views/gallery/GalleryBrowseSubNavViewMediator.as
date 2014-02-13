@@ -1,12 +1,21 @@
 package net.psykosoft.psykopaint2.home.views.gallery
 {
+	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 
 	public class GalleryBrowseSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view:GalleryBrowseSubNavView;
+
+		[Inject]
+		public var requestShowPopUpSignal:RequestShowPopUpSignal;
+
+		[Inject]
+		public var loggedInUser : LoggedInUserProxy;
 
 		private var _navigationStateTypeMap : Array;
 
@@ -30,8 +39,13 @@ package net.psykosoft.psykopaint2.home.views.gallery
 //					requestHomePanningToggleSignal.dispatch(true);
 					break;
 				default:*/
-					requestNavigationStateChange(_navigationStateTypeMap[id]);
 //			}
+
+			if (id == GalleryBrowseSubNavView.ID_YOURS && !loggedInUser.isLoggedIn())
+				requestShowPopUpSignal.dispatch(PopUpType.LOGIN);
+			else
+				requestNavigationStateChange(_navigationStateTypeMap[id]);
+
 		}
 	}
 }
