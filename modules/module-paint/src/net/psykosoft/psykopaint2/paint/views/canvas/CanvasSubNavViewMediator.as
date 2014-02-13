@@ -2,8 +2,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 {
 
 	import flash.utils.getTimer;
-
+	
 	import net.psykosoft.psykopaint2.core.data.PaintingInfoVO;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.PaintingModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingInfoSavedSignal;
@@ -33,6 +34,9 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 		[Inject]
 		public var paintingModel:PaintingModel;
+		
+		[Inject]
+		public var userPaintSettingModel:UserPaintSettingsModel;
 
 		[Inject]
 		public var requestPaintingDeletionSignal:RequestPaintingDeletionSignal;
@@ -56,6 +60,8 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			// Init.
 			registerView( view );
 			super.initialize();
+			view.isContinuedPainting = userPaintSettingModel.isContinuedPainting;
+			
 		}
 
 		// ---------------------------------------------------------------------

@@ -39,7 +39,8 @@ package net.psykosoft.psykopaint2.core.debug
 				}
 			}
 
-			throw new Error("Object not found!");
+			trace("ERROR in UndisposedObjects.remove: Object not found!");
+			//throw new Error("Object not found!");
 		}
 
 		public function getStackTraceReport() : Vector.<Object>

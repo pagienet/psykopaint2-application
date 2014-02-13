@@ -15,6 +15,7 @@ package net.psykosoft.psykopaint2.core.data
 		public var colorBackgroundOriginal:ByteArray;
 		public var width:uint;
 		public var height:uint;
+		public var loadedFileName:String;
 
 		public function PaintingDataVO()
 		{
