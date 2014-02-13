@@ -13,7 +13,7 @@ package net.psykosoft.psykopaint2.core.models
 		public var numComments : uint;
 		public var paintingMode : String;	// any of PaintMode
 		public var isFavorited : Boolean;
-		public var userThunbnailURL : String;
+		public var userThumbnailURL : String;
 		public var userID : int;
 
 		public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
@@ -53,7 +53,7 @@ package net.psykosoft.psykopaint2.core.models
 			clone.paintingMode = paintingMode;
 			clone.isFavorited = isFavorited;
 			clone.userID = userID;
-			clone.userThunbnailURL = userThunbnailURL;
+			clone.userThumbnailURL = userThumbnailURL;
 		}
 	}
 }

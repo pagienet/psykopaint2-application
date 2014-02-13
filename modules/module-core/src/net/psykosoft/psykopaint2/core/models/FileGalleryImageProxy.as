@@ -57,7 +57,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		override public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
 		{
-			if (_onComplete != null) throw "Already loading!";
+			if (_onComplete) cancelLoading();
 			_sizeHint = size;
 
 			_onComplete = onComplete;
@@ -69,7 +69,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		override public function loadFullSizedComposite(onComplete : Function, onError : Function) : void
 		{
-			if (_onComplete != null) throw "Already loading!";
+			if (_onComplete) cancelLoading();
 			_onComplete = onComplete;
 			_onError = onError;
 
@@ -135,7 +135,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		override public function loadSurfaceData(onComplete : Function, onError : Function) : void
 		{
-			if (_onComplete != null) throw "Already loading!";
+			if (_onComplete) cancelLoading();
 			if (_paintingGalleryVO) onComplete(_paintingGalleryVO);
 			_paintingGalleryVO = new PaintingGalleryVO();
 			_onComplete = onComplete;

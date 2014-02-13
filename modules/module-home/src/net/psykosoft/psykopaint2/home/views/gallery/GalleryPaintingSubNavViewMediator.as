@@ -4,13 +4,18 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.models.LoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.signals.RequestShowPopUpSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
+	import net.psykosoft.psykopaint2.core.views.popups.base.PopUpType;
 	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 
 	public class GalleryPaintingSubNavViewMediator extends SubNavigationMediatorBase
 	{
 		[Inject]
 		public var view : GalleryPaintingSubNavView;
+
+		[Inject]
+		public var requestShowPopUpSignal:RequestShowPopUpSignal;
 
 		[Inject]
 		public var activePaintingModel : ActiveGalleryPaintingModel;
@@ -21,6 +26,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		[Inject]
 		public var loggedInUser : LoggedInUserProxy;
 
+
 		public function GalleryPaintingSubNavViewMediator()
 		{
 			super();
@@ -29,11 +35,19 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		override public function initialize() : void
 		{
 			view.setupSignal.addOnce(onViewSetUp);
+			loggedInUser.onChange.add(onLoggedInUserChange);
 			// Init.
 			registerView(view);
 			super.initialize();
 
 			activePaintingModel.onUpdate.add(updateMenu);
+		}
+
+
+
+		private function onLoggedInUserChange():void
+		{
+			updateMenu();
 		}
 
 		private function onViewSetUp() : void
@@ -43,6 +57,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		override public function destroy() : void
 		{
+			loggedInUser.onChange.remove(onLoggedInUserChange);
 			activePaintingModel.onUpdate.remove(updateMenu);
 			super.destroy();
 		}
@@ -57,7 +72,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var painting : GalleryImageProxy = activePaintingModel.painting;
 			if (painting) {
-				view.setUserProfile(painting.userName, painting.userThunbnailURL);
+				view.setUserProfile(painting.userName, painting.userThumbnailURL);
 				view.getRightButton().visible = true;
 			}
 			else {
@@ -69,7 +84,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var painting : GalleryImageProxy = activePaintingModel.painting;
 			if (painting)
-				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, !painting.isFavorited && loggedInUser.isLoggedIn() && painting.userID != loggedInUser.userID);
+				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, !loggedInUser.isLoggedIn() || (!painting.isFavorited && painting.userID != loggedInUser.userID));
 			else
 				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, false);
 		}
@@ -81,22 +96,44 @@ package net.psykosoft.psykopaint2.home.views.gallery
 //					goBack();
 //					break;
 				case GalleryPaintingSubNavView.ID_LOVE:
-					lovePainting();
+					if (loggedInUser.isLoggedIn())
+						lovePainting();
+					else
+						showLogIn();
 					break;
 				case GalleryPaintingSubNavView.ID_SHARE:
-					sharePainting();
+					if (loggedInUser.isLoggedIn())
+						sharePainting();
+					else
+						showLogIn();
+					break;
+				case GalleryPaintingSubNavView.ID_COMMENT:
+					if (loggedInUser.isLoggedIn())
+						commentOnPainting();
+					else
+						showLogIn();
 					break;
 				case GalleryPaintingSubNavView.PROFILE:
 					galleryService.targetUserID = activePaintingModel.painting.userID;
 					requestNavigationStateChange(NavigationStateType.GALLERY_BROWSE_USER);
-					// hack for correct menu
-					requestNavigationStateChange(NavigationStateType.GALLERY_PAINTING);
 					break;
 			}
 		}
 
+		private function showLogIn():void
+		{
+			requestShowPopUpSignal.dispatch(PopUpType.LOGIN);
+		}
+
 		private function sharePainting() : void
 		{
+			// TODO: Maybe share should be a pop-up?
+			requestNavigationStateChange(NavigationStateType.GALLERY_SHARE);
+		}
+
+		private function commentOnPainting():void
+		{
+			// TODO: Maybe comment should be a pop-up?
 			requestNavigationStateChange(NavigationStateType.GALLERY_SHARE);
 		}
 

@@ -32,7 +32,8 @@ package net.psykosoft.psykopaint2.core.views.popups
 			_blocker.graphics.beginFill( 0x000000, 0.25 );
 			_blocker.graphics.drawRect( 0, 0, 1024, 768 );
 			_blocker.graphics.endFill();
-			_blocker.addEventListener( MouseEvent.CLICK, onBlockerClicked );
+			_blocker.mouseEnabled = false;
+
 			addChildAt( _blocker, 0 );
 
 			enable();
@@ -92,14 +93,6 @@ package net.psykosoft.psykopaint2.core.views.popups
 			removeChild( _popUp );
 			_popUp = null;
 			popUpHiddenSignal.dispatch();
-		}
-
-		// -----------------------
-		// Event handlers.
-		// -----------------------
-
-		private function onBlockerClicked( event:MouseEvent ):void {
-			_popUp.onBlockerClicked();
 		}
 	}
 }
