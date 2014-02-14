@@ -34,6 +34,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const INDEX_MODE_SIZE_INV:int = 2;
 		static public const INDEX_MODE_PRESSURE_SPEED:int = 3;
 		public static const INDEX_MODE_FIXED:int = 4;
+		public static const INDEX_MODE_SPEED_INV:int = 5;
 		
 		static public const INDEX_MAPPING_LINEAR:int = 0;
 		static public const INDEX_MAPPING_CIRCQUAD:int = 1;
@@ -81,7 +82,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function SplatterDecorator()
 		{
 			super();
-			mappingMode  	  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Speed","Size", "Inverse Size","Pressure/Speed", "Fixed"]);
+			mappingMode  	  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Speed","Size","Inverse Size","Pressure/Speed", "Fixed"]);
 			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_OFFSET_MAPPING,1,["Linear",
 				"CircQuad",
 				"Circular",
@@ -123,7 +124,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				var angle:Number = point.angle + aaj + rng.getNumber(-oar,oar) + (rng.getChance() ? pi2 : pi3);
 				var offset:Number =  rng.getMappedNumber(0, 1, mf );
 				
-				var distance:Number =  mo + spf * offset * [point.speed / 25, point.size, Math.sqrt(Math.max(0,ms - point.size)), point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, 1][mapIndex]; 
+				var distance:Number =  mo + spf * offset * [point.speed / 25, point.size, Math.sqrt(Math.max(0,ms - point.size)), point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, 1, 1 - (point.speed / 25)][mapIndex]; 
 				point.x  +=  Math.cos(angle) * distance;
 				point.y  +=  Math.sin(angle) * distance;
 				point.size *=  1 - Math.min(1,sf * offset) ; 
