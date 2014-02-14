@@ -37,6 +37,27 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			var index:int = (targetIndexMask & 1) == 1 ? 0 : (targetIndexMask & 2) == 2 ? 4 : (targetIndexMask & 4) == 4 ? 8 : (targetIndexMask & 8) == 8 ? 12 : -1;
 			_canvasModel.pyramidMap.getRGB(x,y,size,tmpRGB );
 			
+			if ( _colorMatrixBlend > 0 && _colorMatrix )
+			{
+				var c:Vector.<Number> = _colorMatrix;
+				var f:Number = _colorMatrixBlend;
+				var fi:Number = 1 - f;
+				var t0:Number,t1:Number,t2:Number;
+				var r1:Number = (t0=tmpRGB[0]) * c[0] + (t1=tmpRGB[1]) * c[1] + (t2=tmpRGB[2]) * c[2] +  c[3];
+				var g1:Number = t0 * c[4] + t1 * c[5] + t2 * c[6] +  c[7];
+				var b1:Number = t0 * c[8] + t1 * c[9] + t2 * c[10] +  c[11];
+				var r2:Number = t0 * c[12] + t1 * c[13] + t2 * c[14] +  c[15];
+				var g2:Number = t0 * c[16] + t1 * c[17] + t2 * c[18] +  c[19];
+				var b2:Number = t0 * c[20] + t1 * c[21] + t2 * c[22] +  c[23];
+				var l:Number = ((0.299 * t0 +  0.587 * t1 +  0.114 * t2) - c[24]) * c[25];
+				if ( l > 1 ) l = 1;
+				else if ( l < 0 ) l = 0;
+				var li:Number = 1 - l;
+				tmpRGB[0] = fi * t0 + f * (l*r2 + li*r1);
+				tmpRGB[1] = fi * t1 + f * (l*g2 + li*g1);
+				tmpRGB[2] = fi * t2 + f * (l*b2 + li*b1);
+			}
+			
 			var t1:Number = target[index] 	     = tmpRGB[0];
 			var t2:Number = target[int(index+1)] = tmpRGB[1]; 
 			var t3:Number = target[int(index+2)] = tmpRGB[2];
@@ -59,7 +80,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 				target[13] = t2;
 				target[14] = t3;
 			}
-			throw("oops, looks like this function is being used after all. TODO: add ColorTransfer methods from below");
 		}
 		
 		
@@ -77,6 +97,27 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 				var py:Number = p.y + radius * Math.sin( baseAngle + i * angle + p.angle );
 				_canvasModel.pyramidMap.getRGB(px,py,sampleSize,tmpRGB);
 				
+				if ( _colorMatrixBlend > 0 && _colorMatrix )
+				{
+					var c:Vector.<Number> = _colorMatrix;
+					var f:Number = _colorMatrixBlend;
+					var fi:Number = 1 - f;
+					var t0:Number,t1:Number,t2:Number;
+					var r1:Number = (t0=tmpRGB[0]) * c[0] + (t1=tmpRGB[1]) * c[1] + (t2=tmpRGB[2]) * c[2] +  c[3];
+					var g1:Number = t0 * c[4] + t1 * c[5] + t2 * c[6] +  c[7];
+					var b1:Number = t0 * c[8] + t1 * c[9] + t2 * c[10] +  c[11];
+					var r2:Number = t0 * c[12] + t1 * c[13] + t2 * c[14] +  c[15];
+					var g2:Number = t0 * c[16] + t1 * c[17] + t2 * c[18] +  c[19];
+					var b2:Number = t0 * c[20] + t1 * c[21] + t2 * c[22] +  c[23];
+					var l:Number = ((0.299 * t0 +  0.587 * t1 +  0.114 * t2) - c[24]) * c[25];
+					if ( l > 1 ) l = 1;
+					else if ( l < 0 ) l = 0;
+					var li:Number = 1 - l;
+					tmpRGB[0] = fi * t0 + f * (l*r2 + li*r1);
+					tmpRGB[1] = fi * t1 + f * (l*g2 + li*g1);
+					tmpRGB[2] = fi * t2 + f * (l*b2 + li*b1);
+				}
+				
 				target[j] = tmpRGB[0];
 				j++;
 				target[j] = tmpRGB[1];
@@ -86,7 +127,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 				//target[j] =  1;
 				//j++;
 			}
-			throw("oops, looks like this function is being used after all. TODO: add ColorTransfer methods from below");
 		}
 		
 		public function getColorsByVO(appendVO:StrokeAppendVO, sampleSize : Number) : void

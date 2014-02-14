@@ -612,7 +612,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<SplatterDecorator >
 							<parameter id={SplatterDecorator.PARAMETER_A_OFFSET_ANGLE_RANGE} value1="0" value2="0" path="pathengine.pointdecorator_1" />
 							<parameter id={SplatterDecorator.PARAMETER_A_ANGLE_ADJUSTMENT} value="90" path="pathengine.pointdecorator_1" />
-							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR} value="5" path="pathengine.pointdecorator_1" showInUI="1"/>
+							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR} value="0" minValue="0" maxValue="5" path="pathengine.pointdecorator_1" showInUI="1"/>
 							<parameter id={SplatterDecorator.PARAMETER_N_SIZE_FACTOR} value="0" path="pathengine.pointdecorator_1" />
 							<parameter id={SplatterDecorator.PARAMETER_N_MINIMUM_OFFSET} value="0" path="pathengine.pointdecorator_1" />
 						</SplatterDecorator>	
