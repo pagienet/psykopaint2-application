@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.core.intrinsics
 			{
 				//this solution is not ideal since it requires temporary memory allocation,
 				//but I ran into issues when trying to do the scale down in a "smarter" way. Bonus points for whoever improves it.
-				var tmpMap:BitmapData = new TrackedBitmapData( map.width*scaleFactor, map.height*scaleFactor, false, 0);
+				var tmpMap:TrackedBitmapData = new TrackedBitmapData( map.width*scaleFactor, map.height*scaleFactor, false, 0);
 				tmpMap.draw( map, new Matrix(scaleFactor,0,0,scaleFactor), null, "normal",null,true )
 				map = tmpMap;
 			}
@@ -61,7 +61,7 @@ package net.psykosoft.psykopaint2.core.intrinsics
 			_width = map.width;
 			_height = map.height;
 			
-			var _scaled:BitmapData = new TrackedBitmapData(Math.ceil(_width * 0.75), Math.ceil(_height * 0.5), true, 0 );
+			var _scaled:TrackedBitmapData = new TrackedBitmapData(Math.ceil(_width * 0.75), Math.ceil(_height * 0.5), true, 0 );
 			var m:Matrix = new Matrix(0.5,0,0,0.5);
 			_scaled.draw( map, m, null, "normal",null,true);
 			m.tx += _width * 0.5;
