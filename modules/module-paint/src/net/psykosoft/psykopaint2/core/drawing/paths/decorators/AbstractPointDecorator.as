@@ -39,7 +39,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			for ( var i:int = 0; i < _parameters.length; i++ )
 			{
-				if ( !showInUiOnly || _parameters[i].showInUI )
+				if ( !showInUiOnly || _parameters[i].showInUI > -1 )
 					vo.parameters.push( _parameters[i] );
 			}
 			

@@ -100,6 +100,15 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP}
 							src="Intensity"
+							target={"pathengine.pointdecorator_2."+BumpDecorator.PARAMETER_N_GLOSSINESS}
+							targetProperties="value"
+							targetOffsets="0.1"
+							targetFactors="0.3"
+							targetMappings="0"
+							/>
+
+						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP}
+							src="Intensity"
 							target={"pathengine.pointdecorator_2."+BumpDecorator.PARAMETER_N_BUMPINESS}
 							targetProperties="value"
 							targetOffsets="0"

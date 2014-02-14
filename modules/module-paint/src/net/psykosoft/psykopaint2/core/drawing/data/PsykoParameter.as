@@ -55,7 +55,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		private var _stringValue:String;
 		private var _numberValues:Vector.<Number>;
 		private var _stringValues:Vector.<String>;
-		private var _showInUI:Boolean;
+		private var _showInUI:int;
 		private var _label:String;
 		private var _colorValue:int;
 		private var _previewID:String;
@@ -115,7 +115,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			
 			if ( data.hasOwnProperty("@label") ) pp.label = data.@label;
 			if ( data.hasOwnProperty("@previewID") ) pp.previewID = data.@previewID;
-			if ( data.hasOwnProperty("@showInUI") ) pp.showInUI = ( data.@showInUI == "1");
+			if ( data.hasOwnProperty("@showInUI") ) pp.showInUI = int(data.@showInUI);
 			return pp;
 		}
 		
@@ -123,6 +123,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		{
 			this.type = type;
 			this.label = this.id = id;
+			this.showInUI = -1;
 			switch ( type )
 			{
 				case NumberParameter:
@@ -458,14 +459,14 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			_previewID = value;
 		}
 		
-		public function get showInUI():Boolean
+		public function get showInUI():int
 		{
 			return _showInUI;
 		}
 		
-		public function set showInUI( value:Boolean ):void
+		public function set showInUI( index:int ):void
 		{
-			_showInUI = value;
+			_showInUI = index;
 		}
 		
 		public function set value( v:Number ):void
@@ -591,7 +592,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					break;
 			}
 			
-			if ( message.hasOwnProperty("@showInUI") ) _showInUI = ( message.@showInUI == "1");
+			if ( message.hasOwnProperty("@showInUI") ) _showInUI = int( message.@showInUI );
 			//_showInUI = message.hasOwnProperty("@showInUI") && message.@showInUI == "1";
 		}
 		
