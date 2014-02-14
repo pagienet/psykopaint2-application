@@ -506,9 +506,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			return _pathManager.getDecoratorByPath(target_path);
 		}
 
+		public function get snapshot():CanvasSnapShot
+		{
+			return _snapshot;
+		}
+
 		public function set snapShot(value : CanvasSnapShot) : void
 		{
 			_snapshot = value;
+			if (!value)
+				_renderInvalid = false;
 		}
 		
 		public function setColorStrategyColorMatrix(colorMatrix:Vector.<Number>, blendFactor:Number):void

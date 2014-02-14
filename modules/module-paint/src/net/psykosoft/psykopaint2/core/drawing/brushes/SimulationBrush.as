@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 
+	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
+
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
@@ -63,6 +65,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function onPathEnd() : void
 		{
+			var tempSnapShot : CanvasSnapShot = snapshot;
 			// set lastDrawCount to 3 to prevent final stationary, we need to add this before snap shot is trimmed
 			_lastDrawCount = 3;
 			SimulationMesh(_brushMesh).appendStationary();
@@ -73,6 +76,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_cleanUpTickerTimer.start();
 
 			super.onPathEnd();
+			// dirty hack to cancel snapshot becoming null
+			snapShot = tempSnapShot;
 		}
 
 		private function onTimerComplete(event : TimerEvent) : void
@@ -86,6 +91,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_cleanUpTickerTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, onTimerComplete);
 				_cleanUpTickerTimer = null;
 			}
+
+			snapShot = null;
 
 			_view.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
