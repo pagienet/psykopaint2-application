@@ -50,7 +50,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 					"sub ft1.xy, ft1.xy, fc0.xx			\n" +
 					"mul ft1.xy, ft1.xy, fc1.xy			\n" +
 					"sub ft1, v0, ft1					\n" +
-					"tex ft0, ft1, fs1 <2d,linear,wrap>	\n" +
+					"tex ft0, ft1, fs1 <2d,linear,clamp>\n" +
 					"mul ft6.x, ft0.w, ft6.x\n" +		// less drainage as alpha decreases
 					"sub ft0.w, ft0.w, ft6.x\n" +
 					"mov oc, ft0"
