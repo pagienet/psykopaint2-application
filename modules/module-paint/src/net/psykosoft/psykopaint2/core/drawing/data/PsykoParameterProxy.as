@@ -67,6 +67,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			if ( xml.hasOwnProperty("@indices" )) result.indices = Vector.<int>(String( xml.@indices ).split(","));
 			if ( xml.hasOwnProperty("@condition" )) result.condition = String( xml.@condition );
 			
+			
 			if ( xml.hasOwnProperty("@targetOffsets" )) 
 			{
 				var mappingOffsets:Array = String( xml.@targetOffsets ).split(",");
@@ -83,6 +84,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					result.targetFactors[i] = Number( mappingFactors[i] );
 				}
 			}
+			
 			if ( xml.hasOwnProperty("@targetProperties" )) 
 			{
 				var mappingProperties:Array = String( xml.@targetProperties ).split(",");
@@ -91,6 +93,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					result.targetProperties[i] = mappingProperties[i];
 				}
 			}
+			
 			if ( xml.hasOwnProperty("@targetMappings" )) 
 			{
 				var mappingIndices:Array = String( xml.@targetMappings ).split(",");
@@ -98,14 +101,38 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				{
 					result.targetMappings[i] = mappingFunctions[int( mappingIndices[i] )];
 				}
-			} else {
+			} 
+			
+			
+			var mappingElementCount:int = Math.max( result.targetMappings.length, result.targetProperties.length,result.targetFactors.length,result.targetOffsets.length );
+			
+			if ( mappingElementCount > 0 )
+			{
+				//set defaults for missing elements;
+				for ( i = result.targetOffsets.length; i < mappingElementCount; i++ )
+				{
+					result.targetOffsets[i] = 0;
+				}
+				
+				for ( i = result.targetFactors.length; i < mappingElementCount; i++ )
+				{
+					result.targetFactors[i] = 1;
+				}
+				
+				for ( i = result.targetProperties.length; i < mappingElementCount; i++ )
+				{
+					result.targetProperties[i] = "value";
+				}
 				
 				//default to linear mapping
-				for ( i = 0; i < result.targetProperties.length; i++ )
+				for ( i = result.targetMappings.length; i < mappingElementCount; i++ )
 				{
 					result.targetMappings[i] = mappingFunctions[0];
 				}
 			}
+			
+			
+			
 			
 			return result;
 		}
