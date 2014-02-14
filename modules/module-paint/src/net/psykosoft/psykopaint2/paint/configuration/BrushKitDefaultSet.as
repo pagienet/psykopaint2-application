@@ -132,7 +132,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={SplatterDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_1" index={SplatterDecorator.INDEX_MODE_SIZE_INV} />
 							<parameter id={SplatterDecorator.PARAMETER_N_MAX_SIZE} path="pathengine.pointdecorator_1" value="1" />
 							<parameter id={SplatterDecorator.PARAMETER_SL_OFFSET_MAPPING} path="pathengine.pointdecorator_1" index={SplatterDecorator.INDEX_MAPPING_LINEAR}   />
-							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR}  path="pathengine.pointdecorator_1" value="20" maxValue="80" />
+							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR}  path="pathengine.pointdecorator_1" value="20" maxValue="80" previewID={PreviewIconFactory.PREVIEW_SIZE} />
 							<parameter id={SplatterDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_1" value="0" />
 							<parameter id={SplatterDecorator.PARAMETER_A_OFFSET_ANGLE_RANGE} path="pathengine.pointdecorator_1" value="360" />
 							<parameter id={SplatterDecorator.PARAMETER_N_SIZE_FACTOR} path="pathengine.pointdecorator_1" value="0" />
@@ -164,6 +164,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_4" value1="0.25" value2="0.33" />
 							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_4" value1="0.8" value2="1" />
 						</ColorDecorator>
+
+						
 					</pathengine>
 				</brush>
 
@@ -541,10 +543,24 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 
 				<brush engine={BrushType.WATER_COLOR} name="Water Color">
-					<parameter id={WaterColorBrush.PARAMETER_N_SURFACE_INFLUENCE} previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
-					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_STAINING} path="brush" value=".5" showInUI="1"/>
-					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_GRANULATION} path="brush" value=".3" showInUI="1"/>
+					<parameter id={WaterColorBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
+					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_STAINING} type={PsykoParameter.NumberParameter} path="brush" value=".4" showInUI="0"/>
+					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_DENSITY} type={PsykoParameter.NumberParameter} path="brush" value=".4" showInUI="0"/>
+					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_GRANULATION} path="brush" value=".81" showInUI="0"/>
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="basic,wet" showInUI="1"/>
+
+					<parameterMapping>
+						<parameter id="WaterColorOpacity" showInUI="1" minValue="0" maxValue="1" value=".33"/>
+						<proxy 	type={PsykoParameterProxy.TYPE_VALUE_MAP} src="WaterColorOpacity"
+								target={"brush."+WaterColorBrush.PARAMETER_N_PIGMENT_DENSITY}
+								targetOffsets="0"
+								targetFactors="0.25"/>
+						<proxy 	type={PsykoParameterProxy.TYPE_VALUE_MAP} src="WaterColorOpacity"
+								target={"brush."+WaterColorBrush.PARAMETER_N_PIGMENT_STAINING}
+								targetOffsets="0.1"
+								targetFactors="0.9"/>
+					</parameterMapping>
+
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}/>
 				</brush>
 

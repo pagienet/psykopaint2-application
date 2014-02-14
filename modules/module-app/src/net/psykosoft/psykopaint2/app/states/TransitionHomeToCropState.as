@@ -71,7 +71,7 @@ package net.psykosoft.psykopaint2.app.states
 			if (_background) _background.dispose();
 			_background = null;
 			_bitmapData = null;
-			_orientation = null
+			_orientation = 0;
 		}
 	}
 }
