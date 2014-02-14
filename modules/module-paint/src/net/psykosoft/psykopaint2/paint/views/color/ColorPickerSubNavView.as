@@ -249,11 +249,9 @@ package net.psykosoft.psykopaint2.paint.views.color
 				if( (parameter.type == PsykoParameter.IntParameter
 					|| parameter.type == PsykoParameter.NumberParameter
 					|| parameter.type == PsykoParameter.AngleParameter) ){
-					if (slider1Parameter == null )
-						slider1Parameter = parameter;
-					else if (slider2Parameter == null )
-						slider2Parameter = parameter;
-				} else if (styleParameter==null && parameter.type == PsykoParameter.IconListParameter )
+					if ( parameter.showInUI == 1 ) slider1Parameter = parameter;
+					if ( parameter.showInUI == 2 ) slider2Parameter = parameter;
+				} else if (styleParameter==null && parameter.type == PsykoParameter.IconListParameter &&  parameter.showInUI == 0)
 				{
 					styleParameter = parameter;
 				}

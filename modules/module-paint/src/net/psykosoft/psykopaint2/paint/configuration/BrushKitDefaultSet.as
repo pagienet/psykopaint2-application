@@ -29,7 +29,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value=".8"/>
 					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value=".4"/>
 
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="paint1,basic,splat,line,sumi" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="paint1,basic,splat,line,sumi" showInUI="0"/>
 					
 					<parameterMapping>
 						<parameter id="Precision" label="Precision" value="0.25" minValue="0" maxValue="1" showInUI="1"/>
@@ -78,7 +78,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							targetMappings="1,1"
 							/>
 						
-						<parameter id="Intensity" value="0.9" minValue="0" maxValue="1" showInUI="1"/>
+						<parameter id="Intensity" value="0.9" minValue="0" maxValue="1" showInUI="2"/>
 						
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP}
 							src="Intensity"
@@ -185,7 +185,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value=".8"/>
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="paint1"/>
 					<parameterMapping>
-						<parameter id="Size" label="Size" previewID={PreviewIconFactory.PREVIEW_SIZE} value="0.25" minValue="0.1" maxValue="1" showInUI="1"/>
+						<parameter id="Size" label="Size" previewID={PreviewIconFactory.PREVIEW_SIZE} value="0.25" minValue="0.1" maxValue="1" showInUI="0"/>
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP}
 							src="Size"
 							target={"pathengine.pointdecorator_0."+SizeDecorator.PARAMETER_N_FACTOR}
@@ -232,7 +232,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_2" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
-							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" previewID={PreviewIconFactory.PREVIEW_ALPHA}  path="pathengine.pointdecorator_2" value="0.9" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY}  path="pathengine.pointdecorator_2" value="0.9" />
 							<parameter id={ColorDecorator.PARAMETER_N_OPACITY_RANGE}  path="pathengine.pointdecorator_2" value="0.2" />
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_2" value1="0.5" value2="0.9" />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_2" value1="0.25" value2="0.33" />
@@ -244,7 +244,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_3" index={BumpDecorator.INDEX_MODE_RANDOM} />
 							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_3" value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3" previewID={PreviewIconFactory.PREVIEW_DEPTH} value="0" minValue="0" maxValue="3" showInUI="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3"  value="0" minValue="0" maxValue="3" />
 							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_3" value="3"/>
 							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_3" value=".8"   />
 						</BumpDecorator>
@@ -256,7 +256,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,paint1,splotch,noisy"/>
 
 					<parameterMapping>
-						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" previewID={PreviewIconFactory.PREVIEW_PAINTBRUSH_STYLE} list="Fat Brush,Speed Brush,Van Gogh,Sprinkle,Smear Brush,Air Brush" showInUI="1"/>
+						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush,Speed Brush,Van Gogh,Sprinkle,Smear Brush,Air Brush" showInUI="0"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE}
 							src="Style"
 							target="pathengine.pointdecorator_0.Factor"
@@ -356,7 +356,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 						<SizeDecorator>
 							<parameter id={SizeDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_0" index={SizeDecorator.INDEX_MODE_PRESSURE_SPEED} />
-							<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0" label="Size"  previewID={PreviewIconFactory.PREVIEW_SIZE} value="0.48" minValue="0" maxValue="1" showInUI="1"/>
+							<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0" value="0.48" minValue="0" maxValue="1" showInUI="1"/>
 							<parameter id={SizeDecorator.PARAMETER_N_RANGE} path="pathengine.pointdecorator_0" label="Range" value="0.2" minValue="0" maxValue="1" />
 							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} path="pathengine.pointdecorator_0" index={SizeDecorator.INDEX_MAPPING_CIRCQUAD}/>
 						</SizeDecorator>
@@ -370,16 +370,16 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</SplatterDecorator>
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_2" index={ColorDecorator.INDEX_MODE_PICK_COLOR} />
-							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" previewID={PreviewIconFactory.PREVIEW_ALPHA}  path="pathengine.pointdecorator_2" value="0.9" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY}  path="pathengine.pointdecorator_2" value="0.9"/>
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_2" value1="0.5" value2="0.9" />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_2" value1="0.25" value2="0.33" />
 							<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_2" value1="0.8" value2="1" />
-							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_2" color="0xffffff" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_2" color="0xffffff"/>
 						</ColorDecorator>
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_3" index={BumpDecorator.INDEX_MODE_SPEED} />
 							<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_3" value="1" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3" previewID={PreviewIconFactory.PREVIEW_DEPTH} value="0.5" minValue="0" maxValue="1" showInUI="1" />
+							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_3" value="0.5" minValue="0" maxValue="1"  />
 							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_3" value="0.5"/>
 						</BumpDecorator>
 						<CircularRotationDecorator active="0">
@@ -397,7 +397,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value="0"/>
 					
 					<parameterMapping>
-						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Small,Medium,Large" index="1" showInUI="1"/>
+						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Small,Medium,Large" index="1" showInUI="0"/>
 						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Brush Style"
 							target="pathengine.pointdecorator_4"
 							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
@@ -420,7 +420,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<SpawnDecorator>
 							<parameter id={SpawnDecorator.PARAMETER_SL_OFFSET_MODE} index={SpawnDecorator.INDEX_MODE_PRESSURE_SPEED} path="pathengine.pointdecorator_1" />
 							<parameter id={SpawnDecorator.PARAMETER_IR_MULTIPLES} value1="8" value2="8" path="pathengine.pointdecorator_1" />
-							<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_OFFSET} path="pathengine.pointdecorator_1"  label="Size" value="16" minValue="0" maxValue="50" showInUI="1"/>
+							<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_OFFSET} path="pathengine.pointdecorator_1" value="16" minValue="0" maxValue="50" showInUI="1"/>
 							<parameter id={SpawnDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_1" value="1" minValue="0" maxValue="200"/>
 							<parameter id={SpawnDecorator.PARAMETER_AR_OFFSET_ANGLE} path="pathengine.pointdecorator_1" value1="-1" value2="1" />
 							<parameter id={SpawnDecorator.PARAMETER_AR_BRUSH_ANGLE_VARIATION} path="pathengine.pointdecorator_1" value1="-2" value2="2" />
@@ -437,9 +437,9 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS} path="pathengine.pointdecorator_3" value1="0.0005" value2="0.1" />
 							<parameter id={ColorDecorator.PARAMETER_SL_PICK_RADIUS_MODE} path="pathengine.pointdecorator_3" index="1" />
-							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity"  previewID={PreviewIconFactory.PREVIEW_ALPHA} path="pathengine.pointdecorator_3" value="0.75" showInUI="1" />
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY}  path="pathengine.pointdecorator_3" value="0.75" showInUI="2" />
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_3" value1="0.1" value2="0.3" />
-							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_3" color="0xffffff" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_3" color="0xffffff"/>
 						</ColorDecorator>
 						<SplatterDecorator >
 							<parameter id={SplatterDecorator.PARAMETER_A_OFFSET_ANGLE_RANGE} value1="0" value2="0" path="pathengine.pointdecorator_4" />
@@ -468,7 +468,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 				<brush engine={BrushType.PENCIL} name="Pencil">
 					<parameterMapping>
-						<parameter id="Custom Color" type={PsykoParameter.BooleanParameter}  value="0" showInUI="1"/>
+						<parameter id="Custom Color" type={PsykoParameter.BooleanParameter}  value="0"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} src="Custom Color"
 							target="pathengine.pointdecorator_1.Color Mode"
 							condition={PsykoParameterProxy.CONDITION_TRUE }
@@ -480,7 +480,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 							index={ColorDecorator.INDEX_MODE_PICK_COLOR}/>
 
-						<parameter id="Size" type={PsykoParameter.NumberParameter} value=".3" minValue="0" maxValue="1" showInUI="1"/>
+						<parameter id="Size" type={PsykoParameter.NumberParameter} value=".3" minValue="0" maxValue="1" />
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} src="Size"
 							target="pathengine.pointdecorator_0.Factor"
 							targetMappings="0,0"
@@ -488,7 +488,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							targetFactors="1,1"
 							targetProperties="lowerRangeValue,upperRangeValue"/>
 
-						<parameter id="Intensity" type={PsykoParameter.NumberParameter} value=".4" minValue="0" maxValue="1" showInUI="1"/>
+						<parameter id="Intensity" type={PsykoParameter.NumberParameter} value=".4" minValue="0" maxValue="1" />
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} src="Intensity"
 							target="pathengine.pointdecorator_1.Opacity"
 							targetMappings="0"
@@ -507,17 +507,17 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.4" value2="0.4" />
 							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_1" value=".4"/>
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" value1="0.7" value2="0.9" />
-							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" />
 
 						</ColorDecorator>
 					</pathengine>
-					<parameter id="Shapes" path="brush" index="0" list="pencil" showInUI="0"/>
+					<parameter id="Shapes" path="brush" index="0" list="pencil" />
 				</brush>        -->
 
 				<brush engine={BrushType.SKETCH} name="Pencil">
 					<parameter id={SketchBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" value="0.5" />
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0" />
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="pencilSketch" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="pencilSketch" showInUI="0"/>
 					<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value="0.25"/>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 						<parameter id={AbstractPathEngine.PARAMETER_SEND_TAPS} path="pathengine" value="0" />
@@ -532,16 +532,16 @@ package net.psykosoft.psykopaint2.paint.configuration
 						</SizeDecorator>
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_1" value1="0.4" value2="0.4" />
-							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_1"  minValue="0.25" value="0.7"  showInUI="1" />
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} path="pathengine.pointdecorator_1"  minValue="0.25" value="0.7"  showInUI="2" />
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_1" value1="0.1" value2="0.3" />
-							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffff" />
 						</ColorDecorator>
 						<SpawnDecorator>
 							<parameter id={SpawnDecorator.PARAMETER_SL_OFFSET_MODE} index={SpawnDecorator.INDEX_MODE_PRESSURE_SPEED} path="pathengine.pointdecorator_1" />
 							<parameter id={SpawnDecorator.PARAMETER_IR_MULTIPLES} value1="8" value2="8" path="pathengine.pointdecorator_1" />
 							<parameter id={SpawnDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_2" value="0.5"/>
 							
-							<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_OFFSET} path="pathengine.pointdecorator_2" label="Size" value="12" minValue="1" maxValue="24"  showInUI="1"/>
+							<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_OFFSET} path="pathengine.pointdecorator_2"  value="12" minValue="1" maxValue="24"  showInUI="1"/>
 							<parameter id={SpawnDecorator.PARAMETER_AR_OFFSET_ANGLE} path="pathengine.pointdecorator_2" value1="-1" value2="1" />
 							<parameter id={SpawnDecorator.PARAMETER_AR_BRUSH_ANGLE_VARIATION} path="pathengine.pointdecorator_2" value1="-2" value2="2" />
 							<parameter id={SpawnDecorator.PARAMETER_NR_BRISTLE_VARIATION} path="pathengine.pointdecorator_2" value="1"/>
@@ -553,13 +553,13 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 				<brush engine={BrushType.WATER_COLOR} name="Water Color">
 					<parameter id={WaterColorBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
-					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_STAINING} type={PsykoParameter.NumberParameter} path="brush" value=".4" showInUI="0"/>
-					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_DENSITY} type={PsykoParameter.NumberParameter} path="brush" value=".4" showInUI="0"/>
-					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_GRANULATION} path="brush" value=".81" showInUI="0"/>
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="basic,wet" showInUI="1"/>
+					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_STAINING} type={PsykoParameter.NumberParameter} path="brush" value=".4" />
+					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_DENSITY} type={PsykoParameter.NumberParameter} path="brush" value=".4" />
+					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_GRANULATION} path="brush" value=".81" />
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="basic,wet" showInUI="0"/>
 
 					<parameterMapping>
-						<parameter id="WaterColorOpacity" showInUI="1" minValue="0" maxValue="1" value=".33"/>
+						<parameter id="WaterColorOpacity" showInUI="2" minValue="0" maxValue="1" value=".33"/>
 						<proxy 	type={PsykoParameterProxy.TYPE_VALUE_MAP} src="WaterColorOpacity"
 								target={"brush."+WaterColorBrush.PARAMETER_N_PIGMENT_DENSITY}
 								targetOffsets="0"
@@ -576,29 +576,18 @@ package net.psykosoft.psykopaint2.paint.configuration
 				<brush engine={BrushType.SPRAY_CAN} name="Eraser">
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0"/>
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splotch,basic smooth,splat,basic,noisy" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splotch,basic smooth,splat,basic,noisy" showInUI="0"/>
 					<parameter id={AbstractBrush.PARAMETER_SL_BLEND_MODE} path="brush" index="1"/>
-					<parameterMapping>
-						<parameter id="Brush Style" type={PsykoParameter.IconListParameter} label="Style" list="Color & Relief, Color Only, Relief Only" showInUI="1"/>
-						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Brush Style"
-							target="pathengine.pointdecorator_2"
-							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="0,2"/>
-						<proxy type={PsykoParameterProxy.TYPE_DECORATOR_ACTIVATION} src="Brush Style"
-							target="pathengine.pointdecorator_1"
-							condition={PsykoParameterProxy.CONDITION_EQUALS_VALUE }
-							indices="0,1"/>
-
-					</parameterMapping>
+					
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
 						<SizeDecorator>
 							<parameter id={SizeDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_0" index={SizeDecorator.INDEX_MODE_FIXED} />
-							<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0"  previewID={PreviewIconFactory.PREVIEW_SIZE} label="Size" value="0.55" minValue="0" maxValue="2" showInUI="1"/>
-							<parameter id={SizeDecorator.PARAMETER_N_RANGE} path="pathengine.pointdecorator_0" label="Range" value="0.15" minValue="0" maxValue="1" />
+							<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0" value="0.55" minValue="0" maxValue="2" showInUI="1"/>
+							<parameter id={SizeDecorator.PARAMETER_N_RANGE} path="pathengine.pointdecorator_0" value="0.15" minValue="0" maxValue="1" />
 							<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} path="pathengine.pointdecorator_0" index="1"/>
 						</SizeDecorator>
 						<ColorDecorator>
-							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Strength"  previewID={PreviewIconFactory.PREVIEW_ALPHA} value="0.5" path="pathengine.pointdecorator_1" showInUI="1" />
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY} value="0.5" path="pathengine.pointdecorator_1" showInUI="2" />
 							<parameter id={ColorDecorator.PARAMETER_C_COLOR}  path="pathengine.pointdecorator_1" color="0xffffffff" />
 						</ColorDecorator>
 						<BumpDecorator>
@@ -607,26 +596,33 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_2" value="0"/>
 							<parameter id={BumpDecorator.PARAMETER_N_SHININESS} path="pathengine.pointdecorator_2" value="0" />
 							<parameter id={BumpDecorator.PARAMETER_N_GLOSSINESS} path="pathengine.pointdecorator_2" value="0" />
-							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} label="Depth Removal" path="pathengine.pointdecorator_2" value="1" minValue="0" maxValue="1" showInUI="1"/>
+							<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE}  path="pathengine.pointdecorator_2" value="1" minValue="0" maxValue="1" />
 						</BumpDecorator>
 					</pathengine>
 				</brush>
 				<brush engine={BrushType.BLOB} name="Cutout">
-						<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="render"/>
+						<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="render" showInUI="0"/>
 
 						<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
+							
 							<ColorDecorator>
-								<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_0" value="0.9" showInUI="1"/>
+								<parameter id={ColorDecorator.PARAMETER_N_OPACITY} label="Intensity" path="pathengine.pointdecorator_0" value="0.9" showInUI="2"/>
 								<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING} path="pathengine.pointdecorator_0" value1="1" value2="1" />
-
 							</ColorDecorator>
+						<SplatterDecorator >
+							<parameter id={SplatterDecorator.PARAMETER_A_OFFSET_ANGLE_RANGE} value1="0" value2="0" path="pathengine.pointdecorator_1" />
+							<parameter id={SplatterDecorator.PARAMETER_A_ANGLE_ADJUSTMENT} value="90" path="pathengine.pointdecorator_1" />
+							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR} value="5" path="pathengine.pointdecorator_1" showInUI="1"/>
+							<parameter id={SplatterDecorator.PARAMETER_N_SIZE_FACTOR} value="0" path="pathengine.pointdecorator_1" />
+							<parameter id={SplatterDecorator.PARAMETER_N_MINIMUM_OFFSET} value="0" path="pathengine.pointdecorator_1" />
+						</SplatterDecorator>	
 						</pathengine>
 				</brush>
 				<!--<brush engine={BrushType.WATER_DAMAGE} name="Water Damage">
-					<parameter id={WaterDamageBrush.PARAMETER_N_SURFACE_INFLUENCE} previewID={PreviewIconFactory.PREVIEW_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
-					<parameter id={WaterDamageBrush.PARAMETER_N_PIGMENT_FLOW} path="brush" value="0.25" showInUI="1"/>
-					<parameter id={WaterDamageBrush.PARAMETER_N_PIGMENT_FLOW} path="brush" value="0.25" showInUI="1"/>
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet" showInUI="0"/>
+					<parameter id={WaterDamageBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" value="0.5"/>
+					<parameter id={WaterDamageBrush.PARAMETER_N_PIGMENT_FLOW} path="brush" value="0.25" />
+					<parameter id={WaterDamageBrush.PARAMETER_N_PIGMENT_FLOW} path="brush" value="0.25" />
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="wet"/>
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}/>
 				</brush>-->
 		</brushkits>;
@@ -669,9 +665,9 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value=".8"/>
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0"  previewID={PreviewIconFactory.PREVIEW_PAINTBRUSH_STYLE} list="paint1,basic,splat,line,sumi" showInUI="1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="paint1,basic,splat,line,sumi" showInUI="0"/>
 					<parameterMapping>
-						<parameter id="Precision" label="Precision" previewID={PreviewIconFactory.PREVIEW_SIZE} value="0.25" minValue="0" maxValue="1" showInUI="1"/>
+						<parameter id="Precision"  value="0.25" minValue="0" maxValue="1" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP}
 							src="Precision"
 							target={"pathengine.pointdecorator_0."+SizeDecorator.PARAMETER_N_FACTOR}
@@ -697,7 +693,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							targetMappings="1"
 							/>
 						
-						<parameter id="Color Precision" label="Color Precision" previewID={PreviewIconFactory.PREVIEW_SIZE} value="100" minValue="0" maxValue="100" showInUI="1"/>
+						<parameter id="Color Precision" value="100" minValue="0" maxValue="100" />
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP}
 							src="Color Precision"
 							target={"pathengine.pointdecorator_4."+ColorDecorator.PARAMETER_N_PICK_RANDOM_OFFSET_FACTOR}
@@ -722,7 +718,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							<parameter id={SplatterDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_1" index={SplatterDecorator.INDEX_MODE_SIZE_INV} />
 							<parameter id={SplatterDecorator.PARAMETER_N_MAX_SIZE} path="pathengine.pointdecorator_1" value="1" />
 							<parameter id={SplatterDecorator.PARAMETER_SL_OFFSET_MAPPING} path="pathengine.pointdecorator_1" index={SplatterDecorator.INDEX_MAPPING_LINEAR}   />
-							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR}  path="pathengine.pointdecorator_1" value="20" maxValue="80" showInUI="1" previewID={PreviewIconFactory.PREVIEW_SIZE} />
+							<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR}  path="pathengine.pointdecorator_1" value="20" maxValue="80" />
 							<parameter id={SplatterDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_1" value="0" />
 							<parameter id={SplatterDecorator.PARAMETER_A_OFFSET_ANGLE_RANGE} path="pathengine.pointdecorator_1" value="360" />
 							<parameter id={SplatterDecorator.PARAMETER_N_SIZE_FACTOR} path="pathengine.pointdecorator_1" value="0" />
@@ -746,7 +742,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						
 						<ColorDecorator>
 							<parameter id={ColorDecorator.PARAMETER_SL_COLOR_MODE}  path="pathengine.pointdecorator_4" index={ColorDecorator.INDEX_MODE_FIXED_COLOR} />
-							<parameter id={ColorDecorator.PARAMETER_N_OPACITY}  path="pathengine.pointdecorator_4" label="Intensity" previewID={PreviewIconFactory.PREVIEW_ALPHA}  value="0.9" showInUI="1"/>
+							<parameter id={ColorDecorator.PARAMETER_N_OPACITY}  path="pathengine.pointdecorator_4"  value="0.9" showInUI="2"/>
 							<parameter id={ColorDecorator.PARAMETER_N_OPACITY_RANGE}  path="pathengine.pointdecorator_4" value="0.2" />
 							<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_4" value1="0.95" value2="1" />
 							<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_4" value1="0.25" value2="0.33" />
@@ -761,9 +757,9 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
 					<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0"/>
 					<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value=".8"/>
-					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="paint1"/>
+					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="paint1" showInUI="0"//>
 					<parameterMapping>
-						<parameter id="Size" label="Size" previewID={PreviewIconFactory.PREVIEW_SIZE} value="0.55" minValue="0.1" maxValue="1" showInUI="1"/>
+						<parameter id="Size" label="Size" value="0.55" minValue="0.1" maxValue="1" showInUI="1"/>
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
 							src="Size" 
 							target={"pathengine.pointdecorator_0."+SizeDecorator.PARAMETER_N_FACTOR}
@@ -787,7 +783,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							targetFactors="40"
 							/>
 						
-						<parameter id="Quantity" label="Quantity" previewID={PreviewIconFactory.PREVIEW_PRECISION} value="0.5" minValue="0" maxValue="1" showInUI="1"/>
+						<parameter id="Quantity" label="Quantity" value="0.5" minValue="0" maxValue="1" />
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
 							src="Quantity" 
 							target={"pathengine.pointdecorator_2."+ColorDecorator.PARAMETER_N_OPACITY}
@@ -829,7 +825,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 							targetMappings="0"
 							/>
 
-						<parameter id="Wetness" label="Wetness" previewID={PreviewIconFactory.PREVIEW_PRECISION} value="0.5" minValue="0" maxValue="1" showInUI="1"/>
+						<parameter id="Wetness" value="0.5" minValue="0" maxValue="1" />
 						<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP} 
 							src="Wetness" 
 							target={"pathengine.pointdecorator_3."+BumpDecorator.PARAMETER_N_SHININESS}
@@ -901,7 +897,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="splat,paint1,splotch,noisy"/>
 
 					<parameterMapping>
-						<parameter id="Style" type={PsykoParameter.IconListParameter} label="Style" list="Fat Brush,Speed Brush,Van Gogh,Sprinkle,Smear Brush,Air Brush" showInUI="1"/>
+						<parameter id="Style" type={PsykoParameter.IconListParameter} list="Fat Brush,Speed Brush,Van Gogh,Sprinkle,Smear Brush,Air Brush" showInUI="0"/>
 						<proxy type={PsykoParameterProxy.TYPE_PARAMETER_CHANGE} 
 							src="Style" 
 							target="pathengine.pointdecorator_0.Factor" 
