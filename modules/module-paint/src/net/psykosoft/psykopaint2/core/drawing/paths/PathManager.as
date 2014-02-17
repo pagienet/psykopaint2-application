@@ -12,6 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
 	
+	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
@@ -22,7 +23,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 
 	final public class PathManager
@@ -724,6 +724,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		public function get canvasMatrix():Matrix
 		{
 			return _canvasMatrix;
+		}
+		
+		public function get pathEngine():IPathEngine
+		{
+			return _pathEngine
 		}
 		
 		/*****************************************************

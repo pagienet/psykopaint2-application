@@ -25,11 +25,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
             type = BrushType.PENCIL;
 
             _surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, "Surface influence",.3, 0, 1.0);
-			_shininess.numberValue = .4;
-			_glossiness.numberValue = .5;
-			_bumpiness.numberValue = .6;
-			_sizeFactor.lowerRangeValue = 0.2;
-			_sizeFactor.upperRangeValue = 0.4;
+			param_shininess.numberValue = .4;
+			param_glossiness.numberValue = .5;
+			param_bumpiness.numberValue = .6;
+			param_sizeFactor.lowerRangeValue = 0.2;
+			param_sizeFactor.upperRangeValue = 0.4;
 		
 		}
 
@@ -76,7 +76,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
         override protected function processPoint(point:SamplePoint):void {
 			//TODO - this is unfortunately broken after normalizing the brush sizes - needs fix:
-            var scale : Number = point.size*10 * _sizeFactor.upperRangeValue - Math.random()*_sizeFactor.rangeValue;
+            var scale : Number = point.size*10 * param_sizeFactor.upperRangeValue - Math.random()*param_sizeFactor.rangeValue;
             addStrokePoint(point, _brushShape.actualSize * _canvasScaleW * scale, _brushShape.rotationRange);
         }
     }

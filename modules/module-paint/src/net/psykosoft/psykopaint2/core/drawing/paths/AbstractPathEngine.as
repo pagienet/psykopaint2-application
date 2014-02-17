@@ -21,7 +21,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		protected var _outputStepSize:PsykoParameter;
 		protected var _sendTaps:PsykoParameter;
 		protected var _speedSmoothing:PsykoParameter;
-		protected var _parameters:Vector.<PsykoParameter>;
+		
+		private var _parameters:Vector.<PsykoParameter>;
 		
 		public function AbstractPathEngine()
 		{
@@ -69,6 +70,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		{
 			return _outputStepSize;
 		}
+		
+		public function set speedSmoothing( value:PsykoParameter ):void
+		{
+			_speedSmoothing = value;
+		}
+		
+		public function get speedSmoothing( ):PsykoParameter
+		{
+			return _speedSmoothing;
+		}
+		
 		
 		public function clear():void
 		{

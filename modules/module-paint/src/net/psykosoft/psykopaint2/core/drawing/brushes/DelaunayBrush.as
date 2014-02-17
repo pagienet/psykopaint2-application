@@ -188,7 +188,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 						
 						tri.rotate( angle, tri_c);
 						
-						scale = _brushShape.size / (bounds.r*2) * rng.getNumber( 1- _sizeFactor.lowerRangeValue, 1-_sizeFactor.upperRangeValue );
+						scale = _brushShape.size / (bounds.r*2) * rng.getNumber( 1- param_sizeFactor.lowerRangeValue, 1-param_sizeFactor.upperRangeValue );
 						tri.scale(scale,scale,tri_c);
 						
 						vertexUVData[2] = 0.5 + (tri.p1.x - tri_c.x) * _canvasScaleW;

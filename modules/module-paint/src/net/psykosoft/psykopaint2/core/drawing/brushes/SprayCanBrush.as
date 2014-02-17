@@ -23,9 +23,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			super(true);
 			type = BrushType.SPRAY_CAN;
 			
-			_shininess.numberValue = .3;
-			_glossiness.numberValue = .25;
-			_bumpiness.numberValue = .6;
+			param_shininess.numberValue = .3;
+			param_glossiness.numberValue = .25;
+			param_bumpiness.numberValue = .6;
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer, paintSettingsModel : UserPaintSettingsModel) : void
@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_appendVO.point = point;
 			if ( _paintSettingsModel.colorMode == PaintMode.PHOTO_MODE )
 			{
-				var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size * point.curvature;
+				var rsize : Number = param_sizeFactor.lowerRangeValue + param_sizeFactor.rangeValue * point.size * point.curvature;
 				if (rsize > 1) rsize = 1;
 				else if (rsize < 0) rsize = 0;
 				
@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (rsize > maxSize) rsize = maxSize;
 			else if (rsize < minSize) rsize = minSize;
 			*/
-			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size * point.curvature;
+			var rsize : Number = param_sizeFactor.lowerRangeValue + param_sizeFactor.rangeValue * point.size * point.curvature;
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;
 			

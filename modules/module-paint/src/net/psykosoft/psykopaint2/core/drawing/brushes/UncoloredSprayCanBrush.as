@@ -52,8 +52,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			if ( _paintSettingsModel.colorMode == PaintMode.PHOTO_MODE )
 			{
-				var minSize:Number = _maxBrushRenderSize * _sizeFactor.lowerRangeValue;
-				var maxSize:Number = _maxBrushRenderSize * _sizeFactor.upperRangeValue;
+				var minSize:Number = _maxBrushRenderSize * param_sizeFactor.lowerRangeValue;
+				var maxSize:Number = _maxBrushRenderSize * param_sizeFactor.upperRangeValue;
 				var rsize : Number = minSize + (maxSize - minSize) * point.size;
 				if (rsize > maxSize) rsize = maxSize;
 				else if (rsize < minSize) rsize = minSize;
@@ -72,8 +72,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function processPoint(point : SamplePoint) : void
 		{
-			var minSize:Number = _maxBrushRenderSize * _sizeFactor.lowerRangeValue;
-			var maxSize:Number = _maxBrushRenderSize * _sizeFactor.upperRangeValue;
+			var minSize:Number = _maxBrushRenderSize * param_sizeFactor.lowerRangeValue;
+			var maxSize:Number = _maxBrushRenderSize * param_sizeFactor.upperRangeValue;
 			var rsize : Number = minSize + (maxSize - minSize) * point.size;
 			if (rsize > maxSize) rsize = maxSize;
 			else if (rsize < minSize) rsize = minSize;

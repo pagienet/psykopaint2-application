@@ -31,9 +31,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			type = BrushType.SKETCH;
 
 			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, .6, 0, 1.0);
-			_shininess.numberValue = .3;
-			_glossiness.numberValue = .25;
-			_bumpiness.numberValue = .6;
+			param_shininess.numberValue = .3;
+			param_glossiness.numberValue = .25;
+			param_bumpiness.numberValue = .6;
 			_parameters.push(_surfaceRelief);
 		}
 
@@ -69,7 +69,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_appendVO.point = point;
 			if ( _paintSettingsModel.colorMode == PaintMode.PHOTO_MODE )
 			{
-				var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size * point.curvature;
+				var rsize : Number = param_sizeFactor.lowerRangeValue + param_sizeFactor.rangeValue * point.size * point.curvature;
 				if (rsize > 1) rsize = 1;
 				else if (rsize < 0) rsize = 0;
 				
@@ -86,7 +86,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		override protected function processPoint( point : SamplePoint) : void
 		{
-			var rsize : Number = _sizeFactor.lowerRangeValue + _sizeFactor.rangeValue * point.size * point.curvature;
+			var rsize : Number = param_sizeFactor.lowerRangeValue + param_sizeFactor.rangeValue * point.size * point.curvature;
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;
 			/*

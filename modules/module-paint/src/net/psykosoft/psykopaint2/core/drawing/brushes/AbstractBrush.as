@@ -66,14 +66,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		protected var _canvasScaleH : Number;
 		
 		protected var _parameters:Vector.<PsykoParameter>;
-		protected var _sizeFactor:PsykoParameter;
-		protected var _shininess:PsykoParameter;
-		protected var _glossiness:PsykoParameter;
-		protected var _bumpiness:PsykoParameter;
-		protected var _bumpInfluence:PsykoParameter;
-		protected var _shapes:PsykoParameter;
-		protected var _blendMode:PsykoParameter;
-		protected var _quadOffsetRatio:PsykoParameter;
+		
+		public var param_sizeFactor:PsykoParameter;
+		public var param_shininess:PsykoParameter;
+		public var param_glossiness:PsykoParameter;
+		public var param_bumpiness:PsykoParameter;
+		public var param_bumpInfluence:PsykoParameter;
+		public var param_shapes:PsykoParameter;
+		public var param_blendMode:PsykoParameter;
+		public var param_quadOffsetRatio:PsykoParameter;
 		
 		protected var _context : Context3D;
 		private var _inProgress : Boolean;
@@ -92,20 +93,20 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_incremental = incremental;
 			
 			_parameters = new Vector.<PsykoParameter>();
-			_shapes          = new PsykoParameter( PsykoParameter.IconListParameter,    PARAMETER_IL_SHAPES,0,["basic"]);
-			_sizeFactor      = new PsykoParameter( PsykoParameter.NumberRangeParameter, PARAMETER_NR_SIZE_FACTOR, 0, 1, 0, 1 );
-			_quadOffsetRatio = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_QUAD_OFFSET_RATIO, 0,-0.5,0.5);
+			param_shapes          = new PsykoParameter( PsykoParameter.IconListParameter,    PARAMETER_IL_SHAPES,0,["basic"]);
+			param_sizeFactor      = new PsykoParameter( PsykoParameter.NumberRangeParameter, PARAMETER_NR_SIZE_FACTOR, 0, 1, 0, 1 );
+			param_quadOffsetRatio = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_QUAD_OFFSET_RATIO, 0,-0.5,0.5);
 			
-			_shininess     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_SHININESS, 0.4, 0, 1);
-			_glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 1);
-			_bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMPINESS, 1, 0, 1 );
-			_bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, 0, 1 );
-			_blendMode 	   = new PsykoParameter( PsykoParameter.StringListParameter,  PARAMETER_SL_BLEND_MODE,0,[Context3DBlendFactor.ONE,Context3DBlendFactor.ZERO,Context3DBlendFactor] );
+			param_shininess     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_SHININESS, 0.4, 0, 1);
+			param_glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 1);
+			param_bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMPINESS, 1, 0, 1 );
+			param_bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, 0, 1 );
+			param_blendMode 	   = new PsykoParameter( PsykoParameter.StringListParameter,  PARAMETER_SL_BLEND_MODE,0,[Context3DBlendFactor.ONE,Context3DBlendFactor.ZERO,Context3DBlendFactor] );
 			
 			
-			_parameters.push( _shapes, _sizeFactor,_blendMode,_quadOffsetRatio ); 
+			_parameters.push( param_shapes, param_sizeFactor,param_blendMode,param_quadOffsetRatio ); 
 			if (drawNormalsOrSpecular)
-				_parameters.push(_shininess,_glossiness,_bumpiness,_bumpInfluence);
+				_parameters.push(param_shininess,param_glossiness,param_bumpiness,param_bumpInfluence);
 
 			_bounds = new Rectangle();
 
@@ -147,6 +148,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			}
 			
 		}
+		
+		public function set pathManager(value:PathManager) : void
+		{
+			 _pathManager = value;
+			 pathManager.setCallbacks(this, onPathPoints, onPathStart, onPathEnd, onPickColor);
+		}
 
 		public function get pathManager() : PathManager
 		{
@@ -168,7 +175,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_appendVO.uvBounds.height = _shapeVariations[3];
 			_appendVO.diagonalAngle = _shapeVariations[4];
 			_appendVO.diagonalLength = _shapeVariations[5];
-			_appendVO.quadOffsetRatio = _quadOffsetRatio.numberValue;
+			_appendVO.quadOffsetRatio = param_quadOffsetRatio.numberValue;
 			_rotationRange = _brushShape.rotationRange;
 			//TODO: this must take into account the actual brush size based on col/rows
 			_maxBrushRenderSize = _brushScalingFactor * (256 / _shapeVariations[5]);
@@ -176,7 +183,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		
 		protected function onShapeChanged(event:Event):void
 		{
-			brushShape = brushShapeLibrary.getBrushShape(_shapes.stringValue);
+			brushShape = brushShapeLibrary.getBrushShape(param_shapes.stringValue);
 		}
 		
 		
@@ -185,14 +192,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_brushMesh = createBrushMesh();
 			// the purpose of this is to avoid a bit of the delay when drawing the very first time
 			_brushMesh.assembleShaderPrograms(context);
-			brushShape = brushShapeLibrary.getBrushShape(_shapes.stringValue);
+			brushShape = brushShapeLibrary.getBrushShape(param_shapes.stringValue);
 			
 			_view = view;
 			_canvasModel = canvasModel;
 			_paintSettingsModel = paintSettingsModel;
 			_context = context;
 			_pathManager.activate( view, canvasModel, renderer );
-			_shapes.addEventListener( Event.CHANGE, onShapeChanged );
+			param_shapes.addEventListener( Event.CHANGE, onShapeChanged );
 			
 			_colorStrategy ||= createColorStrategy();
 		}
@@ -201,7 +208,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			_renderInvalid = false;
 			_pathManager.deactivate();
-			_shapes.removeEventListener( Event.CHANGE, onShapeChanged );
+			param_shapes.removeEventListener( Event.CHANGE, onShapeChanged );
 			//if (_brushShape) _brushShape.dispose();
 		}
 
@@ -368,7 +375,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_context.setStencilActions();
 			}
 
-			_context.setBlendFactors(_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
 			drawBrushColor();
 
@@ -406,7 +413,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		protected function drawBrushNormalsAndSpecular() : void
 		{
-			_brushMesh.drawNormalsAndSpecular(_context, _canvasModel, _shininess.numberValue, _glossiness.numberValue, _bumpiness.numberValue, _bumpInfluence.numberValue );
+			_brushMesh.drawNormalsAndSpecular(_context, _canvasModel, param_shininess.numberValue, param_glossiness.numberValue, param_bumpiness.numberValue, param_bumpInfluence.numberValue );
 		}
 
 		public function getParameterSetAsXML( path:Array ):XML

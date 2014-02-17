@@ -47,14 +47,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MAPPING_STRONG:int = 8;
 		static public const INDEX_MAPPING_EXPONENTIAL:int = 9;
 		
-		private var minOffset:PsykoParameter;
-		private var splatFactor:PsykoParameter;
-		private var sizeFactor:PsykoParameter;
-		private var offsetAngleRange:PsykoParameter;
-		private var mappingMode:PsykoParameter;
-		private var mappingFunction:PsykoParameter;
-		private var angleAdjustment:PsykoParameter;
-		private var maxSize:PsykoParameter;
+		public var param_minOffset:PsykoParameter;
+		public var param_splatFactor:PsykoParameter;
+		public var param_sizeFactor:PsykoParameter;
+		public var param_offsetAngleRange:PsykoParameter;
+		public var param_mappingMode:PsykoParameter;
+		public var param_mappingFunction:PsykoParameter;
+		public var param_angleAdjustment:PsykoParameter;
+		public var param_maxSize:PsykoParameter;
 		
 		private var rng:LCG;
 		
@@ -82,8 +82,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public function SplatterDecorator()
 		{
 			super();
-			mappingMode  	  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Speed","Size","Inverse Size","Pressure/Speed", "Fixed"]);
-			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_OFFSET_MAPPING,1,["Linear",
+			param_mappingMode  	  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Speed","Size","Inverse Size","Pressure/Speed", "Fixed"]);
+			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_OFFSET_MAPPING,1,["Linear",
 				"CircQuad",
 				"Circular",
 				"Sine",
@@ -94,13 +94,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				"Strong",
 				"Expo"]);
 			
-			splatFactor  	  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SPLAT_FACTOR,2,0,500);
-			minOffset   	  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MINIMUM_OFFSET,2,0,64);
-			offsetAngleRange  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_OFFSET_ANGLE_RANGE,15,0,180);
-			sizeFactor 	      = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SIZE_FACTOR,0.3,0,2);
-			angleAdjustment   = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_ANGLE_ADJUSTMENT,0,-180,180);
-			maxSize			  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAX_SIZE,1,0,512);
-			_parameters.push(mappingMode,mappingFunction, splatFactor,minOffset,offsetAngleRange,sizeFactor,angleAdjustment,maxSize );
+			param_splatFactor  	  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SPLAT_FACTOR,2,0,500);
+			param_minOffset   	  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MINIMUM_OFFSET,2,0,64);
+			param_offsetAngleRange  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_OFFSET_ANGLE_RANGE,15,0,180);
+			param_sizeFactor 	      = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SIZE_FACTOR,0.3,0,2);
+			param_angleAdjustment   = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_ANGLE_ADJUSTMENT,0,-180,180);
+			param_maxSize			  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAX_SIZE,1,0,512);
+			_parameters.push(param_mappingMode,param_mappingFunction, param_splatFactor,param_minOffset,param_offsetAngleRange,param_sizeFactor,param_angleAdjustment,param_maxSize );
 			
 			rng = new LCG( Math.random() * 0xffffff );
 		}
@@ -109,15 +109,15 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			var pi2:Number   = Math.PI*  0.5;
 			var pi3:Number   = Math.PI * 1.5;
-			var mapIndex:int = mappingMode.index;
-			var mf:Function  = mappingFunctions[mappingFunction.index];
-			var oar:Number   = offsetAngleRange.numberValue;
-			var aaj:Number   = angleAdjustment.numberValue;
-			var sf:Number    = sizeFactor.numberValue;
+			var mapIndex:int = param_mappingMode.index;
+			var mf:Function  = mappingFunctions[param_mappingFunction.index];
+			var oar:Number   = param_offsetAngleRange.numberValue;
+			var aaj:Number   = param_angleAdjustment.numberValue;
+			var sf:Number    = param_sizeFactor.numberValue;
 			var bar:Number   = manager.brushAngleRange;
-			var spf:Number   = splatFactor.numberValue;
-			var mo:Number    = minOffset.numberValue;
-			var ms:Number 	 = maxSize.numberValue;
+			var spf:Number   = param_splatFactor.numberValue;
+			var mo:Number    = param_minOffset.numberValue;
+			var ms:Number 	 = param_maxSize.numberValue;
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var point:SamplePoint = points[i];

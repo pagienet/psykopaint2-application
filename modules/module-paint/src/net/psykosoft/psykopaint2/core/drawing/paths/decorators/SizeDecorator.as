@@ -43,15 +43,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MAPPING_STRONG:int = 8;
 		static public const INDEX_MAPPING_EXPONENTIAL:int = 9;
 		
-		private const _applyArray:Array = [0,0,1,1];
-		
-		private var mappingMode:PsykoParameter;
-		private var mappingFactor:PsykoParameter;
-		private var mappingRange:PsykoParameter;
-		private var mappingFunction:PsykoParameter;
-		private var invertMapping:PsykoParameter;
-		private var maxSpeed:PsykoParameter;
-		
 		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([
 			Linear.easeNone,
 			CircQuad.easeIn,
@@ -63,16 +54,25 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			Quint.easeIn,
 			Strong.easeIn,
 			Expo.easeIn
-			]);
+		]);
+		
+		private const _applyArray:Array = [0,0,1,1];
+		
+		public var param_mappingMode:PsykoParameter;
+		public var param_mappingFactor:PsykoParameter;
+		public var param_mappingRange:PsykoParameter;
+		public var param_mappingFunction:PsykoParameter;
+		public var param_invertMapping:PsykoParameter;
+		public var param_maxSpeed:PsykoParameter;
 		
 		public function SizeDecorator()
 		{
 			super();
-			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,INDEX_MODE_FIXED,["Fixed","Speed","Pressure/Speed","Multiply","Add"]);
-			mappingFactor   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_FACTOR,0.5,0,1);
-			mappingRange   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_RANGE,0.5,0,1);
+			param_mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,INDEX_MODE_FIXED,["Fixed","Speed","Pressure/Speed","Multiply","Add"]);
+			param_mappingFactor   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_FACTOR,0.5,0,1);
+			param_mappingRange   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_RANGE,0.5,0,1);
 			
-			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,INDEX_MAPPING_LINEAR,["Linear",
+			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,INDEX_MAPPING_LINEAR,["Linear",
 				"CircQuad",
 				"Circular",
 				"Sine",
@@ -82,27 +82,27 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				"Quintic",
 				"Strong",
 				"Expo"]);
-			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_INVERT_MAPPING,0);
-			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
+			param_invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_INVERT_MAPPING,0);
+			param_maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
-			_parameters.push(mappingMode,mappingFactor,mappingRange,mappingFunction,invertMapping,maxSpeed );
+			_parameters.push(param_mappingMode,param_mappingFactor,param_mappingRange,param_mappingFunction,param_invertMapping,param_maxSpeed );
 			
 		}
 		
 		override public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
 			var applyArray:Array = _applyArray;
-			var mode:int = mappingMode.index;
-			var minFactor:Number = mappingFactor.numberValue - mappingRange.numberValue;
+			var mode:int = param_mappingMode.index;
+			var minFactor:Number = param_mappingFactor.numberValue - param_mappingRange.numberValue;
 			if ( minFactor < 0 ) minFactor = 0;
 			if ( minFactor > 1 ) minFactor = 1;
-			var maxFactor:Number = mappingFactor.numberValue + mappingRange.numberValue;
+			var maxFactor:Number = param_mappingFactor.numberValue + param_mappingRange.numberValue;
 			if ( maxFactor < 0 ) maxFactor = 0;
 			if ( maxFactor > 1 ) maxFactor = 1;
 			
-			var mapping:Function = mappingFunctions[mappingFunction.index];
-			var ms:Number = maxSpeed.numberValue;
-			var inv:Boolean = invertMapping.booleanValue;
+			var mapping:Function = mappingFunctions[param_mappingFunction.index];
+			var ms:Number = param_maxSpeed.numberValue;
+			var inv:Boolean = param_invertMapping.booleanValue;
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var point:SamplePoint = points[i];

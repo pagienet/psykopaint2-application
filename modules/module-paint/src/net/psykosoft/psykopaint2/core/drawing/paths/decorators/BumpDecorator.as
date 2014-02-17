@@ -43,25 +43,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MODE_RANDOM:int = 6;
 		static public const INDEX_MODE_RANDOM2:int = 7;
 		
-		
-		private var shininess:PsykoParameter;
-		private var glossiness:PsykoParameter;
-		private var bumpiness:PsykoParameter;
-		private var bumpinessRange:PsykoParameter;
-		private var bumpInfluence:PsykoParameter;
-		private var mappingMode:PsykoParameter;
-		private var mappingFactor:PsykoParameter;
-		private var mappingFunction:PsykoParameter;
-		private var invertMapping:PsykoParameter;
-		private var noBumpProbability:PsykoParameter;
-		
-		private var maxSpeed:PsykoParameter;
-		
-		private const _applyArray:Array = [0,0,1,1];
-		
-		
-		
-		
 		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([
 			Linear.easeNone,
 			CircQuad.easeIn,
@@ -75,14 +56,27 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			Expo.easeIn
 		]);
 		
+		private const _applyArray:Array = [0,0,1,1];
+		
+		public var param_shininess:PsykoParameter;
+		public var param_glossiness:PsykoParameter;
+		public var param_bumpiness:PsykoParameter;
+		public var param_bumpinessRange:PsykoParameter;
+		public var param_bumpInfluence:PsykoParameter;
+		public var param_mappingMode:PsykoParameter;
+		public var param_mappingFactor:PsykoParameter;
+		public var param_mappingFunction:PsykoParameter;
+		public var param_invertMapping:PsykoParameter;
+		public var param_noBumpProbability:PsykoParameter;
+		public var param_maxSpeed:PsykoParameter;
 		
 		public function BumpDecorator()
 		{
 			super();
 			
-			mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Fixed","Speed","Pressure","Automatic","Multiply","Add","Random","Random 2"]);
-			mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_FACTOR,0,1,0,1);
-			mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,0,["Linear",
+			param_mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Fixed","Speed","Pressure","Automatic","Multiply","Add","Random","Random 2"]);
+			param_mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_FACTOR,0,1,0,1);
+			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,0,["Linear",
 				"CircQuad",
 				"Circular",
 				"Sine",
@@ -92,16 +86,16 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				"Quintic",
 				"Strong",
 				"Expo"]);
-			invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_INVERT_MAPPING,0);
-			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
+			param_invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_INVERT_MAPPING,0);
+			param_maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
-			shininess     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_SHININESS, 0.4, 0, 5);
-			glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 5);
-			bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS, 1, -10, 10 );
-			bumpinessRange  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS_RANGE, 0.2, 0, 10 );
-			bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, -5, 5 );
-			noBumpProbability     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_NO_BUMP_PROB, 0.5, 0, 1 );
-			_parameters.push(shininess, glossiness, bumpiness, bumpinessRange,bumpInfluence, mappingMode,mappingFactor,mappingFunction,invertMapping,maxSpeed,noBumpProbability);
+			param_shininess     = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_SHININESS, 0.4, 0, 5);
+			param_glossiness    = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_GLOSSINESS, 0.4, 0.01, 5);
+			param_bumpiness     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS, 1, -10, 10 );
+			param_bumpinessRange  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS_RANGE, 0.2, 0, 10 );
+			param_bumpInfluence = new PsykoParameter( PsykoParameter.NumberParameter,      PARAMETER_N_BUMP_INFLUENCE, 0.6, -5, 5 );
+			param_noBumpProbability     = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_NO_BUMP_PROB, 0.5, 0, 1 );
+			_parameters.push(param_shininess, param_glossiness, param_bumpiness, param_bumpinessRange,param_bumpInfluence, param_mappingMode,param_mappingFactor,param_mappingFunction,param_invertMapping,param_maxSpeed,param_noBumpProbability);
 			
 		}
 		
@@ -109,14 +103,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			var applyArray:Array = _applyArray;
 			
-			var mode:int = mappingMode.index;
-			var minFactor:Number = mappingFactor.lowerRangeValue;
-			var maxFactor:Number = mappingFactor.upperRangeValue;
+			var mode:int = param_mappingMode.index;
+			var minFactor:Number = param_mappingFactor.lowerRangeValue;
+			var maxFactor:Number = param_mappingFactor.upperRangeValue;
 			
-			var mapping:Function = mappingFunctions[mappingFunction.index];
-			var ms:Number = maxSpeed.numberValue;
-			var inv:Boolean = invertMapping.booleanValue;
-			var nbp:Number = noBumpProbability.numberValue;
+			var mapping:Function = mappingFunctions[param_mappingFunction.index];
+			var ms:Number = param_maxSpeed.numberValue;
+			var inv:Boolean = param_invertMapping.booleanValue;
+			var nbp:Number = param_noBumpProbability.numberValue;
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var point:SamplePoint = points[i];
@@ -124,7 +118,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				var bmp:Number = bumpFactors[1];
 				if ( mode == 0)
 				{
-					bmp = mappingFactor.randomValue;
+					bmp = param_mappingFactor.randomValue;
 				} else if ( mode == 1 )
 				{
 					applyArray[0] = Math.min(point.speed,ms) / ms;
@@ -156,22 +150,22 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					bmp = minFactor + bmp * (maxFactor - minFactor );
 				}  else if ( mode == 4 )
 				{
-					bmp *= mappingFactor.randomValue;
+					bmp *= param_mappingFactor.randomValue;
 				} else if ( mode == 5 )
 				{
-					bmp += mappingFactor.randomValue;
+					bmp += param_mappingFactor.randomValue;
 				}  else if ( mode == 6 )
 				{
-					bmp = mappingFactor.randomValue;
+					bmp = param_mappingFactor.randomValue;
 				} else if ( mode == 7 )
 				{
-					bmp = Math.random() < nbp ? 0 : mappingFactor.randomValue;
+					bmp = Math.random() < nbp ? 0 : param_mappingFactor.randomValue;
 				} 
 				
-				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = glossiness.numberValue;
-				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = bumpiness.numberValue - bumpinessRange.numberValue + (  bumpinessRange.numberValue * 2 * bmp );
-				bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = shininess.numberValue;
-				bumpFactors[3] = bumpFactors[7] = bumpFactors[11] = bumpFactors[15] = bumpInfluence.numberValue;
+				bumpFactors[0] = bumpFactors[4] = bumpFactors[8]  = bumpFactors[12] = param_glossiness.numberValue;
+				bumpFactors[1] = bumpFactors[5] = bumpFactors[9]  = bumpFactors[13] = param_bumpiness.numberValue - param_bumpinessRange.numberValue + (  param_bumpinessRange.numberValue * 2 * bmp );
+				bumpFactors[2] = bumpFactors[6] = bumpFactors[10] = bumpFactors[14] = param_shininess.numberValue;
+				bumpFactors[3] = bumpFactors[7] = bumpFactors[11] = bumpFactors[15] = param_bumpInfluence.numberValue;
 			}
 			
 			

@@ -23,6 +23,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths
 		function set minSamplesPerStep( value:PsykoParameter ):void;
 		function get outputStepSize():PsykoParameter;
 		function set outputStepSize( value:PsykoParameter ):void;
+		function get speedSmoothing():PsykoParameter;
+		function set speedSmoothing( value:PsykoParameter ):void;
 		function get pointCount():int;
 		function get sampledPoints():Vector.<SamplePoint>;
 		function set sendTaps( value:Boolean ):void;
