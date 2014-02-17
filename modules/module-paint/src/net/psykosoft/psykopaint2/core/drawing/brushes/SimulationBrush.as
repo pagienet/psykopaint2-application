@@ -113,5 +113,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			cleanUpTicker();
 			super.deactivate();
 		}
+
+		override protected function addStrokePoint(point : SamplePoint, size : Number, rotationRange : Number) : void
+		{
+			// todo: could use speed or something with lowerRangeValue?
+			super.addStrokePoint(point, size*_sizeFactor.upperRangeValue * 1.3, rotationRange);
+		}
 	}
 }

@@ -552,13 +552,20 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 
 				<brush engine={BrushType.WATER_COLOR} name="Water Color">
-					<parameter id={WaterColorBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" value="0.5" showInUI="1"/>
+					<parameter id={WaterColorBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" value="0.75" showInUI="0"/>
 					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_STAINING} type={PsykoParameter.NumberParameter} path="brush" value=".4" />
 					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_DENSITY} type={PsykoParameter.NumberParameter} path="brush" value=".4" />
-					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_GRANULATION} path="brush" value=".81" />
+					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_GRANULATION} path="brush" value="1.5" />
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="basic,wet" showInUI="0"/>
 
 					<parameterMapping>
+						<parameter id="WaterColorSize" showInUI="1" minValue="0" maxValue="1" value=".77"/>
+						<proxy 	type={PsykoParameterProxy.TYPE_VALUE_MAP} src="WaterColorSize"
+								target={"brush."+AbstractBrush.PARAMETER_NR_SIZE_FACTOR}
+								targetProperties="lowerRangeValue,upperRangeValue"
+								targetOffsets="0.0,0.0"
+								targetFactors="1.0,1.0"/>
+
 						<parameter id="WaterColorOpacity" showInUI="2" minValue="0" maxValue="1" value=".33"/>
 						<proxy 	type={PsykoParameterProxy.TYPE_VALUE_MAP} src="WaterColorOpacity"
 								target={"brush."+WaterColorBrush.PARAMETER_N_PIGMENT_DENSITY}
