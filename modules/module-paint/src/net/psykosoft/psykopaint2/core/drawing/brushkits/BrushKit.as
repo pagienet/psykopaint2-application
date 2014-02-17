@@ -41,38 +41,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static var _availableBrushTypes:Vector.<String>;
 		private static var _brushClassFromBrushType:Dictionary;
 		
-		public static function fromXML( xml:XML ):BrushKit
-		{
-			if (!_initialized ) init();
-			
-			var kit:BrushKit = new BrushKit(String(xml.@name));
-			
-			if ( _brushClassFromBrushType[ String(xml.@engine) ] )
-			{
-				var engine:AbstractBrush = new _brushClassFromBrushType[ String(xml.@engine) ]();
-				kit.brushEngine = engine;
-				
-				for ( var i:int = 0; i < xml.parameterMapping.length(); i++ )
-				{
-					kit.addParameterMappingFromXML( xml.parameterMapping[i] );
-				}
-				
-				if ( xml.pathengine[0] )
-				{
-					engine.setPathEngine(xml.pathengine[0]);
-				}
-				kit.brushEngine.updateParametersFromXML( xml );
-				
-				kit.linkParameterMappings();
-				
-				
-			} else {
-				throw("Brush type "+xml.@engine+" does not exist");
-			}
-			
-			return kit;
-		}
-		
 		private static function init():void
 		{
 			registerBrush( BrushType.WATER_COLOR, WaterColorBrush );
@@ -104,15 +72,39 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_initialized = false;
 		}
 		
-		private var _brushEngine:AbstractBrush;
-		private var _brushName:String;
-		private var _parameterMappings:Vector.<PsykoParameterMapping>;
+		public var name:String;
+		protected var _brushEngine:AbstractBrush;
+		protected var _parameterMappings:Vector.<PsykoParameterMapping>;
 		
 
-		public function BrushKit( name:String ) 
+		public function BrushKit() 
+		{}
+		
+		protected function init( xml:XML ):void
 		{
-			_brushName = name;
+			if (!_initialized ) BrushKit.init();
+			
+			name = xml.@name;
 			_parameterMappings = new Vector.<PsykoParameterMapping>();
+			
+			if ( _brushClassFromBrushType[ String(xml.@engine) ] )
+			{
+				brushEngine = new _brushClassFromBrushType[ String(xml.@engine) ]();
+				
+				for ( var i:int = 0; i < xml.parameterMapping.length(); i++ )
+				{
+					addParameterMappingFromXML( xml.parameterMapping[i] );
+				}
+				
+				if ( xml.pathengine[0] )
+				{
+					brushEngine.setPathEngine(xml.pathengine[0]);
+				}
+				brushEngine.updateParametersFromXML( xml );
+				linkParameterMappings();
+			} else {
+				throw("Brush type "+xml.@engine+" does not exist");
+			}
 		}
 
 		public function stopProgression() : void
@@ -157,13 +149,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		public function getParameterSetAsXML():XML
 		{
 			var result:XML = _brushEngine.getParameterSetAsXML([]);
-			result.@name = _brushName;
+			result.@name = name;
 			return result;
 		}
 		
 		public function getParameterSet( showInUIOnly:Boolean = true):ParameterSetVO
 		{
-			var vo:ParameterSetVO = new ParameterSetVO(_brushName);
+			var vo:ParameterSetVO = new ParameterSetVO(name);
 			for ( var i:int = 0; i < _parameterMappings.length; i++ )
 			{
 				_parameterMappings[i].getParameterSet( vo, showInUIOnly );

@@ -246,9 +246,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyAvailableBrushTypesSignal.dispatch( _availableBrushKitNames );
 		}
 
-		private function registerBrushKit( brushKit:BrushKit, kitName:String ):void {
+		private function registerBrushKit( brushKit:BrushKit ):void {
 			_availableBrushKits.push(brushKit);
-			_availableBrushKitNames.push(kitName);
+			_availableBrushKitNames.push(brushKit.name);
 		}
 		
 		public function get activeBrushKit() : String
@@ -291,14 +291,18 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			brushShapeLibrary.init();
 			
-			var brushKitDef : XML = BrushKitDefaultSet.brushKitData.copy();
+			//var brushKitDef : XML = BrushKitDefaultSet.brushKitData.copy();
 
 			_availableBrushKits = new Vector.<BrushKit>();
 			_availableBrushKitNames = new Vector.<String>();
-
+			for ( var i:int = 0; i < BrushKitDefaultSet.brushKits.length; i++ )
+			{
+				registerBrushKit(BrushKitDefaultSet.brushKits[i]);
+			}
+			/*
 			for ( var i:int = 0; i < brushKitDef.brush.length(); i++ )
 				registerBrushKit( BrushKit.fromXML(brushKitDef.brush[i]), brushKitDef.brush[i].@name);
-
+			*/
 			initializeDefaultBrushes();
 
 			_active = true;

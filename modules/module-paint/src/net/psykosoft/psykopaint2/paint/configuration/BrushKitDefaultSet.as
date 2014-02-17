@@ -1,26 +1,27 @@
 package net.psykosoft.psykopaint2.paint.configuration
 {
 	
-	import net.psykosoft.psykopaint2.core.drawing.BrushType;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterDamageBrush;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
-	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
-	import net.psykosoft.psykopaint2.core.drawing.paths.AbstractPathEngine;
-	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CircularRotationDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
-	import net.psykosoft.psykopaint2.core.views.components.previews.PreviewIconFactory;
+	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit;
+	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_BristleBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_Cutout;
+	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_Eraser;
+	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_Pencil;
+	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_SprayCan;
+	import net.psykosoft.psykopaint2.core.drawing.brushkits.BrushKit_WaterColor;
 
 	public class BrushKitDefaultSet
 	{
+		
+		public static const brushKits:Vector.<BrushKit> = Vector.<BrushKit>([
+			new BrushKit_SprayCan(),
+			new BrushKit_BristleBrush(),
+			new BrushKit_Pencil(),
+			new BrushKit_WaterColor(),
+			new BrushKit_Eraser(),
+			new BrushKit_Cutout()
+		]);
+		
+		/*
 		public static const brushKitData:XML =
 			<brushkits>
 				<brush engine={BrushType.SPRAY_CAN} name="Spraycan">
