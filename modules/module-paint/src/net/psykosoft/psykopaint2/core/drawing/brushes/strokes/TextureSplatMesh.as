@@ -82,6 +82,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			data[10] = data[18] = uvBounds.right;
 			data[19] = data[27] = uvBounds.bottom;
 			
+			
 			//used by bump map:
 			var rotCos : Number = Math.cos(angle);
 			var rotSin : Number = Math.sin(angle);
