@@ -49,6 +49,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 		
 		public var type:int;
 		
+	
 		public static function fromXML(xml:XML):PsykoParameterProxy
 		{
 			var result:PsykoParameterProxy = new PsykoParameterProxy();

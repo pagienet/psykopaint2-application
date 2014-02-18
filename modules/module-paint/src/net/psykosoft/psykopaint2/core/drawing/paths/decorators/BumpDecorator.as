@@ -43,19 +43,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MODE_RANDOM:int = 6;
 		static public const INDEX_MODE_RANDOM2:int = 7;
 		
-		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([
-			Linear.easeNone,
-			CircQuad.easeIn,
-			Circ.easeIn,
-			Sine.easeIn,
-			Quad.easeIn, 
-			Cubic.easeIn, 
-			Quart.easeIn, 
-			Quint.easeIn,
-			Strong.easeIn,
-			Expo.easeIn
-		]);
-		
 		private const _applyArray:Array = [0,0,1,1];
 		
 		public var param_shininess:PsykoParameter;
@@ -76,16 +63,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			param_mappingMode  	 = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Fixed","Speed","Pressure","Automatic","Multiply","Add","Random","Random 2"]);
 			param_mappingFactor   = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_FACTOR,0,1,0,1);
-			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,0,["Linear",
-				"CircQuad",
-				"Circular",
-				"Sine",
-				"Quadratic",
-				"Cubic",
-				"Quartic",
-				"Quintic",
-				"Strong",
-				"Expo"]);
+			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,0,mappingFunctionLabels);
 			param_invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_INVERT_MAPPING,0);
 			param_maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			

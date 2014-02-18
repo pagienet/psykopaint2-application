@@ -1,5 +1,16 @@
 package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 {
+	import com.greensock.easing.Circ;
+	import com.greensock.easing.CircQuad;
+	import com.greensock.easing.Cubic;
+	import com.greensock.easing.Expo;
+	import com.greensock.easing.Linear;
+	import com.greensock.easing.Quad;
+	import com.greensock.easing.Quart;
+	import com.greensock.easing.Quint;
+	import com.greensock.easing.Sine;
+	import com.greensock.easing.Strong;
+	
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
@@ -7,6 +18,69 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	
 	public class AbstractPointDecorator implements IPointDecorator
 	{
+		
+		static protected const mappingFunctions:Vector.<Function> = Vector.<Function>([
+			Linear.easeNone,
+			CircQuad.easeIn,
+			Circ.easeIn,
+			Sine.easeIn,
+			Quad.easeIn, 
+			Cubic.easeIn, 
+			Quart.easeIn, 
+			Quint.easeIn,
+			Strong.easeIn,
+			Expo.easeIn,
+			CircQuad.easeOut,
+			Circ.easeOut,
+			Sine.easeOut,
+			Quad.easeOut, 
+			Cubic.easeOut, 
+			Quart.easeOut, 
+			Quint.easeOut,
+			Strong.easeOut,
+			Expo.easeOut,
+			CircQuad.easeInOut,
+			Circ.easeInOut,
+			Sine.easeInOut,
+			Quad.easeInOut, 
+			Cubic.easeInOut, 
+			Quart.easeInOut, 
+			Quint.easeInOut,
+			Strong.easeInOut,
+			Expo.easeInOut
+		]);
+		
+		
+		static protected const mappingFunctionLabels:Vector.<String> = Vector.<String>(
+		["Linear",
+		"CircQuadIn",
+		"CircularIn",
+		"SineIn",
+		"QuadraticIn",
+		"CubicIn",
+		"QuarticIn",
+		"QuinticIn",
+		"StrongIn",
+		"ExpoIn",
+		"CircQuadOut",
+		"CircularOut",
+		"SineOut",
+		"QuadraticOut",
+		"CubicOut",
+		"QuarticOut",
+		"QuinticOut",
+		"StrongOut",
+		"ExpoOut",
+		"CircQuadInOut",
+		"CircularInOut",
+		"SineInOut",
+		"QuadraticInOut",
+		"CubicInOut",
+		"QuarticInOut",
+		"QuinticInOut",
+		"StrongInOut",
+		"ExpoInOut"]);
+		
 		protected var _parameters:Vector.<PsykoParameter>;
 		protected var _active:Boolean;
 		

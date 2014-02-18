@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes.color
 {
 	import flash.display.BitmapData;
+	import flash.geom.Rectangle;
 	
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.StrokeAppendVO;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
@@ -134,14 +135,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			var target: Vector.<Number> = appendVO.point.colorsRGBA;
 			
 			var baseAngle:Number = appendVO.diagonalAngle; 
-			//var halfSize : Number = appendVO.size * Math.SQRT1_2;
 			var halfSize : Number = appendVO.size * appendVO.diagonalLength * 0.5;//appendVO.size * Math.SQRT1_2;
 			
 			var angle : Number = appendVO.point.angle;
 			var cos1 : Number =   halfSize * Math.cos(  baseAngle + angle);
-			var sin1 : Number =   halfSize * Math.sin(  baseAngle + angle);
+			var sin1 : Number =  -halfSize * Math.sin(  baseAngle + angle);
 			var cos2 : Number =   halfSize * Math.cos( -baseAngle + angle);
-			var sin2 : Number =   halfSize * Math.sin( -baseAngle + angle);
+			var sin2 : Number =  -halfSize * Math.sin( -baseAngle + angle);
 			
 			var px:Number = appendVO.point.x;
 			var py:Number = appendVO.point.y;
@@ -150,22 +150,22 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			var oy:Number = appendVO.quadOffsetRatio * (-sin1 - sin2);
 			
 			
-			_canvasModel.pyramidMap.getRGB(px - cos1 + ox,py - sin1 + oy,sampleSize,tmpRGB);
+			_canvasModel.pyramidMap.getRGB(px - cos1 + ox,py + sin1 + oy,sampleSize,tmpRGB);
 			target[0] = tmpRGB[0];
 			target[1] = tmpRGB[1];
 			target[2] = tmpRGB[2];
 			
-			_canvasModel.pyramidMap.getRGB(px + cos2 + ox,py + sin2 + oy,sampleSize,tmpRGB);
+			_canvasModel.pyramidMap.getRGB(px + cos2 + ox,py - sin2 + oy,sampleSize,tmpRGB);
 			target[4] = tmpRGB[0];
 			target[5] = tmpRGB[1];
 			target[6] = tmpRGB[2];
 			
-			_canvasModel.pyramidMap.getRGB(px + cos1 + ox,py + sin1 + oy,sampleSize,tmpRGB);
-			target[8] = tmpRGB[0];
-			target[9] = tmpRGB[1];
+			_canvasModel.pyramidMap.getRGB(px + cos1 + ox,py - sin1 + oy,sampleSize,tmpRGB);
+			target[8]  = tmpRGB[0];
+			target[9]  = tmpRGB[1];
 			target[10] = tmpRGB[2];
 			
-			_canvasModel.pyramidMap.getRGB(px - cos2 + ox,py - sin2 + oy,sampleSize,tmpRGB);
+			_canvasModel.pyramidMap.getRGB(px - cos2 + ox,py + sin2 + oy,sampleSize,tmpRGB);
 			target[12] = tmpRGB[0];
 			target[13] = tmpRGB[1];
 			target[14] = tmpRGB[2];

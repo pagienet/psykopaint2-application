@@ -27,24 +27,24 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PROPERTY_INDEX_PEN_BUTTON_2 : int = 6;
 		
 		
-		private var testProperty:PsykoParameter;
-		private var speedThreshold:PsykoParameter;111
-		private var luminanceThreshold:PsykoParameter;
-		private var randomThreshold:PsykoParameter;
-		private var pressureThreshold:PsykoParameter;
+		public var param_testProperty:PsykoParameter;
+		public var param_speedThreshold:PsykoParameter;
+		public var param_luminanceThreshold:PsykoParameter;
+		public var param_randomThreshold:PsykoParameter;
+		public var param_pressureThreshold:PsykoParameter;
 		
 		private var rng:LCG;
 		
 		public function ConditionalDecorator()
 		{
 			super();
-			testProperty  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_TEST_PROPERTY,0,["Speed","Luminance","Random","Pen Available","Pressure","Pen Button 1","Pen Button 2"] );
-			speedThreshold  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SPEED_THRESHOLD,0,0, 10);
-			luminanceThreshold  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_LUMINANCE_THRESHOLD,0,0, 255);
-			randomThreshold  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_RANDOM_THRESHOLD,0,0, 1);
-			pressureThreshold  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_PRESSURE_THRESHOLD,0,0, 2000);
+			param_testProperty  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_TEST_PROPERTY,0,["Speed","Luminance","Random","Pen Available","Pressure","Pen Button 1","Pen Button 2"] );
+			param_speedThreshold  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SPEED_THRESHOLD,0,0, 10);
+			param_luminanceThreshold  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_LUMINANCE_THRESHOLD,0,0, 255);
+			param_randomThreshold  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_RANDOM_THRESHOLD,0,0, 1);
+			param_pressureThreshold  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_PRESSURE_THRESHOLD,0,0, 2000);
 			
-			_parameters.push(testProperty, speedThreshold, luminanceThreshold, randomThreshold, pressureThreshold);
+			_parameters.push(param_testProperty, param_speedThreshold, param_luminanceThreshold, param_randomThreshold, param_pressureThreshold);
 			rng = new LCG(Math.random() * 0xffffffff);
 			
 		}
@@ -56,7 +56,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			result[1] = new Vector.<SamplePoint>();
 			
 			var cb:PathManagerCallbackInfo =  manager.callbacks;
-			var conditionIndex:int = testProperty.index
+			var conditionIndex:int = param_testProperty.index
 			
 			for ( var i:int = 0; i < points.length; i++ )
 			{
@@ -64,14 +64,14 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				{
 					case 0:
 						//Speed
-						result[(points[i].speed < speedThreshold.numberValue ? 0 : 1)].push(points[i]);
+						result[(points[i].speed < param_speedThreshold.numberValue ? 0 : 1)].push(points[i]);
 						break;
 					case 1:
 						//Luminance
 						break;
 					case 2:
 						//Random
-						result[rng.getChance(randomThreshold.numberValue) ? 0 : 1].push(points[i]);
+						result[rng.getChance(param_randomThreshold.numberValue) ? 0 : 1].push(points[i]);
 						break;
 					case 3:
 						//Pen available
@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 						break;
 					case 4:
 						//Speed
-						result[(points[i].pressure < pressureThreshold.numberValue ? 0 : 1)].push(points[i]);
+						result[(points[i].pressure < param_pressureThreshold.numberValue ? 0 : 1)].push(points[i]);
 						break;
 					case 5:
 						//Pen Button 1

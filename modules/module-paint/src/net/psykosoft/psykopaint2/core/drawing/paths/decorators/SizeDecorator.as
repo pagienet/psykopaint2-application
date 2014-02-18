@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 {
 	import com.greensock.easing.Circ;
+	import com.greensock.easing.CircQuad;
 	import com.greensock.easing.Cubic;
 	import com.greensock.easing.Expo;
 	import com.greensock.easing.Linear;
@@ -9,8 +10,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	import com.greensock.easing.Quint;
 	import com.greensock.easing.Sine;
 	import com.greensock.easing.Strong;
-	import com.greensock.easing.CircQuad;
-	import de.popforge.math.LCG;
 	
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
@@ -43,18 +42,6 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MAPPING_STRONG:int = 8;
 		static public const INDEX_MAPPING_EXPONENTIAL:int = 9;
 		
-		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([
-			Linear.easeNone,
-			CircQuad.easeIn,
-			Circ.easeIn,
-			Sine.easeIn,
-			Quad.easeIn, 
-			Cubic.easeIn, 
-			Quart.easeIn, 
-			Quint.easeIn,
-			Strong.easeIn,
-			Expo.easeIn
-		]);
 		
 		private const _applyArray:Array = [0,0,1,1];
 		
@@ -72,16 +59,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			param_mappingFactor   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_FACTOR,0.5,0,1);
 			param_mappingRange   = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_RANGE,0.5,0,1);
 			
-			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,INDEX_MAPPING_LINEAR,["Linear",
-				"CircQuad",
-				"Circular",
-				"Sine",
-				"Quadratic",
-				"Cubic",
-				"Quartic",
-				"Quintic",
-				"Strong",
-				"Expo"]);
+			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MAPPING,INDEX_MAPPING_LINEAR,mappingFunctionLabels);
 			param_invertMapping   = new PsykoParameter( PsykoParameter.BooleanParameter,PARAMETER_B_INVERT_MAPPING,0);
 			param_maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			
