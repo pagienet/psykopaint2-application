@@ -553,10 +553,10 @@ package net.psykosoft.psykopaint2.paint.configuration
 
 
 				<brush engine={BrushType.WATER_COLOR} name="Water Color">
-					<parameter id={WaterColorBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" value="0.75" showInUI="0"/>
+					<!--<parameter id={WaterColorBrush.PARAMETER_N_SURFACE_INFLUENCE} path="brush" value="0.75" showInUI="0"/>-->
 					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_STAINING} type={PsykoParameter.NumberParameter} path="brush" value=".4" />
 					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_DENSITY} type={PsykoParameter.NumberParameter} path="brush" value=".4" />
-					<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_GRANULATION} path="brush" value="1.5" />
+					<!--<parameter id={WaterColorBrush.PARAMETER_N_PIGMENT_GRANULATION} path="brush" value="1.5" />-->
 					<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="basic,wet" showInUI="0"/>
 
 					<parameterMapping>
@@ -575,7 +575,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 						<proxy 	type={PsykoParameterProxy.TYPE_VALUE_MAP} src="WaterColorOpacity"
 								target={"brush."+WaterColorBrush.PARAMETER_N_PIGMENT_STAINING}
 								targetOffsets="0.1"
-								targetFactors="0.9"/>
+								targetFactors="0.6"/>
 					</parameterMapping>
 
 					<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}/>

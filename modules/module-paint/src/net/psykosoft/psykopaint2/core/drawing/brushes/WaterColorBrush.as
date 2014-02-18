@@ -26,7 +26,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
+	import net.psykosoft.psykopaint2.core.rendering.CopyColorTransferTexture;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
 	public class WaterColorBrush extends SimulationBrush
@@ -49,6 +51,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var _addPigmentToPigmentColor : StrokeColorTransfer;
 		private var _addPigmentToPressure : SinglePigmentBlotTransfer;
 		private var _addWetness : SinglePigmentBlotTransfer;
+
+		private var _transferSource : CopyColorTransferTexture;
 
 		private var _applySlope : ApplySlope;
 		private var _updateVelocities : UpdateVelocities;
@@ -85,13 +89,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function WaterColorBrush()
 		{
 			super(false);
-			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, 0.5, 0, 10);
+			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, 2, 0, 4);
 			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_GRAVITY_INFLUENCE, 0.1, 0, .3);
 			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_VISCOSITY, .2, 0, 1);
 			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_DRAG, .1, 0, .2);
 			_pigmentDensity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_DENSITY, .25, 0,.4);
 			_pigmentStaining = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_STAINING,.25, .1,1);
-			_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_GRANULATION, .81, 0, 1);
+			_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_GRANULATION, 1.0, 0, 1);
 
 			_parameters.push( _surfaceRelief, _gravityStrength, _pigmentDensity, _pigmentStaining, _pigmentGranulation);
 
@@ -133,6 +137,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_addPigmentToPressure = new SinglePigmentBlotTransfer(_canvasModel.stage3D.context3D, "zw");
 			}
 
+			_transferSource = new CopyColorTransferTexture();
+			_transferSource.init(_context);
 			_applySlope = new ApplySlope(_context, _canvasModel);
 			_updateVelocities = new UpdateVelocities(_context, _canvasModel);
 			_relaxDivergence = new RelaxDivergence(_context, _canvasModel);
@@ -157,6 +163,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_pigmentDensityField.dispose();
 				_pigmentColorField.dispose();
 				_applySlope.dispose();
+				_transferSource.dispose();
 				_updateVelocities.dispose();
 				_relaxDivergence.dispose();
 				_movePigment.dispose();
@@ -180,6 +187,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_movePigmentRGB = null;
 				_transferPigment = null;
 				_renderPigment = null;
+				_transferSource = null;
 			}
 
 			if (_addWetness) {
@@ -225,8 +233,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.setRenderToTexture(_pigmentDensityField.texture, true);
 			_context.clear(0, 0, 0, 0);
 			_context.setRenderToTexture(_pigmentColorField.texture, true);
-			_context.clear(1, 1, 1, 0);
-			CopyTexture.copy(_canvasModel.sourceTexture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+
+			if (_paintSettingsModel.colorMode == PaintMode.COLOR_MODE) {
+				_context.clear(_paintSettingsModel.current_r, _paintSettingsModel.current_g, _paintSettingsModel.current_b, 1);
+			}
+			else {
+				_context.clear(1, 1, 1, 0);
+				_transferSource.draw(_canvasModel.sourceTexture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			}
 			_context.setRenderToTexture(_velocityPressureField.texture, true);
 			_context.clear(.5,.5, 0, 1);
 			_context.setRenderToBackBuffer();
@@ -313,8 +327,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_movePigment.execute(SimulationMesh(_brushMesh), _pigmentDensityField.texture, _halfSizedBackBuffer.texture, _velocityPressureField.texture);
 			_pigmentDensityField = swapHalfSized(_pigmentDensityField);
 
-			_movePigmentRGB.execute(SimulationMesh(_brushMesh), _pigmentColorField.texture, _halfSizedBackBuffer.texture, _velocityPressureField.texture, 1, 0, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-			_pigmentColorField = swapHalfSized(_pigmentColorField);
+			if (_paintSettingsModel.colorMode == PaintMode.PHOTO_MODE) {
+				_movePigmentRGB.execute(SimulationMesh(_brushMesh), _pigmentColorField.texture, _halfSizedBackBuffer.texture, _velocityPressureField.texture, 1, 0, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+				_pigmentColorField = swapHalfSized(_pigmentColorField);
+			}
 		}
 
 		private function transferPigment() : void
@@ -330,6 +346,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 //			CopyTexture.copy(_pigmentColorField.texture, context3d);
 
 			_renderPigment.execute(SimulationMesh(_brushMesh), _pigmentDensityField.texture, _pigmentColorField.texture);
+		}
+
+		override public function setColorStrategyColorMatrix(colorMatrix:Vector.<Number>, blendFactor:Number):void
+		{
+			super.setColorStrategyColorMatrix(colorMatrix, blendFactor);
+			_transferSource.setColorMatrix(colorMatrix, blendFactor);
 		}
 	}
 }
