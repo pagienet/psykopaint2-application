@@ -528,7 +528,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function setColorStrategyColorMatrix(colorMatrix:Vector.<Number>, blendFactor:Number):void
 		{
 			_colorStrategy.setColorMatrix(colorMatrix,blendFactor);
-			
 		}
 		
 	}

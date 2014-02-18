@@ -99,8 +99,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_parameters.push( _surfaceRelief, _gravityStrength, _pigmentDensity, _pigmentStaining, _pigmentGranulation);
 
-			_sizeFactor.lowerRangeValue = .77;
-			_sizeFactor.upperRangeValue = .77;
+			param_sizeFactor.lowerRangeValue = .77;
+			param_sizeFactor.upperRangeValue = .77;
 
 			type = BrushType.WATER_COLOR;
 		}
