@@ -58,18 +58,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		private var rng:LCG;
 		
-		static private const mappingFunctions:Vector.<Function> = Vector.<Function>([
-			Linear.easeNone,
-			CircQuad.easeIn,
-			Circ.easeIn,
-			Sine.easeIn,
-			Quad.easeIn, 
-			Cubic.easeIn, 
-			Quart.easeIn, 
-			Quint.easeIn,
-			Strong.easeIn,
-			Expo.easeIn
-		]);
+		
 		/*
 			offsets the point based on its angle and speed
 			
@@ -83,16 +72,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super();
 			param_mappingMode  	  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Speed","Size","Inverse Size","Pressure/Speed", "Fixed"]);
-			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_OFFSET_MAPPING,1,["Linear",
-				"CircQuad",
-				"Circular",
-				"Sine",
-				"Quadratic",
-				"Cubic",
-				"Quartic",
-				"Quintic",
-				"Strong",
-				"Expo"]);
+			param_mappingFunction   = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_OFFSET_MAPPING,1,mappingFunctionLabels);
 			
 			param_splatFactor  	  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SPLAT_FACTOR,2,0,500);
 			param_minOffset   	  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MINIMUM_OFFSET,2,0,64);

@@ -18,25 +18,24 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MODE_PRESET:int = 0;
 		static public const INDEX_MODE_RANDOM:int = 1;
 		
-		
 		private var kdTree:BalancingKDTree;
 		private var centers:XML = <centers/>;
-		private var angleAdjustment:PsykoParameter;
-		private var mode:PsykoParameter;
-		private var randomPoints:PsykoParameter;
-		
 		private var _canvasModel:CanvasModel;
 		private var tempPoint:SamplePoint;
+		
+		public var param_angleAdjustment:PsykoParameter;
+		public var param_mode:PsykoParameter;
+		public var param_randomPoints:PsykoParameter;
 		
 		public function CircularRotationDecorator( )
 		{
 			super();
-			mode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Preset","Random"]);
+			param_mode  = new PsykoParameter( PsykoParameter.StringListParameter,PARAMETER_SL_MODE,0,["Preset","Random"]);
 			
-			angleAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_ANGLE_ADJUSTMENT,0,-90, 90);
-			randomPoints  	 = new PsykoParameter( PsykoParameter.IntParameter,PARAMETER_I_RANDOM_POINT_COUNT,0,0,200);
+			param_angleAdjustment  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_ANGLE_ADJUSTMENT,0,-90, 90);
+			param_randomPoints  	 = new PsykoParameter( PsykoParameter.IntParameter,PARAMETER_I_RANDOM_POINT_COUNT,0,0,200);
 			
-			_parameters.push(mode,angleAdjustment,randomPoints);
+			_parameters.push(param_mode,param_angleAdjustment,param_randomPoints);
 			tempPoint = new SamplePoint();
 		}
 		
@@ -51,7 +50,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					tempPoint.y = points[i].y / manager.canvasModel.height;
 					
 					var nearestNode:KDTreeNode = kdTree.findNearestFor( tempPoint );
-					points[i].angle = Math.atan2(nearestNode.point.y -tempPoint.y ,nearestNode.point.x - tempPoint.x) + nearestNode.point.angle + angleAdjustment.numberValue;
+					points[i].angle = Math.atan2(nearestNode.point.y -tempPoint.y ,nearestNode.point.x - tempPoint.x) + nearestNode.point.angle + param_angleAdjustment.numberValue;
 				}
 			}
 			return points;
@@ -74,7 +73,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			super.updateParametersFromXML(message);
 			kdTree = new BalancingKDTree();
-			if ( mode.index == 0 && message.centers.length() > 0 &&  message.centers[0].point.length() > 0)
+			if ( param_mode.index == 0 && message.centers.length() > 0 &&  message.centers[0].point.length() > 0)
 			{
 				centers = message.centers[0];
 				var pdata:XMLList =  message.centers[0].point;
@@ -83,9 +82,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					kdTree.insertPoint( new SamplePoint(Number(pdata[i].@x), Number( pdata[i].@y)));
 				}
 			} 
-			if (  mode.index == 1 && randomPoints.intValue > 0 )
+			if (  param_mode.index == 1 && param_randomPoints.intValue > 0 )
 			{
-				for ( i = randomPoints.intValue; --i > -1; )
+				for ( i = param_randomPoints.intValue; --i > -1; )
 				{
 					kdTree.insertPoint( new SamplePoint( Math.random(), Math.random()));
 				}

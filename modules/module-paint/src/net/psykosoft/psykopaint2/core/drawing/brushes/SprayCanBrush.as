@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_appendVO.point = point;
 			if ( _paintSettingsModel.colorMode == PaintMode.PHOTO_MODE )
 			{
-				var rsize : Number = param_sizeFactor.lowerRangeValue + param_sizeFactor.rangeValue * point.size * point.curvature;
+				var rsize : Number = param_sizeFactor.lowerRangeValue + param_sizeFactor.rangeValue * point.size * ( param_curvatureSizeInfluence.numberValue * (point.curvature - 1) + 1);
 				if (rsize > 1) rsize = 1;
 				else if (rsize < 0) rsize = 0;
 				
@@ -90,13 +90,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (rsize > maxSize) rsize = maxSize;
 			else if (rsize < minSize) rsize = minSize;
 			*/
-			var rsize : Number = param_sizeFactor.lowerRangeValue + param_sizeFactor.rangeValue * point.size * point.curvature;
+			
+				
+			var rsize : Number = param_sizeFactor.lowerRangeValue + param_sizeFactor.rangeValue * point.size * ( param_curvatureSizeInfluence.numberValue * (point.curvature - 1) + 1);
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;
 			
 			_appendVO.uvBounds.x = int(Math.random() * _shapeVariations[0]) * _shapeVariations[2];
 			_appendVO.uvBounds.y = int(Math.random() * _shapeVariations[1]) * _shapeVariations[3];
-			_appendVO.size = _maxBrushRenderSize * rsize * _canvasScaleW; 
+			_appendVO.size =  rsize * _canvasScaleW * _maxBrushRenderSize;
 			_appendVO.point = point;
 			_brushMesh.append(_appendVO);
 		}

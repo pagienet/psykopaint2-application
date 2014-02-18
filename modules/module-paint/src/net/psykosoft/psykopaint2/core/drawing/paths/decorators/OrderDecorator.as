@@ -10,21 +10,18 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	{
 		static public const PARAMETER_I_BUFFER_SIZE:String = "Buffer Size";
 		
-		private var delay:PsykoParameter;
-		
 		private var rng:LCG;
-		
-		private var bufferSize:PsykoParameter;
-		
 		private var buffer:Vector.<SamplePoint>;
+		
+		public var param_bufferSize:PsykoParameter;
 		
 		public function OrderDecorator( )
 		{
 			super( );
 			buffer = new Vector.<SamplePoint>();
-			bufferSize   	 = new PsykoParameter( PsykoParameter.IntParameter,"Buffer Size",8,0,50);
+			param_bufferSize   	 = new PsykoParameter( PsykoParameter.IntParameter,"Buffer Size",8,0,50);
 			
-			_parameters.push( bufferSize);
+			_parameters.push( param_bufferSize);
 		}
 		
 		override public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
@@ -36,7 +33,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					buffer.splice(int((buffer.length >> 1) + Math.random() * (buffer.length >> 1)), 0, points[i] );
 				}
 				points.length = 0;
-				while ( buffer.length > bufferSize.intValue )
+				while ( buffer.length > param_bufferSize.intValue )
 				{
 					points.push( buffer.splice( int(Math.random() * (buffer.length >> 1)), 1 )[0])
 				}

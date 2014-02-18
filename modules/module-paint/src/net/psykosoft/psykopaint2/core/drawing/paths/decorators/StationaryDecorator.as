@@ -17,25 +17,29 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	final public class StationaryDecorator extends AbstractPointDecorator
 	{
 		
-		private var delay:PsykoParameter;
+		public static const PARAMETER_NR_SIZE:String = "Size";
+		public static const PARAMETER_N_MAX_OFFSET:String = "Maximum Offset";
+		public static const PARAMETER_I_DELAY:String = "Delay";
 		
 		private var rng:LCG;
 		private var lastX:Number;
 		private var lastY:Number;
 		private var lastAngle:Number;
-		private var sizeRange:PsykoParameter;
-		private var maxOffset:PsykoParameter;
 		private var delayTriggered:Boolean;
 		private var timeStamp:int;
+		
+		public var param_delay:PsykoParameter;
+		public var param_sizeRange:PsykoParameter;
+		public var param_maxOffset:PsykoParameter;
 		
 		public function StationaryDecorator(  )
 		{
 			super( );
 			
-			sizeRange    = new PsykoParameter( PsykoParameter.NumberRangeParameter,"Size",0.25,0.75,0,1);
-			maxOffset    = new PsykoParameter( PsykoParameter.NumberParameter,"Maximum Offset",0,0,500);
-			delay   	 = new PsykoParameter( PsykoParameter.IntParameter,"Delay",100,0,1000);
-			_parameters.push( sizeRange, maxOffset, delay );
+			param_sizeRange    = new PsykoParameter( PsykoParameter.NumberRangeParameter,PARAMETER_NR_SIZE,0.25,0.75,0,1);
+			param_maxOffset    = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAX_OFFSET,0,0,500);
+			param_delay   	 = new PsykoParameter( PsykoParameter.IntParameter,PARAMETER_I_DELAY,100,0,1000);
+			_parameters.push( param_sizeRange, param_maxOffset, param_delay );
 			rng = new LCG(Math.random() * 0xffffffff);
 		}
 		
@@ -45,11 +49,11 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			{
 				if ( fingerIsDown )
 				{
-					if ( delayTriggered && 	(getTimer()-timeStamp >=  delay.intValue ))
+					if ( delayTriggered && 	(getTimer()-timeStamp >=  param_delay.intValue ))
 					{
 						var angle:Number = rng.getNumber( 0, Math.PI * 2);
-						var distance:Number =  rng.getMappedNumber(0, maxOffset.numberValue, Quad.easeIn );
-						points.push( PathManager.getSamplePoint(lastX +  Math.cos(angle) * distance,lastY +  Math.sin(angle) * distance,0,rng.getNumber(sizeRange.lowerRangeValue,sizeRange.upperRangeValue),lastAngle ));
+						var distance:Number =  rng.getMappedNumber(0, param_maxOffset.numberValue, Quad.easeIn );
+						points.push( PathManager.getSamplePoint(lastX +  Math.cos(angle) * distance,lastY +  Math.sin(angle) * distance,0,rng.getNumber(param_sizeRange.lowerRangeValue,param_sizeRange.upperRangeValue),lastAngle ));
 					} else if ( !delayTriggered )
 					{
 						delayTriggered = true;

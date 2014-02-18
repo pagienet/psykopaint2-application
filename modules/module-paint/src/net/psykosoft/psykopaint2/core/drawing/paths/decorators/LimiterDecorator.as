@@ -7,19 +7,20 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	final public class LimiterDecorator extends AbstractPointDecorator
 	{
 		static public const PARAMETER_I_MAX_POINTS:String = "Maximum Points";
-		private var maxPointCount:PsykoParameter;
+		
+		public var param_maxPointCount:PsykoParameter;
 		
 		public function LimiterDecorator( )
 		{
 			super( );
-			maxPointCount    = new PsykoParameter( PsykoParameter.IntParameter,PARAMETER_I_MAX_POINTS,50,1,100);
+			param_maxPointCount    = new PsykoParameter( PsykoParameter.IntParameter,PARAMETER_I_MAX_POINTS,50,1,100);
 			
-			_parameters.push( maxPointCount);
+			_parameters.push( param_maxPointCount);
 		}
 		
 		override public function process(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
-			var mp:int = maxPointCount.intValue;
+			var mp:int = param_maxPointCount.intValue;
 			while ( points.length > mp )
 			{
 				PathManager.recycleSamplePoint( points.splice( int(Math.random() * points.length),1)[0]);

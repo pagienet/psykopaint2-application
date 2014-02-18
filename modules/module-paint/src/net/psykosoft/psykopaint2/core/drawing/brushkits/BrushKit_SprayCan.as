@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
@@ -25,6 +26,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var bumpDecorator:BumpDecorator;
 		private var spawnDecorator:SpawnDecorator;
 		private var colorDecorator:ColorDecorator;
+		private var gridDecorator:GridDecorator;
 		
 		public function BrushKit_SprayCan()
 		{
@@ -84,6 +86,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			spawnDecorator.param_maxOffset.numberValue = 16;
 			pathManager.addPointDecorator( spawnDecorator );
 			
+			gridDecorator = new GridDecorator();
+			gridDecorator.param_stepX.numberValue = 32;
+			gridDecorator.param_stepY.numberValue = 32;
+			gridDecorator.param_angleStep.degrees = 0;
+			gridDecorator.active = false;
+			pathManager.addPointDecorator( gridDecorator );
+			
 			colorDecorator = new ColorDecorator();
 			colorDecorator.param_brushOpacity.numberValue = 0.9;
 			colorDecorator.param_brushOpacityRange.numberValue = 0.2;
@@ -116,27 +125,93 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		protected function onStyleChanged(event:Event):void
 		{
 			brushEngine.param_shapes.index = param_style.index;
+			var precision:Number = param_precision.numberValue;
+			var intensity:Number = param_intensity.numberValue;
+			
+			gridDecorator.active = false;
+			spawnDecorator.active = true;
+			
+			if (  param_style.index != 1 )
+			{
+				brushEngine.param_curvatureSizeInfluence.numberValue = 1;
+				sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
+				sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.25;
+				sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
+				bumpDecorator.param_bumpiness.numberValue = 0.5 * intensity;
+				bumpDecorator.param_bumpinessRange.numberValue = 0.5 * intensity;
+				bumpDecorator.param_bumpInfluence.numberValue = intensity;
+				bumpDecorator.param_glossiness.numberValue = 0.1 + 0.3 * intensity;
+				colorDecorator.param_pickRadius.lowerRangeValue = 0.25;
+				colorDecorator.param_pickRadius.upperRangeValue = 0.33;
+			}
+			
+			switch ( param_style.index )
+			{
+				case 0:
+				break;
+				case 1:
+					gridDecorator.active = true;
+					spawnDecorator.active = false;
+					
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
+					sizeDecorator.param_mappingFactor.numberValue = (4 / 64) + precision * (60/64);
+					sizeDecorator.param_mappingRange.numberValue = 0;
+					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
+					
+					bumpDecorator.param_bumpiness.numberValue = 0;
+					bumpDecorator.param_bumpinessRange.numberValue = 0;
+					bumpDecorator.param_bumpInfluence.numberValue = 0;
+					bumpDecorator.param_glossiness.numberValue = 0.2;
+					gridDecorator.param_stepX.numberValue = gridDecorator.param_stepY.numberValue = ((4 + 60 * precision) * 2) - 3;
+					
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.1;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.2;
+				break;
+				case 2:
+				break;
+				case 3:
+				break;
+				case 4:
+				break;
+			}
 		}
 		
 		protected function onPrecisionChanged(event:Event):void
 		{
 			var precision:Number = param_precision.numberValue;
-			sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.25;
-			sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
+			if (  param_style.index != 1 )
+			{
+				sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.25;
+				sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
+			} else {
+				sizeDecorator.param_mappingFactor.numberValue = (4 / 64) + precision * (60/64);
+				sizeDecorator.param_mappingRange.numberValue = 0;
+			}
 			spawnDecorator.param_maxSize.numberValue = 0.05 + precision * 0.36;
 			spawnDecorator.param_maxOffset.numberValue = 16 + precision * 40;
 			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -(120 + precision * 60);
 			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 120 + precision * 60;
+			
+			gridDecorator.param_stepX.numberValue = gridDecorator.param_stepY.numberValue = ((4 + 60 * precision) * 2) - 3;
+			
 		}
 		
 		protected function onIntensityChanged(event:Event):void
 		{
 			var intensity:Number = param_intensity.numberValue;
 			colorDecorator.param_brushOpacity.numberValue = intensity;
-			bumpDecorator.param_bumpInfluence.numberValue = intensity;
-			bumpDecorator.param_glossiness.numberValue = 0.1 + 0.3 * intensity;
-			bumpDecorator.param_bumpiness.numberValue = 0.5 * intensity;
-			bumpDecorator.param_bumpinessRange.numberValue = 0.5 * intensity;
+			if (  param_style.index != 1 )
+			{
+				bumpDecorator.param_bumpInfluence.numberValue = intensity;
+				bumpDecorator.param_glossiness.numberValue = 0.1 + 0.3 * intensity;
+				bumpDecorator.param_bumpiness.numberValue = 0.5 * intensity;
+				bumpDecorator.param_bumpinessRange.numberValue = 0.5 * intensity;
+			} else {
+				bumpDecorator.param_bumpiness.numberValue = 0;
+				bumpDecorator.param_bumpinessRange.numberValue = 0;
+				bumpDecorator.param_bumpInfluence.numberValue = 0;
+				bumpDecorator.param_glossiness.numberValue = 0.2;
+			}
 		}
 	}
 }
