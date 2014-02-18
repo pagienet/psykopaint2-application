@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			super(context);
 			_canvas = canvas;
 			_vertexProps = Vector.<Number>([1/canvas.textureWidth, 1/canvas.textureHeight, 0, 0]);
-			_fragmentProps = Vector.<Number>([0.501961, 2, 0, 0, 0, 0, 0, 0]);
+			_fragmentProps = Vector.<Number>([0.5, 2, 0, 0, 0, 0, 0, 0]);
 		}
 
 		public function get surfaceRelief() : Number

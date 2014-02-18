@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.rendering
 			_fragmentShaderData[29] = 0;
 			_fragmentShaderData[30] = 0;
 			_fragmentShaderData[31] = 1;
+			_fragmentShaderData[34] = 0;
 			_fragmentShaderData[36] = .299;
 			_fragmentShaderData[37] = .587;
 			_fragmentShaderData[38] = .114;
@@ -45,6 +46,10 @@ package net.psykosoft.psykopaint2.core.rendering
 		// same stuff as passed to PyramidMapIntrinsicsStrategy
 		public function setColorMatrix( matrix:Vector.<Number>, blendFactor:Number ):void
 		{
+			if (!matrix) {
+				matrix = new Vector.<Number>(26);
+				blendFactor = 0;
+			}
 			var i : int;
 			for (i = 0; i < 12; ++i)
 				_fragmentShaderData[i] = matrix[i];

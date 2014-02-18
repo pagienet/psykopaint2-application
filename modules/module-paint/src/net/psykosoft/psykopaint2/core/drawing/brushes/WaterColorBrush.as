@@ -90,7 +90,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			super(false);
 			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, 2, 0, 4);
-			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_GRAVITY_INFLUENCE, 0.1, 0, .3);
+			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_GRAVITY_INFLUENCE, 0.0, 0, .3);
 			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_VISCOSITY, .2, 0, 1);
 			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_DRAG, .1, 0, .2);
 			_pigmentDensity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_DENSITY, .25, 0,.4);
