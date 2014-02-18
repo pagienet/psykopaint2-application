@@ -207,7 +207,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		{
 			if (_numIndices < 3) return;
 
-			if (numTriangles < 0) numTriangles = _numIndices / 3;
+			if (numTriangles < 0) numTriangles = _numIndices / 3 - offset;
 
 			var vertexBuffer : VertexBuffer3D = getVertexBuffer(context3d);
 			context3d.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);

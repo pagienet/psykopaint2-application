@@ -68,13 +68,14 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 
 		public function execute(stroke : SimulationMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase, textureRatioX : Number, textureRatioY : Number) : void
 		{
-			var triOffset : int = _triOffset <= 2? 0 : _triOffset-2;
+			const overlapPreventionTris : int = 4;
+			var triOffset : int = _triOffset <= overlapPreventionTris? 0 : _triOffset-overlapPreventionTris;
 			var stationaryEnd : int = stroke.numTriangles - stroke.stationaryTriangleCount;
 			if (triOffset > stationaryEnd) triOffset = stationaryEnd;
 			// nothing new
 			if (triOffset == stroke.numTriangles) return;
 
-			_context.setRenderToTexture(target);
+			_context.setRenderToTexture(target, true);
 			_context.clear();
 			CopyTexture.copy(source, _context, textureRatioX, textureRatioY);
 			_context.setProgram(_program);
@@ -82,6 +83,15 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _fragmentConstants, 1);
 
 			_context.setTextureAt(0, brushTexture);
+
+			if (triOffset > 0) {
+				_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
+				_context.setStencilReferenceValue(0);
+				_context.setColorMask(false, false, false, false);
+				stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS, overlapPreventionTris, false, triOffset);
+				_context.setColorMask(true, true, true, true);
+			}
+
 			stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS, -1, false, triOffset);
 			_context.setTextureAt(0, null);
 

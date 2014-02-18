@@ -84,13 +84,14 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 
 		public function execute(stroke : SimulationMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase, textureRatioX : Number, textureRatioY : Number) : void
 		{
-			var triOffset : int = _triOffset <= 2? 0 : _triOffset-2;
+			const overlapPreventionTris : int = 4;
+			var triOffset : int = _triOffset <= overlapPreventionTris? 0 : _triOffset-overlapPreventionTris;
 			var stationaryEnd : int = stroke.numTriangles - stroke.stationaryTriangleCount;
 			if (triOffset > stationaryEnd) triOffset = stationaryEnd;
 			// nothing new
 			if (triOffset == stroke.numTriangles) return;
 
-			_context.setRenderToTexture(target);
+			_context.setRenderToTexture(target, true);
 			_context.clear(1, 1, 1, 1);
 
 			CopyTexture.copy(source, _context, textureRatioX, textureRatioY);
@@ -98,16 +99,19 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			_context.setProgram(_program);
 			_context.setTextureAt(0, brushTexture);
 
+			_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
+			_context.setStencilReferenceValue(0);
+			_context.setColorMask(false, false, false, false);
 
 			if (_subtractive) {
 				_context.setTextureAt(1, source);
 				_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 				_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _props, 1);
-				stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS | SimulationMesh.CANVAS_TEXTURE_UVS, 1, true, triOffset);
+
+				drawWithoutOverlap(stroke, SimulationMesh.BRUSH_TEXTURE_UVS | SimulationMesh.CANVAS_TEXTURE_UVS, triOffset, overlapPreventionTris);
 			}
 			else {
-				_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
-				stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS, -1, true, triOffset);
+				drawWithoutOverlap(stroke, SimulationMesh.BRUSH_TEXTURE_UVS, triOffset, overlapPreventionTris);
 			}
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
@@ -115,6 +119,18 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			_context.setTextureAt(0, null);
 			_context.setTextureAt(1, null);
 			_triOffset = stroke.numTriangles;
+		}
+
+		private function drawWithoutOverlap(stroke : SimulationMesh, uvMode : int, offset : int, overlapCount : int) : void
+		{
+			if (offset > 0) {
+				_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
+				_context.setStencilReferenceValue(0);
+				_context.setColorMask(false, false, false, false);
+				stroke.drawMesh(_context, uvMode, overlapCount, false, offset);
+				_context.setColorMask(true, true, true, true);
+			}
+			stroke.drawMesh(_context, uvMode, -1, true, offset);
 		}
 	}
 }
