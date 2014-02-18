@@ -61,5 +61,19 @@ package net.psykosoft.psykopaint2.core.drawing.data
 					vo.parameters.push( _parameters[i] );
 			}
 		}
+		
+	
+		public function getParameterByPath(path:Array):PsykoParameter
+		{
+			var parameterID:String = path[1];
+			for ( var i:int = 0; i < _parameters.length; i++ )
+			{
+				if( _parameters[i].id == parameterID )
+				{
+					return _parameters[i];
+				}
+			}
+			return null;
+		}
 	}
 }

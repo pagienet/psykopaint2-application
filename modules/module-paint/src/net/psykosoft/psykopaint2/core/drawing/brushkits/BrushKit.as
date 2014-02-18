@@ -37,11 +37,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	public class BrushKit extends EventDispatcher
 	{
 		
-		private static var _initialized:Boolean = false;
-		private static var _availableBrushTypes:Vector.<String>;
-		private static var _brushClassFromBrushType:Dictionary;
+		protected static var _initialized:Boolean = false;
+		protected static var _availableBrushTypes:Vector.<String>;
+		protected static var _brushClassFromBrushType:Dictionary;
 		
-		private static function init():void
+		protected static function init():void
 		{
 			registerBrush( BrushType.WATER_COLOR, WaterColorBrush );
 			registerBrush( BrushType.WATER_DAMAGE, WaterDamageBrush );
@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_initialized = true;
 		}
 		
-		private static function registerBrush( brushName:String, brushClass:Class ):void {
+		protected static function registerBrush( brushName:String, brushClass:Class ):void {
 			if( !_availableBrushTypes ) _availableBrushTypes = new Vector.<String>();
 			if( !_brushClassFromBrushType ) _brushClassFromBrushType = new Dictionary();
 			_availableBrushTypes.push( brushName );
@@ -74,7 +74,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		public var name:String;
 		protected var _brushEngine:AbstractBrush;
-		protected var _parameterMappings:Vector.<PsykoParameterMapping>;
+		protected var _parameterMapping:PsykoParameterMapping;
 		
 
 		public function BrushKit() 
@@ -85,15 +85,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			if (!_initialized ) BrushKit.init();
 			
 			name = xml.@name;
-			_parameterMappings = new Vector.<PsykoParameterMapping>();
 			
 			if ( _brushClassFromBrushType[ String(xml.@engine) ] )
 			{
 				brushEngine = new _brushClassFromBrushType[ String(xml.@engine) ]();
 				
-				for ( var i:int = 0; i < xml.parameterMapping.length(); i++ )
+				if ( xml.parameterMapping.length() > 1 )
 				{
-					addParameterMappingFromXML( xml.parameterMapping[i] );
+					throw("Only 1 parameterMapping tag per BrushKit is allowed!");
+				} else if (xml.parameterMapping.length() == 1 )
+				{
+					addParameterMappingFromXML( xml.parameterMapping[0] );
 				}
 				
 				if ( xml.pathengine[0] )
@@ -156,17 +158,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		public function getParameterSet( showInUIOnly:Boolean = true):ParameterSetVO
 		{
 			var vo:ParameterSetVO = new ParameterSetVO(name);
-			for ( var i:int = 0; i < _parameterMappings.length; i++ )
-			{
-				_parameterMappings[i].getParameterSet( vo, showInUIOnly );
-			}
+			if ( _parameterMapping ) _parameterMapping.getParameterSet( vo, showInUIOnly );
 			_brushEngine.getParameterSet(vo,showInUIOnly);
 			return vo;
 		}
 		
 		public function addParameterMappingFromXML( xml:XML ):void
 		{
-			_parameterMappings.push( PsykoParameterMapping.fromXML( xml ));
+			_parameterMapping = PsykoParameterMapping.fromXML( xml );
 		}
 		
 		public function setBrushParameter( parameter:XML):void
@@ -243,9 +242,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		public function linkParameterMappings():void
 		{
-			for ( var i:int = 0; i < _parameterMappings.length; i++ )
+			if ( _parameterMapping )
 			{
-				var mapping:PsykoParameterMapping = _parameterMappings[i];
+				var mapping:PsykoParameterMapping = _parameterMapping;
 				for ( var j:int = 0; j < mapping.parameterProxies.length; j++ )
 				{
 					switch ( mapping.parameterProxies[j].type )
@@ -267,14 +266,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 		}
 		
-		private function getParameterByPath(target_path:String):PsykoParameter
+		protected function getParameterByPath(target_path:String):PsykoParameter
 		{
 			var path:Array = target_path.split(".");
 			if ( path[0] == "parameterMapping" ) 
 			{
-				for ( var i:int = 0; i < _parameterMappings.length; i++ )
+				if ( _parameterMapping)
 				{
-					var parameter:PsykoParameter =  _parameterMappings[i].getParameterByPath( path );
+					var parameter:PsykoParameter =  _parameterMapping.getParameterByPath( path );
 					if ( parameter != null ) return parameter;
 				}
 				throw("BrushKit.getParameterByPath "+target_path+" not found");

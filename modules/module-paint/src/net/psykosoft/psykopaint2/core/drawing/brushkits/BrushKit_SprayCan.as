@@ -1,12 +1,13 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
-	import net.psykosoft.psykopaint2.core.drawing.BrushType;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
-	import net.psykosoft.psykopaint2.core.drawing.paths.AbstractPathEngine;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
@@ -14,16 +15,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	public class BrushKit_SprayCan extends BrushKit
 	{
 		
-		private static const definitionXML:XML = <brush engine={BrushType.SPRAY_CAN} name="Spraycan">
-			<parameter id={AbstractBrush.PARAMETER_NR_SIZE_FACTOR} path="brush" value1="0" value2="1" />
-			<parameter id={AbstractBrush.PARAMETER_N_BUMPINESS} path="brush" value="0"/>
-			<parameter id={AbstractBrush.PARAMETER_N_BUMP_INFLUENCE} path="brush" value=".8"/>
-			<parameter id={AbstractBrush.PARAMETER_N_QUAD_OFFSET_RATIO} path="brush" value=".4"/>
-
-			<parameter id={AbstractBrush.PARAMETER_IL_SHAPES} path="brush" index="0" list="paint1,basic,splat,line,sumi" showInUI="0"/>
-			
+		private static const definitionXML:XML = <brush>
 			<parameterMapping>
-				<parameter id="Precision" label="Precision" value="0.25" minValue="0" maxValue="1" showInUI="1"/>
 				<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP}
 					src="Precision"
 					target={"pathengine.pointdecorator_0."+SizeDecorator.PARAMETER_N_FACTOR}
@@ -69,8 +62,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					targetMappings="1,1"
 					/>
 				
-				<parameter id="Intensity" value="0.9" minValue="0" maxValue="1" showInUI="2"/>
-				
 				<proxy type={PsykoParameterProxy.TYPE_VALUE_MAP}
 					src="Intensity"
 					target={"pathengine.pointdecorator_4."+ColorDecorator.PARAMETER_N_OPACITY}
@@ -115,63 +106,97 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					targetFactors="0.5"
 					targetMappings="0"
 					/>
-
 			</parameterMapping>
-			<pathengine type={PathManager.ENGINE_TYPE_EXPERIMENTAL}>
-
-				<parameter id={AbstractPathEngine.PARAMETER_SPEED_SMOOTHING} path="pathengine" value="0.02" />
-
-				<SizeDecorator>
-					<parameter id={SizeDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_0" index={SizeDecorator.INDEX_MODE_PRESSURE_SPEED} />
-					<parameter id={SizeDecorator.PARAMETER_N_FACTOR} path="pathengine.pointdecorator_0" label="Size" value="0.08" minValue="0" maxValue="1" />
-					<parameter id={SizeDecorator.PARAMETER_N_RANGE} path="pathengine.pointdecorator_0" label="Range" value="0.04" minValue="0" maxValue="1" />
-					<parameter id={SizeDecorator.PARAMETER_SL_MAPPING} path="pathengine.pointdecorator_0" index={SizeDecorator.INDEX_MAPPING_CIRCQUAD}/>
-				</SizeDecorator>
-				
-				<SplatterDecorator>
-					<parameter id={SplatterDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_1" index={SplatterDecorator.INDEX_MODE_SIZE_INV} />
-					<parameter id={SplatterDecorator.PARAMETER_N_MAX_SIZE} path="pathengine.pointdecorator_1" value="1" />
-					<parameter id={SplatterDecorator.PARAMETER_SL_OFFSET_MAPPING} path="pathengine.pointdecorator_1" index={SplatterDecorator.INDEX_MAPPING_LINEAR}   />
-					<parameter id={SplatterDecorator.PARAMETER_N_SPLAT_FACTOR}  path="pathengine.pointdecorator_1" value="20" maxValue="80" />
-					<parameter id={SplatterDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_1" value="0" />
-					<parameter id={SplatterDecorator.PARAMETER_A_OFFSET_ANGLE_RANGE} path="pathengine.pointdecorator_1" value="360" />
-					<parameter id={SplatterDecorator.PARAMETER_N_SIZE_FACTOR} path="pathengine.pointdecorator_1" value="0" />
-				</SplatterDecorator>
-
-				<BumpDecorator>
-					<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.INDEX_MODE_RANDOM2} />
-					<parameter id={BumpDecorator.PARAMETER_B_INVERT_MAPPING} path="pathengine.pointdecorator_2" value="1" />
-					<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS} path="pathengine.pointdecorator_2" value="0.5" minValue="0" maxValue="1"  />
-					<parameter id={BumpDecorator.PARAMETER_N_BUMPINESS_RANGE} path="pathengine.pointdecorator_2" value="0.5"/>
-					<parameter id={BumpDecorator.PARAMETER_N_BUMP_INFLUENCE} path="pathengine.pointdecorator_2" value=".8"   />
-					<parameter id={BumpDecorator.PARAMETER_N_NO_BUMP_PROB} path="pathengine.pointdecorator_2" value=".8"   />
-				</BumpDecorator>
-				
-				<SpawnDecorator>
-					<parameter id={SpawnDecorator.PARAMETER_IR_MULTIPLES} path="pathengine.pointdecorator_3" value1="0" value2="20" />
-					<parameter id={SpawnDecorator.PARAMETER_SL_MULTIPLE_MODE} path="pathengine.pointdecorator_3" index={SpawnDecorator.INDEX_MODE_SIZE_INV} />
-					<parameter id={SpawnDecorator.PARAMETER_SL_OFFSET_MODE} path="pathengine.pointdecorator_3" index={SpawnDecorator.INDEX_MODE_RANDOM} />
-					<parameter id={SpawnDecorator.PARAMETER_AR_OFFSET_ANGLE} path="pathengine.pointdecorator_3" value1="-180" value2="180" />
-					<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_SIZE} path="pathengine.pointdecorator_3" value="0.12"  />
-					<parameter id={SpawnDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_3" value="0"  />
-					<parameter id={SpawnDecorator.PARAMETER_N_MAXIMUM_OFFSET} path="pathengine.pointdecorator_3" value="16"  />
-				</SpawnDecorator>
-				
-				<ColorDecorator>
-					<parameter id={ColorDecorator.PARAMETER_N_OPACITY}  path="pathengine.pointdecorator_4" value="0.9"/>
-					<parameter id={ColorDecorator.PARAMETER_N_OPACITY_RANGE}  path="pathengine.pointdecorator_4" value="0.2" />
-					<parameter id={ColorDecorator.PARAMETER_NR_COLOR_BLENDING}  path="pathengine.pointdecorator_4" value1="0.95" value2="1" />
-					<parameter id={ColorDecorator.PARAMETER_NR_PICK_RADIUS}  path="pathengine.pointdecorator_4" value1="0.25" value2="0.33" />
-					<parameter id={ColorDecorator.PARAMETER_NR_SMOOTH_FACTOR}  path="pathengine.pointdecorator_4" value1="0.8" value2="1" />
-				</ColorDecorator>
-
-				
-			</pathengine>
 		</brush>
 		
 		public function BrushKit_SprayCan()
 		{
 			init(definitionXML);
 		}
+		
+		override protected function init( xml:XML ):void
+		{
+			if (!_initialized ) BrushKit.init();
+			
+			name = "Spraycan";
+			
+			brushEngine = new SprayCanBrush();
+			brushEngine.param_bumpiness.numberValue = 0;
+			brushEngine.param_bumpInfluence.numberValue = 0.8;
+			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
+			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","basic","splat","line","sumi"]);
+			brushEngine.param_shapes.index = 0;
+			brushEngine.param_shapes.showInUI = 0;
+			
+			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
+			brushEngine.pathManager = pathManager;
+			pathManager.pathEngine.speedSmoothing.numberValue = 0.02;
+			
+			var sizeDecorator:SizeDecorator = new SizeDecorator();
+			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
+			sizeDecorator.param_mappingFactor.numberValue = 0.08;
+			sizeDecorator.param_mappingRange.numberValue = 0.04;
+			sizeDecorator.param_mappingFunction.index = SizeDecorator.INDEX_MAPPING_CIRCQUAD;
+			pathManager.addPointDecorator( sizeDecorator );
+			
+			var splatterDecorator:SplatterDecorator = new SplatterDecorator();
+			splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SIZE_INV;
+			splatterDecorator.param_mappingMode.numberValue = 1;
+			splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_LINEAR;
+			splatterDecorator.param_splatFactor.numberValue = 20;
+			splatterDecorator.param_minOffset.numberValue = 0;
+			splatterDecorator.param_offsetAngleRange.degrees = 360;
+			splatterDecorator.param_sizeFactor.numberValue = 0;
+			pathManager.addPointDecorator( splatterDecorator );
+			
+			var bumpDecorator:BumpDecorator = new BumpDecorator();
+			bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_RANDOM2;
+			bumpDecorator.param_invertMapping.booleanValue = true;
+			bumpDecorator.param_bumpiness.numberValue = 0.5;
+			bumpDecorator.param_bumpinessRange.numberValue = 0.5;
+			bumpDecorator.param_bumpInfluence.numberValue = 0.8;
+			bumpDecorator.param_noBumpProbability.numberValue = 0.8;
+			pathManager.addPointDecorator( bumpDecorator );
+					
+			var spawnDecorator:SpawnDecorator = new SpawnDecorator();
+			spawnDecorator.param_multiples.upperRangeValue = 16;
+			spawnDecorator.param_multiplesMode.index = SpawnDecorator.INDEX_MODE_SIZE_INV;
+			spawnDecorator.param_offsetMode.index = SpawnDecorator.INDEX_MODE_RANDOM;
+			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
+			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
+			spawnDecorator.param_maxSize.numberValue = 0.12;
+			spawnDecorator.param_minOffset.numberValue = 0;
+			spawnDecorator.param_maxOffset.numberValue = 16;
+			pathManager.addPointDecorator( spawnDecorator );
+			
+			var colorDecorator:ColorDecorator = new ColorDecorator();
+			colorDecorator.param_brushOpacity.numberValue = 0.9;
+			colorDecorator.param_brushOpacityRange.numberValue = 0.2;
+			colorDecorator.param_colorBlending.lowerRangeValue = 0.95;
+			colorDecorator.param_pickRadius.lowerRangeValue = 0.25;
+			colorDecorator.param_pickRadius.upperRangeValue = 0.33;
+			colorDecorator.param_smoothFactor.lowerRangeValue = 0.8;
+			pathManager.addPointDecorator( colorDecorator );
+			
+			_parameterMapping = new PsykoParameterMapping();
+			
+			var precision:PsykoParameter = new PsykoParameter( PsykoParameter.NumberParameter,"Precision",0.25,0,1);
+			precision.showInUI = 1;
+			_parameterMapping.addParameter(precision);
+			
+			var intensity:PsykoParameter = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",0.9,0,1);
+			intensity.showInUI = 2;
+			_parameterMapping.addParameter(intensity);
+			
+			//TODO: replace XML with direct instatiation
+			for ( var i:int = 0; i < xml.parameterMapping[0].proxy.length(); i++ )
+			{
+				_parameterMapping.addProxy( PsykoParameterProxy.fromXML( xml.parameterMapping[0].proxy[i] ) );
+			}
+			
+			linkParameterMappings();
+			
+		}
+		
 	}
 }

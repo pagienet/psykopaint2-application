@@ -78,9 +78,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			super(false);
 			type = BrushType.BLOB;
 			
-			_shininess.numberValue = .3;
-			_glossiness.numberValue = .25;
-			_bumpiness.numberValue = .6;
+			param_shininess.numberValue = .3;
+			param_glossiness.numberValue = .25;
+			param_bumpiness.numberValue = .6;
 			
 			_appendVO.verticesAndUV = new Vector.<Number>(36,true);
 			_appendVO.point = new SamplePoint();

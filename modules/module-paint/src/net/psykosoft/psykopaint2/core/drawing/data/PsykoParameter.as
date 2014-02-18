@@ -397,6 +397,13 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			return _stringValues;
 		}
 		
+		public function set stringList( value:Vector.<String>):void
+		{
+			 _stringValues = value;
+			 minLimit = 0;
+			 maxLimit = _stringValues.length-1;
+		}
+		
 		public function get numberList():Vector.<Number>
 		{
 			return _numberValues;
@@ -411,6 +418,10 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			{
 				if ( _numberValues[0] < _minLimit ) _numberValues[0] = _minLimit;
 				if ( _numberValues[1] < _minLimit ) _numberValues[1] = _minLimit;
+			}
+			if ( type == StringListParameter || type == IconListParameter || type == NumberListParameter )
+			{
+				if ( _index < _minLimit ) _index = _minLimit;
 			}
 		}
 		
@@ -430,6 +441,10 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			{
 				if ( _numberValues[0] > _maxLimit ) _numberValues[0] = _maxLimit;
 				if ( _numberValues[1] > _maxLimit ) _numberValues[1] = _maxLimit;
+			}
+			if ( type == StringListParameter || type == IconListParameter || type == NumberListParameter )
+			{
+				if ( _index > _maxLimit ) _index = _maxLimit;
 			}
 		}
 		
@@ -559,9 +574,8 @@ package net.psykosoft.psykopaint2.core.drawing.data
 				case IconListParameter:
 					if ( message.hasOwnProperty("@list") )
 					{
-						_stringValues = Vector.<String>(String( message.@list ).split(",") );
-						_minLimit = 0;
-						_maxLimit = _stringValues.length-1;
+						stringList = Vector.<String>(String( message.@list ).split(",") );
+						
 					}
 					if ( message.hasOwnProperty("@index") )
 					{

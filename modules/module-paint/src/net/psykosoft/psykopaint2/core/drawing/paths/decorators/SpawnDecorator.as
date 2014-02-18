@@ -31,19 +31,17 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		
 		
 		
-		private var multiples:PsykoParameter;
-		private var minOffset:PsykoParameter;
-		private var maxOffset:PsykoParameter;
-		
-		private var offsetMode:PsykoParameter;
-		private var offsetAngleRange:PsykoParameter;
-		private var brushAngleRange:PsykoParameter;
-		private var bristleVariation:PsykoParameter;
-		private var maxSpeed:PsykoParameter;
-		private var maxSize:PsykoParameter;
-		
-		private var autorotate:PsykoParameter;
-		private var multiplesMode:PsykoParameter;
+		public var param_multiples:PsykoParameter;
+		public var param_minOffset:PsykoParameter;
+		public var param_maxOffset:PsykoParameter;
+		public var param_offsetMode:PsykoParameter;
+		public var param_offsetAngleRange:PsykoParameter;
+		public var param_brushAngleRange:PsykoParameter;
+		public var param_bristleVariation:PsykoParameter;
+		public var param_maxSpeed:PsykoParameter;
+		public var param_maxSize:PsykoParameter;
+		public var param_autorotate:PsykoParameter;
+		public var param_multiplesMode:PsykoParameter;
 		
 		private var swapVector:Vector.<SamplePoint>;
 		
@@ -51,20 +49,20 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		{
 			super( );
 			
-			multiples       = new PsykoParameter( PsykoParameter.IntRangeParameter,PARAMETER_IR_MULTIPLES,1,4,1,16);
-			minOffset       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MINIMUM_OFFSET,0,0,100);
-			maxOffset       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_OFFSET,16,0,100);
-			offsetMode      = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_OFFSET_MODE,2,["Fixed","Random","Speed","Pressure/Speed","Size","Size Inverse"]);
-			multiplesMode   = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_MULTIPLE_MODE,5,["Fixed","Random","Speed","Pressure/Speed","Size","Size Inverse"]);
+			param_multiples       = new PsykoParameter( PsykoParameter.IntRangeParameter,PARAMETER_IR_MULTIPLES,1,4,1,16);
+			param_minOffset       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MINIMUM_OFFSET,0,0,100);
+			param_maxOffset       = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_OFFSET,16,0,100);
+			param_offsetMode      = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_OFFSET_MODE,2,["Fixed","Random","Speed","Pressure/Speed","Size","Size Inverse"]);
+			param_multiplesMode   = new PsykoParameter( PsykoParameter.StringListParameter, PARAMETER_SL_MULTIPLE_MODE,5,["Fixed","Random","Speed","Pressure/Speed","Size","Size Inverse"]);
 			
-			offsetAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_OFFSET_ANGLE,0,0,-180,180);
-			brushAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_BRUSH_ANGLE_VARIATION,0,0,-180,180);
-			bristleVariation  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_NR_BRISTLE_VARIATION,1,0,1);
-			autorotate      = new PsykoParameter( PsykoParameter.BooleanParameter, PARAMETER_B_AUTOROTATE,1);
-			maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
-			maxSize   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SIZE,1,0,1);
+			param_offsetAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_OFFSET_ANGLE,0,0,-180,180);
+			param_brushAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_BRUSH_ANGLE_VARIATION,0,0,-180,180);
+			param_bristleVariation  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_NR_BRISTLE_VARIATION,1,0,1);
+			param_autorotate      = new PsykoParameter( PsykoParameter.BooleanParameter, PARAMETER_B_AUTOROTATE,1);
+			param_maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
+			param_maxSize   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SIZE,1,0,1);
 			
-			_parameters.push(  multiples,multiplesMode, minOffset, maxOffset, offsetMode, offsetAngleRange, brushAngleRange, bristleVariation,maxSpeed,autorotate,maxSize);
+			_parameters.push(  param_multiples,param_multiplesMode, param_minOffset, param_maxOffset, param_offsetMode, param_offsetAngleRange, param_brushAngleRange, param_bristleVariation,param_maxSpeed,param_autorotate,param_maxSize);
 			swapVector = new Vector.<SamplePoint>()
 		}
 		
@@ -73,27 +71,27 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var result:Vector.<SamplePoint> = swapVector;
 			
 			var count:int = points.length;
-			var ms:Number = maxSpeed.numberValue;
-			var ar:Boolean = autorotate.booleanValue;
-			var mapIndex:int = multiplesMode.index;
-			var msz:Number = maxSize.numberValue;
+			var ms:Number = param_maxSpeed.numberValue;
+			var ar:Boolean = param_autorotate.booleanValue;
+			var mapIndex:int = param_multiplesMode.index;
+			var msz:Number = param_maxSize.numberValue;
 			var c:int = 0;
 			
-			var oar_rng:Number = offsetAngleRange.rangeValue;
-			var oar_lrng:Number = offsetAngleRange.lowerRangeValue;
-			var bn:Number = bristleVariation.numberValue;
-			var bar_rng:Number = brushAngleRange.rangeValue;
-			var bar_lrng:Number = brushAngleRange.lowerRangeValue;
+			var oar_rng:Number = param_offsetAngleRange.rangeValue;
+			var oar_lrng:Number = param_offsetAngleRange.lowerRangeValue;
+			var bn:Number = param_bristleVariation.numberValue;
+			var bar_rng:Number = param_brushAngleRange.rangeValue;
+			var bar_lrng:Number = param_brushAngleRange.lowerRangeValue;
 			
 			for ( var j:int = 0; j < count; j++ )
 			{
 				var point:SamplePoint =  points[j];
-				var spawnCount:int =  multiples.lowerRangeValue + multiples.rangeValue * [1,Math.random(), point.speed / 25, point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, point.size, Math.max(0,msz - point.size) / msz][mapIndex]; 
+				var spawnCount:int =  param_multiples.lowerRangeValue + param_multiples.rangeValue * [1,Math.random(), point.speed / 25, point.pressure > 0 ? point.pressure / 1200 : point.speed / 25, point.size, Math.max(0,msz - point.size) / msz][mapIndex]; 
 				
 				//trace(spawnCount, point.size);
-				var offsetRange:Number = maxOffset.numberValue - minOffset.numberValue;
+				var offsetRange:Number = param_maxOffset.numberValue - param_minOffset.numberValue;
 				var distance:Number = 2 * offsetRange / spawnCount;
-				switch ( offsetMode.index )
+				switch ( param_offsetMode.index )
 				{
 					case 1:
 						distance *= Math.random();
@@ -111,7 +109,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 						break;
 				}
 				
-				distance += minOffset.numberValue;
+				distance += param_minOffset.numberValue;
 				
 				for ( var i:int = 0; i < spawnCount; i++ )
 				{
