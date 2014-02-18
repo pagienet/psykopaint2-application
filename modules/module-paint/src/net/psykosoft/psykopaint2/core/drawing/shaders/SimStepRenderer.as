@@ -33,7 +33,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 				_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
 				_context.setStencilReferenceValue(0);
 			}
-			stroke.drawMesh(_context, SimulationMesh.CANVAS_TEXTURE_UVS, 1, _useColor);
+			stroke.drawMesh(_context, SimulationMesh.CANVAS_TEXTURE_UVS, -1, _useColor);
 			_context.setStencilActions();
 		}
 

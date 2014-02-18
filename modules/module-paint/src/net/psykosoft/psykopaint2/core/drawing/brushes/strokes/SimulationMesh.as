@@ -203,9 +203,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 				CopySubTexture.copy(_bakedTexture.texture, sourceRect, bounds, context3d);
 		}
 
-		public function drawMesh(context3d : Context3D, uvMode : int, ratio : Number = 1, useColor : Boolean = true, offset : int = 0) : void
+		public function drawMesh(context3d : Context3D, uvMode : int, numTriangles : int = -1, useColor : Boolean = true, offset : int = 0) : void
 		{
 			if (_numIndices < 3) return;
+
+			if (numTriangles < 0) numTriangles = _numIndices / 3;
 
 			var vertexBuffer : VertexBuffer3D = getVertexBuffer(context3d);
 			context3d.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
@@ -213,7 +215,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			if (uvMode == (BRUSH_TEXTURE_UVS | CANVAS_TEXTURE_UVS))
 				context3d.setVertexBufferAt(3, vertexBuffer, 8, Context3DVertexBufferFormat.FLOAT_2);
 			if (useColor) context3d.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4);
-			context3d.drawTriangles(getIndexBuffer(context3d), offset * 3, _numIndices / 3 * ratio - offset);
+			context3d.drawTriangles(getIndexBuffer(context3d), offset * 3, numTriangles);
 			context3d.setVertexBufferAt(0, null);
 			context3d.setVertexBufferAt(1, null);
 			context3d.setVertexBufferAt(2, null);

@@ -84,7 +84,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 
 		public function execute(stroke : SimulationMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase, textureRatioX : Number, textureRatioY : Number) : void
 		{
-			var triOffset : int = _triOffset <= 4? 0 : _triOffset-4;
+			var triOffset : int = _triOffset <= 2? 0 : _triOffset-2;
 			var stationaryEnd : int = stroke.numTriangles - stroke.stationaryTriangleCount;
 			if (triOffset > stationaryEnd) triOffset = stationaryEnd;
 			// nothing new
@@ -107,7 +107,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			}
 			else {
 				_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
-				stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS, 1, true, triOffset);
+				stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS, -1, true, triOffset);
 			}
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
