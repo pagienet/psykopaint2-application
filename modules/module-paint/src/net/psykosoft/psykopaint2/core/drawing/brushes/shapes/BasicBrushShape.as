@@ -51,9 +51,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		override protected function uploadNormalSpecularMap(texture : Texture) : void
 		{
-			var source:BitmapData = new SourceNormalSpecularMap().bitmapData;
-			//var source:BitmapData = new BitmapData(size,size,false,0);
-			//source.noise(1234,0,64,3);
+			//var source:BitmapData = new SourceNormalSpecularMap().bitmapData;
+			var source:BitmapData = new BitmapData(size,size,false,0);
+			source.noise(1234,0,64,3);
 			uploadMips(_textureSize, source, texture);
 
 			source.dispose();

@@ -15,9 +15,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	
 	public class SprayCanBrush extends SplatBrushBase
 	{
-		public static const PARAMETER_I_NICOLAS_COLUMN : String = "Nicolas Column Parameter";
-		
-		
 		public function SprayCanBrush()
 		{
 			super(true);
