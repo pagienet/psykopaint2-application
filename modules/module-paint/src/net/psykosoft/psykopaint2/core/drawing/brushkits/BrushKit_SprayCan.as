@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","basic","almost circular hard","line","sumi"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","almost circular hard","almost circular rough","basic","line","sumi"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -131,18 +131,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onStyleChanged(event:Event):void
 		{
-			if (  param_style.index == 1 || param_style.index == 2)
+			if (  param_style.index == 0)
 			{
-				brushEngine.param_quadOffsetRatio.numberValue = 0;
-			} else {
 				brushEngine.param_quadOffsetRatio.numberValue = 0.4;
+			} else {
+				brushEngine.param_quadOffsetRatio.numberValue = 0;
 			}
 			brushEngine.param_shapes.index = param_style.index;
 			
 			gridDecorator.active = false;
 			spawnDecorator.active = true;
 			
-			if (  param_style.index != 1 )
+			if (  param_style.index != 3 )
 			{
 				brushEngine.param_curvatureSizeInfluence.numberValue = 1;
 				sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
@@ -161,20 +161,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case 0:
 				break;
 				case 1:
-					gridDecorator.active = true;
-					spawnDecorator.active = false;
-					
-					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
-					sizeDecorator.param_mappingRange.numberValue = 0;
-					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
-					
-					bumpDecorator.param_bumpInfluence.numberValue = 0.8;
-					bumpDecorator.param_bumpiness.numberValue = 0.33;
-					bumpDecorator.param_bumpinessRange.numberValue = 0;
-					
-					colorDecorator.param_pickRadius.lowerRangeValue = 0.1;
-					colorDecorator.param_pickRadius.upperRangeValue = 0.2;
-				break;
 				case 2:
 					//spawnDecorator.active = false;
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_FIXED;
@@ -189,8 +175,21 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_pickRadius.upperRangeValue = 0.6;
 					
 					
-				break;
+					break;
 				case 3:
+					gridDecorator.active = true;
+					spawnDecorator.active = false;
+					
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
+					sizeDecorator.param_mappingRange.numberValue = 0;
+					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
+					
+					bumpDecorator.param_bumpInfluence.numberValue = 0.8;
+					bumpDecorator.param_bumpiness.numberValue = 0.33;
+					bumpDecorator.param_bumpinessRange.numberValue = 0;
+					
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.1;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.2;
 				break;
 				case 4:
 				break;
@@ -213,7 +212,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			switch ( param_style.index )
 			{
 				case 0:
-				case 3:
 				case 4:
 					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.25;
 					sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
@@ -221,13 +219,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_maxOffset.numberValue = 16 + precision * 40;
 					break;
 				case 1:
-					sizeDecorator.param_mappingFactor.numberValue = (4 / 62) + precision * (58/62);
-					sizeDecorator.param_mappingRange.numberValue = 0;
-					gridDecorator.param_stepX.numberValue = gridDecorator.param_stepY.numberValue = ((4 + 58 * precision) * 2);
-					
-					break;
 				case 2:
-					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
 					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
 					sizeDecorator.param_mappingRange.numberValue = 0.05;
 					splatterDecorator.param_splatFactor.numberValue = 10 * precision;
@@ -235,18 +227,24 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					spawnDecorator.param_maxSize.numberValue = 1;
 					spawnDecorator.param_maxOffset.numberValue = precision * 10;
 					break;
+					
+					break;
+				case 3:
+					sizeDecorator.param_mappingFactor.numberValue = (4 / 62) + precision * (58/62);
+					sizeDecorator.param_mappingRange.numberValue = 0;
+					gridDecorator.param_stepX.numberValue = gridDecorator.param_stepY.numberValue = ((4 + 58 * precision) * 2);
+					
+					break;
+				
 				
 			}
-			
-			
-			
 		}
 		
 		protected function onIntensityChanged(event:Event):void
 		{
 			var intensity:Number = param_intensity.numberValue;
 			colorDecorator.param_brushOpacity.numberValue = intensity;
-			if (  param_style.index != 1 )
+			if (  param_style.index != 3 )
 			{
 				bumpDecorator.param_bumpInfluence.numberValue = intensity;
 				bumpDecorator.param_bumpiness.numberValue = 0.5 * intensity;
@@ -261,7 +259,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
-			if (  param_style.index == 1 )
+			if (  param_style.index == 3 )
 			{
 				for ( var i:int = 0; i < points.length; i++ )
 				{
