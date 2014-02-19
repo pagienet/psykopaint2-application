@@ -71,7 +71,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		public function AbstractBrushMesh()
 		{
-			_normalSpecularFragmentData = new <Number>[.5, 1/(NUM_POISSON_SAMPLES + 1), 50, (NUM_POISSON_SAMPLES+1) *.5 ];
+			_normalSpecularFragmentData = new <Number>[.5, 1/(NUM_POISSON_SAMPLES + 1), 50, (NUM_POISSON_SAMPLES+1) *.5, 0, 0, 0, 0 ];
 			_normalSpecularVertexData = new <Number>[0, 0, 0, 1, .5, -.5, 0, 1, 0, 0, 0, 0 ,0,0,0,0];
 			_bounds = new Rectangle();
 			_programKey = getQualifiedClassName(this);
@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		private function initPoisson() : void
 		{
-			var fragmentIndex : uint = 4;
+			var fragmentIndex : uint = 8;
 			var points : Vector.<Number> = PoissonLookup.getDistribution(NUM_POISSON_SAMPLES);
 			var pointIndex : int = 0;
 			var rangeX : Number = SAMPLE_RANGE/CoreSettings.STAGE_WIDTH;
@@ -314,7 +314,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			var registers : Vector.<String> = new Vector.<String>();
 			var i : uint;
-			for (i = 1; i < _numFragmentRegisters; ++i) {
+			for (i = 2; i < _numFragmentRegisters; ++i) {
 				registers.push("fc" + i + ".xy");
 				registers.push("fc" + i + ".zw");
 			}
@@ -335,6 +335,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			for (i = 0; i < NUM_POISSON_SAMPLES; ++i) {
 				code += "add ft7, v3, " + registers[i] + "\n" +
+						// clamp to lower corner manually, due to non-rect textures
+						"min ft7.y, ft7.y, fc1.x\n" +
 						"tex ft7, ft7, fs1 <2d, clamp, linear, nomip>\n";
 
 				if (i == 0)
@@ -486,13 +488,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_normalSpecularVertexData[13] = bumpiness;
 			_normalSpecularVertexData[14] = shininess;
 			_normalSpecularVertexData[15] = influence;
-			/*
-			_normalSpecularFragmentData[3] = glossiness;
-			_normalSpecularFragmentData[4] = bumpiness*2;
-			_normalSpecularFragmentData[5] = shininess;
-			_normalSpecularFragmentData[6] = influence;
-			*/
-			
+
+			_normalSpecularFragmentData[4] = (canvas.height-1)/canvas.textureHeight;
+
 			context3d.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, _normalSpecularVertexData, 4);
 			context3d.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _normalSpecularFragmentData, _numFragmentRegisters);
 			context3d.drawTriangles(getIndexBuffer(context3d), 0, _numIndices/3);
