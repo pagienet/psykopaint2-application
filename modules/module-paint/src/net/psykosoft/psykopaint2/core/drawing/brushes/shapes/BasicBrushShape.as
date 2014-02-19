@@ -11,7 +11,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 	public class BasicBrushShape extends AbstractBrushShape
 	{
-		[Embed(source="assets/basic_normalmap.png", mimeType="image/png")]
+		[Embed(source="assets/basic_normalmap2.png", mimeType="image/png")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function BasicBrushShape(context3D : Context3D)
@@ -52,7 +52,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 		override protected function uploadNormalSpecularMap(texture : Texture) : void
 		{
 			var source:BitmapData = new SourceNormalSpecularMap().bitmapData;
-
+			//var source:BitmapData = new BitmapData(size,size,false,0);
+			//source.noise(1234,0,64,3);
 			uploadMips(_textureSize, source, texture);
 
 			source.dispose();

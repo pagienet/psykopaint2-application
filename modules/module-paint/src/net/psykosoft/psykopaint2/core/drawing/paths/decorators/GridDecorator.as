@@ -44,12 +44,12 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				var p:SamplePoint = points[i];
 				if ( sx > 0 ) 
 				{
-					p.x = p.x - (p.x % sx) + 0.5 * sx;
+					p.x = p.x - (p.x % sx)+ 0.5 * sx;
 					col = int(p.x / sx);
 				}
 				if ( sy > 0 ) 
 				{
-					p.y = p.y - (p.y % sy) + 0.5 * sy;
+					p.y = p.y - (p.y % sy)+ 0.5 * sy;
 					row = int(p.y / sy);
 				}
 				
