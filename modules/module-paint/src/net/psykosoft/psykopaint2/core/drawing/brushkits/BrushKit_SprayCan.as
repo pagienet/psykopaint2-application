@@ -7,7 +7,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
+	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CallbackDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.GridDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.PointDecoratorFactory;
@@ -27,6 +29,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var spawnDecorator:SpawnDecorator;
 		private var colorDecorator:ColorDecorator;
 		private var gridDecorator:GridDecorator;
+		private var callbackDecorator:CallbackDecorator;
 		
 		public function BrushKit_SprayCan()
 		{
@@ -101,6 +104,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			colorDecorator.param_pickRadius.upperRangeValue = 0.33;
 			colorDecorator.param_smoothFactor.lowerRangeValue = 0.8;
 			pathManager.addPointDecorator( colorDecorator );
+			
+			callbackDecorator = new CallbackDecorator( this, processPoints );
+			pathManager.addPointDecorator( callbackDecorator );
 			
 			_parameterMapping = new PsykoParameterMapping();
 			
@@ -216,8 +222,21 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				bumpDecorator.param_bumpinessRange.numberValue = 0;
 			}
 			bumpDecorator.param_glossiness.numberValue = 0.1 + 0.3 * intensity;
-			
-			
+		}
+		
+		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
+		{
+			if (  param_style.index == 1 )
+			{
+				for ( var i:int = 0; i < points.length; i++ )
+				{
+					if ( Math.random() < 0.05 )
+					{
+						points[i].angle = Math.random()*Math.PI*2;
+					}
+				}
+			}
+			return points;
 		}
 	}
 }
