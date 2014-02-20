@@ -156,11 +156,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_curvatureSizeInfluence.numberValue = 0;
 			colorDecorator.param_colorBlending.upperRangeValue = 1;
 			colorDecorator.param_colorBlending.lowerRangeValue = 0.95;
+			spawnDecorator.param_maxSize.numberValue = 1;
 			
 			switch ( param_style.index )
 			{
 				case 0:
 					brushEngine.param_curvatureSizeInfluence.numberValue = 1;
+					spawnDecorator.param_maxSize.numberValue = 0.12;
 				break;
 				
 				case 1:
@@ -177,7 +179,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.3;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.35;
 					
-					spawnDecorator.param_maxSize.numberValue = 1;
+					
 					break;
 				case 3:
 					gridDecorator.active = true;
@@ -202,7 +204,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			var precision:Number = param_precision.numberValue;
 			
-			
+			brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 8;
+			//brushEngine.pathManager.pathEngine.speedSmoothing.numberValue = 0.01 + precision * 0.3;
 			
 			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -(120 + precision * 60);
 			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 120 + precision * 60;
@@ -211,6 +214,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			switch ( param_style.index )
 			{
 				case 0:
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 3;
+					
 				case 4:
 					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.25;
 					sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
@@ -252,11 +257,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			bumpDecorator.param_bumpInfluence.numberValue = 1;
 			
-			bumpDecorator.param_bumpiness.numberValue = 0.8 * intensity;
+			bumpDecorator.param_bumpiness.numberValue = 0.7 * intensity;
 			bumpDecorator.param_bumpinessRange.numberValue = 0.2 * intensity;
 			
 			bumpDecorator.param_glossiness.numberValue = 0.3 + 0.2 * intensity;
-			bumpDecorator.param_shininess.numberValue = 0.3 + 0.2 * intensity;
+			bumpDecorator.param_shininess.numberValue = 0.1 + 0.2 * intensity;
 		}
 		
 		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>

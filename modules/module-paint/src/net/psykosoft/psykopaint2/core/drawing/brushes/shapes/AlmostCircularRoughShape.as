@@ -10,16 +10,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	
 	public class AlmostCircularRoughShape extends EmbeddedBrushShape
 	{
-		[Embed(source="assets/notentirelycircular10.png", mimeType="image/png")]
+		[Embed(source="assets/notentirelycircular17_8x8.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
-		[Embed(source="assets/notentirelycircularheight6.png", mimeType="image/png")]
+		[Embed(source="assets/notentirelycircularheight11_8x8.png", mimeType="image/png")]
 		protected var SourceNormalSpecularMap:Class;
 
 		public function AlmostCircularRoughShape(context3D : Context3D)
 		{
 			super(context3D, "almost circular rough", SourceMap,SourceNormalSpecularMap,1024,8,8);
-			rotationRange = 0.10;
+			rotationRange = 0.05;
 		}
 	}
 }

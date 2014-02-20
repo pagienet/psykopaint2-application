@@ -4,6 +4,8 @@ package net.psykosoft.psykopaint2.core.model
 	import com.quasimondo.color.utils.ColorConverter;
 	import com.quasimondo.geom.ColorMatrix;
 	
+	import flash.utils.setTimeout;
+	
 	import net.psykosoft.psykopaint2.core.drawing.colortransfer.ColorTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.models.PaintMode;
@@ -61,7 +63,7 @@ package net.psykosoft.psykopaint2.core.model
 				}
 				styleBlendParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Style Blend Factor",1,0,1);
 				previewMixtureParameter = new PsykoParameter(PsykoParameter.NumberParameter,"Preview Blending",0.5,0,1);
-				setupColorTransfer();
+				setupColorTransfer(0);
 				
 				_colorPalettes.push( Vector.<uint>([0x0b0b0b,0x01315a,0x00353b,0x026d01,0x452204,
 					0x7a1023,0xa91606,0xbd9c01,0x04396c,0xdedddb]));
@@ -78,27 +80,43 @@ package net.psykosoft.psykopaint2.core.model
 		}
 		
 		
-		private function setupColorTransfer():void
+		private function setupColorTransfer(step:int, parameterList:Array = null):void
 		{
-			styleMatrices = new Vector.<Vector.<Number>>();
-			//var cm:ColorMatrix = new ColorMatrix();
-			styleMatrices.push(null);
-			var colorTransfer:ColorTransfer = canvasModel.colorTransfer;
-			var parameterList:Array = ["No Style"];
-			
-			var presets:Vector.<String> = ColorStylePresets.getAvailableColorStylePresets();
-			var cm:ColorMatrix;
-			for ( var i:int = 0; i < presets.length; i++ )
+			if ( step == 0 )
 			{
+				styleMatrices = new Vector.<Vector.<Number>>();
+				styleMatrices.push(null);
+				 parameterList = ["No Style"];
+				 colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,parameterList);
+			}
+			
+			var colorTransfer:ColorTransfer = canvasModel.colorTransfer;
+			var presets:Vector.<String> = ColorStylePresets.getAvailableColorStylePresets();
+			var cm1:ColorMatrix;
+			var cm2:ColorMatrix;
+			var i:int = step;
+			//for ( var i:int = 0; i < presets.length; i++ )
+			//{
 				
 				var preset:XML = ColorStylePresets.getPreset(presets[i]);
 				parameterList.push(preset.@name);
 				colorTransfer.setFactors(0, preset );
 				colorTransfer.calculateColorMatrices();
-				cm = colorTransfer.getColorMatrix(0);
-				var v:Vector.<Number> = Vector.<Number>([cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255]);
-				cm = colorTransfer.getColorMatrix(1);
-				v.push(cm.matrix[0],cm.matrix[1],cm.matrix[2],cm.matrix[4] / 255,cm.matrix[5],cm.matrix[6],cm.matrix[7],cm.matrix[9]/ 255,cm.matrix[10],cm.matrix[11],cm.matrix[12],cm.matrix[14]/ 255);
+				cm1 = colorTransfer.getColorMatrix(0);
+				cm2 = colorTransfer.getColorMatrix(1);
+				/*
+				if ( threshold < 0 )
+				{
+					cm1.adjustSaturation(-1)
+					cm1.invert();
+					cm2.adjustSaturation(-1)
+					cm2.invert();
+				}
+				*/
+				
+				var v:Vector.<Number> = Vector.<Number>([cm1.matrix[0],cm1.matrix[1],cm1.matrix[2],cm1.matrix[4] / 255,cm1.matrix[5],cm1.matrix[6],cm1.matrix[7],cm1.matrix[9]/ 255,cm1.matrix[10],cm1.matrix[11],cm1.matrix[12],cm1.matrix[14]/ 255,
+					cm2.matrix[0],cm2.matrix[1],cm2.matrix[2],cm2.matrix[4] / 255,cm2.matrix[5],cm2.matrix[6],cm2.matrix[7],cm2.matrix[9]/ 255,cm2.matrix[10],cm2.matrix[11],cm2.matrix[12],cm2.matrix[14]/ 255]);
+				
 				var blendIn:Number = preset.@blend_in;
 				var blendOut:Number =  preset.@blend_out;
 				var blendRange:Number = blendIn + blendOut;
@@ -106,10 +124,10 @@ package net.psykosoft.psykopaint2.core.model
 				v.push((threshold - blendRange *0.5 )/ 255.0 ,  255 / blendRange );
 				styleMatrices.push( v );
 				
-			}
-			
-			colorStyleParameter = new PsykoParameter( PsykoParameter.IconListParameter,"Color Style",0,parameterList);
-			
+			//}
+			step++;
+			colorStyleParameter.stringList = Vector.<String>(parameterList);
+			if ( step < presets.length ) setTimeout(setupColorTransfer,50,step,parameterList);
 			
 			
 			

@@ -2,6 +2,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 {
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.clearTimeout;
@@ -224,8 +225,10 @@ package net.psykosoft.psykopaint2.paint.views.color
 				
 			this.styleParameter = styleParameter;
 			//showStyleIcons(styleParameter);
-			
+			this.styleParameter.addEventListener(Event.CHANGE,onStyleListChanged );
 		}
+		
+		
 		
 		public function setSnappings( slider1:Vector.<Number> = null, slider2:Vector.<Number> = null ):void
 		{
@@ -259,5 +262,12 @@ package net.psykosoft.psykopaint2.paint.views.color
 			updateStyleSliderShuffling();
 		}
 		
+		protected function onStyleListChanged(event:Event):void
+		{
+			if ( styleParameter.stringList.length > previewIcons.length )
+			{
+				initUI();
+			}
+		}
 	}
 }

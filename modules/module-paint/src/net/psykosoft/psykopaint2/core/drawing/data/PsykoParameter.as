@@ -402,6 +402,7 @@ package net.psykosoft.psykopaint2.core.drawing.data
 			 _stringValues = value;
 			 minLimit = 0;
 			 maxLimit = _stringValues.length-1;
+			 dispatchEvent( new Event( Event.CHANGE ) );
 		}
 		
 		public function get numberList():Vector.<Number>
