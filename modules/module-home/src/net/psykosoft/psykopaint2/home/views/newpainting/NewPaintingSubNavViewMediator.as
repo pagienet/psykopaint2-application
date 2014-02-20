@@ -168,7 +168,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 					}
 				}
 			}
-			paintingModel.activePaintingId = infoVO.id;
+			if( infoVO ) paintingModel.activePaintingId = infoVO.id;
 		}
 	}
 }
