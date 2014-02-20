@@ -334,7 +334,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 					"add ft6.xy, ft6.xy, fc0.x\n";
 
 			for (i = 0; i < NUM_POISSON_SAMPLES; ++i) {
-				code += "add ft7, v3, " + registers[i] + "\n" +
+				code += "mul ft5.xy, " + registers[i] + ", ft1.x\n";
+				code += "add ft7, v3, ft5.xy\n" +
 						// clamp to lower corner manually, due to non-rect textures
 						"min ft7.y, ft7.y, fc1.x\n" +
 						"tex ft7, ft7, fs1 <2d, clamp, linear, nomip>\n";
