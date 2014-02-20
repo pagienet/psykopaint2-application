@@ -93,7 +93,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (rsize > 1) rsize = 1;
 			else if (rsize < 0) rsize = 0;
 			
-			_appendVO.uvBounds.x = int(Math.random() * _shapeVariations[0]) * _shapeVariations[2];
+			_appendVO.uvBounds.x = int(Math.random() * _shapeVariations[0]) * _shapeVariations[2]; 
 			_appendVO.uvBounds.y = int(Math.random() * _shapeVariations[1]) * _shapeVariations[3];
 			_appendVO.size =  rsize * _canvasScaleW * _maxBrushRenderSize;
 			_appendVO.point = point;
