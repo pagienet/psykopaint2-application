@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.core.views.components.previews
 			"Cezanne 1","Cezanne 2","Starry Night",
 			"mona lisa","Grey 1","Grey 2","Black and White","Franz Marc","Goya",
 			"Munch","Le Guitarriste",
-			"pencilSketch","wet","render"
+			"pencilSketch","wet","render","sketch"
 		];
 		
 		

@@ -20,6 +20,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	public class BrushKit_SprayCan extends BrushKit
 	{
 		
+		private static const STYLE_PAINTSTROKES:int = 0;
+		private static const STYLE_HARD_ROUND_CIRCLE:int = 1;
+		private static const STYLE_ROUGH_SQUARE:int = 2;
+		private static const STYLE_PENCIL_SKETCH:int = 3;
+		private static const STYLE_PIXELATE:int = 4;
+		private static const STYLE_WHATEVER:int = 5;
+		
 		
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -48,7 +55,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","almost circular hard","almost circular rough","basic","line","sumi"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","almost circular hard","almost circular rough","line","basic","line"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -114,7 +121,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["paint1","basic","splat","line","sumi"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["paint1","basic","splat","sketch","line","sumi"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -133,7 +140,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onStyleChanged(event:Event):void
 		{
-			if (  param_style.index == 0)
+			if (  param_style.index == STYLE_PAINTSTROKES)
 			{
 				brushEngine.param_quadOffsetRatio.numberValue = 0.4;
 			} else {
@@ -144,7 +151,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			gridDecorator.active = false;
 			spawnDecorator.active = true;
 			
-			if (  param_style.index != 3 )
+			if (  param_style.index != STYLE_PIXELATE )
 			{
 				sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
 				colorDecorator.param_pickRadius.lowerRangeValue = 0.25;
@@ -158,16 +165,21 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			colorDecorator.param_colorBlending.lowerRangeValue = 0.95;
 			spawnDecorator.param_maxSize.numberValue = 1;
 			
+			
+			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
+			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
+			
+			
 			switch ( param_style.index )
 			{
-				case 0:
+				case STYLE_PAINTSTROKES:
+				case STYLE_WHATEVER:
 					brushEngine.param_curvatureSizeInfluence.numberValue = 1;
 					spawnDecorator.param_maxSize.numberValue = 0.12;
 				break;
 				
-				case 1:
-				case 2:
-					//spawnDecorator.active = false;
+				case STYLE_HARD_ROUND_CIRCLE:
+				case STYLE_ROUGH_SQUARE:
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_FIXED;
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
 					sizeDecorator.param_mappingRange.numberValue = 0;
@@ -178,10 +190,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_colorBlending.lowerRangeValue = 0.2;
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.3;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.35;
-					
-					
 					break;
-				case 3:
+				
+				case STYLE_PIXELATE:
 					gridDecorator.active = true;
 					spawnDecorator.active = false;
 					
@@ -192,7 +203,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					colorDecorator.param_pickRadius.lowerRangeValue = 0.1;
 					colorDecorator.param_pickRadius.upperRangeValue = 0.2;
 				break;
-				case 4:
+				
+				case STYLE_PENCIL_SKETCH:
+					splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SPEED;
+					
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.05;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.1;
+					colorDecorator.param_colorBlending.upperRangeValue = 0.1;
+					colorDecorator.param_colorBlending.lowerRangeValue = 0.2;
+					brushEngine.param_curvatureSizeInfluence.numberValue = 1;
+					
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
+					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_SPEED;
 				break;
 			}
 			
@@ -209,43 +232,55 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -(120 + precision * 60);
 			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 120 + precision * 60;
-		
+			splatterDecorator.param_angleAdjustment.degrees = 0;
 			
 			switch ( param_style.index )
 			{
-				case 0:
+				case STYLE_PAINTSTROKES:
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 3;
-					
-				case 4:
 					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.25;
 					sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
 					spawnDecorator.param_maxSize.numberValue = 0.05 + precision * 0.36;
 					spawnDecorator.param_maxOffset.numberValue = 16 + precision * 40;
 					break;
-				case 1:
+				
+				case STYLE_HARD_ROUND_CIRCLE:
 				
 					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
-					
 					splatterDecorator.param_splatFactor.numberValue = 10 * precision;
-					
-					
 					spawnDecorator.param_maxOffset.numberValue = precision * 4;
 					break;
 				
-				case 2:
+				case STYLE_ROUGH_SQUARE:
 					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
 					splatterDecorator.param_splatFactor.numberValue = 10 * precision;
 					spawnDecorator.param_maxOffset.numberValue = precision * 12;
 					break;
 					
 				
-				case 3:
+				case STYLE_PIXELATE:
 					sizeDecorator.param_mappingFactor.numberValue = (4 / 62) + precision * (58/62);
 					sizeDecorator.param_mappingRange.numberValue = 0;
 					gridDecorator.param_stepX.numberValue = gridDecorator.param_stepY.numberValue = ((4 + 58 * precision) * 2);
-					
 					break;
 				
+				case STYLE_PENCIL_SKETCH:
+					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision;
+					
+					sizeDecorator.param_mappingFactor.numberValue = 0.06;
+					sizeDecorator.param_mappingRange.numberValue = 0.04;
+					spawnDecorator.param_maxSize.numberValue = 1;
+					spawnDecorator.param_maxOffset.numberValue = 0.5 + precision * 4
+					spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
+					spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
+					
+					splatterDecorator.param_splatFactor.numberValue = 3 * precision;
+					splatterDecorator.param_angleAdjustment.degrees = 10;
+					
+					
+					
+					
+					break;
 				
 			}
 		}
@@ -266,7 +301,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
-			if (  param_style.index == 3 )
+			if (  param_style.index == STYLE_PIXELATE )
 			{
 				for ( var i:int = 0; i < points.length; i++ )
 				{
