@@ -23,6 +23,7 @@ package net.psykosoft.psykopaint2.home.views.home
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.events.Object3DEvent;
+	import away3d.events.Stage3DEvent;
 	import away3d.hacks.NativeTexture;
 	import away3d.hacks.PaintingMaterial;
 	import away3d.lights.LightBase;
@@ -71,18 +72,27 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var cropModeIsActive:Boolean;
 
 		private var cropTransformAccepted:Boolean;
-
+		private var stage3dProxy:Stage3DProxy;
+		
 		public function EaselView(view : View3D, light : LightBase, stage3dProxy : Stage3DProxy)
 		{
 			_view = view;
+			this.stage3dProxy = stage3dProxy;
 			_context3D = stage3dProxy.context3D;
+			stage3dProxy.addEventListener(Stage3DEvent.CONTEXT3D_RECREATED, onContextRecreated );
+			
 			_lightPicker = new StaticLightPicker([light]);
 			_view.camera.addEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraTransformChanged);
 			initMaterial();
 			initCanvas();
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
-
+		
+		protected function onContextRecreated(event:Stage3DEvent):void
+		{
+			_context3D = stage3dProxy.context3D;
+		}
+		
 		private function onAddedToStage(event : Event) : void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -338,6 +348,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function dispose() : void
 		{
+			stage3dProxy.removeEventListener(Stage3DEvent.CONTEXT3D_RECREATED, onContextRecreated );
+			
 			_view.camera.removeEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraTransformChanged);
 			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			_stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);

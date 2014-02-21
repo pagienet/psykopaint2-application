@@ -327,7 +327,8 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			var texture : BitmapTexture = new TrackedBitmapTexture(bitmapData);
 			var material : TextureMaterial = new TextureMaterial(texture);
 			texture.getTextureForStage3D(_stage3DProxy);
-			bitmapData.dispose();
+			//bitmaps cannot be disposed since they might get reuploaded upon context loss
+			//bitmapData.dispose();
 			_textures.push(texture);
 			_materials.push(material);
 			return material;
