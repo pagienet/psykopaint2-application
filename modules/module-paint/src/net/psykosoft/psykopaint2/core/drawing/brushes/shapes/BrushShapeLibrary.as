@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			registerShape(new SumiShape1(context3D));
 			registerShape(new AlmostCircularHardShape(context3D));
 			registerShape(new AlmostCircularRoughShape(context3D));
-			
+			registerShape(new DotsBrushShape(context3D));
 			/*
 			//disabled unused shapes
 			

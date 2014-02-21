@@ -12,7 +12,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 
 		public function LineBrushShape(context3D : Context3D)
 		{
-			super(context3D, "line", SourceMap,SourceNormalSpecularMap,128,1,32);
+			super(context3D, "line", SourceMap,SourceNormalSpecularMap,128,4,16);
 			rotationRange = 0;
 		}
 	}

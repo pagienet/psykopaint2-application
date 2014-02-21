@@ -66,7 +66,7 @@ package net.psykosoft.psykopaint2.core.model
 				setupColorTransfer(0);
 				
 				_colorPalettes.push( Vector.<uint>([0x0b0b0b,0x01315a,0x00353b,0x026d01,0x452204,
-					0x7a1023,0xa91606,0xbd9c01,0x04396c,0xdedddb]));
+					0x7a1023,0xa91606,0xbd9c01,0xdedddb,0x04396c]));
 				
 				
 				

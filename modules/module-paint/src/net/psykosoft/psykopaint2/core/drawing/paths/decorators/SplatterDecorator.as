@@ -28,6 +28,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_N_SIZE_FACTOR:String = "Size Factor";
 		public static const PARAMETER_A_ANGLE_ADJUSTMENT:String = "Angle Adjustment";
 		public static const PARAMETER_N_MAX_SIZE:String = "Maximum Size";
+		public static const PARAMETER_A_BRUSH_ANGLE_OFFSET_RANGE:String = "Brush Angle Offset Range";
 		
 		public static const INDEX_MODE_SPEED:int = 0;
 		public static const INDEX_MODE_SIZE:int = 1;
@@ -54,6 +55,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public var param_mappingMode:PsykoParameter;
 		public var param_mappingFunction:PsykoParameter;
 		public var param_angleAdjustment:PsykoParameter;
+		public var param_brushAngleOffsetRange:PsykoParameter;
 		public var param_maxSize:PsykoParameter;
 		
 		private var rng:LCG;
@@ -79,8 +81,9 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			param_offsetAngleRange  = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_OFFSET_ANGLE_RANGE,15,0,180);
 			param_sizeFactor 	      = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_SIZE_FACTOR,0.3,0,2);
 			param_angleAdjustment   = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_ANGLE_ADJUSTMENT,0,-180,180);
+			param_brushAngleOffsetRange = new PsykoParameter( PsykoParameter.AngleParameter,PARAMETER_A_BRUSH_ANGLE_OFFSET_RANGE,0,0,180);
 			param_maxSize			  = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAX_SIZE,1,0,512);
-			_parameters.push(param_mappingMode,param_mappingFunction, param_splatFactor,param_minOffset,param_offsetAngleRange,param_sizeFactor,param_angleAdjustment,param_maxSize );
+			_parameters.push(param_mappingMode,param_mappingFunction, param_splatFactor,param_minOffset,param_offsetAngleRange,param_sizeFactor,param_angleAdjustment,param_maxSize,param_brushAngleOffsetRange );
 			
 			rng = new LCG( Math.random() * 0xffffff );
 		}
@@ -98,6 +101,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			var spf:Number   = param_splatFactor.numberValue;
 			var mo:Number    = param_minOffset.numberValue;
 			var ms:Number 	 = param_maxSize.numberValue;
+			var bao:Number   = param_brushAngleOffsetRange.numberValue;
 			for ( var i:int = 0; i < points.length; i++ )
 			{
 				var point:SamplePoint = points[i];
@@ -108,7 +112,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				point.x  +=  Math.cos(angle) * distance;
 				point.y  +=  Math.sin(angle) * distance;
 				point.size *=  1 - Math.min(1,sf * offset) ; 
-				point.angle += rng.getNumber(-bar,bar);
+				point.angle += rng.getNumber(-bar-bao,bar+bao);
 			}
 			return points;
 		}

@@ -43,8 +43,14 @@ package net.psykosoft.psykopaint2.core.managers.rendering
 			var needsSnapshot : Boolean = _promises.length > 0;
 			var context : Context3D = stage3DProxy.context3D;
 
-			if (!context) return;
+			if (!context ) return;
 
+			if ( context.driverInfo == "Disposed" )
+			{
+				trace("###################### WARNING: context loss! ###################### ");
+				return;
+			}
+			
 			if (CoreSettings.DEBUG_RENDER_SEQUENCE) {
 				trace(this, "gpu render ------------------------");
 			}

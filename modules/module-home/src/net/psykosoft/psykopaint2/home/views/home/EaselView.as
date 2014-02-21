@@ -370,6 +370,11 @@ package net.psykosoft.psykopaint2.home.views.home
 		
 		public function setCropContent(bitmapData:BitmapData, orientation:int):void
 		{
+			if ( _context3D.driverInfo == "Disposed" )
+			{
+				trace("ERROR in EaselView.setCropContent: context has been disposed");
+				return;
+			}
 			initCanvas();
 			//pad outer edges with white
 			bitmapData.fillRect(new Rectangle(0,0,bitmapData.width,1),0xffffff);
