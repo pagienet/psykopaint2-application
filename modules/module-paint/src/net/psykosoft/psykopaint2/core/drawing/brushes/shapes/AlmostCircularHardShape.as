@@ -10,7 +10,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 	
 	public class AlmostCircularHardShape extends EmbeddedBrushShape
 	{
-		[Embed(source="assets/notentirelycircular1.png", mimeType="image/png")]
+		[Embed(source="assets/notentirelycircular1_noisy.png", mimeType="image/png")]
 		protected var SourceMap:Class;
 		
 		[Embed(source="assets/notentirelycircularheight9_8x8.png", mimeType="image/png")]
