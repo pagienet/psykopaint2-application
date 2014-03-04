@@ -1,15 +1,19 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
+	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DStencilAction;
+	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.TextureBase;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
 	
 	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
+	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.actions.CanvasSnapShot;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
@@ -87,6 +91,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var _snapshot : CanvasSnapShot;
 		private var _type : String;
 		protected var _paintSettingsModel:UserPaintSettingsModel;
+		private var _incrementalWorkerTexture:TrackedTexture;
 		
 		public function AbstractBrush(drawNormalsOrSpecular : Boolean, incremental : Boolean = true, useDepthStencil : Boolean = false)
 		{
@@ -128,6 +133,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			if (_brushShape){
 				_brushShape.dispose();
 				_brushShape = null;
+
+				_incrementalWorkerTexture.dispose();
+				_incrementalWorkerTexture = null;
 			}
 		}
 		
@@ -203,7 +211,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context = context;
 			_pathManager.activate( view, canvasModel, renderer );
 			param_shapes.addEventListener( Event.CHANGE, onShapeChanged );
-			
+
+			_incrementalWorkerTexture ||= _canvasModel.createCanvasTexture(true);
+			_context.setRenderToTexture(_incrementalWorkerTexture.texture);
+			_context.clear(0, 0, 0, 0);
+			_context.setRenderToBackBuffer();
+
 			_colorStrategy ||= createColorStrategy();
 		}
 		
@@ -365,18 +378,47 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function drawColor() : void
 		{
+			if (_incremental)
+				drawColorIncremental();
+			else
+				drawColorNonIncremental();
+		}
+
+		private function drawColorIncremental():void
+		{
+		// draw brush stroke to incremental texture
+			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer, _depthStencil)
+			_context.clear(0, 0, 0, 0);
+			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+			CopyTexture.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+
+			drawBrushColor();
+
+			_incrementalWorkerTexture = _canvasModel.swapFullSized(_incrementalWorkerTexture);
+
+			_context.setRenderToTexture(_canvasModel.colorTexture, false);
+			_context.clear();
+
+			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+
+			_snapshot.drawColor();
+			_context.setStencilActions();
+
+			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+
+			CopyTexture.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+		}
+
+		private function drawColorNonIncremental():void
+		{
 			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer, _depthStencil || (_incremental && !_inProgress));
 			_context.clear();
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 
-			if (_incremental) {
-				CopyTexture.copy(_canvasModel.colorTexture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-			}
-			else {
-				_snapshot.drawColor();
-				_context.setStencilActions();
-			}
+			_snapshot.drawColor();
+			_context.setStencilActions();
 
 			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
