@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
+	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 
 	public class BrushKit_SprayCan extends BrushKit
 	{
@@ -261,7 +262,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					break;
 				
 				case STYLE_HARD_ROUND_CIRCLE:
-				
+				 
 					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
 					splatterDecorator.param_splatFactor.numberValue = 10 * precision;
 					spawnDecorator.param_maxOffset.numberValue = precision * 4;
