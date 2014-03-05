@@ -1,18 +1,12 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
-	import com.quasimondo.geom.Circle;
-	import com.quasimondo.geom.LineSegment;
 	import com.quasimondo.geom.LinearMesh;
 	import com.quasimondo.geom.LinearPath;
 	import com.quasimondo.geom.MixedPath;
-	import com.quasimondo.geom.MixedPathPoint;
-	import com.quasimondo.geom.PeuckerSimplification;
 	import com.quasimondo.geom.Polygon;
-	import com.quasimondo.geom.Triangle;
 	import com.quasimondo.geom.Vector2;
 	import com.quasimondo.geom.WhyattSimplification;
 	import com.quasimondo.geom.utils.LinearPathUtils;
-	import com.quasimondo.geom.utils.MixedPathUtils;
 	import com.quasimondo.geom.utils.PolygonUtils;
 	
 	import flash.display.Bitmap;
@@ -21,16 +15,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.display.Graphics;
 	import flash.display.Shape;
 	import flash.display.Sprite;
-	import flash.display.Stage;
 	import flash.display.StageQuality;
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.Context3DCompareMode;
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
-	import flash.filters.DropShadowFilter;
-	import flash.filters.GlowFilter;
-	import flash.filters.GradientGlowFilter;
 	import flash.geom.Matrix;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 	
@@ -42,17 +33,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.RenderTextureBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.DrawingApiMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureMorphingSplatMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TextureSplatMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TexturedAntialiasedColoredTriangleStroke;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.TexturedTriangleStroke;
-	import net.psykosoft.psykopaint2.core.drawing.data.DelaunayMetaData;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
-	
+	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
+
 	public class DrawingApiBrush extends AbstractBrush
 	{
 
@@ -321,14 +308,49 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			}
 			setTimeout(super.onPathEnd,1);
 		}
+
 		override protected function onPickColor( point : SamplePoint, pickRadius : Number, smoothFactor : Number ) : void
 		{
 			
 		}
 
-		
 		override protected function processPoint( point : SamplePoint) : void
 		{
+		}
+
+		override protected function drawColor():void
+		{
+			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer, false);
+			_context.clear();
+
+			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+
+			CopyTexture.copy(_canvasModel.colorTexture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+
+			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+
+			drawBrushColor();
+
+			_canvasModel.swapColorLayer();
+		}
+
+		override protected function drawNormalsAndSpecular():void
+		{
+			_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
+			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer, false);
+			_context.clear();
+
+			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+			CopyTexture.copy(_canvasModel.normalSpecularMap, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			drawBrushNormalsAndSpecular();
+
+			_canvasModel.swapNormalSpecularLayer();
+		}
+
+		override public function draw():void
+		{
+			super.draw();
+			_brushMesh.clear();
 		}
 	}
 }

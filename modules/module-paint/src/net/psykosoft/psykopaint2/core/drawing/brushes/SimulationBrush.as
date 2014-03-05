@@ -1,5 +1,8 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes
 {
+	import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.Context3DStencilAction;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
@@ -10,6 +13,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
+	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
 	public class SimulationBrush extends AbstractBrush
 	{
@@ -18,7 +22,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		public function SimulationBrush(drawNormalsOrSpecular : Boolean)
 		{
-			super(drawNormalsOrSpecular, false, true);
+			super(drawNormalsOrSpecular);
 		}
 
 		override public function stopProgression() : void
@@ -118,6 +122,43 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			// todo: could use speed or something with lowerRangeValue?
 			super.addStrokePoint(point, size*param_sizeFactor.upperRangeValue * 1.3, rotationRange);
+		}
+
+
+		override protected function drawColor():void
+		{
+			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer, true);
+			_context.clear();
+
+			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+
+			_snapshot.drawColor();
+			_context.setStencilActions();
+
+			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+
+			drawBrushColor();
+
+			_canvasModel.swapColorLayer();
+		}
+
+		override protected function drawNormalsAndSpecular():void
+		{
+			_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
+			_context.setRenderToTexture(_canvasModel.fullSizeBackBuffer, true);
+			_context.clear();
+
+			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+			_context.setStencilReferenceValue(1);
+			_context.setStencilActions("frontAndBack", "always", Context3DStencilAction.SET, Context3DStencilAction.SET, Context3DStencilAction.SET);
+			_snapshot.drawNormalsSpecular();
+			_context.setStencilReferenceValue(0);
+			_context.setStencilActions("frontAndBack", Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP, Context3DStencilAction.KEEP);
+			if (isStrokeInProgress) CopyTexture.copy(_canvasModel.normalSpecularMap, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			_context.setStencilActions();
+			drawBrushNormalsAndSpecular();
+
+			_canvasModel.swapNormalSpecularLayer();
 		}
 	}
 }
