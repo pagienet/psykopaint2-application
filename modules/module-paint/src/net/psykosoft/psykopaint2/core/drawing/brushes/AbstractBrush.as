@@ -205,7 +205,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			//if (_brushShape) _brushShape.dispose();
 		}
 
-		private function finalizeStroke():void
+		protected function finalizeStroke():void
 		{
 			if (!_firstPoint) dispatchEvent(new Event(STROKE_ENDED));
 		}

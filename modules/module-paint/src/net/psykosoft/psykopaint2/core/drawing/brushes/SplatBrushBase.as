@@ -22,7 +22,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public var param_strokeAlpha:PsykoParameter;
 		
 		private var _incrementalWorkerTexture:TrackedTexture;
-
+		
 		public function SplatBrushBase(drawNormalsOrSpecular : Boolean)
 		{
 			super(drawNormalsOrSpecular);
@@ -62,6 +62,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.setRenderToTexture(_incrementalWorkerTexture.texture);
 			_context.clear(0, 0, 0, 0);
 			_context.setRenderToBackBuffer();
+		
 		}
 
 		override public function deactivate():void
@@ -109,6 +110,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			//CopyTexture.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 			CopyTextureWithAlpha.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio,param_strokeAlpha.numberValue);
+			
 		}
 
 		override protected function drawNormalsAndSpecular():void
