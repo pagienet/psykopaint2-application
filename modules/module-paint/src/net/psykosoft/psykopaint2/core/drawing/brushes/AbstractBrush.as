@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			param_glossiness = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_GLOSSINESS, 0.4, 0.01, 1);
 			param_bumpiness = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_BUMPINESS, 1, 0, 1);
 			param_bumpInfluence = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_BUMP_INFLUENCE, 0.6, 0, 1);
-			param_blendMode = new PsykoParameter(PsykoParameter.StringListParameter, PARAMETER_SL_BLEND_MODE, 0, [Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO, Context3DBlendFactor]);
+			param_blendMode = new PsykoParameter(PsykoParameter.StringListParameter, PARAMETER_SL_BLEND_MODE, 0, [Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO, Context3DBlendFactor.SOURCE_ALPHA]);
 
 			_parameters.push(param_shapes, param_sizeFactor, param_blendMode, param_quadOffsetRatio);
 			if (drawNormalsOrSpecular)

@@ -1,20 +1,20 @@
 package net.psykosoft.psykopaint2.core.commands.bootstrap
 {
 
-	import away3d.core.managers.Stage3DManager;
-	import away3d.core.managers.Stage3DProxy;
-	import away3d.events.Stage3DEvent;
-
-	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
-
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.events.Event;
-
+	
+	import away3d.core.managers.Stage3DManager;
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.events.Stage3DEvent;
+	
+	import eu.alebianco.robotlegs.utils.impl.AsyncCommand;
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
-
+	import net.psykosoft.psykopaint2.core.rendering.CopyTextureWithAlpha;
+	
 	import robotlegs.bender.framework.api.IInjector;
 
 	public class InitStage3dCommand extends AsyncCommand
@@ -49,6 +49,7 @@ package net.psykosoft.psykopaint2.core.commands.bootstrap
 			_stage3dProxy.removeEventListener( Event.CONTEXT3D_CREATE, onContext3dCreated );
 
 			CopyTexture.init( _stage3d.context3D );
+			CopyTextureWithAlpha.init( _stage3d.context3D );
 
 			// TODO: listen for context loss?
 			// This simulates a context loss. A bit of googling shows that context loss on iPad is rare, but could be possible.

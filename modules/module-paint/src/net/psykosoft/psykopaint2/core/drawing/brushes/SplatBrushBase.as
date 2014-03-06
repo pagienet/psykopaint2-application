@@ -5,22 +5,30 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DStencilAction;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedTexture;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.IColorStrategy;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.color.PyramidMapIntrinsicsStrategy;
+	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
+	import net.psykosoft.psykopaint2.core.rendering.CopyTextureWithAlpha;
 
 	public class SplatBrushBase extends AbstractBrush
 	{
+		public static const PARAMETER_N_STROKE_ALPHA:String = "Stroke Alpha";
+		public var param_strokeAlpha:PsykoParameter;
+		
 		private var _incrementalWorkerTexture:TrackedTexture;
 
 		public function SplatBrushBase(drawNormalsOrSpecular : Boolean)
 		{
 			super(drawNormalsOrSpecular);
+			
+			param_strokeAlpha = new PsykoParameter(PsykoParameter.NumberParameter, PARAMETER_N_STROKE_ALPHA, 1, 0, 1);
+			_parameters.push(param_strokeAlpha);
 		}
 
 		override protected function createColorStrategy() : IColorStrategy
@@ -99,7 +107,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_context.setBlendFactors(param_blendMode.stringValue, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
-			CopyTexture.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			//CopyTexture.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+			CopyTextureWithAlpha.copy(_incrementalWorkerTexture.texture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio,param_strokeAlpha.numberValue);
 		}
 
 		override protected function drawNormalsAndSpecular():void
