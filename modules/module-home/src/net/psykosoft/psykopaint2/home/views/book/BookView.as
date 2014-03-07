@@ -69,10 +69,13 @@ package net.psykosoft.psykopaint2.home.views.book
 			
 			
 			//EVENTS
-			this.addEventListener(Event.ADDED_TO_STAGE,onAdded);
-			_container.addEventListener( MouseEvent3D.MOUSE_OVER, onObjectMouseOver );
-			_container.addEventListener(MouseEvent3D.MOUSE_DOWN,onMouseDown3d);
-			_view.camera.addEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraMoved);
+			this.addEventListener(Event.ADDED_TO_STAGE,onAdded);	
+			function onAdded(event:Event):void
+			{
+				
+				startGrabController();
+				removeEventListener(Event.ADDED_TO_STAGE,onAdded);
+			}		
 			
 		}
 		
@@ -81,9 +84,6 @@ package net.psykosoft.psykopaint2.home.views.book
 		{
 			BookMaterialsProxy.dispose();
 			stopGrabController();
-			_container.removeEventListener( MouseEvent3D.MOUSE_OVER, onObjectMouseOver );
-			_container.removeEventListener(MouseEvent3D.MOUSE_DOWN,onMouseDown3d);
-			_view.camera.removeEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraMoved);
 		}
 		
 		/////////////////////////////////////////////////////////////////
@@ -145,17 +145,15 @@ package net.psykosoft.psykopaint2.home.views.book
 //			
 			
 			//CREATE BACKGROUND COVER
-			var coverGeometry:Geometry = new PlaneGeometry(380,220);
-			var coverMaterial:ColorMaterial = new ColorMaterial(0x333333);
+			var coverGeometry:Geometry = new PlaneGeometry(373,214);
+			var coverMaterial:ColorMaterial = new ColorMaterial(0xAAAAAA);
 			var coverBook:Mesh = new Mesh(coverGeometry,coverMaterial);
 			_container.addChild(coverBook);
 			coverBook.y=-10;
 			
 			//LOAD PAGES ASSETS
-			trace("BookView::init");
 			BookMaterialsProxy.launch(function ():void
 			{
-				trace("BookView::materials loaded");
 				//LOAD DATAS AS SOON AS THE BOOK ASSETS ARE READY
 				loadDummySourceImageCollection();
 			});
@@ -180,9 +178,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		
 		private function createPages(pageCount:uint=2):void
 		{
-			
-			trace("BookView::createPages");
-			
+						
 			//CREATE PAGES
 			_pages = new Vector.<BookPageView>();
 			var newPageView:BookPageView;
@@ -279,7 +275,10 @@ package net.psykosoft.psykopaint2.home.views.book
 		
 		
 		public function set pageIndex(value:Number):void{
-			_pageIndex = Math.max(value,0);
+			
+			//_pageIndex = Math.max(value,0);
+			_pageIndex = Math.min(Math.max(value,0),(_pages.length/2-1));
+			trace("_pageIndex = "+_pageIndex);
 			updatePages();
 		}
 		
@@ -293,29 +292,8 @@ package net.psykosoft.psykopaint2.home.views.book
 		/////////////////////////////////////////////////////////////////
 		/////////////////////////   EVENTS	/////////////////////////////
 		/////////////////////////////////////////////////////////////////
-		private function onObjectMouseOver( event:MouseEvent3D ):void {
-			trace("onObjectMouseOver");
-		}
-		
-		protected function onMouseDown3d(event:MouseEvent3D):void
-		{
-			trace("on mouse down 3d");
-			
-		}		
-		
-		
-		protected function onAdded(event:Event):void
-		{
-			
-			startGrabController();
-			this.removeEventListener(Event.ADDED_TO_STAGE,onAdded);
-		}		
-		
-		
-		
-		
-		
-		
+		 
+
 		protected function onDragStarted(event:GrabThrowEvent):void
 		{
 			//NOTHING
@@ -349,7 +327,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			//TEST DUMMY COLLECTION
 			var testSourceImageCollection:SourceImageCollection = new SourceImageCollection();
 			var fileSourceImageProxys :Vector.<SourceImageProxy>= new Vector.<SourceImageProxy>();
-			for (var i:int = 0; i < 41; i++) 
+			for (var i:int = 0; i < 36; i++) 
 			{
 				var newImage:FileSourceImageProxy = new FileSourceImageProxy();
 				newImage.id=i;
@@ -362,10 +340,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			setSourceImages(testSourceImageCollection);
 		}
 		
-		private function onCameraMoved(event:Object3DEvent):void
-		{
-			//UPDATE BOOK POSITION
-		}
+		
 		
 		public function get container():ObjectContainer3D
 		{

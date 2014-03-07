@@ -167,7 +167,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.height = stage.stageHeight;
 			_view.camera.lens.far = 50000;
 			addChild( _view );
-			PerspectiveLens( _view.camera.lens ).fieldOfView = 70;
+			//PerspectiveLens( _view.camera.lens ).fieldOfView = 70;
 		}
 
 		private function initCamera() : void

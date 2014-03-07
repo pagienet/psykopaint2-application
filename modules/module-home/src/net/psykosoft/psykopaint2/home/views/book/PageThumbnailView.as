@@ -3,6 +3,7 @@ package net.psykosoft.psykopaint2.home.views.book
 	import flash.display.BitmapData;
 	
 	import away3d.containers.ObjectContainer3D;
+	import away3d.core.base.Geometry;
 	import away3d.entities.Mesh;
 	import away3d.events.MouseEvent3D;
 	import away3d.materials.TextureMaterial;
@@ -16,9 +17,6 @@ package net.psykosoft.psykopaint2.home.views.book
 
 	public class PageThumbnailView extends ObjectContainer3D
 	{
-		//SIGNALS
-		public var thumbnailClicked:Signal;
-		
 		
 		private var _width:Number = 60;
 		private var _height:Number = 40;
@@ -26,21 +24,27 @@ package net.psykosoft.psykopaint2.home.views.book
 		private var _geometry:PlaneGeometry;
 		private var _pageMesh:Mesh;
 		private var _data:SourceImageProxy;
+		private var _shadowTextureMaterial:TextureMaterial
 		
-		
+		private var _shadowMesh:Mesh;
 		public function PageThumbnailView()
 		{
-			//THIS IS THE CLASS WHERE I ADD THE THUMBNAIL WITH SHADOWS
+			//THIS IS THE CLASS WHERE WE ADD THE THUMBNAIL WITH SHADOWS
 			
-			thumbnailClicked = new Signal();
-			this.mouseEnabled=true;
-			this.addEventListener(MouseEvent3D.MOUSE_DOWN,onMouseDown);
+		
+			_shadowTextureMaterial = BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_SHADOW);
+			_shadowTextureMaterial.alphaBlending=true;
+			var newGeometry:Geometry = new PlaneGeometry(64,25,1,1,true,true);
+			_shadowMesh = new Mesh(newGeometry,_shadowTextureMaterial);
+			
+			this.addChild(_shadowMesh);
+			_shadowMesh.y=-1;
+			_shadowMesh.z=-18;
 		}
 		
 		
 		protected function onMouseDown(event:MouseEvent3D):void
 		{
-			thumbnailClicked.dispatch(_data);
 			trace("Thumbnail "+_data['id']);
 		}
 		
@@ -63,7 +67,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		
 		override public function dispose():void{
 			_data= null;
-			this.removeEventListener(MouseEvent3D.MOUSE_DOWN,onMouseDown);
+			//_pageMesh.removeEventListener(MouseEvent3D.MOUSE_DOWN,onMouseDown);
 			super.dispose();
 		}
 		
@@ -80,6 +84,8 @@ package net.psykosoft.psykopaint2.home.views.book
 			_pageMesh = new Mesh(_geometry,new TextureMaterial(Cast.bitmapTexture(TextureUtil.ensurePowerOf2ByScaling(bitmapData))));
 			trace("ASSET LOADED"+ _data);
 			this.addChild(_pageMesh);
+			_pageMesh.mouseEnabled=true;
+			//_pageMesh.addEventListener(MouseEvent3D.MOUSE_DOWN,onMouseDown);
 		}		
 		 
 		

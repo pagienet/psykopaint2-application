@@ -9,7 +9,6 @@ package net.psykosoft.psykopaint2.home.views.book
 	import away3d.core.pick.PickingColliderType;
 	import away3d.entities.Mesh;
 	import away3d.events.MouseEvent3D;
-	import away3d.materials.ColorMaterial;
 	import away3d.materials.MaterialBase;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
@@ -34,7 +33,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private var _pageNumber_txt:TextField;
 		private var _pageNumber:int;
 		private var _textMesh:Mesh;
-		private var _rings:Rings;
+		private var _rings:BookLayoutRings;
 		 
 
 		
@@ -55,17 +54,28 @@ package net.psykosoft.psykopaint2.home.views.book
 			
 			
 			//ADD RING
-			_rings = new Rings(_ringTextureMaterial);
+			_rings = new BookLayoutRings(_ringTextureMaterial);
 			addChild(_rings);
 			_rings.scaleZ=_rings.scaleX=_rings.scaleY=0.19;
 			
 			update();
 			
-			_pageMesh.pickingCollider = PickingColliderType.PB_BEST_HIT
-			_pageMesh.mouseEnabled=true;
-			_pageMesh.addEventListener( MouseEvent3D.MOUSE_OVER, onObjectMouseOver );
-			_pageMesh.addEventListener(MouseEvent3D.MOUSE_DOWN,onMouseDown3d);
+			//_pageMesh.pickingCollider = PickingColliderType.PB_BEST_HIT
+			//_pageMesh.mouseEnabled=true;
+			//_pageMesh.addEventListener( MouseEvent3D.MOUSE_OVER, onObjectMouseOver );
+			//_pageMesh.addEventListener(MouseEvent3D.MOUSE_DOWN,onMouseDown3d);
 		}
+		
+		
+		private function onObjectMouseOver( event:MouseEvent3D ):void {
+			trace("onObjectMouseOver");
+		}
+		
+		protected function onMouseDown3d(event:MouseEvent3D):void
+		{
+			trace("on mouse down 3d");
+			
+		}	
 		
 		
 		
@@ -128,15 +138,6 @@ package net.psykosoft.psykopaint2.home.views.book
 	
 		
 		
-		private function onObjectMouseOver( event:MouseEvent3D ):void {
-			trace("onObjectMouseOver");
-		}
-		
-		protected function onMouseDown3d(event:MouseEvent3D):void
-		{
-			trace("on mouse down 3d");
-			
-		}	
 		
 		override public function dispose():void{
 			if(_layoutView){
@@ -160,7 +161,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			if(_layoutView){
 				
 				_layoutView.z=50;
-				_layoutView.y=1;
+				_layoutView.y=2;
 				if(_flipped){
 					_layoutView.x=-WIDTH+40;
 				}else {
