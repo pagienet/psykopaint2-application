@@ -5,15 +5,23 @@ package net.psykosoft.psykopaint2.home.views.book
 	
 	import away3d.containers.ObjectContainer3D;
 	import away3d.entities.Mesh;
+	import away3d.events.MouseEvent3D;
+	import away3d.events.Object3DEvent;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.tools.utils.TextureUtils;
 	import away3d.utils.Cast;
 	
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
+	
+	import org.osflash.signals.Signal;
 
 	public class PageThumbnailView extends ObjectContainer3D
 	{
+		//SIGNALS
+		public var thumbnailClicked:Signal;
+		
 		
 		private var _width:Number = 60;
 		private var _height:Number = 40;
@@ -22,12 +30,21 @@ package net.psykosoft.psykopaint2.home.views.book
 		private var _pageMesh:Mesh;
 		private var _data:SourceImageProxy;
 		
+		
 		public function PageThumbnailView()
 		{
 			//THIS IS THE CLASS WHERE I ADD THE THUMBNAIL WITH SHADOWS
 			
-			
-			
+			thumbnailClicked = new Signal();
+			this.mouseEnabled=true;
+			this.addEventListener(MouseEvent3D.MOUSE_DOWN,onMouseDown);
+		}
+		
+		
+		protected function onMouseDown(event:MouseEvent3D):void
+		{
+			thumbnailClicked.dispatch(_data);
+			trace("Thumbnail "+_data['id']);
 		}
 		
 		public function get height():Number
@@ -45,22 +62,15 @@ package net.psykosoft.psykopaint2.home.views.book
 			 
 			_data.loadThumbnail(onThumbnailLoaded,onThumbnailFail,1);
 			
-			
 		}
 		
-		private function autoResizeBitmapData(bmData:BitmapData,smoothing:Boolean = true):BitmapData 
-		{
-			if (TextureUtils.isBitmapDataValid(bmData))
-				return bmData;
-			
-			var max:Number = Math.max(bmData.width, bmData.height);
-			max = TextureUtils.getBestPowerOf2(max);
-			var mat:Matrix = new Matrix();
-			mat.scale(max/bmData.width, max/bmData.height);
-			var bmd:BitmapData = new BitmapData(max, max);
-			bmd.draw(bmData, mat, null, null, null, smoothing);
-			return bmd;
-		} 
+		override public function dispose():void{
+			_data= null;
+			this.removeEventListener(MouseEvent3D.MOUSE_DOWN,onMouseDown);
+			super.dispose();
+		}
+		
+		
 		
 		private function onThumbnailFail():void
 		{
@@ -70,7 +80,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function onThumbnailLoaded(bitmapData : BitmapData):void
 		{
 			_geometry = new PlaneGeometry(_width,_height,1,1,true,true);
-			_pageMesh = new Mesh(_geometry,new TextureMaterial(Cast.bitmapTexture(autoResizeBitmapData(bitmapData))));
+			_pageMesh = new Mesh(_geometry,new TextureMaterial(Cast.bitmapTexture(BitmapDataUtils.autoResizePowerOf2(bitmapData))));
 			trace("ASSET LOADED"+ _data);
 			this.addChild(_pageMesh);
 		}		

@@ -35,7 +35,6 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 				
 				_pageThumbnailViews.push(newPageThumbnailView);
 				
-				trace("BookLayoutSamplesView::setData::i="+i);
 				this.addChild(newPageThumbnailView);
 				newPageThumbnailView.x = (i%COLUMNS)*(newPageThumbnailView.width +10);
 				newPageThumbnailView.z = Math.floor(i/COLUMNS)*-(newPageThumbnailView.height +10);
@@ -44,6 +43,21 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			}
 			
 			
+		}
+		
+		
+		override public function dispose():void
+		{
+			_data = null;
+			for (var i:int = 0; i < _pageThumbnailViews.length; i++) 
+			{
+				_pageThumbnailViews[i].dispose();
+				_pageThumbnailViews[i].parent.removeChild(_pageThumbnailViews[i]);
+				_pageThumbnailViews[i]=null;
+			}
+			_pageThumbnailViews = new Vector.<PageThumbnailView>();
+
+			super.dispose();
 		}
 		
 		static public  function get LENGTH():int{

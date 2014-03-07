@@ -9,7 +9,9 @@ package net.psykosoft.psykopaint2.home.views.home
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	
+	import away3d.Away3D;
 	import away3d.cameras.Camera3D;
+	import away3d.cameras.lenses.PerspectiveLens;
 	import away3d.containers.View3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.lights.PointLight;
@@ -105,6 +107,8 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		private function initScene() : void
 		{
+			trace("Away3D VERSION = "+Away3D.MAJOR_VERSION+"."+Away3D.MINOR_VERSION+"."+Away3D.REVISION);
+
 			initView();
 			initCamera();
 			initLight();
@@ -163,7 +167,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view.height = stage.stageHeight;
 			_view.camera.lens.far = 50000;
 			addChild( _view );
-//			PerspectiveLens( _view.camera.lens ).fieldOfView = 70;
+			PerspectiveLens( _view.camera.lens ).fieldOfView = 70;
 		}
 
 		private function initCamera() : void
@@ -216,6 +220,7 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function destroyScene() : void
 		{
 			_view.scene.removeChild(_atelier);
+			_bookView.dispose();
 			_atelier.dispose();
 			_light.dispose();
 			_view.dispose();

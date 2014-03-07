@@ -9,9 +9,10 @@ package net.psykosoft.psykopaint2.base.utils.images
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
-
+	
+	import away3d.tools.utils.TextureUtils;
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class BitmapDataUtils
@@ -69,6 +70,21 @@ package net.psykosoft.psykopaint2.base.utils.images
 
 			return bitmapData;
 		}
+		
+		static public function autoResizePowerOf2(bmData:BitmapData,smoothing:Boolean = true):BitmapData 
+		{
+			if (TextureUtils.isBitmapDataValid(bmData))
+				return bmData;
+			
+			var max:Number = Math.max(bmData.width, bmData.height);
+			max = TextureUtils.getBestPowerOf2(max);
+			var mat:Matrix = new Matrix();
+			mat.scale(max/bmData.width, max/bmData.height);
+			var bmd:BitmapData = new BitmapData(max, max,bmData.transparent,0x00000000);
+			bmd.draw(bmData, mat, null, null, null, smoothing);
+			return bmd;
+		} 
+		
 
 		static public function scaleToFit( sourceBmd:BitmapData, size:Number ):BitmapData {
 			var wRatio:Number = size / sourceBmd.width;
