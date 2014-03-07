@@ -18,6 +18,34 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 	
 	public class AbstractPointDecorator implements IPointDecorator
 	{
+		static public const INDEX_MAPPING_LINEAR:int = 0;
+		static public const INDEX_MAPPING_CIRCQUAD_IN:int = 1;
+		static public const INDEX_MAPPING_CIRCULAR_IN:int = 2;
+		static public const INDEX_MAPPING_SINE_IN:int = 3;
+		static public const INDEX_MAPPING_QUADRATIC_IN:int =4;
+		static public const INDEX_MAPPING_CUBIC_IN:int = 5;
+		static public const INDEX_MAPPING_QUARTIC_IN:int = 6;
+		static public const INDEX_MAPPING_QUINTIC_IN:int = 7;
+		static public const INDEX_MAPPING_STRONG_IN:int = 8;
+		static public const INDEX_MAPPING_EXPONENTIAL_IN:int = 9;
+		static public const INDEX_MAPPING_CIRCQUAD_OUT:int = 10;
+		static public const INDEX_MAPPING_CIRCULAR_OUT:int = 11;
+		static public const INDEX_MAPPING_SINE_OUT:int = 12;
+		static public const INDEX_MAPPING_QUADRATIC_OUT:int =13;
+		static public const INDEX_MAPPING_CUBIC_OUT:int = 14;
+		static public const INDEX_MAPPING_QUARTIC_OUT:int = 15;
+		static public const INDEX_MAPPING_QUINTIC_OUT:int = 16;
+		static public const INDEX_MAPPING_STRONG_OUT:int = 17;
+		static public const INDEX_MAPPING_EXPONENTIAL_OUT:int = 18;
+		static public const INDEX_MAPPING_CIRCQUAD_INOUT:int = 19;
+		static public const INDEX_MAPPING_CIRCULAR_INOUT:int = 20;
+		static public const INDEX_MAPPING_SINE_INOUT:int = 21;
+		static public const INDEX_MAPPING_QUADRATIC_INOUT:int =22;
+		static public const INDEX_MAPPING_CUBIC_INOUT:int = 23;
+		static public const INDEX_MAPPING_QUARTIC_INOUT:int = 24;
+		static public const INDEX_MAPPING_QUINTIC_INOUT:int = 25;
+		static public const INDEX_MAPPING_STRONG_INOUT:int = 26;
+		static public const INDEX_MAPPING_EXPONENTIAL_INOUT:int = 27;
 		
 		static protected const mappingFunctions:Vector.<Function> = Vector.<Function>([
 			Linear.easeNone,

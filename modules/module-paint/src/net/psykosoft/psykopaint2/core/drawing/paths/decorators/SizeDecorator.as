@@ -31,16 +31,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		static public const INDEX_MODE_MULTIPLY:int = 3;
 		static public const INDEX_MODE_ADD:int = 4;
 		
-		static public const INDEX_MAPPING_LINEAR:int = 0;
-		static public const INDEX_MAPPING_CIRCQUAD:int = 1;
-		static public const INDEX_MAPPING_CIRCULAR:int = 2;
-		static public const INDEX_MAPPING_SINE:int = 3;
-		static public const INDEX_MAPPING_QUADRATIC:int =4;
-		static public const INDEX_MAPPING_CUBIC:int = 5;
-		static public const INDEX_MAPPING_QUARTIC:int = 6;
-		static public const INDEX_MAPPING_QUINTIC:int = 7;
-		static public const INDEX_MAPPING_STRONG:int = 8;
-		static public const INDEX_MAPPING_EXPONENTIAL:int = 9;
+		
 		
 		
 		private const _applyArray:Array = [0,0,1,1];

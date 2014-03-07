@@ -40,7 +40,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.helpers
 			if ( Math.random() < curlFlipProbability ) curlAngle = -curlAngle;
 			samplePoint.angle += curlAngle;
 			lifeSpan--;
-			return lifeSpan > 0;
+			return lifeSpan > 0 && (samplePoint.x > -50 && samplePoint.y > -50 && samplePoint.x < 1100 && samplePoint.y < 800);
 		}
 	}
 }

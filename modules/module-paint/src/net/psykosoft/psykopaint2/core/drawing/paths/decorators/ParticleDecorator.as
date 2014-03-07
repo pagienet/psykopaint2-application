@@ -20,6 +20,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		private var cm:ColorMatrix;
 		private var lastSpawnLocation:SamplePoint;
 		private var activeParticles:Vector.<ParticlePoint>;
+		private const _applyArray:Array = [0,0,1,1];
+		
 		
 		public var param_maxConcurrentParticles:PsykoParameter;
 		public var param_minSpawnDistance:PsykoParameter;
@@ -37,17 +39,23 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public var param_hueAdjustment:PsykoParameter;
 		public var param_brightnessAdjustment:PsykoParameter;
 		public var param_applyColorMatrix:PsykoParameter;
+		public var param_lifeSpanDistribution:PsykoParameter;
+		public var param_speedDistribution:PsykoParameter;
+		public var param_dropOriginalPoint:PsykoParameter;
+		
 		
 		public function ParticleDecorator(  maxConcurrentParticles:int = 5, minSpawnDistance:Number = 20, spawnProbability:Number = 0.02 )
 		{
 			super( );
 			
-			param_maxConcurrentParticles = new PsykoParameter( PsykoParameter.IntParameter,"Max Concurrent Particles",maxConcurrentParticles,1,32);
+			param_maxConcurrentParticles = new PsykoParameter( PsykoParameter.IntParameter,"Max Concurrent Particles",maxConcurrentParticles,1,64);
 			param_minSpawnDistance       = new PsykoParameter( PsykoParameter.NumberParameter,"Minimum Spawn Distance",minSpawnDistance,0,200);
 			param_spawnProbability       = new PsykoParameter( PsykoParameter.NumberParameter,"Spawn Probability",spawnProbability,0,1);
 			param_lifeSpan 					= new PsykoParameter( PsykoParameter.IntRangeParameter,"Lifespan",10,400,1,1000);
 			param_acceleration 				= new PsykoParameter( PsykoParameter.NumberRangeParameter,"Acceleration",0.92,1,0,2);
 			param_speed 						= new PsykoParameter( PsykoParameter.NumberRangeParameter,"Speed",1,10,0,30);
+			param_speedDistribution   = new PsykoParameter( PsykoParameter.StringListParameter,"Speed Distribution",0,mappingFunctionLabels);
+			
 			param_offsetAngle 				= new PsykoParameter( PsykoParameter.AngleRangeParameter,"Offset Angle",0,90,0,180);
 			param_curlAngle 					= new PsykoParameter( PsykoParameter.AngleRangeParameter,"Curl Angle",0,4,0,90);
 			param_renderSteps 				= new PsykoParameter( PsykoParameter.IntParameter,"Render Steps per Frame",20,1,50);
@@ -55,10 +63,13 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			param_curlFlipProbability 		= new PsykoParameter( PsykoParameter.NumberRangeParameter,"Curl Flip Probability",0,0.01,0,1);
 			param_useAccelerometer				= new PsykoParameter( PsykoParameter.BooleanParameter,"Use Accelerometer",0);
 			param_applyColorMatrix			= new PsykoParameter( PsykoParameter.BooleanParameter,"Change Particle Colors",0);
+			param_lifeSpanDistribution   = new PsykoParameter( PsykoParameter.StringListParameter,"Life Span Distribution",0,mappingFunctionLabels);
 			
 			param_saturationAdjustment  		= new PsykoParameter( PsykoParameter.NumberParameter,"Particle Saturation Change",1,-2, 2);
 			param_hueAdjustment  				= new PsykoParameter( PsykoParameter.AngleParameter,"Particle Hue Change",0,-360, 360);
 			param_brightnessAdjustment  		= new PsykoParameter( PsykoParameter.NumberParameter,"Particle Brightness Change",0,-255, 255);
+			
+			param_dropOriginalPoint = new PsykoParameter( PsykoParameter.BooleanParameter,"Drop Original Point",false);
 			
 			_parameters.push(param_maxConcurrentParticles,
 							 param_minSpawnDistance,
@@ -75,7 +86,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 							 param_applyColorMatrix,
 							 param_saturationAdjustment, 
 							 param_hueAdjustment, 
-							 param_brightnessAdjustment
+							 param_brightnessAdjustment,
+							 param_lifeSpanDistribution,
+							 param_speedDistribution,
+							 param_dropOriginalPoint
 			
 			
 			);
@@ -107,6 +121,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				cm.adjustHue( param_hueAdjustment.degrees );
 				cm.adjustBrightness( param_brightnessAdjustment.numberValue );
 			}
+			var oldPointCount:int = points.length;
 			for ( var i:int = activeParticles.length; --i > -1; )
 			{
 				for ( var j:int = 0; j < param_renderSteps.intValue; j++ )
@@ -124,6 +139,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					}
 				}
 			}
+			var lifeSpanMapping:Function = mappingFunctions[param_lifeSpanDistribution.index];
+			var speedMapping:Function = mappingFunctions[param_speedDistribution.index];
+			
+			var applyArray:Array = _applyArray;
 			
 			for ( j = 0; j < count && param_maxConcurrentParticles.intValue > activeParticles.length; j++ )
 			{
@@ -132,11 +151,18 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					var f:Number = rng.getChance() ? 1 : -1;
 					var pc:SamplePoint = points[j].getClone();
 					var particle:ParticlePoint;
+					applyArray[0] = rng.getNumber();
+					var ls:Number = param_lifeSpan.lowerRangeValue + lifeSpanMapping.apply(0,applyArray) * param_lifeSpan.rangeValue;
+					applyArray[0] = rng.getNumber();
+					var spd:Number = param_speed.lowerRangeValue + speedMapping.apply(0,applyArray) * param_speed.rangeValue;
+					
+					
 					if ( param_useAccelerometer.booleanValue ) 
 					{
 						//pc.angle = Math.atan2(yAxis.x, yAxis.y);
+						
 						particle = new ParticlePoint(pc, 
-							pc.speed > 0 ? param_lifeSpan.lowerRangeValue + rng.getNumber(0, param_lifeSpan.rangeValue * pc.speed ) : 20, 
+							ls, 
 							0,
 							param_acceleration.randomValue,
 							0,
@@ -146,8 +172,8 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 						);
 					} else {
 						particle = new ParticlePoint(pc, 
-							param_lifeSpan.lowerRangeValue + rng.getNumber(0, param_lifeSpan.rangeValue * pc.speed ), 
-							param_speed.randomValue,
+							ls, 
+							spd,
 							param_acceleration.randomValue,
 							param_offsetAngle.randomValue * f,
 							rng.getMappedNumber(param_curlAngle.lowerRangeValue, param_curlAngle.upperRangeValue, Quint.easeIn ) * f,
@@ -158,6 +184,10 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 					activeParticles.push( particle );
 				}
 				
+			}
+			if ( param_dropOriginalPoint.booleanValue )
+			{
+				PathManager.recycleSamplePoints( points.splice(0,oldPointCount) );
 			}
 			return points;
 		}

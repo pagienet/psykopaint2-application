@@ -9,6 +9,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.AbstractPointDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CallbackDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
@@ -68,7 +69,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
 			sizeDecorator.param_mappingFactor.numberValue = 0.08;
 			sizeDecorator.param_mappingRange.numberValue = 0.04;
-			sizeDecorator.param_mappingFunction.index = SizeDecorator.INDEX_MAPPING_CIRCQUAD;
+			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_CIRCQUAD_IN;
 			pathManager.addPointDecorator( sizeDecorator );
 			
 			splatterDecorator = new SplatterDecorator();
