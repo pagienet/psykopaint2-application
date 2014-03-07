@@ -220,7 +220,6 @@ package net.psykosoft.psykopaint2.home.views.home
 		private function destroyScene() : void
 		{
 			_view.scene.removeChild(_atelier);
-			_bookView.dispose();
 			_atelier.dispose();
 			_light.dispose();
 			_view.dispose();

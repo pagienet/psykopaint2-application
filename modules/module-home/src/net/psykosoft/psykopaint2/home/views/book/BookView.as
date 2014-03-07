@@ -2,15 +2,9 @@ package net.psykosoft.psykopaint2.home.views.book
 {
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Back;
-	import com.greensock.easing.Cubic;
-	import com.greensock.easing.Expo;
-	import com.greensock.easing.Quart;
 	
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 	
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
@@ -21,15 +15,8 @@ package net.psykosoft.psykopaint2.home.views.book
 	import away3d.events.Object3DEvent;
 	import away3d.lights.LightBase;
 	import away3d.materials.ColorMaterial;
-	import away3d.materials.MaterialBase;
-	import away3d.materials.TextureMaterial;
-	import away3d.primitives.CubeGeometry;
 	import away3d.primitives.PlaneGeometry;
-	import away3d.textures.BitmapTexture;
-	import away3d.utils.Cast;
 	
-	import net.psykosoft.psykopaint2.base.utils.io.QueuedFileLoader;
-	import net.psykosoft.psykopaint2.base.utils.io.events.AssetLoadedEvent;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
 	import net.psykosoft.psykopaint2.core.models.FileSourceImageProxy;
@@ -57,7 +44,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private var _galleryImageCollection:GalleryImageCollection;
 		private var _sourceImageCollection:SourceImageCollection;
 		private var _pageIndex:Number=0;
-		private var _dragStartX:Number; 
+		private var _bookMaterialProxy:BookMaterialsProxy;
 		
 		public function BookView(view:View3D, light:LightBase, stage3dProxy:Stage3DProxy)
 		{
@@ -65,7 +52,6 @@ package net.psykosoft.psykopaint2.home.views.book
 			_stage3DProxy = stage3dProxy;
 			_light = light; 
 			_container = new ObjectContainer3D();
-		
 			_pages = new Vector.<BookPageView>();
 			
 			_view.scene.addChild(_container);
@@ -77,6 +63,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			_container.x=-250;
 			_container.z=200;
 			_container.mouseEnabled = true;
+			
 			init();
 			
 			
@@ -89,51 +76,14 @@ package net.psykosoft.psykopaint2.home.views.book
 			
 		}
 		
-		private function onObjectMouseOver( event:MouseEvent3D ):void {
-			trace("onObjectMouseOver");
-		}
-		
-		protected function onMouseDown3d(event:MouseEvent3D):void
-		{
-			trace("on mouse down 3d");
-			
-		}		
-		
-
-		protected function onAdded(event:Event):void
-		{
-			
-			start();
-			//this.stage.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
-			this.removeEventListener(Event.ADDED_TO_STAGE,onAdded);
-		}		
-		
-		
-		public function start():void{
-			if(!_grabThrowController)
-			{
-				_grabThrowController = new GrabThrowController(this.stage);
-				_grabThrowController.start();
-				_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);
-				_grabThrowController.addEventListener(GrabThrowEvent.DRAG_UPDATE,onDragUpdate);
-				_grabThrowController.addEventListener(GrabThrowEvent.RELEASE,onRelease);
-			}
-		}
-		
-		
-		public function stop():void{
-			_grabThrowController.stop();
-			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);
-			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_UPDATE,onDragUpdate);
-			_grabThrowController.removeEventListener(GrabThrowEvent.RELEASE,onRelease);
-			_grabThrowController = null;
-		}
-		
 		
 		public function dispose():void
 		{
-			stop();
-			
+			BookMaterialsProxy.dispose();
+			stopGrabController();
+			_container.removeEventListener( MouseEvent3D.MOUSE_OVER, onObjectMouseOver );
+			_container.removeEventListener(MouseEvent3D.MOUSE_DOWN,onMouseDown3d);
+			_view.camera.removeEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraMoved);
 		}
 		
 		/////////////////////////////////////////////////////////////////
@@ -143,8 +93,10 @@ package net.psykosoft.psykopaint2.home.views.book
 		{
 			//CLEAR PREVIOUS LAYOUT
 			
-			//TODO
+			
 			_galleryImageCollection = galleryImageCollection; 
+			
+			// TODO
 		}
 		
 		
@@ -159,6 +111,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			//NUMBER OF PAGES DEPEND ON THE NUMBER OF IMAGES SENT IN AND NEEDS TO BE PAIR
 			var numberOfPages:uint = Math.ceil((_sourceImageCollection.images.length/BookLayoutSamplesView.LENGTH)/2)*2;
 			
+			//CREATE PAGES
 			createPages(numberOfPages);
 			
 			
@@ -183,7 +136,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function init():void
 		{
 			//SHOW RED TEST CUBE FOR ORIGIN
-//			var testCubeGeometry:Geometry = new CubeGeometry(10,10,10);
+//			var testCubeGeometry:Geometry = new CubeGeometry(2,2,2);
 //			var testCubeMaterial:ColorMaterial = new ColorMaterial(0xFF0000);
 //			var testCube:Mesh = new Mesh(testCubeGeometry,testCubeMaterial);
 //			_container.addChild(testCube);
@@ -192,154 +145,25 @@ package net.psykosoft.psykopaint2.home.views.book
 //			
 			
 			//CREATE BACKGROUND COVER
-			
 			var coverGeometry:Geometry = new PlaneGeometry(380,220);
 			var coverMaterial:ColorMaterial = new ColorMaterial(0x333333);
 			var coverBook:Mesh = new Mesh(coverGeometry,coverMaterial);
 			_container.addChild(coverBook);
 			coverBook.y=-10;
 			
+			//LOAD PAGES ASSETS
+			trace("BookView::init");
+			BookMaterialsProxy.launch(function ():void
+			{
+				trace("BookView::materials loaded");
+				//LOAD DATAS AS SOON AS THE BOOK ASSETS ARE READY
+				loadDummySourceImageCollection();
+			});
 			
-			loadDummySourceImageCollection();
+		
 		}	
+		 
 		
-		private function createPages(pageCount:uint=2):void
-		{
-			
-			
-			//CREATE PAGES
-			_pages = new Vector.<BookPageView>();
-			var newPageView:BookPageView;
-			
-			for (var i:int = 0; i < pageCount; i++) 
-			{
-				newPageView = new BookPageView();
-				_pages.push(newPageView);
-				//newPageView.x = BookPageView.WIDTH;
-				if(i%2==0){newPageView.flip();}
-				_container.addChild(newPageView);
-				
-			}
-			
-		}
-		
-		
-		private function updatePages():void{
-			
-			
-			trace("_pageIndex = "+_pageIndex);
-			
-			//trace("on Mouse move position = "+ position+" t = "+t);
-			for (var i:int = 0; i < _pages.length; i++) 
-			{
-				var page:BookPageView = _pages[i];
-				
-				var pageIndexProgress:Number = _pageIndex+1-Math.ceil(i/2);
-				//var pageIndexProgress:Number = t+1-Math.ceil(+0.5+i)/2-0.5;
-				//EASING IS THE VALUE FROM 0 TO 1 TO EASE THE TRANSITION
-				var easing:Number = pageIndexProgress-Math.floor(pageIndexProgress);
-				
-				//trace("pageIndexProgress "+i+" =  " + pageIndexProgress);
-				
-				if(i%2==0){
-					//PAIR = LEFT PAGES 0, 2,4,6
-					
-					//page.rotationZ = -180+Math.min(180*(Math.floor(pageIndexProgress)+Cubic.easeInOut(easing,0,1,1)),180-1);
-					page.rotationZ = -180+Math.min(180*(Math.floor(pageIndexProgress)+easing),180-i);
-					page.rotationZ = Math.max(page.rotationZ,-180);
-				}else {
-					//IMPAIR = RIGHT PAGES 1,3,5
-					
-					//page.rotationZ = Math.min(180*(Math.floor(pageIndexProgress)+Cubic.easeInOut(easing,0,1,1)),180-1);
-					page.rotationZ = Math.min(180*(Math.floor(pageIndexProgress)+easing),180+i);
-					page.rotationZ = Math.max(page.rotationZ,0);
-				}
-				
-				
-				/*if(_pageIndex<=0){
-					if(i>=3){
-						page.visible=false;
-					}else {
-						page.visible=true;
-					}
-				}*/
-				
-				
-			}
-			
-			/*
-			
-			//MANAGE VISIBILITY OF OTHER PAGES
-			if(_pageIndex<=0){
-				_pages[3].visible=false;
-				
-			}else {
-				
-				_pages[3].visible=true;
-			}
-			if(_pageIndex<=0){
-				_pages[4].visible=false;
-				
-			}else {
-				
-				_pages[4].visible=true;
-			}
-			
-			
-			
-			
-			//LEFT PAGES
-			if(_pageIndex>=1){
-				_pages[0].visible=false;
-				//_pages[0].x = -2;
-			}else {
-				//_pages[0].x = 0;
-				_pages[0].visible=true;
-			}
-			
-			
-			if(_pageIndex>=1){
-				_pages[1].visible=false;
-				
-			}else {
-				_pages[1].visible=true;
-			}
-			
-			if(_pageIndex>=2){
-				_pages[2].visible=false;
-			}else {
-				_pages[2].visible=true;
-			}
-			
-			if(_pageIndex>=3){
-				_pages[4].visible=false;
-				
-			}else {
-				_pages[4].visible=true;
-			}*/
-			
-			
-			//FIRST AND LAST PAGE NEVER MOVES
-			if (_pages.length>0){
-				_pages[0].rotationZ = 0;
-				_pages[_pages.length-1].rotationZ = 0;
-			}
-			
-			
-			
-			
-		}
-		
-		
-		public function set pageIndex(value:Number):void{
-			_pageIndex = Math.max(value,0);
-			updatePages();
-		}
-		
-		public function get pageIndex():Number{
-			return _pageIndex;
-		}
-	
 		
 		private function removePages():void{
 			//CLEAR PREVIOUS LAYOUT
@@ -352,26 +176,157 @@ package net.psykosoft.psykopaint2.home.views.book
 			_pages = new Vector.<BookPageView>();
 		}
 		
+		
+		
+		private function createPages(pageCount:uint=2):void
+		{
+			
+			trace("BookView::createPages");
+			
+			//CREATE PAGES
+			_pages = new Vector.<BookPageView>();
+			var newPageView:BookPageView;
+			
+			for (var i:int = 0; i < pageCount; i++) 
+			{
+				newPageView = new BookPageView();
+				_pages.push(newPageView);
+				if(i%2==0){newPageView.flip();}
+				_container.addChild(newPageView);
+				newPageView.setPageNumber(i);
+			}
+			
+			//ALWAYS UPDATE
+			updatePages();	
+		}
+		
+		
+		private function updatePages():void{
+			
+			
+			//trace("_pageIndex = "+_pageIndex);
+			
+			//trace("on Mouse move position = "+ position+" t = "+t);
+			for (var i:int = 0; i < _pages.length; i++) 
+			{
+				var page:BookPageView = _pages[i];
+				var pageIndexProgress:Number = _pageIndex+1-Math.ceil(i/2);
+				//var pageIndexProgress:Number = t+1-Math.ceil(+0.5+i)/2-0.5;
+				
+				//EASING IS THE VALUE FROM 0 TO 1 TO EASE THE TRANSITION
+				var easing:Number = pageIndexProgress-Math.floor(pageIndexProgress);
+				
+				//trace("pageIndexProgress "+i+" =  " + pageIndexProgress);
+				
+				if(i%2==0){
+					//PAIR = LEFT PAGES 0,2,4,6
+					
+					//page.rotationZ = -180+Math.min(180*(Math.floor(pageIndexProgress)+Cubic.easeInOut(easing,0,1,1)),180-1);
+					page.rotationZ = -180+Math.min(180*(Math.floor(pageIndexProgress)+easing),180);
+					page.rotationZ = Math.max(page.rotationZ,-180);
+				}else {
+					//IMPAIR = RIGHT PAGES 1,3,5
+					
+					//page.rotationZ = Math.min(180*(Math.floor(pageIndexProgress)+Cubic.easeInOut(easing,0,1,1)),180-1);
+					page.rotationZ = Math.min(180*(Math.floor(pageIndexProgress)+easing),180);
+					page.rotationZ = Math.max(page.rotationZ,0);
+				}
+				
+				//UPDATE VISIBILITY
+				// IF WE'RE ON A PRECISE INDEX WE JUST SHOW 2 PAGES
+				if(_pageIndex == int(_pageIndex) ){
+					
+					page.visible= (i<=_pageIndex*2+1 && i>=_pageIndex*2)?true:false;
+				}else {
+					//OTHERWISE WE SHOW THE 4 PAGES CONCERNED
+					var minIndexVisible:int = Math.floor(_pageIndex)*2;
+					page.visible= (i<=minIndexVisible+4 &&i>=minIndexVisible)?true:false;
+				}
+				
+			}
+			
+			
+			
+			//FIRST AND LAST PAGES NEVER MOVE
+			if (_pages.length>0){
+				_pages[0].rotationZ = 0;
+				_pages[_pages.length-1].rotationZ = 0;
+			}
+			
+		}
+		
+		
+		private function startGrabController():void{
+			if(!_grabThrowController)
+			{
+				_grabThrowController = new GrabThrowController(this.stage);
+				_grabThrowController.start();
+				_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);
+				_grabThrowController.addEventListener(GrabThrowEvent.DRAG_UPDATE,onDragUpdate);
+				_grabThrowController.addEventListener(GrabThrowEvent.RELEASE,onRelease);
+			}
+		}
+		
+		
+		private function stopGrabController():void{
+			_grabThrowController.stop();
+			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);
+			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_UPDATE,onDragUpdate);
+			_grabThrowController.removeEventListener(GrabThrowEvent.RELEASE,onRelease);
+			_grabThrowController = null;
+		}
+		
+		
+		
+		public function set pageIndex(value:Number):void{
+			_pageIndex = Math.max(value,0);
+			updatePages();
+		}
+		
+		public function get pageIndex():Number{
+			return _pageIndex;
+		}
+	
+		
+	
+		
 		/////////////////////////////////////////////////////////////////
 		/////////////////////////   EVENTS	/////////////////////////////
 		/////////////////////////////////////////////////////////////////
+		private function onObjectMouseOver( event:MouseEvent3D ):void {
+			trace("onObjectMouseOver");
+		}
+		
+		protected function onMouseDown3d(event:MouseEvent3D):void
+		{
+			trace("on mouse down 3d");
+			
+		}		
+		
+		
+		protected function onAdded(event:Event):void
+		{
+			
+			startGrabController();
+			this.removeEventListener(Event.ADDED_TO_STAGE,onAdded);
+		}		
+		
+		
+		
+		
+		
 		
 		protected function onDragStarted(event:GrabThrowEvent):void
 		{
-			trace("onDragStarted = "+event.velocityX);
-			
-			_dragStartX = this.stage.mouseX;
+			//NOTHING
 		}
 		
 		protected function onDragUpdate(event:GrabThrowEvent):void
 		{
 			
-			trace("onDragUpdate = "+event.velocityX);
 			//!!PageIndex is a SETTER
 			pageIndex += _pageBrowsingSpeed*event.velocityX/1000;
-			//	(this.stage.mouseX/this.stage.stageWidth)*_pageBrowsingSpeed;
 			
-			//updatePages(this.stage.mouseX/this.stage.stageWidth);
 		}	
 		
 		protected function onRelease(event:GrabThrowEvent):void

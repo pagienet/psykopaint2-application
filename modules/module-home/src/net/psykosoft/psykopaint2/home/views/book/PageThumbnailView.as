@@ -1,18 +1,15 @@
 package net.psykosoft.psykopaint2.home.views.book
 {
 	import flash.display.BitmapData;
-	import flash.geom.Matrix;
 	
 	import away3d.containers.ObjectContainer3D;
 	import away3d.entities.Mesh;
 	import away3d.events.MouseEvent3D;
-	import away3d.events.Object3DEvent;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
-	import away3d.tools.utils.TextureUtils;
 	import away3d.utils.Cast;
 	
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
+	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
 	
 	import org.osflash.signals.Signal;
@@ -80,7 +77,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function onThumbnailLoaded(bitmapData : BitmapData):void
 		{
 			_geometry = new PlaneGeometry(_width,_height,1,1,true,true);
-			_pageMesh = new Mesh(_geometry,new TextureMaterial(Cast.bitmapTexture(BitmapDataUtils.autoResizePowerOf2(bitmapData))));
+			_pageMesh = new Mesh(_geometry,new TextureMaterial(Cast.bitmapTexture(TextureUtil.ensurePowerOf2ByScaling(bitmapData))));
 			trace("ASSET LOADED"+ _data);
 			this.addChild(_pageMesh);
 		}		
