@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.app.states
 {
+
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.utils.misc.executeNextFrame;
@@ -71,7 +72,7 @@ package net.psykosoft.psykopaint2.app.states
 		{
 			// TODO: this probably needs to be moved to some activation command
 			requestNavigationToggleSignal.dispatch(1);
-			requestStateChangeSignal.dispatch(NavigationStateType.HOME_ON_EASEL);
+			requestStateChangeSignal.dispatch(NavigationStateType.HOME);
 
 			stateMachine.setActiveState(homeState);
 		}

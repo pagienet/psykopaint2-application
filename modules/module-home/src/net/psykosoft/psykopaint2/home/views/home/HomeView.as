@@ -1,27 +1,27 @@
 package net.psykosoft.psykopaint2.home.views.home
 {
-	import away3d.cameras.Camera3D;
-	import away3d.containers.View3D;
-	import away3d.core.managers.Stage3DProxy;
-	import away3d.lights.PointLight;
-
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
-
+	
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
-	import flash.geom.Vector3D;
-
+	
+	import away3d.cameras.Camera3D;
+	import away3d.containers.View3D;
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.lights.PointLight;
+	
 	import net.psykosoft.psykopaint2.base.ui.base.ViewBase;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
+	import net.psykosoft.psykopaint2.home.views.book.BookView;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryView;
 	import net.psykosoft.psykopaint2.home.views.home.atelier.Atelier;
 	import net.psykosoft.psykopaint2.home.views.home.controllers.CameraPromenadeController;
 	import net.psykosoft.psykopaint2.home.views.home.controllers.OrientationBasedController;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class HomeView extends ViewBase
@@ -43,6 +43,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		private var _easelView : EaselView;
 		private var _roomView : RoomView;
 		private var _galleryView : GalleryView;
+		private var _bookView : BookView;
+
 		private var _atelier : Atelier;
 		private var _camera : Camera3D;
 		private var _scrollingEnabled : Boolean = true;
@@ -81,8 +83,8 @@ package net.psykosoft.psykopaint2.home.views.home
 		public function playIntroAnimation(onComplete : Function) : void
 		{
 			initCameraIntroPosition();
-			TweenLite.to(	_camera, 1.5, { 	z:450,
-				ease: Strong.easeInOut,
+			TweenLite.to(	_camera, 0.25, { 	z:450,
+				ease: Strong.easeOut,
 				onComplete:onComplete,
 				overwrite : 0
 			} );
@@ -144,9 +146,12 @@ package net.psykosoft.psykopaint2.home.views.home
 			_easelView = new EaselView(_view, _light, _stage3dProxy);
 			_roomView = new RoomView(_atelier, _stage3dProxy);
 			_galleryView = new GalleryView(_view, _light, _stage3dProxy);
+			_bookView = new BookView(_view, _light, _stage3dProxy);
 			addChild(_easelView);
 			addChild(_roomView);
 			addChild(_galleryView);
+			addChild(_bookView);
+			
 		}
 
 		private function initView() : void
@@ -229,9 +234,11 @@ package net.psykosoft.psykopaint2.home.views.home
 			removeChild(_easelView);
 			removeChild(_roomView);
 			removeChild(_galleryView);
+			removeChild(_bookView);
 			_easelView = null;
 			_roomView = null;
 			_galleryView = null;
+			_bookView = null;
 		}
 
 		public function setOrientationMatrix(orientationMatrix : Matrix3D) : void

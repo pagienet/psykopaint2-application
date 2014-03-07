@@ -1,5 +1,6 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
+	import flash.display3D.Context3DBlendFactor;
 	import flash.events.Event;
 	
 	import net.psykosoft.psykopaint2.core.drawing.brushes.SprayCanBrush;
@@ -108,8 +109,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager.addPointDecorator( gridDecorator );
 			
 			colorDecorator = new ColorDecorator();
-			colorDecorator.param_brushOpacity.numberValue = 0.9;
-			colorDecorator.param_brushOpacityRange.numberValue = 0.2;
+			colorDecorator.param_brushOpacity.numberValue = 1;
+			colorDecorator.param_brushOpacityRange.numberValue = 0;
 			colorDecorator.param_colorBlending.upperRangeValue = 1;
 			colorDecorator.param_colorBlending.lowerRangeValue = 0.95;
 			colorDecorator.param_pickRadius.lowerRangeValue = 0.25;
@@ -137,6 +138,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			param_intensity.showInUI = 2;
 			param_intensity.addEventListener( Event.CHANGE, onIntensityChanged );
 			_parameterMapping.addParameter(param_intensity);
+			
+			(brushEngine as SprayCanBrush).param_strokeAlpha.numberValue = param_intensity.numberValue;
 		
 		}
 		
@@ -321,7 +324,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		protected function onIntensityChanged(event:Event):void
 		{
 			var intensity:Number = param_intensity.numberValue;
-			colorDecorator.param_brushOpacity.numberValue = intensity;
+			//colorDecorator.param_brushOpacity.numberValue = intensity;
+			(brushEngine as SprayCanBrush).param_strokeAlpha.numberValue = param_intensity.numberValue;
 			
 			bumpDecorator.param_bumpInfluence.numberValue = 1;
 			
