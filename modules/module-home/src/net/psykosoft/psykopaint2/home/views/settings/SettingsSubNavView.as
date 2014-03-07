@@ -14,7 +14,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		}
 
 		override protected function onEnabled():void {
-			setHeader( "Settings" );
+			setHeader( "" );
 		}
 
 		override protected function onSetup():void {

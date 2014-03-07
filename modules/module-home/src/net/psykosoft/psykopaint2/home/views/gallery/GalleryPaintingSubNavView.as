@@ -103,7 +103,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		override protected function onEnabled() : void
 		{
-			setHeader("Gallery");
+			setHeader("");
 //			setLeftButton(ID_BACK, ID_BACK);
 		}
 

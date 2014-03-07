@@ -1,8 +1,5 @@
 package net.psykosoft.psykopaint2.app.states
 {
-	import flash.display.Sprite;
-	import flash.events.Event;
-
 	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.states.ns_state_machine;
 	import net.psykosoft.psykopaint2.base.utils.misc.executeNextFrame;
