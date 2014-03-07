@@ -116,6 +116,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_container.y = PAINTING_Y;
 			_container.z = PAINTING_Z;
 			_container.rotationY = 180;
+			_container.mouseEnabled = false;
+			_container.mouseChildren = false;
 			_view.scene.addChild(_container);
 			_view.camera.addEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraMoved);
 			initGeometry();

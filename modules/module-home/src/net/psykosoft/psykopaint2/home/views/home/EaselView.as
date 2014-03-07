@@ -199,6 +199,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_canvas.position = CANVAS_DEFAULT_POSITION;
 			// start invisible until content is added
 			_canvas.visible = false;
+			_canvas.mouseEnabled = false;
 			_view.scene.addChild(_canvas);
 		}
 

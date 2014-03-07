@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.home.views.home
 	
 	import flash.display3D.textures.Texture;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	import flash.geom.Matrix3D;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
@@ -159,6 +161,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_view = new View3D();
 			_view.stage3DProxy = _stage3dProxy;
 			_view.shareContext = true;
+			_view.rethrowEvents = false;
 			_view.width = stage.stageWidth;
 			_view.height = stage.stageHeight;
 			_view.camera.lens.far = 50000;

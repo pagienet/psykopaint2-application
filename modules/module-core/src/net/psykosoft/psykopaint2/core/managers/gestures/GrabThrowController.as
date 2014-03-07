@@ -139,6 +139,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 				dispatchEvent(new GrabThrowEvent(GrabThrowEvent.DRAG_STARTED, _velocityX, _velocityY));
 				return true;
 			}
+			trace("false");
 			return false;
 		}
 
