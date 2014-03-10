@@ -58,7 +58,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 				if ( sy > 0 ) 
 					p.y += (col * param_offsetCol.numberValue) % sy;
 				
-				if ( param_angleStep.degrees > -1 ) p.angle = (param_angleStep.numberValue > 0 ? (p.angle - p.angle % param_angleStep.numberValue) : 0 ) + param_angleOffset.numberValue;
+				if ( param_angleStep.degrees > 0 ) p.angle = p.angle - (p.angle  % param_angleStep.numberValue) + param_angleOffset.numberValue;
 				if ( i > 0 )
 				{
 					if ( p.x == points[int(i-1)].x && p.y == points[int(i-1)].y )

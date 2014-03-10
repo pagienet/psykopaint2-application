@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 							<parameter id={SpawnDecorator.PARAMETER_N_MINIMUM_OFFSET} path="pathengine.pointdecorator_1" value="1" minValue="0" maxValue="200"/>
 							<parameter id={SpawnDecorator.PARAMETER_AR_OFFSET_ANGLE} path="pathengine.pointdecorator_1" value1="-1" value2="1" />
 							<parameter id={SpawnDecorator.PARAMETER_AR_BRUSH_ANGLE_VARIATION} path="pathengine.pointdecorator_1" value1="-2" value2="2" />
-							<parameter id={SpawnDecorator.PARAMETER_NR_BRISTLE_VARIATION} path="pathengine.pointdecorator_1" value="1"/>
+							<parameter id={SpawnDecorator.PARAMETER_N_BRISTLE_VARIATION} path="pathengine.pointdecorator_1" value="1"/>
 						</SpawnDecorator>
 						<BumpDecorator>
 							<parameter id={BumpDecorator.PARAMETER_SL_MODE} path="pathengine.pointdecorator_2" index={BumpDecorator.INDEX_MODE_FIXED} />
