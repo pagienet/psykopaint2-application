@@ -1,6 +1,12 @@
 package net.psykosoft.psykopaint2.base.utils.gpu
 {
 
+	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.utils.ByteArray;
+	
 	import away3d.containers.View3D;
 	import away3d.core.base.CompactSubGeometry;
 	import away3d.core.managers.Stage3DProxy;
@@ -12,14 +18,12 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.ATFTexture;
 	import away3d.textures.BitmapTexture;
-
+	import away3d.tools.utils.TextureUtils;
+	import away3d.utils.Cast;
+	
 	import br.com.stimuli.loading.BulkLoader;
-
-	import flash.display.BitmapData;
-	import flash.geom.Matrix;
-	import flash.geom.Point;
-	import flash.utils.ByteArray;
-
+	
+	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 
@@ -27,7 +31,7 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 	{
 		private static const MAX_SIZE:uint = 2048;
 
-		public static function createPlaneThatFitsNonPowerOf2TransparentImage( diffuseImage:BitmapData, stage3dProxy:Stage3DProxy, transparent:Boolean = false ):Mesh {
+		public static function createPlaneThatFitsNonPowerOf2TransparentImage( diffuseImage:BitmapData, stage3dProxy:Stage3DProxy=null, transparent:Boolean = false ):Mesh {
 
 			// Remember original diffuseImage and safe diffuseImage dimensions.
 			var imageDimensions:Point = new Point( diffuseImage.width, diffuseImage.height );
@@ -64,13 +68,13 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 
 		}
 
-		private static function createPow2TextureFromBitmap( diffuseImage:BitmapData, stage3dProxy:Stage3DProxy ):BitmapTexture {
+		private static function createPow2TextureFromBitmap( diffuseImage:BitmapData, stage3dProxy:Stage3DProxy =null):BitmapTexture {
 			// Obtain "safe" ( power of 2 sized image ) from the original.
 			var diffuseSafeImage:BitmapData = TextureUtil.ensurePowerOf2ByCentering( diffuseImage );
 
 			// Create texture from image.
 			var diffuseTexture:BitmapTexture = new TrackedBitmapTexture( diffuseSafeImage );
-			diffuseTexture.getTextureForStage3D( stage3dProxy ); // Force diffuseImage creation before the disposal of the bitmap data.
+			if(stage3dProxy) diffuseTexture.getTextureForStage3D( stage3dProxy ); // Force diffuseImage creation before the disposal of the bitmap data.
 			diffuseImage.dispose();
 			diffuseSafeImage.dispose();
 			return diffuseTexture;
@@ -183,5 +187,40 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 			bmd.dispose();
 			return texture;
 		}
+		
+		
+		
+		
+	 	public static function autoResizePowerOf2(bmData:BitmapData,smoothing:Boolean = true):BitmapData 
+		{
+			if (TextureUtils.isBitmapDataValid(bmData))
+				return bmData;
+			
+			var max:Number = Math.max(bmData.width, bmData.height);
+			max = TextureUtils.getBestPowerOf2(max);
+			var mat:Matrix = new Matrix();
+			mat.scale(max/bmData.width, max/bmData.height);
+			var bmd:BitmapData = new BitmapData(max, max,bmData.transparent,0x00000000);
+			bmd.draw(bmData, mat, null, null, null, smoothing);
+			return bmd;
+		} 
+		
+		
+		public static function displayObjectToTextureMaterial(displayObject:DisplayObject):TextureMaterial{
+			
+			var texture:BitmapTexture = new BitmapTexture(autoResizePowerOf2(displayObjectToBitmapData(displayObject)));
+			var textureMaterial:TextureMaterial = new TextureMaterial(Cast.bitmapTexture(texture));
+			
+			return textureMaterial;
+		}
+		
+		
+		public static function displayObjectToBitmapData(displayObject:DisplayObject):BitmapData{
+			var pageBitmapData:BitmapData = new BitmapData(displayObject.getBounds(displayObject).width, displayObject.getBounds(displayObject).height, true,0x00000000);
+			pageBitmapData.draw(displayObject, null, null, "normal", null, true);
+			return pageBitmapData;
+		}
+		
+		
 	}
 }

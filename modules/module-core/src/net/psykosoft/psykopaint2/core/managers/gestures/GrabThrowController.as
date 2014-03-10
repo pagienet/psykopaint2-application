@@ -81,6 +81,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onMouseDown(event : MouseEvent) : void
 		{
+			
 			if (beginGrabThrow(event.stageX, event.stageY)) {
 				if (_exclusive) event.stopImmediatePropagation();
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove, false, _priority);
@@ -90,6 +91,7 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onTouchBegin(event : TouchEvent) : void
 		{
+			
 			if (!event.isPrimaryTouchPoint) {
 				// multitouch detected, not a pan gesture anymore
 				if (_isDragging) endGrabThrow(true);

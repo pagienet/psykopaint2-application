@@ -4,14 +4,16 @@ package net.psykosoft.psykopaint2.base.utils.images
 	import flash.display.BitmapData;
 	import flash.display.BitmapDataChannel;
 	import flash.display.BlendMode;
+	import flash.display.DisplayObject;
 	import flash.filters.ColorMatrixFilter;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
-
+	
+	import away3d.tools.utils.TextureUtils;
+	
 	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
 
 	public class BitmapDataUtils
@@ -69,6 +71,9 @@ package net.psykosoft.psykopaint2.base.utils.images
 
 			return bitmapData;
 		}
+		
+		
+		
 
 		static public function scaleToFit( sourceBmd:BitmapData, size:Number ):BitmapData {
 			var wRatio:Number = size / sourceBmd.width;
