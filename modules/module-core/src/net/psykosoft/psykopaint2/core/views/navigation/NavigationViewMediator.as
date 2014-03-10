@@ -2,12 +2,12 @@ package net.psykosoft.psykopaint2.core.views.navigation
 {
 
 	import flash.display.Stage;
-	
+
 	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GestureType;
 	import net.psykosoft.psykopaint2.core.signals.NavigationCanHideWithGesturesSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationPositionChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
 	import net.psykosoft.psykopaint2.core.views.base.MediatorBase;
@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var notifyNavigationToggledSignal:NotifyNavigationToggledSignal;
 
 		[Inject]
-		public var notifyNavigationMovingSignal:NotifyNavigationMovingSignal;
+		public var notifyNavigationPositionChangedSignal:NotifyNavigationPositionChangedSignal;
 
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
@@ -57,15 +57,17 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			view.panel.showingSignal.add( onViewShowing );
 			view.panel.hiddenSignal.add( onViewHidden );
 			view.panel.hidingSignal.add( onViewHiding );
-			view.panel.showHideUpdateSignal.add( onViewShowHideUpdate );
+			view.panel.positionChanged.add( onViewPositionChanged );
+
 		}
 
 		// -----------------------
 		// From view.
 		// -----------------------
 
-		private function onViewShowHideUpdate( ratio:Number ):void {
-			notifyNavigationMovingSignal.dispatch( ratio );
+		private function onViewPositionChanged(position : Number):void
+		{
+			notifyNavigationPositionChangedSignal.dispatch( position );
 		}
 
 		private function onViewHiding():void {

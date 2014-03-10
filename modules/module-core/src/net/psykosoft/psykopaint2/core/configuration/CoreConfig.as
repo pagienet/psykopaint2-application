@@ -46,7 +46,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyGyroscopeUpdateSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
-	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationMovingSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationPositionChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingDataSavedSignal;
@@ -216,7 +216,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyMemoryWarningSignal ).asSingleton();
 			_injector.map( NotifyBlockingGestureSignal ).asSingleton();
 			_injector.map( RequestNavigationToggleSignal ).asSingleton();
-			_injector.map( NotifyNavigationMovingSignal ).asSingleton();
+			_injector.map( NotifyNavigationPositionChangedSignal ).asSingleton();
 			_injector.map( NotifyPaintingDataSetSignal ).asSingleton();
 			_injector.map( RequestDrawingCoreResetSignal ).asSingleton();
 			_injector.map( RequestEaselUpdateSignal ).asSingleton();

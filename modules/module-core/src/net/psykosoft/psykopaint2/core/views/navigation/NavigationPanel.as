@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public var showingSignal:Signal;
 		public var hidingSignal:Signal;
 		public var hiddenSignal:Signal;
-		public var showHideUpdateSignal:Signal;
+		public var positionChanged:Signal;
 
 		public function NavigationPanel() {
 			super();
@@ -34,7 +34,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			hidingSignal = new Signal();
 			showingSignal = new Signal();
 			hiddenSignal = new Signal();
-			showHideUpdateSignal = new Signal();
+			positionChanged = new Signal();
 
 			_positionManager = new SnapPositionManager();
 			_positionManager.pushSnapPoint( 0 );
@@ -121,7 +121,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			showingSignal.dispatch();
 			
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 0.5, { y:  _positionManager.getSnapPointAtIndex( 0 ) + 768, onComplete:function():void{_positionManager.position = y - 768;_shown = visible = true;shownSignal.dispatch();}, ease: Strong.easeInOut } );
+			TweenLite.to( this, 0.5, {
+				y:  _positionManager.getSnapPointAtIndex( 0 ) + 768,
+				onComplete:function():void{_positionManager.position = y - 768;_shown = visible = true;shownSignal.dispatch();},
+				ease: Strong.easeInOut } );
 		}
 
 		public function hide():void {
@@ -129,7 +132,10 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if( !_shown ) return;
 			hidingSignal.dispatch();
 			TweenLite.killTweensOf( this );
-			TweenLite.to( this, 0.5, { y:  _positionManager.getSnapPointAtIndex( 1 ) + 768, onComplete:function():void{_positionManager.position = y - 768;_shown = visible = false;hiddenSignal.dispatch();}, ease: Strong.easeOut } );
+			TweenLite.to( this, 0.5, {
+				y:  _positionManager.getSnapPointAtIndex( 1 ) + 768,
+				onComplete:function():void{_positionManager.position = y - 768;_shown = visible = false;hiddenSignal.dispatch();},
+				ease: Strong.easeOut } );
 		}
 
 		// ---------------------------------------------------------------------
@@ -187,6 +193,14 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function get shown():Boolean {
 			return _shown;
+		}
+
+		override public function set y(value:Number):void
+		{
+			if (y != value) {
+				super.y = value;
+				positionChanged.dispatch(value - _positionManager.getSnapPointAtIndex( 1 ) - 768);
+			}
 		}
 	}
 }
