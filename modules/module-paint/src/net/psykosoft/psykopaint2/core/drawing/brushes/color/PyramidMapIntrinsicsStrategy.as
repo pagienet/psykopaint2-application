@@ -38,12 +38,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 			var index:int = (targetIndexMask & 1) == 1 ? 0 : (targetIndexMask & 2) == 2 ? 4 : (targetIndexMask & 4) == 4 ? 8 : (targetIndexMask & 8) == 8 ? 12 : -1;
 			_canvasModel.pyramidMap.getRGB(x,y,size,tmpRGB );
 			
+			var t0:Number,t1:Number,t2:Number;
+			
 			if ( _colorMatrixBlend > 0 && _colorMatrix )
 			{
 				var c:Vector.<Number> = _colorMatrix;
 				var f:Number = _colorMatrixBlend;
 				var fi:Number = 1 - f;
-				var t0:Number,t1:Number,t2:Number;
 				var r1:Number = (t0=tmpRGB[0]) * c[0] + (t1=tmpRGB[1]) * c[1] + (t2=tmpRGB[2]) * c[2] +  c[3];
 				var g1:Number = t0 * c[4] + t1 * c[5] + t2 * c[6] +  c[7];
 				var b1:Number = t0 * c[8] + t1 * c[9] + t2 * c[10] +  c[11];
@@ -59,8 +60,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.color
 				tmpRGB[2] = fi * t2 + f * (l*b2 + li*b1);
 			}
 			
-			var t1:Number = target[index] 	     = tmpRGB[0];
-			var t2:Number = target[int(index+1)] = tmpRGB[1]; 
+			t1 = target[index] 	     = tmpRGB[0];
+			t2 = target[int(index+1)] = tmpRGB[1]; 
 			var t3:Number = target[int(index+2)] = tmpRGB[2];
 			
 			if ( (targetIndexMask & 2) == 2 && index != 4)
