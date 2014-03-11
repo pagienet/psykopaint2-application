@@ -14,6 +14,8 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 	import flash.display3D.textures.TextureBase;
 	import flash.geom.Matrix;
 
+	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
+
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
@@ -84,8 +86,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 
 		public function execute(stroke : SimulationMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase, textureRatioX : Number, textureRatioY : Number) : void
 		{
-			const overlapPreventionTris : int = 4;
-			var triOffset : int = _triOffset <= overlapPreventionTris? 0 : _triOffset-overlapPreventionTris;
+			var triOffset : int = _triOffset <= WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT? 0 : _triOffset-WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT;
 			var stationaryEnd : int = stroke.numTriangles - stroke.stationaryTriangleCount;
 			if (triOffset > stationaryEnd) triOffset = stationaryEnd;
 			// nothing new
@@ -108,10 +109,10 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 				_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 				_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _props, 1);
 
-				drawWithoutOverlap(stroke, SimulationMesh.BRUSH_TEXTURE_UVS | SimulationMesh.CANVAS_TEXTURE_UVS, triOffset, overlapPreventionTris);
+				drawWithoutOverlap(stroke, SimulationMesh.BRUSH_TEXTURE_UVS | SimulationMesh.CANVAS_TEXTURE_UVS, triOffset);
 			}
 			else {
-				drawWithoutOverlap(stroke, SimulationMesh.BRUSH_TEXTURE_UVS, triOffset, overlapPreventionTris);
+				drawWithoutOverlap(stroke, SimulationMesh.BRUSH_TEXTURE_UVS, triOffset);
 			}
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
@@ -121,13 +122,13 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			_triOffset = stroke.numTriangles;
 		}
 
-		private function drawWithoutOverlap(stroke : SimulationMesh, uvMode : int, offset : int, overlapCount : int) : void
+		private function drawWithoutOverlap(stroke : SimulationMesh, uvMode : int, offset : int) : void
 		{
 			if (offset > 0) {
 				_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
 				_context.setStencilReferenceValue(0);
 				_context.setColorMask(false, false, false, false);
-				stroke.drawMesh(_context, uvMode, overlapCount, false, offset);
+				stroke.drawMesh(_context, uvMode, WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT, false, offset);
 				_context.setColorMask(true, true, true, true);
 			}
 			stroke.drawMesh(_context, uvMode, -1, true, offset);

@@ -33,6 +33,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 	public class WaterColorBrush extends SimulationBrush
 	{
+		public static const OVERLAP_PREVENTION_TRI_COUNT : int = 2;
+
 		public static const PARAMETER_N_SURFACE_INFLUENCE:String = "Surface influence";
 		public static const PARAMETER_N_GRAVITY_INFLUENCE:String = "Gravity influence";
 		public static const PARAMETER_N_VISCOSITY:String = "Viscosity";

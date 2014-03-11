@@ -195,7 +195,6 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 
 			_canvasRect.width = bottomRight.x - topLeft.x;
 			_canvasRect.height = bottomRight.y - topLeft.y;
-			GyroscopeManager.angleAdjustment += 0.02;
 			updateAndConstrainCanvasRect();
 		}
 
