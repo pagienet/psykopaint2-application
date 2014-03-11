@@ -239,9 +239,15 @@ package net.psykosoft.psykopaint2.home.views.home
 		{
 			_easelView.dispose();
 			removeChild(_easelView);
+			
 			removeChild(_roomView);
+			
+			_galleryView.dispose();
 			removeChild(_galleryView);
+			
+			_bookView.dispose();
 			removeChild(_bookView);
+			
 			_easelView = null;
 			_roomView = null;
 			_galleryView = null;

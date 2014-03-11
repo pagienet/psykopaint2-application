@@ -1,14 +1,15 @@
 package net.psykosoft.psykopaint2.home.views.book
 {
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	
+	import away3d.animators.SpriteSheetAnimationSet;
+	import away3d.animators.data.SpriteSheetAnimationFrame;
+	import away3d.animators.nodes.SpriteSheetClipNode;
 	import away3d.materials.TextureMaterial;
 	import away3d.textures.BitmapTexture;
 	import away3d.utils.Cast;
 	
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-	import net.psykosoft.psykopaint2.base.utils.images.BitmapDataUtils;
 	import net.psykosoft.psykopaint2.base.utils.io.QueuedFileLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.events.AssetLoadedEvent;
 
@@ -41,6 +42,49 @@ package net.psykosoft.psykopaint2.home.views.book
 			_assetsURLs.push({index:1,id:PAGE_PAPER,url:"home-packaged/away3d/book/paperbook512.jpg"});
 			_assetsURLs.push({index:2,id:THUMBNAIL_SHADOW,url:"book-packaged/images/page/pict_shadow.png"});
 			
+		}
+		
+		public function parseAtlasXml(animID:String, textureWidth:uint, textureHeight:uint, atlasXml:XML) : SpriteSheetAnimationSet
+		{
+			var spriteSheetAnimationSet:SpriteSheetAnimationSet = new SpriteSheetAnimationSet();
+			var node:SpriteSheetClipNode = new SpriteSheetClipNode();
+			node.name = animID;
+			
+			spriteSheetAnimationSet.addAnimation(node);
+			
+			var frame:SpriteSheetAnimationFrame;
+			var u:uint, v:uint,i:uint;
+			
+			var scale:Number = 1;//mAtlasTexture.scale;
+			
+			for each (var subTexture:XML in atlasXml.SubTexture)
+			{
+				var name:String = subTexture.attribute("name");
+				var x:Number = parseFloat(subTexture.attribute("x")) / scale;
+				var y:Number = parseFloat(subTexture.attribute("y")) / scale;
+				var width:Number = parseFloat(subTexture.attribute("width")) / scale;
+				var height:Number = parseFloat(subTexture.attribute("height")) / scale;
+				//  var frameX:Number = parseFloat(subTexture.attribute(“frameX”)) / scale;
+				//  var frameY:Number = parseFloat(subTexture.attribute(“frameY”)) / scale;
+				//  var frameWidth:Number = parseFloat(subTexture.attribute(“frameWidth”)) / scale;
+				//  var frameHeight:Number = parseFloat(subTexture.attribute(“frameHeight”)) / scale;
+				
+				//  var regionR:Rectangle = new Rectangle(x, y, width, height);
+				// var frameR:Rectangle = frameWidth > 0 && frameHeight > 0 ? new Rectangle(frameX, frameY, frameWidth, frameHeight) : null;
+				
+				
+				frame = new SpriteSheetAnimationFrame();
+				frame.offsetU = x / textureWidth;
+				frame.offsetV = y / textureHeight;
+				frame.scaleU = width / textureWidth;
+				frame.scaleV = height / textureHeight;
+				frame.mapID = i;
+				
+				node.addFrame(frame, 16);
+				i++;
+			}
+			
+			return spriteSheetAnimationSet;
 		}
 		
 		

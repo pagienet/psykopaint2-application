@@ -587,7 +587,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			_view.camera.removeEventListener(Object3DEvent.SCENETRANSFORM_CHANGED, onCameraMoved);
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			_view.scene.removeChild(_container);
+			if ( _view.scene.contains(_container) ) _view.scene.removeChild(_container);
 			disposePaintings();
 			_container.dispose();
 			_imageCache.thumbnailDisposed.removeAll();
@@ -595,8 +595,8 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_imageCache.clear();
 			_paintingGeometry.dispose();
 			_loadingTexture.dispose();
-			_paintingOccluder.material.dispose();
-			_paintingOccluder.geometry.dispose();
+			if ( _paintingOccluder.material )_paintingOccluder.material.dispose();
+			if ( _paintingOccluder.geometry )_paintingOccluder.geometry.dispose();
 			_paintingOccluder.dispose();
 			disposeHighQualityMaterial();
 			stopInteraction();

@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 		public static const PARAMETER_SL_OFFSET_MODE:String = "Offset Mode";
 		public static const PARAMETER_AR_OFFSET_ANGLE:String = "Offset Angle";
 		public static const PARAMETER_AR_BRUSH_ANGLE_VARIATION:String = "Brush Angle Variation";
-		public static const PARAMETER_NR_BRISTLE_VARIATION:String = "Bristle Variation";
+		public static const PARAMETER_N_BRISTLE_VARIATION:String = "Bristle Variation";
 		public static const PARAMETER_B_AUTOROTATE:String = "Auto Rotate";
 		public static const PARAMETER_N_MAXIMUM_SPEED:String = "Maximum Speed";
 		public static const PARAMETER_N_MAXIMUM_SIZE:String = "Maximum Size";
@@ -57,7 +57,7 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			
 			param_offsetAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_OFFSET_ANGLE,0,0,-180,180);
 			param_brushAngleRange  = new PsykoParameter( PsykoParameter.AngleRangeParameter, PARAMETER_AR_BRUSH_ANGLE_VARIATION,0,0,-180,180);
-			param_bristleVariation  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_NR_BRISTLE_VARIATION,1,0,1);
+			param_bristleVariation  = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_BRISTLE_VARIATION,1,0,1);
 			param_autorotate      = new PsykoParameter( PsykoParameter.BooleanParameter, PARAMETER_B_AUTOROTATE,1);
 			param_maxSpeed   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SPEED,20,1,100);
 			param_maxSize   		= new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_MAXIMUM_SIZE,1,0,1);

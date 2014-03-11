@@ -27,3 +27,5 @@ modules/module-book/.flexLibProperties
 modules/module-core/.flexLibProperties
 
 modules/module-home/.flexLibProperties
+
+certificates/

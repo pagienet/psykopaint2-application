@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static const PARAMETER_N_SURFACE_INFLUENCE : String = "Surface Influence";
 		
 		private var rng:LCG;
-		private var _surfaceRelief : PsykoParameter;
+		public var param_surfaceRelief : PsykoParameter;
 		
 
 		public function SketchBrush()
@@ -30,11 +30,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			rng = new LCG(Math.random() * 0xffffff);
 			type = BrushType.SKETCH;
 
-			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, .6, 0, 1.0);
+			param_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, .6, 0, 1.0);
 			param_shininess.numberValue = .3;
 			param_glossiness.numberValue = .25;
 			param_bumpiness.numberValue = .6;
-			_parameters.push(_surfaceRelief);
+			_parameters.push(param_surfaceRelief);
 		}
 
 		override public function activate(view : DisplayObject, context : Context3D, canvasModel : CanvasModel, renderer:CanvasRenderer, paintSettingsModel : UserPaintSettingsModel) : void
@@ -111,7 +111,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function drawBrushColor() : void
 		{
-			SketchMesh(_brushMesh).setSurfaceRelief(_surfaceRelief.numberValue);
+			SketchMesh(_brushMesh).setSurfaceRelief(param_surfaceRelief.numberValue);
 			super.drawBrushColor();
 		}
 	}

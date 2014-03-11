@@ -22,15 +22,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 	public class BrushKit_SprayCan extends BrushKit
 	{
-		
-		private static const STYLE_PAINTSTROKES:int = 0;
-		private static const STYLE_HARD_ROUND_CIRCLE:int = 1;
-		private static const STYLE_ROUGH_SQUARE:int = 2;
+		private static const STYLE_HARD_ROUND_CIRCLE:int = 0;
+		private static const STYLE_ROUGH_SQUARE:int = 1;
+		private static const STYLE_SPLAT_SPRAY:int = 2;
 		private static const STYLE_PENCIL_SKETCH:int = 3;
-		private static const STYLE_PENCIL_SKETCH2:int = 4;
-		private static const STYLE_PIXELATE:int = 5;
-		private static const STYLE_WHATEVER:int = 6;
-		
+		private static const STYLE_PENCIL_SKETCH2:int =4;
+		private static const STYLE_WHATEVER:int = 5;
+		private static const STYLE_PIXELATE:int = 6;
+		private static const STYLE_PAINTSTROKES:int = 7;
 		
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -59,7 +58,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>(["paint1","almost circular hard","almost circular rough","line","dots","basic"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["almost circular hard","almost circular rough","splatspray","line","dots","basic","paint1"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -125,7 +124,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["paint1","basic","splat","sketch","sketch","line"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["basic","splat","sketch","sketch","sketch","line"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -141,7 +140,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping.addParameter(param_intensity);
 			
 			(brushEngine as SprayCanBrush).param_strokeAlpha.numberValue = param_intensity.numberValue;
-		
+			onStyleChanged(null);
 		}
 		
 		protected function onStyleChanged(event:Event):void
@@ -188,6 +187,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				
 				case STYLE_HARD_ROUND_CIRCLE:
 				case STYLE_ROUGH_SQUARE:
+				case STYLE_SPLAT_SPRAY:
 					bumpDecorator.param_mappingMode.index = BumpDecorator.INDEX_MODE_FIXED;
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
 					sizeDecorator.param_mappingRange.numberValue = 0;
@@ -273,6 +273,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					break;
 				
 				case STYLE_ROUGH_SQUARE:
+				case STYLE_SPLAT_SPRAY:
 					sizeDecorator.param_mappingFactor.numberValue = 0.02 + precision * 0.93;
 					splatterDecorator.param_splatFactor.numberValue = 10 * precision;
 					spawnDecorator.param_maxOffset.numberValue = precision * 12;
