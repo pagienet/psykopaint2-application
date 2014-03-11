@@ -218,7 +218,7 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 					var bottomRight:Point = _transformMatrix.transformPoint( _canvasRect.bottomRight );
 
 					_canvasRect.x = topLeft.x;
-					_canvasRect.y = topLeft.y + offsetY;
+					_canvasRect.y = topLeft.y;
 					_canvasRect.width = bottomRight.x - topLeft.x;
 					_canvasRect.height = bottomRight.y - topLeft.y;
 					updateAndConstrainCanvasRect();
@@ -346,10 +346,14 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 			if( zoomScale < 1 )
 			{
 				ratio = (zoomScale - _minZoomScale)/(1 - _minZoomScale);
-				minPanX = (1-ratio)*_easelRectFromHomeView.x /*+ ZOOM_MARGIN*ratio*/;
-				minPanY = (1-ratio)*_easelRectFromHomeView.y /*+ ZOOM_MARGIN*ratio*/+ offsetY;
-				maxPanX = minPanX /*- ZOOM_MARGIN*ratio*/;
-				maxPanY = minPanY /*- ZOOM_MARGIN*ratio*/;
+				minPanX = (1-ratio)*_easelRectFromHomeView.x;
+				minPanY = (1-ratio)*_easelRectFromHomeView.y + offsetY;
+				// cause a steep ramp up for the margins
+				var powRatio : Number = Math.pow(ratio, 14);
+				maxPanX = minPanX - ZOOM_MARGIN*powRatio;
+				maxPanY = minPanY - ZOOM_MARGIN*powRatio;
+				minPanX += ZOOM_MARGIN*powRatio;
+				minPanY += ZOOM_MARGIN*powRatio;
 			}
 			else {
 				// clamp to painting edges with margin
