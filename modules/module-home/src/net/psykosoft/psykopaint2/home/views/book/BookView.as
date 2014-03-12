@@ -46,6 +46,10 @@ package net.psykosoft.psykopaint2.home.views.book
 		private var _pageIndex:Number=0;
 		private var _bookMaterialProxy:BookMaterialsProxy;
 		
+		private var _benchmarkStartTime:Date;
+		private var _benchmarkFinishTime:Date;
+		private var _coverBook:Mesh;
+		
 		public function BookView(view:View3D, light:LightBase, stage3dProxy:Stage3DProxy)
 		{
 			_view = view;
@@ -147,28 +151,41 @@ package net.psykosoft.psykopaint2.home.views.book
 			//CREATE BACKGROUND COVER
 			var coverGeometry:Geometry = new PlaneGeometry(373,214);
 			var coverMaterial:ColorMaterial = new ColorMaterial(0xAAAAAA);
-			var coverBook:Mesh = new Mesh(coverGeometry,coverMaterial);
-			_container.addChild(coverBook);
-			coverBook.y=-10;
+			_coverBook = new Mesh(coverGeometry,coverMaterial);
+			_container.addChild(_coverBook);
+			_coverBook.y=-10;
+			
+			_coverBook.mouseEnabled=true;
 			
 			//LOAD PAGES ASSETS
 			BookMaterialsProxy.launch(function ():void
 			{
 				//LOAD DATAS AS SOON AS THE BOOK ASSETS ARE READY
-				loadDummySourceImageCollection();
+				//loadDummySourceImageCollection();
+				//TESTING
+				_coverBook.addEventListener(MouseEvent3D.CLICK,onClickBook);
 			});
 			
 		
 		}	
-		 
+		
+		protected function onClickBook(event:Event):void
+		{
+			//_coverBook.removeEventListener(MouseEvent3D.CLICK,onClickBook);
+			//BENCHMARK HOW LONG IT TAKES TO PARSE FILES
+			_benchmarkStartTime = new Date();
+			loadDummySourceImageCollection();
+			
+			
+		}		 
 		
 		
 		private function removePages():void{
 			//CLEAR PREVIOUS LAYOUT
 			for (var i:int = 0; i < _pages.length; i++) 
 			{
-				_pages[i].parent.removeChild(_pages[i]);
 				_pages[i].dispose();
+				//_pages[i].parent.removeChild(_pages[i]);
 				_pages[i] = null;
 			}
 			_pages = new Vector.<BookPageView>();
@@ -278,7 +295,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			
 			//_pageIndex = Math.max(value,0);
 			_pageIndex = Math.min(Math.max(value,0),(_pages.length/2-1));
-			trace("_pageIndex = "+_pageIndex);
+			//trace("_pageIndex = "+_pageIndex);
 			updatePages();
 		}
 		
@@ -303,7 +320,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		{
 			
 			//!!PageIndex is a SETTER
-			pageIndex += _pageBrowsingSpeed*event.velocityX/1000;
+			pageIndex -= _pageBrowsingSpeed*event.velocityX/1000;
 			
 		}	
 		
@@ -327,7 +344,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			//TEST DUMMY COLLECTION
 			var testSourceImageCollection:SourceImageCollection = new SourceImageCollection();
 			var fileSourceImageProxys :Vector.<SourceImageProxy>= new Vector.<SourceImageProxy>();
-			for (var i:int = 0; i < 36; i++) 
+			for (var i:int = 0; i < 40; i++) 
 			{
 				var newImage:FileSourceImageProxy = new FileSourceImageProxy();
 				newImage.id=i;
@@ -338,6 +355,11 @@ package net.psykosoft.psykopaint2.home.views.book
 			testSourceImageCollection.images = fileSourceImageProxys;
 			
 			setSourceImages(testSourceImageCollection);
+			
+			
+			_benchmarkFinishTime = new Date();
+			var benchmarkLoadingAssets:uint = _benchmarkFinishTime.time - _benchmarkStartTime.time;
+			trace("BENCHMARK BOOK LOADING ASSETS = "+benchmarkLoadingAssets); 
 		}
 		
 		

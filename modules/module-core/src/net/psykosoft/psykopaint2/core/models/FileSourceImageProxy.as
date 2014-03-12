@@ -5,6 +5,8 @@ package net.psykosoft.psykopaint2.core.models
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 
 	public class FileSourceImageProxy implements SourceImageProxy
@@ -36,30 +38,65 @@ package net.psykosoft.psykopaint2.core.models
 
 			_onComplete = onComplete;
 			_onError = onError;
-
-			var loader : Loader = new Loader();
-			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
-			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-			loader.load(new URLRequest(filename));
+			
+			trace("FileSourceImageProxy::LOAD FILE "+filename);
+			if (filename.indexOf(".atf")!=-1){
+				var urlloader : URLLoader = new URLLoader();
+				urlloader.addEventListener(Event.COMPLETE, onLoadATFComplete);
+				urlloader.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+				urlloader.dataFormat= URLLoaderDataFormat.BINARY;
+				
+				urlloader.load(new URLRequest(filename));
+			}else {
+				
+				var loader : Loader = new Loader();
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
+				loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+				
+				loader.load(new URLRequest(filename));
+			}
+			
 			//book debug
 			debugFilename = filename;
 		}
-
+		
+		protected function onLoadATFComplete(event:Event):void
+		{
+			var urlLoader:URLLoader = URLLoader(event.target);
+			
+			urlLoader.removeEventListener(Event.COMPLETE, onLoadComplete);
+			urlLoader.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+			var onComplete : Function = _onComplete;
+			_onComplete = null;
+			_onError = null;
+			
+			
+			onComplete((urlLoader.data));
+			
+			
+		}		
+		
+		
 		private function onLoadComplete(event : Event) : void
 		{
 			var loader : LoaderInfo = LoaderInfo(event.target);
-			removeListeners(loader);
+			event.target.removeEventListener(Event.COMPLETE, onLoadComplete);
+			event.target.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 
 			// need to nullify before callback because loading needs to be possible again
 			var onComplete : Function = _onComplete;
 			_onComplete = null;
 			_onError = null;
+			
 			onComplete(Bitmap(loader.content).bitmapData);
+			
 		}
 
 		private function onLoadError(event : IOErrorEvent) : void
 		{
-			removeListeners(LoaderInfo(event.target));
+			
+			event.target.removeEventListener(Event.COMPLETE, onLoadComplete);
+			event.target.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 
 			// need to nullify before callback because loading needs to be possible again
 			var onError : Function = _onError;
@@ -68,10 +105,5 @@ package net.psykosoft.psykopaint2.core.models
 			onError();
 		}
 
-		private function removeListeners(loader : LoaderInfo) : void
-		{
-			loader.removeEventListener(Event.COMPLETE, onLoadComplete);
-			loader.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-		}
 	}
 }

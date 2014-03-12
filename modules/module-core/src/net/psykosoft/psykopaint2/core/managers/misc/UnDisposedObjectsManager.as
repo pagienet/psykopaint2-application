@@ -15,7 +15,6 @@ package net.psykosoft.psykopaint2.core.managers.misc
 
 		public function update():void {
 			if( _oldNumUnDisposedObjects != _unDisposedObjects.numObjects ) {
-				trace( "Number of un-disposed objects changed to " + _unDisposedObjects.numObjects );
 				_oldNumUnDisposedObjects = _unDisposedObjects.numObjects;
 			}
 		}

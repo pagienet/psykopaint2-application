@@ -140,11 +140,22 @@ package net.psykosoft.psykopaint2.home.views.book
 		
 		
 		override public function dispose():void{
+			
+			//REMOVE LAYOUT
 			if(_layoutView){
-				_layoutView.parent.removeChild(_layoutView);
+				
 				_layoutView.dispose();
+				if(_layoutView.parent) _layoutView.parent.removeChild(_layoutView);
+
 				_layoutView = null;
 			}
+			
+			//WE DON'T DISPOSE OF THE MATERIALS HERE, SINCE WE WANT TO KEEP THEM IN MEMORY
+			// BUT WE REMOVE THOSE WHEN DISPOSING THE BOOKVIEW ALONG WITH BookMaterialsProxy
+			//_pageTextureMaterial.dispose();
+			//_ringTextureMaterial.dispose();
+			_pageTextureMaterial = null;
+			_ringTextureMaterial = null;
 			
 			super.dispose();
 		}
