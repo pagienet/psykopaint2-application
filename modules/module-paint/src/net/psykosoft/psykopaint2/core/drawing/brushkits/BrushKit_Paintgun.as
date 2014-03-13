@@ -239,8 +239,31 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			bumpDecorator.param_bumpiness.numberValue = 0.5 * intensity;
 			bumpDecorator.param_bumpinessRange.numberValue = 0.1;
 			
-			bumpDecorator.param_glossiness.numberValue = 0.3 + 0.2 * intensity;
-			bumpDecorator.param_shininess.numberValue = 0.1 + 0.2 * intensity;
+			
+			switch ( param_style.index )
+			{
+				case STYLE_PAINTSTROKES:
+				case STYLE_SPLATS:
+				case STYLE_SPRAY:
+				case STYLE_CRAYON:
+				case STYLE_PAINTBRUSH:
+					bumpDecorator.param_glossiness.numberValue = 0.3 + 0.2 * intensity;
+					bumpDecorator.param_shininess.numberValue = 0.1 + 0.2 * intensity;
+					break;
+				
+				case STYLE_SUMI:
+				case STYLE_INKSPLATS:
+					bumpDecorator.param_glossiness.numberValue = 0.6 + 0.2 * intensity;
+					bumpDecorator.param_shininess.numberValue = 0.4 + 0.2 * intensity;
+					bumpDecorator.param_bumpiness.numberValue = 0.3 * intensity;
+					
+					break;
+				case STYLE_VECTORSPLAT:
+					bumpDecorator.param_bumpiness.numberValue = 0.2 * intensity;
+					bumpDecorator.param_glossiness.numberValue = 0.1 + 0.2 * intensity;
+					bumpDecorator.param_shininess.numberValue = 0.1 + 0.2 * intensity;
+					break;
+			}
 		}
 		
 		
