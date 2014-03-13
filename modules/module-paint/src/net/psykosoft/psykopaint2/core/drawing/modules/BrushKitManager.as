@@ -397,6 +397,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			if ( _view.mouseY > 550 )
 			{
+			
 				requestNavigationToggleSignal.dispatch(-1);
 				_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
 				_navigationWasHiddenByPainting = true;

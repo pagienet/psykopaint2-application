@@ -25,7 +25,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_INKSPLATS:int = 0;
 		private static const STYLE_SPLATS:int = 1;
 		private static const STYLE_SPRAY:int = 2;
-		private static const STYLE_PAINTSTROKES:int = 3;
+		private static const STYLE_VECTORSPLAT:int = 3;
+		private static const STYLE_CRAYON:int = 4;
+		private static const STYLE_PAINTBRUSH:int = 5;
+		private static const STYLE_SUMI:int = 6;
+		private static const STYLE_PAINTSTROKES:int = 7;
 		
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -52,7 +56,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>(["inksplats","splats","spray","paint1"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["inksplats","splats","spray","vectorsplat","crayon","paintbrush","sumi","paint1"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -110,7 +114,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["splat","sketch","sketch","sketch"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["splat","sketch","sketch","sketch","sketch","sketch","sketch","sketch"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -170,6 +174,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_INKSPLATS:
 				case STYLE_SPLATS:
 				case STYLE_SPRAY:
+				case STYLE_VECTORSPLAT:
+				case STYLE_CRAYON:
+				case STYLE_PAINTBRUSH:
+				case STYLE_SUMI:
+					colorDecorator.param_pickRadius.lowerRangeValue = 0.1;
+					colorDecorator.param_pickRadius.upperRangeValue = 0.2;
 					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
 					break;
 				
@@ -204,6 +214,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_INKSPLATS:
 				case STYLE_SPLATS:
 				case STYLE_SPRAY:
+				case STYLE_VECTORSPLAT:
+				case STYLE_CRAYON:
+				case STYLE_PAINTBRUSH:
+				case STYLE_SUMI:
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 3;
 					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.5;
 					sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
