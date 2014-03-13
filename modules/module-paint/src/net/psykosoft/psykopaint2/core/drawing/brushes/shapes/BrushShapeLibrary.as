@@ -51,6 +51,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			registerShape(new DotsBrushShape(context3D));
 			registerShape(new DotBrushShape(context3D));
 			registerShape(new SplatterSprayShape(context3D));
+			registerShape(new InkSplatsShape(context3D));
+			registerShape(new SplatsShape(context3D));
+			registerShape(new SprayShape(context3D));
 			/*
 			//disabled unused shapes
 			
