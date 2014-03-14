@@ -12,7 +12,8 @@ package net.psykosoft.psykopaint2.base.utils.misc
 		public function TrackedTexture(texture : Texture)
 		{
 			_texture = texture;
-
+			trace("TrackedTexture::create"+this);
+			
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
 				UndisposedObjects.getInstance().add(this);
 		}
@@ -30,7 +31,7 @@ package net.psykosoft.psykopaint2.base.utils.misc
 		public function dispose():void
 		{
 			_texture.dispose();
-
+			trace("TrackedTexture::dispose"+this);
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
 				UndisposedObjects.getInstance().remove(this);
 		}

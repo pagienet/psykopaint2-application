@@ -26,6 +26,7 @@ package net.psykosoft.psykopaint2.core.debug
 
 		public function add(object : Object) : void
 		{
+			//trace("Undisposed object::add "+object);
 			_collection.push(new UndisposedData(object));
 		}
 

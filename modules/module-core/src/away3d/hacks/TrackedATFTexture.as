@@ -14,6 +14,8 @@ package away3d.hacks
 		{
 			super(byteArray);
 
+			trace("TrackedATFTexture::create"+this);
+
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
 				UndisposedObjects.getInstance().add(this);
 		}
@@ -21,6 +23,7 @@ package away3d.hacks
 		override public function dispose():void
 		{
 			super.dispose();
+			trace("TrackedATFTexture::dispose"+this);
 
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
 				UndisposedObjects.getInstance().remove(this);

@@ -18,6 +18,8 @@ package away3d.hacks
 		public function TrackedBitmapTexture(bitmapData:BitmapData, generateMipmaps:Boolean = true)
 		{
 			super(bitmapData, generateMipmaps);
+			
+			//trace("TrackedBitmapTexture::created"+this);
 
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
 				UndisposedObjects.getInstance().add(this);
@@ -26,7 +28,8 @@ package away3d.hacks
 		override public function dispose():void
 		{
 			super.dispose();
-
+			
+			//trace("TrackedBitmapTexture::dispose"+this);
 			if (CoreSettings.TRACK_NON_GCED_OBJECTS)
 				UndisposedObjects.getInstance().remove(this);
 		}
