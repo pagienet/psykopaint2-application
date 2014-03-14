@@ -1,18 +1,12 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.SketchBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
-	import net.psykosoft.psykopaint2.core.drawing.paths.AbstractPathEngine;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.BumpDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.ColorDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SpawnDecorator;
-	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
 
 	public class BrushKit_WaterColor extends BrushKit
 	{
@@ -25,7 +19,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			<parameter id={AbstractBrush.PARAMETER_IL_SHAPES}  path="brush" index="0" list="basic,wet" showInUI="0"/>
 
 			<parameterMapping>
-				<parameter id="WaterColorSize" showInUI="1" minValue="0" maxValue="1" value=".77"/>
+				<parameter id="WaterColorSize" showInUI="1" minValue={.03} maxValue="1" value=".77"/>
 				<proxy 	type={PsykoParameterProxy.TYPE_VALUE_MAP} src="WaterColorSize"
 				target={"brush."+AbstractBrush.PARAMETER_NR_SIZE_FACTOR}
 				targetProperties="lowerRangeValue,upperRangeValue"
