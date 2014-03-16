@@ -27,6 +27,5 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		function drawNormalsAndSpecular(context3d : Context3D, canvas : CanvasModel, shininess : Number, glossiness : Number, bumpiness : Number, influence : Number) : void;
 		function assembleShaderPrograms(context3d : Context3D ) : void;
-
 	}
 }

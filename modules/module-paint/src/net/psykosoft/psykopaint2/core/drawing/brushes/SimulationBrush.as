@@ -11,6 +11,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationRibbonMesh;
 	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.base.errors.AbstractMethodError;
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
@@ -29,11 +30,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		{
 			cleanUpTicker();
 			_renderInvalid = false;
-		}
-
-		override protected function createBrushMesh() : IBrushMesh
-		{
-			return new SimulationMesh();
 		}
 
 		override protected function onPathStart() : void
@@ -59,7 +55,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private function onEnterFrame(event : Event) : void
 		{
 			if (++_lastDrawCount == 2)
-				SimulationMesh(_brushMesh).appendStationary();
+				simulationMesh.appendStationary();
 
 			if (_brushMesh.numTriangles > 0)
 				updateSimulation();
@@ -72,7 +68,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			var tempSnapShot : CanvasSnapShot = snapshot;
 			// set lastDrawCount to 3 to prevent final stationary, we need to add this before snap shot is trimmed
 			_lastDrawCount = 3;
-			SimulationMesh(_brushMesh).appendStationary();
+			simulationMesh.appendStationary();
 
 			_view.stage.frameRate = 60;
 			_cleanUpTickerTimer = new Timer(1500, 1);
@@ -159,6 +155,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			drawBrushNormalsAndSpecular();
 
 			_canvasModel.swapNormalSpecularLayer();
+		}
+
+		protected function get simulationMesh():SimulationMesh
+		{
+			return SimulationMesh(_brushMesh);
 		}
 	}
 }

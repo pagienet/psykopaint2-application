@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationRibbonMesh;
 
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
@@ -68,7 +68,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			);
 		}
 
-		public function execute(stroke : SimulationMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase, textureRatioX : Number, textureRatioY : Number) : void
+		public function execute(stroke : SimulationRibbonMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase, textureRatioX : Number, textureRatioY : Number) : void
 		{
 			var triOffset : int = _triOffset <= WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT? 0 : _triOffset-WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT;
 			var stationaryEnd : int = stroke.numTriangles - stroke.stationaryTriangleCount;
@@ -89,11 +89,11 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 				_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
 				_context.setStencilReferenceValue(0);
 				_context.setColorMask(false, false, false, false);
-				stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS, WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT, false, triOffset);
+				stroke.drawMesh(_context, SimulationRibbonMesh.BRUSH_TEXTURE_UVS, WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT, false, triOffset);
 				_context.setColorMask(true, true, true, true);
 			}
 
-			stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS, -1, false, triOffset);
+			stroke.drawMesh(_context, SimulationRibbonMesh.BRUSH_TEXTURE_UVS, -1, false, triOffset);
 			_context.setTextureAt(0, null);
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
