@@ -73,14 +73,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var _relaxationSteps : int = 3;
 
 		// brush properties:
-		private var _surfaceRelief : PsykoParameter;
-		private var _gravityStrength : PsykoParameter;
-		private var _waterViscosity : PsykoParameter;
-		private var _waterDrag : PsykoParameter;
-		private var _pigmentDensity : PsykoParameter;
-		private var _pigmentStaining : PsykoParameter;
-		private var _pigmentGranulation : PsykoParameter;
-		private var _meshType : PsykoParameter;
+		public var _surfaceRelief : PsykoParameter;
+		public var _gravityStrength : PsykoParameter;
+		public var _waterViscosity : PsykoParameter;
+		public var _waterDrag : PsykoParameter;
+		public var _pigmentDensity : PsykoParameter;
+		public var _pigmentStaining : PsykoParameter;
+		public var _pigmentGranulation : PsykoParameter;
+		public var _meshType : PsykoParameter;
 
 		private var _wetBrush : Boolean = false;
 
@@ -105,7 +105,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_pigmentStaining = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_STAINING,.25, .1,1);
 			_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_GRANULATION, 1.0, 0, 1);
 			// 0 = ribbon, 1 = dots
-			_meshType = new PsykoParameter( PsykoParameter.IntParameter, PARAMETER_N_MESH_TYPE, 1, 0, 1);
+			_meshType = new PsykoParameter( PsykoParameter.IntParameter, PARAMETER_N_MESH_TYPE, 0, 0, 1);
 			_meshType.addEventListener(Event.CHANGE, onMeshTypeChange);
 
 			_parameters.push( _surfaceRelief, _gravityStrength, _pigmentDensity, _pigmentStaining, _pigmentGranulation);

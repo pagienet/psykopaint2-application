@@ -48,8 +48,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		{
 			var colorsRGBA:Vector.<Number> =  appendVO.point.colorsRGBA;
 			var halfSize : Number = appendVO.size * .5;
-			var x : Number = appendVO.point.x;
-			var y : Number = appendVO.point.y;
+			var x : Number = appendVO.point.normalX;
+			var y : Number = appendVO.point.normalY;
 			var right : Number = x + halfSize;
 			var bottom : Number = y + halfSize;
 			var left : Number = x - halfSize;
