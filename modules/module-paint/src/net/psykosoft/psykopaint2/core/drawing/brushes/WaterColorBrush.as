@@ -138,7 +138,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createBrushMesh() : IBrushMesh
 		{
-			return _meshType.intValue == 0? new SimulationRibbonMesh() : new SimulationQuadMesh();
+			return param_meshType.intValue == 0? new SimulationRibbonMesh() : new SimulationQuadMesh();
 		}
 
 		private function initBuffers() : void
