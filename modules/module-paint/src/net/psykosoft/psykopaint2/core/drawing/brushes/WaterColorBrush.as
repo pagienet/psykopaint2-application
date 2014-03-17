@@ -73,14 +73,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var _relaxationSteps : int = 3;
 
 		// brush properties:
-		public var _surfaceRelief : PsykoParameter;
-		public var _gravityStrength : PsykoParameter;
-		public var _waterViscosity : PsykoParameter;
-		public var _waterDrag : PsykoParameter;
-		public var _pigmentDensity : PsykoParameter;
-		public var _pigmentStaining : PsykoParameter;
-		public var _pigmentGranulation : PsykoParameter;
-		public var _meshType : PsykoParameter;
+
+		public var param_surfaceRelief : PsykoParameter;
+		public var param_gravityStrength : PsykoParameter;
+		public var param_waterViscosity : PsykoParameter;
+		public var param_waterDrag : PsykoParameter;
+		public var param_pigmentDensity : PsykoParameter;
+		public var param_pigmentStaining : PsykoParameter;
+		public var param_pigmentGranulation : PsykoParameter;
+		public var param_meshType : PsykoParameter;
 
 		private var _wetBrush : Boolean = false;
 
@@ -97,18 +98,19 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public function WaterColorBrush()
 		{
 			super(false);
-			_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, 2, 0, 4);
-			_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_GRAVITY_INFLUENCE, 0.0, 0, .3);
-			_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_VISCOSITY, .2, 0, 1);
-			_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_DRAG, .1, 0, .2);
-			_pigmentDensity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_DENSITY, .25, 0,.4);
-			_pigmentStaining = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_STAINING,.25, .1,1);
-			_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_GRANULATION, 1.0, 0, 1);
-			// 0 = ribbon, 1 = dots
-			_meshType = new PsykoParameter( PsykoParameter.IntParameter, PARAMETER_N_MESH_TYPE, 0, 0, 1);
-			_meshType.addEventListener(Event.CHANGE, onMeshTypeChange);
 
-			_parameters.push( _surfaceRelief, _gravityStrength, _pigmentDensity, _pigmentStaining, _pigmentGranulation);
+			param_surfaceRelief = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_SURFACE_INFLUENCE, 2, 0, 4);
+			param_gravityStrength = new PsykoParameter( PsykoParameter.NumberParameter,PARAMETER_N_GRAVITY_INFLUENCE, 0.0, 0, .3);
+			param_waterViscosity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_VISCOSITY, .2, 0, 1);
+			param_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_DRAG, .1, 0, .2);
+			param_pigmentDensity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_DENSITY, .25, 0,.4);
+			param_pigmentStaining = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_STAINING,.25, .1,1);
+			param_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_GRANULATION, 1.0, 0, 1);
+			// 0 = ribbon, 1 = dots
+			param_meshType = new PsykoParameter( PsykoParameter.IntParameter, PARAMETER_N_MESH_TYPE, 0, 0, 1);
+			param_meshType.addEventListener(Event.CHANGE, onMeshTypeChange);
+
+			_parameters.push( param_surfaceRelief, param_gravityStrength, param_pigmentDensity, param_pigmentStaining, param_pigmentGranulation);
 
 			param_sizeFactor.lowerRangeValue = .77;
 			param_sizeFactor.upperRangeValue = .77;
@@ -320,8 +322,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private function applySlope() : void
 		{
 			var gravity : Vector3D = AccelerometerManager.gravityVector;
-			_applySlope.surfaceRelief = _surfaceRelief.numberValue;
-			_applySlope.gravityStrength = _gravityStrength.numberValue;
+			_applySlope.surfaceRelief = param_surfaceRelief.numberValue;
+			_applySlope.gravityStrength = param_gravityStrength.numberValue;
 			_applySlope.execute(gravity, simulationMesh, _velocityPressureField.texture, _canvasModel.normalSpecularMap, _velocityPressureFieldBackBuffer.texture);
 			swapVelocityBuffer();
 		}
@@ -329,7 +331,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private function updateVelocities() : void
 		{
 			// we keep wetness in velocityPressureField (for now it's always 1)
-			_updateVelocities.execute(simulationMesh, _velocityPressureField.texture, _velocityPressureFieldBackBuffer.texture, _dt, _waterViscosity.numberValue, _waterDrag.numberValue);
+			_updateVelocities.execute(simulationMesh, _velocityPressureField.texture, _velocityPressureFieldBackBuffer.texture, _dt, param_waterViscosity.numberValue, param_waterDrag.numberValue);
 			swapVelocityBuffer();
 		}
 
@@ -356,7 +358,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function transferPigment() : void
 		{
-			_transferPigment.execute(simulationMesh, _pigmentDensityField.texture, _halfSizedBackBuffer.texture, _pigmentGranulation.numberValue, _pigmentDensity.numberValue, _pigmentStaining.numberValue);
+			_transferPigment.execute(simulationMesh, _pigmentDensityField.texture, _halfSizedBackBuffer.texture, param_pigmentGranulation.numberValue, param_pigmentDensity.numberValue, param_pigmentStaining.numberValue);
 			_pigmentDensityField = swapHalfSized(_pigmentDensityField);
 		}
 
