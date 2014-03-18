@@ -66,9 +66,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			brushEngine = new WaterColorBrush();
 			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;
-			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.02;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.006;
 			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .5;
 			brushEngine.param_shapes.stringList = Vector.<String>(["basic","wet"]);
+			setValuesForDryBrush()
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -118,15 +119,15 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private function setValuesForDryBrush():void
 		{
 			brushEngine.param_shapes.index = 0;
-			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .05;
-			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .2;
+			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .2;
+			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .1;
 		}
 
 		private function setValuesForWetBrush():void
 		{
 			brushEngine.param_shapes.index = 1;
-			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .1;
-			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .01;
+			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .2;
+			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .1;
 		}
 
 		protected function onPrecisionChanged(event:Event):void
@@ -137,7 +138,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onIntensityChanged(event:Event):void
 		{
-			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.1 * param_intensity.numberValue;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.03 * param_intensity.numberValue;
 		}
 	}
 }
