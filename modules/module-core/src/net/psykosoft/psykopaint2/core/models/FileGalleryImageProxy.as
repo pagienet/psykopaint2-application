@@ -40,8 +40,9 @@ package net.psykosoft.psykopaint2.core.models
 			_onComplete = null;
 			_onError = null;
 			try {
-				if (_activeLoader)
+				if (_activeLoader){
 					_activeLoader.close();
+				}
 			}
 			catch(error : Error) {
 
@@ -63,7 +64,6 @@ package net.psykosoft.psykopaint2.core.models
 			_onComplete = onComplete;
 			_onError = onError;
 
-			trace ("Loading: " + thumbnailFilename);
 			loadBitmapData(thumbnailFilename, onThumbLoadComplete, onLoadError);
 		}
 
@@ -114,7 +114,7 @@ package net.psykosoft.psykopaint2.core.models
 			_onComplete = null;
 			_onError = null;
 			_activeLoader = null;
-			onComplete(data);
+			if (onComplete) onComplete(data);
 		}
 
 		private function onLoadError(event : IOErrorEvent) : void
