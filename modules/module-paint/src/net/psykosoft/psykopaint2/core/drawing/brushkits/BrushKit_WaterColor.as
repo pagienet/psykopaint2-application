@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
@@ -63,8 +64,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			name = "Water Color";
 			
 			brushEngine = new WaterColorBrush();
-			(brushEngine as WaterColorBrush).param_pigmentStaining.numberValue = 0.4;
-			(brushEngine as WaterColorBrush).param_pigmentDensity.numberValue = 0.4;
+			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 0.4;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.4;
 			brushEngine.param_shapes.stringList = Vector.<String>(["basic","wet"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
@@ -72,7 +73,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			
 			_parameterMapping = new PsykoParameterMapping();
 			
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["basic","wet"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["basic","wet", "paint1"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -92,7 +93,22 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onStyleChanged(event:Event):void
 		{
-			brushEngine.param_shapes.index = param_style.index;
+			switch (param_style.stringValue) {
+				case "basic":
+					brushEngine.param_shapes.index = 0;
+					WaterColorBrush(brushEngine).param_meshType.value = 0;
+					break;
+				case "wet":
+					brushEngine.param_shapes.index = 1;
+					WaterColorBrush(brushEngine).param_meshType.value = 0;
+					break;
+				// needs to be drops
+				case "paint1":
+					brushEngine.param_shapes.index = 1;
+					WaterColorBrush(brushEngine).param_meshType.value = 1;
+					break;
+			}
+
 			onPrecisionChanged(null);
 			onIntensityChanged(null);
 		}
