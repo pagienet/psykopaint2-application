@@ -69,7 +69,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.006;
 			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .5;
 			brushEngine.param_shapes.stringList = Vector.<String>(["basic","wet"]);
-			setValuesForDryBrush()
+			setValuesForDryBrush();
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -99,21 +99,31 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			switch (param_style.index) {
 				case STYLE_BASIC:
 					setValuesForDryBrush();
-					WaterColorBrush(brushEngine).param_meshType.value = 0;
+					setValuesForRibbon();
 					break;
 				case STYLE_WET:
 					setValuesForWetBrush();
-					WaterColorBrush(brushEngine).param_meshType.value = 0;
+					setValuesForRibbon();
 					break;
 				// needs to be drops
 				case STYLE_DROPS:
 					setValuesForWetBrush();
-					WaterColorBrush(brushEngine).param_meshType.value = 1;
+					setValuesForDrops();
 					break;
 			}
 
 			onPrecisionChanged(null);
 			onIntensityChanged(null);
+		}
+
+		private function setValuesForDrops():void
+		{
+			WaterColorBrush(brushEngine).param_meshType.value = 1;			;
+		}
+
+		private function setValuesForRibbon():void
+		{
+			WaterColorBrush(brushEngine).param_meshType.value = 0;
 		}
 
 		private function setValuesForDryBrush():void
