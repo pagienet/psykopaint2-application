@@ -84,6 +84,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public var param_meshType : PsykoParameter;
 
 		private var _wetBrush : Boolean = false;
+		private var _meshTypeChanged:Boolean;
 
 		// IMPORTANT:
 		// The simulation runs on a grid, with values associated to each cell
@@ -105,7 +106,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			param_waterDrag = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_DRAG, .1, 0, .2);
 			param_pigmentDensity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_DENSITY, .25, 0,.4);
 			param_pigmentStaining = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_STAINING,.25, .1,1);
-			param_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_GRANULATION, 1.0, 0, 1);
+			param_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_GRANULATION, 1.0, 0, 3);
 			// 0 = ribbon, 1 = dots
 			param_meshType = new PsykoParameter( PsykoParameter.IntParameter, PARAMETER_N_MESH_TYPE, 0, 0, 1);
 			param_meshType.addEventListener(Event.CHANGE, onMeshTypeChange);
@@ -120,7 +121,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		private function onMeshTypeChange(event:Event):void
 		{
-			_brushMesh = createBrushMesh();
+			// defer creating new mesh type, or it will destroy the sim if still running
+			_meshTypeChanged = true;
 		}
 
 		override protected function createColorStrategy() : IColorStrategy
@@ -250,6 +252,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function resetSimulation() : void
 		{
+			if (_meshTypeChanged) {
+				_brushMesh = createBrushMesh();
+				_meshTypeChanged = false;
+			}
+
 			// prevent rendering with a reset brush (results in the previous stroke being deleted if not yet finalized)
 			// the ACTUAL cause is lack of synchronisation control between the GPURenderManager's trigger and the "stroke started" event. Sucks.
 			_renderInvalid = false;

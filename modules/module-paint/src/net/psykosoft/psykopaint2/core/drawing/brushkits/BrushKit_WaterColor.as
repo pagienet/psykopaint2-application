@@ -46,7 +46,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 		private static const STYLE_BASIC:int = 0;
 		private static const STYLE_WET:int = 1;
-		
+		private static const STYLE_DROPS:int = 2;
+
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
 		private var param_intensity:PsykoParameter;
@@ -64,8 +65,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			name = "Water Color";
 			
 			brushEngine = new WaterColorBrush();
-			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 0.4;
-			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.4;
+			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.02;
+			WaterColorBrush(brushEngine).param_pigmentGranulation.numberValue = .5;
 			brushEngine.param_shapes.stringList = Vector.<String>(["basic","wet"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
@@ -83,7 +85,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			param_precision.addEventListener( Event.CHANGE, onPrecisionChanged );
 			_parameterMapping.addParameter(param_precision);
 			
-			param_intensity = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",0.33,0,1);
+			param_intensity = new PsykoParameter( PsykoParameter.NumberParameter,"Intensity",0.2,0,1);
 			param_intensity.showInUI = 2;
 			param_intensity.addEventListener( Event.CHANGE, onIntensityChanged );
 			_parameterMapping.addParameter(param_intensity);
@@ -93,18 +95,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onStyleChanged(event:Event):void
 		{
-			switch (param_style.stringValue) {
-				case "basic":
-					brushEngine.param_shapes.index = 0;
+			switch (param_style.index) {
+				case STYLE_BASIC:
+					setValuesForDryBrush();
 					WaterColorBrush(brushEngine).param_meshType.value = 0;
 					break;
-				case "wet":
-					brushEngine.param_shapes.index = 1;
+				case STYLE_WET:
+					setValuesForWetBrush();
 					WaterColorBrush(brushEngine).param_meshType.value = 0;
 					break;
 				// needs to be drops
-				case "paint1":
-					brushEngine.param_shapes.index = 1;
+				case STYLE_DROPS:
+					setValuesForWetBrush();
 					WaterColorBrush(brushEngine).param_meshType.value = 1;
 					break;
 			}
@@ -112,7 +114,21 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			onPrecisionChanged(null);
 			onIntensityChanged(null);
 		}
-		
+
+		private function setValuesForDryBrush():void
+		{
+			brushEngine.param_shapes.index = 0;
+			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .05;
+			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .2;
+		}
+
+		private function setValuesForWetBrush():void
+		{
+			brushEngine.param_shapes.index = 1;
+			WaterColorBrush(brushEngine).param_waterViscosity.numberValue = .1;
+			WaterColorBrush(brushEngine).param_waterDrag.numberValue = .01;
+		}
+
 		protected function onPrecisionChanged(event:Event):void
 		{
 			var precision:Number = param_precision.numberValue;
@@ -121,10 +137,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onIntensityChanged(event:Event):void
 		{
-			var intensity:Number = param_intensity.numberValue;
-			
-			(brushEngine as WaterColorBrush).param_pigmentStaining.numberValue = 0.1 + 0.6 * intensity;
-			(brushEngine as WaterColorBrush).param_pigmentDensity.numberValue = 0.25 * intensity;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.1 * param_intensity.numberValue;
 		}
 	}
 }
