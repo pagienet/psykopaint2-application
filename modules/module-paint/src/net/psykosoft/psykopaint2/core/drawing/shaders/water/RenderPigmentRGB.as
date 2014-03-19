@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 	import flash.display3D.textures.Texture;
 	import flash.geom.Point;
 
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationRibbonMesh;
 
 	import net.psykosoft.psykopaint2.core.drawing.shaders.SimStepRenderer;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
@@ -30,7 +30,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 					"add oc, ft0, fc0";                      */
 		}
 
-		public function execute(stroke : SimulationMesh, pigment : Texture) : void
+		public function execute(stroke : SimulationRibbonMesh, pigment : Texture) : void
 		{
 			_context.setTextureAt(0, pigment);
 			_context.clear(0, 0, 0, 0, 0, 0, Context3DClearMask.STENCIL);

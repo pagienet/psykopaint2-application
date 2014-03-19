@@ -15,8 +15,9 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 	import flash.geom.Matrix;
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
-
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
+
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationRibbonMesh;
 
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 
@@ -108,12 +109,12 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			if (_useTexture) {
 				_context.setTextureAt(0, brushTexture);
 //				drawWithoutOverlap(stroke, SimulationMesh.BRUSH_TEXTURE_UVS, triOffset);
-				stroke.drawMesh(_context, SimulationMesh.BRUSH_TEXTURE_UVS, -1, false, triOffset);
+				stroke.drawMesh(_context, SimulationRibbonMesh.BRUSH_TEXTURE_UVS, -1, false, triOffset);
 				_context.setTextureAt(0, null);
 			}
 			else {
 //				drawWithoutOverlap(stroke, SimulationMesh.NO_UVS, triOffset);
-				stroke.drawMesh(_context, SimulationMesh.NO_UVS, -1, false, triOffset);
+				stroke.drawMesh(_context, SimulationRibbonMesh.NO_UVS, -1, false, triOffset);
 			}
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
@@ -121,7 +122,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			_triOffset = stroke.numTriangles;
 		}
 
-		private function drawWithoutOverlap(stroke : SimulationMesh, uvMode : int, offset : int) : void
+		private function drawWithoutOverlap(stroke : SimulationRibbonMesh, uvMode : int, offset : int) : void
 		{
 			if (offset > 0) {
 				_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);

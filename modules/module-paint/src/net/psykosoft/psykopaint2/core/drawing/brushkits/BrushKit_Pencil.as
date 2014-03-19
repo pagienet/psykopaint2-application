@@ -79,7 +79,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			name = "Pencil";
 			
 			brushEngine = new SketchBrush();
-			(brushEngine as SketchBrush).param_surfaceRelief.numberValue = 0.5;
+			(brushEngine as SketchBrush).param_surfaceRelief.numberValue = 0.2;
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.25;
 			brushEngine.param_shapes.stringList = Vector.<String>(["pencilSketch"]);

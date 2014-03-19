@@ -7,6 +7,8 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 	import flash.geom.Vector3D;
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
+
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationRibbonMesh;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.SimStepRenderer;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 

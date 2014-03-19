@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.textures.Texture;
 
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationRibbonMesh;
 
 	import net.psykosoft.psykopaint2.core.drawing.shaders.SimStepRenderer;
 
@@ -45,7 +45,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders.water
 			return EmbedUtils.StringFromEmbed(Shader);
 		}
 
-		public function execute(stroke : SimulationMesh, pigment : Texture, velocityDensity : Texture, backBuffer : Texture, width : Number, height : Number, pigmentFlow : Number) : void
+		public function execute(stroke : SimulationRibbonMesh, pigment : Texture, velocityDensity : Texture, backBuffer : Texture, width : Number, height : Number, pigmentFlow : Number) : void
 		{
 			_context.setRenderToTexture(backBuffer, true);
 			_context.clear(0, 0, 0, 0);

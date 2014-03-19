@@ -12,6 +12,8 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
 
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationRibbonMesh;
+
 	public class SimStepRenderer
 	{
 		protected var _program : Program3D;
@@ -33,7 +35,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 				_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
 				_context.setStencilReferenceValue(0);
 			}
-			stroke.drawMesh(_context, SimulationMesh.CANVAS_TEXTURE_UVS, -1, _useColor);
+			stroke.drawMesh(_context, SimulationRibbonMesh.CANVAS_TEXTURE_UVS, -1, _useColor);
 			_context.setStencilActions();
 		}
 

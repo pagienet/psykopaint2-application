@@ -16,7 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
 
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationRibbonMesh;
 
 	import net.psykosoft.psykopaint2.core.rendering.CopyTexture;
 	import net.psykosoft.psykopaint2.core.utils.EmbedUtils;
@@ -84,7 +84,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			);
 		}
 
-		public function execute(stroke : SimulationMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase, textureRatioX : Number, textureRatioY : Number) : void
+		public function execute(stroke : SimulationRibbonMesh, source : TextureBase, target : TextureBase, brushTexture : TextureBase, textureRatioX : Number, textureRatioY : Number) : void
 		{
 			var triOffset : int = _triOffset <= WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT? 0 : _triOffset-WaterColorBrush.OVERLAP_PREVENTION_TRI_COUNT;
 			var stationaryEnd : int = stroke.numTriangles - stroke.stationaryTriangleCount;
@@ -109,10 +109,10 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 				_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
 				_context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, _props, 1);
 
-				drawWithoutOverlap(stroke, SimulationMesh.BRUSH_TEXTURE_UVS | SimulationMesh.CANVAS_TEXTURE_UVS, triOffset);
+				drawWithoutOverlap(stroke, SimulationRibbonMesh.BRUSH_TEXTURE_UVS | SimulationRibbonMesh.CANVAS_TEXTURE_UVS, triOffset);
 			}
 			else {
-				drawWithoutOverlap(stroke, SimulationMesh.BRUSH_TEXTURE_UVS, triOffset);
+				drawWithoutOverlap(stroke, SimulationRibbonMesh.BRUSH_TEXTURE_UVS, triOffset);
 			}
 
 			_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
@@ -122,7 +122,7 @@ package net.psykosoft.psykopaint2.core.drawing.shaders
 			_triOffset = stroke.numTriangles;
 		}
 
-		private function drawWithoutOverlap(stroke : SimulationMesh, uvMode : int, offset : int) : void
+		private function drawWithoutOverlap(stroke : SimulationRibbonMesh, uvMode : int, offset : int) : void
 		{
 			if (offset > 0) {
 				_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK, Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE, Context3DStencilAction.INCREMENT_SATURATE);
