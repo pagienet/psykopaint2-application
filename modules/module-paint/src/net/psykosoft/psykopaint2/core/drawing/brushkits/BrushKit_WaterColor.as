@@ -1,10 +1,8 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-	import net.psykosoft.psykopaint2.core.drawing.BrushType;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import flash.events.Event;
 	
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.WaterColorBrush;
@@ -12,7 +10,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterMapping;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameterProxy;
 	import net.psykosoft.psykopaint2.core.drawing.paths.PathManager;
+	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.AbstractPointDecorator;
+	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.CallbackDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SizeDecorator;
 	import net.psykosoft.psykopaint2.core.drawing.paths.decorators.SplatterDecorator;
 
@@ -53,6 +53,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_WET:int = 1;
 		private static const STYLE_DRY_DROPS:int = 2;
 		private static const STYLE_WET_DROPS:int = 3;
+		private static const STYLE_MARIO_TEST:int = 4;
 
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -63,6 +64,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 		private static const SPLAT_FACTOR : Number = 100;
 		private static const MIN_SPLAT : Number = 30;
+		private var callbackDecorator:CallbackDecorator;
 
 		
 		public function BrushKit_WaterColor()
@@ -88,7 +90,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 			_parameterMapping = new PsykoParameterMapping();
 
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["basic","wet", "splat", "splat"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["basic","wet", "splat", "splat", "splat"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -117,9 +119,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
 			sizeDecorator.param_mappingFactor.numberValue = 0.08;
 			sizeDecorator.param_mappingRange.numberValue = 0.04;
-
+			
+			callbackDecorator = new CallbackDecorator( this, processPoints );
+			
+			pathManager.addPointDecorator(callbackDecorator);
 			pathManager.addPointDecorator(sizeDecorator);
 			pathManager.addPointDecorator(splatterDecorator);
+			
 
 			onStyleChanged(null);
 		}
@@ -145,6 +151,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 					setValuesForWetBrush();
 					setValuesForDrops();
 					break;
+				// needs to be drops
+				case STYLE_MARIO_TEST:
+					setValuesForWetBrush();
+					setValuesForMario();
+					break;
 			}
 
 			onPrecisionChanged(null);
@@ -157,6 +168,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			WaterColorBrush(brushEngine).param_meshType.value = 1;
 			splatterDecorator.active = true;
 			sizeDecorator.active = true;
+			callbackDecorator.active = false;
+		}
+		
+		private function setValuesForMario():void
+		{
+			pathManager.pathEngine.outputStepSize.numberValue = 2;
+			WaterColorBrush(brushEngine).param_meshType.value = 1;
+			splatterDecorator.active = true;
+			sizeDecorator.active = true;
+			callbackDecorator.active = true;
 		}
 
 		private function setValuesForRibbon():void
@@ -165,7 +186,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			WaterColorBrush(brushEngine).param_meshType.value = 0;
 			splatterDecorator.active = false;
 			sizeDecorator.active = false;
+			callbackDecorator.active = false;
 		}
+		
+		
 
 		private function setValuesForDryBrush():void
 		{
@@ -188,11 +212,31 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_sizeFactor.lowerRangeValue = brushEngine.param_sizeFactor.upperRangeValue = precision;
 			splatterDecorator.param_splatFactor.value = SPLAT_FACTOR*precision;
 			splatterDecorator.param_minOffset.value = MIN_SPLAT*precision;
+			
+			if ( param_style.index == STYLE_MARIO_TEST )
+			{
+				sizeDecorator.param_mappingFactor.numberValue = 0.11 * precision;
+				sizeDecorator.param_mappingRange.numberValue = 0.1 * precision;
+			}
 		}
 		
 		protected function onIntensityChanged(event:Event):void
 		{
 			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.03 * param_intensity.numberValue;
+		}
+		
+		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
+		{
+		
+			for ( var i:int = points.length; --i > -1; )
+			{
+				if ( Math.random() > 0.05 )
+				{
+					PathManager.recycleSamplePoint( points.splice(i,1)[0] );
+				}
+			}
+			
+			return points;
 		}
 	}
 }
