@@ -40,6 +40,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.shapes
 			registerShape(new PencilSketchBrushShape(context3D));
 			registerShape(new WetBrushShape(context3D));
 			registerShape(new BasicBrushShape(context3D));
+			registerShape(new BasicCircularShape(context3D));
 			registerShape(new SplotchBrushShape(context3D));
 			registerShape(new NoisyBrushShape(context3D));
 			registerShape(new ScalesBrushShape(context3D));

@@ -15,7 +15,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.AbstractBrushShape;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.IBrushMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationMesh;
-	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationQuadMesh;
+	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationDropMesh;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.strokes.SimulationRibbonMesh;
 	import net.psykosoft.psykopaint2.core.drawing.data.PsykoParameter;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.SinglePigmentBlotTransfer;
@@ -140,7 +140,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createBrushMesh() : IBrushMesh
 		{
-			return param_meshType.intValue == 0? new SimulationRibbonMesh() : new SimulationQuadMesh();
+			return param_meshType.intValue == 0? new SimulationRibbonMesh() : new SimulationDropMesh();
 		}
 
 		private function initBuffers() : void

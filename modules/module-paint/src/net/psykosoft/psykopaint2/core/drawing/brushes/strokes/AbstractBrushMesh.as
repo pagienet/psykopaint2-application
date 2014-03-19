@@ -75,7 +75,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			_normalSpecularVertexData = new <Number>[0, 0, 0, 1, .5, -.5, 0, 1, 0, 0, 0, 0 ,0,0,0,0];
 			_bounds = new Rectangle();
 			_programKey = getQualifiedClassName(this);
-			_fastBuffer = FastBufferManager.getFastBuffer(topologyIndexType);
+			_fastBuffer = FastBufferManager.getFastBuffer(topologyIndexType, createIndices);
 
 			initPoisson();
 		}
@@ -202,7 +202,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		{
 			return false;
 		}
-		
+
 		public function assembleShaderPrograms(context3d : Context3D) : void
 		{
 			if (!_normalSpecularPrograms[_programKey])
@@ -232,6 +232,14 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 			throw new AbstractMethodError();
 			return -1;
 		}
+
+		// if topologyIndexType == FastBuffer.INDEX_MODE_CUSTOM, overwrite this to provide index method
+		// this method operates on fast memory using intrinsics
+		protected function createIndices(offset : int):void
+		{
+			return;
+		}
+
 
 		protected function updateBuffers(context3d : Context3D) : void
 		{

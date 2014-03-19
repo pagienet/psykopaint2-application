@@ -12,26 +12,39 @@ package net.psykosoft.psykopaint2.core.intrinsics
 		public static const INDEX_MODE_QUADS:int = 0;
 		public static const INDEX_MODE_TRIANGLES:int = 1;
 		public static const INDEX_MODE_TRIANGLESTRIP:int = 2;
-		
+		public static const INDEX_MODE_CUSTOM:int = 3;	// needs a function to be passed in
+
 		protected var _buffer:ByteArray;
 		protected var _baseOffset:int;
 		protected var _indexOffset:int;
 		protected var _indexMode:int = -1;
-		
+		private var _indexMethod:Function;
+
 		private const MAX_VERTEX_COUNT:int = 65535;
 		private const MAX_INDEX_COUNT:int = 524286;
 		
-		public function FastBuffer( indexMode:int = 0)
+		public function FastBuffer( indexMode:int = 0, indexMethod : Function = null)
 		{
-			init( indexMode );
+			init( indexMode, indexMethod );
 		}
-		
-		private function init( indexMode:int = 0):void
+
+		public function get indexMethod():Function
+		{
+			return _indexMethod;
+		}
+
+		public function set indexMethod(value:Function):void
+		{
+			_indexMethod = value;
+		}
+
+		private function init( indexMode:int = 0, indexMethod : Function = null):void
 		{
 			
 			_baseOffset = MemoryManagerIntrinsics.reserveMemory( MAX_VERTEX_COUNT * 16 * 4 + MAX_INDEX_COUNT * 2);
 			_indexOffset = _baseOffset + MAX_VERTEX_COUNT*16*4;
 			_buffer = MemoryManagerIntrinsics.memory;
+			_indexMethod = indexMethod;
 			initIndices(indexMode);
 		}
 		
@@ -39,70 +52,81 @@ package net.psykosoft.psykopaint2.core.intrinsics
 		{
 			_indexMode = indexMode;
 			
-			var j : uint = 0;
-			var i : int = 0;
-			var offset:int = _indexOffset;
-			
 			if ( _indexMode == INDEX_MODE_QUADS )
-			{
-				while ( i < 87381 )
-				{
-					si16(j,offset);
-					offset+=2;
-					si16((j+1),offset);
-					offset+=2;
-					si16((j+2),offset);
-					offset+=2;
-					si16(j,offset);
-					offset+=2;
-					si16((j+2),offset);
-					offset+=2;
-					si16((j+3),offset);
-					offset+=2;
-					i++;
-					j += 4;
-					
-				}
-			} else if ( _indexMode == INDEX_MODE_TRIANGLES )
-			{
-				while ( i < 87381 )
-				{
-					si16(j,offset);
-					offset+=2;
-					j++;
-					i++;
-					si16(j,offset);
-					offset+=2;
-					j++;
-					i++;
-					si16(j,offset);
-					offset+=2;
-					j++;
-					i++;
-				}
-			} else if ( _indexMode == INDEX_MODE_TRIANGLESTRIP )
-			{
-				while ( i < 87381 )
-				{
-					si16(j,offset);
-					offset+=2;
-					si16((j+1),offset);
-					offset+=2;
-					si16((j+2),offset);
-					offset+=2;
-					si16((j+1),offset);
-					offset+=2;
-					si16((j+3),offset);
-					offset+=2;
-					si16((j+2),offset);
-					offset+=2;
-					i++;
-					j = ( j + 2 );
-					
-				}
+				initQuads(_indexOffset);
+			else if ( _indexMode == INDEX_MODE_TRIANGLES )
+				initTriangles(_indexOffset);
+			else if ( _indexMode == INDEX_MODE_TRIANGLESTRIP )
+				initTriangleStrip(_indexOffset);
+			else if ( _indexMode == INDEX_MODE_CUSTOM )
+				_indexMethod(_indexOffset);
+		}
+
+		private function initTriangleStrip(offset:int):void
+		{
+			var j:uint = 0;
+			var i:int = 0;
+			while (i < 87381) {
+				si16(j, offset);
+				offset += 2;
+				si16((j + 1), offset);
+				offset += 2;
+				si16((j + 2), offset);
+				offset += 2;
+				si16((j + 1), offset);
+				offset += 2;
+				si16((j + 3), offset);
+				offset += 2;
+				si16((j + 2), offset);
+				offset += 2;
+				i++;
+				j = ( j + 2 );
+
 			}
 		}
-		
+
+		private function initTriangles(offset:int):void
+		{
+			var j:uint = 0;
+			var i:int = 0;
+			while (i < 87381) {
+				si16(j, offset);
+				offset += 2;
+				j++;
+				i++;
+				si16(j, offset);
+				offset += 2;
+				j++;
+				i++;
+				si16(j, offset);
+				offset += 2;
+				j++;
+				i++;
+			}
+		}
+
+		private function initQuads(offset:int):void
+		{
+			var j:uint = 0;
+			var i:int = 0;
+			while (i < 87381) {
+				si16(j, offset);
+				offset += 2;
+				si16((j + 1), offset);
+				offset += 2;
+				si16((j + 2), offset);
+				offset += 2;
+				si16(j, offset);
+				offset += 2;
+				si16((j + 2), offset);
+				offset += 2;
+				si16((j + 3), offset);
+				offset += 2;
+				i++;
+				j += 4;
+			}
+		}
+
 		public function uploadIndicesToBuffer( indexBuffer:IndexBuffer3D, count:int = 524286):void
 		{
 			indexBuffer.uploadFromByteArray(_buffer,_indexOffset,0, count);
@@ -180,7 +204,7 @@ package net.psykosoft.psykopaint2.core.intrinsics
 		{
 			_buffer = null;
 			_baseOffset = _indexOffset = _indexMode = -1;
-			 
+			_indexMethod = null;
 		}
 	}
 }

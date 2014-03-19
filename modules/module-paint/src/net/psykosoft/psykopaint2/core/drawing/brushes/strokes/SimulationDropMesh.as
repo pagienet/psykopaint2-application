@@ -1,35 +1,38 @@
 package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 {
+	import avm2.intrinsics.memory.si16;
+
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.VertexBuffer3D;
 	import flash.display3D.textures.TextureBase;
 	import flash.geom.Rectangle;
 	
-	import net.psykosoft.psykopaint2.core.drawing.paths.SamplePoint;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.rendering.BlendSubTextureCMYK;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
 	
-	public class SimulationQuadMesh extends AbstractBrushMesh implements SimulationMesh
+	public class SimulationDropMesh extends AbstractBrushMesh implements SimulationMesh
 	{
 		public static const NO_UVS : int = 0;
 		public static const BRUSH_TEXTURE_UVS : int = 1;
 		public static const CANVAS_TEXTURE_UVS : int = 2;
 
+		private static const NUM_SEGMENTS : int = 20;
+
 		private static var _tmpData : Vector.<Number>;
 
 		private var _subtractiveBlending : Boolean;
 
-		public function SimulationQuadMesh(subtractiveBlending : Boolean = false)
+		public function SimulationDropMesh(subtractiveBlending : Boolean = false)
 		{
 			super();
 
 			if (!_tmpData)
-				_tmpData = new Vector.<Number>(40, true);
+				_tmpData = new Vector.<Number>((NUM_SEGMENTS + 1) * numElementsPerVertex, true);
 
-			_subtractiveBlending = subtractiveBlending
+			_subtractiveBlending = subtractiveBlending;
 		}
 
 		override public function customBlending() : Boolean
@@ -48,73 +51,55 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		{
 			var colorsRGBA:Vector.<Number> =  appendVO.point.colorsRGBA;
 			var halfSize : Number = appendVO.size * .5;
-			var x : Number = appendVO.point.normalX;
-			var y : Number = appendVO.point.normalY;
-			var right : Number = x + halfSize;
-			var bottom : Number = y + halfSize;
-			var left : Number = x - halfSize;
-			var top : Number = y - halfSize;
+			var centerX : Number = appendVO.point.normalX;
+			var centerY : Number = appendVO.point.normalY;
 
-			if (right > _maxX) _maxX = right;
-			else if (right < _minX) _minX = right;
-			if (bottom > _maxY) _maxY = bottom;
-			else if (bottom < _minY) _minY = bottom;
-			if (left > _maxX) _maxX = left;
-			else if (left < _minX) _minX = left;
-			if (top > _maxY) _maxY = top;
-			else if (top < _minY) _minY = top;
+			if (centerX + halfSize > _maxX) _maxX = centerX + halfSize;
+			else if (centerX - halfSize < _minX) _minX = centerX - halfSize;
+			if (centerY + halfSize > _maxY) _maxY = centerY + halfSize;
+			else if (centerY - halfSize < _minY) _minY = centerY - halfSize;
 
-			_tmpData[0] = left;
-			_tmpData[1] = top;
-			_tmpData[2] = 0;
-			_tmpData[3] = 0;
-			_tmpData[4] = colorsRGBA[0];
-			_tmpData[5] = colorsRGBA[1];
-			_tmpData[6] = colorsRGBA[2];
-			_tmpData[7] = colorsRGBA[3];
-			_tmpData[8] = left * .5 + .5;
-			_tmpData[9] = .5 - top * .5;
+			var index : int = 0;
 
+			var segmentAngle : Number = Math.PI * 2 / NUM_SEGMENTS;
+			var angle : Number = segmentAngle;
 
-			_tmpData[10] = right;
-			_tmpData[11] = top;
-			_tmpData[12] = 1;
-			_tmpData[13] = 0;
-			_tmpData[14] = colorsRGBA[4];
-			_tmpData[15] = colorsRGBA[5];
-			_tmpData[16] = colorsRGBA[6];
-			_tmpData[17] = colorsRGBA[7];
-			_tmpData[18] = right * .5 + .5;
-			_tmpData[19] = .5 - top * .5;
+			_tmpData[index] = centerX;
+			_tmpData[uint(index + 1)] = centerY;
+			_tmpData[uint(index + 2)] = .5;
+			_tmpData[uint(index + 3)] = 1;
+			_tmpData[uint(index + 4)] = colorsRGBA[0];
+			_tmpData[uint(index + 5)] = colorsRGBA[1];
+			_tmpData[uint(index + 6)] = colorsRGBA[2];
+			_tmpData[uint(index + 7)] = colorsRGBA[3];
+			_tmpData[uint(index + 8)] = centerX * .5 + .5;
+			_tmpData[uint(index + 9)] = .5 - centerY * .5;
 
-			_tmpData[20] = right;
-			_tmpData[21] = bottom;
-			_tmpData[22] = 1;
-			_tmpData[23] = 1;
-			_tmpData[24] = colorsRGBA[4];
-			_tmpData[25] = colorsRGBA[5];
-			_tmpData[26] = colorsRGBA[6];
-			_tmpData[27] = colorsRGBA[7];
-			_tmpData[28] = right * .5 + .5;
-			_tmpData[29] = .5 - bottom * .5;
+			index += 10;
 
-			_tmpData[30] = left;
-			_tmpData[31] = bottom;
-			_tmpData[32] = 0;
-			_tmpData[33] = 1;
-			_tmpData[34] = colorsRGBA[0];
-			_tmpData[35] = colorsRGBA[1];
-			_tmpData[36] = colorsRGBA[2];
-			_tmpData[37] = colorsRGBA[3];
-			_tmpData[38] = left * .5 + .5;
-			_tmpData[39] = .5 - bottom * .5;
+			for (var i : int = 0; i < NUM_SEGMENTS; ++i) {
+				var x : Number = centerX + Math.cos(angle)*halfSize;
+				var y : Number = centerY + Math.sin(angle)*halfSize;
 
+				_tmpData[index] = x;
+				_tmpData[uint(index + 1)] = y;
+				_tmpData[uint(index + 2)] = .5;
+				_tmpData[uint(index + 3)] = 0;
+				_tmpData[uint(index + 4)] = colorsRGBA[4];
+				_tmpData[uint(index + 5)] = colorsRGBA[5];
+				_tmpData[uint(index + 6)] = colorsRGBA[6];
+				_tmpData[uint(index + 7)] = colorsRGBA[7];
+				_tmpData[uint(index + 8)] = x * .5 + .5;
+				_tmpData[uint(index + 9)] = .5 - y * .5;
+				angle += segmentAngle;
+				index += 10;
+			}
 
 			_fastBuffer.addFloatsToVertices(_tmpData, _vIndex);
-			_vIndex += 160;
+			_vIndex += index*4;
 
-			_numVertices += 4;
-			_numIndices += 6;
+			_numVertices += NUM_SEGMENTS + 1;
+			_numIndices += NUM_SEGMENTS*3;
 		}
 
 		override public function drawColor(context3d : Context3D, canvas : CanvasModel, source : TextureBase = null) : void
@@ -174,7 +159,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		override protected function get topologyIndexType() : int
 		{
-			return FastBuffer.INDEX_MODE_QUADS;
+			return FastBuffer.INDEX_MODE_CUSTOM;
 		}
 
 		override protected function get numElementsPerVertex() : int
@@ -189,6 +174,31 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		public function appendStationary():void
 		{
+		}
+
+		override protected function createIndices(offset:int):void
+		{
+			var i:int = 0;
+			var centerIndex : int = 0;
+
+			while (i < 87381) {
+				for (var s : int = 1; s < NUM_SEGMENTS; ++s) {
+					si16(centerIndex, offset);
+					si16(centerIndex + s, offset + 2);
+					si16(centerIndex + s + 1, offset + 4);
+					offset += 6;
+					if (++i >= 87381) return;
+				}
+
+				// closing segment:
+				si16(centerIndex, offset);
+				si16(centerIndex + NUM_SEGMENTS, offset + 2);
+				si16(centerIndex + 1, offset + 4);
+				offset += 6;
+				++i;
+
+				centerIndex += NUM_SEGMENTS + 1;
+			}
 		}
 	}
 }
