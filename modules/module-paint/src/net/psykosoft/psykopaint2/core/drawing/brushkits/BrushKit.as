@@ -69,6 +69,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		}
 		
 		public var name:String;
+		public var isPurchasable:Boolean = false;
+		
 		protected var _brushEngine:AbstractBrush;
 		protected var _parameterMapping:PsykoParameterMapping;
 		

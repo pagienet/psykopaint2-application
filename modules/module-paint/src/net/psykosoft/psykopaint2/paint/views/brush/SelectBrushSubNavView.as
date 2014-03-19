@@ -73,7 +73,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						break;
 					}
 					case 4: {
-						iconType = ButtonIconType.TRY_ERASER;
+						iconType = ButtonIconType.ERASER;
 						break;
 					}
 					default: {

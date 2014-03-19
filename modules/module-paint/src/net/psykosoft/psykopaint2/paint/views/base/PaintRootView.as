@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 	import net.psykosoft.psykopaint2.paint.views.alpha.AlphaSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.brush.UpgradeSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.PipetteView;
@@ -29,6 +30,7 @@ package net.psykosoft.psykopaint2.paint.views.base
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_SELECT_BRUSH, SelectBrushSubNavView );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.TRANSITION_TO_PAINT_MODE, SubNavigationViewBase );
 			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_ADJUST_COLOR, ColorPickerSubNavView );
+			StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_BUY_UPGRADE, UpgradeSubNavView );
 			//StateToSubNavLinker.linkSubNavToState( NavigationStateType.PAINT_ADJUST_ALPHA, AlphaSubNavView );
 			
 			addChild( _pipetteView = new PipetteView() );

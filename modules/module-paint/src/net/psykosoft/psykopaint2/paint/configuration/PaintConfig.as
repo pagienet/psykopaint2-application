@@ -55,6 +55,8 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.paint.views.base.PaintRootViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.brush.SelectBrushSubNavViewMediator;
+	import net.psykosoft.psykopaint2.paint.views.brush.UpgradeSubNavView;
+	import net.psykosoft.psykopaint2.paint.views.brush.UpgradeSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavView;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasSubNavViewMediator;
 	import net.psykosoft.psykopaint2.paint.views.canvas.CanvasView;
@@ -192,6 +194,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_mediatorMap.map( CanvasView ).toMediator( CanvasViewMediator );
 			_mediatorMap.map( PaintRootView ).toMediator( PaintRootViewMediator );
 			_mediatorMap.map( ColorPickerSubNavView ).toMediator( ColorPickerSubNavViewMediator );
+			_mediatorMap.map( UpgradeSubNavView ).toMediator( UpgradeSubNavViewMediator );
 			//_mediatorMap.map( AlphaSubNavView ).toMediator( AlphaSubNavViewMediator );
 			_mediatorMap.map( PipetteView ).toMediator( PipetteViewMediator );
 		}

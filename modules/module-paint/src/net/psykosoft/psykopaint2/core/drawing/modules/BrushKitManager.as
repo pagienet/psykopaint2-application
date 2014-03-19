@@ -16,6 +16,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import flash.utils.setTimeout;
 	
 	import net.psykosoft.psykopaint2.base.remote.PsykoSocket;
+	import net.psykosoft.psykopaint2.base.states.State;
 	import net.psykosoft.psykopaint2.base.utils.ui.CanvasInteractionUtil;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
@@ -379,11 +380,18 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		{
 			singleTapDelay = getTimer();
 			_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
-			if ( _navigationWasHiddenByPainting )
+			
+			if ( _activeBrushKit.isPurchasable )
+			{
+				clearTimeout( _revealNavigationTimeout );
+				revealHiddenNavigation();
+				requestStateChangeSignal.dispatch( NavigationStateType.PAINT_BUY_UPGRADE);
+			} else if ( _navigationWasHiddenByPainting )
 			{
 				clearTimeout( _revealNavigationTimeout );
 				_revealNavigationTimeout = setTimeout( revealHiddenNavigation,400 );
 			}
+			
 		
 		}
 		

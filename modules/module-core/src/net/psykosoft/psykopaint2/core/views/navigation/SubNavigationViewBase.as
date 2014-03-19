@@ -303,6 +303,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			var clickedButton:NavigationButton = event.target as NavigationButton;
 			if( !clickedButton ) clickedButton = event.target.parent as NavigationButton;
+			if( !clickedButton ) clickedButton = event.target.parent.parent as NavigationButton;
 			if( !clickedButton ) {
 				//throw new Error( "unidentified button clicked." );
 				//sorry - this was too annoying for debugging:

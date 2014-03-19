@@ -67,6 +67,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		public function BrushKit_WaterColor()
 		{
+			//isPurchasable = true;
 			init(null);
 		}
 		
