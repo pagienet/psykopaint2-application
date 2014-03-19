@@ -61,23 +61,23 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						break;
 					}
 					case 1: {
-						iconType = ButtonIconType.BRUSH;
+						iconType = ButtonIconType.TRY_BRUSH;
 						break;
 					}
 					case 2: {
-						iconType = ButtonIconType.PENCIL;
+						iconType = ButtonIconType.TRY_PENCIL;
 						break;
 					}
 					case 3: {
-						iconType = ButtonIconType.WATERCOLOR;
+						iconType = ButtonIconType.TRY_WATERCOLOR;
 						break;
 					}
 					case 4: {
-						iconType = ButtonIconType.ERASER;
+						iconType = ButtonIconType.TRY_ERASER;
 						break;
 					}
 					default: {
-						iconType = ButtonIconType.DEFAULT;
+						iconType = ButtonIconType.TRY_BRUSH;
 					}
 				}
 				createCenterButton( availableBrushTypes[ i ], availableBrushTypes[ i ], iconType, IconButton, null, true, true, false );
