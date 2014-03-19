@@ -86,9 +86,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			pathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
 
-			setValuesForDryBrush();
-			setValuesForRibbon();
-
 			_parameterMapping = new PsykoParameterMapping();
 
 			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["basic","wet", "splat", "splat"]);
@@ -121,6 +118,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			sizeDecorator.param_mappingFactor.numberValue = 0.08;
 			sizeDecorator.param_mappingRange.numberValue = 0.04;
 
+			pathManager.addPointDecorator(sizeDecorator);
+			pathManager.addPointDecorator(splatterDecorator);
 
 			onStyleChanged(null);
 		}
@@ -156,17 +155,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			pathManager.pathEngine.outputStepSize.numberValue = 50;
 			WaterColorBrush(brushEngine).param_meshType.value = 1;
-			if (!pathManager.hasActiveDecorators()) {
-				pathManager.addPointDecorator(splatterDecorator);
-				pathManager.addPointDecorator(sizeDecorator);
-			}
+			splatterDecorator.active = true;
+			sizeDecorator.active = true;
 		}
 
 		private function setValuesForRibbon():void
 		{
 			pathManager.pathEngine.outputStepSize.numberValue = 2;
 			WaterColorBrush(brushEngine).param_meshType.value = 0;
-			pathManager.removeAllPointDecorators();
+			splatterDecorator.active = false;
+			sizeDecorator.active = false;
 		}
 
 		private function setValuesForDryBrush():void
