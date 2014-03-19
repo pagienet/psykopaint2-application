@@ -156,7 +156,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			addChild(_easelView);
 			addChild(_roomView);
 			addChild(_galleryView);
-			addChild(_bookView);
+			//addChild(_bookView);
+			//_bookView.rotationX=80;
 			
 		}
 
@@ -248,7 +249,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			removeChild(_galleryView);
 			
 			_bookView.dispose();
-			removeChild(_bookView);
+			//removeChild(_bookView);
 			
 			_easelView = null;
 			_roomView = null;

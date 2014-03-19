@@ -1,25 +1,24 @@
 package net.psykosoft.psykopaint2.home.views.home.atelier
 {
+	import flash.display.BitmapData;
+	import flash.events.Event;
+	import flash.geom.Matrix3D;
+	import flash.utils.ByteArray;
+	
 	import away3d.containers.ObjectContainer3D;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
 	import away3d.hacks.TrackedATFTexture;
 	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.materials.MaterialBase;
+	import away3d.materials.SinglePassMaterialBase;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.methods.LightMapMethod;
 	import away3d.textures.ATFData;
 	import away3d.textures.ATFTexture;
 	import away3d.textures.BitmapTexture;
-	import away3d.materials.SinglePassMaterialBase;
 	import away3d.textures.Texture2DBase;
-
-	import flash.events.Event;
-
-	import flash.utils.ByteArray;
-	import flash.display.BitmapData;
-	import flash.geom.Matrix3D;
-
+	
 	import net.psykosoft.psykopaint2.base.utils.io.QueuedFileLoader;
 	import net.psykosoft.psykopaint2.base.utils.io.events.AssetLoadedEvent;
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
@@ -116,7 +115,9 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 
 		public function init():void
 		{
-			var atfURL : String = CoreSettings.RUNNING_ON_iPAD ? "/home-packaged-ios/away3d/atelier/atfs/" : "/home-packaged-desktop/away3d/atelier/atfs/";
+			var currentPlatform:String =CoreSettings.RUNNING_ON_iPAD ? "ios":"desktop";
+			
+			var atfURL : String =  "/home-packaged-"+currentPlatform+"/away3d/atelier/atfs/"
 			var imgURL : String = "/home-packaged/away3d/atelier/";
 
 			var titlesData:TitlesData = new TitlesData();
@@ -141,14 +142,15 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			var floor_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-1.4995100498199463,-164.59500122070313,1.2002899646759033,1]);
 			var floor:Mesh = new Mesh(floorData.geometryData, null);
 			applyTransform(floor_rd, floor, "floor");
-			loadBitmapMaterial(floor, imgURL + "jpgs/woodfloor_grey.jpg", 3);
+			loadBitmapMaterial(floor, imgURL + "jpgs/woodfloor.jpg", 3);
 			loadATFMaterial(floor, atfURL + "floor_LM.atf", 4);
 
 			var lightsData:LightsData = new LightsData();
 			var lights_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,63.72710037231445,21.96869659423828,-78.13249969482422,1]);
 			var lights:Mesh = new Mesh(lightsData.geometryData, null);
 			applyTransform(lights_rd, lights, "lights");
-			loadBitmapMaterial(lights, imgURL + "pngs/lights.png", 5);
+			//loadBitmapMaterial(lights, imgURL + "pngs/lights.png", 5);
+			loadATFMaterial(lights, atfURL + "lights.atf", 5);
 
 			var elementsData:ElementsData = new ElementsData();
 			var elements_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,376.53948974609375,10.186001777648926,-17.01059913635254,1]);
@@ -166,7 +168,9 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			var dome_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,286.0880126953125,332.2690124511719,-52.463199615478516,1]);
 			var dome:Mesh = new Mesh(domeData.geometryData, null);
 			applyTransform(dome_rd, dome, "dome");
-			loadBitmapMaterial(dome, imgURL + "jpgs/dome.jpg", 8);
+			//loadBitmapMaterial(dome, imgURL + "jpgs/dome.jpg", 8);
+			loadATFMaterial(dome, atfURL + "sky.atf", 8);
+
 
 			var items_no_editData:Items_no_editData = new Items_no_editData();
 			var items_no_edit_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-2.3050498962402344,153.61300659179688,-5.307400226593018,1]);
@@ -186,6 +190,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		{
 			_assetsCount++;
 			_fileLoader.loadBinary(url, null, onError, {mesh:mesh, id:id}, finalizeObject);
+			//_fileLoader.loadBinary(url, finalizeObject, onError, {mesh:mesh, id:id});
 		}
 
 		private function loadBitmapMaterial(mesh:Mesh, url:String, id:uint):void
@@ -241,9 +246,10 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 					clearLoader();
 					return;
 
-				//spots	
+				//lights	
 				case 5:
-					mesh.material = buildBitmapMaterial(BitmapData(e.data));
+					//mesh.material = buildBitmapMaterial(BitmapData(e.data));
+					mesh.material = buildATFMaterial(ByteArray(e.data));
 					TextureMaterial(mesh.material).alphaBlending = true;
 					break;
 				//elements
@@ -258,7 +264,8 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 
 				//dome  --> getter for it to update rotation on enterframe
 				case 8:
-					mesh.material = buildBitmapMaterial(BitmapData(e.data));
+					//mesh.material = buildBitmapMaterial(BitmapData(e.data));
+					mesh.material = buildATFMaterial(ByteArray(e.data));
 					break;
 
 				//items no edit (plints, some ceilings)

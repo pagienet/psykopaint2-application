@@ -75,7 +75,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			_container = new ObjectContainer3D();
 			_pages = new Vector.<BookPageView>();
 			
-			_view.scene.addChild(_container);
+			//_view.scene.addChild(_container);
 			
 			//ROTATE CONTAINER TO FACE THE CAMERA
 			_container.rotationX = 90;
@@ -87,18 +87,10 @@ package net.psykosoft.psykopaint2.home.views.book
 			
 			init();
 			
-			
-		//	_bloomFilter = new DepthOfFieldFilter3D( 10,10,100 );
-			//_view.filters3d = [ _bloomFilter ];
-			
-
+			//TESTING FILTERS
 			//var _bloomFilter:MotionBlurFilter3D = new MotionBlurFilter3D(  );
 			//_view.filters3d = [ _bloomFilter ];
-			
-			
-			
-			
-	
+
 		}
 		
 		
@@ -254,8 +246,7 @@ package net.psykosoft.psykopaint2.home.views.book
 				_rings.scaleZ=_rings.scaleX=_rings.scaleY=0.191;
 				
 				
-				loadDummyGalleryImageCollection();
-				//loadDummySourceImageCollection();
+				//start();
 			
 				//_bloomFilter.range=500;
 				//_bloomFilter.focusDistance = 100;
@@ -269,6 +260,15 @@ package net.psykosoft.psykopaint2.home.views.book
 			
 			
 		
+			
+		}	
+		
+		
+		public function start():void{
+			
+			//loadDummyGalleryImageCollection();
+			//loadDummySourceImageCollection();
+			
 			//EVENTS
 			this.addEventListener(Event.ADDED_TO_STAGE,onAdded);	
 			function onAdded(event:Event):void
@@ -277,8 +277,7 @@ package net.psykosoft.psykopaint2.home.views.book
 				startGrabController();
 				removeEventListener(Event.ADDED_TO_STAGE,onAdded);
 			}		
-			
-		}	
+		}
 		
 		 
 		private function onClickBook(event:Event):void
@@ -476,11 +475,13 @@ package net.psykosoft.psykopaint2.home.views.book
 		
 		
 		private function stopGrabController():void{
-			_grabThrowController.stop();
-			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);
-			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_UPDATE,onDragUpdate);
-			_grabThrowController.removeEventListener(GrabThrowEvent.RELEASE,onRelease);
-			_grabThrowController = null;
+			if(_grabThrowController){
+				_grabThrowController.stop();
+				_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);
+				_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_UPDATE,onDragUpdate);
+				_grabThrowController.removeEventListener(GrabThrowEvent.RELEASE,onRelease);
+				_grabThrowController = null;
+			}
 		}
 		
 		

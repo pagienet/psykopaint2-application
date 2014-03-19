@@ -1,9 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:e226116ab7f66c9a0111b35e210bb39d$ -->
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:0899cbb274d7f4bb3ef2870892237b90:1/1$ -->
 <TextureAtlas imagePath="wallpapers.png">
-    <SubTexture name="bricks" x="214" y="214" width="210" height="210"/>
-    <SubTexture name="pinkfur" x="214" y="2" width="210" height="210"/>
-    <SubTexture name="white" x="2" y="214" width="210" height="210"/>
-    <SubTexture name="wood" x="2" y="2" width="210" height="210"/>
+    <SubTexture name="1" x="1820" y="608" width="200" height="200"/>
+    <SubTexture name="10" x="1618" y="810" width="200" height="200"/>
+    <SubTexture name="11" x="1618" y="608" width="200" height="200"/>
+    <SubTexture name="12" x="1820" y="406" width="200" height="200"/>
+    <SubTexture name="13" x="1618" y="406" width="200" height="200"/>
+    <SubTexture name="14" x="1416" y="810" width="200" height="200"/>
+    <SubTexture name="15" x="1416" y="608" width="200" height="200"/>
+    <SubTexture name="16" x="1416" y="406" width="200" height="200"/>
+    <SubTexture name="17" x="1820" y="204" width="200" height="200"/>
+    <SubTexture name="18" x="1618" y="204" width="200" height="200"/>
+    <SubTexture name="19" x="1416" y="204" width="200" height="200"/>
+    <SubTexture name="2" x="1214" y="810" width="200" height="200"/>
+    <SubTexture name="20" x="1214" y="608" width="200" height="200"/>
+    <SubTexture name="21" x="1214" y="406" width="200" height="200"/>
+    <SubTexture name="22" x="1214" y="204" width="200" height="200"/>
+    <SubTexture name="23" x="1820" y="2" width="200" height="200"/>
+    <SubTexture name="24" x="1618" y="2" width="200" height="200"/>
+    <SubTexture name="25" x="1416" y="2" width="200" height="200"/>
+    <SubTexture name="26" x="1214" y="2" width="200" height="200"/>
+    <SubTexture name="27" x="1012" y="810" width="200" height="200"/>
+    <SubTexture name="28" x="1012" y="608" width="200" height="200"/>
+    <SubTexture name="29" x="1012" y="406" width="200" height="200"/>
+    <SubTexture name="3" x="1012" y="204" width="200" height="200"/>
+    <SubTexture name="30" x="1012" y="2" width="200" height="200"/>
+    <SubTexture name="31" x="810" y="810" width="200" height="200"/>
+    <SubTexture name="32" x="810" y="608" width="200" height="200"/>
+    <SubTexture name="33" x="810" y="406" width="200" height="200"/>
+    <SubTexture name="34" x="810" y="204" width="200" height="200"/>
+    <SubTexture name="35" x="810" y="2" width="200" height="200"/>
+    <SubTexture name="36" x="608" y="810" width="200" height="200"/>
+    <SubTexture name="37" x="608" y="608" width="200" height="200"/>
+    <SubTexture name="38" x="608" y="406" width="200" height="200"/>
+    <SubTexture name="39" x="608" y="204" width="200" height="200"/>
+    <SubTexture name="4" x="608" y="2" width="200" height="200"/>
+    <SubTexture name="40" x="406" y="810" width="200" height="200"/>
+    <SubTexture name="41" x="406" y="608" width="200" height="200"/>
+    <SubTexture name="42" x="406" y="406" width="200" height="200"/>
+    <SubTexture name="43" x="406" y="204" width="200" height="200"/>
+    <SubTexture name="44" x="406" y="2" width="200" height="200"/>
+    <SubTexture name="45" x="204" y="810" width="200" height="200"/>
+    <SubTexture name="46" x="204" y="608" width="200" height="200"/>
+    <SubTexture name="47" x="204" y="406" width="200" height="200"/>
+    <SubTexture name="48" x="204" y="204" width="200" height="200"/>
+    <SubTexture name="49" x="204" y="2" width="200" height="200"/>
+    <SubTexture name="5" x="2" y="810" width="200" height="200"/>
+    <SubTexture name="6" x="2" y="608" width="200" height="200"/>
+    <SubTexture name="7" x="2" y="406" width="200" height="200"/>
+    <SubTexture name="8" x="2" y="204" width="200" height="200"/>
+    <SubTexture name="9" x="2" y="2" width="200" height="200"/>
 </TextureAtlas>

@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.home.model
 		[Inject]
 		public var requestWallpaperChangeSignal:RequestWallpaperChangeSignal;
 
-		private var _wallpaperId:String = "stucco"; // Part of the file name in home-packaged-desktop/away3d/wallpapers/fullsize, eg. "white" in white-desktop.atf.
+		private var _wallpaperId:String = "2"; // Part of the file name in home-packaged-desktop/away3d/wallpapers/fullsize, eg. "white" in white-desktop.atf.
 
 		public function WallpaperModel() {
 			super();

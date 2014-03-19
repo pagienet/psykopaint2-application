@@ -27,6 +27,62 @@ C:\png2atf.exe  -c p  -i  leaf.png  -o  leaf_pvrtc.atf
 -q and -f are for quality adjustment. Basically higher the number more compression.
 
 
+
+Parameter	
+Description
+
+-i <file>
+
+Specifies the input file name.
+
+-o <file>
+
+Specifies the output file name.
+
+-c
+
+Creates the output file with block-based compression. Three types of block-based compression textures are created and embedded into the output ATF file: DXT1, ETC1, and PVRTC 4bpp. When you load this type of texture into Flash Player or AIR, the runtime uses the appropriate format for the device.
+If the PNG file includes transparency, png2atf creates an RGBA texture instead. Use the atfinfo tool to find out what format an ATF file includes. Use the pngalpha tool to find out if a particular PNG file has transparent pixels before creating an ATF file.
+
+-m
+
+Creates a cube map texture. A cube map texture requires six input files. The input files need to be named consecutively in the form XXXn.png where XXX is the base file name and n=0-5, for example: cube0.png, cube1.png, cube2.png, cube3.png, cube4.png, cube5.png. You only specify the first file as the input file with the -i parameter (cube0.png in this example).
+The arrangement of the files is shown in Figure 1.
+
+-n <start>,<end>
+
+Turns off auto-generation of mipmaps and only embeds a specific range of texture levels (the main texture plus mipmaps). The range is defined in the form <start>,<end>, where 0 is the main texture and the mipmaps start with level 1. If you leave off this parameter, png2atf generates all applicable mipmap levels. However, in some cases (such as for sky maps) it is not desirable to enable mipmaps.
+
+-s
+
+Silences the tool's output during compression. You may want to use this parameter for batch processing.
+
+-4
+
+Instructs the JPEG XR encoder to use the 4:4:4 color space internally. This is the default for block-based compression. In some cases it is desirable to use this color space for RGB/RGBA textures, for example if you see color bleeding artifacts around red or blue shapes or for normal maps.
+
+-2
+
+Instructs the JPEG XR encoder to use the 4:2:2 color space internally. Adobe recommends that you do not use this color space for block-based compression because it can cause severe artifacts.
+
+-0
+
+Instructs the JPEG XR encoder to use the 4:2:0 color space internally. In general, Adobe recommends that you do not use this color space for block-based compression because it can cause severe artifacts. However, it might be worth experimenting with this option if the image data is monochromatic.
+
+-q <0-180>
+
+Selects the quantization level, which determines how much the image data should be compressed. Higher values create more artifacts and smaller values reduce artifacts.
+A value of 0 means lossless compression (the default for block-based compression textures). Adobe recommends that you do not use lossy compression for block-based compression. However, it might be worthwhile to experiment with this value on a case-by-case basis.
+The default value for RGB and RGBA textures is 30.
+This value should not be confused with the standard JPEG compression factor. It is similar in concept, but it applies in a different nonlinear range.
+
+-f <0-15>
+
+Selects how many flex bits are trimmed during JPEG XR compression. This option is not related to the quantization level. Rather, it selects how much noise is retained across the image. Higher values create more artifacts and lower values create fewer artifacts. The default value is 0.
+
+
+
+
 /Applications/Adobe\ Gaming\ SDK\ 1.3/Utilities/ATF\ Tools/png2atf -c d -r -q /Users/psykomatt/Documents/workspace/psykopaint2-application/modules/module-book/assets/packaged/book-packaged/samples/thumbs/1.png -o /Users/psykomatt/Documents/workspace/psykopaint2-application/modules/module-book/assets/packaged/book-packaged/samples/thumbs/1.atf
 
 /Applications/Adobe\ Gaming\ SDK\ 1.3/Utilities/ATF\ Tools/png2atf -c p /Users/psykomatt/Documents/workspace/psykopaint2-application/modules/module-book/assets/packaged/book-packaged/samples/samples.png -o /Users/psykomatt/Documents/workspace/psykopaint2-application/modules/module-book/assets/packaged/book-packaged/samples/thumbs/1.atf
@@ -86,3 +142,18 @@ C:\png2atf.exe  -c p  -i  leaf.png  -o  leaf_pvrtc.atf
 /Applications/Adobe\ Gaming\ SDK\ 1.3/Utilities/ATF\ Tools/png2atf -c p -i '/Users/psykomatt/Documents/workspace/psykopaint2-application/modules/module-book/assets/packaged/book-packaged/samples/thumbs/47.png' -o '/Users/psykomatt/Documents/workspace/psykopaint2-application/modules/module-book/assets/packaged/book-packaged/samples/thumbs/47.atf'
 /Applications/Adobe\ Gaming\ SDK\ 1.3/Utilities/ATF\ Tools/png2atf -c p -i '/Users/psykomatt/Documents/workspace/psykopaint2-application/modules/module-book/assets/packaged/book-packaged/samples/thumbs/48.png' -o '/Users/psykomatt/Documents/workspace/psykopaint2-application/modules/module-book/assets/packaged/book-packaged/samples/thumbs/48.atf'
 /Applications/Adobe\ Gaming\ SDK\ 1.3/Utilities/ATF\ Tools/png2atf -c p -i '/Users/psykomatt/Documents/workspace/psykopaint2-application/modules/module-book/assets/packaged/book-packaged/samples/thumbs/49.png' -o '/Users/psykomatt/Documents/workspace/psykopaint2-application/modules/module-book/assets/packaged/book-packaged/samples/thumbs/49.atf'
+
+
+
+
+
+/Applications/Adobe\ Gaming\ SDK\ 1.3/Utilities/ATF\ Tools/png2atf -c p -i 1.png -o 1-ios.atf
+/Applications/Adobe\ Gaming\ SDK\ 1.3/Utilities/ATF\ Tools/png2atf -c d -i 1.png -o 1-desktop.atf
+
+/Applications/Adobe\ Gaming\ SDK\ 1.3/Utilities/ATF\ Tools/png2atf -c p -i 2.png -o 2-ios.atf
+/Applications/Adobe\ Gaming\ SDK\ 1.3/Utilities/ATF\ Tools/png2atf -c d -i 2.png -o 2-desktop.atf
+
+
+/Applications/Adobe\ Gaming\ SDK\ 1.3/Utilities/ATF\ Tools/png2atf -c p -i 2.png -o 2-ios.atf
+/Applications/Adobe\ Gaming\ SDK\ 1.3/Utilities/ATF\ Tools/png2atf -c d -i 2.png -o 2-desktop.atf
+
