@@ -8,7 +8,6 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 	
 	import net.psykosoft.psykopaint2.core.models.SourceImageCollection;
 	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
-	import net.psykosoft.psykopaint2.home.views.book.BookThumbnailView;
 	
 	public class BookLayoutSamplesView extends BookLayoutAbstractView
 	{
@@ -16,7 +15,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		public static const ROWS:int=3;
 		
 		private var _data:SourceImageCollection;
-		private var _pageThumbnailViews:Vector.<BookThumbnailView>;
+		private var _pageThumbnailViews:Vector.<BookLayoutSampleThumbView>;
 		
 		private var _pageIndex:int;
 		
@@ -30,20 +29,21 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		public function setData(data:SourceImageCollection):void{
 			this._data = data;
 			
-			_pageThumbnailViews = new Vector.<BookThumbnailView>();
+			_pageThumbnailViews = new Vector.<BookLayoutSampleThumbView>();
 			
 			var currentSourceImageProxy:SourceImageProxy;
 			for (var i:int = 0; i < _data.images.length; i++) 
 			{
 				currentSourceImageProxy = _data.images[i];
-				var newPageThumbnailView:BookThumbnailView = new BookThumbnailView();
+				var newPageThumbnailView:BookLayoutSampleThumbView = new BookLayoutSampleThumbView();
 				newPageThumbnailView.setData(currentSourceImageProxy);
 				
 				_pageThumbnailViews.push(newPageThumbnailView);
 				
 				this.addChild(newPageThumbnailView);
-				newPageThumbnailView.x = (i%COLUMNS)*(newPageThumbnailView.width +10);
-				newPageThumbnailView.z = Math.floor(i/COLUMNS)*-(newPageThumbnailView.height +10);
+				newPageThumbnailView.x = 50+(i%COLUMNS)*(newPageThumbnailView.width +15);
+				newPageThumbnailView.z = 5+ Math.floor(i/COLUMNS)*-(newPageThumbnailView.height +10)+50;
+				//newPageThumbnailView.y = -1;
 				//newPageThumbnailView.rotationY= Math.random()*5-2.5;
 				
 				newPageThumbnailView.addEventListener(MouseEvent3D.CLICK,onClickDownThumbnail);
@@ -63,7 +63,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		override public function dispose():void
 		{
 			_data = null;
-			trace("BookLayoutSamplesView::dispose");
+			//trace("BookLayoutSamplesView::dispose");
 			for (var i:int = 0; i < _pageThumbnailViews.length; i++) 
 			{
 				_pageThumbnailViews[i].removeEventListener(MouseEvent3D.MOUSE_DOWN,onClickDownThumbnail);
@@ -72,7 +72,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 				
 				_pageThumbnailViews[i]=null;
 			}
-			_pageThumbnailViews = new Vector.<BookThumbnailView>();
+			_pageThumbnailViews = new Vector.<BookLayoutSampleThumbView>();
 
 			super.dispose();
 		}

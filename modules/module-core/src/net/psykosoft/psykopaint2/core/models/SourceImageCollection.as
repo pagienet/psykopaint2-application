@@ -7,14 +7,14 @@ package net.psykosoft.psykopaint2.core.models
 		public var index : int;
 		public var numTotalImages : int;
 		
-		public static function getSubCollection(index:int,imageCount:int,sourceImageCollection:SourceImageCollection):SourceImageCollection
+		public static function getSubCollection(index:int,imageCount:int,imageCollection:SourceImageCollection):SourceImageCollection
 		{
 			var newCollection:SourceImageCollection = new SourceImageCollection();
-			newCollection.source = sourceImageCollection.source;
+			newCollection.source = imageCollection.source;
 			newCollection.images = new Vector.<SourceImageProxy>();
-			for (var i:int = index; i < Math.min(index+imageCount,sourceImageCollection.images.length); i++) 
+			for (var i:int = index; i < Math.min(index+imageCount,imageCollection.images.length); i++) 
 			{
-				newCollection.images.push(sourceImageCollection.images[i]);
+				newCollection.images.push(imageCollection.images[i]);
 			}
 			newCollection.index=0;
 			newCollection.numTotalImages=imageCount;

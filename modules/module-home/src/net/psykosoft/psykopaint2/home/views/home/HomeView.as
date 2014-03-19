@@ -200,6 +200,8 @@ package net.psykosoft.psykopaint2.home.views.home
 			_camera.lookAt(new Vector3D(-266.82, -1.14, -353.10));
 		}
 
+		
+		
 		private function onActivePositionChanged() : void
 		{
 			activeSectionChanged.dispatch(_cameraController.activeTargetPositionID);
