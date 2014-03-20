@@ -60,6 +60,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			_materials = new Vector.<MaterialBase>();
 			_meshes = new Vector.<Mesh>();
 			_fileLoader = new QueuedFileLoader();
+			
 		}
 
 		//todo: replace the icon user with app user icon source
@@ -149,8 +150,8 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			var lights_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,63.72710037231445,21.96869659423828,-78.13249969482422,1]);
 			var lights:Mesh = new Mesh(lightsData.geometryData, null);
 			applyTransform(lights_rd, lights, "lights");
-			//loadBitmapMaterial(lights, imgURL + "pngs/lights.png", 5);
-			loadATFMaterial(lights, atfURL + "lights.atf", 5);
+			loadBitmapMaterial(lights, imgURL + "pngs/lights.png", 5);
+			//loadATFMaterial(lights, atfURL + "lights.atf", 5);
 
 			var elementsData:ElementsData = new ElementsData();
 			var elements_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,376.53948974609375,10.186001777648926,-17.01059913635254,1]);
@@ -176,6 +177,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 			var items_no_edit_rd:Vector.<Number> = Vector.<Number>([1,0,0,0,0,1,0,0,0,0,1,0,-2.3050498962402344,153.61300659179688,-5.307400226593018,1]);
 			var items_no_edit:Mesh = new Mesh(items_no_editData.geometryData, null);
 			applyTransform(items_no_edit_rd, items_no_edit, "items_no_edit");
+			//loadBitmapMaterial(items_no_edit, imgURL + "jpgs/stucco.jpg", 9);
 			loadATFMaterial(items_no_edit, atfURL + "items_no_edit.atf", 9);
 
 			var wallsData:Walls_editmaterial1Data = new Walls_editmaterial1Data();
@@ -189,7 +191,8 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		private function loadATFMaterial(mesh:Mesh, url:String, id:uint):void
 		{
 			_assetsCount++;
-			_fileLoader.loadBinary(url, null, onError, {mesh:mesh, id:id}, finalizeObject);
+			_fileLoader.loadBinary(url, finalizeObject, onError, {mesh:mesh, id:id});
+			
 			//_fileLoader.loadBinary(url, finalizeObject, onError, {mesh:mesh, id:id});
 		}
 
@@ -248,8 +251,8 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 
 				//lights	
 				case 5:
-					//mesh.material = buildBitmapMaterial(BitmapData(e.data));
-					mesh.material = buildATFMaterial(ByteArray(e.data));
+					mesh.material = buildBitmapMaterial(BitmapData(e.data));
+					//mesh.material = buildATFMaterial(ByteArray(e.data));
 					TextureMaterial(mesh.material).alphaBlending = true;
 					break;
 				//elements
@@ -299,6 +302,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 		private function buildWalls(mesh : Mesh, byteArray : ByteArray):void
 		{
 			_wallMesh = mesh;
+			
 			//the texture we use for walls toggles
 			if (_pendingWallTexture) {
 				_wallMesh.material = buildATFMaterial(_pendingWallTexture);
@@ -307,6 +311,7 @@ package net.psykosoft.psykopaint2.home.views.home.atelier
 				_pendingWallTexture = null;
 			}
 
+			SinglePassMaterialBase(mesh.material).mipmap=false;
 			addLightMapMethod(SinglePassMaterialBase(mesh.material), byteArray, true);
 
 			_meshes.push(_wallMesh);
