@@ -230,7 +230,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function onIntensityChanged(event:Event):void
 		{
-			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.03 * param_intensity.numberValue;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.07 * param_intensity.numberValue;
 			WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1 + 0.3 * param_intensity.numberValue;
 		}
 		
