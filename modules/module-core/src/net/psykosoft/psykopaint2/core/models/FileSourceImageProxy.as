@@ -18,10 +18,28 @@ package net.psykosoft.psykopaint2.core.models
 		public var originalFilename : String;
 		//book debug
 		public var debugFilename : String;
-
+		
+		private var _activeLoader:Object;
+		
 		private var _onComplete : Function;
 		private var _onError : Function;
 
+	  public function cancelLoading() : void
+		{
+			_onComplete = null;
+			_onError = null;
+			try {
+				if (_activeLoader){
+					_activeLoader.close();
+				}
+			}
+			catch(error : Error) {
+				
+			}
+			
+			_activeLoader = null;
+		}
+		
 		public function loadThumbnail(onComplete : Function, onError : Function, size : int = 1) : void
 		{
 			load(size == ImageThumbnailSize.LARGE? highResThumbnailFilename : lowResThumbnailFilename, onComplete, onError);
@@ -34,7 +52,7 @@ package net.psykosoft.psykopaint2.core.models
 
 		private function load(filename : String, onComplete : Function, onError : Function) : void
 		{
-			if (_onComplete != null) throw "Already loading!";
+			cancelLoading();
 
 			_onComplete = onComplete;
 			_onError = onError;
@@ -45,20 +63,22 @@ package net.psykosoft.psykopaint2.core.models
 				urlloader.addEventListener(Event.COMPLETE, onLoadATFComplete);
 				urlloader.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 				urlloader.dataFormat= URLLoaderDataFormat.BINARY;
-				
+				_activeLoader = urlloader;
 				urlloader.load(new URLRequest(filename));
 			}else {
 				
 				var loader : Loader = new Loader();
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
 				loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-				
+				_activeLoader = loader;
 				loader.load(new URLRequest(filename));
 			}
 			
 			//book debug
 			debugFilename = filename;
 		}
+		
+	
 		
 		protected function onLoadATFComplete(event:Event):void
 		{
@@ -88,7 +108,7 @@ package net.psykosoft.psykopaint2.core.models
 			_onComplete = null;
 			_onError = null;
 			
-			onComplete(Bitmap(loader.content).bitmapData);
+			if(onComplete) onComplete(Bitmap(loader.content).bitmapData);
 			
 		}
 

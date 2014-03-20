@@ -28,10 +28,11 @@ package net.psykosoft.psykopaint2.paint.views.alpha
 		}
 
 		override protected function onEnabled():void {
-			setHeader( "" );
+			
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 			showRightButton( false );
 			setBgType( NavigationBg.BG_TYPE_WOOD );
+			setHeader( "" );
 		}
 
 		override protected function onDisposed():void {

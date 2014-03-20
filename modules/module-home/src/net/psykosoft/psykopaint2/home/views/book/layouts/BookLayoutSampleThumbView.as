@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.book.layouts
 {
 	import flash.display.BitmapData;
+	import flash.events.Event;
 	import flash.utils.ByteArray;
 	
 	import away3d.containers.ObjectContainer3D;
@@ -27,13 +28,12 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		private var _width:Number = 60;
 		private var _height:Number = 40;
 		
-		private var _data:SourceImageProxy;
+		private var _data:FileSourceImageProxy;
 		
 		//THUMBNAIL
 		private var _thumbGeometry:PlaneGeometry;
 		private var _thumbMesh:Mesh;
 		private var _thumbMaterial:TextureMaterial;
-		private var _thumbTexture:Texture2DBase;
 		
 		//SHADOW
 		private var _shadowTextureMaterial:TextureMaterial
@@ -42,32 +42,24 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		//LOADING ASSET
 		private var _thumbLoadingMaterial:TextureMaterial;
 		private var _thumbBmd:BitmapData;
+		private var EVENT_LOADED:String = "EVENT_LOADED";
 		
 		
 		
 		public function BookLayoutSampleThumbView()
 		{
-			//THIS IS THE CLASS WHERE WE ADD THE THUMBNAIL WITH SHADOWS
-			
-			
+			//THIS IS THE CLASS WHERE WE ADD THE THUMBNAIL WITH SHADOWS			
 			_thumbGeometry = new PlaneGeometry(_width,_height,3,3,true,false);
 			_thumbMesh = new Mesh(_thumbGeometry,BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_LOADING));
 			this.addChild(_thumbMesh);
-			//_thumbMesh.y= 1;
+			_thumbMesh.y= 1;
+			_thumbMesh.mouseEnabled=true;
 			
 		
 			_shadowTextureMaterial = BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_SHADOW);
-		//	_shadowTextureMaterial.alphaBlending=true;
-			//_shadowTextureMaterial.alphaBlending=true;
-			//_shadowTextureMaterial.alphaPremultiplied=true;
 			var newGeometry:Geometry = new PlaneGeometry(64,25,3,3,true,false);
 			_shadowMesh = new Mesh(newGeometry,_shadowTextureMaterial);
-			
-			
-			
-			_thumbMesh.addChild(_shadowMesh);
-			//_shadowMesh.y=1
-			_shadowMesh.y=-1;
+			this.addChild(_shadowMesh);
 			_shadowMesh.z=-18;
 			
 			
@@ -89,31 +81,32 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			return _width;
 		}
 
-		public function setData(data:SourceImageProxy):void{
-			this._data = data;
-			 
+		public function setData(value:FileSourceImageProxy):void{
 			
-			var fileSourceImageProxy:FileSourceImageProxy = 	FileSourceImageProxy(_data);
-			//fileSourceImageProxy.load(fileSourceImageProxy.highResThumbnailFilename,onThumbnailATFLoaded,onThumbnailFail,1);
-			fileSourceImageProxy.loadThumbnail(onThumbnailLoaded,onThumbnailFail,1 /* 1= large thumbnail */);
-			
+			if(_data == null || (_data.id) != (value.id))
+			{
+				this._data = value;
+				var fileSourceImageProxy:FileSourceImageProxy = FileSourceImageProxy(_data);
+				fileSourceImageProxy.loadThumbnail(onThumbnailLoaded,onThumbnailFail,1 /* 1= large thumbnail */);
+			}
 		}
 		
 		override public function dispose():void{
 			
 			//trace("BookThumbnailView::dispose "+FileSourceImageProxy(_data).id);
+			_data.cancelLoading();
 			_data= null;
 		
-			//_shadowTextureMaterial.dispose();
+			/*//IF ASSET HAVEN'T FINISHED LOADING THE THOSE GUYS WILL STILL BE NULL */
+			if(_thumbMaterial){ 
+				_thumbMaterial.texture.dispose();
+				_thumbMaterial.dispose();
+			}
 			if (_thumbBmd) _thumbBmd.dispose();
-			_thumbMesh.dispose();
-			_thumbMaterial.dispose();
-			_thumbTexture.dispose();
 			
 			_shadowMesh.dispose()
 			
 			_thumbBmd = null;
-			_thumbTexture = null;
 			_thumbMesh= null;
 			_thumbMaterial = null;
 			_thumbGeometry = null;
@@ -133,39 +126,36 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		
 		private function onThumbnailLoaded(file : Object):void
 		{
-			
-			_thumbGeometry = new PlaneGeometry(_width,_height,1,1,true,true);
-			
-			//trace("BookThumbnailView::onThumbnailATFLoaded "+FileSourceImageProxy(_data).id);
+			var texture:Texture2DBase	
 			
 			//EITHER ATF
-			if(file is ByteArray){
-				//trace("PageThumbnailView::onThumbnailATFLoaded "+file);
-				_thumbTexture = new TrackedATFTexture(ByteArray(file));
+//			if(file is ByteArray){
+//				//trace("PageThumbnailView::onThumbnailATFLoaded "+file);
+//				_thumbTexture = new TrackedATFTexture(ByteArray(file));
+//				
+//			}else {
 				
-			}else {
-				
-				//WE DON'T RECREATE a BITMAPTEXTURE IF ALREADY EXIST
-				if(!_thumbTexture) {
+				if(!_thumbMaterial) {
 					_thumbBmd = TextureUtil.ensurePowerOf2ByScaling(BitmapData(file));
-					_thumbTexture = new TrackedBitmapTexture(_thumbBmd);
-				
+					texture = new TrackedBitmapTexture(_thumbBmd);
+					_thumbMaterial = new TextureMaterial(Cast.bitmapTexture(texture),false);
+					_thumbMaterial.mipmap = false;
+					_thumbMesh.material = _thumbMaterial;
+					
 				}else {
-					BitmapTexture(_thumbTexture).bitmapData = TextureUtil.ensurePowerOf2ByScaling(BitmapData(file));
+					//trace("replace bitmap");
+					
+					_thumbBmd.dispose();
+					_thumbBmd = null;
+					_thumbBmd = TextureUtil.ensurePowerOf2ByScaling(BitmapData(file));
+					BitmapTexture(_thumbMaterial.texture).bitmapData = _thumbBmd;
+					//previousBmd.dispose();
+					_thumbMaterial.mipmap = false;
+					_thumbMesh.material = _thumbMaterial;
+					
 				}
-				
-			}
+				dispatchEvent(new Event(EVENT_LOADED));
 			
-			//_thumbMaterial = new TextureMaterial(_thumbTexture);
-			_thumbMaterial = new TextureMaterial(Cast.bitmapTexture(_thumbTexture));
-			_thumbMesh.material = _thumbMaterial;
-			_thumbMesh.material.smooth= true;
-
-			
-			this.addChild(_thumbMesh);
-			
-			//ADDING MOUSE ENABLING ON THIS ASSET HERE SO IT CAN DISPATCH TO PARENT
-			_thumbMesh.mouseEnabled=true;
 		}	
 		
 		

@@ -8,6 +8,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.drawing.brushes.shapes.BrushShapeLibrary;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.managers.pen.WacomPenManager;
+	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
 	import net.psykosoft.psykopaint2.core.model.CanvasHistoryModel;
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.LightingModel;
@@ -22,6 +23,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerFailedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySaveToServerSucceededSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestClearCanvasSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestLoadSurfaceSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestSavePaintingToServerSignal;
@@ -126,6 +128,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map(CanvasModel).asSingleton();
 			_injector.map(CanvasHistoryModel).asSingleton();
 			_injector.map(UserPaintSettingsModel).asSingleton();
+			_injector.map(InAppPurchaseManager).asSingleton();
 			
 		//	_injector.map(RubberMeshRenderer).asSingleton();
 		//	_injector.map(RubberMeshModel).asSingleton();
@@ -157,6 +160,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map( NotifyShowPipetteSignal ).asSingleton();
 			_injector.map( NotifyPipetteChargeChangedSignal ).asSingleton();
 			_injector.map( NotifyChangePipetteColorSignal ).asSingleton();
+			_injector.map( NotifyTogglePaintingEnableSignal ).asSingleton();
 			
 		}
 

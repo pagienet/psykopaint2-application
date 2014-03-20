@@ -35,7 +35,7 @@ package net.psykosoft.psykopaint2.home.views.book
 	public class BookView  extends Sprite
 	{
 		
-		private  const SIMULTANEOUS_PAGES:uint= 8;
+		private  const SIMULTANEOUS_PAGES:uint= 10;
 		public static const TYPE_GALLERY_VIEW:String = "TYPE_GALLERY_VIEW";
 		public static const TYPE_FILE_VIEW:String = "TYPE_FILE_VEW";
 		private var _viewType:String;
@@ -69,13 +69,14 @@ package net.psykosoft.psykopaint2.home.views.book
 		
 		public function BookView(view:View3D, light:LightBase, stage3dProxy:Stage3DProxy)
 		{
+			
 			_view = view;
 			_stage3DProxy = stage3dProxy;
 			_light = light; 
 			_container = new ObjectContainer3D();
 			_pages = new Vector.<BookPageView>();
 			
-			//_view.scene.addChild(_container);
+			_view.scene.addChild(_container);
 			
 			//ROTATE CONTAINER TO FACE THE CAMERA
 			_container.rotationX = 90;
@@ -185,20 +186,19 @@ package net.psykosoft.psykopaint2.home.views.book
 		
 		
 		
-		public function updateImageCollection():void{
-			trace("updateImageCollection");
-			//WE TAKE THE PREVIOUS INVISIBLE PAGES AND APPLY THE NEXT ASSETS TO THOSE
+		public function updateImageCollection():void
+		{
 			
-			
+			//WE TAKE THE PREVIOUS INVISIBLE PAGES AND APPLY THE NEXT ASSETS TO THOSE			
 			//FILL LAYOUTS WITH NEW DATA 
 			//WE FILL THE 2 PREVIOUS PAGES TOO
-			for (var i:int = Math.floor(_doublePageIndex*2); i < Math.floor(_doublePageIndex*2)+SIMULTANEOUS_PAGES; i++) 
+			for (var i:int = Math.floor(_doublePageIndex*2)-2; i < Math.floor(_doublePageIndex*2)+SIMULTANEOUS_PAGES-2; i++) 
 			{
+				
+				if(i<0)i=SIMULTANEOUS_PAGES+i;
 				var iModulo:int= i%SIMULTANEOUS_PAGES;
 				var currentBookPageView:BookPageView = _pages[iModulo];
-				
-				var firstPageToLoad:int = (Math.floor(_doublePageIndex)*2+i)-1;
-				
+				var firstPageToLoad:int = Math.max((Math.floor(_doublePageIndex)*2+i)-1,0);
 				
 				if(_viewType==  TYPE_GALLERY_VIEW){
 					var currentGalleryImageCollection:GalleryImageCollection = GalleryImageCollection.getSubCollection(i*BookLayoutGalleryView.LENGTH,BookLayoutGalleryView.LENGTH,_galleryImageCollection);
@@ -208,6 +208,8 @@ package net.psykosoft.psykopaint2.home.views.book
 					BookLayoutSamplesView(currentBookPageView.getLayout()).setData(currentSourcePageCollection);
 				}
 				
+				//SET PAGE NUMBER
+				currentBookPageView.setPageNumber(i);
 				
 			}
 			
@@ -226,18 +228,13 @@ package net.psykosoft.psykopaint2.home.views.book
 			var coverMaterial:ColorMaterial = new ColorMaterial(0xAAAAAA);
 			_coverBook = new Mesh(coverGeometry,coverMaterial);
 			_container.addChild(_coverBook);
-			_coverBook.y=-10;
-			
+			_coverBook.y = -10;
 			_coverBook.mouseEnabled=true;
 			
 			
 			//LOAD PAGES ASSETS
 			BookMaterialsProxy.launch(function ():void
 			{
-				//LOAD DATAS AS SOON AS THE BOOK ASSETS ARE READY
-				//loadDummySourceImageCollection();
-				
-				
 				
 				//ADD RING
 				_ringTextureMaterial = BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.RING);
@@ -246,28 +243,13 @@ package net.psykosoft.psykopaint2.home.views.book
 				_rings.scaleZ=_rings.scaleX=_rings.scaleY=0.191;
 				
 				
-				//start();
+				start();
 			
 				//_bloomFilter.range=500;
 				//_bloomFilter.focusDistance = 100;
-				//_bloomFilter.focusDistance = 120;
 				
-				
-				//TESTING BOOK CREATED ON CLICK
-				_coverBook.addEventListener(MouseEvent3D.CLICK,onClickBook);
 			});
 			
-			
-			
-		
-			
-		}	
-		
-		
-		public function start():void{
-			
-			//loadDummyGalleryImageCollection();
-			//loadDummySourceImageCollection();
 			
 			//EVENTS
 			this.addEventListener(Event.ADDED_TO_STAGE,onAdded);	
@@ -276,23 +258,18 @@ package net.psykosoft.psykopaint2.home.views.book
 				
 				startGrabController();
 				removeEventListener(Event.ADDED_TO_STAGE,onAdded);
-			}		
-		}
+			}	
+			
+		}	
 		
-		 
-		private function onClickBook(event:Event):void
-		{
-			//_coverBook.removeEventListener(MouseEvent3D.CLICK,onClickBook);
-			//BENCHMARK HOW LONG IT TAKES TO PARSE FILES
-			_benchmarkStartTime = new Date();
+		
+		public function start():void{
+			
+			loadDummyGalleryImageCollection();
 			//loadDummySourceImageCollection();
-			//loadDummyGalleryImageCollection();
-			trace("CLICK BOOK");
-			//TweenLite.to(this,1,{ease:Expo.easeInOut ,doublePageIndex:(doublePageIndex+1), onUpdate:function ():void{trace("doublePageIndex + "+doublePageIndex)}});
 			
-			//loadNextGalleryImageCollection();
-			
-		}		 
+		}
+		 
 		
 		
 		private function removePages():void{
@@ -333,7 +310,7 @@ package net.psykosoft.psykopaint2.home.views.book
 						
 			var firstPageIndex:int = Math.floor(_doublePageIndex)*2%SIMULTANEOUS_PAGES;
 			
-			//trace("updatePages _doublePageIndex = "+_doublePageIndex+"  firstPageIndex="+firstPageIndex);
+		//	trace("updatePages _doublePageIndex = "+_doublePageIndex+"  firstPageIndex="+firstPageIndex);
 			for (var p:int = 0; p < _pages.length; p++) 
 			{
 				var pageIndex:uint=Math.floor(_doublePageIndex*2)+p;
@@ -342,12 +319,7 @@ package net.psykosoft.psykopaint2.home.views.book
 				var i:int =(pageIndex)%SIMULTANEOUS_PAGES;
 				
 				var page:BookPageView = _pages[i];
-				
-				//SET PAGE NUMBER
-				page.setPageNumber(pageIndex);
-				
-				
-				
+
 				//var pageIndexProgress:Number = (_doublePageIndex*2+1-Math.ceil(i/2));
 				var nextDoublePageIndex:int= Math.ceil(i/2);
 				var pageIndexProgress:Number = (_doublePageIndex-nextDoublePageIndex+2)%(SIMULTANEOUS_PAGES/2)-1;
@@ -449,16 +421,6 @@ package net.psykosoft.psykopaint2.home.views.book
 			}
 			
 			
-			
-			
-			//FIRST PAGE NEVER MOVE
-			
-			
-			// LAST PAGE TOO
-			//TODO
-			
-		
-			
 		}
 		
 		
@@ -487,10 +449,14 @@ package net.psykosoft.psykopaint2.home.views.book
 		
 		
 		public function set doublePageIndex(value:Number):void{
+	
+			var minValue:int = 0;
+			var maxValue:int = Math.ceil(_maxNumberOfPages/2) -1;
 			
 			//IF WE ARE CHANGING PAGE INDEX FROM 1 TO 2 WE LOAD NEXT SET OF PAGES
-			if(Math.floor(_doublePageIndex)*2 %SIMULTANEOUS_PAGES != Math.floor(value)*2 %SIMULTANEOUS_PAGES){
+			if(value>=0&&value<=maxValue&&Math.floor(_doublePageIndex)*2 %SIMULTANEOUS_PAGES != Math.floor(value)*2 %SIMULTANEOUS_PAGES){
 				updateImageCollection();
+				//trace("_doublePageIndex = "+_doublePageIndex+" value = "+value);
 			}
 			
 			//VALUE CAN'T BE NEGATIVE
@@ -500,11 +466,13 @@ package net.psykosoft.psykopaint2.home.views.book
 			//_doublePageIndex = Math.min(Math.max(value,0),(_pages.length/2-1));
 			
 			
-			
 			//NOW USING NUMBER OF PAGES ACCORDING TO TOTAL NUMBER OF IMAGES FROM SOURCE COLLECTION
 			_doublePageIndex = value;
 			//MAKE SURE THE DOUBLE PAGE INDEX CAN'T BE HIGHER THAN  MAXIMUM NUMBER OF PAGES 
 			_doublePageIndex = Math.min(_doublePageIndex,Math.ceil(_maxNumberOfPages/2) -1);
+			_doublePageIndex = Math.max(_doublePageIndex,0);
+			
+			
 			
 			
 			
@@ -535,7 +503,6 @@ package net.psykosoft.psykopaint2.home.views.book
 			//!!PageIndex is a SETTER
 			doublePageIndex -= _pageBrowsingSpeed*event.velocityX/1500;
 			
-		
 		}	
 		
 		protected function onRelease(event:GrabThrowEvent):void
@@ -554,7 +521,8 @@ package net.psykosoft.psykopaint2.home.views.book
 		
 		private function loadDummySourceImageCollection():void
 		{
-			
+			trace("BookView::loadDummySourceImageCollection");
+
 			//TEST DUMMY SOURCEIMAGECOLLECTION
 			var testSourceImageCollection:SourceImageCollection = new SourceImageCollection();
 			testSourceImageCollection.numTotalImages = 42;
@@ -582,7 +550,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		
 		private function loadDummyGalleryImageCollection():void
 		{
-			trace("loadDummyGalleryImageCollection");
+			trace("BookView::loadDummyGalleryImageCollection");
 			////////////////////////////
 			///////// DUMMY DATA  //////
 			////////////////////////////

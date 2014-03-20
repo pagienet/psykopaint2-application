@@ -156,8 +156,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			addChild(_easelView);
 			addChild(_roomView);
 			addChild(_galleryView);
-			//addChild(_bookView);
-			//_bookView.rotationX=80;
+			addChild(_bookView);
 			
 		}
 
@@ -189,7 +188,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			_cameraController.registerTargetPosition(HOME, new Vector3D(-271, -1.14, 450));
 			_cameraController.registerTargetPosition(GALLERY, GalleryView.CAMERA_FAR_POSITION);
 			_cameraController.registerTargetPosition(CROP, new Vector3D(271, -40, 170));
-			_cameraController.start();
+			//_cameraController.start();
 			_cameraController.interactionRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight - 150*CoreSettings.GLOBAL_SCALING);
 		}
 
@@ -249,7 +248,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			removeChild(_galleryView);
 			
 			_bookView.dispose();
-			//removeChild(_bookView);
+			removeChild(_bookView);
 			
 			_easelView = null;
 			_roomView = null;

@@ -28,8 +28,9 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			
 		}
 		
-		public function setData(data:GalleryImageCollection):void{
-			
+		public function setData(data:GalleryImageCollection):void
+		{
+				//trace("setData :: "+data.index);
 			
 				this._data = data;
 				
@@ -38,24 +39,29 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 				for (var i:int = 0; i < _data.images.length; i++) 
 				{
 					currentSourceImageProxy = _data.images[i];
-					
 					var currentPageThumbnailView:BookLayoutGalleryThumbView;
 					
-					//IF THUMBNAIL DOESN'T EXIST WE CREATE IT
+					//CREATE
 					if(_pageThumbnailViews[i]==null){
 						
 						currentPageThumbnailView = new BookLayoutGalleryThumbView();
 						// CAST GalleryImageProxy => FileGalleryImageProxy
 						// IT'S BEEN WRITTEN THIS WAY THAT GalleryImageCollection collects GalleryImageProxys and not FileGalleryImageProxy
 						 currentPageThumbnailView.setData(FileGalleryImageProxy(currentSourceImageProxy));
-						//trace("BookLayoutGalleryView::currentSourceImageProxy "+i);
 						_pageThumbnailViews[i] = currentPageThumbnailView;
+						currentPageThumbnailView.addEventListener(MouseEvent3D.CLICK,onClickDownThumbnail);
+						//DOWNLOAD IMAGE STRAIGHT AWAY
+						currentPageThumbnailView.load();
 						
 					}else {
-						//trace("SET DATA"+_pageThumbnailViews[i] )
+					//UPDATE	
+					
 						currentPageThumbnailView = _pageThumbnailViews[i] ;
 						currentPageThumbnailView.setData(FileGalleryImageProxy(currentSourceImageProxy));
 						
+						//DOWNLOAD IMAGE STRAIGHT AWAY
+						currentPageThumbnailView.load();
+
 					}
 					
 					
@@ -63,16 +69,14 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 					this.addChild(currentPageThumbnailView);
 					currentPageThumbnailView.x = 50+(i%COLUMNS)*(currentPageThumbnailView.width +15);
 					currentPageThumbnailView.z = 5+ Math.floor(i/COLUMNS)*-(currentPageThumbnailView.height +10)+50;
-					//newPageThumbnailView.rotationY= Math.random()*5-2.5;
 					
-					currentPageThumbnailView.addEventListener(MouseEvent3D.CLICK,onClickDownThumbnail);
 				}
 				
 				
 				
 				//LOAD THUMBNAILS 1 BY 1 STARTING WITH FIRST ONE
 				//_pageThumbnailViews[0].load();
-				loadThumbnail(0);
+				//loadThumbnail(0);
 			
 		}
 		
@@ -81,7 +85,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			//trace("loadThumbnail "+index);
 			if(index<_pageThumbnailViews.length-1){
 				
-				_pageThumbnailViews[index].load(function(){loadThumbnail(index+1)});
+				_pageThumbnailViews[index].load(function():void{loadThumbnail(index+1)});
 			}else {
 				_pageThumbnailViews[index].load();
 			}

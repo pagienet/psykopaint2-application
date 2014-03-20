@@ -50,7 +50,6 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		{
 			//THIS IS THE CLASS WHERE WE ADD THE THUMBNAIL WITH SHADOWS
 			
-			
 			_thumbGeometry = new PlaneGeometry(_width,_height,1,1,true,true);
 			_thumbMesh = new Mesh(_thumbGeometry,BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_LOADING));
 			this.addChild(_thumbMesh);
@@ -68,20 +67,20 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			
 			
 			//COMMENT ICON
-			//var commentPlaneGeometry:PlaneGeometry = new PlaneGeometry(5,5,1,1,true,true);
-			//_commentMesh = new Mesh(commentPlaneGeometry,BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.ICON_COMMENT));
-			//_commentMesh.y=2;
-			//_commentMesh.z=-25;
-			//_commentMesh.x=20;
-			//this.addChild(_commentMesh);
+			var commentPlaneGeometry:PlaneGeometry = new PlaneGeometry(5,5,1,1,true,true);
+			_commentMesh = new Mesh(commentPlaneGeometry,BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.ICON_COMMENT));
+			_commentMesh.y=2;
+			_commentMesh.z=-25;
+			_commentMesh.x=10;
+			this.addChild(_commentMesh);
 			
 			//LIKE ICON
-			//var likePlaneGeometry:PlaneGeometry = new PlaneGeometry(5,5,1,1,true,true);
-			//_likeMesh = new Mesh(likePlaneGeometry,BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.ICON_HEART));
-			//_likeMesh.y=3;
-			//_likeMesh.z=-25;
-			//_likeMesh.x=25;
-			//this.addChild(_likeMesh);
+			var likePlaneGeometry:PlaneGeometry = new PlaneGeometry(5,5,1,1,true,true);
+			_likeMesh = new Mesh(likePlaneGeometry,BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.ICON_HEART));
+			_likeMesh.y=3;
+			_likeMesh.z=-25;
+			_likeMesh.x=25;
+			this.addChild(_likeMesh);
 		}
 		
 		
@@ -110,7 +109,6 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 				
 				//SHOW THE LOADING THUMBNAIL
 				_thumbMesh.material =   BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_LOADING)
-				
 				
 			}
 			
@@ -169,10 +167,9 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		private function onThumbnailLoaded(file : Object):void
 		{
 			var texture:Texture2DBase
-			_thumbGeometry = new PlaneGeometry(_width,_height,1,1,true,true);
 			
 			//trace("BookLayoutGalleryThumbView::loaded "+_data.id);
-			//EITHER ATF
+			
 			//EITHER ATF
 //			if(file is ByteArray){
 //				texture = new TrackedATFTexture(ByteArray(file));
@@ -183,18 +180,21 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 				if(!_thumbMaterial) {
 					_thumbBmd = TextureUtil.ensurePowerOf2ByScaling(BitmapData(file));
 					texture = new TrackedBitmapTexture(_thumbBmd);
-					_thumbMaterial = new TextureMaterial(Cast.bitmapTexture(texture));
+					_thumbMaterial = new TextureMaterial(Cast.bitmapTexture(texture),false);
+					_thumbMaterial.mipmap = false;
 					_thumbMesh.material = _thumbMaterial;
+					
 				}else {
 					//trace("replace bitmap");
 					
 					_thumbBmd.dispose();
 					_thumbBmd = null;
-					//BitmapTexture(_thumbMaterial.texture).bitmapData.dispose();
 					_thumbBmd = TextureUtil.ensurePowerOf2ByScaling(BitmapData(file));
 					BitmapTexture(_thumbMaterial.texture).bitmapData = _thumbBmd;
 					//previousBmd.dispose();
+					_thumbMaterial.mipmap = false;
 					_thumbMesh.material = _thumbMaterial;
+					
 				}
 				dispatchEvent(new Event(EVENT_LOADED));
 				

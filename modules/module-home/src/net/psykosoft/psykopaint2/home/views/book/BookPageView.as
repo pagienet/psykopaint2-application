@@ -74,10 +74,10 @@ package net.psykosoft.psykopaint2.home.views.book
 			
 			var geometry:PlaneGeometry;
 			
-			
+			//trace(" _pageNumber = "+_pageNumber+" "+value);
 			
 			//ONLY CHANGE PAGE NUMBER IF IT DOES CHANGE
-			if(value!=_pageNumber){
+//			if(value!=_pageNumber){
 				if(!_pageNumber_txt){
 					_pageNumber = value;
 					var textFormat:TextFormat = PsykoFonts.BookFontSmall;
@@ -120,11 +120,11 @@ package net.psykosoft.psykopaint2.home.views.book
 					BitmapTexture(TextureMaterial(_textMesh.material).texture).bitmapData = TextureUtil.autoResizePowerOf2(TextureUtil.displayObjectToBitmapData(_pageNumber_txt)) ;
 					
 				}
-			}else { 
-				
-				//DO NOTHING
-				//NUMBER ALREADY BEEN SET TO THIS
-			}
+//			}else { 
+//				
+//				//DO NOTHING
+//				//NUMBER ALREADY BEEN SET TO THIS
+//			}
 			
 			
 			

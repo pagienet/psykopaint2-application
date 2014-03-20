@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
 
 	public class SelectBrushSubNavViewMediator extends SubNavigationMediatorBase
@@ -17,6 +18,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		
 		[Inject]
 		public var userPaintSettingsModel:UserPaintSettingsModel;
+		
+		[Inject]
+		public var userConfig:UserConfigModel;
 
 		private static var _activeBrushId:String = "";
 
@@ -29,7 +33,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		override protected function onViewSetup():void {
 			var brushes:Vector.<String> = paintModule.getAvailableBrushTypes();
 			if( _activeBrushId == "" ) _activeBrushId = brushes[ 0 ];
-			view.setAvailableBrushes( brushes, _activeBrushId );
+			view.setAvailableBrushes( brushes, _activeBrushId, userConfig.userConfig.hasFullVersion );
 			super.onViewSetup();
 		}
 

@@ -6,8 +6,8 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 	import away3d.containers.ObjectContainer3D;
 	import away3d.events.MouseEvent3D;
 	
+	import net.psykosoft.psykopaint2.core.models.FileSourceImageProxy;
 	import net.psykosoft.psykopaint2.core.models.SourceImageCollection;
-	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
 	
 	public class BookLayoutSamplesView extends BookLayoutAbstractView
 	{
@@ -19,34 +19,46 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		
 		private var _pageIndex:int;
 		
+		
 		public function BookLayoutSamplesView()
 		{
-			//THIS IS THE STANDARD LAYOUT VIEW FOR THE SAMPLES
+			_pageThumbnailViews = new Vector.<BookLayoutSampleThumbView>(LENGTH);
 			
-			super();
 		}
 		
 		public function setData(data:SourceImageCollection):void{
 			this._data = data;
-			
-			_pageThumbnailViews = new Vector.<BookLayoutSampleThumbView>();
-			
-			var currentSourceImageProxy:SourceImageProxy;
+						
+			var currentSourceImageProxy:FileSourceImageProxy;
+			var currentPageThumbnailView:BookLayoutSampleThumbView; 
+
 			for (var i:int = 0; i < _data.images.length; i++) 
 			{
-				currentSourceImageProxy = _data.images[i];
-				var newPageThumbnailView:BookLayoutSampleThumbView = new BookLayoutSampleThumbView();
-				newPageThumbnailView.setData(currentSourceImageProxy);
+				currentSourceImageProxy = FileSourceImageProxy(_data.images[i]);
 				
-				_pageThumbnailViews.push(newPageThumbnailView);
+				//CREATE
+				if(_pageThumbnailViews[i]==null){
+					
+					currentPageThumbnailView = new BookLayoutSampleThumbView();
+					currentPageThumbnailView.setData(currentSourceImageProxy);
+					_pageThumbnailViews[i]=currentPageThumbnailView;
+					this.addChild(currentPageThumbnailView);
+					currentPageThumbnailView.addEventListener(MouseEvent3D.CLICK,onClickDownThumbnail);
+				}else {
+				//UPDATE
+					//trace("update thumbnail:: "+i)
+					currentPageThumbnailView = _pageThumbnailViews[i] ;
+					currentPageThumbnailView.setData(currentSourceImageProxy);
+					
+				}
 				
-				this.addChild(newPageThumbnailView);
-				newPageThumbnailView.x = 50+(i%COLUMNS)*(newPageThumbnailView.width +15);
-				newPageThumbnailView.z = 5+ Math.floor(i/COLUMNS)*-(newPageThumbnailView.height +10)+50;
+				
+				currentPageThumbnailView.x = 50+(i%COLUMNS)*(currentPageThumbnailView.width +15);
+				currentPageThumbnailView.z = 5+ Math.floor(i/COLUMNS)*-(currentPageThumbnailView.height +10)+50;
 				//newPageThumbnailView.y = -1;
 				//newPageThumbnailView.rotationY= Math.random()*5-2.5;
 				
-				newPageThumbnailView.addEventListener(MouseEvent3D.CLICK,onClickDownThumbnail);
+				
 			}
 			
 			

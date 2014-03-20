@@ -8,7 +8,7 @@ package net.psykosoft.psykopaint2.core.models
 		public var userConfig:UserConfigVO;
 
 		public function UserConfigModel() {
-			super();
+			userConfig = new UserConfigVO();
 		}
 	}
 }

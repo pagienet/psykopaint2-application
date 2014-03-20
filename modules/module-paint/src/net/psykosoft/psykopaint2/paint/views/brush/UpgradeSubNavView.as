@@ -17,12 +17,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onEnabled():void {
-			setHeader( "Try or Buy" );
 			
 			setBgType( NavigationBg.BG_TYPE_WOOD_LOW );
+			setHeader( "Try or Buy" );
 			
 			createCenterButton( ID_CANCEL,ID_CANCEL, ButtonIconType.CANCEL_UPGRADE, IconButton, null, true, true, false );
-			createCenterButton( ID_BUY,ID_CANCEL, ButtonIconType.BUY_UPGRADE, IconButton, null, true, true, false );
+			createCenterButton( ID_BUY,ID_BUY, ButtonIconType.BUY_UPGRADE, IconButton, null, true, true, false );
 			validateCenterButtons();
 		
 		}
