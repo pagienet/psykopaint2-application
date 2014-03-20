@@ -30,7 +30,9 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		/** Shared Object.  Used in this example to remember what we've bought. */
 		private var sharedObject:SharedObject;
 		
-		[inject]
+		//private var initialized:Boolean = false;
+		
+		[Inject]
 		public var notifyPurchaseStatusSignal:NotifyPurchaseStatusSignal
 		
 		public function InAppPurchaseManager()
@@ -40,7 +42,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		[PostConstruct]
 		public function init() : void
 		{
-			
+			//initialized = true;
 			if (!StoreKit.isSupported())
 			{
 				trace("InAppPurchaseManager: Store Kit iOS purchases is not supported on this platform.");
@@ -117,6 +119,12 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		/** Example of how to purchase a product */
 		public function purchaseFullUpgrade():void
 		{
+			if (!StoreKit.isSupported())
+			{
+				notifyPurchaseStatusSignal.dispatch(null,STATUS_STORE_UNAVAILABLE);
+				return;
+			}
+			
 			// for this to work, you must have added the value of LEVELPACK_PRODUCT_ID in the iTunes Connect website
 			trace("InAppPurchaseManager: start purchase of non-consumable '"+FULL_UPGRADE_PRODUCT_ID+"'...");
 			

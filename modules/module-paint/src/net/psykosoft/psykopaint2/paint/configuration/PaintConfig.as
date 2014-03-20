@@ -128,7 +128,7 @@ package net.psykosoft.psykopaint2.paint.configuration
 			_injector.map(CanvasModel).asSingleton();
 			_injector.map(CanvasHistoryModel).asSingleton();
 			_injector.map(UserPaintSettingsModel).asSingleton();
-			_injector.map(InAppPurchaseManager).asSingleton();
+			
 			
 		//	_injector.map(RubberMeshRenderer).asSingleton();
 		//	_injector.map(RubberMeshModel).asSingleton();
