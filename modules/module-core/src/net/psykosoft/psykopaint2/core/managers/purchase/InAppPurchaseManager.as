@@ -6,15 +6,34 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 	import com.milkmangames.nativeextensions.ios.events.StoreKitEvent;
 	
 	import flash.net.SharedObject;
+	
+	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 
 	public class InAppPurchaseManager
 	{
 		
+		public static const STATUS_PURCHASE_COMPLETE:int = 0;
+		public static const STATUS_PURCHASE_FAILED:int = 1;
+		public static const STATUS_PURCHASE_CANCELLED:int = 2;
+		public static const STATUS_PURCHASE_RESTORED:int = 3;
+		public static const STATUS_PURCHASE_RESTORE_FAILED:int = 4;
+		public static const STATUS_PURCHASE_NOT_REQUIRED:int = 5;
+		public static const STATUS_STORE_UNAVAILABLE:int = 6;
+		public static const STATUS_STORE_DISABLED:int = 7;
+		public static const STATUS_STORE_PRODUCTS_AVAILABLE:int = 8;
+		public static const STATUS_STORE_PRODUCTS_UNAVAILABLE:int = 9;
+		
+		
 		/** Sample Product IDs, must match iTunes Connect Items */
-		private static const FULL_UPGRADE_PRODUCT_ID:String="com.psykopaint.ipad.fullVersionUpgrade";
+		public static const FULL_UPGRADE_PRODUCT_ID:String="com.psykopaint.ipad.fullVersionUpgrade";
 		
 		/** Shared Object.  Used in this example to remember what we've bought. */
 		private var sharedObject:SharedObject;
+		
+		//private var initialized:Boolean = false;
+		
+		[Inject]
+		public var notifyPurchaseStatusSignal:NotifyPurchaseStatusSignal
 		
 		public function InAppPurchaseManager()
 		{
@@ -23,10 +42,11 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		[PostConstruct]
 		public function init() : void
 		{
-			
+			//initialized = true;
 			if (!StoreKit.isSupported())
 			{
 				trace("InAppPurchaseManager: Store Kit iOS purchases is not supported on this platform.");
+				notifyPurchaseStatusSignal.dispatch(null,STATUS_STORE_UNAVAILABLE);
 				return;
 			}
 			
@@ -40,6 +60,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			// (for example, parental controls may be preventing them.)
 			if (!StoreKit.storeKit.isStoreKitAvailable())
 			{
+				notifyPurchaseStatusSignal.dispatch(null,STATUS_STORE_DISABLED);
 				trace("InAppPurchaseManager: Store is disable on this device.");
 				return;
 			}
@@ -98,6 +119,12 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		/** Example of how to purchase a product */
 		public function purchaseFullUpgrade():void
 		{
+			if (!StoreKit.isSupported())
+			{
+				notifyPurchaseStatusSignal.dispatch(null,STATUS_STORE_UNAVAILABLE);
+				return;
+			}
+			
 			// for this to work, you must have added the value of LEVELPACK_PRODUCT_ID in the iTunes Connect website
 			trace("InAppPurchaseManager: start purchase of non-consumable '"+FULL_UPGRADE_PRODUCT_ID+"'...");
 			
@@ -105,6 +132,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			var inventory:Object=sharedObject.data["inventory"];
 			if (inventory[FULL_UPGRADE_PRODUCT_ID]!=null)
 			{
+				notifyPurchaseStatusSignal.dispatch(FULL_UPGRADE_PRODUCT_ID,STATUS_PURCHASE_NOT_REQUIRED);
 				trace("InAppPurchaseManager: You already have a level pack!");
 				return;
 			}
@@ -149,6 +177,8 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 				return;
 			}
 			
+			notifyPurchaseStatusSignal.dispatch(null,STATUS_STORE_PRODUCTS_AVAILABLE);
+			
 			//showFullUI();
 			trace("InAppPurchaseManager: Ready! (hosted content supported?) "+StoreKit.storeKit.isHostedContentAvailable());
 		}
@@ -156,6 +186,8 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		/** Called when product details failed to load */
 		private function onProductDetailsFailed(e:StoreKitErrorEvent):void
 		{
+			notifyPurchaseStatusSignal.dispatch(null,STATUS_STORE_PRODUCTS_UNAVAILABLE);
+			
 			trace("InAppPurchaseManager: ERR loading products:"+e.text);
 		}
 		
@@ -181,6 +213,7 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			
 			// save state!
 			sharedObject.flush();
+			notifyPurchaseStatusSignal.dispatch(e.productId,STATUS_PURCHASE_COMPLETE);
 			
 				
 		}
@@ -189,12 +222,14 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		private function onPurchaseFailed(e:StoreKitErrorEvent):void
 		{
 			trace("InAppPurchaseManager: FAILED purchase="+e.productId+",t="+e.transactionId+",o="+e.originalTransactionId);
+			notifyPurchaseStatusSignal.dispatch(e.productId,STATUS_PURCHASE_FAILED);
 		}
 		
 		/** A purchase was cancelled */
 		private function onPurchaseUserCancelled(e:StoreKitEvent):void
 		{
 			trace("InAppPurchaseManager: CANCELLED purchase="+e.productId+","+e.transactionId);
+			notifyPurchaseStatusSignal.dispatch(e.productId,STATUS_PURCHASE_CANCELLED);
 		}
 		
 		/** All transactions have been restored */
@@ -202,12 +237,14 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		{
 			trace("InAppPurchaseManager: All previous transactions restored!");
 		//	updateInventoryMessage();
+			notifyPurchaseStatusSignal.dispatch(null,STATUS_PURCHASE_RESTORED);
 		}
 		
 		/** Transaction restore has failed */
 		private function onTransactionRestoreFailed(e:StoreKitErrorEvent):void
 		{
-			trace("InAppPurchaseManager: an error occurred in restore purchases:"+e.text);		
+			trace("InAppPurchaseManager: an error occurred in restore purchases:"+e.text);	
+			notifyPurchaseStatusSignal.dispatch(null,STATUS_PURCHASE_RESTORE_FAILED);
 		}
 		
 		

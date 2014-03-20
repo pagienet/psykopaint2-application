@@ -3,9 +3,11 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import net.psykosoft.psykopaint2.core.drawing.data.ParameterSetVO;
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
+	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
 	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
@@ -27,12 +29,20 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		[Inject]
 		public var notifyTogglePaintingEnableSignal:NotifyTogglePaintingEnableSignal;
 		
+		[Inject]
+		public var purchaseManager:InAppPurchaseManager;
+		
+		[Inject]
+		public var notifyPurchaseStatusSignal:NotifyPurchaseStatusSignal;
+		
 		override public function initialize():void {
 			// Init.
 			registerView( view );
 			super.initialize();
+			
+			notifyPurchaseStatusSignal.add( onPurchaseStatus );
 		}
-
+		
 		
 		// -----------------------
 		// From view.
@@ -52,12 +62,41 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					break;
 
 				case UpgradeSubNavView.ID_BUY:
-					userConfig.userConfig.hasFullVersion = true;
-					requestNavigationStateChange( NavigationStateType.PREVIOUS );
-					notifyTogglePaintingEnableSignal.dispatch(true);
+					purchaseManager.purchaseFullUpgrade();
+					
 					break;
 			}
 		}
+		
+		private function onPurchaseStatus( purchaseObjectID:String, status:int ):void
+		{
+			switch ( status )
+			{
+				case InAppPurchaseManager.STATUS_PURCHASE_CANCELLED:
+				case InAppPurchaseManager.STATUS_PURCHASE_FAILED:
+					requestUndoSignal.dispatch();
+					
+					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					notifyTogglePaintingEnableSignal.dispatch(true);
+				break;
+				case InAppPurchaseManager.STATUS_PURCHASE_COMPLETE:
+					//as long as we have a single buy in product this is okayish:
+					userConfig.userConfig.hasFullVersion = true;
+					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					notifyTogglePaintingEnableSignal.dispatch(true);
+					
+				break;
+				case InAppPurchaseManager.STATUS_STORE_UNAVAILABLE:
+					//TODO: for offline testing only
+					userConfig.userConfig.hasFullVersion = true;
+					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					notifyTogglePaintingEnableSignal.dispatch(true);
+				break;
+				
+			}
+			
+		}
+		
 
 	}
 }

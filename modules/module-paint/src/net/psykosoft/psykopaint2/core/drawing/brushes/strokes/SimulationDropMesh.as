@@ -50,7 +50,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		private function appendDrop(appendVO : StrokeAppendVO) : void
 		{
 			var colorsRGBA:Vector.<Number> =  appendVO.point.colorsRGBA;
-			var halfSize : Number = appendVO.size * .5;
+			var halfSize : Number = appendVO.size * appendVO.point.size * .5;
 			var centerX : Number = appendVO.point.normalX;
 			var centerY : Number = appendVO.point.normalY;
 

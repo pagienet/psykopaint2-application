@@ -1,7 +1,9 @@
 package net.psykosoft.psykopaint2.core.drawing.brushkits
 {
 	import flash.events.Event;
-	
+
+	import flashx.textLayout.elements.GlobalSettings;
+
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 	import net.psykosoft.psykopaint2.core.drawing.BrushType;
 	import net.psykosoft.psykopaint2.core.drawing.brushes.AbstractBrush;
@@ -53,7 +55,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_WET:int = 1;
 		private static const STYLE_DRY_DROPS:int = 2;
 		private static const STYLE_WET_DROPS:int = 3;
-		private static const STYLE_MARIO_TEST:int = 4;
+		private static const STYLE_DAMAGE:int = 4;
+		private static const STYLE_DAMAGE_DROPS:int = 5;
 
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -62,9 +65,13 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private var sizeDecorator : SizeDecorator;
 		private var pathManager:PathManager;
 
-		private static const SPLAT_FACTOR : Number = 100;
-		private static const MIN_SPLAT : Number = 30;
+		private static const SPLAT_FACTOR : Number = 200;
+		private static const MIN_SPLAT : Number = .01;
 		private var callbackDecorator:CallbackDecorator;
+
+		private var _minSplatterChance : Number = .1;
+		private var _maxSplatterChance : Number = 1.0;
+		private var _splatterSpeedNorm:Number = 40 * CoreSettings.GLOBAL_SCALING;
 
 		
 		public function BrushKit_WaterColor()
@@ -90,7 +97,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 			_parameterMapping = new PsykoParameterMapping();
 
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["basic","wet", "splat", "splat", "splat"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["basic","wet", "splat", "splat", "splat", "splat"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -107,7 +114,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 			// used for drops
 			splatterDecorator = new SplatterDecorator();
-			splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_PRESSURE_SPEED;
+			splatterDecorator.param_mappingMode.index = SplatterDecorator.INDEX_MODE_SPEED;
 			splatterDecorator.param_minOffset.value = MIN_SPLAT*brushEngine.param_sizeFactor.lowerRangeValue;
 			splatterDecorator.param_splatFactor.value = SPLAT_FACTOR*brushEngine.param_sizeFactor.lowerRangeValue;
 			splatterDecorator.param_mappingFunction.index = SplatterDecorator.INDEX_MAPPING_LINEAR;
@@ -115,10 +122,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			splatterDecorator.param_sizeFactor.numberValue = 0;
 
 			sizeDecorator = new SizeDecorator();
-			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_PRESSURE_SPEED;
+			sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_SPEED;
+			sizeDecorator.param_invertMapping.booleanValue = true;
 			sizeDecorator.param_mappingFunction.index = AbstractPointDecorator.INDEX_MAPPING_LINEAR;
-			sizeDecorator.param_mappingFactor.numberValue = 0.08;
-			sizeDecorator.param_mappingRange.numberValue = 0.04;
+			sizeDecorator.param_mappingFactor.numberValue = .6;
+			sizeDecorator.param_mappingRange.numberValue = .4;
 			
 			callbackDecorator = new CallbackDecorator( this, processPoints );
 			
@@ -136,25 +144,32 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_BASIC:
 					setValuesForDryBrush();
 					setValuesForRibbon();
+					setValuesForColor();
 					break;
 				case STYLE_WET:
 					setValuesForWetBrush();
 					setValuesForRibbon();
+					setValuesForColor();
 					break;
-				// needs to be drops
 				case STYLE_DRY_DROPS:
 					setValuesForDryBrush();
 					setValuesForDrops();
+					setValuesForColor();
 					break;
-				// needs to be drops
 				case STYLE_WET_DROPS:
 					setValuesForWetBrush();
 					setValuesForDrops();
+					setValuesForColor();
 					break;
-				// needs to be drops
-				case STYLE_MARIO_TEST:
+				case STYLE_DAMAGE:
 					setValuesForWetBrush();
-					setValuesForMario();
+					setValuesForRibbon();
+					setValuesForDamage();
+					break;
+				case STYLE_DAMAGE_DROPS:
+					setValuesForWetBrush();
+					setValuesForDrops();
+					setValuesForDamage();
 					break;
 			}
 
@@ -162,18 +177,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			onIntensityChanged(null);
 		}
 
+		private function setValuesForColor():void
+		{
+			WaterColorBrush(brushEngine).param_paintMode.value = 0;
+		}
+
+		private function setValuesForDamage():void
+		{
+			WaterColorBrush(brushEngine).param_paintMode.value = 1;
+		}
+
 		private function setValuesForDrops():void
 		{
-			pathManager.pathEngine.outputStepSize.numberValue = 50;
-			WaterColorBrush(brushEngine).param_meshType.value = 1;
-			splatterDecorator.active = true;
-			sizeDecorator.active = true;
-			callbackDecorator.active = false;
-		}
-		
-		private function setValuesForMario():void
-		{
-			pathManager.pathEngine.outputStepSize.numberValue = 2;
 			WaterColorBrush(brushEngine).param_meshType.value = 1;
 			splatterDecorator.active = true;
 			sizeDecorator.active = true;
@@ -182,7 +197,6 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 		private function setValuesForRibbon():void
 		{
-			pathManager.pathEngine.outputStepSize.numberValue = 2;
 			WaterColorBrush(brushEngine).param_meshType.value = 0;
 			splatterDecorator.active = false;
 			sizeDecorator.active = false;
@@ -212,25 +226,22 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_sizeFactor.lowerRangeValue = brushEngine.param_sizeFactor.upperRangeValue = precision;
 			splatterDecorator.param_splatFactor.value = SPLAT_FACTOR*precision;
 			splatterDecorator.param_minOffset.value = MIN_SPLAT*precision;
-			
-			if ( param_style.index == STYLE_MARIO_TEST )
-			{
-				sizeDecorator.param_mappingFactor.numberValue = 0.11 * precision;
-				sizeDecorator.param_mappingRange.numberValue = 0.1 * precision;
-			}
 		}
 		
 		protected function onIntensityChanged(event:Event):void
 		{
-			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.03 * param_intensity.numberValue;
+			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.07 * param_intensity.numberValue;
+			WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1 + 0.3 * param_intensity.numberValue;
 		}
 		
 		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
-		
+			var splatterRange : Number = _maxSplatterChance - _minSplatterChance;
 			for ( var i:int = points.length; --i > -1; )
 			{
-				if ( Math.random() > 0.05 )
+				var chance : Number = _minSplatterChance + points[i].speed * splatterRange / _splatterSpeedNorm;
+				trace (chance);
+				if ( Math.random() > chance )
 				{
 					PathManager.recycleSamplePoint( points.splice(i,1)[0] );
 				}
