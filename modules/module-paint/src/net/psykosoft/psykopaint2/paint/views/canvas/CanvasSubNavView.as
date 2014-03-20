@@ -21,10 +21,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		}
 
 		override protected function onEnabled():void {
-			setHeader( "Edit Painting" );
+			
 			//setLeftButton( ID_HOME, ID_HOME, ButtonIconType.HOME );
 			setRightButton( ID_PICK_A_BRUSH, ID_PICK_A_BRUSH, ButtonIconType.BRUSH );
 			setBgType( NavigationBg.BG_TYPE_WOOD_LOW );
+			setHeader( "Edit Painting" );
 		}
 
 		override protected function onSetup():void {

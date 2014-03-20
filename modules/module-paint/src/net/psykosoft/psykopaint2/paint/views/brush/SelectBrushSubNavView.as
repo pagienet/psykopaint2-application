@@ -22,6 +22,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		}
 
 		override protected function onEnabled():void {
+			setBgType( NavigationBg.BG_TYPE_WOOD_LOW );
 			setHeader( "Pick a Brush" );
 			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 			setRightButton( ID_COLOR, ID_COLOR, ButtonIconType.TWEAK_BRUSH );
@@ -35,7 +36,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 			*/
 			//setRightButton( ID_ALPHA, ID_ALPHA, ButtonIconType.ALPHA );
-			setBgType( NavigationBg.BG_TYPE_WOOD_LOW );
+			
 		}
 
 		public function setColorButtonHex( argb:uint ):void {

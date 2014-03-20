@@ -3,7 +3,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Strong;
-
+	
 	import flash.display.Sprite;
 	import flash.text.TextField;
 
@@ -12,7 +12,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		// Declared in Flash.
 		public var tf:TextField;
 		public var bg:Sprite;
-
+		public var lowerEdge:Number;
+		
 		public function NavigationHeader() {
 			super();
 		}
@@ -20,7 +21,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		public function setTitle( value:String ):void {
 
 			TweenLite.killTweensOf( bg );
-			y = 768 + bg.height;
+			y = lowerEdge + bg.height;
 
 			if( value == "" ) {
 				visible = false;
@@ -43,11 +44,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 		private function animateHeaderIn():void {
-			TweenLite.to( this, 0.5, { y: 768, ease: Strong.easeOut, onComplete: animateHeaderOut } );
+			TweenLite.to( this, 0.5, { y: lowerEdge, ease: Strong.easeOut, onComplete: animateHeaderOut } );
 		}
 
 		private function animateHeaderOut():void {
-			TweenLite.to( this, 0.25, { delay: 2, y: 768 + bg.height, ease: Strong.easeIn, onComplete: onHeaderOutComplete } );
+			TweenLite.to( this, 0.25, { delay: 2, y: lowerEdge + bg.height, ease: Strong.easeIn, onComplete: onHeaderOutComplete } );
 		}
 
 		private function onHeaderOutComplete():void {

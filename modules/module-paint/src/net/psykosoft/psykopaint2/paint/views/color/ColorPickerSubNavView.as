@@ -132,6 +132,7 @@ package net.psykosoft.psykopaint2.paint.views.color
 			_navigation.leftBtnSide.x -= 50;
 			_navigation.leftBtnSide.y -= 30;
 			setBgType( NavigationBg.BG_TYPE_WOOD );
+			setHeader("Paint Settings");
 			hslSliders.onEnabled();
 			brushStyleUI.onEnabled();
 			photoStyleUI.onEnabled();

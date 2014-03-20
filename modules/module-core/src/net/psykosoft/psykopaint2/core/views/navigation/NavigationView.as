@@ -82,7 +82,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			disposeSubNavigation();
 
 			// Defaults to rope bg.
-			setBgType( NavigationBg.BG_TYPE_ROPE );
+			//setBgType( NavigationBg.BG_TYPE_ROPE );
 
 			// Reset.
 			leftBtnSide.visible = false;
@@ -91,6 +91,8 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if( !subNavType ) {
 				header.setTitle( "" );
 				return;
+			} else {
+				setChildIndex(header,0);
 			}
 
 			trace( this, "creating new sub navigation view" );
@@ -173,11 +175,15 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 		public function setBgType( type:String ):void {
 			bg.setBgType( type );
-			if( type == NavigationBg.BG_TYPE_ROPE || type == NavigationBg.BG_TYPE_WOOD_LOW ) {
+			if( type == NavigationBg.BG_TYPE_ROPE ) {
 				_panel.contentHeight = 140;
-			}
-			else {
+				header.lowerEdge = 768;
+			} else if ( type == NavigationBg.BG_TYPE_WOOD_LOW  ){
+				_panel.contentHeight = 140;
+				header.lowerEdge = 630;
+			} else {
 				_panel.contentHeight = 215;
+				header.lowerEdge = 600;
 			}
 		}
 
