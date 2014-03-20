@@ -5,7 +5,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 	public class SettingsSubNavView extends SubNavigationViewBase
 	{
-		public static const ID_WALLPAPER:String = "Change Wallpaper";
+		public static const ID_WALLPAPER:String = "Wallpaper";
 		public static const ID_LOGIN:String = "Login";
 		public static const ID_LOGOUT:String = "Logout";
 
