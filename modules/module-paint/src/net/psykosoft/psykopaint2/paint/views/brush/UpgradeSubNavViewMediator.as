@@ -5,6 +5,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 	import net.psykosoft.psykopaint2.core.drawing.modules.BrushKitManager;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestUndoSignal;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationMediatorBase;
@@ -17,6 +18,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 		[Inject]
 		public var userPaintSettingsModel:UserPaintSettingsModel;
 
+		[Inject]
+		public var userConfig:UserConfigModel;
+		
 		[Inject]
 		public var requestUndoSignal:RequestUndoSignal;
 		
@@ -48,6 +52,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					break;
 
 				case UpgradeSubNavView.ID_BUY:
+					userConfig.userConfig.hasFullVersion = true;
 					requestNavigationStateChange( NavigationStateType.PREVIOUS );
 					notifyTogglePaintingEnableSignal.dispatch(true);
 					break;

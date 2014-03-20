@@ -30,6 +30,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.model.CanvasModel;
 	import net.psykosoft.psykopaint2.core.model.UserPaintSettingsModel;
 	import net.psykosoft.psykopaint2.core.models.NavigationStateType;
+	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.rendering.CanvasRenderer;
 	import net.psykosoft.psykopaint2.core.signals.NotifyActivateBrushChangedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyAvailableBrushTypesSignal;
@@ -64,6 +65,9 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		
 		[Inject]
 		public var paintSettingsModel : UserPaintSettingsModel;
+		
+		[Inject]
+		public var userConfig : UserConfigModel;
 
 		[Inject]
 		public var stage3D : Stage3D;
@@ -396,7 +400,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			singleTapDelay = getTimer();
 			_view.removeEventListener(Event.ENTER_FRAME, onPaintOverNavCheck );
 			
-			if ( _activeBrushKit.isPurchasable )
+			if ( !userConfig.userConfig.hasFullVersion && _activeBrushKit.isPurchasable )
 			{
 				notifyTogglePaintingEnableSignal.dispatch(false);
 				clearTimeout( _revealNavigationTimeout );

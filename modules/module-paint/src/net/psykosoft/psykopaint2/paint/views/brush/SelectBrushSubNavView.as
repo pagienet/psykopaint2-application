@@ -3,9 +3,9 @@ package net.psykosoft.psykopaint2.paint.views.brush
 
 	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
-
-	import net.psykosoft.psykopaint2.core.models.PaintMode;
+	
 	import net.psykosoft.psykopaint2.core.model.PaintModeModel;
+	import net.psykosoft.psykopaint2.core.models.PaintMode;
 	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.components.button.IconButton;
 	import net.psykosoft.psykopaint2.core.views.navigation.NavigationBg;
@@ -48,7 +48,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 			}
 		}
 
-		public function setAvailableBrushes( availableBrushTypes:Vector.<String>, selectedId:String ):void {
+		public function setAvailableBrushes( availableBrushTypes:Vector.<String>, selectedId:String, hasFullVersion:Boolean ):void {
 
 			var len:uint = availableBrushTypes.length;
 //			trace( this, "setAvailableBrushes - len: " + len );
@@ -61,15 +61,15 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						break;
 					}
 					case 1: {
-						iconType = ButtonIconType.TRY_BRUSH;
+						iconType = hasFullVersion ? ButtonIconType.BRUSH : ButtonIconType.TRY_BRUSH;
 						break;
 					}
 					case 2: {
-						iconType = ButtonIconType.TRY_PENCIL;
+						iconType =  hasFullVersion ? ButtonIconType.PENCIL : ButtonIconType.TRY_PENCIL;
 						break;
 					}
 					case 3: {
-						iconType = ButtonIconType.TRY_WATERCOLOR;
+						iconType =hasFullVersion ? ButtonIconType.WATERCOLOR : ButtonIconType.TRY_WATERCOLOR;
 						break;
 					}
 					case 5: {
@@ -77,7 +77,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						break;
 					}
 					default: {
-						iconType = ButtonIconType.TRY_BRUSH;
+						iconType = hasFullVersion ? ButtonIconType.BRUSH :ButtonIconType.TRY_BRUSH;
 					}
 				}
 				createCenterButton( availableBrushTypes[ i ], availableBrushTypes[ i ], iconType, IconButton, null, true, true, false );
