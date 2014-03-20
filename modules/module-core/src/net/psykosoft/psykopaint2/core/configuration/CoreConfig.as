@@ -56,6 +56,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.signals.NotifyPaintingSavingStartedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpRemovedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPopUpShownSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfaceLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifySurfacePreviewLoadedSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyToggleSwipeGestureSignal;
@@ -251,7 +252,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map( NotifyEaselTappedSignal ).asSingleton();
 			_injector.map( RequestUpdateCropImageSignal ).asSingleton();
 			_injector.map( RequestOpenCroppedBitmapDataSignal ).asSingleton();
-			
+			_injector.map( NotifyPurchaseStatusSignal ).asSingleton();
 			// services
 			_injector.map( NotifyAMFConnectionFailed ).asSingleton();
 		}
