@@ -86,6 +86,12 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					notifyTogglePaintingEnableSignal.dispatch(true);
 					
 				break;
+				case InAppPurchaseManager.STATUS_STORE_UNAVAILABLE:
+					//TODO: for offline testing only
+					userConfig.userConfig.hasFullVersion = true;
+					requestNavigationStateChange( NavigationStateType.PREVIOUS );
+					notifyTogglePaintingEnableSignal.dispatch(true);
+				break;
 				
 			}
 			

@@ -19,6 +19,7 @@ package net.psykosoft.psykopaint2.core.configuration
 	import net.psykosoft.psykopaint2.core.managers.misc.KeyDebuggingManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.MemoryWarningManager;
 	import net.psykosoft.psykopaint2.core.managers.misc.UnDisposedObjectsManager;
+	import net.psykosoft.psykopaint2.core.managers.purchase.InAppPurchaseManager;
 	import net.psykosoft.psykopaint2.core.managers.rendering.ApplicationRenderer;
 	import net.psykosoft.psykopaint2.core.models.AMFLoggedInUserProxy;
 	import net.psykosoft.psykopaint2.core.models.EaselRectModel;
@@ -192,7 +193,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map(GyroscopeManager).asSingleton();
 			_injector.map(AccelerometerManager).asSingleton();
 			_injector.map(RetrievePaintingsDataProcessModel).asSingleton();
-
+			_injector.map(InAppPurchaseManager).asSingleton();
 			// -----------------------
 			// Services.
 			// -----------------------
@@ -202,7 +203,7 @@ package net.psykosoft.psykopaint2.core.configuration
 			_injector.map(GalleryService).toSingleton(AMFGalleryService);
 			_injector.map(CameraRollService).toSingleton(ANECameraRollService);
 			_injector.map(SampleImageService).toSingleton(XMLSampleImageService);
-
+		
 		}
 
 		// -----------------------
