@@ -78,6 +78,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		public function BrushKit_BristleBrush()
 		{
+			isPurchasable = true;
 			init(definitionXML);
 		}
 	}

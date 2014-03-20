@@ -38,6 +38,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 	import net.psykosoft.psykopaint2.core.signals.NotifyGlobalGestureSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyMemoryWarningSignal;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationToggledSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyTogglePaintingEnableSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestAddViewToMainLayerSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
@@ -109,6 +110,8 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 		[Inject]
 		public var requestNavigationToggleSignal:RequestNavigationToggleSignal;
 		
+		[Inject]
+		public var notifyTogglePaintingEnableSignal:NotifyTogglePaintingEnableSignal;
 		
 	
 		private var _view : DisplayObject;
@@ -145,6 +148,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			notifyPickedColorChangedSignal.add( onPickedColorChanged );
 			notifyColorStyleChangedSignal.add( onColorStyleChanged );
 			notifyNavigationToggledSignal.add( onNavigationToggled );
+			notifyTogglePaintingEnableSignal.add( onToggleEnablePainting );
 			_navigationIsVisible = true;
 		}
 		
@@ -153,15 +157,26 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			_navigationIsVisible = shown;
 		}
 		
+		private function onToggleEnablePainting( enable:Boolean ):void
+		{
+			if ( _activeBrushKit )
+			{
+				if ( enable ) 
+					_activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
+				else
+					_activeBrushKit.brushEngine.pathManager.deactivate();
+			}
+		}
+		
 		// TODO: Handle gestures somewhere else
 		private function onGlobalGesture( gestureType:String, event:GestureEvent):void
 		{
 			if ( !pipetteActive && gestureType == GestureType.TRANSFORM_GESTURE_BEGAN )
 			{
-				if ( _activeBrushKit ) _activeBrushKit.brushEngine.pathManager.deactivate();
+				notifyTogglePaintingEnableSignal.dispatch(false);
 			}  else if (!pipetteActive &&  gestureType == GestureType.TRANSFORM_GESTURE_ENDED )
 			{
-				if ( _activeBrushKit ) _activeBrushKit.brushEngine.pathManager.activate( _view, canvasModel, renderer );
+				notifyTogglePaintingEnableSignal.dispatch(true);
 			} else if ( gestureType == GestureType.LONG_TAP_GESTURE_BEGAN )
 			{
 				var clip:* = LongPressGesture(event.target).target;
@@ -189,7 +204,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 						
 						var color:uint = currentColorMap.getPixel(px,py);
 						notifyShowPipetteSignal.dispatch( _view, color,new Point(_view.mouseX,_view.mouseY - 32), true);
-						_activeBrushKit.brushEngine.pathManager.deactivate();
+						notifyTogglePaintingEnableSignal.dispatch(false);
 						pipetteActive = true;
 					}
 				}
@@ -198,7 +213,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				if ( pipetteActive )
 				{
 					pipetteActive = false;
-					_activeBrushKit.brushEngine.pathManager.activate(_view, canvasModel, renderer );
+					notifyTogglePaintingEnableSignal(true);
 					copyColorUtil.dispose();
 				}
 			}
@@ -383,9 +398,11 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 			
 			if ( _activeBrushKit.isPurchasable )
 			{
+				notifyTogglePaintingEnableSignal.dispatch(false);
 				clearTimeout( _revealNavigationTimeout );
 				revealHiddenNavigation();
 				requestStateChangeSignal.dispatch( NavigationStateType.PAINT_BUY_UPGRADE);
+				
 			} else if ( _navigationWasHiddenByPainting )
 			{
 				clearTimeout( _revealNavigationTimeout );

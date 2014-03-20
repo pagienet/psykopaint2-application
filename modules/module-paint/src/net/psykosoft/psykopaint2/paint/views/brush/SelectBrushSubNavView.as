@@ -72,7 +72,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						iconType = ButtonIconType.TRY_WATERCOLOR;
 						break;
 					}
-					case 4: {
+					case 5: {
 						iconType = ButtonIconType.ERASER;
 						break;
 					}
