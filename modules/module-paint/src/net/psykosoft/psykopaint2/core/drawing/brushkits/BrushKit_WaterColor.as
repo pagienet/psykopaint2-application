@@ -53,7 +53,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_WET:int = 1;
 		private static const STYLE_DRY_DROPS:int = 2;
 		private static const STYLE_WET_DROPS:int = 3;
-		private static const STYLE_MARIO_TEST:int = 4;
+		private static const STYLE_DAMAGE:int = 4;
+		private static const STYLE_MARIO_TEST:int = 5;
 
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -90,7 +91,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 
 			_parameterMapping = new PsykoParameterMapping();
 
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["basic","wet", "splat", "splat", "splat"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["basic","wet", "splat", "splat", "splat", "splat"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -136,30 +137,47 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_BASIC:
 					setValuesForDryBrush();
 					setValuesForRibbon();
+					setValuesForColor();
 					break;
 				case STYLE_WET:
 					setValuesForWetBrush();
 					setValuesForRibbon();
+					setValuesForColor();
 					break;
-				// needs to be drops
 				case STYLE_DRY_DROPS:
 					setValuesForDryBrush();
 					setValuesForDrops();
+					setValuesForColor();
 					break;
-				// needs to be drops
 				case STYLE_WET_DROPS:
 					setValuesForWetBrush();
 					setValuesForDrops();
+					setValuesForColor();
 					break;
-				// needs to be drops
+				case STYLE_DAMAGE:
+					setValuesForWetBrush();
+					setValuesForRibbon();
+					setValuesForDamage();
+					break;
 				case STYLE_MARIO_TEST:
 					setValuesForWetBrush();
 					setValuesForMario();
+					setValuesForColor();
 					break;
 			}
 
 			onPrecisionChanged(null);
 			onIntensityChanged(null);
+		}
+
+		private function setValuesForColor():void
+		{
+			WaterColorBrush(brushEngine).param_paintMode.value = 0;
+		}
+
+		private function setValuesForDamage():void
+		{
+			WaterColorBrush(brushEngine).param_paintMode.value = 1;
 		}
 
 		private function setValuesForDrops():void
@@ -223,6 +241,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		protected function onIntensityChanged(event:Event):void
 		{
 			WaterColorBrush(brushEngine).param_pigmentDensity.numberValue = 0.03 * param_intensity.numberValue;
+			WaterColorBrush(brushEngine).param_damageFlow.numberValue = .1 + 0.3 * param_intensity.numberValue;
 		}
 		
 		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>

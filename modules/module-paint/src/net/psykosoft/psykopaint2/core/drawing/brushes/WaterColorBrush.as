@@ -22,9 +22,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 	import net.psykosoft.psykopaint2.core.drawing.shaders.StrokeColorTransfer;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.ApplySlope;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.MovePigment;
+	import net.psykosoft.psykopaint2.core.drawing.shaders.water.MovePigmentCMYA;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.MovePigmentRGB;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.RelaxDivergence;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.RenderPigment;
+	import net.psykosoft.psykopaint2.core.drawing.shaders.water.RenderPigmentRGB;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.TransferPigment;
 	import net.psykosoft.psykopaint2.core.drawing.shaders.water.UpdateVelocities;
 	import net.psykosoft.psykopaint2.core.managers.accelerometer.AccelerometerManager;
@@ -46,7 +48,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public static const PARAMETER_N_PIGMENT_DENSITY:String = "Pigment density";
 		public static const PARAMETER_N_PIGMENT_STAINING:String = "Pigment staining";
 		public static const PARAMETER_N_PIGMENT_GRANULATION:String = "Pigment granulation";
+		public static const PARAMETER_N_DAMAGE_FLOW:String = "Damage flow";
 		public static const PARAMETER_N_MESH_TYPE:String = "Mesh type";
+		public static const PARAMETER_N_PAINT_MODE:String = "Paint mode";
+
+		public static const PAINT_MODE_COLOR:int = 0;
+		public static const PAINT_MODE_DAMAGE:int = 1;
 
 		private var _velocityPressureField : TrackedTexture;
 		private var _halfSizedBackBuffer : TrackedTexture;
@@ -65,9 +72,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		private var _updateVelocities : UpdateVelocities;
 		private var _relaxDivergence : RelaxDivergence;
 		private var _movePigment : MovePigment;
+		private var _movePigmentCMYA : MovePigmentCMYA;
 		private var _movePigmentRGB : MovePigmentRGB;
 		private var _transferPigment : TransferPigment;
-		private var _renderPigment : RenderPigment;
+		private var _renderPigmentColor : RenderPigment;
+		private var _renderPigmentDamage : RenderPigmentRGB;
 
 		private var _dt : Number = 1;
 		private var _relaxationSteps : int = 3;
@@ -78,13 +87,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 		public var param_gravityStrength : PsykoParameter;
 		public var param_waterViscosity : PsykoParameter;
 		public var param_waterDrag : PsykoParameter;
+		public var param_damageFlow : PsykoParameter;	// only for water damage
 		public var param_pigmentDensity : PsykoParameter;
 		public var param_pigmentStaining : PsykoParameter;
 		public var param_pigmentGranulation : PsykoParameter;
 		public var param_meshType : PsykoParameter;
+		public var param_paintMode : PsykoParameter;
+
 
 		private var _wetBrush : Boolean = false;
 		private var _meshTypeChanged:Boolean;
+
+
 
 		// IMPORTANT:
 		// The simulation runs on a grid, with values associated to each cell
@@ -107,9 +121,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			param_pigmentDensity = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_DENSITY, .25, 0,.4);
 			param_pigmentStaining = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_STAINING,.25, .1,1);
 			param_pigmentGranulation = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_PIGMENT_GRANULATION, 1.0, 0, 3);
+			param_damageFlow = new PsykoParameter( PsykoParameter.NumberParameter, PARAMETER_N_DAMAGE_FLOW, .3, 0,.3);
 			// 0 = ribbon, 1 = dots
 			param_meshType = new PsykoParameter( PsykoParameter.IntParameter, PARAMETER_N_MESH_TYPE, 0, 0, 1);
 			param_meshType.addEventListener(Event.CHANGE, onMeshTypeChange);
+
+			param_paintMode = new PsykoParameter( PsykoParameter.IntParameter, PARAMETER_N_PAINT_MODE, 1, 0, 1);
 
 			_parameters.push( param_surfaceRelief, param_gravityStrength, param_pigmentDensity, param_pigmentStaining, param_pigmentGranulation);
 
@@ -169,8 +186,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_relaxDivergence = new RelaxDivergence(_context, _canvasModel);
 			_movePigment = new MovePigment(_context, _canvasModel);
 			_movePigmentRGB = new MovePigmentRGB(_context, _canvasModel,.5);
+			_movePigmentCMYA = new MovePigmentCMYA(_context, _canvasModel);
 			_transferPigment = new TransferPigment(_context, _canvasModel);
-			_renderPigment = new RenderPigment(_context, _canvasModel);
+			_renderPigmentColor = new RenderPigment(_context, _canvasModel);
+			_renderPigmentDamage = new RenderPigmentRGB(_context, _canvasModel);
 		}
 
 		override public function deactivate() : void
@@ -193,8 +212,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_relaxDivergence.dispose();
 				_movePigment.dispose();
 				_movePigmentRGB.dispose();
+				_movePigmentCMYA.dispose();
 				_transferPigment.dispose();
-				_renderPigment.dispose();
+				_renderPigmentColor.dispose();
+				_renderPigmentDamage.dispose();
 				_addPigmentToPressure.dispose();
 				_addPigmentToPigmentDensity.dispose();
 				_addPigmentToPigmentColor.dispose();
@@ -210,8 +231,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_relaxDivergence = null;
 				_movePigment = null;
 				_movePigmentRGB = null;
+				_movePigmentCMYA = null;
 				_transferPigment = null;
-				_renderPigment = null;
+				_renderPigmentColor = null;
+				_renderPigmentDamage = null;
 				_transferSource = null;
 			}
 
@@ -264,12 +287,18 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_context.clear(0, 0, 0, 0);
 			_context.setRenderToTexture(_pigmentColorField.texture, true);
 
-			if (_paintSettingsModel.colorMode == PaintMode.COLOR_MODE) {
-				_context.clear(_paintSettingsModel.current_r, _paintSettingsModel.current_g, _paintSettingsModel.current_b, 1);
+			if (param_paintMode.intValue == PAINT_MODE_COLOR) {
+				if (_paintSettingsModel.colorMode == PaintMode.COLOR_MODE) {
+					_context.clear(_paintSettingsModel.current_r, _paintSettingsModel.current_g, _paintSettingsModel.current_b, 1);
+				}
+				else {
+					_context.clear(1, 1, 1, 0);
+					_transferSource.draw(_canvasModel.sourceTexture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+				}
 			}
 			else {
-				_context.clear(1, 1, 1, 0);
-				_transferSource.draw(_canvasModel.sourceTexture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+				_context.clear(0, 0, 0, 0);
+				CopyTexture.copy(_canvasModel.colorTexture, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 			}
 			_context.setRenderToTexture(_velocityPressureField.texture, true);
 			_context.clear(.5,.5, 0, 1);
@@ -291,14 +320,22 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			applySlope();
 			updateVelocities();
 			relaxDivergence();
-			movePigment();
-			transferPigment();
+
+			if (param_paintMode.intValue == PAINT_MODE_COLOR) {
+				movePigmentColor();
+				transferPigment();
+			}
+			else {
+				movePigmentDamage();
+			}
 		}
 
 		private function addPaintToSimulation() : void
 		{
-			_addPigmentToPigmentDensity.execute(simulationMesh, _pigmentDensityField.texture, _halfSizedBackBuffer.texture, _brushShape.texture, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
-			_pigmentDensityField = swapHalfSized(_pigmentDensityField);
+			if (param_paintMode.intValue == PAINT_MODE_COLOR) {
+				_addPigmentToPigmentDensity.execute(simulationMesh, _pigmentDensityField.texture, _halfSizedBackBuffer.texture, _brushShape.texture, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
+				_pigmentDensityField = swapHalfSized(_pigmentDensityField);
+			}
 
 //			_addPigmentToPigmentColor.execute(SimulationMesh(_brushMesh), _pigmentColorField, _canvasModel.halfSizeBackBuffer, null, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 //			_pigmentColorField = _canvasModel.swapHalfSized(_pigmentColorField);
@@ -310,6 +347,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 			_addPigmentToPressure.execute(simulationMesh, _velocityPressureField.texture, _velocityPressureFieldBackBuffer.texture, _brushShape.texture, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 			swapVelocityBuffer();
+
+
+
 		}
 
 		private function swapHalfSized(other : TrackedTexture) : TrackedTexture
@@ -352,7 +392,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 			_relaxDivergence.deactivate(_context);
 		}
 
-		private function movePigment() : void
+		private function movePigmentColor() : void
 		{
 			_movePigment.execute(simulationMesh, _pigmentDensityField.texture, _halfSizedBackBuffer.texture, _velocityPressureField.texture);
 			_pigmentDensityField = swapHalfSized(_pigmentDensityField);
@@ -361,6 +401,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 				_movePigmentRGB.execute(simulationMesh, _pigmentColorField.texture, _halfSizedBackBuffer.texture, _velocityPressureField.texture, 1, 0, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 				_pigmentColorField = swapHalfSized(_pigmentColorField);
 			}
+		}
+
+		private function movePigmentDamage() : void
+		{
+			_movePigmentCMYA.execute(simulationMesh, _pigmentColorField.texture, _velocityPressureField.texture, _halfSizedBackBuffer.texture, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio, param_damageFlow.numberValue);
+			_pigmentColorField = swapHalfSized(_pigmentColorField);
 		}
 
 		private function transferPigment() : void
@@ -375,7 +421,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 //			CopyTexture.copy(_pigmentDensityField, _context, _canvasModel.usedTextureWidthRatio, _canvasModel.usedTextureHeightRatio);
 //			CopyTexture.copy(_pigmentColorField.texture, context3d);
 
-			_renderPigment.execute(simulationMesh, _pigmentDensityField.texture, _pigmentColorField.texture);
+			if (param_paintMode.intValue == PAINT_MODE_COLOR)
+				_renderPigmentColor.execute(simulationMesh, _pigmentDensityField.texture, _pigmentColorField.texture);
+			else {
+				_context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ZERO);
+				_renderPigmentDamage.execute(simulationMesh, _pigmentColorField.texture);
+			}
 		}
 
 		override public function setColorStrategyColorMatrix(colorMatrix:Vector.<Number>, blendFactor:Number):void
