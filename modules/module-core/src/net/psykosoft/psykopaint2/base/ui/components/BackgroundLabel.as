@@ -32,11 +32,12 @@ package net.psykosoft.psykopaint2.base.ui.components
 			_background.width = Math.max( _textfield.width + plus, 100 );
 		}
 
-		private function randomizeLabelColor():void {
-			return; // TODO: Feature disabled by M's request - remove method if not used
+		public function randomizeLabelColor():void {
+			//return; // TODO: Feature disabled by M's request - remove method if not used
 			var randomHue:int = Math.random() * 360;
 			var randomSat:Number = Math.random() + 1;
-			TweenLite.to( _background, 0, { colorMatrixFilter: { hue: randomHue, saturation: randomSat } } );
+			
+			TweenLite.to( _background, 0, { colorMatrixFilter: { hue: randomHue } } );
 		}
 
 		public function colorizeBackground( color:uint ):void {
@@ -53,7 +54,7 @@ package net.psykosoft.psykopaint2.base.ui.components
 			var hue:Number = Math.atan2( v, u );
 			var saturation:Number = Math.sqrt( u*u + v*v );
 
-			TweenLite.to( _background, 0, { colorMatrixFilter: { hue: hue, saturation: saturation, luminance: luminance } } );
+			TweenLite.to( _background, 0.1, { colorMatrixFilter: { hue: hue, saturation: saturation, luminance: luminance } } );
 		}
 	}
 }

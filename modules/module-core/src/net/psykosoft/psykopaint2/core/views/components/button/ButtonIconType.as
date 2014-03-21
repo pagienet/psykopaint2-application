@@ -47,12 +47,16 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const PENCIL:String = "pencil";
 		public static const SPRAYCAN:String = "spraycan";
 		public static const WATERCOLOR:String = "watercolor";
+		public static const PAINTGUN:String = "paintgun";
 		
 		public static const TRY_BRUSH:String = "brush_try";
 		public static const TRY_KNIFE:String = "knife_try";
 		public static const TRY_PENCIL:String = "pencil_try";
 		public static const TRY_SPRAYCAN:String = "spraycan_try";
 		public static const TRY_WATERCOLOR:String = "watercolor_try";
+		public static const TRY_PAINTGUN:String = "paintgun_try";
+		
+		
 		
 		public static const CANCEL_UPGRADE:String = "cancel_upgrade";
 		public static const BUY_UPGRADE:String = "buy_upgrade";

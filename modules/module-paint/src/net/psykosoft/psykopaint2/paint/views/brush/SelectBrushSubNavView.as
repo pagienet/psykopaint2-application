@@ -73,6 +73,10 @@ package net.psykosoft.psykopaint2.paint.views.brush
 						iconType =hasFullVersion ? ButtonIconType.WATERCOLOR : ButtonIconType.TRY_WATERCOLOR;
 						break;
 					}
+					case 4: {
+						iconType =hasFullVersion ? ButtonIconType.PAINTGUN : ButtonIconType.TRY_PAINTGUN;
+						break;
+					}
 					case 5: {
 						iconType = ButtonIconType.ERASER;
 						break;
