@@ -157,7 +157,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushes
 
 		override protected function createBrushMesh() : IBrushMesh
 		{
-			return param_meshType.intValue == 0? new SimulationRibbonMesh() : new SimulationDropMesh();
+			if (simulationMesh) simulationMesh.buffersFullSignal.remove(onBuffersFull);
+			var mesh : SimulationMesh = param_meshType.intValue == 0? new SimulationRibbonMesh() : new SimulationDropMesh();
+			mesh.buffersFullSignal.add(onBuffersFull);
+			return mesh;
+		}
+
+		private function onBuffersFull():void
+		{
+			onPathEnd();
+			onPathStart();
 		}
 
 		private function initBuffers() : void

@@ -12,7 +12,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import net.psykosoft.psykopaint2.core.rendering.BlendSubTextureCMYK;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
-	
+
+	import org.osflash.signals.Signal;
+
 	public class SimulationDropMesh extends AbstractBrushMesh implements SimulationMesh
 	{
 		public static const NO_UVS : int = 0;
@@ -20,10 +22,12 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		public static const CANVAS_TEXTURE_UVS : int = 2;
 
 		private static const NUM_SEGMENTS : int = 20;
+		private static const MAX_VERTICES:int = int(65535 / (NUM_SEGMENTS + 1)) * (NUM_SEGMENTS + 1);
 
 		private static var _tmpData : Vector.<Number>;
 
 		private var _subtractiveBlending : Boolean;
+		private var _buffersFullSignal : Signal = new Signal();
 
 		public function SimulationDropMesh(subtractiveBlending : Boolean = false)
 		{
@@ -33,6 +37,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 				_tmpData = new Vector.<Number>((NUM_SEGMENTS + 1) * numElementsPerVertex, true);
 
 			_subtractiveBlending = subtractiveBlending;
+		}
+
+		public function get buffersFullSignal():Signal
+		{
+			return _buffersFullSignal;
 		}
 
 		override public function customBlending() : Boolean
@@ -49,6 +58,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		private function appendDrop(appendVO : StrokeAppendVO) : void
 		{
+			if (_numVertices >= MAX_VERTICES) return;
+
 			var colorsRGBA:Vector.<Number> =  appendVO.point.colorsRGBA;
 			var halfSize : Number = appendVO.size * appendVO.point.size * .5;
 			var centerX : Number = appendVO.point.normalX;
@@ -100,6 +111,10 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			_numVertices += NUM_SEGMENTS + 1;
 			_numIndices += NUM_SEGMENTS*3;
+
+			if (_numVertices >= MAX_VERTICES) {
+				_buffersFullSignal.dispatch();
+			}
 		}
 
 		override public function drawColor(context3d : Context3D, canvas : CanvasModel, source : TextureBase = null) : void

@@ -11,12 +11,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 	import net.psykosoft.psykopaint2.core.rendering.BlendSubTextureCMYK;
 	import net.psykosoft.psykopaint2.core.rendering.CopySubTexture;
 	import net.psykosoft.psykopaint2.core.intrinsics.FastBuffer;
-	
+
+	import org.osflash.signals.Signal;
+
 	public class SimulationRibbonMesh extends AbstractBrushMesh implements SimulationMesh
 	{
 		public static const NO_UVS : int = 0;
 		public static const BRUSH_TEXTURE_UVS : int = 1;
 		public static const CANVAS_TEXTURE_UVS : int = 2;
+
+		private static const MAX_VERTICES:int = 65532;
 
 		private static var _tmpData : Vector.<Number>;
 
@@ -28,6 +32,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		private var _prevNormalY : Number;
 		private var _prevAppendVO : StrokeAppendVO;
 		private var _stationaryTriangleCount : int;
+
+		private var _buffersFullSignal : Signal = new Signal();
 
 		public function SimulationRibbonMesh(subtractiveBlending : Boolean = false)
 		{
@@ -146,6 +152,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 		private function appendSegment(x : Number, y : Number, appendVO : StrokeAppendVO, normalX : Number, normalY : Number) : void
 		{
+			if (_numVertices >= MAX_VERTICES) return;
+
 			var colorsRGBA:Vector.<Number> =  appendVO.point.colorsRGBA;
 			var halfSize : Number = appendVO.size * .5;
 			var vx : Number = x + normalX * halfSize;
@@ -188,6 +196,9 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 
 			_numVertices += 2;
 			if (_numVertices > 2) _numIndices += 6;
+
+			if (_numVertices >= 65532)	// = int(65535 / 6) * 6
+				_buffersFullSignal.dispatch();
 		}
 
 		override public function drawColor(context3d : Context3D, canvas : CanvasModel, source : TextureBase = null) : void
@@ -253,6 +264,11 @@ package net.psykosoft.psykopaint2.core.drawing.brushes.strokes
 		override protected function get numElementsPerVertex() : int
 		{
 			return 10;
+		}
+
+		public function get buffersFullSignal():Signal
+		{
+			return _buffersFullSignal;
 		}
 	}
 }
