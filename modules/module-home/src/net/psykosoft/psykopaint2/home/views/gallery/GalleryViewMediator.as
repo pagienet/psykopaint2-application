@@ -106,6 +106,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 				if (view.onZoomUpdateSignal)
 					view.onZoomUpdateSignal.remove(onZoomUpdate);
 				view.stopInteraction();
+				isInteractive = false;
 			}
 		}
 
