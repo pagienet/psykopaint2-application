@@ -34,6 +34,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		private static const STYLE_PAINTSTROKES:int = 7;
 		private static const STYLE_PAINTSTROKES_VAN_GOUGH:int = 8;
 		private static const STYLE_PAINTSTROKES_FIREWORKS:int = 9;
+		private static const STYLE_PAINTSTROKES_SPIRAL:int = 10;
 		
 		private var param_style:PsykoParameter;
 		private var param_precision:PsykoParameter;
@@ -65,7 +66,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			brushEngine.param_bumpiness.numberValue = 0;
 			brushEngine.param_bumpInfluence.numberValue = 0.8;
 			brushEngine.param_quadOffsetRatio.numberValue = 0.4;
-			brushEngine.param_shapes.stringList = Vector.<String>(["inksplats","splats","spray","vectorsplat","crayon","paintbrush","sumi","paint1","paint1","paint1"]);
+			brushEngine.param_shapes.stringList = Vector.<String>(["inksplats","splats","spray","vectorsplat","crayon","paintbrush","sumi","paint1","paint1","paint1","paint1"]);
 			
 			var pathManager:PathManager = new PathManager( PathManager.ENGINE_TYPE_EXPERIMENTAL );
 			brushEngine.pathManager = pathManager;
@@ -128,7 +129,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			_parameterMapping = new PsykoParameterMapping();
 			
 			//UI elements:
-			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["splat","sketch","sketch","sketch","sketch","sketch","sketch","sketch","sketch","sketch"]);
+			param_style = new PsykoParameter( PsykoParameter.IconListParameter,"Style",0,["splat","sketch","sketch","sketch","sketch","sketch","sketch","sketch","sketch","sketch","sketch"]);
 			param_style.showInUI = 0;
 			param_style.addEventListener( Event.CHANGE, onStyleChanged );
 			_parameterMapping.addParameter(param_style);
@@ -151,7 +152,8 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			if (  param_style.index == STYLE_PAINTSTROKES || 
 				param_style.index == STYLE_PAINTSTROKES_VAN_GOUGH || 
-				param_style.index == STYLE_PAINTSTROKES_FIREWORKS
+				param_style.index == STYLE_PAINTSTROKES_FIREWORKS ||
+				param_style.index == STYLE_PAINTSTROKES_SPIRAL
 			)
 			{
 				brushEngine.param_quadOffsetRatio.numberValue = 0.4;
@@ -192,12 +194,17 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_PAINTSTROKES_VAN_GOUGH:
 					callbackDecorator.active = true;
 					forceRotationAngle = Math.PI*0.5;
-					brushEngine.param_curvatureSizeInfluence.numberValue = 1;
+					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
 					break;
 				case STYLE_PAINTSTROKES_FIREWORKS:
 					callbackDecorator.active = true;
 					forceRotationAngle = 0;
-					brushEngine.param_curvatureSizeInfluence.numberValue = 1;
+					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
+					break;
+				case STYLE_PAINTSTROKES_SPIRAL:
+					callbackDecorator.active = true;
+					forceRotationAngle = Math.PI*0.25;
+					brushEngine.param_curvatureSizeInfluence.numberValue = 0;
 					break;
 				case STYLE_INKSPLATS:
 				case STYLE_SPLATS:
@@ -233,6 +240,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_PAINTSTROKES:
 				case STYLE_PAINTSTROKES_VAN_GOUGH:
 				case STYLE_PAINTSTROKES_FIREWORKS:
+				case STYLE_PAINTSTROKES_SPIRAL:
 					brushEngine.pathManager.pathEngine.outputStepSize.numberValue = 0.5 + precision * 3;
 					sizeDecorator.param_mappingFactor.numberValue = 0.05 + precision * 0.5;
 					sizeDecorator.param_mappingRange.numberValue = 0.01 + precision * 0.12;
@@ -274,6 +282,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_PAINTSTROKES:
 				case STYLE_PAINTSTROKES_VAN_GOUGH:
 				case STYLE_PAINTSTROKES_FIREWORKS:
+				case STYLE_PAINTSTROKES_SPIRAL:
 				case STYLE_SPLATS:
 				case STYLE_SPRAY:
 				case STYLE_CRAYON:
@@ -305,6 +314,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			{
 				rotationCenterX = points[0].x;
 				rotationCenterY = points[0].y;
+				if (  param_style.index == STYLE_PAINTSTROKES_SPIRAL ) forceRotationAngle = Math.random() * Math.PI * 2;
 			}
 			for ( var i:int = 0; i < points.length; i++ )
 			{
