@@ -176,6 +176,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 			spawnDecorator.param_offsetAngleRange.lowerDegreesValue = -180;
 			spawnDecorator.param_offsetAngleRange.upperDegreesValue = 180;
 			
+			callbackDecorator.active = false;
 			
 			switch ( param_style.index )
 			{
@@ -203,6 +204,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 				case STYLE_PIXELATE:
 					gridDecorator.active = true;
 					spawnDecorator.active = false;
+					callbackDecorator.active = true;
 					
 					sizeDecorator.param_mappingMode.index = SizeDecorator.INDEX_MODE_FIXED;
 					sizeDecorator.param_mappingRange.numberValue = 0;
@@ -340,17 +342,16 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		
 		protected function processPoints(points:Vector.<SamplePoint>, manager:PathManager, fingerIsDown:Boolean):Vector.<SamplePoint>
 		{
-			if (  param_style.index == STYLE_PIXELATE )
+			//only active for pixelate style
+			for ( var i:int = 0; i < points.length; i++ )
 			{
-				for ( var i:int = 0; i < points.length; i++ )
+				if ( Math.random() < 0.10 )
 				{
-					if ( Math.random() < 0.10 )
-					{
-						points[i].x += (Math.random()-Math.random()) * gridDecorator.param_stepX.numberValue;
-						points[i].y += (Math.random()-Math.random()) * gridDecorator.param_stepY.numberValue;
-					}
+					points[i].x += (Math.random()-Math.random()) * gridDecorator.param_stepX.numberValue;
+					points[i].y += (Math.random()-Math.random()) * gridDecorator.param_stepY.numberValue;
 				}
 			}
+			
 			return points;
 		}
 	}

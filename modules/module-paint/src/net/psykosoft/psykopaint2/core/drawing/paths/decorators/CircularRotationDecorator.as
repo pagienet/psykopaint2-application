@@ -67,6 +67,22 @@ package net.psykosoft.psykopaint2.core.drawing.paths.decorators
 			return data;
 		}
 		
+		public function randomizeRotationCenters( pointCount:int = -1):void
+		{
+			if ( pointCount > -1 )  param_randomPoints.intValue = pointCount;
+			
+			//nasty - better clean up if there is a tree already:
+			kdTree = new BalancingKDTree();
+			
+			if (  param_randomPoints.intValue > 0 )
+			{
+				for ( var i:int = param_randomPoints.intValue; --i > -1; )
+				{
+					kdTree.insertPoint( new SamplePoint( Math.random(), Math.random()));
+				}
+			}
+		}
+		
 		override public function updateParametersFromXML(message:XML):void
 		{
 			//TODO: maybe add some center point generator?

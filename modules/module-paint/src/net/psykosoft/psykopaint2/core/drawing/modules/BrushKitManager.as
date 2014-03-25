@@ -217,7 +217,7 @@ package net.psykosoft.psykopaint2.core.drawing.modules
 				if ( pipetteActive )
 				{
 					pipetteActive = false;
-					notifyTogglePaintingEnableSignal(true);
+					notifyTogglePaintingEnableSignal.dispatch(true);
 					copyColorUtil.dispose();
 				}
 			}
