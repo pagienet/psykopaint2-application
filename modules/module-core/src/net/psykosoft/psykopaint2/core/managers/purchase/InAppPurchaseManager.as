@@ -7,6 +7,8 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 	
 	import flash.net.SharedObject;
 	
+	import net.psykosoft.psykopaint2.core.data.UserConfigVO;
+	import net.psykosoft.psykopaint2.core.models.UserConfigModel;
 	import net.psykosoft.psykopaint2.core.signals.NotifyPurchaseStatusSignal;
 
 	public class InAppPurchaseManager
@@ -34,6 +36,10 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 		
 		[Inject]
 		public var notifyPurchaseStatusSignal:NotifyPurchaseStatusSignal
+		
+		[Inject]
+		public var userConfigModel:UserConfigModel
+		
 		
 		public function InAppPurchaseManager()
 		{
@@ -108,6 +114,13 @@ package net.psykosoft.psykopaint2.core.managers.purchase
 			if (sharedObject.data["inventory"]==null)
 			{			
 				sharedObject.data["inventory"]=new Object();
+			} else {
+				
+				var inventory:Object=sharedObject.data["inventory"];
+				if( inventory[FULL_UPGRADE_PRODUCT_ID]=="purchased")
+				{
+					userConfigModel.userConfig.hasFullVersion = true;
+				}
 			}
 			
 			//updateInventoryMessage();

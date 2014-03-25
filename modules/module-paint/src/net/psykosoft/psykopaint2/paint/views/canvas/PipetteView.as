@@ -37,8 +37,11 @@ package net.psykosoft.psykopaint2.paint.views.canvas
 		override public function dispose():void
 		{
 			super.dispose();
-			pipette.removeEventListener( Event.COMPLETE, onPipetteClosed );
-			onPipetteClosed(null);
+			if ( pipette )
+			{
+				pipette.removeEventListener( Event.COMPLETE, onPipetteClosed );
+				onPipetteClosed(null);
+			}
 			chargeChangedSignal = null;
 		}
 		

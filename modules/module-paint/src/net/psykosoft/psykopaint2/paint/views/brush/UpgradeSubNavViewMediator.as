@@ -80,6 +80,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					notifyTogglePaintingEnableSignal.dispatch(true);
 				break;
 				case InAppPurchaseManager.STATUS_PURCHASE_COMPLETE:
+				case InAppPurchaseManager.STATUS_PURCHASE_NOT_REQUIRED:
 					//as long as we have a single buy in product this is okayish:
 					userConfig.userConfig.hasFullVersion = true;
 					requestNavigationStateChange( NavigationStateType.PREVIOUS );
@@ -87,7 +88,7 @@ package net.psykosoft.psykopaint2.paint.views.brush
 					
 				break;
 				case InAppPurchaseManager.STATUS_STORE_UNAVAILABLE:
-					//TODO: for offline testing only
+					//TODO: for offline testing only - important to remove it for release!
 					userConfig.userConfig.hasFullVersion = true;
 					requestNavigationStateChange( NavigationStateType.PREVIOUS );
 					notifyTogglePaintingEnableSignal.dispatch(true);
