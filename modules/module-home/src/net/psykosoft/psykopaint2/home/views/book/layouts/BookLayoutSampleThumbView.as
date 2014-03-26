@@ -28,7 +28,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		private var _width:Number = 60;
 		private var _height:Number = 40;
 		
-		private var _data:FileSourceImageProxy;
+		private var _imageProxy:SourceImageProxy;
 		
 		//THUMBNAIL
 		private var _thumbGeometry:PlaneGeometry;
@@ -65,12 +65,6 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			
 		}
 		
-		
-		protected function onMouseDown(event:MouseEvent3D):void
-		{
-			trace("Thumbnail "+_data['id']);
-		}
-		
 		public function get height():Number
 		{
 			return _height;
@@ -81,21 +75,21 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			return _width;
 		}
 
-		public function setData(value:FileSourceImageProxy):void{
-			
-			if(_data == null || (_data.id) != (value.id))
-			{
-				this._data = value;
-				var fileSourceImageProxy:FileSourceImageProxy = FileSourceImageProxy(_data);
-				fileSourceImageProxy.loadThumbnail(onThumbnailLoaded,onThumbnailFail,1 /* 1= large thumbnail */);
-			}
+		public function get imageProxy():SourceImageProxy
+		{
+			return _imageProxy;
+		}
+
+		public function set imageProxy(value:SourceImageProxy):void{
+			_imageProxy = value;
+			_imageProxy.loadThumbnail(onThumbnailLoaded,onThumbnailFail,1 /* 1= large thumbnail */);
 		}
 		
 		override public function dispose():void{
 			
-			//trace("BookThumbnailView::dispose "+FileSourceImageProxy(_data).id);
-			_data.cancelLoading();
-			_data= null;
+			//trace("BookThumbnailView::dispose "+FileSourceImageProxy(_imageProxy).id);
+			_imageProxy.cancelLoading();
+			_imageProxy = null;
 		
 			/*//IF ASSET HAVEN'T FINISHED LOADING THE THOSE GUYS WILL STILL BE NULL */
 			if(_thumbMaterial){ 
@@ -121,7 +115,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		
 		private function onThumbnailFail():void
 		{
-			trace("OUPS THE ASSET FAILED TO LOAD "+_data);
+			trace("OUPS THE ASSET FAILED TO LOAD "+_imageProxy);
 		}
 		
 		private function onThumbnailLoaded(file : Object):void

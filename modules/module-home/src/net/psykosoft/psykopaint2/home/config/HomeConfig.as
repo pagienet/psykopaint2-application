@@ -21,12 +21,13 @@ package net.psykosoft.psykopaint2.home.config
 	import net.psykosoft.psykopaint2.home.signals.RequestHomeRootViewRemovalSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestLoadPaintingDataFileSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestOpenPaintingDataVOSignal;
-	import net.psykosoft.psykopaint2.home.signals.RequestSetGalleryPaintingSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestSetupHomeModuleSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestStartNewColorPaintingSignal;
 	import net.psykosoft.psykopaint2.home.signals.RequestWallpaperChangeSignal;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootView;
 	import net.psykosoft.psykopaint2.home.views.base.HomeRootViewMediator;
+	import net.psykosoft.psykopaint2.home.views.book.BookView;
+	import net.psykosoft.psykopaint2.home.views.book.BookViewMediator;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryBrowseSubNavView;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryBrowseSubNavViewMediator;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryPaintingSubNavView;
@@ -164,6 +165,7 @@ package net.psykosoft.psykopaint2.home.config
 			_mediatorMap.map( PickAUserImageView ).toMediator( PickAUserImageViewMediator );
 			_mediatorMap.map( CaptureImageSubNavView ).toMediator( CaptureImageSubNavViewMediator );
 			_mediatorMap.map( CaptureImageView ).toMediator( CaptureImageViewMediator );
+			_mediatorMap.map( BookView ).toMediator( BookViewMediator );
 		}
 	}
 }

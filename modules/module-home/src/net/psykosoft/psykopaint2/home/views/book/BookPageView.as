@@ -125,16 +125,9 @@ package net.psykosoft.psykopaint2.home.views.book
 //				//DO NOTHING
 //				//NUMBER ALREADY BEEN SET TO THIS
 //			}
-			
-			
-			
 		}
 		
-		
-	
-		
-		
-		
+
 		override public function dispose():void{
 			
 			//REMOVE LAYOUT

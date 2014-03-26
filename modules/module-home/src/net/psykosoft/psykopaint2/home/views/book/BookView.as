@@ -12,13 +12,14 @@ package net.psykosoft.psykopaint2.home.views.book
 	import away3d.core.base.Geometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
-	import away3d.events.MouseEvent3D;
 	import away3d.filters.DepthOfFieldFilter3D;
 	import away3d.lights.LightBase;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
-	
+
+	import flash.geom.Vector3D;
+
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
 	import net.psykosoft.psykopaint2.core.models.FileGalleryImageProxy;
@@ -32,12 +33,17 @@ package net.psykosoft.psykopaint2.home.views.book
 	import net.psykosoft.psykopaint2.home.views.book.layouts.BookLayoutRings;
 	import net.psykosoft.psykopaint2.home.views.book.layouts.BookLayoutSamplesView;
 
-	public class BookView  extends Sprite
+	import org.osflash.signals.Signal;
+
+	public class BookView extends Sprite
 	{
-		
 		private  const SIMULTANEOUS_PAGES:uint= 10;
 		public static const TYPE_GALLERY_VIEW:String = "TYPE_GALLERY_VIEW";
 		public static const TYPE_FILE_VIEW:String = "TYPE_FILE_VEW";
+
+		public var galleryImageSelected:Signal = new Signal(GalleryImageProxy);
+		public var sourceImageSelected:Signal = new Signal(SourceImageProxy);
+
 		private var _viewType:String;
 		
 		private var _grabThrowController:GrabThrowController;
@@ -46,9 +52,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private var _light:LightBase;
 		private var _container:ObjectContainer3D;
 		private var _pages:Vector.<BookPageView>;
-		private var _pagesLayouts:Vector.<BookLayoutAbstractView>;
-		private var _cover:Mesh;
-		
+
 		private var _ringTextureMaterial:TextureMaterial;
 		private var _rings:BookLayoutRings;
 		
@@ -57,49 +61,79 @@ package net.psykosoft.psykopaint2.home.views.book
 		private var _galleryImageCollection:GalleryImageCollection;
 		private var _sourceImageCollection:SourceImageCollection;
 		private var _doublePageIndex:Number=0;
-		private var _bookMaterialProxy:BookMaterialsProxy;
-		
+
 		private var _maxNumberOfPages:uint;
-		
-		
+
 		private var _benchmarkStartTime:Date;
 		private var _benchmarkFinishTime:Date;
 		private var _coverBook:Mesh;
-		private var _bloomFilter:DepthOfFieldFilter3D;
+		private var _showing:Boolean;
 		
 		public function BookView(view:View3D, light:LightBase, stage3dProxy:Stage3DProxy)
 		{
-			
 			_view = view;
 			_stage3DProxy = stage3dProxy;
-			_light = light; 
+			_light = light;
+		}
+
+		public function init():void
+		{
 			_container = new ObjectContainer3D();
-			_pages = new Vector.<BookPageView>();
-			
-			_view.scene.addChild(_container);
-			
 			//ROTATE CONTAINER TO FACE THE CAMERA
 			_container.rotationX = 90;
 			_container.rotationY = 0;
 			_container.rotationZ = 180;
-			_container.x=-270;
 			_container.z=200;
 			_container.mouseEnabled = true;
-			
-			init();
-			
-			//TESTING FILTERS
-			//var _bloomFilter:MotionBlurFilter3D = new MotionBlurFilter3D(  );
-			//_view.filters3d = [ _bloomFilter ];
 
+			//CREATE BACKGROUND COVER
+			var coverGeometry:Geometry = new PlaneGeometry(373,214);
+			var coverMaterial:ColorMaterial = new ColorMaterial(0xAAAAAA);
+			_coverBook = new Mesh(coverGeometry,coverMaterial);
+			_container.addChild(_coverBook);
+			_coverBook.y = -10;
+			_coverBook.mouseEnabled=true;
+
+			_ringTextureMaterial = BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.RING);
+			_rings = new BookLayoutRings(_ringTextureMaterial);
+			_container.addChild(_rings);
+			_rings.scaleZ=_rings.scaleX=_rings.scaleY=0.191;
+
+			_pages = new Vector.<BookPageView>();
 		}
-		
+
+
+		public function show():void
+		{
+			// TODO: animations?
+			if (!_showing) {
+				_showing = true;
+				_view.scene.addChild(_container);
+				startGrabController();
+			}
+		}
+
+		public function hide():void{
+			if (_showing) {
+				_view.scene.removeChild(_container);
+				stopGrabController();
+				_showing = false;
+			}
+		}
 		
 		public function dispose():void
 		{
-			BookMaterialsProxy.dispose();
+			removePages();
+
 			_ringTextureMaterial = null;
 			stopGrabController();
+
+			_container.dispose();
+			_coverBook.geometry.dispose();
+			_coverBook.material.dispose();
+			_coverBook.dispose();
+			_container = null;
+			_coverBook = null;
 		}
 		
 		/////////////////////////////////////////////////////////////////
@@ -139,7 +173,7 @@ package net.psykosoft.psykopaint2.home.views.book
 				var currentPageCollection:SourceImageCollection = SourceImageCollection.getSubCollection(i*BookLayoutSamplesView.LENGTH,BookLayoutSamplesView.LENGTH,_sourceImageCollection);
 				var currentBookPageView:BookPageView = _pages[i];
 				var newBookLayoutSamplesView:BookLayoutSamplesView = new BookLayoutSamplesView();
-				
+				newBookLayoutSamplesView.imageSelected.add(sourceImageSelected.dispatch);	// simply forward the signal
 				newBookLayoutSamplesView.setData(currentPageCollection);
 				currentBookPageView.addLayout(newBookLayoutSamplesView);
 			}
@@ -179,13 +213,12 @@ package net.psykosoft.psykopaint2.home.views.book
 				
 				//ADD THE LAYOUT WITH THE LIST OF IMAGES TO THE PAGE WHICH IS A SUBCOLLECTION
 				newBookLayoutGalleryView.setData(currentSubCollection);
+				newBookLayoutGalleryView.imageSelected.add(galleryImageSelected.dispatch);	// simply forward the signal
 				currentBookPageView.addLayout(newBookLayoutGalleryView);
 			}
 			
 		}
-		
-		
-		
+
 		public function updateImageCollection():void
 		{
 			
@@ -220,58 +253,6 @@ package net.psykosoft.psykopaint2.home.views.book
 		/////////////////////////////////////////////////////////////////
 		///////////////////////// PRIVATE FUNCTIONS /////////////////////
 		/////////////////////////////////////////////////////////////////
-		private function init():void
-		{
-			
-			//CREATE BACKGROUND COVER
-			var coverGeometry:Geometry = new PlaneGeometry(373,214);
-			var coverMaterial:ColorMaterial = new ColorMaterial(0xAAAAAA);
-			_coverBook = new Mesh(coverGeometry,coverMaterial);
-			_container.addChild(_coverBook);
-			_coverBook.y = -10;
-			_coverBook.mouseEnabled=true;
-			
-			
-			//LOAD PAGES ASSETS
-			BookMaterialsProxy.launch(function ():void
-			{
-				
-				//ADD RING
-				_ringTextureMaterial = BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.RING);
-				_rings = new BookLayoutRings(_ringTextureMaterial);
-				_container.addChild(_rings);
-				_rings.scaleZ=_rings.scaleX=_rings.scaleY=0.191;
-				
-				
-				start();
-			
-				//_bloomFilter.range=500;
-				//_bloomFilter.focusDistance = 100;
-				
-			});
-			
-			
-			//EVENTS
-			this.addEventListener(Event.ADDED_TO_STAGE,onAdded);	
-			function onAdded(event:Event):void
-			{
-				
-				startGrabController();
-				removeEventListener(Event.ADDED_TO_STAGE,onAdded);
-			}	
-			
-		}	
-		
-		
-		public function start():void{
-			
-			loadDummyGalleryImageCollection();
-			//loadDummySourceImageCollection();
-			
-		}
-		 
-		
-		
 		private function removePages():void{
 			//CLEAR PREVIOUS LAYOUT
 			for (var i:int = 0; i < _pages.length; i++) 
@@ -513,87 +494,18 @@ package net.psykosoft.psykopaint2.home.views.book
 			
 		}
 		
-		
-		///////////////////////////////////
-		///////// TESTING FUNCTIONS //////
-		///////////////////////////////////
-		//USED FOR TESTING PURPOSES ONLY
-		
-		private function loadDummySourceImageCollection():void
+		public function setBookPosition(value:Vector3D):void
 		{
-			trace("BookView::loadDummySourceImageCollection");
+			_container.x = value.x;
+			_container.y = value.y + 20;
+			_container.z = value.z - 250;
+		}
 
-			//TEST DUMMY SOURCEIMAGECOLLECTION
-			var testSourceImageCollection:SourceImageCollection = new SourceImageCollection();
-			testSourceImageCollection.numTotalImages = 42;
-			
-			var fileSourceImageProxys :Vector.<SourceImageProxy>= new Vector.<SourceImageProxy>();
-			for (var i:int = 0; i < testSourceImageCollection.numTotalImages; i++) 
-			{
-				var newImage:FileSourceImageProxy = new FileSourceImageProxy();
-				newImage.id=i;
-				newImage.lowResThumbnailFilename = "book-packaged/samples/thumbs_lowres/"+i+".jpg";
-				newImage.highResThumbnailFilename = "book-packaged/samples/thumbs/"+i+".jpg";
-				fileSourceImageProxys.push(newImage);
-			}
-			testSourceImageCollection.images = fileSourceImageProxys;
-			
-			setSourceImages(testSourceImageCollection);
-			
-			
-			//_benchmarkFinishTime = new Date();
-			//var benchmarkLoadingAssets:uint = _benchmarkFinishTime.time - _benchmarkStartTime.time;
-			//trace("BENCHMARK BOOK LOADING ASSETS = "+benchmarkLoadingAssets); 
-		}
-		
-		
-		
-		private function loadDummyGalleryImageCollection():void
+
+		override public function set mouseEnabled(enabled:Boolean):void
 		{
-			trace("BookView::loadDummyGalleryImageCollection");
-			////////////////////////////
-			///////// DUMMY DATA  //////
-			////////////////////////////
-			//TEST DUMMY GALLERYIMAGECOLLECTION
-			var testGalleryImageCollection:GalleryImageCollection = new GalleryImageCollection();
-			testGalleryImageCollection.numTotalPaintings= 200 /* CHANGE NUMBER OF TEST SAMPLES HERE */;
-			
-			
-			var fileGalleryImageProxys :Vector.<GalleryImageProxy>= new Vector.<GalleryImageProxy>();
-			for (var i:int = 0; i < testGalleryImageCollection.numTotalPaintings; i++) 
-			{
-				var newImage:FileGalleryImageProxy = new FileGalleryImageProxy();
-				newImage.id=i;
-				var startIndex:int = 1035800;
-				//ALL VALUES
-				newImage.sourceThumbnailURL = "http://images.psykopaint.com/gallery/2014/03/thumbnail200/"+(startIndex+i)+".jpg";
-				newImage.thumbnailFilename = "http://images.psykopaint.com/gallery/2014/03/thumbnail200/"+(startIndex+i)+".jpg";
-				newImage.isFavorited = (Math.random()>0.5)?true:false;
-				newImage.numComments = int(Math.random()*100);
-				newImage.numLikes = int(Math.random()*1000);
-				newImage.userThumbnailURL = "";
-				//trace("loadDummyGalleryImageCollection "+i);
-				
-				fileGalleryImageProxys.push(newImage);
-			}
-			testGalleryImageCollection.images = fileGalleryImageProxys;
-			
-			setGalleryImageCollection(testGalleryImageCollection);
-			
-			//REMOVE WHEN NOT NEEDED ANYMORE
-			//_benchmarkFinishTime = new Date();
-			//var benchmarkLoadingAssets:uint = _benchmarkFinishTime.time - _benchmarkStartTime.time;
-			// trace("BENCHMARK BOOK LOADING ASSETS = "+benchmarkLoadingAssets); 
+			super.mouseEnabled = enabled;
+			_view.mouseEnabled = enabled;
 		}
-		
-		
-		
-		
-		public function get container():ObjectContainer3D
-		{
-			return _container;
-		}
-		
-		
 	}
 }

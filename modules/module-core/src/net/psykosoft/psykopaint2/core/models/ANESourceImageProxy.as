@@ -22,5 +22,9 @@ package net.psykosoft.psykopaint2.core.models
 		{
 			onComplete(_ane.getFullImageAtIndex(id));
 		}
+
+		public function cancelLoading():void
+		{
+		}
 	}
 }

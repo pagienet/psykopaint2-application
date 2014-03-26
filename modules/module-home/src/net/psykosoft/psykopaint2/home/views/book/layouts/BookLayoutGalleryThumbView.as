@@ -18,6 +18,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 	
 	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
 	import net.psykosoft.psykopaint2.core.models.FileGalleryImageProxy;
+	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.home.views.book.BookMaterialsProxy;
 
 	public class BookLayoutGalleryThumbView  extends ObjectContainer3D
@@ -27,7 +28,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		private var _width:Number = 60;
 		private var _height:Number = 40;
 		
-		private var _data:FileGalleryImageProxy;
+		private var _imageProxy:GalleryImageProxy;
 		
 		//THUMBNAIL
 		private var _thumbGeometry:PlaneGeometry;
@@ -83,12 +84,12 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			this.addChild(_likeMesh);
 		}
 		
-		
+
 		protected function onMouseDown(event:MouseEvent3D):void
 		{
-			trace("Thumbnail "+_data['id']);
+			trace("Thumbnail "+_imageProxy['id']);
 		}
-		
+
 		public function get height():Number
 		{
 			return _height;
@@ -98,14 +99,20 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		{
 			return _width;
 		}
-		
-		public function setData(value:FileGalleryImageProxy):void{
-			
+
+
+		public function get imageProxy():GalleryImageProxy
+		{
+			return _imageProxy;
+		}
+
+		public function set imageProxy(value:GalleryImageProxy):void{
+
 						
-			if(_data == null || (_data.id) != (value.id))
+			if(_imageProxy == null || (_imageProxy.id) != (value.id))
 			{
 				
-				_data = value;
+				_imageProxy = value;
 				
 				//SHOW THE LOADING THUMBNAIL
 				_thumbMesh.material =   BookMaterialsProxy.getTextureMaterialById(BookMaterialsProxy.THUMBNAIL_LOADING)
@@ -117,18 +124,18 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		
 		public function load(onComplete:Function=null):void{
 			_onComplete = onComplete;
-			if(!_data) trace("BookLayoutGalleryThumbView::WARNING!! Trying to load but there's no data");
-			_data.loadThumbnail(onThumbnailLoaded,onThumbnailFail,1 /* 1= large thumbnail */);
+			if(!_imageProxy) trace("BookLayoutGalleryThumbView::WARNING!! Trying to load but there's no data");
+			_imageProxy.loadThumbnail(onThumbnailLoaded,onThumbnailFail,1 /* 1= large thumbnail */);
 
 		}
 		
 		
 		override public function dispose():void{
 			
-			trace("BookLayoutGalleryThumbView::dispose "+FileGalleryImageProxy(_data).id);
+			trace("BookLayoutGalleryThumbView::dispose "+FileGalleryImageProxy(_imageProxy).id);
 			
-			_data.cancelLoading();
-			_data= null;
+			_imageProxy.cancelLoading();
+			_imageProxy= null;
 			
 			_likeMesh.dispose();
 			_commentMesh.dispose();
@@ -161,14 +168,14 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		
 		private function onThumbnailFail():void
 		{
-			trace("OUPS THE ASSET FAILED TO LOAD "+_data);
+			trace("OUPS THE ASSET FAILED TO LOAD "+_imageProxy);
 		}
 		
 		private function onThumbnailLoaded(file : Object):void
 		{
 			var texture:Texture2DBase
 			
-			//trace("BookLayoutGalleryThumbView::loaded "+_data.id);
+			//trace("BookLayoutGalleryThumbView::loaded "+_imageProxy.id);
 			
 			//EITHER ATF
 //			if(file is ByteArray){

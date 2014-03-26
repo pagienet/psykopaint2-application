@@ -3,29 +3,27 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Expo;
 	
-	import away3d.containers.ObjectContainer3D;
 	import away3d.events.MouseEvent3D;
 	
-	import net.psykosoft.psykopaint2.core.models.FileGalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
+
+	import org.osflash.signals.Signal;
 
 	public class BookLayoutGalleryView  extends BookLayoutAbstractView
 	{
 		
 		public static const COLUMNS:int=2;
 		public static const ROWS:int=3;
-		
+
+		public var imageSelected : Signal = new Signal(GalleryImageProxy);
+
 		private var _data:GalleryImageCollection;
 		private var _pageThumbnailViews:Vector.<BookLayoutGalleryThumbView>;
-		
-		private var _pageIndex:int;
 		
 		public function BookLayoutGalleryView()
 		{
 			_pageThumbnailViews = new Vector.<BookLayoutGalleryThumbView>(LENGTH);
-
-			
 		}
 		
 		public function setData(data:GalleryImageCollection):void
@@ -47,7 +45,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 						currentPageThumbnailView = new BookLayoutGalleryThumbView();
 						// CAST GalleryImageProxy => FileGalleryImageProxy
 						// IT'S BEEN WRITTEN THIS WAY THAT GalleryImageCollection collects GalleryImageProxys and not FileGalleryImageProxy
-						 currentPageThumbnailView.setData(FileGalleryImageProxy(currentSourceImageProxy));
+						 currentPageThumbnailView.imageProxy = currentSourceImageProxy;
 						_pageThumbnailViews[i] = currentPageThumbnailView;
 						currentPageThumbnailView.addEventListener(MouseEvent3D.CLICK,onClickDownThumbnail);
 						//DOWNLOAD IMAGE STRAIGHT AWAY
@@ -57,7 +55,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 					//UPDATE	
 					
 						currentPageThumbnailView = _pageThumbnailViews[i] ;
-						currentPageThumbnailView.setData(FileGalleryImageProxy(currentSourceImageProxy));
+						currentPageThumbnailView.imageProxy = currentSourceImageProxy;
 						
 						//DOWNLOAD IMAGE STRAIGHT AWAY
 						currentPageThumbnailView.load();
@@ -89,21 +87,24 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 			}else {
 				_pageThumbnailViews[index].load();
 			}
-				
 		}
 		
 		
 		protected function onClickDownThumbnail(event:MouseEvent3D):void
 		{
-			TweenLite.to(ObjectContainer3D(event.target),0.25,{ease:Expo.easeOut,y:5,rotationX:2,onComplete:function():void{
-				TweenLite.to(ObjectContainer3D(event.target),0.25,{ease:Expo.easeOut,y:0,rotationX:0});
+			var thumb : BookLayoutGalleryThumbView = BookLayoutGalleryThumbView(event.target);
+			TweenLite.to(thumb,0.25,{ease:Expo.easeOut,y:5,rotationX:2, onComplete:function():void{
+				TweenLite.to(thumb,0.25,{ease:Expo.easeOut,y:0,rotationX:0});
 			}});
-			
+			imageSelected.dispatch(thumb.imageProxy);
 		}		
 		
 		override public function dispose():void
 		{
 			_data = null;
+
+			imageSelected.removeAll();
+
 			//trace("BookLayoutGalleryView::dispose");
 			for (var i:int = 0; i < _pageThumbnailViews.length; i++) 
 			{
@@ -114,7 +115,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 				_pageThumbnailViews[i]=null;
 			}
 			_pageThumbnailViews = new Vector.<BookLayoutGalleryThumbView>();
-			
+
 			super.dispose();
 		}
 		
