@@ -1,32 +1,28 @@
 package net.psykosoft.psykopaint2.home.views.book
 {
-	import away3d.events.Object3DEvent;
-
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Cubic;
 	import com.greensock.easing.Quad;
 	import com.greensock.easing.Sine;
 	
 	import flash.display.Sprite;
-
+	import flash.events.Event;
+	import flash.geom.Matrix3D;
+	import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
+	
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Geometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
+	import away3d.events.Object3DEvent;
 	import away3d.lights.LightBase;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
-
-	import flash.events.Event;
-	import flash.geom.Matrix3D;
-	import flash.geom.Rectangle;
-
-	import flash.geom.Vector3D;
-
+	
 	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
-
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
@@ -36,7 +32,7 @@ package net.psykosoft.psykopaint2.home.views.book
 	import net.psykosoft.psykopaint2.home.views.book.layouts.BookLayoutGalleryView;
 	import net.psykosoft.psykopaint2.home.views.book.layouts.BookLayoutRings;
 	import net.psykosoft.psykopaint2.home.views.book.layouts.BookLayoutSamplesView;
-
+	
 	import org.osflash.signals.Signal;
 
 	public class BookView extends Sprite
@@ -44,7 +40,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		public var switchedToNormalMode:Signal = new Signal();
 		public var switchedToHiddenMode:Signal = new Signal();
 
-		private  const SIMULTANEOUS_PAGES:uint= 10;
+		private static var  SIMULTANEOUS_PAGES:uint = 10;
 		public static const TYPE_GALLERY_VIEW:String = "TYPE_GALLERY_VIEW";
 		public static const TYPE_FILE_VIEW:String = "TYPE_FILE_VEW";
 
@@ -281,11 +277,11 @@ package net.psykosoft.psykopaint2.home.views.book
 			//WE TAKE THE PREVIOUS INVISIBLE PAGES AND APPLY THE NEXT ASSETS TO THOSE			
 			//FILL LAYOUTS WITH NEW DATA 
 			//WE FILL THE 2 PREVIOUS PAGES TOO
-			for (var i:int = Math.floor(_doublePageIndex*2)-2; i < Math.floor(_doublePageIndex*2)+SIMULTANEOUS_PAGES-2; i++) 
+			for (var i:int = Math.floor(_doublePageIndex*2)-2; i < Math.floor(_doublePageIndex*2)+PAGES_CREATED-2; i++) 
 			{
 				
-				if(i<0)i=SIMULTANEOUS_PAGES+i;
-				var iModulo:int= i%SIMULTANEOUS_PAGES;
+				if(i<0)i=PAGES_CREATED+i;
+				var iModulo:int= i%PAGES_CREATED;
 				var currentBookPageView:BookPageView = _pages[iModulo];
 				var firstPageToLoad:int = Math.max((Math.floor(_doublePageIndex)*2+i)-1,0);
 				
@@ -345,23 +341,24 @@ package net.psykosoft.psykopaint2.home.views.book
 		
 		private function updatePages():void{
 						
-			var firstPageIndex:int = Math.floor(_doublePageIndex)*2%SIMULTANEOUS_PAGES;
+			var firstPageIndex:int = Math.floor(_doublePageIndex)*2%PAGES_CREATED;
+			
+			
 			
 		//	trace("updatePages _doublePageIndex = "+_doublePageIndex+"  firstPageIndex="+firstPageIndex);
 			for (var p:int = 0; p < _pages.length; p++) 
 			{
+				
 				var pageIndex:uint=Math.floor(_doublePageIndex*2)+p;
 				//i IS THE pageIndex MODULO SIMULTANEOUS_PAGES
 				//THE LAST ONES GOES BACK TO THE BEGINNING OF THE PILE, ETC...
-				var i:int =(pageIndex)%SIMULTANEOUS_PAGES;
-				
+				var i:int =(pageIndex)%PAGES_CREATED;
 				var page:BookPageView = _pages[i];
-
-				//var pageIndexProgress:Number = (_doublePageIndex*2+1-Math.ceil(i/2));
-				var nextDoublePageIndex:int= Math.ceil(i/2);
-				var pageIndexProgress:Number = (_doublePageIndex-nextDoublePageIndex+2)%(SIMULTANEOUS_PAGES/2)-1;
 				
-				//EASING IS THE VALUE FROM 0 TO 1 TO EASE THE TRANSITION
+				var nextDoublePageIndex:int= Math.ceil(i/2);
+				var pageIndexProgress:Number = (_doublePageIndex-nextDoublePageIndex+2)%(PAGES_CREATED/2)-1;
+				
+				//EASING IS THE VALUE FROM 0 TO 1 USED TO EASE THE TRANSITION
 				var easing:Number = pageIndexProgress-Math.floor(pageIndexProgress);
 								
 				if(i%2==0){
@@ -395,20 +392,20 @@ package net.psykosoft.psykopaint2.home.views.book
 				//
 				if(isRoundPage==0){
 					//trace("SHOW 2 PAGES ONLY");
-					firstVisiblePage = (_doublePageIndex*2)%(SIMULTANEOUS_PAGES);
+					firstVisiblePage = (_doublePageIndex*2)%(PAGES_CREATED);
 					page.visible = false;
 					//SHOW 2 PAGES ONLY
-					if(i%SIMULTANEOUS_PAGES == firstVisiblePage%SIMULTANEOUS_PAGES ){page.visible = true;}
-					if(i%SIMULTANEOUS_PAGES == (firstVisiblePage+1)%SIMULTANEOUS_PAGES){page.visible = true;}
+					if(i%PAGES_CREATED == firstVisiblePage%PAGES_CREATED ){page.visible = true;}
+					if(i%PAGES_CREATED == (firstVisiblePage+1)%PAGES_CREATED){page.visible = true;}
 					
 					
 				}else {
 					//OTHERWISE WE SHOW THE 4 PAGES CONCERNED
-					firstVisiblePage = (Math.floor(_doublePageIndex)*2)%SIMULTANEOUS_PAGES;
+					firstVisiblePage = (Math.floor(_doublePageIndex)*2)%PAGES_CREATED;
 					
 					page.visible = false;
 					// 1ST PAGE
-					if(i%SIMULTANEOUS_PAGES == firstVisiblePage%SIMULTANEOUS_PAGES)
+					if(i%PAGES_CREATED == firstVisiblePage%PAGES_CREATED)
 					{
 						page.visible = true;
 						
@@ -419,7 +416,7 @@ package net.psykosoft.psykopaint2.home.views.book
 					}
 					
 					// 2ND PAGE
-					if(i%SIMULTANEOUS_PAGES == (firstVisiblePage+1)%SIMULTANEOUS_PAGES){
+					if(i%PAGES_CREATED == (firstVisiblePage+1)%PAGES_CREATED){
 						page.visible = true;
 						
 						
@@ -429,7 +426,7 @@ package net.psykosoft.psykopaint2.home.views.book
 					}
 					
 					// 3RD PAGE
-					if(i%SIMULTANEOUS_PAGES == (firstVisiblePage+2)%SIMULTANEOUS_PAGES){
+					if(i%PAGES_CREATED == (firstVisiblePage+2)%PAGES_CREATED){
 						page.visible = true;
 						
 						if(easing<0.5 ){
@@ -438,7 +435,7 @@ package net.psykosoft.psykopaint2.home.views.book
 					}
 					
 					// 4TH PAGE
-					if(i%SIMULTANEOUS_PAGES == (firstVisiblePage+3)%SIMULTANEOUS_PAGES)
+					if(i%PAGES_CREATED == (firstVisiblePage+3)%PAGES_CREATED)
 					{
 							
 						page.visible = true;
@@ -483,7 +480,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			var maxValue:int = Math.ceil(_maxNumberOfPages/2) -1;
 			
 			//IF WE ARE CHANGING PAGE INDEX FROM 1 TO 2 WE LOAD NEXT SET OF PAGES
-			if(value>=0&&value<=maxValue&&Math.floor(_doublePageIndex)*2 %SIMULTANEOUS_PAGES != Math.floor(value)*2 %SIMULTANEOUS_PAGES){
+			if(value>=0&&value<=maxValue&&Math.floor(_doublePageIndex)*2 %PAGES_CREATED != Math.floor(value)*2 %PAGES_CREATED){
 				updateImageCollection();
 				//trace("_doublePageIndex = "+_doublePageIndex+" value = "+value);
 			}
@@ -667,5 +664,11 @@ package net.psykosoft.psykopaint2.home.views.book
 			super.mouseEnabled = enabled;
 			_view.mouseEnabled = enabled;
 		}
+		
+		public function get PAGES_CREATED():int{
+			//return Math.min(_pages.length,SIMULTANEOUS_PAGES);
+			return _pages.length;
+		}
+		
 	}
 }
