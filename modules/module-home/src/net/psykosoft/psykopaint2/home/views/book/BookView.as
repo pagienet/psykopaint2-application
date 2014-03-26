@@ -209,7 +209,7 @@ package net.psykosoft.psykopaint2.home.views.book
 				//CREATE A SUB COLLECTION WITH THE AMOUNT OF IMAGES NEEDED
 				var currentSubCollection:GalleryImageCollection = GalleryImageCollection.getSubCollection(i*BookLayoutGalleryView.LENGTH,BookLayoutGalleryView.LENGTH,_galleryImageCollection);
 				var currentBookPageView:BookPageView = _pages[i];
-				var newBookLayoutGalleryView:BookLayoutGalleryView = new BookLayoutGalleryView();
+				var newBookLayoutGalleryView:BookLayoutGalleryView = new BookLayoutGalleryView(_view.stage3DProxy);
 				
 				//ADD THE LAYOUT WITH THE LIST OF IMAGES TO THE PAGE WHICH IS A SUBCOLLECTION
 				newBookLayoutGalleryView.setData(currentSubCollection);

@@ -97,7 +97,7 @@ package net.psykosoft.psykopaint2.home.views.book
 					showGalleryBook(GalleryType.YOURS);
 					break;
 				case NavigationStateType.GALLERY_PAINTING:
-					showGalleryBook(GalleryType.YOURS, -185);
+					showGalleryBookBottom();
 					break;
 				case NavigationStateType.PICK_SAMPLE_IMAGE:
 					showEaselBook(ImageCollectionSource.SAMPLE_IMAGES);
@@ -122,19 +122,27 @@ package net.psykosoft.psykopaint2.home.views.book
 			service.fetchImages(0, 30, onSourceImagesFetched, onImagesError);
 		}
 
-		private function showGalleryBook(source : uint, offsetY : int = 0):void
+		private function showGalleryBook(source : uint):void
 		{
-			var vector : Vector3D = GalleryView.CAMERA_FAR_POSITION.clone();
-			vector.y += offsetY;
+			var vector : Vector3D = GalleryView.CAMERA_FAR_POSITION;
 			view.setBookPosition(vector);
 			view.mouseEnabled = true;
 			view.show();
 
 			// this just prevents reloading between hidden and shown state
 			if (_gallerySource != source) {
-				galleryService.fetchImages(source, 0, 30, onGalleryImagesFetched, onImagesError);
 				_gallerySource = source;
+				galleryService.fetchImages(source, 0, 30, onGalleryImagesFetched, onImagesError);
 			}
+		}
+
+		private function showGalleryBookBottom():void
+		{
+			var vector : Vector3D = GalleryView.CAMERA_FAR_POSITION.clone();
+			vector.y -= 185;
+			view.setBookPosition(vector);
+			view.mouseEnabled = true;
+			view.show();
 		}
 
 		private function onSourceImagesFetched(collection:SourceImageCollection):void
