@@ -54,6 +54,7 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private var currentState:String;
 		private var _gallerySource:int = -1;
+		private var _activeGalleryNavState:String;
 
 
 		public function BookViewMediator()
@@ -65,6 +66,8 @@ package net.psykosoft.psykopaint2.home.views.book
 			view.init();
 			view.galleryImageSelected.add(onGalleryImageSelected);
 			view.sourceImageSelected.add(onSourceImageSelected);
+			view.switchedToNormalMode.add(onSwitchedToNormalMode);
+			view.switchedToHiddenMode.add(onSwitchedToHiddenMode);
 			notifyStateChange.add(onStateChange);
 		}
 
@@ -73,6 +76,8 @@ package net.psykosoft.psykopaint2.home.views.book
 			view.dispose();
 			view.galleryImageSelected.remove(onGalleryImageSelected);
 			view.sourceImageSelected.remove(onSourceImageSelected);
+			view.switchedToNormalMode.remove(onSwitchedToNormalMode);
+			view.switchedToHiddenMode.remove(onSwitchedToHiddenMode);
 			notifyStateChange.remove(onStateChange);
 		}
 
@@ -82,19 +87,19 @@ package net.psykosoft.psykopaint2.home.views.book
 
 			switch(newState) {
 				case NavigationStateType.GALLERY_BROWSE_FOLLOWING:
-					showGalleryBook(GalleryType.FOLLOWING);
+					showGalleryBook(newState, GalleryType.FOLLOWING);
 					break;
 				case NavigationStateType.GALLERY_BROWSE_MOST_LOVED:
-					showGalleryBook(GalleryType.MOST_LOVED);
+					showGalleryBook(newState, GalleryType.MOST_LOVED);
 					break;
 				case NavigationStateType.GALLERY_BROWSE_MOST_RECENT:
-					showGalleryBook(GalleryType.MOST_RECENT);
+					showGalleryBook(newState, GalleryType.MOST_RECENT);
 					break;
 				case NavigationStateType.GALLERY_BROWSE_USER:
-					showGalleryBook(GalleryType.USER);
+					showGalleryBook(newState, GalleryType.USER);
 					break;
 				case NavigationStateType.GALLERY_BROWSE_YOURS:
-					showGalleryBook(GalleryType.YOURS);
+					showGalleryBook(newState, GalleryType.YOURS);
 					break;
 				case NavigationStateType.GALLERY_PAINTING:
 					showGalleryBookBottom();
@@ -107,7 +112,8 @@ package net.psykosoft.psykopaint2.home.views.book
 					break;
 				default:
 					_gallerySource = -1;
-					view.hide();
+					view.hidingEnabled = false;
+					view.remove();
 			}
 
 			currentState = newState;
@@ -116,17 +122,22 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function showEaselBook(source:String):void
 		{
 			view.setBookPosition(EaselView.CAMERA_POSITION);
-			view.mouseEnabled = true;
+			view.hidingEnabled = false;
+			view.bookEnabled = true;
+			view.hiddenRatio = 0.0;
 			view.show();
 			var service:SourceImageService = source == ImageCollectionSource.CAMERAROLL_IMAGES ? cameraRollService : sampleImageService;
 			service.fetchImages(0, 30, onSourceImagesFetched, onImagesError);
 		}
 
-		private function showGalleryBook(source : uint):void
+		private function showGalleryBook(galleryNavState : String, source : uint):void
 		{
-			var vector : Vector3D = GalleryView.CAMERA_FAR_POSITION;
-			view.setBookPosition(vector);
-			view.mouseEnabled = true;
+			_activeGalleryNavState = galleryNavState;
+
+			view.setBookPosition(GalleryView.CAMERA_FAR_POSITION);
+			view.hiddenRatio = 0.0;
+			view.bookEnabled = true;
+			view.hidingEnabled = true;
 			view.show();
 
 			// this just prevents reloading between hidden and shown state
@@ -138,10 +149,10 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function showGalleryBookBottom():void
 		{
-			var vector : Vector3D = GalleryView.CAMERA_FAR_POSITION.clone();
-			vector.y -= 185;
-			view.setBookPosition(vector);
-			view.mouseEnabled = true;
+			view.setBookPosition(GalleryView.CAMERA_FAR_POSITION);
+			view.hiddenRatio = 1.0;
+			view.bookEnabled = true;
+			view.hidingEnabled = true;
 			view.show();
 		}
 
@@ -169,7 +180,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function onSourceImageSelected(sourceImageProxy : SourceImageProxy) : void
 		{
 			view.mouseEnabled = false;
-			view.hide();
+			view.remove();
 			sourceImageProxy.loadFullSized(onLoadFullSizedSourceComplete, onLoadFullSizedError);
 		}
 
@@ -182,6 +193,16 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function onLoadFullSizedSourceComplete(bitmapData : BitmapData):void
 		{
 			requestCropSourceImageSignal.dispatch(bitmapData, CameraRollImageOrientation.ROTATION_0);
+		}
+
+		private function onSwitchedToHiddenMode():void
+		{
+			requestNavigationStateChange.dispatch(NavigationStateType.GALLERY_PAINTING);
+		}
+
+		private function onSwitchedToNormalMode():void
+		{
+			requestNavigationStateChange.dispatch(_activeGalleryNavState);
 		}
 	}
 }

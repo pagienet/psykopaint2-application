@@ -1,34 +1,38 @@
 package net.psykosoft.psykopaint2.home.views.book
 {
+	import away3d.events.Object3DEvent;
+
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Cubic;
+	import com.greensock.easing.Quad;
 	import com.greensock.easing.Sine;
 	
 	import flash.display.Sprite;
-	import flash.events.Event;
-	
+
 	import away3d.containers.ObjectContainer3D;
 	import away3d.containers.View3D;
 	import away3d.core.base.Geometry;
 	import away3d.core.managers.Stage3DProxy;
 	import away3d.entities.Mesh;
-	import away3d.filters.DepthOfFieldFilter3D;
 	import away3d.lights.LightBase;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
 
+	import flash.events.Event;
+	import flash.geom.Matrix3D;
+	import flash.geom.Rectangle;
+
 	import flash.geom.Vector3D;
+
+	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowController;
 	import net.psykosoft.psykopaint2.core.managers.gestures.GrabThrowEvent;
-	import net.psykosoft.psykopaint2.core.models.FileGalleryImageProxy;
-	import net.psykosoft.psykopaint2.core.models.FileSourceImageProxy;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
 	import net.psykosoft.psykopaint2.core.models.SourceImageCollection;
 	import net.psykosoft.psykopaint2.core.models.SourceImageProxy;
-	import net.psykosoft.psykopaint2.home.views.book.layouts.BookLayoutAbstractView;
 	import net.psykosoft.psykopaint2.home.views.book.layouts.BookLayoutGalleryView;
 	import net.psykosoft.psykopaint2.home.views.book.layouts.BookLayoutRings;
 	import net.psykosoft.psykopaint2.home.views.book.layouts.BookLayoutSamplesView;
@@ -37,15 +41,21 @@ package net.psykosoft.psykopaint2.home.views.book
 
 	public class BookView extends Sprite
 	{
+		public var switchedToNormalMode:Signal = new Signal();
+		public var switchedToHiddenMode:Signal = new Signal();
+
 		private  const SIMULTANEOUS_PAGES:uint= 10;
 		public static const TYPE_GALLERY_VIEW:String = "TYPE_GALLERY_VIEW";
 		public static const TYPE_FILE_VIEW:String = "TYPE_FILE_VEW";
+
+		private static const COVER_WIDTH:Number=373;
+		private static const COVER_HEIGHT:Number=214;
 
 		public var galleryImageSelected:Signal = new Signal(GalleryImageProxy);
 		public var sourceImageSelected:Signal = new Signal(SourceImageProxy);
 
 		private var _viewType:String;
-		
+
 		private var _grabThrowController:GrabThrowController;
 		private var _view:View3D;
 		private var _stage3DProxy:Stage3DProxy;
@@ -56,7 +66,6 @@ package net.psykosoft.psykopaint2.home.views.book
 		private var _ringTextureMaterial:TextureMaterial;
 		private var _rings:BookLayoutRings;
 		
-		private var _pageCount:uint=4;
 		private var _pageBrowsingSpeed:Number=5;
 		private var _galleryImageCollection:GalleryImageCollection;
 		private var _sourceImageCollection:SourceImageCollection;
@@ -64,16 +73,63 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private var _maxNumberOfPages:uint;
 
-		private var _benchmarkStartTime:Date;
-		private var _benchmarkFinishTime:Date;
 		private var _coverBook:Mesh;
 		private var _showing:Boolean;
-		
+
+		private var _swipeMode : int;
+		private var _hidingEnabled : Boolean;
+
+		private static const UNDECIDED : int = 0;
+		private static const PAGE_SWIPE : int = 1;
+		private static const HIDE_SWIPE : int = 2;
+		private var _bookEnabled:Boolean;
+		private var _startMouseX:Number;
+		private var _startMouseY:Number;
+		private var _hiddenOffset : Number = -185;
+		private var _basePosition:Vector3D = new Vector3D();
+		private var _hiddenRatio:Number = 0.0;
+		private var _consideredHidden:Boolean;
+
 		public function BookView(view:View3D, light:LightBase, stage3dProxy:Stage3DProxy)
 		{
 			_view = view;
+			_view.camera.addEventListener(Object3DEvent.POSITION_CHANGED, onCameraPositionChanged);
 			_stage3DProxy = stage3dProxy;
 			_light = light;
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+
+		private function onCameraPositionChanged(event:Object3DEvent):void
+		{
+			updateInteractionRect();
+		}
+
+		private function onAddedToStage(event:Event):void
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			_grabThrowController = new GrabThrowController(stage);
+		}
+
+		public function get bookEnabled():Boolean
+		{
+			return _bookEnabled;
+		}
+
+		public function set bookEnabled(value:Boolean):void
+		{
+			_bookEnabled = value;
+			_view.mouseEnabled = value;
+		}
+
+		public function get hidingEnabled():Boolean
+		{
+			return _hidingEnabled;
+		}
+
+		public function set hidingEnabled(value:Boolean):void
+		{
+			_hidingEnabled = value;
+			updateInteractionRect();
 		}
 
 		public function init():void
@@ -87,7 +143,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			_container.mouseEnabled = true;
 
 			//CREATE BACKGROUND COVER
-			var coverGeometry:Geometry = new PlaneGeometry(373,214);
+			var coverGeometry:Geometry = new PlaneGeometry(COVER_WIDTH, COVER_HEIGHT);
 			var coverMaterial:ColorMaterial = new ColorMaterial(0xAAAAAA);
 			_coverBook = new Mesh(coverGeometry,coverMaterial);
 			_container.addChild(_coverBook);
@@ -113,7 +169,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			}
 		}
 
-		public function hide():void{
+		public function remove():void{
 			if (_showing) {
 				_view.scene.removeChild(_container);
 				stopGrabController();
@@ -400,38 +456,30 @@ package net.psykosoft.psykopaint2.home.views.book
 				
 			
 			}
-			
-			
+
+
 		}
 		
 		
 		private function startGrabController():void{
-			if(!_grabThrowController)
-			{
-				_grabThrowController = new GrabThrowController(this.stage);
-				_grabThrowController.start();
-				_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);
-				_grabThrowController.addEventListener(GrabThrowEvent.DRAG_UPDATE,onDragUpdate);
-				_grabThrowController.addEventListener(GrabThrowEvent.RELEASE,onRelease);
-			}
+			_grabThrowController.start(50000, true);
+			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);
+			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_UPDATE,onDragUpdate);
+			_grabThrowController.addEventListener(GrabThrowEvent.RELEASE,onRelease);
 		}
 		
 		
 		private function stopGrabController():void{
-			if(_grabThrowController){
-				_grabThrowController.stop();
-				_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);
-				_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_UPDATE,onDragUpdate);
-				_grabThrowController.removeEventListener(GrabThrowEvent.RELEASE,onRelease);
-				_grabThrowController = null;
-			}
+			_grabThrowController.stop();
+			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);
+			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_UPDATE,onDragUpdate);
+			_grabThrowController.removeEventListener(GrabThrowEvent.RELEASE,onRelease);
 		}
 		
 		
 		
 		public function set doublePageIndex(value:Number):void{
 	
-			var minValue:int = 0;
 			var maxValue:int = Math.ceil(_maxNumberOfPages/2) -1;
 			
 			//IF WE ARE CHANGING PAGE INDEX FROM 1 TO 2 WE LOAD NEXT SET OF PAGES
@@ -453,11 +501,6 @@ package net.psykosoft.psykopaint2.home.views.book
 			_doublePageIndex = Math.min(_doublePageIndex,Math.ceil(_maxNumberOfPages/2) -1);
 			_doublePageIndex = Math.max(_doublePageIndex,0);
 			
-			
-			
-			
-			
-			
 			updatePages();
 		}
 		
@@ -475,32 +518,149 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		protected function onDragStarted(event:GrabThrowEvent):void
 		{
-			//NOTHING
+			_startMouseX = stage.mouseX;
+			_startMouseY = stage.mouseY;
+			_swipeMode = UNDECIDED;
 		}
 		
 		protected function onDragUpdate(event:GrabThrowEvent):void
 		{
-			
-			//!!PageIndex is a SETTER
-			doublePageIndex -= _pageBrowsingSpeed*event.velocityX/1500;
-			
-		}	
-		
-		protected function onRelease(event:GrabThrowEvent):void
-		{
-			
-			//ON RELEASE SNAP TO THE CURRENTLY OPENED PAGE
-			TweenLite.to(this,0.5,{doublePageIndex:Math.round(doublePageIndex),ease:Sine.easeOut});
-			
-		}
-		
-		public function setBookPosition(value:Vector3D):void
-		{
-			_container.x = value.x;
-			_container.y = value.y + 20;
-			_container.z = value.z - 250;
+			updateSwipeMode();
+
+			if (_swipeMode == PAGE_SWIPE)
+				doublePageIndex -= _pageBrowsingSpeed*event.velocityX/1500;
+			else if (_swipeMode == HIDE_SWIPE) {
+				updateHideSwipe(event.velocityY);
+			}
 		}
 
+		private function updateHideSwipe(velocity : Number):void
+		{
+			var bookVelocity : Number = unprojectVelocity(velocity) / Math.abs(_hiddenOffset);
+			hiddenRatio += bookVelocity;
+		}
+
+		private function releaseHideSwipe(velocity:Number):void
+		{
+			var bookVelocity : Number = unprojectVelocity(velocity) / Math.abs(_hiddenOffset);
+			var target : Number;
+
+			if (Math.abs(velocity) < 5) {
+				target = Math.round(hiddenRatio + bookVelocity);
+			}
+			else {
+				if (bookVelocity > 0.0)
+					target = 1.0;
+				else
+					target = 0.0;
+			}
+
+			TweenLite.to(this,.5,
+			{	hiddenRatio: target,
+				ease:Quad.easeOut
+			});
+		}
+
+		private function unprojectVelocity(screenSpaceVelocity:Number):Number
+		{
+			var matrix:Vector.<Number> = _view.camera.lens.matrix.rawData;
+			var z:Number = _view.camera.z - _container.z;
+			return screenSpaceVelocity / CoreSettings.STAGE_WIDTH * 2 * z / matrix[0];
+		}
+
+		private function updateSwipeMode() : void
+		{
+			if (_swipeMode == UNDECIDED) {
+				if (!_bookEnabled) {
+					_swipeMode = HIDE_SWIPE;
+					return;
+				}
+
+				if (!_hidingEnabled) {
+					_swipeMode = PAGE_SWIPE;
+					return;
+				}
+
+				var dx : Number = Math.abs(_startMouseX - stage.mouseX) * CoreSettings.GLOBAL_SCALING;
+				var dy : Number = Math.abs(_startMouseY - stage.mouseY) * CoreSettings.GLOBAL_SCALING;
+
+				if (dx > 20 && dy < 20) {
+					_swipeMode = PAGE_SWIPE;
+				}
+				else if (dy > 20 && dx < 20) {
+					_swipeMode = HIDE_SWIPE;
+				}
+			}
+		}
+
+		protected function onRelease(event:GrabThrowEvent):void
+		{
+			if (_swipeMode == PAGE_SWIPE)
+				//ON RELEASE SNAP TO THE CURRENTLY OPENED PAGE
+				TweenLite.to(this,0.5,{doublePageIndex:Math.round(doublePageIndex),ease:Sine.easeOut});
+			else if (_swipeMode == HIDE_SWIPE)
+				releaseHideSwipe(event.velocityY);
+		}
+
+		public function setBookPosition(value:Vector3D):void
+		{
+			_basePosition = value.clone();
+			updatePosition();
+		}
+
+		public function get hiddenRatio():Number
+		{
+			return _hiddenRatio;
+		}
+
+		public function set hiddenRatio(value:Number):void
+		{
+			if (value < 0.0) value = 0.0;
+			else if (value > 1.0) value = 1.0;
+			_hiddenRatio = value;
+			updatePosition();
+
+			if (!_hidingEnabled) return;
+
+			if (value < .01 && _consideredHidden) {
+				_consideredHidden = false;
+				switchedToNormalMode.dispatch();
+			}
+			else if (value > .99 && !_consideredHidden) {
+				_consideredHidden = true;
+				switchedToHiddenMode.dispatch();
+			}
+		}
+
+		private function updateInteractionRect():void
+		{
+			if (_hidingEnabled)
+				_grabThrowController.interactionRect = getBookScreenBounds();
+			else
+				_grabThrowController.interactionRect = null;
+		}
+
+		private function getBookScreenBounds():Rectangle
+		{
+			// figure out projected bounds of book, use cover as guidance
+			var matrix : Matrix3D = _coverBook.sceneTransform;
+
+			var topLeft : Vector3D = new Vector3D(-COVER_WIDTH * .5, 0, COVER_HEIGHT * .5);
+			var bottomRight : Vector3D = new Vector3D(COVER_WIDTH * .5, 0, -COVER_HEIGHT * .5);
+
+			topLeft = _view.project(matrix.transformVector(topLeft));
+			bottomRight = _view.project(matrix.transformVector(bottomRight));
+
+			return new Rectangle(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
+		}
+
+		private function updatePosition():void
+		{
+			_container.x = _basePosition.x;
+			_container.y = _basePosition.y + 20 + _hiddenOffset * _hiddenRatio;
+			_container.z = _basePosition.z - 250;
+			updateInteractionRect();
+		}
 
 		override public function set mouseEnabled(enabled:Boolean):void
 		{

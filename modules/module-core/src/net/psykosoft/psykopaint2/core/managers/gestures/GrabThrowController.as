@@ -91,7 +91,6 @@ package net.psykosoft.psykopaint2.core.managers.gestures
 
 		private function onTouchBegin(event : TouchEvent) : void
 		{
-			
 			if (!event.isPrimaryTouchPoint) {
 				// multitouch detected, not a pan gesture anymore
 				if (_isDragging) endGrabThrow(true);
