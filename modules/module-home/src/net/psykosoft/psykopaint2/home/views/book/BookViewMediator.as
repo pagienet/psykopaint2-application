@@ -161,6 +161,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function onSourceImageSelected(sourceImageProxy : SourceImageProxy) : void
 		{
 			view.mouseEnabled = false;
+			view.hide();
 			sourceImageProxy.loadFullSized(onLoadFullSizedSourceComplete, onLoadFullSizedError);
 		}
 

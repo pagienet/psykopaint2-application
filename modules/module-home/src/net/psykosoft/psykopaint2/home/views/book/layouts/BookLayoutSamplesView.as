@@ -98,7 +98,7 @@ package net.psykosoft.psykopaint2.home.views.book.layouts
 		}
 		
 		static public  function get LENGTH():int{
-			return  COLUMNS*ROWS;
+			return COLUMNS*ROWS;
 		}
 	}
 }
