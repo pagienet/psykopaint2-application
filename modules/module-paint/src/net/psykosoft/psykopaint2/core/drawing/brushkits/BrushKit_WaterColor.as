@@ -84,7 +84,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			if (!_initialized ) BrushKit.init();
 			
-			name = "Water Color";
+			name = "Watercolors";
 			
 			brushEngine = new WaterColorBrush();
 			WaterColorBrush(brushEngine).param_pigmentStaining.numberValue = 1.0;

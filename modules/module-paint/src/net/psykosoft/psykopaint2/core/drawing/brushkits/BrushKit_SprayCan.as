@@ -52,7 +52,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			if (!_initialized ) BrushKit.init();
 			
-			name = "Spraycan";
+			name = "Spray cans";
 			
 			brushEngine = new SprayCanBrush();
 			brushEngine.param_bumpiness.numberValue = 0;

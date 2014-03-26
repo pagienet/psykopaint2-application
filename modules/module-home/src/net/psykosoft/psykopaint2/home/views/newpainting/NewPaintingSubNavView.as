@@ -37,7 +37,7 @@ package net.psykosoft.psykopaint2.home.views.newpainting
 		}
 
 		public function createNewPaintingButtons():void {
-			createCenterButton( ID_NEW, "New Painting", ButtonIconType.NEW2, IconButton );
+			createCenterButton( ID_NEW, "New Painting", ButtonIconType.NEW, IconButton );
 			//createCenterButton( ID_NEW_PHOTO, ID_NEW_PHOTO, ButtonIconType.NEW_PAINTING_AUTO, IconButton );
 		}
 

@@ -21,7 +21,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 			
 			var bgLabel:BackgroundLabel = _label as BackgroundLabel;
 
-			bgLabel.rotation= Math.random()*4-2;
+			bgLabel.rotation = Math.random()*4-2;
 			bgLabel.randomizeLabelColor();
 			
 		}

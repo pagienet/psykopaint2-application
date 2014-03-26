@@ -226,7 +226,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 		}
 
 
-		public function relabelButtonWithId( id:String, newLabel:String ):void {
+		public function relabelButtonWithId( id:String, newLabel:String,newIcon:String ):void {
 
 			var targetData:ButtonData;
 			var dataProvider:Vector.<ISnapListData> = _scroller.dataProvider;
@@ -244,6 +244,7 @@ package net.psykosoft.psykopaint2.core.views.navigation
 			if( !targetData ) return;
 
 			targetData.labelText = newLabel;
+			targetData.iconType = newIcon;
 
 			_scroller.updateAllItemRenderersFromData();
 		}

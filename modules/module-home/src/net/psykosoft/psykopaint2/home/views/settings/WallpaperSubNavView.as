@@ -20,7 +20,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 
 		override protected function onEnabled():void {
 			setHeader( "" );
-			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.SETTINGS );
+			setLeftButton( ID_BACK, ID_BACK, ButtonIconType.BACK );
 		}
 
 		override protected function onDisposed():void {

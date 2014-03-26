@@ -18,7 +18,6 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const PARAM9:String = "param9";
 		public static const PARAM10:String = "param10";
 		public static const PARAM11:String = "param11";
-		public static const NEW2:String = "new2";
 		public static const BACK:String = "back";
 		public static const BIN:String = "bin";
 		public static const BLANK_CANVAS:String = "blankCanvas";
@@ -26,6 +25,7 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const CAMERA_ROLL:String = "cameraRoll";
 		public static const COMMENT:String = "comment";
 		public static const CONTINUE:String = "continue";
+		public static const CLEAR:String = "clear";
 		public static const ALPHA:String = "alpha";
 		public static const SAVE:String = "save";
 		public static const DISCARD:String = "discard";
@@ -41,6 +41,15 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const FROM_IPAD:String = "fromIpad";
 		public static const HAND_OK:String = "handOK";
 		public static const HOME:String = "home";
+		
+		//SETTINGS
+		public static const LOGIN:String = "login";
+		public static const LOGOUT:String = "logout";
+		public static const WALLPAPER:String = "wallpaper";
+		public static const NOTIFICATIONS:String = "notifications";
+
+		
+		//BRUSHES
 		public static const BRUSH:String = "brush";
 		public static const ERASER:String = "eraser";
 		public static const KNIFE:String = "knife";
@@ -48,7 +57,6 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const SPRAYCAN:String = "spraycan";
 		public static const WATERCOLOR:String = "watercolor";
 		public static const PAINTGUN:String = "paintgun";
-		
 		public static const TRY_BRUSH:String = "brush_try";
 		public static const TRY_KNIFE:String = "knife_try";
 		public static const TRY_PENCIL:String = "pencil_try";
@@ -78,8 +86,11 @@ package net.psykosoft.psykopaint2.core.views.components.button
 		public static const WAVEFORM:String = "waveform";
 		public static const XO:String = "xo";
 		public static const YOUR_IMAGES:String = "you";
+		
 		public static const NEW_PAINTING_MANUAL:String = "newManual";
 		public static const NEW_PAINTING_AUTO:String = "newAuto";
+		
+		//GALLERY_SEARCH_TYPES
 		public static const PAINTING:String = "painting";
 		public static const YOURS : String = "yours";
 		public static const MOST_LOVED : String = "mostLoved";

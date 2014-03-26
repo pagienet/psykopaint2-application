@@ -1,6 +1,7 @@
 package net.psykosoft.psykopaint2.home.views.settings
 {
 
+	import net.psykosoft.psykopaint2.core.views.components.button.ButtonIconType;
 	import net.psykosoft.psykopaint2.core.views.navigation.SubNavigationViewBase;
 
 	public class SettingsSubNavView extends SubNavigationViewBase
@@ -18,13 +19,13 @@ package net.psykosoft.psykopaint2.home.views.settings
 		}
 
 		override protected function onSetup():void {
-			createCenterButton( ID_WALLPAPER, ID_WALLPAPER );
-			createCenterButton( ID_LOGIN, ID_LOGIN );
+			createCenterButton( ID_WALLPAPER, ID_WALLPAPER,ButtonIconType.WALLPAPER );
+			createCenterButton( ID_LOGIN, ID_LOGIN,ButtonIconType.LOGIN );
 			validateCenterButtons();
 		}
 
 		public function setLoginBtn( label:String ):void {
-			relabelButtonWithId( ID_LOGIN, label );
+			relabelButtonWithId( ID_LOGIN, label ,ButtonIconType.LOGOUT );
 		}
 	}
 }

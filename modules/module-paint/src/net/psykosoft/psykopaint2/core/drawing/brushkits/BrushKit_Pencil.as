@@ -77,7 +77,7 @@ package net.psykosoft.psykopaint2.core.drawing.brushkits
 		{
 			if (!_initialized ) BrushKit.init();
 			
-			name = "Pencil";
+			name = "Pencils";
 			
 			brushEngine = new SketchBrush();
 			(brushEngine as SketchBrush).param_surfaceRelief.numberValue = 0.2;
