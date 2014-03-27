@@ -151,6 +151,11 @@ package net.psykosoft.psykopaint2.core.services
 			_connection.call("Main/addUserFavoritePainting", new Responder(onSuccess, onFail), sessionID, paintingID);
 		}
 
+		public function unfavoritePainting(sessionID : String, paintingID : int, onSuccess : Function, onFail : Function) : void
+		{
+			_connection.call("Main/removeUserFavoritePainting", new Responder(onSuccess, onFail), sessionID, paintingID);
+		}
+
 		private function hashPassword(email : String, password : String) : String
 		{
 			return MD5.hash(email + MD5.hash(password));

@@ -83,8 +83,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		private function updateLoveButton() : void
 		{
 			var painting : GalleryImageProxy = activePaintingModel.painting;
-			if (painting)
-				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, !loggedInUser.isLoggedIn() || (!painting.isFavorited && painting.userID != loggedInUser.userID));
+
+			if (painting) {
+				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, true);
+				var label : String = !loggedInUser.isLoggedIn() || (!painting.isFavorited && painting.userID != loggedInUser.userID)? "LOVE" : "UNLOVE";
+				view.relabelButtonWithId(GalleryPaintingSubNavView.ID_LOVE, label);
+			}
 			else
 				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, false);
 		}
@@ -146,11 +150,18 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var painting : GalleryImageProxy = activePaintingModel.painting;
 			view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, false);
-			galleryService.favorite(painting.id, onLovePaintingSucceeded, onLovePaintingFailed);
+			painting.isFavorited = !painting.isFavorited;
+			updateLoveButton();
+
+			if (painting.isFavorited)
+				galleryService.favorite(painting.id, onLovePaintingSucceeded, onLovePaintingFailed);
+			else
+				galleryService.unfavorite(painting.id, onLovePaintingSucceeded, onLovePaintingFailed);
 		}
 
 		private function onLovePaintingSucceeded() : void
 		{
+			view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, true);
 			// put here just in case we want to give feedback in the button
 		}
 

@@ -150,6 +150,11 @@ package net.psykosoft.psykopaint2.core.services
 			amfBridge.favoritePainting(userProxy.sessionID, paintingID, emptyCallBack(onSuccess), onFailure);
 		}
 
+		public function unfavorite(paintingID : int, onSuccess : Function, onFailure : Function) : void
+		{
+			amfBridge.unfavoritePainting(userProxy.sessionID, paintingID, emptyCallBack(onSuccess), onFailure);
+		}
+
 		private function emptyCallBack(callback : Function) : Function
 		{
 			return function(data : Object) : void { callback(); }
