@@ -534,7 +534,10 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function updateHideSwipe(velocity : Number):void
 		{
 			var bookVelocity : Number = unprojectVelocity(velocity) / Math.abs(_hiddenOffset);
-			hiddenRatio += bookVelocity;
+			var ratio : Number = _hiddenRatio + bookVelocity;
+			if (ratio < 0.0) ratio = 0.0;
+			else if (ratio > 1.0) ratio = 1.0;
+			hiddenRatio = ratio;
 		}
 
 		private function releaseHideSwipe(velocity:Number):void
@@ -543,7 +546,10 @@ package net.psykosoft.psykopaint2.home.views.book
 			var target : Number;
 
 			if (Math.abs(velocity) < 5) {
-				target = Math.round(hiddenRatio + bookVelocity);
+				var ratio : Number = _hiddenRatio + bookVelocity;
+				if (ratio < 0.0) ratio = 0.0;
+				else if (ratio > 1.0) ratio = 1.0;
+				hiddenRatio = ratio;
 			}
 			else {
 				if (bookVelocity > 0.0)
@@ -612,8 +618,6 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		public function set hiddenRatio(value:Number):void
 		{
-			if (value < 0.0) value = 0.0;
-			else if (value > 1.0) value = 1.0;
 			_hiddenRatio = value;
 			updatePosition();
 

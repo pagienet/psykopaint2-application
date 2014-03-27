@@ -48,6 +48,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	public class GalleryView extends Sprite
 	{
 		public static const CAMERA_FAR_POSITION:Vector3D = new Vector3D(-814, -40.14, 450);
+		public static var CAMERA_NEAR_POSITION:Vector3D = null;
 
 		private static const PAINTING_OFFSET:Number = 831;
 		private static const PAINTING_SPACING:Number = 250;
@@ -226,7 +227,12 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public function initInteraction():void
 		{
 			_swipeController ||= new GrabThrowController(stage);
-			_cameraZoomController ||= new GalleryCameraZoomController(stage, _view.camera, PAINTING_WIDTH, PAINTING_Z, CAMERA_FAR_POSITION, calculateCameraNearPosition());
+
+			if (CAMERA_NEAR_POSITION == null) {
+				CAMERA_NEAR_POSITION = calculateCameraNearPosition();
+			}
+
+			_cameraZoomController ||= new GalleryCameraZoomController(stage, _view.camera, PAINTING_WIDTH, PAINTING_Z, CAMERA_FAR_POSITION, CAMERA_NEAR_POSITION);
 
 			_swipeController.addEventListener(GrabThrowEvent.DRAG_STARTED, onDragStarted, false, 0, true);
 			_swipeController.start(10000, true);

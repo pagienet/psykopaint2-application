@@ -1,5 +1,8 @@
 package net.psykosoft.psykopaint2.home.views.book
 {
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Quad;
+
 	import flash.display.BitmapData;
 	import flash.geom.Vector3D;
 
@@ -20,6 +23,7 @@ package net.psykosoft.psykopaint2.home.views.book
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestCropSourceImageSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationStateChangeSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
 	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 	import net.psykosoft.psykopaint2.home.views.gallery.GalleryView;
 	import net.psykosoft.psykopaint2.home.views.home.EaselView;
@@ -52,9 +56,13 @@ package net.psykosoft.psykopaint2.home.views.book
 		[Inject]
 		public var requestNavigationStateChange:RequestNavigationStateChangeSignal;
 
+		[Inject]
+		public var notifyGalleryZoomRatioSignal : NotifyGalleryZoomRatioSignal;
+
 		private var currentState:String;
 		private var _gallerySource:int = -1;
 		private var _activeGalleryNavState:String;
+		private var _galleryZoomRatio:Number;
 
 
 		public function BookViewMediator()
@@ -69,6 +77,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			view.switchedToNormalMode.add(onSwitchedToNormalMode);
 			view.switchedToHiddenMode.add(onSwitchedToHiddenMode);
 			notifyStateChange.add(onStateChange);
+			notifyGalleryZoomRatioSignal.add(onGalleryZoomRatioSignal);
 		}
 
 		override public function destroy():void
@@ -79,6 +88,7 @@ package net.psykosoft.psykopaint2.home.views.book
 			view.switchedToNormalMode.remove(onSwitchedToNormalMode);
 			view.switchedToHiddenMode.remove(onSwitchedToHiddenMode);
 			notifyStateChange.remove(onStateChange);
+			notifyGalleryZoomRatioSignal.remove(onGalleryZoomRatioSignal);
 		}
 
 		private function onStateChange(newState : String) : void
@@ -145,6 +155,38 @@ package net.psykosoft.psykopaint2.home.views.book
 				_gallerySource = source;
 				galleryService.fetchImages(source, 0, 30, onGalleryImagesFetched, onImagesError);
 			}
+		}
+
+		private function onGalleryZoomRatioSignal(value : Number):void
+		{
+			if (_galleryZoomRatio == value) return;
+
+			// the travel factor causes the book not to stay equidistant from the camera,
+			// still generating a *slight* parallax effect without it becoming too big for the screen
+			const travelFactor : Number = .9;
+
+			var position : Vector3D = new Vector3D();
+			position.x = GalleryView.CAMERA_FAR_POSITION.x;
+			position.y = GalleryView.CAMERA_FAR_POSITION.y;
+			position.z = GalleryView.CAMERA_FAR_POSITION.z + value*(GalleryView.CAMERA_NEAR_POSITION.z - GalleryView.CAMERA_FAR_POSITION.z) * travelFactor;
+			view.setBookPosition(position);
+
+			if (value < 0.25) {
+				view.hidingEnabled = true;
+				view.bookEnabled = true;
+
+				// zoom all the way out -> show book fully
+				// otherwise, show book hidden
+				TweenLite.to(view, .4, {hiddenRatio: value == 0.0? 0.0 : 1.0, ease: Quad.easeOut});
+			}
+			else {
+				view.hidingEnabled = false;
+				view.bookEnabled = false;
+				// setting hidden ratio > 1.0 will make it go further offscreen
+				TweenLite.to(view, .4, {hiddenRatio: 1.5, ease: Quad.easeOut});
+			}
+
+			_galleryZoomRatio = value;
 		}
 
 		private function showGalleryBookBottom():void

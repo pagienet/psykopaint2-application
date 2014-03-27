@@ -6,7 +6,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import net.psykosoft.psykopaint2.core.services.GalleryService;
 	import net.psykosoft.psykopaint2.core.signals.NotifyNavigationStateChangeSignal;
 	import net.psykosoft.psykopaint2.core.signals.RequestNavigationToggleSignal;
-	import net.psykosoft.psykopaint2.core.signals.RequestSetBookOffScreenRatioSignal;
+	import net.psykosoft.psykopaint2.core.signals.NotifyGalleryZoomRatioSignal;
 	import net.psykosoft.psykopaint2.home.model.ActiveGalleryPaintingModel;
 
 	import robotlegs.bender.bundles.mvcs.Mediator;
@@ -26,7 +26,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		public var notifyStateChangeSignal:NotifyNavigationStateChangeSignal;
 
 		[Inject]
-		public var requestSetBookOffScreenRatioSignal : RequestSetBookOffScreenRatioSignal;
+		public var notifyGalleryZoomRatioSignal : NotifyGalleryZoomRatioSignal;
 
 		[Inject]
 		public var requestNavigationToggleSignal : RequestNavigationToggleSignal;
@@ -121,7 +121,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 
 		private function onZoomUpdate(ratio : Number) : void
 		{
-			requestSetBookOffScreenRatioSignal.dispatch(ratio);
+			notifyGalleryZoomRatioSignal.dispatch(ratio);
 			requestNavigationToggleSignal.dispatch(ratio > .9? -1 : 1);
 		}
 

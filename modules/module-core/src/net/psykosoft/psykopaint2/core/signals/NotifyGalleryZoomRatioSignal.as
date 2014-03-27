@@ -2,9 +2,9 @@ package net.psykosoft.psykopaint2.core.signals
 {
 	import org.osflash.signals.Signal;
 
-	public class RequestSetBookOffScreenRatioSignal extends Signal
+	public class NotifyGalleryZoomRatioSignal extends Signal
 	{
-		public function RequestSetBookOffScreenRatioSignal()
+		public function NotifyGalleryZoomRatioSignal()
 		{
 			super(Number);
 		}
