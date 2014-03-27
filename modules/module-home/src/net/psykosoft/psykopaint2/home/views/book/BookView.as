@@ -537,18 +537,14 @@ package net.psykosoft.psykopaint2.home.views.book
 			var bookVelocity : Number = unprojectVelocity(velocity) / Math.abs(_hiddenOffset);
 			var target : Number;
 
-			if (Math.abs(velocity) < 5) {
-				var ratio : Number = _hiddenRatio + bookVelocity;
-				if (ratio < 0.0) ratio = 0.0;
-				else if (ratio > 1.0) ratio = 1.0;
-				hiddenRatio = ratio;
+			if (Math.abs(velocity) * CoreSettings.GLOBAL_SCALING < 3) {
+				target = _hiddenRatio + bookVelocity;
+				target = target < 0.5? 0.0 : 1.0;
 			}
-			else {
-				if (bookVelocity > 0.0)
-					target = 1.0;
-				else
-					target = 0.0;
-			}
+			else if (bookVelocity > 0.0)
+				target = 1.0;
+			else
+				target = 0.0;
 
 			TweenLite.to(this,.5,
 			{	hiddenRatio: target,
