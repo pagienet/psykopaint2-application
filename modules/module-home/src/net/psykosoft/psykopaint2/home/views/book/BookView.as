@@ -446,26 +446,18 @@ package net.psykosoft.psykopaint2.home.views.book
 						if(easing<0.25 ){
 							page.visible= false;
 						}
-						//trace(" i = "+i +" is "+page.visible);
 					}
-					
 				}
-				
-			
 			}
-
-
 		}
-		
-		
+
 		private function startGrabController():void{
 			_grabThrowController.start(50000, true);
 			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);
 			_grabThrowController.addEventListener(GrabThrowEvent.DRAG_UPDATE,onDragUpdate);
 			_grabThrowController.addEventListener(GrabThrowEvent.RELEASE,onRelease);
 		}
-		
-		
+
 		private function stopGrabController():void{
 			_grabThrowController.stop();
 			_grabThrowController.removeEventListener(GrabThrowEvent.DRAG_STARTED,onDragStarted);

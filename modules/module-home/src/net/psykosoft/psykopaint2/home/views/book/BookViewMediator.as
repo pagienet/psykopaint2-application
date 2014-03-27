@@ -122,6 +122,8 @@ package net.psykosoft.psykopaint2.home.views.book
 					break;
 				default:
 					_gallerySource = -1;
+					_activeGalleryNavState = null;
+					view.mouseEnabled = false;
 					view.hidingEnabled = false;
 					view.remove();
 			}
@@ -134,7 +136,8 @@ package net.psykosoft.psykopaint2.home.views.book
 			view.setBookPosition(EaselView.CAMERA_POSITION);
 			view.hidingEnabled = false;
 			view.bookEnabled = true;
-			view.hiddenRatio = 0.0;
+			view.hiddenRatio = 1.5;
+			TweenLite.to(view, .4, {hiddenRatio: 0.0, ease: Quad.easeOut});
 			view.show();
 			var service:SourceImageService = source == ImageCollectionSource.CAMERAROLL_IMAGES ? cameraRollService : sampleImageService;
 			service.fetchImages(0, 30, onSourceImagesFetched, onImagesError);
@@ -142,10 +145,14 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		private function showGalleryBook(galleryNavState : String, source : uint):void
 		{
+			// if _activeGalleryNavState == null, we're newly arriving in the gallery, so we need to show the book
+			if (_activeGalleryNavState == null)
+				view.hiddenRatio = 1.5;
+
 			_activeGalleryNavState = galleryNavState;
 
 			view.setBookPosition(GalleryView.CAMERA_FAR_POSITION);
-			view.hiddenRatio = 0.0;
+			TweenLite.to(view, .4, {hiddenRatio: 0.0, ease: Quad.easeOut});
 			view.bookEnabled = true;
 			view.hidingEnabled = true;
 			view.show();
@@ -192,7 +199,7 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function showGalleryBookBottom():void
 		{
 			view.setBookPosition(GalleryView.CAMERA_FAR_POSITION);
-			view.hiddenRatio = 1.0;
+			TweenLite.to(view, .4, {hiddenRatio: 1.0, ease: Quad.easeOut});
 			view.bookEnabled = true;
 			view.hidingEnabled = true;
 			view.show();
@@ -222,8 +229,15 @@ package net.psykosoft.psykopaint2.home.views.book
 		private function onSourceImageSelected(sourceImageProxy : SourceImageProxy) : void
 		{
 			view.mouseEnabled = false;
-			view.remove();
-			sourceImageProxy.loadFullSized(onLoadFullSizedSourceComplete, onLoadFullSizedError);
+			TweenLite.to(view, .4, {
+				hiddenRatio: 1.5,
+				ease: Quad.easeOut,
+				onComplete: function():void
+				{
+					view.remove();
+					sourceImageProxy.loadFullSized(onLoadFullSizedSourceComplete, onLoadFullSizedError);
+				}
+			});
 		}
 
 		private function onLoadFullSizedError():void
