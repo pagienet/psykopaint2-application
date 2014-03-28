@@ -117,21 +117,6 @@ package net.psykosoft.psykopaint2.core.model
 			if (!sourceBitmapData) {
 				sourceBitmapData = new TrackedBitmapData(1024,768,false,0xffffffff);
 			}
-			
-			/*
-			if (!sourceBitmapData)
-			{	
-				if (_pyramidMap) {
-					_pyramidMap.dispose();
-					_pyramidMap = null;
-				}
-				if (_sourceTexture) {
-					_sourceTexture.dispose();
-					_sourceTexture = null;
-				}
-				return;
-			}
-				*/
 
 			// TODO: this is not ideal since in wastes 25% memory by making a square bitmap
 			// if we ever need to free some memory this is a good place to start digging.
