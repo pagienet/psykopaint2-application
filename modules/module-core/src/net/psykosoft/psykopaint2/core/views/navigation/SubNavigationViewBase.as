@@ -243,8 +243,11 @@ package net.psykosoft.psykopaint2.core.views.navigation
 
 			if( !targetData ) return;
 
-			targetData.labelText = newLabel;
-			targetData.iconType = newIcon;
+			if (newLabel)
+				targetData.labelText = newLabel;
+
+			if (newIcon)
+				targetData.iconType = newIcon;
 
 			_scroller.updateAllItemRenderersFromData();
 		}

@@ -1,12 +1,12 @@
 package away3d.hacks
 {
-	import away3d.textures.TextureProxyBase;
+	import away3d.textures.Texture2DBase;
 
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.textures.TextureBase;
 
-	public class RectTextureBase extends TextureProxyBase
+	public class RectTextureBase extends Texture2DBase
 	{
 		public function RectTextureBase()
 		{

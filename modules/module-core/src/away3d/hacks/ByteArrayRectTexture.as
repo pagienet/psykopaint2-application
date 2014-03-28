@@ -1,6 +1,6 @@
 package away3d.hacks
 {
-	import flash.display3D.textures.Texture;
+	import flash.display3D.textures.RectangleTexture;
 	import flash.display3D.textures.TextureBase;
 	import flash.utils.ByteArray;
 
@@ -28,12 +28,11 @@ package away3d.hacks
 			setSize(width, height);
 
 			_byteArray = value;
-			_byteArray.length =  width * height * 4;
 		}
 
 		override protected function uploadContent(texture : TextureBase) : void
 		{
-			Texture(texture).uploadFromByteArray(_byteArray, 0, 0);
+			RectangleTexture(texture).uploadFromByteArray(_byteArray, 0);
 		}
 
 		override public function dispose() : void

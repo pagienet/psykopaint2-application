@@ -10,18 +10,16 @@ package net.psykosoft.psykopaint2.home.views.gallery
 	import away3d.hacks.ByteArrayRectTexture;
 	import away3d.hacks.MaskingMethod;
 	import away3d.hacks.PaintingMaterial;
+	import away3d.hacks.RectTextureBase;
 	import away3d.hacks.StencilMethod;
 	import away3d.hacks.TrackedBitmapRectTexture;
-	import away3d.hacks.TrackedBitmapTexture;
 	import away3d.lights.LightBase;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
-	import away3d.textures.ByteArrayTexture;
 	import away3d.textures.Texture2DBase;
-	import away3d.tools.utils.TextureUtils;
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Quad;
@@ -437,7 +435,6 @@ package net.psykosoft.psykopaint2.home.views.gallery
 		{
 			var aspectRatio:Number = CoreSettings.STAGE_HEIGHT / CoreSettings.STAGE_WIDTH;
 			_paintingGeometry = new PlaneGeometry(PAINTING_WIDTH, PAINTING_WIDTH * aspectRatio, 1, 1, false);
-			_paintingGeometry.scaleUV(1, aspectRatio);
 		}
 
 		private function initLoadingTexture():void
@@ -570,6 +567,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			texture ||= _loadingTexture;
 
 			var material:TextureMaterial = new TextureMaterial(texture);
+			material.mipmap = false;
 			var stencilMethod:StencilMethod = new StencilMethod();
 			stencilMethod.referenceValue = 40;
 			stencilMethod.compareMode = Context3DCompareMode.NOT_EQUAL;
@@ -645,7 +643,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_lowQualityMaterials[i] = null;
 		}
 
-		private function onThumbnailLoaded(imageProxy:GalleryImageProxy, thumbnail:Texture2DBase):void
+		private function onThumbnailLoaded(imageProxy:GalleryImageProxy, thumbnail:RectTextureBase):void
 		{
 			if (_paintings[imageProxy.index])
 				_lowQualityMaterials[imageProxy.index].texture = thumbnail;
@@ -674,7 +672,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			_highQualityColorTexture.bitmapData = galleryVO.colorData;
 			_highQualityColorTexture.getTextureForStage3D(_stage3DProxy);
 
-			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, width, height);
+			_highQualityNormalSpecularTexture.setByteArray(galleryVO.normalSpecularData, galleryVO.colorData.width, galleryVO.colorData.height);
 			_highQualityNormalSpecularTexture.getTextureForStage3D(_stage3DProxy);
 
 			_highQualityIndex = _activeImageProxy.index;

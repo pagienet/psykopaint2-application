@@ -87,7 +87,7 @@ package net.psykosoft.psykopaint2.home.views.gallery
 			if (painting) {
 				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, true);
 				var label : String = !loggedInUser.isLoggedIn() || (!painting.isFavorited && painting.userID != loggedInUser.userID)? "LOVE" : "UNLOVE";
-				view.relabelButtonWithId(GalleryPaintingSubNavView.ID_LOVE, label);
+				view.relabelButtonWithId(GalleryPaintingSubNavView.ID_LOVE, label, null);
 			}
 			else
 				view.enableButtonWithId(GalleryPaintingSubNavView.ID_LOVE, false);

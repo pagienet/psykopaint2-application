@@ -1,16 +1,13 @@
 package net.psykosoft.psykopaint2.home.model
 {
 	import away3d.core.managers.Stage3DProxy;
-	import away3d.hacks.TrackedBitmapTexture;
+	import away3d.hacks.BitmapRectTexture;
+	import away3d.hacks.RectTextureBase;
+	import away3d.hacks.TrackedBitmapRectTexture;
 	import away3d.textures.BitmapTexture;
 	import away3d.textures.Texture2DBase;
 
 	import flash.display.BitmapData;
-	import flash.geom.Matrix;
-
-	import net.psykosoft.psykopaint2.base.utils.gpu.TextureUtil;
-	import net.psykosoft.psykopaint2.base.utils.misc.TrackedBitmapData;
-	import net.psykosoft.psykopaint2.core.configuration.CoreSettings;
 
 	import net.psykosoft.psykopaint2.core.models.GalleryImageCollection;
 	import net.psykosoft.psykopaint2.core.models.GalleryImageProxy;
@@ -20,7 +17,7 @@ package net.psykosoft.psykopaint2.home.model
 
 	public class GalleryImageCache
 	{
-		public var thumbnailLoaded : Signal = new Signal(GalleryImageProxy, Texture2DBase);
+		public var thumbnailLoaded : Signal = new Signal(GalleryImageProxy, RectTextureBase);
 		public var thumbnailDisposed : Signal = new Signal(GalleryImageProxy);
 		public var loadingComplete : Signal = new Signal();
 
@@ -87,21 +84,12 @@ package net.psykosoft.psykopaint2.home.model
 
 		private function onComplete(bitmapData : BitmapData) : void
 		{
-			var legalSize : int = TextureUtil.getNextPowerOfTwo( bitmapData.width );
-			var correctSize : BitmapData = new TrackedBitmapData(legalSize, legalSize, false, 0);
-			var scale : Number = legalSize/bitmapData.width;
-			var aspectScale : Number = bitmapData.width / bitmapData.height;
-			aspectScale *= CoreSettings.STAGE_HEIGHT / CoreSettings.STAGE_WIDTH;
-			var matrix : Matrix = new Matrix(scale, 0, 0, scale*aspectScale);
-			correctSize.draw(bitmapData, matrix);
-			bitmapData.dispose();
-			var texture : BitmapTexture = new TrackedBitmapTexture(correctSize);
+			var texture : TrackedBitmapRectTexture = new TrackedBitmapRectTexture(bitmapData);
 			texture.getTextureForStage3D(_stage3DProxy);
 			if (_textures[_loadingIndex]) throw "Shouldn't assign more than once!";
 			_textures[_loadingIndex] = texture;
 			thumbnailLoaded.dispatch(_proxies[_loadingIndex], texture);
 			cacheNext();
-			correctSize.dispose();
 		}
 
 		private function cacheNext() : void
@@ -130,7 +118,7 @@ package net.psykosoft.psykopaint2.home.model
 			for (var i : uint = start; i < end; ++i) {
 				if (_textures[i]) {
 					thumbnailDisposed.dispatch(_proxies[i]);
-					BitmapTexture(_textures[i]).dispose();
+					BitmapRectTexture(_textures[i]).dispose();
 				}
 				_textures[i] = null;
 				_proxies[i] = null;

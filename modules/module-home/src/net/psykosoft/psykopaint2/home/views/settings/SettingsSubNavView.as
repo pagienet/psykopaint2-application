@@ -25,7 +25,7 @@ package net.psykosoft.psykopaint2.home.views.settings
 		}
 
 		public function setLoginBtn( label:String ):void {
-			relabelButtonWithId( ID_LOGIN, label ,ButtonIconType.LOGOUT );
+			relabelButtonWithId( ID_LOGIN, label, ButtonIconType.LOGOUT );
 		}
 	}
 }
