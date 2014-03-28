@@ -191,7 +191,6 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			aspectRatio = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
 			var geom : Geometry = new PlaneGeometry(CANVAS_WIDTH, CANVAS_WIDTH*aspectRatio, 1, 1, false);
-			geom.scaleUV(1, aspectRatio);
 			_canvas = new Mesh(geom);
 			_canvas.material = _material;
 			_canvas.rotationY = 180;
@@ -411,9 +410,10 @@ package net.psykosoft.psykopaint2.home.views.home
 			var offsetV:Number =  missing * uvData[uvOffset+1] * scaleY / r.height;
 			
 			_tmpMatrix = new Matrix();
+			_tmpMatrix.scale(1.0, aspectRatio);
 			_tmpMatrix.scale(scaleX,scaleY);
 			_tmpMatrix.translate(0,offsetV);
-			
+
 			_canvas.geometry.transformUV(_tmpMatrix);
 			
 			
