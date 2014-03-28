@@ -670,8 +670,16 @@ package net.psykosoft.psykopaint2.home.views.book
 
 		public function get PAGES_CREATED():int
 		{
-			//return Math.min(_pages.length,SIMULTANEOUS_PAGES);
-			return _pages.length;
+			var pageCreated:int ;
+			//IF IT'S FILE VIEW WE JUST CREATE THE NECESSARY PAGES IF LESS THAN SIMULTANEOUS_PAGES AMOUNT
+			if(_viewType == TYPE_FILE_VIEW){
+				pageCreated = Math.min(_pages.length,SIMULTANEOUS_PAGES);
+				//IF GALLERY VIEW WE ALWAYS HAVE THE SIMULTANEOUS_PAGES amount of pages
+			}else if(_viewType == TYPE_GALLERY_VIEW){
+				pageCreated = SIMULTANEOUS_PAGES;
+			}
+			
+			return pageCreated;
 		}
 
 	}
