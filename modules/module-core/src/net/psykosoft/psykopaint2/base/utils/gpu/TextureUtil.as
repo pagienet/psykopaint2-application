@@ -56,8 +56,8 @@ package net.psykosoft.psykopaint2.base.utils.gpu
 		} 
 		
 		
-		public static function displayObjectToTextureMaterial(displayObject:DisplayObject):TextureMaterial{
-			
+		public static function displayObjectToTextureMaterial(displayObject:DisplayObject):TextureMaterial
+		{
 			//AUTOREISEPOWEROF2ONLY HAPPEN IF NECESSARY SO we'RE GOOD TO NOT MAKE A CONDITION
 			var bmd:BitmapData = autoResizePowerOf2(displayObjectToBitmapData(displayObject));
 			var texture:BitmapTexture = new BitmapTexture(bmd);

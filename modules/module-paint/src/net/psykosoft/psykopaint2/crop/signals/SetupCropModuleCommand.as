@@ -32,7 +32,7 @@ package net.psykosoft.psykopaint2.crop.signals
 
 			var cropRootView : CropRootView = new CropRootView();
 			requestAddViewToMainLayerSignal.dispatch(cropRootView,ViewLayerOrdering.AT_BOTTOM_LAYER);
-			requestUpdateCropImageSignal.dispatch(BitmapDataUtils.getLegalBitmapData(bitmapData), orientation);
+			requestUpdateCropImageSignal.dispatch(bitmapData, orientation);
 			notifyCropModuleSetUpSignal.dispatch();
 		}
 	}

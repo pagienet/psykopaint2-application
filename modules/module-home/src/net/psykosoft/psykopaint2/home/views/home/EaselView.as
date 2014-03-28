@@ -191,6 +191,7 @@ package net.psykosoft.psykopaint2.home.views.home
 			}
 			aspectRatio = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
 			var geom : Geometry = new PlaneGeometry(CANVAS_WIDTH, CANVAS_WIDTH*aspectRatio, 1, 1, false);
+			geom.scaleUV(1, aspectRatio);
 			_canvas = new Mesh(geom);
 			_canvas.material = _material;
 			_canvas.rotationY = 180;
@@ -218,6 +219,7 @@ package net.psykosoft.psykopaint2.home.views.home
 
 		public function get easelRect() : Rectangle
 		{
+			var aspectRatio : Number = CoreSettings.STAGE_HEIGHT/CoreSettings.STAGE_WIDTH;
 			var halfWidth : Number = CANVAS_WIDTH*.5;
 			var halfHeight : Number = CANVAS_WIDTH*aspectRatio*.5;
 			var vectorTopLeft : Vector3D = _canvas.scenePosition.clone();
