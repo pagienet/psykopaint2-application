@@ -666,8 +666,20 @@ package net.psykosoft.psykopaint2.home.views.book
 		}
 		
 		public function get PAGES_CREATED():int{
-			//return Math.min(_pages.length,SIMULTANEOUS_PAGES);
-			return _pages.length;
+			var numbPageCreated:int ;
+			
+			//return Math.max(_pages.length,SIMULTANEOUS_PAGES);
+			
+			//IN GALLERY MODE WE ALWAYS CREATE THE SIMULTAENOUS AMOUNT OF PAGES TO MATCH THE FLEXIBLE AMOUNT OF IMAGES
+			
+			if(_viewType == TYPE_GALLERY_VIEW){
+				numbPageCreated = SIMULTANEOUS_PAGES;
+			}
+			//BUT FOR FILE VIEW MODE THERE COULD BE A MAXIMUM AMOUNT OF PAGES
+			else if (_viewType == TYPE_FILE_VIEW){
+				numbPageCreated =  Math.min(_pages.length,SIMULTANEOUS_PAGES);
+			}
+			return numbPageCreated;
 		}
 		
 	}
